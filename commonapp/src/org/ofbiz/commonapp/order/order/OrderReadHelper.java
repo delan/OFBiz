@@ -713,7 +713,11 @@ public class OrderReadHelper {
         }
         
         return false;        
-    }    
+    }   
+    
+    public static OrderReadHelper getHelper(GenericValue orderHeader) {
+        return new OrderReadHelper(orderHeader); 
+    }
     
     /**
      * Checks to see if this user has read permission on this order
