@@ -73,7 +73,7 @@ public class CategoryServices {
         if (values.containsKey(ModelService.ERROR_MESSAGE)) {
             return result;
         }
-        if (!values.containsKey("categoryMembers")) {
+        if (!values.containsKey("categoryMembers") || values.get("categoryMembers") == null) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem reading category data.");
             return result;
