@@ -1865,4 +1865,55 @@ public class OrderServices {
         
         return ServiceUtil.returnSuccess();     
     }
+    
+    public static Map allowOrderSplit(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String orderId = (String) context.get("orderId");
+        String orderItemSeqId = (String) context.get("orderItemSeqId");
+        if (orderItemSeqId == null) {
+            orderItemSeqId = "_NA_";
+        }        
+        
+        // check and make sure we have permission to change the order
+        Security security = ctx.getSecurity();
+        if (!security.hasEntityPermission("ORDERMGR", "_UPDATE", userLogin)) {
+            GenericValue placingCustomer = null;
+            try {
+                Map placingCustomerFields = UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER");
+                placingCustomer = delegator.findByPrimaryKey("OrderRole", placingCustomerFields);                
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError("ERROR: Cannot get OrderRole entity: " + e.getMessage());
+            }
+            if (placingCustomer == null)
+                return ServiceUtil.returnError("You do not have permission to change this order's status.");
+        }        
+        
+        GenericValue shipPref = null;
+        try {
+            Map fields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId);           
+            shipPref = delegator.findByPrimaryKey("OrderShipmentPreference", fields);
+            if (shipPref == null) {
+                fields.put("orderItemSeqId", "_NA_");               
+                shipPref = delegator.findByPrimaryKey("OrderShipmentPreference", fields);
+            }            
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems getting OrderShipmentPreference for : " + orderId + " / " + orderItemSeqId, module);
+            return ServiceUtil.returnError("Cannot update; Problem getting OrderShipmentPreference");
+        }
+        
+        if (shipPref != null) {            
+            shipPref.set("maySplit", "Y");
+            try {
+                shipPref.store();
+            } catch (GenericEntityException e) {
+                Debug.logError("Problem saving OrdeShipmentPreference for : " + orderId + " / " + orderItemSeqId, module);
+                return ServiceUtil.returnError("Cannot update; Problem setting OrderShipmentPreference");
+            }
+        } else {
+            Debug.logError("ERROR: Got a NULL OrderShipmentPreference", module);
+            return ServiceUtil.returnError("Cannot update; No available preference to change");
+        }
+        return ServiceUtil.returnSuccess();
+    }
 }

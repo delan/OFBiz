@@ -34,8 +34,7 @@
           </td>
           <#if maySelectItems?default(false)>
             <td valign="middle" align="right" nowrap>
-              <a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="lightbuttontext">[Add All to Cart]</a>
-              <a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="lightbuttontext">[Add Checked to Cart]</a>
+              <a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="submenutext">Add All to Cart</a><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="submenutextright">Add Checked to Cart</a>
             </td>
           </#if>
         </tr>

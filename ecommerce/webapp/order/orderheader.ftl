@@ -239,6 +239,11 @@
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;Shipping Information</div>
                 </td>
+                <#if maySelectItems?default(false) && !maySplit?default(false)>
+                <td valign="middle" align="right">
+                  <a href="<@ofbizUrl>/allowordersplit?orderId=${orderHeader.orderId}&order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">Allow Split</a>
+                </td> 
+                </#if>               
               </tr>
             </table>
           </td>

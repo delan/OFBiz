@@ -246,6 +246,13 @@
     	<attribute name="orderId" type="String" mode="IN" optional="false"/>
     	<attribute name="backOrderedItems" type="List" mode="OUT" optional="false"/>
     </service>
+    
+    <service name="setAllowOrderSplit" engine="java" auth="true"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="allowOrderSplit">
+        <description>Set the Allow Split Flag To 'Y' (true)</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+    </service>
 
     <service name="addOrderRole" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="addRoleType">

@@ -395,6 +395,13 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderstatus"/>
     </request-map>
+    
+    <request-map uri="allowordersplit">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setAllowOrderSplit"/>
+        <response name="success" type="view" value="orderstatus"/>
+        <response name="error" type="view" value="orderstatus"/>
+    </request-map>
 
     <request-map uri="newcustomer">
         <security https="true" auth="false"/>

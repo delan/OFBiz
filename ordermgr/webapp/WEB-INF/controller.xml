@@ -186,6 +186,12 @@
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="receivepayment"/>
     </request-map>
+    <request-map uri="allowordersplit">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setAllowOrderSplit"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="orderview"/>
+    </request-map>    
 
 	<!-- Order Note Requests -->
     <request-map uri="createnewnote">

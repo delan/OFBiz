@@ -403,7 +403,12 @@
               <tr>
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;Shipment Information</div>
-                </td>          
+                </td>
+                <#if maySplit?default("Y")?upper_case == "N">
+                <td valign="middle" align="right">
+                  <a href="<@ofbizUrl>/allowordersplit?orderId=${orderId}&${paramString}</@ofbizUrl>" class="submenutextright">Allow Split</a>
+                </td>
+                </#if>
               </tr>
             </table>
           </td>
