@@ -3908,7 +3908,7 @@
       <package-name>org.ofbiz.commonapp.order.order</package-name>
       <table-name>ORDER_PAYMENT_PREFERENCE</table-name>
       <field><col-name>ORDER_PAYMENT_PREFERENCE_ID</col-name><type>id-ne</type></field>
-      <field><col-name> ORDER_ID</col-name><type>id</type></field>
+      <field><col-name>ORDER_ID</col-name><type>id</type></field>
       <field><col-name>PAYMENT_METHOD_TYPE_ID</col-name><type>id</type></field>
       <field><col-name>PAYMENT_INFO_ID</col-name><type>id</type></field>
       <field><col-name>MAX_AMOUNT</col-name><type>currency-amount</type></field>	
