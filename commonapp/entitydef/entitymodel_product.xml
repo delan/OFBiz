@@ -339,6 +339,44 @@
         <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ProductCategoryMemberAndRole"
+            package-name="org.ofbiz.commonapp.product.category"
+            title="ProductCategoryMember And ProductCategoryRole View Entity">
+      <member-entity entity-alias="PCM" entity-name="ProductCategoryMember"/>
+      <member-entity entity-alias="PCR" entity-name="ProductCategoryRole"/>
+      <alias entity-alias="PCM" name="productId"/>
+      <alias entity-alias="PCM" name="productCategoryId"/>
+      <alias entity-alias="PCM" name="fromDate"/>
+      <alias entity-alias="PCM" name="thruDate"/>
+      <alias entity-alias="PCM" name="comments"/>
+      <alias entity-alias="PCM" name="sequenceNum"/>
+      <alias entity-alias="PCM" name="quantity"/>
+      <alias entity-alias="PCR" name="partyId"/>
+      <alias entity-alias="PCR" name="roleTypeId"/>
+      <alias entity-alias="PCR" name="roleFromDate" field="fromDate"/>
+      <alias entity-alias="PCR" name="roleThruDate" field="thruDate"/>
+      <alias entity-alias="PCR" name="roleComments" field="comments"/>
+      <view-link entity-alias="PCM" rel-entity-alias="PCR">
+        <key-map field-name="productCategoryId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ProductCategoryMember">
+        <key-map field-name="productCategoryId"/>
+        <key-map field-name="productId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductCategoryRole">
+        <key-map field-name="productCategoryId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+        <key-map field-name="roleFromDate" rel-field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="ProductCategoryRole"
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Role Entity">
@@ -393,6 +431,43 @@
         <key-map field-name="parentProductCategoryId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ProductCategoryRollupAndRole"
+            package-name="org.ofbiz.commonapp.product.category"
+            title="ProductCategoryRollup And ProductCategoryRole View Entity">
+      <description>Allow the lookup of a category that is in another category that a party/role is related to. So, the party/role is related to the parent category.</description>
+      <member-entity entity-alias="PCRLP" entity-name="ProductCategoryRollup"/>
+      <member-entity entity-alias="PCR" entity-name="ProductCategoryRole"/>
+      <alias entity-alias="PCRLP" name="productCategoryId"/>
+      <alias entity-alias="PCRLP" name="parentProductCategoryId"/>
+      <alias entity-alias="PCRLP" name="fromDate"/>
+      <alias entity-alias="PCRLP" name="thruDate"/>
+      <alias entity-alias="PCRLP" name="sequenceNum"/>
+      <alias entity-alias="PCR" name="partyId"/>
+      <alias entity-alias="PCR" name="roleTypeId"/>
+      <alias entity-alias="PCR" name="roleFromDate" field="fromDate"/>
+      <alias entity-alias="PCR" name="roleThruDate" field="thruDate"/>
+      <alias entity-alias="PCR" name="roleComments" field="comments"/>
+      <view-link entity-alias="PCRLP" rel-entity-alias="PCR">
+        <key-map field-name="parentProductCategoryId" rel-field-name="productCategoryId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ProductCategoryRollup">
+        <key-map field-name="productCategoryId"/>
+        <key-map field-name="parentProductCategoryId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductCategoryRole">
+        <key-map field-name="parentProductCategoryId" rel-field-name="productCategoryId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+        <key-map field-name="roleFromDate" rel-field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one-nofk" title="Parent" rel-entity-name="ProductCategory">
+        <key-map field-name="parentProductCategoryId" rel-field-name="productCategoryId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="ProductCategoryType"
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Type Entity">
