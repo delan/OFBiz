@@ -229,7 +229,7 @@
   <%-- ======================== --%>
 
   <br>
-  <table border="0" width="100%" cellpadding="3">
+  <table border="0" width="100%" cellpadding="2" cellspacing='0'>
     <ofbiz:if name="category">
       <tr>
         <td colspan="2" align="right">
@@ -307,10 +307,19 @@
           <%-- ======================== --%>
 
           <p>&nbsp;</p>
-          <a href="javascript:addItem()" class="buttontext"><nobr>[Add to Cart]</nobr></a>&nbsp;
-          <input type="text" size="5" name="quantity" value="1">
+          <%java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();%>
+          <%if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {%>
+              <%-- check to see if introductionDate hasn't passed yet --%>
+              <div class='tabletext' style='color: red;'>This product has not yet been made available for sale.</div>
+          <%} else if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {%>
+              <%-- check to see if salesDiscontinuationDate has passed --%>
+              <div class='tabletext' style='color: red;'>This product is no longer available for sale.</div>
+          <%} else {%>
+              <a href="javascript:addItem()" class="buttontext"><nobr>[Add to Cart]</nobr></a>&nbsp;
+              <input type="text" size="5" name="quantity" value="1">
 
-          <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
+              <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
+          <%}%>
         </form>
 
         <%-- =========================== --%>
