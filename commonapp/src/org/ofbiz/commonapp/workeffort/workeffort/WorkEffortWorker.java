@@ -146,7 +146,7 @@ public class WorkEffortWorker {
                 }
             }
             //filter the work effort - this should really be done in a join/view entity
-            validWorkEfforts = new Vector();
+            validWorkEfforts = new ArrayList();
             Iterator iter = UtilMisc.toIterator(workEffortPartyAssignments);
             while (iter != null && iter.hasNext()) {
                 GenericValue workEffortPartyAssignment = (GenericValue) iter.next();
@@ -180,7 +180,7 @@ public class WorkEffortWorker {
             //Use the View Entity
             if (userLogin != null && userLogin.get("partyId") != null) {
                 try {
-                    validWorkEfforts = new Vector( delegator.findByAnd("WorkEffortAndPartyAssign",
+                    validWorkEfforts = new ArrayList( delegator.findByAnd("WorkEffortAndPartyAssign",
                             UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
                             new EntityExpr("estimatedCompletionDate", EntityOperator.GREATER_THAN_EQUAL_TO, startStamp),
                             new EntityExpr("estimatedStartDate", EntityOperator.LESS_THAN, endStamp),
@@ -194,13 +194,13 @@ public class WorkEffortWorker {
             return;
 
         //Split the WorkEffort list into a list for each day
-        List days = new Vector();
+        List days = new ArrayList();
 
         //For each day in the set we check all work efforts to see if they fall within range
         for (int i = 0; i < numDays; i++) {
             Timestamp curDayStart = UtilDateTime.getDayStart(startStamp, i);
             Timestamp curDayEnd = UtilDateTime.getDayEnd(startStamp, i);
-            List curWorkEfforts = new Vector();
+            List curWorkEfforts = new ArrayList();
 
             for (int j = 0; j < validWorkEfforts.size(); j++) {
                 GenericValue workEffort = (GenericValue) validWorkEfforts.get(j);
