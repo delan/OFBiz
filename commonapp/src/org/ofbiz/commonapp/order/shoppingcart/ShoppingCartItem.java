@@ -49,6 +49,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     private String delegatorName = null;
     private String prodCatalogId = null;
+    private String webSiteId = null;
     private String productId = null;
     private String itemComment = null;
     private double quantity = 0.0;
@@ -97,7 +98,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** makes a ShoppingCartItem and adds it to the cart at cartLocation, or at the end if cartLocation is null */
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
-        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId);
+        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, cart.getWebSiteId());
 
         // check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
@@ -170,10 +171,11 @@ public class ShoppingCartItem implements java.io.Serializable {
     protected ShoppingCartItem() {}
 
     /** Creates new ShoppingCartItem object. */
-    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId) {
+    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, String webSiteId) {
         this._product = product;
         this.productId = _product.getString("productId");
         this.prodCatalogId = prodCatalogId;
+        this.webSiteId = webSiteId;
         this.itemComment = null;
         this.attributes = attributes;
         this.delegator = _product.getDelegator();
@@ -184,6 +186,10 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     public String getProdCatalogId() {
         return this.prodCatalogId;
+    }
+    
+    public String getWebSiteId() {
+        return this.webSiteId;
     }
 
     /** Sets the base price for the item; use with caution */
@@ -229,6 +235,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             
             priceContext.put("product", this.getProduct());
             priceContext.put("prodCatalogId", prodCatalogId);
+            priceContext.put("webSiteId", webSiteId);
             
             String partyId = cart.getPartyId();
             if (partyId != null)

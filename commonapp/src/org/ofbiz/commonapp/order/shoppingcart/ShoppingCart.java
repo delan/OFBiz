@@ -259,6 +259,10 @@ public class ShoppingCart implements java.io.Serializable {
         return (GenericValue) this.session.getAttribute("autoUserLogin");
     }
     
+    public String getWebSiteId() {
+        return (String) session.getAttribute("webSiteId");
+    }
+    
     public String getPartyId() {
     	String partyId = (String) session.getAttribute("orderPartyId");
     	if (partyId == null && getUserLogin() != null)

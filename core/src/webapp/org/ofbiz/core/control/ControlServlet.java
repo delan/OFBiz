@@ -94,6 +94,8 @@ public class ControlServlet extends HttpServlet {
 
         long requestStartTime = System.currentTimeMillis();
         HttpSession session = request.getSession();
+        session.setAttribute("webSiteId", getWebSiteId());
+        
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         // workaraound if we are in the root webapp
@@ -360,6 +362,10 @@ public class ControlServlet extends HttpServlet {
         }
         return security;
     }
+    
+    private String getWebSiteId() {
+        return getServletContext().getInitParameter("webSiteId");
+    }    
     
     public void destroy() {
         super.destroy();

@@ -48,6 +48,7 @@ public class PriceServices {
      *   <li>productId
      *   <li>partyId
      *   <li>prodCatalogId
+     *   <li>webSiteId
      *   <li>facilityGroupId
      *   <li>quantity
      * </ul>
@@ -69,6 +70,7 @@ public class PriceServices {
         GenericValue product = (GenericValue) context.get("product");
         String productId = product.getString("productId");
         String prodCatalogId = (String) context.get("prodCatalogId");
+        String webSiteId = (String) context.get("webSiteId");
         
         String facilityGroupId = (String) context.get("facilityGroupId");
         if (UtilValidate.isEmpty(facilityGroupId)) facilityGroupId = "_NA_";
@@ -391,7 +393,21 @@ public class PriceServices {
                             productPriceRuleIds.add(prodCatalogIdCond.getString("productPriceRuleId"));
                         }
                     }
-
+                    
+                    // by webSiteId
+                    Collection webSiteIdConds = delegator.findByAndCache("ProductPriceCond",
+                            UtilMisc.toMap("inputParamEnumId", "PRIP_WEBSITE_ID", "condValue", webSiteId));
+                    
+                    if (webSiteIdConds != null && webSiteIdConds.size() > 0) {
+                        Iterator webSiteIdCondsIter = webSiteIdConds.iterator();
+                        
+                        while (webSiteIdCondsIter.hasNext()) {
+                            GenericValue webSiteIdCond = (GenericValue) webSiteIdCondsIter.next();
+                            
+                            productPriceRuleIds.add(webSiteIdCond.getString("productPriceRuleId"));
+                        }
+                    }
+                   
                     // by partyId
                     if (partyId != null) {
                         Collection partyIdConds = delegator.findByAndCache("ProductPriceCond",
@@ -478,10 +494,10 @@ public class PriceServices {
 
                         totalConds++;
 
-                        if (!checkPriceCondition(productPriceCond, productId, prodCatalogId, partyId, quantity, listPrice, currencyUomId, delegator)) {
+                        if (!checkPriceCondition(productPriceCond, productId, prodCatalogId, webSiteId, partyId, quantity, listPrice, currencyUomId, delegator)) {
                             // if there is a virtualProductId, try that given that this one has failed
                             if (virtualProductId != null) {
-                                if (!checkPriceCondition(productPriceCond, virtualProductId, prodCatalogId, partyId, quantity, listPrice, currencyUomId, delegator)) {
+                                if (!checkPriceCondition(productPriceCond, virtualProductId, prodCatalogId, webSiteId, partyId, quantity, listPrice, currencyUomId, delegator)) {
                                     allTrue = false;
                                     break;
                                 }
@@ -658,8 +674,8 @@ public class PriceServices {
         return result;
     }
 
-    public static boolean checkPriceCondition(GenericValue productPriceCond, String productId, String prodCatalogId,
-        String partyId, double quantity, double listPrice, String currencyUomId, GenericDelegator delegator) throws GenericEntityException {
+    public static boolean checkPriceCondition(GenericValue productPriceCond, String productId, String prodCatalogId, String webSiteId,
+            String partyId, double quantity, double listPrice, String currencyUomId, GenericDelegator delegator) throws GenericEntityException {
         if (Debug.verboseOn()) Debug.logVerbose("Checking price condition: " + productPriceCond, module);
         int compare = 0;
 
@@ -680,6 +696,8 @@ public class PriceServices {
             }
         } else if ("PRIP_PROD_CLG_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
             compare = prodCatalogId.compareTo(productPriceCond.getString("condValue"));
+        } else if ("PRIP_WEBSITE_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
+            compare = webSiteId.compareTo(productPriceCond.getString("condValue"));
         } else if ("PRIP_QUANTITY".equals(productPriceCond.getString("inputParamEnumId"))) {
             Double quantityValue = new Double(quantity);
 

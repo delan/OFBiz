@@ -58,6 +58,7 @@
     <ofbiz:service name='calculateProductPrice'>
         <ofbiz:param name='product' attribute='product'/>
         <ofbiz:param name='prodCatalogId' value='<%=CatalogWorker.getCurrentCatalogId(pageContext)%>'/>
+        <ofbiz:param name='webSiteId' value='<%=CatalogWorker.getWebSiteId(pageContext)%>'/>
         <ofbiz:param name='partyId' attribute='orderPartyId'/>
         <%-- don't need to pass the partyId because it will use the one from the currently logged in user, if there user logged in --%>
         <%-- returns: isSale, price, orderItemPriceInfos and optionally: listPrice, defaultPrice, averageCost --%>
