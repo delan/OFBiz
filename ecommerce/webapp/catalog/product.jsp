@@ -4,7 +4,7 @@
 <%@ page import="org.ofbiz.core.pseudotag.*, org.ofbiz.commonapp.product.product.*"%>
 
 <%-- ====================================================== --%>
-<%-- Get the requested product                                --%>
+<%-- Get the requested product                              --%>
 <%-- ====================================================== --%>
 <%String productId = request.getParameter("product_id");%>
 <ofbiz:service name='getProduct'>
@@ -23,11 +23,11 @@
     <%-- ====================================================== --%>
     <%-- Special Variant Code                                   --%>
     <%-- ====================================================== --%>
-    <% if (productTypeId.equals("VIRTUAL_PRODUCT")) {%>
+    <% if (productTypeId != null && productTypeId.equals("VIRTUAL_PRODUCT")) {%>
         <ofbiz:service name="getProductFeatureSet">
             <ofbiz:param name='productId' value='<%=productId%>'/>
         </ofbiz:service>
-        <ofbiz:if name="featureSet">
+        <ofbiz:if name="featureSet" size="0">
             <ofbiz:service name="getProductVariantTree">
                 <ofbiz:param name='productId' value='<%=productId%>'/>
                 <ofbiz:param name='featureOrder' attribute='featureSet'/>
@@ -146,9 +146,11 @@
     
                 function getList(name, value) {
                     currentOrderIndex = findIndex(name);
+                    /*
                     if (OPT.length == 1) {
                         value = document.forms["addform"].elements[name].options[(value*1)+1].value;
                     }
+                    */
                     if (currentOrderIndex < 0 || value == "")
                         return;
                     if (currentOrderIndex < (OPT.length - 1)) {
