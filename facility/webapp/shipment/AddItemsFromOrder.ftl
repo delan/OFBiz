@@ -43,92 +43,118 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <div class="head3" style="color: red;">ERROR: Order with ID [${orderId}] not found.</div>
 </#if>
 <#if orderHeader?exists>
+    <div class="head3">NOTE: Order Type is ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}.</div>
     <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>
         <div class="head3">NOTE: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}.</div>
     <#else>
         <div class="head3" style="color: red;">WARNING: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}; should generally be Approved or Backordered before shipping.</div>
     </#if>
-</#if>
-<table width="100%" cellpadding="2" cellspacing="0" border="1">
-    <tr>
-        <td><div class="tableheadtext">Order Item</div></td>
-        <td><div class="tableheadtext">Product</div></td>
-        <td><div class="tableheadtext">Items Issued or Reserved</div></td>
-        <td><div class="tableheadtext">[Issued + Reserved = Total] = Ordered</div></td>
-        <td><div class="tableheadtext">Reserved</div></td>
-        <td><div class="tableheadtext">Issue</div></td>
-    </tr>
-    <#list orderItemDatas?if_exists as orderItemData>
-        <#assign orderItem = orderItemData.orderItem>
-        <#assign orderItemInventoryResDatas = orderItemData.orderItemInventoryResDatas>
-        <#assign product = orderItemData.product>
-        <#assign itemIssuances = orderItemData.itemIssuances>
-        <#assign totalQuantityIssued = orderItemData.totalQuantityIssued>
-        <#assign totalQuantityReserved = orderItemData.totalQuantityReserved>
-        <#assign totalQuantityIssuedAndReserved = orderItemData.totalQuantityIssuedAndReserved>
+    <table width="100%" cellpadding="2" cellspacing="0" border="1">
         <tr>
-            <td><div class="tabletext">${orderItem.orderItemSeqId}</div></td>
-            <td><div class="tabletext">${(product.productName)?if_exists} [${orderItem.productId?if_exists}]</div></td>
-            <td>
-                <#if itemIssuances?has_content>
-                    <#list itemIssuances as itemIssuance>
-                        <div class="tabletext"><b>[${itemIssuance.quantity?if_exists}]</b>${itemIssuance.shipmentId?if_exists}:${itemIssuance.shipmentItemSeqId?if_exists} on [${(itemIssuance.issuedDateTime.toString())?if_exists}] by [${(itemIssuance.issuedByUserLoginId)?if_exists}]</div>
-                    </#list>
-                <#else>
-                    <div class="tabletext">&nbsp;</div>
-                </#if>
-            </td>
-            <td>
-                <div class="tabletext">
-                    <#if (totalQuantityIssuedAndReserved != orderItem.quantity)><span style="color: red;"><#else><span></#if>
-                        [${totalQuantityIssued} + ${totalQuantityReserved} = ${totalQuantityIssuedAndReserved}]
-                        <b>
-                            <#if (totalQuantityIssuedAndReserved > orderItem.quantity)>&gt;<#else><#if (totalQuantityIssuedAndReserved < orderItem.quantity)>&lt;<#else>=</#if></#if>
-                            ${orderItem.quantity}
-                        </b>
-                    </span>
-                </div>
-            </td>
-            <td><div class="tabletext">&nbsp;</div></td>
-            <td><div class="tabletext">&nbsp;</div></td>
+            <td><div class="tableheadtext">Order Item</div></td>
+            <td><div class="tableheadtext">Product</div></td>
+            <#if isSalesOrder>
+                <td><div class="tableheadtext">Items Issued or Reserved</div></td>
+                <td><div class="tableheadtext">[Issued + Reserved = Total] = Ordered</div></td>
+                <td><div class="tableheadtext">Reserved</div></td>
+            <#else>
+                <td><div class="tableheadtext">Items Issued</div></td>
+                <td><div class="tableheadtext">Issed = Ordered</div></td>
+            </#if>
+            <td><div class="tableheadtext">Issue</div></td>
         </tr>
-        <#list orderItemInventoryResDatas as orderItemInventoryResData>
-            <#assign orderItemInventoryRes = orderItemInventoryResData.orderItemInventoryRes>
-            <#assign inventoryItem = orderItemInventoryResData.inventoryItem>
-            <#assign inventoryItemFacility = orderItemInventoryResData.inventoryItemFacility>
+        <#list orderItemDatas?if_exists as orderItemData>
+            <#assign orderItem = orderItemData.orderItem>
+            <#assign product = orderItemData.product>
+            <#assign itemIssuances = orderItemData.itemIssuances>
+            <#assign totalQuantityIssued = orderItemData.totalQuantityIssued>
+            <#assign orderItemInventoryResDatas = orderItemData.orderItemInventoryResDatas?if_exists>
+            <#assign totalQuantityReserved = orderItemData.totalQuantityReserved?if_exists>
+            <#assign totalQuantityIssuedAndReserved = orderItemData.totalQuantityIssuedAndReserved?if_exists>
             <tr>
-                <td><div class="tabletext">&nbsp;</div></td>
-                <td><div class="tabletext">&nbsp;</div></td>
+                <td><div class="tabletext">${orderItem.orderItemSeqId}</div></td>
+                <td><div class="tabletext">${(product.productName)?if_exists} [${orderItem.productId?if_exists}]</div></td>
                 <td>
-                    <div class="tabletext">
-                        ${orderItemInventoryRes.inventoryItemId}
-                        <#if inventoryItem.facilityId?has_content>
-                            <span<#if originFacility?exists && originFacility.facilityId != inventoryItem.facilityId> style="color: red;"</#if>>[${(inventoryItemFacility.facilityName)?default(inventoryItem.facilityId)}]</span>
-                        <#else>
-                            <span style="color: red;">[No Facility]</span>
-                        </#if>
-                    </div>
-                </td>
-                <td><div class="tabletext">&nbsp;</div></td>
-                <td><div class="tabletext">${orderItemInventoryRes.quantity}</div></td>
-                <td>
-                    <#if originFacility?exists && originFacility.facilityId == inventoryItem.facilityId?if_exists>
-                        <form action="<@ofbizUrl>/issueOrderItemInventoryResToShipment</@ofbizUrl>" name="addOrderItemToShipmentForm${orderItemData_index}${orderItemInventoryResData_index}">
-                            <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-                            <input type="hidden" name="orderId" value="${orderItemInventoryRes.orderId}"/>
-                            <input type="hidden" name="orderItemSeqId" value="${orderItemInventoryRes.orderItemSeqId}"/>
-                            <input type="hidden" name="inventoryItemId" value="${orderItemInventoryRes.inventoryItemId}"/>
-                            <input type="text" size="5" name="quantity" value="${orderItemInventoryRes.quantity}"/>
-                            <a href="javascript:document.addOrderItemToShipmentForm${orderItemData_index}${orderItemInventoryResData_index}.submit();" class="buttontext">Issue</a>
-                        </form>
+                    <#if itemIssuances?has_content>
+                        <#list itemIssuances as itemIssuance>
+                            <div class="tabletext"><b>[${itemIssuance.quantity?if_exists}]</b>${itemIssuance.shipmentId?if_exists}:${itemIssuance.shipmentItemSeqId?if_exists} on [${(itemIssuance.issuedDateTime.toString())?if_exists}] by [${(itemIssuance.issuedByUserLoginId)?if_exists}]</div>
+                        </#list>
                     <#else>
-                        <div class="tabletext">Not In Origin Facility</div>
+                        <div class="tabletext">&nbsp;</div>
                     </#if>
                 </td>
+                <td>
+                    <#if isSalesOrder>
+                        <div class="tabletext">
+                            <#if (totalQuantityIssuedAndReserved != orderItem.quantity)><span style="color: red;"><#else><span></#if>
+                                [${totalQuantityIssued} + ${totalQuantityReserved} = ${totalQuantityIssuedAndReserved}]
+                                <b>
+                                    <#if (totalQuantityIssuedAndReserved > orderItem.quantity)>&gt;<#else><#if (totalQuantityIssuedAndReserved < orderItem.quantity)>&lt;<#else>=</#if></#if>
+                                    ${orderItem.quantity}
+                                </b>
+                            </span>
+                        </div>
+                    <#else>
+                    </#if>
+                </td>
+                <#if isSalesOrder>
+                    <td><div class="tabletext">&nbsp;</div></td>
+                    <td><div class="tabletext">&nbsp;</div></td>
+                <#else>
+                    <#assign quantityNotIssued = orderItem.quantity - totalQuantityIssued>
+                    <#if (quantityNotIssued > 0)>
+                        <form action="<@ofbizUrl>/issueOrderItemToShipment</@ofbizUrl>" name="issueOrderItemToShipmentForm${orderItemData_index}">
+                            <input type="hidden" name="shipmentId" value="${shipmentId}"/>
+                            <input type="hidden" name="orderId" value="${orderItem.orderId}"/>
+                            <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
+                            <input type="text" size="5" name="quantity" value="${quantityNotIssued}"/>
+                            <a href="javascript:document.issueOrderItemToShipmentForm${orderItemData_index}.submit();" class="buttontext">Issue</a>
+                        </form>
+                    <#else>
+                        <td><div class="tabletext">&nbsp;</div></td>
+                    </#if>
+                </#if>
             </tr>
+            <#if isSalesOrder>
+                <#list orderItemInventoryResDatas as orderItemInventoryResData>
+                    <#assign orderItemInventoryRes = orderItemInventoryResData.orderItemInventoryRes>
+                    <#assign inventoryItem = orderItemInventoryResData.inventoryItem>
+                    <#assign inventoryItemFacility = orderItemInventoryResData.inventoryItemFacility>
+                    <tr>
+                        <td><div class="tabletext">&nbsp;</div></td>
+                        <td><div class="tabletext">&nbsp;</div></td>
+                        <td>
+                            <div class="tabletext">
+                                ${orderItemInventoryRes.inventoryItemId}
+                                <#if inventoryItem.facilityId?has_content>
+                                    <span<#if originFacility?exists && originFacility.facilityId != inventoryItem.facilityId> style="color: red;"</#if>>[${(inventoryItemFacility.facilityName)?default(inventoryItem.facilityId)}]</span>
+                                <#else>
+                                    <span style="color: red;">[No Facility]</span>
+                                </#if>
+                            </div>
+                        </td>
+                        <td><div class="tabletext">&nbsp;</div></td>
+                        <td><div class="tabletext">${orderItemInventoryRes.quantity}</div></td>
+                        <td>
+                            <#if originFacility?exists && originFacility.facilityId == inventoryItem.facilityId?if_exists>
+                                <form action="<@ofbizUrl>/issueOrderItemInventoryResToShipment</@ofbizUrl>" name="addOrderItemToShipmentForm${orderItemData_index}${orderItemInventoryResData_index}">
+                                    <input type="hidden" name="shipmentId" value="${shipmentId}"/>
+                                    <input type="hidden" name="orderId" value="${orderItemInventoryRes.orderId}"/>
+                                    <input type="hidden" name="orderItemSeqId" value="${orderItemInventoryRes.orderItemSeqId}"/>
+                                    <input type="hidden" name="inventoryItemId" value="${orderItemInventoryRes.inventoryItemId}"/>
+                                    <input type="text" size="5" name="quantity" value="${orderItemInventoryRes.quantity}"/>
+                                    <a href="javascript:document.addOrderItemToShipmentForm${orderItemData_index}${orderItemInventoryResData_index}.submit();" class="buttontext">Issue</a>
+                                </form>
+                            <#else>
+                                <div class="tabletext">Not In Origin Facility</div>
+                            </#if>
+                        </td>
+                    </tr>
+                </#list>
+            </#if>
         </#list>
-    </#list>
-</table>
+    </table>
+</#if>
 
 <#else>
   <h3>The Shipment was not found with ID: [${shipmentId?if_exists}]</h3>
