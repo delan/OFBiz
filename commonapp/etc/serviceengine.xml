@@ -24,6 +24,7 @@
     <global-services loader="mainfile" location="services_order.xml"/>
     <global-services loader="mainfile" location="services_party.xml"/>
     <global-services loader="mainfile" location="services_product.xml"/>
+    <global-services loader="mainfile" location="services_security.xml"/>
     <global-services loader="mainfile" location="services_workeffort.xml"/>
     <global-services loader="mainfile" location="services_workflow.xml"/>
 </service-config>

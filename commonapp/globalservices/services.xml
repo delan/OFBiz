@@ -29,36 +29,6 @@
         <attribute name="result" type="String" mode="OUT"/>
     </service>
 
-    <!-- Security services -->
-    <service name="userLogin" engine="java"
-            location="org.ofbiz.commonapp.security.login.LoginServices" invoke="userLogin">
-        <description>Used to Automatically Authenticate a username/password; create a UserLogin object</description>
-        <attribute name="login.username" type="String" mode="IN"/>
-        <attribute name="login.password" type="String" mode="IN"/>
-        <attribute name="userLogin" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
-    </service>
-
-    <service name="createUserLogin" engine="java"
-            location="org.ofbiz.commonapp.security.login.LoginServices" invoke="createUserLogin" auth="false">
-        <description>Create a UserLogin</description>
-        <attribute name="userLoginId" type="String" mode="IN" optional="false"/>
-        <attribute name="currentPassword" type="String" mode="IN" optional="false"/>
-        <attribute name="currentPasswordVerify" type="String" mode="IN" optional="false"/>
-        <attribute name="passwordHint" type="String" mode="IN" optional="true"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-    </service>
-
-    <service name="updatePassword" engine="java"
-            location="org.ofbiz.commonapp.security.login.LoginServices" invoke="updatePassword" auth="true">
-        <description>Update a UserLogin Password</description>
-        <attribute name="userLoginId" type="String" mode="IN" optional="true"/>
-        <attribute name="currentPassword" type="String" mode="IN" optional="true"/>
-        <attribute name="newPassword" type="String" mode="IN" optional="true"/>
-        <attribute name="newPasswordVerify" type="String" mode="IN" optional="true"/>
-        <attribute name="passwordHint" type="String" mode="IN" optional="true"/>
-        <attribute name="enabled" type="Boolean" mode="IN" optional="true"/>
-    </service>
-
     <!-- Common services -->
     <service name="sendMail" engine="java"
             location="org.ofbiz.commonapp.common.CommonServices" invoke="sendMail">
