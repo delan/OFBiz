@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.3 2003/08/26 21:48:11 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.4 2003/08/27 13:53:25 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -196,14 +196,14 @@ public class CheckOutEvents {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
-        // Load the ProductStore settings       
+        // load the ProductStore settings       
         GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
         Map callResult = checkOutHelper.processPayment(productStore, userLogin);    
         
-        //Generate any messages required
+        // generate any messages required
         ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
 
-        //Determine whether it was a success or failure
+        // determine whether it was a success or failure
         return (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS));
     }
     

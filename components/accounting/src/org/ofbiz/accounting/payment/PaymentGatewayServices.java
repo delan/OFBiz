@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.7 2003/08/26 17:03:38 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.8 2003/08/27 13:53:25 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class PaymentGatewayServices {    
@@ -118,8 +118,9 @@ public class PaymentGatewayServices {
         
         double amountToBill = grandTotal.doubleValue();        
                       
-        // loop through and auth each payment   
-        List finished = new ArrayList();     
+        // loop through and auth each payment         
+        List finished = new ArrayList();
+        List hadError = new ArrayList();     
         Iterator payments = paymentPrefs.iterator();
         while (payments.hasNext()) {
             GenericValue paymentPref = (GenericValue) payments.next();
@@ -135,6 +136,7 @@ public class PaymentGatewayServices {
             
             // handle the response
             if (processorResult != null) {
+                // not null result means either an approval or decline; null would mean error
                 GenericValue paymentSettings = (GenericValue) processorResult.get("paymentSettings");
                 Double thisAmount = (Double) processorResult.get("processAmount");                
 
@@ -148,15 +150,24 @@ public class PaymentGatewayServices {
                     }
                 } catch (GeneralException e) {
                     Debug.logError(e, "Trouble processing the result; processorResult: " + processorResult, module);
+                    hadError.add(paymentPref);
                     ServiceUtil.returnError("Trouble processing the auth results");                     
                 }                                                                                                                                              
             } else {
-                Debug.logError("Payment not authorized", module);
+                // error with payment processor; will try later
+                hadError.add(paymentPref);                
                 continue;             
             }
         }
+        
+        Debug.logInfo("Finished with auth(s) checking results", module);
 
-        if (finished.size() == paymentPrefs.size()) {
+        if (hadError.size() > 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put("processResult", "ERROR");
+            return result;
+        
+        } else if (finished.size() == paymentPrefs.size()) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put("processResult", "APPROVED");
             return result;
@@ -210,11 +221,18 @@ public class PaymentGatewayServices {
             processorResult = dispatcher.runSync(serviceName, processContext);
         } catch (GenericServiceException gse) {
             Debug.logError("Error occurred on: " + serviceName + " => " + processContext, module);
-            Debug.logError(gse, "Problems invoking payment processor!" + "(" + orh.getOrderId() + ")", module);                
+            Debug.logError(gse, "Problems invoking payment processor! Will retry later." + "(" + orh.getOrderId() + ")", module);                
             return null;
         } 
         
         if (processorResult != null) {
+            // check for errors from the processor implementation
+            String resultResponseCode = (String) processorResult.get(ModelService.RESPONSE_MESSAGE);
+            if (resultResponseCode != null && resultResponseCode.equals(ModelService.RESPOND_ERROR)) {
+                Debug.logError("Processor failed; will retry later : " + processorResult.get(ModelService.ERROR_MESSAGE), module);
+                return null;
+            }
+                        
             // pass the payTo partyId to the result processor; we just add it to the result context.
             String payToPartyId = getPayToPartyId(orh.getOrderHeader());
             processorResult.put("payToPartyId", payToPartyId);  
@@ -1017,6 +1035,14 @@ public class PaymentGatewayServices {
             return ServiceUtil.returnError("No payment settings found");              
         }
     }
+    
+    public static Map retryFailedAuths(DispatchContext dctx, Map context) {
+        return ServiceUtil.returnSuccess();
+    }
+    
+    // ****************************************************
+    // Test Services
+    // ****************************************************
 
     /**
      * Simple test processor; declines all orders < 100.00; approves all orders > 100.00
@@ -1073,6 +1099,13 @@ public class PaymentGatewayServices {
         result.put("authFlag", "D");
         result.put("authMessage", "This is a test processor; no payments were captured or authorized");
         return result;
+    }
+    
+    /**
+     * Always fail (error) processor     
+     */
+    public static Map alwaysFailProcessor(DispatchContext dctx, Map context) {
+        return ServiceUtil.returnError("Unable to communicate with bla");
     }
     
     public static Map testRelease(DispatchContext dctx, Map context) {
