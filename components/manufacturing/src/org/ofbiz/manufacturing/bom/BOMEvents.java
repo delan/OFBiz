@@ -1,5 +1,5 @@
 /*
- * $Id: BOMEvents.java,v 1.6 2004/04/19 17:50:46 jacopo Exp $
+ * $Id: BOMEvents.java,v 1.7 2004/04/21 07:02:17 jacopo Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -262,11 +262,11 @@ public class BOMEvents {
 
         // The low level code for the product productIdTo is updated in the Product entity.
         try {
-            int llc = BOMHelper.getMaxDepth(productIdTo, productAssocTypeId, null, delegator); // This is the llc
-            productIdToValue.set("billOfMaterialLevel", new Integer(llc));
-            productIdToValue.store();
-            // FIXME: also all the variants llc should be updated?
-        } catch (GenericEntityException e) {
+            dispatcher.runSync("updateLowLevelCode", UtilMisc.toMap("productId", productIdTo));
+//            int llc = BOMHelper.getMaxDepth(productIdTo, productAssocTypeId, null, delegator); // This is the llc
+//            productIdToValue.set("billOfMaterialLevel", new Integer(llc));
+//            productIdToValue.store();
+        } catch (Exception e) {
             request.setAttribute("_ERROR_MESSAGE_", "Could not update product's low level code");
             Debug.logWarning("[BOMEvents.updateProductBom] Could not update product's low level code; message: " + e.getMessage(), module);
             return "error";
