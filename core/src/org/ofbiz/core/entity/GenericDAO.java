@@ -648,6 +648,12 @@ public class GenericDAO
   public void setValue(PreparedStatement ps, int ind, ModelField curField, GenericEntity entity) throws SQLException
   {
     Object field = entity.get(curField.name);
+    if(field == null)
+    {
+      ps.setNull(ind, Types.NULL);
+      return;
+    }
+    
     Class fieldClass = field.getClass();    
     String fieldType = fieldClass.getName();
     ModelFieldType mft = ModelReader.getModelFieldType(curField.type);
