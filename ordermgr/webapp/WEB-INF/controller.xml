@@ -127,7 +127,6 @@
 		<response name="error" type="view" value="ordertasklist"/>
 	</request-map>  
 
-
 	<!-- Order Manager Edit Requests -->
     <request-map uri="changeOrderStatus">
         <security https="true" auth="true"/>
@@ -312,6 +311,26 @@
         <response name="error" type="view" value="confirm"/>
     </request-map>    
     
+    <!-- Order Return Requests -->
+    <request-map uri="returnMain">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="returnhead"/>    
+    </request-map>
+    <request-map uri="returnItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="returnItems"/>    
+    </request-map>        	
+    <request-map uri="updateReturn">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateReturnHeader"/>
+        <response name="success" type="view" value="returnitems"/>    
+    </request-map> 
+    <request-map uri="createReturnItems">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createReturnItem"/>
+        <response name="success" type="view" value="returnitems"/>    
+    </request-map>       
+    
     <!-- Payment Processor Setup Requests -->
     <request-map uri="paysetup">
         <security https="true" auth="true"/>
@@ -414,7 +433,8 @@
     <view-map name="confirm" type="jpublish" page="/entry/confirmorder.ftl"/>
     <view-map name="ordercomplete" type="jpublish" page="/entry/ordercomplete.ftl"/>
     
-    <view-map name="editreturn" type="jpublish" page="/return/ReturnHeader.ftl"/>
+    <view-map name="returnhead" type="jpublish" page="/return/returnHeader.ftl"/>
+    <view-map name="returnitems" type="jpublish" page="/return/returnItems.ftl"/>
     
     <view-map name="shipsetup" type="region"/>
     <view-map name="taxsetup" type="region"/>
