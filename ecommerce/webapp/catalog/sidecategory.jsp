@@ -12,13 +12,13 @@
     <td align=left valign=top bgcolor='white' width='100%'>
     <table width="100%" border="0" cellpadding="0" cellspacing="0">
         <ofbiz:iterator name="category" property="categoryList">
-        <tr><td align=left valign=top><a href="<ofbiz:url>/category?category_id=<%=category.getString("productCategoryId")%></ofbiz:url>" class='buttontext'>&nbsp;<%=category.getString("description")%></a></td></tr>
+        <tr><td align=left valign=top><a href="<ofbiz:url>/category?pcategory=CATALOG1&category_id=<%=category.getString("productCategoryId")%></ofbiz:url>" class='buttontext'>&nbsp;<%=category.getString("description")%></a></td></tr>
 		
 		<% if ( request.getParameter("category_id") != null && request.getParameter("category_id").equals(category.getString("productCategoryId")) ) { %>
         <% org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedCategories(pageContext,"subCatList",category.getString("productCategoryId")); %>
         <ofbiz:if name="subCatList">
           <ofbiz:iterator name="subcat" property="subCatList">
-            <tr><td align=left valign=top><a href="<ofbiz:url>/category?category_id=<%=subcat.getString("productCategoryId")%></ofbiz:url>" class='buttontext'>&nbsp;&nbsp;&nbsp;<%=subcat.getString("description")%></a></td></tr>
+            <tr><td align=left valign=top><a href="<ofbiz:url>/category?pcategory=<%=category.getString("productCategoryId")%>&category_id=<%=subcat.getString("productCategoryId")%></ofbiz:url>" class='buttontext'>&nbsp;&nbsp;&nbsp;<%=subcat.getString("description")%></a></td></tr>
           </ofbiz:iterator>
 		</ofbiz:if>
 		<% } %>

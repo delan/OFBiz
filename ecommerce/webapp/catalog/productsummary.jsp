@@ -5,7 +5,9 @@
     <td valign="top">
       <%String smallImageUrl = product.getString("smallImageUrl");%>
       <%if(smallImageUrl == null || smallImageUrl.length() <= 0) smallImageUrl = "/images/catalog/defaultImage.jpg";%>
-      <img src="<%=smallImageUrl%>" align="left" height="50" width="50" >
+	  <a href="<ofbiz:url>/product?product_id=<%= product.getString("productId") %></ofbiz:url>">
+       <img src="<%=smallImageUrl%>" align="left" height="50" width="50" >
+	  </a>
     </td>
     <td align="left" valign="top" width="100%">
       <div align="right">
