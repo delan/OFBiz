@@ -292,9 +292,9 @@
               <%pageContext.removeAttribute("lookupGroup");%>
             </ofbiz:iterator>
         </ofbiz:if>
-        <ofbiz:if name="<%=ModelService.ERROR_MESSAGE%>">
+        <ofbiz:if name="errorMessage">
           <tr>
-            <td colspan='4'><div class="head3"><ofbiz:print attribute="<%=ModelService.ERROR_MESSAGE%>"/></div></td>
+            <td colspan='4'><div class="head3"><ofbiz:print attribute="errorMessage"/></div></td>
           </tr>
         </ofbiz:if>
         <ofbiz:unless name="parties">
