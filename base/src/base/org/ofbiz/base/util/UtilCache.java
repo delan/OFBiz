@@ -1,5 +1,5 @@
 /*
- * $Id: UtilCache.java,v 1.2 2004/02/26 16:22:09 jonesde Exp $
+ * $Id: UtilCache.java,v 1.3 2004/04/30 00:16:12 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -23,7 +23,9 @@
  */
 package org.ofbiz.base.util;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -40,7 +42,7 @@ import java.util.ResourceBundle;
  * </ul>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class UtilCache {
@@ -79,6 +81,9 @@ public class UtilCache {
     /** Specifies whether or not to use soft references for this cache, defaults to false */
     protected boolean useSoftReference = false;
 
+    /** The set of listeners to receive notifcations when items are modidfied(either delibrately or because they were expired). */
+    protected HashSet listeners = new HashSet();
+    
     /** Constructor which specifies the cacheName as well as the maxSize, expireTime and useSoftReference.
      * The passed maxSize, expireTime and useSoftReference will be overridden by values from cache.properties if found.
      * @param maxSize The maxSize member is set to this value
@@ -201,10 +206,16 @@ public class UtilCache {
             }
         }
 
+        UtilCache.CacheLine oldCacheLine;
         if (expireTime > 0) {
-            cacheLineTable.put(key, new UtilCache.CacheLine(value, useSoftReference, System.currentTimeMillis()));
+            oldCacheLine = (UtilCache.CacheLine) cacheLineTable.put(key, new UtilCache.CacheLine(this, value, useSoftReference, System.currentTimeMillis()));
         } else {
-            cacheLineTable.put(key, new UtilCache.CacheLine(value, useSoftReference));
+            oldCacheLine = (UtilCache.CacheLine) cacheLineTable.put(key, new UtilCache.CacheLine(this, value, useSoftReference));
+        }
+        if (oldCacheLine == null) {
+            noteAddition(key, value);
+        } else {
+            noteUpdate(key, value, oldCacheLine.getValue());
         }
         if (maxSize > 0 && cacheLineTable.size() > maxSize) {
             Object lastKey = keyLRUList.getLast();
@@ -261,6 +272,7 @@ public class UtilCache {
         UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.remove(key);
         if (line != null) {
             if (maxSize > 0) keyLRUList.remove(key);
+            noteRemoval(key, line.getValue());
             return line.getValue();
         } else {
             missCount++;
@@ -270,6 +282,11 @@ public class UtilCache {
 
     /** Removes all elements from this cache */
     public synchronized void clear() {
+        Iterator it = cacheLineTable.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            noteRemoval(entry.getKey(), entry.getValue());
+        }
         cacheLineTable.clear();
         keyLRUList.clear();
         clearCounters();
@@ -418,6 +435,10 @@ public class UtilCache {
         }
     }
 
+    public Collection getCacheLineValues() {
+        return cacheLineTable.values();
+    }
+
     /** Returns a boolean specifying whether or not the element corresponding to the key has expired.
      * Only returns true if element is in cache and has expired. Error conditions return false, if no expireTable entry, returns true.
      * Always returns false if expireTime <= 0.
@@ -460,6 +481,53 @@ public class UtilCache {
         }
     }
 
+    /** Send a key addition event to all registered listeners */
+    protected void noteAddition(Object key, Object newValue) {
+        synchronized (listeners) {
+            Iterator it = listeners.iterator();
+            while (it.hasNext()) {
+                CacheListener listener = (CacheListener) it.next();
+                listener.noteKeyAddition(this, key, newValue);
+            }
+        }
+    }
+
+    /** Send a key removal event to all registered listeners */
+    protected void noteRemoval(Object key, Object oldValue) {
+        synchronized (listeners) {
+            Iterator it = listeners.iterator();
+            while (it.hasNext()) {
+                CacheListener listener = (CacheListener) it.next();
+                listener.noteKeyRemoval(this, key, oldValue);
+            }
+        }
+    }
+
+    /** Send a key update event to all registered listeners */
+    protected void noteUpdate(Object key, Object newValue, Object oldValue) {
+        synchronized (listeners) {
+            Iterator it = listeners.iterator();
+            while (it.hasNext()) {
+                CacheListener listener = (CacheListener) it.next();
+                listener.noteKeyUpdate(this, key, newValue, oldValue);
+            }
+        }
+    }
+
+    /** Adds an event listener for key removals */
+    public void addListener(CacheListener listener) {
+        synchronized (listeners) {
+            listeners.add(listener);
+        }
+    }
+    
+    /** Removes an event listener for key removals */
+    public void removeListener(CacheListener listener) {
+        synchronized (listeners) {
+            listeners.remove(listener);
+        }
+    }
+    
     /** Clears all expired cache entries from all caches */
     public static void clearExpiredFromAllCaches() {
         Iterator entries = utilCacheTable.entrySet().iterator();
@@ -481,11 +549,13 @@ public class UtilCache {
     }
     
     public static class CacheLine {
+        public UtilCache utilCache;
         public Object valueRef = null;
         public long loadTime = 0;
         public boolean useSoftReference = false;
 
-        public CacheLine(Object value, boolean useSoftReference) {
+        public CacheLine(UtilCache utilCache, Object value, boolean useSoftReference) {
+            this.utilCache = utilCache;
             if (useSoftReference) {
                 this.valueRef = new java.lang.ref.SoftReference(value);
             } else {
@@ -494,8 +564,8 @@ public class UtilCache {
             this.useSoftReference = useSoftReference;
         }
 
-        public CacheLine(Object value, boolean useSoftReference, long loadTime) {
-            this(value, useSoftReference);
+        public CacheLine(UtilCache utilCache, Object value, boolean useSoftReference, long loadTime) {
+            this(utilCache, value, useSoftReference);
             this.loadTime = loadTime;
         }
 
@@ -520,5 +590,16 @@ public class UtilCache {
                 }
             }
         }
+
+        public boolean hasExpired() {
+            return utilCache.hasExpired(this);
+        }
+    }
+
+    /** Implement this interface if you wish to receive events of key modifications. */
+    public interface CacheListener {
+        public void noteKeyRemoval(UtilCache cache, Object key, Object oldValue);
+        public void noteKeyAddition(UtilCache cache, Object key, Object newValue);
+        public void noteKeyUpdate(UtilCache cache, Object key, Object newValue, Object oldValue);
     }
 }
