@@ -23,6 +23,9 @@
  */
 package org.ofbiz.commonapp.thirdparty.ups;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -66,6 +69,16 @@ public class UpsServices {
         GenericDelegator delegator = dctx.getDelegator();
         String shipmentId = (String) context.get("shipmentId");
         String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
+
+        boolean shipmentUpsSaveCertificationInfo = "true".equals(UtilProperties.getPropertyValue("shipment", "shipment.ups.save.certification.info"));
+        String shipmentUpsSaveCertificationPath = UtilProperties.getPropertyValue("shipment", "shipment.ups.save.certification.path");
+        File shipmentUpsSaveCertificationFile = null;
+        if (shipmentUpsSaveCertificationInfo) {
+            shipmentUpsSaveCertificationFile = new File(shipmentUpsSaveCertificationPath);
+            if (!shipmentUpsSaveCertificationFile.exists()) {
+                shipmentUpsSaveCertificationFile.mkdirs();
+            }
+        }
 
         String shipmentConfirmResponseString = null;
         
@@ -335,6 +348,19 @@ public class UpsServices {
             // TODO: note that we may have to append <?xml version="1.0"?> before each string
             xmlString.append(accessRequestString);
             xmlString.append(shipmentConfirmRequestString);
+
+            if (shipmentUpsSaveCertificationInfo) {
+                String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentConfirmRequest" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
+                try {
+                    FileOutputStream fileOut = new FileOutputStream(outFileName);
+                    fileOut.write(xmlString.toString().getBytes());
+                    fileOut.flush();
+                    fileOut.close();
+                } catch (IOException e) {
+                    Debug.log(e, "Could not save UPS XML file: [[[" + xmlString.toString() + "]]] to file: " + outFileName, module);
+                }
+            }
+            
             try {
                 shipmentConfirmResponseString = sendUpsRequest("ShipConfirm", xmlString.toString());
             } catch (UpsConnectException e) {
@@ -343,6 +369,18 @@ public class UpsServices {
                 return ServiceUtil.returnError(uceErrMsg);
             }
 
+            if (shipmentUpsSaveCertificationInfo) {
+                String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentConfirmResponse" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml"; 
+                try {
+                    FileOutputStream fileOut = new FileOutputStream(outFileName);
+                    fileOut.write(shipmentConfirmResponseString.getBytes());
+                    fileOut.flush();
+                    fileOut.close();
+                } catch (IOException e) {
+                    Debug.log(e, "Could not save UPS XML file: [[[" + xmlString.toString() + "]]] to file: " + outFileName, module);
+                }
+            }
+            
             Document shipmentConfirmResponseDocument = null;
             try {
                 shipmentConfirmResponseDocument = UtilXml.readXmlDocument(shipmentConfirmResponseString, false);
@@ -485,6 +523,16 @@ public class UpsServices {
         GenericDelegator delegator = dctx.getDelegator();
         String shipmentId = (String) context.get("shipmentId");
         String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
+        
+        boolean shipmentUpsSaveCertificationInfo = "true".equals(UtilProperties.getPropertyValue("shipment", "shipment.ups.save.certification.info"));
+        String shipmentUpsSaveCertificationPath = UtilProperties.getPropertyValue("shipment", "shipment.ups.save.certification.path");
+        File shipmentUpsSaveCertificationFile = null;
+        if (shipmentUpsSaveCertificationInfo) {
+            shipmentUpsSaveCertificationFile = new File(shipmentUpsSaveCertificationPath);
+            if (!shipmentUpsSaveCertificationFile.exists()) {
+                shipmentUpsSaveCertificationFile.mkdirs();
+            }
+        }
 
         String shipmentAcceptResponseString = null;
 
@@ -554,6 +602,19 @@ public class UpsServices {
             // TODO: note that we may have to append <?xml version="1.0"?> before each string
             xmlString.append(accessRequestString);
             xmlString.append(shipmentAcceptRequestString);
+            
+            if (shipmentUpsSaveCertificationInfo) {
+                String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentAcceptRequest" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
+                try {
+                    FileOutputStream fileOut = new FileOutputStream(outFileName);
+                    fileOut.write(xmlString.toString().getBytes());
+                    fileOut.flush();
+                    fileOut.close();
+                } catch (IOException e) {
+                    Debug.log(e, "Could not save UPS XML file: [[[" + xmlString.toString() + "]]] to file: " + outFileName, module);
+                }
+            }
+            
             try {
                 shipmentAcceptResponseString = sendUpsRequest("ShipAccept", xmlString.toString());
             } catch (UpsConnectException e) {
@@ -562,6 +623,18 @@ public class UpsServices {
                 return ServiceUtil.returnError(uceErrMsg);
             }
 
+            if (shipmentUpsSaveCertificationInfo) {
+                String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentAcceptResponse" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
+                try {
+                    FileOutputStream fileOut = new FileOutputStream(outFileName);
+                    fileOut.write(shipmentAcceptResponseString.getBytes());
+                    fileOut.flush();
+                    fileOut.close();
+                } catch (IOException e) {
+                    Debug.log(e, "Could not save UPS XML file: [[[" + xmlString.toString() + "]]] to file: " + outFileName, module);
+                }
+            }
+            
             Document shipmentAcceptResponseDocument = null;
             try {
                 shipmentAcceptResponseDocument = UtilXml.readXmlDocument(shipmentAcceptResponseString, false);
@@ -719,7 +792,43 @@ public class UpsServices {
                     shipmentPackageRouteSeg.set("labelIntlSignImage", labelInternationalSignatureGraphicImageBytes);
                     String packageLabelHTMLImageStringDecoded = Base64.base64Decode(packageLabelHTMLImageString);
                     shipmentPackageRouteSeg.set("labelHtml", packageLabelHTMLImageStringDecoded);
-                    
+
+                    if (shipmentUpsSaveCertificationInfo) {
+                        if (labelImageBytes != null) {
+                            String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentLabelImage" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + "_" + shipmentPackageRouteSeg.getString("shipmentRouteSegmentId") + "_" + shipmentPackageRouteSeg.getString("shipmentPackageSeqId") + ".gif";
+                            try {
+                                FileOutputStream fileOut = new FileOutputStream(outFileName);
+                                fileOut.write(labelImageBytes);
+                                fileOut.flush();
+                                fileOut.close();
+                            } catch (IOException e) {
+                                Debug.log(e, "Could not save UPS LabelImage GIF file: [[[" + packageLabelGraphicImageString + "]]] to file: " + outFileName, module);
+                            }
+                        }
+                        if (labelInternationalSignatureGraphicImageBytes != null) {
+                            String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentLabelIntlSignImage" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + "_" + shipmentPackageRouteSeg.getString("shipmentRouteSegmentId") + "_" + shipmentPackageRouteSeg.getString("shipmentPackageSeqId") + ".gif";
+                            try {
+                                FileOutputStream fileOut = new FileOutputStream(outFileName);
+                                fileOut.write(labelInternationalSignatureGraphicImageBytes);
+                                fileOut.flush();
+                                fileOut.close();
+                            } catch (IOException e) {
+                                Debug.log(e, "Could not save UPS IntlSign LabelImage GIF file: [[[" + packageLabelInternationalSignatureGraphicImageString + "]]] to file: " + outFileName, module);
+                            }
+                        }
+                        if (packageLabelHTMLImageStringDecoded != null) {
+                            String outFileName = shipmentUpsSaveCertificationPath + "/UpsShipmentLabelHTMLImage" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + "_" + shipmentPackageRouteSeg.getString("shipmentRouteSegmentId") + "_" + shipmentPackageRouteSeg.getString("shipmentPackageSeqId") + ".html";
+                            try {
+                                FileOutputStream fileOut = new FileOutputStream(outFileName);
+                                fileOut.write(packageLabelHTMLImageStringDecoded.getBytes());
+                                fileOut.flush();
+                                fileOut.close();
+                            } catch (IOException e) {
+                                Debug.log(e, "Could not save UPS LabelImage HTML file: [[[" + packageLabelHTMLImageStringDecoded + "]]] to file: " + outFileName, module);
+                            }
+                        }
+                    }
+            
                     shipmentPackageRouteSeg.store();
                 }
 
@@ -761,6 +870,16 @@ public class UpsServices {
         GenericDelegator delegator = dctx.getDelegator();
         String shipmentId = (String) context.get("shipmentId");
         String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
+
+        boolean shipmentUpsSaveCertificationInfo = "true".equals(UtilProperties.getPropertyValue("shipment", "shipment.ups.save.certification.info"));
+        String shipmentUpsSaveCertificationPath = UtilProperties.getPropertyValue("shipment", "shipment.ups.save.certification.path");
+        File shipmentUpsSaveCertificationFile = null;
+        if (shipmentUpsSaveCertificationInfo) {
+            shipmentUpsSaveCertificationFile = new File(shipmentUpsSaveCertificationPath);
+            if (!shipmentUpsSaveCertificationFile.exists()) {
+                shipmentUpsSaveCertificationFile.mkdirs();
+            }
+        }
 
         String voidShipmentResponseString = null;
 
@@ -825,6 +944,19 @@ public class UpsServices {
             // TODO: note that we may have to append <?xml version="1.0"?> before each string
             xmlString.append(accessRequestString);
             xmlString.append(voidShipmentRequestString);
+
+            if (shipmentUpsSaveCertificationInfo) {
+                String outFileName = shipmentUpsSaveCertificationPath + "/UpsVoidShipmentRequest" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
+                try {
+                    FileOutputStream fileOut = new FileOutputStream(outFileName);
+                    fileOut.write(xmlString.toString().getBytes());
+                    fileOut.flush();
+                    fileOut.close();
+                } catch (IOException e) {
+                    Debug.log(e, "Could not save UPS XML file: [[[" + xmlString.toString() + "]]] to file: " + outFileName, module);
+                }
+            }
+            
             try {
                 voidShipmentResponseString = sendUpsRequest("Void", xmlString.toString());
             } catch (UpsConnectException e) {
@@ -833,6 +965,18 @@ public class UpsServices {
                 return ServiceUtil.returnError(uceErrMsg);
             }
 
+            if (shipmentUpsSaveCertificationInfo) {
+                String outFileName = shipmentUpsSaveCertificationPath + "/UpsVoidShipmentResponse" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
+                try {
+                    FileOutputStream fileOut = new FileOutputStream(outFileName);
+                    fileOut.write(voidShipmentResponseString.getBytes());
+                    fileOut.flush();
+                    fileOut.close();
+                } catch (IOException e) {
+                    Debug.log(e, "Could not save UPS XML file: [[[" + xmlString.toString() + "]]] to file: " + outFileName, module);
+                }
+            }
+            
             Document voidShipmentResponseDocument = null;
             try {
                 voidShipmentResponseDocument = UtilXml.readXmlDocument(voidShipmentResponseString, false);
@@ -911,6 +1055,16 @@ public class UpsServices {
         String shipmentId = (String) context.get("shipmentId");
         String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
 
+        boolean shipmentUpsSaveCertificationInfo = "true".equals(UtilProperties.getPropertyValue("shipment", "shipment.ups.save.certification.info"));
+        String shipmentUpsSaveCertificationPath = UtilProperties.getPropertyValue("shipment", "shipment.ups.save.certification.path");
+        File shipmentUpsSaveCertificationFile = null;
+        if (shipmentUpsSaveCertificationInfo) {
+            shipmentUpsSaveCertificationFile = new File(shipmentUpsSaveCertificationPath);
+            if (!shipmentUpsSaveCertificationFile.exists()) {
+                shipmentUpsSaveCertificationFile.mkdirs();
+            }
+        }
+
         String trackResponseString = null;
 
         try {
@@ -972,6 +1126,19 @@ public class UpsServices {
             // TODO: note that we may have to append <?xml version="1.0"?> before each string
             xmlString.append(accessRequestString);
             xmlString.append(trackRequestString);
+
+            if (shipmentUpsSaveCertificationInfo) {
+                String outFileName = shipmentUpsSaveCertificationPath + "/UpsTrackRequest" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
+                try {
+                    FileOutputStream fileOut = new FileOutputStream(outFileName);
+                    fileOut.write(xmlString.toString().getBytes());
+                    fileOut.flush();
+                    fileOut.close();
+                } catch (IOException e) {
+                    Debug.log(e, "Could not save UPS XML file: [[[" + xmlString.toString() + "]]] to file: " + outFileName, module);
+                }
+            }
+            
             try {
                 trackResponseString = sendUpsRequest("Track", xmlString.toString());
             } catch (UpsConnectException e) {
@@ -980,6 +1147,18 @@ public class UpsServices {
                 return ServiceUtil.returnError(uceErrMsg);
             }
 
+            if (shipmentUpsSaveCertificationInfo) {
+                String outFileName = shipmentUpsSaveCertificationPath + "/UpsTrackResponseString" + shipmentId + "_" + shipmentRouteSegment.getString("shipmentRouteSegmentId") + ".xml";
+                try {
+                    FileOutputStream fileOut = new FileOutputStream(outFileName);
+                    fileOut.write(trackResponseString.getBytes());
+                    fileOut.flush();
+                    fileOut.close();
+                } catch (IOException e) {
+                    Debug.log(e, "Could not save UPS XML file: [[[" + xmlString.toString() + "]]] to file: " + outFileName, module);
+                }
+            }
+            
             Document trackResponseDocument = null;
             try {
                 trackResponseDocument = UtilXml.readXmlDocument(trackResponseString, false);
