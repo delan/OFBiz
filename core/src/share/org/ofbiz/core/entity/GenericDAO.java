@@ -1099,31 +1099,27 @@ public class GenericDAO {
         }
         String fieldType = mft.javaType;
         
-        if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
+        if(fieldType.equals("java.lang.String") || fieldType.equals("String")) {
             entity.set(curField.name, rs.getString(ind));
-        else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
+        } else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp")) {
             entity.set(curField.name, rs.getTimestamp(ind));
-        else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
+        } else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time")) {
             entity.set(curField.name, rs.getTime(ind));
-        else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date"))
+        } else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date")) {
             entity.set(curField.name, rs.getDate(ind));
-        else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer")) {
+        } else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer")) {
             if(rs.getObject(ind) == null) entity.set(curField.name, null);
             else entity.set(curField.name, new Integer(rs.getInt(ind)));
-        }
-        else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long")) {
+        } else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long")) {
             if(rs.getObject(ind) == null) entity.set(curField.name, null);
             else entity.set(curField.name, new Long(rs.getLong(ind)));
-        }
-        else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float")) {
+        } else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float")) {
             if(rs.getObject(ind) == null) entity.set(curField.name, null);
             else entity.set(curField.name, new Float(rs.getFloat(ind)));
-        }
-        else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double")) {
+        } else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double")) {
             if(rs.getObject(ind) == null) entity.set(curField.name, null);
             else entity.set(curField.name, new Double(rs.getDouble(ind)));
-        }
-        else {
+        } else {
             throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
         }
     }
@@ -1150,36 +1146,28 @@ public class GenericDAO {
         if(fieldType.equals("java.lang.String") || fieldType.equals("String")) {
             if(field != null) ps.setString(ind, (String)field);
             else ps.setNull(ind, Types.VARCHAR);
-        }
-        else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp")) {
+        } else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp")) {
             if(field != null) ps.setTimestamp(ind, (java.sql.Timestamp)field);
             else ps.setNull(ind, Types.TIMESTAMP);
-        }
-        else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time")) {
+        } else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time")) {
             if(field != null) ps.setTime(ind, (java.sql.Time)field);
             else ps.setNull(ind, Types.TIME);
-        }
-        else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date")) {
+        } else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date")) {
             if(field != null) ps.setDate(ind, (java.sql.Date)field);
             else ps.setNull(ind, Types.DATE);
-        }
-        else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer")) {
+        } else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer")) {
             if(field != null) ps.setInt(ind, ((java.lang.Integer)field).intValue());
             else ps.setNull(ind, Types.NUMERIC);
-        }
-        else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long")) {
+        } else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long")) {
             if(field != null) ps.setLong(ind, ((java.lang.Long)field).longValue());
             else ps.setNull(ind, Types.NUMERIC);
-        }
-        else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float")) {
+        } else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float")) {
             if(field != null) ps.setFloat(ind, ((java.lang.Float)field).floatValue());
             else ps.setNull(ind, Types.NUMERIC);
-        }
-        else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double")) {
+        } else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double")) {
             if(field != null) ps.setDouble(ind, ((java.lang.Double)field).doubleValue());
             else ps.setNull(ind, Types.NUMERIC);
-        }
-        else {
+        } else {
             throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
         }
     }
@@ -1221,13 +1209,11 @@ public class GenericDAO {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(sql);
-        }
-        catch (SQLException sqle) {
+        } catch (SQLException sqle) {
             Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
             Debug.logWarning(sqle.getMessage());
             return false;
-        }
-        finally {
+        } finally {
             try { if (stmt != null) stmt.close(); } catch (SQLException sqle) { }
             try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
         }
@@ -1261,15 +1247,15 @@ public class GenericDAO {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(sql);
-        }
-        catch (SQLException sqle) {
+        } catch (SQLException sqle) {
             Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
             Debug.logWarning(sqle.getMessage());
             return false;
-        }
-        finally {
-            try { if (stmt != null) stmt.close(); } catch (SQLException sqle) { }
-            try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
+        } finally {
+            try { if (stmt != null) stmt.close(); } 
+            catch (SQLException sqle) { }
+            try { if (connection != null) connection.close(); } 
+            catch (SQLException sqle) { }
         }
         return true;
     }
@@ -1373,14 +1359,12 @@ public class GenericDAO {
                                         String ddStr = fullTypeStr.substring(comma+1, closeParen);
                                         try { decimalDigits = Integer.parseInt(ddStr); }
                                         catch(NumberFormatException e) { Debug.logError(e); }
-                                    }
-                                    else {
+                                    } else {
                                         String csStr = fullTypeStr.substring(openParen+1, closeParen);
                                         try { columnSize = Integer.parseInt(csStr); }
                                         catch(NumberFormatException e) { Debug.logError(e); }
                                     }
-                                }
-                                else {
+                                } else {
                                     typeName = fullTypeStr;
                                 }
                                 
@@ -1389,26 +1373,24 @@ public class GenericDAO {
                                     Debug.logError("[GenericDAO.checkDb] " + message);
                                     if(messages != null) messages.add(message);
                                 }
-                                if(columnSize != -1 && columnSize != ccInfo.columnSize) {
+                                if(columnSize != -1 && ccInfo.columnSize != -1 && columnSize != ccInfo.columnSize) {
                                     String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" has a column size of \"" + ccInfo.columnSize + "\" in the database, but is defined to have a column size of \"" + columnSize + "\" in the entity definition.";
-                                    Debug.logError("[GenericDAO.checkDb] " + message);
+                                    Debug.logWarning("[GenericDAO.checkDb] " + message);
                                     if(messages != null) messages.add(message);
                                 }
                                 if(decimalDigits != -1 && decimalDigits != ccInfo.decimalDigits) {
                                     String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" has a decimalDigits of \"" + ccInfo.decimalDigits + "\" in the database, but is defined to have a decimalDigits of \"" + decimalDigits + "\" in the entity definition.";
-                                    Debug.logError("[GenericDAO.checkDb] " + message);
+                                    Debug.logWarning("[GenericDAO.checkDb] " + message);
                                     if(messages != null) messages.add(message);
                                 }
-                            }
-                            else {
+                            } else {
                                 String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" has a field type name of \"" + field.type + "\" which is not found in the field type definitions";
                                 Debug.logError("[GenericDAO.checkDb] " + message);
                                 if(messages != null) messages.add(message);
                             }
-                        }
-                        else {
+                        } else {
                             String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" exists in the database but has no corresponding field";
-                            Debug.logError("[GenericDAO.checkDb] " + message);
+                            Debug.logWarning("[GenericDAO.checkDb] " + message);
                             if(messages != null) messages.add(message);
                         }
                     }
