@@ -86,7 +86,7 @@ public class ProductServices {
         String productId = (String) context.get("productId");
         Set featureSet = new OrderedSet();
         try {
-            Map fields = UtilMisc.toMap("productId", productId);
+            Map fields = UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE");
             List order = UtilMisc.toList("sequenceNum", "productFeatureTypeId");
             Collection features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
             Iterator i = features.iterator();
@@ -384,6 +384,10 @@ public class ProductServices {
         Map group = new OrderedMap();
         String orderKey = (String) order.get(index);
 
+        if (featureList == null) {
+            throw new IllegalArgumentException("Cannot build feature tree: featureList is null");
+        }
+        
         if (index < 0) {
             throw new IllegalArgumentException("Invalid index '" + index + "' min index '0'");
         }
@@ -428,7 +432,12 @@ public class ProductServices {
         }
 
         // Loop through the feature list and order the keys in the tempGroup
-        Iterator featureListIt = ((List)featureList.get(orderKey)).iterator();
+        List orderFeatureList = (List) featureList.get(orderKey);
+        if (orderFeatureList == null) {
+            throw new IllegalArgumentException("Cannot build feature tree: orderFeatureList is null for orderKey=" + orderKey);
+        }
+        
+        Iterator featureListIt = orderFeatureList.iterator();
         while (featureListIt.hasNext()) {
             String featureStr = (String) featureListIt.next();
             if (tempGroup.containsKey(featureStr))
@@ -438,11 +447,13 @@ public class ProductServices {
         Debug.logVerbose("Group: " + group);
 
         // no groups; no tree
-        if (group.size() == 0)
+        if (group.size() == 0) {
             throw new IllegalStateException("Cannot create tree from group list; error on '" + orderKey + "'");
+        }
 
-        if (index + 1 == order.size())
+        if (index + 1 == order.size()) {
             return group;
+        }
 
         // loop through the keysets and get the sub-groups
         Iterator groupIterator = group.keySet().iterator();
