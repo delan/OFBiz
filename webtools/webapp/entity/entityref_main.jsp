@@ -139,7 +139,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 	
 <%
   TreeSet ufields = new TreeSet();
-  for(int y = 0; y < entity.fields.size(); y++) {
+  for (int y = 0; y < entity.getFieldsSize(); y++) {
     ModelField field = entity.getField(y);	
     ModelFieldType type = delegator.getEntityFieldType(entity, field.getType());
     String javaName = null;
@@ -195,24 +195,27 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   for ( int r = 0; r < entity.getRelationsSize(); r++ ) {
     ModelRelation relation = entity.getRelation(r);
     
-    if(checkWarnings) {
-      if(!entityNames.contains(relation.getRelEntityName()))
+    if (checkWarnings) {
+      if (!entityNames.contains(relation.getRelEntityName())) {
         warningString = warningString + "<li><div style=\"color: red;\">[RelatedEntityNotFound]</div> Related entity <b>" + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> not found.</li>";
-      if(relations.contains(relation.getTitle() + relation.getRelEntityName()))
+      }
+      if (relations.contains(relation.getTitle() + relation.getRelEntityName())) {
         warningString = warningString + "<li><div style=\"color: red;\">[RelationNameNotUnique]</div> Relation <b>" + relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not unique for that entity.</li>";
-      else
+      } else {
         relations.add(relation.getTitle() + relation.getRelEntityName());
+      }
 
       ModelEntity relatedEntity = reader.getModelEntity(relation.getRelEntityName());
-      if(relatedEntity != null) {
+      if (relatedEntity != null) {
         //if relation is of type one, make sure keyMaps match the PK of the relatedEntity
-        if(relation.getType().equalsIgnoreCase("one")) {
-          if(relatedEntity.getPksSize() != relation.getKeyMapsSize())
-            warningString = warningString + "<li><div style=\"color: red;\">[RelatedOneKeyMapsWrongSize]</div> The number of primary keys (" + relatedEntity.pks.size() + ") of related entity <b>" + relation.relEntityName + "</b> does not match the number of keymaps (" + relation.keyMaps.size() + ") for relation of type one \"" +  relation.title + relation.relEntityName + "\" of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
-          for(int repks=0; repks<relatedEntity.pks.size(); repks++) {
-            ModelField pk = (ModelField)relatedEntity.pks.get(repks);
-            if(relation.findKeyMapByRelated(pk.name) == null)
-              warningString = warningString + "<li><div style=\"color: red;\">[RelationOneRelatedPrimaryKeyMissing]</div> The primary key \"<b>" + pk.name + "</b>\" of related entity <b>" + relation.relEntityName + "</b> is missing in the keymaps for relation of type one <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
+        if (relation.getType().equalsIgnoreCase("one")) {
+          if (relatedEntity.getPksSize() != relation.getKeyMapsSize())
+            warningString = warningString + "<li><div style=\"color: red;\">[RelatedOneKeyMapsWrongSize]</div> The number of primary keys (" + relatedEntity.getPksSize() + ") of related entity <b>" + relation.getRelEntityName() + "</b> does not match the number of keymaps (" + relation.getKeyMapsSize() + ") for relation of type one \"" +  relation.getTitle() + relation.getRelEntityName() + "\" of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
+          for (int repks = 0; repks < relatedEntity.getPksSize(); repks++) {
+            ModelField pk = relatedEntity.getPk(repks);
+            if(relation.findKeyMapByRelated(pk.getName()) == null) {
+              warningString = warningString + "<li><div style=\"color: red;\">[RelationOneRelatedPrimaryKeyMissing]</div> The primary key \"<b>" + pk.getName() + "</b>\" of related entity <b>" + relation.getRelEntityName() + "</b> is missing in the keymaps for relation of type one <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
+            }
           }
         }
       }
@@ -228,12 +231,12 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
           rfield = relatedEntity.getField(keyMap.getRelFieldName());
         }
         if(rfield == null)
-          warningString = warningString + "<li><div style=\"color: red;\">[RelationRelatedFieldNotFound]</div> The field \"<b>" + keyMap.getRelFieldName() + "</b>\" of related entity <b>" + relation.getRelEntityName() + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
+          warningString = warningString + "<li><div style=\"color: red;\">[RelationRelatedFieldNotFound]</div> The field \"<b>" + keyMap.getRelFieldName() + "</b>\" of related entity <b>" + relation.getRelEntityName() + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
         if(field == null)
-          warningString = warningString + "<li><div style=\"color: red;\">[RelationFieldNotFound]</div> The field <b>" + keyMap.getFieldName() + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
+          warningString = warningString + "<li><div style=\"color: red;\">[RelationFieldNotFound]</div> The field <b>" + keyMap.getFieldName() + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
         if(field != null && rfield != null) {
-          if(!field.type.equals(rfield.type) && !field.type.startsWith(rfield.type) && !rfield.type.startsWith(field.type))
-            warningString = warningString + "<li><div style=\"color: red;\">[RelationFieldTypesDifferent]</div> The field type (" + field.type + ") of <b>" + field.name + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not the same as field type (" + rfield.type + ") of <b>" + rfield.name + "</b> of entity <A href=\"#" + relation.relEntityName + "\">" + relation.relEntityName + "</A> for relation <b>" +  relation.title + relation.relEntityName + "</b>.</li>";
+          if(!field.getType().equals(rfield.getType()) && !field.getType().startsWith(rfield.getType()) && !rfield.getType().startsWith(field.getType()))
+            warningString = warningString + "<li><div style=\"color: red;\">[RelationFieldTypesDifferent]</div> The field type (" + field.getType() + ") of <b>" + field.getName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not the same as field type (" + rfield.getType() + ") of <b>" + rfield.getName() + "</b> of entity <A href=\"#" + relation.getRelEntityName() + "\">" + relation.getRelEntityName() + "</A> for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b>.</li>";
         }
       }
     }
@@ -241,12 +244,12 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     <tr bgcolor="#FEEEEE"> 
       <td> 
         <div align="left" class='relationtext'>
-          <b><%=relation.title%></b><A href='#<%=relation.relEntityName%>' class='rlinktext'><%=relation.relEntityName%></A>
+          <b><%=relation.getTitle()%></b><A href='#<%=relation.getRelEntityName()%>' class='rlinktext'><%=relation.getRelEntityName()%></A>
         </div>
       </td>
       <td width="60%" colspan='4'><div align="left" class='relationtext'>
-        <%=relation.type%>:<%if(relation.type.length()==3){%>&nbsp;<%}%>
-        <%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
+        <%=relation.getType()%>:<%if(relation.getType().length()==3){%>&nbsp;<%}%>
+        <%for (int km = 0; km < relation.getKeyMapsSize(); km++){ ModelKeyMap keyMap = relation.getKeyMap(km);%>
           <br>&nbsp;&nbsp;<%=km+1%>)&nbsp;
           <%if(keyMap.getFieldName().equals(keyMap.getRelFieldName())){%><%=keyMap.getFieldName()%>
           <%}else{%><%=keyMap.getFieldName()%> : <%=keyMap.getRelFieldName()%><%}%>
