@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -183,6 +183,11 @@ public class UtilValidate {
         } else {
             return obj.equals(obj2);
         }
+    }
+
+    /** Check whether an object is empty, will see if it is a String, Map, Collection, etc. */
+    public static boolean isEmpty(Object o) {
+        return ObjectType.isEmpty(o);
     }
 
     /** Check whether string s is empty. */

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -202,18 +202,27 @@ public class ServiceEventHandler implements EventHandler {
                 value = multiPartMap.get(name);
 
                 // check the request parameters
-                if (value == null) {
-                    value = request.getParameter(name);
+                if (UtilValidate.isEmpty(value)) {
+                    Object tempVal = request.getParameter(name);
+                    if (tempVal != null) {
+                        value = tempVal;
+                    }
                 }
 
                 // next check attributes
-                if (value == null) {
-                    value = request.getAttribute(name);
+                if (UtilValidate.isEmpty(value)) {
+                    Object tempVal = request.getAttribute(name);
+                    if (tempVal != null) {
+                        value = tempVal;
+                    }
                 }
 
                 // then session
-                if (value == null) {
-                    value = request.getSession().getAttribute(name);
+                if (UtilValidate.isEmpty(value)) {
+                    Object tempVal = request.getSession().getAttribute(name);
+                    if (tempVal != null) {
+                        value = tempVal;
+                    }
                 }
 
                 // no field found
