@@ -951,7 +951,9 @@
       <field name="description" type="description"></field>
       <field name="transactionDate" type="date-time"></field>
       <field name="isPosted" type="indicator"></field>
+      <field name="postedDate" type="date-time"></field>
       <field name="glJournalId" type="id"></field>
+      <field name="glFiscalTypeId" type="id"></field>
       <field name="voucherRef" type="short-varchar"></field>
       <field name="voucherDate" type="date-time"></field>
       <field name="groupStatusId" type="id"></field>
@@ -973,6 +975,9 @@
       </relation>
       <relation type="one" fk-name="ACCTTX_GLJRNL" rel-entity-name="GlJournal">
         <key-map field-name="glJournalId"/>
+      </relation>
+      <relation type="one" fk-name="ACCTTX_GLFST" rel-entity-name="GlFiscalType">
+        <key-map field-name="glFiscalTypeId"/>
       </relation>
       <relation type="one" fk-name="ACCTTX_GRPSTTS" rel-entity-name="StatusItem">
         <key-map field-name="groupStatusId" rel-field-name="statusId"/>
@@ -1260,6 +1265,16 @@
       </relation>
       <relation type="one" fk-name="GL_BDGT_XRF_BIT" rel-entity-name="BudgetItemType">
         <key-map field-name="budgetItemTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="GlFiscalType"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="General Ledger Fiscal Entity">
+      <field name="glFiscalTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="glFiscalTypeId"/>
+      <relation type="many" rel-entity-name="AcctgTrans">
+        <key-map field-name="glFiscalTypeId"/>
       </relation>
     </entity>
     <entity entity-name="GlJournal"

@@ -66,6 +66,12 @@
 
   <GlXbrlClass description="US GAAP" glXbrlClassId="US_GAAP"/>
   <GlXbrlClass description="IAS" glXbrlClassId="IAS"/>
+  
+  <GlFiscalType description="Actual" glFiscalTypeId="ACTUAL"/>
+  <GlFiscalType description="Budget" glFiscalTypeId="BUDGET"/>
+  <GlFiscalType description="Forecast" glFiscalTypeId="FORECAST"/>
+  <GlFiscalType description="Plan" glFiscalTypeId="PLAN"/>
+  <GlFiscalType description="Scenario" glFiscalTypeId="SCENARIO"/>
 
   <InvoiceItemType description="Purchase" hasTable="N" invoiceItemTypeId="PURCHASE_INVOICE_ITE" parentTypeId=""/>
   <InvoiceItemType description="Sales" hasTable="N" invoiceItemTypeId="SALES_INVOICE_ITEM" parentTypeId=""/>
