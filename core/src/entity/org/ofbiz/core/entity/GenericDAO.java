@@ -74,7 +74,7 @@ public class GenericDAO {
         modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
     }
     
-    public void insert(GenericEntity entity) throws GenericEntityException {
+    public int insert(GenericEntity entity) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
         
         if (modelEntity == null) {
@@ -84,7 +84,7 @@ public class GenericDAO {
         SQLProcessor sql = new SQLProcessor(helperName);
         
         try {
-            singleInsert(entity, modelEntity, modelEntity.getFieldsCopy(), sql.getConnection());
+            return singleInsert(entity, modelEntity, modelEntity.getFieldsCopy(), sql.getConnection());
         } catch (GenericDataSourceException e) {
             sql.rollback();
             throw new GenericDataSourceException("Exception while inserting the following entity: " + entity.toString(), e);
@@ -93,7 +93,7 @@ public class GenericDAO {
         }
     }
     
-    private void singleInsert(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave, Connection connection) throws GenericEntityException {
+    private int singleInsert(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave, Connection connection) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
             throw new GenericNotImplementedException("Operation insert not supported yet for view entities");
         }
@@ -113,8 +113,9 @@ public class GenericDAO {
         try {
             sqlP.prepareStatement(sql);
             SqlJdbcUtil.setValues(sqlP, fieldsToSave, entity, modelFieldTypeReader);
-            sqlP.executeUpdate();
+            int retVal = sqlP.executeUpdate();
             entity.modified = false;
+            return retVal;
         } catch (GenericEntityException e) {
             throw new GenericEntityException("while inserting: " + entity.toString(), e);
         } finally {
@@ -122,22 +123,23 @@ public class GenericDAO {
         }
     }
     
-    public void updateAll(GenericEntity entity) throws GenericEntityException {
+    public int updateAll(GenericEntity entity) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
         
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
         
-        customUpdate(entity, modelEntity, modelEntity.getNopksCopy());
+        return customUpdate(entity, modelEntity, modelEntity.getNopksCopy());
     }
     
-    public void update(GenericEntity entity) throws GenericEntityException {
+    public int update(GenericEntity entity) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
         
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
+
         //we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
         List partialFields = new ArrayList();
         Collection keys = entity.getAllKeys();
@@ -149,14 +151,14 @@ public class GenericDAO {
                 partialFields.add(curField);
         }
         
-        customUpdate(entity, modelEntity, partialFields);
+        return customUpdate(entity, modelEntity, partialFields);
     }
     
-    private void customUpdate(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave) throws GenericEntityException {
+    private int customUpdate(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave) throws GenericEntityException {
         SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
-            singleUpdate(entity, modelEntity, fieldsToSave, sqlP.getConnection());
+            return singleUpdate(entity, modelEntity, fieldsToSave, sqlP.getConnection());
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
             throw new GenericDataSourceException("Exception while updating the following entity: " + entity.toString(), e);
@@ -165,7 +167,7 @@ public class GenericDAO {
         }
     }
     
-    private void singleUpdate(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave, Connection connection) throws GenericEntityException {
+    private int singleUpdate(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave, Connection connection) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
             throw new GenericNotImplementedException("Operation update not supported yet for view entities");
         }
@@ -173,7 +175,8 @@ public class GenericDAO {
         //no non-primaryKey fields, update doesn't make sense, so don't do it
         if (fieldsToSave.size() <= 0) {
             Debug.logVerbose("Trying to do an update on an entity with no non-PK fields, returning having done nothing; entity=" + entity);
-            return;
+            //returning one because it was effectively updated, ie the same thing, so don't trigger any errors elsewhere
+            return 1;
         }
         
         if (modelEntity.lock()) {
@@ -199,22 +202,29 @@ public class GenericDAO {
         
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
         
+        int retVal = 0;
         try {
             sqlP.prepareStatement(sql);
             SqlJdbcUtil.setValues(sqlP, fieldsToSave, entity, modelFieldTypeReader);
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
-            sqlP.executeUpdate();
+            retVal = sqlP.executeUpdate();
             entity.modified = false;
         } catch (GenericEntityException e) {
             throw new GenericEntityException("while updating: " + entity.toString(), e);
         } finally {
             sqlP.close();
         }
+        
+        if (retVal == 0) {
+            throw new GenericEntityNotFoundException("Tried to update an entity that does not exist.");
+        }
+        return retVal;
     }
     
     /** Store the passed entity - insert if does not exist, otherwise update */
-    private void singleStore(GenericEntity entity, Connection connection) throws GenericEntityException {
+    private int singleStore(GenericEntity entity, Connection connection) throws GenericEntityException {
         GenericPK tempPK = entity.getPrimaryKey();
+        ModelEntity modelEntity = entity.getModelEntity();
         
         try {
             //must use same connection for select or it won't be in the same transaction...
@@ -222,30 +232,42 @@ public class GenericDAO {
         } catch (GenericEntityNotFoundException e) {
             //Debug.logInfo(e);
             //select failed, does not exist, insert
-            singleInsert(entity, entity.getModelEntity(), entity.getModelEntity().getFieldsCopy(), connection);
-            return;
+            return singleInsert(entity, modelEntity, modelEntity.getFieldsCopy(), connection);
         }
         //select did not fail, so exists, update
-        singleUpdate(entity, entity.getModelEntity(), entity.getModelEntity().getNopksCopy(), connection);
+
+        //we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
+        List partialFields = new ArrayList();
+        Collection keys = entity.getAllKeys();
+        
+        for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
+            ModelField curField = modelEntity.getNopk(fi);
+            
+            if (keys.contains(curField.getName()))
+                partialFields.add(curField);
+        }
+
+        return singleUpdate(entity, modelEntity, partialFields, connection);
     }
     
     /* ====================================================================== */
     
     /* ====================================================================== */
     
-    public void storeAll(Collection entities) throws GenericEntityException {
+    public int storeAll(Collection entities) throws GenericEntityException {
         if (entities == null || entities.size() <= 0) {
-            return;
+            return 0;
         }
         
         SQLProcessor sqlP = new SQLProcessor(helperName);
         
+        int totalStored = 0;
         try {
             Iterator entityIter = entities.iterator();
             
             while (entityIter != null && entityIter.hasNext()) {
                 GenericEntity curEntity = (GenericEntity) entityIter.next();
-                singleStore(curEntity, sqlP.getConnection());
+                totalStored += singleStore(curEntity, sqlP.getConnection());
             }
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
@@ -253,6 +275,7 @@ public class GenericDAO {
         } finally {
             sqlP.close();
         }
+        return totalStored;
     }
     
     /* ====================================================================== */
@@ -948,11 +971,11 @@ public class GenericDAO {
     
     /* ====================================================================== */
     
-    public void delete(GenericEntity entity) throws GenericEntityException {
+    public int delete(GenericEntity entity) throws GenericEntityException {
         SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
-            delete(entity, sqlP.getConnection());
+            return delete(entity, sqlP.getConnection());
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
             throw new GenericDataSourceException("Exception while deleting the following entity: " + entity.toString(), e);
@@ -961,7 +984,7 @@ public class GenericDAO {
         }
     }
     
-    public void delete(GenericEntity entity, Connection connection) throws GenericEntityException {
+    public int delete(GenericEntity entity, Connection connection) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
         
         if (modelEntity == null) {
@@ -976,21 +999,23 @@ public class GenericDAO {
         
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
         
+        int retVal;
         try {
             sqlP.prepareStatement(sql);
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
-            sqlP.executeUpdate();
+            retVal = sqlP.executeUpdate();
             entity.modified = true;
         } finally {
             sqlP.close();
         }
+        return retVal;
     }
     
-    public void deleteByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
+    public int deleteByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
         SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
-            deleteByAnd(modelEntity, fields, sqlP.getConnection());
+            return deleteByAnd(modelEntity, fields, sqlP.getConnection());
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
             throw new GenericDataSourceException("Generic Entity Exception occured in deleteByAnd", e);
@@ -999,9 +1024,9 @@ public class GenericDAO {
         }
     }
     
-    public void deleteByAnd(ModelEntity modelEntity, Map fields, Connection connection) throws GenericEntityException {
+    public int deleteByAnd(ModelEntity modelEntity, Map fields, Connection connection) throws GenericEntityException {
         if (modelEntity == null || fields == null)
-            return;
+            return 0;
         if (modelEntity instanceof ModelViewEntity) {
             throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation deleteByAnd not supported yet for view entities");
         }
@@ -1023,11 +1048,11 @@ public class GenericDAO {
         GenericValue dummyValue = new GenericValue(modelEntity, fields);
         String sql = "DELETE FROM " + modelEntity.getTableName();
         
-        if (fields != null || fields.size() > 0)
+        if (fields != null || fields.size() > 0) {
             sql += " WHERE " + SqlJdbcUtil.makeWhereStringAnd(whereFields, dummyValue);
+        }
         
         SQLProcessor sqlP = new SQLProcessor(helperName);
-        
         try {
             sqlP.prepareStatement(sql);
             
@@ -1035,16 +1060,16 @@ public class GenericDAO {
                 SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
             }
             
-            sqlP.executeUpdate();
+            return sqlP.executeUpdate();
         } finally {
             sqlP.close();
         }
     }
     
     /** Called dummyPKs because they can be invalid PKs, doing a deleteByAnd instead of a normal delete */
-    public void deleteAll(Collection dummyPKs) throws GenericEntityException {
+    public int deleteAll(Collection dummyPKs) throws GenericEntityException {
         if (dummyPKs == null || dummyPKs.size() == 0) {
-            return;
+            return 0;
         }
         
         SQLProcessor sqlP = new SQLProcessor(helperName);
@@ -1052,16 +1077,18 @@ public class GenericDAO {
         try {
             Iterator iter = dummyPKs.iterator();
             
+            int numDeleted = 0;
             while (iter.hasNext()) {
                 GenericEntity entity = (GenericEntity) iter.next();
                 
                 //if it contains a complete primary key, delete the one, otherwise deleteByAnd
                 if (entity.containsPrimaryKey()) {
-                    delete(entity, sqlP.getConnection());
+                    numDeleted += delete(entity, sqlP.getConnection());
                 } else {
-                    deleteByAnd(entity.getModelEntity(), entity.getAllFields(), sqlP.getConnection());
+                    numDeleted += deleteByAnd(entity.getModelEntity(), entity.getAllFields(), sqlP.getConnection());
                 }
             }
+            return numDeleted;
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
             throw new GenericDataSourceException("Generic Entity Exception occured in deleteAll", e);

@@ -250,9 +250,7 @@ public class SQLProcessor {
      * Execute a query based on the prepared statement
      *
      * @param fkt
-     *
      * @return The result set of the query
-     *
      * @throws GenericDataSourceException
      */
     public ResultSet executeQuery() throws GenericDataSourceException {
@@ -270,9 +268,7 @@ public class SQLProcessor {
      * Execute a query baed ont SQL string given
      *
      * @param sql  The SQL string to be executed
-     *
      * @return  The result set of the query
-     *
      * @throws GenericEntityException
      * @throws GenericDataSourceException
      */
@@ -285,35 +281,29 @@ public class SQLProcessor {
      * Execute updates
      *
      * @return  The number of rows updated
-     *
      * @throws GenericDataSourceException
      */
     public int executeUpdate() throws GenericDataSourceException {
-        int rtn;
-        
         try {
             Debug.logVerbose("[SQLProcessor.executeUpdate] ps=" + _ps.toString(), module);
-            rtn = _ps.executeUpdate();
+            return _ps.executeUpdate();
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
         }
-        
-        return rtn;
     }
     
     /**
      * Execute update based on the SQL statement given
      *
      * @param sql  SQL statement to be executed
-     *
      * @throws GenericDataSourceException
      */
-    public void executeUpdate(String sql) throws GenericDataSourceException {
+    public int executeUpdate(String sql) throws GenericDataSourceException {
         Statement stmt = null;
         
         try {
             stmt = _connection.createStatement();
-            stmt.executeUpdate(sql);
+            return stmt.executeUpdate(sql);
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
         } finally {
