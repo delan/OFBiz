@@ -120,7 +120,8 @@ public class FlexibleMapAccessor {
         if (this.subMapAccessor != null) {
             newBase = this.subMapAccessor.getSubMap(base, false);
         } else {
-            newBase = new HashMap(base);
+            // DEJ 20041221 was like this, any reason to create a new Map?: newBase = new HashMap(base);
+            newBase = base;
         }
         
         Object ret = null;
