@@ -4,17 +4,17 @@
 <%@ page import="org.ofbiz.ecommerce.shoppingcart.*" %>
 
 <%ShoppingCart microCart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART);%>
-<font color="white">
+<font color="black">
 <%if(microCart != null && microCart.size() > 0){%>
   Cart has <b><%=microCart.size()%></b> items, <b>$<%=UtilFormatOut.formatPrice(microCart.getGrandTotal())%></b>
 <%}else{%>
   Shopping Cart is <b>Empty</b>
 <%}%>
 </font>
-<div class='lightbuttontextdisabled'>
-  <a href="<ofbiz:url>/view/showcart</ofbiz:url>" class="lightbuttontext">[View&nbsp;Cart]</a>
+<div class='buttontextdisabled'>
+  <a href="<ofbiz:url>/view/showcart</ofbiz:url>" class="buttontext">[View&nbsp;Cart]</a>
   <%if(microCart != null && microCart.size() > 0){%>
-    <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>
+    <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="buttontext">[Checkout]</a>
   <%}else{%>
     [Checkout]
   <%}%>

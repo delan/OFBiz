@@ -189,9 +189,9 @@
         <tr>
           <td valign=top>
 
+<table width="100%" border="0" cellpadding="4" cellspacing="0">
+  <tr><td colspan="2"><a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CM_NEW_PURPOSE_TYPE_ID=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add New Address]</a></td></tr>
  <ofbiz:if name="shippingContactMechList" size="0">
-  <table width="100%" border="0" cellpadding="4" cellspacing="0">
-    <tr><td colspan="2"><a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CM_NEW_PURPOSE_TYPE_ID=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add New Address]</a></td></tr>
     <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
     <ofbiz:iterator name="shippingContactMech" property="shippingContactMechList">
     <%GenericValue shippingAddress = shippingContactMech.getRelatedOne("PostalAddress");%>
@@ -218,8 +218,8 @@
       </tr>
       <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
   </ofbiz:iterator>
-  </table>
  </ofbiz:if>
+</table>
           </td>
         </tr>
       </table>
@@ -253,9 +253,9 @@
         <tr>
           <td valign=top>
 
-<ofbiz:if name="creditCardInfoList" size="0"> 
 <table width="100%" cellpadding="4" cellspacing="0" border="0">
   <tr><td colspan="2"><a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add Credit Card]</a></td></tr>
+ <ofbiz:if name="creditCardInfoList" size="0"> 
   <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
   <ofbiz:iterator name="creditCardInfo" property="creditCardInfoList">
       <tr>
@@ -273,8 +273,8 @@
       </tr>
       <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
   </ofbiz:iterator>
+ </ofbiz:if>
 </table>
-</ofbiz:if>
 <ofbiz:unless name="creditCardInfoList" size="0">
    <h3>There are no credit cards on file.</h3>
 </ofbiz:unless>
