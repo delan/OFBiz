@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.1 2003/12/12 03:29:09 ajzeneski Exp $
+ * $Id: EntityDataServices.java,v 1.2 2003/12/12 04:02:04 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class EntityDataServices {
@@ -137,7 +137,7 @@ public class EntityDataServices {
 
                 Map fieldMap = makeMap(header, fields);
                 GenericValue newValue = delegator.makeValue(entityName, fieldMap);
-                delegator.storeAll(UtilMisc.toList(newValue));
+                newValue = delegator.createOrStore(newValue);
                 //Debug.log("Stored record : " + newValue, module);
             }
             lineNumber++;

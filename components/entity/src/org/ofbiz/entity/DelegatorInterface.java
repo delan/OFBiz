@@ -1,5 +1,5 @@
 /*
- * $Id: DelegatorInterface.java,v 1.4 2003/09/19 06:05:12 jonesde Exp $
+ * $Id: DelegatorInterface.java,v 1.5 2003/12/12 04:02:04 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.entity.util.SequenceUtil;
  * Delegator Interface
  *
  * @author     <a href="mailto:plightbo@cisco.com">Patrick Lightbody</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public interface DelegatorInterface {
@@ -92,6 +92,10 @@ public interface DelegatorInterface {
     GenericValue create(GenericPK primaryKey) throws GenericEntityException;
 
     GenericValue create(GenericPK primaryKey, boolean doCacheClear) throws GenericEntityException;
+
+    GenericValue createOrStore(GenericValue value, boolean doCacheClear) throws GenericEntityException;
+
+    GenericValue createOrStore(GenericValue value) throws GenericEntityException;
 
     GenericValue findByPrimaryKey(GenericPK primaryKey) throws GenericEntityException;
 

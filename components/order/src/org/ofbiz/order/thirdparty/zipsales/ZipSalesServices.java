@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.5 2003/12/11 19:44:53 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.6 2003/12/12 04:02:04 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -142,8 +142,7 @@ public class ZipSalesServices {
                 newValue.set("comboUseTax", entry.get("comboUseTax"));
 
                 try {
-                    // using storeAll as an easy way to create/update
-                    delegator.storeAll(UtilMisc.toList(newValue));
+                    delegator.createOrStore(newValue);
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError("Error writing record(s) to the database");
