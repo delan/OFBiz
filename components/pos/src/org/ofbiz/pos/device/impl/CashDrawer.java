@@ -29,6 +29,8 @@ import jpos.JposException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.device.GenericDevice;
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.pos.screen.DialogCallback;
+import org.ofbiz.pos.screen.PosDialog;
 
 /**
  *
@@ -36,11 +38,12 @@ import org.ofbiz.pos.screen.PosScreen;
  * @version    $Rev$
  * @since      3.2
  */
-public class CashDrawer extends GenericDevice implements Runnable {
+public class CashDrawer extends GenericDevice implements Runnable, DialogCallback {
 
     public static final String module = CashDrawer.class.getName();
 
-    protected boolean waiting = false;
+    protected boolean openCalled = false;
+    protected boolean waiting = false;    
     protected Thread waiter = null;
     protected long startTime = -1;
 
@@ -53,13 +56,21 @@ public class CashDrawer extends GenericDevice implements Runnable {
         Debug.logInfo("CashDrawer [" + control.getPhysicalDeviceName() + "] Claimed : " + control.getClaimed(), module);
     }
 
+    public void receiveDialogCb(PosDialog dialog) {
+        if (this.openCalled) {
+            this.openDrawer();
+        }
+    }
+
     public void openDrawer() {
         try {
+            this.openCalled = true;
             ((jpos.CashDrawer) control).openDrawer();
+            this.openCalled = false;
             //this.startWaiter();
         } catch (JposException e) {
             Debug.logError(e, module);
-            PosScreen.currentScreen.showDialog("dialog/error/drawererror");
+            PosScreen.currentScreen.showDialog("dialog/error/drawererror", this);
         }
     }
 
@@ -68,7 +79,6 @@ public class CashDrawer extends GenericDevice implements Runnable {
             return ((jpos.CashDrawer) control).getDrawerOpened();
         } catch (JposException e) {
             Debug.logError(e, module);
-            PosScreen.currentScreen.showDialog("dialog/error/drawererror");
         }
         return false;
     }
@@ -103,7 +113,7 @@ public class CashDrawer extends GenericDevice implements Runnable {
                     java.awt.Toolkit.getDefaultToolkit().beep();
                 }
                 if ((now > 4499) && (now % 5000 == 0)) {
-                    PosScreen.currentScreen.showDialog("dialog/error/draweropen");   
+                    PosScreen.currentScreen.showDialog("dialog/error/draweropen");
                 }
             } else {
                 this.waiting = false;
