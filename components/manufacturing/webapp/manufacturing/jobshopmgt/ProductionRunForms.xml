@@ -428,7 +428,7 @@
         </field>
         <field name="estimatedShipDate" title="${uiLabelMap.ProductEstimatedShipDate}"><display/></field>
         <field name="viewShipmentPlanLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="WorkWithShipmentPlans?shipmentId=${shipmentId}" description="[${uiLabelMap.ManufacturingViewShipmentPlan}]" also-hidden="false"/>
+            <hyperlink target="WorkWithShipmentPlans?shipmentId=${shipmentId}" description="[${uiLabelMap.CommonView}]" also-hidden="false"/>
         </field>
     </form>
     
