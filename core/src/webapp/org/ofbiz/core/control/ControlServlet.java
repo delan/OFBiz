@@ -62,7 +62,7 @@ public class ControlServlet extends HttpServlet {
             //Debug.logInfo("Found PoolMan Driver...");
         }
         catch(Exception ex) {
-            Debug.logWarning("[ControlServlet.init] WARNING: PoolMan not found");
+            //Debug.logWarning("[ControlServlet.init] WARNING: PoolMan not found");
         }
         
         // initialize the request handler
