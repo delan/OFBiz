@@ -55,12 +55,12 @@ public class ContentUrlTag extends BodyTagSupport {
         if (request.isSecure()) {
             String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.secure");
             if (prefix != null) {
-                newURL.append(prefix);
+                newURL.append(prefix.trim());
             }
         } else {
             String prefix = UtilProperties.getPropertyValue("url", "content.url.prefix.standard");
             if (prefix != null) {
-                newURL.append(prefix);
+                newURL.append(prefix.trim());
             }
         }
         
