@@ -1,5 +1,5 @@
 /*
- * $Id: ModelForm.java,v 1.3 2003/11/05 15:12:06 jonesde Exp $
+ * $Id: ModelForm.java,v 1.4 2003/11/15 21:52:15 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class ModelForm {
@@ -414,11 +414,6 @@ public class ModelForm {
      *   use the same form definitions for many types of form UIs
      */
     public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
-        // if useRequestParameters if not set in the context and a default-map-name is specific but does not exist in the context, set useRequestParameters to TRUE
-        if (context.get("useRequestParameters") == null && !this.defaultMapName.isEmpty() && this.defaultMapName.get(context) == null) {
-            context.put("useRequestParameters", Boolean.TRUE);
-        }
-
         // if this is a list form, don't useRequestParameters
         if ("list".equals(this.type) || "multi".equals(this.type)) {
             context.put("useRequestParameters", Boolean.FALSE);
