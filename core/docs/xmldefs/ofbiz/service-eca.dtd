@@ -62,7 +62,7 @@
 <!ATTLIST action
     service CDATA #REQUIRED
     mode ( sync | async ) #REQUIRED
-    result-map-name #IMPLIED
+    result-map-name CDATA #IMPLIED
     result-to-context ( true | false ) "true"
     ignore-error ( true | false ) "true"
     persist ( true | false ) "false"
