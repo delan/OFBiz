@@ -210,13 +210,13 @@ public class UtilXml {
             Debug.logError(e, module);
         }
 
+        if (document == null) return null;
+        
         if (rootElementName != null) {
             Element rootElement = document.createElement(rootElementName);
-
             document.appendChild(rootElement);
         }
 
-        if (document == null) return null;
         return document;
     }
 
