@@ -38,12 +38,21 @@
   boolean mostlyInserts = request.getParameter("mostlyInserts") != null;
   
   String txTimeoutStr = UtilFormatOut.checkEmpty(request.getParameter("txTimeout"), "7200");
+  String filePauseStr = UtilFormatOut.checkEmpty(request.getParameter("filePause"), "0");
   Integer txTimeout = null;
   try {
       txTimeout = Integer.valueOf(txTimeoutStr);
   } catch (Exception e) {
       txTimeout = new Integer(7200);
       %><div>ERROR: TX Timeout not a valid number, setting to 7200 seconds (2 hours): <%=e%><%
+  }
+
+  Long filePause = null;
+  try {
+      filePause = Long.valueOf(filePauseStr);
+  } catch (Exception e) {
+      filePause = new Long(0);
+      %><div>ERROR: File Pause not a valid number, setting to 0 seconds (no pause): <%=e%><%
   }
 %>
 
@@ -58,6 +67,7 @@
     <INPUT type=text class='inputBox' size='60' name='path' value="<%=UtilFormatOut.checkNull(path)%>">
     Mostly Inserts?:<INPUT type=checkbox name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
     TX Timeout Seconds:<INPUT type="text" size="6" value="<%=txTimeoutStr%>" name='txTimeout'>
+    Pause (secs) between files:<INPUT type="text" size="6" value="<%=filePauseStr%>" name="filePause">
     <INPUT type=submit value='Import Files'>
   </FORM>
   <hr>
@@ -66,6 +76,7 @@
   <%if (path != null && path.length() > 0) {%>
   <%
 
+    long pauseLong = filePause != null ? filePause.longValue() : 0;
     File baseDir = new File(path);
 
     if (baseDir.isDirectory() && baseDir.canRead()) {
@@ -120,6 +131,13 @@
                     %> <div>Looks like referential integrity violation, will retry</div> <%
                     files.add(curFile);
                 }
+            }
+
+            // pause in between files
+            if (pauseLong > 0) {
+                Debug.log("Pausing for [" + pauseLong + "] seconds - " + UtilDateTime.nowTimestamp());
+                Thread.sleep((pauseLong * 1000));
+                Debug.log("Pause finished - " + UtilDateTime.nowTimestamp());
             }
 	    }
     } else {
