@@ -28,7 +28,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     -->
 
     <delegator name="default" entity-model-reader="main" entity-group-reader="main">
-        <group-map group-name="org.ofbiz.commonapp" datasource-name="localsapdb"/>
+        <group-map group-name="org.ofbiz.commonapp" datasource-name="localpostgres"/>
     </delegator>
     <delegator name="other" entity-model-reader="main" entity-group-reader="main">
         <group-map group-name="org.ofbiz.commonapp" datasource-name="localpostgres"/>
@@ -124,7 +124,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
 
     <datasource name="localpostgres"
             helper-class="org.ofbiz.core.entity.GenericHelperDAO"
-            field-type-name="postgres72"
+            field-type-name="postgres"
             check-on-start="true"
             add-missing-on-start="true"
             join-style="ansi">
