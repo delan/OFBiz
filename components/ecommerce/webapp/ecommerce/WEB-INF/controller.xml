@@ -754,6 +754,12 @@
     <request-map uri="tellafriend">
         <response name="success" type="view" value="tellafriend"/>
     </request-map>
+    <request-map uri="emailFriend">
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="tellAFriend"/>
+        <response name="success" type="view" value="tellafriend"/>
+        <response name="error" type="view" value="tellafriend"/>
+    </request-map>
+
     <!-- End of Request Mappings -->
 
     <!-- View Mappings -->

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductEvents.java,v 1.1 2003/08/17 18:04:22 ajzeneski Exp $
+ * $Id: ProductEvents.java,v 1.2 2003/11/07 01:07:51 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,25 +26,29 @@ package org.ofbiz.product.product;
 import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.product.KeywordSearch;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
 
 /**
  * Product Information Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ProductEvents {
@@ -531,6 +535,47 @@ public class ProductEvents {
             return "error";
         }
 
+        return "success";
+    }
+
+    public static String tellAFriend(HttpServletRequest request, HttpServletResponse response) {
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+
+        GenericValue productStore = ProductStoreWorker.getProductStore(request);
+        GenericValue productStoreEmail = null;
+        String emailType = "PRDS_TELL_FRIEND";
+        try {
+            productStoreEmail = delegator.findByPrimaryKey("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", productStore.get("productStoreId"), "emailType", emailType));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to get product store email setting for tell-a-frield", module);
+            return "error";
+        }
+        if (productStoreEmail == null) {
+            return "error";
+        }
+
+        Map paramMap = UtilHttp.getParameterMap(request);
+        String subjectString = productStoreEmail.getString("subject");
+        subjectString = FlexibleStringExpander.expandString(subjectString, paramMap);
+
+        String ofbizHome = System.getProperty("ofbiz.home");
+        Map context = new HashMap();
+        context.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
+        context.put("templateData", paramMap);
+        context.put("sendTo", paramMap.get("sendTo"));
+        context.put("contentType", productStoreEmail.get("contentType"));
+        context.put("sendFrom", productStoreEmail.get("fromAddress"));
+        context.put("sendCc", productStoreEmail.get("ccAddress"));
+        context.put("sendBcc", productStoreEmail.get("bccAddress"));
+        context.put("subject", subjectString);
+
+        try {
+            dispatcher.runAsync("sendGenericNotificationEmail", context);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Problem sending mail", module);
+            return "error";
+        }
         return "success";
     }
 }
