@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.8 2004/04/23 05:34:09 doogie Exp $
+ * $Id: EntityUtil.java,v 1.9 2004/04/24 07:33:44 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -35,6 +35,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -59,6 +60,8 @@ import org.ofbiz.entity.model.ModelField;
  *@since      1.0
  */
 public class EntityUtil {
+
+    public static final String module = EntityUtil.class.getName();
 
     public static GenericValue getFirst(List values) {
         if ((values != null) && (values.size() > 0)) {
@@ -405,6 +408,7 @@ public class EntityUtil {
         }
 
         List result = new ArrayList(values);
+        if (Debug.verboseOn()) Debug.logVerbose("Sorting " + values.size() + " values, orderBy=" + orderBy.toString(), module);
         Collections.sort(result, new OrderByComparator(orderBy));
         return result;
     }
@@ -502,12 +506,12 @@ public class EntityUtil {
                 fieldAndDirection = fieldAndDirection.substring(0, fieldAndDirection.length() - 4);
             } else if (upper.startsWith("-")) {
                 this.descending = true;
-                upper = upper.substring(0, upper.length() - 1);
-                fieldAndDirection = fieldAndDirection.substring(0, fieldAndDirection.length() - 1);
+                upper = upper.substring(1, upper.length());
+                fieldAndDirection = fieldAndDirection.substring(1, fieldAndDirection.length());
             } else if (upper.startsWith("+")) {
                 this.descending = false;
-                upper = upper.substring(0, upper.length() - 1);
-                fieldAndDirection = fieldAndDirection.substring(0, fieldAndDirection.length() - 1);
+                upper = upper.substring(1, upper.length());
+                fieldAndDirection = fieldAndDirection.substring(1, fieldAndDirection.length());
             } else {
                 this.descending = false;
             }
