@@ -32,6 +32,7 @@ import jpos.events.ErrorEvent;
 
 import org.ofbiz.pos.adaptor.KeyboardAdaptor;
 import org.ofbiz.pos.adaptor.KeyboardReceiver;
+import org.ofbiz.base.util.Debug;
 
 /**
  * 
@@ -270,6 +271,7 @@ public class MsrKybService extends BaseService implements jpos.services.MSRServi
             String tr1OptData = track1.substring(nextCarrot + 4, track1.length() - 2);
             String tr1EndChar = track1.substring(track1.length() - 2, track1.length() - 1);
             String tr1LrcCode = track1.substring(track1.length() - 1, track1.length());
+            Debug.log("Track 1 - Act#:" + tr1AcctNum + " Exp:" + tr1ExpDate + " Name:" + cardHolder, module);
 
             // track 2 data
             String tr2BegChar = track2.substring(0, 1);
@@ -278,6 +280,7 @@ public class MsrKybService extends BaseService implements jpos.services.MSRServi
             String tr2OptData = track2.substring(track2.indexOf("=") + 5, track2.length() - 2);
             String tr2EndChar = track2.substring(track2.length() - 2, track2.length() - 1);
             String tr2LrcCode = track2.substring(track2.length() - 1, track2.length());
+            Debug.log("Track 1 - Act#:" + tr2AcctNum + " Exp:" + tr2ExpDate, module);
 
             // see if we need to remove the sentinels
             if (this.sendSentinels) {
