@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.16 2003/11/21 17:41:49 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.17 2003/11/21 17:43:18 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.base.util.UtilURL;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
-  *@version    $Revision: 1.16 $
+  *@version    $Revision: 1.17 $
  * @since      3.0
  */
 public class JettyContainer implements Container {
@@ -333,6 +333,7 @@ public class JettyContainer implements Container {
                 try {
                     server.start();
                 } catch (MultiException e) {
+                    Debug.logError(e, "Jetty Server Multi-Exception", module);
                     throw new ContainerException(e);
                 }
             }
