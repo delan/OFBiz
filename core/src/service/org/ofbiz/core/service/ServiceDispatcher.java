@@ -175,12 +175,16 @@ public class ServiceDispatcher {
 
             // invoke the service
             Map result = engine.runSync(service, context);
-            context.putAll(result);
+            
+            //create a new context with the results to pass to ECA services; necessary because caller may reuse this context
+            Map ecaContext = new HashMap(context);
+            //copy all results: don't worry parameters that aren't allowed won't be passed to the ECA services
+            ecaContext.putAll(result);
 
             // validate the result
             if (service.validate) {
                 if (eventMap != null)
-                    ECAUtil.evalConditions(service.name, eventMap, "out-validate", (DispatchContext) localContext.get(localName), context);
+                    ECAUtil.evalConditions(service.name, eventMap, "out-validate", (DispatchContext) localContext.get(localName), ecaContext);
                 try {
                     service.validate(result, ModelService.OUT_PARAM);
                 } catch (ServiceValidationException e) {
@@ -190,7 +194,7 @@ public class ServiceDispatcher {
 
             // pre-commit ECA
             if (eventMap != null)
-                ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context);
+                ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), ecaContext);
 
             // commit the transaction
             try {
@@ -201,7 +205,7 @@ public class ServiceDispatcher {
 
             // pre-return ECA
             if (eventMap != null)
-                ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context);
+                ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), ecaContext);
 
             return result;
         } catch (GenericServiceException e) {
