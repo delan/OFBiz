@@ -155,10 +155,10 @@
               <tr>
                 <td>&nbsp;</td>
                 <td><div class="tabletext">Order Amount (before adjustments)</div></td>
-                <td><div class="tabletext"><%=dayItemTotal%></div></td>
-                <td><div class="tabletext"><%=weekItemTotal%></div></td>
-                <td><div class="tabletext"><%=monthItemTotal%></div></td>
-                <td><div class="tabletext"><%=yearItemTotal%></div></td>
+                <td><div class="tabletext"><ofbiz:format type="C"><%=dayItemTotal%></ofbiz:format></div></td>
+                <td><div class="tabletext"><ofbiz:format type="C"><%=weekItemTotal%></ofbiz:format></div></td>
+                <td><div class="tabletext"><ofbiz:format type="C"><%=monthItemTotal%></ofbiz:format></div></td>
+                <td><div class="tabletext"><ofbiz:format type="C"><%=yearItemTotal%></ofbiz:format></div></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
