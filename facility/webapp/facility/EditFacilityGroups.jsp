@@ -39,20 +39,20 @@
     boolean useValues = true;
     if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
-	String facilityId = request.getParameter("facilityId");
-	GenericValue facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
-	if (facility == null) useValues = false;
+    String facilityId = request.getParameter("facilityId");
+    GenericValue facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
+    if (facility == null) useValues = false;
 
-	List facilityGroupMembers = facility.getRelated("FacilityGroupMember", null, UtilMisc.toList("sequenceNum", "facilityGroupId"));
-	if (activeOnly) {
-		facilityGroupMembers = EntityUtil.filterByDate(facilityGroupMembers, true);
-	}
-	if (facilityGroupMembers != null) {
-		pageContext.setAttribute("facilityGroupMembers", facilityGroupMembers);
-	}
+    List facilityGroupMembers = facility.getRelated("FacilityGroupMember", null, UtilMisc.toList("sequenceNum", "facilityGroupId"));
+    if (activeOnly) {
+            facilityGroupMembers = EntityUtil.filterByDate(facilityGroupMembers, true);
+    }
+    if (facilityGroupMembers != null) {
+            pageContext.setAttribute("facilityGroupMembers", facilityGroupMembers);
+    }
 
-   	List facilityGroups = delegator.findAll("FacilityGroup", UtilMisc.toList("description"));
-	if (facilityGroups != null) pageContext.setAttribute("facilityGroups", facilityGroups);
+    List facilityGroups = delegator.findAll("FacilityGroup", UtilMisc.toList("description"));
+    if (facilityGroups != null) pageContext.setAttribute("facilityGroups", facilityGroups);
 
     if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 
@@ -199,12 +199,17 @@
   <input type=hidden name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'>
 
   <script language='JavaScript'>
-      function setPcmFromDate() { document.addFacilityGroupMemberForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
+      function setFgmFromDate() { document.addFacilityGroupMemberForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
   </script>
   <div class='head2'>Add FacilityGroupMember:</div>
   <div class='tabletext'>
-    Facility Group ID: <input type=text class='inputBox' size='20' name='facilityGroupId'>
-    From Date: <a href='#' onclick='setPcmFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' class="inputBox" name='fromDate'>
+    Facility Group ID: 
+    <select name='facilityGroupId' size=1 class='selectBox'>
+        <ofbiz:iterator name="facilityGroup" property="facilityGroups">
+            <option value='<ofbiz:entityfield attribute="facilityGroup" field="facilityGroupId"/>'><ofbiz:entityfield attribute="facilityGroup" field="facilityGroupName"/></option>
+        </ofbiz:iterator>
+    </select>
+    From Date: <input type=text size='22' class="inputBox" name='fromDate'><a href='#' onclick='setFgmFromDate()' class='buttontext'>[Now]</a>
     <input type="submit" value="Add">
   </div>
 </form>
