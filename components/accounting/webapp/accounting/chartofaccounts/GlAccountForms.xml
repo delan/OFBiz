@@ -23,6 +23,16 @@
 -->
 
 <forms>
+
+    <form name="ListGlAccount" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" target="" paginate-target="/EditGlobalAccount" title="" type="list">
+        <auto-fields-entity entity-name="GlAccount" default-field-type="display"/>
+        <field name="glAccountId" title="Edit" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${glAccountId}" target="GlAccountTree?glAccountId=${glAccountId}"/>
+        </field>
+    </form>
+
     <form name="EditGlAccount" type="single" 
             target="updateGlAccount" title="" default-map-name="glAccount"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
