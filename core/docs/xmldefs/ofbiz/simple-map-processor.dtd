@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   To refer to this DTD in your XML file, use the following declaration:
-<!DOCTYPE string-processor PUBLIC "-//OFBiz//DTD String Processor//EN" "http://www.ofbiz.org/dtds/string-processor.dtd">
+<!DOCTYPE simple-map-processor PUBLIC "-//OFBiz//DTD Simple Map Processor//EN" "http://www.ofbiz.org/dtds/simple-map-processor.dtd">
 -->
 
 <!--
@@ -25,12 +25,12 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*This is the DTD for the Open For Business String Processor definition XML file.
+*This is the DTD for the Open For Business Simple Map Processor definition XML file.
 -->
 
-<!ELEMENT string-processor ( string-process* )>
-<!ELEMENT string-process ( ( validate-method | compare | compare-field | regexp | not-empty | equals | copy | convert )* )>
-<!ATTLIST string-process
+<!ELEMENT simple-map-processor ( process* )>
+<!ELEMENT process ( ( validate-method | compare | compare-field | regexp | not-empty | equals | copy | convert )* )>
+<!ATTLIST process
     field CDATA #REQUIRED
 >
 
@@ -68,14 +68,14 @@
 
 <!ELEMENT not-empty ( fail-message | fail-property )>
 
-<!-- Copy operation: if no to-field is specified, it is the same as the field on string-process -->
+<!-- Copy operation: if no to-field is specified, it is the same as the field on process -->
 <!ELEMENT copy EMPTY>
 <!ATTLIST copy
     to-field CDATA #IMPLIED
     replace ( true | false ) "true"
 >
 
-<!-- Convert operation: if no to-field is specified, it is the same as the field on string-process -->
+<!-- Convert operation: if no to-field is specified, it is the same as the field on process -->
 <!ELEMENT convert ( fail-message | fail-property )>
 <!ATTLIST convert
     to-field CDATA #IMPLIED
