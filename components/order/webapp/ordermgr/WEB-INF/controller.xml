@@ -101,21 +101,21 @@
     <!-- Order Manager Task List Requests -->
     <request-map uri="acceptassignment">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.ordermgr.task.TaskEvents" invoke="acceptRoleAssignment"/>
+        <event type="java" path="org.ofbiz.order.task.TaskEvents" invoke="acceptRoleAssignment"/>
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="ordertasklist"/>
     </request-map>
 
     <request-map uri="delegateassignment">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.ordermgr.task.TaskEvents" invoke="delegateAndAcceptAssignment"/>
+        <event type="java" path="org.ofbiz.order.task.TaskEvents" invoke="delegateAndAcceptAssignment"/>
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="ordertasklist"/>
     </request-map>
 
 	<request-map uri="completeassignment">
 		<security https="true" auth="true"/>
-		<event type="java" path="org.ofbiz.ordermgr.task.TaskEvents" invoke="completeAssignment"/>
+		<event type="java" path="org.ofbiz.order.task.TaskEvents" invoke="completeAssignment"/>
 		<response name="success" type="view" value="ordertasklist"/>
 		<response name="error" type="view" value="ordertasklist"/>
 	</request-map>  
@@ -183,7 +183,7 @@
     </request-map>    
     <request-map uri="receiveOfflinePayments">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.ordermgr.OrderManagerEvents" invoke="receiveOfflinePayment"/>
+        <event type="java" path="org.ofbiz.order.OrderManagerEvents" invoke="receiveOfflinePayment"/>
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="receivepayment"/>
     </request-map>
@@ -262,7 +262,7 @@
     
     <request-map uri="calcShipping">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.shipment.shipment.ShippingEvents" invoke="getShipEstimate"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.shipping.ShippingEvents" invoke="getShipEstimate"/>
         <response name="success" type="request" value="calcTax"/>
         <response name="error" type="view" value="orderentry"/>
     </request-map>
@@ -279,7 +279,7 @@
     </request-map>
     <request-map uri="createCustomer">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/ordermgr/customer/CustomerEvents.xml" invoke="createCustomer"/>
+        <event type="simple" path="org/ofbiz/order/customer/CustomerEvents.xml" invoke="createCustomer"/>
         <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="custsetting"/>
     </request-map>     
@@ -367,7 +367,7 @@
     </request-map>
     <request-map uri="processOfflinePayment">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.ordermgr.OrderManagerEvents" invoke="processOfflinePayments"/>
+        <event type="java" path="org.ofbiz.order.OrderManagerEvents" invoke="processOfflinePayments"/>
         <response name="success" type="request" value="clearcart"/>
         <response name="fail" type="view" value="confirm"/>
         <response name="error" type="view" value="confirm"/>
