@@ -20,8 +20,8 @@
 
     <define id='RIGHTBAR_REGION' template='/templates/rightbar_template.jsp'>
         <put section='first' content='/cart/minicart.jsp'/>
-        <put section='second' content='/catalog/miniassocprods.jsp'/>
-        <!-- <put section='third' content='/third.jsp'/> -->
+        <put section='second' content='/catalog/minipromotext.jsp'/>
+        <put section='third' content='/catalog/miniassocprods.jsp'/>
         <!-- <put section='fourth' content='/fourth.jsp'/> -->
         <!-- <put section='fifth' content='/fifth.jsp'/> -->
     </define>

@@ -186,7 +186,14 @@
 --%>
 </TABLE>
 
- <ofbiz:if name="productPromos" size="0">
+<%-- Make sure that at least one promo has non-empty promoText --%>
+<%boolean showPromoText = false;%>
+<ofbiz:iterator name="productPromo" property="productPromos">
+    <%if (UtilValidate.isNotEmpty(productPromo.getString("promoText"))) { showPromoText = true; }%>
+</ofbiz:iterator>
+<%pageContext.setAttribute("showPromoText", new Boolean(showPromoText));%>
+
+<ofbiz:if name="showPromoText" type="Boolean">
   <BR>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
@@ -194,7 +201,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
             <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;Special Offers:</div>
+              <div class="boxhead">&nbsp;Special Offers</div>
             </td>
             <td valign="middle" align="right">&nbsp;</td>
           </tr>
@@ -206,28 +213,30 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td>
-    <table width='100%' cellspacing="0" cellpadding="1" border="0">
-      <%int listIndex = 1;%>
-      <!-- random complementary products -->
-      <ofbiz:iterator name="productPromo" property="productPromos">
-        <%if(listIndex > 1) {%>
-          <tr><td><hr class='sepbar'></td></tr>
-        <%}%>
-        <tr>
-          <td>
-            <div class='tabletext'><%=UtilFormatOut.checkNull(productPromo.getString("promoText"))%></div>
-          </td>
-        </tr>
-        <%listIndex++;%>
-      </ofbiz:iterator>
-    </table>
+                <table width='100%' cellspacing="0" cellpadding="1" border="0">
+                  <%int listIndex = 1;%>
+                  <!-- show promotions text -->
+                  <ofbiz:iterator name="productPromo" property="productPromos">
+                    <%if (UtilValidate.isNotEmpty(productPromo.getString("promoText"))) {%>
+                        <%if (listIndex > 1) {%>
+                          <tr><td><hr class='sepbar'></td></tr>
+                        <%}%>
+                        <tr>
+                          <td>
+                            <div class='tabletext'><%=productPromo.getString("promoText")%></div>
+                          </td>
+                        </tr>
+                        <%listIndex++;%>
+                    <%}%>
+                  </ofbiz:iterator>
+                </table>
             </td>
           </tr>
         </table>
       </TD>
     </TR>
   </TABLE>
- </ofbiz:if>
+</ofbiz:if>
 
  <ofbiz:if name="associatedProducts" size="0">
   <BR>
