@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
  */
 
@@ -57,7 +57,7 @@ context.put("product", product);
 
 // Start ProductContent stuff
 productContent = null;
-if (product != null) productContent = product.getRelated("ProductContent", null, UtilMisc.toList("productContentId"));
+if (product != null) productContent = product.getRelated("ProductContent", null, UtilMisc.toList("productContentTypeId"));
 context.put("productContent", productContent);
 
 List productContentDatas = new LinkedList();
