@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Security Build Script.
- *  $Id: build.xml,v 1.1 2003/08/17 04:39:05 ajzeneski Exp $
+ *  $Id: build.xml,v 1.2 2003/08/17 08:37:22 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Security" default="jar" basedir=".">
@@ -38,7 +38,9 @@
         <property name="dtd.dir" value="dtd"/>
         <property name="lib.dir" value="lib"/>        
         <property name="build.dir" value="build"/>        
-		        
+    </target>        
+    
+    <target name="classpath">		        
         <path id="local.class.path">
             <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
             <fileset dir="../../base/lib" includes="*.jar"/>
@@ -52,8 +54,7 @@
     <!-- ================================================================== -->
 
     <target name="clean" depends="clean-lib">
-        <delete dir="${build.dir}"/>        
-        <delete dir="${doc.dir}/api"/>
+        <delete dir="${build.dir}"/>
     </target>
 
     <target name="clean-lib" depends="init">
@@ -77,7 +78,7 @@
     <!-- Compilation of the base files                                                                                                                         -->
     <!-- ================================================================== -->               
 
-    <target name="classes" depends="prepare">
+    <target name="classes" depends="prepare,classpath">
     	<javac debug="on" deprecation="on" destdir="${build.dir}/classes">
             <classpath>
                 <path refid="local.class.path"/>                
