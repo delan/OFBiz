@@ -45,14 +45,15 @@
 <!ENTITY % EventEnvOperations "env-to-request | env-to-session | request-to-env | session-to-env">
 <!ENTITY % ServiceOperations "field-to-result | env-to-result">
 <!ENTITY % EnvOperations "field-to-field | env-to-list | env-to-field | field-to-env">
-<!ENTITY % EntityMiscOperations "make-now-timestamp | get-sequenced-id">
-<!ENTITY % EntityValueOperations "make-value | clone-value | find-value | create-value | update-value | remove-value">
+<!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env">
+<!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and">
+<!ENTITY % EntityValueOperations "make-value | clone-value | create-value | update-value | remove-value | remove-by-and">
 <!ENTITY % EntityListOperations "store-list | remove-list">
 <!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty">
 
 <!ENTITY % SimpleMethodOperations "%CallOperations; | %EventOperations; | %EventEnvOperations; | 
-        %ServiceOperations; | %EnvOperations; | %EntityMiscOperations; | %EntityValueOperations; |
-        %EntityListOperations; | %IfOperations;">
+        %ServiceOperations; | %EnvOperations; | %EntityMiscOperations; | %EntityFindOperations; |
+        %EntityValueOperations; | %EntityListOperations; | %IfOperations;">
 
 <!ELEMENT simple-methods ( simple-method+ )>
 
@@ -312,24 +313,39 @@ These operations are used to interact with a data source through the entity
 engine and facilitate related operations.
 -->
 
-<!-- TODO: implement all entity engine related ops -->
-<!ELEMENT make-now-timestamp EMPTY>
-<!ATTLIST make-now-timestamp
-    map-name CDATA #REQUIRED
-    field-name CDATA #REQUIRED
+<!ELEMENT now-timestamp-to-env EMPTY>
+<!ATTLIST now-timestamp-to-env
+    env-name CDATA #REQUIRED
 >
-<!ELEMENT get-sequenced-id EMPTY>
-<!ATTLIST get-sequenced-id
+<!ELEMENT now-date-to-env EMPTY>
+<!ATTLIST now-date-to-env
+    env-name CDATA #REQUIRED
+>
+<!ELEMENT sequenced-id-to-env EMPTY>
+<!ATTLIST sequenced-id-to-env
     sequence-name CDATA #REQUIRED
+    env-name CDATA #REQUIRED
+>
+
+<!-- TODO: implement remaining entity engine related ops -->
+<!ELEMENT find-by-primary-key EMPTY>
+<!ATTLIST find-by-primary-key
+    value-name CDATA #REQUIRED
+    entity-name CDATA #REQUIRED
     map-name CDATA #REQUIRED
-    field-name CDATA #REQUIRED
+>
+<!ELEMENT find-by-and EMPTY>
+<!ATTLIST find-by-and
+    list-name CDATA #REQUIRED
+    entity-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
 >
 
 <!ELEMENT make-value EMPTY>
 <!ATTLIST make-value
     value-name CDATA #REQUIRED
     entity-name CDATA #REQUIRED
-    map-name CDATA #IMPLIED
+    map-name CDATA #REQUIRED
 >
 <!ELEMENT clone-value EMPTY>
 <!ATTLIST clone-value
@@ -337,12 +353,6 @@ engine and facilitate related operations.
     new-value-name CDATA #REQUIRED
 >
 
-<!ELEMENT find-value EMPTY>
-<!ATTLIST find-value
-    value-name CDATA #REQUIRED
-    entity-name CDATA #REQUIRED
-    map-name CDATA #IMPLIED
->
 <!ELEMENT create-value EMPTY>
 <!ATTLIST create-value
     value-name CDATA #REQUIRED
@@ -354,6 +364,11 @@ engine and facilitate related operations.
 <!ELEMENT remove-value EMPTY>
 <!ATTLIST remove-value
     value-name CDATA #REQUIRED
+>
+<!ELEMENT remove-by-and EMPTY>
+<!ATTLIST remove-by-and
+    entity-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
 >
 
 <!ELEMENT store-list EMPTY>

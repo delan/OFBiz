@@ -468,6 +468,13 @@ public class SimpleMethod {
                 } else if ("field-to-env".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.FieldToEnv(curOperElem, simpleMethod));
 
+                } else if ("now-timestamp-to-env".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.NowTimestampToEnv(curOperElem, simpleMethod));
+                } else if ("now-date-to-env".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.NowDateToEnv(curOperElem, simpleMethod));
+                } else if ("sequenced-id-to-env".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.SequencedIdToEnv(curOperElem, simpleMethod));
+
                 } else if ("if-validate-method".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfValidateMethod(curOperElem, simpleMethod));
                 } else if ("if-compare".equals(nodeName)) {
