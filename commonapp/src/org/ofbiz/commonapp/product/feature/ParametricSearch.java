@@ -85,8 +85,8 @@ public class ParametricSearch {
         return productFeaturesByTypeMap;
     }
     
-    public static Map makeFeatureByTypeMap(ServletRequest request) {
-        Map featureByType = new HashMap();
+    public static Map makeFeatureIdByTypeMap(ServletRequest request) {
+        Map featureIdByType = new HashMap();
         
         Enumeration parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
@@ -95,28 +95,28 @@ public class ParametricSearch {
                 String productFeatureTypeId = parameterName.substring(4);
                 String productFeatureId = request.getParameter(parameterName);
                 if (productFeatureId != null && productFeatureId.length() > 0) {
-                    featureByType.put(productFeatureTypeId, productFeatureId);
+                    featureIdByType.put(productFeatureTypeId, productFeatureId);
                 }
             }
         }
         
-        return featureByType;
+        return featureIdByType;
     }
     
-    public static String makeFeatureByTypeString(Map featureByType) {
-        if (featureByType == null || featureByType.size() == 0) {
+    public static String makeFeatureIdByTypeString(Map featureIdByType) {
+        if (featureIdByType == null || featureIdByType.size() == 0) {
             return "";
         }
         
         StringBuffer outSb = new StringBuffer();
-        Iterator fbtIter = featureByType.entrySet().iterator();
+        Iterator fbtIter = featureIdByType.entrySet().iterator();
         while (fbtIter.hasNext()) {
             Map.Entry entry = (Map.Entry) fbtIter.next();
             String productFeatureTypeId = (String) entry.getKey();
-            GenericValue productFeature = (GenericValue) entry.getValue();
+            String productFeatureId = (String) entry.getValue();
             outSb.append(productFeatureTypeId);
             outSb.append('=');
-            outSb.append(productFeature.getString("productFeatureId"));
+            outSb.append(productFeatureId);
             if (fbtIter.hasNext()) {
                 outSb.append('&');
             }
@@ -125,7 +125,7 @@ public class ParametricSearch {
         return outSb.toString();
     }
     
-    public static void filterProductIdListByFeatures(List productIds, Map featureByType, GenericDelegator delegator) {
+    public static void filterProductIdListByFeatures(List productIds, Map featureIdByType, GenericDelegator delegator) {
         if (productIds == null || productIds.size() == 0) return;
         //filter search results by features
         
@@ -135,15 +135,15 @@ public class ParametricSearch {
             String productId = (String) productIdsIter.next();
             
             boolean doRemove = false;
-            Iterator requiredFeaturesIter = featureByType.values().iterator();
+            Iterator requiredFeaturesIter = featureIdByType.values().iterator();
             while (!doRemove && requiredFeaturesIter.hasNext()) {
-                GenericValue requiredFeature = (GenericValue) requiredFeaturesIter.next();
+                String productFeatureId = (String) requiredFeaturesIter.next();
                 List productFeatureAppl = null;
                 try {
                     // for now only constraining by productId and productFeatureId, so any appl type will be included...
-                    productFeatureAppl = delegator.findByAndCache("ProductFeatureAppl", UtilMisc.toMap("productId", productId, "productFeatureId", requiredFeature.get("productFeatureId")));
+                    productFeatureAppl = delegator.findByAndCache("ProductFeatureAppl", UtilMisc.toMap("productId", productId, "productFeatureId", productFeatureId));
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, "Error getting feature appls associated with the productId: [" + productId + "] and the productFeatureId [" + requiredFeature.getString("productFeatureId") + "], removing product from search match list.");
+                    Debug.logError(e, "Error getting feature appls associated with the productId: [" + productId + "] and the productFeatureId [" + productFeatureId + "], removing product from search match list.");
                     doRemove = true;
                     continue;
                 }
@@ -160,9 +160,9 @@ public class ParametricSearch {
         }
     }
     
-    public static ArrayList parametricKeywordSearch(Map featureByType, String keywordsString, GenericDelegator delegator, String categoryId, String visitId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
+    public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String categoryId, String visitId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
         ArrayList productIds = KeywordSearch.productsByKeywords(keywordsString, delegator, categoryId, visitId, anyPrefix, anySuffix, intraKeywordOperator);
-        filterProductIdListByFeatures(productIds, featureByType, delegator);
+        filterProductIdListByFeatures(productIds, featureIdByType, delegator);
         return productIds;
     }
 }
