@@ -27,36 +27,16 @@
  *@version    1.0
  */
 %>
-<%@ page import="java.util.*" %>
+<%@ include file="/includes/envsetup.jsp" %>
+
 <%@ page import="java.text.*" %>
 <%@ page import="javax.servlet.jsp.tagext.BodyContent" %>
 <%@ page import="org.ofbiz.commonapp.party.party.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 
-<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-
-<%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.security.*" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.core.util.*" %>
 
 <% pageContext.setAttribute("PageName", "confirmorder");%>
-
-<%String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);%>
-
-<%String companyName = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "company.name");%>
-<%String companySubtitle = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "company.subtitle");%>
-<%String headerImageUrl = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "header.image.url");%>
-
-<%String boxBorderColor = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.border.color", "black");%>
-<%String boxBorderWidth = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.border.width", "1");%>
-<%String boxTopColor = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.top.color", "#678475");%>
-<%String boxBottomColor = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.bottom.color", "white");%>
-<%String boxTopPadding = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.top.padding", "4");%>
-<%String boxBottomPadding = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.bottom.padding", "4");%>
-
-<%GenericValue userLogin = null;%>
 
 <html>
   <head>
@@ -89,11 +69,6 @@
   <body bgcolor="white">
   <a name="top"></a>
 
-<%String controlPath = (String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
-<%String serverRoot = (String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);%>
-
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 <% 
    final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "order.confirmation.securityCode");
    String securityCode = request.getParameter("security_code");

@@ -32,6 +32,7 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 
 <% pageContext.setAttribute("PageName", "Edit Person"); %>
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%

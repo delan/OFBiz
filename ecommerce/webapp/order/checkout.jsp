@@ -39,6 +39,7 @@
 
 <% pageContext.setAttribute("PageName", "checkout"); %>
 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 

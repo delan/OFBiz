@@ -40,6 +40,7 @@
 
 <% pageContext.setAttribute("PageName", "orderhistory"); %>
 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 

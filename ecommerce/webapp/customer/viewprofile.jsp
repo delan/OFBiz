@@ -33,6 +33,7 @@
 <%@ page import="org.ofbiz.commonapp.party.contact.ContactHelper" %>
 
 <% pageContext.setAttribute("PageName", "viewprofile"); %>
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%

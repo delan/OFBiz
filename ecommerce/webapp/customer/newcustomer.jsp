@@ -33,6 +33,7 @@
 <%@ page import="org.ofbiz.core.util.*" %> 
 
 <%pageContext.setAttribute("PageName", "newuser");%>
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%String previousParams=(String)session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>

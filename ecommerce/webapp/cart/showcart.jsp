@@ -1,6 +1,7 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <% pageContext.setAttribute("PageName", "showcart"); %>
 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %> 
 

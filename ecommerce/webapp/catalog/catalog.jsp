@@ -3,6 +3,7 @@
 <%@ page import="org.ofbiz.ecommerce.catalog.*" %>
 
 <% pageContext.setAttribute("PageName", "catalog"); %>
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %> 
 

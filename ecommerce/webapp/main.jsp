@@ -1,5 +1,6 @@
 
 <% pageContext.setAttribute("PageName", "main"); %> 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %> 
 

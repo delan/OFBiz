@@ -42,6 +42,7 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <% pageContext.setAttribute("PageName", "orderstatus"); %>
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%@ include file="/includes/datepicker.js" %>

@@ -32,6 +32,7 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 
 <% pageContext.setAttribute("PageName", "editcreditcard"); %>
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%

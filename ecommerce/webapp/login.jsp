@@ -29,6 +29,7 @@
 %>
 
 <%pageContext.setAttribute("PageName", "Log In");%>
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%String previousParams=(String)session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>

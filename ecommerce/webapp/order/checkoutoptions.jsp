@@ -35,6 +35,7 @@
 <%@ page import="org.ofbiz.commonapp.party.contact.*" %>
 
 <% pageContext.setAttribute("PageName", "checkoutoptions"); %>
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 
