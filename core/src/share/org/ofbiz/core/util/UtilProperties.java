@@ -128,6 +128,32 @@ public class UtilProperties {
         return value == null ? "" : value;
     }
 
+    /** Returns the specified resource/properties file
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @return The properties file
+     */
+    public static Properties getProperties(String resource) {
+        if (resource == null || resource.length() <= 0)
+            return null;
+        Properties properties = (FlexibleProperties) resCache.get(resource);
+        if (properties == null) {
+            try {
+                URL url = UtilURL.fromResource(resource);
+                if (url == null)
+                    return null;
+                properties = FlexibleProperties.makeFlexibleProperties(url);
+                resCache.put(resource, properties);
+            } catch (MissingResourceException e) {
+                Debug.log(e.getMessage());
+            }
+        }
+        if (properties == null) {
+            Debug.log("[UtilProperties.getProperties] could not find resource: " + resource);
+            return null;
+        }
+        return properties;
+    }
+
 //========= URL Based Methods ==========
 
     /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
