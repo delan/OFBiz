@@ -239,14 +239,14 @@ public class CheckOutEvents {
             }
         } else {
          */
-            String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
-            String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
-            serverRoot.append("http://");
-            serverRoot.append(server);
-            if (!"80".equals(port)) {
-                serverRoot.append(":");
-                serverRoot.append(port);
-            }
+        String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
+        String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+        serverRoot.append("http://");
+        serverRoot.append(server);
+        if (!"80".equals(port)) {
+            serverRoot.append(":");
+            serverRoot.append(port);
+        }
         /* } */
 
         try {
@@ -397,19 +397,6 @@ public class CheckOutEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
 
-        URL orderPropertiesUrl = null;
-        try {
-            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, module);
-        }
-        if (orderPropertiesUrl == null)
-            throw new GeneralException("Cannot get reference to order.properties.");
-
-        String taxService = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.tax.service", "NONE");
-        if ("NONE".equals(taxService))
-            return;
-
         List items = cart.makeOrderItems();
         List adjs = cart.makeAllAdjustments();
         GenericValue shipAddress = cart.getShippingAddress();
@@ -420,27 +407,29 @@ public class CheckOutEvents {
         cart.removeAdjustmentByType("SALES_TAX");
 
         // get the tax adjustments
-        List taxReturn = getTaxAdjustments(dispatcher, taxService, items, adjs, shipAddress);
+        List taxReturn = getTaxAdjustments(dispatcher, "calcTax", items, adjs, shipAddress);
         Debug.logVerbose("ReturnList: " + taxReturn);
 
         List orderAdj = (List) taxReturn.get(0);
         List itemAdj = (List) taxReturn.get(1);
 
         // pass the order adjustments back
-        if (orderAdj != null) {
+        if (orderAdj != null && orderAdj.size() > 0) {
             Iterator oai = orderAdj.iterator();
             while (oai.hasNext())
-                cart.addAdjustment((GenericValue)oai.next());
+                cart.addAdjustment((GenericValue) oai.next());
         }
 
         // return the order item adjustments
-        List cartItems = cart.items();
-        for (int i = 0; i < cartItems.size(); i++) {
-            ShoppingCartItem item = (ShoppingCartItem) cartItems.get(i);
-            List itemAdjustments = (List) itemAdj.get(i);
-            Iterator ida = itemAdjustments.iterator();
-            while (ida.hasNext())
-                item.addAdjustment((GenericValue)ida.next());
+        if (itemAdj != null && itemAdj.size() > 0) {
+            List cartItems = cart.items();
+            for (int i = 0; i < cartItems.size(); i++) {
+                ShoppingCartItem item = (ShoppingCartItem) cartItems.get(i);
+                List itemAdjustments = (List) itemAdj.get(i);
+                Iterator ida = itemAdjustments.iterator();
+                while (ida.hasNext())
+                    item.addAdjustment((GenericValue) ida.next());
+            }
         }
     }
 
@@ -514,7 +503,6 @@ public class CheckOutEvents {
         }
 
         // Get some payment related strings from order.properties.
-        final String PAYMENT_SERVICE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.service", "NONE");
         final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
         final String ITEM_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
         final String HEADER_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
@@ -535,19 +523,18 @@ public class CheckOutEvents {
         }
 
         // Invoke payment processing.
-        if (requireAuth && PAYMENT_SERVICE != null && !PAYMENT_SERVICE.equalsIgnoreCase("NONE") &&
-                !PAYMENT_SERVICE.equalsIgnoreCase("")) {
+        if (requireAuth) {
             Map paymentResult = null;
             try {
                 // invoke the payment gateway service.
-                paymentResult = dispatcher.runSync(PAYMENT_SERVICE, UtilMisc.toMap("orderId", orderId));
+                paymentResult = dispatcher.runSync("processPayments", UtilMisc.toMap("orderId", orderId));
             } catch (GenericServiceException e) {
                 Debug.logWarning(e, module);
             }
             if (Debug.verboseOn()) Debug.logVerbose("Finsished w/ Payment Service", module);
-            if (paymentResult != null && paymentResult.containsKey("authResponse")) {
-                String authResp = (String) paymentResult.get("authResponse");
-                if (!authResp.equals("SUCCESS")) {
+            if (paymentResult != null && paymentResult.containsKey("processResult")) {
+                String authResp = (String) paymentResult.get("processResult");
+                if (!authResp.equals("APPROVED")) {
                     // order was NOT approved
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth was NOT a success!", module);
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>" + DECLINE_MESSAGE);

@@ -97,7 +97,57 @@
         <attribute name="comments" type="String" mode="IN" optional="true"/>
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
     </service>
-    
+
+    <service name="processPayments" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="processPayments" auth="false">
+        <description>Process payments (authorizations)</description>
+        <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="payToPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="processResult" type="String" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="ccProcessor" engine="java"
+            location="org.ofbiz.commonapp.thirdparty.verisign.PayflowPro" invoke="authorizePayment">
+            <!--location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor" auth="false">-->
+        <description>Credit Card Processing</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="processAmount" type="Double" mode="INOUT" optional="false"/>
+        <attribute name="contactPerson" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="contactEmail" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="billingAddress" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="shippingAddress" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="creditCard" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="authResult" type="Boolean" mode="OUT" optional="true"/>
+        <attribute name="captureResult" type="Boolean" mode="OUT" optional="true"/>
+        <attribute name="authCode" type="String" mode="OUT" optional="true"/>
+        <attribute name="authRefNum" type="String" mode="OUT" optional="false"/>
+        <attribute name="authFlag" type="String" mode="OUT" optional="false"/>
+        <attribute name="authMessage" type="String" mode="OUT" optional="false"/>
+        <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="eftProcessor" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor" auth="false">
+        <description>EFT Account Processing</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="processAmount" type="Double" mode="INOUT" optional="false"/>
+        <attribute name="contactPerson" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="contactEmail" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="billingAddress" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="shippingAddress" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="eftAccount" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="authResult" type="Boolean" mode="OUT" optional="true"/>
+        <attribute name="captureResult" type="Boolean" mode="OUT" optional="true"/>
+        <attribute name="authCode" type="String" mode="OUT" optional="false"/>
+        <attribute name="authRefNum" type="String" mode="OUT" optional="false"/>
+        <attribute name="authFlag" type="String" mode="OUT" optional="false"/>
+        <attribute name="authMessage" type="String" mode="OUT" optional="false"/>
+        <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
+    </service>
+
     <service name="authorizePayment" engine="java"
         location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="authorizePayment" auth="false">
         <description>Authorize Payment</description>
@@ -111,11 +161,11 @@
         <description>Capture Payment</description>
         <attribute name="orderId" type="String" mode="IN" optional="false" />
     </service>
-    
+
     <service name="captureAll" engine="simple"
                 location="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="captureAll" auth="false">
         <description>Capture all payments for orders with a given status</description>
         <attribute name="orderStatusId" type="String" mode="IN" optional="false" />
     </service>
-            
+
 </services>

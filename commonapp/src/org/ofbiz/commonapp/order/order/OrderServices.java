@@ -642,6 +642,11 @@ public class OrderServices {
         return result;
     }
 
+    /** Null tax calc service. */
+    public static Map nullTaxCalc(DispatchContext dctx, Map context) {
+        return UtilMisc.toMap("orderAdjustments", UtilMisc.toList(null), "itemAdjustments", UtilMisc.toList(null));
+    }
+
     /** Simple tax calc service. */
     public static Map simpleTaxCalc(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();

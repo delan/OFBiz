@@ -86,9 +86,9 @@
         <attribute name="note" type="String" mode="IN"/>
     </service>
 
-    <service name="simpleTaxCalc" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="simpleTaxCalc">
-        <description>Simple Tax Calc</description>
+    <service name="calcTax" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="nullTaxCalc">
+        <description>Calc Tax Service</description>
         <attribute name="itemProductList" type="java.util.List" mode="IN"/>
         <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
         <attribute name="itemShippingList" type="java.util.List" mode="IN" optional="true"/>
