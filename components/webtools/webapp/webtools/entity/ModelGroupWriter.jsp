@@ -1,13 +1,14 @@
 <%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.base.config.*, org.ofbiz.base.util.*, org.ofbiz.entity.*, org.ofbiz.entity.config.*, org.ofbiz.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" /><jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" /><%
 
-  if("true".equals(request.getParameter("savetofile"))) {
+  if("true-not-working".equals(request.getParameter("savetofile"))) {
     if(security.hasPermission("ENTITY_MAINT", session)) {
       //save to the file specified in the ModelReader config
       String controlPath=(String)request.getAttribute("_CONTROL_PATH_");
       String serverRootUrl=(String)request.getAttribute("_SERVER_ROOT_URL_");
       ModelGroupReader modelGroupReader = delegator.getModelGroupReader();
 
-      ResourceHandler resourceHandler = modelGroupReader.entityGroupResourceHandler;
+      ResourceHandler resourceHandler = null; //modelGroupReader.entityGroupResourceHandler;
+
       if (resourceHandler.isFileResource()) {
           String filename = resourceHandler.getFullLocation();
 
