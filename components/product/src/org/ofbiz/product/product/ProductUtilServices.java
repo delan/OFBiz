@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.26 2004/01/28 14:00:15 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.27 2004/01/28 15:17:38 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -339,6 +339,12 @@ public class ProductUtilServices {
         Boolean removeOldBool = (Boolean) context.get("removeOld");
         boolean removeOld = removeOldBool.booleanValue();
         
+        Boolean testBool = (Boolean) context.get("test");
+        boolean test = false;
+        if (testBool != null) {
+            test = testBool.booleanValue();
+        }
+        
         try {
             GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
             Debug.logInfo("Processing virtual product with one variant with ID: " + productId + " and name: " + product.getString("internalName"), module);
@@ -348,11 +354,19 @@ public class ProductUtilServices {
             GenericValue productAssoc = EntityUtil.getFirst(paList);
             if (removeOld) {
                 // remove the productAssoc before getting down so it isn't copied over...
-                productAssoc.remove();
+                if (test) {
+                    Debug.logInfo("Test mode, would remove: " + productAssoc, module);
+                } else {
+                    productAssoc.remove();
+                }
             } else {
                 // don't remove, just expire to avoid running again in the future
                 productAssoc.set("thruDate", nowTimestamp);
-                productAssoc.store();
+                if (test) {
+                    Debug.logInfo("Test mode, would store: " + productAssoc, module);
+                } else {
+                    productAssoc.store();
+                }
             }
             String variantProductId = productAssoc.getString("productIdTo");
             
@@ -365,33 +379,46 @@ public class ProductUtilServices {
             GenericValue newVariantProduct = delegator.makeValue("Product", product);
             newVariantProduct.setAllFields(variantProduct, false, "", null);
             newVariantProduct.set("isVariant", "N");
-            newVariantProduct.store();
+            if (test) {
+                Debug.logInfo("Test mode, would store: " + newVariantProduct, module);
+            } else {
+                newVariantProduct.store();
+            }
             
             // ProductCategoryMember - always remove these to pull the virtual from any categories it might have been in
-            duplicateRelated(product, "", "ProductCategoryMember", "productId", variantProductId, nowTimestamp, true, delegator);
+            duplicateRelated(product, "", "ProductCategoryMember", "productId", variantProductId, nowTimestamp, true, delegator, test);
             
             // ProductFeatureAppl
-            duplicateRelated(product, "", "ProductFeatureAppl", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            duplicateRelated(product, "", "ProductFeatureAppl", "productId", variantProductId, nowTimestamp, removeOld, delegator, test);
             
             // ProductContent
-            duplicateRelated(product, "", "ProductContent", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            duplicateRelated(product, "", "ProductContent", "productId", variantProductId, nowTimestamp, removeOld, delegator, test);
             
             // ProductPrice
-            duplicateRelated(product, "", "ProductPrice", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            duplicateRelated(product, "", "ProductPrice", "productId", variantProductId, nowTimestamp, removeOld, delegator, test);
             
             // GoodIdentification
-            duplicateRelated(product, "", "GoodIdentification", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            duplicateRelated(product, "", "GoodIdentification", "productId", variantProductId, nowTimestamp, removeOld, delegator, test);
             
             // ProductAttribute
-            duplicateRelated(product, "", "ProductAttribute", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            duplicateRelated(product, "", "ProductAttribute", "productId", variantProductId, nowTimestamp, removeOld, delegator, test);
             
             // ProductAssoc
-            duplicateRelated(product, "Main", "ProductAssoc", "productId", variantProductId, nowTimestamp, removeOld, delegator);
-            duplicateRelated(product, "Assoc", "ProductAssoc", "productIdTo", variantProductId, nowTimestamp, removeOld, delegator);
+            duplicateRelated(product, "Main", "ProductAssoc", "productId", variantProductId, nowTimestamp, removeOld, delegator, test);
+            duplicateRelated(product, "Assoc", "ProductAssoc", "productIdTo", variantProductId, nowTimestamp, removeOld, delegator, test);
             
             if (removeOld) {
-                product.removeRelated("ProductKeyword");
-                product.remove();
+                if (test) {
+                    Debug.logInfo("Test mode, would remove related ProductKeyword with dummy key: " + product.getRelatedDummyPK("ProductKeyword"), module);
+                    Debug.logInfo("Test mode, would remove: " + product, module);
+                } else {
+                    product.removeRelated("ProductKeyword");
+                    product.remove();
+                }
+            }
+            
+            if (test) {
+                ServiceUtil.returnError("Test mode - returning error to get a rollback");
             }
         } catch (GenericEntityException e) {
             String errMsg = "Entity error running makeStandAloneFromSingleVariantVirtuals: " + e.toString();
@@ -399,11 +426,10 @@ public class ProductUtilServices {
             return ServiceUtil.returnError(errMsg);
         }
        
-        
         return ServiceUtil.returnSuccess();
     }
     
-    protected static void duplicateRelated(GenericValue product, String title, String relatedEntityName, String productIdField, String variantProductId, Timestamp nowTimestamp, boolean removeOld, GenericDelegator delegator) throws GenericEntityException {
+    protected static void duplicateRelated(GenericValue product, String title, String relatedEntityName, String productIdField, String variantProductId, Timestamp nowTimestamp, boolean removeOld, GenericDelegator delegator, boolean test) throws GenericEntityException {
         List relatedList = EntityUtil.filterByDate(product.getRelated(title + relatedEntityName), nowTimestamp);
         Iterator relatedIter = relatedList.iterator();
         while (relatedIter.hasNext()) {
@@ -420,17 +446,28 @@ public class ProductUtilServices {
                 findValue.remove("fromDate");
                 List existingValueList = EntityUtil.filterByDate(delegator.findByAnd(relatedEntityName, findValue), nowTimestamp);
                 if (existingValueList.size() > 0) {
+                    if (test) {
+                        Debug.logInfo("Found " + existingValueList.size() + " existing values for related entity name: " + relatedEntityName + ", not copying, findValue is: " + findValue, module);
+                    }
                     continue;
                 }
                 newRelatedValue.set("fromDate", nowTimestamp);
             }
             
             if (delegator.findCountByAnd(relatedEntityName, newRelatedValue.getPrimaryKey()) == 0) {
-                newRelatedValue.create();
+                if (test) {
+                    Debug.logInfo("Test mode, would create: " + newRelatedValue, module);
+                } else {
+                    newRelatedValue.create();
+                }
             }
         }
         if (removeOld) {
-            product.removeRelated(title + relatedEntityName);
+            if (test) {
+                Debug.logInfo("Test mode, would remove related " + title + relatedEntityName + " with dummy key: " + product.getRelatedDummyPK(title + relatedEntityName), module);
+            } else {
+                product.removeRelated(title + relatedEntityName);
+            }
         }
     }
     

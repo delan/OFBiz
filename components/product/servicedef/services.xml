@@ -1078,6 +1078,7 @@
         <description>A service to be called by the make stand alone service to do the operation for one product.</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="removeOld" type="Boolean" mode="IN" optional="false"/>
+        <attribute name="test" type="Boolean" mode="IN" optional="true"/>
     </service>
     
     <service name="setAllProductImageNames" engine="java"
