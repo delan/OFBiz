@@ -84,6 +84,7 @@ public class ModelFormField {
     protected String titleStyle;
     protected String widgetStyle;
     protected String tooltipStyle;
+    protected String requiredFieldStyle;
     protected Integer position = null;
     protected String redWhen;
     protected FlexibleStringExpander useWhen;
@@ -91,6 +92,7 @@ public class ModelFormField {
     protected FieldInfo fieldInfo = null;
     protected String idName;
     protected boolean separateColumn = false;
+    protected boolean requiredField = false;
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -114,12 +116,14 @@ public class ModelFormField {
         this.titleStyle = fieldElement.getAttribute("title-style");
         this.widgetStyle = fieldElement.getAttribute("widget-style");
         this.tooltipStyle = fieldElement.getAttribute("tooltip-style");
+        this.requiredFieldStyle = fieldElement.getAttribute("required-field-style");
         this.redWhen = fieldElement.getAttribute("red-when");
         this.setUseWhen(fieldElement.getAttribute("use-when"));
         this.idName = fieldElement.getAttribute("id-name");
         String sepColumns = fieldElement.getAttribute("separate-column");
         if (sepColumns != null && sepColumns.equalsIgnoreCase("true"))
             separateColumn = true;
+        this.requiredField = "true".equals(fieldElement.getAttribute("required-field"));
 
 
 
@@ -885,6 +889,17 @@ public class ModelFormField {
     /**
      * @return
      */
+    public String getRequiredFieldStyle() {
+        if (UtilValidate.isNotEmpty(this.requiredFieldStyle)) {
+            return this.requiredFieldStyle;
+        } else {
+            return this.modelForm.getDefaultRequiredFieldStyle();
+        }
+    }
+
+    /**
+     * @return
+     */
     public String getTooltip(Map context) {
         if (tooltip != null && !tooltip.isEmpty()) {
             return tooltip.expandString(context);
@@ -1094,6 +1109,13 @@ public class ModelFormField {
      */
     public boolean getSeparateColumn() {
         return this.separateColumn;
+    }
+
+    /**
+     * @return
+     */
+    public boolean getRequiredField() {
+        return this.requiredField;
     }
 
     public static abstract class FieldInfo {

@@ -122,6 +122,14 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="css-styling" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="alt-target">
         <xs:complexType>
@@ -172,14 +180,39 @@
     </xs:attributeGroup>
     <xs:element name="sort-order">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="sort-field"/>
-            </xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element ref="sort-field"/>
+                <xs:element ref="field-group"/>
+            </xs:choice>
             <xs:attributeGroup ref="attlist.sort-order"/>
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.sort-order">
         <xs:attribute name="type" default="explicit">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="explicit"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="field-group">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="sort-field"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.field-group"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.field-group">
+        <xs:attribute name="id" default="explicit">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="explicit"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="style" default="explicit">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="explicit"/>
@@ -265,6 +298,17 @@
         </xs:attribute>
         <xs:attribute type="xs:string" name="id-name"/>
         <xs:attribute name="separate-column" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="required-field-style">
+            <xs:annotation><xs:documentation>The name of a style (like a CSS class) to apply to the title of this field if required. Will default to form's default-required-field-style. If field is required, but required-field-style is empty, an '*' will be placed to the right of text, textarea and password fields.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="required-field" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true"/>

@@ -84,6 +84,7 @@ public class ModelForm {
     protected String defaultTitleStyle;
     protected String defaultWidgetStyle;
     protected String defaultTooltipStyle;
+    protected String defaultRequiredFieldStyle;
     protected String itemIndexSeparator;
     protected FlexibleStringExpander paginateTarget;
     protected boolean separateColumns = false;
@@ -227,6 +228,8 @@ public class ModelForm {
             this.defaultWidgetStyle = formElement.getAttribute("default-widget-style");
         if (this.defaultTooltipStyle == null || formElement.hasAttribute("default-tooltip-style"))
             this.defaultTooltipStyle = formElement.getAttribute("default-tooltip-style");
+        if (this.defaultRequiredFieldStyle == null || formElement.hasAttribute("default-required-field-style"))
+            this.defaultRequiredFieldStyle = formElement.getAttribute("default-required-field-style");
         if (this.itemIndexSeparator == null || formElement.hasAttribute("item-index-separator"))
             this.itemIndexSeparator = formElement.getAttribute("item-index-separator");
         if (this.paginateTarget == null || formElement.hasAttribute("paginate-target"))
@@ -631,7 +634,7 @@ public class ModelForm {
 
             // render title (unless this is a submit or a reset field)
             if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.SUBMIT && fieldInfo.getFieldType() != ModelFormField.FieldInfo.RESET) {
-                formStringRenderer.renderFieldTitle(buffer, context, currentFormField);
+                formStringRenderer.renderSingleFormFieldTitle(buffer, context, currentFormField);
             } else {
                 formStringRenderer.renderFormatEmptySpace(buffer, context, this);
             }
@@ -1098,6 +1101,13 @@ public class ModelForm {
      */
     public String getDefaultTooltipStyle() {
         return this.defaultTooltipStyle;
+    }
+
+    /**
+     * @return
+     */
+    public String getDefaultRequiredFieldStyle() {
+        return this.defaultRequiredFieldStyle;
     }
 
     /**

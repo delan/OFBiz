@@ -101,6 +101,19 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
     }
 
+    public void addAstericks(StringBuffer buffer, Map context, ModelFormField modelFormField) {
+           
+        boolean requiredField = modelFormField.getRequiredField();
+        if (requiredField) {
+            String requiredStyle = modelFormField.getRequiredFieldStyle();
+            
+            if (UtilValidate.isEmpty(requiredStyle)) {
+               buffer.append("*");
+            }
+        }
+        return;
+    }
+    
     /* (non-Javadoc)
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderDisplayField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.DisplayField)
      */
@@ -217,6 +230,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
 
         buffer.append("/>");
+        
+        this.addAstericks(buffer, context, modelFormField);
 
         this.makeHyperlinkString(buffer, textField.getSubHyperlink(), context);
 
@@ -268,6 +283,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
 
         buffer.append("</textarea>");
+
+        this.addAstericks(buffer, context, modelFormField);
 
         this.appendTooltip(buffer, context, modelFormField);
 
@@ -692,6 +709,34 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("</span>");
 
         this.appendWhitespace(buffer);
+    }
+
+    /* (non-Javadoc)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFieldTitle(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField)
+     */
+    public void renderSingleFormFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField) {
+        boolean requiredField = modelFormField.getRequiredField();
+        if (requiredField) {
+            
+            buffer.append("<span");
+            String requiredStyle = modelFormField.getRequiredFieldStyle();
+            if (UtilValidate.isEmpty(requiredStyle)) {
+                requiredStyle = modelFormField.getTitleStyle();
+            }
+            
+            if (UtilValidate.isNotEmpty(requiredStyle)) {
+                buffer.append(" class=\"");
+                buffer.append(requiredStyle);
+                buffer.append("\"");
+            }
+            buffer.append(">");
+            buffer.append(modelFormField.getTitle(context));
+            buffer.append("</span>");
+
+            this.appendWhitespace(buffer);
+        } else {
+            renderFieldTitle(buffer, context, modelFormField);
+        }
     }
 
     /* (non-Javadoc)
@@ -1678,6 +1723,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
 
         buffer.append("/>");
+
+        this.addAstericks(buffer, context, modelFormField);
 
         this.makeHyperlinkString(buffer, passwordField.getSubHyperlink(), context);
 
