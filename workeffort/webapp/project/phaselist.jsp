@@ -59,6 +59,9 @@
           <TD align=left>
             <div class='boxhead'>&nbsp;<b>Project:</b>&nbsp;<ofbiz:entityfield attribute="projectWorkEffort" field="workEffortName"/></div>
           </TD>
+          <TD align=right>
+            <A href='<ofbiz:url>/projecttasklist?projectWorkEffortId=<%=projectWorkEffortId%></ofbiz:url>' class='lightbuttontext'>[All&nbsp;Tasks]</A>
+          </TD>
         </tr>
       </table>
     </TD>
@@ -118,17 +121,20 @@
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <TR>
                   <TD><DIV class='tabletext'><b>Name</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>Description</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Start Date/Time</b></DIV></TD>
 <%--                  <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>--%>
                   <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
                   <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
                 </TR>
-                <TR><TD colspan='5'><HR class='sepbar'></TD></TR>
+                <TR><TD colspan='6'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="workEffort" property="phases">
                   <TR>
                     <TD><A class='buttontext' href='<ofbiz:url>/phasetasklist?phaseWorkEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                         <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></TD>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
+                    <TD><A class='buttontext' href='<ofbiz:url>/phasetasklist?phaseWorkEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                        <ofbiz:entityfield attribute="workEffort" field="description"/></a></TD>
+                    <TD><DIV class='tabletext'><%=UtilDateTime.toDateTimeString(workEffort.getTimestamp("estimatedStartDate"))%></DIV></TD>
 <%--                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="priority"/></DIV></TD>--%>
                     <%GenericValue currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId")));%>
                     <%if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);%>

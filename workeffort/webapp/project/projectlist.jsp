@@ -75,17 +75,21 @@
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <TR>
                   <TD><DIV class='tabletext'><b>Name</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Start Date/Time</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>Description</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>Start Date</b></DIV></TD>
 <%--                  <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>--%>
                   <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
                   <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
                 </TR>
                 <TR><TD colspan='5'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="workEffort" property="projects">
-                  <TR>
+                  <TR onclick="javascript:window.location='<ofbiz:url>/phaselist?projectWorkEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'">
                     <TD><A class='buttontext' href='<ofbiz:url>/phaselist?projectWorkEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                         <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
+                    <TD><A class='buttontext' href='<ofbiz:url>/phaselist?projectWorkEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                        <ofbiz:entityfield attribute="workEffort" field="description"/></a></DIV></TD>
+                    <%//GenericValue workEffort = (GenericValue)pageContext.getAttribute("workEffort");%>
+                    <TD><DIV class='tabletext'><%=UtilDateTime.toDateTimeString(workEffort.getTimestamp("estimatedStartDate"))%></DIV></TD>
 <%--                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="priority"/></DIV></TD>--%>
                     <%GenericValue currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId")));%>
                     <%if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);%>

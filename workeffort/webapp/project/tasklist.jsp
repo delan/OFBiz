@@ -177,15 +177,17 @@
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <TR>
                   <TD><DIV class='tabletext'><b>Name</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>Description</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Start Date/Time</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
                   <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
                 </TR>
-                <TR><TD colspan='5'><HR class='sepbar'></TD></TR>
+                <TR><TD colspan='6'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="workEffort" property="tasks">
                   <TR>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="workEffortName"/></DIV></TD>
+                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="description"/></DIV></TD>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="priority"/></DIV></TD>
                     <%GenericValue currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId")));%>
