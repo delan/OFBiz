@@ -78,6 +78,9 @@
         <make-value value-name="newEntity" entity-name="SecurityGroupPermission"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
+        
+        <!-- clear the org.ofbiz.core.security.Security object's custom cache by newEntity -->
+        <call-bsh><![CDATA[ org.ofbiz.core.security.Security.securityGroupPermissionCache.remove(newEntity); ]]></call-bsh>
     </simple-method>
     <simple-method method-name="removeSecurityPermissionFromSecurityGroup" short-description="Remove SecurityPermission From SecurityGroup">
         <check-permission permission="SECURITY" action="_DELETE"><fail-message message="Security Error: to run removeSecurityPermissionFromSecurityGroup you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -87,6 +90,9 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="SecurityGroupPermission" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+        
+        <!-- clear the org.ofbiz.core.security.Security object's custom cache by lookupPKMap -->
+        <call-bsh><![CDATA[ org.ofbiz.core.security.Security.securityGroupPermissionCache.remove(lookupPKMap); ]]></call-bsh>
     </simple-method>
 
     <!-- UserLogin to SecurityGroup methods -->
@@ -104,6 +110,9 @@
         </if-empty>
         
         <create-value value-name="newEntity"/>
+        
+        <!-- clear the org.ofbiz.core.security.Security object's custom cache by userLoginId -->
+        <call-bsh><![CDATA[ org.ofbiz.core.security.Security.userLoginSecurityGroupByUserLoginId.remove(parameters.get("userLoginId")); ]]></call-bsh>
     </simple-method>
     <simple-method method-name="updateUserLoginToSecurityGroup" short-description="Update UserLogin to SecurityGroup">
         <check-permission permission="SECURITY" action="_UPDATE"><fail-message message="Security Error: to run updateUserLoginToSecurityGroup you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -114,6 +123,9 @@
         <find-by-primary-key entity-name="UserLoginSecurityGroup" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
+        
+        <!-- clear the org.ofbiz.core.security.Security object's custom cache by userLoginId -->
+        <call-bsh><![CDATA[ org.ofbiz.core.security.Security.userLoginSecurityGroupByUserLoginId.remove(parameters.get("userLoginId")); ]]></call-bsh>
     </simple-method>
     <simple-method method-name="removeUserLoginFromSecurityGroup" short-description="Remove UserLogin From SecurityGroup">
         <check-permission permission="SECURITY" action="_DELETE"><fail-message message="Security Error: to run removeUserLoginFromSecurityGroup you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -123,5 +135,8 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="UserLoginSecurityGroup" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+        
+        <!-- clear the org.ofbiz.core.security.Security object's custom cache by userLoginId -->
+        <call-bsh><![CDATA[ org.ofbiz.core.security.Security.userLoginSecurityGroupByUserLoginId.remove(parameters.get("userLoginId")); ]]></call-bsh>
     </simple-method>
 </simple-methods>
