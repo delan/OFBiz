@@ -116,10 +116,10 @@
                    <number value="1"/>
                </calcop>
            </calculate>
-           <to-string field-name="shoppingListItemSeqId" map-name="newEntity"/>           
+           <to-string field-name="shoppingListItemSeqId" map-name="newEntity" numeric-padding="5"/>
         </else>
         </if-empty>
-                        
+
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <field-to-result field-name="shoppingListItemSeqId" map-name="newEntity"/>                                        
         <field-to-result field-name="shoppingListId" map-name="newEntity"/>                                        
