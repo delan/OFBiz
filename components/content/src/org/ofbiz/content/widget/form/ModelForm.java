@@ -228,6 +228,8 @@ public class ModelForm {
             this.itemIndexSeparator = formElement.getAttribute("item-index-separator");
         if (this.paginateTarget == null || formElement.hasAttribute("paginate-target"))
             this.paginateTarget = formElement.getAttribute("paginate-target");
+        
+        paginate = "true".equals(formElement.getAttribute("true"));
         if (formElement.hasAttribute("separate-columns")) {
             String sepColumns = formElement.getAttribute("separate-columns");
             if (sepColumns != null && sepColumns.equalsIgnoreCase("true"))
@@ -1385,7 +1387,7 @@ public class ModelForm {
         listSize = val;
     }
 
-    public void setLowndex(int val) {
+    public void setLowIndex(int val) {
         lowIndex = val;
     }
 

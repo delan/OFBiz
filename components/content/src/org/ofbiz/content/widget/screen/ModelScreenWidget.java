@@ -111,6 +111,8 @@ public abstract class ModelScreenWidget {
                 subWidgets.add(new Link(modelScreen, subElement));
             } else if ("image".equals(subElement.getNodeName())) {
                 subWidgets.add(new Image(modelScreen, subElement));
+            } else if ("iterate-section".equals(subElement.getNodeName())) {
+                subWidgets.add(new IterateSectionWidget(modelScreen, subElement));
             } else {
                 throw new IllegalArgumentException("Found invalid screen widget element with name: " + subElement.getNodeName());
             }
@@ -719,14 +721,16 @@ public abstract class ModelScreenWidget {
         
         protected FlexibleStringExpander contentId;
         protected FlexibleStringExpander editRequest;
+        protected FlexibleStringExpander editContainerStyle;
         protected boolean xmlEscape = false;
         
         public Content(ModelScreen modelScreen, Element subContentElement) {
             super(modelScreen, subContentElement);
 
             // put the text attribute first, then the pcdata under the element, if both are there of course
-            this.contentId = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("content-id")));
-            this.editRequest = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("edit-request")));
+            this.contentId = new FlexibleStringExpander(subContentElement.getAttribute("content-id"));
+            this.editRequest = new FlexibleStringExpander(subContentElement.getAttribute("edit-request"));
+            this.editContainerStyle = new FlexibleStringExpander(subContentElement.getAttribute("edit-container-style"));
             this.xmlEscape = "true".equals(subContentElement.getAttribute("xml-escape"));
             return;
         }
@@ -752,6 +756,10 @@ public abstract class ModelScreenWidget {
             return this.editRequest.expandString(context);
         }
         
+        public String getEditContainerStyle(Map context) {
+            return this.editContainerStyle.expandString(context);
+        }
+        
         public boolean xmlEscape() {
             return this.xmlEscape;
         }
@@ -763,6 +771,7 @@ public abstract class ModelScreenWidget {
         protected FlexibleStringExpander contentId;
         protected FlexibleStringExpander assocName;
         protected FlexibleStringExpander editRequest;
+        protected FlexibleStringExpander editContainerStyle;
         protected boolean xmlEscape = false;
         
         public SubContent(ModelScreen modelScreen, Element subContentElement) {
@@ -772,6 +781,7 @@ public abstract class ModelScreenWidget {
             this.contentId = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("content-id")));
             this.assocName = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("assoc-name")));
             this.editRequest = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("edit-request")));
+            this.editContainerStyle = new FlexibleStringExpander(subContentElement.getAttribute("edit-container-style"));
             this.xmlEscape = "true".equals(subContentElement.getAttribute("xml-escape"));
 
         }
@@ -798,6 +808,10 @@ public abstract class ModelScreenWidget {
         
         public String getEditRequest(Map context) {
             return this.editRequest.expandString(context);
+        }
+        
+        public String getEditContainerStyle(Map context) {
+            return this.editContainerStyle.expandString(context);
         }
         
         public boolean xmlEscape() {
@@ -1110,5 +1124,7 @@ public abstract class ModelScreenWidget {
         }
             
     }
+    
+
 }
 

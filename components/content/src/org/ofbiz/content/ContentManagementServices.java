@@ -95,6 +95,14 @@ public class ContentManagementServices {
         GenericValue userLogin = (GenericValue)context.get("userLogin");
         Timestamp fromDate = (Timestamp)context.get("fromDate");
         List assocTypes = (List) context.get("assocTypes"); 
+        String assocTypesString = (String)context.get("assocTypesString");
+        if (UtilValidate.isNotEmpty(assocTypesString)) {
+            List lst = StringUtil.split(assocTypesString, "|");
+            if (assocTypes == null) {
+                assocTypes = new ArrayList();   
+            }
+            assocTypes.addAll(lst);
+        }
         GenericValue content = null;
         GenericValue view = null;
 
