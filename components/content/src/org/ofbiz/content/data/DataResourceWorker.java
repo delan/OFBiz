@@ -643,7 +643,7 @@ public class DataResourceWorker {
                          }
                      }
 
-                    String combinedName = (String)dataResource.get("dataObject");
+                    String combinedName = (String)dataResource.get("objectInfo");
                     ModelScreen modelScreen = ScreenFactory.getScreenFromLocation(combinedName);
                     modelScreen.renderScreenString(out, context, screenStringRenderer);
 
