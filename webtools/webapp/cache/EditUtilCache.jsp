@@ -99,7 +99,7 @@
   <%}else{%>
     <H3>&nbsp;No Cache Name Specified</H3>
   <%}%>
-  <br><a href='<ofbiz:url>/FindUtilCache"</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
+  <br><a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
 
 <%}else{%>
   <h3>You do not have permission to view this page (UTIL_CACHE_EDIT needed).</h3>
