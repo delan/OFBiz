@@ -139,10 +139,9 @@ public class OrderManagerEvents {
             return "error";
         }
         
-        OrderReadHelper orh = null;
-        if (orderHeader != null)
-            orh = new OrderReadHelper(orderHeader);
-        double grandTotal = orh.getOrderGrandTotal();
+        Double grandTotal = new Double(0.00);
+        if (orderHeader != null)          
+         grandTotal = orderHeader.getDouble("grandTotal");
             
         // get the payment types to receive
         List paymentMethodTypes = null;
@@ -210,7 +209,7 @@ public class OrderManagerEvents {
         }
                                                                       
         // now finish up
-        if (paymentTally == grandTotal) {
+        if (paymentTally == grandTotal.doubleValue()) {
             // cancel the old payment preferences
             if (currentPaymentPrefs != null && currentPaymentPrefs.size() > 0) {
                 Iterator cppi = currentPaymentPrefs.iterator();
