@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE site-conf PUBLIC "-//OFBiz//DTD Request Config//EN" "http://www.ofbiz.org/dtds/site-conf.dtd">
+<!DOCTYPE site-conf 
+  PUBLIC "-//OFBiz//DTD Request Config//EN" 
+  "http://www.ofbiz.org/dtds/site-conf.dtd">
 
 <site-conf>
     <description>CommonApp Site Configuration File</description>
@@ -9,15 +11,6 @@
     <handler name="java" class="org.ofbiz.core.event.JavaEventHandler"/>
     <handler name="soap" class="org.ofbiz.core.event.SOAPEventHandler"/>
     <handler name="service" class="org.ofbiz.core.event.ServiceEventHandler"/>
-    
-    <preprocessor>
-    	<!-- Events to run on every request before security (chains exempt) -->
-    	<event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
-    </preprocessor>
-    <postprocessor>
-    	<!-- Events to run on every request after all other processing (chains exempt) -->
-    	<event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> 
-    </postprocessor>
     
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
@@ -178,6 +171,7 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="readxpdl"/>
     </request-map>
+    
 
     <!-- end of request mappings -->
 
