@@ -36,7 +36,6 @@ else
 %><?xml version="1.0"?>
 <!--
 /**
- *  $Id$
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
