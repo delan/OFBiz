@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.23 2003/11/25 06:05:36 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.24 2004/01/19 12:53:04 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,7 +58,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -333,6 +333,8 @@ public class ProductSearch {
             try {
                 boolean hasResults = false;
                 Object initialResult = null;
+                
+                /* this method has been replaced by the following to address issue with SAP DB and possibly other DBs
                 if (resultOffset != null) {
                     Debug.logInfo("Before relative, current index=" + eli.currentIndex(), module);
                     hasResults = eli.relative(resultOffset.intValue());
@@ -342,7 +344,18 @@ public class ProductSearch {
                         hasResults = true;
                     }
                 }
+                 */
 
+                initialResult = eli.next();
+                if (initialResult != null) {
+                    hasResults = true;
+                }
+                if (resultOffset != null && resultOffset.intValue() > 1) {
+                    Debug.logInfo("Before relative, current index=" + eli.currentIndex(), module);
+                    hasResults = eli.relative(resultOffset.intValue() - 1);
+                    initialResult = null;
+                }
+                
                 // get the first as the current one
                 GenericValue searchResult = null;
                 if (hasResults) {
@@ -366,6 +379,7 @@ public class ProductSearch {
 
                 // init numRetreived to one since we have already grabbed the initial one
                 int numRetreived = 1;
+                int duplicatesFound = 0;
 
                 Set productIdSet = new HashSet();
                 while (((searchResult = (GenericValue) eli.next()) != null) && (maxResults == null || numRetreived < maxResults.intValue())) {
@@ -374,13 +388,32 @@ public class ProductSearch {
                         productIds.add(productId);
                         productIdSet.add(productId);
                         numRetreived++;
+                    } else {
+                        duplicatesFound++;
                     }
+                    
+                    /*
+                    StringBuffer lineMsg = new StringBuffer("Got search result line: ");
+                    Iterator fieldsToSelectIter = fieldsToSelect.iterator();
+                    while (fieldsToSelectIter.hasNext()) {
+                        String fieldName = (String) fieldsToSelectIter.next();
+                        lineMsg.append(fieldName);
+                        lineMsg.append("=");
+                        lineMsg.append(searchResult.get(fieldName));
+                        if (fieldsToSelectIter.hasNext()) {
+                            lineMsg.append(", ");
+                        }
+                    }
+                    Debug.logInfo(lineMsg.toString(), module);
+                    */
                 }
 
                 if (searchResult != null) {
                     // we weren't at the end, so go to the end and get the index
+                    //Debug.logInfo("Getting totalResults from ending index - before last() currentIndex=" + eli.currentIndex(), module);
                     if (eli.last()) {
                         this.totalResults = new Integer(eli.currentIndex());
+                        //Debug.logInfo("Getting totalResults from ending index - after last() currentIndex=" + eli.currentIndex(), module);
                     }
                 }
                 if (this.totalResults == null || this.totalResults.intValue() == 0) {
@@ -391,7 +424,7 @@ public class ProductSearch {
                     this.totalResults = new Integer(total);
                 }
 
-                //Debug.logInfo("Got values, numRetreived=" + numRetreived + ", totalResults=" + totalResults + ", maxResults=" + maxResults + ", resultOffset=" + resultOffset, module);
+                Debug.logInfo("Got search values, numRetreived=" + numRetreived + ", totalResults=" + totalResults + ", maxResults=" + maxResults + ", resultOffset=" + resultOffset + ", duplicatesFound(in the current results)=" + duplicatesFound, module);
 
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error getting results from the product search query", module);
