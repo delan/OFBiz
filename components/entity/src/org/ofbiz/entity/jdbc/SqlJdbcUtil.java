@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.10 2004/01/20 15:51:07 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.11 2004/01/20 16:06:06 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -66,7 +66,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -545,6 +545,7 @@ public class SqlJdbcUtil {
                 case 1:
                     String value = rs.getString(ind);
                     if (value == null || value.length() == 0) {
+                        Debug.logInfo("For field " + curField.getName() + " of entity " + entity.getEntityName() + " getString was null or empty, trying getCharacterStream", module);
                         // if the String is empty, try to get a text input stream, this is required for some databases for larger fields, like CLOBs
                         Reader valueReader = rs.getCharacterStream(ind);
                         if (valueReader != null) {
