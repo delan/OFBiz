@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/08/30 21:02:18  jonesde
+ * Fixed little throws clause bug stopping it from compiling.
+ *
  * Revision 1.4  2001/08/30 20:58:15  jonesde
  * Cleaned up some CSS stuff and some finishing touches on the newcustomer and viewprofile pieces, and added initial editcontactmech stuff.
  *
@@ -58,7 +61,6 @@ public class CustomerEvents
     GenericValue newUserLogin = null;
 
     String errMsg = "";
-
     GenericHelper helper = (GenericHelper)request.getAttribute("helper");
     
     String username = request.getParameter("USERNAME");
@@ -153,7 +155,7 @@ public class CustomerEvents
     Long newCMId = null;
     //make address
     newCMId = helper.getNextSeqId("ContactMech");
-    if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+    if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
     tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "POSTAL_ADDRESS")));
     Map addrFields = new HashMap();
     addrFields.put("contactMechId", newCMId.toString());
@@ -173,7 +175,7 @@ public class CustomerEvents
     //make home phone number
     if(UtilValidate.isNotEmpty(homeContactNumber))
     {
-      newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+      newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
       tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
       tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", homeCountryCode, "areaCode", homeAreaCode, "contactNumber", homeContactNumber)));
       tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", homeAllowSolicitation, "extension", homeExt)));
@@ -183,7 +185,7 @@ public class CustomerEvents
     //make work phone number
     if(UtilValidate.isNotEmpty(workContactNumber))
     {
-      newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+      newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
       tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
       tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", workCountryCode, "areaCode", workAreaCode, "contactNumber", workContactNumber)));
       tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", workAllowSolicitation, "extension", workExt)));
@@ -193,7 +195,7 @@ public class CustomerEvents
     //make fax number
     if(UtilValidate.isNotEmpty(faxContactNumber))
     {
-      newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+      newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
       tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
       tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", faxCountryCode, "areaCode", faxAreaCode, "contactNumber", faxContactNumber)));
       tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", faxAllowSolicitation)));
@@ -203,7 +205,7 @@ public class CustomerEvents
     //make mobile phone number
     if(UtilValidate.isNotEmpty(mobileContactNumber))
     {
-      newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+      newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
       tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
       tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", mobileCountryCode, "areaCode", mobileAreaCode, "contactNumber", mobileContactNumber)));
       tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", mobileAllowSolicitation)));
@@ -211,12 +213,12 @@ public class CustomerEvents
     }
       
     //make email
-    newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; return "error"; }
+    newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
     tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "EMAIL_ADDRESS", "infoString", email)));
     tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", emailAllowSolicitation)));
     
     newUserLogin = helper.create(tempUserLogin);
-    if(newUserLogin == null) { errMsg = "<li>ERROR: Could not create new account (create failure). Please contact customer service."; return "error"; }
+    if(newUserLogin == null) { errMsg = "<li>ERROR: Could not create new account (create failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
 
     if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) request.getSession().setAttribute(SiteDefs.USER_LOGIN, newUserLogin);
     return "success";
@@ -224,6 +226,119 @@ public class CustomerEvents
   
   public static String updateContactMech(HttpServletRequest request, HttpServletResponse response)
   {
+    String errMsg = "";
+    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+    if(userLogin == null) { errMsg = "<li>ERROR: User not logged in, cannot update contact info. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+
+    String updateMode = request.getParameter("UPDATE_MODE");
+    
+    if("CREATE".equals(updateMode))
+    {
+      String contactMechTypeId = request.getParameter("CONTACT_MECH_TYPE_ID");
+      if(contactMechTypeId == null) { errMsg = "<li>ERROR: Could not create new contact info, type not specified. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+      
+      Long newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new contact info (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+      GenericValue tempContactMech = helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", contactMechTypeId));
+      tempContactMech.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", "N")));      
+      
+      if("POSTAL_ADDRESS".equals(contactMechTypeId))        
+        tempContactMech.preStoreOther(helper.makeValue("PostalAddress", UtilMisc.toMap("contactMechId", newCMId.toString())));
+      else if("TELECOM_NUMBER".equals(contactMechTypeId))
+        tempContactMech.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString())));
+      
+      helper.create(tempContactMech);
+      request.setAttribute("CONTACT_MECH_ID", newCMId.toString());
+    }
+    else if("DELETE".equals(updateMode))
+    {
+      //never delete a contact mechanism, just put a to date on the link to the party
+      String contactMechId = request.getParameter("CONTACT_MECH_ID");      
+      GenericValue partyContactMech = helper.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId));
+      partyContactMech.set("thruDate", UtilDateTime.nowTimestamp());
+      partyContactMech.store();
+    }
+    else if("UPDATE".equals(updateMode))
+    {
+      Long newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not change contact info (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+
+      String contactMechId = request.getParameter("CONTACT_MECH_ID");      
+      GenericValue contactMech = helper.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
+      GenericValue partyContactMech = helper.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId));
+      if(partyContactMech == null) { errMsg = "<li>ERROR: Logged in user is cannot update specified contact info because it does not belong to the user. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+      
+      //never change a contact mech, just create a new one with the changes
+      GenericValue newContactMech = new GenericValue(contactMech);
+      newContactMech.set("contactMechId", newCMId.toString());
+      GenericValue newPartyContactMech = new GenericValue(partyContactMech);
+      newPartyContactMech.set("contactMechId", newCMId.toString());
+      newPartyContactMech.set("fromDate", UtilDateTime.nowTimestamp());
+
+      if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId")))
+      {
+        String toName = request.getParameter("CM_TO_NAME");
+        String attnName = request.getParameter("CM_ATTN_NAME");
+        String address1 = request.getParameter("CM_ADDRESS1");
+        String address2 = request.getParameter("CM_ADDRESS2");
+        String city = request.getParameter("CM_CITY");
+        String state = request.getParameter("CM_STATE");
+        String postalCode = request.getParameter("CM_POSTAL_CODE");
+        String country = request.getParameter("CM_COUNTRY");
+        String directions = "";
+
+        Map addrFields = new HashMap();
+        addrFields.put("contactMechId", newCMId.toString());
+        addrFields.put("toName", toName);
+        addrFields.put("attnName", attnName);
+        addrFields.put("address1", address1);
+        addrFields.put("address2", address2);
+        addrFields.put("directions", directions);
+        addrFields.put("city", city);
+        addrFields.put("postalCode", postalCode);
+        addrFields.put("stateProvinceGeoId", state);
+        addrFields.put("countryGeoId", country);
+        //addrFields.put("postalCodeGeoId", postalCodeGeoId);
+        partyContactMech.preStoreOther(helper.makeValue("PostalAddress", addrFields));
+      }
+      else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId")))
+      {
+        String countryCode = request.getParameter("CM_COUNTRY_CODE");
+        String areaCode = request.getParameter("CM_AREA_CODE");
+        String contactNumber = request.getParameter("CM_CONTACT_NUMBER");
+        String extension = request.getParameter("CM_EXTENSION");
+        partyContactMech.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", countryCode, "areaCode", areaCode, "contactNumber", contactNumber)));
+        newPartyContactMech.set("extension", extension);
+      }
+      else
+      {        
+        String infoString = request.getParameter("CM_INFO_STRING");
+        newContactMech.set("infoString", infoString);
+      }
+      String allowSolicitation = request.getParameter("CM_ALLOW_SOL");
+      newPartyContactMech.set("allowSolicitation", allowSolicitation);
+      
+      partyContactMech.preStoreOther(newContactMech);
+      partyContactMech.preStoreOther(newPartyContactMech);
+      
+      Iterator partyContactMechPurposes = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
+      while(partyContactMechPurposes != null && partyContactMechPurposes.hasNext())
+      {
+        GenericValue tempVal = new GenericValue((GenericValue)partyContactMechPurposes.next());
+        tempVal.set("contactMechId", newCMId.toString());
+        partyContactMech.preStoreOther(tempVal);
+      }
+      
+      partyContactMech.set("thruDate", UtilDateTime.nowTimestamp());
+      try { partyContactMech.store(); }
+      catch(Exception e) { errMsg = "<li>ERROR: Could not change contact info (write failure) . Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+    }
+    else
+    {
+      errMsg = "<li>ERROR: Specified Update Mode (" + updateMode + ") is not valid. Please contact customer service."; 
+      request.setAttribute("ERROR_MESSAGE", errMsg);
+      return "error";
+    }
+    
     return "success";
   }
 

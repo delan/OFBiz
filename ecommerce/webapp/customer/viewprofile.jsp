@@ -99,6 +99,8 @@
                 GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");
                 Collection partyContactMechPurposes = partyContactMech.getRelated("PartyContactMechPurpose");
                 Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMechPurposes);
+                if(partyContactMech.getTimestamp("thruDate") == null)
+                {
 %>
                 <tr>
                   <td align="left" valign="top" width="90%">
@@ -111,14 +113,12 @@
                   <%GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");%>
                     <div class="tabletext">
                       <%=UtilFormatOut.checkNull(postalAddress.getString("address1"))%><br>
-                      <%if(postalAddress.getString("address2") != null && postalAddress.getString("address2").length() != 0){%> <%= postalAddress.getString("address2") %><br> <%}%>
+                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("address2"), "", "<br>")%>
                       <%=UtilFormatOut.checkNull(postalAddress.getString("city"))%>, 
                       <%=UtilFormatOut.checkNull(postalAddress.getString("stateProvinceGeoId"))%> 
                       <%=UtilFormatOut.checkNull(postalAddress.getString("postalCode"))%>
                       <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("countryGeoId"),"<br>","")%>
                     </div>
-                    <div class="tabletext">Since:&nbsp;<%=UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("fromDate"))%></div>
-                  </td>
               <%}else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))){%>
                   <%GenericValue telecomNumber = contactMech.getRelatedOne("TelecomNumber");%>
                     <div class="tabletext">
@@ -126,15 +126,14 @@
                       <%=UtilFormatOut.ifNotEmpty(telecomNumber.getString("areaCode"), "", "-")%><%=UtilFormatOut.checkNull(telecomNumber.getString("contactNumber"))%>
                       <%=UtilFormatOut.ifNotEmpty(partyContactMech.getString("extension"), "ext&nbsp;", "")%>
                     </div>
-                    <div class="tabletext">Since:&nbsp;<%=UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("fromDate"))%></div>
-                  </td>
               <%}else if("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
                     <div class="tabletext">
                       <%=UtilFormatOut.checkNull(contactMech.getString("infoString"))%>
                     </div>
-                    <div class="tabletext">Since:&nbsp;<%=UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("fromDate"))%></div>
-                  </td>
               <%}%>
+                    <div class="tabletext">(Created:&nbsp;<%=UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("fromDate"))%>)</div>
+                    <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("thruDate")), "<div class=\"tabletext\"><b>This contact was removed on:&nbsp;", "</b></div>")%>
+                  </td>
                   <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(<%=UtilFormatOut.checkNull(partyContactMech.getString("allowSolicitation"))%>)</b></div></td>
                   <td width="5">&nbsp;</td>
                   <td align="right" valign="top" nowrap width="1%">
@@ -142,12 +141,13 @@
                     [Update]</a></div>&nbsp;
                   </td>
                   <td align="right" valign="top" width="1%">
-                    <div><a href="<%=response.encodeURL(controlPath + "/deletecontactmech/viewprofile?CONTACT_MECH_ID=" + contactMech.getString("contactMechId"))%>" class="buttontext">
+                    <div><a href="<%=response.encodeURL(controlPath + "/updatecontactmech/viewprofile?UPDATE_MODE=DELETE&CONTACT_MECH_ID=" + contactMech.getString("contactMechId"))%>" class="buttontext">
                     [Delete]</a></div>
                   </td>
                 </tr>
                 <%if(partyContactMechIterator.hasNext()){%>
                   <tr><td colspan="5" height="1" bgcolor="#899ABC"></td></tr>
+                  <%}%>
                 <%}%>
               <%}%>
           </table>
