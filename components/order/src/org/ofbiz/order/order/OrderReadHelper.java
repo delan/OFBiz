@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.27 2004/08/16 09:14:02 jonesde Exp $
+ * $Id: OrderReadHelper.java,v 1.28 2004/08/16 16:53:21 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -593,7 +593,6 @@ public class OrderReadHelper {
     }
 
     public double getShippableWeight() {
-        GenericDelegator delegator = orderHeader.getDelegator();
         double shippableWeight = 0.00;
         List validItems = getValidOrderItems();
         if (validItems != null) {
@@ -1091,18 +1090,18 @@ public class OrderReadHelper {
             double itemSubTotal = this.getOrderItemSubTotal(orderItem);
             double itemTaxes = this.getOrderItemTax(orderItem);
             double itemShipping = this.getOrderItemShipping(orderItem);
-            
+
             Double quantityReturnedDouble = (Double) itemReturnedQuantities.get(orderItem.get("orderItemSeqId"));
             double quantityReturned = 0;
             if (quantityReturnedDouble != null) {
                 quantityReturned = quantityReturnedDouble.doubleValue();
             }
-            
-            double quantityNotReturned = itemQuantity = quantityReturned;
-            
+
+            double quantityNotReturned = itemQuantity - quantityReturned;
+
             double factorNotReturned = quantityNotReturned / itemQuantity;
             double subTotalNotReturned = itemSubTotal * factorNotReturned;
-            
+
             // calculate tax and shipping adjustments for each item, add to accumulators
             double itemTaxNotReturned = itemTaxes * factorNotReturned;
             double itemShippingNotReturned = itemShipping * factorNotReturned;
@@ -1111,7 +1110,7 @@ public class OrderReadHelper {
             totalTaxNotReturned += itemTaxNotReturned;
             totalShippingNotReturned += itemShippingNotReturned;
         }
-        
+
         // calculate tax and shipping adjustments for entire order, add to result
         double orderFactorNotReturned = totalSubTotalNotReturned / this.getOrderItemsSubTotal();
         double orderTaxNotReturned = this.getTaxTotal() * orderFactorNotReturned;
