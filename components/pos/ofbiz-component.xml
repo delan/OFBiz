@@ -34,5 +34,6 @@
     <classpath type="jar" location="build/lib/*"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/PosSecurityData.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/DemoRetail.xml"/>
+    <entity-resource type="data" reader-name="main" loader="main" location="data/PosSyncSettings.xml"/>
 </ofbiz-component>
 
