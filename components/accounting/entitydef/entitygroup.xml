@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  */
 -->
 
@@ -99,6 +99,9 @@
     <entity-group group="org.ofbiz" entity="AcctgTransTypeAttr" />
     <entity-group group="org.ofbiz" entity="GlAccount" />
     <entity-group group="org.ofbiz" entity="GlAccountClass" />
+    <entity-group group="org.ofbiz" entity="GlAccountGroup" />
+    <entity-group group="org.ofbiz" entity="GlAccountGroupMember" />
+    <entity-group group="org.ofbiz" entity="GlAccountGroupType" />
     <entity-group group="org.ofbiz" entity="GlAccountHistory" />
     <entity-group group="org.ofbiz" entity="GlAccountOrganization" />
     <entity-group group="org.ofbiz" entity="GlAccountRole" />
