@@ -88,10 +88,10 @@
         </field>
         <field name="dataResourceId">
             <lookup target-form-name="LookupDataResource">
-				<sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${content.dataResourceId}" description="Go to Data Resource"/>
+				<sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
 <!--
-				<sub-hyperlink link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${content.dataResourceId}" description="Go to Data Resource"/>
-				<sub-hyperlink use-when="&quot;${content.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${content.dataResourceId}" description="Go to Data Resource"/>
+				<sub-hyperlink link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
+				<sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
 -->
             </lookup>
         </field>
