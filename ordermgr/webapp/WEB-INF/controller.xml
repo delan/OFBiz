@@ -67,6 +67,25 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderlist"/>
     </request-map>
+    <request-map uri="tasklist">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="ordertasklist"/>
+    </request-map>
+    
+    <!-- Order Manager Task List Requests -->
+    <request-map uri="acceptassignment">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptRoleAssignment"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="ordertasklist"/>
+    </request-map>
+
+    <request-map uri="delegateassignment">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptRoleAssignment"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="ordertasklist"/>
+    </request-map>    
 
 	<!-- Order Manager Edit Requests -->
     <request-map uri="changeOrderStatus">
@@ -201,6 +220,7 @@
 
     <view-map name="orderview" type="region"/>
     <view-map name="orderlist" type="region"/>
+    <view-map name="ordertasklist" type="region"/>
     <view-map name="createnewnote" type="region"/>
     
     <view-map name="salesentry" type="region"/>

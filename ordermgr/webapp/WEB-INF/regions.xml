@@ -59,6 +59,10 @@
         <put section='title'>Create New Note</put>
         <put section='content' content='/order/newnote.jsp'/>
     </define>
+    <define id='ordertasklist' region='MAIN_REGION'>
+    	<put section='title'>Order Task List</put>
+    	<put section='content' content='/task/ordertasklist.jsp'/>
+    </define>
 
 	<!-- sales entry screens -->
     <define id='salesentry' region='LEFT_ONLY_REGION'>
