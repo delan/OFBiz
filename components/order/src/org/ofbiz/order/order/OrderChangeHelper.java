@@ -1,5 +1,5 @@
 /*
- * $Id: OrderChangeHelper.java,v 1.8 2003/11/01 18:01:49 ajzeneski Exp $
+ * $Id: OrderChangeHelper.java,v 1.9 2003/11/14 20:59:49 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.workflow.client.WorkflowClient;
  * Order Helper - Helper Methods For Non-Read Actions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class OrderChangeHelper {
@@ -73,6 +73,9 @@ public class OrderChangeHelper {
 
             // call the service to check/run digial fulfillment
             Map checkDigi = dispatcher.runSync("checkDigitalItemFulfillment", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
+            if (ModelService.RESPOND_ERROR.equals(checkDigi.get(ModelService.RESPONSE_MESSAGE))) {
+                Debug.logError("Problems checking for digital fulfillment", module);
+            }
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
@@ -95,7 +98,8 @@ public class OrderChangeHelper {
         try {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS, null);
             OrderChangeHelper.cancelInventoryReservations(dispatcher, userLogin, orderId);
-            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);                                                                                                                    
+            OrderChangeHelper.releasePaymentAuthorizations(dispatcher, userLogin,orderId);
+            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
@@ -117,7 +121,8 @@ public class OrderChangeHelper {
         try {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS, null);
             OrderChangeHelper.cancelInventoryReservations(dispatcher, userLogin, orderId);
-            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);                                                                                                                    
+            OrderChangeHelper.releasePaymentAuthorizations(dispatcher, userLogin,orderId);
+            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
@@ -176,6 +181,9 @@ public class OrderChangeHelper {
                                 // update the status
                                 Map digitalStatusFields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "statusId", digitalItemStatus, "userLogin", userLogin);
                                 Map digitalStatusChange = dispatcher.runSync("changeOrderItemStatus", digitalStatusFields);
+                                if (ModelService.RESPOND_ERROR.equals(digitalStatusChange.get(ModelService.RESPONSE_MESSAGE))) {
+                                    Debug.logError("Problems with digital product status change : " + product, module);
+                                }
                             }
                         }
                     }
@@ -188,12 +196,20 @@ public class OrderChangeHelper {
         // cancel the inventory reservations
         Map cancelInvFields = UtilMisc.toMap("orderId", orderId, "userLogin", userLogin);
         Map cancelInvResult = dispatcher.runSync("cancelOrderInventoryReservation", cancelInvFields);
-        if (ModelService.RESPOND_ERROR.equals((String) cancelInvResult.get(ModelService.RESPONSE_MESSAGE))) {
+        if (ModelService.RESPOND_ERROR.equals(cancelInvResult.get(ModelService.RESPONSE_MESSAGE))) {
             Debug.logError("Problems reversing inventory reservations for order #" + orderId, module);
         }                         
     }
-    
-    public static GenericValue createPaymentFromPreference(GenericValue orderPaymentPreference, String paymentRefNumber, String paymentFromId, String comments) {        
+
+    public static void releasePaymentAuthorizations(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) throws GenericServiceException {
+        Map releaseFields = UtilMisc.toMap("orderId", orderId, "userLogin", userLogin);
+        Map releaseResult = dispatcher.runSync("releaseOrderPayments", releaseFields);
+        if (ModelService.RESPOND_ERROR.equals(releaseResult.get(ModelService.RESPONSE_MESSAGE))) {
+            Debug.logError("Problems releasing payment authorizations for order #" + orderId, module);
+        }
+    }
+
+    public static GenericValue createPaymentFromPreference(GenericValue orderPaymentPreference, String paymentRefNumber, String paymentFromId, String comments) {
         GenericDelegator delegator = orderPaymentPreference.getDelegator();
         
         // get the order header
