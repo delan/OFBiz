@@ -376,6 +376,7 @@
         <description>Get the quantity allowed for an item to be returned</description>
         <attribute name="orderItem" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="returnableQuantity" type="Double" mode="OUT" optional="false"/>
+        <attribute name="returnablePrice" type="Double" mode="OUT" optional="false"/>
     </service>
     <service name="getReturnableItems" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="getReturnableItems">

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
 -->
 
@@ -130,7 +130,7 @@
       <td><div class="tableheadtext">Description</div></td>
       <td><div class="tableheadtext">Order Qty</div></td>
       <td><div class="tableheadtext">Return Qty</div></td>
-      <td><div class="tableheadtext">Order Price</div></td>
+      <td><div class="tableheadtext">Unit Price</div></td>
       <td><div class="tableheadtext">Return Price*</div></td>
       <td><div class="tableheadtext">Return Reason</div></td>
       <td><div class="tableheadtext">Return Type</div></td>
@@ -149,10 +149,6 @@
       <#assign orderHeader = orderItem.getRelatedOne("OrderHeader")>
       <#assign itemCount = orderItem.quantity>
       <#assign itemPrice = orderItem.unitPrice>
-      <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
-      <#assign totalItemTax = orh.getOrderItemTax(orderItem)>
-      <#assign itemUnitTax = totalItemTax / itemCount>
-      <#assign itemPriceWithTax = itemPrice + itemUnitTax>
       <#-- end of order item information -->
       <tr>       
         <td>
@@ -167,13 +163,13 @@
           <div class="tabletext">${orderItem.quantity?string.number}</div>
         </td>        
         <td>
-          <input type="text" class="inputBox" size="6" name="returnQuantity_o_${rowCount}" value="${returnableItems.get(orderItem)}">
+          <input type="text" class="inputBox" size="6" name="returnQuantity_o_${rowCount}" value="${returnableItems.get(orderItem).get("returnableQuantity")}">
         </td>
         <td align='left'>
           <div class="tabletext">${orderItem.unitPrice?string.currency}</div>
         </td>
         <td>
-          <input type="text" class="inputBox" size="8" name="returnPrice_o_${rowCount}" value="${itemPriceWithTax?string("##0.00")}">
+          <input type="text" class="inputBox" size="8" name="returnPrice_o_${rowCount}" value="${returnableItems.get(orderItem).get("returnablePrice")?string("##0.00")}">
         </td>  
         <td>
           <select name="returnReasonId_o_${rowCount}" class="selectBox">
@@ -234,7 +230,7 @@
       <tr><td colspan="7"><div class="tabletext">No items found for order #${requestParameters.orderId}</div></td></tr>
     </#if>
     <tr>
-      <td colspan="7"><div class="tabletext">*Price includes tax</div></td>
+      <td colspan="7"><div class="tabletext">*Price includes tax & adjustments</div></td>
   </table>
 </form>
 </#if>
