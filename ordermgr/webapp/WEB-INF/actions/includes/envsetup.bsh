@@ -28,6 +28,7 @@ import java.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.security.login.*;
+import org.ofbiz.commonapp.common.*;
 
 userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
 if (userLogin != null) request.setAttribute("userLogin", userLogin);
@@ -58,6 +59,8 @@ layoutSettings.put("companySubtitle", "Part of the Open For Business Family of O
 layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
 layoutSettings.put("headerMiddleBackgroundUrl", null);
 layoutSettings.put("headerRightBackgroundUrl", null);
+
+request.setAttribute("checkLoginUrl", CommonWorkers.makeLoginUrl(request, "checkLogin"));
 
 externalLoginKey = LoginEvents.getExternalLoginKey(request);
 externalKeyParam = externalLoginKey == null ? "" : "?externalLoginKey=" + externalLoginKey;
