@@ -37,7 +37,7 @@
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 <%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
-
+<br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
   <td width='45%' valign=top align=left>
@@ -61,6 +61,8 @@
       <tr>
         <td bgcolor='white' colspan='2'>
             <table width="100%" border="0" cellpadding="1">
+             <%if (userLogin != null) pageContext.setAttribute("userLogin", userLogin);%>
+             <ofbiz:if name="userLogin">
               <tr>
                 <td align="right" valign="top" width="15%">
                   <div class="tabletext">&nbsp;<b>Name</b></div>
@@ -77,6 +79,7 @@
                 </td>
               </tr>
               <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
+             </ofbiz:if>
               <tr>
                 <td align="right" valign="top" width="15%">
                   <div class="tabletext">&nbsp;<b>Status</b></div>
@@ -120,7 +123,11 @@
       <tr>
         <td bgcolor='white' colspan='2'>
             <table width="100%" border="0" cellpadding="1">
-<ofbiz:if name="creditCardInfo"> 
+            <%if (creditCardInfo != null) pageContext.setAttribute("creditCardInfo", creditCardInfo);%>
+            <%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
+            <%--if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);--%>
+            <ofbiz:if name="creditCardInfo"> 
+              <%pageContext.setAttribute("outputted", "true");%>
               <tr>
                 <td align="right" valign="top" width="15%">
                   <div class="tabletext">&nbsp;<b>Credit Card</b></div>
@@ -133,14 +140,42 @@
                     </div>
                 </td>
               </tr>
-  <ofbiz:if name="billingAddress">
+            </ofbiz:if>
+            <ofbiz:if name="billingAccount">
+              <ofbiz:if name="outputted">
               <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
-  </ofbiz:if>
-</ofbiz:if>
-<ofbiz:if name="billingAddress">
+              </ofbiz:if>
+              <%pageContext.setAttribute("outputted", "true");%>
               <tr>
                 <td align="right" valign="top" width="15%">
                   <div class="tabletext">&nbsp;<b>Billing Account</b></div>
+                </td>
+                <td width="5">&nbsp;</td>
+                <td align="left" valign="top" width="80%">
+                    <div class="tabletext">
+                      #<%=billingAccount.getString("billingAccountId")%> - <%=UtilFormatOut.checkNull(billingAccount.getString("description"))%>
+                    </div>
+                </td>
+              </tr>
+              <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
+              <tr>
+                <td align="right" valign="top" width="15%">
+                  <div class="tabletext">&nbsp;<b>Purchase Order Number</b></div>
+                </td>
+                <td width="5">&nbsp;</td>
+                <td align="left" valign="top" width="80%">
+                    <div class="tabletext"><%=UtilFormatOut.checkNull(customerPoNumber)%></div>
+                </td>
+              </tr>
+            </ofbiz:if>
+            <%--ofbiz:if name="billingAddress">
+              <ofbiz:if name="outputted">
+              <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
+              </ofbiz:if>
+              <%pageContext.setAttribute("outputted", "true");%>
+              <tr>
+                <td align="right" valign="top" width="15%">
+                  <div class="tabletext">&nbsp;<b>Billing Address</b></div>
                 </td>
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="80%">
@@ -155,17 +190,7 @@
                     </div>
                 </td>
               </tr>
-              <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
-              <tr>
-                <td align="right" valign="top" width="15%">
-                  <div class="tabletext">&nbsp;<b>Purchase Order Number</b></div>
-                </td>
-                <td width="5">&nbsp;</td>
-                <td align="left" valign="top" width="80%">
-                    <div class="tabletext"><%=UtilFormatOut.checkNull(customerPoNumber)%></div>
-                </td>
-              </tr>
-</ofbiz:if>
+            </ofbiz:if --%>
             </table>
         </td>
       </tr>
@@ -191,12 +216,15 @@
       <tr>
         <td bgcolor='white' colspan='2'>
             <table width="100%" border="0" cellpadding="1">
+              <%if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);%>
+              <ofbiz:if name="shippingAddress">
               <tr>
                 <td align="right" valign="top" width="15%">
                   <div class="tabletext">&nbsp;<b>Destination</b></div>
                 </td>
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="80%">
+                    <div class="tabletext">
                     <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
                     <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
                     <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address1"), "", "<br>")%>
@@ -204,18 +232,22 @@
                     <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", "<br>")%>
                     <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
                     <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("countryGeoId"), "", "<br>")%>
+                    </div>
                 </td>
               </tr>
               <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
+              </ofbiz:if>
               <tr>
                 <td align="right" valign="top" width="15%">
                   <div class="tabletext">&nbsp;<b>Method</b></div>
                 </td>
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="80%">
-                  <%=UtilFormatOut.checkNull(carrierPartyId)%> 
-                  <%=UtilFormatOut.checkNull(helper.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId)).getString("description"))%>
-                  <%--=UtilFormatOut.ifNotEmpty(shippingAccount, "<br>Use Account: ", "")--%>
+                    <div class="tabletext">
+                    <%=UtilFormatOut.checkNull(carrierPartyId)%> 
+                    <%=UtilFormatOut.checkNull(helper.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId)).getString("description"))%>
+                    <%--=UtilFormatOut.ifNotEmpty(shippingAccount, "<br>Use Account: ", "")--%>
+                    </div>
                 </td>
               </tr>
               <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
@@ -226,6 +258,7 @@
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="80%">
                     <div class="tabletext">
+                    <%if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);%>
                     <ofbiz:if name="maySplit" value="false" type="Boolean">
                     Please wait until the entire order is ready before shipping.
                     </ofbiz:if>
@@ -242,7 +275,9 @@
                 </td>
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="80%">
-                <%=UtilFormatOut.checkNull(shippingInstructions)%>
+                    <div class="tabletext">
+                    <%=UtilFormatOut.checkNull(shippingInstructions)%>
+                    </div>
                  </td>
               </tr>
             </table>

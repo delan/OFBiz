@@ -59,7 +59,6 @@
   if(orderId != null && orderId.length() > 0) {
     orderHeader = helper.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
     if (orderHeader != null) {
-        pageContext.setAttribute("orderHeader", orderHeader);
         //check ownership
         GenericValue orderRole = helper.findByPrimaryKey("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER"));
         if (orderRole == null) {
@@ -67,48 +66,33 @@
         }
     }
   }%>
+<%if (orderHeader != null) pageContext.setAttribute("orderHeader", orderHeader);%>
 <ofbiz:if name="orderHeader">
     <%
-      Iterator orderItemIter = null;
-      GenericValue billingAddress = null; 
-      GenericValue shippingAddress = null; 
-      int numberLines = 0;
-
       OrderReadHelper order = new OrderReadHelper(orderHeader);
 
-      //XXX should we look in the OrderItemContactMech's here, too?
-      Collection shippingLocationList = helper.findByAnd("OrderContactMech", UtilMisc.toMap(
-              "orderId", orderId, "contactMechPurposeTypeId", "SHIPPING_LOCATION"), null);
-      if (shippingLocationList.size() > 0) {
-          shippingAddress = ((GenericValue) shippingLocationList.iterator().next()).getRelatedOne("ContactMech").getRelatedOne("PostalAddress");
-          if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);
-      }
-      //XXX should we look in the OrderItemContactMech's here, too?
-      Collection billingLocationList = helper.findByAnd("OrderContactMech", UtilMisc.toMap(
-              "orderId", orderId, "contactMechPurposeTypeId", "BILLING_LOCATION"), null);
-      if (billingLocationList.size() > 0) {
-          billingAddress = ((GenericValue) billingLocationList.iterator().next()).getRelatedOne("ContactMech").getRelatedOne("PostalAddress");
-          if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);
-      }
+      Collection orderItemList = orderHeader.getRelated("OrderItem");
 
-      pageContext.setAttribute("orderItemList", orderHeader.getRelated("OrderItem"));
-
+      GenericValue shippingAddress = order.getShippingAddress();
+      GenericValue billingAddress = order.getBillingAddress(); 
+      GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
+     
       GenericValue creditCardInfo = orderHeader.getRelatedOne("OrderPaymentPreference").getRelatedOne("CreditCardInfo");
-      if (creditCardInfo != null) pageContext.setAttribute("creditCardInfo", creditCardInfo);
 
       GenericValue shipmentPreference = orderHeader.getRelatedOne("OrderShipmentPreference");
       Boolean maySplit = shipmentPreference.getBoolean("maySplit");
-      if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);
       String carrierPartyId = shipmentPreference.getString("carrierPartyId");
       String shipmentMethodTypeId = shipmentPreference.getString("shipmentMethodTypeId");
       String shippingInstructions = shipmentPreference.getString("shippingInstructions");
 
       String customerPoNumber = ((GenericValue) orderHeader.getRelated("OrderItem").iterator().next()).getString("correspondingPoId");
+      Iterator orderAdjustmentIterator = order.getAdjustmentIterator();
 %>
 
 <%@ include file="orderinformation.jsp" %>
 
 
+  <%pageContext.setAttribute("maySelectItems", "true");%>
   <form name="addOrderToCartForm" action="<ofbiz:url><%="/addordertocart/orderstatus?order_id=" + orderId%></ofbiz:url>" method="GET">
   <input type="HIDDEN" name="add_all" value="false">
   <input type="HIDDEN" name="order_id" value="<%=orderId%>">
@@ -123,105 +107,8 @@
       </td>
     </tr></table>
   </td></tr></table>
-  <table border="0" width="100%" cellpadding="2" cellspacing="2">
-    <tr bgcolor="<%=bColorA2%>">
-      <td width="15%"><div class="tabletext"><b>ID</b></div></td>
-      <td width="50%"><div class="tabletext"><b>Description</b></div></td>
-      <td width="10%" align="right"><div class="tabletext"><b>Quantity</b></div></td>
-      <td width="10%" align="right"><div class="tabletext"><b>Unit Price</b></div></td>
-      <td width="15%" align="right" nowrap><div class="tabletext"><b>Line Price</b></div></td>
-      <td><div class="tabletext"><b>&nbsp;</b></div></td>
-    </tr>
- <ofbiz:iterator name="orderItem" property="orderItemList">
-    <%numberLines++;%>
-    <%if(bColorB.equals(bColorB1)){bColorB=bColorB2;}else{bColorB=bColorB1;}%>
-    <tr bgcolor="<%=bColorB%>">
-      <%if(orderItem.getString("productId").equals("shoppingcart.CommentLine")){%>
-        <td colspan="4">    
-          <b><div class="tabletext"> &gt;&gt; <%=orderItem.getString("itemDescription")%></div></b>
-        </td>
-      <%}else{%>
-        <td>
-          <a href="<ofbiz:url><%="/details?product_id=" + orderItem.getString("productId")%></ofbiz:url>" class="buttontext"><%=orderItem.getString("productId")%></a>
-        </td>
-        <td>
-          <a href="<ofbiz:url><%="/details?product_id=" + orderItem.getString("productId")%></ofbiz:url>" class="buttontext"><%=orderItem.getString("itemDescription")%></a>
-        </td>
-        <td align="right">
-            <div nowrap>
-              <%=UtilFormatOut.formatQuantity(orderItem.getDouble("quantity"))%>
-            </div>
-        </td>
-        <td align="right">
-            <div nowrap>
-              <%=UtilFormatOut.formatQuantity(orderItem.getDouble("unitPrice"))%>
-            </div>
-        </td>
-        <td align="right" nowrap>
-          <div class="tabletext"><%=UtilFormatOut.formatPrice(orderItem.getDouble("quantity").doubleValue()*orderItem.getDouble("unitPrice").doubleValue())%></div>
-        </td>
-      <%}%>
-<%-- Removing add a certain quantity of a single item to cart, may still want later...
-      <td align="right">
-        <table border="0" cellspacing="0" cellpadding="0">
-        <tr>
-        <td>
-        <form method="POST" action="<ofbiz:url>/additemsfromorder/orderstatus</ofbiz:url>" vspace="0" hspace="0" name="the<%=orderItem.getTransLineId().intValue()%>form" style=margin:0;>
-          <input type="hidden" name="<%="event"%>" value="<%="add_to_cart"%>">
-          <input type="hidden" name="<%="order_id"%>" value="<%=orderId%>">
-          <input type="hidden" name="<%=HttpRequestConstants.PRODUCT_ID%>" value="<%=orderItem.getString("productId")%>">
-          <%
-            if(orderItem.getString("itemDescription").indexOf("[[RandomLength:") >= 0)
-            {
-              String desc = orderItem.getString("itemDescription");
-              int index1 = desc.indexOf("[[RandomLength:")+15;
-              int index2 = desc.indexOf("]]",index1);
-              String RLString = desc.substring(index1, index2);
-          %>
-            <input type="hidden" name="<%=HttpRequestConstants.RANDOM_LENGTH_STRING%>" value="<%=RLString%>">
-          <%
-            }
-          %>
-          <nobr>
-            <%if(orderItem.getString("productId").compareTo("shoppingcart.CommentLine") != 0){%>
-              <input type="text" size="5" name="<%=HttpRequestConstants.QUANTITY%>" value="<%=UtilFormatOut.formatQuantity(orderItem.getDouble("quantity"))%>">
-            <%}else{%>
-              <input type="hidden" name="<%=HttpRequestConstants.QUANTITY%>" value="1">
-            <%}%>
-            <a href="javascript:document.the<%=orderItem.getTransLineId().intValue()%>form.submit()" class="buttontext">[Add to Cart]</a>
-          </nobr>
-        </form>
-        </td>
-        </tr>
-        </table>
-      </td>
---%>
-      <td>
-      <input name="item_id" value="<%=orderItem.getString("orderItemSeqId")%>" type="checkbox">
-      </td>
-    </tr>
-  </ofbiz:iterator>
-  <ofbiz:unless name="orderItemList" size="0">
-  <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
-  </ofbiz:unless>
 
-    <% pageContext.setAttribute("orderAdjustmentIterator", order.getAdjustmentIterator()); %>
-    <ofbiz:iterator name="orderAdjustmentObject" type="java.lang.Object" property="orderAdjustmentIterator">
-    <%OrderReadHelper.Adjustment orderAdjustment = (OrderReadHelper.Adjustment) orderAdjustmentObject;%>
-    <tr>
-        <td align="right" colspan="4"><div class="tabletext"><b><%=orderAdjustment.getDescription()%></b></div></td>
-        <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(orderAdjustment.getAmount())%></div></td>
-    </tr>
-    </ofbiz:iterator> 
-    <tr>
-        <td align="right" colspan="4"><div class="tabletext"><b>Total Due</b></div></td>
-       <td align="right" nowrap>
-      <div class="tabletext"><%= UtilFormatOut.formatPrice(order.getTotalPrice())%></div>
-        </td>
-    </tr>
-<%-- } else { %>
-  <tr><td><font color="red">ERROR: Sales Order lookup failed.</font></td></tr> --%>
-</table>
+<%@ include file="orderitems.jsp" %>
 
 </ofbiz:if> <%-- Order --%>
 <ofbiz:unless name="orderHeader">
@@ -244,3 +131,4 @@
 <%@ include file="/includes/footer.jsp" %>
 
 
+ 

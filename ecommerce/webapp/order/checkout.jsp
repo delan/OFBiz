@@ -51,7 +51,9 @@
 <%
   GenericValue shippingAddress = cart.getShippingAddress(helper);
   GenericValue creditCardInfo = cart.getCreditCardInfo(helper);
-  GenericValue  billingAddress = cart.getBillingAddress(helper);
+  GenericValue billingAddress = cart.getBillingAddress(helper);
+  GenericValue billingAccount = cart.getBillingAccountId() != null ? helper.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", cart.getBillingAccountId())) : null;
+
   String shippingInstructions = cart.getShippingInstructions();
   String customerPoNumber = cart.getPoNumber();
   String carrierPartyId = cart.getCarrierPartyId();
@@ -59,112 +61,17 @@
   Boolean maySplit = cart.getMaySplit();
 //  if (creditCardInfo == null) {
 
-  if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);
-  if (creditCardInfo != null) pageContext.setAttribute("creditCardInfo", creditCardInfo);
-  if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);
-  if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);
-  pageContext.setAttribute("cartItems", cart.items()); 
+  Collection orderItemList = cart.makeOrderItems(helper, null);
+  Iterator orderAdjustmentIterator = cart.getAdjustments().iterator();
 %>
 
 <%@ include file="orderinformation.jsp" %>
 
-<%-- *************************** OLD --%>
+<br>
+<%@ include file="orderitems.jsp" %>
 
-<%-- table for shoppingcartline items --%>
+<%String prevPage = "checkoutoptions";%>
   <table border="0" cellpadding="1" width="100%">
-    <%-- use this row to set the widths on all the columns --%>
-    <tr>
-      <td width="15%"><img src="../images/shim.gif" width="2" height="1"></td>
-      <td width="50%"><img src="../images/shim.gif" width="2" height="1"></td>
-      <td width="5%"><img src="../images/shim.gif" width="2" height="1"></td>
-      <td width="15%"><img src="../images/shim.gif" width="2" height="1"></td>
-      <td width="15%"><img src="../images/shim.gif" width="2" height="1"></td>
-    </tr>
-
-    <tr>
-      <td colspan="5" bgcolor="#678475">
-      <div class="tabletext"><font color="white"><b>Order</b></font></div>
-      </td>
-    </tr>
-
-    <tr>
-      <td align="left" valign="bottom"><div class="tabletext"><b>ID</b></div></td>
-      <td align="left" valign="bottom"><div class="tabletext"><b>Description</b></div></td>
-      <td align="center" valign="bottom"><div class="tabletext"><b>Quantity</b></div></td>
-      <td align="center" valign="bottom"><div class="tabletext"><b>Our Price</b></div></td>
-      <td align="center" valign="bottom"><div class="tabletext"><b>SubTotal</b></div></td>
-    </tr>
-    <tr>
-      <td colspan="5"><hr size="1"></td>
-    </tr>
-
- <ofbiz:iterator name="cartItem" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCartItem" property="cartItems">
-<% pageContext.setAttribute("productId", cartItem.getProductId()); %>
-  <ofbiz:if name="productId" value="shoppingcart.CommentLine">
-    <tr>
-      <td valign="middle" colspan="5">
-        <b><div class="tabletext"> >> <%=cartItem.getDescription()%></div></b>
-      </td>
-    </tr>
-  </ofbiz:if>
-  <ofbiz:unless name="productId" value="shoppingcart.CommentLine">
-    <tr>
-      <td nowrap valign="top">
-        <div class="tabletext"><%=cartItem.getProductId()%></div>
-      </td>
-      <td valign="top">
-        <div class="tabletext"><%=cartItem.getName()%> : <%=cartItem.getDescription()%>
-        </div>
-      </td>
-      <td align="center" valign="top">
-        <div class="tabletext"><%=UtilFormatOut.formatQuantity(cartItem.getQuantity())%></div>
-      </td>
-      <td align="right" nowrap valign="top">
-        <div class="tabletext"><%-- cartItem.getUnitPrice().getCurrency() --%>
-        <%=UtilFormatOut.formatPrice(cartItem.getPrice())%></div>
-      </td>
-      <td align="right" nowrap valign="top">
-        <div class="tabletext"><%-- lineTotal.getCurrency() --%>
-        <%=UtilFormatOut.formatPrice(cartItem.getTotalPrice())%></div>
-      </td>
-    </tr>
-  </ofbiz:unless>
-    <tr>
-      <td colspan="5" height="1"><hr size="1"></td>
-    </tr>
-</ofbiz:iterator>
-
-<%String prevPage = "/checkoutoptions"; %>
-    <tr>
-      <td colspan="4" align="right"><div class="tabletext">Item Total</div></td>
-      <td align="right" nowrap>
-  <div class="tabletext"><%=UtilFormatOut.formatPrice(cart.getItemTotal())%></div>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="4" align="right"><div class="tabletext">Shipping & handling</div></td>
-      <td align="right" nowrap>
-  <div class="tabletext"><%=UtilFormatOut.formatPrice(cart.getShipping())%></div>
-      </td>
-    </tr>
-
-    <tr>
-      <td colspan="4" align="right"><div class="tabletext">Total tax</div></td>
-      <td align="right" nowrap>
-  <div class="tabletext"><%=UtilFormatOut.formatPrice(cart.getSalesTax())%></div>
-      </td>
-    </tr>
-
-    <tr>
-      <td colspan="4" align="right"><div class="tabletext"><b>Total due</b></div></td>
-     <td align="right" bgcolor="#99BBAA" nowrap>
-  <div class="tabletext"><b><%-- total.getCurrency() --%>
-  <%=UtilFormatOut.formatPrice(cart.getGrandTotal())%></b></div>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="5"><hr size="1"></td>
-    </tr>
    <tr>
       <td colspan="4" align="left">
       <a href="<ofbiz:url><%=prevPage%></ofbiz:url>" class="buttontextbig">&nbsp;[Back]</a></td>
@@ -173,7 +80,6 @@
       </td>
     </tr>
   </table>
-</ofbiz:if><%-- Shipping address check --%>
 
 </ofbiz:if><%-- cart check --%>
 <ofbiz:unless name="cart" size="0">
