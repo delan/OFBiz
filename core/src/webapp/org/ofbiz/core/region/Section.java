@@ -56,6 +56,8 @@ public class Section extends Content {
     protected final String info;
     protected URL regionFile;
     
+    protected static Boolean doFlushOnRenderPageContext = null;
+    
     public Section(String name, String info, String content, String type, URL regionFile) {
         super(content, type);
         this.name = name;
@@ -68,7 +70,19 @@ public class Section extends Content {
     }
     
     public void render(PageContext pageContext) throws JspException {
+        //this check to see if we should flush is done because on most servers this 
+        // will just slow things down and not solve any problems, but on Tomcat it is necessary
+        if (doFlushOnRenderPageContext == null) {
+            boolean doflush = false;
+            if (pageContext.getServletContext().getServerInfo().startsWith("Apache Tomcat")) {
+                Debug.logImportant("Apache Tomcat detected, enabling the flush on the region render from PageContext");
+                doflush = true;
+            }
+            doFlushOnRenderPageContext = new Boolean(doflush);
+        }
+        
         try {
+            if (doFlushOnRenderPageContext.booleanValue()) pageContext.getOut().flush();
             render((HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
         } catch (java.io.IOException e) {
             Debug.logError(e, "Error rendering section: ");
