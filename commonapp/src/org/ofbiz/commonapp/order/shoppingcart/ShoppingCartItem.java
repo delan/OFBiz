@@ -30,6 +30,8 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 import org.ofbiz.commonapp.order.order.*;
+import org.ofbiz.commonapp.product.catalog.*;
+import org.ofbiz.commonapp.product.category.*;
 
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
@@ -76,8 +78,17 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         try {
             product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+
+            // first see if there is a purchase allow category and if this product is in it or not
+            String purchaseProductCategoryId = CatalogWorker.getCatalogPurchaseAllowCategoryId(delegator, prodCatalogId);
+            if (purchaseProductCategoryId != null) {
+                if (!CategoryWorker.isProductInCategory(delegator, product.getString("productId"), purchaseProductCategoryId)) {
+                    // a Purchase allow productCategoryId was found, but the product is not in the category, axe it...
+                    product = null;
+                }
+            }
         } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage());
+            Debug.logWarning(e.toString());
             product = null;
         }
 

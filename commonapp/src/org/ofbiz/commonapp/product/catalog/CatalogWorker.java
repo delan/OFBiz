@@ -329,7 +329,10 @@ public class CatalogWorker {
     
     public static List getProdCatalogCategories(ServletRequest request, String prodCatalogId, String prodCatalogCategoryTypeId) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        return getProdCatalogCategories(delegator, prodCatalogId, prodCatalogCategoryTypeId);
+    }
 
+    public static List getProdCatalogCategories(GenericDelegator delegator, String prodCatalogId, String prodCatalogCategoryTypeId) {
         try {
             List prodCatalogCategories = EntityUtil.filterByDate(delegator.findByAndCache("ProdCatalogCategory",
                         UtilMisc.toMap("prodCatalogId", prodCatalogId),
@@ -515,13 +518,38 @@ public class CatalogWorker {
     }
     
     public static String getCatalogSearchCategoryId(ServletRequest request, String prodCatalogId) {
+        return getCatalogSearchCategoryId((GenericDelegator) request.getAttribute("delegator"), prodCatalogId);
+    }
+    public static String getCatalogSearchCategoryId(GenericDelegator delegator, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
-        List prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_SEARCH");
-
+        List prodCatalogCategories = getProdCatalogCategories(delegator, prodCatalogId, "PCCT_SEARCH");
         if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
             GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
+            return prodCatalogCategory.getString("productCategoryId");
+        } else {
+            return null;
+        }
+    }
 
+    public static String getCatalogViewAllowCategoryId(GenericDelegator delegator, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+
+        List prodCatalogCategories = getProdCatalogCategories(delegator, prodCatalogId, "PCCT_VIEW_ALLW");
+        if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
+            GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
+            return prodCatalogCategory.getString("productCategoryId");
+        } else {
+            return null;
+        }
+    }
+
+    public static String getCatalogPurchaseAllowCategoryId(GenericDelegator delegator, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+
+        List prodCatalogCategories = getProdCatalogCategories(delegator, prodCatalogId, "PCCT_PURCH_ALLW");
+        if (prodCatalogCategories != null && prodCatalogCategories.size() > 0) {
+            GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
             return prodCatalogCategory.getString("productCategoryId");
         } else {
             return null;

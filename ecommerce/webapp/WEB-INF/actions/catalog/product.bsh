@@ -30,11 +30,13 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.commonapp.product.catalog.*;
+import org.ofbiz.commonapp.product.category.*;
 
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 catalogName = CatalogWorker.getCatalogName(request);
+currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 requestParams = UtilHttp.getParameterMap(request);
 
 detailTemplate = "/catalog/productdetail.ftl";
@@ -46,6 +48,18 @@ if (productId != null) {
 // get the product entity
 if (productId != null) {
     product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+    
+    // first check to see if there is a view allow category and if this product is in it...
+    if (product != null) {
+        viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
+        if (viewProductCategoryId != null) {
+            if (!CategoryWorker.isProductInCategory(delegator, productId, viewProductCategoryId)) {
+                // a view allow productCategoryId was found, but the product is not in the category, axe it...
+                product = null;
+            }
+        }
+    }
+    
     if (product != null) {
         request.setAttribute("product", product);  
         content = context.get("page");

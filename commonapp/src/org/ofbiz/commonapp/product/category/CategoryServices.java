@@ -30,6 +30,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
+import org.ofbiz.commonapp.product.catalog.*;
 
 /**
  * CategoryServices - Category Services
@@ -141,21 +142,24 @@ public class CategoryServices {
         boolean limitView = ((Boolean) context.get("limitView")).booleanValue();
         int defaultViewSize = ((Integer) context.get("defaultViewSize")).intValue();
 
-        boolean useCacheForMembers = true;
+        // checkViewAllow defaults to false, must be set to true and pass the prodCatalogId to enable
+        Boolean cvaBool = (Boolean) context.get("checkViewAllow");
+        boolean checkViewAllow = (cvaBool == null ? false : cvaBool.booleanValue());
+        String prodCatalogId = (String) context.get("prodCatalogId");
 
+        boolean useCacheForMembers = true;
         if (context.get("useCacheForMembers") != null) {
             useCacheForMembers = ((Boolean) context.get("useCacheForMembers")).booleanValue();
         }
 
         int viewIndex = 0;
-
         try {
             viewIndex = Integer.valueOf((String) context.get("viewIndexString")).intValue();
         } catch (Exception e) {
             viewIndex = 0;
         }
+        
         int viewSize = defaultViewSize;
-
         try {
             viewSize = Integer.valueOf((String) context.get("viewSizeString")).intValue();
         } catch (Exception e) {
@@ -163,7 +167,6 @@ public class CategoryServices {
         }
 
         GenericValue productCategory = null;
-
         try {
             productCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
         } catch (GenericEntityException e) {
@@ -172,7 +175,6 @@ public class CategoryServices {
         }
 
         List productCategoryMembers = null;
-
         if (productCategory != null) {
             try {
                 if (useCacheForMembers) {
@@ -181,6 +183,14 @@ public class CategoryServices {
                     productCategoryMembers = productCategory.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum"));
                 }
                 productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
+                
+                // first check to see if there is a view allow category and if this product is in it...
+                if (checkViewAllow && prodCatalogId != null && productCategoryMembers != null && productCategoryMembers.size() > 0) {
+                    String viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, prodCatalogId);
+                    if (viewProductCategoryId != null) {
+                        productCategoryMembers = CategoryWorker.filterProductsInCategory(delegator, productCategoryMembers, viewProductCategoryId);
+                    }
+                }
             } catch (GenericEntityException e) {
                 Debug.logError(e);
             }
@@ -204,7 +214,6 @@ public class CategoryServices {
         }
 
         Map result = new HashMap();
-
         result.put("viewIndex", new Integer(viewIndex));
         result.put("viewSize", new Integer(viewSize));
         result.put("lowIndex", new Integer(lowIndex));

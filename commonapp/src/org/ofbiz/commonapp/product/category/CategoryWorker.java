@@ -292,5 +292,33 @@ public class CategoryWorker {
             return null;
         }
     }
+    
+    public static boolean isProductInCategory(GenericDelegator delegator, String productId, String productCategoryId) throws GenericEntityException {
+        if (productCategoryId == null) return false;
+        if (productId == null || productId.length() == 0) return false;
+        
+        List productCategoryMembers = EntityUtil.filterByDate(delegator.findByAndCache("ProductCategoryMember", 
+                UtilMisc.toMap("productCategoryId", productCategoryId, "productId", productId)), true);
+        if (productCategoryMembers == null || productCategoryMembers.size() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    public static List filterProductsInCategory(GenericDelegator delegator, List valueObjects, String productCategoryId) throws GenericEntityException {
+        if (productCategoryId == null) return new LinkedList();
+        if (valueObjects == null) return null;
+        
+        List newList = new ArrayList(valueObjects.size());
+        Iterator valIter = valueObjects.iterator();
+        while (valIter.hasNext()) {
+            GenericValue curValue = (GenericValue) valIter.next();
+            String productId = curValue.getString("productId");
+            if (isProductInCategory(delegator, productId, productCategoryId)) {
+                newList.add(curValue);
+            }
+        }
+        return newList;
+    }
 }
-

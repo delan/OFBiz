@@ -1210,8 +1210,10 @@
             location="org.ofbiz.commonapp.product.category.CategoryServices" invoke="getProductCategoryAndLimitedMembers">
         <description>Gets a productCategory and a Collection of associated productCategoryMembers and calculates limiting parameters</description>
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="true"/>
         <attribute name="defaultViewSize" type="Integer" mode="IN" optional="false"/>
         <attribute name="limitView" type="Boolean" mode="IN" optional="false"/>
+        <attribute name="checkViewAllow" type="Boolean" mode="IN" optional="true"/>
         <attribute name="viewIndexString" type="String" mode="IN" optional="true"/>
         <attribute name="viewSizeString" type="String" mode="IN" optional="true"/>
         <attribute name="useCacheForMembers" type="Boolean" mode="IN" optional="true"/>

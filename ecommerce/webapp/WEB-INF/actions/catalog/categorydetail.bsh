@@ -32,6 +32,7 @@ import org.ofbiz.commonapp.product.catalog.*;
 requestParameters = UtilHttp.getParameterMap(request);
 viewSize = requestParameters.get("VIEW_SIZE");
 viewIndex = requestParameters.get("VIEW_INDEX");
+currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 
 // set the default view size
 defaultViewSize = request.getAttribute("defaultViewSize");
@@ -50,9 +51,12 @@ context.put("limitView", limitView);
 
 // get the product category & members
 dispatcher = request.getAttribute("dispatcher");
-catResult = dispatcher.runSync("getProductCategoryAndLimitedMembers", UtilMisc.toMap("productCategoryId", 
-        request.getAttribute("productCategoryId"), "viewIndexString", viewIndex,
-        "viewSizeString", viewSize, "defaultViewSize", defaultViewSize, "limitView", limitView));
+andMap = UtilMisc.toMap("productCategoryId", request.getAttribute("productCategoryId"), 
+        "viewIndexString", viewIndex, "viewSizeString", viewSize, 
+        "defaultViewSize", defaultViewSize, "limitView", limitView);
+andMap.put("prodCatalogId", currentCatalogId);
+andMap.put("checkViewAllow", Boolean.TRUE);
+catResult = dispatcher.runSync("getProductCategoryAndLimitedMembers", andMap);
        
 context.put("productCategoryId", request.getAttribute("productCategoryId"));
 if (catResult != null) {
@@ -80,6 +84,3 @@ if (members != null && members.size() > 0) {
         }        
     }    
 }
-
-
-
