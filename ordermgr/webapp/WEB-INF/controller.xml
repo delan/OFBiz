@@ -471,9 +471,9 @@
     <view-map name="returnhead" type="jpublish" page="/return/returnHeader.ftl"/>
     <view-map name="returnitems" type="jpublish" page="/return/returnItems.ftl"/>
     
-    <view-map name="shipsetup" type="region"/>
-    <view-map name="taxsetup" type="region"/>
-    <view-map name="paysetup" type="region"/>
+    <view-map name="shipsetup" type="jpublish" page="/setup/shippingsetup.ftl"/>
+    <view-map name="taxsetup" type="jpublish" page="/setup/taxsetup.ftl"/>
+    <view-map name="paysetup" type="jpublish" page="/setup/paymentsetup.ftl"/>
     
     <view-map name="wfOrderNotify" page="/notifications/pendingOrderNotify.jsp"/>
     
