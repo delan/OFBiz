@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.11 2003/11/28 18:48:46 jonesde Exp $
+ * $Id: ShoppingCartEvents.java,v 1.12 2003/12/05 23:07:13 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -210,15 +210,16 @@ public class ShoppingCartEvents {
                 } else {
                     Map surveyContext = UtilHttp.getParameterMap(request);
                     GenericValue userLogin = cart.getUserLogin();
+                    String partyId = null;
                     if (userLogin != null) {
-                        surveyContext.put("partyId", userLogin.getString("partyId"));
+                        partyId = userLogin.getString("partyId");
                     }
                     String formAction = "/additemsurvey";
                     String nextPage = RequestHandler.getNextPageUri(request.getPathInfo());
                     if (nextPage != null) {
                         formAction = formAction + "/" + nextPage;
                     }
-                    ProductStoreSurveyWrapper wrapper = new ProductStoreSurveyWrapper(survey, surveyContext);
+                    ProductStoreSurveyWrapper wrapper = new ProductStoreSurveyWrapper(survey, partyId, surveyContext);
                     request.setAttribute("surveyWrapper", wrapper);
                     request.setAttribute("surveyAction", formAction); // will be used as the form action of the survey
                     return "survey";
