@@ -6,23 +6,17 @@
 
 package org.ofbiz.manufacturing.bom;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.entity.util.EntityUtil;
-
-import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceUtil;
 
 
     /** It represents an (in-memory) bill of materials (in which each
