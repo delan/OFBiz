@@ -1,5 +1,5 @@
 /*
- * $Id: Process.java,v 1.1 2004/04/22 15:41:02 ajzeneski Exp $
+ * $Id: Process.java,v 1.2 2004/05/11 16:59:55 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class Process implements ProcessPersistenceInterface {
@@ -142,11 +142,11 @@ public class Process implements ProcessPersistenceInterface {
     }
 
     public void setState(String s) {
-        process.set("state", s);
+        process.set("currentState", s);
     }
 
     public String getState() {
-        return process.getString("state");
+        return process.getString("currentState");
     }
 
     public String getName() {
