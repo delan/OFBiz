@@ -1,5 +1,5 @@
 /*
- * $Id: PriceServices.java,v 1.12 2004/06/23 23:14:59 jonesde Exp $
+ * $Id: PriceServices.java,v 1.13 2004/07/16 18:35:31 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class PriceServices {
@@ -469,19 +469,33 @@ public class PriceServices {
                             }
                         }
                     }
-                    
-                    // by webSiteId
-                    Collection webSiteIdConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_WEBSITE_ID", "condValue", webSiteId));
-                    if (webSiteIdConds != null && webSiteIdConds.size() > 0) {
-                        Iterator webSiteIdCondsIter = webSiteIdConds.iterator();
-                        while (webSiteIdCondsIter.hasNext()) {
-                            GenericValue webSiteIdCond = (GenericValue) webSiteIdCondsIter.next();
-                            productPriceRuleIds.add(webSiteIdCond.getString("productPriceRuleId"));
+
+                    // by productStoreGroupId
+                    if (UtilValidate.isNotEmpty(productStoreGroupId)) {
+                        Collection storeGroupConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_SGRP_ID", "condValue", productStoreGroupId));
+                        if (storeGroupConds != null && storeGroupConds.size() > 0) {
+                            Iterator storeGroupCondsIter = storeGroupConds.iterator();
+                            while (storeGroupCondsIter.hasNext()) {
+                                GenericValue storeGroupCond = (GenericValue) storeGroupCondsIter.next();
+                                productPriceRuleIds.add(storeGroupCond.getString("productPriceRuleId"));
+                            }
                         }
                     }
-                   
+
+                    // by webSiteId
+                    if (UtilValidate.isNotEmpty(webSiteId)) {
+                        Collection webSiteIdConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_WEBSITE_ID", "condValue", webSiteId));
+                        if (webSiteIdConds != null && webSiteIdConds.size() > 0) {
+                            Iterator webSiteIdCondsIter = webSiteIdConds.iterator();
+                            while (webSiteIdCondsIter.hasNext()) {
+                                GenericValue webSiteIdCond = (GenericValue) webSiteIdCondsIter.next();
+                                productPriceRuleIds.add(webSiteIdCond.getString("productPriceRuleId"));
+                            }
+                        }
+                    }
+
                     // by partyId
-                    if (partyId != null) {
+                    if (UtilValidate.isNotEmpty(partyId)) {
                         Collection partyIdConds = delegator.findByAndCache("ProductPriceCond", UtilMisc.toMap("inputParamEnumId", "PRIP_PARTY_ID", "condValue", partyId));
                         if (partyIdConds != null && partyIdConds.size() > 0) {
                             Iterator partyIdCondsIter = partyIdConds.iterator();
@@ -555,10 +569,10 @@ public class PriceServices {
 
                         totalConds++;
 
-                        if (!checkPriceCondition(productPriceCond, productId, prodCatalogId, webSiteId, partyId, quantity, listPrice, currencyUomId, delegator)) {
+                        if (!checkPriceCondition(productPriceCond, productId, prodCatalogId, productStoreGroupId, webSiteId, partyId, quantity, listPrice, currencyUomId, delegator)) {
                             // if there is a virtualProductId, try that given that this one has failed
                             if (virtualProductId != null) {
-                                if (!checkPriceCondition(productPriceCond, virtualProductId, prodCatalogId, webSiteId, partyId, quantity, listPrice, currencyUomId, delegator)) {
+                                if (!checkPriceCondition(productPriceCond, virtualProductId, prodCatalogId, productStoreGroupId, webSiteId, partyId, quantity, listPrice, currencyUomId, delegator)) {
                                     allTrue = false;
                                     break;
                                 }
@@ -758,8 +772,9 @@ public class PriceServices {
         return result;
     }
 
-    public static boolean checkPriceCondition(GenericValue productPriceCond, String productId, String prodCatalogId, String webSiteId,
-            String partyId, double quantity, double listPrice, String currencyUomId, GenericDelegator delegator) throws GenericEntityException {
+    public static boolean checkPriceCondition(GenericValue productPriceCond, String productId, String prodCatalogId,
+            String productStoreGroupId, String webSiteId, String partyId, double quantity, double listPrice,
+            String currencyUomId, GenericDelegator delegator) throws GenericEntityException {
         if (Debug.verboseOn()) Debug.logVerbose("Checking price condition: " + productPriceCond, module);
         int compare = 0;
 
@@ -779,19 +794,29 @@ public class PriceServices {
                 compare = 1;
             }
         } else if ("PRIP_PROD_CLG_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
-            if (prodCatalogId != null) {
+            if (UtilValidate.isNotEmpty(prodCatalogId)) {
                 compare = prodCatalogId.compareTo(productPriceCond.getString("condValue"));
             } else {
                 // this shouldn't happen because if prodCatalogId is null no PRIP_PROD_CLG_ID prices will be in the list
                 compare = 1;
             }
+        } else if ("PRIP_PROD_SGRP_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
+            if (UtilValidate.isNotEmpty(productStoreGroupId)) {
+                compare = productStoreGroupId.compareTo(productPriceCond.getString("condValue"));
+            } else {
+                compare = 1;
+            }
         } else if ("PRIP_WEBSITE_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
-            compare = webSiteId.compareTo(productPriceCond.getString("condValue"));
+            if (UtilValidate.isNotEmpty(webSiteId)) {
+                compare = webSiteId.compareTo(productPriceCond.getString("condValue"));
+            } else {
+                compare = 1;
+            }
         } else if ("PRIP_QUANTITY".equals(productPriceCond.getString("inputParamEnumId"))) {
             Double quantityValue = new Double(quantity);
             compare = quantityValue.compareTo(Double.valueOf(productPriceCond.getString("condValue")));
         } else if ("PRIP_PARTY_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
-            if (partyId != null) {
+            if (UtilValidate.isNotEmpty(partyId)) {
                 compare = partyId.compareTo(productPriceCond.getString("condValue"));
             } else {
                 compare = 1;
