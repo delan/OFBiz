@@ -63,9 +63,9 @@
         <put section='content' content='/party/editeftaccount.jsp'/>
     </define>
 
-    <define id='changepassword' region='MAIN_REGION'>
+    <define id='editlogin' region='MAIN_REGION'>
         <put section='title'>Change Password</put>
-        <put section='content' content='/party/changepassword.jsp'/>
+        <put section='content' content='/party/editlogin.jsp'/>
     </define>
 
     <define id='editperson' region='MAIN_REGION'>

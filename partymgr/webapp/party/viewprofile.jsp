@@ -4,22 +4,22 @@
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
@@ -38,13 +38,19 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%
-    String partyId = request.getParameter("party_id"); 
+    String partyId = request.getParameter("party_id");
     if (partyId == null) partyId = (String) request.getAttribute("partyId");
     if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
     else request.getSession().setAttribute("partyId", partyId);
 
     Collection userLogins = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", partyId));
     if (userLogins != null) pageContext.setAttribute("userLogins", userLogins);
+
+    Collection partyRoles = delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId", partyId));
+    if (partyRoles != null) pageContext.setAttribute("partyRoles", partyRoles);
+
+    Collection roles = delegator.findAll("RoleType", UtilMisc.toList("description", "roleTypeId"));
+    if (roles != null) pageContext.setAttribute("roles", roles);
 
     PartyWorker.getPartyOtherValues(pageContext, partyId, "party", "person", "partyGroup");
     boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
@@ -361,10 +367,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;User Name & Password</div>
+            <div class="boxhead">&nbsp;User Name</div>
           </td>
           <td valign="middle" align="right">&nbsp;
-            <a href="<ofbiz:url>/createnewlogin</ofbiz:url>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp; 
+            <a href="<ofbiz:url>/createnewlogin</ofbiz:url>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
           </td>
         </tr>
       </table>
@@ -380,8 +386,23 @@
               <tr>
                 <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>User Name</b></div></td>
                 <td width="5">&nbsp;</td>
-                <td align="left" valign="top" width="70%"><div class="tabletext"><%entityField.run("userUserLogin", "userLoginId");%></div></td> 
-                <td align="right" valign="top" width="20%"><a href="<ofbiz:url>/editlogin?userlogin_id=<%entityField.run("userUserLogin", "userLoginId");%></ofbiz:url>" class="buttontext">[Edit]</a>&nbsp;&nbsp;
+                <td align="left" valign="top" width="40%"><div class="tabletext"><%entityField.run("userUserLogin", "userLoginId");%></div></td>
+                <td align="left" valign="top" width="30%">
+                  <div class="tabletext">
+                    <%
+                       String enabled = "ENABLED";
+                       GenericValue thisUL = null;
+                       try {
+                           thisUL = (GenericValue) pageContext.findAttribute("userUserLogin");
+                       } catch (Exception e) {}
+                       if (thisUL != null && thisUL.get("enabled") != null && thisUL.getString("enabled").equals("N")) enabled = "DISABLED";
+                    %>
+                    <%=enabled%>
+                  </div>
+                </td>
+                <td align="right" valign="top" width="20%">
+                  <a href="<ofbiz:url>/editlogin?userlogin_id=<%entityField.run("userUserLogin", "userLoginId");%></ofbiz:url>" class="buttontext">[Edit]</a>&nbsp;
+                </td>
               </tr>
               </ofbiz:iterator>
             </table>
@@ -392,6 +413,58 @@
   </TR>
 </TABLE>
 </ofbiz:if>
+
+<ofbiz:if name="partyRoles">
+<br>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <form name="addPartyRole" method="post" action="<ofbiz:url>/addrole</ofbiz:url>">
+    <input type="hidden" name="partyId" value="<%=partyId%>">
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Member Roles</div>
+          </td>
+          <td valign="middle" align="right">&nbsp;
+            <select name="roleTypeId">
+              <ofbiz:iterator name="role" property="roles">
+                 <option value="<ofbiz:entityfield attribute="role" field="roleTypeId"/>"><ofbiz:entityfield attribute="role" field="description"/> [<ofbiz:entityfield attribute="role" field="roleTypeId"/>]</option>
+              </ofbiz:iterator>
+            </select>
+            &nbsp;&nbsp;
+            <a href="javascript:document.addPartyRole.submit()" class="lightbuttontext">[Add]</a>&nbsp;&nbsp;
+          </td>
+        </tr>
+      </table>
+    </TD>
+    </form>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+            <table width="100%" border="0" cellpadding="1">
+              <ofbiz:iterator name="userRole" property="partyRoles">
+              <tr>
+                <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>Role</b></div></td>
+                <td width="5">&nbsp;</td>
+                <td align="left" valign="top" width="70%"><div class="tabletext"><%entityField.run("userRole", "roleTypeId");%></div></td>
+                <td align="right" valign="top" width="20%">
+                  <a href="<ofbiz:url>/deleterole?partyId=<%=partyId%>&roleTypeId=<ofbiz:entityfield attribute="userRole" field="roleTypeId"/></ofbiz:url>" class="buttontext">[Delete]</a>&nbsp;
+                </td>
+              </tr>
+              </ofbiz:iterator>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+</ofbiz:if>
+
 </ofbiz:if>
 <ofbiz:unless name="party">
     No party found with the partyId of: <%=partyId%>
