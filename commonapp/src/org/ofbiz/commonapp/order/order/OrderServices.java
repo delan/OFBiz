@@ -256,6 +256,16 @@ public class OrderServices {
         }
         
         if ( testValue != null && testValue.get("orderId").equals(orderId) ) {
+            if (!testValue.getString("partyId").equals(partyId)) {
+                try {
+                    testValue.set("partyId", partyId);
+                    testValue.store();
+                } catch (GenericEntityException e) {
+                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                    result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not update role to order (" + e.getMessage() + ").");
+                    return result;
+                }
+            }
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             return result;
         }

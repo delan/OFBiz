@@ -143,7 +143,9 @@ public class CommonServices {
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Could update note data (write failure): " + e.getMessage());
         }
-        return ServiceUtil.returnSuccess();
+        Map result = ServiceUtil.returnSuccess();
+        result.put("noteId", noteId);
+        return result;
     }
 }
 

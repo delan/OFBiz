@@ -79,6 +79,7 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="noteName" type="String" mode="IN" optional="true"/>
         <attribute name="note" type="String" mode="IN"/>
+        <attribute name="noteId" type="String" mode="OUT"/>
     </service>
 
     <!-- Workflow services -->
