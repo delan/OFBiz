@@ -1,5 +1,5 @@
 /*
- * $Id: ContentDocument.java,v 1.2 2004/06/16 22:16:04 byersa Exp $
+ * $Id: ContentDocument.java,v 1.3 2004/06/17 22:12:16 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,16 +34,23 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.content.content.ContentWorker;
+import org.ofbiz.content.data.DataResourceWorker;
+import org.ofbiz.base.util.GeneralException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.sql.Timestamp;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Locale;
 
 /**
  * ContentDocument Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since 3.1
  * 
  *  
@@ -65,11 +72,12 @@ public class ContentDocument {
 	  		return doc;
 	  	}
 	  	
-	  	doc = Document(content);
+                Map map = new HashMap();
+	  	doc = Document(content, map);
                 return doc;
 	}
 	
-	public static Document Document(GenericValue content) throws InterruptedException  {
+	public static Document Document(GenericValue content, Map context) throws InterruptedException  {
 	  	
 		Document doc = null;
 	  	// make a new, empty document
@@ -103,10 +111,57 @@ public class ContentDocument {
                 ContentWorker.getContentAncestryAll(delegator, contentId, "WEB_SITE_PUB_PT", "TO", ancestorList);
                 String ancestorString = StringUtil.join(ancestorList, " ");
 	  	Debug.logInfo("in ContentDocument, ancestorString:" + ancestorString, module);
-                if (UtilValidate.isNotEmpty(ancestorString) )
-	  	    doc.add(Field.UnStored("categories", ancestorString));
+                if (UtilValidate.isNotEmpty(ancestorString) ) {
+                    Field field = Field.UnStored("site", ancestorString);
+	  	    Debug.logInfo("in ContentDocument, field:" + field.stringValue(), module);
+	  	    doc.add(field);
+                }
+
+                indexDataResource(content, doc, context);
 
 	  	return doc;
 	}
 
+	public static void indexDataResource(GenericValue content, Document doc, Map context) {
+	  	
+            GenericDelegator delegator = content.getDelegator();
+            String dataResourceId = content.getString("dataResourceId");
+            GenericValue dataResource = null;
+	    try {
+	  	dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+	    } catch(GenericEntityException e) {
+	  	Debug.logError(e, module);
+	  	return ;
+	    }
+	  	
+	  	
+	    String mimeTypeId = dataResource.getString("mimeTypeId");
+	    if (UtilValidate.isEmpty(mimeTypeId)) {
+                mimeTypeId = "text/html";
+            }
+
+	    Locale locale = Locale.getDefault();
+            String currentLocaleString = dataResource.getString("localeString");
+            if (UtilValidate.isNotEmpty(currentLocaleString)) {
+                locale = UtilMisc.parseLocale(currentLocaleString);
+            }
+        
+            StringWriter outWriter = new StringWriter();
+	    try {
+	  	    DataResourceWorker.writeDataResourceTextCache(dataResource, mimeTypeId, locale, context, delegator, outWriter);
+	    } catch(GeneralException e) {
+	  	Debug.logError(e, module);
+	    } catch(IOException e) {
+	  	Debug.logError(e, module);
+	    }
+	    String text = outWriter.toString();
+	    Debug.logInfo("in DataResourceDocument, text:" + text, module);
+            if (UtilValidate.isNotEmpty(text)) {
+              Field field = Field.UnStored("content", text);
+	      Debug.logInfo("in ContentDocument, field:" + field.stringValue(), module);
+	      doc.add(field);
+            }
+	    
+	    return;
+	}
 }

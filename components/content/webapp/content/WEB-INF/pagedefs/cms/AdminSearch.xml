@@ -14,7 +14,7 @@
     <property name="menuName">cms</property>
     <property name="menuItemName">subsites</property>
     <property name="targetName">dflt</property>
-    <property name="defaultSiteId">WebStore_FORUM</property>
+    <property name="defaultSiteId">WebStoreFORUM</property>
 
     <page-action name="/includes/permprep.bsh" />
     <page-action name="/menu/menuinit.bsh"/>

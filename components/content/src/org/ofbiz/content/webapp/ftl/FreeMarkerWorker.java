@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.28 2004/06/16 18:54:45 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.29 2004/06/17 22:12:16 byersa Exp $
  *
  * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -190,6 +190,8 @@ public class FreeMarkerWorker {
                 if (obj instanceof BeanModel) {
                     BeanModel bean = (BeanModel) obj;
                     obj = bean.getWrappedObject();
+                } else if (obj instanceof SimpleScalar) {
+                    obj = obj.toString();
                 }
             }
         } catch (TemplateModelException e) {
@@ -717,6 +719,8 @@ public class FreeMarkerWorker {
 
     public static GenericValue getCurrentContent( GenericDelegator delegator, List trail,  GenericValue userLogin, Map ctx, Boolean nullThruDatesOnly, String contentAssocPredicateId)  throws GeneralException {
 
+        Object obj = ctx.get("contentId");
+        if (Debug.infoOn()) Debug.logInfo("in getCurrentContent(0), obj ." + obj + " cls:" + obj.getClass(), module);
         String contentId = (String)ctx.get("contentId");
         String subContentId = (String)ctx.get("subContentId");
         String mapKey = (String)ctx.get("mapKey");
