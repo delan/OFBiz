@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2001/12/21 16:28:52  jonesde
+ * Added exclusion of new cancelled state to activity and task stuff
+ *
  * Revision 1.11  2001/12/10 16:45:52  jonesde
  * Fixed wrong status ids
  *
@@ -148,49 +151,6 @@ public class WorkEffortWorker {
             pageContext.setAttribute(tryEntityAttrName, tryEntity);
         if (currentStatus != null)
             pageContext.setAttribute(currentStatusAttrName, currentStatus);
-    }
-
-    public static void getEventStatusItems(PageContext pageContext, String attributeName) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
-        try {
-            Collection statusItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", "EVENT_STATUS"), UtilMisc.toList("sequenceId"));
-            if (statusItems != null)
-                pageContext.setAttribute(attributeName, statusItems);
-        } catch (GenericEntityException e) {
-            Debug.logError(e);
-        }
-    }
-
-    public static void getTaskStatusItems(PageContext pageContext, String attributeName) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
-        List statusItems = new LinkedList();
-        try {
-            Collection calItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", "CALENDAR_STATUS"), UtilMisc.toList("sequenceId"));
-            if (calItems != null)
-                statusItems.addAll(calItems);
-        } catch (GenericEntityException e) {
-            Debug.logError(e);
-        }
-        try {
-            Collection taskItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", "TASK_STATUS"), UtilMisc.toList("sequenceId"));
-            if (taskItems != null)
-                statusItems.addAll(taskItems);
-        } catch (GenericEntityException e) {
-            Debug.logError(e);
-        }
-        
-        pageContext.setAttribute(attributeName, statusItems);
-    }
-
-    public static void getActivityStatusItems(PageContext pageContext, String attributeName) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
-        try {
-            Collection statusItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", "WORKFLOW_STATUS"), UtilMisc.toList("sequenceId"));
-            if (statusItems != null)
-                pageContext.setAttribute(attributeName, statusItems);
-        } catch (GenericEntityException e) {
-            Debug.logError(e);
-        }
     }
 
     public static void getMonthWorkEffortEvents(PageContext pageContext, String attributeName) {

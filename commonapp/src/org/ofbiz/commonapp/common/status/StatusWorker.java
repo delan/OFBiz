@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/12/21 16:26:18  jonesde
+ * Added simple worker to get status change to details
+ *
  *
  */
 package org.ofbiz.commonapp.common.status;
@@ -39,6 +42,39 @@ import java.util.*;
  * Created on December 21, 2001
  */
 public class StatusWorker {
+    public static void getStatusItems(PageContext pageContext, String attributeName, String statusTypeId) {
+        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        try {
+            Collection statusItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", statusTypeId), UtilMisc.toList("sequenceId"));
+            if (statusItems != null)
+                pageContext.setAttribute(attributeName, statusItems);
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+        }
+    }
+
+    public static void getStatusItems(PageContext pageContext, String attributeName, String statusTypeIdOne, String statusTypeIdTwo) {
+        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        List statusItems = new LinkedList();
+        try {
+            Collection calItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", statusTypeIdOne), UtilMisc.toList("sequenceId"));
+            if (calItems != null)
+                statusItems.addAll(calItems);
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+        }
+        try {
+            Collection taskItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", statusTypeIdTwo), UtilMisc.toList("sequenceId"));
+            if (taskItems != null)
+                statusItems.addAll(taskItems);
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+        }
+        
+        if (statusItems.size() > 0)
+            pageContext.setAttribute(attributeName, statusItems);
+    }
+
     public static void getStatusValidChangeToDetails(PageContext pageContext, String attributeName, String statusId) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
         Collection statusValidChangeToDetails = null;
