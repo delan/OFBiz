@@ -198,7 +198,14 @@ public class ControlServlet extends HttpServlet {
             //some containers call filters on EVERY request, even forwarded ones, so let it know that it came from the control servlet
             request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
             RequestDispatcher rd = request.getRequestDispatcher(errorPage);
-            if (rd != null) rd.forward(request, response);
+            
+            //use this request parameter to avoid infinite looping on errors in the error page...
+            if (request.getAttribute("_ERROR_OCCURRED_") == null) {
+                request.setAttribute("_ERROR_OCCURRED_", new Boolean(true));
+                if (rd != null) rd.forward(request, response);
+            } else {
+                response.getWriter().print("ERROR in error page, but here is the text anyway: " + request.getAttribute(SiteDefs.ERROR_MESSAGE));
+            }
         }
 
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
