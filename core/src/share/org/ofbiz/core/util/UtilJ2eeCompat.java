@@ -71,8 +71,6 @@ public class UtilJ2eeCompat {
                 Debug.logImportant("Resin detected, disabling the flush on the region render from PageContext for better performance");
                 doflush = false;
             } else if (serverInfo.indexOf(REX_IP) >= 0) {
-                Debug.logImportant("Trade City RexIP detected, disabling the flush on the region render from PageContext for better performance");
-                doflush = false;
                 Debug.logImportant("Trade City RexIP detected, using response.getWriter to write text out instead of response.getOutputStream");
                 usestream = false;
             }
