@@ -186,6 +186,8 @@
         <ant dir="partymgr" inheritAll="false" />
         <echo message="[build] ===== Building ordermgr =====" />
         <ant dir="ordermgr" inheritAll="false" />
+        <echo message="[build] ===== Building workeffort =====" />
+        <ant dir="workeffort" inheritAll="false" />
         
         <echo message="[build] ===== Done Building =====" />
     </target>
@@ -207,6 +209,8 @@
         <ant dir="partymgr" target="war" inheritAll="false" />
         <echo message="[build] ===== Building ordermgr =====" />
         <ant dir="ordermgr" target="war" inheritAll="false" />
+        <echo message="[build] ===== Building workeffort =====" />
+        <ant dir="workeffort" target="war" inheritAll="false" />
         
         <echo message="[build] ===== Done Building =====" />
     </target>
@@ -230,6 +234,8 @@
         <ant dir="partymgr" target="docs" />        
         <echo message="[docs] ===== Javadoc ordermgr =====" />
         <ant dir="ordermgr" target="docs" />        
+        <echo message="[docs] ===== Javadoc workeffort =====" />
+        <ant dir="workeffort" target="docs" />        
         
         <echo message="[docs] ===== Done Cleaning =====" />
     </target>
@@ -311,6 +317,8 @@
             toFile="${j2eedeploy.dir}/partymgr-ext.war" />
         <copy file="ordermgr/lib/ordermgr-ext.war"
             toFile="${j2eedeploy.dir}/ordermgr-ext.war" />
+        <copy file="workeffort/lib/workeffort-ext.war"
+            toFile="${j2eedeploy.dir}/workeffort-ext.war" />
     </target>
 
 </project>

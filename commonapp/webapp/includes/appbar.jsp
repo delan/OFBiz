@@ -21,6 +21,9 @@
         <tr>
           <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="javascript:document.commonappform.submit()" class="buttontext">CommonApp</a></td>
           <TD bgcolor="<%=headerBoxBottomColor%>" width="90%" align=center class='headerCenter'>App Links</TD>
+          <%if(security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", session)) {%>
+            <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="javascript:document.workeffortform.submit()" class="buttontext">WorkEffort</a></td>
+          <%}%>
           <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
             <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="javascript:document.catalogform.submit()" class="buttontext">Catalog</a></td>
           <%}%>
@@ -37,6 +40,10 @@
 </TABLE>
 
   <form method="POST" action="<%=response.encodeURL("/commonapp/control/login/main")%>" name="commonappform" style='margin: 0;'>
+    <input type="hidden" name="USERNAME" value="<%=userLogin.getString("userLoginId")%>">
+    <input type="hidden" name="PASSWORD" value="<%=userLogin.getString("currentPassword")%>">
+  </form>
+  <form method="POST" action="<%=response.encodeURL("/workeffort/control/login/main")%>" name="workeffortform" style='margin: 0;'>
     <input type="hidden" name="USERNAME" value="<%=userLogin.getString("userLoginId")%>">
     <input type="hidden" name="PASSWORD" value="<%=userLogin.getString("currentPassword")%>">
   </form>

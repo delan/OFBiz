@@ -291,6 +291,10 @@
                  debug="0" reloadable="true">
           <Logger className="org.apache.catalina.logger.FileLogger" prefix="ordermgr_log." suffix=".txt" timestamp="true"/>
         </Context>
+        <Context path="/workeffort" docBase="../../ofbiz/workeffort/webapp"
+                 debug="0" reloadable="true">
+          <Logger className="org.apache.catalina.logger.FileLogger" prefix="workeffort_log." suffix=".txt" timestamp="true"/>
+        </Context>
       </Host>
 
     </Engine>
