@@ -57,6 +57,7 @@ if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
         orderItems = orderHeader.getRelated("OrderItem");
         orderItemIter = orderItems.iterator();
         while (orderItemIter.hasNext()) {
+            orderItemData = new HashMap();
             orderItem = orderItemIter.next();
             product = orderItem.getRelatedOne("Product");
             
@@ -94,7 +95,6 @@ if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
                 orderItemData.put("totalQuantityIssuedAndReserved", totalQuantityReserved + totalQuantityIssued);
             }
             
-            orderItemData = new HashMap();
             orderItemData.put("orderItem", orderItem);
             orderItemData.put("product", product);
             orderItemData.put("itemIssuances", itemIssuances);

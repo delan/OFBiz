@@ -43,11 +43,17 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <div class="head3" style="color: red;">ERROR: Order with ID [${orderId}] not found.</div>
 </#if>
 <#if orderHeader?exists>
-    <div class="head3">NOTE: Order Type is ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}.</div>
+    <#if orderHeader.orderTypeId == "SALES_ORDER" && shipment.shipmentTypeId != "SALES_SHIPMENT">
+        <div class="head3" style="color: red;">WARNING: Order Type is ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}, but this is NOT a Sales Shipment.</div>
+    <#elseif orderHeader.orderTypeId == "PURCHASE_ORDER" && shipment.shipmentTypeId != "PURCHASE_SHIPMENT">
+        <div class="head3" style="color: red;">WARNING: Order Type is ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}, but this is NOT a Purchase Shipment.</div>
+    <#else>
+        <div class="head3">NOTE: Order Type is ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}.</div>
+    </#if>
     <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>
         <div class="head3">NOTE: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}.</div>
     <#else>
-        <div class="head3" style="color: red;">WARNING: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}; should generally be Approved or Backordered before shipping.</div>
+        <div class="head3" style="color: red;">WARNING: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}; should generally be Approved before shipping.</div>
     </#if>
     <table width="100%" cellpadding="2" cellspacing="0" border="1">
         <tr>
@@ -65,7 +71,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         </tr>
         <#list orderItemDatas?if_exists as orderItemData>
             <#assign orderItem = orderItemData.orderItem>
-            <#assign product = orderItemData.product>
+            <#assign product = orderItemData.product?if_exists>
             <#assign itemIssuances = orderItemData.itemIssuances>
             <#assign totalQuantityIssued = orderItemData.totalQuantityIssued>
             <#assign orderItemInventoryResDatas = orderItemData.orderItemInventoryResDatas?if_exists>
@@ -73,7 +79,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <#assign totalQuantityIssuedAndReserved = orderItemData.totalQuantityIssuedAndReserved?if_exists>
             <tr>
                 <td><div class="tabletext">${orderItem.orderItemSeqId}</div></td>
-                <td><div class="tabletext">${(product.productName)?if_exists} [${orderItem.productId?if_exists}]</div></td>
+                <td><div class="tabletext">${(product.productName)?if_exists} [${orderItem.productId?default("N/A")}]</div></td>
                 <td>
                     <#if itemIssuances?has_content>
                         <#list itemIssuances as itemIssuance>
@@ -84,8 +90,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                     </#if>
                 </td>
                 <td>
-                    <#if isSalesOrder>
-                        <div class="tabletext">
+                    <div class="tabletext">
+                        <#if isSalesOrder>
                             <#if (totalQuantityIssuedAndReserved != orderItem.quantity)><span style="color: red;"><#else><span></#if>
                                 [${totalQuantityIssued} + ${totalQuantityReserved} = ${totalQuantityIssuedAndReserved}]
                                 <b>
@@ -93,9 +99,16 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                                     ${orderItem.quantity}
                                 </b>
                             </span>
-                        </div>
-                    <#else>
-                    </#if>
+                        <#else>
+                            <#if (totalQuantityIssued > orderItem.quantity)><span style="color: red;"><#else><span></#if>
+                                ${totalQuantityIssued}
+                                <b>
+                                    <#if (totalQuantityIssued > orderItem.quantity)>&gt;<#else><#if (totalQuantityIssued < orderItem.quantity)>&lt;<#else>=</#if></#if>
+                                    ${orderItem.quantity}
+                                </b>
+                            </span>
+                        </#if>
+                    </div>
                 </td>
                 <#if isSalesOrder>
                     <td><div class="tabletext">&nbsp;</div></td>
@@ -103,13 +116,15 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 <#else>
                     <#assign quantityNotIssued = orderItem.quantity - totalQuantityIssued>
                     <#if (quantityNotIssued > 0)>
-                        <form action="<@ofbizUrl>/issueOrderItemToShipment</@ofbizUrl>" name="issueOrderItemToShipmentForm${orderItemData_index}">
-                            <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-                            <input type="hidden" name="orderId" value="${orderItem.orderId}"/>
-                            <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
-                            <input type="text" size="5" name="quantity" value="${quantityNotIssued}"/>
-                            <a href="javascript:document.issueOrderItemToShipmentForm${orderItemData_index}.submit();" class="buttontext">Issue</a>
-                        </form>
+                        <td>
+                            <form action="<@ofbizUrl>/issueOrderItemToShipment</@ofbizUrl>" name="issueOrderItemToShipmentForm${orderItemData_index}">
+                                <input type="hidden" name="shipmentId" value="${shipmentId}"/>
+                                <input type="hidden" name="orderId" value="${orderItem.orderId}"/>
+                                <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
+                                <input type="text" size="5" name="quantity" value="${quantityNotIssued}"/>
+                                <a href="javascript:document.issueOrderItemToShipmentForm${orderItemData_index}.submit();" class="buttontext">Issue</a>
+                            </form>
+                        </td>
                     <#else>
                         <td><div class="tabletext">&nbsp;</div></td>
                     </#if>

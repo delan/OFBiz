@@ -128,10 +128,6 @@
         <make-value entity-name="OrderItem" value-name="orderItemLookupPk"/>
         <set-pk-fields value-name="orderItemLookupPk" map-name="parameters"/>
         <find-by-primary-key map-name="orderItemLookupPk" value-name="orderItem"/>
-        <!-- get inventoryItem -->
-        <make-value entity-name="InventoryItem" value-name="inventoryItemLookupPk"/>
-        <set-pk-fields value-name="inventoryItemLookupPk" map-name="parameters"/>
-        <find-by-primary-key map-name="inventoryItemLookupPk" value-name="inventoryItem"/>
         <!-- get shipment -->
         <make-value entity-name="Shipment" value-name="shipmentLookupPk"/>
         <set-pk-fields value-name="shipmentLookupPk" map-name="parameters"/>
@@ -224,11 +220,14 @@
     <!-- some inline methods for the issuance process -->
     <simple-method method-name="findCreateIssueShipmentItem" short-description="Find or Create ShipmentItem to Issue To - meant to be called in-line">
         <!-- try to find an existing shipmentItem and attach to it, if none found create a new shipmentItem -->
-        <field-to-field field-name="productId" map-name="orderItem" to-map-name="shipmentItemLookup"/>
-        <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="shipmentItemLookup"/>
-        <string-to-list string="shipmentItemSeqId" list-name="shipmentItemOrder"/>
-        <find-by-and entity-name="ShipmentItem" list-name="shipmentItems" map-name="shipmentItemLookup" order-by-list-name="shipmentItemOrder"/>
-        <first-from-list entry-name="shipmentItem" list-name="shipmentItems"/>
+        <!-- if there is NO productId on the orderItem, ALWAYS create a new shipmentItem -->
+        <if-not-empty field-name="productId" map-name="orderItem">
+            <field-to-field field-name="productId" map-name="orderItem" to-map-name="shipmentItemLookup"/>
+            <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="shipmentItemLookup"/>
+            <string-to-list string="shipmentItemSeqId" list-name="shipmentItemOrder"/>
+            <find-by-and entity-name="ShipmentItem" list-name="shipmentItems" map-name="shipmentItemLookup" order-by-list-name="shipmentItemOrder"/>
+            <first-from-list entry-name="shipmentItem" list-name="shipmentItems"/>
+        </if-not-empty>
         
         <if-empty field-name="shipmentItem">
             <field-to-field field-name="productId" map-name="orderItem" to-map-name="shipmentItemCreate"/>
