@@ -242,13 +242,25 @@ public class InvoiceServices {
         if (billItems != null) {
             Iterator itemIter = billItems.iterator();
             while (itemIter.hasNext()) {
-                GenericValue itemIssuance = (GenericValue) itemIter.next();
+                GenericValue itemIssuance = null;
                 GenericValue orderItem = null;
-                try {
-                    orderItem = itemIssuance.getRelatedOne("OrderItem");
-                } catch (GenericEntityException e) {                   
-                    Debug.logError(e, "Trouble getting related OrderItem from ItemIssuance", module);
-                    return ServiceUtil.returnError("Trouble getting OrderItem from ItemIssuance");
+                GenericValue currentValue = (GenericValue) itemIter.next();
+                if ("ItemIssuance".equals(currentValue.getEntityName())) {
+                    itemIssuance = currentValue;
+                } else if ("OrderItem".equals(currentValue.getEntityName())) {
+                    orderItem = currentValue;
+                }
+                
+                if (orderItem == null && itemIssuance != null) {
+                    try {
+                        orderItem = itemIssuance.getRelatedOne("OrderItem");
+                    } catch (GenericEntityException e) {                   
+                        Debug.logError(e, "Trouble getting related OrderItem from ItemIssuance", module);
+                        return ServiceUtil.returnError("Trouble getting OrderItem from ItemIssuance");
+                    }
+                } else if (orderItem == null && itemIssuance == null) {
+                    Debug.logError("Cannot create invoice when both orderItem and itemIssuance is null", module);
+                    return ServiceUtil.returnError("Illegal values passed to create invoice service");
                 }
                 GenericValue product = null;
                 if (orderItem.get("productId") != null) {                
@@ -262,20 +274,27 @@ public class InvoiceServices {
                 
                 // get some quantities
                 Double orderedQuantity = orderItem.getDouble("quantity");
-                Double billingQuantity = itemIssuance.getDouble("quantity");
+                Double billingQuantity = null;
+                if (itemIssuance != null) {
+                    billingQuantity = itemIssuance.getDouble("quantity");
+                } else {
+                    billingQuantity = orderedQuantity;
+                }
                 if (orderedQuantity == null) orderedQuantity = new Double(0.00);
                 if (billingQuantity == null) billingQuantity = new Double(0.00);                
                                 
                 GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));                
                 invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, orderItem.getString("orderItemTypeId"), "INV_PROD_ITEM"));
                 invoiceItem.set("description", orderItem.get("itemDescription"));
-                invoiceItem.set("quantity", itemIssuance.get("quantity"));
+                invoiceItem.set("quantity", billingQuantity);
                 invoiceItem.set("amount", orderItem.get("unitPrice"));
                 invoiceItem.set("productId", orderItem.get("productId"));
                 invoiceItem.set("productFeatureId", orderItem.get("productFeatureId"));
                 //invoiceItem.set("uomId", "");
-                                
-                if (itemIssuance.get("inventoryItemId") != null) {                
+                
+                String itemIssuanceId = null;           
+                if (itemIssuance != null && itemIssuance.get("inventoryItemId") != null) {
+                    itemIssuanceId = itemIssuance.getString("itemIssuanceId");                
                     invoiceItem.set("inventoryItemId", itemIssuance.get("inventoryItemId"));
                 }                                                   
                 if (product != null) {
@@ -291,7 +310,7 @@ public class InvoiceServices {
                 GenericValue orderItemBill = delegator.makeValue("OrderItemBilling", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
                 orderItemBill.set("orderId", orderItem.get("orderId"));
                 orderItemBill.set("orderItemSeqId", orderItem.get("orderItemSeqId"));
-                orderItemBill.set("itemIssuanceId", itemIssuance.getString("itemIssuanceId"));
+                orderItemBill.set("itemIssuanceId", itemIssuanceId);
                 orderItemBill.set("quantity", invoiceItem.get("quantity"));
                 orderItemBill.set("amount", invoiceItem.get("amount"));
                 toStore.add(orderItemBill);
