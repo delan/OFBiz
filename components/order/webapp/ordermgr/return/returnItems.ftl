@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 
@@ -80,7 +80,7 @@ function removeSelected() {
     <a href="<@ofbizUrl>/returnMain?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButton">Return Header</a>  
     <a href="<@ofbizUrl>/returnItems?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return Items</a>  
     <#if returnHeader?has_content && returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED">
-      <a href="/facility/control/ReceiveReturn?returnId=${returnId?if_exists}${requestAttributes.externalKeyParam}" class="tabButton">Receive Return</a>
+      <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${requestAttributes.externalKeyParam}" class="tabButton">Receive Return</a>
     </#if>
 </div>
 
