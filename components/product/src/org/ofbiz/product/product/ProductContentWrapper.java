@@ -49,7 +49,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Product Content Worker: gets product content to display
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class ProductContentWrapper {
@@ -97,7 +97,7 @@ public class ProductContentWrapper {
             if (outString.length() > 0) {
                 return outString;
             } else {
-                return null;
+                return product.getString(candidateFieldName);
             }
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
