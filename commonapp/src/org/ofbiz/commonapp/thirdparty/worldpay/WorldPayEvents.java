@@ -132,13 +132,16 @@ public class WorldPayEvents {
         }
         
         // get the telephone number to pass over
+        String phoneNumber = null;
         GenericValue phoneContact = null;        
         
         // get the email address to pass over
+        String emailAddress = null;
         GenericValue emailContact = null;
         try {
             List emailAddrs = delegator.findByAnd("OrderContactMech", UtilMisc.toMap("orderId", orderId, "contactMechPurposeTypeId", "ORDER_EMAIL"));
             emailContact = EntityUtil.getFirst(emailAddrs);
+            emailAddress = emailContact.getString("infoString");
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Problems getting order email address", module);
         }
@@ -158,6 +161,8 @@ public class WorldPayEvents {
         String instId = UtilProperties.getPropertyValue(configString, "payment.worldpay.instId", "NONE");
         String authMode = UtilProperties.getPropertyValue(configString, "payment.worldpay.authMode", "A");
         String testMode = UtilProperties.getPropertyValue(configString, "payment.worldpay.testMode", "100");
+        String fixContact = UtilProperties.getPropertyValue(configString, "payment.worldpay.fixContact", "N");
+        String hideContact = UtilProperties.getPropertyValue(configString, "payment.worldpay.hideContact", "N");
         String timeout = UtilProperties.getPropertyValue(configString, "payment.worldpay.timeout", "0");
         String company = UtilProperties.getPropertyValue(configString, "payment.general.company", "");
         String defCur = UtilProperties.getPropertyValue(configString, "payment.general.defaultCurrency", "USD");
@@ -245,7 +250,7 @@ public class WorldPayEvents {
             Debug.logWarning(e, "Problems setting the authorization mode", module);
         }
         token.setTestMode(testModeInt);
-        
+                        
         // set the token to the purchase link
         try {
             linkParms.setValue(SelectDefs.SEL_purchase, token.produce());
@@ -257,12 +262,21 @@ public class WorldPayEvents {
         
         // set the customer data in the link
         linkParms.setValue(SelectDefs.SEL_desc, description);
-        linkParms.setValue(SelectDefs.SEL_name, name);
-        linkParms.setValue(SelectDefs.SEL_address, address.toString());
-        linkParms.setValue(SelectDefs.SEL_postcode, contactAddress.getString("postalCode"));
+        linkParms.setValue(SelectDefs.SEL_name, name != null ? name : "");
+        linkParms.setValue(SelectDefs.SEL_address, address != null ? address.toString() : "");
+        linkParms.setValue(SelectDefs.SEL_postcode, contactAddress != null ? contactAddress.getString("postalCode") : "");
         linkParms.setValue(SelectDefs.SEL_country, countryGeo.getString("geoCode"));
-        linkParms.setValue(SelectDefs.SEL_tel, "");
-        linkParms.setValue(SelectDefs.SEL_email, "");
+        linkParms.setValue(SelectDefs.SEL_tel, phoneNumber != null ? phoneNumber : ""); 
+        linkParms.setValue(SelectDefs.SEL_email, emailAddress != null ? emailAddress : "");
+        
+        // set some optional data
+        if (fixContact != null && fixContact.toUpperCase().startsWith("Y")) {
+            linkParms.setValue(SelectDefs.SEL_fixContact, "Y");
+        }
+        if (hideContact != null && hideContact.toUpperCase().startsWith("Y")) {
+            linkParms.setValue("hideContact", "Y"); // why is this not in SelectDefs??
+        }
+            
         
         // redirect to worldpay
         try {

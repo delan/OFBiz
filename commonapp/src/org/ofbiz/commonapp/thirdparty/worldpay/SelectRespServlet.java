@@ -32,6 +32,7 @@ import javax.servlet.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.commonapp.order.shoppingcart.*;
 
 import com.worldpay.select.*;
 import com.worldpay.select.merchant.*;
@@ -59,6 +60,26 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         delegator = this.getDelegator();
         dispatcher = this.getDispatcher();
         
+        // get the properties file
+        String webSiteId = sctx.getInitParameter("webSiteId");
+        String configString = null;
+        try {
+            GenericValue webSitePayment = delegator.findByPrimaryKey("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", "EXT_WORLDPAY"));
+            if (webSitePayment != null)
+                configString = webSitePayment.getString("paymentConfiguration");
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, "Cannot find webSitePayment Settings", module);
+        }
+        if (configString == null)
+        configString = "payment.properties";        
+        
+        // store some stuff for calling existing events
+        request.setAttribute("servletContext", sctx);
+        request.setAttribute("delegator", delegator);
+        request.setAttribute("dispatcher", dispatcher);
+        request.setAttribute("order_id", request.getParameter(SelectDefs.SEL_cartId));
+        request.setAttribute(SiteDefs.CONTROL_PATH, UtilProperties.getPropertyValue(configString, "payment.general.controlpath", "/control"));
+        
         // load the order.properties file.        
         try {
             orderPropertiesUrl = sctx.getResource("/WEB-INF/order.properties");
@@ -75,8 +96,20 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             // order was cancelled
             cancelOrder(orderId);
         }
+        
+        // set the payment preference
         setPaymentPreferences(orderId, request);
-                  
+        
+        // call the existing confirm order events (calling direct)
+        String confirm = CheckOutEvents.renderConfirmOrder(request, response);
+        String email = CheckOutEvents.emailOrder(request, response);
+        
+        // set up the output stream for the page
+        response.setContentType("text/html");
+        ServletOutputStream out = response.getOutputStream();
+        String content = (String) request.getAttribute("confirmorder");
+        if (content != null)
+            out.println(content);                                           
     }
         
     private void approveOrder(String orderId) {        
@@ -157,7 +190,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         String transId = request.getParameter(SelectDefs.SEL_transId);       
         String transTime = request.getParameter(SelectDefs.SEL_transTime);
         String transStatus = request.getParameter(SelectDefs.SEL_transStatus);
-        String avsCode = request.getParameter("AVS");
+        String avsCode = request.getParameter("AVS");  // why is this not in SelectDefs??
         String authCode = request.getParameter(SelectDefs.SEL_authCode);
         String authAmount = request.getParameter(SelectDefs.SEL_authAmount); 
         String rawAuthMessage = request.getParameter(SelectDefs.SEL_rawAuthMessage);
