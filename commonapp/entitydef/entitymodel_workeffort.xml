@@ -138,7 +138,6 @@
       <field name="activityId" type="id-long-ne"></field>
       <field name="objectName" type="name"></field>
       <field name="objectPriority" type="numeric"></field>
-      <field name="objectState" type="name"></field>
       <field name="description" type="description"></field>
       <field name="timeLimit" type="floating-point"></field>
       <field name="startModeEnumId" type="id"></field>
@@ -407,8 +406,8 @@
     <view-entity entity-name="WorkflowDataFieldsView" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Data Fields View Entity">	
-      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />	
-      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />
+      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />	
+      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />
       <alias entity-alias="WDF" name="dataFieldId" prim-key="true" />
       <alias entity-alias="WDF" name="dataFieldName" />
       <alias entity-alias="WDF" name="description" />
@@ -733,7 +732,6 @@
       <field name="processId" type="id-long-ne"></field>
       <field name="objectName" type="name"></field>
       <field name="objectPriority" type="numeric"></field>
-      <field name="objectState" type="name"></field>
       <field name="description" type="description"></field>
       <field name="creationDateTime" type="date-time"></field>
       <field name="objectVersion" type="very-short"></field>
@@ -865,6 +863,12 @@
         <key-map field-name="processId" />
         <key-map field-name="activityId" />
         <key-map field-name="restrictionSeqId" />
+      </relation>
+      <relation type="one" title="Join" rel-entity-name="Enumeration">
+        <key-map field-name="joinTypeEnumId" rel-field-name="enumId" />
+      </relation>
+      <relation type="one" title="Split" rel-entity-name="Enumeration">
+        <key-map field-name="splitTypeEnumId" rel-field-name="enumId" />
       </relation>
     </entity>
     <entity entity-name="WorkflowTransition" 
