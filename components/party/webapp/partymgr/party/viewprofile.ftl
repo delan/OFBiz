@@ -70,7 +70,7 @@
       <#else>
         <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}&SHOW_OLD=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyShowOld}]</a>
       </#if>
-      <a href="/accounting/control/findBillingAccount?partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.AccountingBillingAccount}]</a>
+      <a href="/accounting/control/FindBillingAccount?partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.AccountingBillingAccount}]</a>
       <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
         <a href="/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderOrders}]</a>
       </#if>
