@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   To refer to this DTD in your XML file, use the following declaration:
-<!DOCTYPE ofbiz-containers PUBLIC "-//OFBiz//DTD Containers Config//EN" "http://www.ofbiz.org/dtds/containers.dtd">
+<!DOCTYPE ofbiz-containers PUBLIC "-//OFBiz//DTD Containers Config//EN" "http://www.ofbiz.org/dtds/ofbiz-containers.dtd">
 -->
 
 <!--
@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  Dynamic OFBiz Containers Definition DTD
- *  $Id: ofbiz-containers.dtd,v 1.2 2003/08/15 22:05:59 ajzeneski Exp $
+ *  $Id: ofbiz-containers.dtd,v 1.3 2003/08/15 23:45:37 ajzeneski Exp $
 -->
 
 <!ELEMENT ofbiz-containers (container+)>
