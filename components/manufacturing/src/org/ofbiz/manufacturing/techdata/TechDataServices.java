@@ -1,5 +1,5 @@
 /*
- * $Id: TechDataServices.java,v 1.1 2003/11/21 10:05:35 holivier Exp $
+ * $Id: TechDataServices.java,v 1.2 2003/11/21 12:45:35 holivier Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:johan@ibibi.com">Johan Isacsson</a>
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class TechDataServices {
@@ -109,24 +109,25 @@ public class TechDataServices {
 	 * @author holivier
 	 * @param ctx
 	 * @param context: a map containing workEffortIdFrom (routing) and SeqId, fromDate thruDate
-	 * @return result: a map containing seqIdNotOk which is equal to "Y" if it's not Ok
+	 * @return result: a map containing sequenceNumNotOk which is equal to "Y" if it's not Ok
 	 */
 		public static Map checkRoutingTaskAssoc(DispatchContext ctx, Map context) {
 			GenericDelegator delegator = ctx.getDelegator();
 			Map result = new HashMap();
-			String seqIdNotOk = "N";
+			String sequenceNumNotOk = "N";
         
 			String workEffortIdFrom = (String) context.get("workEffortIdFrom");    
 			String workEffortIdTo = (String) context.get("workEffortIdTo");    
 			String workEffortAssocTypeId = (String) context.get("workEffortAssocTypeId");    
-			String seqId = (String) context.get("seqId");
+			Long sequenceNum =  (Long) context.get("sequenceNum");
+//			Long sequenceNum =  Long.valueOf((String) context.get("sequenceNum"));
 			java.sql.Timestamp  fromDate =  (java.sql.Timestamp) context.get("fromDate");
 			java.sql.Timestamp  thruDate =  (java.sql.Timestamp) context.get("thruDate");
 
 			List listRoutingTaskAssoc = null;
 
 			try {
-				listRoutingTaskAssoc = delegator.findByAnd("WorkEffortAssoc",UtilMisc.toMap("workEffortIdFrom", workEffortIdFrom,"seqId",seqId), UtilMisc.toList("fromDate"));
+				listRoutingTaskAssoc = delegator.findByAnd("WorkEffortAssoc",UtilMisc.toMap("workEffortIdFrom", workEffortIdFrom,"sequenceNum",sequenceNum), UtilMisc.toList("fromDate"));
 			} catch (GenericEntityException e) {
 				Debug.logWarning(e, module);
 				return ServiceUtil.returnError("Error finding desired WorkEffortAssoc records: " + e.toString());
@@ -139,30 +140,30 @@ public class TechDataServices {
 					if ( ! workEffortIdFrom.equals(routingTaskAssoc.getString("workEffortIdFrom")) ||
 						  ! workEffortIdTo.equals(routingTaskAssoc.getString("workEffortIdTo")) ||
 						  ! workEffortAssocTypeId.equals(routingTaskAssoc.getString("workEffortAssocTypeId")) ||
-						  ! seqId.equals(routingTaskAssoc.getString("seqId"))
+						    sequenceNum != routingTaskAssoc.getLong("sequenceNum")
 						  ) {
-							if (routingTaskAssoc.getTimestamp("thruDate") == null && routingTaskAssoc.getTimestamp("fromDate") == null) seqIdNotOk = "Y";
+							if (routingTaskAssoc.getTimestamp("thruDate") == null && routingTaskAssoc.getTimestamp("fromDate") == null) sequenceNumNotOk = "Y";
 							else if (routingTaskAssoc.getTimestamp("thruDate") == null) {
-								if (thruDate == null) seqIdNotOk = "Y";
-								else if (thruDate.after(routingTaskAssoc.getTimestamp("fromDate"))) seqIdNotOk = "Y";
+								if (thruDate == null) sequenceNumNotOk = "Y";
+								else if (thruDate.after(routingTaskAssoc.getTimestamp("fromDate"))) sequenceNumNotOk = "Y";
 							}
 							else  if (routingTaskAssoc.getTimestamp("fromDate") == null) {	
-								if (fromDate == null) seqIdNotOk = "Y";
-								else if (fromDate.before(routingTaskAssoc.getTimestamp("thruDate"))) seqIdNotOk = "Y";
+								if (fromDate == null) sequenceNumNotOk = "Y";
+								else if (fromDate.before(routingTaskAssoc.getTimestamp("thruDate"))) sequenceNumNotOk = "Y";
 							}
-							else if ( fromDate == null && thruDate == null) seqIdNotOk = "Y";
+							else if ( fromDate == null && thruDate == null) sequenceNumNotOk = "Y";
 							else if (thruDate == null) {
-								if (fromDate.before(routingTaskAssoc.getTimestamp("thruDate"))) seqIdNotOk = "Y";
+								if (fromDate.before(routingTaskAssoc.getTimestamp("thruDate"))) sequenceNumNotOk = "Y";
 							}
 							else if (fromDate == null) {
-								if (thruDate.after(routingTaskAssoc.getTimestamp("fromDate"))) seqIdNotOk = "Y";
+								if (thruDate.after(routingTaskAssoc.getTimestamp("fromDate"))) sequenceNumNotOk = "Y";
 							}
-							else if ( routingTaskAssoc.getTimestamp("fromDate").before(thruDate) && fromDate.before(routingTaskAssoc.getTimestamp("thruDate")) ) seqIdNotOk = "Y";
+							else if ( routingTaskAssoc.getTimestamp("fromDate").before(thruDate) && fromDate.before(routingTaskAssoc.getTimestamp("thruDate")) ) sequenceNumNotOk = "Y";
 					}
 				}
 			}
 	
-			result.put("seqIdNotOk", seqIdNotOk);
+			result.put("sequenceNumNotOk", sequenceNumNotOk);
 			return result;
 		}
 

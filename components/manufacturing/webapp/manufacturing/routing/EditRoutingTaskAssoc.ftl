@@ -61,7 +61,7 @@ ${pages.get("/routing/RoutingTabBar.ftl")}
          </tr>
          <tr>
            <td align="right"><div class="tableheadtext">${uiLabelMap.CommonSequenceNum}</div></td>
-           <td><input type="text" name="seqId" class="inputBox" size="10"></td>
+           <td><input type="text" name="sequenceNum" class="inputBox" size="10"></td>
            <td align="right"><div class="tableheadtext">${uiLabelMap.CommonThruDate}</div></td>
            <td><input type="text" name="thruDate" class="inputBox" size="25">
         			<a href="javascript:call_cal(document.addtaskassocform.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Click here For Calendar"></a>
