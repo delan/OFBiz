@@ -117,7 +117,7 @@ public class ServiceDispatcher {
      */
     public Map runSync(String localName, ModelService service, Map context)
             throws ServiceAuthException, GenericServiceException {
-        context = checkAuth(localName, context);
+        context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
         if (service.auth && userLogin == null)
             throw new ServiceAuthException("User authorization is required for this service");
@@ -158,7 +158,7 @@ public class ServiceDispatcher {
      */
     public void runSyncIgnore(String localName, ModelService service, Map context)
             throws ServiceAuthException, GenericServiceException {
-        context = checkAuth(localName, context);
+        context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
         if (service.auth && userLogin == null)
             throw new ServiceAuthException("User authorization is required for this service");
@@ -192,7 +192,7 @@ public class ServiceDispatcher {
      */
     public void runAsync(String localName, ModelService service, Map context, GenericRequester requester, boolean persist)
             throws ServiceAuthException, GenericServiceException {
-        context = checkAuth(localName, context);
+        context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
         if (service.auth && userLogin == null)
             throw new ServiceAuthException("User authorization is required for this service");
@@ -225,7 +225,7 @@ public class ServiceDispatcher {
      */
     public void runAsync(String localName, ModelService service, Map context, boolean persist)
             throws ServiceAuthException, GenericServiceException {
-        context = checkAuth(localName, context);
+        context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
         if (service.auth && userLogin == null)
             throw new ServiceAuthException("User authorization is required for this service");
@@ -300,31 +300,36 @@ public class ServiceDispatcher {
     }
 
     // checks if parameters were passed for authentication
-    private Map checkAuth(String localName, Map context) throws GenericServiceException {
+    private Map checkAuth(String localName, Map context, ModelService origService) throws GenericServiceException {
+        String service = ServiceConfigUtil.getElementAttr("authorization", "service-name");
+        if (service == null) {
+            throw new GenericServiceException("No Authentication Service Defined");
+        }
+        if (service.equals(origService.name)) {
+            //manually calling the auth service, don't continue...
+            return context;
+        }
+
         // check for a username/password
         if (context.containsKey("login.username")) {
             String username = (String) context.get("login.username");
             if (context.containsKey("login.password")) {
                 String password = (String) context.get("login.password");
                 context.put("userLogin",
-                            getLoginObject(localName, username, password));
+                            getLoginObject(service, localName, username, password));
                 context.remove("login.password");
-            } else
-                context.put("userLogin", getLoginObject(localName, username, null));
+            } else {
+                context.put("userLogin", getLoginObject(service, localName, username, null));
+            }
             context.remove("login.username");
         }
         return context;
     }
 
     // gets a value object from name/password pair
-    private GenericValue getLoginObject(String localName, String username, String password)
+    private GenericValue getLoginObject(String service, String localName, String username, String password)
             throws GenericServiceException {
-        String service = ServiceConfigUtil.getElementAttr("authorization", "service-name");
         Map context = UtilMisc.toMap("login.username", username, "login.password", password);
-
-        if (service == null)
-            throw new GenericServiceException("No Authentication Service Defined");
-
         Debug.logVerbose("[ServiceDispathcer.authenticate] : Invoking UserLogin Service", module);
 
         // Manually invoke the service
@@ -341,5 +346,3 @@ public class ServiceDispatcher {
         return value;
     }
 }
-
-
