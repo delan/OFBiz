@@ -57,6 +57,9 @@
 				</entity-options>
 			</drop-down>
 		</field>
+        
+        <!-- Need to find/create a better way to do this... <field name="primaryOrderId" use-when="shipment==null&amp;&amp;orderId!=null"><display also-hidden="true" description="${orderId}"/></field> -->
+        
 		<field name="originFacilityId" title="Origin Facility" widget-style="selectBox">
 			<drop-down allow-empty="true" current="first-in-list">
 				<entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
@@ -72,8 +75,8 @@
 			</drop-down>
 		</field>
 
-		<field name="estimatedShipWorkEffId" title="Estimated Ship Event" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedShipWorkEffId}" also-hidden="false" target-type="inter-app"/></field>
-		<field name="estimatedArrivalWorkEffId" title="Estimated Arrival Event" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedArrivalWorkEffId}" also-hidden="false" target-type="inter-app"/></field>
+		<field name="estimatedShipWorkEffId" title="Estimated Ship Event" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedShipWorkEffId}" also-hidden="false" description="${shipment.estimatedShipWorkEffId}" target-type="inter-app"/></field>
+		<field name="estimatedArrivalWorkEffId" title="Estimated Arrival Event" widget-style="buttontext"><hyperlink target="/workeffort/control/event?workEffortId=${shipment.estimatedArrivalWorkEffId}" also-hidden="false" description="${shipment.estimatedArrivalWorkEffId}" target-type="inter-app"/></field>
         
 		<field name="originContactMechId" title="Origin Postal Address Id" 
                 tooltip="To: ${originPostalAddress.toName}, Attn: ${originPostalAddress.attnName}, ${originPostalAddress.address1}, ${originPostalAddress.address2}, ${originPostalAddress.city}, ${originPostalAddress.stateProvinceGeoId}, ${originPostalAddress.postalCode}, ${originPostalAddress.countryGeoId}" tooltip-style="tabletext">

@@ -39,6 +39,14 @@ HtmlFormWrapper editShipmentWrapper = new HtmlFormWrapper("/shipment/ShipmentFor
 editShipmentWrapper.putInContext("shipmentId", shipmentId);
 editShipmentWrapper.putInContext("shipment", shipment);
 
+editShipmentWrapper.putInContext("orderId", null);
+if (shipment == null) {
+    orderId = request.getParameter("orderId");
+    if (orderId != null && orderId.length() > 0) {
+        editShipmentWrapper.putInContext("orderId", orderId);
+    }
+}
+
 context.put("shipmentId", shipmentId);
 context.put("shipment", shipment);
 context.put("editShipmentWrapper", editShipmentWrapper);
