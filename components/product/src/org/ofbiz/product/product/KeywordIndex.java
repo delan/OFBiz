@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordIndex.java,v 1.5 2003/12/26 18:04:54 jonesde Exp $
+ * $Id: KeywordIndex.java,v 1.6 2004/01/22 01:25:16 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Does indexing in preparation for a keyword search.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class KeywordIndex {
@@ -180,7 +180,7 @@ public class KeywordIndex {
             toBeStored.add(productKeyword);
         }
         if (toBeStored.size() > 0) {
-            if (Debug.infoOn()) Debug.logInfo("[KeywordSearch.induceKeywords] Storing " + toBeStored.size() + " keywords for productId " + product.getString("productId"), module);
+            if (Debug.verboseOn()) Debug.logVerbose("[KeywordSearch.induceKeywords] Storing " + toBeStored.size() + " keywords for productId " + product.getString("productId"), module);
             delegator.storeAll(toBeStored);
         }
     }
