@@ -324,6 +324,13 @@ public abstract class ModelScreenWidget {
                 return;
             }
             
+            // check to see if the name is a composite name separated by a #, if so split it up and get it by the full loc#name
+            if (ScreenFactory.isCombinedName(name)) {
+                String combinedName = name;
+                location = ScreenFactory.getResourceNameFromCombined(combinedName);
+                name = ScreenFactory.getScreenNameFromCombined(combinedName);
+            }
+            
             ModelScreen modelScreen = null;
             if (UtilValidate.isNotEmpty(location)) {
                 try {
@@ -407,6 +414,13 @@ public abstract class ModelScreenWidget {
             
             String name = this.getName(context);
             String location = this.getLocation(context);
+            
+            // check to see if the name is a composite name separated by a #, if so split it up and get it by the full loc#name
+            if (ScreenFactory.isCombinedName(name)) {
+                String combinedName = name;
+                location = ScreenFactory.getResourceNameFromCombined(combinedName);
+                name = ScreenFactory.getScreenNameFromCombined(combinedName);
+            }
             
             ModelScreen modelScreen = null;
             if (UtilValidate.isNotEmpty(location)) {

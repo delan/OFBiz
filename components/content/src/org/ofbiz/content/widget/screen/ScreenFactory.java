@@ -58,6 +58,17 @@ public class ScreenFactory {
     public static final UtilCache screenLocationCache = new UtilCache("widget.screen.locationResource", 0, 0, false);
     public static final UtilCache screenWebappCache = new UtilCache("widget.screen.webappResource", 0, 0, false);
 
+    public static boolean isCombinedName(String combinedName) {
+        int numSignIndex = combinedName.lastIndexOf("#");
+        if (numSignIndex == -1) {
+            return false;
+        }
+        if (numSignIndex + 1 >= combinedName.length()) {
+            return false;
+        }
+        return true;
+    }
+    
     public static String getResourceNameFromCombined(String combinedName) {
         // split out the name on the last "#"
         int numSignIndex = combinedName.lastIndexOf("#");

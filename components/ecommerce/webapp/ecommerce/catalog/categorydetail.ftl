@@ -19,15 +19,13 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Rev$
  *@since      2.1
 -->
 
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-
-<#if pages?exists>${pages.get("/catalog/breadcrumbs.ftl")}</#if>
-<#if screens?exists>${screens.render("component://ecommerce/widget/CatalogScreens.xml#breadcrumbs")}</#if>
+${screens.render("component://ecommerce/widget/CatalogScreens.xml#breadcrumbs")}
 
 <#if productCategory?exists>
 <table border="0" cellpadding="3">
@@ -67,7 +65,7 @@
 </table>
 </#if>
 
-<#if productCategoryMembers?exists && 0 < productCategoryMembers.size()>
+<#if productCategoryMembers?has_content>
 <table border="0" cellpadding="2">
   <tr>
     <td align="right">
@@ -111,8 +109,7 @@
           ${setRequestAttribute("optProductId", productCategoryMember.productId)} 
           ${setRequestAttribute("productCategoryMember", productCategoryMember)} 
           ${setRequestAttribute("listIndex", productCategoryMember_index)}         
-          <#if pages?exists>${pages.get("/catalog/productsummary.ftl")}</#if>
-          <#if screens?exists>${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}</#if>
+          ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
         </td>
       </tr>
     </#list>
@@ -159,4 +156,3 @@
   </tr>
 </table>
 </#if>
-

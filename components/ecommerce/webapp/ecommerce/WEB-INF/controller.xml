@@ -1100,11 +1100,11 @@
     <view-map name="showPromotionDetails" type="jpublish" page="/cart/showPromotionDetails.ftl"/>
 
     <view-map name="quickadd" type="jpublish" page="/catalog/quickadd.ftl"/>
-    <view-map name="category" type="jpublish" page="/catalog/category.ftl"/>
-    <view-map name="product" type="jpublish" page="/catalog/product.ftl"/>
+    <view-map name="category" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#category"/>
+    <view-map name="product" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#product"/>
     <view-map name="detailImage" type="jpublish" page="/catalog/detailImage.ftl"/>
     <view-map name="lastviewedproducts" type="jpublish" page="/catalog/lastviewedproducts.ftl"/>
-    <view-map name="productReview" type="jpublish" page="/catalog/productreview.ftl"/>
+    <view-map name="productReview" type="screen" page="component://ecommerce/widget/CatalogScreens.xml#productreview"/>
 
     <view-map name="keywordsearch" type="jpublish" page="/catalog/keywordsearch.ftl"/>
     <view-map name="advancedsearch" type="jpublish" page="/catalog/advancedsearch.ftl"/>

@@ -153,8 +153,8 @@ public class ScreenWidgetViewHandler implements ViewHandler {
         context.put("dispatcher", request.getAttribute("dispatcher"));
         context.put("security", request.getAttribute("security"));
 
-        // make sure the "null" object is in there for entity ops
-        context.put("null", GenericEntity.NULL_FIELD);
+        // make sure the "nullField" object is in there for entity ops; note this is nullField and not null because as null causes problems in FreeMarker and such...
+        context.put("nullField", GenericEntity.NULL_FIELD);
         
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         context.put("userLogin", userLogin);

@@ -133,11 +133,11 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
         </tr>        
         <tr>
-            <td width="20%" align=right valign=top><div class="tabletext"><b>${uiLabelMap.ProductDetailTemplate}</b></div></td>
+            <td width="20%" align=right valign=top><div class="tabletext"><b>${uiLabelMap.ProductDetailScreen}</b></div></td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
-                <input type="text" class="inputBox" name="detailTemplate" value="${(product.detailTemplate)?if_exists}" size="60" maxlength="250">
-                <br><span class="tabletext">${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} "/catalog/productdetail.ftl"</span>
+                <input type="text" class="inputBox" name="detailScreen" value="${(product.detailScreen)?if_exists}" size="60" maxlength="250">
+                <br><span class="tabletext">${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} &quot;productdetail&quot;, for screens in other files use something like: &quot;component://ecommerce/widget/CatalogScreens.xml#productdetail&quot;</span>
             </td>
         </tr>        
         <tr>
