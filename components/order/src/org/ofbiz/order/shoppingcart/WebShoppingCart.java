@@ -1,5 +1,5 @@
 /*
- * $Id: WebShoppingCart.java,v 1.1 2003/08/18 17:03:09 ajzeneski Exp $
+ * $Id: WebShoppingCart.java,v 1.2 2003/08/20 01:18:13 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * <p><b>Title:</b> WebShoppingCart.java
  * <p><b>Description:</b> This is a very basic
  * extension of the 
- * {@link org.ofbiz.commonapp.order.shoppingcart.ShoppingCart ShoppingCart}
+ * {@link org.ofbiz.order.shoppingcart.ShoppingCart ShoppingCart}
  * class which provides web presentation layer specific functionality
  * related specifically to user session information. 
  *
@@ -43,7 +43,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class WebShoppingCart extends ShoppingCart {

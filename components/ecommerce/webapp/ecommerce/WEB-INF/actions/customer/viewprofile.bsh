@@ -27,8 +27,8 @@ import java.lang.*;
 import java.util.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
-import org.ofbiz.commonapp.party.contact.ContactMechWorker;
-import org.ofbiz.commonapp.accounting.payment.PaymentWorker;
+import org.ofbiz.party.contact.ContactMechWorker;
+import org.ofbiz.accounting.payment.PaymentWorker;
 
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
 
@@ -43,7 +43,7 @@ String nowTimestampString = UtilDateTime.nowTimestamp().toString();
 context.put("nowTimestampString", nowTimestampString);
 
 boolean tryEntity = true;
-if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+if (request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
 
 String productStoreId = request.getParameter("productStoreId");
 context.put("productStoreId", productStoreId);

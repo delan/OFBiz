@@ -32,8 +32,8 @@
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.entity.*, org.ofbiz.commonapp.party.contact.*" %>
-<%@ page import="org.ofbiz.commonapp.accounting.payment.*" %>
+<%@ page import="org.ofbiz.entity.*, org.ofbiz.party.contact.*" %>
+<%@ page import="org.ofbiz.accounting.payment.*" %>
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 <ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.entity.GenericValue" />  
 

@@ -20,18 +20,18 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
  */
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
-import org.ofbiz.commonapp.product.catalog.CatalogWorker;
-import org.ofbiz.commonapp.product.store.ProductStoreWorker;
-import org.ofbiz.commonapp.common.CommonWorkers;
-import org.ofbiz.commonapp.order.shoppingcart.*;
+import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.common.CommonWorkers;
+import org.ofbiz.order.shoppingcart.*;
 
-userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
+userLogin = session.getAttribute("userLogin");
 
 productStore = ProductStoreWorker.getProductStore(request);
 context.put("productStore", productStore);
@@ -47,20 +47,20 @@ if (prodCatalog != null) {
 context.put("checkLoginUrl", CommonWorkers.makeLoginUrl(request, "checkLogin"));
 context.put("catalogQuickaddUse", CatalogWorker.getCatalogQuickaddUse(request));
 
-eventMsgReq = request.getAttribute(SiteDefs.EVENT_MESSAGE);
-errorMsgReq = request.getAttribute(SiteDefs.ERROR_MESSAGE);
-errorMsgSes = session.getAttribute(SiteDefs.ERROR_MESSAGE);
+eventMsgReq = request.getAttribute("_EVENT_MESSAGE_");
+errorMsgReq = request.getAttribute("_ERROR_MESSAGE_");
+errorMsgSes = session.getAttribute("_ERROR_MESSAGE_");
 
 if (eventMsgReq != null) {
     request.setAttribute("eventMsgReq", UtilFormatOut.replaceString(eventMsgReq, "\n", "<br>"));
-    request.removeAttribute(SiteDefs.EVENT_MESSAGE);
+    request.removeAttribute("_EVENT_MESSAGE_");
 }
 if (errorMsgReq != null) {
     request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>"));
-    request.removeAttribute(SiteDefs.ERROR_MESSAGE);
+    request.removeAttribute("_ERROR_MESSAGE_");
 }
 if (errorMsgSes != null) {
     request.setAttribute("errorMsgSes", UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>"));
-    session.removeAttribute(SiteDefs.ERROR_MESSAGE);
+    session.removeAttribute("_ERROR_MESSAGE_");
 }
 

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
 
@@ -47,7 +47,7 @@ if (UtilValidate.isEmpty(defaultCurrencyUomId)) defaultCurrencyUomId = "USD";
 context.put("defaultCurrencyUomId", defaultCurrencyUomId);
 
 boolean useValues = true;
-if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+if (request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
 
 productId = request.getParameter("productId");
 context.put("productId", productId);

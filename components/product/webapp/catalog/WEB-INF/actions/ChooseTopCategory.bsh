@@ -21,13 +21,13 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
-import org.ofbiz.commonapp.product.category.*;
+import org.ofbiz.product.category.*;
 
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");

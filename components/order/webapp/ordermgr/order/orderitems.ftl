@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -104,10 +104,10 @@
                         <div class="tabletext" nowrap>${orderItem.unitPrice?string.currency} / ${orderItem.unitListPrice?string.currency}</div>
                       </td>
                       <td align="right" valign="top" nowrap>
-                        <div class="tabletext" nowrap>${Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false)?string.currency}</div>
+                        <div class="tabletext" nowrap>${Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false)?string.currency}</div>
                       </td>
                       <td align="right" valign="top" nowrap>
-                        <div class="tabletext" nowrap>${Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getOrderItemSubTotal(orderItem, orderAdjustments)?string.currency}</div>
+                        <div class="tabletext" nowrap>${Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemSubTotal(orderItem, orderAdjustments)?string.currency}</div>
                       </td>
                       <td>&nbsp;</td>                      
                       <td align="right" valign="top" nowrap>
@@ -121,7 +121,7 @@
                   </tr>
                   
                   <#-- now show adjustment details per line item -->
-                  <#assign orderItemAdjustments = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getOrderItemAdjustmentList(orderItem, orderAdjustments)>
+                  <#assign orderItemAdjustments = Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentList(orderItem, orderAdjustments)>
                   <#if orderItemAdjustments?exists && orderItemAdjustments?has_content>
                     <#list orderItemAdjustments as orderItemAdjustment>
                       <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType")>
@@ -133,7 +133,7 @@
                         <td>&nbsp;</td>
                         <td align="right">
                           <div class="tabletext" style='font-size: xx-small;'>
-                            ${Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].calcItemAdjustment(orderItemAdjustment, orderItem)?string.currency}
+                            ${Static["org.ofbiz.order.order.OrderReadHelper"].calcItemAdjustment(orderItemAdjustment, orderItem)?string.currency}
                           </div>
                          </td>
                         <td>&nbsp;</td>
@@ -213,7 +213,7 @@
                     <div class="tabletext"><b>${adjustmentType.description}</b> : ${orderHeaderAdjustment.comments?if_exists}</div>
                   </td>                       
                   <td align="right" nowrap>
-                    <div class="tabletext">${Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal)?string.currency}</div>
+                    <div class="tabletext">${Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal)?string.currency}</div>
                   </td>
                   <td>&nbsp;</td>                        
                 </tr>

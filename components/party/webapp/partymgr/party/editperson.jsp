@@ -52,7 +52,7 @@
         if (lookupPerson != null) pageContext.setAttribute("lookupPerson", lookupPerson);
 
         boolean tryEntity = true;
-        if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+        if(request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
         if(lookupPerson == null)
            tryEntity = false;
         pageContext.setAttribute("tryEntity", new Boolean(tryEntity));

@@ -1,8 +1,8 @@
 <%@ page import="org.ofbiz.base.util.*" %><%
-String eventMsgReq = (String)request.getAttribute(SiteDefs.EVENT_MESSAGE);
-String errorMsgReq = (String)request.getAttribute(SiteDefs.ERROR_MESSAGE);
-String errorMsgSes = (String)session.getAttribute(SiteDefs.ERROR_MESSAGE);
-if(errorMsgSes != null) session.removeAttribute(SiteDefs.ERROR_MESSAGE);
+String eventMsgReq = (String)request.getAttribute("_EVENT_MESSAGE_");
+String errorMsgReq = (String)request.getAttribute("_ERROR_MESSAGE_");
+String errorMsgSes = (String)session.getAttribute("_ERROR_MESSAGE_");
+if(errorMsgSes != null) session.removeAttribute("_ERROR_MESSAGE_");
 if(errorMsgReq != null){ %>
 <br><div class='errorMessage'><%=UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>")%></div><br><%} if(errorMsgSes != null) {%>
 <br><div class='errorMessage'><%=UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>")%></div><br><%} if(eventMsgReq != null) {%>

@@ -1,7 +1,7 @@
 <%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*" %>
 <%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.commonapp.security.login.*" %>
+<%@ page import="org.ofbiz.securityext.login.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 

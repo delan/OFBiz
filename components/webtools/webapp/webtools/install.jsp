@@ -56,7 +56,7 @@
 <br>
 Specify the group name for the entity group whose data you want to load:<br>
 <form method=post action='<ofbiz:url>/install?groupfile=group</ofbiz:url>'>
-  Group Name: <INPUT type=text class="inputBox" name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
+  Group Name: <INPUT type=text class="inputBox" name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz"%>' size='60'>
   <INPUT type=submit style="font-size: x-small;" value='Load Data'>
 </form>
 <br>
@@ -64,7 +64,7 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
 <form method=post action='<ofbiz:url>/install?groupfile=file</ofbiz:url>'>
   Server File Path/Name: <INPUT type=text class="inputBox" name='loadFile' value='<%=loadFile!=null?loadFile:""%>' size='60'>
   <br>
-  Group Name (required if .sql file): <INPUT type=text class="inputBox" name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
+  Group Name (required if .sql file): <INPUT type=text class="inputBox" name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz"%>' size='60'>
   <INPUT type=submit style="font-size: x-small;" value='Load Data File'>
 </form>
 <div>OR click <a href='<ofbiz:url>/install?groupfile=gensecurity</ofbiz:url>'>here</a> for entity granularity security settings only (auto generated, not in a file)</div>

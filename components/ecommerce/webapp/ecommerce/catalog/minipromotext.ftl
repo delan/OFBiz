@@ -20,12 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
 <#-- get these for the promoText -->
-<#assign productPromos = Static["org.ofbiz.commonapp.product.promo.ProductPromoWorker"].getStoreProductPromos(delegator, request)>
+<#assign productPromos = Static["org.ofbiz.product.promo.ProductPromoWorker"].getStoreProductPromos(delegator, request)>
 
 <#-- Make sure that at least one promo has non-empty promoText -->
 <#assign showPromoText = false>

@@ -356,7 +356,7 @@
                                             ${creditCard.cardNumber}
                                             ${creditCard.expireDate}
                                         <#else>
-                                            ${Static["org.ofbiz.commonapp.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                                            ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                         </#if>
                                       </b>
                                       (Updated:&nbsp;${paymentMethod.fromDate.toString()})

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -83,7 +83,7 @@
                       </tr>
                       <tr><td colspan='8'><hr class='sepbar'></td></tr>
                       <#list poList as orderHeaderAndRole>
-                        <#assign orh = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getHelper(orderHeaderAndRole)>
+                        <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeaderAndRole)>
                         <#assign statusItem = orderHeaderAndRole.getRelatedOneCache("StatusItem")>
                         <#assign placingParty = orh.getPlacingParty()?if_exists>
                         <tr>

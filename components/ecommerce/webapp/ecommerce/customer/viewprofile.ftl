@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -276,7 +276,7 @@
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
                                       <b>
-                                        Credit Card: ${creditCard.nameOnCard} - ${Static["org.ofbiz.commonapp.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                                        Credit Card: ${creditCard.nameOnCard} - ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                       </b>
                                       (Updated:&nbsp;${paymentMethod.fromDate.toString()})
                                       <#if paymentMethod.thruDate?exists><b>(Delete:&nbsp;${paymentMethod.thruDate.toString()})</b></#if>

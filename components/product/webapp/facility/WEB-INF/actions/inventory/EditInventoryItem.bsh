@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
  
@@ -48,7 +48,7 @@ locationSeqId = request.getParameter("locationSeqId");
 session.removeAttribute("inventoryItemId");
 
 boolean tryEntity = true;
-if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+if (request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
 
 inventoryItemId = request.getParameter("inventoryItemId");
 if (UtilValidate.isEmpty(inventoryItemId) && UtilValidate.isNotEmpty((String) request.getAttribute("inventoryItemId"))) {

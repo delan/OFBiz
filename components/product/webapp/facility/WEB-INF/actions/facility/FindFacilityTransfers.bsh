@@ -23,7 +23,7 @@ boolean activeOnly = !"false".equals(request.getParameter("activeOnly"));
 context.put("activeOnly", activeOnly);
 
 boolean useValues = true;
-if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+if (request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
 
 // get the 'to' this facility transfers
 List exprsTo = null;

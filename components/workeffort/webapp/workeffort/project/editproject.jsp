@@ -31,12 +31,12 @@
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="userLogin" type="org.ofbiz.entity.GenericValue" scope="request" />
 
-<%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
-<%@ page import="org.ofbiz.commonapp.common.status.*" %>
+<%@ page import="org.ofbiz.workeffort.workeffort.*" %>
+<%@ page import="org.ofbiz.common.status.*" %>
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
 <%StatusWorker.getStatusItems(pageContext, "taskStatusItems", "WORKFLOW_STATUS");%>
 <%String workEffortId = request.getParameter("workEffortId");%>
-<%//GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);%>
+<%//GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");%>
 <%java.sql.Timestamp now = new java.sql.Timestamp((new java.util.Date()).getTime());%>
 <%Collection assignments = delegator.findByAnd("WorkEffortPartyAssignment",
         UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -135,8 +135,8 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <#else>          
           <input type='hidden' name="product_id" value='${product.productId}'>
           <input type='hidden' name="add_product_id" value='${product.productId}'>
-          <#if !Static["org.ofbiz.commonapp.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, product.productId?string, 1.0?double)>
-            <#if Static["org.ofbiz.commonapp.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)> 
+          <#if !Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, product.productId?string, 1.0?double)>
+            <#if Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)> 
               <div class='tabletext'><b>This item is out of stock.</b></div>
               <#assign inStock = false>
             <#else>

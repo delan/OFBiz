@@ -33,7 +33,7 @@
 <%if(security.hasEntityPermission("MARKETING", "_VIEW", session)) {%>
 <%
     boolean tryEntity = true;
-    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+    if(request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;
 
     String marketingCampaignId = request.getParameter("marketingCampaignId");
     if (UtilValidate.isEmpty(marketingCampaignId) && UtilValidate.isNotEmpty((String) request.getAttribute("marketingCampaignId"))) {

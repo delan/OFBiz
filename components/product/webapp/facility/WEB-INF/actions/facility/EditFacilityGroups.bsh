@@ -26,7 +26,7 @@ boolean activeOnly = !"false".equals(request.getParameter("activeOnly"));
 context.put("activeOnly", activeOnly);
 
 boolean useValues = true;
-if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+if (request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
 
 if (facility == null) useValues = false;
 

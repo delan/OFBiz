@@ -3,8 +3,8 @@
   if("true".equals(request.getParameter("savetofile"))) {
     if(security.hasPermission("ENTITY_MAINT", session)) {
       //save to the file specified in the ModelReader config
-      String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
-      String serverRootUrl=(String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);
+      String controlPath=(String)request.getAttribute("_CONTROL_PATH_");
+      String serverRootUrl=(String)request.getAttribute("_SERVER_ROOT_URL_");
       ModelGroupReader modelGroupReader = delegator.getModelGroupReader();
 
       ResourceHandler resourceHandler = modelGroupReader.entityGroupResourceHandler;

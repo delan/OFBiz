@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -85,7 +85,7 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          ${Static["org.ofbiz.commonapp.party.party.PartyHelper"].formatPartyId(distributorId, delegator)}
+                          ${Static["org.ofbiz.party.party.PartyHelper"].formatPartyId(distributorId, delegator)}
                         </div>
                       </td>
                     </tr>
@@ -99,7 +99,7 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          ${Static["org.ofbiz.commonapp.party.party.PartyHelper"].formatPartyId(affiliateId, delegator)}
+                          ${Static["org.ofbiz.party.party.PartyHelper"].formatPartyId(affiliateId, delegator)}
                         </div>
                       </td>
                     </tr>
@@ -183,7 +183,7 @@
                                   ${creditCard.expireDate}
                                   &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]                                    
                                 <#else>
-                                  ${Static["org.ofbiz.commonapp.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                                  ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                 </#if>
                               </div>                              
                               <#if orderPaymentPreference.authDate?exists>
@@ -310,7 +310,7 @@
                       <td NOWRAP align="left" valign="top" width="80%">
                         <div class="tabletext">
                           <#if userPerson?has_content>
-                            ${Static["org.ofbiz.commonapp.party.party.PartyHelper"].getPersonName(userPerson)}
+                            ${Static["org.ofbiz.party.party.PartyHelper"].getPersonName(userPerson)}
                           </#if>
                           <#if partyId?exists>
                             &nbsp;(<a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target='partymgr' class="buttontext">${partyId}</a>)

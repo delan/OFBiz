@@ -22,16 +22,16 @@
  *@author     Johan Isacsson
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
 
 import java.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
-import org.ofbiz.commonapp.security.login.*;
-import org.ofbiz.commonapp.common.*;
-import org.ofbiz.commonapp.party.contact.*;
+import org.ofbiz.securityext.login.*;
+import org.ofbiz.common.*;
+import org.ofbiz.party.contact.*;
 
 String externalLoginKey = LoginEvents.getExternalLoginKey(request);
 String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;

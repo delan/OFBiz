@@ -23,14 +23,14 @@
  *@version    1.0
  */
 
-import org.ofbiz.base.util.SiteDefs;
-import org.ofbiz.commonapp.common.CommonWorkers;
+;
+import org.ofbiz.common.CommonWorkers;
 
 if (session.getAttribute("autoUserLogin") != null)
     context.put("autoUserLogin", session.getAttribute("autoUserLogin"));
 context.put("autoLogoutUrl", CommonWorkers.makeLoginUrl(request, "autoLogout")); 
 
-previousParams = session.getAttribute(SiteDefs.PREVIOUS_PARAMS);
+previousParams = session.getAttribute("_PREVIOUS_PARAMS_");
 if (previousParams != null && previousParams.length() > 0) {
     previousParams = "?" + previousParams;
 } else {

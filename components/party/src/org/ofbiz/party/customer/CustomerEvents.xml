@@ -89,7 +89,7 @@
             String password = (String) userLoginContext.get("currentPassword");
             String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
             String passwordHint = (String) userLoginContext.get("passwordHint");
-            org.ofbiz.commonapp.security.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true);
+            org.ofbiz.securityext.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true);
         ]]></call-bsh>
 
         <!-- Create the Person -->
@@ -283,7 +283,7 @@
         <!-- If password encryption is enabled, encrpyt it now -->
         <call-bsh><![CDATA[
             boolean useEncryption = "true".equals(org.ofbiz.base.util.UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
-            if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.commonapp.security.login.HashEncrypt.getHash((String) newUserLogin.get("currentPassword"))); }
+            if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.securityext.login.HashEncrypt.getHash((String) newUserLogin.get("currentPassword"))); }
         ]]></call-bsh>
 
         <!-- create the UserLogin manually to get around ordering and security constraints in the service -->

@@ -26,7 +26,7 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.base.util.*, org.ofbiz.entity.*" %>
-<%@ page import="org.ofbiz.commonapp.product.product.*"%>
+<%@ page import="org.ofbiz.product.product.*"%>
 
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -169,7 +169,7 @@ function lookupInvoices() {
           <#list invoiceList[lowIndex..highIndex-1] as invoice>            
             <#assign statusItem = invoice.getRelatedOneCache("StatusItem")>
             <#assign invoiceType = invoice.getRelatedOneCache("InvoiceType")>
-            <#assign invoiceTotal = Static["org.ofbiz.commonapp.accounting.invoice.InvoiceWorker"].getInvoiceTotal(invoice)>        
+            <#assign invoiceTotal = Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceTotal(invoice)>        
             <tr class='${rowClass}'>
               <td><div class='tabletext'>${invoiceType.description?default(invoiceType.invoiceTypeId?default(""))}</div></td>
               <td><a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${invoice.invoiceId}</a></td>

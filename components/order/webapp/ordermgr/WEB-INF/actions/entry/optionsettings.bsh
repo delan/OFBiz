@@ -20,24 +20,24 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 */
 
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
-import org.ofbiz.commonapp.order.shoppingcart.*;
-import org.ofbiz.commonapp.party.contact.*;
-import org.ofbiz.commonapp.product.store.*;
+import org.ofbiz.order.shoppingcart.*;
+import org.ofbiz.party.contact.*;
+import org.ofbiz.product.store.*;
 
 delegator = request.getAttribute("delegator");
 partyId = session.getAttribute("orderPartyId");
-cart = session.getAttribute(SiteDefs.SHOPPING_CART);
+cart = session.getAttribute("shoppingCart");
 context.put("cart", cart);
 productStoreId = ProductStoreWorker.getProductStoreId(request);
 
 // nuke the event messages
-request.removeAttribute(SiteDefs.EVENT_MESSAGE);
+request.removeAttribute("_EVENT_MESSAGE_");
 
 partyId = session.getAttribute("orderPartyId");
 if (partyId != null) {

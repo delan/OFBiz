@@ -3,12 +3,12 @@ import org.ofbiz.core.security.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
-import org.ofbiz.commonapp.workeffort.workeffort.*;
-import org.ofbiz.commonapp.workeffort.project.*;
+import org.ofbiz.workeffort.workeffort.*;
+import org.ofbiz.workeffort.project.*;
 
 delegator = request.getAttribute("delegator");
 
-GenericValue userLogin = (GenericValue) context.getSession().getAttribute(SiteDefs.USER_LOGIN);
+GenericValue userLogin = (GenericValue) context.getSession().getAttribute("userLogin");
 Collection validWorkEfforts = null;
 String showAllProjects = "false";
 if (userLogin != null && userLogin.get("partyId") != null) {
