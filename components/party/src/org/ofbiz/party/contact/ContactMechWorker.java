@@ -1,5 +1,5 @@
 /*
- * $Id: ContactMechWorker.java,v 1.3 2003/11/21 02:35:39 ajzeneski Exp $
+ * $Id: ContactMechWorker.java,v 1.4 2003/11/21 20:01:49 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,6 +35,7 @@ import javax.servlet.jsp.PageContext;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -44,7 +45,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Worker methods for Contact Mechanisms
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ContactMechWorker {
@@ -960,26 +961,15 @@ public class ContactMechWorker {
             addr2 = addr2.replaceAll("\\W", "").toLowerCase();
         }
 
-        // check for po box
-        if (addr1 != null && addr1.matches(".*pobox.*")) {
-            return true;
-        }
-        if (addr2 != null && addr2.matches(".*pobox.*")) {
-            return true;
-        }
-
-        // check for Rural Route
-        if (addr1 != null && addr1.startsWith("rr")) {
-            return true;
-        }
-        if (addr2 != null && addr2.startsWith("rr")) {
-            return true;
-        }
-        if (addr1 != null && addr1.matches(".*ruralroute.*")) {
-            return true;
-        }
-        if (addr2 != null && addr2.matches(".*ruralroute.*")) {
-            return true;
+        // get the matching string from general.properties
+        String matcher = UtilProperties.getPropertyValue("general.properties", "usps.address.match");
+        if (matcher != null && matcher.length() > 0) {
+            if (addr1 != null && addr1.matches(".*(" + matcher + ").*")) {
+                return true;
+            }
+            if (addr2 != null && addr2.matches(".*(" + matcher + ").*")) {
+                return true;
+            }
         }
 
         return false;
