@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/11/11 14:50:36  jonesde
+ * Finished initial working versions of work effort workers and events
+ *
  * Revision 1.3  2001/11/11 03:35:48  jonesde
  * Updated upcoming events worker to use view entity, left old code in as an example (of inefficiency...)
  *
@@ -47,7 +50,7 @@ import java.util.*;
  * Created on November 7, 2001
  */
 public class WorkEffortWorker {
-  public static void getWorkEffort(PageContext pageContext, String workEffortIdAttrName, String workEffortAttrName, String partyAssignsAttrName, String canViewAttrName, String tryEntityAttrName) {
+  public static void getWorkEffort(PageContext pageContext, String workEffortIdAttrName, String workEffortAttrName, String partyAssignsAttrName, String canViewAttrName, String tryEntityAttrName, String currentStatusAttrName) {
     GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
     Security security = (Security)pageContext.getServletContext().getAttribute("security");
     GenericValue userLogin = (GenericValue)pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
@@ -62,8 +65,17 @@ public class WorkEffortWorker {
 
     Boolean canView = null;
     Collection workEffortPartyAssignments = null;
+    Boolean tryEntity = null;
+    GenericValue currentStatus = null;
     if(workEffort == null) {
+      tryEntity = new Boolean(false);
       canView = new Boolean(true);
+
+      String statusId = pageContext.getRequest().getParameter("CURRENT_STATUS_ID");
+      if(statusId != null && statusId.length() > 0) {
+        try { currentStatus = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", statusId)); }
+        catch(GenericEntityException e) { Debug.logWarning(e); }
+      }
     }
     else {
       //get a collection of workEffortPartyAssignments, if empty then this user CANNOT view the event, unless they have permission to view all
@@ -75,18 +87,43 @@ public class WorkEffortWorker {
       if(!canView.booleanValue() && security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", pageContext.getSession())) {
         canView = new Boolean(true);
       }
+      
+      tryEntity = new Boolean(true);
+
+      if(workEffort.get("currentStatusId") != null) {
+        try { currentStatus = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.get("currentStatusId"))); }
+        catch(GenericEntityException e) { Debug.logWarning(e); }
+      }
     }
+    
+    //if there was an error message, don't get values from entity
+    if(pageContext.getRequest().getAttribute(SiteDefs.ERROR_MESSAGE) != null) {
+      tryEntity = new Boolean(false);
+    }
+    Debug.logInfo("[WorkEffortWorker.getWorkEffort] tryEntity = " + tryEntity);
     
     if(workEffortId != null) pageContext.setAttribute(workEffortIdAttrName, workEffortId);
     if(workEffort != null) pageContext.setAttribute(workEffortAttrName, workEffort);
     if(canView != null) pageContext.setAttribute(canViewAttrName, canView);
     if(workEffortPartyAssignments != null) pageContext.setAttribute(partyAssignsAttrName, workEffortPartyAssignments);
+    if(tryEntity != null) pageContext.setAttribute(tryEntityAttrName, tryEntity);
+    if(currentStatus != null) pageContext.setAttribute(currentStatusAttrName, currentStatus);
+    
     pageContext.setAttribute(tryEntityAttrName, new Boolean(workEffort==null?false:true));
   }
     
+  public static void getEventStatusItems(PageContext pageContext, String attributeName) {
+    GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
+    try {
+      Collection statusItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", "EVENT_STATUS"), UtilMisc.toList("sequenceId"));
+      if(statusItems != null) pageContext.setAttribute(attributeName, statusItems);
+    }
+    catch(GenericEntityException e) { Debug.logError(e); }
+  }
+
   public static void getMonthWorkEfforts(PageContext pageContext, String attributeName) {
   }
-    
+
   public static void getUpcomingWorkEfforts(PageContext pageContext, String daysAttrName) {
     int numDays = 7;
     GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
@@ -147,8 +184,8 @@ public class WorkEffortWorker {
     //Split the WorkEffort list into a list for each day
     List days = new Vector();
     List curWorkEfforts = null;
-    int lastYear = -1;
-    int lastDay = -1;
+    //Timestamp curDayStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+    Timestamp curDayEnd = null;
     Iterator wfiter = null;
     if(validWorkEfforts != null) wfiter = validWorkEfforts.iterator();
     while(wfiter != null && wfiter.hasNext()) {
@@ -156,15 +193,13 @@ public class WorkEffortWorker {
       //Debug.log("Got workEffort: " + workEffort.toString());      
       
       Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
-      if(estimatedStartDate == null) continue;
+      Timestamp estimatedCompletionDate = workEffort.getTimestamp("estimatedCompletionDate");
+      if(estimatedStartDate == null || estimatedCompletionDate == null) continue;
       
-      Calendar startCal = Calendar.getInstance();
-      startCal.setTime(new java.util.Date(estimatedStartDate.getTime()));
-      int startYear = startCal.get(Calendar.YEAR);
-      int startDay = startCal.get(Calendar.DAY_OF_YEAR);
-      if(lastYear < startYear || lastDay < startDay) {
+      if(curDayEnd == null || estimatedStartDate.after(curDayEnd)) {
         curWorkEfforts = new Vector();
         days.add(curWorkEfforts);
+        curDayEnd = UtilDateTime.getDayEnd(estimatedStartDate);
       }
       //this should never be null at this point...
       if(curWorkEfforts != null) {

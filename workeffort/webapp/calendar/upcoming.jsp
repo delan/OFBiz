@@ -64,9 +64,9 @@
             <ofbiz:if name="days" size="0">
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <TR>
-                  <TD><DIV class='tabletext'>Start Date/Time</DIV></TD>
-                  <TD><DIV class='tabletext'>End Date/Time</DIV></TD>
-                  <TD><DIV class='tabletext'>Event Name</DIV></TD>
+                  <TD><DIV class='tabletext'><b>Start Date/Time</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>End Date/Time</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>Event Name</b></DIV></TD>
                 </TR>
                 <ofbiz:iterator name="workEfforts" property="days" type="java.util.List">
                   <TR><TD colspan='3'><HR class='sepbar'></TD></TR>

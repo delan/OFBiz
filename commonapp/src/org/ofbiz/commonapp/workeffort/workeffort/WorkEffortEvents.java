@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/11/12 23:49:19  jonesde
+ * Fixed small logic bug on checking to see if anything had changed
+ *
  * Revision 1.3  2001/11/11 14:50:36  jonesde
  * Finished initial working versions of work effort workers and events
  *
@@ -241,6 +244,9 @@ public class WorkEffortEvents {
 
     if(!UtilValidate.isNotEmpty(workEffortName)) errMsg += "<li>Name is missing.";
     if(!UtilValidate.isNotEmpty(currentStatusId)) errMsg += "<li>Status is missing.";
+    if(estimatedStartDate != null && estimatedCompletionDate != null && estimatedStartDate.after(estimatedCompletionDate)) {
+      errMsg += "<li>Start date/time cannot be after end date/time.";
+    }
     if(errMsg.length() > 0) {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
       request.setAttribute("ERROR_MESSAGE", errMsg);
@@ -255,7 +261,7 @@ public class WorkEffortEvents {
     
     //if necessary create new status entry, and set lastStatusUpdate date
     if(workEffort == null || (currentStatusId != null && !currentStatusId.equals(workEffort.getString("currentStatusId")))) {
-      newWorkEffort.preStoreOther(delegator.makeValue("WorkEffortStatus", UtilMisc.toMap("workEffortId", workEffortId, "statusId", currentStatusId, "statusDatetime", nowStamp)));
+      newWorkEffort.preStoreOther(delegator.makeValue("WorkEffortStatus", UtilMisc.toMap("workEffortId", workEffortId, "statusId", currentStatusId, "statusDatetime", nowStamp, "setByPartyId", userLogin.get("partyId"))));
       newWorkEffort.set("currentStatusId", currentStatusId);
       newWorkEffort.set("lastStatusUpdate", nowStamp);
     }

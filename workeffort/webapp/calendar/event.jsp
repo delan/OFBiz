@@ -29,13 +29,14 @@
 %>
 
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
+<%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
+<%WorkEffortWorker.getEventStatusItems(pageContext, "eventStatusItems");%>
 
 <%pageContext.setAttribute("PageName", "Calendar Event Editor Page");%>
 
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
-<%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity");%>
 
 <BR>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
@@ -77,8 +78,6 @@
                   </ofbiz:if>
                 </ofbiz:unless>
 
-                <input type='hidden' name='CURRENT_STATUS_ID' value='CAL_ACCEPTED'>
-                
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Event Name</div></td>
                   <td>&nbsp;</td>
@@ -97,6 +96,24 @@
                     </SELECT>
                   </td>
                 </tr>
+                <tr>
+                  <td width='26%' align=right><div class='tabletext'>Event Status</div></td>
+                  <td>&nbsp;</td>
+                  <td width='74%'>
+                    <SELECT name='CURRENT_STATUS_ID'>
+                      <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
+                      <OPTION value=''>--</OPTION>
+                      <ofbiz:iterator name="statusItem" property="eventStatusItems">
+                        <OPTION value='<ofbiz:entityfield field="statusId" attribute="statusItem"/>'><ofbiz:entityfield field="description" attribute="statusItem"/></OPTION>
+                      </ofbiz:iterator>
+                    </SELECT>
+                    <ofbiz:if name="workEffort">
+                      <span class='tabletext'>Last Updated <ofbiz:entityfield field="lastStatusUpdate" attribute="workEffort"/></span>
+                    </ofbiz:if>
+                  </td>
+                </tr>
+                <input type='hidden' name='CURRENT_STATUS_ID' value='CAL_ACCEPTED'>
+
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Location</div></td>
                   <td>&nbsp;</td>
