@@ -7,20 +7,6 @@
 
 <ofbiz:if name="userLogin">
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
-<%--
-  <TR>
-    <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
-        <tr>
-          <TD align=left width='99%' >
-            <div  style="margin: 0; font-size: 12pt; font-weight: bold; color: white;">OFBIZ - Application QuickLinks</div>
-          </TD>
-          <TD align=right width='1%'>&nbsp;</TD>
-        </tr>
-      </table>
-    </TD>
-  </TR>
---%>  
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom' style='border-width: 1px 1px 0px 1px;'>
@@ -28,11 +14,20 @@
           <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
             <td class="headerButtonLeft"><a href="javascript:document.partyform.submit()" class="headerbuttontext">Party</a></td>
           <%}%>
+          <%if(security.hasEntityPermission("MARKETING", "_VIEW", session)) {%>
+            <td class="headerButtonLeft"><a href="javascript:document.marketingform.submit()" class="headerbuttontext">Marketing</a></td>
+          <%}%>
           <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
             <td class="headerButtonLeft"><a href="javascript:document.catalogform.submit()" class="headerbuttontext">Catalog</a></td>
           <%}%>
+          <%if(security.hasEntityPermission("FACILITY", "_VIEW", session)) {%>
+            <td class="headerButtonLeft"><a href="javascript:document.facilityform.submit()" class="headerbuttontext">Facility</a></td>
+          <%}%>
           <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
             <td class="headerButtonLeft"><a href="javascript:document.orderform.submit()" class="headerbuttontext">Order</a></td>
+          <%}%>
+          <%if(security.hasEntityPermission("ACCOUNTING", "_VIEW", session)) {%>
+            <td class="headerButtonLeft"><a href="javascript:document.accountingform.submit()" class="headerbuttontext">Accounting</a></td>
           <%}%>
           <%if(security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", session)) {%>
             <td class="headerButtonLeft"><a href="javascript:document.workeffortform.submit()" class="headerbuttontext">WorkEffort</a></td>
@@ -75,6 +70,18 @@
     <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
   </form>
   <form method="POST" action="<%=response.encodeURL("/ordermgr/control/login/main")%>" name="orderform" style='margin: 0;'>
+    <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
+    <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
+  </form>
+  <form method="POST" action="<%=response.encodeURL("/accounting/control/login/main")%>" name="accountingform" style='margin: 0;'>
+    <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
+    <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
+  </form>
+  <form method="POST" action="<%=response.encodeURL("/facility/control/login/main")%>" name="facilityform" style='margin: 0;'>
+    <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
+    <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
+  </form>
+  <form method="POST" action="<%=response.encodeURL("/marketing/control/login/main")%>" name="marketingform" style='margin: 0;'>
     <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
     <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
   </form>

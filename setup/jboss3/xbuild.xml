@@ -129,6 +129,12 @@
         <ant dir="webtools" target="clean" inheritAll="false" />
         <echo message="[clean] ===== Cleaning workeffort =====" />
         <ant dir="workeffort" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning accounting =====" />
+        <ant dir="accounting" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning facility =====" />
+        <ant dir="facility" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning marketing =====" />
+        <ant dir="marketing" target="clean" inheritAll="false" />
 
         <echo message="[clean] ===== Done Cleaning =====" />
     </target>
@@ -166,6 +172,12 @@
         <ant dir="webtools" inheritAll="false" />
         <echo message="[build] ===== Building workeffort =====" />
         <ant dir="workeffort" inheritAll="false" />
+        <echo message="[build] ===== Building accounting =====" />
+        <ant dir="accounting" inheritAll="false" />
+        <echo message="[build] ===== Building facility =====" />
+        <ant dir="facility" inheritAll="false" />
+        <echo message="[build] ===== Building marketing =====" />
+        <ant dir="marketing" inheritAll="false" />
 
         <echo message="[build] ===== Done Building (Compile) =====" />
     </target>
@@ -185,6 +197,12 @@
         <ant dir="webtools" target="war" inheritAll="false" />
         <echo message="[war] ===== Building workeffort =====" />
         <ant dir="workeffort" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building accounting =====" />
+        <ant dir="accounting" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building facility =====" />
+        <ant dir="facility" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building marketing =====" />
+        <ant dir="marketing" target="war" inheritAll="false" />
 
         <echo message="[build] ===== Done Building (WAR) =====" />
     </target>
@@ -208,6 +226,12 @@
         <ant dir="ordermgr" target="docs" />
         <echo message="[docs] ===== Javadoc workeffort =====" />
         <ant dir="workeffort" target="docs" />
+        <echo message="[docs] ===== Javadoc accounting =====" />
+        <ant dir="accounting" target="docs" />
+        <echo message="[docs] ===== Javadoc facility =====" />
+        <ant dir="facility" target="docs" />
+        <echo message="[docs] ===== Javadoc marketing =====" />
+        <ant dir="marketing" target="docs" />
 
         <echo message="[docs] ===== Done Building (Docs) =====" />
     </target>
@@ -226,6 +250,9 @@
         <copy file="core/etc/ofbiz.tld" toDir="ordermgr/webapp/WEB-INF"/>
         <copy file="core/etc/ofbiz.tld" toDir="partymgr/webapp/WEB-INF"/>
         <copy file="core/etc/ofbiz.tld" toDir="workeffort/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="accounting/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="facility/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="marketing/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="webtools/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="commonapp/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="commonapp/empty_webapp/WEB-INF"/>
@@ -234,6 +261,9 @@
         <copy file="core/etc/regions.tld" toDir="ordermgr/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="partymgr/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="workeffort/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="accounting/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="facility/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="marketing/webapp/WEB-INF"/>
         <echo message="[tld] ===== Done Copying ====="/>
     </target>
     <target name="update-apps" depends="copy-tld"/>
@@ -292,6 +322,12 @@
             toFile="${j2eedeploy.dir}/ordermgr-ext.war" />
         <copy file="workeffort/lib/workeffort-ext.war"
             toFile="${j2eedeploy.dir}/workeffort-ext.war" />
+        <copy file="accounting/lib/accounting-ext.war"
+            toFile="${j2eedeploy.dir}/accounting-ext.war" />
+        <copy file="facility/lib/facility-ext.war"
+            toFile="${j2eedeploy.dir}/facility-ext.war" />
+        <copy file="marketing/lib/marketing-ext.war"
+            toFile="${j2eedeploy.dir}/marketing-ext.war" />
     </target>
 
     <!-- ================================================================== -->
@@ -347,6 +383,9 @@
         <copy file="partymgr/lib/partymgr.war"               toDir="${ext.dir}/webapps"/>
         <copy file="ordermgr/lib/ordermgr.war"               toDir="${ext.dir}/webapps"/>
         <copy file="workeffort/lib/workeffort.war"           toDir="${ext.dir}/webapps"/>
+        <copy file="accounting/lib/accounting.war"           toDir="${ext.dir}/webapps"/>
+        <copy file="facility/lib/facility.war"               toDir="${ext.dir}/webapps"/>
+        <copy file="marketing/lib/marketing.war"             toDir="${ext.dir}/webapps"/>
 
         <copy file="commonapp/etc/serverstats.properties"    toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/entityengine.xml"          toDir="${ext.dir}/etc"/>
@@ -392,6 +431,9 @@
         <copy file="partymgr/lib/partymgr.war" toFile="${eartemp.dir}/partymgr.war" />
         <copy file="ordermgr/lib/ordermgr.war" toFile="${eartemp.dir}/ordermgr.war" />
         <copy file="workeffort/lib/workeffort.war" toFile="${eartemp.dir}/workeffort.war" />
+        <copy file="accounting/lib/accounting.war" toFile="${eartemp.dir}/accounting.war" />
+        <copy file="facility/lib/facility.war" toFile="${eartemp.dir}/facility.war" />
+        <copy file="marketing/lib/marketing.war" toFile="${eartemp.dir}/marketing.war" />
 
         <jar jarfile="./ofbiz.ear" basedir="${eartemp.dir}" />
         <delete dir="${eartemp.dir}" />

@@ -250,6 +250,12 @@
         <ant dir="webtools" target="clean" inheritAll="false" />
         <echo message="[clean] ===== Cleaning workeffort =====" />
         <ant dir="workeffort" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning accounting =====" />
+        <ant dir="accounting" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning facility =====" />
+        <ant dir="facility" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning marketing =====" />
+        <ant dir="marketing" target="clean" inheritAll="false" />
 
         <echo message="[clean] ===== Done Cleaning =====" />
     </target>
@@ -259,22 +265,71 @@
     <!-- ================================================================== -->
 
     <target name="build" depends="ofbiz-init">
-        <echo message="[build] ===== Building core =====" />
+        <echo message="[build]" />
+        <echo message="[build] ===================================" />
+        <echo message="[build] ========== Building core ==========" />
+        <echo message="[build] ===================================" />
         <ant dir="core" inheritAll="false" />
-        <echo message="[build] ===== Building commonapp =====" />
+        
+        <echo message="[build]" />
+        <echo message="[build] ========================================" />
+        <echo message="[build] ========== Building commonapp ==========" />
+        <echo message="[build] ========================================" />
         <ant dir="commonapp" inheritAll="false" />
-        <echo message="[build] ===== Building ecommerce =====" />
+        
+        <echo message="[build]" />
+        <echo message="[build] ========================================" />
+        <echo message="[build] ========== Building ecommerce ==========" />
+        <echo message="[build] ========================================" />
         <ant dir="ecommerce" inheritAll="false" />
-        <echo message="[build] ===== Building catalog =====" />
+        
+        <echo message="[build]" />
+        <echo message="[build] ======================================" />
+        <echo message="[build] ========== Building catalog ==========" />
+        <echo message="[build] ======================================" />
         <ant dir="catalog" inheritAll="false" />
-        <echo message="[build] ===== Building partymgr =====" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =======================================" />
+        <echo message="[build] ========== Building partymgr ==========" />
+        <echo message="[build] =======================================" />
         <ant dir="partymgr" inheritAll="false" />
-        <echo message="[build] ===== Building ordermgr =====" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =======================================" />
+        <echo message="[build] ========== Building ordermgr ==========" />
+        <echo message="[build] =======================================" />
         <ant dir="ordermgr" inheritAll="false" />
-        <echo message="[build] ===== Building webtools =====" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =======================================" />
+        <echo message="[build] ========== Building webtools ==========" />
+        <echo message="[build] =======================================" />
         <ant dir="webtools" inheritAll="false" />
-        <echo message="[build] ===== Building workeffort =====" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =========================================" />
+        <echo message="[build] ========== Building workeffort ==========" />
+        <echo message="[build] =========================================" />
         <ant dir="workeffort" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =========================================" />
+        <echo message="[build] ========== Building accounting ==========" />
+        <echo message="[build] =========================================" />
+        <ant dir="accounting" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =======================================" />
+        <echo message="[build] ========== Building facility ==========" />
+        <echo message="[build] =======================================" />
+        <ant dir="facility" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] ========================================" />
+        <echo message="[build] ========== Building marketing ==========" />
+        <echo message="[build] ========================================" />
+        <ant dir="marketing" inheritAll="false" />
 
     	<delete file="${ofbcore-webapp.jar}" />
         <echo message="[build] ===== Done Building (Compile) =====" />
@@ -299,6 +354,12 @@
         <ant dir="webtools" inheritAll="false" />
         <echo message="[build] ===== Building workeffort =====" />
         <ant dir="workeffort" inheritAll="false" />
+        <echo message="[build] ===== Building accounting =====" />
+        <ant dir="accounting" inheritAll="false" />
+        <echo message="[build] ===== Building facility =====" />
+        <ant dir="facility" inheritAll="false" />
+        <echo message="[build] ===== Building marketing =====" />
+        <ant dir="marketing" inheritAll="false" />
 
         <echo message="[build] ===== Done Building (Compile), Ignored Core =====" />
     </target>
@@ -318,6 +379,12 @@
         <ant dir="webtools" target="war" inheritAll="false" />
         <echo message="[war] ===== Building workeffort =====" />
         <ant dir="workeffort" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building accounting =====" />
+        <ant dir="accounting" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building facility =====" />
+        <ant dir="facility" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building marketing =====" />
+        <ant dir="marketing" target="war" inheritAll="false" />
 
         <echo message="[build] ===== Done Building (WAR) =====" />
     </target>
@@ -341,6 +408,12 @@
         <ant dir="ordermgr" target="docs" />
         <echo message="[docs] ===== Javadoc workeffort =====" />
         <ant dir="workeffort" target="docs" />
+        <echo message="[docs] ===== Javadoc accounting =====" />
+        <ant dir="accounting" target="docs" />
+        <echo message="[docs] ===== Javadoc facility =====" />
+        <ant dir="facility" target="docs" />
+        <echo message="[docs] ===== Javadoc marketing =====" />
+        <ant dir="marketing" target="docs" />
 
         <echo message="[docs] ===== Done Building (Docs) =====" />
     </target>
@@ -359,6 +432,9 @@
         <copy file="core/etc/ofbiz.tld" toDir="ordermgr/webapp/WEB-INF"/>
         <copy file="core/etc/ofbiz.tld" toDir="partymgr/webapp/WEB-INF"/>
         <copy file="core/etc/ofbiz.tld" toDir="workeffort/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="accounting/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="facility/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="marketing/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="webtools/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="commonapp/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="commonapp/empty_webapp/WEB-INF"/>
@@ -367,6 +443,9 @@
         <copy file="core/etc/regions.tld" toDir="ordermgr/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="partymgr/webapp/WEB-INF"/>
         <copy file="core/etc/regions.tld" toDir="workeffort/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="accounting/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="facility/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="marketing/webapp/WEB-INF"/>
         <echo message="[tld] ===== Done Copying ====="/>
     </target>
     <target name="update-apps" depends="copy-tld"/>
@@ -417,23 +496,24 @@
     </target>
 
     <target name="deploy-copy" depends="" if="copy.dirs.exist">
-        <copy file="commonapp/etc/serverstats.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/cache.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/cybersource.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/debug.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/entityengine.xml" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/general.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/inventoryalerts.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/jndiservers.xml" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/localdtds.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/payflow.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/payment.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/prodsearch.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/security.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/security.xml" toDir="${classes.dir}" />
-        <copy file="commonapp/etc/debug.properties" toDir="${classes.dir}" />
-        <copy file="commonapp/etc/cache.properties" toDir="${classes.dir}" />
-        <copy file="commonapp/etc/general.properties" toDir="${classes.dir}" />
-        <copy file="commonapp/etc/prodsearch.properties" toDir="${classes.dir}" />
-        <copy file="commonapp/etc/localdtds.properties" toDir="${classes.dir}" />
-        <copy file="commonapp/etc/url.properties" toDir="${classes.dir}" />
-        <copy file="commonapp/etc/cybersource.properties" toDir="${classes.dir}" />
-        <copy file="commonapp/etc/payflow.properties" toDir="${classes.dir}" />
-        <copy file="commonapp/etc/taxware.properties" toDir="${classes.dir}" />
-
-        <copy file="commonapp/etc/jndiservers.xml" toDir="${classes.dir}" />
-        <copy file="commonapp/etc/entityengine.xml" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/serverstats.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/serviceengine.xml" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/taxware.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/tyrexdomain.xml" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/url.properties" toDir="${classes.dir}" />
 
         <copy file="core/lib/ofbcore-share${ofbiz.version}.jar" toDir="${lib.dir}" />
         <copy file="core/lib/ofbcore-entity${ofbiz.version}.jar" toDir="${lib.dir}" />
@@ -455,22 +535,24 @@
     <!-- Copy all files necessary for EXTERNAL running -->
     <target name="int-deploy-ext" depends="">
         <mkdir dir="${home.dir}/commonapp/entitydef" />
-        <copy file="commonapp/entitydef/entitymodel.xml"
-            toFile="${home.dir}/commonapp/entitydef/entitymodel.xml" />
-        <copy file="commonapp/entitydef/fieldtypemysql.xml"
-            toFile="${home.dir}/commonapp/entitydef/fieldtypemysql.xml" />
+        <copy file="commonapp/entitydef/entitymodel.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypecloudscape.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypehsql.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypemysql.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypeoracle.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypepostgres.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypepostgres72.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypesapdb.xml" toDir="${home.dir}/commonapp/entitydef" />
 
-        <copy file="ecommerce/lib/ecommerce-ext.war"
-            toFile="${j2eedeploy.dir}/ecommerce-ext.war" />
+        <copy file="ecommerce/lib/ecommerce-ext.war" toDir="${j2eedeploy.dir}" />
 
-        <copy file="catalog/lib/catalog-ext.war"
-            toFile="${j2eedeploy.dir}/catalog-ext.war" />
-        <copy file="partymgr/lib/partymgr-ext.war"
-            toFile="${j2eedeploy.dir}/partymgr-ext.war" />
-        <copy file="ordermgr/lib/ordermgr-ext.war"
-            toFile="${j2eedeploy.dir}/ordermgr-ext.war" />
-        <copy file="workeffort/lib/workeffort-ext.war"
-            toFile="${j2eedeploy.dir}/workeffort-ext.war" />
+        <copy file="catalog/lib/catalog-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="partymgr/lib/partymgr-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="ordermgr/lib/ordermgr-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="workeffort/lib/workeffort-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="accounting/lib/accounting-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="facility/lib/facility-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="marketing/lib/marketing-ext.war" toDir="${j2eedeploy.dir}" />
     </target>
 
     <!-- ================================================================== -->
@@ -506,24 +588,27 @@
         <copy file="lib/compile/mail.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/compile/xerces.jar"                  toDir="${ext.dir}/lib/ext"/>
 
-        <copy file="core/lib/ofbcore-share${ofbiz.version}.jar"              toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-entity${ofbiz.version}.jar"             toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-service${ofbiz.version}.jar"            toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-extutil${ofbiz.version}.jar"            toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-workflow${ofbiz.version}.jar"           toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-rules${ofbiz.version}.jar"              toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-datafile${ofbiz.version}.jar"           toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-minilang${ofbiz.version}.jar"           toDir="${ext.dir}/lib"/>
-        <copy file="commonapp/lib/commonapp${ofbiz.version}.jar"             toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-share${ofbiz.version}.jar"    toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-entity${ofbiz.version}.jar"   toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-service${ofbiz.version}.jar"  toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-extutil${ofbiz.version}.jar"  toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-workflow${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-rules${ofbiz.version}.jar"    toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-datafile${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-minilang${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="commonapp/lib/commonapp${ofbiz.version}.jar"   toDir="${ext.dir}/lib"/>
 
-        <copy file="webtools/lib/webtools.war"               toDir="${ext.dir}/webapps"/>
-        <copy file="commonapp/lib/commonapp.war"             toDir="${ext.dir}/webapps"/>
-        <copy file="ecommerce/lib/ecommerce.war"             toDir="${ext.dir}/webapps"/>
-        <copy file="ecommerce/lib/images.war"                toDir="${ext.dir}/webapps"/>
-        <copy file="catalog/lib/catalog.war"                 toDir="${ext.dir}/webapps"/>
-        <copy file="partymgr/lib/partymgr.war"               toDir="${ext.dir}/webapps"/>
-        <copy file="ordermgr/lib/ordermgr.war"               toDir="${ext.dir}/webapps"/>
-        <copy file="workeffort/lib/workeffort.war"           toDir="${ext.dir}/webapps"/>
+        <copy file="webtools/lib/webtools.war"      toDir="${ext.dir}/webapps"/>
+        <copy file="commonapp/lib/commonapp.war"    toDir="${ext.dir}/webapps"/>
+        <copy file="ecommerce/lib/ecommerce.war"    toDir="${ext.dir}/webapps"/>
+        <copy file="ecommerce/lib/images.war"       toDir="${ext.dir}/webapps"/>
+        <copy file="catalog/lib/catalog.war"        toDir="${ext.dir}/webapps"/>
+        <copy file="partymgr/lib/partymgr.war"      toDir="${ext.dir}/webapps"/>
+        <copy file="ordermgr/lib/ordermgr.war"      toDir="${ext.dir}/webapps"/>
+        <copy file="workeffort/lib/workeffort.war"  toDir="${ext.dir}/webapps"/>
+        <copy file="accounting/lib/accounting.war"  toDir="${ext.dir}/webapps"/>
+        <copy file="facility/lib/facility.war"      toDir="${ext.dir}/webapps"/>
+        <copy file="marketing/lib/marketing.war"    toDir="${ext.dir}/webapps"/>
 
         <copy file="commonapp/etc/serverstats.properties"    toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/serverstats.xml"           toDir="${ext.dir}/etc"/>
@@ -563,20 +648,21 @@
         <copy file="commonapp/earetc/application.xml"
             toFile="${eartemp.dir}/META-INF/application.xml" />
 
-        <copy file="webtools/lib/webtools.war" toFile="${eartemp.dir}/webtools.war" />
-        <copy file="commonapp/lib/commonapp.war" toFile="${eartemp.dir}/commonapp.war" />
+        <copy file="webtools/lib/webtools.war" toDir="${eartemp.dir}" />
+        <copy file="commonapp/lib/commonapp.war" toDir="${eartemp.dir}" />
 
-        <copy file="ecommerce/lib/ecommerce.war" toFile="${eartemp.dir}/ecommerce.war" />
-        <copy file="ecommerce/lib/images.war" toFile="${eartemp.dir}/images.war" />
+        <copy file="ecommerce/lib/ecommerce.war" toDir="${eartemp.dir}" />
+        <copy file="ecommerce/lib/images.war" toDir="${eartemp.dir}" />
 
-        <copy file="catalog/lib/catalog.war" toFile="${eartemp.dir}/catalog.war" />
-        <copy file="partymgr/lib/partymgr.war" toFile="${eartemp.dir}/partymgr.war" />
-        <copy file="ordermgr/lib/ordermgr.war" toFile="${eartemp.dir}/ordermgr.war" />
-        <copy file="workeffort/lib/workeffort.war" toFile="${eartemp.dir}/workeffort.war" />
+        <copy file="catalog/lib/catalog.war" toDir="${eartemp.dir}" />
+        <copy file="partymgr/lib/partymgr.war" toDir="${eartemp.dir}" />
+        <copy file="ordermgr/lib/ordermgr.war" toDir="${eartemp.dir}" />
+        <copy file="workeffort/lib/workeffort.war" toDir="${eartemp.dir}" />
+        <copy file="accounting/lib/accounting.war" toDir="${eartemp.dir}" />
+        <copy file="facility/lib/facility.war" toDir="${eartemp.dir}" />
+        <copy file="marketing/lib/marketing.war" toDir="${eartemp.dir}" />
 
         <jar jarfile="./ofbiz.ear" basedir="${eartemp.dir}" />
         <delete dir="${eartemp.dir}" />
     </target>
-
-
 </project>

@@ -16,6 +16,9 @@
     <web-app load-on-startup="true" application="default" shared="true" name="ordermgr" root="/ordermgr" />
     <web-app load-on-startup="true" application="default" shared="true" name="partymgr" root="/partymgr" />
     <web-app load-on-startup="true" application="default" shared="true" name="workeffort" root="/workeffort" />
+    <web-app load-on-startup="true" application="default" shared="true" name="accounting" root="/accounting" />
+    <web-app load-on-startup="true" application="default" shared="true" name="facility" root="/facility" />
+    <web-app load-on-startup="true" application="default" shared="true" name="marketing" root="/marketing" />
     
     <!-- Access Log, where requests are logged to -->
     <access-log path="../log/default-web-access.log" />

@@ -14,6 +14,9 @@
     <web-module id="ordermgr" path="../../ofbiz/ordermgr/webapp" />
     <web-module id="partymgr" path="../../ofbiz/partymgr/webapp" />
     <web-module id="workeffort" path="../../ofbiz/workeffort/webapp" />
+    <web-module id="accounting" path="../../ofbiz/accounting/webapp" />
+    <web-module id="facility" path="../../ofbiz/facility/webapp" />
+    <web-module id="marketing" path="../../ofbiz/marketing/webapp" />
 
     <persistence path="../persistence" />
     

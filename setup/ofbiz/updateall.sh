@@ -25,6 +25,15 @@ cvs update -P -d
 cd ../workeffort
 echo "--- workeffort ---"
 cvs update -P -d
+cd ../accounting
+echo "--- accounting ---"
+cvs update -P -d
+cd ../facility
+echo "--- facility ---"
+cvs update -P -d
+cd ../marketing
+echo "--- marketing ---"
+cvs update -P -d
 cd ../setup
 echo "--- setup ---"
 cvs update -P -d
@@ -32,4 +41,3 @@ cd ../website
 echo "--- website ---"
 cvs update -P -d
 cd ..
-

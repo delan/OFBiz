@@ -26,6 +26,15 @@
     <webapp name="catalog" uri="/catalog" path="../../../../ofbiz/catalog/webapp/">
         <server name="defaultServer"></server>
     </webapp>
+    <webapp name="accounting" uri="/accounting" path="../../../../ofbiz/accounting/webapp/">
+        <server name="defaultServer"></server>
+    </webapp>
+    <webapp name="facility" uri="/facility" path="../../../../ofbiz/facility/webapp/">
+        <server name="defaultServer"></server>
+    </webapp>
+    <webapp name="marketing" uri="/marketing" path="../../../../ofbiz/marketing/webapp/">
+        <server name="defaultServer"></server>
+    </webapp>
     <webapp name="ecommerce" uri="/ecommerce" path="../../../../ofbiz/ecommerce/webapp/">
         <server name="defaultServer"></server>
     </webapp>

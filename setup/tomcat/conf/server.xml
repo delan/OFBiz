@@ -265,50 +265,28 @@
              If security manager is enabled, you'll have read perms.
              in the webapps dir and read/write in the workdir.
          -->
-        <Context path="/webtools" docBase="../ofbiz/webtools/webapp"
-                 debug="2" reloadable="true" trusted="false" >
+        <Context path="/webtools" docBase="../ofbiz/webtools/webapp" debug="2" reloadable="true" trusted="false" >
         </Context>
-        <Context path="/commonapp" docBase="../ofbiz/commonapp/webapp"
-                 debug="2" reloadable="true" trusted="false" >
+        <Context path="/commonapp" docBase="../ofbiz/commonapp/webapp" debug="2" reloadable="true" trusted="false" >
         </Context>
-        <Context path="/ecommerce" docBase="../ofbiz/ecommerce/webapp"
-                 debug="2" reloadable="true" trusted="false" >
+        <Context path="/ecommerce" docBase="../ofbiz/ecommerce/webapp" debug="2" reloadable="true" trusted="false" >
         </Context>
-        <Context path="/images" docBase="../ofbiz/ecommerce/images"
-                 debug="2" reloadable="true" trusted="false" >
+        <Context path="/images" docBase="../ofbiz/ecommerce/images" debug="2" reloadable="true" trusted="false" >
         </Context>
-        <Context path="/catalog" docBase="../ofbiz/catalog/webapp"
-                 debug="2" reloadable="true" trusted="false">
+        <Context path="/catalog" docBase="../ofbiz/catalog/webapp" debug="2" reloadable="true" trusted="false">
         </Context>
-        <Context path="/partymgr" docBase="../ofbiz/partymgr/webapp"
-                 debug="2" reloadable="true" trusted="false">
+        <Context path="/partymgr" docBase="../ofbiz/partymgr/webapp" debug="2" reloadable="true" trusted="false">
         </Context>
-        <Context path="/ordermgr" docBase="../ofbiz/ordermgr/webapp"
-                 debug="2" reloadable="true" trusted="false">
+        <Context path="/ordermgr" docBase="../ofbiz/ordermgr/webapp" debug="2" reloadable="true" trusted="false">
         </Context>
-        <Context path="/workeffort" docBase="../ofbiz/workeffort/webapp"
-                 debug="2" reloadable="true" trusted="false">
+        <Context path="/workeffort" docBase="../ofbiz/workeffort/webapp" debug="2" reloadable="true" trusted="false">
         </Context>
-<!--      
-        <Context path="/commerce"
-                 docBase="../relmsoft/webapp"
-                 debug="2" 
-                 reloadable="true" 
-                 trusted="false" >
+        <Context path="/accounting" docBase="../ofbiz/accounting/webapp" debug="2" reloadable="true" trusted="false">
         </Context>
-        <Context path="/entitygen" 
-                 docBase="../ofbiz/entitygen/webapp"
-                 debug="2" 
-                 reloadable="true" 
-                 trusted="false" >
+        <Context path="/facility" docBase="../ofbiz/facility/webapp" debug="2" reloadable="true" trusted="false">
         </Context>
-        <Context path="/ecommerce"
-                 docBase="../ofbiz/ecommerce/webapp"
-                 debug="2" 
-                 reloadable="true" 
-                 trusted="false" >
+        <Context path="/marketing" docBase="../ofbiz/marketing/webapp" debug="2" reloadable="true" trusted="false">
         </Context>
--->        
         <!-- Admin context will use tomcat.core to add/remove/get info about
              the webapplications and tomcat internals. 
              By default it is not trusted - i.e. it is not allowed access to 

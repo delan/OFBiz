@@ -10,9 +10,16 @@ cd ../ordermgr
 cvs update
 cd ../partymgr
 cvs update
+cd ../workeffort
+cvs update
+cd ../accounting
+cvs update
+cd ../facility
+cvs update
+cd ../marketing
+cvs update
 cd ../setup
 cvs update
 cd ../website
 cvs update
 cd ..
-

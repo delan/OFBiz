@@ -24,6 +24,9 @@
         <web-app load-on-startup="true" application="default" name="ordermgr" root="/ordermgr" /> 
         <web-app load-on-startup="true" application="default" name="partymgr" root="/partymgr" /> 
         <web-app load-on-startup="true" application="default" name="workeffort" root="/workeffort" /> 
+        <web-app load-on-startup="true" application="default" name="accounting" root="/accounting" /> 
+        <web-app load-on-startup="true" application="default" name="facility" root="/facility" /> 
+        <web-app load-on-startup="true" application="default" name="marketing" root="/marketing" /> 
         
         <!-- Uncomment the following to access these apps.
 	<web-app application="callerInfo" name="callerInfo-web" root="/jazn" /> 

@@ -267,42 +267,41 @@
             </parameter>
           </ResourceParams>
         </Context>
-        <Context path="/webtools" docBase="../../ofbiz/webtools/webapp"
-                 debug="0" reloadable="true">
+        <Context path="/webtools" docBase="../../ofbiz/webtools/webapp" debug="0" reloadable="true">
           <Logger className="org.apache.catalina.logger.FileLogger" prefix="webtools_log." suffix=".txt" timestamp="true"/>
         </Context>
-        <Context path="/commonapp" docBase="../../ofbiz/commonapp/webapp"
-                 debug="0" reloadable="true">
+        <Context path="/commonapp" docBase="../../ofbiz/commonapp/webapp" debug="0" reloadable="true">
           <Logger className="org.apache.catalina.logger.FileLogger" prefix="commonapp_log." suffix=".txt" timestamp="true"/>
         </Context>
-        <Context path="/ecommerce" docBase="../../ofbiz/ecommerce/webapp"
-                 debug="0" reloadable="true">
+        <Context path="/ecommerce" docBase="../../ofbiz/ecommerce/webapp" debug="0" reloadable="true">
           <Logger className="org.apache.catalina.logger.FileLogger" prefix="ecommerce_log." suffix=".txt" timestamp="true"/>
         </Context>
-        <Context path="/images" docBase="../../ofbiz/ecommerce/images"
-                 debug="0" reloadable="true">
+        <Context path="/images" docBase="../../ofbiz/ecommerce/images" debug="0" reloadable="true">
           <Logger className="org.apache.catalina.logger.FileLogger" prefix="images_log." suffix=".txt" timestamp="true"/>
         </Context>
-        <Context path="/catalog" docBase="../../ofbiz/catalog/webapp"
-                 debug="0" reloadable="true">
+        <Context path="/catalog" docBase="../../ofbiz/catalog/webapp" debug="0" reloadable="true">
           <Logger className="org.apache.catalina.logger.FileLogger" prefix="catalog_log." suffix=".txt" timestamp="true"/>
         </Context>
-        <Context path="/partymgr" docBase="../../ofbiz/partymgr/webapp"
-                 debug="0" reloadable="true">
+        <Context path="/partymgr" docBase="../../ofbiz/partymgr/webapp" debug="0" reloadable="true">
           <Logger className="org.apache.catalina.logger.FileLogger" prefix="partymgr_log." suffix=".txt" timestamp="true"/>
         </Context>
-        <Context path="/ordermgr" docBase="../../ofbiz/ordermgr/webapp"
-                 debug="0" reloadable="true">
+        <Context path="/ordermgr" docBase="../../ofbiz/ordermgr/webapp" debug="0" reloadable="true">
           <Logger className="org.apache.catalina.logger.FileLogger" prefix="ordermgr_log." suffix=".txt" timestamp="true"/>
         </Context>
-        <Context path="/workeffort" docBase="../../ofbiz/workeffort/webapp"
-                 debug="0" reloadable="true">
+        <Context path="/workeffort" docBase="../../ofbiz/workeffort/webapp" debug="0" reloadable="true">
           <Logger className="org.apache.catalina.logger.FileLogger" prefix="workeffort_log." suffix=".txt" timestamp="true"/>
         </Context>
+        <Context path="/accounting" docBase="../../ofbiz/accounting/webapp" debug="0" reloadable="true">
+          <Logger className="org.apache.catalina.logger.FileLogger" prefix="accounting_log." suffix=".txt" timestamp="true"/>
+        </Context>
+        <Context path="/facility" docBase="../../ofbiz/facility/webapp" debug="0" reloadable="true">
+          <Logger className="org.apache.catalina.logger.FileLogger" prefix="facility_log." suffix=".txt" timestamp="true"/>
+        </Context>
+        <Context path="/marketing" docBase="../../ofbiz/marketing/webapp" debug="0" reloadable="true">
+          <Logger className="org.apache.catalina.logger.FileLogger" prefix="marketing_log." suffix=".txt" timestamp="true"/>
+        </Context>
       </Host>
-
     </Engine>
-
   </Service>
 
   <!-- The MOD_WEBAPP connector is used to connect Apache 1.3 with Tomcat 4.0

@@ -91,6 +91,9 @@ ofbiz setup
 ofbiz website
 ofbiz webtools
 ofbiz workeffort
+ofbiz accounting
+ofbiz facility
+ofbiz marketing
 EOF
 
 CVSBASE="$METHOD$USER@$SERVER:$CVSDIR"

@@ -30,6 +30,15 @@
     <module>
       <web><web-uri>../../../../../workeffort/webapp</web-uri><context-root>/workeffort</context-root></web>
     </module>
+    <module>
+      <web><web-uri>../../../../../accounting/webapp</web-uri><context-root>/accounting</context-root></web>
+    </module>
+    <module>
+      <web><web-uri>../../../../../facility/webapp</web-uri><context-root>/facility</context-root></web>
+    </module>
+    <module>
+      <web><web-uri>../../../../../marketing/webapp</web-uri><context-root>/marketing</context-root></web>
+    </module>
 
 </application>
 

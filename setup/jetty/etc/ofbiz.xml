@@ -116,6 +116,24 @@
     <Arg><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Arg>
     <Arg type="boolean">false</Arg> <!-- dont expand war -->
   </Call>
+  <Call name="addWebApplication">
+    <Arg>/accounting/*</Arg>
+    <Arg><SystemProperty name="ofbiz.home" default="../ofbiz"/>/accounting/webapp</Arg>
+    <Arg><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Arg>
+    <Arg type="boolean">false</Arg> <!-- dont expand war -->
+  </Call>
+  <Call name="addWebApplication">
+    <Arg>/facility/*</Arg>
+    <Arg><SystemProperty name="ofbiz.home" default="../ofbiz"/>/facility/webapp</Arg>
+    <Arg><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Arg>
+    <Arg type="boolean">false</Arg> <!-- dont expand war -->
+  </Call>
+  <Call name="addWebApplication">
+    <Arg>/marketing/*</Arg>
+    <Arg><SystemProperty name="ofbiz.home" default="../ofbiz"/>/marketing/webapp</Arg>
+    <Arg><SystemProperty name="jetty.home" default="."/>/etc/webdefault.xml</Arg>
+    <Arg type="boolean">false</Arg> <!-- dont expand war -->
+  </Call>
 
   <Set name="RequestLog">
     <New class="org.mortbay.http.NCSARequestLog">

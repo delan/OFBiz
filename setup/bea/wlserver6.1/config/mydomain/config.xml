@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--If your domain is active, please do not edit the config.xml file. Any changes made to that file while the domain is active will not have any effect on the domain's configuration and are likely to be lost. If your domain is inactive, you may edit this file with an XML editor. If you do so, please refer to the BEA Weblogic Server Configuration Reference  documentation available from http://edocs.bea.com/wls/docs61/reference.html.  In general, we recommend that changes to your configuration file be made through the Administration Console.-->
 <Domain Name="mydomain">
-    <Application Deployed="true" Name="OFBiz Images" Path="/ofbiz/work/ofbiz/ecommerce/images">
-        <WebAppComponent Name="images" Targets="myserver" URI="."/>
-    </Application>
     <Application Deployed="true" Name="certificate" Path="./config/mydomain/applications">
         <WebAppComponent Name="certificate" Targets="myserver" URI="certificate.war"/>
     </Application>
@@ -13,15 +10,9 @@
         Properties="user=ofbiz;password=ofbiz"
         SupportsLocalTransaction="true" Targets="myserver" URL="jdbc:postgresql://127.0.0.1/ofbiz"/>
     <JTA Name="mydomain"/>
-    <Application Deployed="true" Name="OFBiz Party Mgr" Path="/ofbiz/work/ofbiz/partymgr/webapp">
-        <WebAppComponent Name="partymgr" Targets="myserver" URI="."/>
-    </Application>
     <ApplicationManager Name="mydomain"/>
     <SNMPAgent Name="mydomain"/>
     <Realm FileRealm="wl_default_file_realm" Name="wl_default_realm"/>
-    <Application Deployed="true" Name="OFBiz Catalog" Path="/ofbiz/work/ofbiz/catalog/webapp">
-        <WebAppComponent Name="catalog" Targets="myserver" URI="."/>
-    </Application>
     <Application Deployed="true" Name="DefaultWebApp" Path="./config/mydomain/applications">
         <WebAppComponent Name="DefaultWebApp" Targets="myserver" URI="DefaultWebApp"/>
     </Application>
@@ -43,11 +34,38 @@
         <Log FileName="config/mydomain/logs/weblogic.log" Name="myserver"/>
         <ServerStart Name="myserver"/>
     </Server>
-    <Application Deployed="true" Name="OFBiz WorkEffort Mgr" Path="/ofbiz/work/ofbiz/workeffort/webapp">
-        <WebAppComponent Name="workeffort" Targets="myserver" URI="."/>
+    <Application Deployed="true" Name="OFBiz WebTools" Path="/ofbiz/work/ofbiz/webtools/webapp">
+        <WebAppComponent Name="webtools" Targets="myserver" URI="."/>
+    </Application>
+    <Application Deployed="true" Name="OFBiz CommonApp" Path="/ofbiz/work/ofbiz/commonapp/webapp">
+        <WebAppComponent Name="commonapp" Targets="myserver" URI="."/>
     </Application>
     <Application Deployed="true" Name="OFBiz eCommerce" Path="/ofbiz/work/ofbiz/ecommerce/webapp">
         <WebAppComponent Name="ecommerce" Targets="myserver" URI="."/>
+    </Application>
+    <Application Deployed="true" Name="OFBiz Images" Path="/ofbiz/work/ofbiz/ecommerce/images">
+        <WebAppComponent Name="images" Targets="myserver" URI="."/>
+    </Application>
+    <Application Deployed="true" Name="OFBiz Catalog" Path="/ofbiz/work/ofbiz/catalog/webapp">
+        <WebAppComponent Name="catalog" Targets="myserver" URI="."/>
+    </Application>
+    <Application Deployed="true" Name="OFBiz Order Mgr" Path="/ofbiz/work/ofbiz/ordermgr/webapp">
+        <WebAppComponent Name="ordermgr" Targets="myserver" URI="."/>
+    </Application>
+    <Application Deployed="true" Name="OFBiz Party Mgr" Path="/ofbiz/work/ofbiz/partymgr/webapp">
+        <WebAppComponent Name="partymgr" Targets="myserver" URI="."/>
+    </Application>
+    <Application Deployed="true" Name="OFBiz WorkEffort Mgr" Path="/ofbiz/work/ofbiz/workeffort/webapp">
+        <WebAppComponent Name="workeffort" Targets="myserver" URI="."/>
+    </Application>
+    <Application Deployed="true" Name="OFBiz Accounting Mgr" Path="/ofbiz/work/ofbiz/accounting/webapp">
+        <WebAppComponent Name="accounting" Targets="myserver" URI="."/>
+    </Application>
+    <Application Deployed="true" Name="OFBiz Facility Mgr" Path="/ofbiz/work/ofbiz/facility/webapp">
+        <WebAppComponent Name="facility" Targets="myserver" URI="."/>
+    </Application>
+    <Application Deployed="true" Name="OFBiz Marketing Mgr" Path="/ofbiz/work/ofbiz/marketing/webapp">
+        <WebAppComponent Name="marketing" Targets="myserver" URI="."/>
     </Application>
     <CustomRealm
         ConfigurationData="user.filter=(&amp;(cn=%u)(objectclass=person));user.dn=ou=people, o=example.com;server.principal=cn=admin, o=example.com;membership.filter=(&amp;(member=%M)(objectclass=groupofuniquenames));group.filter=(&amp;(cn=%g)(objectclass=groupofuniquenames));server.host=ldapserver.example.com;server.ssl=true;group.dn=ou=groups, o=example.com"
@@ -62,23 +80,14 @@
     <Security GuestDisabled="false" Name="mydomain"
         PasswordPolicy="wl_default_password_policy" Realm="wl_default_realm"/>
     <Log FileName="config/mydomain/logs/wl-domain.log" Name="mydomain"/>
-    <Application Deployed="true" Name="OFBiz WebTools" Path="/ofbiz/work/ofbiz/webtools/webapp">
-        <WebAppComponent Name="webtools" Targets="myserver" URI="."/>
-    </Application>
     <FileRealm Name="wl_default_file_realm"/>
     <JDBCTxDataSource EnableTwoPhaseCommit="true"
         JNDIName="PostgresDataSource" Name="PostgreSQL Tx Data Source"
         PoolName="PostgresPool" Targets="myserver"/>
     <PasswordPolicy Name="wl_default_password_policy"/>
-    <Application Deployed="true" Name="OFBiz CommonApp" Path="/ofbiz/work/ofbiz/commonapp/webapp">
-        <WebAppComponent Name="commonapp" Targets="myserver" URI="."/>
-    </Application>
     <CustomRealm
         ConfigurationData="server.host=ldapserver.example.com;membership.scope.depth=1;microsoft.membership.scope=sub;membership.filter=(|(&amp;(memberobject=%M)(objectclass=memberof))(&amp;(groupobject=%M)(objectclass=groupmemberof)));group.dn=ou=Groups, o=ExampleMembershipDir;group.filter=(&amp;(cn=%g)(objectclass=mgroup));server.principal=cn=Administrator, ou=Members, o=ExampleMembershipDir;user.dn=ou=Members, o=ExampleMembershipDir;user.filter=(&amp;(cn=%u)(objectclass=member))"
         Name="defaultLDAPRealmForMicrosoftSiteServer"
         Notes="This is provided as an example. Before enabling this Realm, you must edit the configuration parameters as appropriate for your environment."
         Password="{3DES}FvgMUYKH1H4CpQgNIXIDGg==" RealmClassName="weblogic.security.ldaprealmv2.LDAPRealm"/>
-    <Application Deployed="true" Name="OFBiz Order Mgr" Path="/ofbiz/work/ofbiz/ordermgr/webapp">
-        <WebAppComponent Name="ordermgr" Targets="myserver" URI="."/>
-    </Application>
 </Domain>
