@@ -20,8 +20,8 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.2 2003/08/17 18:05:09 ajzeneski Exp $
+ *  This is the Open for Business Party Build Script.
+ *  $Id: build.xml,v 1.3 2003/08/19 01:48:15 jonesde Exp $
 -->
 
 <project name="OFBiz - Party Component" default="jar" basedir=".">
@@ -108,7 +108,7 @@
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs">
-        <javadoc packagenames="org.ofbiz.service.*" 
+        <javadoc packagenames="org.ofbiz.party.*" 
                  classpathref="local.class.path"
                  destdir="${build.dir}/javadocs" 
                  Windowtitle="Open for Business - ${desc}">
