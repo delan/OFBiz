@@ -1,5 +1,5 @@
 /*
- * $Id: BOMServices.java,v 1.2 2004/02/17 11:27:39 jacopo Exp $
+ * $Id: BOMServices.java,v 1.3 2004/04/17 07:44:14 jacopo Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,6 +46,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
+
 /** Bills of Materials' services implementation.
  * These services are useful when dealing with product's
  * bills of materials.
@@ -54,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
 public class BOMServices {
 
     public static final String module = BOMServices.class.getName();
-
+    
     /** Returns the product's low level code (llc) i.e. the maximum depth
      * in which the productId can be found in any of the
      * bills of materials of bomType type.
@@ -127,7 +128,7 @@ public class BOMServices {
         
         GenericValue duplicatedProductAssoc = null;
         try {
-            duplicatedProductAssoc = BOMHelper.searchDuplicatedAncestor(productId, productIdKey, bomType, fromDate, delegator);
+            duplicatedProductAssoc = BOMHelper.searchDuplicatedAncestor(productId, productIdKey, bomType, fromDate, delegator, dispatcher);
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error running duplicated ancestor search: " + gee.getMessage());
         }
@@ -174,7 +175,7 @@ public class BOMServices {
         
         ItemConfigurationTree tree = null;
         try {
-            tree = new ItemConfigurationTree(productId, bomType, fromDate, explosion.booleanValue(), delegator);
+            tree = new ItemConfigurationTree(productId, bomType, fromDate, explosion.booleanValue(), delegator, dispatcher);
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
         }

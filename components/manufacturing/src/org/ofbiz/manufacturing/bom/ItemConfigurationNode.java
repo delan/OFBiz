@@ -18,6 +18,10 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
 
 /** An ItemCoinfigurationNode represents a component in a bill of materials.
@@ -56,7 +60,7 @@ public class ItemConfigurationNode {
         this(delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", partId)));
     }
 
-    protected void loadChildren(String partBomTypeId, Date inDate, List productFeatures) throws GenericEntityException {
+    protected void loadChildren(String partBomTypeId, Date inDate, List productFeatures, LocalDispatcher dispatcher) throws GenericEntityException {
         if (part == null) {
             throw new GenericEntityException("Part is null");
         }
@@ -87,11 +91,11 @@ public class ItemConfigurationNode {
         while(childrenIterator.hasNext()) {
             oneChild = (GenericValue)childrenIterator.next();
             // Configurator
-            oneChildNode = configurator(oneChild, productFeatures, getRootNode().getProductForRules(), inDate, delegator);
+            oneChildNode = configurator(oneChild, productFeatures, getRootNode().getProductForRules(), inDate, delegator, dispatcher);
             // If the node is null this means that the node has been discarded by the rules.
             if (oneChildNode != null) {
                 oneChildNode.setParentNode(this);
-                oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures);
+                oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, dispatcher);
             }
             childrenNodes.add(oneChildNode);
         }
@@ -148,7 +152,7 @@ public class ItemConfigurationNode {
         return oneChildNode;
     }
     
-    private ItemConfigurationNode configurator(GenericValue node, List productFeatures, String productIdForRules, Date inDate, GenericDelegator delegator) throws GenericEntityException {
+    private ItemConfigurationNode configurator(GenericValue node, List productFeatures, String productIdForRules, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
         ItemConfigurationNode oneChildNode = new ItemConfigurationNode((String)node.get("productIdTo"), delegator);
         try {
             oneChildNode.setQuantityMultiplier(node.getDouble("quantity").floatValue());
@@ -203,6 +207,40 @@ public class ItemConfigurationNode {
                             // FIXME
                             //...
                         }
+                        // -----------------------------------------------------------
+                        // We try to apply directly the selected features
+                        if (newNode == oneChildNode) {
+                            Map selectedFeatures = new HashMap();
+                            if (productFeatures != null) {
+                                GenericValue feature = null;
+                                for (int j = 0; j < productFeatures.size(); j++) {
+                                    feature = (GenericValue)productFeatures.get(j);
+                                    selectedFeatures.put((String)feature.get("productFeatureTypeId"), (String)feature.get("productFeatureId")); // FIXME
+                                }
+                            }
+
+                            Map context = new HashMap();
+                            context.put("productId", node.get("productIdTo"));
+                            context.put("selectedFeatures", selectedFeatures);
+                            Map storeResult = null;
+                            GenericValue variantProduct = null;
+                            try {
+                                storeResult = dispatcher.runSync("getProductVariant", context);
+                                List variantProducts = (List) storeResult.get("products");
+                                if (variantProducts.size() > 0) {
+                                    variantProduct = (GenericValue)variantProducts.get(0);
+                                }
+                            } catch (GenericServiceException e) {
+                                String service = e.getMessage();
+                                System.out.println("ItemConfigurationNode.configurator(...): " + service);
+                            }
+                            if (variantProduct != null) {
+                                newNode = new ItemConfigurationNode(variantProduct);
+                                newNode.setSubstitutedNode(oneChildNode);
+                            }
+
+                        }
+                        // -----------------------------------------------------------
                     }
                 }
             }
@@ -312,21 +350,13 @@ public class ItemConfigurationNode {
         depth++;
         for (int i = 0; i < children.size(); i++) {
             oneChild = (GenericValue)children.get(i);
-//            float bomQuantity = 0;
-//            try {
-//                bomQuantity = oneChild.getDouble("quantity").floatValue();
-//            } catch(Exception exc) {
-//                bomQuantity = 1;
-//            }
             oneChildNode = (ItemConfigurationNode)childrenNodes.get(i);
             if (oneChildNode != null) {
-//                oneChildNode.print(arr, (quantity * bomQuantity), depth);
                 oneChildNode.print(arr, this.quantity, depth);
             }
         }
     }
 
-    // Method used for TEST and DEBUG purposes
     public void sumQuantity(HashMap nodes) {
         // First of all, we try to fetch a node with the same partId
         ItemConfigurationNode sameNode = (ItemConfigurationNode)nodes.get(part.getString("productId"));
@@ -347,6 +377,15 @@ public class ItemConfigurationNode {
         }
     }
 
+    public void createManufacturingOrder(String orderId, String orderItemSeqId, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException {
+        // FIXME: Not still implemented
+    }
+
+    // FIXME: at now we create manufacturing orders for all the non leaf components.
+    protected boolean needsManufacturing() {
+        return children.size() > 0; 
+    }
+    
     protected boolean isVirtual() {
         return (part.get("isVirtual") != null? part.get("isVirtual").equals("Y"): false);
     }
