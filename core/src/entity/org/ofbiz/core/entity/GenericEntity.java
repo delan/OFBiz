@@ -297,10 +297,22 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
             case 9:
                 set(name, Boolean.valueOf(value));
                 break;
+
+            case 10:
+                set(name, value);
+                break;
             }
         } catch (GenericNotImplementedException ex) {
             throw new IllegalArgumentException(ex.getMessage());
         }
+    }
+
+    /** Sets a field with an array of bytes, wrapping them automatically for easy use.
+     * @param name The field name to set
+     * @param bytes The byte array to be wrapped and set
+     */
+    public void setBytes(String name, byte[] bytes) {
+        this.set(name, new ByteWrapper(bytes));
     }
 
     public Boolean getBoolean(String name) {
@@ -363,6 +375,12 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
     public Double getDouble(String name) {
         return (Double) get(name);
+    }
+
+    public byte[] getBytes(String name) {
+        ByteWrapper wrapper = (ByteWrapper) get(name);
+        if (wrapper == null) return null;
+        return wrapper.getBytes();
     }
 
     public GenericPK getPrimaryKey() {
