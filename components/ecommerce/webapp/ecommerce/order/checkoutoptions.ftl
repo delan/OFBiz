@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.14 $
+ *@version    $Revision: 1.15 $
  *@since      2.1
 -->
 
@@ -236,7 +236,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td colspan="2">
-                          <textarea class='textAreaBox' cols="30" rows="3" name="shipping_instructions">${cart.getShippingInstructions()?if_exists}</textarea>
+                          <textarea class='textAreaBox' cols="30" rows="3" wrap="hard" name="shipping_instructions">${cart.getShippingInstructions()?if_exists}</textarea>
                         </td>
                       </tr>
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -267,7 +267,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td colspan="2">
-                          <textarea class='textAreaBox' cols="30" rows="3" name="gift_message">${cart.getGiftMessage()?if_exists}</textarea>
+                          <textarea class='textAreaBox' cols="30" rows="3" wrap="hard" name="gift_message">${cart.getGiftMessage()?if_exists}</textarea>
                         </td>
                       </tr>
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
