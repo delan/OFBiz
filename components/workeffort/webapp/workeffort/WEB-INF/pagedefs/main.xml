@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>    
-    <property name="title">Main Page</property>
-    <property name="headerItem">main</property>
-    <content-action name="main.bsh"/>
-</page>
-

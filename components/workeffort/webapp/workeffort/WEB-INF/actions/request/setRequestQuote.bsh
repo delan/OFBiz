@@ -1,6 +1,4 @@
-<!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Copyright (c) 2003 The Open For Business Project - www.ofbiz.org -->
-<#--
+/*
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -21,22 +19,18 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Johan Isacsson
- *@version    $Rev:$
- *@since      2.1
--->
+ *@author     Jacopo Cappellato (tiz@sastau.it)
+ *@version    $Rev$
+ */
 
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>${page.title}</title>
-    <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
-    <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
-    <link rel='stylesheet' href='<@ofbizContentUrl>/images/calendarstyles.css</@ofbizContentUrl>' type='text/css'>    
-</head>
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.entity.util.EntityUtil;
 
-<body>
-${common.get("/includes/messages.ftl")}
-${pages.get(page.path)}
-</body>
-</html>
+custRequestId = request.getParameter("custRequestId");	
+if (custRequestId != null) {
+    requestQuotes = delegator.findByAnd("QuoteItem", UtilMisc.toMap("custRequestId", custRequestId));
+    requestQuote = EntityUtil.getFirst(requestQuotes);
+    if (requestQuote != null) {
+        context.put("quoteId", requestQuote.getString("quoteId"));
+    }
+}	
