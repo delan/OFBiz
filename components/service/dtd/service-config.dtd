@@ -39,6 +39,7 @@
 <!ELEMENT thread-pool ( run-from-pool* )>
 <!ATTLIST thread-pool
     send-to-pool CDATA #REQUIRED
+    purge-old-jobs CDATA "30"
     ttl CDATA #REQUIRED
     wait-millis CDATA #REQUIRED
     jobs CDATA #REQUIRED

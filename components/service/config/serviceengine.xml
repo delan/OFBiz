@@ -7,6 +7,7 @@
 
     <!-- Thread pool configuration (max/min threads, uses to live and time to live) -->
     <thread-pool send-to-pool="pool"
+                 purge-old-jobs="30"
                  ttl="18000000"
                  wait-millis="750"
                  jobs="3"
@@ -15,6 +16,7 @@
                  poll-enabled="true"
                  poll-db-millis="20000">
         <run-from-pool name="pool"/>
+        <purge-old-jobs service="purgeOldJobs" days-to-keep="30"/>
     </thread-pool>
 
     <!-- Service Engine Configuration -->
