@@ -97,7 +97,7 @@ while (true) {
     featureCombinationInfo.put("existingVariantProductIds", existingVariantProductIds);
     
     for (int featureTypeIndex = 0; featureTypeIndex < featureTypeSize; featureTypeIndex++) {
-        featureValues = featureTypeValues.get(featureTypeIndex);%>
+        featureValues = featureTypeValues.get(featureTypeIndex);
         productFeatureAndAppl = featureValues.get(indices[featureTypeIndex]);
         // add to list of features for this combination: productFeatureAndAppl
         curProductFeatureAndAppls.add(productFeatureAndAppl);
@@ -154,7 +154,7 @@ while (true) {
 
             if (hasAllFeatures) {
             	// add to list of existing variants: productId=productAssoc.productIdTo
-            	existingVariantProductIds.add(productAssoc.get("productIdTo"));
+            	existingVariantProductIds.add(productAssoc);
             }
         }
     }

@@ -953,7 +953,7 @@
     <view-map name="EditProductGlAccounts" type="jpublish" page="/product/EditProductGlAccounts.ftl"/>
     <view-map name="UploadImage" type="region"/>
 
-    <view-map name="QuickAddVariants" type="region"/>
+    <view-map name="QuickAddVariants" type="jpublish" page="/product/QuickAddVariants.ftl"/>
 
     <view-map name="EditFeatureCategories" type="jpublish" page="/feature/EditFeatureCategories.ftl"/>
     <view-map name="EditFeatureCategoryFeatures" type="jpublish" page="/feature/EditFeatureCategoryFeatures.ftl"/>

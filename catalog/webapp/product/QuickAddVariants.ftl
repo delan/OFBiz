@@ -53,7 +53,7 @@
     </#if>
     
     <br>
-    <#if productFeatureAndAppls.size() > 0>
+    <#if (productFeatureAndAppls.size() > 0)>
         <table border="1" cellpadding="2" cellspacing="0">
 	        <tr>
 	            <#list featureTypes as featureType>
@@ -79,11 +79,11 @@
 			            </#list>
 			            <td>
 			                <input type=text size="20" maxlength="20" name="variantProductId">
-			                <INPUT type=submit value="Create!">
+			                <INPUT type='submit' class='smallSubmit' value="Create!">
 			            </td>
 			            <td>
 			                <div class="tabletext">&nbsp;
-			                <#list existingVariantProductIds as existingVariantProductId>
+			                <#list existingVariantProductIds as productAssoc>
 			                	[<a href="<@ofbizUrl>/EditProduct?productId=${productAssoc.productIdTo}</@ofbizUrl>" class="buttontext">${productAssoc.productIdTo}</a>] &nbsp;
 			                </#list>
 			                </div>
