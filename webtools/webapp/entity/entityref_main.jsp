@@ -151,10 +151,11 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
         warningString += "<li><div style=\"color: red;\">[FieldNotUnique]</div> Field <b>" + field.getName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not unique for that entity.</li>";
       else
         ufields.add(field.getName());
-      if(field.getColName().length() > 30)
+      if(field.getColName().length() > 30 && !(entity instanceof ModelViewEntity)) {
         warningString += "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name <b>" + field.getColName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is longer than 30 characters.</li>";
+      }
       if(field.getColName().length() == 0)
-        warningString += "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name for field name <b>\"" + field.getName() + "\"</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is empty (zero length).</li>";
+        warningString += "<li><div style=\"color: red;\">[FieldNameEQ0]</div> Column name for field name <b>\"" + field.getName() + "\"</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is empty (zero length).</li>";
       if(reservedWords.contains(field.getColName().toUpperCase()))
         warningString += "<li><div style=\"color: red;\">[FieldNameRW]</div> Column name <b>" + field.getColName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is a reserved word.</li>";
     }
