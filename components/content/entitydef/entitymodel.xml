@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.33 $
+ * @version    $Revision: 1.34 $
  */
 -->
 
@@ -268,16 +268,16 @@
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
       </relation>
       <relation type="many" rel-entity-name="ContentPurpose">
-          <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+          <key-map field-name="caContentIdTo" rel-field-name="contentId"/>
       </relation>
       <relation type="many" title="From" rel-entity-name="ContentAssoc">
-        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+        <key-map field-name="caContentIdTo" rel-field-name="contentId"/>
       </relation>
       <relation type="many" title="To" rel-entity-name="ContentAssoc">
-        <key-map field-name="contentIdTo" rel-field-name="contentIdTo"/>
+        <key-map field-name="caContentIdTo" rel-field-name="contentIdTo"/>
       </relation>
       <relation type="many" rel-entity-name="ContentRole">
-        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+        <key-map field-name="caContentIdTo" rel-field-name="contentId"/>
       </relation>
     </view-entity>
     <entity entity-name="ContentAssocPredicate"
