@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -30,6 +30,7 @@ import java.sql.*;
 import java.io.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.string.*;
 import org.ofbiz.content.widget.html.*;
 
 security = request.getAttribute("security");
@@ -46,14 +47,25 @@ context.put("nowTimestamp", nowTimestamp);
 String nowTimestampString = nowTimestamp.toString();
 context.put("nowTimestampString", nowTimestampString);
 
-URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");
-if (catalogPropertiesURL != null) context.put("catalogPropertiesURL", catalogPropertiesURL.toString());
-
 String productId = request.getParameter("productId");
 context.put("productId", productId);
 
 GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 context.put("product", product);
+
+// make the image file formats
+String imageFilenameFormat = UtilProperties.getPropertyValue("catalog", "image.filename.format");
+String imageServerPath = UtilProperties.getPropertyValue("catalog", "image.server.path");
+String imageUrlPrefix = UtilProperties.getPropertyValue("catalog", "image.url.prefix");
+context.put("imageFilenameFormat", imageFilenameFormat);
+context.put("imageServerPath", imageServerPath);
+context.put("imageUrlPrefix", imageUrlPrefix);
+
+FlexibleStringExpander filenameExpander = new FlexibleStringExpander(imageFilenameFormat);
+context.put("imageNameSmall", imageUrlPrefix + "/" + filenameExpander.expandString(UtilMisc.toMap("size", "small", "productId", productId)));
+context.put("imageNameMedium", imageUrlPrefix + "/" + filenameExpander.expandString(UtilMisc.toMap("size", "medium", "productId", productId)));
+context.put("imageNameLarge", imageUrlPrefix + "/" + filenameExpander.expandString(UtilMisc.toMap("size", "large", "productId", productId)));
+context.put("imageNameDetail", imageUrlPrefix + "/" + filenameExpander.expandString(UtilMisc.toMap("size", "detail", "productId", productId)));
 
 // Start ProductContent stuff
 productContent = null;
@@ -102,7 +114,13 @@ String fileType = request.getParameter("upload_file_type");
 if (fileType != null) {
     context.put("fileType", fileType);
 
-    String fileNameToUse = "product." + productId + "." + fileType;
+    String fileLocation = filenameExpander.expandString(UtilMisc.toMap("size", fileType, "productId", productId));
+    String filePathPrefix = "";
+    String filenameToUse = fileLocation;
+    if (fileLocation.lastIndexOf("/") != -1) {
+        filePathPrefix = fileLocation.substring(0, fileLocation.lastIndexOf("/") + 1); // adding 1 to include the trailing slash
+        filenameToUse = fileLocation.substring(fileLocation.lastIndexOf("/") + 1);
+    }
     
     int i1;
     if (contentType != null && (i1 = contentType.indexOf("boundary=")) != -1) {
@@ -110,15 +128,10 @@ if (fileType != null) {
         contentType = "--" + contentType;
     }
         
-    String imageServerPath = UtilProperties.getPropertyValue(catalogPropertiesURL, "image.server.path");
-    context.put("imageServerPath", imageServerPath);
-    String imageUrlPrefix = UtilProperties.getPropertyValue(catalogPropertiesURL, "image.url.prefix");
-    context.put("imageUrlPrefix", imageUrlPrefix);
-
-    String defaultFileName = productId;
+    String defaultFileName = filenameToUse + "_temp";
     HttpRequestFileUpload uploadObject = new HttpRequestFileUpload();
     uploadObject.setOverrideFilename(defaultFileName);
-    uploadObject.setSavePath(imageServerPath + System.getProperty("file.separator"));
+    uploadObject.setSavePath(imageServerPath + "/" + filePathPrefix);
     uploadObject.doUpload(request);
     
     String clientFileName = uploadObject.getFilename();
@@ -126,20 +139,20 @@ if (fileType != null) {
     
     if (clientFileName != null && clientFileName.length() > 0) {
         if (clientFileName.lastIndexOf(".") > 0 && clientFileName.lastIndexOf(".") < clientFileName.length()) {
-            fileNameToUse += clientFileName.substring(clientFileName.lastIndexOf("."));
+            filenameToUse += clientFileName.substring(clientFileName.lastIndexOf("."));
         } else {
-            fileNameToUse += ".jpg";
+            filenameToUse += ".jpg";
         }
     
         context.put("clientFileName", clientFileName);        
-        context.put("fileNameToUse", fileNameToUse);
+        context.put("filenameToUse", filenameToUse);
         
         String characterEncoding = request.getCharacterEncoding();
-        String imageUrl = imageUrlPrefix + "/" + java.net.URLEncoder.encode(fileNameToUse, characterEncoding);
+        String imageUrl = imageUrlPrefix + "/" + filePathPrefix + java.net.URLEncoder.encode(filenameToUse, characterEncoding);
         
         try {
-            File file = new File(imageServerPath, defaultFileName);
-            File file1 = new File(imageServerPath, fileNameToUse);
+            File file = new File(imageServerPath + "/" + filePathPrefix, defaultFileName);
+            File file1 = new File(imageServerPath + "/" + filePathPrefix, filenameToUse);
             try {
                 file1.delete();
             } catch(Exception e) { 
