@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -32,14 +32,15 @@ userLogin = session.getAttribute("userLogin");
 partyId = request.getParameter("party_id");
 if (partyId == null) partyId = request.getParameter("partyId");
 if (partyId == null) partyId = (String) request.getAttribute("partyId");
+if (UtilValidate.isEmpty(partyId)) partyId = userLogin.getString("partyId");
 context.put("partyId", partyId);
 
 partyIdTo = request.getParameter("partyIdTo");
-if (partyIdTo == null) partyIdTo = userLogin.getString("partyId");
+if (UtilValidate.isEmpty(partyIdTo)) partyIdTo = userLogin.getString("partyId");
 context.put("partyIdTo", partyIdTo);
 
 partyIdFrom = request.getParameter("partyIdFrom");
-if (partyIdFrom == null) partyIdFrom = userLogin.getString("partyId");
+if (UtilValidate.isEmpty(partyIdFrom)) partyIdFrom = userLogin.getString("partyId");
 context.put("partyIdFrom", partyIdFrom);
 
 party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));

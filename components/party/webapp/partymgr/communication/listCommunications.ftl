@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 
@@ -146,7 +146,7 @@
           <td><div class="tabletext">${uiLabelMap.CommonNA}</div></td>
         </#if>
         <td><div class="tabletext">${(event.entryDate?string)?if_exists}</div></td>
-        <td align="right"><a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${event.partyIdFrom}&communicationEventId=${event.communicationEventId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a>
+        <td align="right"><a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${event.partyIdFrom?if_exists}&communicationEventId=${event.communicationEventId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a>
       </tr>
     </#list>
   <#else>
@@ -158,3 +158,4 @@
 <#else>
   <h3>${uiLabelMap.PartyMgrViewPermissionError}</h3>
 </#if>
+
