@@ -76,6 +76,7 @@ public class PayflowPro {
         }
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         double amountToBill = orh.getTotalPrice();
+        Debug.logVerbose("Amount to charge is: " + amountToBill, module);
 
         Iterator payments = paymentPrefs.iterator();
         while (payments.hasNext()) {
@@ -120,9 +121,9 @@ public class PayflowPro {
             amountToBill -= thisAmount;
             NumberFormat nf = NumberFormat.getCurrencyInstance();
             String totalStr = nf.format(thisAmount);
+            Debug.logVerbose("Charging amount: " + totalStr, module);
             if (totalStr != null) {
-                Double total = Double.valueOf(totalStr.substring(1));
-                data.put("AMT", total);
+                data.put("AMT", totalStr.substring(1));
             }
 
             // get the payment information
