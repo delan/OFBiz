@@ -108,6 +108,29 @@ of OFBiz much easier than it was under Tomcat because there is no longer a need 
     	<li class='contenttext'>added billing account administration
     	<li class='contenttext'>added invoice administration
     </ul>
+    <li class='contenttext'>Core Framework Related
+    <ul>
+    	<li class='contenttext'>MiniLang simple-method
+        <ul>
+            <li class='contenttext'>added ${} (dollar-sign curly-brace) syntax to nearly all attributes in 
+            simple-method operations to insert data from environment fields
+            <li class='contenttext'>added support for "." (dot, for map entries) and "[]" (square-brace, for list elements) 
+            syntax for ${} strings and environment variable names such as field-names, map-names, list-names, etc.
+            <li class='contenttext'>added new <b>if</b> simple-method operation that contains a condition element, 
+            a then element, zero to many else-if elements and an optional else element; the condition block supports
+            combinations of conditions using and, or, xor, and not elements and supports the previously available
+            if-* comparator operations such as if-empty, if-compare, if-compare-field, if-has-permission, etc;
+            for examples of this see the ProductServices.xml file in commonapp/src/org/ofbiz/commonapp/product/product
+        </ul>
+    	<li class='contenttext'>WebApp (ControlServlet, etc)
+        <ul>
+            <li class='contenttext'>added support for FreeMarker and JPublish as view types
+            <li class='contenttext'>added special FreeMarker wrapper for JPublish to setup OFBiz context
+            <li class='contenttext'>added some FreeMarker transforms for ofbizUrl and ofbizContentUrl
+            <li class='contenttext'>added cache plugin for FreeMarker and JPublish to use the OFBiz UtilCache
+            <li class='contenttext'>added special BeanShell BSF engine that implements a compiled script cache
+        </ul>
+    </ul>
 </ul>
 <br>
 
