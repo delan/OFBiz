@@ -23,7 +23,10 @@
  */
 package org.ofbiz.core.util;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * OrderedMap - HashMap backed by a linked list.
