@@ -641,6 +641,9 @@
   <!-- ========================================================= -->
 	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivity" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivityLoop" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivitySubFlow" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivityTool" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowApplication" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowApplicationList" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowApplicationsView" />	
@@ -659,7 +662,9 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowParticipantsView" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowProcess" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowSpecification" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowTransition" /> 
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowTransRestriction" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowTransition" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowTransitionRef" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowTypeDeclaration" />
 
   <!-- ========================================================= -->
