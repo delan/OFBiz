@@ -888,7 +888,7 @@ public class UpsServices {
                 }
                 return ServiceUtil.returnSuccess(successString.toString());
             } else {
-                errorList.add(0, "The UPS ShipmentConfirm failed");
+                errorList.add(0, "The UPS ShipmentConfirm failed; the StatusType is: [" + statusTypeCode + ":" + statusTypeDescription + "], the StatusCode is: [" + statusCodeCode + ":" + statusCodeDescription + "]");
                 return ServiceUtil.returnError(errorList);
             }
         } catch (GenericEntityException e) {
@@ -903,7 +903,7 @@ public class UpsServices {
         String shipmentId = (String) context.get("shipmentId");
         String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
 
-        String trackShipmentResponseString = null;
+        String trackResponseString = null;
 
         try {
             GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
@@ -922,26 +922,26 @@ public class UpsServices {
                 return ServiceUtil.returnError("ERROR: The trackingIdNumber was not set for this Route Segment, meaning that a UPS shipment confirm has not been done.");
             }
 
-            Document trackShipmentRequestDoc = UtilXml.makeEmptyXmlDocument("TrackShipmentRequest");
-            Element trackShipmentRequestElement = trackShipmentRequestDoc.getDocumentElement();
-            trackShipmentRequestElement.setAttribute("xml:lang", "en-US");
+            Document trackRequestDoc = UtilXml.makeEmptyXmlDocument("TrackRequest");
+            Element trackRequestElement = trackRequestDoc.getDocumentElement();
+            trackRequestElement.setAttribute("xml:lang", "en-US");
 
             // Top Level Element: Request
-            Element requestElement = UtilXml.addChildElement(trackShipmentRequestElement, "Request", trackShipmentRequestDoc);
+            Element requestElement = UtilXml.addChildElement(trackRequestElement, "Request", trackRequestDoc);
 
-            Element transactionReferenceElement = UtilXml.addChildElement(requestElement, "TransactionReference", trackShipmentRequestDoc);
-            UtilXml.addChildElementValue(transactionReferenceElement, "CustomerContext", "Track", trackShipmentRequestDoc);
-            UtilXml.addChildElementValue(transactionReferenceElement, "XpciVersion", "1.0001", trackShipmentRequestDoc);
+            Element transactionReferenceElement = UtilXml.addChildElement(requestElement, "TransactionReference", trackRequestDoc);
+            UtilXml.addChildElementValue(transactionReferenceElement, "CustomerContext", "Track", trackRequestDoc);
+            UtilXml.addChildElementValue(transactionReferenceElement, "XpciVersion", "1.0001", trackRequestDoc);
 
-            UtilXml.addChildElementValue(requestElement, "RequestAction", "Track", trackShipmentRequestDoc);
+            UtilXml.addChildElementValue(requestElement, "RequestAction", "Track", trackRequestDoc);
 
-            UtilXml.addChildElementValue(trackShipmentRequestElement, "ShipmentIdentificationNumber", shipmentRouteSegment.getString("trackingIdNumber"), trackShipmentRequestDoc);
+            UtilXml.addChildElementValue(trackRequestElement, "ShipmentIdentificationNumber", shipmentRouteSegment.getString("trackingIdNumber"), trackRequestDoc);
 
-            String trackShipmentRequestString = null;
+            String trackRequestString = null;
             try {
-                trackShipmentRequestString = UtilXml.writeXmlDocument(trackShipmentRequestDoc);
+                trackRequestString = UtilXml.writeXmlDocument(trackRequestDoc);
             } catch (IOException e) {
-                String ioeErrMsg = "Error writing the TrackShipmentRequest XML Document to a String: " + e.toString();
+                String ioeErrMsg = "Error writing the TrackRequest XML Document to a String: " + e.toString();
                 Debug.logError(e, ioeErrMsg);
                 return ServiceUtil.returnError(ioeErrMsg);
             }
@@ -963,37 +963,37 @@ public class UpsServices {
             StringBuffer xmlString = new StringBuffer();
             // TODO: note that we may have to append <?xml version="1.0"?> before each string
             xmlString.append(accessRequestString);
-            xmlString.append(trackShipmentRequestString);
+            xmlString.append(trackRequestString);
             try {
-                trackShipmentResponseString = sendUpsRequest("Track", xmlString.toString());
+                trackResponseString = sendUpsRequest("Track", xmlString.toString());
             } catch (UpsConnectException e) {
                 String uceErrMsg = "Error sending UPS request for UPS Service Track: " + e.toString();
                 Debug.logError(e, uceErrMsg);
                 return ServiceUtil.returnError(uceErrMsg);
             }
 
-            Document trackShipmentResponseDocument = null;
+            Document trackResponseDocument = null;
             try {
-                trackShipmentResponseDocument = UtilXml.readXmlDocument(trackShipmentResponseString, false);
+                trackResponseDocument = UtilXml.readXmlDocument(trackResponseString, false);
             } catch (SAXException e2) {
-                String excErrMsg = "Error parsing the TrackShipmentResponse: " + e2.toString();
+                String excErrMsg = "Error parsing the TrackResponse: " + e2.toString();
                 Debug.logError(e2, excErrMsg);
                 return ServiceUtil.returnError(excErrMsg);
             } catch (ParserConfigurationException e2) {
-                String excErrMsg = "Error parsing the TrackShipmentResponse: " + e2.toString();
+                String excErrMsg = "Error parsing the TrackResponse: " + e2.toString();
                 Debug.logError(e2, excErrMsg);
                 return ServiceUtil.returnError(excErrMsg);
             } catch (IOException e2) {
-                String excErrMsg = "Error parsing the TrackShipmentResponse: " + e2.toString();
+                String excErrMsg = "Error parsing the TrackResponse: " + e2.toString();
                 Debug.logError(e2, excErrMsg);
                 return ServiceUtil.returnError(excErrMsg);
             }
 
-            // process TrackShipmentResponse, update data as needed
-            Element trackShipmentResponseElement = trackShipmentResponseDocument.getDocumentElement();
+            // process TrackResponse, update data as needed
+            Element trackResponseElement = trackResponseDocument.getDocumentElement();
             
             // handle Response element info
-            Element responseElement = UtilXml.firstChildElement(trackShipmentResponseElement, "Response");
+            Element responseElement = UtilXml.firstChildElement(trackResponseElement, "Response");
             Element responseTransactionReferenceElement = UtilXml.firstChildElement(responseElement, "TransactionReference");
             String responseTransactionReferenceCustomerContext = UtilXml.childElementValue(responseTransactionReferenceElement, "CustomerContext");
             String responseTransactionReferenceXpciVersion = UtilXml.childElementValue(responseTransactionReferenceElement, "XpciVersion");
@@ -1003,58 +1003,60 @@ public class UpsServices {
             List errorList = new LinkedList();
             UpsServices.handleErrors(responseElement, errorList);
 
-            // TODO: handle other response elements
-/*
-<TrackResponse>
-    ...
-    <Shipment>
-        <Shipper>
-            <ShipperNumber>12345E</ShipperNumber>
-        </Shipper>
-        <Service>
-            <Code>15</Code>
-            <Description>NDA EAM/EXP EAM</Description>
-        </Service>
-        <ShipmentIdentificationNumber>1Z12345E1512345676</ShipmentIdentificationNumber>
-        <Package>
-            <TrackingNumber>1Z12345E1512345676</TrackingNumber>
-            <Activity>
-                <ActivityLocation>
-                    <Address>
-                        <City>CLAKVILLE</City>
-                        <StateProvinceCode>AK</StateProvinceCode>
-                        <PostalCode>99901</PostalCode>
-                        <CountryCode>US</CountryCode>
-                    </Address>
-                    <Code>MG</Code>
-                    <Description>MC MAN</Description>
-                </ActivityLocation>
-                <Status>
-                    <StatusType>
-                        <Code>D</Code>
-                        <Description>DELIVERED</Description>
-                    </StatusType>
-                    <StatusCode>
-                        <Code>FS</Code>
-                    </StatusCode>
-                </Status>
-                <Date>20020930</Date>
-                <Time>130900</Time>
-            </Activity>
-            <PackageWeight>
-                <UnitOfMeasurement>
-                    <Code>LBS</Code>
-                </UnitOfMeasurement>
-                <Weight>0.00</Weight>
-            </PackageWeight>
-        </Package>
-    </Shipment>
-</TrackResponse>
- * 
- */
-
             if ("1".equals(responseStatusCode)) {
-                Element shipmentResultsElement = UtilXml.firstChildElement(trackShipmentResponseElement, "ShipmentResults");
+                // TODO: handle other response elements
+                Element shipmentElement = UtilXml.firstChildElement(trackResponseElement, "Shipment");
+
+                Element shipperElement = UtilXml.firstChildElement(shipmentElement, "Shipper");
+                String shipperNumber = UtilXml.childElementValue(shipperElement, "ShipperNumber");
+
+                Element serviceElement = UtilXml.firstChildElement(shipmentElement, "Service");
+                String serviceCode = UtilXml.childElementValue(serviceElement, "Code");
+                String serviceDescription = UtilXml.childElementValue(serviceElement, "Description");
+
+                String shipmentIdentificationNumber = UtilXml.childElementValue(shipmentElement, "ShipmentIdentificationNumber");
+                
+                List packageElements = UtilXml.childElementList(shipmentElement, "Package");
+                Iterator packageElementIter = packageElements.iterator();
+                while (packageElementIter.hasNext()) {
+                    Element packageElement = (Element) packageElementIter.next();
+                }
+    /*
+            <Package>
+                <TrackingNumber>1Z12345E1512345676</TrackingNumber>
+                <Activity>
+                    <ActivityLocation>
+                        <Address>
+                            <City>CLAKVILLE</City>
+                            <StateProvinceCode>AK</StateProvinceCode>
+                            <PostalCode>99901</PostalCode>
+                            <CountryCode>US</CountryCode>
+                        </Address>
+                        <Code>MG</Code>
+                        <Description>MC MAN</Description>
+                    </ActivityLocation>
+                    <Status>
+                        <StatusType>
+                            <Code>D</Code>
+                            <Description>DELIVERED</Description>
+                        </StatusType>
+                        <StatusCode>
+                            <Code>FS</Code>
+                        </StatusCode>
+                    </Status>
+                    <Date>20020930</Date>
+                    <Time>130900</Time>
+                </Activity>
+                <PackageWeight>
+                    <UnitOfMeasurement>
+                        <Code>LBS</Code>
+                    </UnitOfMeasurement>
+                    <Weight>0.00</Weight>
+                </PackageWeight>
+            </Package>
+     * 
+     */
+
 
                 // -=-=-=- Okay, now done with that, just return any extra info...
                 StringBuffer successString = new StringBuffer("The UPS TrackShipment succeeded");
