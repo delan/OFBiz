@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
 -->
 
@@ -85,7 +85,8 @@
           <field-to-field field-name="orderId" map-name="receipt" to-map-name="newLookupMap"/>
           <field-to-field field-name="orderItemSeqId" map-name="receipt" to-map-name="newLookupMap"/>
           <find-by-primary-key entity-name="OrderItem" map-name="newLookupMap" value-name="orderItem"/>
-          <if-compare-field field-name="quantity" map-name="orderItem" operator="greater-equals" to-field-name="${receipt.orderItemSeqId}" to-map-name="totalsMap" type="Double">
+          <if-compare field-name="statusId" map-name="orderItem" operator="not-equals" value="ITEM_COMPLETED">
+          <if-compare-field field-name="quantity" map-name="orderItem" operator="less-equals" to-field-name="${receipt.orderItemSeqId}" to-map-name="totalsMap" type="Double">
             <!-- update the status for the item -->
             <string-to-field field-name="statusId" map-name="orderItem" string="ITEM_COMPLETED"/>
             <store-value value-name="orderItem"/>
@@ -103,6 +104,7 @@
 
             <create-value value-name="newValue"/>
           </if-compare-field>
+          </if-compare>
         </iterate>
 
         <!-- check to see if all items have been received -->
