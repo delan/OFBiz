@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/11 02:34:29  azeneski
+ * Added new method to get numbers from properties file.
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -26,6 +29,7 @@
 package org.ofbiz.core.util;
 
 import java.util.*;
+import java.net.*;
 
 /**
  * <p><b>Title:</b> Generic Property Accessor - with Cache
@@ -96,24 +100,89 @@ public class UtilProperties {
     else return value;
   }
   
+  public static double getPropertyNumber(String resource, String name) {
+    String str = getPropertyValue(resource,name);
+    double strValue = 0.00000;
+    try { strValue = Double.parseDouble(str); }
+    catch ( NumberFormatException nfe ) {}
+    return strValue;
+  }
+
   /** Returns the value of the specified property name from the specified resource/properties file
    * @param resource The name of the resource - can be a file, class, or URL
    * @param name The name of the property in the properties file
    * @return The value of the property in the properties file
    */
   public static String getPropertyValue(String resource, String name) {
-    if(resource == null || resource.length() <= 0) return "";
+    URL url = UtilURL.fromResource(resource);
+    return getPropertyValue(url, name);
+  }
+
+//========= URL Based Methods ==========
+  
+  /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
+   * @param url URL object specifying the location of the resource
+   * @param name The name of the property in the properties file
+   * @param compareString The String to compare the property value to
+   * @return True if the strings are the same, false otherwise
+   */
+  public static boolean propertyValueEquals(URL url, String name, String compareString) {
+    String value = getPropertyValue(url, name);
+    if(value == null) return false;
+    return value.equals(compareString);
+  }
+  
+  /** Compares Ignoring Case the specified property to the compareString, returns true if they are the same, false otherwise
+   * @param url URL object specifying the location of the resource
+   * @param name The name of the property in the properties file
+   * @param compareString The String to compare the property value to
+   * @return True if the strings are the same, false otherwise
+   */
+  public static boolean propertyValueEqualsIgnoreCase(URL url, String name, String compareString) {
+    String value = getPropertyValue(url, name);
+    if(value == null) return false;
+    return value.equalsIgnoreCase(compareString);
+  }
+  
+  /** Returns the value of the specified property name from the specified resource/properties file.
+   * If the specified property name or properties file is not found, the defaultValue is returned.
+   * @param url URL object specifying the location of the resource
+   * @param name The name of the property in the properties file
+   * @param defaultValue The value to return if the property is not found
+   * @return The value of the property in the properties file, or if not found then the defaultValue
+   */
+  public static String getPropertyValue(URL url, String name, String defaultValue) {
+    String value = getPropertyValue(url, name);
+    if(value == null || value.length() <= 0) return defaultValue;
+    else return value;
+  }
+  
+  public static double getPropertyNumber(URL url, String name) {
+    String str = getPropertyValue(url,name);
+    double strValue = 0.00000;
+    try { strValue = Double.parseDouble(str); }
+    catch ( NumberFormatException nfe ) {}
+    return strValue;
+  }
+
+  /** Returns the value of the specified property name from the specified resource/properties file
+   * @param url URL object specifying the location of the resource
+   * @param name The name of the property in the properties file
+   * @return The value of the property in the properties file
+   */
+  public static String getPropertyValue(URL url, String name) {
+    if(url == null) return "";
     if(name == null || name.length() <= 0) return "";
-    FlexibleProperties properties = (FlexibleProperties)resCache.get(resource);
+    FlexibleProperties properties = (FlexibleProperties)resCache.get(url);
     if(properties == null) {
       try {
-        properties = new FlexibleProperties(resource);
-        resCache.put(resource, properties);
+        properties = FlexibleProperties.makeFlexibleProperties(url);
+        resCache.put(url, properties);
       }
       catch(MissingResourceException e) { Debug.log(e.getMessage()); }
     }
     if(properties == null) {
-      Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource);
+      Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + url);
       return null;
     }
 
@@ -122,13 +191,4 @@ public class UtilProperties {
     catch(Exception e) { Debug.log(e.getMessage()); }
     return value;
   }
-  
-  public static double getPropertyNumber(String resource, String name) {
-      String str = getPropertyValue(resource,name);
-      double strValue = 0.00000;
-      try { strValue = Double.parseDouble(str); }
-      catch ( NumberFormatException nfe ) {}
-      return strValue;
-  }
-          
 }

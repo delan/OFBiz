@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.1  2001/09/27 06:45:15  jonesde
  * Added FlexibleProperties and updated UtilProperties to use it.
  *
@@ -45,67 +48,32 @@ public class FlexibleProperties extends Properties {
   private static final boolean truncateIfMissingDefault = false;
   private static final boolean doPropertyExpansionDefault = true;
 
-  private String resourceName = null;
-  private Class contextClass = null;
+  private URL url = null;
   private boolean doPropertyExpansion = doPropertyExpansionDefault;
   private boolean truncateIfMissing = truncateIfMissingDefault;
   
+//constructors
   public FlexibleProperties() { super(); }
   public FlexibleProperties(Properties properties) { super(properties); }
-  
-  public FlexibleProperties(String[] keysAndValues) {
+  public FlexibleProperties(URL url) { this.url = url; init(); }
+  public FlexibleProperties(URL url, Properties properties) { super(properties); this.url = url; init(); }
+
+//factories
+  public static FlexibleProperties makeFlexibleProperties(Properties properties) { return new FlexibleProperties(properties); }
+  public static FlexibleProperties makeFlexibleProperties(URL url) { return new FlexibleProperties(url); }
+  public static FlexibleProperties makeFlexibleProperties(URL url, Properties properties) { return new FlexibleProperties(url, properties); }
+
+  public static FlexibleProperties makeFlexibleProperties(String[] keysAndValues) {
     // if they gave me an odd number of elements
     if((keysAndValues.length % 2) != 0) {
       throw new IllegalArgumentException("FlexibleProperties(String[] keysAndValues) cannot accept an odd number of elements!");
     }
-    defaults = new FlexibleProperties();
+    Properties newProperties = new Properties();
     for(int i=0; i < keysAndValues.length; i+=2) {
-      defaults.setProperty(keysAndValues[i],  keysAndValues[i+1]);
+      newProperties.setProperty(keysAndValues[i],  keysAndValues[i+1]);
     }
-  }
-  
-  public FlexibleProperties(Class contextClass) {
-    super();
-    this.resourceName=contextClass.getName();
-    int dotIndex = resourceName.lastIndexOf('.');
-    if(dotIndex!=-1) resourceName=resourceName.substring(dotIndex+1)+".properties";
-    this.contextClass=contextClass;
-    init();
-  }
-  
-  public FlexibleProperties(Class contextClass, Properties properties) {
-    super(properties);
-    this.resourceName=contextClass.getName();
-    int dotIndex = resourceName.lastIndexOf('.');
-    if(dotIndex!=-1) resourceName=resourceName.substring(dotIndex+1)+".properties";
-    this.contextClass=contextClass;
-    init();
-  }
-  
-  public FlexibleProperties(Class contextClass, String resourceName) {
-    super();
-    this.resourceName=resourceName;
-    this.contextClass=contextClass;
-    init();
-  }
-  
-  public FlexibleProperties(Class contextClass, String resourceName, Properties properties) {
-    super(properties);
-    this.resourceName=resourceName;
-    this.contextClass=contextClass;
-    init();
-  }
-  
-  public FlexibleProperties(String resourceName) {
-    super();
-    this.resourceName=resourceName;
-    init();
-  }
-  
-  public FlexibleProperties(String resourceName, Properties properties) {
-    super(properties);
-    this.resourceName=resourceName;
-    init();
+    
+    return new FlexibleProperties(newProperties);
   }
   
   private void init() {
@@ -119,100 +87,44 @@ public class FlexibleProperties extends Properties {
   public boolean getTruncateIfMissing() { return truncateIfMissing; }  
   public void setTruncateIfMissing(boolean truncateIfMissing) { this.truncateIfMissing = truncateIfMissing; }
   
-  public String getResourceName() { return resourceName; }  
-  public void setResourceName(String resourceName) {
-    this.resourceName=resourceName;
+  public URL getURL() { return url; }  
+  public void setURL(URL url) {
+    this.url=url;
     init();
   }
   
   public Properties getDefaultProperties() { return this.defaults; }
   public void setDefaultProperties(Properties defaults) { this.defaults = new FlexibleProperties(defaults); }
   
-  public synchronized void load(String resourceName) throws IOException {
-    this.resourceName=resourceName;
-    load();
-  }
-  
-  public synchronized void load(Class contextClass) throws IOException {
-    this.resourceName=contextClass.getName().replace('.',File.separatorChar)+".properties";
-    load();
-  }
-  
   protected synchronized void load() throws IOException {
-    if(resourceName != null) {
-      InputStream in = null;
-      
-      // Try to load from the classpath
-      //first try the contextClass classpath, if not null
-      if(contextClass != null) in = contextClass.getResourceAsStream(resourceName);
-      if(contextClass != null && in == null) {
-        in = this.getClass().getClassLoader().getResourceAsStream(resourceName + ".properties");
-      }
-      
-      //next, try the classloader from THIS class
-      if(in == null) {
-        in = this.getClass().getClassLoader().getResourceAsStream(resourceName);
-      }
-      if(in == null) {
-        in = this.getClass().getClassLoader().getResourceAsStream(resourceName + ".properties");
-      }
-      
-      //last, try the system classloader
-      if(in == null) {
-        in = ClassLoader.getSystemResourceAsStream(resourceName);
-      }
-      if(in == null) {
-        in = ClassLoader.getSystemResourceAsStream(resourceName + ".properties");
-      }
-      
-      // Try using a File object
-      if(in == null) {
-        try { in = new FileInputStream(resourceName); } 
-        catch(FileNotFoundException fileEx) {
-          Debug.log("[FlexibleProperties.load]: Couldn't find the file: " + resourceName);
-          try { in = new FileInputStream(resourceName + ".properties"); } 
-          catch(FileNotFoundException ex) {
-            Debug.log("[FlexibleProperties.load]: Couldn't find the file: " + resourceName + ".properties");
-          }
-        }
-      }
-      
-      // Try using a URL object
-      if(in == null) {
-        try { in = new URL(resourceName).openStream(); }
-        catch(Exception urlex) {
-          try {
-            Debug.log("[FlexibleProperties.load]: Couldn't find the URL: " + resourceName);
-            in = new URL(resourceName+".properties").openStream();
-          }
-          catch(Exception e) {
-            Debug.log("[FlexibleProperties.load]: Couldn't find the URL: " + resourceName + ".properties");
-            Debug.log(e.getMessage());
-          }
-        }
-      }
-      
-      if(in == null) throw new IOException("Could not find resource " + resourceName);
-      
-      super.load(in);
-      in.close();
+    if(url == null) return;
+    InputStream in = null;
+
+    try { in = url.openStream(); }
+    catch(Exception urlex) {
+      Debug.log("[FlexibleProperties.load]: Couldn't find the URL: " + url);
+      Debug.log(urlex);
     }
-    
+
+    if(in == null) throw new IOException("Could not open resource URL " + url);
+
+    super.load(in);
+    in.close();
+
     if(defaults instanceof FlexibleProperties) ((FlexibleProperties)defaults).reload();
     if(getDoPropertyExpansion()) interpolateProperties();
   }
   
   public synchronized void store(String header) throws IOException {
-    URL url = ClassLoader.getSystemResource(resourceName);
     super.store(url.openConnection().getOutputStream(),header);
   }
   
   public synchronized void reload() throws IOException {
-    Debug.log("Reloading the resource: "+resourceName);
+    Debug.log("Reloading the resource: "+url);
     this.load();
   }
   
-/* ==== Property interpolation methods ==== */
+// ==== Property interpolation methods ====
   public void interpolateProperties() {
     if((defaults != null) && (defaults instanceof FlexibleProperties)) {
       ((FlexibleProperties) defaults).interpolateProperties();
@@ -308,7 +220,7 @@ public class FlexibleProperties extends Properties {
     return value;
   }
   
-/* ==== Utility/override methods ==== */
+// ==== Utility/override methods ====
   public Object clone() {
     FlexibleProperties c = (FlexibleProperties)super.clone();
     // avoid recursion for some reason someone used themselves as defaults
