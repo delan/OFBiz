@@ -113,11 +113,8 @@ public class CallService extends MethodOperation {
                 ResultToFieldDef rtfDef = new ResultToFieldDef();
 
                 rtfDef.resultName = resultToFieldElement.getAttribute("result-name");
-                rtfDef.mapName = resultToFieldElement.getAttribute("map-name");
-                rtfDef.fieldName = resultToFieldElement.getAttribute("field-name");
-
-                if (rtfDef.fieldName == null || rtfDef.fieldName.length() == 0)
-                    rtfDef.fieldName = rtfDef.resultName;
+                rtfDef.mapAcsr = new ContextAccessor(resultToFieldElement.getAttribute("map-name"));
+                rtfDef.fieldAcsr = new ContextAccessor(resultToFieldElement.getAttribute("field-name"), rtfDef.resultName);
 
                 resultToField.add(rtfDef);
             }
@@ -217,7 +214,6 @@ public class CallService extends MethodOperation {
         } catch (GenericServiceException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem invoking the " + serviceName + " service: " + e.getMessage() + "]";
-
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                 methodContext.putEnv(simpleMethod.getEventResponseCodeName(), errorCode);
@@ -230,26 +226,22 @@ public class CallService extends MethodOperation {
 
         if (resultsToMap.size() > 0) {
             Iterator iter = resultsToMap.iterator();
-
             while (iter.hasNext()) {
                 String mapName = (String) iter.next();
-
                 methodContext.putEnv(mapName, new HashMap(result));
             }
         }
 
         if (resultToField.size() > 0) {
             Iterator iter = resultToField.iterator();
-
             while (iter.hasNext()) {
                 ResultToFieldDef rtfDef = (ResultToFieldDef) iter.next();
-                Map tempMap = (Map) methodContext.getEnv(rtfDef.mapName);
-
+                Map tempMap = (Map) rtfDef.mapAcsr.get(methodContext);
                 if (tempMap == null) {
                     tempMap = new HashMap();
-                    methodContext.putEnv(rtfDef.mapName, tempMap);
+                    rtfDef.mapAcsr.put(methodContext, tempMap);
                 }
-                tempMap.put(rtfDef.fieldName, result.get(rtfDef.resultName));
+                rtfDef.fieldAcsr.put(tempMap, result.get(rtfDef.resultName), methodContext);
             }
         }
 
@@ -257,11 +249,11 @@ public class CallService extends MethodOperation {
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             if (resultToRequest.size() > 0) {
                 Iterator iter = resultToRequest.entrySet().iterator();
-
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
-
-                    methodContext.getRequest().setAttribute((String) entry.getKey(), result.get(entry.getValue()));
+                    String requestName = methodContext.expandString((String) entry.getKey());
+                    String resultName = methodContext.expandString((String) entry.getValue());
+                    methodContext.getRequest().setAttribute(requestName, resultName);
                 }
             }
         }
@@ -270,11 +262,11 @@ public class CallService extends MethodOperation {
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             if (resultToSession.size() > 0) {
                 Iterator iter = resultToSession.entrySet().iterator();
-
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
-
-                    methodContext.getRequest().getSession().setAttribute((String) entry.getKey(), result.get(entry.getValue()));
+                    String sessionName = methodContext.expandString((String) entry.getKey());
+                    String resultName = methodContext.expandString((String) entry.getValue());
+                    methodContext.getRequest().getSession().setAttribute(sessionName, resultName);
                 }
             }
         }
@@ -283,11 +275,11 @@ public class CallService extends MethodOperation {
         if (methodContext.getMethodType() == MethodContext.SERVICE) {
             if (resultToResult.size() > 0) {
                 Iterator iter = resultToResult.entrySet().iterator();
-
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
-
-                    methodContext.putResult((String) entry.getKey(), result.get(entry.getValue()));
+                    String fromName = methodContext.expandString((String) entry.getKey());
+                    String resultName = methodContext.expandString((String) entry.getValue());
+                    methodContext.putResult(fromName, resultName);
                 }
             }
         }
@@ -300,7 +292,6 @@ public class CallService extends MethodOperation {
         String messageSuffixStr = messageSuffix.getMessage(methodContext.getLoader(), methodContext);
 
         String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, errorPrefixStr, errorSuffixStr);
-
         if (UtilValidate.isNotEmpty(errorMessage)) {
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errorMessage);
@@ -310,7 +301,6 @@ public class CallService extends MethodOperation {
         }
 
         String successMessage = ServiceUtil.makeSuccessMessage(result, messagePrefixStr, messageSuffixStr, successPrefixStr, successSuffixStr);
-
         if (UtilValidate.isNotEmpty(successMessage)) {
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventEventMessageName(), successMessage);
@@ -320,7 +310,6 @@ public class CallService extends MethodOperation {
         }
 
         String defaultMessageStr = defaultMessage.getMessage(methodContext.getLoader(), methodContext);
-
         if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessageStr)) {
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventEventMessageName(), defaultMessageStr);
@@ -331,7 +320,6 @@ public class CallService extends MethodOperation {
 
         // handle the result
         String responseCode = result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String) result.get(ModelService.RESPONSE_MESSAGE) : successCode;
-
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             methodContext.putEnv(simpleMethod.getEventResponseCodeName(), responseCode);
         } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
@@ -347,7 +335,7 @@ public class CallService extends MethodOperation {
 
     public static class ResultToFieldDef {
         public String resultName;
-        public String mapName;
-        public String fieldName;
+        public ContextAccessor mapAcsr;
+        public ContextAccessor fieldAcsr;
     }
 }
