@@ -175,10 +175,12 @@ public abstract class ModelScreenAction {
             }
 
             // If newValue is still empty, use the default value
-           	if (this.defaultExdr != null) {
-           		if (ObjectType.isEmpty(newValue)) {
-            		newValue = this.defaultExdr.expandString(context);
-               	}
+            if (UtilValidate.isEmpty(newValue)) {
+            	if (this.defaultExdr != null) {
+            		if (ObjectType.isEmpty(newValue)) {
+            			newValue = this.defaultExdr.expandString(context);
+            		}
+            	}
             }
             
             if (UtilValidate.isNotEmpty(this.type)) {
