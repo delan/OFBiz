@@ -1,7 +1,7 @@
 /*
- * $Id: ModelRelation.java,v 1.4 2004/06/18 14:46:23 jonesde Exp $
+ * $Id: ModelRelation.java,v 1.5 2004/06/20 04:03:23 jonesde Exp $
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Relation model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ModelRelation {
@@ -261,5 +261,20 @@ public class ModelRelation {
      */
     public void setAutoRelation(boolean isAutoRelation) {
         this.isAutoRelation = isAutoRelation;
+    }
+    
+    public boolean equals(Object other) {
+        ModelRelation otherRel = (ModelRelation) other;
+        
+        if (!otherRel.type.equals(this.type)) return false;
+        if (!otherRel.title.equals(this.title)) return false;
+        if (!otherRel.relEntityName.equals(this.relEntityName)) return false;
+        
+        Set thisKeyNames = new HashSet(this.keyMaps);
+        Set otherKeyNames = new HashSet(otherRel.keyMaps);
+        if (!thisKeyNames.containsAll(otherKeyNames)) return false;
+        if (!otherKeyNames.containsAll(thisKeyNames)) return false;
+        
+        return true;
     }
 }

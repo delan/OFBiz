@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  */
 -->
 
@@ -77,35 +77,6 @@
   <!-- org.ofbiz.manufacturing.techdata -->
   <!-- ========================================================= -->
 
-    <entity entity-name="TechDataCalendarWeek"
-            package-name="org.ofbiz.manufacturing.techdata"
-            title="Week definition entity"
-            author="Olivier Heintz">
-      <description>Used to defined the week definition disponibility for machine</description>
-      <field name="calendarWeekId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <field name="mondayStartTime" type="time"></field>
-      <field name="mondayCapacity" type="floating-point"></field>
-      <field name="tuesdayStartTime" type="time"></field>
-      <field name="tuesdayCapacity" type="floating-point"></field>
-      <field name="wednesdayStartTime" type="time"></field>
-      <field name="wednesdayCapacity" type="floating-point"></field>
-      <field name="thursdayStartTime" type="time"></field>
-      <field name="thursdayCapacity" type="floating-point"></field>
-      <field name="fridayStartTime" type="time"></field>
-      <field name="fridayCapacity" type="floating-point"></field>
-      <field name="saturdayStartTime" type="time"></field>
-      <field name="saturdayCapacity" type="floating-point"></field>
-      <field name="sundayStartTime" type="time"></field>
-      <field name="sundayCapacity" type="floating-point"></field>
-      <prim-key field="calendarWeekId"/>
-      <relation type="many"  rel-entity-name="TechDataCalendar">
-        <key-map field-name="calendarWeekId"/>
-      </relation>
-      <relation type="many"  rel-entity-name="TechDataCalendarExcWeek">
-        <key-map field-name="calendarWeekId"/>
-      </relation>
-    </entity>
     <entity entity-name="TechDataCalendar"
             package-name="org.ofbiz.manufacturing.techdata"
             title="Calendar entity"
@@ -119,15 +90,6 @@
       <prim-key field="calendarId"/>
       <relation type="one" fk-name="CALENDAR_WEEK" rel-entity-name="TechDataCalendarWeek">
         <key-map field-name="calendarWeekId"/>
-      </relation>
-      <relation type="many"  rel-entity-name="TechDataCalendarExcDay">
-        <key-map field-name="calendarId"/>
-      </relation>
-      <relation type="many"  rel-entity-name="TechDataCalendarExcWeek">
-        <key-map field-name="calendarId"/>
-      </relation>
-      <relation type="many"  rel-entity-name="FixedAsset">
-        <key-map field-name="calendarId"/>
       </relation>
     </entity>
     <entity entity-name="TechDataCalendarExcDay"
@@ -150,8 +112,7 @@
             package-name="org.ofbiz.manufacturing.techdata"
             title="Calendar Exception Week entity"
             author="Olivier Heintz">
-      <description>Used to defined some weeks which differ from the normal week defined in the calendar.
-      </description>
+      <description>Used to defined some weeks which differ from the normal week defined in the calendar.</description>
       <field name="calendarId" type="id-ne"></field>
       <field name="exceptionDateStart" type="date"></field>
       <field name="calendarWeekId" type="id-ne"></field>
@@ -165,6 +126,29 @@
         <key-map field-name="calendarWeekId"/>
       </relation>
     </entity>
+    <entity entity-name="TechDataCalendarWeek"
+            package-name="org.ofbiz.manufacturing.techdata"
+            title="Week definition entity"
+            author="Olivier Heintz">
+      <description>Used to defined the week definition disponibility for machine</description>
+      <field name="calendarWeekId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <field name="mondayStartTime" type="time"></field>
+      <field name="mondayCapacity" type="floating-point"></field>
+      <field name="tuesdayStartTime" type="time"></field>
+      <field name="tuesdayCapacity" type="floating-point"></field>
+      <field name="wednesdayStartTime" type="time"></field>
+      <field name="wednesdayCapacity" type="floating-point"></field>
+      <field name="thursdayStartTime" type="time"></field>
+      <field name="thursdayCapacity" type="floating-point"></field>
+      <field name="fridayStartTime" type="time"></field>
+      <field name="fridayCapacity" type="floating-point"></field>
+      <field name="saturdayStartTime" type="time"></field>
+      <field name="saturdayCapacity" type="floating-point"></field>
+      <field name="sundayStartTime" type="time"></field>
+      <field name="sundayCapacity" type="floating-point"></field>
+      <prim-key field="calendarWeekId"/>
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.manufacturing.mrp -->
@@ -175,7 +159,7 @@
             title="Inventory event planned"
             author="Olivier Heintz">
       <description>Contain all the planned InventoryEvent by ProductId to be able to check the product availability 
-      					and if necessary generate some requirements</description>
+                          and if necessary generate some requirements</description>
       <field name="productId" type="id-ne"></field>
       <field name="eventDate" type="date-time"></field>
       <field name="inventoryEventPlanTypeId" type="id-ne"></field>
@@ -184,10 +168,10 @@
       <prim-key field="eventDate"/>
       <prim-key field="inventoryEventPlanTypeId"/>
       <relation type="one" fk-name="INV_EVNT_PLN_PRDT" rel-entity-name="Product">
-      <key-map field-name="productId"/>
+        <key-map field-name="productId"/>
       </relation>
-	  <relation type="one" fk-name="INV_EVNT_PLN_TYP" rel-entity-name="InventoryEventPlannedType">
-      <key-map field-name="inventoryEventPlanTypeId"/>
+      <relation type="one" fk-name="INV_EVNT_PLN_TYP" rel-entity-name="InventoryEventPlannedType">
+        <key-map field-name="inventoryEventPlanTypeId"/>
       </relation>
     </entity>
     <entity entity-name="InventoryEventPlannedType"
@@ -203,25 +187,24 @@
         <key-map field-name="inventoryEventPlanTypeId"/>
       </relation>
     </entity>
-	<view-entity entity-name="MrpInventoryEventPlanned" package-name="org.ofbiz.manufacturing.mrp" 
-	    title="Inventory Event Planned view for MRP process" author="Olivier Heintz">
-	 <description>Uses for the MRP process to be able to read the InventoryEventPlanned By billOfMaterialLevel and by eventDate</description>
-	 <member-entity entity-alias="IEP" entity-name="InventoryEventPlanned"></member-entity>
-	 <member-entity entity-alias="IEPT" entity-name="InventoryEventPlannedType"></member-entity>
-	 <member-entity entity-alias="PR" entity-name="Product"></member-entity>
-	 <alias-all entity-alias="IEP"></alias-all>
-	 <alias entity-alias="PR" name="billOfMaterialLevel"></alias>
-	 <alias entity-alias="IEPT" name="inOut"></alias>
-	 <view-link entity-alias="IEP" rel-entity-alias="PR">
-	     <key-map field-name="productId"></key-map>
-	 </view-link>
-	 <view-link entity-alias="IEP" rel-entity-alias="IEPT">
-	     <key-map field-name="inventoryEventPlanTypeId"></key-map>
-	 </view-link>
-	 <relation rel-entity-name="Product" type="one-nofk">
-	     <key-map field-name="productId"/>
-	 </relation>
-	</view-entity>
-
+    <view-entity entity-name="MrpInventoryEventPlanned" package-name="org.ofbiz.manufacturing.mrp" 
+        title="Inventory Event Planned view for MRP process" author="Olivier Heintz">
+      <description>Uses for the MRP process to be able to read the InventoryEventPlanned By billOfMaterialLevel and by eventDate</description>
+      <member-entity entity-alias="IEP" entity-name="InventoryEventPlanned"></member-entity>
+      <member-entity entity-alias="IEPT" entity-name="InventoryEventPlannedType"></member-entity>
+      <member-entity entity-alias="PR" entity-name="Product"></member-entity>
+      <alias-all entity-alias="IEP"></alias-all>
+      <alias entity-alias="PR" name="billOfMaterialLevel"></alias>
+      <alias entity-alias="IEPT" name="inOut"></alias>
+      <view-link entity-alias="IEP" rel-entity-alias="PR">
+        <key-map field-name="productId"></key-map>
+      </view-link>
+      <view-link entity-alias="IEP" rel-entity-alias="IEPT">
+        <key-map field-name="inventoryEventPlanTypeId"></key-map>
+      </view-link>
+      <relation rel-entity-name="Product" type="one-nofk">
+        <key-map field-name="productId"/>
+      </relation>
+    </view-entity>
 </entitymodel>
 

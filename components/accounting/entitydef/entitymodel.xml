@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  */
 -->
 
@@ -72,9 +72,6 @@
       <relation type="many" rel-entity-name="BudgetTypeAttr">
         <key-map field-name="budgetTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="RequirementBudgetAllocation">
-        <key-map field-name="budgetId"/>
-      </relation>
     </entity>
     <entity entity-name="BudgetAttribute"
             package-name="org.ofbiz.accounting.budget"
@@ -107,10 +104,6 @@
       </relation>
       <relation type="many" rel-entity-name="BudgetItemTypeAttr">
         <key-map field-name="budgetItemTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PaymentBudgetAllocation">
-        <key-map field-name="budgetId"/>
-        <key-map field-name="budgetItemSeqId"/>
       </relation>
     </entity>
     <entity entity-name="BudgetItemAttribute"
@@ -348,9 +341,6 @@
       <field name="description" type="description"></field>
       <field name="formula" type="long-varchar"></field>
       <prim-key field="depreciationMethodId"/>
-      <relation type="many" rel-entity-name="FixedAssetDepMethod">
-        <key-map field-name="depreciationMethodId"/>
-      </relation>
     </entity>
     <entity entity-name="FixedAsset"
             package-name="org.ofbiz.accounting.fixedasset"
@@ -539,12 +529,6 @@
       <relation type="many" rel-entity-name="InvoiceTypeAttr">
         <key-map field-name="invoiceTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="InvoiceAttribute">
-        <key-map field-name="invoiceId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceContactMech">
-        <key-map field-name="invoiceId"/>
-      </relation>
       <relation type="one" fk-name="INVOICE_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
@@ -563,36 +547,6 @@
       </relation>
       <relation type="one" fk-name="INVOICE_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderItemBilling">
-        <key-map field-name="invoiceId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTrans">
-        <key-map field-name="invoiceId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PaymentApplication">
-        <key-map field-name="invoiceId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceItem">
-        <key-map field-name="invoiceId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceRole">
-        <key-map field-name="invoiceId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceStatus">
-        <key-map field-name="invoiceId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceTerm">
-        <key-map field-name="invoiceId"/>
-      </relation>
-      <relation type="many" rel-entity-name="TimeEntryBilling">
-        <key-map field-name="invoiceId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortBilling">
-        <key-map field-name="invoiceId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentItemBilling">
-        <key-map field-name="invoiceId"/>
       </relation>
     </entity>
     <entity entity-name="InvoiceAttribute"
@@ -652,10 +606,6 @@
       <relation type="many" rel-entity-name="InvoiceItemTypeAttr">
         <key-map field-name="invoiceItemTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="InvoiceItemAttribute">
-        <key-map field-name="invoiceId"/>
-        <key-map field-name="invoiceItemSeqId"/>
-      </relation>
       <relation type="one" fk-name="INVCE_ITM_INVCE" rel-entity-name="Invoice">
         <key-map field-name="invoiceId"/>
       </relation>
@@ -670,30 +620,6 @@
       </relation>
       <relation type="one" fk-name="INVCE_ITM_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderItemBilling">
-        <key-map field-name="invoiceId"/>
-        <key-map field-name="invoiceItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PaymentApplication">
-        <key-map field-name="invoiceId"/>
-        <key-map field-name="invoiceItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceTerm">
-        <key-map field-name="invoiceId"/>
-        <key-map field-name="invoiceItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="TimeEntryBilling">
-        <key-map field-name="invoiceId"/>
-        <key-map field-name="invoiceItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortBilling">
-        <key-map field-name="invoiceId"/>
-        <key-map field-name="invoiceItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentItemBilling">
-        <key-map field-name="invoiceId"/>
-        <key-map field-name="invoiceItemSeqId"/>
       </relation>
     </entity>
     <entity entity-name="InvoiceItemAttribute"
@@ -726,17 +652,8 @@
       <relation type="one" fk-name="INVOICE_ITEM_TPAR" title="Parent" rel-entity-name="InvoiceItemType">
         <key-map field-name="parentTypeId" rel-field-name="invoiceItemTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="InvoiceItemType">
-        <key-map field-name="invoiceItemTypeId" rel-field-name="parentTypeId"/>
-      </relation>
       <relation type="one" fk-name="INVOICE_ITEM_GLAC" rel-entity-name="GlAccount">
         <key-map field-name="glAccountId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceItemTypeAttr">
-        <key-map field-name="invoiceItemTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceItem">
-        <key-map field-name="invoiceItemTypeId"/>
       </relation>
     </entity>
     <entity entity-name="InvoiceItemTypeAttr"
@@ -856,15 +773,6 @@
       <prim-key field="invoiceTypeId"/>
       <relation type="one" fk-name="INVOICE_TYPE_PAR" title="Parent" rel-entity-name="InvoiceType">
         <key-map field-name="parentTypeId" rel-field-name="invoiceTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="InvoiceType">
-        <key-map field-name="invoiceTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="InvoiceTypeAttr">
-        <key-map field-name="invoiceTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Invoice">
-        <key-map field-name="invoiceTypeId"/>
       </relation>
     </entity>
     <entity entity-name="InvoiceTypeAttr"
@@ -1101,21 +1009,6 @@
       <relation type="one" fk-name="GLACCT_PAR" title="Parent" rel-entity-name="GlAccount">
         <key-map field-name="parentGlAccountId" rel-field-name="glAccountId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="GlAccount">
-        <key-map field-name="glAccountId" rel-field-name="parentGlAccountId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTransEntry">
-        <key-map field-name="glAccountId"/>
-      </relation>
-      <relation type="many" rel-entity-name="GlBudgetXref">
-        <key-map field-name="glAccountId"/>
-      </relation>
-      <relation type="many" rel-entity-name="GlAccountRole">
-        <key-map field-name="glAccountId"/>
-      </relation>
-      <relation type="many" rel-entity-name="GlAccountGroupMember">
-        <key-map field-name="glAccountId"/>
-      </relation>
       <index name="GLACCT_UNQCD" unique="true">
         <index-field name="accountCode"/>
       </index>
@@ -1131,12 +1024,6 @@
       <relation type="one" fk-name="GLACTCLS_PAR" title="Parent" rel-entity-name="GlAccountClass">
         <key-map field-name="parentClassId" rel-field-name="glAccountClassId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="GlAccountClass">
-        <key-map field-name="glAccountClassId" rel-field-name="parentClassId"/>
-      </relation>
-      <relation type="many" rel-entity-name="GlAccount">
-        <key-map field-name="glAccountClassId"/>
-      </relation>
     </entity>
     <entity entity-name="GlAccountGroup"
             package-name="org.ofbiz.accounting.ledger"
@@ -1147,9 +1034,6 @@
       <prim-key field="glAccountGroupId"/>
       <relation type="one" fk-name="GLACT_GRP_TP" rel-entity-name="GlAccountGroupType">
         <key-map field-name="glAccountGroupTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="GlAccountGroupMember">
-        <key-map field-name="glAccountGroupId"/>
       </relation>
     </entity>
     <entity entity-name="GlAccountGroupMember"
@@ -1176,12 +1060,6 @@
       <field name="glAccountGroupTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="glAccountGroupTypeId"/>
-      <relation type="many" rel-entity-name="GlAccountGroup">
-        <key-map field-name="glAccountGroupTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="GlAccountGroupMember">
-        <key-map field-name="glAccountGroupTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="GlAccountHistory"
             package-name="org.ofbiz.accounting.ledger"
@@ -1264,9 +1142,6 @@
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
       <prim-key field="glAccountTypeId"/>
-      <relation type="many" rel-entity-name="GlAccount">
-        <key-map field-name="glAccountTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="GlBudgetXref"
             package-name="org.ofbiz.accounting.ledger"
@@ -1292,9 +1167,6 @@
       <field name="glFiscalTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="glFiscalTypeId"/>
-      <relation type="many" rel-entity-name="AcctgTrans">
-        <key-map field-name="glFiscalTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="GlJournal"
             package-name="org.ofbiz.accounting.ledger"
@@ -1308,9 +1180,6 @@
       <relation type="one" fk-name="GLJOURN_PARTY" rel-entity-name="Party">
         <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
       </relation>
-      <relation type="many" rel-entity-name="AcctgTrans">
-        <key-map field-name="glJournalId"/>
-      </relation>
     </entity>
     <entity entity-name="GlReconciliation"
             package-name="org.ofbiz.accounting.ledger"
@@ -1321,9 +1190,6 @@
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="glReconciliationId"/>
-      <relation type="many" rel-entity-name="GlReconciliationEntry">
-        <key-map field-name="glReconciliationId"/>
-      </relation>
     </entity>
     <entity entity-name="GlReconciliationEntry"
             package-name="org.ofbiz.accounting.ledger"
@@ -1352,9 +1218,6 @@
       <field name="glResourceTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="glResourceTypeId"/>
-      <relation type="many" rel-entity-name="GlAccount">
-        <key-map field-name="glResourceTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="GlXbrlClass"
             package-name="org.ofbiz.accounting.ledger"
@@ -1362,9 +1225,6 @@
       <field name="glXbrlClassId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="glXbrlClassId"/>
-      <relation type="many" rel-entity-name="GlAccount">
-        <key-map field-name="glXbrlClassId"/>
-      </relation>
     </entity>
     <entity entity-name="SettlementTerm"
             package-name="org.ofbiz.accounting.ledger"
@@ -1374,9 +1234,6 @@
       <field name="termValue" type="numeric"></field>
       <field name="uomId" type="id"></field>
       <prim-key field="settlementTermId"/>
-      <relation type="many" rel-entity-name="AcctgTransEntry">
-        <key-map field-name="settlementTermId"/>
-      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -1531,12 +1388,6 @@
       <relation type="one" fk-name="CREDCART_PADDR" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrderPaymentPreference">
-        <key-map field-name="paymentMethodId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Payment">
-        <key-map field-name="paymentMethodId"/>
-      </relation>
     </entity>
     <entity entity-name="Deduction"
             package-name="org.ofbiz.accounting.payment"
@@ -1559,12 +1410,6 @@
       <field name="deductionTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="deductionTypeId"/>
-      <relation type="many" rel-entity-name="PayrollPreference">
-        <key-map field-name="deductionTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Deduction">
-        <key-map field-name="deductionTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="EftAccount"
             package-name="org.ofbiz.accounting.payment"
@@ -1586,12 +1431,6 @@
       </relation>
       <relation type="one" fk-name="EFTACCT_PADDR" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderPaymentPreference">
-        <key-map field-name="paymentMethodId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Payment">
-        <key-map field-name="paymentMethodId"/>
       </relation>
     </entity>
     <entity entity-name="FinAccount"
@@ -1767,12 +1606,6 @@
       <relation type="one" fk-name="GIFTCART_PADDR" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="many" rel-entity-name="OrderPaymentPreference">
-        <key-map field-name="paymentMethodId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Payment">
-        <key-map field-name="paymentMethodId"/>
-      </relation>
     </entity>
     <entity entity-name="Payment"
             package-name="org.ofbiz.accounting.payment"
@@ -1799,9 +1632,6 @@
       <relation type="many" rel-entity-name="PaymentTypeAttr">
         <key-map field-name="paymentTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="PaymentAttribute">
-        <key-map field-name="paymentId"/>
-      </relation>
       <relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
@@ -1812,6 +1642,9 @@
         <key-map field-name="paymentMethodId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="EftAccount">
+        <key-map field-name="paymentMethodId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="GiftCard">
         <key-map field-name="paymentMethodId"/>
       </relation>
       <relation type="one" fk-name="PAYMENT_ORDPMPRF" rel-entity-name="OrderPaymentPreference">
@@ -1838,21 +1671,6 @@
       </relation>
       <relation type="one" fk-name="PAYMENT_FACTX" rel-entity-name="FinAccountTrans">
         <key-map field-name="finAccountTransId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTrans">
-        <key-map field-name="paymentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PaymentApplication">
-        <key-map field-name="paymentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PaymentBudgetAllocation">
-        <key-map field-name="paymentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PerfReview">
-        <key-map field-name="paymentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Deduction">
-        <key-map field-name="paymentId"/>
       </relation>
     </entity>
     <view-entity entity-name="PaymentAndApplication"
@@ -1965,23 +1783,8 @@
       <relation type="one" fk-name="PAYMETH_TYPE" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
-      <relation type="one-nofk" rel-entity-name="CreditCard">
-        <key-map field-name="paymentMethodId"/>
-      </relation>
-        <relation type="one-nofk" rel-entity-name="GiftCard">
-        <key-map field-name="paymentMethodId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="EftAccount">
-        <key-map field-name="paymentMethodId"/>
-      </relation>
       <relation type="one" fk-name="PAYMETH_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderPaymentPreference">
-        <key-map field-name="paymentMethodId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Payment">
-        <key-map field-name="paymentMethodId"/>
       </relation>
     </entity>
     <entity entity-name="PaymentMethodType"
@@ -1990,15 +1793,6 @@
       <field name="paymentMethodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="paymentMethodTypeId"/>
-      <relation type="many" rel-entity-name="PaymentMethod">
-        <key-map field-name="paymentMethodTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderPaymentPreference">
-        <key-map field-name="paymentMethodTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PayrollPreference">
-        <key-map field-name="paymentMethodTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="PaymentType"
             package-name="org.ofbiz.accounting.payment"
@@ -2010,15 +1804,6 @@
       <prim-key field="paymentTypeId"/>
       <relation type="one" fk-name="PAYMENT_TYPE_PAR" title="Parent" rel-entity-name="PaymentType">
         <key-map field-name="parentTypeId" rel-field-name="paymentTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="PaymentType">
-        <key-map field-name="paymentTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PaymentTypeAttr">
-        <key-map field-name="paymentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Payment">
-        <key-map field-name="paymentTypeId"/>
       </relation>
     </entity>
     <entity entity-name="PaymentTypeAttr"

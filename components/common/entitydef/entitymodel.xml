@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  */
 -->
 
@@ -243,9 +243,6 @@
       <field name="noteParty" type="id"></field>
       <field name="noteDateTime" type="date-time"></field>
       <prim-key field="noteId"/>
-      <relation type="many" rel-entity-name="WorkEffortNote">
-        <key-map field-name="noteId"/>
-      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -284,21 +281,6 @@
       <prim-key field="periodTypeId"/>
       <relation type="one" fk-name="PER_TYPE_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
-      </relation>
-      <relation type="many" rel-entity-name="StandardTimePeriod">
-        <key-map field-name="periodTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CustomTimePeriod">
-        <key-map field-name="periodTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PayrollPreference">
-        <key-map field-name="periodTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PayHistory">
-        <key-map field-name="periodTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyBenefit">
-        <key-map field-name="periodTypeId"/>
       </relation>
     </entity>
     <entity entity-name="StandardTimePeriod"
@@ -425,12 +407,6 @@
       <prim-key field="uomTypeId"/>
       <relation type="one" fk-name="UOM_TYPE_PARENT" title="Parent" rel-entity-name="UomType">
         <key-map field-name="parentTypeId" rel-field-name="uomTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="UomType">
-        <key-map field-name="uomTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Uom">
-        <key-map field-name="uomTypeId"/>
       </relation>
     </entity>
 </entitymodel>

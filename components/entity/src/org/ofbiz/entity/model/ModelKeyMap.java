@@ -1,5 +1,5 @@
 /*
- * $Id: ModelKeyMap.java,v 1.4 2003/10/18 06:24:50 jonesde Exp $
+ * $Id: ModelKeyMap.java,v 1.5 2004/06/20 04:03:23 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * Generic Entity - KeyMap model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ModelKeyMap {
@@ -90,5 +90,18 @@ public class ModelKeyMap {
     }
     public static List makeKeyMapList(String fieldName1, String relFieldName1, String fieldName2, String relFieldName2, String fieldName3, String relFieldName3) {
         return UtilMisc.toList(new ModelKeyMap(fieldName1, relFieldName1), new ModelKeyMap(fieldName2, relFieldName2), new ModelKeyMap(fieldName3, relFieldName3));
+    }
+
+    public int hashCode() {
+        return this.fieldName.hashCode() + this.relFieldName.hashCode();
+    }
+    
+    public boolean equals(Object other) {
+        ModelKeyMap otherKeyMap = (ModelKeyMap) other;
+        
+        if (!otherKeyMap.fieldName.equals(this.fieldName)) return false;
+        if (!otherKeyMap.relFieldName.equals(this.relFieldName)) return false;
+        
+        return true;
     }
 }

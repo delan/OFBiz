@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  */
 -->
 
@@ -91,9 +91,6 @@
       </relation>
       <relation type="one" fk-name="ITEM_ISS_IBUL" title="IssuedBy" rel-entity-name="UserLogin">
         <key-map field-name="issuedByUserLoginId" rel-field-name="userLoginId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ItemIssuanceRole">
-        <key-map field-name="itemIssuanceId"/>
       </relation>
     </entity>
     <entity entity-name="ItemIssuanceRole"
@@ -379,12 +376,6 @@
       <relation type="many" rel-entity-name="ShipmentTypeAttr">
         <key-map field-name="shipmentTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="ShipmentAttribute">
-        <key-map field-name="shipmentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderShipment">
-        <key-map field-name="shipmentId"/>
-      </relation>
       <relation type="one" fk-name="SHPMNT_PRTYTO" title="To" rel-entity-name="Party">
         <key-map field-name="partyIdTo" rel-field-name="partyId"/>
       </relation>
@@ -402,34 +393,6 @@
       </relation>
       <relation type="one-nofk" title="From" rel-entity-name="PartyGroup">
         <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentPackageContent">
-        <key-map field-name="shipmentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentRouteSegment">
-        <key-map field-name="shipmentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentItemFeature">
-        <key-map field-name="shipmentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentItemBilling">
-        <key-map field-name="shipmentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentItem">
-        <key-map field-name="shipmentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentPackage">
-        <key-map field-name="shipmentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentStatus">
-        <key-map field-name="shipmentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ItemIssuance">
-        <key-map field-name="shipmentId"/>
-      </relation>
-      <relation type="one-nofk" title="Current" rel-entity-name="ShipmentStatus">
-        <key-map field-name="shipmentId"/>
-        <key-map field-name="statusId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentManifestView">
         <key-map field-name="shipmentId"/>
@@ -499,12 +462,6 @@
       <relation type="one" fk-name="SHMT_BXTP_DUOM" title="Dimension" rel-entity-name="Uom">
         <key-map field-name="dimensionUomId" rel-field-name="uomId"/>
       </relation>
-      <relation type="many" rel-entity-name="CarrierShipmentBoxType">
-        <key-map field-name="shipmentBoxTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentPackage">
-        <key-map field-name="shipmentBoxTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ShipmentContactMech"
             package-name="org.ofbiz.shipment.shipment"
@@ -530,9 +487,6 @@
       <field name="shipmentContactMechTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="shipmentContactMechTypeId"/>
-      <relation type="many" rel-entity-name="ShipmentContactMech">
-        <key-map field-name="shipmentContactMechTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ShipmentCostEstimate"
             package-name="org.ofbiz.shipment.shipment"
@@ -614,35 +568,11 @@
       <field name="shipmentContentDescription" type="description"></field>
       <prim-key field="shipmentId"/>
       <prim-key field="shipmentItemSeqId"/>
-      <relation type="many" rel-entity-name="OrderShipment">
-        <key-map field-name="shipmentId"/>
-        <key-map field-name="shipmentItemSeqId"/>
-      </relation>
       <relation type="one" fk-name="SHPMNT_ITM_SHPMT" rel-entity-name="Shipment">
         <key-map field-name="shipmentId"/>
       </relation>
       <relation type="one" fk-name="SHPMNT_ITM_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ItemIssuance">
-        <key-map field-name="shipmentId"/>
-        <key-map field-name="shipmentItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentPackageContent">
-        <key-map field-name="shipmentId"/>
-        <key-map field-name="shipmentItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentItemFeature">
-        <key-map field-name="shipmentId"/>
-        <key-map field-name="shipmentItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentItemBilling">
-        <key-map field-name="shipmentId"/>
-        <key-map field-name="shipmentItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShippingDocument">
-        <key-map field-name="shipmentId"/>
-        <key-map field-name="shipmentItemSeqId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentItemBilling"
@@ -840,15 +770,6 @@
       <field name="description" type="description"></field>
       <field name="sequenceNum" type="numeric"></field>
       <prim-key field="shipmentMethodTypeId"/>
-      <relation type="many" rel-entity-name="OrderShipmentPreference">
-        <key-map field-name="shipmentMethodTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentRouteSegment">
-        <key-map field-name="shipmentMethodTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FacilityCarrierShipment">
-        <key-map field-name="shipmentMethodTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ShipmentPackage"
             package-name="org.ofbiz.shipment.shipment"
@@ -866,22 +787,6 @@
       </relation>
       <relation type="one" fk-name="SHPKG_BXTYP" rel-entity-name="ShipmentBoxType">
         <key-map field-name="shipmentBoxTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentReceipt">
-        <key-map field-name="shipmentId"/>
-        <key-map field-name="shipmentPackageSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentPackageContent">
-        <key-map field-name="shipmentId"/>
-        <key-map field-name="shipmentPackageSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentPackageRouteSeg">
-        <key-map field-name="shipmentId"/>
-        <key-map field-name="shipmentPackageSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShippingDocument">
-        <key-map field-name="shipmentId"/>
-        <key-map field-name="shipmentPackageSeqId"/>
       </relation>
       <relation type="many" rel-entity-name="CarrierShipmentBoxType">
         <key-map field-name="shipmentBoxTypeId"/>
@@ -1024,10 +929,6 @@
       <relation type="one" fk-name="SHPMT_RTSEG_DTCN" title="Dest" rel-entity-name="TelecomNumber">
         <key-map field-name="destTelecomNumberId" rel-field-name="contactMechId"/>
       </relation>
-      <relation type="many" rel-entity-name="ShipmentPackageRouteSeg">
-        <key-map field-name="shipmentId"/>
-        <key-map field-name="shipmentRouteSegmentId"/>
-      </relation>
       <relation type="one" fk-name="SHPKRTSG_CSSTS" title="CarrierService" rel-entity-name="StatusItem">
         <key-map field-name="carrierServiceStatusId" rel-field-name="statusId"/>
       </relation>
@@ -1063,15 +964,6 @@
       <prim-key field="shipmentTypeId"/>
       <relation type="one" fk-name="SHPMNT_TYPPAR" title="Parent" rel-entity-name="ShipmentType">
         <key-map field-name="parentTypeId" rel-field-name="shipmentTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="ShipmentType">
-        <key-map field-name="shipmentTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentTypeAttr">
-        <key-map field-name="shipmentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Shipment">
-        <key-map field-name="shipmentTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentTypeAttr"
