@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.4 2003/08/17 03:43:46 jonesde Exp $
+ * $Id: ComponentConfig.java,v 1.5 2003/08/17 05:55:11 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  */
 public class ComponentConfig {
@@ -413,7 +413,7 @@ public class ComponentConfig {
             this.location = element.getAttribute("location");
         }
         
-        ComponentResourceHandler createResourceHandler() {
+        public ComponentResourceHandler createResourceHandler() {
             return new ComponentResourceHandler(componentConfig.getGlobalName(), loader, location);
     	}
     }
