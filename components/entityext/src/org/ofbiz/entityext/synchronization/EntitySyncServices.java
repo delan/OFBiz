@@ -385,7 +385,7 @@ public class EntitySyncServices {
                 List keysToRemove = esc.assembleKeysToRemove();
                 
                 esc.setTotalRowCounts(valuesToCreate, valuesToStore, keysToRemove);
-                if (esc.totalRowsToStore > 0) {
+                if (esc.totalRowsPerSplit > 0) {
                     // stop if we found some data, otherwise look and try again
                     Map result = ServiceUtil.returnSuccess();
                     result.put("startDate", esc.startDate);
