@@ -329,7 +329,31 @@
       <relation type="one" title="To" rel-entity-name="StatusItem">
         <key-map field-name="statusIdTo" rel-field-name="statusId" />
       </relation>
-    </entity>
+    </entity>	
+    <view-entity entity-name="StatusValidChangeToDetail" 
+            package-name="org.ofbiz.commonapp.common.status"
+            title="Status Valid Change To Detail View Entity">	
+      <member-entity entity-alias="SI" entity-name="StatusItem" />	
+      <member-entity entity-alias="SVC" entity-name="StatusValidChange" />
+      <alias entity-alias="SVC" name="statusId" prim-key="true" />
+      <alias entity-alias="SVC" name="statusIdTo" prim-key="true" />
+      <alias entity-alias="SVC" name="conditionExpression" />
+      <alias entity-alias="SVC" name="transitionName" />
+      <alias entity-alias="SI" name="statusTypeId" />
+      <alias entity-alias="SI" name="statusCode" />
+      <alias entity-alias="SI" name="sequenceId" />
+      <alias entity-alias="SI" name="description" />
+      <view-link entity-alias="SVC" rel-entity-alias="SI">
+        <key-map field-name="statusIdTo" rel-field-name="statusId" />
+      </view-link>
+      <relation type="one" rel-entity-name="StatusValidChange">
+        <key-map field-name="statusId" />
+        <key-map field-name="statusIdTo" />
+      </relation>
+      <relation type="one" rel-entity-name="StatusItem">
+        <key-map field-name="statusId" />
+      </relation>
+    </view-entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.uom -->

@@ -180,7 +180,8 @@
 	
     <entity-group group="org.ofbiz.commonapp" entity="StatusItem" />	
     <entity-group group="org.ofbiz.commonapp" entity="StatusType" />	
-    <entity-group group="org.ofbiz.commonapp" entity="StatusValidChange" />
+    <entity-group group="org.ofbiz.commonapp" entity="StatusValidChange" />	
+    <entity-group group="org.ofbiz.commonapp" entity="StatusValidChangeToDetail" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.uom -->
