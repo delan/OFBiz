@@ -47,7 +47,8 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="Requirement" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <clone-value value-name="lookedUpValue" new-value-name="savedValue"/>
-        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>      
+        <field-to-result field-name="lookedUpValue.statusId" result-name="oldStatusId"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/> 
         <store-value value-name="lookedUpValue"/>
     </simple-method>
 
