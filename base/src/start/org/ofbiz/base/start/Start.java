@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.22 2004/07/12 17:50:31 ajzeneski Exp $
+ * $Id: Start.java,v 1.23 2004/07/31 18:33:14 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,16 +26,16 @@ package org.ofbiz.base.start;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,35 +45,38 @@ import java.util.Properties;
 /**
  * Start - OFBiz Container(s) Startup Class
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.22 $
- * @since      2.1
+ * @author <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version $Revision: 1.23 $
+ * @since 2.1
  */
 public class Start implements Runnable {
 
-    private Classpath classPath = new Classpath(System.getProperty("java.class.path"));     
+    private Classpath classPath = new Classpath(System.getProperty("java.class.path"));
     private ServerSocket serverSocket = null;
     private Thread serverThread = null;
-    private boolean serverRunning = true;    
+    private boolean serverRunning = true;
     private List loaders = null;
     private Config config = null;
-    private String loaderArgs[] = null;
+    private String[] loaderArgs = null;
 
     private static final String SHUTDOWN_COMMAND = "SHUTDOWN";
     private static final String STATUS_COMMAND = "STATUS";
 
-    public Start(String args[], String configFile) throws IOException {
+    public void init(String[] args) throws IOException {
+        String firstArg = args.length > 0 ? args[0] : "";
+        String cfgFile = Start.getConfigFileName(firstArg);
+
         this.loaders = new ArrayList();
         this.config = new Config();
 
-        // always read the default properties first
-        config.readConfig(configFile);
+        // read the default properties first
+        config.readConfig(cfgFile);
 
-        // parse the startup args
+        // parse the startup arguments
         if (args.length > 1) {
             this.loaderArgs = new String[args.length - 1];
             for (int i = 1; i < args.length; i++) {
-                this.loaderArgs[i-1] = args[i];
+                this.loaderArgs[i - 1] = args[i];
             }
         }
     }
@@ -93,10 +96,10 @@ public class Start implements Runnable {
     public void run() {
         while (serverRunning) {
             try {
-            Socket clientSocket = serverSocket.accept();
-            System.out.println("Received connection from - " + clientSocket.getInetAddress() + " : " + clientSocket.getPort());
-            processClientRequest(clientSocket);
-            clientSocket.close();
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Received connection from - " + clientSocket.getInetAddress() + " : " + clientSocket.getPort());
+                processClientRequest(clientSocket);
+                clientSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -120,7 +123,7 @@ public class Start implements Runnable {
     private String processRequest(String request, Socket client) {
         if (request != null) {
             String key = request.substring(0, request.indexOf(':'));
-            String command = request.substring(request.indexOf(':')+1);
+            String command = request.substring(request.indexOf(':') + 1);
             if (!key.equals(config.adminKey)) {
                 return "FAIL";
             } else {
@@ -137,7 +140,7 @@ public class Start implements Runnable {
         }
     }
 
-    private void loadLibs(String path) throws Exception {
+    private void loadLibs(String path) throws IOException {
         File libDir = new File(path);
         if (libDir.exists()) {
             File files[] = libDir.listFiles();
@@ -152,7 +155,7 @@ public class Start implements Runnable {
         }
     }
 
-    private void startServer() throws Exception {
+    private void startServer() throws IOException {
         // load tools.jar
         if (config.toolsJar != null) {
             classPath.addComponent(config.toolsJar);
@@ -218,7 +221,7 @@ public class Start implements Runnable {
 
     private void setShutdownHook() {
         try {
-            Method shutdownHook = java.lang.Runtime.class.getMethod("addShutdownHook", new Class[] { java.lang.Thread.class });
+            Method shutdownHook = java.lang.Runtime.class.getMethod("addShutdownHook", new Class[]{java.lang.Thread.class});
             Thread hook = new Thread() {
                 public void run() {
                     setName("OFBiz_Shutdown_Hook");
@@ -232,7 +235,7 @@ public class Start implements Runnable {
                 }
             };
 
-            shutdownHook.invoke(Runtime.getRuntime(), new Object[] { hook });
+            shutdownHook.invoke(Runtime.getRuntime(), new Object[]{hook});
         } catch (Exception e) {
             // VM Does not support shutdown hook
             e.printStackTrace();
@@ -254,7 +257,7 @@ public class Start implements Runnable {
         serverRunning = false;
     }
 
-    public void start() throws Exception {
+    public void start() throws IOException {
         startServer();
         if (config.shutdownAfterLoad) {
             shutdownServer();
@@ -262,11 +265,23 @@ public class Start implements Runnable {
         }
     }
 
-    public String shutdown() throws Exception {
+    public void stop() {
+        shutdownServer();
+    }
+
+    public void destroy() {
+        this.serverSocket = null;
+        this.serverThread = null;
+        this.loaders = null;
+        this.config = null;
+        this.loaderArgs = null;
+    }
+
+    public String shutdown() throws IOException {
         return sendSocketCommand(Start.SHUTDOWN_COMMAND);
     }
 
-    public String status() throws Exception {
+    public String status() throws IOException {
         String status = null;
         try {
             status = sendSocketCommand(Start.STATUS_COMMAND);
@@ -302,8 +317,9 @@ public class Start implements Runnable {
         return response;
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         String firstArg = args.length > 0 ? args[0] : "";
+        Start start = new Start();
 
         if (firstArg.equals("-help") || firstArg.equals("-?")) {
             System.out.println("");
@@ -318,7 +334,9 @@ public class Start implements Runnable {
             System.out.println("[no config] --> Use default config");
             System.out.println("[no command] -> Start the server w/ default config");
         } else {
-            Start start = new Start(args, getConfigFileName(firstArg));
+            // initialize the startup object
+            start.init(args);
+
             // hack for the status and shutdown commands
             if (firstArg.equals("-status")) {
                 System.out.println("Current Status : " + start.status());
@@ -530,7 +548,7 @@ public class Start implements Runnable {
             // loader classes
             loaders = new ArrayList();
             int currentPosition = 1;
-            while(true) {
+            while (true) {
                 String loaderClass = props.getProperty("ofbiz.start.loader" + currentPosition);
                 if (loaderClass == null || loaderClass.length() == 0) {
                     break;
