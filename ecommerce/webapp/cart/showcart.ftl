@@ -168,6 +168,9 @@ function addToList() {
                 <#if cartLine.getShoppingListId()?exists>
                   <#assign itemsFromList = true>
                   <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="buttontext">L</a>&nbsp;&nbsp;
+                <#elseif cartLine.getIsPromo()>
+                  <#assign promoItems = true>
+                  <a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontext">P</a>&nbsp;&nbsp;
                 <#else>
                   &nbsp;
                 </#if>
@@ -233,7 +236,13 @@ function addToList() {
         <tr>
           <td valign="bottom" colspan="6"><div class="tabletext">L - Items from a shopping list; update quantities from list page.</td>
         </tr>
-        <#else>
+        </#if>
+        <#if promoItems>
+        <tr>
+          <td valign="bottom" colspan="6"><div class="tabletext">P - Promotional items; quantities cannot be modified.</td>
+        </tr>
+        </#if>        
+        <#if !itemsFromList && !promoItems>
         <tr>
           <td colspan="6">&nbsp;</td>
         </tr>
