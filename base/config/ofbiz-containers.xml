@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.22 2004/05/26 16:16:12 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.23 2004/05/26 16:28:43 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -89,8 +89,8 @@
                 <property name="tcp-listen-port" value="4001"/>
                 <property name="tcp-sector-timeout" value="100"/>
                 <property name="tcp-thread-count" value="6"/>
-                <property name="mcast-bind-addr" value="10.1.1.10"/>
-                <property name="mcast-addr" value="10.1.1.10"/>
+                <property name="mcast-bind-addr" value="192.168.2.1"/>
+                <property name="mcast-addr" value="224.0.0.1"/>
                 <property name="mcast-port" value="45564"/>
                 <property name="mcast-freq" value="500"/>
                 <property name="mcast-drop-time" value="3000"/>
