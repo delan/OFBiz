@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.core.service.DispatchContext;
 import org.ofbiz.core.service.GenericServiceException;
@@ -83,7 +84,7 @@ public class ServiceEcaRule {
         if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions);
     }
 
-    public void eval(String serviceName, DispatchContext dctx, Map context, Map result, boolean isError) throws GenericServiceException {
+    public void eval(String serviceName, DispatchContext dctx, Map context, Map result, boolean isError, Set actionsRun) throws GenericServiceException {
         if (isError && !this.runOnError) {
             return;
         }
@@ -103,7 +104,12 @@ public class ServiceEcaRule {
             Iterator a = actions.iterator();
             while (a.hasNext()) {
                 ServiceEcaAction ea = (ServiceEcaAction) a.next();
-                ea.runAction(serviceName, dctx, context, result);
+                // in order to enable OR logic without multiple calls to the given service, 
+                //only execute a given service name once per service call phase 
+                if (!actionsRun.contains(ea.serviceName)) {
+                    ea.runAction(serviceName, dctx, context, result);
+                    actionsRun.add(ea.serviceName);
+                }
             }
         }
     }

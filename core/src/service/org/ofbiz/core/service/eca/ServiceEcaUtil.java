@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.ofbiz.core.config.GenericConfigException;
 import org.ofbiz.core.config.ResourceHandler;
@@ -139,9 +141,10 @@ public class ServiceEcaUtil {
 
         Iterator i = rules.iterator();
         if (i.hasNext() && Debug.verboseOn()) Debug.logVerbose("Running ECA (" + event + ").", module);
+        Set actionsRun = new TreeSet();
         while (i.hasNext()) {
             ServiceEcaRule eca = (ServiceEcaRule) i.next();
-            eca.eval(serviceName, dctx, context, result, isError);
+            eca.eval(serviceName, dctx, context, result, isError, actionsRun);
         }
     }
 }
