@@ -42,15 +42,26 @@ public class ServiceEventHandler implements EventHandler {
 
     public static final String module = ServiceEventHandler.class.getName();
 
+    public static final String SYNC = "sync";
+    public static final String ASYNC = "async";
+
+    private String mode = SYNC;
     private String serviceName = null;
     
     /** Initialize the required parameters
-     *@param eventPath The path or location of this event
-     *@param eventMethod The method to invoke
+     *@param eventPath The mode of service invokation
+     *@param eventMethod The service to invoke
      */
     public void initialize(String eventPath, String eventMethod) {
+        if (eventPath == null || eventPath.length() == 0) {
+          this.mode = SYNC;
+        }
+        else {
+          this.mode = eventPath;
+        }
         this.serviceName = eventMethod;
-        Debug.logVerbose("[Set method]: " + eventMethod, module);
+        Debug.logVerbose("[Set mode/service]: " +
+                                mode + "/" + serviceName, module);
     }
     
     /** Invoke the web event
@@ -102,49 +113,60 @@ public class ServiceEventHandler implements EventHandler {
         // invoke the service
         Map result = null;
         try {
-            result = dispatcher.runSync(serviceName,serviceContext);
+            if (ASYNC.equalsIgnoreCase(mode)) {
+              dispatcher.runAsync(serviceName,serviceContext);
+            }
+            else {
+              result = dispatcher.runSync(serviceName,serviceContext);
+            }
         } catch (GenericServiceException e) {
             throw new EventHandlerException("Service invocation error", e);
         }
                         
         String responseString = null;
-        if (result == null || !result.containsKey(ModelService.RESPONSE_MESSAGE))
+        if (result == null) {
             responseString = ModelService.RESPOND_SUCCESS;
-        else
-            responseString = (String) result.get(ModelService.RESPONSE_MESSAGE);
-        
-        //Get the messages:
+        }
+        else {
 
-        String errorPrefixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.error.prefix");
-        String errorSuffixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.error.suffix");
-        String successPrefixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.success.prefix");
-        String successSuffixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.success.suffix");
-        String messagePrefixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.message.prefix");
-        String messageSuffixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.message.suffix");
-        String defaultMessageStr = UtilProperties.getPropertyValue("DefaultMessages", "service.default.message");
+            if (!result.containsKey(ModelService.RESPONSE_MESSAGE))
+                responseString = ModelService.RESPOND_SUCCESS;
+            else
+                responseString = (String) result.get(ModelService.RESPONSE_MESSAGE);
+            
+            //Get the messages:
 
-        String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, errorPrefixStr, errorSuffixStr);
-        if (UtilValidate.isNotEmpty(errorMessage))
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
+            String errorPrefixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.error.prefix");
+            String errorSuffixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.error.suffix");
+            String successPrefixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.success.prefix");
+            String successSuffixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.success.suffix");
+            String messagePrefixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.message.prefix");
+            String messageSuffixStr = UtilProperties.getPropertyValue("DefaultMessages", "service.message.suffix");
+            String defaultMessageStr = UtilProperties.getPropertyValue("DefaultMessages", "service.default.message");
 
-        String successMessage = ServiceUtil.makeSuccessMessage(result, messagePrefixStr, messageSuffixStr, successPrefixStr, successSuffixStr);
-        if (UtilValidate.isNotEmpty(successMessage))
-            request.setAttribute(SiteDefs.EVENT_MESSAGE, successMessage);
+            String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, errorPrefixStr, errorSuffixStr);
+            if (UtilValidate.isNotEmpty(errorMessage))
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
 
-        if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessageStr))
-            request.setAttribute(SiteDefs.EVENT_MESSAGE, defaultMessageStr);
+            String successMessage = ServiceUtil.makeSuccessMessage(result, messagePrefixStr, messageSuffixStr, successPrefixStr, successSuffixStr);
+            if (UtilValidate.isNotEmpty(successMessage))
+                request.setAttribute(SiteDefs.EVENT_MESSAGE, successMessage);
 
-        // set the results in the request
-        Iterator ri = result.keySet().iterator();
-        while (ri.hasNext()) {
-            String resultKey = (String) ri.next();
-            Object resultValue = result.get((Object)resultKey);
-            if (!resultKey.equals(ModelService.RESPONSE_MESSAGE) && !resultKey.equals(ModelService.ERROR_MESSAGE) && 
-                    !resultKey.equals(ModelService.ERROR_MESSAGE_LIST) && !resultKey.equals(ModelService.SUCCESS_MESSAGE) && !resultKey.equals(ModelService.SUCCESS_MESSAGE_LIST)) {
-                request.setAttribute(resultKey,resultValue);
+            if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessageStr))
+                request.setAttribute(SiteDefs.EVENT_MESSAGE, defaultMessageStr);
+
+            // set the results in the request
+            Iterator ri = result.keySet().iterator();
+            while (ri.hasNext()) {
+                String resultKey = (String) ri.next();
+                Object resultValue = result.get((Object)resultKey);
+                if (!resultKey.equals(ModelService.RESPONSE_MESSAGE) && !resultKey.equals(ModelService.ERROR_MESSAGE) && 
+                        !resultKey.equals(ModelService.ERROR_MESSAGE_LIST) && !resultKey.equals(ModelService.SUCCESS_MESSAGE) && !resultKey.equals(ModelService.SUCCESS_MESSAGE_LIST)) {
+                    request.setAttribute(resultKey,resultValue);
+                }
             }
         }
-        
+
         Debug.logVerbose("[Event Return]: " + responseString, module);
         
         return responseString;

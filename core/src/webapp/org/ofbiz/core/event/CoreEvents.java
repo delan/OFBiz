@@ -259,13 +259,14 @@ public class CoreEvents {
             return "error";
         }
 
-        // get the service name 
+        // get the mode and service name 
         String serviceName = request.getParameter("SERVICE_NAME");
+        String mode = request.getParameter("SERVICE_MODE");
 
         // call the service via the ServiceEventHandler which 
         // adapts an event to a service.
         ServiceEventHandler seh = new ServiceEventHandler();
-        seh.initialize(null, serviceName);
+        seh.initialize(mode, serviceName);
         try {
             return seh.invoke(request, response);
         } catch (EventHandlerException e) {
