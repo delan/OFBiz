@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 
@@ -57,26 +57,50 @@
 </#if>
 
 <#if productIds?has_content>
-<center>
-  <table width="100%" cellpadding="0" cellspacing="0">
-    <#assign listIndex = lowIndex>
-    <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
-      ${setRequestAttribute("optProductId", productId)}
-      ${setRequestAttribute("listIndex", productId_index)}
-      <tr><td colspan="2"><hr class="sepbar"></td></tr>
-      <tr>
-        <td>
-          ${pages.get("/entry/catalog/productsummary.ftl")}
-        </td>
-      </tr>
-    </#list>
-  </table>
-</center>
+    <#if sessionAttributes.shoppingCart?exists && sessionAttributes.shoppingCart.isPurchaseOrder()>
+        <center>
+          <form method="post" action="<@ofbizUrl>/addtocartbulk</@ofbizUrl>" name="bulkaddform" style='margin: 0;'>
+              <#if requestParameters.category_id?has_content><input type="hidden" name="category_id" value="${requestParameters.category_id}"></#if>
+              <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"></#if>
+              <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"></#if>
+              <input type="hidden" name="clearSearch" value="N">
+            <div class="tabletext" align="right">
+              <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddAlltoCart}]</nobr></a>
+            </div>     
+            <table border='1' width='100%' cellpadding='2' cellspacing='0'>      
+              <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
+                <tr>
+                    ${setRequestAttribute("optProductId", productId)}
+                    ${pages.get("/entry/catalog/quickaddsummary.ftl")}
+                </tr>        
+              </#list> 
+            </table>
+            <div class="tabletext" align="right">
+              <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddAlltoCart}]</nobr></a>
+            </div>      
+          </form>
+        </center>
+    <#else>
+        <center>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <#assign listIndex = lowIndex>
+            <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
+              ${setRequestAttribute("optProductId", productId)}
+              ${setRequestAttribute("listIndex", productId_index)}
+              <tr><td colspan="2"><hr class="sepbar"></td></tr>
+              <tr>
+                <td>
+                  ${pages.get("/entry/catalog/productsummary.ftl")}
+                </td>
+              </tr>
+            </#list>
+          </table>
+        </center>
+    </#if>
 </#if>
 
 <#if productIds?has_content>
 <table border="0" width="100%" cellpadding="2">
-    <tr><td colspan="2"><hr class="sepbar"></td></tr>
     <tr>
       <td align=right>
         <b>

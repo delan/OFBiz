@@ -283,6 +283,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="keywordsearch"/>
     </request-map>
+    <request-map uri="addtocartbulk">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCartBulk"/>
+        <response name="success" type="view" value="keywordsearch"/>
+        <response name="error" type="view" value="keywordsearch"/>
+    </request-map>
     <request-map uri="category">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="category"/>
