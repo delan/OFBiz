@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/09 01:28:07  jonesde
+ * More progress on event and workers, upcoming events worker mostly there
+ *
  * Revision 1.1  2001/11/08 03:03:46  jonesde
  * Initial WorkEffort event and worker files, very little functionality in place so far
  *
@@ -242,11 +245,13 @@ public class WorkEffortEvents {
     }
     
     //done validating, now go about setting values and storing them...
-    GenericValue newWorkEffort = (GenericValue)workEffort.clone();
+    GenericValue newWorkEffort = null;
+    if(workEffort != null) newWorkEffort = (GenericValue)workEffort.clone();
+    else newWorkEffort = delegator.makeValue("WorkEffort", null);
     Timestamp nowStamp = UtilDateTime.nowTimestamp();
     
     //if necessary create new status entry, and set lastStatusUpdate date
-    if(currentStatusId != null && !currentStatusId.equals(workEffort.getString("currentStatusId"))) {
+    if(workEffort == null || (currentStatusId != null && !currentStatusId.equals(workEffort.getString("currentStatusId")))) {
       newWorkEffort.preStoreOther(delegator.makeValue("WorkEffortStatus", UtilMisc.toMap("workEffortId", workEffortId, "statusId", currentStatusId, "statusDatetime", nowStamp)));
       newWorkEffort.set("currentStatusId", currentStatusId);
       newWorkEffort.set("lastStatusUpdate", nowStamp);
@@ -289,7 +294,12 @@ public class WorkEffortEvents {
     
     if(updateMode.equals("CREATE")) {
       newWorkEffort.set("createdDate", nowStamp);
-      if(userLogin.get("partyId") != null) newWorkEffort.set("createdByPartyId", userLogin.get("partyId"));
+      if(userLogin.get("partyId") != null) {
+        newWorkEffort.set("createdByPartyId", userLogin.get("partyId"));
+        //add a party assignment for the creator of the event
+        newWorkEffort.preStoreOther(delegator.makeValue("WorkEffortPartyAssignment", 
+          UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId"), "roleTypeId", "CAL_OWNER", "fromDate", nowStamp, "statusId", "CAL_ASN_ACCEPTED")));
+      }
       
       GenericValue createWorkEffort = null;
       try { createWorkEffort = delegator.create(newWorkEffort); }
@@ -298,6 +308,7 @@ public class WorkEffortEvents {
         request.setAttribute("ERROR_MESSAGE", "Could not create new WorkEffort (write error)");
         return "error";
       }
+      request.setAttribute("WORK_EFFORT_ID", workEffortId);
     }
     else if(updateMode.equals("UPDATE")) {
       try { newWorkEffort.store(); }
@@ -312,6 +323,90 @@ public class WorkEffortEvents {
       return "error";
     }
     
+    return "success";
+  }
+
+  /** Updates WorkEffortPartyAssignment information according to UPDATE_MODE parameter
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
+  public static String updateWorkEffortPartyAssignment(HttpServletRequest request, HttpServletResponse response) {
+  /* --- Needs to be finished...
+    String errMsg = "";
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+    Security security = (Security)request.getAttribute("security");
+    Timestamp nowStamp = UtilDateTime.nowTimestamp();
+    
+    GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+    if(userLogin == null) {
+      request.setAttribute("ERROR_MESSAGE", "You must be logged in to update a Work Effort.");
+      return "error";
+    }
+    
+    String updateMode = request.getParameter("UPDATE_MODE");
+    if(updateMode == null || updateMode.length() <= 0) {
+      request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+      Debug.logWarning("[WorkEffortEvents.updateWorkEffort] Update Mode was not specified, but is required");
+      return "error";
+    }
+    
+    String workEffortId = null;
+    String partyId = null;
+    String roleTypeId = null;
+    Timestamp fromDate = null;
+    GenericValue workEffortPartyAssignment = null;
+    if("CREATE".equals(updateMode)) {
+      fromDate = nowStamp;
+    }
+    else {
+      //get, and validate, the primary keys
+      workEffortId = request.getParameter("WORK_EFFORT_ID");
+      if(!UtilValidate.isNotEmpty(workEffortId)) errMsg += "<li>Work Effort ID missing.";
+      if(errMsg.length() > 0) {
+        errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+        request.setAttribute("ERROR_MESSAGE", errMsg);
+        return "error";
+      }
+
+      //do a findByPrimary key to see if the entity exists, and other things later
+      try { workEffortPartyAssignment = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId)); }
+      catch(GenericEntityException e) { Debug.logWarning(e); }
+
+      //check permissions before moving on:
+      // 1) if create, no permission necessary
+      // 2) if update or delete logged in user must be associated OR have the corresponding UPDATE or DELETE permissions
+      boolean associatedWith = (userLogin.getString("partyId").equals(workEffortPartyAssignment.getString("partyId")))?true:false;
+      if(!associatedWith && !security.hasEntityPermission("WORKEFFORTMGR", "_" + updateMode, request.getSession())) {
+        request.setAttribute("ERROR_MESSAGE", "You cannot update or delete this Work Effort, you must either be associated with it or have administration permission.");
+        return "error";
+      }
+    }
+    
+    //if this is a delete, do that before getting all of the non-pk parameters and validating them
+    if(updateMode.equals("DELETE")) {
+      if(workEffortPartyAssignment != null) {
+        //NOTE: this is pretty weak for handling removal in clean way; what we really need
+        // is the upcoming generic transaction token stuff in the Entity Engine
+        
+        //Remove associated/dependent entries from other tables here
+
+        //Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared
+        try { workEffortPartyAssignment.remove(); }
+        catch(GenericEntityException e) { errMsg += e.getMessage(); }
+        if(errMsg.length() > 0) {
+          errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+          request.setAttribute("ERROR_MESSAGE", errMsg);
+          return "error";
+        }
+        else return "success";
+      }
+      else {
+        request.setAttribute("ERROR_MESSAGE", "Could not find Work Effort with ID" + workEffortId + ", workEffortPartyAssignment not deleted.");
+        return "error";
+      }
+    }
+   */
     return "success";
   }
 }

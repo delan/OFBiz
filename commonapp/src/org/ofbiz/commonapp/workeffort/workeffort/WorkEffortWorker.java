@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/11 03:35:48  jonesde
+ * Updated upcoming events worker to use view entity, left old code in as an example (of inefficiency...)
+ *
  * Revision 1.2  2001/11/09 01:28:07  jonesde
  * More progress on event and workers, upcoming events worker mostly there
  *
@@ -44,31 +47,41 @@ import java.util.*;
  * Created on November 7, 2001
  */
 public class WorkEffortWorker {
-  public static void getWorkEffort(PageContext pageContext, String workEffortIdAttrName, String workEffortAttrName, String partyAssignsAttrName, String canViewAttrName) {
+  public static void getWorkEffort(PageContext pageContext, String workEffortIdAttrName, String workEffortAttrName, String partyAssignsAttrName, String canViewAttrName, String tryEntityAttrName) {
     GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
     Security security = (Security)pageContext.getServletContext().getAttribute("security");
     GenericValue userLogin = (GenericValue)pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
     
     String workEffortId = pageContext.getRequest().getParameter("WORK_EFFORT_ID");
+    //if there was no parameter, check the request attribute, this may be a newly created entity
+    if(workEffortId == null) workEffortId = (String)pageContext.getRequest().getAttribute("WORK_EFFORT_ID");
+    
     GenericValue workEffort = null;
     try { workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId)); }
     catch(GenericEntityException e) { Debug.logWarning(e); }
 
-    //get a collection of workEffortPartyAssignments, if empty then this user CANNOT view the event, unless they have permission to view all
+    Boolean canView = null;
     Collection workEffortPartyAssignments = null;
-    if(userLogin != null && userLogin.get("partyId") != null && workEffortId != null) {
-      try { workEffortPartyAssignments = delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId"))); }
-      catch(GenericEntityException e) { Debug.logWarning(e); }
-    }
-    Boolean canView = (workEffortPartyAssignments != null && workEffortPartyAssignments.size()>0)?new Boolean(true):new Boolean(false);
-    if(!canView.booleanValue() && security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", pageContext.getSession())) {
+    if(workEffort == null) {
       canView = new Boolean(true);
+    }
+    else {
+      //get a collection of workEffortPartyAssignments, if empty then this user CANNOT view the event, unless they have permission to view all
+      if(userLogin != null && userLogin.get("partyId") != null && workEffortId != null) {
+        try { workEffortPartyAssignments = delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId"))); }
+        catch(GenericEntityException e) { Debug.logWarning(e); }
+      }
+      canView = (workEffortPartyAssignments != null && workEffortPartyAssignments.size()>0)?new Boolean(true):new Boolean(false);
+      if(!canView.booleanValue() && security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", pageContext.getSession())) {
+        canView = new Boolean(true);
+      }
     }
     
     if(workEffortId != null) pageContext.setAttribute(workEffortIdAttrName, workEffortId);
     if(workEffort != null) pageContext.setAttribute(workEffortAttrName, workEffort);
     if(canView != null) pageContext.setAttribute(canViewAttrName, canView);
     if(workEffortPartyAssignments != null) pageContext.setAttribute(partyAssignsAttrName, workEffortPartyAssignments);
+    pageContext.setAttribute(tryEntityAttrName, new Boolean(workEffort==null?false:true));
   }
     
   public static void getMonthWorkEfforts(PageContext pageContext, String attributeName) {
@@ -140,10 +153,13 @@ public class WorkEffortWorker {
     if(validWorkEfforts != null) wfiter = validWorkEfforts.iterator();
     while(wfiter != null && wfiter.hasNext()) {
       GenericValue workEffort = (GenericValue)wfiter.next();
+      //Debug.log("Got workEffort: " + workEffort.toString());      
+      
       Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
+      if(estimatedStartDate == null) continue;
       
       Calendar startCal = Calendar.getInstance();
-      startCal.setTime(estimatedStartDate);
+      startCal.setTime(new java.util.Date(estimatedStartDate.getTime()));
       int startYear = startCal.get(Calendar.YEAR);
       int startDay = startCal.get(Calendar.DAY_OF_YEAR);
       if(lastYear < startYear || lastDay < startDay) {
