@@ -146,11 +146,21 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 
 <p>NOTE: Use the following at your own risk; make sure you know what you are doing before running these...</p>
 
+
+<script language="JavaScript">
+ <!--
+     function enableTablesRemove() {
+         document.forms["TablesRemoveForm"].elements["TablesRemoveButton"].disabled=false;
+     }
+ //-->
+</script>
+
 <H3>Remove All Tables</H3>
-<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>" name="TablesRemoveForm">
   <input type="hidden" name="option" value="removetables"/>
   Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
-  <input type="submit" value="Remove"/>
+  <input type="submit" value="Remove" name="TablesRemoveButton" disabled/>
+  <input type="button" value="Enable" onClick="enableTablesRemove();"/>
 </form>
 
 <H3>Create/Remove All Primary Keys</H3>
