@@ -354,7 +354,7 @@
         <key-map field-name="orderId"/>
       </relation>
       <relation type="many" title="Primary" rel-entity-name="Shipment">
-        <key-map field-name="orderId" rel-field-name="primarOrderId"/>
+        <key-map field-name="orderId" rel-field-name="primaryOrderId"/>
       </relation>
       <relation type="many" rel-entity-name="ItemIssuance">
         <key-map field-name="orderId"/>
