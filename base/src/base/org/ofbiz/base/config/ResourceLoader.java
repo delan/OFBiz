@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceLoader.java,v 1.4 2003/11/25 07:48:13 jonesde Exp $
+ * $Id: ResourceLoader.java,v 1.5 2004/05/01 13:43:06 jonesde Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,14 +40,13 @@ import org.w3c.dom.Element;
  * Loads resources using dynamically specified resource loader classes
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.0
  */
 public abstract class ResourceLoader {
     
     public static final String module = ResourceLoader.class.getName();
     protected static UtilCache loaderCache = new UtilCache("resource.ResourceLoaders", 0, 0);
-    protected static Map docSaveMap = new HashMap();
 
     protected String name;
     protected String prefix;
@@ -103,17 +102,15 @@ public abstract class ResourceLoader {
     }
 
     public static void invalidateDocument(String xmlFilename) throws GenericConfigException {
-        synchronized (ResourceLoader.class) {
-            docSaveMap.remove(xmlFilename);
-        }
+        loaderCache.clearCachesThatStartWith(xmlFilename);
     }
 
     public static Document getXmlDocument(String xmlFilename) throws GenericConfigException {
-        Document document = (Document) docSaveMap.get(xmlFilename);
+        Document document = (Document) loaderCache.get(xmlFilename);
 
         if (document == null) {
             synchronized (ResourceLoader.class) {
-                document = (Document) docSaveMap.get(xmlFilename);
+                document = (Document) loaderCache.get(xmlFilename);
                 if (document == null) {
                     URL confUrl = UtilURL.fromResource(xmlFilename);
 
@@ -132,7 +129,7 @@ public abstract class ResourceLoader {
                     }
 
                     if (document != null) {
-                        docSaveMap.put(xmlFilename, document);
+                        loaderCache.put(xmlFilename, document);
                     }
                 }
             }
