@@ -1496,12 +1496,14 @@
             location="org.ofbiz.content.ContentManagementServices" invoke="incrementContentChildStats">
         <description>Set childLeafCount and childBranchCount in parent Content entities</description>
         <attribute name="contentId" type="String" mode="IN" optional="false"/>
+        <attribute name="contentAssocTypeId" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="decrementContentChildStats" engine="java"
             location="org.ofbiz.content.ContentManagementServices" invoke="decrementContentChildStats">
         <description>Set childLeafCount and childBranchCount in parent Content entities</description>
         <attribute name="contentId" type="String" mode="IN" optional="false"/>
+        <attribute name="contentAssocTypeId" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="updateContentChildStats" engine="java"
@@ -1509,6 +1511,7 @@
             location="org.ofbiz.content.ContentManagementServices" invoke="updateContentChildStats">
         <description>Set childLeafCount and childBranchCount in passed id and those below</description>
         <attribute name="contentId" type="String" mode="IN" optional="false"/>
+        <attribute name="contentAssocTypeId" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="updateImage" engine="java"
