@@ -166,6 +166,7 @@
       <field name="agreementId" type="id-ne"></field>
       <field name="agreementItemSeqId" type="id-ne"></field>
       <field name="agreementItemTypeId" type="id"></field>
+      <field name="currencyUomId" type="id"></field>
       <field name="agreementText" type="long-varchar"></field>
       <field name="agreementImage" type="blob"></field>
       <prim-key field="agreementId"/>
@@ -299,7 +300,8 @@
       <field name="agreementItemSeqId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="termValue" type="numeric"></field>
+      <field name="termValue" type="currency-amount"></field>
+      <field name="termDays" type="numeric"></field>
       <prim-key field="agreementTermId"/>
       <relation type="one" fk-name="AGRMNT_TERM_TTYP" rel-entity-name="TermType">
         <key-map field-name="termTypeId"/>
