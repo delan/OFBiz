@@ -430,7 +430,7 @@
       <relation type="one-nofk" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId"/>
       </relation>
-      <relation type="one-nokf" title="Origin" rel-entity-name="Facility">
+      <relation type="one-nofk" title="Origin" rel-entity-name="Facility">
         <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderTypeAttr">
