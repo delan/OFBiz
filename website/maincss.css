@@ -18,14 +18,14 @@
   }
 
   .head1 {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     margin: 0px; font-size: large;
     font-weight: bold;
     color: #000099;
   }
 
   .head2 {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     margin: 0px;
     font-size: medium;
     font-weight: bold;
@@ -33,7 +33,7 @@
   }
 
   .head3 {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     margin: 0px;
     font-size: small;
     font-weight: bold;
@@ -41,7 +41,7 @@
   }
 
   .info {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     margin: 0px;
     font-size: x-small;
     font-style: normal;
@@ -50,12 +50,12 @@
 
   .tabletext {
     font-size: x-small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
   }
 
   .contenttext {
     font-size: small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
   }
 
   .headerboxoutside {
@@ -80,7 +80,7 @@
   }
 
   .boxhead {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     margin: 0px;
     font-size: small;
     font-weight: bold;
@@ -96,7 +96,7 @@
   }
 
   .boxtop {
-    background-color: #6666CC;
+    background-color: #000099;
     padding-top: 1px;
     padding-bottom: 1px;
     padding-right: 4px;
@@ -124,7 +124,7 @@
   }
 
   A.buttontext {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: x-small;
     font-weight: bold;
     text-decoration: none;
@@ -136,15 +136,35 @@
   }
 
   .buttontextdisabled {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: x-small;
     font-weight: bold;
     text-decoration: none;
     color: #333333;
   }
+  
+  A.headerbuttontext {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: x-small;
+    font-weight: bold;
+    text-decoration: none;
+    color: #000099;
+  }
+
+  A.headerbuttontext:hover {
+    color: red;
+  }
+
+  .headerbuttontextdisabled {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: x-small;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333333;
+  }  
 
   A.lightbuttontext {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: x-small;
     font-weight: bold;
     text-decoration: none;
@@ -156,7 +176,7 @@
   }
 
   .lightbuttontextdisabled {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: x-small;
     font-weight: bold;
     text-decoration: none;
@@ -164,7 +184,7 @@
   }
 
   A.buttontextbig {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: medium;
     font-weight: bold;
     text-decoration: none;
@@ -189,7 +209,7 @@
   }
 
   .headerButtonLeft:hover {
-    background-color: #EEEECC
+    background-color: #EEEECC;
   }
 
   .headerButtonLeftSelected {
@@ -207,7 +227,7 @@
   }
 
   .headerButtonRight:hover {
-    background-color: #EEEECC
+    background-color: #EEEECC;
   }
 
   .headerButtonRightSelected {
@@ -238,7 +258,7 @@
   .headerCompanyName {
     margin: 0px;
     font-size: x-large;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     font-weight: bold;
     color: #330099;
     white-space: nowrap;
@@ -247,19 +267,19 @@
   .headerCompanySubtitle {
     margin: 0px;
     font-size: xx-small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     color: #330099;
     white-space: nowrap;
   }
 
   .insideHeaderText {
     font-size: small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     color: black;
   }
 
   A.insideHeaderLink {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: x-small;
     font-weight: bold;
     text-decoration: none;
@@ -271,7 +291,7 @@
   }
 
   .insideHeaderDisabled {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: x-small;
     font-weight: bold;
     text-decoration: none;
@@ -280,13 +300,13 @@
 
   .headersmalltext {
     font-size: small; 
-    font-family: Arial, Helvetica, sans-serif; 
+    font-family: Verdana, Arial, Helvetica, sans-serif; 
     font: bold; 
     color: black;
   }
   a.headersmalllink {
     font-size: small; 
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     font: bold; 
     color: blue; 
     text-decoration: none;
@@ -303,7 +323,7 @@
   }
 
   .errorMessage {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     margin: 0px;
     font-size: small;
     font-weight: bold;
@@ -311,7 +331,7 @@
   }
 
   .eventMessage {
-    font-family: Helvetica,sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     margin: 0px;
     font-size: small;
     font-weight: bold;
@@ -330,7 +350,7 @@
     font-size: small;
     font-weight: bold;
     color: white;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     text-decoration: none;
     padding: 2px;
   }
@@ -347,7 +367,7 @@
     font-size: x-small;
     font-weight: bold;
     color: blue;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     text-decoration: none;
     padding: 2px;
   }
@@ -358,7 +378,7 @@
 
   .areaheader {
     font-size: x-small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     font-weight: bold;
     color: white;
     width: 100%;
@@ -378,53 +398,53 @@
   .viewOneTR1 {
     background-color: #99CCFF;
     font-size: x-small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
   }
 
   .viewOneTR2 {
     background-color: #CCFFFF;
     font-size: x-small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
   }
 
   .viewManyHeaderTR {
     background-color: #99CCFF;
     font-size: x-small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
   }
 
   .viewManyTR1 {
     background-color: #99FFCC;
     font-size: x-small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
   }
 
   .viewManyTR2 {
     background-color: #CCFFCC;
     font-size: x-small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
   }
 
   .editInputBox {
     background-color: white;
     font-size: x-small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
   }
 
   .basePrice {
     font-size: x-small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     color: black;
   }
 
   .normalPrice {
     font-size: x-small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     color: green;
   }
 
   .salePrice {
     font-size: x-small;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
     color: red;
   }
