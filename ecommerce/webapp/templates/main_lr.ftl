@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org -->
 <#--
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
