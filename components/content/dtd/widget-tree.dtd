@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-tree.dtd,v 1.1 2004/06/27 13:09:39 jonesde Exp $
+ *  $Id: widget-tree.dtd,v 1.2 2004/06/28 17:51:14 jonesde Exp $
 -->
 
 <!ELEMENT trees ( tree+ )>
@@ -36,22 +36,11 @@
     root-node-name CDATA #REQUIRED
 >
 
-<!ELEMENT node ( (entity | service), (screen | label), sub-node* )>
+<!ELEMENT node ( (entity-one | service), (screen | label), sub-node* )>
 <!ATTLIST node
     name CDATA #REQUIRED
 >
 
-    <!ELEMENT entity EMPTY>
-    <!ATTLIST entity
-        entity-name CDATA #REQUIRED
-        cache ( true | false ) "true"
-    >
-    
-    <!ELEMENT service EMPTY>
-    <!ATTLIST service
-        service-name CDATA #REQUIRED
-    >
-    
     <!ELEMENT screen EMPTY>
     <!ATTLIST screen
         screen-name CDATA #REQUIRED
@@ -65,13 +54,31 @@
         style CDATA #IMPLIED
     >
 
-<!ELEMENT sub-node ( constraint*, order-by*, field-map+ )>
+<!ELEMENT sub-node (entity-many | service)>
 <!ATTLIST sub-node
     node-name CDATA #REQUIRED
-    entity-name CDATA #REQUIRED
-    cache ( true | false ) "true"
-    filter-by-date ( true | false | by-name ) "by-name"
 >
+
+    <!ELEMENT service ( field-map* )>
+    <!ATTLIST service
+        service-name CDATA #REQUIRED
+        out-field-name CDATA "dataFound"
+        auto-field-map ( true | false ) "true"
+    >
+    
+    <!ELEMENT entity-one ( field-map* )>
+    <!ATTLIST entity-one
+        entity-name CDATA #REQUIRED
+        cache ( true | false ) "true"
+        auto-field-map ( true | false ) "true"
+    >
+    
+    <!ELEMENT entity-many ( constraint*, order-by*, field-map+ )>
+    <!ATTLIST entity-many
+        entity-name CDATA #REQUIRED
+        cache ( true | false ) "true"
+        filter-by-date ( true | false | by-name ) "by-name"
+    >
 
     <!ELEMENT constraint EMPTY>
     <!ATTLIST constraint
@@ -90,11 +97,12 @@
         to-field-name CDATA #IMPLIED
     >
 
+
 <!-- examples
 <trees>
     <tree name="ProductCategoryTree" root-node-name="ChildProductCategory">
         <node name="ChildProductCategory">
-            <entity entity-name="ProductCategory"/>
+            <entity-one entity-name="ProductCategory"/>
             <label text="${description} [${productCategoryId}]" style="tabletext"/>
             <sub-node node-name="ChildProductCategory" entity-name="ProductCategoryRollup">
                 <constraint field-name="parentProductCategoryId" value="${productCategoryId}"/>
@@ -105,17 +113,21 @@
     </tree>
     <tree name="ProductCategoryAndProductsTree" root-node-name="ChildProductCategory">
         <node name="ChildProductCategory">
-            <entity entity-name="ProductCategory"/>
+            <entity-one entity-name="ProductCategory"/>
             <label text="${description} [${productCategoryId}]" style="tableheadtext"/>
-            <sub-node node-name="ChildProductCategory" entity-name="ProductCategoryRollup">
-                <constraint field-name="parentProductCategoryId" value="${productCategoryId}"/>
-                <order-by field-name="sequenceNum"/>
-                <field-map field-name="productCategoryId"/>
+            <sub-node node-name="ChildProductCategory">
+                <entity-many entity-name="ProductCategoryRollup">
+                    <constraint field-name="parentProductCategoryId" value="${productCategoryId}"/>
+                    <order-by field-name="sequenceNum"/>
+                    <field-map field-name="productCategoryId"/>
+                </entity-many>
             </sub-node>
-            <sub-node node-name="ChildProduct" entity-name="ProductCategoryMember">
-                <constraint field-name="productCategoryId" value="${productCategoryId}"/>
-                <order-by field-name="sequenceNum"/>
-                <field-map field-name="productId"/>
+            <sub-node node-name="ChildProduct">
+                <entity-many entity-name="ProductCategoryMember">
+                    <constraint field-name="productCategoryId" value="${productCategoryId}"/>
+                    <order-by field-name="sequenceNum"/>
+                    <field-map field-name="productId"/>
+                </entity-many>
             </sub-node>
         </node>
         <node name="ChildProduct">
