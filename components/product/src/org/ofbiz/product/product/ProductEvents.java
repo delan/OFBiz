@@ -1,25 +1,17 @@
 /*
- * $Id: ProductEvents.java,v 1.5 2004/01/21 14:28:49 jonesde Exp $
- *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * $Id: ProductEvents.java,v 1.6 2004/01/22 00:23:00 jonesde Exp $
+ * 
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.ofbiz.product.product;
 
@@ -48,19 +40,23 @@ import org.ofbiz.service.LocalDispatcher;
 
 /**
  * Product Information Related Events
- *
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
- * @since      2.0
+ * 
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version $Revision: 1.6 $
+ * @since 2.0
  */
 public class ProductEvents {
-    
+
     public static final String module = ProductEvents.class.getName();
 
-    /** Updates ProductKeyword information according to UPDATE_MODE parameter, only support CREATE and DELETE, no modify becuse all fields are PKs
-     *@param request The HTTPRequest object for the current request
-     *@param response The HTTPResponse object for the current request
-     *@return String specifying the exit status of this event
+    /**
+     * Updates ProductKeyword information according to UPDATE_MODE parameter, only support CREATE and DELETE, no modify becuse all fields are PKs
+     * 
+     * @param request
+     *                The HTTPRequest object for the current request
+     * @param response
+     *                The HTTPResponse object for the current request
+     * @return String specifying the exit status of this event
      */
     public static String updateProductKeyword(HttpServletRequest request, HttpServletResponse response) {
         String errMsg = "";
@@ -77,7 +73,9 @@ public class ProductEvents {
 
         // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute("_ERROR_MESSAGE_", "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(
+                "_ERROR_MESSAGE_",
+                "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
 
@@ -97,8 +95,9 @@ public class ProductEvents {
 
         if (updateMode.equals("CREATE")) {
             keyword = keyword.toLowerCase();
-            
-            GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword, "relevancyWeight", relevancyWeight));
+
+            GenericValue productKeyword =
+                delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword, "relevancyWeight", relevancyWeight));
             GenericValue newValue = null;
 
             try {
@@ -151,10 +150,14 @@ public class ProductEvents {
         return "success";
     }
 
-    /** Update (create/induce or delete) all keywords for a given Product
-     *@param request The HTTPRequest object for the current request
-     *@param response The HTTPResponse object for the current request
-     *@return String specifying the exit status of this event
+    /**
+     * Update (create/induce or delete) all keywords for a given Product
+     * 
+     * @param request
+     *                The HTTPRequest object for the current request
+     * @param response
+     *                The HTTPResponse object for the current request
+     * @return String specifying the exit status of this event
      */
     public static String updateProductKeywords(HttpServletRequest request, HttpServletResponse response) {
         String errMsg = "";
@@ -171,7 +174,9 @@ public class ProductEvents {
 
         // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute("_ERROR_MESSAGE_", "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(
+                "_ERROR_MESSAGE_",
+                "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
 
@@ -218,10 +223,14 @@ public class ProductEvents {
         return "success";
     }
 
-    /** Updates/adds keywords for all products
-     *@param request The HTTPRequest object for the current request
-     *@param response The HTTPResponse object for the current request
-     *@return String specifying the exit status of this event
+    /**
+     * Updates/adds keywords for all products
+     * 
+     * @param request
+     *                The HTTPRequest object for the current request
+     * @param response
+     *                The HTTPResponse object for the current request
+     * @return String specifying the exit status of this event
      */
     public static String updateAllKeywords(HttpServletRequest request, HttpServletResponse response) {
         String errMsg = "";
@@ -236,14 +245,14 @@ public class ProductEvents {
             return "error";
         }
 
-		EntityListIterator entityListIterator = null;
+        EntityListIterator entityListIterator = null;
 
-		try {
-			entityListIterator = delegator.findListIteratorByCondition("Product", null, null, null);
-		} catch (GenericEntityException gee) {
-			Debug.logWarning(gee.getMessage(), module);
-			entityListIterator = null;
-		}
+        try {
+            entityListIterator = delegator.findListIteratorByCondition("Product", null, null, null);
+        } catch (GenericEntityException gee) {
+            Debug.logWarning(gee.getMessage(), module);
+            entityListIterator = null;
+        }
 
         int numProds = 0;
         int errProds = 0;
@@ -257,7 +266,7 @@ public class ProductEvents {
                     request.setAttribute("_ERROR_MESSAGE_", "Could not create keywords (write error).");
                     Debug.logWarning("[ProductEvents.updateAllKeywords] Could not create product-keyword (write error); message: " + e.getMessage(), module);
                     try {
-                    	entityListIterator.close();
+                        entityListIterator.close();
                     } catch (GenericEntityException gee) {
                         Debug.logError(gee, "Error closing EntityListIterator when indexing product keywords.", module);
                     }
@@ -267,27 +276,33 @@ public class ProductEvents {
             numProds++;
         }
 
-		if (entityListIterator != null) {
-			try {
-				entityListIterator.close();
-			} catch (GenericEntityException gee) {
+        if (entityListIterator != null) {
+            try {
+                entityListIterator.close();
+            } catch (GenericEntityException gee) {
                 Debug.logError(gee, "Error closing EntityListIterator when indexing product keywords.", module);
-			}
+            }
         }
-        
+
         if (errProds == 0) {
             request.setAttribute("_EVENT_MESSAGE_", "Keyword creation complete for " + numProds + " products.");
             return "success";
         } else {
-            request.setAttribute("_ERROR_MESSAGE_", "Keyword creation complete for " + numProds + " products, with errors in " + errProds + " products (see the log for more details).");
+            request.setAttribute(
+                "_ERROR_MESSAGE_",
+                "Keyword creation complete for " + numProds + " products, with errors in " + errProds + " products (see the log for more details).");
             return "error";
         }
     }
 
-    /** Updates ProductAssoc information according to UPDATE_MODE parameter
-     *@param request The HTTPRequest object for the current request
-     *@param response The HTTPResponse object for the current request
-     *@return String specifying the exit status of this event
+    /**
+     * Updates ProductAssoc information according to UPDATE_MODE parameter
+     * 
+     * @param request
+     *                The HTTPRequest object for the current request
+     * @param response
+     *                The HTTPResponse object for the current request
+     * @return String specifying the exit status of this event
      */
     public static String updateProductAssoc(HttpServletRequest request, HttpServletResponse response) {
         String errMsg = "";
@@ -304,7 +319,9 @@ public class ProductEvents {
 
         // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute("_ERROR_MESSAGE_", "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(
+                "_ERROR_MESSAGE_",
+                "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
 
@@ -354,11 +371,9 @@ public class ProductEvents {
         delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId));
 
         delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productAssocTypeId", productAssocTypeId));
-        delegator.clearCacheLine("ProductAssoc",
-            UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
+        delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
 
-        GenericValue tempProductAssoc = delegator.makeValue("ProductAssoc",
-                UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
+        GenericValue tempProductAssoc = delegator.makeValue("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
 
         if (updateMode.equals("DELETE")) {
             GenericValue productAssoc = null;
@@ -483,7 +498,9 @@ public class ProductEvents {
 
         // check permissions before moving on...
         if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
-            request.setAttribute("_ERROR_MESSAGE_", "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+            request.setAttribute(
+                "_ERROR_MESSAGE_",
+                "You do not have sufficient permissions to " + updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
             return "error";
         }
 
@@ -550,7 +567,10 @@ public class ProductEvents {
         GenericValue productStoreEmail = null;
         String emailType = "PRDS_TELL_FRIEND";
         try {
-            productStoreEmail = delegator.findByPrimaryKey("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", productStore.get("productStoreId"), "emailType", emailType));
+            productStoreEmail =
+                delegator.findByPrimaryKey(
+                    "ProductStoreEmailSetting",
+                    UtilMisc.toMap("productStoreId", productStore.get("productStoreId"), "emailType", emailType));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get product store email setting for tell-a-frield", module);
             return "error";
@@ -585,7 +605,7 @@ public class ProductEvents {
 
     /** Simple event to set the users initial locale and currency Uom based on website product store */
     public static String setDefaultStoreSettings(HttpServletRequest request, HttpServletResponse response) {
-        GenericValue  productStore = ProductStoreWorker.getProductStore(request);
+        GenericValue productStore = ProductStoreWorker.getProductStore(request);
         if (productStore != null) {
             // request.getSession().setAttribute("productStoreGroupId", productStore.getString("primaryStoreGroupId"));
             UtilHttp.setLocale(request, productStore.getString("defaultLocaleString"));
