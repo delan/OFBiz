@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/09/01 01:59:44  azeneski
+ * Cleaned up catalog files, using new taglibs.
+ *
  * Revision 1.2  2001/08/27 17:29:31  epabst
  * simplified
  *
@@ -57,7 +60,7 @@ import org.ofbiz.core.entity.GenericHelperFactory;
  */
 public class CatalogHelper {
     
-    public static void getRelatedCategories(PageContext pageContext, String parentId) {        
+    public static void getRelatedCategories(PageContext pageContext, String attributeName, String parentId) {        
         ArrayList categories = new ArrayList();
         GenericHelper helper = GenericHelperFactory.getDefaultHelper();
         Collection rollups = helper.findByAnd("ProductCategoryRollup",UtilMisc.toMap("parentProductCategoryId",parentId),null);
@@ -76,10 +79,10 @@ public class CatalogHelper {
         }
         
         if ( categories.size() > 0 ) 
-            pageContext.setAttribute("categoryList",categories);
+            pageContext.setAttribute(attributeName,categories);
     }
     
-    public static void getRelatedProducts(PageContext pageContext, String parentId) {                
+    public static void getRelatedProducts(PageContext pageContext, String attributeName, String parentId) {                
         ArrayList products = new ArrayList();
         GenericHelper helper = GenericHelperFactory.getDefaultHelper();
         GenericValue category = helper.findByPrimaryKey("ProductCategory",UtilMisc.toMap("productCategoryId",parentId));
@@ -90,15 +93,15 @@ public class CatalogHelper {
         }            
         
         if ( products.size() > 0 )
-            pageContext.setAttribute("productList",products);
+            pageContext.setAttribute(attributeName,products);
     }
     
-    public static void getProduct(PageContext pageContext, String productId) {    
+    public static void getProduct(PageContext pageContext, String attributeName, String productId) {    
         GenericValue product = null;
         GenericHelper helper = GenericHelperFactory.getDefaultHelper();
         product = helper.findByPrimaryKey("Product",UtilMisc.toMap("productId", productId));
         if ( product != null )
-            pageContext.setAttribute("productValue",product);
+            pageContext.setAttribute(attributeName,product);
     }
     
 }

@@ -8,7 +8,7 @@
 
 <%
 	// Get the value object of the request product id.
-	org.ofbiz.ecommerce.catalog.CatalogHelper.getProduct(pageContext,request.getParameter("product_id"));
+	org.ofbiz.ecommerce.catalog.CatalogHelper.getProduct(pageContext,"productValue",request.getParameter("product_id"));
 %>
 
 <ofbiz:unless name="productValue">

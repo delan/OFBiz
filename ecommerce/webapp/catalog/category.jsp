@@ -8,9 +8,9 @@
 
 <%
 	// Get a list of all available categories.
-	org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedCategories(pageContext,request.getParameter("category_id"));
+	org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedCategories(pageContext,"categoryList",request.getParameter("category_id"));
 	// Get a list of all available products.
-	org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedProducts(pageContext,request.getParameter("category_id"));
+	org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedProducts(pageContext,"productList",request.getParameter("category_id"));
 %>
 
 <br><br>

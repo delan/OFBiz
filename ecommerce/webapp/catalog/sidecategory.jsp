@@ -1,6 +1,6 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedCategories(pageContext,"CATALOG1");%>
+<%org.ofbiz.ecommerce.catalog.CatalogHelper.getRelatedCategories(pageContext,"categoryList","CATALOG1");%>
 
 <table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
   <tr>
