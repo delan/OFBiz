@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  Dynamic OFBiz Containers Definition DTD
- *  $Id: ofbiz-containers.dtd,v 1.4 2003/08/17 03:11:29 ajzeneski Exp $
+ *  $Id: ofbiz-containers.dtd,v 1.5 2004/05/25 22:45:26 ajzeneski Exp $
 -->
 
 <!ELEMENT ofbiz-containers ( container+ )>
@@ -36,11 +36,13 @@
     class CDATA #REQUIRED
 >
 
-<!ELEMENT property ( property* )>
+<!ELEMENT property ( property*, property-value? )>
 <!ATTLIST property
     name CDATA #REQUIRED
     value CDATA #IMPLIED
 >
+
+<!ELEMENT property-value ANY>
 
 <!--
 
