@@ -43,7 +43,7 @@
 <!ENTITY % CallOperations "call-map-processor | call-service | call-service-asynch | call-bsh | check-errors">
 <!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field">
 <!ENTITY % ServiceOperations "field-to-result">
-<!ENTITY % EnvOperations "field-to-field | env-to-list | env-to-field | field-to-env">
+<!ENTITY % EnvOperations "field-to-field | env-to-list | env-to-field | field-to-env | string-to-field | property-to-field">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env">
 <!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and">
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-by-and">
@@ -278,6 +278,19 @@ Error messages go on the error list and are handled with the check-errors tag.
     env-name CDATA #REQUIRED
     map-name CDATA #REQUIRED
     field-name CDATA #IMPLIED
+>
+<!ELEMENT string-to-field EMPTY>
+<!ATTLIST string-to-field
+    string CDATA #REQUIRED
+    map-name CDATA #IMPLIED
+    field-name CDATA #REQUIRED
+>
+<!ELEMENT property-to-field EMPTY>
+<!ATTLIST property-to-field
+    resource CDATA #REQUIRED
+    property CDATA #REQUIRED
+    map-name CDATA #IMPLIED
+    field-name CDATA #REQUIRED
 >
 
 <!--

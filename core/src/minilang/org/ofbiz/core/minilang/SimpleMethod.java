@@ -456,6 +456,10 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.EnvToField(curOperElem, simpleMethod));
                 } else if ("field-to-env".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.FieldToEnv(curOperElem, simpleMethod));
+                } else if ("string-to-field".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.StringToField(curOperElem, simpleMethod));
+                } else if ("property-to-field".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.PropertyToField(curOperElem, simpleMethod));
 
                 } else if ("now-timestamp-to-env".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.NowTimestampToEnv(curOperElem, simpleMethod));
