@@ -49,7 +49,7 @@ import org.ofbiz.core.util.*;
  */
 
 public class ModelFieldTypeReader {
-  public static Map readers = new Hashtable();
+  public static UtilCache readers = new UtilCache("ModelFieldTypeReader", 0, 0);
   
   public Map fieldTypeCache = null;
   

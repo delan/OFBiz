@@ -49,7 +49,7 @@ import org.ofbiz.core.util.*;
  */
 
 public class ModelReader {
-  public static Map readers = new Hashtable();
+  public static UtilCache readers = new UtilCache("ModelReader", 0, 0);
   
   public Map entityCache = null;
   
@@ -105,7 +105,8 @@ public class ModelReader {
       fileNamesStr = fileNamesStr.substring(fileNamesStr.indexOf(';')+1);
       fileNamesStr.trim();
     }
-    entityFileNames.add(fileNamesStr);
+    if(fileNamesStr.length() > 0)
+        entityFileNames.add(fileNamesStr);
     
     //preload caches...
     getEntityCache();

@@ -49,7 +49,7 @@ import org.ofbiz.core.util.*;
  */
 
 public class ModelGroupReader {
-  public static Map readers = new Hashtable();
+  public static UtilCache readers = new UtilCache("ModelGroupReader", 0, 0);
   
   private Map groupCache = null;
   private Set groupNames = null;
