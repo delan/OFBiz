@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.7 2003/12/07 18:50:34 ajzeneski Exp $
+ * $Id: LoginEvents.java,v 1.8 2004/01/12 09:55:28 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -297,14 +297,15 @@ public class LoginEvents {
         // also make sure the delegatorName is preserved, especially so that a new Visit can be created
         String delegatorName = (String) session.getAttribute("delegatorName");
         // also save the shopping cart if we have one
-        ShoppingCart shoppingCart = (ShoppingCart) session.getAttribute("shoppingCart");
+        // DON'T save the cart, causes too many problems: security issues with things done in cart to easy to miss, especially bad on public systems; was put in here because of the "not me" link for auto-login stuff, but that is a small problem compared to what it causes
+        //ShoppingCart shoppingCart = (ShoppingCart) session.getAttribute("shoppingCart");
 
         session.invalidate();
         session = request.getSession(true);
 
         if (currCatalog != null) session.setAttribute("CURRENT_CATALOG_ID", currCatalog);
         if (delegatorName != null) session.setAttribute("delegatorName", delegatorName);
-        if (shoppingCart != null) session.setAttribute("shoppingCart", new WebShoppingCart(shoppingCart, session));
+        // DON'T save the cart, causes too many problems: if (shoppingCart != null) session.setAttribute("shoppingCart", new WebShoppingCart(shoppingCart, session));
     }
 
     /**
