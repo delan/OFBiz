@@ -5,30 +5,30 @@
     <description>Common Application Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>	
-    <service name="sendMail" engine="java"
-            location="org.ofbiz.commonapp.common.CommonServices" invoke="sendMail">
-        <description>Send E-Mail Service</description>
+    
+    <service name="sendMailInterface" engine="interface" location="" invoke="">
+    	<description>Interface service for mail services</description>
         <attribute name="sendTo" type="String" mode="IN" optional="false"/>
         <attribute name="sendCc" type="String" mode="IN" optional="true"/>
         <attribute name="sendBcc" type="String" mode="IN" optional="true"/>
         <attribute name="sendFrom" type="String" mode="IN" optional="false"/>
-        <attribute name="subject" type="String" mode="IN" optional="false"/>
-        <attribute name="body" type="String" mode="IN" optional="false"/>
+        <attribute name="subject" type="String" mode="IN" optional="false"/>        
         <attribute name="sendVia" type="String" mode="IN" optional="false"/>
         <attribute name="sendType" type="String" mode="IN" optional="true"/>
-        <attribute name="contentType" type="String" mode="IN" optional="true"/>
+        <attribute name="contentType" type="String" mode="IN" optional="true"/>    	
     </service>
+    
+    <service name="sendMail" engine="java"
+            location="org.ofbiz.commonapp.common.CommonServices" invoke="sendMail">
+        <description>Send E-Mail Service</description>   
+        <implements service="sendMailInterface"/>     
+        <attribute name="body" type="String" mode="IN" optional="false"/>        
+    </service>
+    
     <service name="sendMailFromUrl" engine="java"
             location="org.ofbiz.commonapp.common.CommonServices" invoke="sendMailFromUrl">
         <description>Send E-Mail From URL Service</description>
-        <attribute name="sendTo" type="String" mode="IN" optional="false"/>
-        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
-        <attribute name="sendBcc" type="String" mode="IN" optional="true"/>
-        <attribute name="sendFrom" type="String" mode="IN" optional="false"/>
-        <attribute name="subject" type="String" mode="IN" optional="false"/>
-        <attribute name="sendVia" type="String" mode="IN" optional="false"/>
-        <attribute name="sendType" type="String" mode="IN" optional="true"/>
-        <attribute name="contentType" type="String" mode="IN" optional="true"/>
+        <implements service="sendMailInterface"/>
         <attribute name="bodyUrl" type="String" mode="IN" optional="false"/>
         <attribute name="bodyUrlParameters" type="java.util.Map" mode="IN" optional="true"/>
         <attribute name="body" type="String" mode="OUT" optional="false"/>
