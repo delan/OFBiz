@@ -528,7 +528,13 @@
     	<event type="service" invoke="updateShipmentPackage"/>
         <response name="success" type="view" value="QuickShipOrder"/>
         <response name="error" type="view" value="QuickShipOrder"/>
-    </request-map>        	
+    </request-map>
+    <request-map uri="setQuickRouteInfo">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="updateShipmentRouteSegment"/>
+        <response name="success" type="view" value="QuickShipOrder"/>
+        <response name="error" type="view" value="QuickShipOrder"/>
+    </request-map>          	
 
     <!-- ================ Shipment Items Requests ================= -->
     <request-map uri="EditShipmentItems">
