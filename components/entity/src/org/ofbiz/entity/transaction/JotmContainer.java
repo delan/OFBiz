@@ -1,8 +1,31 @@
+/*
+ * $Id: JotmContainer.java,v 1.2 2003/12/02 01:18:38 ajzeneski Exp $
+ *
+ * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
 package org.ofbiz.entity.transaction;
 
 import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerException;
-import org.ofbiz.base.util.Debug;
 import org.objectweb.carol.util.configuration.RMIConfigurationException;
 import org.objectweb.transaction.jta.TMService;
 import org.objectweb.jotm.Jotm;
@@ -11,17 +34,16 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: jaz
- * Date: Dec 1, 2003
- * Time: 1:46:07 PM
- * To change this template use Options | File Templates.
+ * JOTM Container
+ *
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision: 1.2 $
+ * @since      3.0
  */
 public class JotmContainer implements Container {
 
     public static final String module = JotmContainer.class.getName();
 
-    protected InitialContext icx = null;
     protected TMService jotm = null;
 
     public boolean start(String configFileLocation) throws ContainerException {
@@ -50,8 +72,8 @@ public class JotmContainer implements Container {
 
         // check JNDI
         try {
-            icx = new InitialContext();
-            Object o = icx.lookup("java:comp/UserTransaction");
+            InitialContext ic = new InitialContext();
+            Object o = ic.lookup("java:comp/UserTransaction");
             if (o == null) {
                 throw new NamingException("Object came back null");
             }
