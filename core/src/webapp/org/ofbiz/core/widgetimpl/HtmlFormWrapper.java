@@ -31,7 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.UtilHttp;
+import org.ofbiz.core.util.UtilValidate;
 import org.ofbiz.core.widget.form.FormFactory;
 import org.ofbiz.core.widget.form.FormStringRenderer;
 import org.ofbiz.core.widget.form.ModelForm;
@@ -70,8 +72,20 @@ public class HtmlFormWrapper {
         this.renderer = new HtmlFormRenderer(request, response);
         
         this.context = new HashMap();
-        context.put("parameters", UtilHttp.getParameterMap(request));
-        context.put("isError", Boolean.FALSE);
+        Map parameterMap = UtilHttp.getParameterMap(request);
+        context.put("parameters", parameterMap);
+
+        // if there was an error message, this is an error
+        if (UtilValidate.isNotEmpty((String) request.getAttribute(SiteDefs.ERROR_MESSAGE))) {
+            context.put("isError", Boolean.TRUE);
+        } else {
+            context.put("isError", Boolean.FALSE);
+        }
+        
+        // if a parameter was passed saying this is an error, it is an error
+        if ("true".equals((String) parameterMap.get("isError"))) {
+            context.put("isError", Boolean.TRUE);
+        }
     }
     
     public String renderFormString() {
@@ -80,6 +94,13 @@ public class HtmlFormWrapper {
         return buffer.toString();
     }
 
+    /** 
+     * Tells the form library whether this is a response to an error or not.
+     * Defaults on initialization according to the presense of an errorMessage
+     * in the request or if an isError parameter was passed to the page with 
+     * the value "true". If true then the prefilled values will come from the
+     * parameters Map instead of the value Map. 
+     */
     public void setIsError(boolean isError) {
         this.context.put("isError", new Boolean(isError));
     }
