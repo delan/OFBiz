@@ -120,11 +120,15 @@
     <bodycontent>NONE</bodycontent>
     <info>Outputs a string for an input box from either an entity field or a request parameter. 
           Decides which to use by checking to see if the entityattr exist and using the specified field if it does.
-          If the Boolean object referred to by the tryentityattr attribute is false, always tries to use the request parameter and ignores the entity field.</info>
+          If the Boolean object referred to by the tryentityattr attribute is false, always tries to use the request parameter and ignores the entity field.
+          If param is null or empty it is set to the value of field.
+          If fullattrs is set to true then name="[param]" and value="[value]" will be output in addition to just the [value].
+          By default fullattrs is false.</info>
     <attribute><name>field</name><required>true</required></attribute>
-    <attribute><name>param</name><required>true</required></attribute>
+    <attribute><name>param</name><required>false</required></attribute>
     <attribute><name>entityAttr</name><required>true</required></attribute>
     <attribute><name>tryEntityAttr</name><required>false</required></attribute>
     <attribute><name>default</name><required>false</required></attribute>
+    <attribute><name>fullattrs</name><required>false</required></attribute>
   </tag>
 </taglib>
