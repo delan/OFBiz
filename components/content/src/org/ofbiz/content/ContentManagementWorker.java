@@ -762,15 +762,18 @@ public class ContentManagementWorker {
     }
     
     public static void updateStatsBottomUp(GenericDelegator delegator, String contentId, List typeList, int changeAmount) throws GenericEntityException {
-        GenericValue thisContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+        GenericValue thisContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
         if (thisContent == null)
             throw new RuntimeException("No entity found for id=" + contentId);
         
         String thisContentId = thisContent.getString("contentId");
-        Integer leafCount = (Integer)thisContent.get("nodeLeafCount");
-        int subLeafCount = (leafCount == null) ? 0 : leafCount.intValue();
+        Object countObj = thisContent.get("childLeafCount");
+        int subLeafCount = 0;
+        if (countObj != null && countObj instanceof Long){
+        	subLeafCount = ((Long)countObj).intValue();
+        }
         subLeafCount += changeAmount;
-        thisContent.put("nodeLeafCount", new Integer(subLeafCount));
+        thisContent.put("childLeafCount", new Integer(subLeafCount));
         thisContent.store();
 
        List condList = new ArrayList();
@@ -787,8 +790,8 @@ public class ContentManagementWorker {
             Iterator iter = listFiltered.iterator();
             while (iter.hasNext()) {
                 GenericValue contentAssoc = (GenericValue)iter.next();
-                String subContentId = contentAssoc.getString("contentId");
-                updateStatsBottomUp(delegator, subContentId, typeList, changeAmount);
+                String contentIdTo = contentAssoc.getString("contentIdTo");
+                updateStatsBottomUp(delegator, contentIdTo, typeList, changeAmount);
             }
             
         
