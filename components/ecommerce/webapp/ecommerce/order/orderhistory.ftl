@@ -29,9 +29,9 @@
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align='left'><div class="boxhead">${requestAttributes.uiLabelMap.OrderHistory}</div></td>
+          <td align='left'><div class="boxhead">${uiLabelMap.OrderHistory}</div></td>
           <#--<td align='right'>
-            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[${requestAttributes.uiLabelMap.OrderBackHome}]</a>&nbsp;&nbsp;
+            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.OrderBackHome}]</a>&nbsp;&nbsp;
           </td>-->
         </tr>
       </table>      
@@ -45,19 +45,19 @@
             <table width="100%" cellpadding="1" cellspacing="0" border="0">
               <tr>
                 <td width="30%">
-                  <div class="tabletext"><b>${requestAttributes.uiLabelMap.CommonDate}</b></div>
+                  <div class="tabletext"><b>${uiLabelMap.CommonDate}</b></div>
                 </td>
                 <td width="10">&nbsp;</td>
                 <td width="15%">
-                  <div class="tabletext"><b><nobr>${requestAttributes.uiLabelMap.OrderOrder} #</nobr></b></div>
+                  <div class="tabletext"><b><nobr>${uiLabelMap.OrderOrder} #</nobr></b></div>
                 </td>
                 <td width="10">&nbsp;</td>
                 <td width="15%">
-                  <div class="tabletext"><b>${requestAttributes.uiLabelMap.CommonAmount}</b></div>
+                  <div class="tabletext"><b>${uiLabelMap.CommonAmount}</b></div>
                 </td>
                 <td width="10">&nbsp;</td>
                 <td width="15%">
-                  <div class="tabletext"><b>${requestAttributes.uiLabelMap.CommonStatus}</b></div>
+                  <div class="tabletext"><b>${uiLabelMap.CommonStatus}</b></div>
                 </td>
                 <td width="10">&nbsp;</td>
                 <td width="15%"><b></b></td>                
@@ -83,12 +83,12 @@
                   </td>
                   <td width="10">&nbsp;</td>
                   <td align=right>
-                    <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${requestAttributes.uiLabelMap.CommonView}]</a>
+                    <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${uiLabelMap.CommonView}]</a>
                   </td>
                 </tr>
               </#list>
               <#if !orderHeaderList?has_content>
-                <tr><td colspan="8"><div class='head3'>${requestAttributes.uiLabelMap.OrderNoOrderFound}</div></td></tr>
+                <tr><td colspan="8"><div class='head3'>${uiLabelMap.OrderNoOrderFound}</div></td></tr>
               </#if>
             </table>
           </td>

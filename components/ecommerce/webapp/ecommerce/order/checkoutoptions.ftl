@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -89,8 +89,7 @@ function toggleBillingAccount(box) {
 // -->
 </script>
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign cart = context.shoppingCart?if_exists>
+<#assign cart = shoppingCart?if_exists>
 <#assign shipping = !cart.containAllWorkEffortCartItems()> <#-- contains items which need shipping? -->
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
   <input type="hidden" name="checkoutpage" value="quick">
@@ -138,9 +137,9 @@ function toggleBillingAccount(box) {
                           </td>
                         </tr>
                       </#if>
-                       <#if context.shippingContactMechList?has_content>
+                       <#if shippingContactMechList?has_content>
                          <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                         <#list context.shippingContactMechList as shippingContactMech>
+                         <#list shippingContactMechList as shippingContactMech>
                            <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                            <tr>
                              <td align="left" valign="top" width="1%" nowrap>
@@ -198,11 +197,11 @@ function toggleBillingAccount(box) {
                   <td>
                     <table width='100%' cellpadding='1' border='0' cellpadding='0' cellspacing='0'>
                      <#if shipping == true>
-                      <#list context.carrierShipmentMethodList as carrierShipmentMethod>
+                      <#list carrierShipmentMethodList as carrierShipmentMethod>
                         <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                         <tr>
                           <td width='1%' valign="top" >
-                            <input type='radio' name='shipping_method' value='${shippingMethod}' <#if shippingMethod == context.chosenShippingMethod?default("N@A")>checked</#if>>
+                            <input type='radio' name='shipping_method' value='${shippingMethod}' <#if shippingMethod == chosenShippingMethod?default("N@A")>checked</#if>>
                           </td>
                           <td valign="top">
                             <div class='tabletext'>
@@ -307,7 +306,7 @@ function toggleBillingAccount(box) {
                           <div class="tabletext">${uiLabelMap.OrderEmailSentToFollowingAddresses}:</div>
                           <div class="tabletext">
                             <b>
-                              <#list context.emailList as email>
+                              <#list emailList as email>
                                 ${email.infoString?if_exists}<#if email_has_next>,</#if>
                               </#list>
                             </b>
@@ -364,7 +363,7 @@ function toggleBillingAccount(box) {
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
                       <tr>
                         <td width="1%" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == context.checkOutPaymentId>checked</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
                           <span class="tabletext">${uiLabelMap.OrderMoneyOrder}</span>
@@ -372,7 +371,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td width="1%" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == context.checkOutPaymentId>checked</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
                           <span class="tabletext">${uiLabelMap.OrderCOD}</span>
@@ -380,7 +379,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td width="1%" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == context.checkOutPaymentId>checked</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
                           <span class="tabletext">${uiLabelMap.AccountingPayWithWorldPay}</span>
@@ -388,7 +387,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td width="1%" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == context.checkOutPaymentId>checked</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
                           <span class="tabletext">${uiLabelMap.AccountingPayWithPayPal}</span>
@@ -396,7 +395,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
 
-                      <#list context.paymentMethodList as paymentMethod>
+                      <#list paymentMethodList as paymentMethod>
                         <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
                           <tr>

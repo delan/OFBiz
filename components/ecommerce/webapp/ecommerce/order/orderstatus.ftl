@@ -23,17 +23,15 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if orderHeader?has_content>
-  <#assign maySelectItems = true>
   <form name="addCommonToCartForm" action="<@ofbizUrl>/addordertocart/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" method="GET">
     <input type="hidden" name="add_all" value="false">
-    <input type="hidden" name="order_id" value="${orderHeader.orderId}">    
-    <#include "orderheader.ftl">
+    <input type="hidden" name="order_id" value="${orderHeader.orderId}">
+    ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderheader")}
     <br>
-    <#include "orderitems.ftl">
+    ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}
   </form>
 
 <#else>
-  <h3>${requestAttributes.uiLabelMap.OrderSpecifiedNotFound}.</h3>
+  <h3>${uiLabelMap.OrderSpecifiedNotFound}.</h3>
 </#if>

@@ -45,6 +45,21 @@
         </section>
     </screen>
 
+    <screen name="orderheader">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/orderheader.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="orderitems">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/orderitems.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
     <!-- =========== Top-Level and Stand-Alone Screens =========== -->
 
     <!-- Category Screens -->
@@ -128,6 +143,172 @@
                 <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/confirmorder.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="checkoutoptions">
+        <section>
+            <actions>
+                <set field="title-property" value="PageTitleCheckoutOptions"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutoptions.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutoptions.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="checkoutshippingaddress">
+        <section>
+            <actions>
+                <set field="rightbarScreenName" value="rightbar"/>
+
+                <set field="title-property" value="PageTitleCheckoutOptions"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutshippingaddress.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutshippingaddress.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="checkoutshippingoptions">
+        <section>
+            <actions>
+                <set field="rightbarScreenName" value="rightbar"/>
+
+                <set field="title-property" value="PageTitleCheckoutOptions"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutshippingoptions.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutshippingoptions.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="checkoutpayment">
+        <section>
+            <actions>
+                <set field="rightbarScreenName" value="rightbar"/>
+
+                <set field="title-property" value="PageTitleCheckoutOptions"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutpayment.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutpayment.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="splitship">
+        <section>
+            <actions>
+                <set field="title" value="Split Items For Shipping"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/splitship.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/splitship.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="checkoutreview">
+        <section>
+            <actions>
+                <set field="title-property" value="PageTitleCheckoutReview"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutreview.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutreview.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ordercomplete">
+        <section>
+            <actions>
+                <set field="title-property" value="PageTitleOrderSummary"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/ordercomplete.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="orderhistory">
+        <section>
+            <actions>
+                <set field="rightbarScreenName" value="rightbar"/>
+
+                <set field="title-property" value="PageTitleOrderHistory"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderhistory.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/orderhistory.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="orderstatus">
+        <section>
+            <actions>
+                <set field="rightbarScreenName" value="rightbar"/>
+
+                <set field="maySelectItems" value="Y"/>
+                <set field="title-property" value="PageTitleOrderStatus"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/orderstatus.ftl"/></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="requestreturn">
+        <section>
+            <actions>
+                <set field="rightbarScreenName" value="rightbar"/>
+
+                <set field="title-property" value="PageTitleRequestReturn"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/requestreturn.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/requestreturn.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
