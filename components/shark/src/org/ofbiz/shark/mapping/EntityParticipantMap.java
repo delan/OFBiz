@@ -1,5 +1,5 @@
 /*
- * $Id: EntityParticipantMap.java,v 1.2 2004/07/03 19:54:26 jonesde Exp $
+ * $Id: EntityParticipantMap.java,v 1.3 2004/07/11 23:26:28 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -30,14 +30,14 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.shark.container.SharkContainer;
 
-import org.enhydra.shark.api.internal.mappersistence.ParticipantMap;
+import org.enhydra.shark.api.internal.partmappersistence.ParticipantMap;
 import org.enhydra.shark.api.RootException;
 
 /**
  * Shark Participant Map Implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class EntityParticipantMap implements ParticipantMap {

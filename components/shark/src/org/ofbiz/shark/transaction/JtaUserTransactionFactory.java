@@ -1,5 +1,5 @@
 /*
- * $Id: JtaUserTransactionFactory.java,v 1.1 2004/04/22 15:41:11 ajzeneski Exp $
+ * $Id: JtaUserTransactionFactory.java,v 1.2 2004/07/11 23:26:30 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.enhydra.shark.api.RootException;
  * Shark JTA User Transaction Factory Implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class JtaUserTransactionFactory implements UserTransactionFactory {
@@ -46,23 +46,6 @@ public class JtaUserTransactionFactory implements UserTransactionFactory {
     }
 
     public UserTransaction createTransaction() throws TransactionException {
-        return new NullTransaction();
-    }
-
-    protected class NullTransaction implements UserTransaction {
-
-        public void commit() throws TransactionException {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        public void rollback() throws TransactionException {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-        public void release() throws TransactionException {
-            //To change body of implemented methods use File | Settings | File Templates.
-        }
-
-
-    }
+        return new JtaTransaction();
+    }    
 }

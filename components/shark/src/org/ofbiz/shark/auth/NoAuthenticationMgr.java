@@ -1,5 +1,5 @@
 /*
- * $Id: NoAuthenticationManager.java,v 1.1 2004/04/22 15:40:56 ajzeneski Exp $
+ * $Id: NoAuthenticationMgr.java,v 1.1 2004/07/11 23:26:24 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.enhydra.shark.api.UserTransaction;
  * @version    $Revision: 1.1 $
  * @since      3.1
  */
-public class NoAuthenticationManager implements AuthenticationManager {
+public class NoAuthenticationMgr implements AuthenticationManager {
 
     protected CallbackUtilities callBack = null;
 

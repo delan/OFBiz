@@ -1,5 +1,5 @@
 /*
- * $Id: JtaTransaction.java,v 1.1 2004/04/22 15:41:10 ajzeneski Exp $
+ * $Id: JtaTransaction.java,v 1.2 2004/07/11 23:26:30 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,23 +24,26 @@
  */
 package org.ofbiz.shark.transaction;
 
-import org.ofbiz.entity.transaction.TransactionUtil;
-import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 
+import org.enhydra.shark.api.ApplicationMappingTransaction;
+import org.enhydra.shark.api.ParticipantMappingTransaction;
 import org.enhydra.shark.api.SharkTransaction;
 import org.enhydra.shark.api.TransactionException;
-import org.enhydra.shark.api.MappingTransaction;
 import org.enhydra.shark.api.UserTransaction;
+import org.enhydra.shark.api.RepositoryTransaction;
 
 /**
  * Shark JTA Transaction Implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
-public class JtaTransaction implements SharkTransaction, MappingTransaction, UserTransaction {
+public class JtaTransaction implements SharkTransaction, UserTransaction,
+        ApplicationMappingTransaction, ParticipantMappingTransaction, RepositoryTransaction {
 
     public static final String module = JtaTransaction.class.getName();
     public static final int transactionTimeout = 120;

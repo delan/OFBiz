@@ -1,5 +1,5 @@
 /*
- * $Id: EventAudit.java,v 1.2 2004/07/03 19:54:25 jonesde Exp $
+ * $Id: EventAudit.java,v 1.1 2004/07/11 23:26:23 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -22,21 +22,21 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.shark.instance;
+package org.ofbiz.shark.audit;
 
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 
-import org.enhydra.shark.api.internal.instancepersistence.*;
+import org.enhydra.shark.api.internal.eventaudit.EventAuditPersistenceInterface;
 
 /**
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.1 $
  * @since      3.1
  */
 public class EventAudit implements EventAuditPersistenceInterface {
@@ -76,6 +76,10 @@ public class EventAudit implements EventAuditPersistenceInterface {
         this.eventAuditId = eventAudit.getString("eventAuditId");
         this.eventAudit = eventAudit;
         this.delegator = eventAudit.getDelegator();
+    }
+
+    public String getEventAuditId() {
+        return eventAudit.getString("eventAuditId");    
     }
 
     public void setUTCTime(String ts) {

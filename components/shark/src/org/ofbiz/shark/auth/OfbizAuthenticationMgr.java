@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAuthenticationManager.java,v 1.2 2004/05/11 16:59:54 ajzeneski Exp $
+ * $Id: OfbizAuthenticationMgr.java,v 1.1 2004/07/11 23:26:25 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,11 +24,15 @@
  */
 package org.ofbiz.shark.auth;
 
-import org.ofbiz.entity.GenericDelegator;
+import java.util.Map;
+
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.shark.container.SharkContainer;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.config.ServiceConfigUtil;
 
 import org.enhydra.shark.api.internal.authentication.AuthenticationManager;
 import org.enhydra.shark.api.internal.working.CallbackUtilities;
@@ -36,13 +40,13 @@ import org.enhydra.shark.api.RootException;
 import org.enhydra.shark.api.UserTransaction;
 
 /**
- * Shark Generic Authentication Manager - Uses the Generic Entities
+ * Shark OFBiz Authentication Manager - Uses the OFBiz Entities
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.1 $
  * @since      3.1
  */
-public class GenericAuthenticationManager implements AuthenticationManager {
+public class OfbizAuthenticationMgr implements AuthenticationManager {
 
     protected CallbackUtilities callBack = null;
 
@@ -51,17 +55,23 @@ public class GenericAuthenticationManager implements AuthenticationManager {
     }
 
     public boolean validateUser(UserTransaction userTransaction, String userName, String password) throws RootException {
-        GenericDelegator delegator = SharkContainer.getDelegator();
-        GenericValue sharkUser = null;
+        String service = ServiceConfigUtil.getElementAttr("authorization", "service-name");
+        if (service == null) {
+            throw new RootException("No Authentication Service Defined");
+        }
+
+        LocalDispatcher dispatcher = SharkContainer.getDispatcher();
+        Map context = UtilMisc.toMap("login.username", userName, "login.password", password);
+        Map serviceResult = null;
         try {
-            sharkUser = delegator.findByPrimaryKey("SharkUser", UtilMisc.toMap("userName", userName));
-        } catch (GenericEntityException e) {
+            serviceResult = dispatcher.runSync(service, context);
+        } catch (GenericServiceException e) {
             throw new RootException(e);
         }
 
-        if (sharkUser != null) {
-            String registeredPwd = sharkUser.getString("passwd");
-            if (password.equals(registeredPwd)) {
+        if (!ServiceUtil.isError(serviceResult)) {
+            GenericValue userLogin = (GenericValue) serviceResult.get("userLogin");
+            if (userLogin != null) {
                 return true;
             }
         }
@@ -69,3 +79,4 @@ public class GenericAuthenticationManager implements AuthenticationManager {
         return false;
     }
 }
+

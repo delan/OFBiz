@@ -1,5 +1,5 @@
 /*
- * $Id: DataEventAudit.java,v 1.1 2004/04/22 15:41:01 ajzeneski Exp $
+ * $Id: DataEventAudit.java,v 1.1 2004/07/11 23:26:23 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -22,29 +22,22 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.shark.instance;
+package org.ofbiz.shark.audit;
 
-import org.enhydra.shark.api.internal.instancepersistence.*;
-import org.enhydra.shark.SharkUtilities;
-import org.enhydra.shark.SharkEngineManager;
-import org.xml.sax.SAXException;
-
-import java.util.Map;
-import java.io.IOException;
 import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Map;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.ofbiz.entity.GenericValue;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.serialize.XmlSerializer;
-import org.ofbiz.entity.serialize.SerializeException;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericValue;
+
+import org.enhydra.shark.api.internal.eventaudit.DataEventAuditPersistenceInterface;
 
 /**
  * Persistance Object
@@ -84,7 +77,7 @@ public class DataEventAudit extends EventAudit implements DataEventAuditPersiste
         super(dataEventAudit.getDelegator(), dataEventAudit.getString("eventAuditId"));
         this.dataEventAudit = dataEventAudit;
     }
-
+        
     public void setOldData(Map od) {
         byte[] value = serialize(od);
         dataEventAudit.setBytes("oldData", (value != null ? value : null));

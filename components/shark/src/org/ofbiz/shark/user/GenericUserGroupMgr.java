@@ -1,5 +1,5 @@
 /*
- * $Id: GenericUserGroupManager.java,v 1.1 2004/04/22 15:41:11 ajzeneski Exp $
+ * $Id: GenericUserGroupMgr.java,v 1.1 2004/07/11 23:26:31 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -34,6 +34,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.shark.container.SharkContainer;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 
 import org.enhydra.shark.api.internal.usergroup.UserGroupManager;
 import org.enhydra.shark.api.internal.working.CallbackUtilities;
@@ -47,9 +48,9 @@ import org.enhydra.shark.api.UserTransaction;
  * @version    $Revision: 1.1 $
  * @since      3.1
  */
-public class GenericUserGroupManager implements UserGroupManager {
+public class GenericUserGroupMgr implements UserGroupManager {
 
-    public static final String module = GenericUserGroupManager.class.getName();
+    public static final String module = GenericUserGroupMgr.class.getName();
     protected CallbackUtilities callBack = null;
 
     public void configure(CallbackUtilities callbackUtilities) throws RootException {
@@ -214,11 +215,11 @@ public class GenericUserGroupManager implements UserGroupManager {
         }
     }
 
-    public void addGroupToGroup(UserTransaction trans, String groupName, String subGroupName) throws RootException {
+    public void addGroupToGroup(UserTransaction trans, String parentGroupName, String groupName) throws RootException {
         GenericDelegator delegator = SharkContainer.getDelegator();
         GenericValue rollup = delegator.makeValue("SharkGroupRollup", null);
+        rollup.set("parentGroupName", parentGroupName);
         rollup.set("groupName", groupName);
-        rollup.set("parentGroupName", subGroupName);
         try {
             delegator.create(rollup);
         } catch (GenericEntityException e) {
@@ -227,8 +228,8 @@ public class GenericUserGroupManager implements UserGroupManager {
         }
     }
 
-    public void removeGroupFromGroup(UserTransaction trans, String groupName, String subGroupName) throws RootException {
-        GenericValue rollup = getGroupRollup(groupName, subGroupName);
+    public void removeGroupFromGroup(UserTransaction trans, String parentGroup, String group) throws RootException {
+        GenericValue rollup = getGroupRollup(parentGroup, group);
         if (rollup != null) {
             try {
                 rollup.remove();
@@ -239,6 +240,11 @@ public class GenericUserGroupManager implements UserGroupManager {
         }
     }
 
+    public void moveGroup(UserTransaction trans, String currentParentGroup, String newParentGroup, String groupName) throws RootException {
+        this.removeGroupFromGroup(trans, currentParentGroup, groupName);
+        this.addGroupToGroup(trans, newParentGroup, groupName);
+    }
+
     public String getGroupDescription(UserTransaction trans, String groupName) throws RootException {
         GenericValue group = getGroup(groupName);
         if (group != null) {
@@ -247,11 +253,11 @@ public class GenericUserGroupManager implements UserGroupManager {
         return null;
     }
 
-    public void addUserToGroup(UserTransaction trans, String groupName, String userName) throws RootException {
+    public void addUserToGroup(UserTransaction trans, String groupName, String username) throws RootException {
         GenericDelegator delegator = SharkContainer.getDelegator();
         GenericValue member = delegator.makeValue("SharkGroupMember", null);
         member.set("groupName", groupName);
-        member.set("userName", userName);
+        member.set("userName", username);
         try {
             delegator.create(member);
         } catch (GenericEntityException e) {
@@ -260,8 +266,8 @@ public class GenericUserGroupManager implements UserGroupManager {
         }
     }
 
-    public void removeUserFromGroup(UserTransaction trans, String groupName, String userName) throws RootException {
-        GenericValue member = getGroupMember(groupName, userName);
+    public void removeUserFromGroup(UserTransaction trans, String groupName, String username) throws RootException {
+        GenericValue member = getGroupMember(groupName, username);
         if (member != null) {
             try {
                 member.remove();
@@ -272,20 +278,26 @@ public class GenericUserGroupManager implements UserGroupManager {
         }
     }
 
-    public boolean doesUserBelongToGroup(UserTransaction trans, String groupName, String userName) throws RootException {
-        GenericValue member = getGroupMember(groupName, userName);
+    public void moveUser(UserTransaction trans, String currentGroup, String newGroup, String username) throws RootException {
+        this.removeUserFromGroup(trans, currentGroup, username);
+        this.addUserToGroup(trans, newGroup, username);
+    }
+
+    public boolean doesUserBelongToGroup(UserTransaction trans, String groupName, String username) throws RootException {
+        GenericValue member = getGroupMember(groupName, username);
         if (member != null) {
             return true;
         }
         return false;
     }
 
-    public void createUser(UserTransaction trans, String groupName, String userName, String password, String realName, String email) throws RootException {
+    public void createUser(UserTransaction trans, String groupName, String username, String password, String firstName, String lastName, String email) throws RootException {
         GenericDelegator delegator = SharkContainer.getDelegator();
         GenericValue user = delegator.makeValue("SharkUser", null);
-        user.set("userName", userName);
+        user.set("userName", username);
+        user.set("firstName", firstName);
+        user.set("lastName", lastName);
         user.set("password", password);
-        user.set("realName", realName);
         user.set("emailAddress", email);
         try {
             delegator.create(user);
@@ -293,12 +305,16 @@ public class GenericUserGroupManager implements UserGroupManager {
             Debug.logError(e, module);
             throw new RootException(e);
         }
+        if (groupName != null) {
+            this.addUserToGroup(trans, groupName, username);
+        }
     }
 
-    public void updateUser(UserTransaction trans, String userName, String realName, String email) throws RootException {
-        GenericValue user = getUser(userName);
+    public void updateUser(UserTransaction trans, String username, String firstName, String lastName, String email) throws RootException {
+        GenericValue user = getUser(username);
         if (user != null) {
-            user.set("realName", realName);
+            user.set("firstName", firstName);
+            user.set("lastName", firstName);
             user.set("emailAddress", email);
             try {
                 user.store();
@@ -309,8 +325,8 @@ public class GenericUserGroupManager implements UserGroupManager {
         }
     }
 
-    public void removeUser(UserTransaction trans, String userName) throws RootException {
-        GenericValue user = getUser(userName);
+    public void removeUser(UserTransaction trans, String username) throws RootException {
+        GenericValue user = getUser(username);
         if (user != null) {
             try {
                 user.remove();
@@ -321,16 +337,16 @@ public class GenericUserGroupManager implements UserGroupManager {
         }
     }
 
-    public boolean doesUserExist(UserTransaction trans, String userName) throws RootException {
-        GenericValue user = getUser(userName);
+    public boolean doesUserExist(UserTransaction trans, String username) throws RootException {
+        GenericValue user = getUser(username);
         if (user == null) {
             return false;
         }
         return true;
     }
 
-    public void setPassword(UserTransaction trans, String userName, String password) throws RootException {
-        GenericValue user = getUser(userName);
+    public void setPassword(UserTransaction trans, String username, String password) throws RootException {
+        GenericValue user = getUser(username);
         if (user != null) {
             user.set("password", password);
             try {
@@ -342,27 +358,45 @@ public class GenericUserGroupManager implements UserGroupManager {
         }
     }
 
-    public String getUserRealName(UserTransaction trans, String userName) throws RootException {
-        GenericValue user = getUser(userName);
-        if (user != null) {
-            return user.getString("realName");
+    public String getUserRealName(UserTransaction trans, String username) throws RootException {
+        StringBuffer buf = new StringBuffer();
+        GenericValue user = getUser(username);
+        if (!UtilValidate.isEmpty(user.getString("firstName"))) {
+            buf.append(user.getString("firstName"));
+
         }
-        return null;
+        if (!UtilValidate.isEmpty(user.getString("lastName"))) {
+            if (buf.length() > 0) {
+                buf.append(" ");
+            }
+            buf.append(user.getString("lastName"));
+        }
+        return buf.toString();
     }
 
-    public String getUserEMailAddress(UserTransaction trans, String userName) throws RootException {
-        GenericValue user = getUser(userName);
+    public String getUserFirstName(UserTransaction trans, String username) throws RootException {
+        GenericValue user = getUser(username);
+        return user.getString("firstName");
+    }
+
+    public String getUserLastName(UserTransaction trans, String username) throws RootException {
+        GenericValue user = getUser(username);
+        return user.getString("lastName");
+    }
+
+    public String getUserEMailAddress(UserTransaction trans, String username) throws RootException {
+        GenericValue user = getUser(username);
         if (user != null) {
             return user.getString("emailAddress");
         }
         return null;
     }
 
-    private GenericValue getUser(String userName) throws RootException {
+    private GenericValue getUser(String username) throws RootException {
         GenericDelegator delegator = SharkContainer.getDelegator();
         GenericValue value = null;
         try {
-            value = delegator.findByPrimaryKey("SharkUser", UtilMisc.toMap("userName", userName));
+            value = delegator.findByPrimaryKey("SharkUser", UtilMisc.toMap("userName", username));
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             throw new RootException(e);
@@ -382,11 +416,11 @@ public class GenericUserGroupManager implements UserGroupManager {
         return value;
     }
 
-    private GenericValue getGroupMember(String groupName, String userName) throws RootException {
+    private GenericValue getGroupMember(String groupName, String username) throws RootException {
         GenericDelegator delegator = SharkContainer.getDelegator();
         GenericValue member = null;
         try {
-            member = delegator.findByPrimaryKey("SharkGroupMember", UtilMisc.toMap("groupName", groupName, "userName", userName));
+            member = delegator.findByPrimaryKey("SharkGroupMember", UtilMisc.toMap("groupName", groupName, "userName", username));
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             throw new RootException(e);
@@ -394,11 +428,11 @@ public class GenericUserGroupManager implements UserGroupManager {
         return member;
     }
 
-    private GenericValue getGroupRollup(String groupName, String subGroupName) throws RootException {
+    private GenericValue getGroupRollup(String parentGroup, String group) throws RootException {
         GenericDelegator delegator = SharkContainer.getDelegator();
         GenericValue rollup = null;
         try {
-            rollup = delegator.findByPrimaryKey("SharkGroupRollup", UtilMisc.toMap("groupName", groupName, "subGroupName", subGroupName));
+            rollup = delegator.findByPrimaryKey("SharkGroupRollup", UtilMisc.toMap("parentGroupName", parentGroup, "groupName", group));
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             throw new RootException(e);
