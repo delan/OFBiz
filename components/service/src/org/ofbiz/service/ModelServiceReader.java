@@ -1,5 +1,5 @@
 /* 
- * $Id: ModelServiceReader.java,v 1.4 2003/09/02 04:30:32 jonesde Exp $
+ * $Id: ModelServiceReader.java,v 1.5 2003/12/04 20:16:22 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 
@@ -399,7 +399,7 @@ public class ModelServiceReader {
                 if (fieldsIter != null) {            
                     while (fieldsIter.hasNext()) {
                         ModelField field = (ModelField) fieldsIter.next();
-                        if ((field.getIsPk() && includePk) || (!field.getIsPk() && includeNonPk)) {                        
+                        if ((!field.getIsAutoCreatedInternal()) && ((field.getIsPk() && includePk) || (!field.getIsPk() && includeNonPk))) {
                             ModelFieldType fieldType = delegator.getEntityFieldType(entity, field.getType());
                             if (fieldType == null) {
                                 throw new GeneralException("Null field type from delegator for entity [" + entityName + "]");
