@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
+  <ProductCategory description="Primary Catalog"
+    longDescription="Product Catalog" productCategoryId="CATALOG1"/>
+  <ProductCategory description="Gizmos"
+    longDescription="long description of Gizmos"
+    primaryParentCategoryId="CATALOG1" productCategoryId="100"/>
+  <ProductCategory description="Widgets"
+    longDescription="long description of Widgets"
+    primaryParentCategoryId="CATALOG1" productCategoryId="200"/>
+  <ProductCategory description="Small Gizmos"
+    longDescription="long description of Small Gizmos"
+    primaryParentCategoryId="100" productCategoryId="101"/>
+  <ProductCategory description="Large Gizmos"
+    longDescription="long description of Large Gizmos"
+    primaryParentCategoryId="100" productCategoryId="102"/>
+  <ProductCategory description="Small Widgets"
+    longDescription="long description of Small Widgets"
+    primaryParentCategoryId="200" productCategoryId="201"/>
+  <ProductCategory description="Large Widgets"
+    longDescription="long description of Large Widgets"
+    primaryParentCategoryId="200" productCategoryId="202"/>
+  <ProductCategory description="Mini Widgets"
+    longDescription="long description of Mini Widgets"
+    primaryParentCategoryId="201" productCategoryId="2011"/>
+  <ProductCategory description="Other Mini Widgets"
+    longDescription="long description of Other Mini Widgets"
+    primaryParentCategoryId="201" productCategoryId="2012"/>
+  <ProductCategory description="Micro Widgets"
+    longDescription="long description of Micro Widgets"
+    primaryParentCategoryId="2011" productCategoryId="20111"/>
+  <ProductCategory description="Featured Products" productCategoryId="PROMOTIONS"/>
+  <ProductCategory description="Catalog1 Search Products"
+    longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1" productCategoryId="CATALOG1_SEARCH"/>
+  <ProductCategory description="Main Quick Add Products"
+    longDescription="For quick orders, you have found the right place!" productCategoryId="CATALOG1_QUICKADD1"/>
+  <ProductCategory description="Widget Quick Add Products"
+    longDescription="Get all you widgets here!" productCategoryId="CATALOG1_QUICKADD2"/>
+  <ProductAssocType description="Upgrade or Up-Sell" hasTable="N" productAssocTypeId="PRODUCT_UPGRADE"/>
+  <ProductAssocType description="Complementary or Cross-Sell" hasTable="N" productAssocTypeId="PRODUCT_COMPLEMENT"/>
+  <ProductAssocType description="Incompatable" hasTable="N" productAssocTypeId="PRODUCT_INCOMPATABLE"/>
+  <ProductAssocType description="New Version, Replacement" hasTable="N" productAssocTypeId="PRODUCT_OBSOLESCENCE"/>
+  <ProductAssocType description="Marketing Package Component" hasTable="N" productAssocTypeId="MARKETING_PACKAGE"/>
+  <ProductAssocType description="Actual Product Component" hasTable="N" productAssocTypeId="PRODUCT_COMPONENT"/>
+  <ProductAssocType description="Equivalent or Substitute" hasTable="N" productAssocTypeId="PRODUCT_SUBSTITUTE"/>
+  <ProductAssocType description="Product Variant" hasTable="N" productAssocTypeId="PRODUCT_VARIANT"/>
   <Product defaultPrice="47.99" description="Round Gizmo w/ Lights"
     longDescription="A small round gizmo with multi-colored lights. Works great in the dark. Small and compact."
     primaryProductCategoryId="101" productId="GZ-2644"
@@ -60,52 +104,6 @@
   <ProductAssoc fromDate="2001-01-01 12:00:00.0"
     productAssocTypeId="PRODUCT_OBSOLESCENCE" productId="GZ-8544"
     productIdTo="WG-9943" quantity="1.0" reason="The Giant Widget is much better than the Big Gizmo, so much so that it makes the Big Gizmo obsolete."/>
-  <ProductAssocType description="Upgrade or Up-Sell" hasTable="N" productAssocTypeId="PRODUCT_UPGRADE"/>
-  <ProductAssocType description="Complementary or Cross-Sell"
-    hasTable="N" productAssocTypeId="PRODUCT_COMPLEMENT"/>
-  <ProductAssocType description="Incompatable" hasTable="N" productAssocTypeId="PRODUCT_INCOMPATABLE"/>
-  <ProductAssocType description="New Version, Replacement" hasTable="N" productAssocTypeId="PRODUCT_OBSOLESCENCE"/>
-  <ProductAssocType description="Marketing Package Component"
-    hasTable="N" productAssocTypeId="MARKETING_PACKAGE"/>
-  <ProductAssocType description="Actual Product Component" hasTable="N" productAssocTypeId="PRODUCT_COMPONENT"/>
-  <ProductAssocType description="Equivalent or Substitute" hasTable="N" productAssocTypeId="PRODUCT_SUBSTITUTE"/>
-  <ProductAssocType description="Product Variant" hasTable="N" productAssocTypeId="PRODUCT_VARIANT"/>
-  <ProductCategory description="Primary Catalog"
-    longDescription="Product Catalog" productCategoryId="CATALOG1"/>
-  <ProductCategory description="Gizmos"
-    longDescription="long description of Gizmos"
-    primaryParentCategoryId="CATALOG1" productCategoryId="100"/>
-  <ProductCategory description="Widgets"
-    longDescription="long description of Widgets"
-    primaryParentCategoryId="CATALOG1" productCategoryId="200"/>
-  <ProductCategory description="Small Gizmos"
-    longDescription="long description of Small Gizmos"
-    primaryParentCategoryId="100" productCategoryId="101"/>
-  <ProductCategory description="Large Gizmos"
-    longDescription="long description of Large Gizmos"
-    primaryParentCategoryId="100" productCategoryId="102"/>
-  <ProductCategory description="Small Widgets"
-    longDescription="long description of Small Widgets"
-    primaryParentCategoryId="200" productCategoryId="201"/>
-  <ProductCategory description="Large Widgets"
-    longDescription="long description of Large Widgets"
-    primaryParentCategoryId="200" productCategoryId="202"/>
-  <ProductCategory description="Mini Widgets"
-    longDescription="long description of Mini Widgets"
-    primaryParentCategoryId="201" productCategoryId="2011"/>
-  <ProductCategory description="Other Mini Widgets"
-    longDescription="long description of Other Mini Widgets"
-    primaryParentCategoryId="201" productCategoryId="2012"/>
-  <ProductCategory description="Micro Widgets"
-    longDescription="long description of Micro Widgets"
-    primaryParentCategoryId="2011" productCategoryId="20111"/>
-  <ProductCategory description="Featured Products" productCategoryId="PROMOTIONS"/>
-  <ProductCategory description="Catalog1 Search Products"
-    longDescription="Catalog1 Search Products - only products in this category will show up in a search in catalog1" productCategoryId="CATALOG1_SEARCH"/>
-  <ProductCategory description="Main Quick Add Products"
-    longDescription="For quick orders, you have found the right place!" productCategoryId="CATALOG1_QUICKADD1"/>
-  <ProductCategory description="Widget Quick Add Products"
-    longDescription="Get all you widgets here!" productCategoryId="CATALOG1_QUICKADD2"/>
   <ProductCategoryMember fromDate="2001-01-01 12:00:00.0"
     productCategoryId="202" productId="WG-9943"/>
   <ProductCategoryMember fromDate="2001-01-01 12:00:00.0"
@@ -157,36 +155,4 @@
   <ProductCategoryRollup parentProductCategoryId="201" productCategoryId="2011"/>
   <ProductCategoryRollup parentProductCategoryId="201" productCategoryId="2012"/>
   <ProductCategoryRollup parentProductCategoryId="2011" productCategoryId="20111"/>
-  <ProductCategoryType description="Catalog" hasTable="N" productCategoryTypeId="CATALOG_CATEGORY"/>
-  <ProductCategoryType description="Industry" hasTable="N" productCategoryTypeId="INDUSTRY_CATEGORY"/>
-  <ProductCategoryType description="Materials" hasTable="N" productCategoryTypeId="MATERIALS_CATEGORY"/>
-  <ProductCategoryType description="Quick Add" hasTable="N" productCategoryTypeId="QUICKADD_CATEGORY"/>
-  <ProductCategoryType description="Search" hasTable="N" productCategoryTypeId="SEARCH_CATEGORY"/>
-  <ProductCategoryType description="Usage" hasTable="N" productCategoryTypeId="USAGE_CATEGORY"/>
-  <ProductFeatureApplType hasTable="N" productFeatureApplTypeId="OPTIONAL_FEATURE"/>
-  <ProductFeatureApplType hasTable="N" productFeatureApplTypeId="REQUIRED_FEATURE"/>
-  <ProductFeatureApplType hasTable="N" productFeatureApplTypeId="SELECTABLE_FEATURE"/>
-  <ProductFeatureApplType hasTable="N" productFeatureApplTypeId="STANDARD_FEATURE"/>
-  <ProductFeatureIactnType hasTable="N" productFeatureIactnTypeId="FEATURE_IACTN_DEPEND"/>
-  <ProductFeatureIactnType hasTable="N" productFeatureIactnTypeId="FEATURE_IACTN_INCOMP"/>
-  <ProductFeatureType hasTable="N" productFeatureTypeId="BILLING_FEATURE"/>
-  <ProductFeatureType hasTable="N" productFeatureTypeId="BRAND"/>
-  <ProductFeatureType hasTable="N" productFeatureTypeId="COLOR"/>
-  <ProductFeatureType hasTable="N" productFeatureTypeId="HARDWARE_FEATURE"/>
-  <ProductFeatureType hasTable="N" productFeatureTypeId="OTHER_FEATURE"/>
-  <ProductFeatureType hasTable="N" productFeatureTypeId="PRODUCT_QUALITY"/>
-  <ProductFeatureType hasTable="N" productFeatureTypeId="SIZE"/>
-  <ProductFeatureType hasTable="N" productFeatureTypeId="SOFTWARE_FEATURE"/>
-  <ProductFeatureType hasTable="N" productFeatureTypeId="DIMENSION"/>
-  <ProductType description="Virtual Product" hasTable="N" productTypeId="VIRTUAL_PRODUCT"/>
-  <ProductType description="Service" hasTable="N" productTypeId="SERVICE"/>
-  <ProductType description="Good" hasTable="N" productTypeId="GOOD"/>
-  <ProductType description="Raw Material" hasTable="N"
-    parentTypeId="GOOD" productTypeId="RAW_MATERIAL"/>
-  <ProductType description="Subassembly" hasTable="N"
-    parentTypeId="GOOD" productTypeId="SUBASSEMBLY"/>
-  <ProductType description="Finished Good" hasTable="N"
-    parentTypeId="GOOD" productTypeId="FINISHED_GOOD"/>
 </entity-engine-xml>
-
-
