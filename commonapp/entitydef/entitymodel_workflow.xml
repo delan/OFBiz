@@ -84,6 +84,8 @@
       <field name="splitTypeEnumId" type="id"></field>
       <field name="acceptAllAssignments" type="indicator"></field>
       <field name="completeAllAssignments" type="indicator"></field>	
+	  <field name="limitService" type="name"></field>	  
+	  <field name="limitAfterStart" type="indicator"></field>
       <prim-key field="packageId" />	
       <prim-key field="processId" />	
       <prim-key field="activityId" />
@@ -208,6 +210,7 @@
       <field name="toolId" type="id-long-ne"></field>
       <field name="toolTypeEnumId" type="id"></field>
       <field name="actualParameters" type="very-long"></field>
+	  <field name="extendedAttributes" type="very-long"></field>
       <field name="description" type="description"></field>	
       <prim-key field="packageId" />	
       <prim-key field="processId" />	
