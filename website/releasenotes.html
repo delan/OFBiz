@@ -10,6 +10,7 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
 <hr>
 <h3>Table of Contents</h3>
 <ul>
+  <li><a href="#Release 2.0 Alpha 1">Release 2.0 Alpha 1</a> 
   <li><a href="#Release 1.0 Beta 1">Release 1.0 Beta 1</a> 
   <li><a href="#Release 2001.09.29">Release 2001.09.29</a> 
   <li><a href="#Release 2001.07.20">Release 2001.07.20</a>
@@ -18,6 +19,66 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
   <li><a href="#Release 2001.06.01">Release 2001.06.01</a>
   <li><a href="#Release 2001.05.28">Release 2001.05.28</a>
   <li><a href="#Release 2001.05.24">Release 2001.05.24</a>
+</ul>
+
+<hr>
+<h3><a name="Release 2.0 Alpha 1">Release 2.0 Alpha 1</a></h3>
+<hr>
+<h4>Overview</h4>
+<p>The 2.0 Alpha 1 release represents a MAJOR step forward for Open For Business,
+as have many releases before this. This release is an Alpha release because
+there are so many new pieces that have not been extensively tested, and in some
+cases are missing some functionality. Other pieces are beta quality or stable,
+like the Entity Engine and the eCommerce application.</p>
+
+<h4>Service Engine Introduction</h4>
+<p>The Service Engine is the tool that allows us to
+  organize our applications around internal services that can seamlessly be exposed
+  as web services, or can be implemented using remote web services. It provides a
+  simple interface so that the caller does not have to know what language the service
+  is implemented in or where that service is located. Service definitions are done in XML.</p>
+
+<h4>Entity Engine Improvements</h4>
+<p>The Entity Engine now support JTA transactions. The default implementation
+is done with Tyrex from Exolab, but can easily be adapted to run with J2EE
+application servers like JBoss, Weblogic, etc. The Entity Engine now also provides
+an easy way to do joins with View Entities and has more flexible find methods,
+especially the findByAnd that accepts a List of EntityExpr objects to constrain
+the query.</p>
+
+<h4>Workflow Engine Introduction</h4>
+<p>The Workflow Engine makes it easy to layout and
+execute business processes as part of a J2EE application. It is based in the XPDL and other
+specifications from WfMC and the Workflow Management Facility Specification from OMG. It takes
+advantage of and is well integrated with the OFBiz Service and Entity Engines. Workflows can be
+invoked synchronously or asynchronously and locally or remotely through the Service Engine, and
+any activity in a process can be implemented as a service.</p>
+
+<h4>Mini-Languages Introduction</h4>
+<p>The Mini-Languages are XML files that describe simple
+  processes making common operations fast and easy to write and maintain. At the moment
+  the existing languages make it easy to create events to validate and convert form input
+  and pass it on to a service. Future extensions will allow complete applications to be
+  written using JSP, XML Mini-Languages, and Entity and Service definitions. This will be
+  anywhere from 5-10 times as efficient as coding these common components in Java.</p>
+
+<h4>Rule Engine Introduction</h4>
+<p>The Rule Engine makes it easy to express and execute business
+rules and constraints. It is based on modern standards like RuleML and the mature language Prolog.
+It is written in Java and runs with an application in the same JVM, and can be invoked locally or 
+remotely through the Service or Entity Engines. It can also call back into Services as sensors or
+effectors and integrates seamlessly with the Entity Engine to expand your knowledgebase in a ruleset
+to all of the data in your relational database. The Rule Engine is only partially in place
+and certain features are still in planning.</p>
+
+<h4>Tasks Completed</h4>
+<p>A number of tasks have been planned and completed for this release, in addition
+to the many smaller refinements and changes that have been done. These tasks include:</p>
+<ul>
+<li><b>Core Subproject</b>
+  <ul>
+  <li>
+  </ul>
 </ul>
 
 <hr>
