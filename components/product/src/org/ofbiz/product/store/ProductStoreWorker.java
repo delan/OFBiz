@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.31 2004/08/06 22:26:11 jonesde Exp $
+ * $Id: ProductStoreWorker.java,v 1.32 2004/08/12 21:33:33 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.31 $
+ * @version    $Revision: 1.32 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -164,6 +164,22 @@ public class ProductStoreWorker {
         }
 
         return storePayment;
+    }
+
+    public static GenericValue getProductStoreShipmentMethod(GenericDelegator delegator, String productStoreId,
+            String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId) {
+        // check for an external service call
+        Map storeFields = UtilMisc.toMap("productStoreId", productStoreId, "shipmentMethodTypeId", shipmentMethodTypeId,
+                "partyId", carrierPartyId, "roleTypeId", carrierRoleTypeId);
+
+        GenericValue storeShipMeth = null;
+        try {
+            storeShipMeth = delegator.findByPrimaryKeyCache("ProductStoreShipmentMeth", storeFields);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        return storeShipMeth;
     }
 
     public static List getAvailableStoreShippingMethods(GenericDelegator delegator, String productStoreId, GenericValue shippingAddress, List itemSizes, Map featureIdMap, double weight, double orderTotal) {

@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentServices.java,v 1.5 2004/08/12 02:18:11 ajzeneski Exp $
+ * $Id: ShipmentServices.java,v 1.6 2004/08/12 21:33:33 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.common.geo.GeoWorker;
  * ShipmentServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ShipmentServices {
@@ -175,7 +175,6 @@ public class ShipmentServices {
 
     // ShippingEstimate Calc Service
     public static Map calcShipmentCostEstimate(DispatchContext dctx, Map context) {
-        String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
         GenericDelegator delegator = dctx.getDelegator();
 
         // prepare the data
@@ -191,6 +190,8 @@ public class ShipmentServices {
         Double shippableTotal = (Double) context.get("shippableTotal");
         Double shippableQuantity = (Double) context.get("shippableQuantity");
         Double shippableWeight = (Double) context.get("shippableWeight");
+        Double initialEstimateAmt = (Double) context.get("initialEstimateAmt");
+
         if (shippableTotal == null) {
             shippableTotal = new Double(0.00);
         }
@@ -208,18 +209,20 @@ public class ShipmentServices {
         Collection estimates = null;
         try {
             estimates = delegator.findByAnd("ShipmentCostEstimate", estFields);
-            if (Debug.verboseOn()) Debug.logVerbose("Estimate fields: " + estFields, module);
-            if (Debug.verboseOn()) Debug.logVerbose("Estimate(s): " + estimates, module);
         } catch (GenericEntityException e) {
-            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.", module);
-            return ServiceUtil.returnSuccess(standardMessage);
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Unable to locate estimates from database");
         }
         if (estimates == null || estimates.size() < 1) {
-            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
-            return ServiceUtil.returnSuccess(standardMessage);
-        }
+            if (initialEstimateAmt == null || initialEstimateAmt.doubleValue() == 0.00) {
+                Debug.logWarning("Using the passed context : " + context, module);
+                Debug.logWarning("No shipping estimates found; the shipping amount returned is 0!", module);
+            }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Estimates begin size: " + estimates.size(), module);
+            Map respNow = ServiceUtil.returnSuccess();
+            respNow.put("shippingEstimateAmount", new Double(0.00));
+            return respNow;
+        }
 
         // Get the PostalAddress
         GenericValue shipAddress = null;
@@ -227,8 +230,8 @@ public class ShipmentServices {
         try {
             shipAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMechId));
         } catch (GenericEntityException e) {
-            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping address entity.", module);
-            return ServiceUtil.returnSuccess(standardMessage);
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Cannot get shipping address entity");
         }
 
         // Get the possible estimates.
@@ -325,11 +328,8 @@ public class ShipmentServices {
             }
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Estimates left after GEO filter: " + estimateList.size(), module);
-
         if (estimateList.size() < 1) {
-            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
-            return ServiceUtil.returnSuccess(standardMessage);
+            return ServiceUtil.returnError("No shipping estimate found");
         }
 
         // Calculate priority based on available data.
@@ -471,8 +471,7 @@ public class ShipmentServices {
         // shipping total
         double shippingTotal = spanTotal + flatTotal + surchargeTotal;
 
-        if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal, module);
-
+        // prepare the return result
         Map responseResult = ServiceUtil.returnSuccess();
         responseResult.put("shippingEstimateAmount", new Double(shippingTotal));
         return responseResult;

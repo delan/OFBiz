@@ -1,5 +1,5 @@
 /*
- * $Id: UpsServices.java,v 1.1 2003/08/18 18:45:49 jonesde Exp $
+ * $Id: UpsServices.java,v 1.2 2004/08/12 21:33:34 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,8 +49,11 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.product.store.ProductStoreWorker;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -60,7 +63,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class UpsServices {
@@ -169,8 +172,8 @@ public class UpsServices {
             if (destCountryGeo == null) {
                 return ServiceUtil.returnError("DestCountryGeo not found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId);
             }
-            
-            Map findCarrierShipmentMethodMap = UtilMisc.toMap("partyId", shipmentRouteSegment.get("carrierPartyId"), "roleTypeId", "CARRIER", "shipmentMethodTypeId", shipmentRouteSegment.get("shipmentMethodTypeId")); 
+
+            Map findCarrierShipmentMethodMap = UtilMisc.toMap("partyId", shipmentRouteSegment.get("carrierPartyId"), "roleTypeId", "CARRIER", "shipmentMethodTypeId", shipmentRouteSegment.get("shipmentMethodTypeId"));
             GenericValue carrierShipmentMethod = delegator.findByPrimaryKey("CarrierShipmentMethod", findCarrierShipmentMethodMap);
             if (carrierShipmentMethod == null) {
                 return ServiceUtil.returnError("CarrierShipmentMethod not found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId + "; partyId is " + shipmentRouteSegment.get("carrierPartyId") + " and shipmentMethodTypeId is " + shipmentRouteSegment.get("shipmentMethodTypeId"));
@@ -1343,13 +1346,272 @@ public class UpsServices {
             return ServiceUtil.returnError(errorList);
         }
     }
-    
+
+    public static Map upsRateInquire(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        // prepare the data
+        String serviceConfigProps = (String) context.get("serviceConfigProps");
+        String upsRateInquireMode = (String) context.get("upsRateInquireMode");
+        String productStoreId = (String) context.get("productStoreId");
+        String carrierRoleTypeId = (String) context.get("carrierRoleTypeId");
+        String carrierPartyId = (String) context.get("carrierPartyId");
+        String shipmentMethodTypeId = (String) context.get("shipmentMethodTypeId");
+        String shippingContactMechId = (String) context.get("shippingContactMechId");
+
+        Map shippableFeatureMap = (Map) context.get("shippableFeatureMap");
+        List shippableItemSizes = (List) context.get("shippableItemSizes");
+
+        Double shippableTotal = (Double) context.get("shippableTotal");
+        Double shippableQuantity = (Double) context.get("shippableQuantity");
+        Double shippableWeight = (Double) context.get("shippableWeight");
+        if (shippableTotal == null) {
+            shippableTotal = new Double(0.00);
+        }
+        if (shippableQuantity == null) {
+            shippableQuantity = new Double(0.00);
+        }
+        if (shippableWeight == null) {
+            shippableWeight = new Double(0.00);
+        }
+        if (serviceConfigProps == null) {
+            serviceConfigProps = "shipment.properties";
+        }
+        if (upsRateInquireMode == null || !"Shop".equals(upsRateInquireMode)) {
+            // can be either Rate || Shop
+            upsRateInquireMode = "Rate";
+        }
+
+        // grab the pickup type; if none is defined we will assume daily pickup
+        String pickupType = UtilProperties.getPropertyValue(serviceConfigProps, "shipment.ups.shipper.pickup.type", "01");
+
+        // locate the ship-from address based on the product store's default facility
+        GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
+        GenericValue shipFromAddress = null;
+        if (productStore != null && productStore.get("inventoryFacilityId") != null) {
+            List shipLocs = null;
+            try {
+                shipLocs = delegator.findByAnd("FacilityContactMechPurpose", UtilMisc.toMap("facilityId",
+                        productStore.getString("inventoryFacilityId"), "contactMechPurposeTypeId",
+                        "SHIP_ORIG_LOCATION"), UtilMisc.toList("-fromDate"));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (shipLocs != null) {
+                shipLocs = EntityUtil.filterByDate(shipLocs);
+                GenericValue purp =  EntityUtil.getFirst(shipLocs);
+                if (purp != null) {
+                    try {
+                        shipFromAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", purp.getString("contactMechId")));
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                    }
+                }
+            }
+        }
+        if (shipFromAddress == null) {
+            return ServiceUtil.returnError("Unable to determine ship-from address");
+        }
+
+        // obtain the ship-to address
+        GenericValue shipToAddress = null;
+        if (shippingContactMechId != null) {
+            try {
+                shipToAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMechId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+        }
+        if (shipToAddress == null) {
+            return ServiceUtil.returnError("Unable to determine ship-to address");
+        }
+
+        // locate the service code
+        String serviceCode = null;
+        if (!"Shop".equals(upsRateInquireMode)) {
+            // locate the CarrierShipmentMethod record
+            GenericValue carrierShipmentMethod = null;
+            try {
+                carrierShipmentMethod = delegator.findByPrimaryKey("CarrierShipmentMethod", UtilMisc.toMap("shipmentMethodTypeId",
+                        shipmentMethodTypeId, "partyId", carrierPartyId, "roleTypeId", carrierRoleTypeId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (carrierShipmentMethod == null) {
+                return ServiceUtil.returnError("Unable to locate the shipping method requested");
+            }
+
+            // service code is 'carrierServiceCode'
+            serviceCode = carrierShipmentMethod.getString("carrierServiceCode");
+        }
+
+        // prepare the XML Document
+        Document rateRequestDoc = UtilXml.makeEmptyXmlDocument("RatingServiceSelectionRequest");
+        Element rateRequestElement = rateRequestDoc.getDocumentElement();
+        rateRequestElement.setAttribute("xml:lang", "en-US");
+
+        // XML request header
+        Element requestElement = UtilXml.addChildElement(rateRequestElement, "Request", rateRequestDoc);
+        Element transactionReferenceElement = UtilXml.addChildElement(requestElement, "TransactionReference", rateRequestDoc);
+        UtilXml.addChildElementValue(transactionReferenceElement, "CustomerContext", "Rating and Service", rateRequestDoc);
+        UtilXml.addChildElementValue(transactionReferenceElement, "XpciVersion", "1.0001", rateRequestDoc);
+
+        // set to Rate or Shop mode
+        UtilXml.addChildElementValue(requestElement, "RequestAction", upsRateInquireMode, rateRequestDoc);
+        UtilXml.addChildElementValue(requestElement, "RequestOption", upsRateInquireMode, rateRequestDoc);
+
+        // set the pickup type
+        Element pickupElement = UtilXml.addChildElement(rateRequestElement, "PickupType", rateRequestDoc);
+        UtilXml.addChildElementValue(pickupElement, "Code", pickupType, rateRequestDoc);
+
+        // shipment info
+        Element shipmentElement = UtilXml.addChildElement(rateRequestElement, "Shipment", rateRequestDoc);
+
+        // shipper info - (sub of shipment)
+        Element shipperElement = UtilXml.addChildElement(shipmentElement, "Shipper", rateRequestDoc);
+        Element shipperAddrElement = UtilXml.addChildElement(shipperElement, "Address", rateRequestDoc);
+        UtilXml.addChildElementValue(shipperAddrElement, "PostalCode", shipFromAddress.getString("postalCode"), rateRequestDoc);
+
+        // ship-to info - (sub of shipment)
+        Element shiptoElement = UtilXml.addChildElement(shipmentElement, "ShipTo", rateRequestDoc);
+        Element shiptoAddrElement = UtilXml.addChildElement(shiptoElement, "Address", rateRequestDoc);
+        UtilXml.addChildElementValue(shiptoAddrElement, "PostalCode", shipToAddress.getString("postalCode"), rateRequestDoc);
+
+        // requested service (code) - not used when in Shop mode
+        if (serviceCode != null) {
+            Element serviceElement = UtilXml.addChildElement(shipmentElement, "Service", rateRequestDoc);
+            UtilXml.addChildElementValue(serviceElement, "Code", serviceCode, rateRequestDoc);
+        }
+
+        // package info
+        Element packageElement = UtilXml.addChildElement(shipmentElement, "Package", rateRequestDoc);
+        Element packagingTypeElement = UtilXml.addChildElement(packageElement, "PackagingType", rateRequestDoc);
+        UtilXml.addChildElementValue(packagingTypeElement, "Code", "00", rateRequestDoc);
+        UtilXml.addChildElementValue(packagingTypeElement, "Description", "Unknown PackagingType", rateRequestDoc);
+        UtilXml.addChildElementValue(packageElement, "Description", "Package Description", rateRequestDoc);
+        Element packageWeightElement = UtilXml.addChildElement(packageElement, "PackageWeight", rateRequestDoc);
+        UtilXml.addChildElementValue(packageWeightElement, "Weight", shippableWeight.toString(), rateRequestDoc);
+
+        // service options
+        UtilXml.addChildElement(shipmentElement, "ShipmentServiceOptions", rateRequestDoc);
+
+        String rateRequestString = null;
+        try {
+            rateRequestString = UtilXml.writeXmlDocument(rateRequestDoc);
+        } catch (IOException e) {
+            String ioeErrMsg = "Error writing the RatingServiceSelectionRequest XML Document to a String: " + e.toString();
+            Debug.logError(e, ioeErrMsg, module);
+            return ServiceUtil.returnError(ioeErrMsg);
+        }
+
+        // create AccessRequest XML doc
+        Document accessRequestDocument = createAccessRequestDocument(serviceConfigProps);
+        String accessRequestString = null;
+        try {
+            accessRequestString = UtilXml.writeXmlDocument(accessRequestDocument);
+        } catch (IOException e) {
+            String ioeErrMsg = "Error writing the AccessRequest XML Document to a String: " + e.toString();
+            Debug.logError(e, ioeErrMsg, module);
+            return ServiceUtil.returnError(ioeErrMsg);
+        }
+
+        // prepare the access/inquire request string
+        StringBuffer xmlString = new StringBuffer();
+        xmlString.append(accessRequestString);
+        xmlString.append(rateRequestString);
+
+        // send the request
+        String rateResponseString = null;
+        try {
+            rateResponseString = sendUpsRequest("Rate", xmlString.toString());
+        } catch (UpsConnectException e) {
+            String uceErrMsg = "Error sending UPS request for UPS Service Rate: " + e.toString();
+            Debug.logError(e, uceErrMsg, module);
+            return ServiceUtil.returnError(uceErrMsg);
+        }
+
+        Document rateResponseDocument = null;
+        try {
+            rateResponseDocument = UtilXml.readXmlDocument(rateResponseString, false);
+        } catch (SAXException e2) {
+            String excErrMsg = "Error parsing the RatingServiceSelectionResponse: " + e2.toString();
+            Debug.logError(e2, excErrMsg, module);
+            return ServiceUtil.returnError(excErrMsg);
+        } catch (ParserConfigurationException e2) {
+            String excErrMsg = "Error parsing the RatingServiceSelectionResponse: " + e2.toString();
+            Debug.logError(e2, excErrMsg, module);
+            return ServiceUtil.returnError(excErrMsg);
+        } catch (IOException e2) {
+            String excErrMsg = "Error parsing the RatingServiceSelectionResponse: " + e2.toString();
+            Debug.logError(e2, excErrMsg, module);
+            return ServiceUtil.returnError(excErrMsg);
+        }
+
+        return handleUpsRateInquireResponse(rateResponseDocument);
+
+    }
+
+    public static Map handleUpsRateInquireResponse(Document rateResponseDocument) {
+        // process TrackResponse, update data as needed
+        Element rateResponseElement = rateResponseDocument.getDocumentElement();
+
+        // handle Response element info
+        Element responseElement = UtilXml.firstChildElement(rateResponseElement, "Response");
+        Element responseTransactionReferenceElement = UtilXml.firstChildElement(responseElement, "TransactionReference");
+        String responseTransactionReferenceCustomerContext = UtilXml.childElementValue(responseTransactionReferenceElement, "CustomerContext");
+        String responseTransactionReferenceXpciVersion = UtilXml.childElementValue(responseTransactionReferenceElement, "XpciVersion");
+
+        String responseStatusCode = UtilXml.childElementValue(responseElement, "ResponseStatusCode");
+        String responseStatusDescription = UtilXml.childElementValue(responseElement, "ResponseStatusDescription");
+        List errorList = new LinkedList();
+        UpsServices.handleErrors(responseElement, errorList);
+
+        if ("1".equals(responseStatusCode)) {
+            List rates = UtilXml.childElementList(rateResponseElement, "RatedShipment");
+            Map rateMap = new HashMap();
+            Double firstRate = null;
+            if (rates == null || rates.size() == 0) {
+                return ServiceUtil.returnError("No rates available at this time");
+            } else {
+                Iterator i = rates.iterator();
+                while (i.hasNext()) {
+                    Element element = (Element) i.next();
+
+                    // get service
+                    Element service = UtilXml.firstChildElement(element, "Service");
+                    String serviceCode = UtilXml.childElementValue(service, "Code");
+
+                    // get total
+                    Element totalCharges = UtilXml.firstChildElement(element, "TotalCharges");
+                    String totalString = UtilXml.childElementValue(totalCharges, "MonetaryValue");
+
+                    rateMap.put(serviceCode, new Double(totalString));
+                    if (firstRate == null) {
+                        firstRate = (Double) rateMap.get(serviceCode);
+                    }
+                }
+            }
+
+            Debug.log("UPS Rate Map : " + rateMap, module);
+
+            Map resp = ServiceUtil.returnSuccess();
+            resp.put("upsRateCodeMap", rateMap);
+            resp.put("shippingEstimateAmount", firstRate);
+            return resp;
+        } else {
+            return ServiceUtil.returnError(errorList);
+        }
+    }
+
     public static Document createAccessRequestDocument() {
+        return createAccessRequestDocument("shipment.properties");
+    }
+
+    public static Document createAccessRequestDocument(String props) {
         Document accessRequestDocument = UtilXml.makeEmptyXmlDocument("AccessRequest");
         Element accessRequestElement = accessRequestDocument.getDocumentElement();
-        UtilXml.addChildElementValue(accessRequestElement, "AccessLicenseNumber", UtilProperties.getPropertyValue("shipment", "shipment.ups.access.license.number"), accessRequestDocument);
-        UtilXml.addChildElementValue(accessRequestElement, "UserId", UtilProperties.getPropertyValue("shipment", "shipment.ups.access.user.id"), accessRequestDocument);
-        UtilXml.addChildElementValue(accessRequestElement, "Password", UtilProperties.getPropertyValue("shipment", "shipment.ups.access.password"), accessRequestDocument);
+        UtilXml.addChildElementValue(accessRequestElement, "AccessLicenseNumber", UtilProperties.getPropertyValue(props, "shipment.ups.access.license.number"), accessRequestDocument);
+        UtilXml.addChildElementValue(accessRequestElement, "UserId", UtilProperties.getPropertyValue(props, "shipment.ups.access.user.id"), accessRequestDocument);
+        UtilXml.addChildElementValue(accessRequestElement, "Password", UtilProperties.getPropertyValue(props, "shipment.ups.access.password"), accessRequestDocument);
         return accessRequestDocument;
     }
     
@@ -1489,6 +1751,7 @@ ShipConfirm
 ShipAccept
 Void
 Track
+Rate
 
 Package Type Code
 00 Unknown
@@ -1546,7 +1809,7 @@ SA Salesperson No.
 SE Serial No.
 SY Social Security No.
 ST Store No.
-TN Transaction Ref. No. 
+TN Transaction Ref. No.
 
 Error Codes
 First note that in the ref guide there are about 21 pages of error codes
@@ -1561,7 +1824,7 @@ Here are some overalls:
 
 /*
  * Sample XML documents:
- *  
+ *
 <?xml version="1.0"?>
 <AccessRequest xml:lang="en-US">
    <AccessLicenseNumber>TEST262223144CAT</AccessLicenseNumber>
@@ -1894,6 +2157,127 @@ Track Shipment Request/Response
         </Package>
     </Shipment>
 </TrackResponse>
+
+=======================================
+Rates & Service Request/Response
+=======================================
+
+<?xml version="1.0"?>
+<RatingServiceSelectionRequest xml:lang="en-US">
+  <Request>
+    <TransactionReference>
+      <CustomerContext>Bare Bones Rate Request</CustomerContext>
+      <XpciVersion>1.0</XpciVersion>
+    </TransactionReference>
+	<RequestAction>Rate</RequestAction>
+	<RequestOption>Rate</RequestOption>
+  </Request>
+  <PickupType>
+  	<Code>01</Code>
+  </PickupType>
+  <Shipment>
+    <Shipper>
+      	<Address>
+        	<PostalCode>44129</PostalCode>
+        	<CountryCode>US</CountryCode>
+      	</Address>
+    </Shipper>
+    <ShipTo>
+      	<Address>
+        	<PostalCode>44129</PostalCode>
+        	<CountryCode>US</CountryCode>
+      	</Address>
+   	</ShipTo>
+   	<ShipFrom>
+      	<Address>
+        	<PostalCode>32779</PostalCode>
+        	<CountryCode>US</CountryCode>
+      	</Address>
+  	</ShipFrom>
+  	<Service>
+    		<Code>01</Code>
+  	</Service>
+  	<Package>
+      	<PackagingType>
+	        <Code>02</Code>
+      	</PackagingType>
+			<Dimensions>
+      			<UnitOfMeasurement>
+      			  <Code>IN</Code>
+      			</UnitOfMeasurement>
+	        	<Length>20</Length>
+	        	<Width>20</Width>
+	        	<Height>20</Height>
+			</Dimensions>
+      	<PackageWeight>
+      		<UnitOfMeasurement>
+      			 <Code>LBS</Code>
+      		</UnitOfMeasurement>
+	        <Weight>23</Weight>
+      	</PackageWeight>
+   	</Package>
+  </Shipment>
+</RatingServiceSelectionRequest>
+
+=======================================
+
+<?xml version="1.0" encoding="UTF-8"?>
+<RatingServiceSelectionResponse>
+    <Response>
+        <TransactionReference>
+            <CustomerContext>Bare Bones Rate Request</CustomerContext>
+            <XpciVersion>1.0</XpciVersion>
+        </TransactionReference>
+        <ResponseStatusCode>1</ResponseStatusCode>
+        <ResponseStatusDescription>Success</ResponseStatusDescription>
+    </Response>
+    <RatedShipment>
+        <Service>
+            <Code>01</Code>
+        </Service>
+        <BillingWeight>
+            <UnitOfMeasurement>
+                <Code>LBS</Code>
+            </UnitOfMeasurement>
+            <Weight>42.0</Weight>
+        </BillingWeight>
+        <TransportationCharges>
+            <CurrencyCode>USD</CurrencyCode>
+            <MonetaryValue>108.61</MonetaryValue>
+        </TransportationCharges>
+        <ServiceOptionsCharges>
+            <CurrencyCode>USD</CurrencyCode>
+            <MonetaryValue>0.00</MonetaryValue>
+        </ServiceOptionsCharges>
+        <TotalCharges>
+            <CurrencyCode>USD</CurrencyCode>
+            <MonetaryValue>108.61</MonetaryValue>
+        </TotalCharges>
+        <GuaranteedDaysToDelivery>1</GuaranteedDaysToDelivery>
+        <ScheduledDeliveryTime>10:30 A.M.</ScheduledDeliveryTime>
+        <RatedPackage>
+            <TransportationCharges>
+                <CurrencyCode>USD</CurrencyCode>
+                <MonetaryValue>108.61</MonetaryValue>
+            </TransportationCharges>
+            <ServiceOptionsCharges>
+                <CurrencyCode>USD</CurrencyCode>
+                <MonetaryValue>0.00</MonetaryValue>
+            </ServiceOptionsCharges>
+            <TotalCharges>
+                <CurrencyCode>USD</CurrencyCode>
+                <MonetaryValue>108.61</MonetaryValue>
+            </TotalCharges>
+            <Weight>23.0</Weight>
+            <BillingWeight>
+                <UnitOfMeasurement>
+                    <Code>LBS</Code>
+                </UnitOfMeasurement>
+                <Weight>42.0</Weight>
+            </BillingWeight>
+        </RatedPackage>
+    </RatedShipment>
+</RatingServiceSelectionResponse>
 
  */
 
