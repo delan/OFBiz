@@ -95,6 +95,110 @@
         <find-by-primary-key entity-name="Shipment" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+    <simple-method method-name="setShipmentSettingsFromPrimaryOrder" short-description="Set Shipment Settings From Primary Order">
+        <check-permission permission="FACILITY" action="_CREATE">
+            <fail-message message="Security Error: to run setShipmentSettingsFromOrder you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-permission permission="FACILITY" action="_UPDATE">
+            <fail-message message="Security Error: to run setShipmentSettingsFromOrder you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <!-- on Shipment set partyIdFrom, partyIdTo (vendorPartyId), originContactMechId, destinationContactMechId, estimatedShipCost -->
+        <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="lookupShipmentPKMap"/>
+        <find-by-primary-key entity-name="Shipment" map-name="lookupShipmentPKMap" value-name="shipment"/>
+
+        <if-empty field-name="primaryOrderId" map-name="shipment">
+            <!-- No primryOrderId specified, don't do anything -->
+            <return response-code="success"/>
+        </if-empty>
+
+        <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="lookupOrderHeaderPKMap"/>
+        <find-by-primary-key entity-name="OrderHeader" map-name="lookupOrderHeaderPKMap" value-name="orderHeader"/>
+        
+        <if-compare value="SALES_ORDER" operator="equals" field-name="orderTypeId" map-name="orderHeader">
+            <!-- partyIdFrom, partyIdTo (vendorPartyId) -->
+            <find-by-and entity-name="OrderRole" map-name="lookupOrderHeaderPKMap" list-name="orderRoles"/>
+            <if-empty field-name="partyIdFrom" map-name="shipment">
+                <string-to-field string="VENDOR" field-name="roleTypeId" map-name="vendorRoleMap"/>
+                <filter-list-by-and list-name="orderRoles" map-name="vendorRoleMap" to-list-name="vendorOrderRoles"/>
+                <first-from-list entry-name="vendorOrderRole" list-name="vendorOrderRoles"/>
+                <if-not-empty field-name="vendorOrderRole">
+                    <field-to-field field-name="partyId" map-name="vendorOrderRole" to-field-name="partyIdFrom" to-map-name="shipment"/>
+                </if-not-empty>
+            </if-empty>
+            <if-empty field-name="partyIdTo" map-name="shipment">
+                <string-to-field string="SHIP_TO_CUSTOMER" field-name="roleTypeId" map-name="customerRoleMap"/>
+                <filter-list-by-and list-name="orderRoles" map-name="customerRoleMap" to-list-name="customerOrderRoles"/>
+                <first-from-list entry-name="customerOrderRole" list-name="customerOrderRoles"/>
+                <if-not-empty field-name="customerOrderRole">
+                    <field-to-field field-name="partyId" map-name="customerOrderRole" to-field-name="partyIdTo" to-map-name="shipment"/>
+                </if-not-empty>
+            </if-empty>
+            
+            <!-- TODO: lookup contactMechId for Facility and set as originContactMechId -->
+        </if-compare>
+        
+        <find-by-and entity-name="OrderContactMech" map-name="lookupOrderHeaderPKMap" list-name="orderContactMechs"/>
+        <!-- destinationContactMechId -->
+        <if-empty field-name="destinationContactMechId" map-name="shipment">
+            <string-to-field string="SHIPPING_LOCATION" field-name="contactMechPurposeTypeId" map-name="destinationContactMap"/>
+            <filter-list-by-and list-name="orderContactMechs" map-name="destinationContactMap" to-list-name="destinationOrderContactMechs"/>
+            <first-from-list entry-name="destinationOrderContactMech" list-name="destinationOrderContactMechs"/>
+            <if-not-empty field-name="destinationOrderContactMech">
+                <field-to-field field-name="contactMechId" map-name="destinationOrderContactMech" to-field-name="destinationContactMechId" to-map-name="shipment"/>
+            </if-not-empty>
+        </if-empty>
+        <!-- originContactMechId -->
+        <if-empty field-name="originContactMechId" map-name="shipment">
+            <string-to-field string="SHIP_ORIG_LOCATION" field-name="contactMechPurposeTypeId" map-name="originContactMap"/>
+            <filter-list-by-and list-name="orderContactMechs" map-name="originContactMap" to-list-name="originOrderContactMechs"/>
+            <first-from-list entry-name="originOrderContactMech" list-name="originOrderContactMechs"/>
+            <if-not-empty field-name="originOrderContactMech">
+                <field-to-field field-name="contactMechId" map-name="originOrderContactMech" to-field-name="originContactMechId" to-map-name="shipment"/>
+            </if-not-empty>
+        </if-empty>
+        
+        <call-bsh><![CDATA[
+                import org.ofbiz.commonapp.order.order.OrderReadHelper;
+            
+                orderReadHelper = new OrderReadHelper(orderHeader);
+                orderItems = orderReadHelper.getValidOrderItems();
+                orderAdjustments = orderReadHelper.getAdjustments();
+                orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
+                orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
+               
+                shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
+                shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
+                org.ofbiz.core.util.Debug.logInfo("shippingAmmount=" + shippingAmount);
+                shipment.put("estimatedShipCost", shippingAmount);
+        ]]></call-bsh>
+        
+        <!-- create a ShipmentRouteSegment with originFacilityId (if set on Shipment), destContactMechId, 
+            and from OrderShipmentPreference shipmentMethodTypeId, carrierPartyId, etc -->
+        <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
+        
+        <!-- estimatedShipDate, estimatedArrivalDate -->
+        <field-to-field field-name="estimatedShipDate" map-name="shipment" to-field-name="estimatedStartDate" to-map-name="shipmentRouteSegmentMap"/>
+        <field-to-field field-name="estimatedArrivalDate" map-name="shipment" to-field-name="estimatedArrivalDate" to-map-name="shipmentRouteSegmentMap"/>
+
+        <field-to-field field-name="originFacilityId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
+        <field-to-field field-name="originContactMechId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
+        <field-to-field field-name="destinationFacilityId" map-name="shipment" to-field-name="destFacilityId" to-map-name="shipmentRouteSegmentMap"/>
+        <field-to-field field-name="destinationContactMechId" map-name="shipment" to-field-name="destContactMechId" to-map-name="shipmentRouteSegmentMap"/>
+
+        <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="lookupOrderSpPKMap"/>
+        <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="lookupOrderSpPKMap"/>
+        <find-by-primary-key entity-name="OrderShipmentPreference" map-name="lookupOrderSpPKMap" value-name="orderShipmentPreference"/>
+        <if-not-empty field-name="orderShipmentPreference">
+            <field-to-field field-name="carrierPartyId" map-name="orderShipmentPreference" to-map-name="shipmentRouteSegmentMap"/>
+            <field-to-field field-name="shipmentMethodTypeId" map-name="orderShipmentPreference" to-map-name="shipmentRouteSegmentMap"/>
+        </if-not-empty>
+
+        <!-- do all storing here... -->
+        <store-value value-name="shipment"/>
+        <call-service service-name="createShipmentRouteSegment" in-map-name="shipmentRouteSegmentMap"/>        
+    </simple-method>
 
     <!-- ShipmentItem services -->
     <simple-method method-name="createShipmentItem" short-description="Create ShipmentItem">

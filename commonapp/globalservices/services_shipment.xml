@@ -34,6 +34,11 @@
         <description>Delete Shipment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="setShipmentSettingsFromPrimaryOrder" default-entity-name="Shipment" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="setShipmentSettingsFromPrimaryOrder" auth="true">
+        <description>Create Shipment</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <!-- ShipmentItem Services -->
     <service name="createShipmentItem" default-entity-name="ShipmentItem" engine="simple"

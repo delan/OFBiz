@@ -78,6 +78,9 @@
 		<field name="destinationContactMechId" title="Destination Postal Address Id" 
                 tooltip="To: ${destinationPostalAddress.toName}, Attn: ${destinationPostalAddress.attnName}, ${destinationPostalAddress.address1}, ${destinationPostalAddress.address2}, ${destinationPostalAddress.city}, ${destinationPostalAddress.stateProvinceGeoId}, ${destinationPostalAddress.postalCode}, ${destinationPostalAddress.countryGeoId}" tooltip-style="tabletext">
         </field>
+
+		<field name="partyIdTo" title="To Party" tooltip="${toPerson.firstName} ${toPerson.middleName} ${toPerson.lastName} ${toPartyGroup.groupName}" tooltip-style="tabletext"/>
+		<field name="partyIdFrom" title="From Party" tooltip="${fromPerson.firstName} ${fromPerson.middleName} ${fromPerson.lastName} ${fromPartyGroup.groupName}" tooltip-style="tabletext"/>
 		
 		<field use-when="shipment!=null" name="createdDate" widget-style="tabletext"><display also-hidden="false" description="${shipment.createdDate}"/></field>
 		<field use-when="shipment!=null" name="createdByUserLogin" widget-style="tabletext"><display also-hidden="false" description="${shipment.createdByUserLogin}"/></field>
