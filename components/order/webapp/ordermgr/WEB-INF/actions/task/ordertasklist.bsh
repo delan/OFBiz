@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
  */
 
@@ -57,6 +57,15 @@ partyTasks = delegator.findByCondition("OrderTaskList", partyCond, null, sortOrd
 if (partyTasks != null) partyTasks = EntityUtil.filterByDate(partyTasks);
 context.put("partyTasks", partyTasks);
 
+// Build a map of orderId and currency
+orderCurrencyMap = new HashMap();
+ptIter = partyTasks.iterator();
+while (ptIter.hasNext()) {
+    ptItem = ptIter.next();
+    orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", ptItem.get("orderId")));
+    orderCurrencyMap.put( ptItem.get("orderId"), orderHeader.get("currencyUom") );
+}
+
 // get this user's roles
 partyRoles = delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId", userLogin.getString("partyId")));  
     
@@ -82,6 +91,15 @@ roleTasks = delegator.findByCondition("OrderTaskList", conditions, null, sortOrd
 if (roleTasks != null) roleTasks = EntityUtil.filterByAnd(roleTasks, baseList);
 if (roleTasks != null) roleTasks = EntityUtil.filterByDate(roleTasks);  
 context.put("roleTasks", roleTasks);
+
+// Add to the map of orderId and currency
+rtIter = roleTasks.iterator();
+while (rtIter.hasNext()) {
+    rtItem = rtIter.next();
+    orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", rtItem.get("orderId")));
+    orderCurrencyMap.put( rtItem.get("orderId"), orderHeader.get("currencyUom") );
+}
+context.put("orderCurrencyMap", orderCurrencyMap);
 
 context.put("now", UtilDateTime.nowTimestamp());
 

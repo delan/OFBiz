@@ -83,14 +83,14 @@
         <override name="emailType" mode="OUT"/>
     </service>
     <service name="sendOrderConfirmation" engine="java"
-            location="org.ofbiz.common.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.content.notification.NotificationServices" invoke="sendNotification">
         <description>Send a order confirmation</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
     </service>
     <service name="sendOrderChangeNotification" engine="java"
-            location="org.ofbiz.common.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.content.notification.NotificationServices" invoke="sendNotification">
         <description>Send a order notification</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
@@ -98,7 +98,7 @@
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
     </service>
     <service name="sendOrderCompleteNotification" engine="java"
-            location="org.ofbiz.common.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.content.notification.NotificationServices" invoke="sendNotification">
         <description>Send a order notification</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
@@ -106,7 +106,7 @@
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
     </service>
     <service name="sendOrderBackorderNotification" engine="java"
-            location="org.ofbiz.common.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.content.notification.NotificationServices" invoke="sendNotification">
         <description>Send a order notification</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>

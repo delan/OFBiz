@@ -20,11 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
 <#assign localOrderReadHelper = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
+<#assign currencyUomId = localOrderReadHelper.getCurrency()>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -420,13 +421,13 @@
                       <div class="tabletext" nowrap>${orderItem.quantity?string.number}</div>
                     </td>
                     <td align="right" valign="top">
-                      <div class="tabletext" nowrap>${orderItem.unitPrice?string.currency}</div>
+                      <div class="tabletext" nowrap><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/></div>
                     </td>
                     <td align="right" valign="top">
-                      <div class="tabletext" nowrap>${localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem)?string.currency}</div>
+                      <div class="tabletext" nowrap><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/></div>
                     </td>
                     <td align="right" valign="top" nowrap>
-                      <div class="tabletext">${localOrderReadHelper.getOrderItemTotal(orderItem)?string.currency}</div>
+                      <div class="tabletext"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem) isoCode=currencyUomId/></div>
                     </td>
                     <#if maySelectItems?default(false)>
                       <td>                                 
@@ -449,7 +450,7 @@
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td align="right">
-                      <div class="tabletext" style='font-size: xx-small;'>${localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment)?string.currency}</div>
+                      <div class="tabletext" style='font-size: xx-small;'><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment) isoCode=currencyUomId/></div>
                     </td>
                     <td>&nbsp;</td>
                     <#if maySelectItems?default(false)><td>&nbsp;</td></#if>
@@ -463,28 +464,28 @@
               <tr><td colspan="8"><hr class='sepbar'></td></tr>
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Subtotal</b></div></td>
-                <td align="right" nowrap><div class="tabletext">${orderSubTotal?string.currency}</div></td>
+                <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></div></td>
               </tr>              
               <#list headerAdjustmentsToShow as orderHeaderAdjustment>                
                 <tr>
                   <td align="right" colspan="4"><div class="tabletext"><b>${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</b></div></td>
-                  <td align="right" nowrap><div class="tabletext">${localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment)?string.currency}</div></td>
+                  <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment) isoCode=currencyUomId/></div></td>
                 </tr>
               </#list>
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Shipping and Handling</b></div></td>
-                <td align="right" nowrap><div class="tabletext">${orderShippingTotal?string.currency}</div></td>
+                <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=orderShippingTotal isoCode=currencyUomId/></div></td>
               </tr>              
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Sales Tax</b></div></td>
-                <td align="right" nowrap><div class="tabletext">${orderTaxTotal?string.currency}</div></td>
+                <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=orderTaxTotal isoCode=currencyUomId/></div></td>
               </tr>
               
               <tr><td colspan=2></td><td colspan="8"><hr class='sepbar'></td></tr>
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Grand Total</b></div></td>
                 <td align="right" nowrap>
-                  <div class="tabletext">${orderGrandTotal?string.currency}</div>
+                  <div class="tabletext"><@ofbizCurrency amount=orderGrandTotal isoCode=currencyUomId/></div>
                 </td>
               </tr>
             </table>

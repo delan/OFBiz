@@ -1,5 +1,5 @@
 /*
- * $Id: NotificationServices.java,v 1.3 2003/11/07 01:05:43 ajzeneski Exp $
+ * $Id: NotificationServices.java,v 1.1 2003/11/26 11:52:44 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.common;
+package org.ofbiz.content.notification;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,6 +46,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.content.webapp.ftl.OfbizCurrencyTransform;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
@@ -106,12 +107,14 @@ import freemarker.template.TemplateHashModel;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.1 $
  * @since      2.2
  */
 public class NotificationServices {
 
     public static final String module = NotificationServices.class.getName();
+
+    public static OfbizCurrencyTransform ofbizCurrency = new OfbizCurrencyTransform();
 
     /** 
      * This will use the {@link #prepareNotification(DispatchContext, Map) prepareNotification(DispatchContext, Map)}
@@ -225,6 +228,7 @@ public class NotificationServices {
             BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
             TemplateHashModel staticModels = wrapper.getStaticModels();
             templateData.put("Static", staticModels);
+            templateData.put("ofbizCurrency", ofbizCurrency);
                         
             
             InputStreamReader templateReader = new InputStreamReader(templateUrl.openStream());
