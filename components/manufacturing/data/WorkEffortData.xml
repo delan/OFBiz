@@ -35,7 +35,7 @@
     <StatusItem description="Created" sequenceId="01" statusCode="CREATED" statusId="PRUN_CREATED" statusTypeId="PRODUCTION_RUN"/>
     <StatusItem description="Documents Printed" sequenceId="02" statusCode="DOC_PRINTED" statusId="PRUN_DOC_PRINTED" statusTypeId="PRODUCTION_RUN"/>
     <StatusItem description="Running" sequenceId="03" statusCode="RUNNING" statusId="PRUN_RUNNING" statusTypeId="PRODUCTION_RUN"/>
-    <StatusItem description="Realized" sequenceId="04" statusCode="REALIZED" statusId="PRUN_REALIZED" statusTypeId="PRODUCTION_RUN"/>
+    <StatusItem description="Completed" sequenceId="04" statusCode="COMPLETED" statusId="PRUN_COMPLETED" statusTypeId="PRODUCTION_RUN"/>
     <StatusItem description="Closed" sequenceId="05" statusCode="CLOSED" statusId="PRUN_CLOSED" statusTypeId="PRODUCTION_RUN"/>
 
     <!-- ProductionRun Inventory assignement status -->
