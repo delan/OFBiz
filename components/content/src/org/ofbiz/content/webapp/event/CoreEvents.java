@@ -1,5 +1,5 @@
 /*
- * $Id: CoreEvents.java,v 1.4 2003/12/03 19:32:56 ajzeneski Exp $
+ * $Id: CoreEvents.java,v 1.5 2003/12/05 21:03:55 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.ofbiz.service.calendar.RecurrenceRule;
  * CoreEvents - WebApp Events Related To CORE components
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class CoreEvents {
@@ -200,7 +200,7 @@ public class CoreEvents {
         Map params = UtilHttp.getParameterMap(request);
         // get the schedule parameters
         String serviceName = (String) params.remove("SERVICE_NAME");
-        String loaderName = (String) params.remove("LOADER_NAME");
+        String poolName = (String) params.remove("POOL_NAME");
         String serviceTime = (String) params.remove("SERVICE_TIME");
         String serviceEndTime = (String) params.remove("SERVICE_END_TIME");
         String serviceFreq = (String) params.remove("SERVICE_FREQUENCY");
@@ -238,17 +238,6 @@ public class CoreEvents {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         Locale locale = UtilHttp.getLocale(request);
 
-        // get the service loader by name
-        if (loaderName != null && loaderName.length() > 0) {
-            ServiceDispatcher sd = ServiceDispatcher.getInstance(loaderName, delegator);
-            if (sd != null) {
-                dispatcher = sd.getLocalDispatcher(loaderName);   
-            } else {
-                request.setAttribute("_ERROR_MESSAGE_", "<li>Invalid service loader name, no dispatcher found.");
-                return "error";
-            }
-        }
-        
         // lookup the service definition to see if this service is externally available, if not require the SERVICE_INVOKE_ANY permission
         ModelService modelService = null;
         try {
@@ -383,7 +372,7 @@ public class CoreEvents {
                       
         // schedule service
         try {
-            dispatcher.schedule(serviceName, serviceContext, startTime, frequency, interval, count, endTime);
+            dispatcher.schedule(poolName, serviceName, serviceContext, startTime, frequency, interval, count, endTime);
         } catch (GenericServiceException e) {
             request.setAttribute("_ERROR_MESSAGE_", "<li>Service dispatcher threw an exception: " + e.getMessage());
             return "error";
