@@ -5512,15 +5512,17 @@
       <title>Credit Card Information Entity</title>
       <package-name>org.ofbiz.commonapp.party.contact</package-name>
       <table-name>CREDIT_CARD_INFO</table-name>
-      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
       <field><col-name>CREDIT_CARD_ID</col-name><type>id-ne</type></field>
+      <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
+      <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
+      <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
       <field><col-name>CARD_TYPE</col-name><type>short-varchar</type></field>
       <field><col-name>CARD_NUMBER</col-name><type>credit-card-number</type></field>
+      <field><col-name>CARD_SECURITY_CODE</col-name><type>very-short</type></field>
       <field><col-name>EXPIRE_DATE</col-name><type>credit-card-date</type></field>
       <field><col-name>NAME_ON_CARD</col-name><type>name</type></field>
       <field><col-name>COMPANY_NAME_ON_CARD</col-name><type>name</type></field>
       <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>	
-      <prim-key-col>PARTY_ID</prim-key-col>	
       <prim-key-col>CREDIT_CARD_ID</prim-key-col>
       <relation>
         <type>one</type>
@@ -8029,18 +8031,18 @@
   <!-- ========================================================= -->
 	
     <entity>
-      <title>Login Account History Entity</title>
+      <title>User Login History Entity</title>
       <package-name>org.ofbiz.commonapp.security.login</package-name>
-      <table-name>LOGIN_ACCOUNT_HISTORY</table-name>
+      <table-name>USER_LOGIN_HISTORY</table-name>
       <field><col-name>USER_LOGIN_ID</col-name><type>id-ne</type></field>
-      <field><col-name>USER_LOGIN_SEQ_ID</col-name><type>id-ne</type></field>
       <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
       <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
       <field><col-name>PARTY_ID</col-name><type>id</type></field>
       <field><col-name>USER_ID</col-name><type>id</type></field>
+      <field><col-name>REFERRER_URL</col-name><type>url</type></field>
       <field><col-name>PASSWORD</col-name><type>short-varchar</type></field>	
       <prim-key-col>USER_LOGIN_ID</prim-key-col>	
-      <prim-key-col>USER_LOGIN_SEQ_ID</prim-key-col>
+      <prim-key-col>FROM_DATE</prim-key-col>
       <relation>
         <type>one</type>
         <rel-table-name>USER_LOGIN</rel-table-name>
@@ -8074,13 +8076,18 @@
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>LOGIN_ACCOUNT_HISTORY</rel-table-name>
+        <rel-table-name>USER_LOGIN_HISTORY</rel-table-name>
         <key-map><col-name>USER_LOGIN_ID</col-name></key-map>
       </relation>
       <relation>
         <type>one</type>
         <rel-table-name>PERSON</rel-table-name>
         <key-map><col-name>PARTY_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
       </relation>
     </entity>
 
