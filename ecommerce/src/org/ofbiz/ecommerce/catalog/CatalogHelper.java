@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/09/05 01:35:22  azeneski
+ * Update.. (not finished)
+ *
  * Revision 1.6  2001/09/05 00:30:14  jonesde
  * Initial keyword search implementation in place.
  *
@@ -76,7 +79,7 @@ public class CatalogHelper {
     public static void getRelatedCategories(PageContext pageContext, String attributeName) {
         getRelatedCategories(pageContext,attributeName,null);
     }
-       
+    
     public static void getRelatedCategories(PageContext pageContext, String attributeName, String parentId) {
         ArrayList categories = new ArrayList();
         ServletRequest request = pageContext.getRequest();
@@ -238,30 +241,44 @@ public class CatalogHelper {
         if(products.size() > 0) pageContext.setAttribute("searchProductList",products);
     }
     
-    public static void setTrail(PageContext pageContext, String category, boolean topLevel) {
+    public static void setTrail(PageContext pageContext, String currentCategory, boolean topLevel) {
+        ServletRequest request = pageContext.getRequest();
         HttpSession session = pageContext.getSession();
+        String previousCategory = request.getParameter("pcategory");
         ArrayList crumb = null;
+        
         if ( !topLevel ) {
-            crumb = (ArrayList) session.getAttribute("_BREAD_CRUMB_TRAIL_");
-            if ( crumb != null ) {
-                Debug.logInfo("Appended category to crumb.");
-                crumb.add(category);
-            }
-            else {
+            if ( previousCategory != null )
+                crumb = (ArrayList) session.getAttribute("_BREAD_CRUMB_TRAIL_");
+            
+            if ( crumb == null )
                 crumb = new ArrayList();
-                Debug.logInfo("Created new crumb, added category.");
-                crumb.add(category);
+            
+            if ( crumb.contains(currentCategory) ) {
+                Debug.logInfo("Category already set. Aborting.");
+                return;
             }
+            
+            if ( crumb.contains(previousCategory) ) {
+                int index = crumb.indexOf(previousCategory);
+                if ( index < (crumb.size() - 1) ) {
+                    for ( int i = crumb.size() -1; i > index; i-- ) {
+                        crumb.remove(i);
+                    }
+                }
+            }
+            
+            crumb.add(currentCategory);
         }
         else {
             crumb = new ArrayList();
-            crumb.add(category);
-            Debug.logInfo("New crumb force, created and added category.");
+            Debug.logInfo("Created new crumb, added category.");
+            crumb.add(currentCategory);
         }
-        if ( crumb != null )
-            session.setAttribute("_BREAD_CRUMB_TRAIL_",crumb);
+        
+        session.setAttribute("_BREAD_CRUMB_TRAIL_",crumb);
     }
-    
+               
     public static Collection getTrail(PageContext pageContext) {
         HttpSession session = pageContext.getSession();
         ArrayList crumb = (ArrayList) session.getAttribute("_BREAD_CRUMB_TRAIL_");
