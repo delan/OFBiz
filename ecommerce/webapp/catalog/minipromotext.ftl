@@ -25,7 +25,7 @@
 -->
 
 <#-- get these for the promoText -->
-<#assign productPromos = Static["org.ofbiz.commonapp.product.promo.ProductPromoWorker"].getCatalogProductPromos(delegator, request)>
+<#assign productPromos = Static["org.ofbiz.commonapp.product.promo.ProductPromoWorker"].getStoreProductPromos(delegator, request)>
 
 <#-- Make sure that at least one promo has non-empty promoText -->
 <#assign showPromoText = false>

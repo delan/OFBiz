@@ -33,6 +33,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 
 import org.ofbiz.commonapp.product.category.*;
+import org.ofbiz.commonapp.product.store.*;
 import org.ofbiz.commonapp.order.shoppingcart.*;
 
 /**
@@ -74,18 +75,14 @@ public class CatalogWorker {
         return null;
     }
 
-    public static List getWebSiteCatalogs(PageContext pageContext) {
-        return getWebSiteCatalogs(pageContext.getRequest());
-    }
-
-    public static List getWebSiteCatalogs(ServletRequest request) {
-        String webSiteId = getWebSiteId(request);
+    public static List getStoreCatalogs(ServletRequest request) {
+        String productStoreId = ProductStoreWorker.getProductStoreId(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         try {
-            return EntityUtil.filterByDate(delegator.findByAndCache("WebSiteCatalog", UtilMisc.toMap("webSiteId", webSiteId), UtilMisc.toList("sequenceNum", "prodCatalogId")), true);
+            return EntityUtil.filterByDate(delegator.findByAndCache("ProductStoreCatalog", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNum", "prodCatalogId")), true);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up website catalogs for website with id " + webSiteId, module);
+            Debug.logError(e, "Error looking up website catalogs for store with id " + productStoreId, module);
         }
         return null;
     }
@@ -175,10 +172,10 @@ public class CatalogWorker {
     public static List getCatalogIdsAvailable(ServletRequest request) {
         List categoryIds = new LinkedList();
         List partyCatalogs = getPartyCatalogs(request);
-        List webSiteCatalogs = getWebSiteCatalogs(request);
-        List allCatalogLinks = new ArrayList((webSiteCatalogs == null ? 0 : webSiteCatalogs.size()) + (partyCatalogs == null ? 0 : partyCatalogs.size()));
+        List storeCatalogs = getStoreCatalogs(request);
+        List allCatalogLinks = new ArrayList((storeCatalogs == null ? 0 : storeCatalogs.size()) + (partyCatalogs == null ? 0 : partyCatalogs.size()));
         if (partyCatalogs != null) allCatalogLinks.addAll(partyCatalogs);
-        if (webSiteCatalogs != null) allCatalogLinks.addAll(webSiteCatalogs);
+        if (storeCatalogs != null) allCatalogLinks.addAll(storeCatalogs);
         
         if (allCatalogLinks.size() > 0) {
             Iterator aclIter = allCatalogLinks.iterator();

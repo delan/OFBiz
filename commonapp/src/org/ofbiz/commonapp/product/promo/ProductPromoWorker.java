@@ -33,6 +33,7 @@ import org.ofbiz.core.util.*;
 
 import org.ofbiz.commonapp.order.shoppingcart.*;
 import org.ofbiz.commonapp.product.catalog.*;
+import org.ofbiz.commonapp.product.store.*;
 
 /**
  * ProductPromoWorker - Worker class for catalog/product promotion related functionality
@@ -46,70 +47,67 @@ public class ProductPromoWorker {
 
     public static final String module = ProductPromoWorker.class.getName();
 
-    public static List getCatalogProductPromos(GenericDelegator delegator, ServletRequest request) {
+    public static List getStoreProductPromos(GenericDelegator delegator, ServletRequest request) {
         List productPromos = new LinkedList();
 
         try {
-            String prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
+            GenericValue productStore = ProductStoreWorker.getProductStore(request);                      
+            
+            if (productStore != null) {
+                String productStoreId = productStore.getString("productStoreId");                                                
+                Iterator productStorePromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(productStore.getRelatedCache("ProductStorePromoAppl", null, UtilMisc.toList("sequenceNum")), true));
 
-            if (prodCatalogId != null) {
-                GenericValue prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
+                while (productStorePromoAppls != null && productStorePromoAppls.hasNext()) {
+                    GenericValue productStorePromoAppl = (GenericValue) productStorePromoAppls.next();
+                    GenericValue productPromo = productStorePromoAppl.getRelatedOneCache("ProductPromo");
+                    List productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
 
-                if (prodCatalog != null) {
-                    Iterator prodCatalogPromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum")), true));
+                    // get the ShoppingCart out of the session.
+                    HttpServletRequest req = null;
+                    ShoppingCart cart = null;
 
-                    while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()) {
-                        GenericValue prodCatalogPromoAppl = (GenericValue) prodCatalogPromoAppls.next();
-                        GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
-                        Collection productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
-
-                        // get the ShoppingCart out of the session.
-                        HttpServletRequest req = null;
-                        ShoppingCart cart = null;
-
-                        try {
-                            req = (HttpServletRequest) request;
-                            cart = ShoppingCartEvents.getCartObject(req);
-                        } catch (ClassCastException cce) {
-                            Debug.logInfo("Not a HttpServletRequest, no shopping cart found.", module);
-                        }
-
-                        boolean condResult = true;
-
-                        if (productPromoRules != null) {
-                            Iterator promoRulesItr = productPromoRules.iterator();
-
-                            while (condResult && promoRulesItr != null && promoRulesItr.hasNext()) {
-                                GenericValue promoRule = (GenericValue) promoRulesItr.next();
-                                Iterator productPromoConds = UtilMisc.toIterator(promoRule.getRelatedCache("ProductPromoCond", null, UtilMisc.toList("productPromoCondSeqId")));
-
-                                while (condResult && productPromoConds != null && productPromoConds.hasNext()) {
-                                    GenericValue productPromoCond = (GenericValue) productPromoConds.next();
-
-                                    // evaluate the party related conditions; so we don't show the promo if it doesn't apply.
-                                    if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId")))
-                                        condResult = checkCondition(prodCatalogId, productPromoCond, cart, null, 0, delegator);
-                                    else if ("PRIP_PARTY_GRP_MEM".equals(productPromoCond.getString("inputParamEnumId")))
-                                        condResult = checkCondition(prodCatalogId, productPromoCond, cart, null, 0, delegator);
-                                    else if ("PRIP_PARTY_CLASS".equals(productPromoCond.getString("inputParamEnumId")))
-                                        condResult = checkCondition(prodCatalogId, productPromoCond, cart, null, 0, delegator);
-                                    else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId")))
-                                        condResult = checkCondition(prodCatalogId, productPromoCond, cart, null, 0, delegator);
-                                }
-                            }
-                            if (!condResult) productPromo = null;
-                        }
-                        if (productPromo != null) productPromos.add(productPromo);
+                    try {
+                        req = (HttpServletRequest) request;
+                        cart = ShoppingCartEvents.getCartObject(req);
+                    } catch (ClassCastException cce) {
+                        Debug.logInfo("Not a HttpServletRequest, no shopping cart found.", module);
                     }
+
+                    boolean condResult = true;
+
+                    if (productPromoRules != null) {
+                        Iterator promoRulesItr = productPromoRules.iterator();
+
+                        while (condResult && promoRulesItr != null && promoRulesItr.hasNext()) {
+                            GenericValue promoRule = (GenericValue) promoRulesItr.next();
+                            Iterator productPromoConds = UtilMisc.toIterator(promoRule.getRelatedCache("ProductPromoCond", null, UtilMisc.toList("productPromoCondSeqId")));
+
+                            while (condResult && productPromoConds != null && productPromoConds.hasNext()) {
+                                GenericValue productPromoCond = (GenericValue) productPromoConds.next();
+
+                                // evaluate the party related conditions; so we don't show the promo if it doesn't apply.
+                                if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId")))
+                                    condResult = checkCondition(productStoreId, productPromoCond, cart, null, 0, delegator);
+                                else if ("PRIP_PARTY_GRP_MEM".equals(productPromoCond.getString("inputParamEnumId")))
+                                    condResult = checkCondition(productStoreId, productPromoCond, cart, null, 0, delegator);
+                                else if ("PRIP_PARTY_CLASS".equals(productPromoCond.getString("inputParamEnumId")))
+                                    condResult = checkCondition(productStoreId, productPromoCond, cart, null, 0, delegator);
+                                else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId")))
+                                    condResult = checkCondition(productStoreId, productPromoCond, cart, null, 0, delegator);
+                            }
+                        }
+                        if (!condResult) productPromo = null;
+                    }
+                    if (productPromo != null) productPromos.add(productPromo);
                 }
-            }
+            }            
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
         return productPromos;
     }
 
-    public static void doPromotions(String prodCatalogId, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public static void doPromotions(String productStoreId, boolean fixme, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
         // this is our safety net; we should never need to loop through the rules more than a certain number of times, this is that number and may have to be changed for insanely large promo sets...
         int maxIterations = 1000;
 
@@ -124,32 +122,32 @@ public class ProductPromoWorker {
 
         if (Debug.verboseOn()) Debug.logVerbose("Doing Promotions; apply=" + apply + ", oldQuantity=" + oldQuantity + ", newQuantity=" + cartItem.getQuantity() + ", productId=" + cartItem.getProductId(), module);
 
-        GenericValue prodCatalog = null;
+        GenericValue productStore = null;
 
         try {
-            prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
+            productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up prodCatalog with id " + prodCatalogId, module);
+            Debug.logError(e, "Error looking up store with id " + productStoreId, module);
         }
-        if (prodCatalog == null) {
-            Debug.logWarning("No prodCatalog found with id " + prodCatalogId + ", not doing promotions", module);
+        if (productStore == null) {
+            Debug.logWarning("No store found with id " + productStoreId + ", not doing promotions", module);
             return;
         }
 
         // there will be a ton of db access, so just do a big catch entity exception block
         try {
             // loop through promotions and get a list of all of the rules...
-            Collection prodCatalogPromoApplsCol = prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum"));
+            Collection productStorePromoApplsCol = productStore.getRelatedCache("ProductStorePromoAppl", null, UtilMisc.toList("sequenceNum"));
             if (apply) {
-                prodCatalogPromoApplsCol = EntityUtil.filterByDate((List) prodCatalogPromoApplsCol, true);
+                productStorePromoApplsCol = EntityUtil.filterByDate((List) productStorePromoApplsCol, true);
             }
 
-            if (prodCatalogPromoApplsCol == null || prodCatalogPromoApplsCol.size() == 0) {
-                if (Debug.infoOn()) Debug.logInfo("Not doing promotions, none applied to prodCatalog with ID " + prodCatalogId, module);
+            if (productStorePromoApplsCol == null || productStorePromoApplsCol.size() == 0) {
+                if (Debug.infoOn()) Debug.logInfo("Not doing promotions, none applied to store with ID " + productStoreId, module);
             }
 
             List allPromoRules = new LinkedList();
-            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(prodCatalogPromoApplsCol);
+            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(productStorePromoApplsCol);
 
             while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()) {
                 GenericValue prodCatalogPromoAppl = (GenericValue) prodCatalogPromoAppls.next();
@@ -201,7 +199,7 @@ public class ProductPromoWorker {
                     while (productPromoConds != null && productPromoConds.hasNext()) {
                         GenericValue productPromoCond = (GenericValue) productPromoConds.next();
 
-                        boolean condResult = checkCondition(prodCatalogId, productPromoCond, cart, cartItem, oldQuantity, delegator);
+                        boolean condResult = checkCondition(productStoreId, productPromoCond, cart, cartItem, oldQuantity, delegator);
 
                         // if apply, any false condition will cause it to NOT perform the action
                         // if !apply, any false condition will cause it to PERFORM the action
@@ -231,7 +229,7 @@ public class ProductPromoWorker {
                             // Debug.logInfo("Doing action: " + productPromoAction, module);
 
                             try {
-                                boolean actionChangedCart = performAction(apply, productPromoAction, cart, cartItem, oldQuantity, prodCatalogId, delegator, dispatcher);
+                                boolean actionChangedCart = performAction(apply, productPromoAction, cart, cartItem, oldQuantity, productStoreId, delegator, dispatcher);
 
                                 // if cartChanged is already true then don't set it again: implements OR logic (ie if ANY actions change content, redo loop)
                                 if (!cartChanged) {
@@ -251,7 +249,7 @@ public class ProductPromoWorker {
         }
     }
 
-    public static boolean checkCondition(String prodCatalogId, GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator) throws GenericEntityException {
+    public static boolean checkCondition(String productStoreId, GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator) throws GenericEntityException {
         GenericValue userLogin = null;
         String partyId = null;
 
@@ -367,7 +365,7 @@ public class ProductPromoWorker {
     }
 
     /** returns true if the cart was changed and rules need to be re-evaluted */
-    public static boolean performAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, String prodCatalogId, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException, CartItemModifyException {
+    public static boolean performAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, String productStoreId, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException, CartItemModifyException {
         if ("PROMO_GWP".equals(productPromoAction.getString("productPromoActionTypeId"))) {
             if (apply) {
                 Integer itemLoc = findPromoItem(productPromoAction, cart);
@@ -381,7 +379,8 @@ public class ProductPromoWorker {
                 double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
 
                 // pass null for cartLocation to add to end of cart, pass false for doPromotions to avoid infinite recursion
-                ShoppingCartItem gwpItem = ShoppingCartItem.makeItem(null, product, quantity, null, null, prodCatalogId, dispatcher, cart, false);
+                // TODO fixme - changed prodCatalogId to null
+                ShoppingCartItem gwpItem = ShoppingCartItem.makeItem(null, product, quantity, null, null, null, dispatcher, cart, false);
 
                 double discountAmount = quantity * gwpItem.getBasePrice();
                 GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
