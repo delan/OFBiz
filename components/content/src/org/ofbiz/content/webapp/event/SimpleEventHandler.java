@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleEventHandler.java,v 1.2 2003/09/14 05:36:47 jonesde Exp $
+ * $Id: SimpleEventHandler.java,v 1.3 2004/07/09 17:29:12 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -24,10 +24,14 @@
  */
 package org.ofbiz.content.webapp.event;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.SimpleMethod;
 
@@ -36,12 +40,25 @@ import org.ofbiz.minilang.SimpleMethod;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class SimpleEventHandler implements EventHandler {
 
     public static final String module = SimpleEventHandler.class.getName();
+    /**
+     * Contains the property file name for translation of error
+     * messages.
+     */
+    public static final String RESOURCE = "ContentErrorUiLabel";
+    /**
+     * Contains an error message.
+     */
+    private static String errMsg = "";
+    /**
+     * Language setting.
+     */
+    private static Locale locale;
 
     /** 
      * Invoke the web event
@@ -55,7 +72,8 @@ public class SimpleEventHandler implements EventHandler {
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         String xmlResource = eventPath;
         String eventName = eventMethod;
-
+        SimpleEventHandler.locale = UtilHttp.getLocale(request); 
+        
         if (Debug.verboseOn()) Debug.logVerbose("[Set path/method]: " + xmlResource + " / " + eventName, module);
 
         if (xmlResource == null)
@@ -71,7 +89,12 @@ public class SimpleEventHandler implements EventHandler {
             return eventReturn;
         } catch (MiniLangException e) {
             Debug.logError(e, module);
-            request.setAttribute("_ERROR_MESSAGE_", "Could not complete event: " + e.getMessage());
+            SimpleEventHandler.errMsg = UtilProperties.getMessage(
+            SimpleEventHandler.RESOURCE,
+                    "simpleEventHandler.event_not_completed", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ": ";            
+            request.setAttribute("_ERROR_MESSAGE_", errMsg + e.getMessage());
             return "error";
         }
     }

@@ -17,6 +17,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.ContentManagementWorker;
 import org.ofbiz.entity.GenericDelegator;
@@ -34,7 +35,7 @@ import org.ofbiz.service.ModelService;
  * LayoutEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      3.0
  *
  * 
@@ -42,21 +43,40 @@ import org.ofbiz.service.ModelService;
 public class LayoutEvents {
 
     public static final String module = LayoutEvents.class.getName();
+    /**
+     * Contains the property file name for translation of error
+     * messages.
+     */
+    public static final String RESOURCE = "ContentErrorUiLabel";
+    /**
+     * Contains an error message.
+     */
+    private static String errMsg = "";
+    /**
+     * Language setting.
+     */
+    private static Locale locale;
 
 
     public static String createLayoutImage(HttpServletRequest request, HttpServletResponse response) {
 
-        try {
+        try {            
             GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
             LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
             HttpSession session = request.getSession();
+            Locale loc = (Locale) session.getServletContext().getAttribute("locale");            
             Map uploadResults = LayoutWorker.uploadImageAndParameters(request, "imageData");
             //Debug.logVerbose("in createLayoutImage(java), uploadResults:" + uploadResults, "");
             Map formInput = (Map)uploadResults.get("formInput");
             Map context = new HashMap();
             ByteWrapper byteWrap = (ByteWrapper)uploadResults.get("imageData");
             if (byteWrap == null) {
-                request.setAttribute("_ERROR_MESSAGE_", "Image data is null.");
+                LayoutEvents.errMsg = UtilProperties.getMessage(
+                LayoutEvents.RESOURCE,
+                        "layoutEvents.image_data_null", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ".";                
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
         //Debug.logVerbose("in createLayoutImage, byteWrap(0):" + byteWrap, module);
@@ -70,7 +90,6 @@ public class LayoutEvents {
             }
             String mimeTypeId = "image/" + imageFileNameExt;
             List errorMessages = new ArrayList();
-            Locale loc = (Locale)request.getSession().getServletContext().getAttribute("locale");
             if (loc == null)
                 loc = Locale.getDefault();
             context.put("locale", loc);
@@ -162,6 +181,7 @@ public class LayoutEvents {
     public static String updateLayoutImage(HttpServletRequest request, HttpServletResponse response) {
 
         try {
+            LayoutEvents.locale = UtilHttp.getLocale(request);           
             GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
             LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
             HttpSession session = request.getSession();
@@ -169,7 +189,12 @@ public class LayoutEvents {
             Map context = (Map)uploadResults.get("formInput");
             ByteWrapper byteWrap = (ByteWrapper)uploadResults.get("imageData");
             if (byteWrap == null) {
-                request.setAttribute("_ERROR_MESSAGE_", "Image data is null.");
+                LayoutEvents.errMsg = UtilProperties.getMessage(
+                LayoutEvents.RESOURCE,
+                        "layoutEvents.image_data_null", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ".";                
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
             String imageFileName = (String)uploadResults.get("imageFileName");
@@ -223,17 +248,28 @@ public class LayoutEvents {
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
         HttpSession session = request.getSession();
+        LayoutEvents.locale = UtilHttp.getLocale(request);
         Map context = new HashMap();
         Map paramMap = UtilHttp.getParameterMap(request);
         Debug.logVerbose("in replaceSubContent, paramMap:" + paramMap, module);
         String dataResourceId = (String)paramMap.get("dataResourceId");
         if (UtilValidate.isEmpty(dataResourceId)) {
-            request.setAttribute("_ERROR_MESSAGE_", "DataResourceId is null.");
+            LayoutEvents.errMsg = UtilProperties.getMessage(
+            LayoutEvents.RESOURCE,
+                    "layoutEvents.data_ressource_id_null", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";            
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
         String contentIdTo = (String)paramMap.get("contentIdTo");
         if (UtilValidate.isEmpty(contentIdTo)) {
-            request.setAttribute("_ERROR_MESSAGE_", "contentIdTo is null.");
+            LayoutEvents.errMsg = UtilProperties.getMessage(
+            LayoutEvents.RESOURCE,
+                    "layoutEvents.content_id_to_null", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";            
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
         String mapKey = (String)paramMap.get("mapKey");
@@ -299,12 +335,18 @@ public class LayoutEvents {
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
         HttpSession session = request.getSession();
+        Locale loc = (Locale) session.getServletContext().getAttribute("locale");
         Map paramMap = UtilHttp.getParameterMap(request);
         String contentId = (String)paramMap.get("contentId");
         Debug.logVerbose("in cloneLayout, contentId:" + contentId, "");
         if (UtilValidate.isEmpty(contentId)) {
-                request.setAttribute("_ERROR_MESSAGE_", "contentId is empty");
-                return "error";
+            LayoutEvents.errMsg = UtilProperties.getMessage(
+            LayoutEvents.RESOURCE,
+                    "layoutEvents.content_id_empty", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";            
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);            
+            return "error";
         }
         String contentIdTo = (String)paramMap.get("contentIdTo");
         Debug.logVerbose("in cloneLayout, contentIdTo:" + contentIdTo, "");
@@ -320,7 +362,12 @@ public class LayoutEvents {
                        UtilMisc.toMap("contentId", contentId));
         Debug.logVerbose("in cloneLayout, content:" + content, "");
             if (content == null) {
-                request.setAttribute("_ERROR_MESSAGE_", "content is empty");
+                LayoutEvents.errMsg = UtilProperties.getMessage(
+                LayoutEvents.RESOURCE,
+                        "layoutEvents.content_empty", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ".";            
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
             newContent = delegator.makeValue("Content", content);
@@ -375,7 +422,12 @@ public class LayoutEvents {
             results = dispatcher.runSync("getAssocAndContentAndDataResource", serviceIn);
             entityList = (List)results.get("entityList");
             if (entityList == null || entityList.size() == 0) {
-                request.setAttribute("_ERROR_MESSAGE_", "No subContent found");
+                LayoutEvents.errMsg = UtilProperties.getMessage(
+                LayoutEvents.RESOURCE,
+                        "layoutEvents.no_subcontent", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ".";            
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
             }
         } catch(GenericServiceException e) {
                 request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
@@ -390,7 +442,6 @@ public class LayoutEvents {
         for (int i=0; i<entityList.size(); i++) {
             GenericValue view = (GenericValue)entityList.get(i);
             List errorMessages = new ArrayList();
-            Locale loc = (Locale)request.getSession().getServletContext().getAttribute("locale");
             if (loc == null)
                 loc = Locale.getDefault();
             try {
@@ -594,9 +645,15 @@ public class LayoutEvents {
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         Map paramMap = UtilHttp.getParameterMap(request);
         String entityName = (String)paramMap.get("entityName");
-        
+        LayoutEvents.locale = UtilHttp.getLocale(request);
+                
         if (UtilValidate.isEmpty(entityName) ) {
-            request.setAttribute("_ERROR_MESSAGE_", "'entityName' is empty.");
+            LayoutEvents.errMsg = UtilProperties.getMessage(
+            LayoutEvents.RESOURCE,
+                    "layoutEvents.entityname_empty", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";            
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         } 
         GenericValue v = delegator.makeValue(entityName, null);
@@ -614,7 +671,12 @@ public class LayoutEvents {
             if (UtilValidate.isNotEmpty(attrVal)) {
                 passedPK.put(attrName,attrVal);
             } else {
-                request.setAttribute("_ERROR_MESSAGE_", attrName + " is empty.");
+                LayoutEvents.errMsg = UtilProperties.getMessage(
+                LayoutEvents.RESOURCE,
+                        "layoutEvents.empty", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ".";            
+                request.setAttribute("_ERROR_MESSAGE_", attrName + " " + errMsg);
                 return "error";
             }
         }

@@ -2,6 +2,7 @@ package org.ofbiz.content.content;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Iterator;
@@ -18,7 +19,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.entity.GenericDelegator;
@@ -39,7 +42,7 @@ import org.ofbiz.minilang.MiniLangException;
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -47,6 +50,19 @@ import org.ofbiz.minilang.MiniLangException;
 public class UploadContentAndImage {
 
     public static final String module = UploadContentAndImage.class.getName();
+    /**
+     * Contains the property file name for translation of error
+     * messages.
+     */
+    public static final String RESOURCE = "ContentErrorUiLabel";
+    /**
+     * Contains an error message.
+     */
+    private static String errMsg = "";
+    /**
+     * Language setting.
+     */
+    private static Locale locale;
 
 
     public UploadContentAndImage() {}
@@ -56,6 +72,7 @@ public class UploadContentAndImage {
 
        
         try {
+            UploadContentAndImage.locale = UtilHttp.getLocale(request);
             LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
             GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
             HttpSession session = request.getSession();
@@ -74,7 +91,12 @@ public class UploadContentAndImage {
             //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]lst " + lst, module);
     
             if (lst.size() == 0) {
-                request.setAttribute("_ERROR_MESSAGE_", "No files uploaded");
+                UploadContentAndImage.errMsg = UtilProperties.getMessage(
+                UploadContentAndImage.RESOURCE,
+                        "uploadContentAndImage.no_files_uploaded", (locale != null
+                                ? locale
+                                    : Locale.getDefault()));                
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 Debug.logWarning("[DataEvents.uploadImage] No files uploaded", module);
                 return "error";
             }
