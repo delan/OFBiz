@@ -1,5 +1,5 @@
 /*
- * $Id: ContentDocument.java,v 1.6 2004/08/11 17:16:39 byersa Exp $
+ * $Id: ContentDocument.java,v 1.7 2004/08/12 05:29:37 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.util.Iterator;
  * ContentDocument Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 3.1
  * 
  *  
@@ -111,15 +111,15 @@ public class ContentDocument {
                 GenericDelegator delegator = content.getDelegator();
                 ContentWorker.getContentAncestryAll(delegator, contentId, "WEB_SITE_PUB_PT", "TO", ancestorList);
                 String ancestorString = StringUtil.join(ancestorList, " ");
-	  	Debug.logInfo("in ContentDocument, ancestorString:" + ancestorString, module);
+	  	//Debug.logInfo("in ContentDocument, ancestorString:" + ancestorString, module);
                 if (UtilValidate.isNotEmpty(ancestorString) ) {
                     Field field = Field.UnStored("site", ancestorString);
-	  	    Debug.logInfo("in ContentDocument, field:" + field.stringValue(), module);
+	  	    //Debug.logInfo("in ContentDocument, field:" + field.stringValue(), module);
 	  	    doc.add(field);
                 }
 
                 boolean retVal = indexDataResource(content, doc, context);
-	        Debug.logInfo("in DataResourceDocument, context.badIndexList:" + context.get("badIndexList"), module);
+	        //Debug.logInfo("in DataResourceDocument, context.badIndexList:" + context.get("badIndexList"), module);
                 if (!retVal)
                     doc = null;
 	  	return doc;
@@ -129,9 +129,9 @@ public class ContentDocument {
 	  	
             GenericDelegator delegator = content.getDelegator();
             String contentId = content.getString("contentId");
-	  	    Debug.logInfo("in ContentDocument, contentId:" + contentId, module);
+	  	    //Debug.logInfo("in ContentDocument, contentId:" + contentId, module);
             String dataResourceId = content.getString("dataResourceId");
-	  	    Debug.logInfo("in ContentDocument, dataResourceId:" + dataResourceId, module);
+	  	    //Debug.logInfo("in ContentDocument, dataResourceId:" + dataResourceId, module);
             GenericValue dataResource = null;
 	    try {
 	  	dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
@@ -143,6 +143,13 @@ public class ContentDocument {
 	  	return false;
 	    }
 	  	
+            if (dataResource == null) {
+                List badIndexList = (List)context.get("badIndexList");
+                badIndexList.add(contentId + " - dataResource is null."  );
+	        Debug.logInfo("in DataResourceDocument, badIndexList:" + badIndexList, module);
+	  	return false;
+	    }
+        
 	  	
 	    String mimeTypeId = dataResource.getString("mimeTypeId");
 	    if (UtilValidate.isEmpty(mimeTypeId)) {
@@ -174,7 +181,7 @@ public class ContentDocument {
 	    //Debug.logInfo("in DataResourceDocument, text:" + text, module);
             if (UtilValidate.isNotEmpty(text)) {
               Field field = Field.UnStored("content", text);
-	      Debug.logInfo("in ContentDocument, field:" + field.stringValue(), module);
+	      //Debug.logInfo("in ContentDocument, field:" + field.stringValue(), module);
 	      doc.add(field);
             }
 
@@ -195,7 +202,7 @@ public class ContentDocument {
                 featureList.add(feature); 
             }
             String featureString = StringUtil.join(featureList, " ");
-            Debug.logInfo("in ContentDocument, featureString:" + featureString, module);
+            //Debug.logInfo("in ContentDocument, featureString:" + featureString, module);
             if (UtilValidate.isNotEmpty(featureString) ) {
                 Field field = Field.UnStored("feature", featureString);
 	  	doc.add(field);
