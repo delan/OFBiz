@@ -66,6 +66,7 @@ externalLoginKey = LoginEvents.getExternalLoginKey(request);
 externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
 request.setAttribute("externalKeyParam", externalKeyParam);
 request.setAttribute("isFacilityMgrActive", new Boolean(true));
+request.setAttribute("activeApp", "facilitymgr");
 
 eventMsgReq = request.getAttribute(SiteDefs.EVENT_MESSAGE);
 errorMsgReq = request.getAttribute(SiteDefs.ERROR_MESSAGE);

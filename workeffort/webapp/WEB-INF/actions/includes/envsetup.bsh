@@ -66,7 +66,7 @@ externalLoginKey = LoginEvents.getExternalLoginKey(request);
 externalKeyParam = externalLoginKey == null ? "" : "?externalLoginKey=" + externalLoginKey;
 request.setAttribute("externalKeyParam", externalKeyParam);
 request.setAttribute("isWorkEffortMgrActive", new Boolean(true));
-
+request.setAttribute("activeApp", "workeffortmgr");
 eventMsgReq = request.getAttribute(SiteDefs.EVENT_MESSAGE);
 errorMsgReq = request.getAttribute(SiteDefs.ERROR_MESSAGE);
 errorMsgSes = session.getAttribute(SiteDefs.ERROR_MESSAGE);
