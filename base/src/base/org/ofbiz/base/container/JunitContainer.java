@@ -1,5 +1,5 @@
 /*
- * $Id: JunitContainer.java,v 1.1 2004/05/04 15:36:40 ajzeneski Exp $
+ * $Id: JunitContainer.java,v 1.2 2004/06/09 18:13:01 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.base.util.ObjectType;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class JunitContainer implements Container {
@@ -77,7 +77,7 @@ public class JunitContainer implements Container {
         // dispay the results
         Debug.log("[JUNIT] Pass: " + results.wasSuccessful() + " | # Tests: " + results.runCount() + " | # Failed: " +
                 results.failureCount() + " # Errors: " + results.errorCount(), module);
-        if (Debug.verboseOn()) {
+        if (Debug.infoOn()) {
             Debug.log("[JUNIT] ----------------------------- ERRORS ----------------------------- [JUNIT]", module);
             Enumeration err = results.failures();
             if (!err.hasMoreElements()) {
