@@ -23,8 +23,20 @@
  *@created    May 22 2001
  *@version    1.0
 --%>
-
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<%
+    String state = request.getParameter("SearchProductsState");
+    boolean isOpen = true;
+    if (state != null) {
+        session.setAttribute("SearchProductsState", state);
+        isOpen = "open".equals(state);
+    } else {
+        state = (String) session.getAttribute("SearchProductsState");
+        if (state != null) {
+            isOpen = "open".equals(state);
+        }
+    }
+%>
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -34,10 +46,18 @@
           <td valign=middle align=center>
             <div class="boxhead">Search&nbsp;Products</div>
           </td>
+          <td valign=middle align=right>
+            <%if (isOpen) {%>
+                <a href='<ofbiz:url>/main?SearchProductsState=close</ofbiz:url>' class='lightbuttontext'>&nbsp;_&nbsp;</a>
+            <%} else {%>
+                <a href='<ofbiz:url>/main?SearchProductsState=open</ofbiz:url>' class='lightbuttontext'>&nbsp;[]&nbsp;</a>
+            <%}%>
+          </td>
         </tr>
       </table>
     </TD>
   </TR>
+<%if (isOpen) {%>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
@@ -57,4 +77,5 @@
       </table>
     </TD>
   </TR>
+<%}%>
 </TABLE>
