@@ -222,6 +222,9 @@
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Shopping List Items - ${shoppingList.listName}</div>
           </td>
+          <td valign="middle" align="right">
+            <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="lightbuttontext">[Add List To Cart]</a>
+          </td>
         </tr>
       </table>
     </TD>
