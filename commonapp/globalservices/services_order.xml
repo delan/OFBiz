@@ -245,6 +245,26 @@
         <attribute name="note" type="String" mode="IN"/>
     </service>
 
+    <service name="checkSupplierRelatedPermission" engine="simple"
+    		location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" 
+    		invoke="checkSupplierRelatedPermission" auth="true">
+    	<description>Verifies the logged in user has the specified supplier permission for a specified order</description>
+    	<attribute name="orderId" type="String" mode="IN" optional="false"/>
+    	<attribute name="callingMethodName" type="String" mode="IN" optional="true"/>
+    	<attribute name="checkAction" type="String" mode="IN" optional="true"/>
+        <attribute name="hasSupplierRelatedPermission" type="String" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="checkCarrierRelatedPermission" engine="simple"
+    		location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" 
+    		invoke="checkCarrierRelatedPermission" auth="true">
+    	<description>Verifies the logged in user has the specified carrier permission for a specified order</description>
+    	<attribute name="orderId" type="String" mode="IN" optional="false"/>
+    	<attribute name="callingMethodName" type="String" mode="IN" optional="true"/>
+    	<attribute name="checkAction" type="String" mode="IN" optional="true"/>
+        <attribute name="hasCarrierRelatedPermission" type="String" mode="OUT" optional="false"/>
+    </service>
+
     <!-- Order Return Services -->
     <service name="createReturnHeader" engine="simple"
             location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="createReturnHeader">
