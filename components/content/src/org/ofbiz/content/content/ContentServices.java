@@ -34,6 +34,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.io.StringWriter;
+import java.io.FileInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -43,6 +47,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -55,6 +60,19 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
+
+import java.io.ByteArrayOutputStream;
+import org.apache.avalon.framework.logger.Log4JLogger;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.fop.apps.Driver;
+import org.apache.fop.image.FopImageFactory;
+import org.apache.fop.messaging.MessageHandler;
+import org.apache.fop.tools.DocumentInputSource;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.ofbiz.entity.util.ByteWrapper;
+import org.xml.sax.SAXException ;
+import javax.xml.parsers.ParserConfigurationException ;
 
 /**
  * ContentServices Class
@@ -874,7 +892,7 @@ public class ContentServices {
         }
 
         Writer outWriter = new StringWriter();
-        GenericValue view = null;
+        GenericValue view = (GenericValue)context.get("subContentDataResourceView");
         try {
             results = ContentWorker.renderContentAsTextCache(delegator, contentId, outWriter, templateContext, view, locale, mimeTypeId);
             out.write(outWriter.toString());
@@ -1058,6 +1076,148 @@ public class ContentServices {
             }
             String outputString = UtilHttp.urlEncodeArgs(mapFiltered);
             result.put("outputString", outputString );
+        }
+        return result;
+    }
+    
+    public static Map foToPdf(DispatchContext dctx, Map context) throws GenericServiceException{
+            
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Map result = new HashMap();
+        String foFileIn = (String)context.get("foFileIn");
+        String pdfFileOut = (String)context.get("pdfFileOut");
+        String dataResourceTypeId = (String)context.get("dataResourceTypeId");
+        String contentId = (String)context.get("contentId");
+        String foContentId = (String)context.get("foContentId");
+        String templateDataResourceId = (String)context.get("templateDataResourceId");
+        Map fmContext = (Map)context.get("fmContext");
+        // configure logging for the FOP
+        Logger logger = new Log4JLogger(Debug.getLogger(module));
+        MessageHandler.setScreenLogger(logger);        
+                          
+        // Get input FO. Process thru template, if required.
+        String processedFo = null;
+        if (UtilValidate.isEmpty(foContentId)) {
+            if (UtilValidate.isEmpty(foFileIn)) {
+                return ServiceUtil.returnError("No FO file or contentId available.");
+            }
+            Map mapIn = new HashMap();
+            mapIn.put("drObjectInfo", foFileIn);
+            mapIn.put("drDataResourceTypeId", "CONTEXT_FILE");
+            mapIn.put("contentTypeId", "DOCUMENT");
+            mapIn.put("contentPurposeString", "SOURCE");
+            mapIn.put("templateDataResourceId", templateDataResourceId);
+            try {
+                Map thisResult = dispatcher.runSync("persistContentAndAssoc", mapIn);
+                foContentId = (String)thisResult.get("contentId");
+                if (UtilValidate.isEmpty(foContentId)) {
+                	Debug.logError("Could not add FO content - foContentId is null.", "ContentServices");
+                    return ServiceUtil.returnError("Could not add FO conten - foContentId is null.");
+                }
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem adding FO content.", "ContentServices");
+                return ServiceUtil.returnError("Problem adding FO content.");
+            }
+            
+        } else {
+            try {
+                GenericDelegator delegator = dctx.getDelegator();
+                GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", foContentId));
+                String thisTemplateDataResourceId = content.getString("templateDataResourceId");
+                if ((thisTemplateDataResourceId == null || !thisTemplateDataResourceId.equals(templateDataResourceId))
+                        && UtilValidate.isNotEmpty(templateDataResourceId))
+                {
+                     content.put("templateDataResourceId", templateDataResourceId);
+                     content.store();
+                }
+            } catch(GenericEntityException e) {
+                Debug.logError(e,  "ContentServices");
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+        if (UtilValidate.isEmpty(templateDataResourceId)) {
+        }
+        Map mapIn = new HashMap();
+        mapIn.put("contentId", foContentId);
+        mapIn.put("templateContext", fmContext);
+        StringWriter sw = new StringWriter();
+        mapIn.put("outWriter", sw);
+        try {
+            Map thisResult = dispatcher.runSync("renderContentAsText", mapIn);
+            processedFo = (String)thisResult.get("textData");
+            if (UtilValidate.isEmpty(processedFo)) {
+            	Debug.logError("Could not get FO text", "ContentServices");
+                return ServiceUtil.returnError("Could not get FO text");
+            }
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Problem getting FO text", "ContentServices");
+            return ServiceUtil.returnError("Problem getting FO text");
+        }
+        // load the FOP driver
+        Driver driver = new Driver();
+        driver.setRenderer(Driver.RENDER_PDF);
+        driver.setLogger(logger);
+                                        
+        // read the XSL-FO XML Document
+        Document xslfo = null;
+        try {
+            xslfo = UtilXml.readXmlDocument(processedFo);
+        } catch (FileNotFoundException e) {
+            return ServiceUtil.returnError("Error getting FO file: " + e.toString());
+        } catch (IOException e2) {
+            return ServiceUtil.returnError("Error getting FO file: " + e2.toString());
+        } catch (ParserConfigurationException e3) {
+            return ServiceUtil.returnError("Error getting FO file: " + e3.toString());
+        } catch (SAXException e4) {
+            return ServiceUtil.returnError("Error getting FO file: " + e4.toString());
+        }
+        
+        // create the output stream for the PDF
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        driver.setOutputStream(out);     
+                
+        // set the input source (XSL-FO) and generate the PDF        
+        InputSource is = new DocumentInputSource(xslfo);               
+        driver.setInputSource(is);        
+        try {
+            driver.run();
+            FopImageFactory.resetCache();
+        } catch (Throwable t) {
+            Debug.logError("Error processing PDF." + t.getMessage(), "ContentServices");
+            return ServiceUtil.returnError("Error processing PDF." + t.getMessage());
+        }
+        ByteWrapper pdfByteWrapper = new ByteWrapper(out.toByteArray());
+        result.put("pdfByteWrapper", pdfByteWrapper );
+                  
+        if (UtilValidate.isNotEmpty(dataResourceTypeId)) {
+            if (pdfByteWrapper != null) {
+                Map mapIn2 = new HashMap();
+                mapIn2.put("contentId", contentId);
+                mapIn2.put("drDataResourceTypeId", dataResourceTypeId);
+                mapIn2.put("contentTypeId", "DOCUMENT");
+                mapIn2.put("imageData", pdfByteWrapper);
+                mapIn2.put("_imageData_ContentType", "application/pdf");
+                mapIn2.put("_imageData_fileName", pdfFileOut);
+                mapIn2.put("drObjectInfo", pdfFileOut);
+                try {
+                    Map thisResult = dispatcher.runSync("persistContentAndAssoc", mapIn2);
+                    contentId = (String)thisResult.get("contentId");
+                    if (UtilValidate.isEmpty(foContentId)) {
+                    	Debug.logError("Could not add PDF content - contentId is null.", "ContentServices");
+                        return ServiceUtil.returnError("Could not add PDF conten - contentId is null.");
+                    }
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "Problem adding FO content.", "ContentServices");
+                    return ServiceUtil.returnError("Problem adding FO content.");
+                }
+                result.put("contentId", contentId);
+            }
+        } else {
+            if (UtilValidate.isEmpty(pdfFileOut)) {
+            }
+            String outputPath = "";
+            String rootDir = null;
+            String ofbizHome = System.getProperty("ofbiz.home");
         }
         return result;
     }

@@ -481,7 +481,7 @@
             <xs:annotation><xs:documentation>The key to mark as selected when there is no current entry value.</xs:documentation></xs:annotation>
         </xs:attribute>
         <xs:attribute type="xs:string" name="current-description"/>
-        <xs:attribute type="xs:positiveInteger" name="other-field-size" default="0">
+        <xs:attribute type="xs:integer" name="other-field-size" default="0">
             <xs:annotation><xs:documentation>If non-zero, a text field will conditionally show
                next to the select control to implement a crude "combo box".
                In order for this to work there must be a option in the select as:

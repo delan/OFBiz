@@ -82,6 +82,7 @@
     <ContentPurposeType contentPurposeTypeId="SUB_ARTICLE" description="Sub Content"/>
     <ContentPurposeType contentPurposeTypeId="USER" description="User"/>
     <ContentPurposeType contentPurposeTypeId="FAQ" description="FAQ"/>
+    <ContentPurposeType contentPurposeTypeId="SOURCE" description="General Source"/>
 
     <!-- These ContentTypes are primarily for structuring knowledge -->
     <ContentType contentTypeId="DOCUMENT" description="Document" hasTable="N" parentTypeId=""/>
