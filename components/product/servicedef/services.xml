@@ -66,11 +66,11 @@
             This will create a virtual product and return its ID, and associate all of the variants with it.
             It will not put the selectable features on the virtual or standard features on the variant.
         </description>
+        <attribute name="productId" type="String" mode="INOUT" optional="true"/>
         <attribute name="variantProductIdsBag" type="String" mode="IN" optional="false"/>
         <attribute name="productFeatureIdOne" type="String" mode="IN" optional="true"/>
         <attribute name="productFeatureIdTwo" type="String" mode="IN" optional="true"/>
         <attribute name="productFeatureIdThree" type="String" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="OUT" optional="false"/>
     </service>
 
     <service name="indexProductKeywords" engine="simple"

@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -64,6 +64,17 @@ ${pages.get("/product/ProductTabBar.ftl")}
     <#if (product.isVirtual)?if_exists != "Y">
         ${uiLabelMap.ProductWarningProductNotVirtual}
     </#if>
+    
+    <br>
+    <div style="float: right;">
+        <div class="tabletext"><b>Add Variant Products:</b></div>
+        <form action="<@ofbizUrl>addVariantsToVirtual</@ofbizUrl>" method="POST" style="margin: 0;" name="addVariantsToVirtual">
+            <input type="hidden" name="productId" value="${productId}"/>
+            <div><span class="tabletext">Variant Product IDs:</span></div>
+            <div><textarea name="variantProductIdsBag" rows="6" cols="20"></textarea></div>
+            <div><input type="submit" class="standardSubmit" value="Add Variant Products"/></div>
+        </form>
+    </div>
     
     <br>
     <#if (productFeatureAndAppls.size() > 0)>

@@ -785,23 +785,48 @@ public class ProductServices {
 
         Map successResult = ServiceUtil.returnSuccess();
         
-        // Generate new virtual productId, prefix with "VP", put in successResult
-        String productId = "VP" + delegator.getNextSeqId("VirtualProduct");
-        successResult.put("productId", productId);
-        
-        // separate variantProductIdsBag into a Set of variantProductIds
-        //note: can be comma, tab, or white-space delimited
-        Set prelimVariantProductIds = new HashSet();
-        List splitIds = Arrays.asList(variantProductIdsBag.split("[,\\p{Space}]"));
-        Debug.logInfo("Variants: bag=" + variantProductIdsBag, module);
-        Debug.logInfo("Variants: split=" + splitIds, module);
-        prelimVariantProductIds.addAll(splitIds);
-        //note: should support both direct productIds and GoodIdentification entries (what to do if more than one GoodID? Add all?
         try {
+            // Generate new virtual productId, prefix with "VP", put in successResult
+            String productId = (String) context.get("productId");
+            
+            if (UtilValidate.isEmpty(productId)) {
+                productId = "VP" + delegator.getNextSeqId("VirtualProduct");
+                // Create new virtual product...
+                GenericValue product = delegator.makeValue("Product", null);
+                product.set("productId", productId);
+                // set: isVirtual=Y, isVariant=N, productTypeId=FINISHED_GOOD, introductionDate=now
+                product.set("isVirtual", "Y");
+                product.set("isVariant", "N");
+                product.set("productTypeId", "FINISHED_GOOD");
+                product.set("introductionDate", nowTimestamp);
+                // set all to Y: returnable, taxable, chargeShipping, autoCreateKeywords, includeInPromotions
+                product.set("returnable", "Y");
+                product.set("taxable", "Y");
+                product.set("chargeShipping", "Y");
+                product.set("autoCreateKeywords", "Y");
+                product.set("includeInPromotions", "Y");
+                // in it goes!
+                product.create();
+            }
+            successResult.put("productId", productId);
+            
+            // separate variantProductIdsBag into a Set of variantProductIds
+            //note: can be comma, tab, or white-space delimited
+            Set prelimVariantProductIds = new HashSet();
+            List splitIds = Arrays.asList(variantProductIdsBag.split("[,\\p{Space}]"));
+            Debug.logInfo("Variants: bag=" + variantProductIdsBag, module);
+            Debug.logInfo("Variants: split=" + splitIds, module);
+            prelimVariantProductIds.addAll(splitIds);
+            //note: should support both direct productIds and GoodIdentification entries (what to do if more than one GoodID? Add all?
+
             Map variantProductsById = new HashMap();
             Iterator variantProductIdIter = prelimVariantProductIds.iterator();
             while (variantProductIdIter.hasNext()) {
                 String variantProductId = (String) variantProductIdIter.next();
+                if (UtilValidate.isEmpty(variantProductId)) {
+                    // not sure why this happens, but seems to from time to time with the split method
+                    continue;
+                }
                 // is a Product.productId?
                 GenericValue variantProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", variantProductId));
                 if (variantProduct != null) {
@@ -830,23 +855,6 @@ public class ProductServices {
                 }
             }
 
-            // Create new virtual product...
-            GenericValue product = delegator.makeValue("Product", null);
-            product.set("productId", productId);
-            // set: isVirtual=Y, isVariant=N, productTypeId=FINISHED_GOOD, introductionDate=now
-            product.set("isVirtual", "Y");
-            product.set("isVariant", "N");
-            product.set("productTypeId", "FINISHED_GOOD");
-            product.set("introductionDate", nowTimestamp);
-            // set all to Y: returnable, taxable, chargeShipping, autoCreateKeywords, includeInPromotions
-            product.set("returnable", "Y");
-            product.set("taxable", "Y");
-            product.set("chargeShipping", "Y");
-            product.set("autoCreateKeywords", "Y");
-            product.set("includeInPromotions", "Y");
-            // in it goes!
-            product.create();
-            
             // Attach productFeatureIdOne, Two, Three to the new virtual and all variant products as a standard feature
             Set featureProductIds = new HashSet();
             featureProductIds.add(productId);
