@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.11 2004/01/27 09:11:04 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.12 2004/01/27 09:16:40 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -342,7 +342,9 @@ public class ProductUtilServices {
                 newRelatedValue.set("fromDate", nowTimestamp);
             }
             
-            newRelatedValue.create();
+            if (delegator.findCountByAnd(relatedEntityName, newRelatedValue.getPrimaryKey()) == 0) {
+                newRelatedValue.create();
+            }
         }
         if (removeOld) {
             product.removeRelated(title + relatedEntityName);
