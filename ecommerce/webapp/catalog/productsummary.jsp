@@ -1,6 +1,6 @@
 
 <ofbiz:if name="product">
-  <table border="0" width="100%" cellpadding="0">
+  <table border="0" width='100%' cellpadding='0' cellspacing='0'>
     <tr>
       <td valign="top">
         <%GenericValue localProduct = (GenericValue)pageContext.getAttribute("product");%>

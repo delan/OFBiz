@@ -157,7 +157,7 @@
         <tr>
           <td>
   <ofbiz:if name="partyContactMechValueMaps" size="0">
-    <table width="100%" border="0" cellpadding="1">
+    <table width="100%" border="0" cellpadding="0">
       <tr align=left valign=bottom>
         <th>Contact&nbsp;Type</th>
         <th width="5">&nbsp;</th>

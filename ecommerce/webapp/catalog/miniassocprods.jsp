@@ -21,7 +21,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td>
-    <table width='100%' CELLSPACING="0" CELLPADDING="4" BORDER="0">
+    <table width='100%' CELLSPACING="0" CELLPADDING="0" BORDER="0">
       <%int miniProdListIndex = 1;%>
       <!-- random complementary products -->
       <ofbiz:iterator name="miniProduct" property="miniAssociatedProducts">

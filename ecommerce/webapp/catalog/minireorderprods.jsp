@@ -24,7 +24,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td>
-                <table width='100%' cellspacing="0" cellpadding="2" border="0">
+                <table width='100%' cellspacing="0" cellpadding="0" border="0">
                   <%int miniReorderListIndex = 1;%>
                   <!-- random complementary products -->
                   <ofbiz:iterator name="miniProduct" property="miniReorderProducts">

@@ -12,18 +12,18 @@
   .headerboxtop {background-color: #006633; padding: 4; border-color: #000000; border-style: solid; border-width: 1px 1px 1px 1px;}
   .headerboxbottom {background-color: #CCCC99; padding: 0; border-color: #000000; border-style: solid; border-width: 0px 1px 1px 1px;}
 
-  .boxhead {font-family: Helvetica,sans-serif; margin: 0px; font-size: medium; font-weight: bold; COLOR: #FFFFFF; }
+  .boxhead {font-family: Helvetica,sans-serif; margin: 0px; font-size: small; font-weight: bold; COLOR: #FFFFFF; }
   .boxoutside {background-color: black; padding: 0;}
   .boxtop {background-color: #006633; padding: 4; border-color: #000000; border-style: solid; border-width: 1px 1px 1px 1px;}
   .boxbottom {background-color: white; padding: 4; border-color: #000000; border-style: solid; border-width: 0px 1px 1px 1px;}
 
   .button {border-style: outset; border-color: #9999CC; border-width: 2px; background-color: #dddddd; padding-right: 5px; padding-left: 5px;}
-  A.buttontext {font-family: Helvetica,sans-serif; font-size: xx-small; font-weight: bold; text-decoration: none; color: blue; }
+  A.buttontext {font-family: Helvetica,sans-serif; font-size: x-small; font-weight: bold; text-decoration: none; color: blue; }
   A.buttontext:hover {color: red;}
-  .buttontextdisabled {font-family: Helvetica,sans-serif; font-size: xx-small; font-weight: bold; text-decoration: none; color: #333333; }
-  A.lightbuttontext {font-family: Helvetica,sans-serif; font-size: xx-small; font-weight: bold; text-decoration: none; color: yellow;}
+  .buttontextdisabled {font-family: Helvetica,sans-serif; font-size: x-small; font-weight: bold; text-decoration: none; color: #333333; }
+  A.lightbuttontext {font-family: Helvetica,sans-serif; font-size: x-small; font-weight: bold; text-decoration: none; color: yellow;}
   A.lightbuttontext:hover {color: red;}
-  .lightbuttontextdisabled {font-family: Helvetica,sans-serif; font-size: xx-small; font-weight: bold; text-decoration: none; color: #CCCCCC;}
+  .lightbuttontextdisabled {font-family: Helvetica,sans-serif; font-size: x-small; font-weight: bold; text-decoration: none; color: #CCCCCC;}
   A.buttontextbig {font-family: Helvetica,sans-serif; font-size: medium; font-weight: bold; text-decoration: none; color: blue; }
   A.buttontextbig:hover {color: red;}
 
@@ -38,11 +38,11 @@
   .headerCompanySubtitle {margin: 0px; font-size: xx-small; color: white; white-space: nowrap; }
 
   .microCartText {FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: white;}
-  A.microCartLink {font-family: Helvetica,sans-serif; font-size: xx-small; font-weight: bold; text-decoration: none; color: yellow;}
+  A.microCartLink {font-family: Helvetica,sans-serif; font-size: x-small; font-weight: bold; text-decoration: none; color: yellow;}
   A.microCartLink:hover {color: red;}
-  .microCartDisabled {font-family: Helvetica,sans-serif; font-size: xx-small; font-weight: bold; text-decoration: none; color: #CCCCCC;}
+  .microCartDisabled {font-family: Helvetica,sans-serif; font-size: x-small; font-weight: bold; text-decoration: none; color: #CCCCCC;}
 
-  HR.sepbar {width: 100%; height: 1px; background-color: #999999; margin: -8px 0px -12px 0px; border-width: 0px;}
+  HR.sepbar {width: 100%; height: 1px; background-color: #999999; border-width: 0px;}
 
   .errorMessage {font-family: Helvetica,sans-serif; margin: 0px; font-size: small; font-weight: bold; COLOR: red;}
   .eventMEssage {font-family: Helvetica,sans-serif; margin: 0px; font-size: small; font-weight: bold; COLOR: blue;}
