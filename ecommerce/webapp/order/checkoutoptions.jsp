@@ -3,6 +3,7 @@
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.ecommerce.order.*" %>
 
 
 <% pageContext.setAttribute("PageName", "checkoutoptions"); %>
@@ -13,38 +14,28 @@
 <table width="100%" border="0">
 <tr valign="top" align="left">
 <td bgcolor="#FFCCCC">
-<%
-  String defaultShipMethod = "FIXME: US Postal Service (default)";
-  Iterator shippingMethodIterator = helper.findAllCache("ShipmentMethodType", null).iterator();
-%>
+<% String defaultShipMethod = "FIXME: US Postal Service (default)"; %>
+<% pageContext.setAttribute("carrierShipmentMethodList", helper.findAllCache("CarrierShipmentMethod", null)); %>
 
   <div class="head2" nowrap><b>How shall WE ship it?</b></div>
   <table width="100%" cellpadding="0" border="0" cellpadding="0" cellspacing="0">
-<% if(shippingMethodIterator != null) { %>
-  <%
-    boolean check = true;
-    while(shippingMethodIterator.hasNext())
-    {
-      GenericValue shippingMethod = (GenericValue)shippingMethodIterator.next();
-  %>
+<ofbiz:iterator name="carrierShipmentMethod" property="carrierShipmentMethodList">
     <tr>
       <td width=1% valign="top" >
         <input
-          <% if (shippingMethod.getString("shipmentMethodTypeId").equalsIgnoreCase(defaultShipMethod)) { %>
-          <%-- if(check){ --%>
+          <ofbiz:if name='<%=carrierShipmentMethod.getString("shipmentMethodTypeId")%>' value="<%=defaultShipMethod%>">
              CHECKED
-            <%check=false;
-          }%>
+          </ofbiz:if>
           type="radio" name="shipping_method"
-          value="<%=shippingMethod.getString("shipmentMethodTypeId")%>"
+          value="<%=carrierShipmentMethod.getString("shipmentMethodTypeId")%>@<%=carrierShipmentMethod.getString("partyId")%>"
         >
       </td>
       <td valign="top">
-        <div class="tabletext"><%=shippingMethod.getString("description") + " [" + shippingMethod.getString("shipmentMethodTypeId") + "]" %></div>
+        <div class="tabletext"><%=carrierShipmentMethod.getString("partyId") + " " + carrierShipmentMethod.getString("shipmentMethodTypeId") %></div>
       </td>
     </tr>
-  <%}%>
-<% } else { %>
+</ofbiz:iterator>
+<ofbiz:unless name="carrierShipmentMethodList" size="0">
     <tr>
       <td width="1%" valign="top">
         <input CHECKED type="radio" name="shipping_method" value="Default">
@@ -53,7 +44,7 @@
         <div class="tabletext">Use Default: No other shipping methods available.</div>
       </td>
     </tr>
-<% } // end if shippingMethodIterator %>
+</ofbiz:unless>
     <tr>
       <td colspan="2">
       Enter account code here, or ship freight collect: <input size="25" type="text" name="SHIPPING_ACCOUNT" value="">
@@ -115,12 +106,13 @@
         <div class="tabletext">Your order will be sent to the following email addresses:</div>
         <div class="tabletext">
           <b>
-<%-- FIXME          <%=UtilFormatOut.checkNull(person.getEmail()) FIXME%>,
-          <%=UtilFormatOut.checkNull(customer.getEmail()) FIXME%>,
-          <%=UtilFormatOut.checkNull(customer.getOrderEmail()) FIXME%> --%>
+          <% pageContext.setAttribute("emailList",  OrderHelper.getContactMech(userLogin.getRelatedOne("Party"), "EMAIL_ADDRESS", false));%>
+          <ofbiz:iterator name="email" property="emailList">
+            <%=UtilFormatOut.checkNull(email.getString("infoString"))%>,
+          </ofbiz:iterator>
           </b>
         </div>
-        <div class="tabletext">Your may update these in your <a href="<ofbiz:url>/editprofile?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttonlink">profile</a>.</div>
+        <div class="tabletext">Your may update these in your <a href="<ofbiz:url>/viewprofile?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttonlink">profile</a>.</div>
         <br>
         <div class="tabletext">You may add other comma separated email addresses here that will be used only for the current order:</div>
         <input type="text" size="38" name="ORDER_ADDITIONAL_EMAILS" value="">
