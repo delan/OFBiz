@@ -34,7 +34,8 @@
 <% 
 if(security.hasPermission("ENTITY_MAINT", session)) {
   initReservedWords();
-  boolean checkWarnings = "true".equals(request.getParameter("CHECK_WARNINGS"));
+  //boolean checkWarnings = "true".equals(request.getParameter("CHECK_WARNINGS"));
+  boolean checkWarnings = true;
   String search = null;
   //GenericDelegator delegator = GenericHelperFactory.getDefaultHelper();
   ModelReader reader = delegator.getModelReader();
