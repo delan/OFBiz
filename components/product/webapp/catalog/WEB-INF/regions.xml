@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE regions PUBLIC "-//OFBiz//DTD Regions Config//EN" "http://www.ofbiz.org/dtds/regions.dtd">
 
-<regions>
+<regions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/regions.xsd">
     <define id='MAIN_REGION' template='/templates/main_template.jsp'>
         <put section='title'>Application Page</put> <!-- this is a default and is meant to overridden -->
         <put section='header' type="jpublish" content='/includes/header.ftl'/>

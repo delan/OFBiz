@@ -29,8 +29,7 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <form name="ListProductManufacturingRules" type="list" 
             target="UpdateProductManufacturingRule" title="" list-name="manufacturingRules"
-            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext"
-            >
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateProductManufacturingRule" map-name="manufacturingRule"/>
         <field name="ruleId"><display/></field>
         <field name="productId"><display/></field>
@@ -50,7 +49,7 @@
         </field>
     </form>
 
-     <form name="UpdateProductManufacturingRule" type="single" 
+    <form name="UpdateProductManufacturingRule" type="single" 
             target="UpdateProductManufacturingRule" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateProductManufacturingRule" map-name="manufacturingRule"/>
@@ -78,7 +77,7 @@
         </field>
     </form>
     
-     <form name="AddProductManufacturingRule" type="single" 
+    <form name="AddProductManufacturingRule" type="single" 
             target="AddProductManufacturingRule" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="addProductManufacturingRule" map-name="manufacturingRule"/>
@@ -106,8 +105,7 @@
         </field>
     </form>
 
-    <form
-        name="lookupVirtualProduct" 
+    <form name="lookupVirtualProduct" 
         default-map-name= "inputFields" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupVirtualProduct" title="" type="single">
@@ -119,7 +117,7 @@
             <hidden value="equals"/>
         </field>
         <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find default-value="equals">
-        	</text-find> </field>
+            </text-find></field>
         <field name="productTypeId" title="${uiLabelMap.ProductProductType}">
             <drop-down>
                 <option key="" description=""/>
@@ -131,25 +129,23 @@
         <field name="productTypeId_op">
             <hidden value="equals"/>
         </field>
-	<field name="productName" title="${uiLabelMap.ProductProductName}"><text-find default-value="equals"/></field>
+        <field name="productName" title="${uiLabelMap.ProductProductName}"><text-find default-value="equals"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
-    <form
-        name="listLookupVirtualProduct" 
+    <form name="listLookupVirtualProduct" 
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="entityList" paginate-target="/GenericLookup" 
-	title="" type="list">
+        title="" type="list">
         <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="productName"><display/></field>
         <field name="productTypeId"><display/></field>
     </form>
-    <form 
-        name="lruLookupVirtualProduct" 
+    <form name="lruLookupVirtualProduct" 
         default-entity-name="Product"
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
@@ -162,5 +158,4 @@
                 <display/>
         </field>
     </form>
-
 </forms>
