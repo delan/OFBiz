@@ -1,5 +1,5 @@
 /*
- * $Id: StatusServices.java,v 1.1 2003/08/17 10:12:40 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.service.ServiceUtil;
  * StatusServices
  *
  * @author     <a href="mailto:johan@ibibi.com">Johan Isacsson</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class StatusServices {

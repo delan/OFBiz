@@ -1,5 +1,5 @@
 /*
- * $Id: CommonServices.java,v 1.13 2004/07/03 19:54:19 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class CommonServices {

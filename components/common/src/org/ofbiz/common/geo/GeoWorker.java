@@ -1,5 +1,5 @@
 /*
- * $Id: GeoWorker.java,v 1.3 2004/02/06 17:04:48 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.ArrayList;
  * Worker methods for Geos
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class GeoWorker {
