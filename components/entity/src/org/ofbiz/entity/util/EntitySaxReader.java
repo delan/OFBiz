@@ -42,7 +42,6 @@ import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -282,7 +281,9 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                     Reader templateReader = new InputStreamReader(templateUrl.openStream());
                     
                     StringWriter outWriter = new StringWriter();
-                    Configuration config = FreeMarkerWorker.makeDefaultOfbizConfig();
+                    Configuration config = new Configuration();            
+                    config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+                    config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
                     
                     Template template = new Template("FMImportFilter", templateReader, config);
                     NodeModel nodeModel = NodeModel.wrap(this.rootNodeForTemplate);
