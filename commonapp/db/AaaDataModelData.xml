@@ -412,8 +412,11 @@
   <ProductFeatureType description="Amount" hasTable="N" parentTypeId="" productFeatureTypeId="AMOUNT"/>
   <ProductFeatureType description="Billing Feature" hasTable="N" parentTypeId="" productFeatureTypeId="BILLING_FEATURE"/>
   <ProductFeatureType description="Brand" hasTable="N" parentTypeId="" productFeatureTypeId="BRAND"/>
+  <ProductFeatureType description="Care" hasTable="N" parentTypeId="" productFeatureTypeId="CARE"/>
   <ProductFeatureType description="Color" hasTable="N" parentTypeId="" productFeatureTypeId="COLOR"/>
+  <ProductFeatureType description="Fabric" hasTable="N" parentTypeId="" productFeatureTypeId="FABRIC"/>
   <ProductFeatureType description="Hardware Feature" hasTable="N" parentTypeId="" productFeatureTypeId="HARDWARE_FEATURE"/>
+  <ProductFeatureType description="Origin" hasTable="N" parentTypeId="" productFeatureTypeId="ORIGIN"/>
   <ProductFeatureType description="Other Feature" hasTable="N" parentTypeId="" productFeatureTypeId="OTHER_FEATURE"/>
   <ProductFeatureType description="Product Quality" hasTable="N" parentTypeId="" productFeatureTypeId="PRODUCT_QUALITY"/>
   <ProductFeatureType description="Size" hasTable="N" parentTypeId="" productFeatureTypeId="SIZE"/>
