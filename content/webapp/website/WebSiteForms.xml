@@ -132,7 +132,9 @@
 		<auto-fields-service service-name="updateWebSiteEmailSetting"/>
 		<field name="webSiteId"><hidden/></field>
 		<field name="emailType"><display description="${emailType}"/></field>		
-		<field name="location"></field>
+		<field name="templatePath"></field>
+		<field name="subject"></field>
+		<field name="fromAddress"></field>
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
 			<hyperlink target="removeWebSiteEmail?webSiteId=${webSiteId}&amp;emailType=${emailType}"
