@@ -6,7 +6,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.math.*;
 import org.ofbiz.commonapp.security.*;
-import org.ofbiz.commonapp.common.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> <%=entity.title%>
@@ -48,11 +48,11 @@ public class <%=entity.ejbName%>WebEvent
    * @exception java.rmi.RemoteException Standard RMI Remote Exception
    * @exception java.io.IOException Standard IO Exception
    */
-  public static boolean update<%=entity.ejbName%>(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, java.rmi.RemoteException, java.io.IOException
+  public static String update<%=entity.ejbName%>(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, java.rmi.RemoteException, java.io.IOException
   {
     // a little check to reprocessing the web event in error cases - would cause infinate loop
-    if(request.getAttribute("ERROR_MESSAGE") != null) return true;
-    if(request.getSession().getAttribute("ERROR_MESSAGE") != null) return true;    
+    if(request.getAttribute("ERROR_MESSAGE") != null) return "success";
+    if(request.getSession().getAttribute("ERROR_MESSAGE") != null) return "success";    
     String errMsg = "";
     
     String updateMode = request.getParameter("UPDATE_MODE");
@@ -69,7 +69,7 @@ public class <%=entity.ejbName%>WebEvent
     if(!Security.hasEntityPermission("<%=entity.tableName%>", "_" + updateMode, request.getSession()))
     {
       request.getSession().setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " <%=entity.ejbName%> (<%=entity.tableName%>_" + updateMode + " or <%=entity.tableName%>_ADMIN needed).");
-      return true;
+      return "success";
     }
 
     //get the primary key parameters...
@@ -105,7 +105,7 @@ public class <%=entity.ejbName%>WebEvent
       //Remove associated/dependent entries from other tables here
       //Delete actual <%=entity.ejbName%> last, just in case database is set up to do a cascading delete, caches won't get cleared
       <%=entity.ejbName%>Helper.removeByPrimaryKey(<%=entity.pkNameString()%>);
-      return true;
+      return "success";
     }
 
     //get the non-primary key parameters
@@ -149,18 +149,7 @@ public class <%=entity.ejbName%>WebEvent
     {
       errMsg = "<br><b>The following error(s) occured:</b><ul>" + errMsg + "</ul>";
       request.setAttribute("ERROR_MESSAGE", errMsg);
-      //note that it is much easier to do a RequestDispatcher.forward here instead of a respones.sendRedirect because the sendRedirent will not automatically keep the Parameters...
-      RequestDispatcher rd;
-      String onErrorPage = request.getParameter("ON_ERROR_PAGE");
-      if(onErrorPage != null) rd = request.getRequestDispatcher(onErrorPage);
-      <%
-        String packagePath = entity.packageName.replace('.','/');
-        //remove the first two folders (usually org/ and ofbiz/)
-        packagePath = packagePath.substring(packagePath.indexOf("/")+1);
-        packagePath = packagePath.substring(packagePath.indexOf("/")+1);
-      %>else rd = request.getRequestDispatcher("/<%=packagePath%>/Edit<%=entity.ejbName%>.jsp");
-      rd.forward(request, response);
-      return false;
+      return "error";
     }
 
     if(updateMode.equals("CREATE"))
@@ -169,7 +158,7 @@ public class <%=entity.ejbName%>WebEvent
       if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> == null)
       {
         request.getSession().setAttribute("ERROR_MESSAGE", "Creation of <%=entity.ejbName%> failed. <%=entity.colNameString(entity.pks)%>: " + <%=entity.pkNameString(" + \", \" + ", "")%>);
-        return true;
+        return "success";
       }
     }
     else if(updateMode.equals("UPDATE"))
@@ -178,7 +167,7 @@ public class <%=entity.ejbName%>WebEvent
       if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> == null)
       {
         request.getSession().setAttribute("ERROR_MESSAGE", "Update of <%=entity.ejbName%> failed. <%=entity.colNameString(entity.pks)%>: " + <%=entity.pkNameString(" + \", \" + ", "")%>);
-        return true;
+        return "success";
       }
     }
     else
@@ -190,6 +179,6 @@ public class <%=entity.ejbName%>WebEvent
       }
     }
 
-    return true;
+    return "success";
   }
 }

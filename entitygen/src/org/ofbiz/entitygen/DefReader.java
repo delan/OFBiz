@@ -18,8 +18,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.ofbiz.commonapp.common.UtilCache;
-import org.ofbiz.commonapp.common.UtilTimer;
+import org.ofbiz.core.util.UtilCache;
+import org.ofbiz.core.util.UtilTimer;
 
 /**
  * <p><b>Title:</b> Entity Generator - Entity Definition Reader

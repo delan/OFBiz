@@ -5,7 +5,7 @@ import java.util.*;
 import javax.naming.InitialContext;
 import javax.ejb.*;
 
-import org.ofbiz.commonapp.common.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> <%=entity.title%>

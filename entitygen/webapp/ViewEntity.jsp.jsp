@@ -30,16 +30,13 @@
 %>
 
 [ltp]@ page import="java.util.*" %>
-[ltp]@ page import="org.ofbiz.commonapp.common.*" %>
-[ltp]@ page import="org.ofbiz.commonapp.webevent.*" %>
+[ltp]@ page import="org.ofbiz.core.util.*" %>
 [ltp]@ page import="org.ofbiz.commonapp.security.*" %>
 [ltp]@ page import="<%=entity.packageName%>.*" %>
 <%@ page import="java.util.*" %><%Hashtable importNames = new Hashtable(); importNames.put("org.ofbiz.commonapp.security","");importNames.put(entity.packageName,"");%><%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(relIndex);%><%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%><%if(!importNames.containsKey(relatedEntity.packageName)){ importNames.put(relatedEntity.packageName,"");%>
 [ltp]@ page import="<%=relatedEntity.packageName%>.*" %><%}%><%}%>
 
-[ltp]@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
-<webevent:dispatch loginRequired="true" />
-
+[ltp]String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 [ltp]pageContext.setAttribute("PageName", "View<%=entity.ejbName%>"); %>
 
 [ltp]@ include file="/includes/header.jsp" %>
@@ -103,13 +100,13 @@ function ShowViewTab(lname)
   <b>View Entity: <%=entity.ejbName%> with (<%=entity.colNameString(entity.pks)%>: [ltp]=<%=entity.pkNameString("%" + ">, [ltp]=", "%" + ">")%>).</b>
 </div>
 
-<a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" class="buttontext">[Find <%=entity.ejbName%>]</a>
+<a href="[ltp]=response.encodeURL(controlPath + "/Find<%=entity.ejbName%>")%>" class="buttontext">[Find <%=entity.ejbName%>]</a>
 [ltp]if(hasCreatePermission){%>
-  <a href="[ltp]=response.encodeURL("View<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create New <%=entity.ejbName%>]</a>
+  <a href="[ltp]=response.encodeURL(controlPath + "/View<%=entity.ejbName%>")%>" class="buttontext">[Create New <%=entity.ejbName%>]</a>
 [ltp]}%>
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
   [ltp]if(hasDeletePermission){%>
-    <a href="[ltp]=response.encodeURL("View<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&" + <%=entity.httpArgList(entity.pks)%>)%>" class="buttontext">[Delete this <%=entity.ejbName%>]</a>
+    <a href="[ltp]=response.encodeURL(controlPath + "/Update<%=entity.ejbName%>?UPDATE_MODE=DELETE&" + <%=entity.httpArgList(entity.pks)%>)%>" class="buttontext">[Delete this <%=entity.ejbName%>]</a>
   [ltp]}%>
 [ltp]}%>
 
@@ -182,8 +179,7 @@ function ShowViewTab(lname)
     <%=GenUtil.lowerFirstChar(entity.ejbName)%> = null;
   }
 %>
-<form action="[ltp]=response.encodeURL("View<%=entity.ejbName%>.jsp")%>" method="POST" name="updateForm" style="margin:0;">
-  <input type="hidden" name="WEBEVENT" value="UPDATE_<%=entity.tableName%>">
+<form action="[ltp]=response.encodeURL(controlPath + "/Update<%=entity.ejbName%>")%>" method="POST" name="updateForm" style="margin:0;">
   <input type="hidden" name="ON_ERROR_PAGE" value="[ltp]=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
@@ -365,11 +361,10 @@ function ShowTab(lname)
      <b><%=relation.relationTitle%></b> Related Entity: <b><%=relatedEntity.ejbName%></b> with (<%=relatedEntity.colNameString(relatedEntity.pks)%>: [ltp]=<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("()%" + ">, [ltp]=" + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()%" + ">")%>)
     </div>
     [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("() != null && " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "() != null")%>){%>
-      <%String packagePath = relatedEntity.packageName.replace('.','/'); /* remove the first two folders (usually org/ and ofbiz/) */ packagePath = packagePath.substring(packagePath.indexOf("/")+1);packagePath = packagePath.substring(packagePath.indexOf("/")+1); %>
-      <a href="[ltp]=response.encodeURL("/<%=packagePath%>/View<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpRelationArgList(relatedEntity.pks, relation)%>)%>" class="buttontext">[View <%=relatedEntity.ejbName%>]</a>      
+      <a href="[ltp]=response.encodeURL(controlPath + "/View<%=relatedEntity.ejbName%>?" + <%=relatedEntity.httpRelationArgList(relatedEntity.pks, relation)%>)%>" class="buttontext">[View <%=relatedEntity.ejbName%>]</a>      
     [ltp]if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related == null){%>
       [ltp]if(Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_CREATE", session)){%>
-        <a href="[ltp]=response.encodeURL("/<%=packagePath%>/View<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpRelationArgList(relatedEntity.pks, relation)%>)%>" class="buttontext">[Create <%=relatedEntity.ejbName%>]</a>
+        <a href="[ltp]=response.encodeURL(controlPath + "/View<%=relatedEntity.ejbName%>?" + <%=relatedEntity.httpRelationArgList(relatedEntity.pks, relation)%>)%>" class="buttontext">[Create <%=relatedEntity.ejbName%>]</a>
       [ltp]}%>
     [ltp]}%>
     [ltp]}%>
@@ -445,11 +440,11 @@ function ShowTab(lname)
     %>
       <%String packagePath = relatedEntity.packageName.replace('.','/'); /* remove the first two folders (usually org/ and ofbiz/) */  packagePath = packagePath.substring(packagePath.indexOf("/")+1); packagePath = packagePath.substring(packagePath.indexOf("/")+1);%>
     [ltp]if(relatedCreatePerm){%>
-      <a href="[ltp]=response.encodeURL("/<%=packagePath%>/View<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpRelationArgList(relation)%>)%>" class="buttontext">[Create <%=relatedEntity.ejbName%>]</a>
+      <a href="[ltp]=response.encodeURL(controlPath + "/View<%=relatedEntity.ejbName%>?" + <%=relatedEntity.httpRelationArgList(relation)%>)%>" class="buttontext">[Create <%=relatedEntity.ejbName%>]</a>
     [ltp]}%>    
     [ltp]String curFindString = "SEARCH_TYPE=<%=relation.keyMapRelatedUpperString("And","")%>";%>
     <%for(int j=0;j<relation.keyMaps.size();j++){%>[ltp]curFindString = curFindString + "&SEARCH_PARAMETER<%=j+1%>=" + <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((KeyMap)relation.keyMaps.elementAt(j)).fieldName)%><%}%>();%>
-    <a href="[ltp]=response.encodeURL("/<%=packagePath%>/Find<%=entity.ejbName%>.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find <%=relatedEntity.ejbName%>]</a>
+    <a href="[ltp]=response.encodeURL(controlPath + "/Find<%=entity.ejbName%>?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find <%=relatedEntity.ejbName%>]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="[ltp]=rowClassResultHeader%>">
@@ -511,11 +506,11 @@ function ShowTab(lname)
       </td>
   <%}%>
       <td>
-        <a href="[ltp]=response.encodeURL("/<%=packagePath%>/View<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpArgListFromClass(relatedEntity.pks, "Related")%>)%>" class="buttontext">[View]</a>
+        <a href="[ltp]=response.encodeURL(controlPath + "/View<%=relatedEntity.ejbName%>?" + <%=relatedEntity.httpArgListFromClass(relatedEntity.pks, "Related")%>)%>" class="buttontext">[View]</a>
       </td>
       [ltp]if(relatedDeletePerm){%>
         <td>
-          <a href="[ltp]=response.encodeURL("View<%=entity.ejbName%>.jsp?" + <%=relatedEntity.httpArgListFromClass(relatedEntity.pks, "Related")%> + "&" + <%=entity.httpArgList(entity.pks)%> + "&WEBEVENT=UPDATE_<%=relatedEntity.tableName%>&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="[ltp]=response.encodeURL(controlPath + "/Update<%=relatedEntity.ejbName%>?" + <%=relatedEntity.httpArgListFromClass(relatedEntity.pks, "Related")%> + "&" + <%=entity.httpArgList(entity.pks)%> + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       [ltp]}%>
     </tr>

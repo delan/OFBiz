@@ -21,8 +21,8 @@
     String fileName;
     String codeString;
 
-    url = new java.net.URL("http",request.getServerName(),request.getServerPort(),request.getContextPath() + "/SnippetWebEvent.properties.jsp");
-    fileName = ejbName + "webevent.properties";
+    url = new java.net.URL("http",request.getServerName(),request.getServerPort(),request.getContextPath() + "/SnippetSiteConfig.xml.jsp");
+    fileName = ejbName + "siteconfig.xml";
     codeString = GenUtil.getCodeFromUrl(url,params);
     if(codeString != null && codeString.length() > 0)
     {

@@ -4,7 +4,7 @@ package <%=entity.packageName%>;
 import java.rmi.*;
 import javax.ejb.*;
 import java.util.*;
-import org.ofbiz.commonapp.common.*;
+import org.ofbiz.core.util.*;
 <%@ page import="java.util.*" %><%Hashtable importNames = new Hashtable(); importNames.put(entity.packageName,"");%><%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(relIndex);%><%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%><%if(!importNames.containsKey(relatedEntity.packageName)){ importNames.put(relatedEntity.packageName,"");%>
 import <%=relatedEntity.packageName%>.*;<%}%><%}%>
 

@@ -102,7 +102,7 @@ NOTE: Document and Entity objects are cached for performance. You can use the co
 <ul>
   <li>Combined Entity Snippets for all Entities in the XML definition file
   <ul>
-    <li><a href="SnippetWebEvent.properties.jsp?defFileName=<%=defFileName%>">webevent.properties</a>
+    <li><a href="SnippetSiteConfig.xml.jsp?defFileName=<%=defFileName%>">siteconfig.xml</a>
     <li><a href="SnippetMySql.sql.jsp?defFileName=<%=defFileName%>">mysql.sql</a>
     <li><a href="SnippetDataMySql.sql.jsp?defFileName=<%=defFileName%>">data-mysql.sql</a>
     <li><a href="SnippetEjbJar.xml.enterprise-beans.jsp?defFileName=<%=defFileName%>">ejb-jar.enterprise-beans.xml</a>
@@ -162,7 +162,7 @@ Select Entity for Entity specific code:
   </ul>
   <li>Entity Snippets
   <ul>
-    <li><a href="SnippetWebEvent.properties.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>"><%=ejbName%> WebEvent Properties</a>
+    <li><a href="SnippetSiteConfig.xml.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>"><%=ejbName%> siteconfig.xml</a>
     <li><a href="SnippetMySql.sql.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>"><%=ejbName%> SQL</a>
     <li><a href="SnippetDataMySql.sql.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>">SQL Data - permissions</a>
     <li><a href="SnippetEjbJar.xml.enterprise-beans.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>"><%=ejbName%> ejb-jar.xml.enterprise-beans</a>
