@@ -77,6 +77,46 @@ public class ProductServices {
     }
 
     /**
+     * Builds a variant feature tree.
+     */
+    private static Map prodMakeFeatureTree(DispatchContext dctx, Map context) {
+        // * String productId      -- Parent (virtual) product ID
+        // * List featureOrder     -- Order of features
+        Map result = new HashMap();
+        List featureOrder = (List) context.get("featureOrder");
+        if (featureOrder == null || featureOrder.size() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Empty list of features passed");
+            return result;
+        }
+
+        Collection items = (Collection) prodFindAllVariants(dctx, context).get("assocProducts");
+        if (items == null || items.size() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Empty list of products returned");
+            return result;
+        }
+
+        Map tree = null;
+        try {
+            tree = makeGroup(items, featureOrder, 0);
+        } catch (Exception e) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
+            return result;
+        }
+        if (tree == null || tree.size() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Feature grouping came back empty");
+        } else {
+            result.put("variantTree", tree);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        }
+
+        return result;
+    }
+
+    /**
      * Gets the product features of a product.
      */
     public static Map prodGetFeatures(DispatchContext dctx, Map context) {
@@ -86,7 +126,9 @@ public class ProductServices {
         String productId = (String) context.get("productId");
         Collection features = null;
         try {
-            features = delegator.findByAnd("ProductFeature", UtilMisc.toMap("productId", productId));
+            Map fields = UtilMisc.toMap("productId", productId);
+            List order = UtilMisc.toList("sequenceId", "featureType");
+            features = delegator.findByAnd("ProductFeature", fields);
             result.put("productFeatures", features);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (GenericEntityException e ) {
@@ -161,4 +203,52 @@ public class ProductServices {
         return result;
     }
 
+    // Builds a product feature tree
+    private static Map makeGroup(Collection items, List order, int index)
+            throws IllegalArgumentException, IllegalStateException {
+        Map group = new HashMap();
+        Object orderKey = order.get(index);
+
+        if (index < 0)
+            throw new IllegalArgumentException("Invalid index '" + index + "' min index '0'");
+        if (index + 1 > order.size())
+            throw new IllegalArgumentException("Invalid index '" + index + "' max index '" + (order.size() - 1) + "'");
+
+        // loop through items and make the lists
+        Iterator itemIterator = items.iterator();
+        while (itemIterator.hasNext()) {
+            // -------------------------------
+            // Gather the necessary data
+            // -------------------------------
+            GenericValue item = (GenericValue) itemIterator.next();
+            // -------------------------------
+            Object itemKey = item.get(orderKey);
+            if (group.containsKey(itemKey)) {
+                List itemList = (List) group.get(itemKey);
+                itemList.add(item);
+            } else {
+                List itemList = UtilMisc.toList(item);
+                group.put(itemKey, itemList);
+            }
+        }
+
+        // no groups; no tree
+        if (group.size() == 0)
+            throw new IllegalStateException("Cannot create tree from group list; error on '" + orderKey + "'");
+
+        if (index + 1 == order.size())
+            return group;
+
+        // loop through the keysets and get the sub-groups
+        Iterator groupIterator = group.keySet().iterator();
+        while (groupIterator.hasNext()) {
+            Object key = groupIterator.next();
+            List itemList = (List) group.get(key);
+            if (itemList == null || itemList.size() == 0)
+                throw new IllegalStateException("Cannot create tree from an empty list; error on '" + key + "'");
+            Map subGroup = makeGroup(itemList, order, index + 1);
+            group.put(key, subGroup);
+        }
+        return group;
+    }
 }
