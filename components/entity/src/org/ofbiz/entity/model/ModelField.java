@@ -1,5 +1,5 @@
 /*
- * $Id: ModelField.java,v 1.1 2003/08/16 22:05:48 ajzeneski Exp $
+ * $Id: ModelField.java,v 1.2 2003/09/19 21:48:37 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Field model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ModelField {
@@ -74,7 +74,7 @@ public class ModelField {
 
     /** DB Names Constructor */
     public ModelField(DatabaseUtil.ColumnCheckInfo ccInfo, ModelFieldTypeReader modelFieldTypeReader) {
-        this.colName = ccInfo.columnName.toUpperCase();
+        this.colName = ccInfo.columnName;
         this.name = ModelUtil.dbNameToVarName(this.colName);
 
         // figure out the type according to the typeName, columnSize and decimalDigits
