@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.8 2004/01/12 09:55:28 jonesde Exp $
+ * $Id: LoginEvents.java,v 1.9 2004/01/28 21:05:31 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -204,11 +204,18 @@ public class LoginEvents {
         if (username == null) username = (String) session.getAttribute("USERNAME");
         if (password == null) password = (String) session.getAttribute("PASSWORD");
 
-        if ((username != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
+        if ((username != null) && ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
             username = username.toLowerCase();
         }
-        if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.lowercase")))) {
+        if ((password != null) && ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "password.lowercase")))) {
             password = password.toLowerCase();
+        }
+
+        if ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "login.lock.active"))) {
+            if (isLoggedInSession(username, request, false)) {
+                request.setAttribute("_ERROR_MESSAGE_", "<b>This user is already logged in.</b><br>");
+                return "error";
+            }
         }
 
         // get the visit id to pass to the userLogin for history
@@ -675,13 +682,17 @@ public class LoginEvents {
     }
 
     public static boolean isLoggedInSession(GenericValue userLogin, HttpServletRequest request) {
-        if (userLogin != null) {
-            Map webappMap = (Map) loggedInSessions.get(userLogin.get("userLoginId"));
+        return isLoggedInSession(userLogin.getString("userLoginId"), request, true);
+    }
+
+    public static boolean isLoggedInSession(String userLoginId, HttpServletRequest request, boolean checkSessionId) {
+        if (userLoginId != null) {
+            Map webappMap = (Map) loggedInSessions.get(userLoginId);
             if (webappMap == null) {
                 return false;
             } else {
                 String sessionId = (String) webappMap.get(UtilHttp.getApplicationName(request));
-                if (sessionId == null || !sessionId.equals(request.getSession().getId())) {
+                if (checkSessionId && (sessionId == null || !sessionId.equals(request.getSession().getId()))) {
                     return false;
                 }
             }
