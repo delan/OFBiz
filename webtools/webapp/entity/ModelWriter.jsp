@@ -74,7 +74,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author David E. Jones (jonesde@ofbiz.org)
- * @author Andy Zeneski (jaz@jflow.net)
+ * @author Andy Zeneski (jaz@ofbiz.org)
  * @version    1.0
  */
 -->
