@@ -61,11 +61,11 @@
     </xs:element>
     <!-- see the children of entitymodel section for description, etc. -->
     <xs:attributeGroup name="attlist.entity">
-        <xs:attribute name="entity-name" use="required"/>
-        <xs:attribute name="table-name"/>
-        <xs:attribute name="package-name" use="required"/>
-        <xs:attribute name="default-resource-name"/>
-        <xs:attribute name="dependent-on"/>
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="table-name"/>
+        <xs:attribute type="xs:string" name="package-name" use="required"/>
+        <xs:attribute type="xs:string" name="default-resource-name"/>
+        <xs:attribute type="xs:string" name="dependent-on"/>
         <xs:attribute name="enable-lock" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -98,10 +98,10 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="title"/>
-        <xs:attribute name="copyright"/>
-        <xs:attribute name="author"/>
-        <xs:attribute name="version"/>
+        <xs:attribute type="xs:string" name="title"/>
+        <xs:attribute type="xs:string" name="copyright"/>
+        <xs:attribute type="xs:string" name="author"/>
+        <xs:attribute type="xs:string" name="version"/>
     </xs:attributeGroup>
     <xs:element name="prim-key">
         <xs:complexType>
@@ -109,7 +109,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.prim-key">
-        <xs:attribute name="field" use="required"/>
+        <xs:attribute type="xs:string" name="field" use="required"/>
     </xs:attributeGroup>
     <!-- ==================== field ===================== -->
     <xs:element name="field">
@@ -121,9 +121,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.field">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="col-name"/>
-        <xs:attribute name="type" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="col-name"/>
+        <xs:attribute type="xs:string" name="type" use="required"/>
         <xs:attribute name="encrypt" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -139,7 +139,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.validate">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:attributeGroup>
     <!-- ==================== relation ====================== -->
     <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
@@ -161,9 +161,9 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="title"/>
-        <xs:attribute name="rel-entity-name" use="required"/>
-        <xs:attribute name="fk-name"/>
+        <xs:attribute type="xs:string" name="title"/>
+        <xs:attribute type="xs:string" name="rel-entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="fk-name"/>
     </xs:attributeGroup>
     <xs:element name="key-map">
         <xs:complexType>
@@ -171,8 +171,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.key-map">
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="rel-field-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="rel-field-name"/>
     </xs:attributeGroup>
     <!-- ==================== index ===================== -->
     <xs:element name="index">
@@ -184,7 +184,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.index">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute name="unique" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -200,7 +200,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.index-field">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:attributeGroup>
     <!-- ================== view-entity ===================== -->
     <xs:element name="view-entity">
@@ -218,10 +218,10 @@
     </xs:element>
     <!-- see the children of entitymodel section for description, etc. -->
     <xs:attributeGroup name="attlist.view-entity">
-        <xs:attribute name="entity-name" use="required"/>
-        <xs:attribute name="package-name" use="required"/>
-        <xs:attribute name="dependent-on"/>
-        <xs:attribute name="default-resource-name"/>
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="package-name" use="required"/>
+        <xs:attribute type="xs:string" name="dependent-on"/>
+        <xs:attribute type="xs:string" name="default-resource-name"/>
         <xs:attribute name="never-cache" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -238,10 +238,10 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="title"/>
-        <xs:attribute name="copyright"/>
-        <xs:attribute name="author"/>
-        <xs:attribute name="version"/>
+        <xs:attribute type="xs:string" name="title"/>
+        <xs:attribute type="xs:string" name="copyright"/>
+        <xs:attribute type="xs:string" name="author"/>
+        <xs:attribute type="xs:string" name="version"/>
     </xs:attributeGroup>
     <xs:element name="member-entity">
         <xs:complexType>
@@ -249,8 +249,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.member-entity">
-        <xs:attribute name="entity-alias" use="required"/>
-        <xs:attribute name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="entity-alias" use="required"/>
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="alias-all">
         <xs:complexType>
@@ -261,8 +261,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.alias-all">
-        <xs:attribute name="entity-alias" use="required"/>
-        <xs:attribute name="prefix"/>
+        <xs:attribute type="xs:string" name="entity-alias" use="required"/>
+        <xs:attribute type="xs:string" name="prefix"/>
     </xs:attributeGroup>
     <xs:element name="exclude">
         <xs:complexType>
@@ -270,7 +270,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.exclude">
-        <xs:attribute name="field" use="required"/>
+        <xs:attribute type="xs:string" name="field" use="required"/>
     </xs:attributeGroup>
     <xs:element name="alias">
         <xs:complexType>
@@ -281,11 +281,11 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.alias">
-        <xs:attribute name="entity-alias" use="required"/>
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="field"/>
-        <xs:attribute name="col-alias"/>
-        <xs:attribute name="prim-key"/>
+        <xs:attribute type="xs:string" name="entity-alias" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="field"/>
+        <xs:attribute type="xs:string" name="col-alias"/>
+        <xs:attribute type="xs:string" name="prim-key"/>
         <xs:attribute name="group-by" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -319,7 +319,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.complex-alias">
-        <xs:attribute name="operator" use="required"/>
+        <xs:attribute type="xs:string" name="operator" use="required"/>
     </xs:attributeGroup>
     <xs:element name="complex-alias-field">
         <xs:complexType>
@@ -327,8 +327,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.complex-alias-field">
-        <xs:attribute name="entity-alias" use="required"/>
-        <xs:attribute name="field" use="required"/>
+        <xs:attribute type="xs:string" name="entity-alias" use="required"/>
+        <xs:attribute type="xs:string" name="field" use="required"/>
         <xs:attribute name="function">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -353,8 +353,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.view-link">
-        <xs:attribute name="entity-alias" use="required"/>
-        <xs:attribute name="rel-entity-alias" use="required"/>
+        <xs:attribute type="xs:string" name="entity-alias" use="required"/>
+        <xs:attribute type="xs:string" name="rel-entity-alias" use="required"/>
         <xs:attribute name="rel-optional" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">

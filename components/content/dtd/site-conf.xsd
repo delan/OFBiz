@@ -39,7 +39,7 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="description" type="any"/>
+    <xs:element name="description" type="xs:string"/>
     <xs:element name="owner" type="xs:string"/>
     <xs:element name="errorpage" type="xs:string"/>
     <xs:element name="handler">
@@ -48,7 +48,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.handler">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute name="type" default="request">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -57,7 +57,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="class" use="required"/>
+        <xs:attribute type="xs:string" name="class" use="required"/>
     </xs:attributeGroup>
     <xs:element name="firstvisit">
         <xs:complexType>
@@ -92,7 +92,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.request-map">
-        <xs:attribute name="uri" use="required"/>
+        <xs:attribute type="xs:string" name="uri" use="required"/>
         <xs:attribute name="edit" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -147,9 +147,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.event">
-        <xs:attribute name="type" use="required"/>
-        <xs:attribute name="path"/>
-        <xs:attribute name="invoke"/>
+        <xs:attribute type="xs:string" name="type" use="required"/>
+        <xs:attribute type="xs:string" name="path"/>
+        <xs:attribute type="xs:string" name="invoke"/>
     </xs:attributeGroup>
     <xs:element name="response">
         <xs:complexType>
@@ -157,7 +157,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.response">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute name="type" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -169,7 +169,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="value"/>
+        <xs:attribute type="xs:string" name="value"/>
     </xs:attributeGroup>
     <xs:element name="view-map">
         <xs:complexType>
@@ -180,16 +180,11 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.view-map">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="page"/>
-        <xs:attribute name="type" default="default"/>
-        <xs:attribute name="info"/>
-        <xs:attribute name="content-type"/>
-        <xs:attribute name="encoding"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="page"/>
+        <xs:attribute type="xs:string" name="type" default="default"/>
+        <xs:attribute type="xs:string" name="info"/>
+        <xs:attribute type="xs:string" name="content-type"/>
+        <xs:attribute type="xs:string" name="encoding"/>
     </xs:attributeGroup>
-    <xs:complexType name="any" mixed="true">
-        <xs:sequence>
-            <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
-        </xs:sequence>
-    </xs:complexType>
 </xs:schema>

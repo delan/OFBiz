@@ -35,11 +35,11 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="description" type="any"/>
-    <xs:element name="namespace" type="any"/>
+    <xs:element name="description" type="xs:string"/>
     <xs:element name="vendor" type="xs:string"/>
     <xs:element name="version" type="xs:string"/>
     <xs:element name="created" type="xs:string"/>
+    <xs:element name="namespace" type="xs:string"/>
     <xs:element name="service">
         <xs:complexType>
             <xs:sequence>
@@ -55,10 +55,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.service">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="engine" use="required"/>
-        <xs:attribute name="location" use="required"/>
-        <xs:attribute name="invoke" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="engine" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required"/>
+        <xs:attribute type="xs:string" name="invoke" use="required"/>
         <xs:attribute name="auth" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -83,7 +83,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="default-entity-name"/>
+        <xs:attribute type="xs:string" name="default-entity-name"/>
         <xs:attribute name="use-transaction" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -100,8 +100,8 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="transaction-timout"/>
-        <xs:attribute name="max-retry" default="-1"/>
+        <xs:attribute type="xs:string" name="transaction-timout"/>
+        <xs:attribute type="xs:string" name="max-retry" default="-1"/>
         <xs:attribute name="debug" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -136,8 +136,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.check-permission">
-        <xs:attribute name="permission" use="required"/>
-        <xs:attribute name="action"/>
+        <xs:attribute type="xs:string" name="permission" use="required"/>
+        <xs:attribute type="xs:string" name="action"/>
     </xs:attributeGroup>
     <xs:element name="check-role-member">
         <xs:complexType>
@@ -145,7 +145,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.check-role-member">
-        <xs:attribute name="role-type" use="required"/>
+        <xs:attribute type="xs:string" name="role-type" use="required"/>
     </xs:attributeGroup>
     <xs:element name="implements">
         <xs:complexType>
@@ -153,57 +153,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.implements">
-        <xs:attribute name="service" use="required"/>
-    </xs:attributeGroup>
-    <xs:element name="attribute">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element minOccurs="0" maxOccurs="unbounded" ref="type-validate"/>
-            </xs:sequence>
-            <xs:attributeGroup ref="attlist.attribute"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.attribute">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="type" use="required"/>
-        <xs:attribute name="mode" use="required">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="IN"/>
-                    <xs:enumeration value="OUT"/>
-                    <xs:enumeration value="INOUT"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="form-label"/>
-        <xs:attribute name="entity-name"/>
-        <xs:attribute name="field-name"/>
-        <xs:attribute name="string-map-prefix"/>
-        <xs:attribute name="string-list-suffix"/>
-        <xs:attribute name="form-display" default="true">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="optional" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-    </xs:attributeGroup>
-    <xs:element name="exclude">
-        <xs:complexType>
-            <xs:attributeGroup ref="attlist.exclude"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.exclude">
-        <xs:attribute name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="service" use="required"/>
     </xs:attributeGroup>
     <xs:element name="auto-attributes">
         <xs:complexType>
@@ -214,7 +164,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.auto-attributes">
-        <xs:attribute name="entity-name"/>
+        <xs:attribute type="xs:string" name="entity-name"/>
         <xs:attribute name="include" default="all">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -233,6 +183,14 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="optional" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="form-display" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -241,7 +199,49 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="exclude">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.exclude"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.exclude">
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="attribute">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="type-validate"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.attribute"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.attribute">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="type" use="required"/>
+        <xs:attribute name="mode" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="IN"/>
+                    <xs:enumeration value="OUT"/>
+                    <xs:enumeration value="INOUT"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="optional" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="form-label"/>
+        <xs:attribute type="xs:string" name="entity-name"/>
+        <xs:attribute type="xs:string" name="field-name"/>
+        <xs:attribute type="xs:string" name="string-map-prefix"/>
+        <xs:attribute type="xs:string" name="string-list-suffix"/>
+        <xs:attribute name="form-display" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true"/>
@@ -259,10 +259,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.override">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="type"/>
-        <xs:attribute name="entity-name"/>
-        <xs:attribute name="field-name"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="type"/>
+        <xs:attribute type="xs:string" name="entity-name"/>
+        <xs:attribute type="xs:string" name="field-name"/>
         <xs:attribute name="mode">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -272,8 +272,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="form-label"/>
-        <xs:attribute name="form-display">
+        <xs:attribute name="optional">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true"/>
@@ -281,7 +280,8 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="optional">
+        <xs:attribute type="xs:string" name="form-label"/>
+        <xs:attribute name="form-display">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true"/>
@@ -300,8 +300,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.type-validate">
-        <xs:attribute name="method"/>
-        <xs:attribute name="class" default="org.ofbiz.base.util.UtilValidate"/>
+        <xs:attribute type="xs:string" name="method"/>
+        <xs:attribute type="xs:string" name="class" default="org.ofbiz.base.util.UtilValidate"/>
     </xs:attributeGroup>
     <xs:element name="fail-message">
         <xs:complexType>
@@ -309,7 +309,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.fail-message">
-        <xs:attribute name="message" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="required"/>
     </xs:attributeGroup>
     <xs:element name="fail-property">
         <xs:complexType>
@@ -317,12 +317,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.fail-property">
-        <xs:attribute name="resource" use="required"/>
-        <xs:attribute name="property" use="required"/>
+        <xs:attribute type="xs:string" name="resource" use="required"/>
+        <xs:attribute type="xs:string" name="property" use="required"/>
     </xs:attributeGroup>
-    <xs:complexType name="any" mixed="true">
-        <xs:sequence>
-            <xs:any minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
-        </xs:sequence>
-    </xs:complexType>
 </xs:schema>

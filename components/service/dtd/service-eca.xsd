@@ -44,7 +44,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.eca">
-        <xs:attribute name="service" use="required"/>
+        <xs:attribute type="xs:string" name="service" use="required"/>
         <xs:attribute name="event" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -82,8 +82,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.condition">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
         <xs:attribute name="operator" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -99,7 +99,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="value"/>
+        <xs:attribute type="xs:string" name="value"/>
         <xs:attribute name="type" default="String">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -117,7 +117,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="format"/>
+        <xs:attribute type="xs:string" name="format"/>
     </xs:attributeGroup>
     <xs:element name="condition-field">
         <xs:complexType>
@@ -125,8 +125,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.condition-field">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
         <xs:attribute name="operator" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -140,8 +140,8 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="to-map-name"/>
-        <xs:attribute name="to-field-name"/>
+        <xs:attribute type="xs:string" name="to-map-name"/>
+        <xs:attribute type="xs:string" name="to-field-name"/>
         <xs:attribute name="type" default="String">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -159,7 +159,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="format"/>
+        <xs:attribute type="xs:string" name="format"/>
     </xs:attributeGroup>
     <xs:element name="action">
         <xs:complexType>
@@ -167,7 +167,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.action">
-        <xs:attribute name="service" use="required"/>
+        <xs:attribute type="xs:string" name="service" use="required"/>
         <xs:attribute name="mode" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -176,7 +176,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="result-map-name"/>
+        <xs:attribute type="xs:string" name="result-map-name"/>
         <xs:attribute name="result-to-context" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
