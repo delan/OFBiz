@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.21 2004/05/26 03:38:20 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.22 2004/05/26 16:16:12 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -58,10 +58,12 @@
 
     <!-- load catalina (tomcat) and all web applications -->
     <container name="catalina-container" class="org.ofbiz.catalina.container.CatalinaContainer">
+        <!-- static configuration for tomcat -->
         <property name="use-naming" value="false"/>
         <property name="debug" value="0"/>
         <property name="apps-cross-context" value="true"/>
-        <property name="apps-distributable" value="true"/>        
+        <property name="apps-distributable" value="true"/>
+        <!-- one or more tomcat engines (servers); components map to this + host -->
         <property name="default-server" value="engine">
             <property name="default-host" value="0.0.0.0"/>
             <property name="jvm-route" value="jvm1"/>
@@ -95,27 +97,81 @@
             </property>
             -->
         </property>
+        <!-- all connectors support type, host, port, enable-lookups -->
         <property name="ajp-connector" value="connector">
             <property name="type" value="ajp"/>
             <property name="host" value="0.0.0.0"/>
             <property name="port" value="8009"/>
+            <property name="debug" value="0"/>
+            <property name="redirect" value="0"/>
             <property name="enable-lookups" value="true"/>
+            <property name="enable-keep-alive" value="true"/>
+            <property name="compression" value="off"/>
+            <property name="allow-trace" value="false"/>
+            <property name="min-processors" value="5"/>
+            <property name="max-processors" value="20"/>
+            <property name="max-keep-alive" value="100"/>
+            <property name="max-header-size" value="4096"/>
+            <property name="max-post-size" value="2097152"/> <!-- 2mb -->
+            <property name="buffer-size" value="2048"/>
+            <property name="accept-count" value="10"/>
+            <property name="connection-linger" value="-1"/>
+            <property name="connection-timeout" value="60000"/>
+            <property name="upload-timeout" value="300000"/>
+            <property name="socket-timeout" value="0"/>
         </property>
         <property name="http-connector" value="connector">
             <property name="type" value="http"/>
             <property name="host" value="0.0.0.0"/>
             <property name="port" value="8080"/>
+            <property name="debug" value="0"/>
             <property name="enable-lookups" value="true"/>
+            <property name="enable-keep-alive" value="true"/>
+            <property name="compression" value="on"/>
+            <property name="allow-trace" value="false"/>
+            <property name="min-processors" value="5"/>
+            <property name="max-processors" value="20"/>
+            <property name="max-keep-alive" value="100"/>
+            <property name="max-header-size" value="4096"/>
+            <property name="max-post-size" value="2097152"/> <!-- 2mb -->
+            <property name="buffer-size" value="2048"/>
+            <property name="accept-count" value="10"/>
+            <property name="connection-linger" value="-1"/>
+            <property name="connection-timeout" value="60000"/>
+            <property name="upload-timeout" value="300000"/>
+            <property name="socket-timeout" value="0"/>
         </property>
         <property name="https-connector" value="connector">
             <property name="type" value="https"/>
             <property name="host" value="0.0.0.0"/>
             <property name="port" value="8443"/>
+            <property name="debug" value="0"/>
             <property name="enable-lookups" value="true"/>
+            <property name="enable-keep-alive" value="true"/>
+            <property name="compression" value="on"/>
+            <property name="allow-trace" value="false"/>
+            <property name="min-processors" value="5"/>
+            <property name="max-processors" value="20"/>
+            <property name="max-keep-alive" value="100"/>
+            <property name="max-header-size" value="4096"/>
+            <property name="max-post-size" value="2097152"/> <!-- 2mb -->
+            <property name="buffer-size" value="2048"/>
+            <property name="accept-count" value="10"/>
+            <property name="connection-linger" value="-1"/>
+            <property name="connection-timeout" value="60000"/>
+            <property name="upload-timeout" value="300000"/>
+            <property name="socket-timeout" value="0"/>
+            <!-- additional SSL properties -->
             <property name="keystore" value="base/config/ofbizssl.jks"/>
             <property name="password" value="changeit"/>
             <property name="key-alias" value="ssl"/>
-            <property name="keystore-type" value="jks"/>
+            <property name="keystore-type" value="JKS"/>
+            <!-- more SSL optional properties -->
+            <property name="ssl-client-auth" value="false"/>
+            <property name="ssl-protocol" value="TLS"/>
+            <property name="ssl-ciphers" value=""/> <!-- use all available ciphers; or only the ones listed -->
+            <property name="x509-algorithm" value="SunX509"/>
+
         </property>
     </container>
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.7 2004/05/26 03:38:21 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.8 2004/05/26 16:16:13 ajzeneski Exp $
  *
  */
 package org.ofbiz.catalina.container;
@@ -45,6 +45,7 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardWrapper;
 import org.apache.catalina.core.StandardEngine;
 import org.apache.coyote.tomcat5.CoyoteServerSocketFactory;
+import org.apache.coyote.tomcat5.CoyoteConnector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -99,7 +100,7 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      May 21, 2004
  */
 public class CatalinaContainer implements Container {
@@ -130,11 +131,11 @@ public class CatalinaContainer implements Container {
         }
 
         // embedded properties
-        boolean useNaming = getPropertyValue(cc, "use-naming", false);
-        int debug = getPropertyValue(cc, "debug", 0);
+        boolean useNaming = ContainerConfig.getPropertyValue(cc, "use-naming", false);
+        int debug = ContainerConfig.getPropertyValue(cc, "debug", 0);
 
-        this.crossContext = getPropertyValue(cc, "apps-cross-context", true);
-        this.distribute = getPropertyValue(cc, "apps-distributable", true);
+        this.crossContext = ContainerConfig.getPropertyValue(cc, "apps-cross-context", true);
+        this.distribute = ContainerConfig.getPropertyValue(cc, "apps-distributable", true);
                 
         // create the instance of Embedded
         embedded = new Embedded();
@@ -196,7 +197,7 @@ public class CatalinaContainer implements Container {
         engine.setDefaultHost(hostName);
 
         // set the JVM Route property (JK/JK2)
-        String jvmRoute = getPropertyValue(engineConfig, "jvm-route", null);
+        String jvmRoute = ContainerConfig.getPropertyValue(engineConfig, "jvm-route", null);
         if (jvmRoute != null) {
             engine.setJvmRoute(jvmRoute);
         }
@@ -221,14 +222,14 @@ public class CatalinaContainer implements Container {
         }
 
         // request dumper valve
-        boolean enableRequestDump = getPropertyValue(engineConfig, "enable-request-dump", false);
+        boolean enableRequestDump = ContainerConfig.getPropertyValue(engineConfig, "enable-request-dump", false);
         if (enableRequestDump) {
             RequestDumperValve rdv = new RequestDumperValve();
             engine.addValve(rdv);
         }
 
         // configure the access log valve
-        String logDir = getPropertyValue(engineConfig, "access-log-dir", null);
+        String logDir = ContainerConfig.getPropertyValue(engineConfig, "access-log-dir", null);
         AccessLogValve al = null;
         if (logDir != null) {
             al = new AccessLogValve();
@@ -242,23 +243,23 @@ public class CatalinaContainer implements Container {
             al.setDirectory(logFile.getAbsolutePath());
         }
 
-        String alp2 = getPropertyValue(engineConfig, "access-log-pattern", null);
+        String alp2 = ContainerConfig.getPropertyValue(engineConfig, "access-log-pattern", null);
         if (al != null && !UtilValidate.isEmpty(alp2)) {
             al.setPattern(alp2);
         }
 
-        String alp3 = getPropertyValue(engineConfig, "access-log-prefix", null);
+        String alp3 = ContainerConfig.getPropertyValue(engineConfig, "access-log-prefix", null);
         if (al != null && !UtilValidate.isEmpty(alp3)) {
             al.setPrefix(alp3);
         }
 
 
-        boolean alp4 = getPropertyValue(engineConfig, "access-log-resolve", true);
+        boolean alp4 = ContainerConfig.getPropertyValue(engineConfig, "access-log-resolve", true);
         if (al != null) {
             al.setResolveHosts(alp4);
         }
 
-        boolean alp5 = getPropertyValue(engineConfig, "access-log-rotate", false);
+        boolean alp5 = ContainerConfig.getPropertyValue(engineConfig, "access-log-rotate", false);
         if (al != null) {
             al.setRotatable(alp5);
         }
@@ -289,13 +290,13 @@ public class CatalinaContainer implements Container {
         String defaultValveFilter = ".*.gif;.*.js;.*.jpg;.*.htm;.*.html;.*.txt;";
 
         ReplicationValve clusterValve = new ReplicationValve();
-        clusterValve.setFilter(getPropertyValue(clusterProps, "rep-valve-filter", defaultValveFilter));
+        clusterValve.setFilter(ContainerConfig.getPropertyValue(clusterProps, "rep-valve-filter", defaultValveFilter));
 
-        String mcb = getPropertyValue(clusterProps, "mcast-bind-addr", null);
-        String mca = getPropertyValue(clusterProps, "mcast-addr", null);
-        int mcp = getPropertyValue(clusterProps, "mcast-port", -1);
-        int mcd = getPropertyValue(clusterProps, "mcast-freq", 500);
-        int mcf = getPropertyValue(clusterProps, "mcast-drop-time", 3000);
+        String mcb = ContainerConfig.getPropertyValue(clusterProps, "mcast-bind-addr", null);
+        String mca = ContainerConfig.getPropertyValue(clusterProps, "mcast-addr", null);
+        int mcp = ContainerConfig.getPropertyValue(clusterProps, "mcast-port", -1);
+        int mcd = ContainerConfig.getPropertyValue(clusterProps, "mcast-freq", 500);
+        int mcf = ContainerConfig.getPropertyValue(clusterProps, "mcast-drop-time", 3000);
 
         if (mca == null || mcp == -1) {
             throw new ContainerException("Cluster configuration requires mcast-addr and mcast-port properties");
@@ -311,10 +312,10 @@ public class CatalinaContainer implements Container {
         mcast.setMcastDropTime(mcd);
         mcast.setMcastFrequency(mcf);
 
-        String tla = getPropertyValue(clusterProps, "tcp-listen-host", "auto");
-        int tlp = getPropertyValue(clusterProps, "tcp-listen-port", 4001);
-        int tlt = getPropertyValue(clusterProps, "tcp-sector-timeout", 100);
-        int tlc = getPropertyValue(clusterProps, "tcp-thread-count", 6);
+        String tla = ContainerConfig.getPropertyValue(clusterProps, "tcp-listen-host", "auto");
+        int tlp = ContainerConfig.getPropertyValue(clusterProps, "tcp-listen-port", 4001);
+        int tlt = ContainerConfig.getPropertyValue(clusterProps, "tcp-sector-timeout", 100);
+        int tlc = ContainerConfig.getPropertyValue(clusterProps, "tcp-thread-count", 6);
         //String tls = getPropertyValue(clusterProps, "", "");
 
         if (tlp == -1) {
@@ -329,12 +330,12 @@ public class CatalinaContainer implements Container {
         //listener.setIsSenderSynchronized(false);
 
         ReplicationTransmitter trans = new ReplicationTransmitter();
-        trans.setReplicationMode(getPropertyValue(clusterProps, "replication-mode", "pooled"));
+        trans.setReplicationMode(ContainerConfig.getPropertyValue(clusterProps, "replication-mode", "pooled"));
 
-        String mgrClassName = getPropertyValue(clusterProps, "manager-class", "org.apache.catalina.cluster.session.DeltaManager");
-        int debug = getPropertyValue(clusterProps, "debug", 0);
-        boolean expireSession = getPropertyValue(clusterProps, "expire-session", false);
-        boolean useDirty = getPropertyValue(clusterProps, "use-dirty", true);
+        String mgrClassName = ContainerConfig.getPropertyValue(clusterProps, "manager-class", "org.apache.catalina.cluster.session.DeltaManager");
+        int debug = ContainerConfig.getPropertyValue(clusterProps, "debug", 0);
+        boolean expireSession = ContainerConfig.getPropertyValue(clusterProps, "expire-session", false);
+        boolean useDirty = ContainerConfig.getPropertyValue(clusterProps, "use-dirty", true);
 
         SimpleTcpCluster cluster = new SimpleTcpCluster();
         cluster.setClusterName(clusterProps.name);
@@ -361,54 +362,73 @@ public class CatalinaContainer implements Container {
             throw new ContainerException("Cannot create Connector without Embedded instance!");
         }
 
-        String host = "0.0.0.0";
-        String type = "http";
-        int port = 8080;
-        int redirect = 0;
-        boolean lookup = false;
+        String conType = ContainerConfig.getPropertyValue(connectorProp, "type", "http");
+        String conAddr = ContainerConfig.getPropertyValue(connectorProp, "host", "0.0.0.0");
+        int conPort = ContainerConfig.getPropertyValue(connectorProp, "port", 8080);
+        int debug = ContainerConfig.getPropertyValue(connectorProp, "debug", 0);
 
-        ContainerConfig.Container.Property hostProp = connectorProp.getProperty("host");
-        if (hostProp != null) {
-            host = hostProp.value;
-        }
+        // create the connector
+        CoyoteConnector connector = (CoyoteConnector) embedded.createConnector(conAddr, conPort, conType);
+        connector.setDebug(debug);
 
-        ContainerConfig.Container.Property typeProp = connectorProp.getProperty("type");
-        if (typeProp != null) {
-            type = typeProp.value;
-        }
+        boolean enableLookups = ContainerConfig.getPropertyValue(connectorProp, "enable-lookups", true);
+        connector.setEnableLookups(enableLookups);
 
-        ContainerConfig.Container.Property portProp = connectorProp.getProperty("port");
-        if (portProp != null) {
-            try {
-                port = Integer.parseInt(portProp.value);
-            } catch (Exception e) {
-                Debug.logWarning("Invalid port number " + portProp.value + " setting connector [" + connectorProp.name + "] to 8080.", module);
-                port = 8080;
-            }
-        }
+        boolean enableKeepAlive = ContainerConfig.getPropertyValue(connectorProp, "enable-keep-alive", true);
+        connector.setKeepAlive(enableKeepAlive);
 
-        ContainerConfig.Container.Property lookupProp = connectorProp.getProperty("enable-lookups");
-        if (lookupProp != null) {
-            lookup = "true".equalsIgnoreCase(lookupProp.value);
-        }
-
-        ContainerConfig.Container.Property rePortProp = connectorProp.getProperty("redirect-port");
-        if (rePortProp != null) {
-            try {
-                redirect = Integer.parseInt(rePortProp.value);
-            } catch (Exception e) {
-                Debug.logWarning("Invalid redirect-port number " + portProp.value + " not setting connector [" + connectorProp.name + "].", module);
-                redirect = 0;
-            }
-        }
-
-        Connector connector = embedded.createConnector(host, port, type);
-        connector.setEnableLookups(lookup);
+        int redirect = ContainerConfig.getPropertyValue(connectorProp, "port", -1);
         if (redirect > 0) {
             connector.setRedirectPort(redirect);
         }
 
-        if ("https".equals(type)) {
+        String proxyName = ContainerConfig.getPropertyValue(connectorProp, "proxy-name", null);
+        int proxyPort = ContainerConfig.getPropertyValue(connectorProp, "proxy-port", 0);
+        if (proxyName != null && proxyPort > 0) {
+            connector.setProxyName(proxyName);
+            connector.setProxyPort(proxyPort);
+        }
+
+        String compression = ContainerConfig.getPropertyValue(connectorProp, "compression", "off");
+        connector.setCompression(compression); // on, off, force
+
+        boolean allowTrace = ContainerConfig.getPropertyValue(connectorProp, "allow-trace", false);
+        connector.setAllowTrace(allowTrace);
+
+        int minProc = ContainerConfig.getPropertyValue(connectorProp, "min-processors", 5);
+        connector.setMinProcessors(minProc);
+
+        int maxProc = ContainerConfig.getPropertyValue(connectorProp, "max-processors", 20);
+        connector.setMaxProcessors(maxProc);
+
+        int maxKeepAlive = ContainerConfig.getPropertyValue(connectorProp, "max-keep-alive", 100);
+        connector.setMaxKeepAliveRequests(maxKeepAlive);
+
+        int maxHeaderSize = ContainerConfig.getPropertyValue(connectorProp, "max-header-size", 4096);
+        connector.setMaxHttpHeaderSize(maxHeaderSize);
+
+        int maxPostSize = ContainerConfig.getPropertyValue(connectorProp, "max-post-size", 2097152);
+        connector.setMaxPostSize(maxPostSize);
+
+        int bufferSize = ContainerConfig.getPropertyValue(connectorProp, "buffer-size", 2048);
+        connector.setBufferSize(bufferSize);
+
+        int acceptCount = ContainerConfig.getPropertyValue(connectorProp, "accept-count", 10);
+        connector.setAcceptCount(acceptCount);
+
+        int conLinger = ContainerConfig.getPropertyValue(connectorProp, "connection-linger", -1);
+        connector.setConnectionLinger(conLinger);
+
+        int conTimeout = ContainerConfig.getPropertyValue(connectorProp, "connection-timeout", 60000);
+        connector.setConnectionTimeout(conTimeout);
+
+        int uploadTimeout = ContainerConfig.getPropertyValue(connectorProp, "upload-timeout", 300000);
+        connector.setConnectionUploadTimeout(uploadTimeout);
+
+        int socketTimeout = ContainerConfig.getPropertyValue(connectorProp, "socket-timeout", 0);
+        connector.setServerSocketTimeout(socketTimeout);
+
+        if ("https".equals(conType)) {
             configureSsl(connectorProp, connector);
         }
         embedded.addConnector(connector);
@@ -423,42 +443,52 @@ public class CatalinaContainer implements Container {
 
         CoyoteServerSocketFactory sf = (CoyoteServerSocketFactory) connector.getFactory();
 
-        String keystore = null;
-        String storeType = null;
-        String password = null;
-        String keyAlias = null;
+        String keystore = ContainerConfig.getPropertyValue(connectorProp, "keystore", null);
+        String password = ContainerConfig.getPropertyValue(connectorProp, "password", null);
+        String storeType = ContainerConfig.getPropertyValue(connectorProp, "keystore-type", null);
+        String keyAlias = ContainerConfig.getPropertyValue(connectorProp, "key-alias", null);
+        String protocol = ContainerConfig.getPropertyValue(connectorProp, "ssl-protocol", null);
+        String ciphers = ContainerConfig.getPropertyValue(connectorProp, "ssl-ciphers", null);
+        String algorithm = ContainerConfig.getPropertyValue(connectorProp, "ssl-algorithm", null);
+        String clientAuth = ContainerConfig.getPropertyValue(connectorProp, "ssl-client-auth", null);
 
-        ContainerConfig.Container.Property keyStoreProp = connectorProp.getProperty("keystore");
-        if (keyStoreProp == null) {
+        // keystore is requrired for SSL
+        if (keystore == null) {
             throw new ContainerException("No keystore setting found for SSL connector!");
         }
-        keystore = keyStoreProp.value;
-
-        ContainerConfig.Container.Property keyStoreType = connectorProp.getProperty("keystore-type");
-        if (keyStoreType != null) {
-            storeType = keyStoreType.value;
-        }
-
-        ContainerConfig.Container.Property passwordProp = connectorProp.getProperty("password");
-        if (passwordProp != null) {
-            password = passwordProp.value;
-        }
-
-        ContainerConfig.Container.Property aliasProp = connectorProp.getProperty("key-alias");
-        if (aliasProp != null) {
-            keyAlias = aliasProp.value;
-        }
-
         sf.setKeystoreFile(keystore);
+
+        // other 'optional' parameters
         if (password != null) {
             sf.setKeystorePass(password);
         }
+
         if (storeType != null) {
             sf.setKeystoreType(storeType);
         }
+
         if (keyAlias != null) {
             sf.setKeyAlias(keyAlias);
         }
+
+        if (clientAuth != null) {
+            sf.setClientAuth(clientAuth);
+        }
+
+        if (protocol != null) {
+            sf.setProtocol(protocol);
+        }
+
+        if (ciphers != null) {
+            sf.setCiphers(ciphers);
+        }
+
+        if (algorithm != null) {
+            sf.setAlgorithm(algorithm);
+        }
+
+
+
         connector.setFactory(sf);
     }
 
@@ -635,72 +665,6 @@ public class CatalinaContainer implements Container {
         }
 
         return mimeTypes;
-    }
-
-    protected String getPropertyValue(ContainerConfig.Container parentProp, String name, String defaultValue) {
-        ContainerConfig.Container.Property prop = parentProp.getProperty(name);
-        if (prop == null || UtilValidate.isEmpty(prop.value)) {
-            return defaultValue;
-        } else {
-            return prop.value;
-        }
-    }
-
-    protected int getPropertyValue(ContainerConfig.Container parentProp, String name, int defaultValue) {
-        ContainerConfig.Container.Property prop = parentProp.getProperty(name);
-        if (prop == null || UtilValidate.isEmpty(prop.value)) {
-            return defaultValue;
-        } else {
-            int num = defaultValue;
-            try {
-                num = Integer.parseInt(prop.value);
-            } catch (Exception e) {
-                return defaultValue;
-            }
-            return num;
-        }
-    }
-
-    protected boolean getPropertyValue(ContainerConfig.Container parentProp, String name, boolean defaultValue) {
-        ContainerConfig.Container.Property prop = parentProp.getProperty(name);
-        if (prop == null || UtilValidate.isEmpty(prop.value)) {
-            return defaultValue;
-        } else {
-            return "true".equalsIgnoreCase(prop.value);
-        }
-    }
-
-    protected String getPropertyValue(ContainerConfig.Container.Property parentProp, String name, String defaultValue) {
-        ContainerConfig.Container.Property prop = parentProp.getProperty(name);
-        if (prop == null || UtilValidate.isEmpty(prop.value)) {
-            return defaultValue;
-        } else {
-            return prop.value;
-        }
-    }
-
-    protected int getPropertyValue(ContainerConfig.Container.Property parentProp, String name, int defaultValue) {
-        ContainerConfig.Container.Property prop = parentProp.getProperty(name);
-        if (prop == null || UtilValidate.isEmpty(prop.value)) {
-            return defaultValue;
-        } else {
-            int num = defaultValue;
-            try {
-                num = Integer.parseInt(prop.value);
-            } catch (Exception e) {
-                return defaultValue;
-            }
-            return num;
-        }
-    }
-
-    protected boolean getPropertyValue(ContainerConfig.Container.Property parentProp, String name, boolean defaultValue) {
-        ContainerConfig.Container.Property prop = parentProp.getProperty(name);
-        if (prop == null || UtilValidate.isEmpty(prop.value)) {
-            return defaultValue;
-        } else {
-            return "true".equalsIgnoreCase(prop.value);
-        }
     }
 
     class DebugLogger extends LoggerBase {
