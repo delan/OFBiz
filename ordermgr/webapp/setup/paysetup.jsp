@@ -72,7 +72,7 @@
                 <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="description"/></div></td>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="paymentService"/></div></td>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="paymentConfiguration"/></div></td>                
-                <td>
+                <td nowrap>
                   <div class="tabletext">&nbsp;
                     <%if(security.hasEntityPermission("PAYPROC", "_UPDATE", session)) {%>
                     <a href="<ofbiz:url>/paysetup?webSiteId=<ofbiz:entityfield attribute="paymentSetting" field="webSiteId"/>&paymentMethodTypeId=<ofbiz:entityfield attribute="paymentSetting" field="paymentMethodTypeId"/></ofbiz:url>" class="buttontext">[Edit]</a>&nbsp;

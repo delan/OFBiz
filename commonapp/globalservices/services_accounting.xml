@@ -190,23 +190,57 @@
         <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
     </service>	
     
-    	<service name="ccProcessor" engine="java"
+    <!-- Credit Card Processors -->    
+    <service name="testCCProcessor" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor">
-            <!-- location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor"> -->
-            <!-- location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysApproveProcessor"> -->
-            <!-- location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysDeclineProcessor"> -->
-            <!-- location="org.ofbiz.commonapp.thirdparty.verisign.PayflowPro" invoke="ccProcessor"> -->
-            <!-- location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="ccProcessor"> -->
+        <description>Credit Card Processing</description>
+        <implements service="ccProcessInterface"/>
+    </service>
+    
+    <service name="alwaysApproveCCProcessor" engine="java"
+             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysApproveProcessor">            
         <description>Credit Card Processing</description>
         <implements service="ccProcessInterface"/>
     </service>
 
-    <service name="eftProcessor" engine="java"
-            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor" auth="false">
+    <service name="alwaysDeclineCCProcessor" engine="java"            
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysDeclineProcessor">            
+        <description>Credit Card Processing</description>
+        <implements service="ccProcessInterface"/>
+    </service>
+    
+    <service name="payflowCCProcessor" engine="java"
+             location="org.ofbiz.commonapp.thirdparty.verisign.PayflowPro" invoke="ccProcessor"> 
+        <description>Credit Card Processing</description>
+        <implements service="ccProcessInterface"/>
+    </service>
+
+    <service name="cyberSourceCCProcessor" engine="java"            
+            location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="ccProcessor">
+        <description>Credit Card Processing</description>
+        <implements service="ccProcessInterface"/>
+    </service>
+
+    <!-- EFT Processors -->        
+    <service name="testEFTProcessor" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor">
         <description>EFT Account Processing</description>
         <implements service="eftProcessInterface"/>
     </service>
+    
+    <service name="alwaysApproveEFTProcessor" engine="java"
+             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysApproveProcessor">            
+        <description>Credit Card Processing</description>
+        <implements service="eftProcessInterface"/>
+    </service>
 
+    <service name="alwaysDeclineEFTProcessor" engine="java"            
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysDeclineProcessor">            
+        <description>Credit Card Processing</description>
+        <implements service="eftProcessInterface"/>
+    </service>    
+
+    <!-- These are being depricated; and will be removed -->
     <service name="authorizePayment" engine="java"
         location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="authorizePayment" auth="false">
         <description>Authorize Payment</description>

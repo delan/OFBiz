@@ -24,6 +24,7 @@
  */
 package org.ofbiz.commonapp.thirdparty.verisign;
 
+import java.net.*;
 import java.util.*;
 import java.text.*;
 
@@ -56,6 +57,7 @@ public class PayflowPro {
         Double processAmount = (Double) context.get("processAmount");
         GenericValue cc = (GenericValue) context.get("creditCard");
         GenericValue ps = (GenericValue) context.get("billingAddress");
+        String configUrlStr = (String) context.get("configUrl");
 
         Map data = UtilMisc.toMap("COMMENT1", orderId);
 
@@ -93,8 +95,18 @@ public class PayflowPro {
             data.put("STREET", street);
             data.put("ZIP", ps.getString("postalCode"));
         }
+        
+        URL configUrl = null;
+        if (configUrlStr != null) {        
+            try {
+                configUrl = new URL(configUrlStr);
+            } catch (MalformedURLException e) {
+                Debug.logError(e, "Bad URL for payflow payment properties file; fatal error.", module);
+                return ServiceUtil.returnError("Bad properties URL; cannot find settings");
+            }
+        }
 
-        PFProAPI pn = init();
+        PFProAPI pn = init(configUrl);
 
         // get the base params
         StringBuffer params = makeBaseParams();
@@ -187,7 +199,7 @@ public class PayflowPro {
         return buf;
     }
 
-    private static PFProAPI init() {
+    private static PFProAPI init(URL configUrl) {
         String hostAddress = "test-payflow.verisign.com";
         Integer hostPort = Integer.decode("443");
         Integer timeout = Integer.decode("80");
@@ -196,16 +208,27 @@ public class PayflowPro {
         String proxyLogon = "";
         String proxyPassword = "";
         String certsPath = "certs";
-
+                
         try {
-            certsPath = UtilProperties.getPropertyValue("payflow", "certsPath", "certs");
-            hostAddress = UtilProperties.getPropertyValue("payflow", "hostAddress", "test-payflow.verisign.com");
-            hostPort = Integer.decode(UtilProperties.getPropertyValue("payflow", "hostPort", "443"));
-            timeout = Integer.decode(UtilProperties.getPropertyValue("payflow", "timeout", "80"));
-            proxyAddress = UtilProperties.getPropertyValue("payflow", "proxyAddress", "");
-            proxyPort = Integer.decode(UtilProperties.getPropertyValue("payflow", "proxyPort", "80"));
-            proxyLogon = UtilProperties.getPropertyValue("payflow", "proxyLogon", "");
-            proxyPassword = UtilProperties.getPropertyValue("payflow", "proxyPassword", "");
+            if (configUrl != null) {
+                certsPath = UtilProperties.getPropertyValue(configUrl, "certsPath", "certs");                        
+                hostAddress = UtilProperties.getPropertyValue(configUrl, "hostAddress", "test-payflow.verisign.com");
+                hostPort = Integer.decode(UtilProperties.getPropertyValue(configUrl, "hostPort", "443"));
+                timeout = Integer.decode(UtilProperties.getPropertyValue(configUrl, "timeout", "80"));
+                proxyAddress = UtilProperties.getPropertyValue(configUrl, "proxyAddress", "");
+                proxyPort = Integer.decode(UtilProperties.getPropertyValue(configUrl, "proxyPort", "80"));
+                proxyLogon = UtilProperties.getPropertyValue(configUrl, "proxyLogon", "");
+                proxyPassword = UtilProperties.getPropertyValue(configUrl, "proxyPassword", "");                            
+            } else {    
+                certsPath = UtilProperties.getPropertyValue("payflow", "certsPath", "certs");                        
+                hostAddress = UtilProperties.getPropertyValue("payflow", "hostAddress", "test-payflow.verisign.com");
+                hostPort = Integer.decode(UtilProperties.getPropertyValue("payflow", "hostPort", "443"));
+                timeout = Integer.decode(UtilProperties.getPropertyValue("payflow", "timeout", "80"));
+                proxyAddress = UtilProperties.getPropertyValue("payflow", "proxyAddress", "");
+                proxyPort = Integer.decode(UtilProperties.getPropertyValue("payflow", "proxyPort", "80"));
+                proxyLogon = UtilProperties.getPropertyValue("payflow", "proxyLogon", "");
+                proxyPassword = UtilProperties.getPropertyValue("payflow", "proxyPassword", "");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

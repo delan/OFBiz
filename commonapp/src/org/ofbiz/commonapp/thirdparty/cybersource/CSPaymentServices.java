@@ -24,6 +24,7 @@
  */
 package org.ofbiz.commonapp.thirdparty.cybersource;
 
+import java.net.*;
 import java.text.*;
 import java.util.*;
 
@@ -48,11 +49,30 @@ public class CSPaymentServices {
     public static final String module = CSPaymentServices.class.getName();
 
     public static Map ccProcessor(DispatchContext dctx, Map context) {
-        StringBuffer apps = new StringBuffer();
-        boolean fraudScore = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "fraudScore", "Y");
-        boolean enableDav = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "enableDav", "Y");
-        boolean autoBill = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "autoBill", "Y");
+        String configUrlStr = (String) context.get("configUrl");
+        URL configUrl = null;
+        try {
+            configUrl = new URL(configUrlStr); 
+        } catch (MalformedURLException e) {
+            Debug.logError(e, "Bad URL for cybersource payment properties file; fatal error.", module);
+            return ServiceUtil.returnError("Bad properties URL; cannot find settings");
+        }
+        
+        boolean fraudScore = true;
+        boolean enableDav = true;
+        boolean autoBill = false;
+        
+        if (configUrl != null) {
+            fraudScore = UtilProperties.propertyValueEqualsIgnoreCase(configUrl, "fraudScore", "Y");
+            enableDav = UtilProperties.propertyValueEqualsIgnoreCase(configUrl, "enableDav", "Y");
+            autoBill = UtilProperties.propertyValueEqualsIgnoreCase(configUrl, "autoBill", "Y");            
+        } else {        
+            fraudScore = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "fraudScore", "Y");
+            enableDav = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "enableDav", "Y");
+            autoBill = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "autoBill", "Y");
+        }
 
+        StringBuffer apps = new StringBuffer();
         apps.append("ics_auth");
         if (fraudScore)
             apps.append(",ics_score");
@@ -67,22 +87,48 @@ public class CSPaymentServices {
         Map result = new HashMap();
         String orderId = (String) context.get("orderId");
         String currency = (String) context.get("currency");
+        String configUrl = (String) context.get("configUrl");
 
         // Some default values
-        String defCur = UtilProperties.getPropertyValue("cybersource.properties", "defaultCurrency", "USD");
-        String timeout = UtilProperties.getPropertyValue("cybersource.properties", "timeout", "90");
-        String retryWait = UtilProperties.getPropertyValue("cybersource.properties", "retryWait", "90");
-        String avsDeclineCodes = UtilProperties.getPropertyValue("cybersource.properties", "avsDeclineCodes", "");
-
-        boolean disableAvs = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "disableAuthAvs", "Y");
-        boolean enableRetry = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "enableRetry", "Y");
+        Properties properties = null;
+        String defCur = null;
+        String timeout = null;
+        String retryWait = null;
+        String avsDeclineCodes = null;
+        boolean disableAvs = false;
+        boolean enableRetry = true;
+        
+        if (configUrl != null) {
+            URL propsUrl = null;
+            try {
+                propsUrl = new URL(configUrl);
+            } catch (MalformedURLException e) {
+                Debug.logError(e, "Bad URL for cybersource payment properties file; fatal error.", module);
+                return ServiceUtil.returnError("Bad properties URL; cannot find settings");
+            }
+            properties = UtilProperties.getProperties(propsUrl);
+            defCur = UtilProperties.getPropertyValue(propsUrl, "defaultCurrency", "USD");
+            timeout = UtilProperties.getPropertyValue(propsUrl, "timeout", "90");
+            retryWait = UtilProperties.getPropertyValue(propsUrl, "retryWait", "90");
+            avsDeclineCodes = UtilProperties.getPropertyValue(propsUrl, "avsDeclineCodes", "");
+            disableAvs = UtilProperties.propertyValueEqualsIgnoreCase(propsUrl, "disableAuthAvs", "Y");
+            enableRetry = UtilProperties.propertyValueEqualsIgnoreCase(propsUrl, "enableRetry", "Y");            
+        } else {
+            properties = UtilProperties.getProperties("cybersource.properties");                
+            defCur = UtilProperties.getPropertyValue("cybersource.properties", "defaultCurrency", "USD");
+            timeout = UtilProperties.getPropertyValue("cybersource.properties", "timeout", "90");
+            retryWait = UtilProperties.getPropertyValue("cybersource.properties", "retryWait", "90");
+            avsDeclineCodes = UtilProperties.getPropertyValue("cybersource.properties", "avsDeclineCodes", "");
+            disableAvs = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "disableAuthAvs", "Y");
+            enableRetry = UtilProperties.propertyValueEqualsIgnoreCase("cybersource.properties", "enableRetry", "Y");
+        }
 
         ICSClientRequest request = null;
         ICSClient client = null;
         ICSReply reply = null;
 
         try {
-            client = new ICSClient(UtilProperties.getProperties("cybersource.properties"));
+            client = new ICSClient(properties);
             request = buildRequest(client, context);
             if (client == null)
                 throw new GeneralException("ICS returned a null client.");
