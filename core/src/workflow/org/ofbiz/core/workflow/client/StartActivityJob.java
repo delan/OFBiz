@@ -26,6 +26,7 @@ package org.ofbiz.core.workflow.client;
 
 import java.util.*;
 
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
@@ -38,12 +39,20 @@ import org.ofbiz.core.workflow.*;
  * @since      2.0
  */
 public class StartActivityJob extends AbstractJob {
+    
+    public static final String module = StartActivityJob.class.getName();
 
-    protected WfActivity activity;
+    protected WfActivity activity = null;
+    protected GenericRequester requester = null;
 
     public StartActivityJob(WfActivity activity) {
-        super(activity.toString());
+        this(activity, null);
+    }
+    
+    public StartActivityJob(WfActivity activity, GenericRequester requester) {
+        super(activity.toString());        
         this.activity = activity;
+        this.requester = requester;
         runtime = new Date().getTime();
     }
 
@@ -58,9 +67,11 @@ public class StartActivityJob extends AbstractJob {
         try {
             activity.activate();
         } catch (Exception e) {
-            Debug.logError("Start Activity Failed.");
-            e.printStackTrace();
+            Debug.logError(e, "Start Activity Failed.", module);
+            if (requester != null)
+                requester.receiveException(e);
         }
+        requester.receiveResult(new HashMap());
         finish();
     }
 }

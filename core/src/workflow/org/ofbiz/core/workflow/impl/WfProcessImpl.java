@@ -27,8 +27,11 @@ package org.ofbiz.core.workflow.impl;
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
+import org.ofbiz.core.workflow.client.*;
 
 /**
  * WfProcessImpl - Workflow Process Object implementation
@@ -312,15 +315,28 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     // Activates an activity object
     private void startActivity(GenericValue value) throws WfException {
         WfActivity activity = WfFactory.getWfActivity(value, workEffortId);
+        GenericResultWaiter req = new GenericResultWaiter();
 
         if (Debug.verboseOn()) Debug.logVerbose("[WfProcess.startActivity] : Attempting to start activity (" + activity.name() + ")", module);
-        try {
-            activity.activate();
-        } catch (AlreadyRunning e) {
-            throw new WfException("Activity already running", e);
-        } catch (CannotStart e) {
-            Debug.logVerbose("[WfProcess.startActivity] : Cannot start activity. Waiting for manual start.", module);
+        
+        // using the StartActivityJob class to run the activity within its own thread        
+        try {            
+            Job activityJob = new StartActivityJob(activity, req);            
+            this.getDispatcher().getJobManager().runJob(activityJob);  
+        } catch (JobManagerException e) {
+            throw new WfException("Problems with job queue", e);
         }
+         
+        // the GenericRequester object will hold any exceptions; and report the job as failed       
+        if (req.status() == GenericResultWaiter.SERVICE_FAILED) {
+            Exception excep = req.getException();
+            if (excep instanceof CannotStart)
+                Debug.logVerbose("[WfProcess.startActivity] : Cannot start activity. Waiting for manual start.", module);
+            else if (excep instanceof AlreadyRunning) 
+                throw new WfException("Activity already running", excep);
+            else            
+                throw new WfException("Activity error", excep);
+        }                        
     }
 
     // Determine the next activity or activities

@@ -59,7 +59,7 @@ public abstract class WfActivityAbstractImplementation {
     protected GenericResultWaiter runService(String serviceName, String params, String extend) throws WfException {
         DispatchContext dctx = getActivity().getDispatcher().getLocalContext(getActivity().getServiceLoader());
         ModelService service = null;
-        Debug.logVerbose("[WfActivity.runService] : Getting the service model.", module);
+        Debug.logVerbose("[WfActivityAbstractImplementation.runService] : Getting the service model.", module);
         try {
             service = dctx.getModelService(serviceName);
         } catch (GenericServiceException e) {
@@ -71,14 +71,11 @@ public abstract class WfActivityAbstractImplementation {
         return runService(service, params, extend);
     }
 
-    protected GenericResultWaiter runService(ModelService service, String params, String extend) throws WfException {
-
-        //Modified by Oswin Ondarza and Manuel Soto
-        Map ctx = getActivity().actualContext(params, extend, service.getParameterNames(ModelService.IN_PARAM, false));
-        //End modified
-
+    protected GenericResultWaiter runService(ModelService service, String params, String extend) throws WfException {      
+        Map ctx = getActivity().actualContext(params, extend, service.getParameterNames(ModelService.IN_PARAM, true));
+        
         GenericResultWaiter waiter = new GenericResultWaiter();
-        Debug.logVerbose("[WfActivity.runService] : Invoking the service.", module);
+        Debug.logVerbose("[WfActivityAbstractImplementation.runService] : Invoking the service.", module);
         try {
             getActivity().getDispatcher().runAsync(getActivity().getServiceLoader(), service, ctx, waiter, false);
         } catch (GenericServiceException e) {
@@ -92,7 +89,9 @@ public abstract class WfActivityAbstractImplementation {
         this.resultContext = result;
     }
 
-    protected WfActivityImpl getActivity() {
+    protected WfActivityImpl getActivity() throws WfException {
+        if (this.wfActivity == null)
+            throw new WfException("Activity object is null");
         return wfActivity;
     }
 

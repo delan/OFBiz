@@ -69,8 +69,10 @@ public class WfActivitySubFlowImplementation extends WfActivityAbstractImplement
         service.engineName = "workflow";
         service.location = subFlow.getString("packageId");
         service.invoke = subFlow.getString("subFlowProcessId");
-        //service.contextInfo = null; // TODO FIXME
+        service.validate = false;        
 
+        // we don't use the service definition parameters (since there is no definition) so, we will just grab 
+        // the actual parameters and let the workflow engine test the contextSignature
         String actualParameters = subFlow.getString("actualParameters");
         GenericResultWaiter waiter = runService(service, actualParameters, null);
         if (type.equals("WSE_SYNCHR")) {
