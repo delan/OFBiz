@@ -42,6 +42,8 @@ public class ModelField
   public boolean isPk = false;
   /** validators to be called when an update is done */  
   public Vector validators = new Vector();
+  
+  public ModelFieldType modelFieldType = null;
 
   /** Default Constructor */  
   public ModelField()

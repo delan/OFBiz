@@ -76,6 +76,35 @@ public class GenericEntity implements Serializable
     }
     fields.put(name, value); modified = true;
   }
+
+  public void setString(String name, String value)
+  {
+    ModelField field = modelEntity.getField(name);
+    if(field == null) set(name, value); //this will get a warning...
+    
+    ModelFieldType type = field.modelFieldType;
+    String fieldType = type.javaType;
+    if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
+      set(name, value);
+    else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
+      set(name, java.sql.Timestamp.valueOf(value));
+    else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
+      set(name, java.sql.Time.valueOf(value));
+    else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date"))
+      set(name, java.sql.Date.valueOf(value));
+    else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer"))
+      set(name, Integer.valueOf(value));
+    else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long"))
+      set(name, Long.valueOf(value));
+    else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float"))
+      set(name, Float.valueOf(value));
+    else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double"))
+      set(name, Double.valueOf(value));
+    else
+    {
+      //throw an exception or something...
+    }
+  }
   
   //might be nice to add some ClassCastException handling...
   public String getString(String name) { return (String)fields.get(name); }

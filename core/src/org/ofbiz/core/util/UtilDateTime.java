@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.1  2001/07/15 16:36:18  azeneski
  * Initial Import
  *
@@ -257,7 +260,7 @@ public class UtilDateTime
    */  
   public static String toDateString(java.util.Date date)
   {
-    if(date == null) return null;
+    if(date == null) return "";
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
     int month = calendar.get(Calendar.MONTH) + 1;
@@ -280,7 +283,7 @@ public class UtilDateTime
    */  
   public static String toTimeString(java.util.Date date)
   {
-    if(date == null) return null;
+    if(date == null) return "";
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
     return(toTimeString(calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),calendar.get(Calendar.SECOND)));

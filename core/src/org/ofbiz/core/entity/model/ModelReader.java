@@ -404,6 +404,8 @@ public class ModelReader
       field.validators.add(checkNull(elementValue(element)));
     }
     
+    field.modelFieldType = getModelFieldType(field.type);
+    
     return field;
   }
   
