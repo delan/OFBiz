@@ -94,24 +94,24 @@ public class ModelUtil {
      * @return The Java variable name
      */
     public static String dbNameToVarName(String columnName) {
-        String fieldName = null;
-        int end = columnName.indexOf("_");
-        int start = 0;
+        if (columnName == null) return null;
 
-        if (end > 0) {
-            fieldName = columnName.substring(start, end).toLowerCase();
-            start = end + 1;
-            end = columnName.indexOf("_", start);
-            while (end > 0) {
-                fieldName = fieldName + upperFirstChar(columnName.substring(start, end).toLowerCase());
-                start = end + 1;
-                end = columnName.indexOf("_", start);
+        StringBuffer fieldName = new StringBuffer(columnName.length());
+
+        boolean toUpper = false;
+        for (int i=0; i < columnName.length(); i++) {
+            char ch = columnName.charAt(i);
+            if (ch == '_') {
+                toUpper = true;
+            } else if (toUpper == true) {
+                fieldName.append(Character.toUpperCase(ch));
+                toUpper = false;
+            } else {
+                fieldName.append(Character.toLowerCase(ch));
             }
-            fieldName = fieldName + upperFirstChar(columnName.substring(start).toLowerCase());
-        } else {
-            fieldName = columnName.toLowerCase();
         }
-        return fieldName;
+
+        return fieldName.toString();
     }
 
     /** Converts a Java variable name to a database name.
