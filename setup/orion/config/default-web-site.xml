@@ -2,13 +2,13 @@
 <!DOCTYPE web-site PUBLIC "Orion Web-site" "http://www.orionserver.com/dtds/web-site.dtd">
 
 <web-site host="[ALL]" port="8080" display-name="Default Orion WebSite">
-	<!-- The default web-app for this site, bound to the root -->
-	<default-web-app application="default" shared="true" name="defaultWebApp" />
+    <!-- The default web-app for this site, bound to the root -->
+    <default-web-app application="default" shared="true" name="defaultWebApp" />
 
-	<!-- Uncomment this to activate the news app -->
-	<!-- <web-app application="news" name="news-web" root="/news" /> -->
+    <!-- Uncomment this to activate the news app -->
+    <!-- <web-app application="news" name="news-web" root="/news" /> -->
 
-	<web-app load-on-startup="true" application="default" shared="true" name="commonapp" root="/commonapp" />
+    <web-app load-on-startup="true" application="default" shared="true" name="commonapp" root="/commonapp" />
     <web-app load-on-startup="true" application="default" shared="true" name="webtools" root="/webtools" />
     <web-app load-on-startup="true" application="default" shared="true" name="ecommerce" root="/ecommerce" />
     <web-app load-on-startup="true" application="default" shared="true" name="images" root="/images" />
@@ -17,6 +17,6 @@
     <web-app load-on-startup="true" application="default" shared="true" name="partymgr" root="/partymgr" />
     <web-app load-on-startup="true" application="default" shared="true" name="workeffort" root="/workeffort" />
     
-	<!-- Access Log, where requests are logged to -->
-	<access-log path="../log/default-web-access.log" />
+    <!-- Access Log, where requests are logged to -->
+    <access-log path="../log/default-web-access.log" />
 </web-site>

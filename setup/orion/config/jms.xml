@@ -9,17 +9,17 @@
         <topic-connection-factory location="jms/TopicConnectionFactory" port="9127" password="ofbiz" username="ofbiz" />
         <!--<xa-topic-connection-factory location="jms/XATopicConnectionFactory" password="ofbiz" username="ofbiz" />-->
 
-	<queue name="OFB Services Queue" location="jms/OFBQueue">
-	    <description>Service Engine Queue</description>
-	</queue>
+    <queue name="OFB Services Queue" location="jms/OFBQueue">
+        <description>Service Engine Queue</description>
+    </queue>
 
-	<topic name="OFB Services Topic" location="jms/OFBTopic">
-	    <description>Service Engine Topic</description>
-	</topic>
+    <topic name="OFB Services Topic" location="jms/OFBTopic">
+        <description>Service Engine Topic</description>
+    </topic>
 
-	<!-- path to the log-file where JMS-events/errors are stored -->
-	<log>
+    <!-- path to the log-file where JMS-events/errors are stored -->
+    <log>
             <file path="../log/jms.log" />
-	</log>
+    </log>
 
 </jms-server>
