@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.31 2004/07/01 07:57:56 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.32 2004/07/07 05:53:47 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.31 $
+ *@version    $Revision: 1.32 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -422,9 +422,9 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         } else if (obj instanceof String) {
             String value = (String) obj;
 
-            if ("Y".equals(value)) {
+            if ("Y".equalsIgnoreCase(value) || "T".equalsIgnoreCase(value)) {
                 return Boolean.TRUE;
-            } else if ("N".equals(value)) {
+            } else if ("N".equalsIgnoreCase(value) || "F".equalsIgnoreCase(value)) {
                 return Boolean.FALSE;
             } else {
                 throw new IllegalArgumentException("getBoolean could not map the String '" + value + "' to Boolean type");
