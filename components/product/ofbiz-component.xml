@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.10 2003/12/07 18:02:16 ajzeneski Exp $
+ *  $Id: ofbiz-component.xml,v 1.11 2004/01/15 17:45:38 jonesde Exp $
 -->
 
 <ofbiz-component name="product">
@@ -33,6 +33,7 @@
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel_shipment.xml"/>
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
     <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
+    <entity-resource type="data" reader-name="main" loader="main" location="data/ProductScheduledServices.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/ProductTypeData.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/ShipmentTypeData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
