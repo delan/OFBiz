@@ -175,7 +175,7 @@ public class PayPalEvents {
         }
                 
         // first verify this is valid from PayPal
-        Map parametersMap = UtilMisc.getParameterMap(request);
+        Map parametersMap = UtilHttp.getParameterMap(request);
         parametersMap.put("cmd", "_notify-validate");  
         
         // send off the confirm request 

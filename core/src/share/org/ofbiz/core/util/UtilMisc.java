@@ -24,13 +24,12 @@
 package org.ofbiz.core.util;
 
 import java.util.*;
-import javax.servlet.http.*;
 
 /**
  * UtilMisc - Misc Utility Functions
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @version    $Revision$
  * @since      2.0
  */
@@ -246,102 +245,6 @@ public class UtilMisc {
         }
     }
 
-    /** 
-     * Create a map from an HttpServletRequest object
-     * @return The resulting Map
-     */
-    public static Map getParameterMap(HttpServletRequest request) {
-        HashMap paramMap = new OrderedMap();
-        java.util.Enumeration e = request.getParameterNames();
-        while (e.hasMoreElements()) {
-            String name = (String) e.nextElement();
-            paramMap.put(name, request.getParameter(name));
-        }
-        return (Map) paramMap;
-    }
-    
-    /**
-     * Put request parameters in request object as attributes.
-     * @param request
-     */
-    public static void parametersToAttributes(HttpServletRequest request) {
-    	java.util.Enumeration e = request.getParameterNames();
-    	while (e.hasMoreElements()) {
-    		String name = (String) e.nextElement();
-    		request.setAttribute(name, request.getParameter(name));
-    	}
-    }
-
-    /** 
-     * Given a request, returns the application name or "root" if deployed on root 
-     * @param request
-     * @return String
-     */
-    public static String getApplicationName(HttpServletRequest request) {
-        String appName = "root";
-
-        if (request.getContextPath().length() > 1) {
-            appName = request.getContextPath().substring(1);
-        }
-        return appName;
-    }
-
-    public static StringBuffer getServerRootUrl(HttpServletRequest request) {
-        StringBuffer requestUrl = new StringBuffer();
-
-        requestUrl.append(request.getScheme());
-        requestUrl.append("://" + request.getServerName());
-        if (request.getServerPort() != 80 && request.getServerPort() != 443)
-            requestUrl.append(":" + request.getServerPort());
-        return requestUrl;
-    }
-
-    public static StringBuffer getFullRequestUrl(HttpServletRequest request) {
-        StringBuffer requestUrl = getServerRootUrl(request);
-
-        requestUrl.append(request.getRequestURI());
-        if (request.getQueryString() != null) {
-            requestUrl.append("?" + request.getQueryString());
-        }
-        return requestUrl;
-    }
-    
-    private static Locale getLocale(HttpServletRequest request, HttpSession  session) {
-        Object localeObject = session != null ? session.getAttribute("locale") : null;
-        if (localeObject == null) localeObject = request != null ? request.getLocale() : null;
-
-        if (localeObject != null && localeObject instanceof String) {
-            localeObject = UtilMisc.parseLocale((String) localeObject);
-        } 
-        
-        if (localeObject != null && localeObject instanceof Locale) {
-            return (Locale) localeObject;
-        } else {
-            return Locale.getDefault();
-        }                                
-    }
-    
-    /**
-     * Get the Locale object from a session variable; if not found use the browser's default
-     * @param request HttpServletRequest object to use for lookup
-     * @return Locale The current Locale to use
-     */
-    public static Locale getLocale(HttpServletRequest request) {
-        if (request == null) return Locale.getDefault();
-        return getLocale(request, request.getSession());
-    }
-    
-    /**
-     * Get the Locale object from a session variable; if not found use the system's default.
-     * NOTE: This method is not recommended because it ignores the Locale from the browser not having the request object.
-     * @param session HttpSession object to use for lookup
-     * @return Locale The current Locale to use
-     */
-    public static Locale getLocale(HttpSession  session) {
-        if (session == null) return Locale.getDefault();
-        return getLocale(null, session);
-    }
-    
     /**
      * Parse a locale string Locale object
      * @param localeString The locale string (en_US)
@@ -362,13 +265,6 @@ public class UtilMisc {
         return locale;
     }
     
-    public static void setLocale(HttpServletRequest request, String localeString) {
-        setLocale(request, parseLocale(localeString));        
-    }
-    public static void setLocale(HttpServletRequest request, Locale locale) {
-        request.getSession().setAttribute("locale", locale);        
-    }
-
     /** This is meant to be very quick to create and use for small sized maps, perfect for how we usually use UtilMisc.toMap */
     protected static class SimpleMap implements Map, java.io.Serializable {
         protected Map realMapIfNeeded = null;

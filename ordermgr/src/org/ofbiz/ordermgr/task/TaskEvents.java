@@ -49,7 +49,7 @@ public class TaskEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         
-        Map parameterMap = UtilMisc.getParameterMap(request);
+        Map parameterMap = UtilHttp.getParameterMap(request);
         String workEffortId = (String) parameterMap.remove("workEffortId");
         String partyId = (String) parameterMap.remove("partyId");
         String roleTypeId = (String) parameterMap.remove("roleTypeId");

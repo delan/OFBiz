@@ -484,7 +484,7 @@ public class LoginEvents {
     }
 
     protected static String getAutoLoginCookieName(HttpServletRequest request) {
-        return UtilMisc.getApplicationName(request) + ".autoUserLoginId";
+        return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
     }
 
     public static String getAutoUserLoginId(HttpServletRequest request) {

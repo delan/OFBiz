@@ -58,7 +58,7 @@ public class ShoppingCartEvents {
         // Get the parameters as a MAP, remove the productId and quantity params.
         // The rest should be product attributes.This only works w/ servlet api 2.3
         // Map paramMap = request.getParameterMap();
-        Map paramMap = UtilMisc.getParameterMap(request);
+        Map paramMap = UtilHttp.getParameterMap(request);
 
         if (paramMap.containsKey("ADD_PRODUCT_ID")) {
             productId = (String) paramMap.remove("ADD_PRODUCT_ID");
@@ -325,7 +325,7 @@ public class ShoppingCartEvents {
     public static String deleteFromCart(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        Map paramMap = UtilMisc.getParameterMap(request);
+        Map paramMap = UtilHttp.getParameterMap(request);
         Set names = paramMap.keySet();
         Iterator i = names.iterator();
 
@@ -365,7 +365,7 @@ public class ShoppingCartEvents {
         Security security = (Security) request.getAttribute("security");
         
         ArrayList deleteList = new ArrayList();
-        Map paramMap = UtilMisc.getParameterMap(request);
+        Map paramMap = UtilHttp.getParameterMap(request);
         String errMsg = "";
 
         Set names = paramMap.keySet();
