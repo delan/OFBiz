@@ -371,7 +371,11 @@ public class RequestHandler implements Serializable {
 
     public static String getRequestUri(String path) {
         List pathInfo = StringUtil.split(path, "/");
-        return (String) pathInfo.get(0);
+        if (((String)pathInfo.get(0)).indexOf('?') > -1) {        
+            return ((String) pathInfo.get(0)).substring(0, ((String)pathInfo.get(0)).indexOf('?'));
+        } else {               
+            return (String) pathInfo.get(0);
+        }
     }
 
     public static String getNextPageUri(String path) {
@@ -380,6 +384,9 @@ public class RequestHandler implements Serializable {
         for (int i = 1; i < pathInfo.size(); i++) {
             String element = (String) pathInfo.get(i);
             if (element.indexOf('~') != 0) {
+                if (element.indexOf('?') > -1) {
+                    element = element.substring(0, element.indexOf('?'));
+                }
                 if (i == 1) {                
                     nextPage = element;
                 } else {
