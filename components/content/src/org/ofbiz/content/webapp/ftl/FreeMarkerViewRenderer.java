@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewRenderer.java,v 1.6 2004/01/07 19:30:11 byersa Exp $
+ * $Id: FreeMarkerViewRenderer.java,v 1.7 2004/04/20 21:01:20 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import freemarker.template.WrappingTemplateModel;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.1
  */
 public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMarkerViewRenderer {
@@ -84,7 +84,6 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
                      //root.put(key, wrapper.wrap(value));
                      root.put(key, value);
                  }
-                 //Debug.logVerbose("Key: " + key + " Value: " + value + ":" + (value == null ? "null" : value.getClass().getName()), module);
              }
              root.put("context", wrapper.wrap(contextMap));                          
              //root.put("jpublishContext", wrapper.wrap(context));
@@ -96,7 +95,6 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
     }
 
     public void render(JPublishContext context, String path, Reader in, Writer out) throws IOException, ViewRenderException{
-        if (Debug.verboseOn()) Debug.logVerbose("render(" + path + ")", module);
         try {
             Page page = (Page)context.get(JPublishContext.JPUBLISH_PAGE);
             Object viewContext = createViewContext(context, path);

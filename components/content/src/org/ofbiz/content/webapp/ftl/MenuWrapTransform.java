@@ -1,5 +1,5 @@
 /*
- * $Id: MenuWrapTransform.java,v 1.2 2004/04/11 08:28:15 jonesde Exp $
+ * $Id: MenuWrapTransform.java,v 1.3 2004/04/20 21:01:29 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import freemarker.template.TransformControl;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since 3.0
  */
 public class MenuWrapTransform implements TemplateTransformModel {
@@ -92,7 +92,6 @@ public class MenuWrapTransform implements TemplateTransformModel {
         //final String menuDefFile = (String)templateCtx.get("menuDefFile");
         //final String menuName = (String)templateCtx.get("menuName");
         //final String associatedContentId = (String)templateCtx.get("associatedContentId");
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(E)after overrride", templateCtx, 0),module);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List trail = (List)templateCtx.get("globalNodeTrail");
         String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
@@ -113,7 +112,6 @@ public class MenuWrapTransform implements TemplateTransformModel {
             dataResourceId = (String) view.get("dataResourceId");
         }
         String subContentIdSub = (String) view.get("contentId");
-        if (Debug.verboseOn()) Debug.logVerbose("in EditSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)templateCtx.get("subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
@@ -148,7 +146,6 @@ public class MenuWrapTransform implements TemplateTransformModel {
 
             public void write(char cbuf[], int off, int len) {
                 buf.append(cbuf, off, len);
-                if (Debug.verboseOn()) Debug.logVerbose("in WrapSubContent, buf:" + buf.toString(), module);
             }
 
             public void flush() throws IOException {

@@ -1,5 +1,5 @@
 /*
- * $Id: WrapSubContentCacheTransform.java,v 1.3 2004/04/11 08:28:16 jonesde Exp $
+ * $Id: WrapSubContentCacheTransform.java,v 1.4 2004/04/20 21:01:30 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since 3.0
  */
 public class WrapSubContentCacheTransform implements TemplateTransformModel {
@@ -87,7 +87,6 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
         //if (Debug.infoOn()) Debug.logInfo("in Wrap(0b), savedValuesUp ." + savedValuesUp , module);
         final String wrapTemplateId = (String)templateCtx.get("wrapTemplateId");
         //if (Debug.infoOn()) Debug.logInfo("in WrapSubContent, wrapTemplateId(1):" + wrapTemplateId, module);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(E)after overrride", templateCtx, 0),module);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List trail = (List)templateCtx.get("globalNodeTrail");
                 //if (Debug.infoOn()) Debug.logInfo("in WrapSubContent, trail(0):" + trail, "");
@@ -110,7 +109,6 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
             dataResourceId = (String) view.get("dataResourceId");
         }
         String subContentIdSub = (String) view.get("contentId");
-        if (Debug.verboseOn()) Debug.logVerbose("in EditSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)templateCtx.get("subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
@@ -139,7 +137,6 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
 
             public void write(char cbuf[], int off, int len) {
                 buf.append(cbuf, off, len);
-                if (Debug.verboseOn()) Debug.logVerbose("in WrapSubContent, buf:" + buf.toString(), module);
             }
 
             public void flush() throws IOException {
@@ -183,7 +180,6 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
                         Debug.logError(e2, "Error rendering content" + e2.getMessage(), module);
                         throw new IOException("Error rendering content" + e2.toString());
                     }
-                    if (Debug.verboseOn()) Debug.logVerbose("in ERSC, after renderContentAsText", module);
                         
                 FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
                         //if (Debug.infoOn()) Debug.logInfo("in Wrap(2), savedValuesUp ." + savedValuesUp , module);

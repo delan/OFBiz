@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentTransform.java,v 1.6 2004/04/11 08:28:16 jonesde Exp $
+ * $Id: RenderSubContentTransform.java,v 1.7 2004/04/20 21:01:29 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -41,7 +41,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderSubContentTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
@@ -94,13 +94,6 @@ public class RenderSubContentTransform implements TemplateTransformModel {
 
         final GenericValue subContentDataResourceView = subContentDataResourceViewTemp;
 
-        if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, start.", module);
-        if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, mapKey:" + mapKey, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, subContentId:" + subContentId, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, subDataResourceTypeId:" + subDataResourceTypeId, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, contentId:" + contentId, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, mimeTypeId:" + mimeTypeId, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, locale:" + locale, module);
 
         final Map templateContext = ctx;
 
@@ -115,7 +108,6 @@ public class RenderSubContentTransform implements TemplateTransformModel {
 
             public void close() throws IOException {
                 try {
-                    if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, close:", module);
                     renderSubContent();
                 } catch (IOException e) {
                     throw new IOException(e.getMessage());
@@ -129,7 +121,6 @@ public class RenderSubContentTransform implements TemplateTransformModel {
                 String rootDir = servletContext.getRealPath("/");
                 String webSiteId = (String) servletContext.getAttribute("webSiteId");
                 String https = (String) servletContext.getAttribute("https");
-                if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, rootDir:" + rootDir, module);
                 templateContext.put("webSiteId", webSiteId);
                 templateContext.put("https", https);
                 templateContext.put("rootDir", rootDir);
@@ -137,10 +128,7 @@ public class RenderSubContentTransform implements TemplateTransformModel {
                 Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
                 
                 templateRoot.put("context", templateContext);
-                if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, calling renderSubCasT:" + " contentId:" + contentId + " mapKey:" + mapKey + " subContentId:" + subContentId, module);
                 if (subContentDataResourceView != null) {
-                    if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, " + " subContentDataResourceView:" + subContentDataResourceView.get("contentId")
-                            + " / " + subContentDataResourceView.get("drDataResourceId"), module);
                 }
                 try {
                     Map results = ContentWorker.renderSubContentAsText(delegator, contentId, out, mapKey, subContentId, subContentDataResourceView, templateRoot, locale, mimeTypeId, userLogin, fromDate);
@@ -157,15 +145,6 @@ public class RenderSubContentTransform implements TemplateTransformModel {
                 templateContext.put("mimeTypeId", null);
                 templateContext.put("locale", locale);
                 
-                if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, contentId." + resultCtx.get("contentId"), module);
-                if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, after.", module);
-                if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, mapKey:" + mapKey, module);
-                if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, subContentId:" + subContentId, module);
-                if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, subDataResourceTypeId:" + subDataResourceTypeId, module);
-                if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, contentId:" + contentId, module);
-                if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, mimeTypeId:" + mimeTypeId, module);
-                if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, locale:" + locale, module);
-                if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, contentId2." + resultCtx.get("contentId"), module);
                 
                 return;
             }

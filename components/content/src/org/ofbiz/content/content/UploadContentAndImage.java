@@ -29,7 +29,7 @@ import org.ofbiz.service.ModelService;
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -77,7 +77,6 @@ public class UploadContentAndImage {
                 fi = (FileItem) lst.get(i);
                 //String fn = fi.getName();
                 String fieldName = fi.getFieldName();
-                if (Debug.verboseOn()) Debug.logVerbose("in uploadAndStoreImage, fieldName:" + fieldName, "");
                 if (fi.isFormField()) {
                     String fieldStr = fi.getString();
                     passedParams.put(fieldName, fieldStr);
@@ -110,19 +109,14 @@ public class UploadContentAndImage {
             ftlContext.put("dataTemplateTypeId", passedParams.get("dataTemplateTypeId"));
             ftlContext.put("description", passedParams.get("description"));
             ftlContext.put("privilegeEnumId", passedParams.get("privilegeEnumId"));
-            if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]passedParams " + passedParams, module);
             String drid = (String)passedParams.get("dataResourceId");
             //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]drid:" + drid, module);
             ftlContext.put("dataResourceId", drid);
-            if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]ftlContext(1):" + ftlContext, module);
             ftlContext.put("dataResourceTypeId", null); // inhibits persistence of DataResource, because it already exists
             ftlContext.put("contentIdTo", passedParams.get("contentIdTo"));
             ftlContext.put("contentAssocTypeId", passedParams.get("contentAssocTypeId"));
-            if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]ftlContext " + ftlContext, module);
-            if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]ftlContext(2):" + ftlContext, module);
             if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]persist ftlContext: " + ftlContext, module);
             Map ftlResults = dispatcher.runSync("persistContentAndAssoc", ftlContext);
-            if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]ftlContext(3):" + ftlContext, module);
             boolean isError = ModelService.RESPOND_ERROR.equals(ftlResults.get(ModelService.RESPONSE_MESSAGE));
             if (isError) {
                 request.setAttribute("_ERROR_MESSAGE_", ftlResults.get(ModelService.ERROR_MESSAGE));
@@ -158,7 +152,6 @@ public class UploadContentAndImage {
                 sumContext.put("textData", passedParams.get("summaryData"));
                 sumContext.put("mapKey", "SUMMARY");
                 sumContext.put("dataTemplateTypeId", "NONE");
-                if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]sumContext " + sumContext, module);
                 Map sumResults = dispatcher.runSync("persistContentAndAssoc", sumContext);
                 isError = ModelService.RESPOND_ERROR.equals(sumResults.get(ModelService.RESPONSE_MESSAGE));
                 if (isError) {
@@ -188,7 +181,6 @@ public class UploadContentAndImage {
                 txtContext.put("textData", passedParams.get("textData"));
                 txtContext.put("mapKey", "ARTICLE");
                 txtContext.put("dataTemplateTypeId", "NONE");
-                if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]txtContext " + txtContext, module);
                 Map txtResults = dispatcher.runSync("persistContentAndAssoc", txtContext);
                 isError = ModelService.RESPOND_ERROR.equals(txtResults.get(ModelService.RESPONSE_MESSAGE));
                 if (isError) {

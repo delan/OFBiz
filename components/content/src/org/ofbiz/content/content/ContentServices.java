@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.21 2004/04/11 08:28:11 jonesde Exp $
+ * $Id: ContentServices.java,v 1.22 2004/04/20 21:01:17 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  * @since 2.2
  * 
  *  
@@ -136,7 +136,6 @@ public class ContentServices {
         } else {
             direction = "To";
         }
-        //Debug.logVerbose("contentId(start):" + contentId, null);
         if (contentId == null)
             contentId = "PUBLISH_ROOT";
         GenericValue content = null;
@@ -146,7 +145,6 @@ public class ContentServices {
             System.out.println("Entity Error:" + e.getMessage());
             return ServiceUtil.returnError("Error in retrieving Content. " + e.getMessage());
         }
-        //Debug.logVerbose("content(start):" + content, null);
         String fromDateStr = (String) context.get("fromDateStr");
         String thruDateStr = (String) context.get("thruDateStr");
         Timestamp fromDate = null;
@@ -167,9 +165,7 @@ public class ContentServices {
             startContentAssocTypeId = "PUBLISH";
         Map nodeMap = new HashMap();
         List pickList = new ArrayList();
-        //Debug.logVerbose("whenMap(start):" + whenMap,null);
         ContentWorker.traverse(delegator, content, fromDate, thruDate, whenMap, 0, nodeMap, startContentAssocTypeId, pickList, direction);
-        //Debug.logVerbose("After travers",null);
 
         results.put("nodeMap", nodeMap);
         results.put("pickList", pickList);
@@ -214,7 +210,6 @@ public class ContentServices {
         GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", contentId));
         content.setNonPKFields(context);
         context.put("currentContent", content);
-        if (Debug.verboseOn()) Debug.logVerbose("in createContentMethod, currentContent:" + content, "");
         Map permResults = ContentWorker.callContentPermissionCheckResult(delegator, dispatcher, context);
         String permissionStatus = (String)permResults.get("permissionStatus");
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
@@ -288,9 +283,6 @@ public class ContentServices {
         String contentIdFrom = (String) context.get("contentIdFrom");
         String contentIdTo = (String) context.get("contentIdTo");
         String contentId = (String) context.get("contentId");
-        Debug.logVerbose("CREATING CONTENTASSOC contentIdFrom(1):" + contentIdFrom, null);
-        Debug.logVerbose("CREATING CONTENTASSOC contentIdTo(1):" + contentIdTo, null);
-        Debug.logVerbose("CREATING CONTENTASSOC contentId:" + contentId, null);
         int contentIdCount = 0;
         if (UtilValidate.isNotEmpty(contentIdFrom))
             contentIdCount++;
@@ -329,8 +321,6 @@ public class ContentServices {
                 val.store();
             }
         }
-        Debug.logVerbose("CREATING CONTENTASSOC contentIdFrom(2):" + contentIdFrom, null);
-        Debug.logVerbose("CREATING CONTENTASSOC contentIdTo(2):" + contentIdTo, null);
 
         GenericValue contentAssoc = delegator.makeValue("ContentAssoc", new HashMap());
         contentAssoc.put("contentId", contentIdFrom);
@@ -395,7 +385,6 @@ public class ContentServices {
                 //Debug.logInfo("permResults(0):" + permResults, "");
         permissionStatus = (String) permResults.get("permissionStatus");
 
-        if (Debug.verboseOn()) Debug.logVerbose("CREATING CONTENTASSOC permissionStatus :" + permissionStatus, null);
         if (permissionStatus != null && permissionStatus.equals("granted")) {
             contentAssoc.create();
         } else {
@@ -659,9 +648,6 @@ public class ContentServices {
         }
         Writer out = (Writer) context.get("outWriter");
 
-        //Debug.logVerbose("in renderSubContent(svc), contentId:" + contentId, "");
-        //Debug.logVerbose("in renderSubContent(svc), subContentId:" + subContentId, "");
-        //Debug.logVerbose("in renderSubContent(svc), mapKey:" + mapKey, "");
         if (templateContext == null) {
             templateContext = new HashMap();
         }

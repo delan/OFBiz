@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentTransform.java,v 1.9 2004/01/07 19:30:11 byersa Exp $
+ * $Id: EditRenderSubContentTransform.java,v 1.10 2004/04/20 21:01:19 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since 3.0
  */
 public class EditRenderSubContentTransform implements TemplateTransformModel {
@@ -83,12 +83,6 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         String subDataResourceTypeIdTemp = getArg(args, "subDataResourceTypeId", ctx);
         final String contentId = getArg(args, "contentId", ctx);
 
-        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, editTemplate:" + editTemplate, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapTemplateId:" + wrapTemplateId, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, mapKey:" + mapKey, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, templateContentId:" + templateContentId, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, subContentId:" + subContentId, module);
-        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, contentId:" + contentId, module);
         
         final Locale locale = (Locale) FreeMarkerWorker.getWrappedObject("locale", env);
         String mimeTypeIdTemp = getArg(args, "mimeTypeId", ctx);
@@ -131,15 +125,9 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         String subContentIdSubTemp = null;
         if (subContentDataResourceView != null && subContentDataResourceView.get("contentId") != null) {
 
-            if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, subContentDataResourceView contentId/drDataResourceId:"
-                    + subContentDataResourceView.get("contentId") + " / "
-                    + subContentDataResourceView.get("drDataResourceId"), module);
 
             dataResourceIdTemp = (String) subContentDataResourceView.get("drDataResourceId");
-            if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent(0), dataResourceIdTemp ." + dataResourceIdTemp, module);
             subContentIdSubTemp = (String) subContentDataResourceView.get("contentId");
-            if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent(0), subContentIdSubTemp ." + subContentIdSubTemp, module);
-            if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent(0), mimeTypeIdTemp." + mimeTypeIdTemp, module);
             if (UtilValidate.isEmpty(subDataResourceTypeIdTemp)) {
                 subDataResourceTypeIdTemp = (String) subContentDataResourceView.get("drDataResourceTypeId");
             }
@@ -150,7 +138,6 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                         parentContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
                         if (parentContent != null) {
                             mimeTypeIdTemp = (String) parentContent.get("mimeTypeId");
-                            if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, parentContentId: " + parentContent.get("contentId"), module);
                         }
                     } catch (GenericEntityException e) {
                         throw new RuntimeException(e.getMessage());
@@ -158,8 +145,6 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                 }
 
             }
-            if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent(2), mimeTypeIdTemp." + mimeTypeIdTemp, module);
-            if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, subContentId/Sub." + subContentIdSubTemp, module);
             ctx.put("subContentId", subContentIdSubTemp);
             ctx.put("drDataResourceId", dataResourceIdTemp);
             ctx.put("subContentDataResourceView", subContentDataResourceView);
@@ -178,7 +163,6 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         //final GenericValue finalSubContentView = subContentDataResourceView;
         //final GenericValue content = parentContent;
         final Map templateContext = ctx;
-        //if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, templateContext:"+templateContext,module);
         final String mimeTypeId = mimeTypeIdTemp;
         final String subDataResourceTypeId = subDataResourceTypeIdTemp;
 
@@ -186,7 +170,6 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
 
             public void write(char cbuf[], int off, int len) {
                 buf.append(cbuf, off, len);
-                if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, buf:" + buf.toString(), module);
             }
 
             public void flush() throws IOException {
@@ -195,13 +178,11 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
 
             public void close() throws IOException {
                 String wrappedFTL = buf.toString();
-                if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrappedFTL:" + wrappedFTL, module);
                 if (editTemplate != null && editTemplate.equalsIgnoreCase("true")) {
                     if (UtilValidate.isNotEmpty(wrapTemplateId)) {
                         templateContext.put("wrappedFTL", wrappedFTL);
                         //ServletContext servletContext = (ServletContext)request.getSession().getServletContext();
                         //String rootDir = servletContext.getRealPath("/");
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, rootDir:" + rootDir, module);
                         templateContext.put("webSiteId", webSiteId);
                         templateContext.put("https", https);
                         templateContext.put("rootDir", rootDir);
@@ -215,13 +196,6 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                         templateRoot.put("wrapMimeTypeId", mimeTypeId);
                         templateRoot.put("wrapMapKey", mapKey);
                         templateRoot.put("context", templateContext);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, wrapDataResourceId:" + dataResourceId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, wrapDataResourceTypeId:" + subDataResourceTypeId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, wrapContentIdTo:" + contentId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, wrapSubContentId:" + subContentIdSub, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, wrapMimeTypeId:" + mimeTypeId, module);
-                        //if (Debug.verboseOn()) Debug.logVerbose("in ERSC, wrapMapKey:" + mapKey,module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, calling renderContentAsText, wrapTemplateId:" + wrapTemplateId, module);
                         
                         try {
                             ContentWorker.renderContentAsText(delegator, wrapTemplateId, out, templateRoot, null, locale, mimeTypeId);
@@ -232,10 +206,8 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                             Debug.logError(e2, "Error rendering content" + e2.getMessage(), module);
                             throw new IOException("Error rendering content" + e2.toString());
                         }
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, after renderContentAsText", module);
                         
                         Map ctx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, contentId:" + ctx.get("contentId"), module);
                         templateContext.put("contentId", contentId);
                         templateContext.put("locale", locale);
                         templateContext.put("mapKey", null);
@@ -244,14 +216,6 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                         templateContext.put("subDataResourceTypeId", null);
                         templateContext.put("mimeTypeId", null);
                         templateContext.put("wrappedFTL", null);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, after.", module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, mapKey:" + mapKey, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, subContentId:" + subContentId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, subDataResourceTypeId:" + subDataResourceTypeId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, contentId:" + contentId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, mimeTypeId:" + mimeTypeId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, locale:" + locale, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, contentId2." + ctx.get("contentId"), module);
                     }
                 } else {
                     out.write(wrappedFTL);

@@ -1,5 +1,5 @@
 /*
- * $Id: InjectNodeTrailCsvTransform.java,v 1.4 2004/04/11 08:28:15 jonesde Exp $
+ * $Id: InjectNodeTrailCsvTransform.java,v 1.5 2004/04/20 21:01:20 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -36,7 +36,7 @@ import freemarker.template.TransformControl;
  * InjectNodeTrailCsvTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since 3.0
  */
 public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
@@ -78,7 +78,6 @@ public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
 
             public void write(char cbuf[], int off, int len) {
                 buf.append(cbuf, off, len);
-                if (Debug.verboseOn()) Debug.logVerbose("in InjectNodeTrailCsv, buf:"+buf.toString(),module);
             }
 
             public void flush() throws IOException {
