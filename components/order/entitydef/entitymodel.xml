@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  */
 -->
 
@@ -328,30 +328,33 @@
         <key-map field-name="orderPaymentPreferenceId"/>
       </relation>
     </view-entity>
+    <view-entity entity-name="OrderHeaderAndRoleSummary"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Roles View Entity">
+      <member-entity entity-alias="OR" entity-name="OrderRole"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <alias entity-alias="OR" name="partyId" group-by="true"/>
+      <alias entity-alias="OR" name="roleTypeId" group-by="true"/>
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OH" name="orderDate"/>
+      <alias entity-alias="OH" name="statusId"/>
+      <alias entity-alias="OH" name="totalAmount" field="grandTotal" function="sum"/>
+      <alias entity-alias="OH" name="totalOrders" field="orderId" function="count"/>
+      <view-link entity-alias="OR" rel-entity-alias="OH">
+        <key-map field-name="orderId"/>
+      </view-link>
+    </view-entity>
     <view-entity entity-name="OrderHeaderAndRoles"
             package-name="org.ofbiz.order.order"
             never-cache="true"
             title="Order Header And Roles View Entity">
-      <member-entity entity-alias="OT" entity-name="OrderRole"/>
+      <member-entity entity-alias="OR" entity-name="OrderRole"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
-      <alias entity-alias="OH" name="orderId"/>
-      <alias entity-alias="OT" name="partyId"/>
-      <alias entity-alias="OT" name="roleTypeId"/>
-      <alias entity-alias="OH" name="orderTypeId"/>
-      <alias entity-alias="OH" name="orderDate"/>
-      <alias entity-alias="OH" name="entryDate"/>
-      <alias entity-alias="OH" name="visitId"/>
-      <alias entity-alias="OH" name="statusId"/>
-      <alias entity-alias="OH" name="createdBy"/>
-      <alias entity-alias="OH" name="firstAttemptOrderId"/>
-      <alias entity-alias="OH" name="currencyUom"/>
-      <alias entity-alias="OH" name="syncStatusId"/>
-      <alias entity-alias="OH" name="billingAccountId"/>
-      <alias entity-alias="OH" name="originFacilityId"/>
-      <alias entity-alias="OH" name="productStoreId"/>
-      <alias entity-alias="OH" name="webSiteId"/>
-      <alias entity-alias="OH" name="grandTotal"/>
-      <view-link entity-alias="OT" rel-entity-alias="OH">
+      <alias-all entity-alias="OR"/>
+      <alias-all entity-alias="OH"/>
+      <view-link entity-alias="OR" rel-entity-alias="OH">
         <key-map field-name="orderId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="OrderType">

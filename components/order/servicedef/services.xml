@@ -729,6 +729,19 @@
     </service>
 
     <!-- Order View Services -->
+    <service name="getOrderedSummaryInformation" engine="simple"
+            location="org/ofbiz/order/order/OrderServices.xml" invoke="getOrderedSummaryInformation">
+        <description>Get basic order header information.</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/> <!-- defaults to PLACING_CUSTOMER -->
+        <attribute name="orderTypeId" type="String" mode="IN" optional="true"/> <!-- defaults to SALES_ORDER -->
+        <attribute name="statusId" type="String" mode="IN" optional="true"/> <!-- defaults to ORDER_COMPLETED -->
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="totalOrders" type="Long" mode="OUT" optional="false"/>
+        <attribute name="totalAmount" type="Long" mode="OUT" optional="false"/>
+    </service>
+    
     <service name="getOrderInformation" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="getOrderInformation">
         <description>Get basic order information.</description>
