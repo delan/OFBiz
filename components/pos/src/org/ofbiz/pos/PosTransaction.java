@@ -25,6 +25,7 @@
 package org.ofbiz.pos;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -64,7 +65,7 @@ import org.ofbiz.accounting.payment.PaymentGatewayServices;
  * @version    $Rev$
  * @since      3.1
  */
-public class PosTransaction {
+public class PosTransaction implements Serializable {
 
     public static final String module = PosTransaction.class.getName();
     public static final int NO_PAYMENT = 0;

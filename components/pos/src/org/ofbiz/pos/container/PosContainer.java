@@ -25,7 +25,6 @@
 package org.ofbiz.pos.container;
 
 import java.util.Locale;
-import java.util.Map;
 
 import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.container.ContainerException;
@@ -106,10 +105,5 @@ public class PosContainer extends XuiContainer {
             throw new ContainerException("Invalid Currency for POS!");
         }
         session.setAttribute("currency", currencyStr);
-
-        // get the device settings
-        ContainerConfig.Container.Property devices = cc.getProperty("devices");
-        Map deviceProps = devices.properties;
-        session.setAttribute("jposDevices", deviceProps);
     }
 }

@@ -96,11 +96,8 @@
                 <path refid="local.class.path"/>                
             </classpath>
             <src path="${src.dir}"/>
-            <exclude name="org/ofbiz/shark/SharkGuiContainer.java"/>
         </javac>
-        <!-- also put the DTDs in the jar file... -->       
         <copy todir="${build.dir}/classes">
-            <!--<fileset dir="${dtd.dir}" includes="*.dtd"/>-->
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
     </target>

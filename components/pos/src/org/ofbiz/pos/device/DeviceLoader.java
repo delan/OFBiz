@@ -26,11 +26,21 @@ package org.ofbiz.pos.device;
 
 import java.util.Map;
 
+import jpos.JposException;
+
+import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.container.ContainerConfig;
-import org.ofbiz.content.xui.XuiSession;
+import org.ofbiz.pos.device.impl.CashDrawer;
+import org.ofbiz.pos.device.impl.CheckScanner;
+import org.ofbiz.pos.device.impl.Journal;
+import org.ofbiz.pos.device.impl.Keyboard;
+import org.ofbiz.pos.device.impl.LineDisplay;
+import org.ofbiz.pos.device.impl.Msr;
+import org.ofbiz.pos.device.impl.PinPad;
+import org.ofbiz.pos.device.impl.Receipt;
+import org.ofbiz.pos.device.impl.Scanner;
 
 /**
  * 
@@ -52,9 +62,7 @@ public class DeviceLoader {
     public static Receipt receipt = null;
     public static Scanner scanner = null;
 
-    public static void load(XuiSession session) throws GeneralException {
-        Map devices = (Map) session.getAttribute("jposDevices");
-
+    public static void load(Map devices) throws GeneralException {
         // load the keyboard
         if (devices.get("Keyboard") != null) {
             String keyboardDevice = ((ContainerConfig.Container.Property) devices.get("Keyboard")).value;
@@ -154,16 +162,23 @@ public class DeviceLoader {
         }
 
         // load the cash drawer(s) -- Currently only supports one drawer per terminal
-        if (devices.get("CashDrawer.1") != null) {
-            String cashDrawerDevice = ((ContainerConfig.Container.Property) devices.get("CashDrawer.1")).value;
-            if (UtilValidate.isNotEmpty(cashDrawerDevice) && !"[NOT IMPLEMENTED]".equals(cashDrawerDevice)) {
-                drawer = new CashDrawer[1];
-                drawer[0] = new CashDrawer(cashDrawerDevice, -1);
-                try {
-                    drawer[0].open();
-                } catch (jpos.JposException jpe) {
-                    Debug.logError(jpe, "JPOS Exception", module);
-                    throw new GeneralException(jpe.getOrigException());
+        for (int i = 1; i < 10; i++) { // more than 10 cash drawers on a terminal??
+            String idName = "CashDrawer." + i;
+            if (devices.get(idName) != null) {
+                String cashDrawerDevice = ((ContainerConfig.Container.Property) devices.get(idName)).value;
+                if (UtilValidate.isNotEmpty(cashDrawerDevice) && !"[NOT IMPLEMENTED]".equals(cashDrawerDevice)) {
+                    if (drawer == null) {
+                        drawer = new CashDrawer[10];
+                    }
+
+                    // create the instance
+                    drawer[i-1] = new CashDrawer(cashDrawerDevice, -1);
+                    try {
+                        drawer[i-1].open();
+                    } catch (jpos.JposException jpe) {
+                        Debug.logError(jpe, "JPOS Exception", module);
+                        throw new GeneralException(jpe.getOrigException());
+                    }
                 }
             }
         }
@@ -197,5 +212,44 @@ public class DeviceLoader {
         // notify when the drawer is open and
         // print any information needed to the
         // journal
+    }
+
+    public static void stop() throws GeneralException {
+        try {
+            if (keyboard != null) {
+                keyboard.close();
+            }
+            if (scanner != null) {
+                scanner.close();
+            }
+            if (msr != null) {
+                msr.close();
+            }
+            if (check != null) {
+                check.close();
+            }
+            if (ldisplay != null) {
+                ldisplay.close();
+            }
+            if (pinpad != null) {
+                pinpad.close();
+            }
+
+            if (drawer != null) {
+                for (int i = 0; i < drawer.length; i++) {
+                    drawer[i].close();
+                }
+            }
+
+            if (receipt != null) {
+                receipt.close();
+            }
+            if (journal != null) {
+                journal.close();
+            }
+        } catch (JposException jpe) {
+            Debug.logError(jpe, "JPOS Exception", module);
+            throw new GeneralException(jpe.getOrigException());
+        }
     }
 }

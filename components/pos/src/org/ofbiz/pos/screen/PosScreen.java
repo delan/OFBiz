@@ -59,7 +59,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     public static PosScreen currentScreen;
 
     protected static boolean monitorRunning = false;
-    protected static boolean deviceInit = false;
+    protected static boolean firstInit = false;
     protected static long lastActivity = 0;
     protected static Thread activityMonitor = null;
 
@@ -86,16 +86,9 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.operator = new Operator(this);
         this.setLastActivity(System.currentTimeMillis());
 
-        if (!deviceInit) {
-            deviceInit = true;
-
-            // load the shared devices
-            try {
-                DeviceLoader.load(session);
-            } catch (Exception e) {
-                Debug.logError(e, module);
-            }
-
+        if (!firstInit) {
+            firstInit = true;
+            
             // pre-load a few screens
             XProjectManager.getPageManager().loadPage("main/paypanel");
             XProjectManager.getPageManager().loadPage("main/mgrpanel");

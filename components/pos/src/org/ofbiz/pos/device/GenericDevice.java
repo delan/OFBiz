@@ -28,8 +28,8 @@ import jpos.BaseControl;
 import jpos.JposException;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.event.MenuEvents;
+import org.ofbiz.pos.screen.PosScreen;
 
 /**
  * 
