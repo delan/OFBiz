@@ -102,7 +102,7 @@ public class ContactMechWorker {
 
         Iterator allOrderContactMechs = null;
         try {
-            Collection tempCol = delegator.findByAnd("OrderContactMech", UtilMisc.toMap("orderId", orderId));
+            Collection tempCol = delegator.findByAnd("OrderContactMech", UtilMisc.toMap("orderId", orderId), UtilMisc.toList("contactMechPurposeTypeId"));
             allOrderContactMechs = UtilMisc.toIterator(tempCol);
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
@@ -129,8 +129,8 @@ public class ContactMechWorker {
                 }
 
                 try {
-                    Collection orderContactMechPurposes = orderContactMech.getRelated("OrderContactMechPurpose");
-                    orderContactMechValueMap.put("orderContactMechPurposes", orderContactMechPurposes);
+                    GenericValue contactMechPurposeType = orderContactMech.getRelatedOne("ContactMechPurposeType");
+                    orderContactMechValueMap.put("contactMechPurposeType", contactMechPurposeType);
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e);
                 }
