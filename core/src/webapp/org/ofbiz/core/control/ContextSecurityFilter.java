@@ -51,12 +51,16 @@ public class ContextSecurityFilter implements Filter {
         String allowedPath = config.getInitParameter("allowedPaths");
         String redirectPath = config.getInitParameter("redirectPath");
         String errorCode = config.getInitParameter("errorCode");
-               
+                  
         List allowList = StringUtil.split(allowedPath,":");        
         allowList.add("/");    // No path is allowed.
         allowList.add("");      // No path is allowed.
-                
+        
+        //Debug.logInfo("[ContextSecurityFilter.debug] : " + httpRequest.getRequestURI());
+        
         String requestPath = httpRequest.getServletPath();
+        if ( requestPath == null ) requestPath = "";
+        
         if ( requestPath.lastIndexOf("/") > 0 ) {
             if ( requestPath.indexOf("/") == 0 )                 
                 requestPath = "/" + requestPath.substring(1,requestPath.indexOf("/",1));
@@ -65,6 +69,8 @@ public class ContextSecurityFilter implements Filter {
         }
         
         String requestInfo = httpRequest.getServletPath();
+        if ( requestInfo == null ) requestInfo = "";
+        
         if(requestInfo.lastIndexOf("/") >= 0) {
           requestInfo = requestInfo.substring(0,requestInfo.lastIndexOf("/")) + "/*";
         }
@@ -78,7 +84,7 @@ public class ContextSecurityFilter implements Filter {
             contextUriBuffer.append(httpRequest.getPathInfo());        
         String contextUri = contextUriBuffer.toString();        
                 
-        /*  Debugging
+        /* Debugging
         for ( int i = 0; i < allowList.size(); i++ ) {
             Debug.logInfo("[ContextSecurityFilter.debug] : allow - " + ((String)allowList.get(i)));
         }
