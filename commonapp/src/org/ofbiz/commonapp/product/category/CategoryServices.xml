@@ -102,7 +102,7 @@
         <create-value value-name="newEntity"/>
         
         <!-- this is for the ecommerce cache of products in a category, findByAnd -->
-        <field-to-field field-name="productCategoryId" map-name="newEntity" to-map-name="cacheClearMap"/>
+        <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="cacheClearMap"/>
         <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="updateProductToCategory" short-description="Update Product to Category Application">
@@ -116,7 +116,7 @@
         <store-value value-name="lookedUpValue"/>
         
         <!-- this is for the ecommerce cache of products in a category, findByAnd -->
-        <field-to-field field-name="productCategoryId" map-name="newEntity" to-map-name="cacheClearMap"/>
+        <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="cacheClearMap"/>
         <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="removeProductFromCategory" short-description="Remove Product From Category">
@@ -129,7 +129,7 @@
         <remove-value value-name="lookedUpValue"/>
         
         <!-- this is for the ecommerce cache of products in a category, findByAnd -->
-        <field-to-field field-name="productCategoryId" map-name="newEntity" to-map-name="cacheClearMap"/>
+        <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="cacheClearMap"/>
         <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
     </simple-method>
 
@@ -153,7 +153,7 @@
         <create-value value-name="newEntity"/>
         
         <!-- this is for the ecommerce cache of category in a parent category, findByAnd -->
-        <field-to-field field-name="parentProductCategoryId" map-name="newEntity" to-map-name="cacheClearMap"/>
+        <field-to-field field-name="parentProductCategoryId" map-name="parameters" to-map-name="cacheClearMap"/>
         <clear-cache-line entity-name="ProductCategoryRollup" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="updateProductCategoryToCategory" short-description="Update ProductCategory to Category Application">
@@ -167,7 +167,7 @@
         <store-value value-name="lookedUpValue"/>
         
         <!-- this is for the ecommerce cache of category in a parent category, findByAnd -->
-        <field-to-field field-name="parentProductCategoryId" map-name="lookedUpValue" to-map-name="cacheClearMap"/>
+        <field-to-field field-name="parentProductCategoryId" map-name="parameters" to-map-name="cacheClearMap"/>
         <clear-cache-line entity-name="ProductCategoryRollup" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="removeProductCategoryFromCategory" short-description="Remove ProductCategory From Category">
@@ -180,7 +180,7 @@
         <remove-value value-name="lookedUpValue"/>
         
         <!-- this is for the ecommerce cache of category in a parent category, findByAnd -->
-        <field-to-field field-name="parentProductCategoryId" map-name="lookedUpValue" to-map-name="cacheClearMap"/>
+        <field-to-field field-name="parentProductCategoryId" map-name="parameters" to-map-name="cacheClearMap"/>
         <clear-cache-line entity-name="ProductCategoryRollup" map-name="cacheClearMap"/>
     </simple-method>
 
