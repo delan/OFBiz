@@ -951,6 +951,7 @@
       <field name="maxAmount" type="currency-amount"></field>
       <field name="processAttempt" type="numeric"></field>
       <field name="billingPostalCode" type="short-varchar"></field>
+      <field name="manualAuthCode" type="short-varchar"></field>
       <field name="manualRefNum" type="short-varchar"></field>
       <field name="statusId" type="id"></field>
       <prim-key field="orderPaymentPreferenceId"/>
