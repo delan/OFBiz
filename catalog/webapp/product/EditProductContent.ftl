@@ -88,7 +88,7 @@ function insertImageName(size,ext) {
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
                 <input type="text" class="inputBox" name="detailTemplate" value="${(product.detailTemplate)?if_exists}" size="60" maxlength="250">
-                <br><span class="tabletext">If not specified defaults to "/catalog/productdetail.jsp"</span>
+                <br><span class="tabletext">If not specified defaults to "/catalog/productdetail.ftl"</span>
             </td>
         </tr>        
         <tr>
@@ -191,7 +191,7 @@ function insertImageName(size,ext) {
                 <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="large"onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=large</@ofbizUrl>");'>Large
                 <input class="radioButton" type=RADIO name="upload_file_type_bogus" value="detail" onclick='setUploadUrl("<@ofbizUrl>/UploadProductImage?productId=${productId}&upload_file_type=detail</@ofbizUrl>");'>Detail
             </span>
-            <input type="submit" value="Upload Image">
+            <input type="submit" class="smallSubmit" value="Upload Image">
         </form>
     </#if>
 <#else>
