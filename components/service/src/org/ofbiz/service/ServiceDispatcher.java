@@ -225,6 +225,11 @@ public class ServiceDispatcher {
                 "/" + modelService.invoke + "] (" + modelService.engineName + ")", module);
         }
 
+        // setup the result map
+        Map result = new HashMap();
+        boolean isFailure = false;
+        boolean isError = false;
+
         // check the locale
         this.checkLocale(context);
 
@@ -277,11 +282,11 @@ public class ServiceDispatcher {
             Map eventMap = ServiceEcaUtil.getServiceEventMap(modelService.name);
 
             // setup global transaction ECA listeners
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-rollback", ctx, context, null, false, false);
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-commit", ctx, context, null, false, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-rollback", ctx, context, result, false, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-commit", ctx, context, result, false, false);
 
             // pre-auth ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "auth", ctx, context, null, false, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "auth", ctx, context, result, false, false);
 
             context = checkAuth(localName, context, modelService);
             Object userLogin = context.get("userLogin");
@@ -294,10 +299,14 @@ public class ServiceDispatcher {
             GenericEngine engine = getGenericEngine(modelService.engineName);
 
             // pre-validate ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "in-validate", ctx, context, null, false, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "in-validate", ctx, context, result, false, false);
+
+            // check for pre-validate failure/erros
+            isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
+            isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
 
             // validate the context
-            if (modelService.validate) {
+            if (modelService.validate && !isError && !isFailure) {
                 try {
                     modelService.validate(context, ModelService.IN_PARAM);
                 } catch (ServiceValidationException e) {
@@ -307,14 +316,23 @@ public class ServiceDispatcher {
             }
 
             // pre-invoke ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "invoke", ctx, context, null, false, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "invoke", ctx, context, result, false, false);
+
+            // check for pre-invoke failure/erros
+            isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
+            isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
 
             // ===== invoke the service =====
-            Map result = engine.runSync(localName, modelService, context);
-
-            // if anything but the error response, is not an error
-            boolean isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
-            boolean isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
+            if (!isError && !isFailure) {
+                Map invokeResult = engine.runSync(localName, modelService, context);
+                if (invokeResult != null) {
+                    result.putAll(invokeResult);
+                }
+            } else {
+                // re-check the errors/failures
+                isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
+                isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
+            }
 
             // create a new context with the results to pass to ECA services; necessary because caller may reuse this context
             Map ecaContext = new HashMap(context);
@@ -421,6 +439,11 @@ public class ServiceDispatcher {
                 "] (" + service.engineName + ")", module);
         }
 
+        // setup the result map
+        Map result = new HashMap();
+        boolean isFailure = false;
+        boolean isError = false;
+
         // check the locale
         this.checkLocale(context);
 
@@ -473,7 +496,7 @@ public class ServiceDispatcher {
             Map eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
 
             // pre-auth ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "auth", ctx, context, null, false, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "auth", ctx, context, result, isError, isFailure);
 
             context = checkAuth(localName, context, service);
             Object userLogin = context.get("userLogin");
@@ -485,10 +508,14 @@ public class ServiceDispatcher {
             GenericEngine engine = getGenericEngine(service.engineName);
 
             // pre-validate ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, null, false, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, result, isError, isFailure);
+
+            // check for pre-validate failure/erros
+            isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
+            isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
 
             // validate the context
-            if (service.validate) {
+            if (service.validate && !isError && !isFailure) {
                 try {
                     service.validate(context, ModelService.IN_PARAM);
                 } catch (ServiceValidationException e) {
@@ -498,10 +525,12 @@ public class ServiceDispatcher {
             }
 
             // run the service
-            if (requester != null) {
-                engine.runAsync(localName, service, context, requester, persist);
-            } else {
-                engine.runAsync(localName, service, context, persist);
+            if (!isError && !isFailure) {
+                if (requester != null) {
+                    engine.runAsync(localName, service, context, requester, persist);
+                } else {
+                    engine.runAsync(localName, service, context, persist);
+                }
             }
 
             // always try to commit the transaction since we don't know in this case if its was an error or not

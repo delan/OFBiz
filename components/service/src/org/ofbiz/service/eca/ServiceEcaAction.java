@@ -117,22 +117,26 @@ public class ServiceEcaAction {
 
         // if we aren't ignoring errors check it here...
         boolean success = true;
-        if (result != null) {
+        if (actionResult != null) {
             if (!ignoreFailure) {
                 if (ModelService.RESPOND_FAIL.equals(actionResult.get(ModelService.RESPONSE_MESSAGE))) {
-                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_FAIL);
+                    if (result != null) {
+                        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_FAIL);
+                    }
                     success = false;
                 }
             }
             if (!ignoreError) {
                 if (ModelService.RESPOND_ERROR.equals(actionResult.get(ModelService.RESPONSE_MESSAGE))) {
-                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                    if (result != null) {
+                        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                    }
                     success = false;
                 }
             }
         }
 
-        if (!success) {
+        if (result != null && !success) {
             String errorMessage = (String) actionResult.get(ModelService.ERROR_MESSAGE);
             List errorMessageList = (List) actionResult.get(ModelService.ERROR_MESSAGE_LIST);
             Map errorMessageMap = (Map) actionResult.get(ModelService.ERROR_MESSAGE_MAP);
