@@ -38,10 +38,17 @@ import java.net.URLClassLoader;
 public class CachedClassLoader extends URLClassLoader {
     private String contextName;
 
-    public static Map localClassNameClassMap = new HashMap();
     public static Map globalClassNameClassMap = new HashMap();
-    public static HashSet localBadClassNameSet = new HashSet();
     public static HashSet globalBadClassNameSet = new HashSet();
+
+    public Map localClassNameClassMap = new HashMap();
+    public HashSet localBadClassNameSet = new HashSet();
+
+    public static Map globalResourceMap = new HashMap();
+    public static HashSet globalBadResourceNameSet = new HashSet();
+
+    public Map localResourceMap = new HashMap();
+    public HashSet localBadResourceNameSet = new HashSet();
 
     static {
         // setup some commonly used classes...
@@ -129,7 +136,7 @@ public class CachedClassLoader extends URLClassLoader {
         }
         
         if (theClass == null) {
-            if (Debug.verboseOn()) Debug.logVerbose("Class loader cache miss for name: [" + name + "]");
+            if (Debug.verboseOn()) Debug.logVerbose("Cached loader cache miss for class name: [" + name + "]");
             
             synchronized (this) {
                 theClass = (Class) localClassNameClassMap.get(name);
@@ -157,10 +164,49 @@ public class CachedClassLoader extends URLClassLoader {
         return theClass;
     }
     
-    /*
-    public synchronized URL getResource(String name) {
+    public URL getResource(String name) {
+        //check glocal common resources, ie for all instances
+        URL theResource = (URL) globalResourceMap.get(name);
+        
+        //check local resources, ie for this instance
+        if (theResource == null) theResource = (URL) localResourceMap.get(name);
+
+        //make sure it is not a known bad resource name
+        if (theResource == null) {
+            if (localBadResourceNameSet.contains(name) || globalBadResourceNameSet.contains(name)) {
+                if (Debug.verboseOn()) Debug.logVerbose("Cached loader got a known bad resource name: [" + name + "]");
+                return null;
+            }
+        }
+        
+        if (theResource == null) {
+            //if (Debug.verboseOn()) Debug.logVerbose("Cached loader cache miss for resource name: [" + name + "]");
+            Debug.logInfo("Cached loader cache miss for resource name: [" + name + "]");
+            
+            synchronized (this) {
+                theResource = (URL) localResourceMap.get(name);
+                if (theResource == null) {
+                    theResource = super.getResource(name);
+                    if (theResource == null) {
+                        //if (Debug.verboseOn()) Debug.logVerbose("Remembering invalid resource name: [" + name + "]");
+                        Debug.logInfo("Remembering invalid resource name: [" + name + "]");
+                        if (isGlobalPath(name)) {
+                            globalBadResourceNameSet.add(name);
+                        } else {
+                            localBadResourceNameSet.add(name);
+                        }
+                    } else {
+                        if (isGlobalPath(name)) {
+                            globalResourceMap.put(name, theResource);
+                        } else {
+                            localResourceMap.put(name, theResource);
+                        }
+                    }
+                }
+            }
+        }
+        return theResource;
     }
-     */
     
     protected boolean isGlobalPath(String name) {
         if (name.startsWith("java.") || name.startsWith("java/") || name.startsWith("/java/")) return true;
