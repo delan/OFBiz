@@ -197,7 +197,16 @@
             </calcop>
         </calculate>
         <if-compare value="0" operator="equals" field-name="quantity" map-name="orderItemInventoryRes" type="Double">
+            <!-- if none left reserved, remove OIIR -->
             <remove-value value-name="orderItemInventoryRes"/>
+            <!-- if there are no more OIIRs for the orderItem, set the orderItem.statusId to ITEM_COMPLETED -->
+            <get-related value-name="orderItem" relation-name="OrderItemInventoryRes" list-name="otherOiirs"/>
+            <if-empty field-name="otherOiirs">
+                <string-to-field string="ITEM_COMPLETED" field-name="statusId" map-name="changeOrderItemStatusMap"/>
+                <field-to-field field-name="orderId" map-name="orderItem" to-map-name="changeOrderItemStatusMap"/>
+                <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="changeOrderItemStatusMap"/>
+                <call-service service-name="changeOrderItemStatus" in-map-name="changeOrderItemStatusMap"/>
+            </if-empty>
         <else>
             <store-value value-name="orderItemInventoryRes"/>
         </else>
