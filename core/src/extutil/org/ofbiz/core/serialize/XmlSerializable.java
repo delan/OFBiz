@@ -41,7 +41,7 @@ public interface XmlSerializable {
      * @element XML element
      * @throws SerializeException
      */
-    public static Object deserialize(Element element) throws SerializeException;
+    public Object deserialize(Element element) throws SerializeException;
 
     /**
      * Serialize the object to an XML element

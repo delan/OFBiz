@@ -250,7 +250,7 @@
             <sourcepath path="${src.dir}/rules" />
             <sourcepath path="${src.dir}/datafile" />
             <sourcepath path="${src.dir}/minilang" />
-            <sourcepath path="${src.dir}/ejb" />
+            <!--<sourcepath path="${src.dir}/ejb" />-->
             <sourcepath path="${src.dir}/crypto" />
         </javadoc>
     </target> 
