@@ -115,27 +115,36 @@ public class ModelReader
           Element docElement = document.getDocumentElement();
           if(docElement == null) { fieldTypeCache = null; return null; }
           docElement.normalize();
-          utilTimer.timerString("Before getElementsByTagName(field-type-def)");
-          NodeList fieldTypeList = docElement.getElementsByTagName("field-type-def");
 
-          utilTimer.timerString("Before start of loop");
-          int i;
-          for(i=0; i<fieldTypeList.getLength(); i++)
+          Node curChild = docElement.getFirstChild();
+          
+          int i=0;
+          if(curChild != null)
           {
-            //utilTimer.timerString("Start loop -- " + i + " --");
-            Element curFieldType = (Element)fieldTypeList.item(i);
-            String fieldTypeName = checkNull(childElementValue(curFieldType, "type"), "[No type name]");
-            //utilTimer.timerString("  After fieldTypeName -- " + i + " --");
-            ModelFieldType fieldType = createModelFieldType(curFieldType, docElement, null);
-            //utilTimer.timerString("  After createModelFieldType -- " + i + " --");
-            if(fieldType != null) 
+            utilTimer.timerString("Before start of field type loop");
+            do
             {
-              fieldTypeCache.put(fieldTypeName, fieldType);
-              //utilTimer.timerString("  After fieldTypeCache.put -- " + i + " --");
-              Debug.logInfo("-- getModelFieldType: #" + i + " Created fieldType: " + fieldTypeName);
-            }
-            else { Debug.logWarning("-- -- ENTITYGEN ERROR:getModelFieldType: Could not create fieldType for fieldTypeName: " + fieldTypeName); }
+              if(curChild.getNodeType() == Node.ELEMENT_NODE && "field-type-def".equals(curChild.getNodeName()))
+              {
+                i++;
+                //utilTimer.timerString("Start loop -- " + i + " --");
+                Element curFieldType = (Element)curChild;
+                String fieldTypeName = checkNull(childElementValue(curFieldType, "type"), "[No type name]");
+                //utilTimer.timerString("  After fieldTypeName -- " + i + " --");
+                ModelFieldType fieldType = createModelFieldType(curFieldType, docElement, null);
+                //utilTimer.timerString("  After createModelFieldType -- " + i + " --");
+                if(fieldType != null) 
+                {
+                  fieldTypeCache.put(fieldTypeName, fieldType);
+                  //utilTimer.timerString("  After fieldTypeCache.put -- " + i + " --");
+                  Debug.logInfo("-- getModelFieldType: #" + i + " Created fieldType: " + fieldTypeName);
+                }
+                else { Debug.logWarning("-- -- ENTITYGEN ERROR:getModelFieldType: Could not create fieldType for fieldTypeName: " + fieldTypeName); }
+                
+              }
+            } while((curChild = curChild.getNextSibling()) != null);
           }
+          else Debug.logWarning("No child nodes found.");
           utilTimer.timerString("FINISHED - Total Field Types: " + i + " FINISHED");
         }
       }
@@ -170,28 +179,35 @@ public class ModelReader
           Element docElement = document.getDocumentElement();
           if(docElement == null) { entityCache = null; return null; }
           docElement.normalize();
-          utilTimer.timerString("Before getElementsByTagName(entity)");
-          NodeList entityList = docElement.getElementsByTagName("entity");
-
-          utilTimer.timerString("Before start of loop: " + entityList.getLength() + " entities");
-          int i;
-          for(i=0; i<entityList.getLength(); i++)
+          Node curChild = docElement.getFirstChild();
+          
+          int i=0;
+          if(curChild != null)
           {
-            //utilTimer.timerString("Start loop -- " + i + " --");
-            Element curEntity = (Element)entityList.item(i);
-            String entityName = entityEntityName(curEntity);
-            //utilTimer.timerString("  After entityEntityName -- " + i + " --");
-            //ModelEntity entity = createModelEntity(curEntity, docElement, utilTimer, docElementValues);
-            ModelEntity entity = createModelEntity(curEntity, docElement, null, docElementValues);
-            //utilTimer.timerString("  After createModelEntity -- " + i + " --");
-            if(entity != null) 
+            utilTimer.timerString("Before start of entity loop");
+            do
             {
-              entityCache.put(entityName, entity);
-              //utilTimer.timerString("  After entityCache.put -- " + i + " --");
-              Debug.logInfo("-- getModelEntity: #" + i + " Created entity: " + entityName);
-            }
-            else Debug.logWarning("-- -- ENTITYGEN ERROR:getModelEntity: Could not create entity for entityName: " + entityName);
+              if(curChild.getNodeType() == Node.ELEMENT_NODE && "entity".equals(curChild.getNodeName()))
+              {
+                i++;
+                Element curEntity = (Element)curChild;
+                String entityName = entityEntityName(curEntity);
+                //utilTimer.timerString("  After entityEntityName -- " + i + " --");
+                //ModelEntity entity = createModelEntity(curEntity, docElement, utilTimer, docElementValues);
+                ModelEntity entity = createModelEntity(curEntity, docElement, null, docElementValues);
+                //utilTimer.timerString("  After createModelEntity -- " + i + " --");
+                if(entity != null) 
+                {
+                  entityCache.put(entityName, entity);
+                  //utilTimer.timerString("  After entityCache.put -- " + i + " --");
+                  Debug.logInfo("-- getModelEntity: #" + i + " Created entity: " + entityName);
+                }
+                else Debug.logWarning("-- -- ENTITYGEN ERROR:getModelEntity: Could not create entity for entityName: " + entityName);
+                
+              }
+            } while((curChild = curChild.getNextSibling()) != null);
           }
+          else Debug.logWarning("No child nodes found.");
           utilTimer.timerString("FINISHED - Total Entities: " + i + " FINISHED");
           Debug.logInfo("FINISHED LOADING ENTITIES; #entites=" + numEntities + " #fields=" + numFields + " #relations=" + numRelations);
         }
@@ -432,11 +448,17 @@ public class ModelReader
   {
     if(element == null || childElementName == null) return null;
     //get the value of the first element with the given name
-    NodeList nodeList = element.getElementsByTagName(childElementName);
-    if(nodeList.getLength() >= 1)
+    Node node = element.getFirstChild();
+    if(node != null)
     {
-      Element childElement = (Element)nodeList.item(0);
-      return elementValue(childElement);
+      do
+      {
+        if(node.getNodeType() == Node.ELEMENT_NODE && childElementName.equals(node.getNodeName()))
+        {
+          Element childElement = (Element)node;
+          return elementValue(childElement);
+        }
+      } while((node = node.getNextSibling()) != null);
     }
     return null;
   }  
