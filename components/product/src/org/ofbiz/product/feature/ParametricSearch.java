@@ -1,5 +1,5 @@
 /*
- * $Id: ParametricSearch.java,v 1.5 2003/10/25 11:24:53 jonesde Exp $
+ * $Id: ParametricSearch.java,v 1.6 2003/10/26 06:05:38 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -47,7 +47,7 @@ import org.ofbiz.product.product.KeywordSearch;
  *  Utilities for parametric search based on features.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.1
  */
 public class ParametricSearch {
@@ -95,6 +95,28 @@ public class ParametricSearch {
             productFeaturesByTypeMap.put(entry.getKey(), sortedFeatures);
         }
         
+        return productFeaturesByTypeMap;
+    }
+    
+    public static Map getAllFeaturesByType(GenericDelegator delegator) {
+        Map productFeaturesByTypeMap = new HashMap();
+        try {
+            List productFeatures = delegator.findAll("ProductFeature", UtilMisc.toList("description"));
+            Iterator pfsIter = productFeatures.iterator();
+            while (pfsIter.hasNext()) {
+                GenericValue productFeature = (GenericValue) pfsIter.next();
+
+                String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
+                List featuresByType = (List) productFeaturesByTypeMap.get(productFeatureTypeId);
+                if (featuresByType == null) {
+                    featuresByType = new LinkedList();
+                    productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
+                }
+                featuresByType.add(productFeature);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error getting all features", module);
+        }
         return productFeaturesByTypeMap;
     }
     
