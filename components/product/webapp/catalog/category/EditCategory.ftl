@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel )
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -36,6 +36,7 @@ ${productCategory.description?if_exists}
 <#if productCategoryId?has_content> 
   <a href="/ecommerce/control/category?category_id=${productCategoryId}" class="buttontext" target="_blank">[${uiLabelMap.ProductCategoryPage}]</a>
   <a href="<@ofbizUrl>/createProductInCategoryStart?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateProductInCategory}]</a>
+  <a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${productCategoryId}</@ofbizUrl>" class="buttontext">[Search in Category]</a>
 </#if>
 <br>
 <br>

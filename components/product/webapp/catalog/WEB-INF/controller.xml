@@ -93,6 +93,9 @@
         <response name="error" type="view" value="main"/>
     </request-map>
 
+    <request-map uri="advancedsearch"><security https="true" auth="true"/>
+        <response name="success" type="view" value="advancedsearch"/>
+    </request-map>
     <request-map uri="keywordsearch"><security https="true" auth="true"/>
         <response name="success" type="view" value="keywordsearch"/>
     </request-map>
@@ -991,9 +994,10 @@
     <view-map name="login" type="jpublish" page="/login.ftl"/>
 
     <view-map name="FastLoadCache" type="region"/>
-    <view-map name="keywordsearch" type="region"/>
     <view-map name="FindProductById" type="region"/>
     <view-map name="ChooseTopCategory" type="jpublish" page="/ChooseTopCategory.ftl"/>
+    <view-map name="advancedsearch" type="jpublish" page="/find/advancedsearch.ftl"/>
+    <view-map name="keywordsearch" type="jpublish" page="/find/keywordsearch.ftl"/>
 
     <view-map name="EditCategory" type="jpublish" page="/category/EditCategory.ftl"/>
     <view-map name="EditCategoryRollup" type="jpublish" page="/category/EditCategoryRollup.ftl"/>
