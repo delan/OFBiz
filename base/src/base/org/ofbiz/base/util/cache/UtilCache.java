@@ -26,8 +26,6 @@ package org.ofbiz.base.util.cache;
 import java.io.Serializable;
 import java.util.*;
 
-import org.ofbiz.base.util.Debug;
-
 /**
  * Generalized caching utility. Provides a number of caching features:
  * <ul>
