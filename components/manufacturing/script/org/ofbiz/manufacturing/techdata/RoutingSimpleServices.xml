@@ -24,42 +24,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Olivier Heintz (olivier.heintz@nereide.biz)
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
 -->
 
 <simple-methods>
-
-    <simple-method method-name="createMachineGroup" short-description="Create Machine Group">
-    	<check-permission permission="MANUFACTURING" action="_CREATE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingMachineGroupPermissionError"/></check-permission>
-    	<check-errors/>
-        <make-value value-name="lookupPKMap" entity-name="FixedAsset"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
-        <find-by-primary-key entity-name="FixedAsset" map-name="lookupPKMap" value-name="newEntity"/>
-        <if-not-empty field-name="fixedAssetId" map-name="newEntity">
-			<add-error>
-				<fail-property resource="ManufacturingUiLabels" property="ManufacturingMachineGroupIdAlreadyExist"/>
-			</add-error>
-    		<check-errors/>
-		<else>
-         	<make-value value-name="newEntity" entity-name="FixedAsset"/>  
-        	<set-pk-fields map-name="parameters" value-name="newEntity"/>  
-        	<set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        	<string-to-field string="GROUP_EQUIPMENT" map-name="newEntity" field-name="fixedAssetTypeId"/>
-        	<create-value value-name="newEntity"/>
-		</else>
-		</if-not-empty>
-    </simple-method>
-
-    <simple-method method-name="updateMachineGroup" short-description="Update Machine Group">
-        <check-permission permission="MANUFACTURING" action="_UPDATE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingMachineGroupPermissionError"/></check-permission>
-        <check-errors/>
-        <make-value value-name="lookupPKMap" entity-name="FixedAsset"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
-        <find-by-primary-key entity-name="FixedAsset" map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        <store-value value-name="lookedUpValue"/>
-    </simple-method>
 
     <simple-method method-name="createCalendar" short-description="Create Calendar">
     	<check-permission permission="MANUFACTURING" action="_CREATE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingCalendarPermissionError"/></check-permission>
@@ -265,50 +234,6 @@
         <find-by-primary-key entity-name="TechDataCalendarExcWeek" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <if-not-empty map-name="lookedUpValue" field-name="calendarId">
             <remove-value value-name="lookedUpValue"/>
-        </if-not-empty>
-    </simple-method>
-
-    <simple-method method-name="createMachine" short-description="Create Machine">
-    	<check-permission permission="MANUFACTURING" action="_CREATE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingMachinePermissionError"/></check-permission>
-    	<check-errors/>
-        <make-value value-name="lookupPKMap" entity-name="FixedAsset"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
-        <find-by-primary-key entity-name="FixedAsset" map-name="lookupPKMap" value-name="newEntity"/>
-        <if-not-empty field-name="fixedAssetId" map-name="newEntity">
-			<add-error>
-				<fail-property resource="ManufacturingUiLabels" property="ManufacturingMachineIdAlreadyExist"/>
-			</add-error>
-    		<check-errors/>
-		<else>  
-         		<make-value value-name="newEntity" entity-name="FixedAsset"/>  
-        		<set-pk-fields map-name="parameters" value-name="newEntity"/>  
-        		<set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        		<string-to-field string="PRODUCTION_EQUIPMENT" map-name="newEntity" field-name="fixedAssetTypeId"/>
-        		<create-value value-name="newEntity"/>
-		</else>
-		</if-not-empty>
-    </simple-method>
-
-    <simple-method method-name="updateMachine" short-description="Update Machine">
-        <check-permission permission="MANUFACTURING" action="_UPDATE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingMachinePermissionError"/></check-permission>
-        <check-errors/>
-        <make-value value-name="lookupPKMap" entity-name="FixedAsset"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
-        <find-by-primary-key entity-name="FixedAsset" map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        <store-value value-name="lookedUpValue"/>
-    </simple-method>
-
-    <simple-method method-name="removeMachine" short-description="Remove Machine">
-        <check-permission permission="MANUFACTURING" action="_DELETE"><fail-property resource="ManufacturingUiLabels" property="ManufacturingMachinePermissionError"/></check-permission>
-        <check-errors/>
-        <make-value value-name="lookupPKMap" entity-name="FixedAsset"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
-        <find-by-primary-key entity-name="FixedAsset" map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <if-not-empty map-name="lookedUpValue" field-name="fixedAssetId">
-	        <if-empty  field-name="errorExist">
-    	        <remove-value value-name="lookedUpValue"/>
-        	</if-empty>
         </if-not-empty>
     </simple-method>
 
