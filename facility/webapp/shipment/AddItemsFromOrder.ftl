@@ -51,56 +51,69 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 </#if>
 <table width="100%" cellpadding="2" cellspacing="0" border="1">
     <tr>
-        <td><div class="tableheadtext">OrderItem</div></td>
-        <td><div class="tableheadtext">InventoryItem</div></td>
+        <td><div class="tableheadtext">Order Item</div></td>
         <td><div class="tableheadtext">Product</div></td>
-        <td><div class="tableheadtext">Facility</div></td>
+        <td><div class="tableheadtext">Items Issued or Reserved</div></td>
+        <td><div class="tableheadtext">[Issued + Reserved = Total] = Ordered</div></td>
         <td><div class="tableheadtext">Reserved</div></td>
-        <td><div class="tableheadtext">Issued</div></td>
-        <td><div class="tableheadtext">ShipmentItems</div></td>
         <td><div class="tableheadtext">Issue</div></td>
     </tr>
     <#list orderItemDatas?if_exists as orderItemData>
         <#assign orderItem = orderItemData.orderItem>
         <#assign orderItemInventoryResDatas = orderItemData.orderItemInventoryResDatas>
         <#assign product = orderItemData.product>
+        <#assign itemIssuances = orderItemData.itemIssuances>
+        <#assign totalQuantityIssued = orderItemData.totalQuantityIssued>
+        <#assign totalQuantityReserved = orderItemData.totalQuantityReserved>
+        <#assign totalQuantityIssuedAndReserved = orderItemData.totalQuantityIssuedAndReserved>
         <tr>
             <td><div class="tabletext">${orderItem.orderItemSeqId}</div></td>
-            <td><div class="tabletext">&nbsp;</div></td>
             <td><div class="tabletext">${(product.productName)?if_exists} [${orderItem.productId?if_exists}]</div></td>
-            <td><div class="tabletext">&nbsp;</div></td>
-            <td><div class="tabletext">&nbsp;</div></td>
-            <td><div class="tabletext">&nbsp;</div></td>
             <td>
                 <#if itemIssuances?has_content>
                     <#list itemIssuances as itemIssuance>
-                        <div class="tabletext">${itemIssuance.shipmentId?if_exists}:${itemIssuance.shipmentItemSeqId?if_exists}-${itemIssuance.quantity?if_exists}-${(itemIssuance.issuedDateTime.toString())?if_exists}</div>
+                        <div class="tabletext"><b>[${itemIssuance.quantity?if_exists}]</b>${itemIssuance.shipmentId?if_exists}:${itemIssuance.shipmentItemSeqId?if_exists} on [${(itemIssuance.issuedDateTime.toString())?if_exists}] by [${(itemIssuance.issuedByUserLoginId)?if_exists}]</div>
                     </#list>
                 <#else>
                     <div class="tabletext">&nbsp;</div>
                 </#if>
             </td>
+            <td>
+                <div class="tabletext">
+                    [${totalQuantityIssued} + ${totalQuantityReserved} = ${totalQuantityIssuedAndReserved}]
+                    <#if (totalQuantityIssuedAndReserved > orderItem.quantity)> 
+                        <span style="color: red;"><b>&gt; ${orderItem.quantity}</b></span>
+                    <#else>
+                        <#if (totalQuantityIssuedAndReserved < orderItem.quantity)> 
+                            <span style="color: red;"><b>&lt; ${orderItem.quantity}</b></span>
+                        <#else>
+                            <b>= ${orderItem.quantity}</b>
+                        </#if>
+                    </#if>
+                </div>
+            </td>
+            <td><div class="tabletext">&nbsp;</div></td>
             <td><div class="tabletext">&nbsp;</div></td>
         </tr>
         <#list orderItemInventoryResDatas as orderItemInventoryResData>
             <#assign orderItemInventoryRes = orderItemInventoryResData.orderItemInventoryRes>
             <#assign inventoryItem = orderItemInventoryResData.inventoryItem>
-            <#assign itemIssuances = orderItemInventoryResData.itemIssuances>
-            <#assign totalQuantityIssued = orderItemInventoryResData.totalQuantityIssued>
+            <#assign inventoryItemFacility = orderItemInventoryResData.inventoryItemFacility>
             <tr>
                 <td><div class="tabletext">&nbsp;</div></td>
-                <td><div class="tabletext">${orderItemInventoryRes.inventoryItemId}</div></td>
                 <td><div class="tabletext">&nbsp;</div></td>
                 <td>
-                    <#if inventoryItem.facilityId?has_content>
-                        <div class="tabletext"<#if originFacility?exists && originFacility.facilityId != inventoryItem.facilityId> style="color: red;"</#if>>${inventoryItem.facilityId}</div>
-                    <#else>
-                        <div class="tabletext" style="color: red;">No Facility</div>
-                    </#if>
+                    <div class="tabletext">
+                        ${orderItemInventoryRes.inventoryItemId}
+                        <#if inventoryItem.facilityId?has_content>
+                            <span<#if originFacility?exists && originFacility.facilityId != inventoryItem.facilityId> style="color: red;"</#if>>[${(inventoryItemFacility.facilityName)?default(inventoryItem.facilityId)}]</span>
+                        <#else>
+                            <span style="color: red;">[No Facility]</span>
+                        </#if>
+                    </div>
                 </td>
-                <td><div class="tabletext">${orderItemInventoryRes.quantity}</div></td>
-                <td><div class="tabletext">${totalQuantityIssued}</div></td>
                 <td><div class="tabletext">&nbsp;</div></td>
+                <td><div class="tabletext">${orderItemInventoryRes.quantity}</div></td>
                 <td>
                     <#if originFacility?exists && originFacility.facilityId == inventoryItem.facilityId?if_exists>
                         <form action="<@ofbizUrl>/issueOrderItemInventoryResToShipment</@ofbizUrl>" name="addOrderItemToShipmentForm${orderItemData_index}${orderItemInventoryResData_index}">

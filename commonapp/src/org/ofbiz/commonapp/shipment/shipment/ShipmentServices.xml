@@ -150,14 +150,20 @@
         <field-to-field field-name="orderId" map-name="orderItemInventoryRes" to-map-name="itemIssuanceCreate"/>
         <field-to-field field-name="orderItemSeqId" map-name="orderItemInventoryRes" to-map-name="itemIssuanceCreate"/>
         <field-to-field field-name="inventoryItemId" map-name="orderItemInventoryRes" to-map-name="itemIssuanceCreate"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="issuedByUserLoginId" to-map-name="itemIssuanceCreate"/>
         <call-service service-name="createItemIssuance" in-map-name="itemIssuanceCreate" >
             <result-to-field result-name="itemIssuanceId"/>
         </call-service>
         <field-to-result field-name="itemIssuanceId"/>
         
         <!-- make sure the party is in the PACKER role -->
-        <string-to-field string="PACKER" field-name="roleTypeId" map-name="roleCreate"/>
-        <call-service service-name="createPartyRole" break-on-error="false" in-map-name="roleCreate"/>
+        <make-value entity-name="PartyRole" value-name="partyRole"/>
+        <field-to-field field-name="partyId" map-name="userLogin" to-map-name="partyRole"/>
+        <string-to-field string="PACKER" field-name="roleTypeId" map-name="partyRole"/>
+        <find-by-primary-key entity-name="PartyRole" map-name="partyRole" value-name="checkPartyRole"/>
+        <if-empty field-name="checkPartyRole">
+            <create-value value-name="partyRole"/>
+        </if-empty>
         
         <!-- Add ItemIssuanceRole for party that issues this... -->
         <env-to-field env-name="itemIssuanceId" map-name="itemIssuanceRoleCreate"/>
