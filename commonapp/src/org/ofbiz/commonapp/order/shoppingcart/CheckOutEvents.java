@@ -23,22 +23,56 @@
  */
 package org.ofbiz.commonapp.order.shoppingcart;
 
-import java.net.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.mail.*;
-import javax.mail.internet.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.stats.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.commonapp.order.order.*;
-import org.ofbiz.commonapp.party.contact.*;
-import org.ofbiz.commonapp.product.catalog.*;
-import org.ofbiz.commonapp.marketing.tracking.*;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.ofbiz.commonapp.marketing.tracking.TrackingCodeEvents;
+import org.ofbiz.commonapp.order.order.OrderChangeHelper;
+import org.ofbiz.commonapp.order.order.OrderReadHelper;
+import org.ofbiz.commonapp.party.contact.ContactHelper;
+import org.ofbiz.commonapp.product.catalog.CatalogWorker;
+import org.ofbiz.core.control.JPublishWrapper;
+import org.ofbiz.core.entity.EntityExpr;
+import org.ofbiz.core.entity.EntityOperator;
+import org.ofbiz.core.entity.EntityUtil;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.service.ServiceUtil;
+import org.ofbiz.core.stats.VisitHandler;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.GeneralException;
+import org.ofbiz.core.util.HttpClient;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.StringUtil;
+import org.ofbiz.core.util.UtilFormatOut;
+import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.core.util.UtilProperties;
+import org.ofbiz.core.util.UtilValidate;
 
 /**
  * Events used for processing checkout and orders.
@@ -358,9 +392,13 @@ public class CheckOutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+        JPublishWrapper jp = null;
+        if (application != null) {
+            jp = (JPublishWrapper) application.getAttribute("jpublishWrapper");
+        }
         
         URL ecommercePropertiesUrl = CheckOutEvents.getEcommerceProperties(request);
-        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);
+        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);                
       
         try {
             String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
@@ -383,7 +421,7 @@ public class CheckOutEvents {
             String orderAdditionalEmails = (String) request.getAttribute("orderAdditionalEmails");
             StringBuffer emails = new StringBuffer();
             
-            String orderId = (String) request.getAttribute("order_id");
+            String orderId = (String) request.getAttribute("order_id");            
             
             // get the email addresses from the order contact mech(s)
             List orderContactMechs = null;
@@ -441,63 +479,59 @@ public class CheckOutEvents {
                 
             // send off the confirmation email
             try {
-                URL templateUrl = null;
-                if (application != null) {
-                    templateUrl = application.getResource(CONFIRM_TEMPLATE);
+                String content = null;
+                if (jp != null) {
+                    content = jp.render(CONFIRM_TEMPLATE, request, response);
                 } else {
-                    // if no application is passed check for a string in the request
-                    String templateStr = (String) request.getAttribute("confirmEmail");
-                    if (templateStr != null)
-                        templateUrl = new URL(templateStr);
-                }  
-                if (templateUrl != null) {     
-                    Map context = new HashMap();
-                    context.put("orderId", orderId);
-                    context.put("templateUrl", templateUrl.toExternalForm());
+                    // get the content from the request 
+                    content = (String) request.getAttribute("confirmEmail");
+                }                
+               
+                if (content != null) {     
+                    Map context = new HashMap();                    
+                    context.put("body", content);
                     context.put("subject", CONFIRM_SUBJECT);
                     context.put("sendFrom", CONFIRM_FROM);
                     context.put("sendTo", emails.toString());
                     context.put("sendCc", CONFIRM_CC);
                     context.put("sendBcc", CONFIRM_BCC);
                     context.put("sendVia", SMTP_SERVER);
-                    dispatcher.runAsync("sendEmailConfirmation", context);
+                    dispatcher.runAsync("sendMail", context);
                 }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Trouble calling emailOrderConfirm service", module);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");                       
+            } catch (GeneralException e) {
+                Debug.logError(e, "Trouble getting the parsed content from JPublish", module);
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
-            } catch (MalformedURLException e) {
-                Debug.logError(e, "Trouble getting template url", module);
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");                    
             }
                         
             // send off the notification email  
             try {
-                URL templateUrl = null;
-                if (application != null) {
-                    templateUrl = application.getResource(NOTIFY_TEMPLATE);                
+                String content = null;
+                if (jp != null) {
+                    content = jp.render(NOTIFY_TEMPLATE, request, response);
                 } else {
-                    // if no application is passed check for a string in the request
-                    String templateStr = (String) request.getAttribute("notifyEmail");
-                    if (templateStr != null)
-                        templateUrl = new URL(templateStr);
-                }   
-                if (templateUrl != null) {  
-                    Map context = new HashMap();
-                    context.put("orderId", orderId);
-                    context.put("templateUrl", templateUrl.toExternalForm());
+                    // get the content from the request
+                    content = (String) request.getAttribute("notifyEmail");
+                }
+                                  
+                if (content != null) {  
+                    Map context = new HashMap();                    
+                    context.put("body", content);
                     context.put("subject", NOTIFY_SUBJECT);
                     context.put("sendFrom", NOTIFY_FROM);
                     context.put("sendTo", NOTIFY_TO);
                     context.put("sendCc", NOTIFY_CC);
                     context.put("sendBcc", NOTIFY_BCC);
                     context.put("sendVia", SMTP_SERVER);
-                    dispatcher.runAsync("sendEmailConfirmation", context);
+                    dispatcher.runAsync("sendMail", context);
                 }
             } catch (GenericServiceException e) {
-                Debug.logError(e, "Trouble calling emailOrderConfirm service for merchant notification", module);               
-            } catch (MalformedURLException e) {
-                Debug.logError(e, "Trouble getting template url for merchant notification", module);                                   
-            }                      
+                Debug.logError(e, "Trouble calling emailOrderConfirm service for merchant notification", module);                                                  
+            } catch (GeneralException e) {
+                Debug.logError(e, "Trouble getting parsed content from JPublish", module);
+            }                                
             
         } catch (RuntimeException re) {
             Debug.logError(re, module);
