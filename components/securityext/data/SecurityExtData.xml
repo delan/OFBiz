@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
+    <!-- OFBiz Core security -->
+    <!-- Target file: components/securityext/data/SecurityExtData.xml -->
     <Party partyId="_NA_" partyTypeId="PERSON"/>
     <Person partyId="_NA_"/>
     <PartyRole partyId="_NA_" roleTypeId="CARRIER"/>
@@ -28,11 +30,6 @@
     <PartyRole partyId="externaluser" roleTypeId="SUPPLIER"/>
     <PartyContactMech partyId="externaluser" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
 
-    <!-- OFBiz Core security -->
-    <!-- Target file: components/securityext/data/SecurityData.xml -->
-    <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
-    <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
-    <SecurityGroup description="Demo Admin group, has all view permissions." groupId="VIEWADMIN"/>
     <UserLogin userLoginId="anonymous" currentPassword="anonymous" passwordHint=""/>
     <UserLogin userLoginId="admin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
     <UserLogin userLoginId="flexadmin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
