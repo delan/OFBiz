@@ -307,6 +307,17 @@ public class UtilXml {
             return "";
     }
 
+    public static boolean checkBoolean(String str) {
+        return checkBoolean(str, false);
+    }
+
+    public static boolean checkBoolean(String str, boolean def) {
+        if (str != null && str.equalsIgnoreCase("true")) {
+            return true;
+        }
+        return def;
+    }
+
     /**
      * Local entity resolver to handle J2EE DTDs. With this a http connection
      * to sun is not needed during deployment.

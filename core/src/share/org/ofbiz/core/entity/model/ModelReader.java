@@ -47,9 +47,10 @@ import org.ofbiz.core.util.*;
 /**
  * Generic Entity - Entity Definition Reader
  *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @created May 15, 2001
- * @version 1.0
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@created    May 15, 2001
+ *@version    1.0
  */
 
 public class ModelReader {
@@ -289,6 +290,7 @@ public class ModelReader {
         entity.tableName = UtilXml.checkEmpty(entityElement.getAttribute("table-name"), ModelUtil.javaNameToDbName(entity.entityName));
         entity.packageName = UtilXml.checkEmpty(entityElement.getAttribute("package-name"));
         entity.dependentOn = UtilXml.checkEmpty(entityElement.getAttribute("dependent-on"));
+        entity.doLock = UtilXml.checkBoolean(entityElement.getAttribute("enable-lock"));
 
         if (docElementValues == null) {
             entity.title = UtilXml.checkEmpty(entityElement.getAttribute("title"), UtilXml.childElementValue(docElement, "title"), "None");

@@ -381,6 +381,13 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
         return true;
     }
 
+    /** Used to indicate if locking is enabled for this entity
+     * @return True if locking is enabled
+     */
+    public boolean lockEnabled() {
+        return modelEntity.lock();
+    }
+
     // ======= XML Related Methods ========
     public static Document makeXmlDocument(Collection values) {
         Document document = UtilXml.makeEmptyXmlDocument("entity-engine-xml");

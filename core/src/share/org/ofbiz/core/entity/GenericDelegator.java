@@ -322,6 +322,8 @@ public class GenericDelegator {
         value = helper.create(value);
         if (value != null)
             value.setDelegator(this);
+        if (value.lockEnabled())
+            refresh(value);
         return value;
     }
 
@@ -915,6 +917,9 @@ public class GenericDelegator {
         this.clearCacheLine(value.getPrimaryKey());
         GenericHelper helper = getEntityHelper(value.getModelEntity());
         helper.store(value);
+        // refresh the valueObject to get the new version
+        if (value.lockEnabled())
+            refresh(value);
     }
 
     /** Store the Entities from the Collection GenericValue instances to the persistent store.
@@ -973,6 +978,14 @@ public class GenericDelegator {
             }
             //after rolling back, rethrow the exception
             throw e;
+        }
+
+        // Refresh the valueObjects to get the new version
+        viter = values.iterator();
+        while (viter.hasNext()) {
+            GenericValue value = (GenericValue) viter.next();
+            if (value.lockEnabled())
+                refresh(value);
         }
     }
 

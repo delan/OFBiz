@@ -19,7 +19,7 @@ public class ServiceTest {
             response.put("resp", "service done");
         }
 
-        System.out.println("----- SVC: " + dctx.getRootPath() + " -----");
+        System.out.println("----- SVC: " + dctx.getName() + " -----");
         return response;
     }
 
