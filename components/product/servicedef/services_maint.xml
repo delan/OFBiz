@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+
+<services>
+    <description>Product Component Maintenance Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <!-- Product Category Maintenance Services -->
+    <service name="copyCategoryProductMembers" engine="simple"
+                location="org/ofbiz/product/category/CategoryServices.xml" invoke="copyCategoryProductMembers" auth="true">
+        <description>Copy Product Members from one Category to Another, optionally filtering by the given valid date (otherwise no date filtering done), and optionally recursing (if recurse=Y) down the from category</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryIdTo" type="String" mode="IN" optional="false"/>
+        <attribute name="validDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="recurse" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="expireAllCategoryProductMembers" engine="simple"
+                location="org/ofbiz/product/category/CategoryServices.xml" invoke="expireAllCategoryProductMembers" auth="true">
+        <description>Expire All Product Members in a Category optionally using the thruDate specified as the expire date (now timestamp used by default)</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="removeExpiredCategoryProductMembers" engine="simple"
+                location="org/ofbiz/product/category/CategoryServices.xml" invoke="removeExpiredCategoryProductMembers" auth="true">
+        <description>Remove All Expired Product Members in a Category, optionally uses the valid date instead of now to determine if the member has expired</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="validDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+
+    <!-- ========================================= -->
+    <!-- Some Product Maintenance Utility Services -->
+    <!-- ========================================= -->
+    <!-- These are generally run manually, but some can be run on a schedule as well. -->
+    <service name="discVirtualsWithDiscVariants" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="discVirtualsWithDiscVariants" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Discontinue Virtuals With Discontinued Variants</description>
+    </service>
+    <service name="removeCategoryMembersOfDiscProducts" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="removeCategoryMembersOfDiscProducts" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Remove Category Members Of Discontinued Products</description>
+    </service>
+    <service name="removeDuplicateOpenEndedCategoryMembers" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="removeDuplicateOpenEndedCategoryMembers" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Remove Duplicate, excluding fromDate, Category Members that have no thruDate</description>
+    </service>
+    
+    <service name="makeStandAloneFromSingleVariantVirtuals" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="makeStandAloneFromSingleVariantVirtuals" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Make Stand Alone From Single Variant Virtuals</description>
+    </service>
+    <service name="mergeVirtualWithSingleVariant" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="mergeVirtualWithSingleVariant" auth="true" transaction-timout="3600000" require-new-transaction="true">
+        <description>A service to be called by the make stand alone service to do the operation for one product.</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="removeOld" type="Boolean" mode="IN" optional="false"/>
+        <attribute name="test" type="Boolean" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="setAllProductImageNames" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="setAllProductImageNames" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Set All Product Image Names</description>
+        <attribute name="pattern" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="clearAllVirtualProductImageNames" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="clearAllVirtualProductImageNames" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Set All Product Image Names</description>
+    </service>
+    
+    <service name="attachProductFeaturesToCategory" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="attachProductFeaturesToCategory" auth="true" transaction-timout="36000000" require-new-transaction="true">
+        <description>Attach Product Features To Category Through Groups</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="doSubCategories" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <!-- ============================== -->
+    <!-- Promotion Maintenance Services -->
+    <!-- ============================== -->
+    <service name="purgeOldStoreAutoPromos" engine="java"
+            location="org.ofbiz.product.promo.PromoServices" invoke="purgeOldStoreAutoPromos" auth="true">
+    	<description>Purge Expired ProductStorePromoAppl Records, by store or global if productStoreId is null</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <!-- ============================== -->
+    <!-- Inventory Maintenance Services -->
+    <!-- ============================== -->
+    <service name="getInventoryAlerts" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="getInventoryAlerts" auth="false">
+        <description>Get all Inventory Alerts in effect for a given catalog</description>
+        <attribute name="catalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="alertResults" type="List" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="emailInventoryAlerts" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="emailInventoryAlerts" auth="false">
+        <description>Get all Inventory Alerts in effect for a given catalog</description>
+        <attribute name="catalogId" type="String" mode="IN" optional="false"/>
+    </service>
+</services>
