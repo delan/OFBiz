@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.51 2004/07/16 18:35:32 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.52 2004/07/19 02:41:38 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -45,6 +45,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.OrderedMap;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
@@ -55,24 +56,22 @@ import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
 
 /**
- * <p><b>Title:</b> ShoppingCart.java
- * <p><b>Description:</b> Shopping Cart Object.
+ * Shopping Cart Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.51 $
+ * @version    $Revision: 1.52 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
 
     public static final String module = ShoppingCart.class.getName();
 
-    private List paymentMethodIds = new LinkedList();
+    private Map paymentMethodTypeAmounts = new OrderedMap();
+    private Map paymentMethodAmounts = new OrderedMap();
     private List singleUsePaymentIds = new LinkedList();
-    private Map paymentMethodAmounts = new HashMap();
-    private List paymentMethodTypeIds = new LinkedList();
-    private Map paymentMethodTypeAmounts = new HashMap();
+
     private String orderType = "SALES_ORDER"; // default orderType
     private String poNumber = null;
     private String orderId = null;
@@ -137,8 +136,6 @@ public class ShoppingCart implements Serializable {
         this.delegator = cart.getDelegator();
         this.delegatorName = delegator.getDelegatorName();
         this.productStoreId = cart.getProductStoreId();
-        this.paymentMethodIds = cart.getPaymentMethodIds();
-        this.paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
         this.poNumber = cart.getPoNumber();
         this.orderId = cart.getOrderId();
         this.firstAttemptOrderId = cart.getFirstAttemptOrderId();
@@ -507,9 +504,7 @@ public class ShoppingCart implements Serializable {
         this.desiredAlternateGiftByAction.clear();
         this.productPromoUseInfoList.clear();
         this.productPromoCodes.clear();
-
-        this.clearPaymentMethodIds();
-        this.clearPaymentMethodTypeIds();
+        this.clearPayments();
         
         this.adjustments.clear();
         this.expireSingleUsePayments();
@@ -533,30 +528,6 @@ public class ShoppingCart implements Serializable {
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
                 }
-            }
-        }
-    }
-
-    private void expireSingleUsePayments() {
-        Iterator i = singleUsePaymentIds.iterator();
-        Timestamp now = UtilDateTime.nowTimestamp();
-        while (i.hasNext()) {
-            String paymentMethodId = (String) i.next();
-            GenericValue paymentMethod = null;
-            try {
-                paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "ERROR: Unable to get payment method record to expire : " + paymentMethodId, module);
-            }
-            if (paymentMethod != null) {
-                paymentMethod.set("thruDate", now);
-                try {
-                    paymentMethod.store();
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Unable to store single use PaymentMethod record : " + paymentMethod, module);
-                }
-            } else {
-                Debug.logError("ERROR: Received back a null payment method record for expired ID : " + paymentMethodId, module);
             }
         }
     }
@@ -589,113 +560,224 @@ public class ShoppingCart implements Serializable {
         return poNumber;
     }
 
-    /** Checks to see if a Payment Method is selected. */
-    public boolean isPaymentMethodSelected(String paymentMethodId) {
-        if (paymentMethodId != null) {
-            return this.paymentMethodIds.contains(paymentMethodId);
-        } else {
-            return false;
-        }
-    }
+    // =======================================================================
+    // Payment Method
+    // =======================================================================
 
-    /** Sets the amount of a Payment Method. */
-    public void setPaymentMethodAmount(String paymentMethodId, Double amount, boolean isSingleUse) {
-        if (paymentMethodId != null) {
-            if (!this.paymentMethodIds.contains(paymentMethodId)) {
-                this.paymentMethodIds.add(paymentMethodId);
+    /** adds a payment method/payment method type */
+    public void addPaymentAmount(String id, Double amount, boolean isSingleUse) {
+        if (Character.isDigit(id.charAt(0))) {
+            // payment methods are numeric
+            paymentMethodAmounts.put(id, amount);
+            if (isSingleUse) {
+                singleUsePaymentIds.add(id);
             }
-            this.paymentMethodAmounts.put(paymentMethodId, amount);
-        }
-        if (isSingleUse) {
-            this.singleUsePaymentIds.add(paymentMethodId);
-        }
-    }
-
-    public void setPaymentMethodAmount(String paymentMethodId, Double amount) {
-        setPaymentMethodAmount(paymentMethodId, amount, false);
-    }
-
-    /** Returns the Payment Method Ids. */
-    public List getPaymentMethodIds() {
-        return paymentMethodIds;
-    }
-
-    /** Clears the list of Payment Method Ids. */
-    public void clearPaymentMethodIds() {
-        this.paymentMethodIds.clear();
-        this.paymentMethodAmounts.clear();
-    }
-
-    /** Clears a specific Payment Method Id. */
-    public void clearPaymentMethodId(String paymentMethodId) {
-        this.paymentMethodIds.remove(paymentMethodId);
-        this.paymentMethodAmounts.remove(paymentMethodId);
-    }
-
-    /** Add the Payment Method Type Id to the cart. */
-    public void addPaymentMethodTypeId(String paymentMethodTypeId) {
-        addPaymentMethodTypeId(paymentMethodTypeId, null);
-    }
-
-    /** Add the Payment Method Type Id with amount to the cart. */
-    public void addPaymentMethodTypeId(String paymentMethodTypeId, Double amount) {
-        if (paymentMethodTypeId != null) {
-            this.paymentMethodTypeIds.add(paymentMethodTypeId);
-            this.paymentMethodTypeAmounts.put(paymentMethodTypeId, amount);
-        }
-    }
-
-    /** Returns set amount of the Payment Method. */
-    public Double getPaymentMethodAmount(String paymentMethodId) {
-        if (this.paymentMethodAmounts.get(paymentMethodId) != null) {
-            return (Double) this.paymentMethodAmounts.get(paymentMethodId);
         } else {
-            return new Double(0.00);
+            // alpha-numeric is a payment method type
+            paymentMethodTypeAmounts.put(id, amount);
+            // ignore single use; only applies to payment methods
         }
     }
 
-    /** Returns the total amount of the selected Payment Method(s). */
-    public double getSelectedPaymentMethodsTotal() {
-        double paymentMethodsTotal = 0.00;
-        Iterator i = this.getPaymentMethodIds().iterator();
+    /** adds a payment method/payment method type */
+    public void addPaymentAmount(String id, double amount, boolean isSingleUse) {
+        this.addPaymentAmount(id, new Double(amount), isSingleUse);
+    }
+
+    /** adds a payment method/payment method type */
+    public void addPaymentAmount(String id, Double amount) {
+        this.addPaymentAmount(id, amount, false);
+    }
+
+    /** adds a payment method/payment method type */
+    public void addPaymentAmount(String id, double amount) {
+        this.addPaymentAmount(id, new Double(amount), false);
+    }
+
+    /** adds a payment method/payment method type */
+    public void addPayment(String id) {
+        this.addPaymentAmount(id, null, false);
+    }
+
+    /** returns the payment method/payment method type amount */
+    public Double getPaymentAmount(String id) {
+        if (Character.isDigit(id.charAt(0))) {
+            return (Double) paymentMethodAmounts.get(id);
+        } else {
+            return (Double) paymentMethodTypeAmounts.get(id);
+        }
+    }
+
+    /** returns the total payment amounts */
+    public Double getPaymentTotal() {
+        double total = 0.00;
+        if (paymentMethodAmounts != null && paymentMethodAmounts.size() > 0) {
+            Iterator pmi = paymentMethodAmounts.keySet().iterator();
+            while (pmi.hasNext()) {
+                Double amt = this.getPaymentAmount((String) pmi.next());
+                if (amt != null) {
+                    total += amt.doubleValue();
+                }
+            }
+        }
+        if (paymentMethodTypeAmounts != null && paymentMethodTypeAmounts.size() > 0) {
+            Iterator pti = paymentMethodTypeAmounts.keySet().iterator();
+            while (pti.hasNext()) {
+                Double amt = this.getPaymentAmount((String) pti.next());
+                if (amt != null) {
+                    total += amt.doubleValue();
+                }
+            }
+        }
+        return new Double(total);
+    }
+
+    public boolean isPaymentSelected(String id) {
+        if (Character.isDigit(id.charAt(0))) {
+            return paymentMethodAmounts.containsKey(id);
+        } else {
+            return paymentMethodTypeAmounts.containsKey(id);
+        }
+    }
+
+    /** removes a specific payment method/payment method type */
+    public void clearPayment(String id) {
+        if (Character.isDigit(id.charAt(0))) {
+            paymentMethodAmounts.remove(id);
+        } else {
+            paymentMethodTypeAmounts.remove(id);
+        }
+    }
+
+    /** clears all payment method/payment method types */
+    public void clearPayments() {
+        paymentMethodTypeAmounts.clear();
+        paymentMethodAmounts.clear();
+        this.expireSingleUsePayments();
+    }
+
+    private void expireSingleUsePayments() {
+        Iterator i = singleUsePaymentIds.iterator();
+        Timestamp now = UtilDateTime.nowTimestamp();
         while (i.hasNext()) {
             String paymentMethodId = (String) i.next();
-            Double paymentTotal = (Double) this.paymentMethodAmounts.get(paymentMethodId);
-            if (paymentTotal != null) {
-                paymentMethodsTotal += paymentTotal.doubleValue();
+            GenericValue paymentMethod = null;
+            boolean done = true;
+            try {
+                paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+            } catch (GenericEntityException e) {
+                done = false;
+                Debug.logError(e, "ERROR: Unable to get payment method record to expire : " + paymentMethodId, module);
+            }
+            if (paymentMethod != null) {
+                paymentMethod.set("thruDate", now);
+                try {
+                    paymentMethod.store();
+                } catch (GenericEntityException e) {
+                    done = false;
+                    Debug.logError(e, "Unable to store single use PaymentMethod record : " + paymentMethod, module);
+                }
+            } else {
+                done = false;
+                Debug.logError("ERROR: Received back a null payment method record for expired ID : " + paymentMethodId, module);
+            }
+            if (done) {
+                i.remove();
             }
         }
-        return paymentMethodsTotal;
     }
 
-    /** Returns a list of PaymentMethod value objects selected in the cart. */
-    public List getSelectedPaymentMethods() {
-        List ids = getPaymentMethodIds();
-        List methods = new ArrayList();
-        try {
-            Iterator i = ids.iterator();
+    /** Returns the Payment Method Ids */
+    public List getPaymentMethodIds() {
+        return ((OrderedMap) paymentMethodAmounts).getOrderedKeys();
+    }
+
+    /** Returns the Payment Method Ids */
+    public List getPaymentMethodTypeIds() {
+        return ((OrderedMap) paymentMethodTypeAmounts).getOrderedKeys();
+    }
+
+    /** Returns a list of PaymentMethod value objects selected in the cart */
+    public List getPaymentMethods() {
+        List methods = new LinkedList();
+        if (paymentMethodAmounts != null && paymentMethodAmounts.size() > 0) {
+            Iterator i = getPaymentMethodIds().iterator();
             while (i.hasNext()) {
                 String id = (String) i.next();
-                GenericValue paymentMethod = this.getDelegator().findByPrimaryKeyCache("PaymentMethod", UtilMisc.toMap("paymentMethodId", id));
-                methods.add(paymentMethod);
+                try {
+                    methods.add(this.getDelegator().findByPrimaryKeyCache("PaymentMethod", UtilMisc.toMap("paymentMethodId", id)));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Unable to get payment method from the database", module);
+                }
             }
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Unable to get selected payment methods from the database", module);
-            return null;
         }
+
         return methods;
     }
 
-    /** Returns the Payment Method Ids. */
-    public List getPaymentMethodTypeIds() {
-        return paymentMethodTypeIds;
+    /** Returns a list of PaymentMethodType value objects selected in the cart */
+    public List getPaymentMethodTypes() {
+        List types = new LinkedList();
+        if (paymentMethodTypeAmounts != null && paymentMethodTypeAmounts.size() > 0) {
+            Iterator i = getPaymentMethodTypeIds().iterator();
+            while (i.hasNext()) {
+                String id = (String) i.next();
+                try {
+                    types.add(this.getDelegator().findByPrimaryKeyCache("PaymentMethodType", UtilMisc.toMap("paymentMethodTypeId", id)));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Unable to get payment method type from the database", module);
+                }
+            }
+        }
+
+        return types;
     }
 
-    /** Clears the list of Payment Method Type Ids. */
-    public void clearPaymentMethodTypeIds() {
-        this.paymentMethodTypeIds.clear();
-        this.paymentMethodTypeAmounts.clear();
+    public List getCreditCards() {
+        List paymentMethods = this.getPaymentMethods();
+        List creditCards = new LinkedList();
+        if (paymentMethods != null) {
+            Iterator i = paymentMethods.iterator();
+            while (i.hasNext()) {
+                GenericValue pm = (GenericValue) i.next();
+                if ("CREDIT_CARD".equals(pm.getString("paymentMethodTypeId"))) {
+                    try {
+                        GenericValue cc = pm.getRelatedOne("CreditCard");
+                        creditCards.add(cc);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Unable to get credit card record from payment method : " + pm, module);
+                    }
+                }
+            }
+        }
+
+        return creditCards;
     }
+
+    public List getGiftCards() {
+        List paymentMethods = this.getPaymentMethods();
+        List giftCards = new LinkedList();
+        if (paymentMethods != null) {
+            Iterator i = paymentMethods.iterator();
+            while (i.hasNext()) {
+                GenericValue pm = (GenericValue) i.next();
+                if ("GIFT_CARD".equals(pm.getString("paymentMethodTypeId"))) {
+                    try {
+                        GenericValue gc = pm.getRelatedOne("GiftCard");
+                        giftCards.add(gc);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Unable to get gift card record from payment method : " + pm, module);
+                    }
+                }
+            }
+        }
+
+        return giftCards;
+    }
+
+    // =======================================================================
+    // Billing Accounts
+    // =======================================================================
 
     /** Sets the billing account id string. */
     public void setBillingAccount(String billingAccountId, double amount) {
@@ -712,6 +794,10 @@ public class ShoppingCart implements Serializable {
     public double getBillingAccountAmount() {
         return this.billingAccountAmt;
     }
+
+    // =======================================================================
+    // Shipping Method
+    // =======================================================================
 
     /** Sets the shipping contact mech id. */
     public void setShippingContactMechId(String shippingContactMechId) {
@@ -794,44 +880,7 @@ public class ShoppingCart implements Serializable {
         return orderAdditionalEmails;
     }
 
-    public List getPaymentMethods() {
-        List paymentMethods = new LinkedList();
 
-        if (paymentMethodIds != null && paymentMethodIds.size() > 0) {
-            Iterator pmIdsIter = paymentMethodIds.iterator();
-
-            while (pmIdsIter.hasNext()) {
-                String paymentMethodId = (String) pmIdsIter.next();
-
-                try {
-                    paymentMethods.add(getDelegator().findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId)));
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
-                }
-            }
-        }
-        return paymentMethods;
-    }
-
-    public List getGiftCards() {
-        List paymentMethods = this.getPaymentMethods();
-        List giftCards = new LinkedList();
-        if (paymentMethods != null) {
-            Iterator i = paymentMethods.iterator();
-            while (i.hasNext()) {
-                GenericValue pm = (GenericValue) i.next();
-                if ("GIFT_CARD".equals(pm.getString("paymentMethodTypeId"))) {
-                    try {
-                        GenericValue gc = pm.getRelatedOne("GiftCard");
-                        giftCards.add(gc);
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, "Unable to get gift card record from payment method : " + pm, module);
-                    }
-                }
-            }
-        }
-        return giftCards;
-    }
 
     public GenericValue getShippingAddress() {
         if (this.getShippingContactMechId() != null) {

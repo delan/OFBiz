@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.25 2004/07/18 16:15:17 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.26 2004/07/19 02:41:37 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -66,7 +66,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -236,8 +236,7 @@ public class CheckOutHelper {
         // set the payment method option
         if (selectedPaymentMethods != null && selectedPaymentMethods.size() > 0) {
             // clear out the old payments
-            this.cart.clearPaymentMethodTypeIds();
-            this.cart.clearPaymentMethodIds();
+            cart.clearPayments();
 
             // if we are EXT_BILLACT (billing account only) then we need to make sure we have enough credit
             if (selectedPaymentMethods.containsKey("EXT_BILLACT")) {
@@ -261,14 +260,8 @@ public class CheckOutHelper {
                     paymentAmount = (Double) selectedPaymentMethods.get(checkOutPaymentId);
                 }
 
-                // all payment method ids will be numeric, type ids will start with letter
-                if (Character.isLetter(checkOutPaymentId.charAt(0))) {
-                    this.cart.addPaymentMethodTypeId(checkOutPaymentId);
-                } else {
-                    boolean singleUse = singleUsePayments.contains(checkOutPaymentId);
-                    this.cart.setPaymentMethodAmount(checkOutPaymentId, paymentAmount, singleUse);
-                    //Debug.logInfo("Set Payment Method : " + checkOutPaymentId + " @ " + paymentAmount, module);
-                }
+                boolean singleUse = singleUsePayments.contains(checkOutPaymentId);
+                cart.addPaymentAmount(checkOutPaymentId, paymentAmount, singleUse);                
             }
         } else {
             errMsg = UtilProperties.getMessage(resource,"checkhelper.select_method_of_payment",
@@ -996,12 +989,11 @@ public class CheckOutHelper {
      * any error messages
      */
     public Map finalizeOrderEntryMethodType(String paymentMthodType) {
-        Map result;
+        Map result = null;
+        cart.clearPayments();
 
-        this.cart.clearPaymentMethodTypeIds();
-        this.cart.clearPaymentMethodIds();
         if (paymentMthodType != null && paymentMthodType.equals("offline")) {
-            this.cart.addPaymentMethodTypeId("EXT_OFFLINE");
+            cart.addPayment("EXT_OFFLINE");
         }
 
         result = ServiceUtil.returnSuccess();
@@ -1026,18 +1018,11 @@ public class CheckOutHelper {
             if (!checkOutPaymentId.equals("OFFLINE_PAYMENT")) {
                 // clear out the old payments
                 if (!append) {
-                    this.cart.clearPaymentMethodTypeIds();
-                    this.cart.clearPaymentMethodIds();
+                    cart.clearPayments();
                 }
-                // all payment method ids will be numeric, type ids will start with letter
-                if (Character.isLetter(checkOutPaymentId.charAt(0))) {
-                    this.cart.addPaymentMethodTypeId(checkOutPaymentId);
-                } else {
-                    this.cart.setPaymentMethodAmount(checkOutPaymentId, amount, singleUse);
-                }
+                cart.addPaymentAmount(checkOutPaymentId, amount, singleUse);
             } else {
-                this.cart.clearPaymentMethodIds();
-                this.cart.clearPaymentMethodTypeIds();
+                cart.clearPayments();
                 result.put("OFFLINE_PAYMENT", new Boolean(true));
             }
         }
@@ -1111,7 +1096,7 @@ public class CheckOutHelper {
                 while (i.hasNext()) {
                     String type = (String) i.next();
                     Double amt = (Double) paymentPrefs.get(type);
-                    cart.addPaymentMethodTypeId(type, amt);
+                    cart.addPaymentAmount(type, amt);
                 }
                 result.put("OFFLINE_PAYMENTS", new Boolean(true));
             }
