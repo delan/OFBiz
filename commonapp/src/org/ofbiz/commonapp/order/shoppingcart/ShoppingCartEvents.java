@@ -130,8 +130,9 @@ public class ShoppingCartEvents {
         } else if (paramMap.containsKey("price")) {
             priceStr = (String) paramMap.remove("price");
         }
-        if (priceStr == null) 
+        if (priceStr == null) {
             priceStr = "0.00";  // default price is 0.00
+        }
     
         // get the quantity
         if (paramMap.containsKey("QUANTITY")) {
@@ -139,8 +140,9 @@ public class ShoppingCartEvents {
         } else if (paramMap.containsKey("quantity")) {
             quantityStr = (String) paramMap.remove("quantity");
         }
-        if (quantityStr == null)
+        if (quantityStr == null) {
             quantityStr = "1";  // default quantity is 1
+        }
     
         // parse the price
         try {

@@ -242,7 +242,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         this.delegator = item.getDelegator();      
         this.delegatorName = delegator.getDelegatorName();
-        this.prodCatalogId = getProdCatalogId();
+        this.prodCatalogId = item.getProdCatalogId();
+        this.webSiteId = item.getWebSiteId();
         this.productId = item.getProductId();
         this.itemType = item.getItemType();
         this.itemComment = item.getItemComment(); 
@@ -252,15 +253,16 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.listPrice = item.getListPrice();
         this.isPromo = item.getIsPromo();
         this.orderItemSeqId = item.getOrderItemSeqId();
-        this.orderShipmentPreference = item.getOrderShipmentPreference();
+        this.orderShipmentPreference = new GenericValue(item.getOrderShipmentPreference());
         this.additionalProductFeatureAndAppls = item.getAdditionalProductFeatureAndAppls() == null ?
                 null : new HashMap(item.getAdditionalProductFeatureAndAppls());
         this.attributes = item.getAttributes() == null ? null : new HashMap(item.getAttributes());
         this.contactMechIdsMap = item.getOrderItemContactMechIds() == null ? null : new HashMap(item.getOrderItemContactMechIds());
         this.orderItemPriceInfos = item.getOrderItemPriceInfos() == null ? null : new LinkedList(item.getOrderItemPriceInfos());
         this.itemAdjustments = item.getAdjustments() == null ? null : new LinkedList(item.getAdjustments());
-        if (this._product == null)
+        if (this._product == null) {
             this.itemDescription = item.getName();
+        }
     }
 
     /** Cannot create shopping cart item with no parameters */
@@ -356,8 +358,8 @@ public class ShoppingCartItem implements java.io.Serializable {
                 
                 priceContext.put("currencyUomId", cart.getCurrency());
                 priceContext.put("product", this.getProduct());
-                priceContext.put("prodCatalogId", prodCatalogId);
-                priceContext.put("webSiteId", webSiteId);            
+                priceContext.put("prodCatalogId", this.getProdCatalogId());
+                priceContext.put("webSiteId", this.getWebSiteId());            
                 
                 String partyId = cart.getPartyId();
                 if (partyId != null)

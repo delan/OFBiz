@@ -79,10 +79,10 @@ public class ShoppingCart implements java.io.Serializable {
     private transient GenericDelegator delegator = null;
     private String delegatorName = null;
     private String productStoreId = null; 
+    private String webSiteId;
     
     private GenericValue userLogin;
     private GenericValue autoUserLogin;
-    private String webSiteId;
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -92,6 +92,7 @@ public class ShoppingCart implements java.io.Serializable {
         this.delegator = cart.getDelegator();
         this.delegatorName = delegator.getDelegatorName();
         this.productStoreId = cart.getProductStoreId();
+        this.webSiteId = cart.getWebSiteId();
         this.paymentMethodIds = cart.getPaymentMethodIds();
         this.paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
         this.poNumber = cart.getPoNumber();
@@ -107,16 +108,17 @@ public class ShoppingCart implements java.io.Serializable {
         // clone the items
         List items = cart.items();
         Iterator itIt = items.iterator();
-
-        while (itIt.hasNext())
+        while (itIt.hasNext()) {
             cartLines.add(new ShoppingCartItem((ShoppingCartItem) itIt.next()));
+        }
     }
 
     /** Creates new empty ShoppingCart object. */
-    public ShoppingCart(GenericDelegator delegator, String productStoreId) {
+    public ShoppingCart(GenericDelegator delegator, String productStoreId, String webSiteId) {
         this.delegator = delegator;
         this.delegatorName = delegator.getDelegatorName();
         this.productStoreId = productStoreId;
+        this.webSiteId = webSiteId;
         this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
     }
 

@@ -26,6 +26,7 @@ package org.ofbiz.commonapp.order.shoppingcart;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.ofbiz.commonapp.product.catalog.CatalogWorker;
 import org.ofbiz.commonapp.product.store.ProductStoreWorker;
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericValue;
@@ -56,7 +57,7 @@ public class WebShoppingCart extends ShoppingCart {
 
     /** Creates new empty ShoppingCart object. */
     public WebShoppingCart(HttpServletRequest request) {
-        super((GenericDelegator)request.getAttribute("delegator"), ProductStoreWorker.getProductStoreId(request));
+        super((GenericDelegator)request.getAttribute("delegator"), ProductStoreWorker.getProductStoreId(request), CatalogWorker.getWebSiteId(request));
         this.session = request.getSession();
     }
     

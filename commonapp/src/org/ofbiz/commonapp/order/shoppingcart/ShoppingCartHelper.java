@@ -56,32 +56,32 @@ import org.ofbiz.core.util.UtilMisc;
  * @since      2.0
  */
 public class ShoppingCartHelper {
-    
+
     public static String module = ShoppingCartHelper.class.getName();
-    
+
     /**
      * The shopping cart to manipulate
      */
     private ShoppingCart cart;
-    
+
     /**
      * The entity engine delegator
      */
     private GenericDelegator delegator;
-    
+
     /**
      * The service invoker
      */
     private LocalDispatcher dispatcher;
-    
+
     /**
      * This will create a default, non-interface specific, 
      * <code>ShoppingCart</code> to manipulate. 
      */
-    public ShoppingCartHelper(GenericDelegator delegator, LocalDispatcher dispatcher, String productStoreId) {
-        this(delegator, dispatcher, new ShoppingCart(delegator, productStoreId));
+    public ShoppingCartHelper(GenericDelegator delegator, LocalDispatcher dispatcher, String productStoreId, String webSiteId) {
+        this(delegator, dispatcher, new ShoppingCart(delegator, productStoreId, webSiteId));
     }
-    
+
     /**
      * Changes will be made to the cart directly, as opposed
      * to a copy of the cart provided.
@@ -95,18 +95,26 @@ public class ShoppingCartHelper {
     }
 
     /** Event to add an item to the shopping cart. */
-    public Map addToCart(String catalogId, String shoppingListId, String shoppingListItemSeqId, 
-            String productId, String productCategoryId, String itemType, String itemDescription,
-            double price, double quantity, Map context){
+    public Map addToCart(
+        String catalogId,
+        String shoppingListId,
+        String shoppingListItemSeqId,
+        String productId,
+        String productCategoryId,
+        String itemType,
+        String itemDescription,
+        double price,
+        double quantity,
+        Map context) {
         Map result;
         Map attributes = null;
-        
+
         // price sanity check
         if (productId == null && price < 0) {
             result = ServiceUtil.returnError("Price must be a positive number.");
             return result;
         }
-        
+
         // quantity sanity check
         if (quantity < 0) {
             result = ServiceUtil.returnError("Quantity must be a positive number.");
@@ -115,21 +123,22 @@ public class ShoppingCartHelper {
 
         // Create a HashMap of product attributes - From ShoppingCartItem.attributeNames[]
         for (int namesIdx = 0; namesIdx < ShoppingCartItem.attributeNames.length; namesIdx++) {
-            if (attributes == null) attributes = new HashMap();
+            if (attributes == null)
+                attributes = new HashMap();
             if (context.containsKey(ShoppingCartItem.attributeNames[namesIdx])) {
                 attributes.put(ShoppingCartItem.attributeNames[namesIdx], context.get(ShoppingCartItem.attributeNames[namesIdx]));
             }
         }
-        
+
         // Retrieve the catalog ID
         try {
             int itemId;
-            if (productId != null) {            
+            if (productId != null) {
                 itemId = cart.addOrIncreaseItem(productId, quantity, null, attributes, catalogId, dispatcher);
             } else {
                 itemId = cart.addNonProductItem(delegator, itemType, itemDescription, productCategoryId, price, quantity, attributes, catalogId, dispatcher);
-            } 
-            
+            }
+
             if (shoppingListId != null && shoppingListItemSeqId != null) {
                 ShoppingCartItem item = cart.findCartItem(itemId);
                 item.setShoppingList(shoppingListId, shoppingListItemSeqId);
@@ -138,13 +147,13 @@ public class ShoppingCartHelper {
             result = ServiceUtil.returnError(cartException.getMessage());
             return result;
         }
-        
+
         //Indicate there were no critical errors
         result = ServiceUtil.returnSuccess();
         return result;
     }
 
-    public Map addToCartFromOrder(String catalogId, String orderId, String[] itemIds, boolean addAll){
+    public Map addToCartFromOrder(String catalogId, String orderId, String[] itemIds, boolean addAll) {
         ArrayList errorMsgs = new ArrayList();
         Map result;
 
@@ -166,13 +175,18 @@ public class ShoppingCartHelper {
             }
 
             if (itemIter != null && itemIter.hasNext()) {
-
                 while (itemIter.hasNext()) {
                     GenericValue orderItem = (GenericValue) itemIter.next();
 
                     if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
                         try {
-                            this.cart.addOrIncreaseItem(orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), null, null, catalogId, dispatcher);
+                            this.cart.addOrIncreaseItem(
+                                orderItem.getString("productId"),
+                                orderItem.getDouble("quantity").doubleValue(),
+                                null,
+                                null,
+                                catalogId,
+                                dispatcher);
                             noItems = false;
                         } catch (CartItemModifyException e) {
                             errorMsgs.add(e.getMessage());
@@ -205,7 +219,13 @@ public class ShoppingCartHelper {
                     if (orderItem != null) {
                         if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
                             try {
-                                this.cart.addOrIncreaseItem(orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), null, null, catalogId, dispatcher);
+                                this.cart.addOrIncreaseItem(
+                                    orderItem.getString("productId"),
+                                    orderItem.getDouble("quantity").doubleValue(),
+                                    null,
+                                    null,
+                                    catalogId,
+                                    dispatcher);
                                 noItems = false;
                             } catch (CartItemModifyException e) {
                                 errorMsgs.add(e.getMessage());
@@ -218,7 +238,7 @@ public class ShoppingCartHelper {
                     result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
                     return result; // don't return error because this is a non-critical error and should go back to the same page
                 }
-            }// else no items
+            } // else no items
         }
 
         if (noItems) {
@@ -236,7 +256,7 @@ public class ShoppingCartHelper {
      * for each; if no parameter for a certain product in the category, or if
      * quantity is 0, do not add
      */
-    public Map addToCartBulk(String catalogId, String categoryId, Map context){
+    public Map addToCartBulk(String catalogId, String categoryId, Map context) {
         Map result;
 
         if (categoryId == null || categoryId.length() <= 0) {
@@ -264,7 +284,7 @@ public class ShoppingCartHelper {
 
         while (pcmIter.hasNext()) {
             GenericValue productCategoryMember = (GenericValue) pcmIter.next();
-            String quantStr = (String)context.get("quantity_" + productCategoryMember.getString("productId"));
+            String quantStr = (String) context.get("quantity_" + productCategoryMember.getString("productId"));
 
             if (quantStr != null && quantStr.length() > 0) {
                 double quantity = 0;
@@ -295,7 +315,7 @@ public class ShoppingCartHelper {
      * for each; if no default for a certain product in the category, or if
      * quantity is 0, do not add
      */
-    public Map addCategoryDefaults(String catalogId, String categoryId){
+    public Map addCategoryDefaults(String catalogId, String categoryId) {
         ArrayList errorMsgs = new ArrayList();
         Map result;
 
@@ -347,12 +367,11 @@ public class ShoppingCartHelper {
     }
 
     /** Delete an item from the shopping cart. */
-    public Map deleteFromCart(Map context){
+    public Map deleteFromCart(Map context) {
         Map result;
         Set names = context.keySet();
         Iterator i = names.iterator();
         ArrayList errorMsgs = new ArrayList();
-
 
         while (i.hasNext()) {
             String o = (String) i.next();
@@ -384,7 +403,7 @@ public class ShoppingCartHelper {
     /** Update the items in the shopping cart. */
     public Map modifyCart(Security security, GenericValue userLogin, Map context, boolean removeSelected, String[] selectedItems) {
         Map result;
-        
+
         ArrayList deleteList = new ArrayList();
         ArrayList errorMsgs = new ArrayList();
 
@@ -401,19 +420,19 @@ public class ShoppingCartHelper {
                     int index = Integer.parseInt(indexStr);
                     String quantString = (String) context.get(o);
                     double quantity = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
-                    
+
                     if (quantity < 0) {
                         throw new CartItemModifyException("Quantity must be a positive number.");
                     }
-                    
+
                     if (o.toUpperCase().startsWith("UPDATE")) {
                         if (quantity == 0.0) {
-                            deleteList.add(this.cart.findCartItem(index));                            
+                            deleteList.add(this.cart.findCartItem(index));
                         } else {
                             ShoppingCartItem item = this.cart.findCartItem(index);
 
                             if (item != null) {
-                                try {                                   
+                                try {
                                     item.setQuantity(quantity, dispatcher, this.cart);
                                 } catch (CartItemModifyException e) {
                                     errorMsgs.add(e.getMessage());
@@ -421,16 +440,16 @@ public class ShoppingCartHelper {
                             }
                         }
                     }
-                    
+
                     if (o.toUpperCase().startsWith("PRICE")) {
                         if (security.hasEntityPermission("ORDERMGR", "_CREATE", userLogin)) {
                             ShoppingCartItem item = this.cart.findCartItem(index);
                             item.setBasePrice(quantity); // this is quanity because the parsed number variable is the same as quantity
-                        }                       
+                        }
                     }
 
                     if (o.toUpperCase().startsWith("DELETE")) {
-                        deleteList.add(this.cart.findCartItem(index));                       
+                        deleteList.add(this.cart.findCartItem(index));
                     }
                 } catch (NumberFormatException nfe) {
                     Debug.logWarning(nfe, "Caught number format exception on cart update.", module);
@@ -439,9 +458,9 @@ public class ShoppingCartHelper {
                 } catch (Exception e) {
                     Debug.logWarning(e, "Caught exception on cart update.", module);
                 }
-            }// else not a parameter we need
+            } // else not a parameter we need
         }
-        
+
         // get a list of the items to delete
         if (removeSelected) {
             for (int si = 0; si < selectedItems.length; si++) {
@@ -458,14 +477,15 @@ public class ShoppingCartHelper {
                 }
             }
         }
-                                    
+
         Iterator di = deleteList.iterator();
 
         while (di.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) di.next();
             int itemIndex = this.cart.getItemIndex(item);
 
-            if (Debug.infoOn()) Debug.logInfo("Removing item index: " + itemIndex, module);
+            if (Debug.infoOn())
+                Debug.logInfo("Removing item index: " + itemIndex, module);
             try {
                 this.cart.removeCartItem(itemIndex, dispatcher);
             } catch (CartItemModifyException e) {

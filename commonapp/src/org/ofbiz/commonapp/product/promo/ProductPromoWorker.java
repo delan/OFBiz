@@ -87,13 +87,13 @@ public class ProductPromoWorker {
 
                                 // evaluate the party related conditions; so we don't show the promo if it doesn't apply.
                                 if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId")))
-                                    condResult = checkCondition(productStoreId, productPromoCond, cart, null, 0, delegator);
+                                    condResult = checkCondition(productPromoCond, cart, null, 0, delegator);
                                 else if ("PRIP_PARTY_GRP_MEM".equals(productPromoCond.getString("inputParamEnumId")))
-                                    condResult = checkCondition(productStoreId, productPromoCond, cart, null, 0, delegator);
+                                    condResult = checkCondition(productPromoCond, cart, null, 0, delegator);
                                 else if ("PRIP_PARTY_CLASS".equals(productPromoCond.getString("inputParamEnumId")))
-                                    condResult = checkCondition(productStoreId, productPromoCond, cart, null, 0, delegator);
+                                    condResult = checkCondition(productPromoCond, cart, null, 0, delegator);
                                 else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId")))
-                                    condResult = checkCondition(productStoreId, productPromoCond, cart, null, 0, delegator);
+                                    condResult = checkCondition(productPromoCond, cart, null, 0, delegator);
                             }
                         }
                         if (!condResult) productPromo = null;
@@ -200,7 +200,7 @@ public class ProductPromoWorker {
                     while (productPromoConds != null && productPromoConds.hasNext()) {
                         GenericValue productPromoCond = (GenericValue) productPromoConds.next();
 
-                        boolean condResult = checkCondition(productStoreId, productPromoCond, cart, cartItem, oldQuantity, delegator);
+                        boolean condResult = checkCondition(productPromoCond, cart, cartItem, oldQuantity, delegator);
 
                         // if apply, any false condition will cause it to NOT perform the action
                         // if !apply, any false condition will cause it to PERFORM the action
@@ -230,7 +230,7 @@ public class ProductPromoWorker {
                             // Debug.logInfo("Doing action: " + productPromoAction, module);
 
                             try {
-                                boolean actionChangedCart = performAction(apply, productPromoAction, cart, cartItem, oldQuantity, productStoreId, delegator, dispatcher);
+                                boolean actionChangedCart = performAction(apply, productPromoAction, cart, cartItem, oldQuantity, delegator, dispatcher);
 
                                 // if cartChanged is already true then don't set it again: implements OR logic (ie if ANY actions change content, redo loop)
                                 if (!cartChanged) {
@@ -250,7 +250,7 @@ public class ProductPromoWorker {
         }
     }
 
-    public static boolean checkCondition(String productStoreId, GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator) throws GenericEntityException {
+    public static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator) throws GenericEntityException {
         GenericValue userLogin = null;
         String partyId = null;
 
@@ -366,7 +366,7 @@ public class ProductPromoWorker {
     }
 
     /** returns true if the cart was changed and rules need to be re-evaluted */
-    public static boolean performAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, String productStoreId, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException, CartItemModifyException {
+    public static boolean performAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException, CartItemModifyException {
         if ("PROMO_GWP".equals(productPromoAction.getString("productPromoActionTypeId"))) {
             if (apply) {
                 Integer itemLoc = findPromoItem(productPromoAction, cart);
