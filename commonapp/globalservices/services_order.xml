@@ -60,6 +60,14 @@
         <attribute name="statusId" type="String" mode="IN"/>
         <attribute name="orderStatusId" type="String" mode="OUT" optional="true"/>
     </service>
+    
+    <service name="changeOrderItemStatus" engine="java"
+    		location="org.ofbiz.commonapp.order.order.OrderServices" invoke="setItemStatus">
+    	<description>Change the status of an existing order item</description>
+    	<attribute name="orderId" type="String" mode="IN" optional="false"/>
+    	<attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+    	<attribute name="statusId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <service name="addOrderRole" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="addRoleType">

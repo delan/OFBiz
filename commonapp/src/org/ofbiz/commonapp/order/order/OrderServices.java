@@ -418,12 +418,117 @@ public class OrderServices {
     	}
     }
 
-    /** Service for changing the status on an order */
+    /** Service for changing the status on order item(s) */
+    public static Map setItemStatus(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
+        
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String orderId = (String) context.get("orderId");
+        String orderItemSeqId = (String) context.get("orderItemSeqId");
+        String statusId = (String) context.get("statusId");
+        
+        // check and make sure we have permission to change the order
+        Security security = ctx.getSecurity();
+        if (!security.hasEntityPermission("ORDERMGR", "_UPDATE", userLogin)) {
+            GenericValue placingCustomer = null;
+            try {
+                Map placingCustomerFields = UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER");
+                placingCustomer = delegator.findByPrimaryKey("OrderRole", placingCustomerFields);                
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError("ERROR: Cannot get OrderRole entity: " + e.getMessage());
+            }
+            if (placingCustomer == null)
+                return ServiceUtil.returnError("You do not have permission to change this order's status.");
+        }
+        
+        Map fields = UtilMisc.toMap("orderId", orderId);
+        if (orderItemSeqId != null)
+            fields.put("orderItemSeqId", orderItemSeqId);
+        
+        List orderItems = null;
+        try {
+            orderItems = delegator.findByAnd("OrderItem", fields);
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError("ERROR: Cannot get OrderRole entity: " + e.getMessage());
+        }
+        
+        if (orderItems != null && orderItems.size() > 0) {
+            List toBeStored = new ArrayList();
+            Iterator itemsIterator = orderItems.iterator();
+            while (itemsIterator.hasNext()) {
+                GenericValue orderItem = (GenericValue) itemsIterator.next();
+                if (orderItem == null)
+                    ServiceUtil.returnError("ERROR: Cannot change item status; item not found.");
+                if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setItemStatus] : Status Change: [" + orderId + "] (" + orderItem.getString("orderItemSeqId"), module);
+                if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setIte,Status] : From Status : " + orderItem.getString("statusId"));
+                if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : To Status : " + statusId);
+                
+                if (orderItem.getString("statusId").equals(statusId)) { 
+                    continue;
+                }
+                    
+                try {
+                    Map statusFields = UtilMisc.toMap("statusId", orderItem.getString("statusId"), "statusIdTo", statusId);
+                    GenericValue statusChange = delegator.findByPrimaryKeyCache("StatusValidChange", statusFields);
+                    
+                    if (statusChange == null) {                        
+                        Debug.logWarning("Item status not changed " + orderItem.getString("statusId") + " -> " + statusId + " is not a valid change.", module);
+                        continue;                        
+                    }
+                } catch (GenericEntityException e) {
+                    return ServiceUtil.returnError("ERROR: Could not change item status: " + e.getMessage());
+                }
+                
+                orderItem.set("statusId", statusId);
+                toBeStored.add(orderItem);
+                
+                // now create a status change
+                Map changeFields = new HashMap();
+                changeFields.put("orderStatusId", delegator.getNextSeqId("OrderStatus").toString());
+                changeFields.put("statusId", statusId);
+                changeFields.put("orderId", orderId);
+                changeFields.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
+                changeFields.put("statusDatetime", UtilDateTime.nowTimestamp());
+                GenericValue orderStatus = delegator.makeValue("OrderStatus", changeFields);  
+                toBeStored.add(orderStatus);              
+            }
+            
+            // store the changes
+            if (toBeStored.size() > 0) {
+                try {
+                    delegator.storeAll(toBeStored);
+                } catch (GenericEntityException e) {
+                    return ServiceUtil.returnError("ERROR: Cannot store status changes: " + e.getMessage());
+                }
+            }
+            
+        }
+        
+        return ServiceUtil.returnSuccess();
+    }
+    
+    /** Service for changing the status on an order header */
     public static Map setOrderStatus(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
+        
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         String orderId = (String) context.get("orderId");
         String statusId = (String) context.get("statusId");
+        
+        // check and make sure we have permission to change the order
+        Security security = ctx.getSecurity();
+        if (!security.hasEntityPermission("ORDERMGR", "_UPDATE", userLogin)) {
+            GenericValue placingCustomer = null;
+            try {
+                Map placingCustomerFields = UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER");
+                placingCustomer = delegator.findByPrimaryKey("OrderRole", placingCustomerFields);                
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError("ERROR: Cannot get OrderRole entity: " + e.getMessage());
+            }
+            if (placingCustomer == null)
+                return ServiceUtil.returnError("You do not have permission to change this order's status.");
+        }
 
         try {
             GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
@@ -435,6 +540,7 @@ public class OrderServices {
             }
             if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : From Status : " + orderHeader.getString("statusId"));
             if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : To Status : " + statusId);
+            
             if (orderHeader.getString("statusId").equals(statusId)) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
                 return result;
@@ -453,9 +559,12 @@ public class OrderServices {
                 result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change order status (" + e.getMessage() + ").");
                 return result;
             }
+            
+            // update the current status
             orderHeader.set("statusId", statusId);
+            
+            // now create a status change
             Map fields = new HashMap();
-
             fields.put("orderStatusId", delegator.getNextSeqId("OrderStatus").toString());
             fields.put("statusId", statusId);
             fields.put("orderId", orderId);
@@ -504,7 +613,7 @@ public class OrderServices {
         }
         return result;
     }
-
+    
     /** Service to add a role type to an order */
     public static Map addRoleType(DispatchContext ctx, Map context) {
         Map result = new HashMap();
