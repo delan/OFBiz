@@ -87,7 +87,7 @@
     name CDATA #REQUIRED
 >
 
-<!ELEMENT entity-group-reader EMPTY>
+<!ELEMENT entity-group-reader ( resource* )>
 <!ATTLIST entity-group-reader
     name CDATA #REQUIRED
     loader CDATA #REQUIRED
