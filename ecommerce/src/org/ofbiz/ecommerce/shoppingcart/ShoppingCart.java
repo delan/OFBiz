@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/31 17:45:36  epabst
+ * added method to simplify code
+ *
  * Revision 1.2  2001/08/28 02:24:34  azeneski
  * Updated shopping cart to use store a reference to the product entity, rather then individual attributes.
  * Worked on the equals() method in ShoppingCartItem.java. Might be fixed now.
@@ -13,12 +16,10 @@
 package org.ofbiz.ecommerce.shoppingcart;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
-import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> ShoppingCart.java
@@ -49,13 +50,20 @@ import org.ofbiz.core.util.Debug;
 public class ShoppingCart {
     
     private ArrayList cartLines;
-    private String taxString;
-    private String shippingString;
+    
+    //either creditCardId or poNumber must be null (use one or the other)
+    private String creditCardId;
+    private String poNumber;
+    
+    private String shippingContactMechId;
+    private String billingContactMechId;
     private String cartDiscountString;
+    private String taxString;
     private double salesTax;
     private double shipping;
     private double cartDiscount;
     private boolean viewCartOnAdd = true;
+    
     
     /** Creates new empty ShoppingCart object. */
     public ShoppingCart() {
@@ -63,7 +71,7 @@ public class ShoppingCart {
         shipping = 0.00;
         salesTax = 0.00;
         cartDiscount = 0.00;
-        shippingString = "";
+        shippingContactMechId = "";
         taxString = "";
         cartDiscountString = "";
     }
@@ -159,14 +167,26 @@ public class ShoppingCart {
             cartLines.add(toIndex-1,cartLines.remove(fromIndex));
     }
     
+    /** Sets the credit card id in the cart. */
+    public void setPoNumber(String poNumber) {
+        this.poNumber = poNumber;
+        this.creditCardId = null;
+    }
+    
+    /** Sets the credit card id in the cart. */
+    public void setCreditCartId(String creditCardId) {
+        this.poNumber = null;
+        this.creditCardId = creditCardId;
+    }
+    
     /** Sets the shipping amount in the cart. */
     public void setShipping(double shipping) {
         this.shipping = shipping;
     }
     
     /** Sets the shipping message string. */
-    public void setShippingString(String shippingString) {
-        this.shippingString = shippingString;
+    public void setShippingContactMechId(String shippingContactMechId) {
+        this.shippingContactMechId = shippingContactMechId;
     }
     
     /** Sets the tax dollar amount in the cart. */
@@ -189,14 +209,51 @@ public class ShoppingCart {
         this.cartDiscountString = cartDiscountString;
     }
     
+    /** Returns the credit card id. */
+    public String getCreditCardId() {
+        return creditCardId;
+    }
+    
+    /** Returns the po number. */
+    public String getPoNumber() {
+        return poNumber;
+    }
+    
     /** Returns the shipping amount from the cart object. */
     public double getShipping() {
         return shipping;
     }
     
     /** Returns the shipping message string. */
-    public String getShippingString() {
-        return shippingString;
+    public String getShippingContactMechId() {
+        return shippingContactMechId;
+    }
+    
+    public GenericValue getCreditCardInfo(GenericHelper helper) {
+        if (this.creditCardId != null) {
+            return helper.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap(
+                    "creditCardId", creditCardId));
+        } else {
+            return null;
+        }
+    }
+    
+    public GenericValue getShippingAddress(GenericHelper helper) {
+        if (this.shippingContactMechId != null) {
+            return helper.findByPrimaryKey("PostalAddress", UtilMisc.toMap(
+                    "contactMechId", shippingContactMechId));
+        } else {
+            return null;
+        }
+    }
+    
+    public GenericValue getBillingAddress(GenericHelper helper) {
+        if (this.billingContactMechId != null) {
+            return helper.findByPrimaryKey("PostalAddress", UtilMisc.toMap(
+                    "contactMechId", billingContactMechId));
+        } else {
+            return null;
+        }
     }
     
     /** Returns the dollar tax amount from the cart object. */
