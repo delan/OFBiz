@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.14 2003/09/14 18:17:18 ajzeneski Exp $
+ * $Id: ComponentConfig.java,v 1.15 2003/12/06 17:24:47 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      3.0
  */
 public class ComponentConfig {
@@ -318,7 +318,7 @@ public class ComponentConfig {
             this.webappInfos.add(webappInfo);
         }
         
-        Debug.logInfo("Loaded component : " + globalName + " [" + rootLocation + "]", module);
+        if (Debug.verboseOn()) Debug.logVerbose("Read component config : [" + rootLocation + "]", module);
     }
     
     public boolean isFileResource(ResourceInfo resourceInfo) throws ComponentException {
