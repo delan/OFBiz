@@ -1,0 +1,183 @@
+<!ELEMENT NetworkDesign (Task*, Arc*)>
+
+<!ELEMENT Task (Description?, Roles*, Realization, Invocation*, Output*, Exception*, DataSecurityMask*, Constraint*, InputOperator?, OutputOperator?)>
+	<!ATTLIST Task 
+		id ID #REQUIRED
+		name CDATA #IMPLIED
+		securitydomainurl CDATA #REQUIRED
+		timeout CDATA #IMPLIED
+		host CDATA #IMPLIED
+		foreigntask (true|false) #IMPLIED
+		x CDATA #REQUIRED
+		y CDATA #REQUIRED
+		inarcs IDREFS #IMPLIED
+		outarcs IDREFS #IMPLIED
+		exceptionarcs IDREFS #IMPLIED>
+
+<!ELEMENT Arc (BoundaryInfo?, Mapping*)>
+	<!ATTLIST Arc 
+		arctype (Success|Fail|Alternative) #REQUIRED
+		id ID #REQUIRED
+		exception CDATA #IMPLIED
+		alternativetransition IDREF #IMPLIED
+		source IDREF #REQUIRED
+		destination IDREF #REQUIRED>
+
+
+<!ELEMENT Description (#PCDATA)>
+<!ELEMENT Realization (NetworkTaskRealization | SimpleRealization | SyncRealization)>
+
+
+<!ELEMENT SyncRealization (#PCDATA)>
+	<!ATTLIST SyncRealization 
+		syncType (SynchronizationTaskIn | SynchronizationTaskOut) #IMPLIED>
+<!ELEMENT NetworkTaskRealization (Domain+)>
+	<!ATTLIST NetworkTaskRealization 
+		firsttask IDREF #IMPLIED
+		lasttask IDREF #IMPLIED
+		realizationtype (NonTransactionalNetwork | TransactionalNetwork | Open2PCNetwork | CompositeNetwork) #IMPLIED>
+
+<!ELEMENT SimpleRealization (CollaborationRealization | HumanRealization | NonTransactionalTaskRealization | TransactionalTaskRealization)>
+
+<!ELEMENT CollaborationRealization (CollaborationObject)>
+	<!ATTLIST CollaborationRealization
+		collaborationtool CDATA #IMPLIED
+		collaborationtoolinvocation CDATA #IMPLIED>
+
+<!ELEMENT CollaborationObject EMPTY >
+	<!ATTLIST CollaborationObject 
+		objectname CDATA #IMPLIED
+		objecturl CDATA #IMPLIED
+		receiverrole CDATA #IMPLIED
+		receivername CDATA #IMPLIED>
+
+<!ELEMENT HumanRealization EMPTY>
+	<!ATTLIST HumanRealization templatefile CDATA #IMPLIED>
+
+<!ELEMENT NonTransactionalTaskRealization (TaskInvocation | CorbaInvocation)>
+	<!ATTLIST NonTransactionalTaskRealization type (TaskInvocation | CorbaInvocation) #REQUIRED>
+
+<!ELEMENT TransactionalTaskRealization (TransactionalInput*, TransactionalOutput*)>
+	<!ATTLIST TransactionalTaskRealization
+		url CDATA #IMPLIED 
+		database CDATA #IMPLIED
+		username CDATA #IMPLIED
+		userpassword CDATA #IMPLIED
+		query CDATA #IMPLIED>
+
+<!ELEMENT Roles (Role*)>
+	<!ATTLIST Roles roledomain CDATA #IMPLIED>
+<!ELEMENT Role EMPTY>
+	<!ATTLIST Role url CDATA #IMPLIED>
+
+<!ELEMENT Invocation (Parameter)*>
+<!ELEMENT Parameter EMPTY >
+	<!ATTLIST Parameter 
+		id ID #REQUIRED
+		datatypeurl CDATA #REQUIRED
+		variablename CDATA #REQUIRED>
+
+<!ELEMENT Output EMPTY >
+	<!ATTLIST Output 
+		id ID #REQUIRED
+		datatypeurl CDATA #REQUIRED
+		variablename CDATA #REQUIRED>
+
+<!ELEMENT TaskException (LocalHandler?)>
+	<!ATTLIST TaskException 
+		id ID #REQUIRED
+		datatypeurl CDATA #REQUIRED
+		variablename CDATA #REQUIRED>
+
+<!ELEMENT LocalHandler EMPTY>
+	<!ATTLIST LocalHandler 
+		retrytimes CDATA #REQUIRED
+		retrydelay CDATA #REQUIRED
+		rethrowexception CDATA #REQUIRED
+		email CDATA #REQUIRED>
+
+<!ELEMENT DataSecurityMask (FieldMask*)>
+	<!ATTLIST DataSecurityMask dataname CDATA #REQUIRED>
+<!ELEMENT FieldMask EMPTY >
+	<!ATTLIST FieldMask 
+		fieldname CDATA #REQUIRED
+		accesstype (ReadOnly|NoAccess|FullControl) #REQUIRED>
+
+<!ELEMENT Constraint (#PCDATA)>
+
+<!ELEMENT Domain (Compartment*)>
+	<!ATTLIST Domain 
+		id ID #REQUIRED
+		url CDATA #REQUIRED
+		tasks IDREFS #IMPLIED
+		x CDATA #REQUIRED
+		y CDATA #REQUIRED
+		width CDATA #REQUIRED
+		height CDATA #REQUIRED>
+<!ELEMENT Compartment (Compartment*)>
+	<!ATTLIST Compartment 
+		id ID #REQUIRED
+		name CDATA #REQUIRED
+		tasks IDREFS #IMPLIED
+		x CDATA #REQUIRED
+		y CDATA #REQUIRED
+		width CDATA #REQUIRED
+		height CDATA #REQUIRED>
+
+<!ELEMENT BoundaryInfo (PumpBoundaryInfo|GenericBoundaryInfo)>
+
+<!ELEMENT PumpBoundaryInfo EMPTY>
+	<!ATTLIST PumpBoundaryInfo 
+		receiverhost CDATA #REQUIRED
+		receiverport CDATA #REQUIRED
+		senderhost CDATA #REQUIRED
+		senderport CDATA #REQUIRED
+		pumphost CDATA #REQUIRED
+		pumpport CDATA #REQUIRED>
+
+<!ELEMENT GenericBoundaryInfo EMPTY>
+	<!ATTLIST GenericBoundaryInfo 
+		receiverhost CDATA #REQUIRED
+		receiverport CDATA #REQUIRED
+		optionstring CDATA #REQUIRED>
+
+<!ELEMENT TaskInvocation (#PCDATA)>
+<!ELEMENT CorbaInvocation (Parameter*, ForwardMappingList, ReverseMappingList)>
+	<!ATTLIST CorbaInvocation 
+		objectmarker CDATA #REQUIRED
+		servername CDATA #REQUIRED
+		serverhost CDATA #REQUIRED
+		classname CDATA #REQUIRED
+		methodname CDATA #REQUIRED
+		returnvalue CDATA #REQUIRED>
+
+<!ELEMENT TransactionalInput (#PCDATA)>
+<!ELEMENT TransactionalOutput (#PCDATA)>
+<!ELEMENT Exception (#PCDATA)>
+
+<!ELEMENT CorbaMapping EMPTY >
+	<!ATTLIST CorbaMapping 
+		firstElement CDATA #REQUIRED
+		secondElement CDATA #REQUIRED>
+<!ELEMENT Mapping EMPTY >
+	<!ATTLIST Mapping 
+		firstElement IDREF #REQUIRED
+		secondElement IDREF #REQUIRED>
+
+<!ELEMENT ForwardMappingList (CorbaMapping)*>
+<!ELEMENT ReverseMappingList (CorbaMapping)*>
+
+<!ELEMENT InputOperator (Operator)>
+<!ELEMENT OutputOperator (Operator)>
+
+<!ELEMENT Operator (Field)*>
+	<!ATTLIST Operator 
+		id ID #REQUIRED
+		type (or|and|loop) #REQUIRED>
+
+<!-- terminal Field points to task, non-terminal has Operator -->
+<!ELEMENT Field (Operator?)>
+	<!ATTLIST Field 
+		id ID #REQUIRED
+		condition CDATA #IMPLIED
+		task IDREF #IMPLIED>

@@ -1,0 +1,45 @@
+<?xml encoding="US-ASCII"?>
+
+<!--
+    Workflow DataClass Data Type Definition (DTD)
+    Revision: 1
+    Date:  Dec 09, 1998
+    Revision: 1.1
+    Date:  Jan 12, 1999
+    Revision: 1.2
+    Date:  Mar 3, 1999
+
+    Simple types allowed are :
+
+	boolean	short		unsigned short
+	char		long		unsigned long
+	wchar		long long	unsigned long long
+	string	float		double
+	wstring	any		octet
+	
+    Special return type :  void
+
+-->
+
+<!ELEMENT DataClass (Name,Package?,Parent?,FieldList,MethodList)>
+
+<!ELEMENT Name (#PCDATA)>
+<!ELEMENT Package (#PCDATA)>
+<!ELEMENT Parent (Url)>
+<!ELEMENT FieldList (Field)*>
+<!ELEMENT MethodList (Method*)>
+
+<!ELEMENT Url EMPTY>
+<!ATTLIST Url href CDATA #REQUIRED>
+<!ELEMENT Field (Type,Name,DefaultValue?)>
+<!ELEMENT Method (Type,Name,ParametersList,Exception*)>
+
+<!ELEMENT Type ((SimpleType|Url), Dimension*)>
+<!ELEMENT DefaultValue (#PCDATA)>
+<!ELEMENT ParametersList (Parameter*)>
+<!ELEMENT Exception (#PCDATA)>
+
+<!ELEMENT SimpleType (#PCDATA)>
+<!ELEMENT Parameter (Type,Name,DefaultValue?)>
+
+<!ELEMENT Dimension (#PCDATA)>

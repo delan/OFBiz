@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<!-- 
+     defaultRoleDomain
+     Revision: 1
+     Tue Nov 07 12:34:37 EST 2000
+-->
+
+<!DOCTYPE NetworkDesign SYSTEM "file:///c:/workflow/newdesigner/dtd/RoleDomain.dtd">
+
+<RoleDomain id="RoleDomain_defaultRoleDomain">
+  <Name>defaultRoleDomain</Name>
+  <Description></Description>
+</RoleDomain>

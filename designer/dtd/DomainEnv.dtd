@@ -1,0 +1,35 @@
+<?xml encoding="US-ASCII"?>
+
+<!--
+    Workflow DomainEnv Data Type Definition (DTD)
+    Revision: 1
+    Date:  Oct 22, 1998
+-->
+
+<!ELEMENT DomainEnv (Name, DomainInfo*, PolicyRecord*, DomainRelationship*)>
+<!ATTLIST DomainEnv id ID #REQUIRED
+                date CDATA #IMPLIED>
+
+<!ELEMENT Name (#PCDATA)>
+<!ELEMENT DomainInfo (Name, Color, Position?, Description)>
+<!ATTLIST DomainInfo id ID #REQUIRED>
+
+<!ELEMENT Color (Number, Number, Number)>
+<!ELEMENT Position (Number, Number)>
+<!ELEMENT Description (#PCDATA)>
+<!ELEMENT Number (#PCDATA)>
+
+<!ELEMENT PolicyRecord (#PCDATA)>
+<!ATTLIST PolicyRecord id ID #REQUIRED
+			policyType (Receive | Send) #REQUIRED
+			fromDomain IDREF #REQUIRED
+			toDomain IDREF #REQUIRED>
+<!ELEMENT DomainRelationship EMPTY>
+<!ATTLIST DomainRelationship id ID #REQUIRED
+			highDomain IDREF #REQUIRED
+			lowDomain IDREF #REQUIRED>
+
+
+
+
+

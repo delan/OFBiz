@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE NetworkDesign SYSTEM "file:///c:/workflow/newdesigner/dtd/RoleDomain.dtd">
+
+<RoleDomain id="test0">
+  <Name>test0</Name>
+  <Description></Description>
+  <Role id="Node0">
+    <Name>Accountant</Name>
+    <Description></Description>
+    <Privileges>It is the privelege of the accountant to handle the finances.</Privileges>
+    <Color>
+      <Number>102</Number>
+      <Number>255</Number>
+      <Number>51</Number>
+    </Color>
+    <Position>
+      <Number>191</Number>
+      <Number>146</Number>
+    </Position>
+  </Role>
+  <Role id="Node1">
+    <Name>Analyst</Name>
+    <Description></Description>
+    <Privileges>It is the privelege of the analyst to provide decision-makers with data.</Privileges>
+    <Color>
+      <Number>255</Number>
+      <Number>0</Number>
+      <Number>51</Number>
+    </Color>
+    <Position>
+      <Number>159</Number>
+      <Number>286</Number>
+    </Position>
+  </Role>
+  <RoleRelationship highRole="Node0" lowRole="Node1" id="Node0Node1"/>
+</RoleDomain>

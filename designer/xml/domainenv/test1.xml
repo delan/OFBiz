@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE DomainEnv SYSTEM "C:\workflow\LatticeEditor\Data\DomainEnv.dtd">
+
+<DomainEnv id="test1">
+  <Name>test1</Name>
+  <DomainInfo id="Node1">
+    <Name>Unclassified</Name>
+    <Color>
+      <Number>51</Number>
+      <Number>51</Number>
+      <Number>255</Number>
+    </Color>
+    <Position>
+      <Number>132</Number>
+      <Number>396</Number>
+    </Position>
+    <Description>This is the Unclassified Domain</Description>
+  </DomainInfo>
+  <DomainInfo id="Node2">
+    <Name>Secret</Name>
+    <Color>
+      <Number>0</Number>
+      <Number>210</Number>
+      <Number>100</Number>
+    </Color>
+    <Position>
+      <Number>129</Number>
+      <Number>283</Number>
+    </Position>
+    <Description>This is the Secret Domain</Description>
+  </DomainInfo>
+  <DomainInfo id="Node3">
+    <Name>Top Secret</Name>
+    <Color>
+      <Number>211</Number>
+      <Number>255</Number>
+      <Number>110</Number>
+    </Color>
+    <Position>
+      <Number>139</Number>
+      <Number>150</Number>
+    </Position>
+    <Description>This is the Top Secret Domain</Description>
+  </DomainInfo>
+  <DomainInfo id="Node4">
+    <Name>New</Name>
+    <Color>
+      <Number>0</Number>
+      <Number>0</Number>
+      <Number>0</Number>
+    </Color>
+    <Position>
+      <Number>172</Number>
+      <Number>53</Number>
+    </Position>
+    <Description></Description>
+  </DomainInfo>
+  <PolicyRecord fromDomain="Node1" toDomain="Node2" policyType="Send" id="Node1Node2Send">Unclassified's send policy to Secret</PolicyRecord>
+  <PolicyRecord fromDomain="Node1" toDomain="Node2" policyType="Receive" id="Node1Node2Receive">Secret's send policy to Unclassified</PolicyRecord>
+  <PolicyRecord fromDomain="Node2" toDomain="Node1" policyType="Send" id="Node2Node1Send">Secret's send policy to Unclassified</PolicyRecord>
+  <PolicyRecord fromDomain="Node2" toDomain="Node1" policyType="Receive" id="Node2Node1Receive">Secret's receive policy from Unclassified</PolicyRecord>
+  <PolicyRecord fromDomain="Node3" toDomain="Node2" policyType="Send" id="Node3Node2Send">Top Secret's send policy to Secret</PolicyRecord>
+  <PolicyRecord fromDomain="Node3" toDomain="Node2" policyType="Receive" id="Node3Node2Receive">Top Secret's Receive Policy from  Secret</PolicyRecord>
+  <PolicyRecord fromDomain="Node2" toDomain="Node3" policyType="Send" id="Node2Node3Send">Secret's send policy to Top Secret</PolicyRecord>
+  <PolicyRecord fromDomain="Node2" toDomain="Node3" policyType="Receive" id="Node2Node3Receive">Secret's receive policy from Top Secret</PolicyRecord>
+  <DomainRelationship lowDomain="Node1" highDomain="Node2" id="Node2Node1"/>
+  <DomainRelationship lowDomain="Node2" highDomain="Node3" id="Node3Node2"/>
+  <DomainRelationship lowDomain="Node3" highDomain="Node4" id="Node4Node3"/>
+</DomainEnv>
