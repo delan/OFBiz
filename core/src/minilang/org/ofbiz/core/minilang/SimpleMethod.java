@@ -690,6 +690,10 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.FindByPrimaryKey(curOperElem, simpleMethod));
                 } else if ("find-by-and".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.FindByAnd(curOperElem, simpleMethod));
+                } else if ("get-related-one".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.GetRelatedOne(curOperElem, simpleMethod));
+                } else if ("get-related".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.GetRelated(curOperElem, simpleMethod));
                 } else if ("filter-list-by-and".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.FilterListByAnd(curOperElem, simpleMethod));
                 } else if ("filter-list-by-date".equals(nodeName)) {
@@ -743,8 +747,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.CheckPermission(curOperElem, simpleMethod));
                 } else if ("check-id".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.CheckId(curOperElem, simpleMethod));
-                } else if ("else".equals(nodeName)) {// don't add anything, but don't complain either, this one is handled in the individual operations
-                    
+                } else if ("else".equals(nodeName)) {
+                    // don't add anything, but don't complain either, this one is handled in the individual operations
                 } else if ("property-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.otherops.PropertyToField(curOperElem, simpleMethod));
                 } else if ("calculate".equals(nodeName)) {

@@ -46,7 +46,7 @@
 <!ENTITY % ServiceOperations "field-to-result">
 <!ENTITY % EnvOperations "map-to-map | field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | string-to-list | to-string | clear-field | iterate | first-from-list">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env | set-current-user-login">
-<!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and | filter-list-by-and | filter-list-by-date">
+<!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and | get-related-one | get-related | filter-list-by-and | filter-list-by-date">
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-related | remove-by-and | clear-cache-line | clear-entity-caches | set-pk-fields | set-nonpk-fields">
 <!ENTITY % EntityListOperations "store-list | remove-list">
 <!ENTITY % EntityTxOperations "transaction-begin | transaction-commit | transaction-rollback">
@@ -446,6 +446,22 @@ engine and facilitate related operations.
     delegator-name CDATA #IMPLIED
     use-cache ( true | false ) "false"
     use-iterator ( true | false ) "false"
+>
+<!ELEMENT get-related-one EMPTY>
+<!ATTLIST get-related-one
+    value-name CDATA #REQUIRED
+    relation-name CDATA #REQUIRED
+    use-cache ( true | false ) "false"
+    to-value-name CDATA #REQUIRED
+>
+<!ELEMENT get-related EMPTY>
+<!ATTLIST get-related
+    value-name CDATA #REQUIRED
+    relation-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
+    order-by-list-name CDATA #IMPLIED
+    use-cache ( true | false ) "false"
+    list-name CDATA #REQUIRED
 >
 <!ELEMENT filter-list-by-and EMPTY>
 <!ATTLIST filter-list-by-and
