@@ -263,26 +263,6 @@ public class PaymentServices {
         if (result.size() > 0)
             return result;
 
-        // do some more complicated/critical validation...
-        List messages = new LinkedList();
-
-        // first remove all spaces from the credit card number
-        context.put("cardNumber", StringUtil.removeSpaces((String) context.get("cardNumber")));
-        if (!UtilValidate.isCardMatch((String) context.get("cardType"), (String) context.get("cardNumber")))
-            messages.add(
-                (String) context.get("cardNumber")
-                    + UtilValidate.isCreditCardPrefixMsg
-                    + (String) context.get("cardType")
-                    + UtilValidate.isCreditCardSuffixMsg
-                    + " (It appears to be a "
-                    + UtilValidate.getCardType((String) context.get("cardNumber"))
-                    + " credit card number)");
-        if (!UtilValidate.isDateAfterToday((String) context.get("expireDate")))
-            messages.add("The expiration date " + (String) context.get("expireDate") + " is before today.");
-        if (messages.size() > 0) {
-            return ServiceUtil.returnError(messages);
-        }
-
         List toBeStored = new LinkedList();
         boolean isModified = false;
 
@@ -306,6 +286,46 @@ public class PaymentServices {
             return ServiceUtil.returnError(
                 "ERROR: Could not find credit card to update with payment method id " + paymentMethodId);
         }
+        
+        // do some more complicated/critical validation...
+        List messages = new LinkedList();
+        
+        // first remove all spaces from the credit card number       
+        String updatedCardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
+        if (updatedCardNumber.startsWith("*")) {
+            Debug.log(updatedCardNumber);
+            // get the masked card number from the db
+            String origCardNumber = creditCard.getString("cardNumber");
+            Debug.log(origCardNumber);
+            String origMaskedNumber = "";
+            int cardLength = origCardNumber.length() - 4;
+            for (int i = 0; i < cardLength; i++) {
+                origMaskedNumber = origMaskedNumber + "*";
+            }
+            origMaskedNumber = origMaskedNumber + origCardNumber.substring(cardLength);
+            Debug.log(origMaskedNumber);
+            
+            // compare the two masked numbers
+            if (updatedCardNumber.equals(origMaskedNumber)) {
+                updatedCardNumber = origCardNumber;
+            }            
+        }
+        context.put("cardNumber", updatedCardNumber);
+        
+        if (!UtilValidate.isCardMatch((String) context.get("cardType"), (String) context.get("cardNumber")))
+            messages.add(
+                (String) context.get("cardNumber")
+                    + UtilValidate.isCreditCardPrefixMsg
+                    + (String) context.get("cardType")
+                    + UtilValidate.isCreditCardSuffixMsg
+                    + " (It appears to be a "
+                    + UtilValidate.getCardType((String) context.get("cardNumber"))
+                    + " credit card number)");
+        if (!UtilValidate.isDateAfterToday((String) context.get("expireDate")))
+            messages.add("The expiration date " + (String) context.get("expireDate") + " is before today.");
+        if (messages.size() > 0) {
+            return ServiceUtil.returnError(messages);
+        }        
 
         newPm = new GenericValue(paymentMethod);
         toBeStored.add(newPm);
