@@ -790,7 +790,7 @@
 
     <view-map name="QuickAddVariants" type="region"/>
 
-    <view-map name="EditFeatureCategories" type="region"/>
+    <view-map name="EditFeatureCategories" type="jpublish" page="/feature/EditFeatureCategories.ftl"/>
     <view-map name="EditFeatureCategoryFeatures" type="region"/>
 
     <view-map name="FindProdCatalog" type="jpublish" page="/catalog/FindProdCatalog.ftl"/>
