@@ -25,38 +25,15 @@
 -->
 
 <#assign security = requestAttributes.security>
+<#assign unselectedClassName = "headerButtonLeft">
+<#assign selectedClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
 <div class="apptitle">&nbsp;Work Effort Manager Application&nbsp;</div>
 <div class="row">
-<#if requestAttributes.isMainSelected?default(false)> 
-<#assign headerClass = "headerButtonLeftSelected">
-<#else>
-<#assign headerClass = "headerButtonLeft">
-</#if>
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${headerClass}">Main</a></div>   
-<#if requestAttributes.isTaskSelected?default(false)> 
-<#assign headerClass = "headerButtonLeftSelected">
-<#else>
-<#assign headerClass = "headerButtonLeft">
-</#if> 
-  <div class="col"><a href="<@ofbizUrl>/mytasks</@ofbizUrl>" class="${headerClass}">Task&nbsp;List</a></div>
-<#if requestAttributes.isCalendarSelected?default(false)> 
-<#assign headerClass = "headerButtonLeftSelected">
-<#else>
-<#assign headerClass = "headerButtonLeft">
-</#if> 
-  <div class="col"><a href="<@ofbizUrl>/day</@ofbizUrl>" class="${headerClass}">Calendar</a></div>
-<#if requestAttributes.isProjectSelected?default(false)> 
-<#assign headerClass = "headerButtonLeftSelected">
-<#else>
-<#assign headerClass = "headerButtonLeft">
-</#if> 
-  <div class="col"><a href="<@ofbizUrl>/projectlist</@ofbizUrl>" class="${headerClass}">Projects</a></div>
-<#if requestAttributes.isRequestSelected?default(false)> 
-<#assign headerClass = "headerButtonLeftSelected">
-<#else>
-<#assign headerClass = "headerButtonLeft">
-</#if> 
-  <div class="col"><a href="<@ofbizUrl>/requestlist</@ofbizUrl>" class="${headerClass}">Requests</a></div>  
+  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedClassMap.main?default(unselectedClassName)}">Main</a></div>   
+  <div class="col"><a href="<@ofbizUrl>/mytasks</@ofbizUrl>" class="${selectedClassMap.task?default(unselectedClassName)}">Task&nbsp;List</a></div>
+  <div class="col"><a href="<@ofbizUrl>/day</@ofbizUrl>" class="${selectedClassMap.calendar?default(unselectedClassName)}">Calendar</a></div>
+  <div class="col"><a href="<@ofbizUrl>/projectlist</@ofbizUrl>" class="${selectedClassMap.project?default(unselectedClassName)}">Projects</a></div>
+  <div class="col"><a href="<@ofbizUrl>/requestlist</@ofbizUrl>" class="${selectedClassMap.request?default(unselectedClassName)}">Requests</a></div>  
   <#if userLogin?has_content>
   <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
   <#else>
