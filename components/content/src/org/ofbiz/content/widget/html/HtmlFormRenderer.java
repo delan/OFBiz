@@ -864,6 +864,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
         ModelFormField submitField = modelForm.getMultiSubmitField();
         if (submitField != null) {
 
+            // Threw this in that as a hack to keep the submit button from expanding the first field
+            // Needs a more rugged solution
+            this.renderFormatItemRowCellOpen(buffer, context, modelForm, submitField);
+            this.renderFormatItemRowCellClose(buffer, context, modelForm, submitField);
+            
             this.renderFormatItemRowCellOpen(buffer, context, modelForm, submitField);
 
             submitField.renderFieldString(buffer, context, this);
