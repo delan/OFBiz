@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.5 2003/09/19 06:05:12 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.6 2003/10/14 22:34:46 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,6 +50,7 @@ import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.datasource.GenericHelper;
 import org.ofbiz.entity.datasource.GenericHelperFactory;
 import org.ofbiz.entity.eca.EntityEcaHandler;
+import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.model.ModelFieldType;
@@ -58,6 +59,7 @@ import org.ofbiz.entity.model.ModelGroupReader;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.model.ModelReader;
 import org.ofbiz.entity.model.ModelRelation;
+import org.ofbiz.entity.model.ModelViewEntity;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entity.util.EntityFindOptions;
@@ -75,7 +77,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -991,7 +993,7 @@ public class GenericDelegator implements DelegatorInterface {
     }
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
-     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
+     *@param entityName The name of the Entity as defined in the entity XML file
      *@param whereEntityCondition The EntityCondition object that specifies how to constrain this query before any groupings are done (if this is a view entity with group-by aliases)
      *@param havingEntityCondition The EntityCondition object that specifies how to constrain this query after any groupings are done (if this is a view entity with group-by aliases)
      *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
@@ -1005,20 +1007,46 @@ public class GenericDelegator implements DelegatorInterface {
             throws GenericEntityException {
 
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericValue dummyValue = new GenericValue(modelEntity); 
-        Map ecaEventMap = this.getEcaEntityEventMap(entityName);
+        GenericValue dummyValue = new GenericValue(modelEntity);
+        Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
         this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
 
         if (whereEntityCondition != null) whereEntityCondition.checkCondition(modelEntity);
         if (havingEntityCondition != null) havingEntityCondition.checkCondition(modelEntity);
 
         this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-        GenericHelper helper = getEntityHelper(entityName);
+        GenericHelper helper = getEntityHelper(modelEntity.getEntityName());
         EntityListIterator eli = helper.findListIteratorByCondition(modelEntity, whereEntityCondition,
                 havingEntityCondition, fieldsToSelect, orderBy, findOptions);
         eli.setDelegator(this);
 
         this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+        return eli;
+    }
+
+    /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
+     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
+     *@param whereEntityCondition The EntityCondition object that specifies how to constrain this query before any groupings are done (if this is a view entity with group-by aliases)
+     *@param havingEntityCondition The EntityCondition object that specifies how to constrain this query after any groupings are done (if this is a view entity with group-by aliases)
+     *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
+     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
+     *@param findOptions An instance of EntityFindOptions that specifies advanced query options. See the EntityFindOptions JavaDoc for more details.
+     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE 
+     *      DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
+     */
+    public EntityListIterator findListIteratorByCondition(DynamicViewEntity dynamicViewEntity, EntityCondition whereEntityCondition,
+            EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions)
+            throws GenericEntityException {
+
+        ModelViewEntity modelViewEntity = dynamicViewEntity.makeModelViewEntity(this);
+        if (whereEntityCondition != null) whereEntityCondition.checkCondition(modelViewEntity);
+        if (havingEntityCondition != null) havingEntityCondition.checkCondition(modelViewEntity);
+
+        GenericHelper helper = getEntityHelper(dynamicViewEntity.getOneRealEntityName());
+        EntityListIterator eli = helper.findListIteratorByCondition(modelViewEntity, whereEntityCondition,
+                havingEntityCondition, fieldsToSelect, orderBy, findOptions);
+        eli.setDelegator(this);
+
         return eli;
     }
 
