@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  This is the DTD for the Open For Business Entity Engine configuration XML file.
- *  $Id: entity-config.dtd,v 1.6 2003/11/23 01:33:58 ajzeneski Exp $
+ *  $Id: entity-config.dtd,v 1.7 2004/01/21 13:37:40 ajzeneski Exp $
 -->
 
 <!-- ====================== Root Element ======================= -->
@@ -122,7 +122,7 @@
     check-fks-on-start ( true | false ) "false"
     check-fk-indices-on-start ( true | false ) "false"
     fk-style ( name_constraint | name_fk ) "name_constraint"
-    use-fk-initially-deferred ( true | false ) "true"
+    use-fk-initially-deferred ( true | false ) "false"
     use-indices ( true | false ) "true"
     check-indices-on-start ( true | false ) "false"
     join-style ( ansi | ansi-no-parenthesis | theta-oracle | theta-mssql ) "ansi"
