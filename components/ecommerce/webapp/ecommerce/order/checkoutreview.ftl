@@ -44,7 +44,7 @@
 </script>
 
 <p class="head1">${uiLabelMap.OrderFinalCheckoutReview}</p>
-<p>${uiLabelMap.OrderDemoFrontNote}.</p>
+<#if !isDemoStore?exists || isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
 
 <#if cart?exists && 0 < cart.size()>
   ${pages.get("/order/orderheader.ftl")}

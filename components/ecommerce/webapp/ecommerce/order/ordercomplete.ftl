@@ -20,12 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <p class="head1">${uiLabelMap.OrderConfirmation}</p>
-<p>${uiLabelMap.OrderDemoFrontNote}.</p>
+<#if !isDemoStore?exists || isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
 
 <#if orderHeader?has_content>
   <#include "orderheader.ftl">

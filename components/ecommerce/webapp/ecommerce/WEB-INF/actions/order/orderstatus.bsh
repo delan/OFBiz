@@ -114,6 +114,10 @@ if (orderHeader != null) {
     webSiteId = CatalogWorker.getWebSiteId(request);
     
     productStore = ProductStoreWorker.getProductStore(request);
+
+    isDemoStore = !"N".equals(productStore.getString("isDemoStore"));
+    context.put("isDemoStore", isDemoStore);
+    
     payToPartyId = productStore.getString("payToPartyId");
     paymentAddress =  PaymentWorker.getPaymentAddress(delegator, payToPartyId);    
     if (paymentAddress != null) context.put("paymentAddress", paymentAddress);  
