@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.4 2003/12/06 08:15:28 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.5 2003/12/09 20:43:53 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.entityext.synchronization;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -162,10 +163,13 @@ public class EntitySyncServices {
                 // TODO: make sure tx times are indexed somehow
                 // TODO: save info about removed, all entities that don't have no-auto-stamp set, this will be done in the GenericDAO like the stamp sets
                 
+                // simulate two ordered lists and merge them on-the-fly for faster combined sorting
+                ArrayList valuesToStore = new ArrayList(); // make it an ArrayList to easily merge in sorted lists
+                
                 // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
-                List valuesToStore = new LinkedList();
                 Iterator entityModelToUseIter = entityModelToUseList.iterator();
                 while (entityModelToUseIter.hasNext()) {
+                    int insertBefore = 0;
                     ModelEntity modelEntity = (ModelEntity) entityModelToUseIter.next();
                     // find all instances of this entity with the STAMP_TX_FIELD != null, sort ascending to get lowest/oldest value first, then grab first and consider as candidate currentRunStartTime
                     EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
@@ -174,7 +178,11 @@ public class EntitySyncServices {
                     EntityListIterator eli = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findValCondition, null, UtilMisc.toList(ModelEntity.STAMP_FIELD));
                     GenericValue nextValue = null;
                     while ((nextValue = (GenericValue) eli.next()) != null) {
-                        valuesToStore.add(nextValue);
+                        // find first value in valuesToStore list, starting with the current insertBefore value, that has a STAMP_FIELD after the nextValue.STAMP_FIELD
+                        while (insertBefore < valuesToStore.size() && ((GenericValue) valuesToStore.get(insertBefore)).getTimestamp(ModelEntity.STAMP_FIELD).before(nextValue.getTimestamp(ModelEntity.STAMP_FIELD))) {
+                            insertBefore++;
+                        }
+                        valuesToStore.add(insertBefore, nextValue);
                     }
                     eli.close();
                 }
@@ -356,14 +364,58 @@ public class EntitySyncServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         
-        // TODO: sort incoming lists by lastUpdatedStamp
+        String entitySyncId = (String) context.get("entitySyncId");
+        // incoming lists will already be sorted by lastUpdatedStamp
+        List valuesToStore = (List) context.get("valuesToStore");
+        List keysToRemove = (List) context.get("keysToRemove");
         
-        // TODO: iterate through to store list and store each
-        // TODO: to store check if exists (find by pk), if not insert; if exists check lastUpdatedStamp: if null or before the candidate value insert, otherwise don't insert
-        
-        // TODO: iterate through to remove list and remove each
-        
-        return ServiceUtil.returnSuccess();
+        try {
+            long numInserted = 0;
+            long numUpdated = 0;
+            long numNotUpdated = 0;
+            long numRemoved = 0;
+            long numAlreadyRemoved = 0;
+            
+            // iterate through to store list and store each
+            Iterator valueToStoreIter = valuesToStore.iterator();
+            while (valueToStoreIter.hasNext()) {
+                GenericValue valueToStore = (GenericValue) valueToStoreIter.next();
+                // to store check if exists (find by pk), if not insert; if exists check lastUpdatedStamp: if null or before the candidate value insert, otherwise don't insert
+                // NOTE: use the delegator from this DispatchContext rather than the one named in the GenericValue
+                GenericValue existingValue = delegator.findByPrimaryKey(valueToStore.getPrimaryKey());
+                if (existingValue == null) {
+                    delegator.create(valueToStore);
+                    numInserted++;
+                } else {
+                    // if the existing value has a stamp field that is AFTER the stamp on the valueToStore, don't update it
+                    if (existingValue.get(ModelEntity.STAMP_FIELD) != null && existingValue.getTimestamp(ModelEntity.STAMP_FIELD).after(valueToStore.getTimestamp(ModelEntity.STAMP_FIELD))) {
+                        numNotUpdated++;
+                    } else {
+                        delegator.store(valueToStore);
+                        numUpdated++;
+                    }
+                }
+            }
+            
+            // iterate through to remove list and remove each
+            Iterator keyToRemoveIter = keysToRemove.iterator();
+            while (keyToRemoveIter.hasNext()) {
+                GenericValue keyToRemove = (GenericValue) keyToRemoveIter.next();
+                // TODO: pull the PK from the EntitySyncRemove in the primaryKeyRemoved field, de-XML-serialize it and check to see if it exists, if so remove and count, if not just count already removed
+            }
+            
+            Map result = ServiceUtil.returnSuccess();
+            result.put("numInserted", new Long(numInserted));
+            result.put("numUpdated", new Long(numUpdated));
+            result.put("numNotUpdated", new Long(numNotUpdated));
+            result.put("numRemoved", new Long(numRemoved));
+            result.put("numAlreadyRemoved", new Long(numAlreadyRemoved));
+            return result;
+        } catch (GenericEntityException e) {
+            String errorMsg = "Error saving Entity Sync Data for entitySyncId [" + entitySyncId + "]: " + e.toString();
+            Debug.logError(e, errorMsg, module);
+            return ServiceUtil.returnError(errorMsg);
+        }
     }
 }
 
