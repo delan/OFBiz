@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFunction.java,v 1.2 2004/05/02 05:46:40 doogie Exp $
+ * $Id: EntityFunction.java,v 1.3 2004/07/06 22:50:35 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -96,6 +96,10 @@ public abstract class EntityFunction extends EntityCondition {
 
     public int getId() {
         return idInt;
+    }
+
+    public int hashCode() {
+        return codeString.hashCode();
     }
 
     public boolean equals(Object obj) {
