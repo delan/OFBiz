@@ -108,10 +108,12 @@
             toFile="${etc.dir}/cache.properties" />
         
         <copy file="core/build/ofbcore.jar"
-            toFile="${lib.dir}/ofbcore.jar" />
-        
+            toFile="${lib.dir}/ofbcore.jar" />        
         <copy file="core/build/ofbcore-ejb.jar"
             toFile="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
+
+        <copy file="ecommerce/build/ofbecom.jar"
+            toFile="${lib.dir}/ofbecom.jar" />
     </target>
 
     <!-- Copy all files necessary for EXTERNAL running -->

@@ -7,5 +7,7 @@ cd core
 call ant
 cd ..\commonapp
 call ant
+cd ..\ecommerce
+call ant
 cd ..
 call ant
