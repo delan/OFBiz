@@ -85,7 +85,7 @@
         <td><div class="tabletext"><b>Appl&nbsp;Type</b></div></td>
         <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
         <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
-        <td><div class="tabletext">&nbsp;</div></td>
+        <td><div class="tabletext"><b>Amount</b></div></td>
         <td><div class="tabletext"><b>Sequence</b></div></td>
         <td colspan='3'><div class="tabletext">&nbsp;</div></td>
     <%}%>
@@ -139,7 +139,7 @@
         </td>
         <td><input type=text size='18' name='fromDate' style='font-size: x-small;'></td>
         <td><input type=text size='18' name='thruDate' style='font-size: x-small;'></td>
-        <td>&nbsp;</td>
+        <td><input type=text size='6' name='amount' style='font-size: x-small;'></td>
         <td><input type=text size='5' name='sequenceNum' value='<ofbiz:inputvalue entityAttr="productFeature" field="defaultSequenceNum"/>'></td>
       <td colspan='3' align=left><INPUT type=submit value='Apply'></td>
       </FORM>

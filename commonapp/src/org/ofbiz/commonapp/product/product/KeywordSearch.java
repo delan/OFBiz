@@ -37,6 +37,7 @@ import org.ofbiz.core.util.*;
  *@created Sep 4, 2001
  */
 public class KeywordSearch {
+    
     /** Does a product search by keyword using the PRODUCT_KEYWORD table.
      *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
      *@param delegator The delegator to look up the name of the helper/server to get a connection to
@@ -56,18 +57,23 @@ public class KeywordSearch {
      *@param intraKeywordOperator The operator to use inbetween the keywords, usually "AND" or "OR"
      *@return Collection of productId Strings
      */
-    public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
+    public static ArrayList productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
         if (delegator == null) {
             return null;
         }
         String helperName = null;
         helperName = delegator.getEntityHelperName("ProductKeyword");
         boolean useCategory = (categoryId != null && categoryId.length() > 0) ? true : false;
-
-        Collection pbkCollection = new LinkedList();
+        intraKeywordOperator = intraKeywordOperator.toUpperCase();
+        if (intraKeywordOperator == null || (!"AND".equals(intraKeywordOperator) && !"OR".equals(intraKeywordOperator))) {
+            Debug.logWarning("intraKeywordOperator [" + intraKeywordOperator + "] was not valid, defaulting to OR");
+            intraKeywordOperator = "OR";
+        }
+        
+        ArrayList pbkList = new ArrayList(100);
 
         String keywords[] = makeKeywordList(keywordsString);
-        List keywordList = fixKeywords(keywords, anyPrefix, anySuffix);
+        List keywordList = fixKeywords(keywords, anyPrefix, anySuffix, intraKeywordOperator);
         if (keywordList.size() == 0) {
             return null;
         }
@@ -90,24 +96,24 @@ public class KeywordSearch {
 
             for (int i = 0; i < params.size(); i++) {
                 statement.setString(i + 1, (String) params.get(i));
-                if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] Params: " + (String) params.get(i));
+                if (Debug.verboseOn()) Debug.logVerbose("[KeywordSearch] Params: " + (String) params.get(i));
             }
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
                 do {
-                    pbkCollection.add(resultSet.getString("PRODUCT_ID"));
-                } while (resultSet.next())
-                    ;
-                return pbkCollection;
+                    pbkList.add(resultSet.getString("PRODUCT_ID"));
+                    //Debug.logInfo("PRODUCT_ID=" + resultSet.getString("PRODUCT_ID") + " TOTAL_WEIGHT=" + resultSet.getInt("TOTAL_WEIGHT"));
+                } while (resultSet.next());
+                if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix);
+                return pbkList;
             } else {
-                if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] no results found for search string:" + keywordsString);
+                if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] no results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix);
                 return null;
             }
         } catch (java.sql.SQLException sqle) {
             Debug.logError(sqle);
-        }
-        catch (GenericEntityException e) {
+        } catch (GenericEntityException e) {
             Debug.logError(e);
         } finally { 
             try {
@@ -140,10 +146,18 @@ public class KeywordSearch {
         return keywords;
     }
 
-    protected static List fixKeywords(String keywords[], boolean anyPrefix, boolean anySuffix) {
+    protected static List fixKeywords(String keywords[], boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
         if (keywords == null) {
             return null;
         }
+        
+        String stopWordBag = null;
+        if (intraKeywordOperator.equals("AND")) {
+            stopWordBag = UtilProperties.getPropertyValue("general", "stop.word.bag.and");
+        } else {
+            stopWordBag = UtilProperties.getPropertyValue("general", "stop.word.bag.or");
+        }
+        
         List list = new LinkedList();
         String str = null;
         for (int i = 0; i < keywords.length; i++) {
@@ -152,6 +166,7 @@ public class KeywordSearch {
                 str = str.replace('*', '%');
                 str = str.replace('?', '_');
                 str = str.toLowerCase();
+                if (stopWordBag.indexOf(":" + str + ":") >= 0) continue;
 
                 StringBuffer strSb = new StringBuffer();
                 if (anyPrefix) strSb.append('%');
@@ -174,119 +189,192 @@ public class KeywordSearch {
         StringBuffer sql = new StringBuffer();
         Iterator keywordIter = keywords.iterator();
 
-        if (intraKeywordOperator == null || (!"AND".equalsIgnoreCase(intraKeywordOperator) && !"OR".equalsIgnoreCase(intraKeywordOperator))) {
-            Debug.logWarning("intraKeywordOperator [" + intraKeywordOperator + "] was not valid, defaulting to OR");
-            intraKeywordOperator = "OR";
+        boolean isAnd = intraKeywordOperator.equals("AND");
+        
+        //AND EXAMPLE:
+        //  SELECT DISTINCT P1.PRODUCT_ID, TOTAL_WEIGHT = P1.RELEVANCY_WEIGHT + P2.RELEVANCY_WEIGHT + P3.RELEVANCY_WEIGHT FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3
+        //  WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD = '1003027' ORDER BY TOTAL_WEIGHT DESC
+        //AND EXAMPLE WITH CATEGORY CONSTRAINT:
+        //  SELECT DISTINCT P1.PRODUCT_ID, CAT_SEQ_NUM = PCM.SEQUENCE_NUM, TOTAL_WEIGHT = P1.RELEVANCY_WEIGHT + P2.RELEVANCY_WEIGHT + P3.RELEVANCY_WEIGHT FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3, PRODUCT_CATEGORY_MEMBER PCM
+        //  WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD = '1003027' AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo' ORDER BY CAT_SEQ_NUM, TOTAL_WEIGHT DESC
+
+        //ORs are a little more complicated, so get individual results group them by PRODUCT_ID and sum the RELEVANCY_WEIGHT
+        //OR EXAMPLE:
+        //  SELECT DISTINCT P1.PRODUCT_ID, TOTAL_WEIGHT = SUM(P1.RELEVANCY_WEIGHT) FROM PRODUCT_KEYWORD P1
+        //  WHERE (P1.KEYWORD LIKE 'TI%' OR P1.KEYWORD LIKE 'HOUS%' OR P1.KEYWORD = '1003027') GROUP BY P1.PRODUCT_ID ORDER BY TOTAL_WEIGHT DESC
+        //OR EXAMPLE WITH CATEGORY CONSTRAINT:
+        //  SELECT DISTINCT P1.PRODUCT_ID, CAT_SEQ_NUM = MIN(PCM.SEQUENCE_NUM), TOTAL_WEIGHT = SUM(P1.RELEVANCY_WEIGHT) FROM PRODUCT_KEYWORD P1, PRODUCT_CATEGORY_MEMBER PCM
+        //  WHERE (P1.KEYWORD LIKE 'TI%' OR P1.KEYWORD LIKE 'HOUS%' OR P1.KEYWORD = '1003027') AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo' GROUP BY P1.PRODUCT_ID ORDER BY CAT_SEQ_NUM, TOTAL_WEIGHT DESC
+
+        StringBuffer from = new StringBuffer(" FROM ");
+        StringBuffer join = new StringBuffer(" WHERE ");
+        StringBuffer where = new StringBuffer(" (");
+        StringBuffer selectWeightTotal = new StringBuffer();
+        StringBuffer groupBy = new StringBuffer();
+        
+        if (isAnd) {
+            selectWeightTotal.append(", TOTAL_WEIGHT = P1.RELEVANCY_WEIGHT");
+            int i = 1;
+            while (keywordIter.hasNext()) {
+                String keyword = (String) keywordIter.next();
+                String comparator = "=";
+                if (keyword.indexOf('%') >= 0 || keyword.indexOf('_') >= 0) {
+                    comparator = " LIKE ";
+                }
+                params.add(keyword);
+                if (i == 1) {
+                    from.append("PRODUCT_KEYWORD P");
+                    from.append(i);
+
+                    where.append(" P");
+                    where.append(i);
+                    where.append(".KEYWORD");
+                    where.append(comparator);
+                    where.append("? ");
+                } else {
+                    from.append(", PRODUCT_KEYWORD P");
+                    from.append(i);
+                    from.append(" ");
+
+                    selectWeightTotal.append(" + P");
+                    selectWeightTotal.append(i);
+                    selectWeightTotal.append(".RELEVANCY_WEIGHT");
+
+                    join.append("P");
+                    join.append(i - 1);
+                    join.append(".PRODUCT_ID=P");
+                    join.append(i);
+                    join.append(".PRODUCT_ID AND ");
+
+                    where.append("AND P");
+                    where.append(i);
+                    where.append(".KEYWORD");
+                    where.append(comparator);
+                    where.append("? ");
+                }
+                i++;
+            }
+            where.append(") ");
+        } else {
+            selectWeightTotal.append(", TOTAL_WEIGHT = SUM(P1.RELEVANCY_WEIGHT)");
+            from.append("PRODUCT_KEYWORD P1");
+            groupBy.append(" GROUP BY P1.PRODUCT_ID ");
+            int i = 1;
+            while (keywordIter.hasNext()) {
+                String keyword = (String) keywordIter.next();
+                String comparator = "=";
+                if (keyword.indexOf('%') >= 0 || keyword.indexOf('_') >= 0) {
+                    comparator = " LIKE ";
+                }
+                params.add(keyword);
+                if (i == 1) {
+                    where.append(" P1.KEYWORD");
+                    where.append(comparator);
+                    where.append("? ");
+                } else {
+                    where.append("OR P1.KEYWORD");
+                    where.append(comparator);
+                    where.append("? ");
+                }
+                i++;
+            }
+            where.append(") ");
         }
         
-        //EXAMPLE:
-        //  SELECT DISTINCT P1.PRODUCT_ID FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3
-        //  WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%'
-        //EXAMPLE WITH CATEGORY CONSTRAINT:
-        //  SELECT DISTINCT P1.PRODUCT_ID FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3, PRODUCT_CATEGORY_MEMBER PCM
-        //  WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%' AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo'
+        if (useCategory) {
+            from.append(", PRODUCT_CATEGORY_MEMBER PCM");
+            where.append(" AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID=?");
+        }
 
         StringBuffer select = null;
         if (useCategory) {
-            select = new StringBuffer("SELECT DISTINCT P1.PRODUCT_ID, PCM.SEQUENCE_NUM FROM ");
-        } else {
-            select = new StringBuffer("SELECT DISTINCT P1.PRODUCT_ID FROM ");
-        }
-        StringBuffer join = new StringBuffer(" WHERE ");
-        StringBuffer where = new StringBuffer(" (");
-
-        int i = 1;
-        while (keywordIter.hasNext()) {
-            String keyword = (String) keywordIter.next();
-            String comparator = "=";
-            if (keyword.indexOf('%') >= 0 || keyword.indexOf('_') >= 0) {
-                comparator = " LIKE ";
-            }
-            params.add(keyword);
-            if (i == 1) {
-                select.append("PRODUCT_KEYWORD P");
-                select.append(i);
-
-                where.append(" P");
-                where.append(i);
-                where.append(".KEYWORD");
-                where.append(comparator);
-                where.append("? ");
+            if (isAnd) {
+                select = new StringBuffer("SELECT DISTINCT P1.PRODUCT_ID, CAT_SEQ_NUM = PCM.SEQUENCE_NUM");
             } else {
-                select.append(", PRODUCT_KEYWORD P");
-                select.append(i);
-                select.append(" ");
-                
-                join.append("P");
-                join.append(i - 1);
-                join.append(".PRODUCT_ID=P");
-                join.append(i);
-                join.append(".PRODUCT_ID AND ");
-                
-                where.append(intraKeywordOperator);
-                where.append(" P");
-                where.append(i);
-                where.append(".KEYWORD");
-                where.append(comparator);
-                where.append("? ");
+                select = new StringBuffer("SELECT DISTINCT P1.PRODUCT_ID, CAT_SEQ_NUM = MIN(PCM.SEQUENCE_NUM)");
             }
-            i++;
-        }
-        where.append(") ");
-        
-        if (useCategory) {
-            select.append(", PRODUCT_CATEGORY_MEMBER PCM");
-            where.append(" AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID=?");
+        } else {
+            select = new StringBuffer("SELECT DISTINCT P1.PRODUCT_ID");
         }
         sql.append(select.toString());
+        sql.append(selectWeightTotal.toString());
+        sql.append(from.toString());
         sql.append(join.toString());
         sql.append(where.toString());
+        sql.append(groupBy.toString());
+        //for order by: do by SEQUENCE_NUM first then by RELEVANCY_WEIGHT
+        // this basicly allows a default ordering with the RELEVANCY_WEIGHT and a manual override with SEQUENCE_NUM
+        sql.append(" ORDER BY ");
         if (useCategory) {
-            sql.append(" ORDER BY PCM.SEQUENCE_NUM");
+            sql.append("CAT_SEQ_NUM, ");
         }
+        sql.append("TOTAL_WEIGHT DESC");
 
         if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] sql=" + sql.toString());
         return sql.toString();
     }
 
-    public static String tokens = ";: ,.!?\t\"\'\r\n()[]{}*%<>";
+    public static String separators = ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-_";
     public static void induceKeywords(GenericValue product) throws GenericEntityException {
-        if (product == null)
-            return;
+        if (product == null) return;
         GenericDelegator delegator = product.getDelegator();
-        if (delegator == null)
-            return;
+        if (delegator == null) return;
+        String productId = product.getString("productId");
 
-        Collection keywords = new TreeSet();
-        keywords.add(product.getString("productId").toLowerCase());
+        String stopWordBagOr = UtilProperties.getPropertyValue("general", "stop.word.bag.or");
+        String stopWordBagAnd = UtilProperties.getPropertyValue("general", "stop.word.bag.and");
+        
+        Map keywords = new TreeMap();
+        keywords.put(product.getString("productId").toLowerCase(), new Long(1));
 
-        Collection strings = new ArrayList();
-        if (product.getString("productName") != null)
-            strings.add(product.getString("productName"));
-        if (product.getString("comments") != null)
-            strings.add(product.getString("comments"));
-        if (product.getString("description") != null)
-            strings.add(product.getString("description"));
-        if (product.getString("longDescription") != null)
-            strings.add(product.getString("longDescription"));
+        Collection strings = new ArrayList(40);
+        if (product.getString("productName") != null) strings.add(product.getString("productName"));
+        if (product.getString("description") != null) strings.add(product.getString("description"));
+        if (product.getString("longDescription") != null) strings.add(product.getString("longDescription"));
+        
+        //get strings from attributes and features
+        Iterator productFeatureAndAppls = UtilMisc.toIterator(delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId)));
+        while (productFeatureAndAppls != null && productFeatureAndAppls.hasNext()) {
+            GenericValue productFeatureAndAppl = (GenericValue) productFeatureAndAppls.next();
+            if (productFeatureAndAppl.get("description") != null) strings.add(productFeatureAndAppl.get("description"));
+            if (productFeatureAndAppl.get("abbrev") != null) strings.add(productFeatureAndAppl.get("abbrev"));
+            if (productFeatureAndAppl.get("idCode") != null) strings.add(productFeatureAndAppl.get("idCode"));
+        }
 
+        Iterator productAttributes = UtilMisc.toIterator(delegator.findByAnd("ProductAttribute", UtilMisc.toMap("productId", productId)));
+        while (productAttributes != null && productAttributes.hasNext()) {
+            GenericValue productAttribute = (GenericValue) productAttributes.next();
+            if (productAttribute.get("name") != null) strings.add(productAttribute.get("name"));
+            if (productAttribute.get("value") != null) strings.add(productAttribute.get("value"));
+        }
+        
         Iterator strIter = strings.iterator();
         while (strIter.hasNext()) {
             String str = (String) strIter.next();
             if (str.length() > 0) {
-                StringTokenizer tokener = new StringTokenizer(str, tokens, false);
+                StringTokenizer tokener = new StringTokenizer(str, separators, false);
 
                 while (tokener.hasMoreTokens()) {
-                    keywords.add(tokener.nextToken().toLowerCase());
+                    String token = tokener.nextToken().toLowerCase();
+                    String colonToken = ":" + token + ":";
+                    if (stopWordBagOr.indexOf(colonToken) >= 0 && stopWordBagAnd.indexOf(colonToken) >= 0) {
+                        continue;
+                    }
+                    Long curWeight = (Long) keywords.get(token);
+                    if (curWeight == null) {
+                        keywords.put(token, new Long(1));
+                    } else {
+                        keywords.put(token, new Long(curWeight.longValue() + 1));
+                    }
                 }
             }
         }
 
         List toBeStored = new LinkedList();
-        Iterator kiter = keywords.iterator();
+        Iterator kiter = keywords.entrySet().iterator();
         while (kiter.hasNext()) {
-            String keyword = (String) kiter.next();
-            GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", keyword));
+            Map.Entry entry = (Map.Entry) kiter.next();
+            GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", entry.getKey(), "relevancyWeight", entry.getValue()));
             toBeStored.add(productKeyword);
         }
         if (toBeStored.size() > 0) {

@@ -738,6 +738,7 @@
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <attribute name="amount" type="Double" mode="IN" optional="true"/>
     </service>
     <service name="updateFeatureToProductApplication" engine="simple"
                 location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="updateFeatureToProductApplication" auth="true">
@@ -748,6 +749,7 @@
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <attribute name="amount" type="Double" mode="IN" optional="true"/>
     </service>
     <service name="removeFeatureFromProduct" engine="simple"
                 location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="removeFeatureFromProduct" auth="true">

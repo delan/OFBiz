@@ -73,7 +73,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left>
-            <DIV class='boxhead'>Add product-keyword (enter keyword):</DIV>
+            <DIV class='boxhead'>Add product keyword:</DIV>
           </TD>
           <TD align=right>
             <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="lightbuttontext">[Edit Product]</a>
@@ -90,7 +90,8 @@
               <form method="POST" action="<ofbiz:url>/UpdateProductKeyword</ofbiz:url>" style='margin: 0;'>
                 <input type="hidden" name="UPDATE_MODE" value="CREATE">
                 <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
-                <input type="text" size="20" name="KEYWORD" value="" style='font-size: x-small;'>
+                <span class='tabletext'>Keyword: </span><input type="text" size="20" name="KEYWORD" value="" style='font-size: x-small;'>
+                <span class='tabletext'>Weight: </span><input type="text" size="4" name="relevancyWeight" value="1" style='font-size: x-small;'>
                 <input type="submit" value="Add" style='font-size: x-small;'>
               </form>
           </td>
@@ -131,6 +132,7 @@
   <%while(pkIterator.hasNext()) {%>
     <%GenericValue productKeyword = (GenericValue)pkIterator.next();%>
     <tr>
+      <td align=right><%=UtilFormatOut.formatQuantity(productKeyword.getLong("relevancyWeight"))%>-&nbsp;</td>
       <td align=left>&nbsp;<%=productKeyword.getString("keyword")%></td>
       <td>&nbsp;&nbsp;</td>
       <td align=left>
@@ -143,7 +145,7 @@
       <%colSize += colSize;%>
       </TABLE>
     </TD>
-    <TD bgcolor='#FFFFFF' valign=top>
+    <TD bgcolor='#FFFFFF' valign=top style='border-left: solid #CCCCCC 1px;'>
       <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>      
     <%}%>
   <%}%>

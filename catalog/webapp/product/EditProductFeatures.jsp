@@ -86,7 +86,7 @@
     <td><div class="tabletext"><b>Type</b></div></td>
     <td><div class="tabletext"><b>Category</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
-    <td><div class="tabletext"><b>Thru&nbsp;Date, Sequence, Application&nbsp;Type</b></div></td>
+    <td><div class="tabletext"><b>Thru&nbsp;Date, Amount, Sequence, Application&nbsp;Type</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
 <ofbiz:iterator name="productFeatureAndAppl" property="productFeatureAndAppls">
@@ -110,6 +110,7 @@
         <%boolean hasExpired = false;%>
         <%if (productFeatureAndAppl.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))) { hasExpired = true; }%>
         <input type=text size='22' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
+        <input type=text size='6' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="amount" fullattrs="true"/> style='font-size: x-small;'>
         <input type=text size='5' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
       <select name='productFeatureApplTypeId' size=1 style='font-size: x-small;'>
         <%if (productFeatureAndAppl.get("productFeatureApplTypeId") != null) {%>

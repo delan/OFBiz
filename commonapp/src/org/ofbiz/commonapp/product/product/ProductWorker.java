@@ -129,17 +129,11 @@ public class ProductWorker {
         ArrayList productIds = (ArrayList) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
         String resultArrayName = (String) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
         if (productIds == null || resultArrayName == null || !curFindString.equals(resultArrayName)) { // || viewIndex == 0
-            if (Debug.infoOn()) Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
-            if (Debug.infoOn()) Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
+            if (Debug.infoOn()) Debug.logInfo("KeywordSearch productId Array not found in session, getting new one...");
+            if (Debug.infoOn()) Debug.logInfo("curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
-            //sort by productId (only available sort for now...)
-            Collection unsortedIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, anyPrefix, anySuffix, intraKeywordOperator);
-            if (unsortedIds != null && unsortedIds.size() > 0) {
-                TreeSet productIdTree = new TreeSet(unsortedIds);
-                productIds = new ArrayList(productIdTree);
-            } else {
-                productIds = null;
-            }
+            //productIds will be pre-sorted
+            productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, anyPrefix, anySuffix, intraKeywordOperator);
 
             if (productIds != null) {
                 pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", productIds);
@@ -167,8 +161,7 @@ public class ProductWorker {
                 Debug.logWarning(e.getMessage());
                 prod = null;
             }
-            if (prod != null)
-                products.add(prod);
+            if (prod != null) products.add(prod);
         }
 
         pageContext.setAttribute(attributePrefix + "viewIndex", new Integer(viewIndex));
@@ -177,8 +170,7 @@ public class ProductWorker {
         pageContext.setAttribute(attributePrefix + "highIndex", new Integer(highIndex));
         pageContext.setAttribute(attributePrefix + "listSize", new Integer(listSize));
         pageContext.setAttribute(attributePrefix + "keywordString", keywordString);
-        if (products.size() > 0)
-            pageContext.setAttribute(attributePrefix + "searchProductList",products);
+        if (products.size() > 0) pageContext.setAttribute(attributePrefix + "searchProductList",products);
     }
 
     public static void getAssociatedProducts(PageContext pageContext, String productAttributeName, String assocPrefix) {
@@ -189,20 +181,16 @@ public class ProductWorker {
 
         try {
             Collection upgradeProducts = product.getRelatedByAndCache("MainProductAssoc",
-                                                                      UtilMisc.toMap("productAssocTypeId",
-                                                                                     "PRODUCT_UPGRADE"));
+                    UtilMisc.toMap("productAssocTypeId", "PRODUCT_UPGRADE"));
 
             Collection complementProducts = product.getRelatedByAndCache("MainProductAssoc",
-                                                                         UtilMisc.toMap("productAssocTypeId",
-                                                                                        "PRODUCT_COMPLEMENT"));
+                    UtilMisc.toMap("productAssocTypeId", "PRODUCT_COMPLEMENT"));
 
             Collection obsolescenceProducts = product.getRelatedByAndCache("AssocProductAssoc",
-                                                                           UtilMisc.toMap("productAssocTypeId",
-                                                                                          "PRODUCT_OBSOLESCENCE"));
+                    UtilMisc.toMap("productAssocTypeId", "PRODUCT_OBSOLESCENCE"));
 
             Collection obsoleteByProducts = product.getRelatedByAndCache("MainProductAssoc",
-                                                                         UtilMisc.toMap("productAssocTypeId",
-                                                                                        "PRODUCT_OBSOLESCENCE"));
+                    UtilMisc.toMap("productAssocTypeId", "PRODUCT_OBSOLESCENCE"));
 
             //since ProductAssoc records have a fromDate and thruDate, we can filter by now so that only assocs in the date range are included
             upgradeProducts = EntityUtil.filterByDate(upgradeProducts, true);

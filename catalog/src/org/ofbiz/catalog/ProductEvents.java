@@ -68,6 +68,7 @@ public class ProductEvents {
 
         String productId = request.getParameter("PRODUCT_ID");
         String keyword = request.getParameter("KEYWORD");
+        String relevancyWeight = request.getParameter("relevancyWeight");
 
         if (!UtilValidate.isNotEmpty(productId))
             errMsg += "<li>Product ID is missing.";
@@ -80,7 +81,7 @@ public class ProductEvents {
         }
 
         if (updateMode.equals("CREATE")) {
-            GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword));
+            GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword, "relevancyWeight", relevancyWeight));
             GenericValue newValue = null;
             try {
                 newValue = delegator.findByPrimaryKey(productKeyword.getPrimaryKey());

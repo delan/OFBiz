@@ -521,6 +521,7 @@
       <alias entity-alias="PFA" name="fromDate"/>
       <alias entity-alias="PFA" name="thruDate"/>
       <alias entity-alias="PFA" name="sequenceNum"/>
+      <alias entity-alias="PFA" name="amount"/>
       <view-link entity-alias="PF" rel-entity-alias="PFA">
         <key-map field-name="productFeatureId"/>
       </view-link>
@@ -543,6 +544,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="sequenceNum" type="numeric"></field>
+      <field name="amount" type="currency-amount"></field>
       <prim-key field="productId"/>
       <prim-key field="productFeatureId"/>
       <prim-key field="fromDate"/>
@@ -1259,6 +1261,7 @@
             title="Product Keyword Entity">
       <field name="productId" type="id-ne"></field>
       <field name="keyword" type="short-varchar"></field>
+      <field name="relevancyWeight" type="numeric"></field>
       <prim-key field="productId"/>
       <prim-key field="keyword"/>
       <relation type="one" fk-name="PROD_KWD_PROD" rel-entity-name="Product">

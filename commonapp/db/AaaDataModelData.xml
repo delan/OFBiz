@@ -424,6 +424,7 @@
   <ProductAssocType description="Actual Product Component" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPONENT"/>
   <ProductAssocType description="Equivalent or Substitute" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_SUBSTITUTE"/>
   <ProductAssocType description="Product Variant" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_VARIANT"/>
+  <ProductAssocType description="Unique Item" hasTable="N" parentTypeId="" productAssocTypeId="UNIQUE_ITEM"/>
 
   <ProductCategoryType description="Catalog" hasTable="N" parentTypeId="" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategoryType description="Industry" hasTable="N" parentTypeId="" productCategoryTypeId="INDUSTRY_CATEGORY"/>
@@ -440,6 +441,7 @@
   <ProductFeatureIactnType description="Dependencies" hasTable="N" parentTypeId="" productFeatureIactnTypeId="FEATURE_IACTN_DEPEND"/>
   <ProductFeatureIactnType description="Incompatibility" hasTable="N" parentTypeId="" productFeatureIactnTypeId="FEATURE_IACTN_INCOMP"/>
 
+  <ProductFeatureType description="Accessory" hasTable="N" parentTypeId="" productFeatureTypeId="ACCESSORY"/>
   <ProductFeatureType description="Amount" hasTable="N" parentTypeId="" productFeatureTypeId="AMOUNT"/>
   <ProductFeatureType description="Billing Feature" hasTable="N" parentTypeId="" productFeatureTypeId="BILLING_FEATURE"/>
   <ProductFeatureType description="Brand" hasTable="N" parentTypeId="" productFeatureTypeId="BRAND"/>
@@ -453,6 +455,7 @@
   <ProductFeatureType description="Size" hasTable="N" parentTypeId="" productFeatureTypeId="SIZE"/>
   <ProductFeatureType description="Software Feature" hasTable="N" parentTypeId="" productFeatureTypeId="SOFTWARE_FEATURE"/>
   <ProductFeatureType description="Dimension" hasTable="N" parentTypeId="" productFeatureTypeId="DIMENSION"/>
+  <ProductFeatureType description="Warranty" hasTable="N" parentTypeId="" productFeatureTypeId="WARRANTY"/>
 
   <ProductPromoActionType description="Gift With Purchase" productPromoActionTypeId="PROMO_GWP"/>
   <ProductPromoActionType description="Free Shipping" productPromoActionTypeId="PROMO_FREE_SHIPPING"/>
