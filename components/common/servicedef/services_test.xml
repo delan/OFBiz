@@ -106,4 +106,10 @@
             location="org.ofbiz.common.CommonServices" invoke="entitySortTest">
         <description>Test Entity Comparable</description>
     </service>
+
+     <service name="makeALotOfVisits" engine="java" auth="true"
+			location="org.ofbiz.common.CommonServices" invoke="makeALotOfVisits">
+    	<description>Test JavaScript Service</description>
+    	<attribute name="count" type="Integer" mode="IN" optional="false"/>
+    </service>
 </services>
