@@ -503,16 +503,21 @@
             title="Content Entity">
       <field name="contentId" type="id-vlong-ne"></field>
       <field name="contentTypeId" type="id"></field>
-      <field name="statusId" type="id"></field>
-      <field name="description" type="description"></field>
-      <field name="urlLocation" type="url"></field>
       <field name="dataObjectId" type="id"></field>
+      <field name="statusId" type="id"></field>
+      <field name="contentName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="isTemplate" type="indicator"></field>
+      <field name="locale" type="very-short"></field>
       <prim-key field="contentId"/>
-      <relation type="one" fk-name="CONTENT_STATUS" rel-entity-name="StatusItem">
-        <key-map field-name="statusId"/>
-      </relation>
       <relation type="one" fk-name="CONTENT_TO_TYPE" rel-entity-name="ContentType">
         <key-map field-name="contentTypeId"/>
+      </relation>
+      <relation type="one" fk-name="CONTENT_TO_DATA" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectId"/>
+      </relation>
+      <relation type="one" fk-name="CONTENT_STATUS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
       <relation type="many" rel-entity-name="ContentTypeAttr">
         <key-map field-name="contentTypeId"/>
@@ -520,19 +525,10 @@
       <relation type="many" rel-entity-name="ContentAttribute">
         <key-map field-name="contentId"/>
       </relation>
-      <relation type="many" rel-entity-name="ContentDataObjectUsage">
-        <key-map field-name="contentId"/>
+      <relation type="many" title="From" rel-entity-name="ContentAssoc">
+        <key-map field-name="contentId" rel-field-name="contentId"/>
       </relation>
-      <relation type="many" rel-entity-name="ContentCategoryClass">
-        <key-map field-name="contentId"/>
-      </relation>
-      <relation type="one" fk-name="CONTENT_TO_DATA" rel-entity-name="DataObject">
-        <key-map field-name="dataObjectId"/>
-      </relation>
-      <relation type="many" title="From" rel-entity-name="ContentAssociation">
-        <key-map field-name="contentId" rel-field-name="contentIdFrom"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="ContentAssociation">
+      <relation type="many" title="To" rel-entity-name="ContentAssoc">
         <key-map field-name="contentId" rel-field-name="contentIdTo"/>
       </relation>
       <relation type="many" rel-entity-name="WebPage">
@@ -542,22 +538,39 @@
         <key-map field-name="contentId"/>
       </relation>
     </entity>
-    <entity entity-name="ContentAssociation"
+    <entity entity-name="ContentAssoc"
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Association Entity">
-      <field name="contentIdFrom" type="id-vlong-ne"></field>
+      <field name="contentId" type="id-vlong-ne"></field>
       <field name="contentIdTo" type="id-vlong-ne"></field>
-      <field name="contactMechId" type="id"></field>
-      <field name="functionTypeId" type="id"></field>
-      <field name="upperLeftCoordinate" type="numeric"></field>
-      <prim-key field="contentIdFrom"/>
+      <field name="contentAssocTypeId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <field name="mapKey" type="name"></field>
+      <field name="predicateName" type="name"></field>
+      <field name="upperCoordinate" type="numeric"></field>
+      <field name="leftCoordinate" type="numeric"></field>
+      <prim-key field="contentId"/>
       <prim-key field="contentIdTo"/>
+      <prim-key field="contentAssocTypeId"/>
+      <prim-key field="fromDate"/>
       <relation type="one" fk-name="CONTENT_ASSC_FROM" title="From" rel-entity-name="Content">
-        <key-map field-name="contentIdFrom" rel-field-name="contentId"/>
+        <key-map field-name="contentId" rel-field-name="contentId"/>
       </relation>
       <relation type="one" fk-name="CONTENT_ASSC_TO" title="To" rel-entity-name="Content">
         <key-map field-name="contentIdTo" rel-field-name="contentId"/>
       </relation>
+      <relation type="one" fk-name="CONTENT_ASSC_TYP" rel-entity-name="ContentAssocType">
+        <key-map field-name="contentAssocTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ContentAssocType"
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Association Type Entity">
+      <field name="contentAssocTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="contentAssocTypeId"/>
     </entity>
     <entity entity-name="ContentAttribute"
             package-name="org.ofbiz.commonapp.content.content"
@@ -572,56 +585,6 @@
       </relation>
       <relation type="many" rel-entity-name="ContentTypeAttr">
         <key-map field-name="attrName"/>
-      </relation>
-    </entity>
-    <entity entity-name="ContentCategory"
-            package-name="org.ofbiz.commonapp.content.content"
-            title="Content Category Entity">
-      <field name="contentCategoryId" type="id-ne"></field>
-      <field name="parentCategoryId" type="id"></field>
-      <field name="parentSeqId" type="id"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="contentCategoryId"/>
-      <relation type="one" fk-name="CONTENT_CAT_PARENT" rel-entity-name="ContentCategory">
-        <key-map field-name="parentCategoryId" rel-field-name="contentCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ContentCategoryClass">
-        <key-map field-name="contentCategoryId"/>
-      </relation>
-    </entity>
-    <entity entity-name="ContentCategoryClass"
-            package-name="org.ofbiz.commonapp.content.content"
-            title="Content Category Classification Entity">
-      <field name="contentCategoryId" type="id-ne"></field>
-      <field name="contentId" type="id-vlong-ne"></field>
-      <field name="seqId" type="id-ne"></field>
-      <prim-key field="contentCategoryId"/>
-      <prim-key field="contentId"/>
-      <prim-key field="seqId"/>
-      <relation type="one" fk-name="CNTNT_CLASS_CNTNT" rel-entity-name="Content">
-        <key-map field-name="contentId"/>
-      </relation>
-      <relation type="one" fk-name="CNTNT_CLASS_CAT" rel-entity-name="ContentCategory">
-        <key-map field-name="contentCategoryId"/>
-      </relation>
-    </entity>
-    <entity entity-name="ContentDataObjectUsage"
-            package-name="org.ofbiz.commonapp.content.content"
-            title="Content Data Object Usage Entity">
-      <field name="contentId" type="id-vlong-ne"></field>
-      <field name="dataObjectId" type="id-ne"></field>
-      <field name="seqId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <prim-key field="contentId"/>
-      <prim-key field="dataObjectId"/>
-      <prim-key field="seqId"/>
-      <prim-key field="fromDate"/>
-      <relation type="one" fk-name="CNTNT_CDOU_CNTNT" rel-entity-name="Content">
-        <key-map field-name="contentId"/>
-      </relation>
-      <relation type="one" fk-name="CNTNT_CDOU_DATA" rel-entity-name="DataObject">
-        <key-map field-name="dataObjectId"/>
       </relation>
     </entity>
     <entity entity-name="ContentRole"
@@ -707,23 +670,8 @@
       <relation type="many" title="Sibling" rel-entity-name="DataCategory">
         <key-map field-name="parentCategoryId"/>
       </relation>
-      <relation type="many" rel-entity-name="DataCategoryMember">
+      <relation type="many" rel-entity-name="DataObject">
         <key-map field-name="dataCategoryId"/>
-      </relation>
-    </entity>
-    <entity entity-name="DataCategoryMember"
-            package-name="org.ofbiz.commonapp.content.data"
-            title="Data Category Member Entity">
-      <field name="dataObjectId" type="id-ne"></field>
-      <field name="dataCategoryId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <prim-key field="dataObjectId"/>
-      <prim-key field="dataCategoryId"/>
-      <relation type="one" fk-name="DATA_CAT_CAT" rel-entity-name="DataCategory">
-        <key-map field-name="dataCategoryId"/>
-      </relation>
-      <relation type="one" fk-name="DATA_CAT_DATA" rel-entity-name="DataObject">
-        <key-map field-name="dataObjectId"/>
       </relation>
     </entity>
     <entity entity-name="DataObject"
@@ -731,9 +679,11 @@
             title="Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="dataObjectTypeId" type="id"></field>
+      <field name="dataCategoryId" type="id-ne"></field>
       <field name="dataObjectName" type="name"></field>
       <field name="description" type="description"></field>
-      <field name="fileLocation" type="long-varchar"></field>
+      <field name="locale" type="very-short"></field>
+      <field name="objectInfo" type="long-varchar"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByPartyId" type="id"></field>
       <field name="lastModifiedDate" type="date-time"></field>
@@ -751,11 +701,11 @@
       <relation type="many" rel-entity-name="Content">
         <key-map field-name="dataObjectId"/>
       </relation>
-      <relation type="many" rel-entity-name="ContentDataObjectUsage">
-        <key-map field-name="dataObjectId"/>
-      </relation>
       <relation type="one" fk-name="DATA_OBJ_TO_TYPE" rel-entity-name="DataObjectType">
         <key-map field-name="dataObjectTypeId"/>
+      </relation>
+      <relation type="one" fk-name="DATA_OBJ_TO_CAT" rel-entity-name="DataCategory">
+        <key-map field-name="dataCategoryId"/>
       </relation>
       <relation type="many" rel-entity-name="DataObjectTypeAttr">
         <key-map field-name="dataObjectTypeId"/>
@@ -777,9 +727,6 @@
       </relation>
       <relation type="one" fk-name="DATA_OBJ_LMB_PARTY" title="LastModifiedBy" rel-entity-name="Party">
         <key-map field-name="lastModifiedByPartyId" rel-field-name="partyId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DataCategoryMember">
-        <key-map field-name="dataObjectId"/>
       </relation>
     </entity>
     <entity entity-name="DataObjectAttribute"
@@ -868,13 +815,6 @@
       <relation type="one" fk-name="DATA_OBJ_TEXT" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId"/>
       </relation>
-    </entity>
-    <entity entity-name="FunctionType"
-            package-name="org.ofbiz.commonapp.content.data"
-            title="Function Type Entity">
-      <field name="functionTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="functionTypeId"/>
     </entity>
     <entity entity-name="ImageDataObject"
             package-name="org.ofbiz.commonapp.content.data"

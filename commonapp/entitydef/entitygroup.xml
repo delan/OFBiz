@@ -193,11 +193,9 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz.commonapp" entity="Content" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentAssociation" />
+    <entity-group group="org.ofbiz.commonapp" entity="ContentAssoc" />
+    <entity-group group="org.ofbiz.commonapp" entity="ContentAssocType" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentCategory" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentCategoryClass" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentDataObjectUsage" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentRole" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentType" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentTypeAttr" />
@@ -207,7 +205,6 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz.commonapp" entity="DataCategory" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataCategoryMember" />
     <entity-group group="org.ofbiz.commonapp" entity="DataObject" />
     <entity-group group="org.ofbiz.commonapp" entity="DataObjectAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="DataObjectPurpose" />
@@ -215,7 +212,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="DataObjectType" />
     <entity-group group="org.ofbiz.commonapp" entity="DataObjectTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="ElectronicText" />
-    <entity-group group="org.ofbiz.commonapp" entity="FunctionType" />
     <entity-group group="org.ofbiz.commonapp" entity="ImageDataObject" />
     <entity-group group="org.ofbiz.commonapp" entity="OtherDataObject" />
 
@@ -763,6 +759,7 @@
   <!-- org.ofbiz.commonapp.workeffort.workeffort -->
   <!-- ========================================================= -->
 
+    <entity-group group="org.ofbiz.commonapp" entity="ApplicationSandbox" />
     <entity-group group="org.ofbiz.commonapp" entity="CommunicationEventWorkEff" />
     <entity-group group="org.ofbiz.commonapp" entity="Deliverable" />
     <entity-group group="org.ofbiz.commonapp" entity="DeliverableType" />
