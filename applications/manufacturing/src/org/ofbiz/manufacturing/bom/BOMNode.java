@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
@@ -28,6 +29,7 @@ import org.ofbiz.service.LocalDispatcher;
  */
 
 public class BOMNode {
+    public static final String module = BOMNode.class.getName();
 
     protected LocalDispatcher dispatcher = null;
     protected GenericDelegator delegator = null;
@@ -270,7 +272,7 @@ public class BOMNode {
                                     }
                                 } catch (GenericServiceException e) {
                                     String service = e.getMessage();
-                                    System.out.println("BOMNode.configurator(...): " + service);
+                                    if (Debug.infoOn()) Debug.logInfo("Error calling getProductVariant service", module);
                                 }
                                 if (variantProduct != null) {
                                     newNode = new BOMNode(variantProduct, dispatcher, userLogin);
@@ -497,9 +499,8 @@ public class BOMNode {
                 resultService = dispatcher.runSync("createProductionRun", serviceContext);
                 productionRunId = (String)resultService.get("productionRunId");
             } catch (GenericServiceException e) {
-                //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
+                Debug.logError("Problem calling the createProductionRun service", module);
             }
-            //System.out.println("Production run #" + productionRunId + " created for " + getProduct().getString("productId"));
             try {
                 if (productionRunId != null && orderId != null && orderItemSeqId != null) {
                     delegator.create("WorkOrderItemFulfillment", UtilMisc.toMap("workEffortId", productionRunId, "orderId", orderId, "orderItemSeqId", orderItemSeqId));
@@ -550,7 +551,7 @@ public class BOMNode {
                 }
             }
         } catch(GenericEntityException gee) {
-            System.out.println("Error in BOMNode.isWarehouseManaged() " + gee);
+            Debug.logError("Problem in BOMNode.isWarehouseManaged()", module);
         }
         return isWarehouseManaged;
     }
