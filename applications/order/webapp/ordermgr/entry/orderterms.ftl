@@ -32,29 +32,11 @@
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td align='left'>
-            <div class='boxhead'>&nbsp;${uiLabelMap.OrderOrderEntryOrderTerms}</div>
-          </td>
-          <td nowrap align="right">
-            <div class="tabletext">
-              <a href="<@ofbizUrl>/setOrderTerm</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonRefresh}</a>
-              <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderOrderItems}</a>
-              <a href="javascript:document.ordertermform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <#if orderTerms?has_content && !requestParameters.createNew?exists>
-            <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="ordertermform">
+            <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="term">
              <table width="100%" border="0" cellpadding="1" cellspacing="0">
                <tr>
@@ -93,7 +75,7 @@
           </table>
             <#else>
               <#if !orderTerms?has_content || requestParameters.createNew?exists>
-               <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="ordertermform">
+               <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
                  <input type="hidden" name="finalizeMode" value="term">
                </form>
                <form method="post" action="<@ofbizUrl>/addOrderTerm</@ofbizUrl>" name="termform">

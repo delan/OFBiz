@@ -31,32 +31,9 @@
 
 <#-- ==================== Party Selection dialog box ========================= -->
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-  <tr>
-    <td width="100%">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;${uiLabelMap.PartyAdditionalPartyEntry}</div>
-	  </td>
-          <td nowrap align="right">
-            <div class="tabletext">
-              <#--<a href="<@ofbizUrl>/setAdditionalParty</@ofbizUrl>" class="submenutext">${uiLabelMapRefresh</a>-->
-              <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderOrderItems}</a>
-              <a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">${uiLabelMap.FacilityShipping}</a>
-              <a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonOptions}</a>
-              <#if orderType=="PURCHASE_ORDER">
-                 <a href="<@ofbizUrl>/setOrderTerm</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingPayment}</a>
-              <#else>
-              <a href="<@ofbizUrl>/setBilling</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingPayment}</a>
-              </#if>
-              <a href="<@ofbizUrl>/finalizeOrder?finalizeReqAdditionalParty=false</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonContinue}</a>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  
+  <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+    <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
+  </form>
   <form method="post" action="<@ofbizUrl>/setAdditionalParty</@ofbizUrl>" name="quickAddPartyForm">
 
   <tr>

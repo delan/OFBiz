@@ -32,7 +32,7 @@
 <script language="javascript">
 <!-- //
 function shipBillAddr() {
-    if (document.billsetupform.useShipAddr.checked) {
+    if (document.checkoutsetupform.useShipAddr.checked) {
         window.location = "<@ofbizUrl>/setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}&useShipAddr=Y</@ofbizUrl>";
     } else { 
         window.location = "<@ofbizUrl>/setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}</@ofbizUrl>";
@@ -52,7 +52,7 @@ function toggleBillingAccount(box) {
 }
 
 function makeExpDate() {
-    document.billsetupform.expireDate.value = document.billsetupform.expMonth.options[document.billsetupform.expMonth.selectedIndex].value + "/" + document.billsetupform.expYear.options[document.billsetupform.expYear.selectedIndex].value;
+    document.checkoutsetupform.expireDate.value = document.checkoutsetupform.expMonth.options[document.checkoutsetupform.expMonth.selectedIndex].value + "/" + document.checkoutsetupform.expYear.options[document.checkoutsetupform.expYear.selectedIndex].value;
 }
 // -->
 </script>
@@ -61,28 +61,12 @@ function makeExpDate() {
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td align='left'>
-            <div class='boxhead'>&nbsp;${uiLabelMap.OrderOrderEntryPaymentSettings}</div>
-          </td> 
-          <td nowrap align="right">
-            <div class="tabletext">
-              <a href="<@ofbizUrl>/setBilling</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonRefresh}</a><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderOrderItems}</a><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">${uiLabelMap.FacilityShipping}</a><a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonOptions}</a><a href="javascript:document.billsetupform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
-            </div>
-          </td>         
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <#if (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew?exists>
               <#-- initial screen when we have a associated party -->
-              <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="billsetupform">
+              <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="finalizeMode" value="payment">
                 <table width="100%" cellpadding="1" cellspacing="0" border="0">
                   <tr>
@@ -181,24 +165,24 @@ function makeExpDate() {
               <#-- after initial screen; show detailed screens for selected type -->
               <#if paymentMethodType == "CC">
                 <#if postalAddress?has_content>
-                  <form method="post" action="<@ofbizUrl>/updateCreditCardAndPostalAddress</@ofbizUrl>" name="billsetupform">
+                  <form method="post" action="<@ofbizUrl>/updateCreditCardAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
                     <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId?if_exists}">
                     <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId?if_exists}">
                 <#elseif requestParameters.useShipAddr?exists>
-                  <form method="post" action="<@ofbizUrl>/createCreditCard</@ofbizUrl>" name="billsetupform">
+                  <form method="post" action="<@ofbizUrl>/createCreditCard</@ofbizUrl>" name="checkoutsetupform">
                 <#else>
-                  <form method="post" action="<@ofbizUrl>/createCreditCardAndPostalAddress</@ofbizUrl>" name="billsetupform">
+                  <form method="post" action="<@ofbizUrl>/createCreditCardAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
                 </#if>
               </#if>
               <#if paymentMethodType == "EFT">
                 <#if postalAddress?has_content>                  
-                  <form method="post" action="<@ofbizUrl>/updateEftAndPostalAddress</@ofbizUrl>" name="billsetupform">
+                  <form method="post" action="<@ofbizUrl>/updateEftAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
                     <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId?if_exists}">
                     <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId?if_exists}">
                 <#elseif requestParameters.useShipAddr?exists>
-                  <form method="post" action="<@ofbizUrl>/createEftAccount</@ofbizUrl>" name="billsetupform">
+                  <form method="post" action="<@ofbizUrl>/createEftAccount</@ofbizUrl>" name="checkoutsetupform">
                 <#else>                    
-                  <form method="post" action="<@ofbizUrl>/createEftAndPostalAddress</@ofbizUrl>" name="billsetupform">
+                  <form method="post" action="<@ofbizUrl>/createEftAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
                 </#if>        
               </#if>
               
@@ -513,7 +497,7 @@ function makeExpDate() {
               </table>                    	                                                                     
             <#else>
               <#-- initial screen show a list of options -->
-              <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="billsetupform">
+              <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
                 <input type="hidden" name="finalizeMode" value="payoption">
                 <input type="hidden" name="createNew" value="Y">                
                 <table width="100%" border="0" cellpadding="1" cellspacing="0"> 

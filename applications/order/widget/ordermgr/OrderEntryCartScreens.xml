@@ -27,6 +27,14 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
 
     <!-- Included Screens -->
+    <screen name="minicart">
+        <section>
+            <widgets>
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/minicart.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="promoUseDetailsInline">
         <section>
             <widgets>

@@ -29,6 +29,8 @@
     <screen name="OrderTerms">
         <section>
             <actions>
+                <set field="stepTitleId" value="OrderOrderEntryOrderTerms"/>
+                <set field="stepLabelId" value="OrderOrderTerms"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/orderterms.bsh"/>
             </actions>
             <widgets>
@@ -45,6 +47,8 @@
     <screen name="BillSettings">
         <section>
             <actions>
+                <set field="stepTitleId" value="OrderOrderEntryPaymentSettings"/>
+                <set field="stepLabelId" value="AccountingPayment"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/billsettings.bsh"/>
             </actions>
             <widgets>
@@ -61,6 +65,9 @@
     <screen name="ConfirmOrder">
         <section>
             <actions>
+                <set field="stepTitleId" value="OrderOrderConfirmation"/>
+                <set field="stepLabelId" value="OrderReviewOrder"/>
+            
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/checkoutreview.bsh"/>
             </actions>
             <widgets>
@@ -96,6 +103,8 @@
     <screen name="OptionSettings">
         <section>
             <actions>
+                <set field="stepTitleId" value="OrderOrderOptionSettings"/>
+                <set field="stepLabelId" value="CommonOptions"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/optionsettings.bsh"/>
             </actions>
             <widgets>
@@ -112,10 +121,12 @@
     <screen name="OrderComplete">
         <section>
             <actions>
+                <set field="headerItem" value="orderentry"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/orderstatus.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderCheckoutDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://order/widget/ordermgr/CommonScreens.xml">
+                <!--<decorator-screen name="CommonOrderCheckoutDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">-->
                     <decorator-section name="body">
                       <platform-specific>
                             <html><html-template location="component://order/webapp/ordermgr/entry/order/orderheader.ftl"/></html>
@@ -131,6 +142,8 @@
     <screen name="SetAdditionalParty">
         <section>
             <actions>
+                <set field="stepTitleId" value="PartyAdditionalPartyEntry"/>
+                <set field="stepLabelId" value="PartyParties"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/setAdditionalParty.bsh"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/additionalPartyListing.bsh"/>
             </actions>
@@ -151,6 +164,8 @@
     <screen name="ShipSettings">
         <section>
             <actions>
+                <set field="stepTitleId" value="OrderOrderEntryShipToSettings"/>
+                <set field="stepLabelId" value="FacilityShipping"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/shipsettings.bsh"/>
             </actions>
             <widgets>

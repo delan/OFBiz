@@ -31,28 +31,12 @@
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td align='left'>
-            <div class='boxhead'>&nbsp;${uiLabelMap.OrderOrderOptionSettings}</div>
-          </td> 
-          <td nowrap align="right">
-            <div class="tabletext">
-              <a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonRefresh}</a><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderOrderItems}</a><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">${uiLabelMap.FacilityShipping}</a><a href="javascript:document.optsetupform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
-            </div>
-          </td>         
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
+<tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>          
-            <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="optsetupform">
+            <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
               <input type="hidden" name="finalizeMode" value="options">              
               <table width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
                <#if cart.getOrderType() != "PURCHASE_ORDER">
@@ -175,7 +159,7 @@
                               <td width="5">&nbsp;</td>
                               <td width="74%">
                                 <input type='text' size='25' class='inputBox' name='shipBeforeDate' value='${requestParameters.shipBeforeDate?if_exists}'>
-                                <a href="javascript:call_cal(document.optsetupform.shipBeforeDate,'${beforeDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+                                <a href="javascript:call_cal(document.checkoutsetupform.shipBeforeDate,'${beforeDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                               </td>
                             </tr>
                          </table>
@@ -191,7 +175,7 @@
                               <td width="5">&nbsp;</td>
                               <td width="74%">
                                 <input type='text' size='25' class='inputBox' name='shipAfterDate' value='${requestParameters.shipAfterDate?if_exists}'>
-                                <a href="javascript:call_cal(document.optsetupform.shipAfterDate,'${afterDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+                                <a href="javascript:call_cal(document.checkoutsetupform.shipAfterDate,'${afterDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                               </td>
                             </tr>
                          </table>
