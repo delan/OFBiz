@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.41 2004/01/21 14:02:27 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.42 2004/02/11 12:06:10 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.41 $
+ * @version    $Revision: 1.42 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -462,6 +462,9 @@ public class ProductPromoWorker {
     }
 
     public static String makeAutoDescription(GenericValue productPromo, GenericDelegator delegator, Locale locale) throws GenericEntityException {
+        if (productPromo == null) {
+            return "";
+        }
         StringBuffer promoDescBuf = new StringBuffer();
         List productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
         Iterator promoRulesIter = productPromoRules.iterator();
