@@ -216,7 +216,7 @@
         <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
         <override name="address1" optional="false"/>
         <override name="city" optional="false"/>
-        <override name="postalCode" optional="true"/>
+        <override name="postalCode" optional="false"/>
     </service>
     <service name="createPartyPostalAddress" engine="simple"
             location="org/ofbiz/party/contact/PartyContactMechServices.xml" invoke="createPartyPostalAddress" auth="true">
@@ -228,7 +228,7 @@
         <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
         <override name="address1" optional="false"/>
         <override name="city" optional="false"/>
-        <override name="postalCode" optional="true"/>
+        <override name="postalCode" optional="false"/>
     </service>
     <service name="updatePostalAddress" engine="simple"
             location="org/ofbiz/party/contact/ContactMechServices.xml" invoke="updatePostalAddress" auth="true">
