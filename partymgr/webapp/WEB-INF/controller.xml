@@ -64,11 +64,176 @@
     	<response name="success" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="changeDelegator">
-	    <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
-	    <response name="success" type="view" value="main"/>
-	    <response name="error" type="view" value="error"/>
-	</request-map>
+    <request-map uri="viewprofile">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewprofile"/>
+    </request-map>
+
+    <request-map uri="editcontactmech">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="createContactMech">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createContactMech"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="updateContactMech">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updateContactMech"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="deleteContactMech">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="deleteContactMech"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="createPostalAddressAndPurpose">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createPostalAddressAndPurpose"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="createPostalAddress">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createPostalAddress"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="updatePostalAddress">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updatePostalAddress"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="createTelecomNumber">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createTelecomNumber"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="updateTelecomNumber">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updateTelecomNumber"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="createEmailAddress">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createEmailAddress"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="updateEmailAddress">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updateEmailAddress"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="createPartyContactMechPurpose">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createPartyContactMechPurpose"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="deletePartyContactMechPurpose">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="deletePartyContactMechPurpose"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <request-map uri="editcreditcard">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editcreditcard"/>
+    </request-map>
+
+    <request-map uri="createCreditCard">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="createCreditCard"/>
+        <response name="success" type="view" value="editcreditcard"/>
+        <response name="error" type="view" value="editcreditcard"/>
+    </request-map>
+
+    <request-map uri="updateCreditCard">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="updateCreditCard"/>
+        <response name="success" type="view" value="editcreditcard"/>
+        <response name="error" type="view" value="editcreditcard"/>
+    </request-map>
+
+    <request-map uri="editeftaccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editeftaccount"/>
+    </request-map>
+
+    <request-map uri="createEftAccount">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="createEftAccount"/>
+        <response name="success" type="view" value="editeftaccount"/>
+        <response name="error" type="view" value="editeftaccount"/>
+    </request-map>
+
+    <request-map uri="updateEftAccount">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="updateEftAccount"/>
+        <response name="success" type="view" value="editeftaccount"/>
+        <response name="error" type="view" value="editeftaccount"/>
+    </request-map>
+
+    <request-map uri="deletePaymentMethod">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="deletePaymentMethod"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
+    </request-map>
+
+    <request-map uri="editperson">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editperson"/>
+    </request-map>
+
+    <request-map uri="createPerson">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/party/PartySimpleEvents.xml" invoke="createPerson"/>
+        <response name="success" type="view" value="editperson"/>
+        <response name="error" type="view" value="editperson"/>
+    </request-map>
+
+    <request-map uri="updatePerson">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/party/PartySimpleEvents.xml" invoke="updatePerson"/>
+        <response name="success" type="view" value="editperson"/>
+        <response name="error" type="view" value="editperson"/>
+    </request-map>
+
+    <request-map uri="changepassword">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="changepassword"/>
+    </request-map>
+
+    <request-map uri="updatePassword">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/security/login/LoginSimpleEvents.xml" invoke="updatePassword"/>
+        <response name="success" type="view" value="changepassword"/>
+        <response name="error" type="view" value="changepassword"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
