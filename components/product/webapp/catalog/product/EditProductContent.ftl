@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -64,7 +64,17 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <h3>${uiLabelMap.ProductCouldNotFindProduct} "${productId}".</h3>
     <#else>
         <table border="1" cellpadding="2" cellspacing="0" width="100%">
-        <tr class="tableheadtext"><td>Content</td><td>Type</td><td>From</td><td>Thru</td><td>Purchase From</td><td>Purchase Thru</td><td>Use Count</td><td>Use Days</td><td>&nbsp;</td></tr>
+        <tr class="tableheadtext">
+            <td>Content</td>
+            <td>Type</td>
+            <td>From</td>
+            <td>Thru</td>
+            <td>Purchase From</td>
+            <td>Purchase Thru</td>
+            <td>Use Count</td>
+            <td>Use Days</td>
+            <td>&nbsp;</td>
+        </tr>
         <#list productContentList as entry>
             <#assign productContent=entry.productContent/>
             <#assign productContentType=productContent.getRelatedOneCache("ProductContentType")/>
@@ -78,6 +88,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <td>${productContent.useCountLimit?default("N/A")}</td>
                 <td>${productContent.useDaysLimit?default("N/A")}</td>
                 <td><a href="<@ofbizUrl>/removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">[Delete]</a></td>
+                <td><a href="/content/control/EditContent?contentId=${productContent.contentId}&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="buttontext">[Edit Content ${entry.content.contentId}]</td>
              </tr>
         </#list>
         </table>
