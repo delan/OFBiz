@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.6 2003/11/25 23:56:07 ajzeneski Exp $
+ * $Id: ServiceUtil.java,v 1.7 2003/12/04 02:15:30 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,11 +25,7 @@
 package org.ofbiz.service;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,6 +38,8 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.config.ServiceConfigUtil;
 
@@ -49,7 +47,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ServiceUtil {
@@ -239,13 +237,26 @@ public class ServiceUtil {
         cal.setTimeInMillis(now.getTime());
         cal.add(Calendar.DAY_OF_YEAR, daysToKeep * -1);
         Timestamp purgeTime = new Timestamp(cal.getTimeInMillis());
-        
-        List exprs = UtilMisc.toList(new EntityExpr("poolId", EntityOperator.EQUALS, sendPool));
-        exprs.add(new EntityExpr("finishDateTime", EntityOperator.NOT_EQUAL, null));
-        exprs.add(new EntityExpr("finishDateTime", EntityOperator.LESS_THAN, purgeTime));
+
+        // create the conditions to query
+        EntityCondition pool = new EntityExpr("poolId", EntityOperator.EQUALS, sendPool);
+
+        List finExp = UtilMisc.toList(new EntityExpr("finishDateTime", EntityOperator.NOT_EQUAL, null));
+        finExp.add(new EntityExpr("finishDateTime", EntityOperator.LESS_THAN, purgeTime));
+
+        List canExp = UtilMisc.toList(new EntityExpr("cancelDateTime", EntityOperator.NOT_EQUAL, null));
+        canExp.add(new EntityExpr("cancelDateTime", EntityOperator.LESS_THAN, purgeTime));
+
+        EntityCondition cancelled = new EntityConditionList(canExp, EntityOperator.AND);
+        EntityCondition finished = new EntityConditionList(finExp, EntityOperator.AND);
+
+        EntityCondition done = new EntityConditionList(UtilMisc.toList(cancelled, finished), EntityOperator.OR);
+        EntityCondition main = new EntityConditionList(UtilMisc.toList(done, pool), EntityOperator.AND);
+
+        // lookup the jobs
         List foundJobs = null;
         try {
-            foundJobs = delegator.findByAnd("JobSandbox", exprs);
+            foundJobs = delegator.findByCondition("JobSandbox", main, null, null);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot get jobs to purge");
             return ServiceUtil.returnError(e.getMessage());
