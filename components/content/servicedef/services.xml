@@ -437,7 +437,7 @@
     </service>
     <service name="removeDataResource" engine="simple"
         location="org/ofbiz/content/data/DataServices.xml"
-        invoke="removeDataResource"
+        invoke="deleteDataResource"
         default-entity-name="DataResource" auth="true">
         <description>Remove DataResource</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
