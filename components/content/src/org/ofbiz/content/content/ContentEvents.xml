@@ -25,7 +25,7 @@
       <log level="always" message="context: ${context}"/>
       <field-to-field map-name="parameters" field-name="contentPurposeTypeId"
           to-map-name="context" />
-      <string-to-list list-name="targetOperationList" string="CREATE_CONTENT"/>
+      <string-to-list list-name="targetOperationList" string="CONTENT_CREATE"/>
       <env-to-field env-name="targetOperationList" to-map-name="context" 
                to-field-name="targetOperationList" />
       <session-to-field field-name="userLogin" map-name="context" session-name="userLogin"/>
@@ -91,7 +91,7 @@
                   list-name="contentPurposeList" />
       <env-to-field env-name="contentPurposeList" to-map-name="context" 
                              to-field-name="contentPurposeList" />
-      <string-to-list list-name="targetOperationList" string="UPDATE_CONTENT"/>
+      <string-to-list list-name="targetOperationList" string="CONTENT_UPDATE"/>
       <env-to-field env-name="targetOperationList" to-map-name="context" 
                to-field-name="targetOperationList" />
       <session-to-field field-name="userLogin" map-name="context" session-name="userLogin"/>

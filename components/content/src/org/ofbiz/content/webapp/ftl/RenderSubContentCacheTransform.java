@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentCacheTransform.java,v 1.3 2004/01/13 06:16:30 byersa Exp $
+ * $Id: RenderSubContentCacheTransform.java,v 1.4 2004/03/16 17:27:17 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -18,13 +18,17 @@ package org.ofbiz.content.webapp.ftl;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.Iterator;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
@@ -43,11 +47,13 @@ import freemarker.template.Environment;
 import freemarker.template.SimpleHash;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateTransformModel;
+import freemarker.template.TemplateModelException;
+//import com.clarkware.profiler.Profiler;
 /**
  * RenderSubContentCacheTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
@@ -55,8 +61,8 @@ import freemarker.template.TemplateTransformModel;
 public class RenderSubContentCacheTransform implements TemplateTransformModel {
 
     public static final String module = RenderSubContentCacheTransform.class.getName();
-    public static final String [] saveKeyNames = {"contentId", "subContentId", "mimeTypeId", "subContentDataResourceView", "wrapTemplateId", "templateContentId", "pickWhen", "followWhen", "returnAfterPickWhen", "returnBeforePickWhen", "globalNodeTrail", "nodeTrail", "passedGlobalNodeTrail"};
-    public static final String [] removeKeyNames = {"templateContentId", "subDataResourceTypeId", "mapKey", "wrappedFTL"};
+    public static final String [] upSaveKeyNames = {"globalNodeTrail"};
+    public static final String [] saveKeyNames = {"contentId", "subContentId", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail"};
     
     /**
      * Does a conditional search to return a value for a parameter with the passed name. Looks first to see if it was passed as an argument to the transform.
@@ -81,57 +87,24 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
         if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(R)before save", templateCtx, 0),module);
-        final Map savedValues = FreeMarkerWorker.saveValues(templateCtx, saveKeyNames);
+        final Map savedValuesUp = new HashMap();
+        FreeMarkerWorker.saveContextValues(templateCtx, upSaveKeyNames, savedValuesUp);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
         if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(R)after overrride", templateCtx, 0),module);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
-        String contentId = (String)templateCtx.get("contentId");
-        String subContentId = (String)templateCtx.get("subContentId");
-        String mapKey = (String)templateCtx.get("mapKey");
-        Timestamp fromDate = UtilDateTime.nowTimestamp();
-        List assocTypes = null;
         List trail = (List)templateCtx.get("globalNodeTrail");
-        List passedGlobalNodeTrail = null;
-        if (trail != null && trail.size() > 0) 
-            passedGlobalNodeTrail = new ArrayList(trail);
-        else
-            passedGlobalNodeTrail = new ArrayList();
-        if (UtilValidate.isNotEmpty(subContentId) || UtilValidate.isNotEmpty(contentId) ) {
-            String thisContentId = subContentId;
-            if (UtilValidate.isEmpty(thisContentId)) 
-                 thisContentId = contentId;
-
-            // Don't want to duplicate a node value
-            String passedContentId = null;
-            if (passedGlobalNodeTrail.size() > 0) {
-                Map nd = (Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1);
-                passedContentId = (String)nd.get("contentId");
-            }
-            if (UtilValidate.isNotEmpty(thisContentId)
-                && ( UtilValidate.isEmpty(passedContentId) || !thisContentId.equals(passedContentId))) {
-            
-            
-                try {
-                    GenericValue view = ContentWorker.getSubContentCache(delegator, contentId, mapKey, subContentId, userLogin, assocTypes, fromDate);
-                    passedGlobalNodeTrail.add(FreeMarkerWorker.makeNode(view));
-                } catch (GenericEntityException e) {
-                    throw new RuntimeException(e.getMessage());
-                } catch (MiniLangException e2) {
-                    throw new RuntimeException(e2.getMessage());
-                } catch (GeneralException e3) {
-                    throw new RuntimeException(e3.getMessage());
-                }
-            }
+        if (Debug.infoOn()) Debug.logInfo("in Render(0), globalNodeTrail ." + trail , module);
+        String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
+        String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
+        Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
+        GenericValue val = null;
+        try {
+            val = FreeMarkerWorker.getCurrentContent(delegator, trail, userLogin, templateCtx, nullThruDatesOnly, contentAssocPredicateId);
+        } catch(GeneralException e) {
+            throw new RuntimeException("Error getting current content. " + e.toString());
         }
-        templateCtx.put("globalNodeTrail", passedGlobalNodeTrail);
-    Debug.logInfo("REnder, globalNodeTrail csv:" + FreeMarkerWorker.nodeTrailToCsv((List)passedGlobalNodeTrail), "");
-        templateCtx.put("contentId", null);
-        templateCtx.put("subContentId", null);
-        int sz = passedGlobalNodeTrail.size();
-        if (sz == 0)
-            throw new RuntimeException("No current subContent found.");
-        templateCtx.put("indent", new Integer(sz));
-        final GenericValue view = (GenericValue)((Map)passedGlobalNodeTrail.get(sz - 1)).get("value");
+        final GenericValue view = val;
+        if (Debug.verboseOn()) Debug.logVerbose("renderEditSubContentCache, view:" + view, "");
 
         String dataResourceId = null;
         try {
@@ -139,9 +112,9 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         } catch (Exception e) {
             dataResourceId = (String) view.get("dataResourceId");
         }
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache(0), dataResourceId ." + dataResourceId, module);
+        if (Debug.verboseOn()) Debug.logVerbose("in renderSubContentCache(0), dataResourceId ." + dataResourceId, module);
         String subContentIdSub = (String) view.get("contentId");
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
+        if (Debug.verboseOn()) Debug.logVerbose("in renderSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)templateCtx.get("subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
@@ -154,31 +127,15 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
             // the parent context. But it will already have one and it is the same context that is
             // being passed.
         }
-        // This order is taken so that the mimeType can be overridden in the transform arguments.
-        String mimeTypeId = (String)templateCtx.get("mimeTypeId");
-        if (UtilValidate.isEmpty(mimeTypeId)) {
-            mimeTypeId = (String) view.get("mimeTypeId");
-            String parentContentId = (String)templateCtx.get("contentId");
-            if (UtilValidate.isEmpty(mimeTypeId) && UtilValidate.isNotEmpty(parentContentId)) { // will need these below
-                try {
-                    GenericValue parentContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", parentContentId));
-                    if (parentContent != null) {
-                        mimeTypeId = (String) parentContent.get("mimeTypeId");
-                        templateCtx.put("parentContent", parentContent);
-                        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, parentContentId: " + parentContent.get("contentId"), module);
-                    }
-                } catch (GenericEntityException e) {
-                    throw new RuntimeException(e.getMessage());
-                }
-            }
-
-        }
+        String mimeTypeId = FreeMarkerWorker.getMimeTypeId(delegator, view, templateCtx);
         templateCtx.put("drDataResourceId", dataResourceId);
         templateCtx.put("mimeTypeId", mimeTypeId);
         templateCtx.put("dataResourceId", dataResourceId);
         templateCtx.put("subContentIdSub", subContentIdSub);
         templateCtx.put("subDataResourceTypeId", subDataResourceTypeId);
 
+        //final Map savedValues = new HashMap();
+        //FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
 
         return new Writer(out) {
 
@@ -190,9 +147,12 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
             }
 
             public void close() throws IOException {
+        if (Debug.infoOn()) Debug.logInfo("in Render(1), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
                 try {
                     if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, close:", module);
                     renderSubContent();
+                FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
+        if (Debug.infoOn()) Debug.logInfo("in Render(2), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
                 } catch (IOException e) {
                     throw new IOException(e.getMessage());
                 }
@@ -202,33 +162,60 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 //TemplateHashModel dataRoot = env.getDataModel();
                 Timestamp fromDate = UtilDateTime.nowTimestamp();
                 List passedGlobalNodeTrail = (List)templateCtx.get("globalNodeTrail");
-                GenericValue view = null;
+        if (Debug.infoOn()) Debug.logInfo("in Render(3), passedGlobalNodeTrail ." + passedGlobalNodeTrail , module);
+                GenericValue thisView = null;
                 if (passedGlobalNodeTrail.size() > 0) {
-                    view = (GenericValue)((Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1)).get("value");
+                    thisView = (GenericValue)((Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1)).get("value");
                 }
+                if (thisView != null && Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, thisView:" + thisView.get("contentId"), module);
+                ServletContext servletContext = request.getSession().getServletContext();
+                String rootDir = servletContext.getRealPath("/");
+                String webSiteId = (String) servletContext.getAttribute("webSiteId");
+                String https = (String) servletContext.getAttribute("https");
+                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, rootDir:" + rootDir, module);
+                templateCtx.put("webSiteId", webSiteId);
+                templateCtx.put("https", https);
+                templateCtx.put("rootDir", rootDir);
 
-                Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
+
+                    //Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
+                    Map templateRootTemplate = (Map)templateCtx.get("templateRootTemplate");
+                    Map templateRoot = null;
+                    if (templateRootTemplate == null) {
+                        Map templateRootTmp = FreeMarkerWorker.createEnvironmentMap(env);
+                        templateRoot = new HashMap(templateRootTmp);
+                        //templateCtx.put("templateRootTemplate", templateRootTmp);
+                    } else {
+                        templateRoot = new HashMap(templateRootTemplate);
+                    }
                 templateRoot.put("context", templateCtx);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("in RenderSubContent, templateCtx.keySet()" + templateCtx.keySet(), "");
+            Set kySet = templateCtx.keySet();
+            Iterator it = kySet.iterator();
+            while (it.hasNext()) {
+                Object ky = it.next();
+            Debug.logVerbose("in RednerSubContent, ky:" + ky, "");
+                Object val = templateCtx.get(ky);
+                    Debug.logVerbose("in RednerSubContent, val:" + val, "");
+            }
+        }
+
                 String mimeTypeId = (String) templateCtx.get("mimeTypeId");
                 Locale locale = (Locale) templateCtx.get("locale");
                 if (locale == null)
                     locale = Locale.getDefault();
                 try {
-                        ContentWorker.renderContentAsTextCache(delegator, null, out, templateRoot, view, locale, mimeTypeId);
+                    ContentWorker.renderContentAsTextCache(delegator, null, out, templateRoot, thisView, locale, mimeTypeId);
                 } catch (GeneralException e) {
                     Debug.logError(e, "Error rendering content", module);
-                    throw new IOException("Error rendering view:" + view + " msg:" + e.toString());
+                    throw new IOException("Error rendering thisView:" + thisView + " msg:" + e.toString());
                 }
-
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(R)before remove", templateCtx, 0),module);
-                FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(R)after remove", templateCtx, 0),module);
-                FreeMarkerWorker.reloadValues(templateCtx, savedValues);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(R)after reload", templateCtx, 0),module);
-                
+        if (Debug.infoOn()) Debug.logInfo("in Render(4), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
                 return;
             }
         };
+        
     }
 
 }

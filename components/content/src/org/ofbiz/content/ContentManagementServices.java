@@ -41,7 +41,7 @@ import org.ofbiz.content.content.ContentWorker;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  *
  * 
@@ -130,12 +130,16 @@ public class ContentManagementServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map permContext = new HashMap();
 
+        List contentPurposeList = (List)context.get("contentPurposeList");
+        if (Debug.infoOn()) Debug.logInfo("in persist... contentPurposeList(0):" + contentPurposeList, null);
         GenericValue content = delegator.makeValue("Content", null);
         content.setPKFields(context);
         content.setNonPKFields(context);
         String contentId = (String)content.get("contentId");
         String contentTypeId = (String)content.get("contentTypeId");
+        String origContentId = (String)content.get("contentId");
         String origDataResourceId = (String)content.get("dataResourceId");
+        String origContentTypeId = (String)content.get("contentTypeId");
 
 
         GenericValue dataResource = delegator.makeValue("DataResource", null);
@@ -162,35 +166,12 @@ public class ContentManagementServices {
         // Do update and create permission checks on DataResource if warranted.
         boolean updatePermOK = false;
         boolean createPermOK = false;
-        if (UtilValidate.isNotEmpty(dataResourceTypeId) 
-           || UtilValidate.isNotEmpty(textData) ) {
-            List targetOperations = new ArrayList();
-            if (UtilValidate.isNotEmpty(dataResourceId) ) {
-                permContext.put("entityOperation", "_UPDATE");
-                targetOperations.add("UPDATE_CONTENT");
-                updatePermOK = true;
-            } else {
-                permContext.put("entityOperation", "_CREATE");
-                targetOperations.add("CREATE_CONTENT");
-                createPermOK = true;
-            }
-            permContext.put("targetOperationList", targetOperations);
-            permContext.put("contentPurposeList", context.get("contentPurposeList"));
-            permContext.put("userLogin", userLogin);
-            String permissionStatus = ContentWorker.callContentPermissionCheck(delegator,
-                                     dispatcher, permContext);
-
-            Debug.logVerbose("permissionStatus(update):" + permissionStatus, null);
-            if (permissionStatus == null || !permissionStatus.equals("granted") ) {
-                return ServiceUtil.returnError("Permission not granted");
-            }
-            context.put("skipPermissionCheck", "granted");
-        }
 
         boolean dataResourceExists = true;
         if (UtilValidate.isNotEmpty(dataResourceTypeId) ) {
                 if (UtilValidate.isEmpty(dataResourceId)) {
                     dataResourceExists = false;
+                    context.put("skipPermissionCheck", "granted"); // TODO: a temp hack because I don't want to bother with DataResource permissions at this time.
                     Map thisResult = DataServices.createDataResourceMethod(dctx, context);
                     dataResourceId = (String)thisResult.get("dataResourceId");
                     dataResource = (GenericValue)thisResult.get("dataResource");
@@ -240,36 +221,6 @@ public class ContentManagementServices {
         }
 
         // Do update and create permission checks on Content if warranted.
-        if (UtilValidate.isNotEmpty(contentTypeId)) {
-            String permissionStatus = "granted";
-            List targetOperations = new ArrayList();
-            permContext.put("targetOperationList", targetOperations);
-            permContext.put("contentPurposeList", context.get("contentPurposeList"));
-            permContext.put("userLogin", userLogin);
-            if (UtilValidate.isNotEmpty(dataResourceId) ) {
-                permContext.put("entityOperation", "_UPDATE");
-                targetOperations.add("UPDATE_CONTENT");
-                if (!updatePermOK) {
-                    permissionStatus = ContentWorker.callContentPermissionCheck(delegator,
-                                     dispatcher, permContext);
-                    updatePermOK = true;
-                }
-            } else {
-                permContext.put("entityOperation", "_CREATE");
-                targetOperations.add("CREATE_CONTENT");
-                if (!createPermOK) {
-                    permissionStatus = ContentWorker.callContentPermissionCheck(delegator,
-                                     dispatcher, permContext);
-                    createPermOK = true;
-                }
-            }
-
-            Debug.logVerbose("permissionStatus(update):" + permissionStatus, null);
-            if (permissionStatus == null || !permissionStatus.equals("granted") ) {
-                return ServiceUtil.returnError("Permission not granted");
-            }
-            context.put("skipPermissionCheck", "granted");
-        }
 
         boolean contentExists = true;
         if (UtilValidate.isNotEmpty(contentTypeId) ) {
@@ -284,10 +235,21 @@ public class ContentManagementServices {
                     return ServiceUtil.returnError(e.getMessage());
                 }
             }
+            //List targetOperations = new ArrayList();
+            //context.put("targetOperations", targetOperations);
             if (contentExists) {
+                //targetOperations.add("CONTENT_UPDATE");
                 Map thisResult = ContentServices.updateContentMethod(dctx, context);
+                boolean isError = ModelService.RESPOND_ERROR.equals(thisResult.get(ModelService.RESPONSE_MESSAGE));
+                if (isError) 
+                    return ServiceUtil.returnError( (String)thisResult.get(ModelService.ERROR_MESSAGE));
             } else {
+                //targetOperations.add("CONTENT_CREATE");
                 Map thisResult = ContentServices.createContentMethod(dctx, context);
+                boolean isError = ModelService.RESPOND_ERROR.equals(thisResult.get(ModelService.RESPONSE_MESSAGE));
+                if (isError) 
+                    return ServiceUtil.returnError( (String)thisResult.get(ModelService.ERROR_MESSAGE));
+
                 contentId = (String)thisResult.get("contentId");
             }
             result.put("contentId", contentId);
@@ -295,7 +257,6 @@ public class ContentManagementServices {
 
         
 
-            List contentPurposeList = (List)context.get("contentPurposeList");
             // Add ContentPurposes if this is a create operation
             if (contentId != null && !contentExists) {
                 try {
@@ -328,6 +289,10 @@ public class ContentManagementServices {
             } catch (Exception e2) {
                 throw new GenericServiceException(e2.getMessage());
             }
+            boolean isError = ModelService.RESPOND_ERROR.equals(thisResult.get(ModelService.RESPONSE_MESSAGE));
+            if (isError) 
+                return ServiceUtil.returnError( (String)thisResult.get(ModelService.ERROR_MESSAGE));
+
             result.put("contentIdTo", thisResult.get("contentIdTo"));
             result.put("contentIdFrom", thisResult.get("contentIdFrom"));
             result.put("contentAssocTypeId", thisResult.get("contentAssocTypeId"));
@@ -335,8 +300,8 @@ public class ContentManagementServices {
        }
             //Debug.logVerbose("return from CREATING CONTENTASSOC result:" +  result, null);
        context.remove("skipPermissionCheck");
-       context.remove("contentId");
-       context.remove("dataResourceId");
+       context.put("contentId", origContentId);
+       context.put("dataResourceId", origDataResourceId);
        context.remove("dataResource");
        return result;
     }

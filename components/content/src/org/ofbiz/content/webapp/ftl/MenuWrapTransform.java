@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentCacheTransform.java,v 1.4 2004/03/16 17:27:16 byersa Exp $
+ * $Id: MenuWrapTransform.java,v 1.1 2004/03/16 17:27:16 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -46,24 +48,29 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.minilang.MiniLangException;
+import org.ofbiz.content.widget.menu.ModelMenu;
+import org.ofbiz.content.widget.html.HtmlMenuWrapper;
 
 import freemarker.template.Environment;
 import freemarker.template.TemplateTransformModel;
+import freemarker.template.TemplateModelException;
+import freemarker.template.TransformControl;
 
-import com.clarkware.profiler.Profiler;
+//import com.clarkware.profiler.Profiler;
 /**
- * EditRenderSubContentCacheTransform - Freemarker Transform for URLs (links)
+ * MenuWrapTransform - Freemarker Transform for URLs (links)
  * 
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.1 $
  * @since 3.0
  */
-public class EditRenderSubContentCacheTransform implements TemplateTransformModel {
+public class MenuWrapTransform implements TemplateTransformModel {
 
-    public static final String module = EditRenderSubContentCacheTransform.class.getName();
-    public static final String [] saveKeyNames = {"contentId", "subContentId", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly"};
+    public static final String module = MenuWrapTransform.class.getName();
+    public static final String [] upSaveKeyNames = {"globalNodeTrail"};
+    public static final String [] saveKeyNames = {"contentId", "subContentId", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "renderOnStart", "renderOnClose", "menuDefFile", "menuName", "associatedContentId", "wrapperClassName"};
     
     /**
      * A wrapper for the FreeMarkerWorker version.
@@ -86,8 +93,15 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
         final Map templateCtx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
         final GenericDelegator delegator = (GenericDelegator) FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);
+        final HttpServletResponse response = (HttpServletResponse) FreeMarkerWorker.getWrappedObject("response", env);
+        final HttpSession session = (HttpSession) FreeMarkerWorker.getWrappedObject("session", env);
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
+        final Map savedValuesUp = new HashMap();
+        FreeMarkerWorker.saveContextValues(templateCtx, upSaveKeyNames, savedValuesUp);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
+        //final String menuDefFile = (String)templateCtx.get("menuDefFile");
+        //final String menuName = (String)templateCtx.get("menuName");
+        //final String associatedContentId = (String)templateCtx.get("associatedContentId");
         if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(E)after overrride", templateCtx, 0),module);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List trail = (List)templateCtx.get("globalNodeTrail");
@@ -132,11 +146,19 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
         final Map savedValues = new HashMap();
         FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
 
-        return new Writer(out) {
+        return new LoopWriter(out) {
+
+            public int onStart() throws TemplateModelException, IOException {
+                String renderOnStart = (String)templateCtx.get("renderOnStart");
+                if (renderOnStart != null && renderOnStart.equalsIgnoreCase("true")) {
+                    renderMenu();
+                }
+                return TransformControl.EVALUATE_BODY;
+            }
 
             public void write(char cbuf[], int off, int len) {
                 buf.append(cbuf, off, len);
-                if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, buf:" + buf.toString(), module);
+                if (Debug.verboseOn()) Debug.logVerbose("in WrapSubContent, buf:" + buf.toString(), module);
             }
 
             public void flush() throws IOException {
@@ -146,56 +168,33 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
             public void close() throws IOException {
                 FreeMarkerWorker.reloadValues(templateCtx, savedValues);
                 String wrappedContent = buf.toString();
-                if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrappedContent:" + wrappedContent, module);
-                String editTemplate = (String)templateCtx.get("editTemplate");
-//                if (editTemplate != null && editTemplate.equalsIgnoreCase("true")) {
-                    String wrapTemplateId = (String)templateCtx.get("wrapTemplateId");
-                    if (UtilValidate.isNotEmpty(wrapTemplateId)) {
-                        templateCtx.put("wrappedContent", wrappedContent);
-                        
-                    //Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
-                    Map templateRoot = null;
-                    Map templateRootTemplate = (Map)templateCtx.get("templateRootTemplate");
-                    if (templateRootTemplate == null) {
-                        Map templateRootTmp = FreeMarkerWorker.createEnvironmentMap(env);
-                        templateRoot = new HashMap(templateRootTmp);
-                        templateCtx.put("templateRootTemplate", templateRootTmp);
-                    } else {
-                        templateRoot = new HashMap(templateRootTemplate);
-                    }
-                        
-                        templateRoot.put("context", templateCtx);
-        if (Debug.verboseOn()) {
-            Debug.logVerbose("in EditRenderSubContent, templateCtx.keySet()" + templateCtx.keySet(), "");
-            Set kySet = templateCtx.keySet();
-            Iterator it = kySet.iterator();
-            while (it.hasNext()) {
-                Object ky = it.next();
-            Debug.logVerbose("in EditRenderSubContent, ky:" + ky, "");
-                Object val = templateCtx.get(ky);
-                    Debug.logVerbose("in EditRenderSubContent, val:" + val, "");
-            }
-        }
-                        
-                        String mimeTypeId = (String)templateCtx.get("mimeTypeId");
-                        Locale locale = null;
-                        try {
-        if (Debug.infoOn()) Debug.logInfo("in Edit(0), before calling renderContentAsTextCache, wrapTemplateId: ." + wrapTemplateId , module);
-                            ContentWorker.renderContentAsTextCache(delegator, wrapTemplateId, out, templateRoot, null, locale, mimeTypeId);
-        if (Debug.infoOn()) Debug.logInfo("in Edit(0), after calling renderContentAsTextCache, wrapTemplateId: ." + wrapTemplateId , module);
-                        } catch (IOException e) {
-                            Debug.logError(e, "Error rendering content" + e.getMessage(), module);
-                            throw new IOException("Error rendering content" + e.toString());
-                        } catch (GeneralException e2) {
-                            Debug.logError(e2, "Error rendering content" + e2.getMessage(), module);
-                            throw new IOException("Error rendering content" + e2.toString());
-                        }
-                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, after renderContentAsText", module);
-                        
-                } else {
-                    out.write(wrappedContent);
+                out.write(wrappedContent);
+                String renderOnClose = (String)templateCtx.get("renderOnClose");
+                if (renderOnClose == null || !renderOnClose.equalsIgnoreCase("false")) {
+                    renderMenu();
                 }
+                FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
             }
+
+            public void renderMenu() throws IOException {
+           
+                ModelMenu modelMenu = null;
+                String menuDefFile = (String)templateCtx.get("menuDefFile");
+                String menuName = (String)templateCtx.get("menuName");
+                String menuWrapperClassName = (String)templateCtx.get("menuWrapperClassName");
+                HtmlMenuWrapper menuWrapper = HtmlMenuWrapper.getMenuWrapper(request, response, session, menuDefFile, menuName, menuWrapperClassName);
+                String associatedContentId = (String)templateCtx.get("associatedContentId");
+                menuWrapper.putInContext("defaultAssociatedContentId", associatedContentId);
+                menuWrapper.putInContext("currentValue", view);
+
+                if (menuWrapper == null) {
+                    throw new IOException("HtmlMenuWrapper with def file:" + menuDefFile + " menuName:" + menuName + " and HtmlMenuWrapper class:" + menuWrapperClassName + " could not be instantiated.");
+                }
+                String menuStr = menuWrapper.renderMenuString();
+                out.write(menuStr);
+                return;
+            }
+                
         };
     }
 }

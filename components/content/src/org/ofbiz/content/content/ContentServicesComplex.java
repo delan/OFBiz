@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServicesComplex.java,v 1.8 2004/02/04 19:50:49 byersa Exp $
+ * $Id: ContentServicesComplex.java,v 1.9 2004/03/16 17:27:13 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.ofbiz.minilang.SimpleMapProcessor;
  * ContentServicesComplex Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
  *
  * 
@@ -231,6 +231,7 @@ public class ContentServicesComplex {
         String contentId = (String)context.get("contentId");
         String direction = (String)context.get("direction");
         String mapKey = (String)context.get("mapKey");
+        String contentAssocPredicateId = (String)context.get("contentAssocPredicateId");
         Boolean nullThruDatesOnly = (Boolean)context.get("nullThruDatesOnly");
         //Debug.logVerbose("in getAACADR, contentId:" +  contentId, null);
         //Debug.logVerbose("in getAACADR, mapKey:" +  mapKey, null);
@@ -240,7 +241,7 @@ public class ContentServicesComplex {
         try {
             results = getAssocAndContentAndDataResourceCacheMethod(delegator,
                           contentId, mapKey, direction, fromDate, 
-                          fromDateStr, assocTypes, contentTypes, nullThruDatesOnly);
+                          fromDateStr, assocTypes, contentTypes, nullThruDatesOnly, contentAssocPredicateId);
         } catch(GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
         } catch(MiniLangException e2) {
@@ -249,16 +250,9 @@ public class ContentServicesComplex {
         return results;
     }
 
-    public static Map getAssocAndContentAndDataResourceCacheMethod(GenericDelegator delegator, String contentId, String mapKey, String direction, 
-                          Timestamp fromDate, String fromDateStr, List assocTypes, List contentTypes) throws GenericEntityException, MiniLangException{
-
-            return getAssocAndContentAndDataResourceCacheMethod(delegator,
-                          contentId, mapKey, direction, fromDate, 
-                          fromDateStr, assocTypes, contentTypes, null);
-    }
 
     public static Map getAssocAndContentAndDataResourceCacheMethod(GenericDelegator delegator, String contentId, String mapKey, String direction, 
-                          Timestamp fromDate, String fromDateStr, List assocTypes, List contentTypes, Boolean nullThruDatesOnly) throws GenericEntityException, MiniLangException{
+                          Timestamp fromDate, String fromDateStr, List assocTypes, List contentTypes, Boolean nullThruDatesOnly, String contentAssocPredicateId) throws GenericEntityException, MiniLangException {
 
         List exprList = new ArrayList();
         EntityExpr joinExpr = null;
@@ -271,13 +265,37 @@ public class ContentServicesComplex {
         } else {
             contentFieldName = "contentId";
         }
-        List contentAssocsUnfiltered = null;
-        if (nullThruDatesOnly != null && nullThruDatesOnly.booleanValue()) {
-            contentAssocsUnfiltered = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap(contentFieldName, contentId, "mapKey", mapKey, "thruDate", null), UtilMisc.toList("-fromDate"));
+        if (direction != null && direction.equalsIgnoreCase("From") ) {
+            viewName = "ContentAssocDataResourceViewFrom";
         } else {
-            contentAssocsUnfiltered = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap(contentFieldName, contentId, "mapKey", mapKey), UtilMisc.toList("-fromDate"));
+            viewName = "ContentAssocDataResourceViewTo";
         }
+            if (Debug.infoOn()) Debug.logInfo("in getAssocAndContent...Cache, assocTypes:" + assocTypes, module);
+        Map fieldMap = UtilMisc.toMap(contentFieldName, contentId);
+        if (assocTypes != null && assocTypes.size() == 1) {
+            fieldMap.putAll(UtilMisc.toMap("contentAssocTypeId", assocTypes.get(0)));
+        }
+        if (UtilValidate.isNotEmpty(mapKey)) {
+            if (mapKey.equalsIgnoreCase("is null"))
+                fieldMap.putAll(UtilMisc.toMap("mapKey", null));
+            else
+                fieldMap.putAll(UtilMisc.toMap("mapKey", mapKey));
+        }
+        if (UtilValidate.isNotEmpty(contentAssocPredicateId)) {
+            if (contentAssocPredicateId.equalsIgnoreCase("is null"))
+                fieldMap.putAll(UtilMisc.toMap("contentAssocPredicateId", null));
+            else
+                fieldMap.putAll(UtilMisc.toMap("contentAssocPredicateId", contentAssocPredicateId));
+        }
+        if (nullThruDatesOnly != null && nullThruDatesOnly.booleanValue()) {
+            fieldMap.putAll(UtilMisc.toMap("thruDate", null));
+        }
+        List contentAssocsUnfiltered = null;
+        
+            if (Debug.infoOn()) Debug.logInfo("in getAssocAndContent...Cache, fieldMap:" + fieldMap, module);
+        contentAssocsUnfiltered = delegator.findByAndCache("ContentAssoc", fieldMap, UtilMisc.toList("-fromDate"));
 
+            if (Debug.infoOn()) Debug.logInfo("in getAssocAndContent...Cache, contentAssocsUnfiltered:" + contentAssocsUnfiltered, module);
         if (fromDate == null && fromDateStr != null ) {
             fromDate = UtilDateTime.toTimestamp( fromDateStr );
 	}
@@ -285,7 +303,7 @@ public class ContentServicesComplex {
 
         String contentAssocTypeId = null;
         List contentAssocsTypeFiltered = new ArrayList();
-        if (assocTypes != null && assocTypes.size() > 0) {
+        if (assocTypes != null && assocTypes.size() > 1) {
             Iterator it = contentAssocsDateFiltered.iterator();
             while (it.hasNext()) {
                 contentAssoc = (GenericValue)it.next();
@@ -305,11 +323,11 @@ public class ContentServicesComplex {
             assocRelationName = "FromContent";
         }
 
-        GenericValue subContentDataResourceView = null;
+        GenericValue contentAssocDataResourceView = null;
         GenericValue content = null;
         GenericValue dataResource = null;
-        List subContentDataResourceList = new ArrayList();
-        Locale locale = Locale.getDefault();
+        List contentAssocDataResourceList = new ArrayList();
+        Locale locale = Locale.getDefault(); // TODO: this needs to be passed in
         Iterator it = contentAssocsTypeFiltered.iterator();
         while (it.hasNext()) {
             contentAssoc = (GenericValue)it.next();
@@ -318,24 +336,31 @@ public class ContentServicesComplex {
             if (contentTypes != null && contentTypes.size() > 0) {
                 String contentTypeId = (String)content.get("contentTypeId");
                 if (contentTypes.contains(contentTypeId)) {
-                    subContentDataResourceView = delegator.makeValue("SubContentDataResourceView", null);
-                    subContentDataResourceView.setAllFields(content, true, null, null);
+                    contentAssocDataResourceView = delegator.makeValue(viewName, null);
+                    contentAssocDataResourceView.setAllFields(content, true, null, null);
                 }
             } else {
-                subContentDataResourceView = delegator.makeValue("SubContentDataResourceView", null);
-                subContentDataResourceView.setAllFields(content, true, null, null);
+                contentAssocDataResourceView = delegator.makeValue(viewName, null);
+                contentAssocDataResourceView.setAllFields(content, true, null, null);
             }
-            if (Debug.verboseOn()) Debug.logVerbose("subContentDataResourceView:" + subContentDataResourceView, module);
+            SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocOut", contentAssoc, contentAssocDataResourceView, new ArrayList(), locale);
+            //if (Debug.infoOn()) Debug.logInfo("contentAssoc:" + contentAssoc, module);
+            //contentAssocDataResourceView.setAllFields(contentAssoc, false, null, null);
+            //if (Debug.verboseOn()) Debug.logVerbose("contentAssocDataResourceView:" + contentAssocDataResourceView, module);
             dataResource = content.getRelatedOneCache("DataResource");
+            //if (Debug.infoOn()) Debug.logInfo("dataResource:" + dataResource, module);
+            //if (Debug.infoOn()) Debug.logInfo("contentAssocDataResourceView:" + contentAssocDataResourceView, module);
             if (dataResource != null) {
                 if (Debug.verboseOn()) Debug.logVerbose("dataResource:" + dataResource, module);
-                SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceOut", dataResource, subContentDataResourceView, new ArrayList(), locale);
+                //contentAssocDataResourceView.setAllFields(dataResource, false, null, null);
+                SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceOut", dataResource, contentAssocDataResourceView, new ArrayList(), locale);
             }
-            subContentDataResourceList.add(subContentDataResourceView );
+            //if (Debug.infoOn()) Debug.logInfo("contentAssocDataResourceView:" + contentAssocDataResourceView, module);
+            contentAssocDataResourceList.add(contentAssocDataResourceView );
         }
 
         HashMap results = new HashMap();
-        results.put("entityList", subContentDataResourceList);
+        results.put("entityList", contentAssocDataResourceList);
         return results;
     }
 

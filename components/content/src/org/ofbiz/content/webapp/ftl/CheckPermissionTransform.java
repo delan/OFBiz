@@ -1,5 +1,5 @@
 /*
- * $Id: CheckPermissionTransform.java,v 1.3 2004/01/13 06:16:29 byersa Exp $
+ * $Id: CheckPermissionTransform.java,v 1.4 2004/03/16 17:27:15 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,6 +31,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.content.content.ContentServicesComplex;
 import org.ofbiz.content.content.ContentPermissionServices;
 import org.ofbiz.content.content.ContentWorker;
@@ -51,14 +53,14 @@ import freemarker.template.TemplateModelException;
  * CheckPermissionTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since 3.0
  */
 public class CheckPermissionTransform implements TemplateTransformModel {
 
     public static final String module = CheckPermissionTransform.class.getName();
 
-    public static final String [] saveKeyNames = {"globalNodeTrail", "nodeTrail"};
+    public static final String [] saveKeyNames = {"globalNodeTrail", "nodeTrail", "mode", "purposeTypeId", "statusId", "entityOperation", "targetOperation" };
     public static final String [] removeKeyNames = {};
 
     /**
@@ -84,13 +86,14 @@ public class CheckPermissionTransform implements TemplateTransformModel {
         //FreeMarkerWorker.convertContext(templateCtx);
         final GenericDelegator delegator = (GenericDelegator) FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);
+        final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
-        //templateCtx.put("buf", buf);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)before save", templateCtx, 0),module);
-        final Map savedValues = FreeMarkerWorker.saveValues(templateCtx, saveKeyNames);
-        if (Debug.verboseOn()) Debug.logVerbose("(C-0)savedValues: " + savedValues,module);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
         if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)after overrride", templateCtx, 0),module);
+        final String mode = (String)templateCtx.get("mode");
+        final Map savedValues = new HashMap();
+                    Debug.logInfo("in CheckPermission, contentId(1):" + templateCtx.get("contentId"),"");
+                    Debug.logInfo("in CheckPermission, subContentId(1):" + templateCtx.get("subContentId"),"");
 
         return new LoopWriter(out) {
 
@@ -105,69 +108,65 @@ public class CheckPermissionTransform implements TemplateTransformModel {
 
             public int onStart() throws TemplateModelException, IOException {
                 List trail = (List)templateCtx.get("globalNodeTrail");
-                List passedGlobalNodeTrail = null;
-                if (trail != null) 
-                    passedGlobalNodeTrail = new ArrayList(trail);
-                else
-                    passedGlobalNodeTrail = new ArrayList();
-                int sz = passedGlobalNodeTrail.size();
+                String trailCsv = FreeMarkerWorker.nodeTrailToCsv(trail);
+                    Debug.logInfo("in CheckPermission, trailCsv(2):" + trailCsv,"");
+                    Debug.logInfo("in CheckPermission, contentId(2):" + templateCtx.get("contentId"),"");
+                    Debug.logInfo("in CheckPermission, subContentId(2):" + templateCtx.get("subContentId"),"");
+             
+                GenericValue currentContent = null;
+        String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
+                String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
+                Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
+                GenericValue val = null;
+                try {
+                    val = FreeMarkerWorker.getCurrentContent(delegator, trail, userLogin, templateCtx, nullThruDatesOnly, contentAssocPredicateId);
+                } catch(GeneralException e) {
+                    throw new RuntimeException("Error getting current content. " + e.toString());
+                }
+                final GenericValue view = val;
+                currentContent = val;
+                if (currentContent != null)
+                    Debug.logInfo("in CheckPermission, currentContent:" + currentContent.get("contentId"),"");
 
-                GenericValue view = null;
-                String contentId = (String)templateCtx.get("contentId");
-                String subContentId = (String)templateCtx.get("subContentId");
-                if (UtilValidate.isNotEmpty(subContentId) || UtilValidate.isNotEmpty(contentId) ) {
-                    String thisContentId = contentId;
-                    if (UtilValidate.isEmpty(thisContentId)) 
-                        thisContentId = subContentId;
-        
-                    if (UtilValidate.isNotEmpty(thisContentId)) {
-                    
-                        try {
-                            view = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", thisContentId));
-                        } catch (GenericEntityException e) {
-                            Debug.logError(e, "Error getting sub-content", module);
-                            throw new RuntimeException(e.getMessage());
-                        }
-                        passedGlobalNodeTrail.add(FreeMarkerWorker.makeNode(view));
-                    }
-                } else {
-                    if (sz > 0) {
-                        view = (GenericValue)passedGlobalNodeTrail.get(sz - 1);
-                    }
-                }
-                if (view == null) {
-                    view = delegator.makeValue("Content", null);
-                    view.put("ownerContentId", templateCtx.get("ownerContentId"));
+                if (currentContent == null) {
+                    currentContent = delegator.makeValue("Content", null);
+                    currentContent.put("ownerContentId", templateCtx.get("ownerContentId"));
                 }
         
-                GenericValue userLogin = null;
                 Security security = null;
                 if (request != null) {
-                    userLogin = (GenericValue)request.getSession().getAttribute("userLogin");
                     security = (Security) request.getAttribute("security");
                 }
-                if (userLogin == null) {
-                    userLogin = (GenericValue)templateCtx.get("userLogin");
-                }
              
-                String statusId = (String)templateCtx.get("statusId");
-                String targetPurpose = (String)templateCtx.get("purposeTypeId");
-                List purposeList = new ArrayList();
-                if (UtilValidate.isNotEmpty(targetPurpose))
-                    purposeList.add(targetPurpose);
-                String entityAction = (String)templateCtx.get("entityAction");
+                String statusId = (String)currentContent.get("statusId");
+                String passedStatusId = (String)templateCtx.get("statusId");
+                List statusList = StringUtil.split(passedStatusId, "|");
+                if (statusList == null)
+                    statusList = new ArrayList();
+                if (UtilValidate.isNotEmpty(statusId) && !statusList.contains(statusId)) {
+                    statusList.add(statusId);
+                } 
+                String targetPurpose = (String)templateCtx.get("contentPurposeList");
+                List purposeList = StringUtil.split(targetPurpose, "|");
+                String entityOperation = (String)templateCtx.get("entityOperation");
                 String targetOperation = (String)templateCtx.get("targetOperation");
                 if (UtilValidate.isEmpty(targetOperation)) {
-                    if (UtilValidate.isNotEmpty(entityAction))
-                        targetOperation = "CONTENT" + entityAction;
+                    if (UtilValidate.isNotEmpty(entityOperation))
+                        targetOperation = "CONTENT" + entityOperation;
                 }
-                List targetOperationList = new ArrayList();
-                if (UtilValidate.isNotEmpty(targetOperation)) 
-                    targetOperationList.add(targetOperation);
+                List targetOperationList = StringUtil.split(targetOperation, "|");
+                if (targetOperationList.size() == 0) {
+                    Debug.logInfo("in CheckPermission, entityOperation:" + entityOperation,"");
+                    Debug.logInfo("in CheckPermission, templateCtx:" + templateCtx,"");
+                    throw new IOException("targetOperationList has zero size.");
+                }
                 List roleList = new ArrayList();
         
-                if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, view" + view,module);
-                Map results = ContentPermissionServices.checkPermission(view, statusId, userLogin, purposeList, targetOperationList, roleList, delegator, security, entityAction); 
+                if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, currentContent:" + currentContent,module);
+                if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, targetOperationList:" + targetOperationList,module);
+                if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, statusId:" + statusId,module);
+                String privilegeEnumId = (String)currentContent.get("privilegeEnumId");
+                Map results = ContentPermissionServices.checkPermission(currentContent, statusList, userLogin, purposeList, targetOperationList, roleList, delegator, security, entityOperation, privilegeEnumId); 
                 if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, results" + results, module);
 
                 boolean isError = ModelService.RESPOND_ERROR.equals(results.get(ModelService.RESPONSE_MESSAGE));
@@ -177,8 +176,9 @@ public class CheckPermissionTransform implements TemplateTransformModel {
 
                 String permissionStatus = (String) results.get("permissionStatus");
 
-                if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
-                if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, permissionStatus" + permissionStatus, module);
+                if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") && (UtilValidate.isEmpty(mode) || mode.equals("equals"))) {
+                    if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, permissionStatus" + permissionStatus, module);
+                    FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
                     return TransformControl.EVALUATE_BODY;
                 } else {
                     return TransformControl.SKIP_BODY;
@@ -187,14 +187,10 @@ public class CheckPermissionTransform implements TemplateTransformModel {
 
 
             public void close() throws IOException {
-                String wrappedFTL = buf.toString();
-                if (Debug.verboseOn()) Debug.logVerbose("in CheckPerm, wrappedFTL:"+wrappedFTL,module);
-                out.write(wrappedFTL);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)before remove", templateCtx, 0),module);
-                    FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)after remove", templateCtx, 0),module);
-                    FreeMarkerWorker.reloadValues(templateCtx, savedValues);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)after reload", templateCtx, 0),module);
+                FreeMarkerWorker.reloadValues(templateCtx, savedValues);
+                String wrappedContent = buf.toString();
+                if (Debug.verboseOn()) Debug.logVerbose("in CheckPerm, wrappedContent:"+wrappedContent,module);
+                out.write(wrappedContent);
             }
         };
     }

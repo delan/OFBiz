@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.9 2004/01/13 06:16:30 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.10 2004/03/16 17:27:16 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,17 +35,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.sql.Timestamp;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericPK;
+import org.ofbiz.content.content.ContentWorker;
+import org.ofbiz.minilang.MiniLangException;
 
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
@@ -57,13 +62,14 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
+//import com.clarkware.profiler.Profiler;
 
 
 /**
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -86,6 +92,10 @@ public class FreeMarkerWorker {
     public static TraverseSubContentCacheTransform  traverseSubContentCache = new TraverseSubContentCacheTransform();
     public static CheckPermissionTransform  checkPermission = new CheckPermissionTransform();
     public static InjectNodeTrailCsvTransform  injectNodeTrailCsv = new InjectNodeTrailCsvTransform();
+    public static WrapSubContentCacheTransform  wrapSubContentCache = new WrapSubContentCacheTransform();
+    public static MenuWrapTransform  menuWrap = new MenuWrapTransform();
+
+    public static Map cachedTemplates = new HashMap();
     
     public static void addAllOfbizTransforms(Map context) {
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
@@ -105,8 +115,10 @@ public class FreeMarkerWorker {
         context.put("renderSubContentCache", renderSubContentCache);
         context.put("loopSubContentCache", loopSubContentCache);
         context.put("traverseSubContentCache", traverseSubContentCache);
+        context.put("wrapSubContentCache", wrapSubContentCache);
         context.put("checkPermission", checkPermission);
         context.put("injectNodeTrailCsv", injectNodeTrailCsv);
+        context.put("menuWrap", menuWrap);
     }
     
     public static Configuration makeDefaultOfbizConfig() throws TemplateException {
@@ -156,7 +168,7 @@ public class FreeMarkerWorker {
                 }
             }
         } catch (TemplateModelException e) {
-            Debug.logVerbose(e.getMessage(), module);
+            Debug.logInfo(e.getMessage(), module);
         }
         return obj;
     }
@@ -171,7 +183,7 @@ public class FreeMarkerWorker {
         try {
             bean = (BeanModel) env.getVariable(varName);
         } catch (TemplateModelException e) {
-            Debug.logVerbose(e.getMessage(), module);
+            Debug.logInfo(e.getMessage(), module);
         }
         return bean;
     }
@@ -193,13 +205,13 @@ public class FreeMarkerWorker {
 
         if (view != null) {
             mimeTypeId = (String)view.get("mimeTypeId");
-       Debug.logVerbose("in determineMimeType,  mimeType:" + mimeTypeId,"");
+            if (Debug.verboseOn()) Debug.logVerbose("in determineMimeType,  mimeType:" + mimeTypeId,"");
             String drMimeTypeId = (String)view.get("drMimeTypeId");
-       Debug.logVerbose("in determineMimeType,  drMimeType:" + drMimeTypeId,"");
+            if (Debug.verboseOn()) Debug.logVerbose("in determineMimeType,  drMimeType:" + drMimeTypeId,"");
             if (UtilValidate.isNotEmpty(drMimeTypeId)) {
                 mimeTypeId = drMimeTypeId;
             }
-       Debug.logVerbose("in determineMimeType, view: " + view.get("contentId") + " / " + view.get("drDataResourceId")  + " mimeType:" + view.get("drMimeTypeId"),"");
+            if (Debug.verboseOn()) Debug.logVerbose("in determineMimeType, view: " + view.get("contentId") + " / " + view.get("drDataResourceId")  + " mimeType:" + view.get("drMimeTypeId"),"");
         }
 
         if (UtilValidate.isEmpty(mimeTypeId)) {
@@ -208,9 +220,9 @@ public class FreeMarkerWorker {
                         UtilMisc.toMap("contentId", contentId, "drDataResourceId", dataResourceId));
                 if (view != null) {
                     mimeTypeId = (String)view.get("mimeTypeId");
-               Debug.logVerbose("in determineMimeType,  mimeType:" + mimeTypeId,"");
+                    if (Debug.verboseOn()) Debug.logVerbose("in determineMimeType,  mimeType:" + mimeTypeId,"");
                     String drMimeTypeId = (String)view.get("drMimeTypeId");
-               Debug.logVerbose("in determineMimeType,  drMimeType:" + drMimeTypeId,"");
+                    if (Debug.verboseOn()) Debug.logVerbose("in determineMimeType,  drMimeType:" + drMimeTypeId,"");
                     if (UtilValidate.isNotEmpty(drMimeTypeId)) {
                         mimeTypeId = drMimeTypeId;
                     }
@@ -242,10 +254,6 @@ public class FreeMarkerWorker {
         Object o = null;
         try {
             o = args.get(key);
-            //Debug.logVerbose("in FM.get, o:" + o + " key:" + key, module);
-            if (o != null) {
-                 //Debug.logVerbose("in FM.get, o class:" + o.getClass(), module);
-            }
         } catch(TemplateModelException e) {
             Debug.logVerbose(e.getMessage(), module);
             return returnObj;
@@ -259,7 +267,7 @@ public class FreeMarkerWorker {
                 ctxObj = args.get("context");
                 //Debug.logVerbose("in FM.get, ctxObj:" + ctxObj, module);
             } catch(TemplateModelException e) {
-                Debug.logVerbose(e.getMessage(), module);
+                Debug.logInfo(e.getMessage(), module);
                 return returnObj;
             }
             Map ctx = null;
@@ -288,10 +296,8 @@ public class FreeMarkerWorker {
 
         if (o instanceof SimpleScalar) {
             returnObj = o.toString();
-            //Debug.logVerbose("in FM.get, SimpleScalar:" + returnObj, module);
         } else if (o instanceof BeanModel) {
             returnObj = ((BeanModel)o).getWrappedObject();
-            //Debug.logVerbose("in FM.get, BeanModel:" + returnObj, module);
         }
     
         return returnObj;
@@ -299,13 +305,11 @@ public class FreeMarkerWorker {
 
     public static void checkForLoop(String path, Map ctx) throws IOException {
         List templateList = (List)ctx.get("templateList");
-            //Debug.logVerbose("in checkForLoop, templateList:" +templateList, "");
-            //Debug.logVerbose("in checkForLoop, templatePath:" +path, "");
         if (templateList == null) {
             templateList = new ArrayList();
         } else {
             if (templateList.contains(path)) {
-                Debug.logVerbose("in checkForLoop, " +path + " has been visited.", "");
+                if (Debug.verboseOn()) Debug.logVerbose("in checkForLoop, " +path + " has been visited.", "");
                 throw new IOException(path + " has already been visited.");
             }
         }
@@ -326,6 +330,10 @@ public class FreeMarkerWorker {
             Iterator varNameIter = varNames.iterator();
             while (varNameIter.hasNext()) {
                 String varName = (String) varNameIter.next();
+                //freemarker.ext.beans.StringModel varObj = (freemarker.ext.beans.StringModel ) varNameIter.next();
+                //Object varObj =  varNameIter.next();
+                //String varName = varObj.toString();
+//Debug.logInfo("cEM: varObj:" + varObj + " varName:" + varName,"");
                 templateRoot.put(varName, FreeMarkerWorker.getWrappedObject(varName, env));
             }
         }
@@ -333,6 +341,7 @@ public class FreeMarkerWorker {
     }
     
     public static void renderTemplate(String templateIdString, String template, Map context, Writer outWriter) throws TemplateException, IOException {
+        //if (Debug.infoOn()) Debug.logInfo("template:" + template.toString(), "");        
         Reader templateReader = new StringReader(template);
         renderTemplate(templateIdString, templateReader, context, outWriter);
     }
@@ -344,22 +353,34 @@ public class FreeMarkerWorker {
         
         Configuration config = makeDefaultOfbizConfig();            
         Template template = new Template(templateIdString, templateReader, config);            
-        
         // add the OFBiz transforms/methods
         addAllOfbizTransforms(context);
         
+        cachedTemplates.put(templateIdString, template);
         // process the template with the given data and write
         // the email body to the String buffer
         template.process(context, outWriter);
     }
+ 
+    public static Template getTemplateCached(String dataResourceId) {
+
+        Template t = (Template)cachedTemplates.get("DataResource:" + dataResourceId);
+        return t;
+    }
+
+    public static void renderTemplateCached( Template template, Map context, Writer outWriter) throws TemplateException, IOException {
+        template.process(context, outWriter);
+    }
+    
 
     public static void traceNodeTrail(String lbl, List nodeTrail) {
 
+/*
         if (!Debug.verboseOn()) {
             return;
         }
         if (nodeTrail == null) {
-            Debug.logVerbose("[" + lbl + "] nodeTrail is null.", "");
+            if (Debug.verboseOn()) Debug.logVerbose("[" + lbl + "] nodeTrail is null.", "");
             return;
         }
         String s = "";
@@ -375,9 +396,14 @@ public class FreeMarkerWorker {
                 s += " kSz:" + kSz;
                 Boolean isPick = (Boolean)cN.get("isPick");
                 s += " isPick:" + isPick;
+                Boolean isFollow = (Boolean)cN.get("isFollow");
+                s += " isFollow:" + isFollow;
+                Boolean isReturnAfterPick = (Boolean)cN.get("isReturnAfterPick");
+                s += " isReturnAfterPick:" + isReturnAfterPick;
             }
         }
-        Debug.logVerbose("[" + lbl + "] " + s, "");
+        if (Debug.verboseOn()) Debug.logVerbose("[" + lbl + "] " + s, "");
+*/
         return;
     }
 
@@ -448,6 +474,20 @@ public class FreeMarkerWorker {
         return s + eol + eol;
     }
 
+    public static void saveContextValues(Map context, String [] saveKeyNames, Map saveMap ) {
+        //Map saveMap = new HashMap();
+        for (int i=0; i<saveKeyNames.length; i++) {
+            String key = (String)saveKeyNames[i];
+            Object o = context.get(key);
+            if (o instanceof Map)
+                o = new HashMap((Map)o);
+            else if (o instanceof List)
+                o = new ArrayList((List)o);
+            saveMap.put(key, o);
+        }
+        return ;
+    }
+
     public static Map saveValues(Map context, String [] saveKeyNames) {
         Map saveMap = new HashMap();
         for (int i=0; i<saveKeyNames.length; i++) {
@@ -458,15 +498,10 @@ public class FreeMarkerWorker {
             else if (o instanceof List)
                 o = new ArrayList((List)o);
             saveMap.put(key, o);
-if (key.equals("globalNodeTrail")) {
-    Debug.logInfo("saveValues,key:" + key + " csv:" + nodeTrailToCsv((List)o), "");
-}
-if (key.equals("nodeTrail")) {
-    Debug.logInfo("saveValues,key:" + key + " csv:" + nodeTrailToCsv((List)o), "");
-}
         }
         return saveMap;
     }
+
 
     public static void reloadValues(Map context, Map saveValues ) {
         Set keySet = saveValues.keySet();
@@ -475,12 +510,6 @@ if (key.equals("nodeTrail")) {
             String key = (String)it.next();
             Object o = saveValues.get(key);
             context.put(key, saveValues.get(key));
-if (key.equals("globalNodeTrail")) {
-    Debug.logInfo("reloadValues,key:" + key + " csv:" + nodeTrailToCsv((List)o), "");
-}
-if (key.equals("nodeTrail")) {
-    Debug.logInfo("reloadValues,key:" + key + " csv:" + nodeTrailToCsv((List)o), "");
-}
         }
         return;
     }
@@ -503,7 +532,7 @@ if (key.equals("nodeTrail")) {
                 Object unwrappedObj = unwrap(obj);
                 if (unwrappedObj == null)
                     unwrappedObj = obj;
-       Debug.logVerbose("in overrideWithArgs,  key:" + key + " uObj:" + unwrappedObj,"");
+                    if (Debug.verboseOn()) Debug.logVerbose("in overrideWithArgs,  key:" + key + " uObj:" + unwrappedObj,"");
                 ctx.put(key, unwrappedObj.toString());
             } else {
                 ctx.put(key, null);
@@ -552,12 +581,30 @@ if (key.equals("nodeTrail")) {
     }
 
     public static Map makeNode(GenericValue thisContent) {
-        Map thisNode = new HashMap();
+        Map thisNode = null;
+        if (thisContent == null) 
+            return thisNode;
+
+        thisNode = new HashMap();
         thisNode.put("value", thisContent);
-        thisNode.put("contentId", thisContent.get("contentId"));
+        String contentId = (String)thisContent.get("contentId");
+        thisNode.put("contentId", contentId);
         thisNode.put("contentTypeId", thisContent.get("contentTypeId"));
+        thisNode.put("isReturnBeforePick", new Boolean(false));
+        thisNode.put("isReturnAfterPick", new Boolean(false));
+        thisNode.put("isPick", new Boolean(true));
+        thisNode.put("isFollow", new Boolean(true));
+        try {
+            thisNode.put("contentAssocTypeId", thisContent.get("caContentAssocTypeId"));
+            thisNode.put("mapKey", thisContent.get("caMapKey"));
+            thisNode.put("fromDate", thisContent.get("caFromDate"));
+            thisNode.put("contentAssocTypeId", thisContent.get("caContentAssocTypeId"));
+        } catch(Exception e) {
+            // This ignores the case when thisContent does not have ContentAssoc values
+        }
         return thisNode;
     }
+
 
     public static String nodeTrailToCsv(List nodeTrail) {
         
@@ -599,5 +646,96 @@ if (key.equals("nodeTrail")) {
             outList.add(values);    
         }
         return outList;
+    }
+
+    public static GenericValue getCurrentContent( GenericDelegator delegator, List trail,  GenericValue userLogin, Map ctx, Boolean nullThruDatesOnly, String contentAssocPredicateId)  throws GeneralException {
+
+        String contentId = (String)ctx.get("contentId");
+        String subContentId = (String)ctx.get("subContentId");
+        String mapKey = (String)ctx.get("mapKey");
+        Timestamp fromDate = UtilDateTime.nowTimestamp();
+        List assocTypes = null;
+        List passedGlobalNodeTrail = null;
+        GenericValue currentContent = null;
+        if (trail != null && trail.size() > 0) 
+            passedGlobalNodeTrail = new ArrayList(trail);
+        else
+            passedGlobalNodeTrail = new ArrayList();
+        //if (Debug.infoOn()) Debug.logInfo("in getCurrentContent, passedGlobalNodeTrail(3):" + passedGlobalNodeTrail , module);
+        int sz = passedGlobalNodeTrail.size();
+        if (Debug.verboseOn()) Debug.logVerbose("sz:" + sz ,module);
+        String viewContentId = null;
+        if (sz > 0) {
+            Map nd = (Map)passedGlobalNodeTrail.get(sz - 1);
+            if (nd != null)
+                currentContent = (GenericValue)nd.get("value");
+            if (currentContent != null) 
+                viewContentId = (String)currentContent.get("contentId");
+        }
+
+        //if (Debug.infoOn()) Debug.logInfo("in getCurrentContent, currentContent(3):" + currentContent , module);
+        if (Debug.infoOn()) Debug.logInfo("getCurrentContent, contentId:" + contentId, "");
+        if (Debug.infoOn()) Debug.logInfo("getCurrentContent, subContentId:" + subContentId, "");
+        if (Debug.infoOn()) Debug.logInfo("getCurrentContent, viewContentId:" + viewContentId, "");
+/*
+        if (UtilValidate.isNotEmpty(subContentId) && UtilValidate.isNotEmpty(contentId) && contentId.equals(subContentId)) {
+            Debug.logError("subContentId and contentId cannot be equal. Setting subContentId to null", module);
+            subContentId = null;
+        }
+*/
+        if (UtilValidate.isNotEmpty(subContentId)) {
+            ctx.put("subContentId", subContentId);
+            ctx.put("contentId", null);
+            if (viewContentId != null && viewContentId.equals(subContentId) ) {
+                return currentContent;
+            }
+        } else {
+            ctx.put("contentId", contentId);
+            ctx.put("subContentId", null);
+            if (viewContentId != null && viewContentId.equals(contentId) ) {
+                return currentContent;
+            }
+        }
+        if (Debug.infoOn()) Debug.logInfo("getCurrentContent(2), contentId:" + contentId + " viewContentId:" + viewContentId + " subContentId:" + subContentId, "");
+        if (UtilValidate.isNotEmpty(contentId) || UtilValidate.isNotEmpty(subContentId)) {
+            
+                try {
+                    currentContent = ContentWorker.getSubContentCache(delegator, contentId, mapKey, subContentId, userLogin, assocTypes, fromDate, nullThruDatesOnly, contentAssocPredicateId);
+                    Map node = FreeMarkerWorker.makeNode(currentContent);
+                    passedGlobalNodeTrail.add(node);
+                } catch (GenericEntityException e) {
+                    throw new GeneralException(e.getMessage());
+                } catch (MiniLangException e2) {
+                    throw new GeneralException(e2.getMessage());
+                }
+        }
+        ctx.put("globalNodeTrail", passedGlobalNodeTrail);
+        ctx.put("indent", new Integer(sz));
+        if (Debug.verboseOn()) Debug.logVerbose("getCurrentContent, currentContent:" + currentContent, "");
+        return currentContent;
+    }
+
+    public static String getMimeTypeId(GenericDelegator delegator, GenericValue view, Map ctx) {
+        // This order is taken so that the mimeType can be overridden in the transform arguments.
+        String mimeTypeId = (String)ctx.get("mimeTypeId");
+        if (UtilValidate.isEmpty(mimeTypeId)) {
+            mimeTypeId = (String) view.get("mimeTypeId");
+            String parentContentId = (String)ctx.get("contentId");
+            if (UtilValidate.isEmpty(mimeTypeId) && UtilValidate.isNotEmpty(parentContentId)) { // will need these below
+                try {
+                    GenericValue parentContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", parentContentId));
+                    if (parentContent != null) {
+                        mimeTypeId = (String) parentContent.get("mimeTypeId");
+                        ctx.put("parentContent", parentContent);
+                        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, parentContentId: " + parentContent.get("contentId"), module);
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e.getMessage(), module);
+                    //throw new GeneralException(e.getMessage());
+                }
+            }
+
+        }
+        return mimeTypeId;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: InjectNodeTrailCsvTransform.java,v 1.1 2004/01/13 06:16:30 byersa Exp $
+ * $Id: InjectNodeTrailCsvTransform.java,v 1.2 2004/03/16 17:27:16 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -51,7 +51,7 @@ import freemarker.template.TemplateModelException;
  * InjectNodeTrailCsvTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 3.0
  */
 public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
@@ -85,14 +85,11 @@ public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
         final GenericDelegator delegator = (GenericDelegator) FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
-        //templateCtx.put("buf", buf);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(I)before save", templateCtx, 0),module);
-        final Map savedValues = FreeMarkerWorker.saveValues(templateCtx, saveKeyNames);
-        if (Debug.verboseOn()) Debug.logVerbose("(I-0)savedValues: " + savedValues,module);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(I)after overrride", templateCtx, 0),module);
 
         return new LoopWriter(out) {
+
+            final String passedCsv = (String)templateCtx.get("nodeTrailCsv");
 
             public void write(char cbuf[], int off, int len) {
                 buf.append(cbuf, off, len);
@@ -104,9 +101,10 @@ public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
             }
 
             public int onStart() throws TemplateModelException, IOException {
-                String passedCsv = (String)templateCtx.get("nodeTrailCsv");
                 String csvTrail = null;
                 List trail = (List)templateCtx.get("globalNodeTrail");
+                if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv, trail:"+trail,module);
+                if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv, passedCsv:"+passedCsv,module);
                 if (UtilValidate.isNotEmpty(passedCsv)) {
                     csvTrail = passedCsv;
                     int lastComma = passedCsv.lastIndexOf(",");
@@ -140,14 +138,9 @@ public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
 
 
             public void close() throws IOException {
-                String wrappedFTL = buf.toString();
-                if (Debug.verboseOn()) Debug.logVerbose("in InjectNodeTrailCsv, wrappedFTL:"+wrappedFTL,module);
-                out.write(wrappedFTL);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(I)before remove", templateCtx, 0),module);
-                    FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(I)after remove", templateCtx, 0),module);
-                    FreeMarkerWorker.reloadValues(templateCtx, savedValues);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(I)after reload", templateCtx, 0),module);
+                templateCtx.put("nodeTrailCsv", passedCsv);
+                String wrappedContent = buf.toString();
+                out.write(wrappedContent);
             }
         };
     }

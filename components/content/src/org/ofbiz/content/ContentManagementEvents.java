@@ -1,0 +1,377 @@
+package org.ofbiz.content;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Locale;
+import java.io.IOException;
+import java.sql.Timestamp;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
+
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericPK;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.ByteWrapper;
+import org.ofbiz.security.Security;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.content.ContentManagementWorker;
+import org.ofbiz.content.content.ContentServices;
+import org.ofbiz.content.data.DataServices;
+import org.ofbiz.content.content.ContentWorker;
+import org.ofbiz.content.content.PermissionRecorder;
+
+
+
+/**
+ * ContentManagementEvents Class
+ *
+ * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
+ * @version    $Revision: 1.1 $
+ * @since      3.0
+ *
+ * 
+ */
+public class ContentManagementEvents {
+
+    public static final String module = ContentManagementEvents.class.getName();
+
+    public static String updateStaticValues(HttpServletRequest request, HttpServletResponse response) {
+
+        HttpSession session = request.getSession();
+        Security security = (Security)request.getAttribute("security");
+        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        ServletContext servletContext = session.getServletContext();
+        String webSiteId = (String) servletContext.getAttribute("webSiteId");
+        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
+        Map paramMap = UtilHttp.getParameterMap(request);
+                if (Debug.infoOn()) Debug.logInfo("in updateStaticValues, paramMap:" + paramMap , module);
+        String parentPlaceholderId = (String)paramMap.get("ph");
+        if ( UtilValidate.isEmpty(parentPlaceholderId)) {
+            request.setAttribute("_ERROR_MESSAGE_", "ParentPlaceholder is empty.");
+            return "error";
+        }
+        List allPublishPointList = null;
+        List permittedPublishPointList = null;
+        List valueList = null;
+        try {
+            allPublishPointList = ContentManagementWorker.getAllPublishPoints(delegator, webSiteId);
+            permittedPublishPointList = ContentManagementWorker.getPermittedPublishPoints(delegator, allPublishPointList, userLogin, security, "_ADMIN", null, null);
+            valueList = ContentManagementWorker.getStaticValues(delegator, parentPlaceholderId, permittedPublishPointList);
+        } catch(GeneralException e) {
+            Debug.logError(e.getMessage(), module);
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            return "error";
+        }
+/*
+        Set keySet = paramMap.keySet();
+        Iterator itKeySet = keySet.iterator();
+        Map contentIdLookup = new HashMap();
+        while (itKeySet.hasNext()) {
+            String idxAndContentId = (String)itKeySet.next();
+            int pos = idxAndContentId.indexOf("_");
+            if (pos > 0) {
+                String idxStr = idxAndContentId.substring(0, pos);
+                int idx = Integer.parseInt(idxStr);
+                String contentId = idxAndContentId.substring(pos + 1);
+                contentIdLookup.put(contentId, new Integer(idx));
+            }
+        }
+*/
+
+        Iterator it = valueList.iterator();
+        int counter = 0;
+        while (it.hasNext()) {
+            Map map = (Map)it.next();
+            String contentId = (String)map.get("contentId");
+            //Integer idxObj = (Integer)contentIdLookup.get(contentId);
+            //int idx = idxObj.intValue();
+            Iterator itPubPt = permittedPublishPointList.iterator();
+            while (itPubPt.hasNext()) {
+                String [] pubArr = (String [])itPubPt.next();
+                String pubContentId = (String)pubArr[0];
+                String pubValue = (String)map.get(pubContentId);
+                String paramName = Integer.toString(counter)  + "_" + pubContentId;
+                String paramValue = (String)paramMap.get(paramName);
+                if (Debug.infoOn()) Debug.logInfo("in updateStaticValues, contentId:" + contentId + " pubContentId:" + pubContentId + " pubValue:" + pubValue + " paramName:" + paramName + " paramValue:" + paramValue, module);
+                Map serviceIn = new HashMap();
+                serviceIn.put("userLogin", userLogin);
+                serviceIn.put("contentIdTo", contentId);
+                serviceIn.put("contentId", pubContentId);
+                serviceIn.put("contentAssocTypeId", "SUBSITE");
+                try {
+                    if (UtilValidate.isNotEmpty(paramValue)) {
+                        if (!paramValue.equals(pubValue)) {
+                            if (paramValue.equalsIgnoreCase("Y")) {
+                                serviceIn.put("fromDate", UtilDateTime.nowTimestamp());
+                                Map results = dispatcher.runSync("createContentAssoc", serviceIn);
+                            } else if (paramValue.equalsIgnoreCase("N") && pubValue.equalsIgnoreCase("Y")) {
+                                serviceIn.put("thruDate", UtilDateTime.nowTimestamp());
+                                Timestamp fromDate = (Timestamp)map.get(pubContentId + "FromDate");
+                                serviceIn.put("fromDate", fromDate);
+                                Map results = dispatcher.runSync("updateContentAssoc", serviceIn);
+                            }
+                        }
+                    } else if ( UtilValidate.isNotEmpty(pubValue)) {
+                        if (pubValue.equalsIgnoreCase("Y")) {
+                                serviceIn.put("thruDate", UtilDateTime.nowTimestamp());
+                                Timestamp fromDate = (Timestamp)map.get(pubContentId + "FromDate");
+                                serviceIn.put("fromDate", fromDate);
+                                Map results = dispatcher.runSync("updateContentAssoc", serviceIn);
+                        }
+                    }
+                } catch(GenericServiceException e) {
+                    Debug.logError(e.getMessage(), module);
+                    request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+                    return "error";
+                }
+            }
+            counter++;
+        }
+        return "success";
+    }
+
+    public static String createStaticValue(HttpServletRequest request, HttpServletResponse response) {
+        String retValue = "success";
+        return retValue;
+    }
+
+    public static String updatePublishLinks(HttpServletRequest request, HttpServletResponse response) {
+
+        HttpSession session = request.getSession();
+        Security security = (Security)request.getAttribute("security");
+        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        ServletContext servletContext = session.getServletContext();
+        String webSiteId = (String) servletContext.getAttribute("webSiteId");
+        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
+        Map paramMap = UtilHttp.getParameterMap(request);
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, paramMap:" + paramMap , module);
+        String targContentId = (String)paramMap.get("contentId"); // The content to be linked to one or more sites
+        String roles = null;
+        String authorId = null;
+        GenericValue authorContent = ContentManagementWorker.getAuthorContent(delegator, targContentId);
+        if (authorContent != null) {
+            authorId = authorContent.getString("contentId");
+        } else {
+            request.setAttribute("_ERROR_MESSAGE_", "authorContent is empty.");
+            return "error";
+        }
+
+        String userLoginId = userLogin.getString("userLoginId");
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, userLoginId:" + userLoginId + " authorId:" + authorId , module);
+        List roleTypeList = null;
+        if (authorId != null && userLoginId != null && authorId.equals(userLoginId)) {
+            roles = "_OWNER_";
+            roleTypeList = StringUtil.split(roles, "|");
+        }
+        List targetOperationList = UtilMisc.toList("CONTENT_PUBLISH");
+        List contentPurposeList = UtilMisc.toList("ARTICLE");
+        if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, roles:" + roles +" roleTypeList:" + roleTypeList , module);
+        String permittedAction = (String)paramMap.get("permittedAction"); // The content to be linked to one or more sites
+        String permittedOperations = (String)paramMap.get("permittedOperations"); // The content to be linked to one or more sites
+        if ( UtilValidate.isEmpty(targContentId)) {
+            request.setAttribute("_ERROR_MESSAGE_", "targContentId is empty.");
+            return "error";
+        }
+
+        // Get all the subSites that the user is permitted to link to
+        List origPublishedLinkList = null;
+        try {
+            origPublishedLinkList = ContentManagementWorker.getPublishedLinks(delegator, targContentId, webSiteId, userLogin, security, permittedAction, permittedOperations, roles );
+        } catch(GeneralException e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            return "error";
+        }
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, origPublishedLinkList:" + origPublishedLinkList , module);
+
+        // make a map of the values that are passed in using the top subSite as the key.
+        // Content can only be linked to one subsite under a top site (ends with "_MASTER")
+        Set keySet = paramMap.keySet();
+        Iterator itKeySet = keySet.iterator();
+        Map siteIdLookup = new HashMap();
+        while (itKeySet.hasNext()) {
+            String param = (String)itKeySet.next();
+            int pos = param.indexOf("select_");
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, param:" + param + " pos:" + pos , module);
+            if (pos >= 0) {
+                String siteId = param.substring(7);
+                String subSiteVal = (String)paramMap.get(param);
+                siteIdLookup.put(siteId, subSiteVal);
+            }
+        }
+
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, siteIdLookup:" + siteIdLookup , module);
+
+        // Loop thru all the possible subsites
+        Iterator it = origPublishedLinkList.iterator();
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        int counter = 0;
+        String responseMessage = null;
+        String errorMessage = null;
+        String permissionMessage = null;
+        Map results = null;
+        while (it.hasNext()) {
+            Object [] arr = (Object [])it.next();
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, arr:" + Arrays.asList(arr) , module);
+            String contentId = (String)arr[0]; // main (2nd level) site id
+            String origSubContentId = null;
+            List origSubList = (List)arr[1];
+            Timestamp topFromDate = (Timestamp)arr[3];
+            Timestamp origFromDate = null;
+            Iterator itOrigSubPt = origSubList.iterator();
+            // see if a link already exists by looking for non-null fromDate
+            while (itOrigSubPt.hasNext()) {
+                Object [] pubArr = (Object [])itOrigSubPt.next();
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, pubArr:" + Arrays.asList(pubArr) , module);
+                Timestamp fromDate = (Timestamp)pubArr[2];
+                origSubContentId = null;
+                if (fromDate != null) {
+                    origSubContentId = (String)pubArr[0];
+                    origFromDate = fromDate;
+                    break;
+                }
+            }
+            String currentSubContentId = (String)siteIdLookup.get(contentId);
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, currentSubContentId:" + currentSubContentId , module);
+            try {
+                Map serviceIn = new HashMap();
+                serviceIn.put("userLogin", userLogin);
+                serviceIn.put("contentId", targContentId);
+                serviceIn.put("contentAssocTypeId", "SUB_CONTENT");
+                serviceIn.put("roleTypeList", roleTypeList);
+                serviceIn.put("targetOperationList", targetOperationList);
+                serviceIn.put("contentPurposeList", contentPurposeList);
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, serviceIn(1):" + serviceIn , module);
+                if (UtilValidate.isNotEmpty(currentSubContentId)) {
+                    if (!currentSubContentId.equals(origSubContentId)) {
+                        // disable existing link
+                        if (UtilValidate.isNotEmpty(origSubContentId) && origFromDate != null) {
+                            serviceIn.put("contentIdTo", origSubContentId);
+                            serviceIn.put("thruDate", nowTimestamp);
+                            serviceIn.put("fromDate", origFromDate);
+                            results = dispatcher.runSync("updateContentAssoc", serviceIn);
+
+                            serviceIn = new HashMap();
+                            serviceIn.put("userLogin", userLogin);
+                            serviceIn.put("contentId", targContentId);
+                            serviceIn.put("contentAssocTypeId", "SUB_CONTENT");
+                            serviceIn.put("contentIdTo", contentId);
+                            serviceIn.put("fromDate", topFromDate);
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, serviceIn(2):" + serviceIn , module);
+                            results = dispatcher.runSync("updateContentAssoc", serviceIn);
+                            responseMessage = (String)results.get(ModelService.RESPONSE_MESSAGE); 
+                            if (UtilValidate.isNotEmpty(responseMessage)) {
+                                errorMessage = (String)results.get(ModelService.ERROR_MESSAGE);
+                                Debug.logError("in updatePublishLinks, serviceIn:" + serviceIn , module);
+                                Debug.logError(errorMessage, module);
+                                request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                                return "error";
+                            }
+                        }
+                        // create new link
+                        serviceIn = new HashMap();
+                        serviceIn.put("userLogin", userLogin);
+                        serviceIn.put("contentId", targContentId);
+                        serviceIn.put("contentAssocTypeId", "SUB_CONTENT");
+                        serviceIn.put("fromDate", nowTimestamp);
+                        serviceIn.put("contentIdTo", currentSubContentId);
+                        serviceIn.put("roleTypeList", roleTypeList);
+                        serviceIn.put("targetOperationList", targetOperationList);
+                        serviceIn.put("contentPurposeList", contentPurposeList);
+                        results = dispatcher.runSync("createContentAssoc", serviceIn);
+                        responseMessage = (String)results.get(ModelService.RESPONSE_MESSAGE); 
+                        if (UtilValidate.isNotEmpty(responseMessage)) {
+                            errorMessage = (String)results.get(ModelService.ERROR_MESSAGE);
+                            Debug.logError("in updatePublishLinks, serviceIn:" + serviceIn , module);
+                            Debug.logError(errorMessage, module);
+                            request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                            return "error";
+                        }
+
+                        serviceIn = new HashMap();
+                        serviceIn.put("userLogin", userLogin);
+                        serviceIn.put("contentId", targContentId);
+                        serviceIn.put("contentAssocTypeId", "SUB_CONTENT");
+                        serviceIn.put("fromDate", nowTimestamp);
+                        serviceIn.put("contentIdTo", contentId);
+                        serviceIn.put("roleTypeList", roleTypeList);
+                        serviceIn.put("targetOperationList", targetOperationList);
+                        serviceIn.put("contentPurposeList", contentPurposeList);
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, serviceIn(3b):" + serviceIn , module);
+                        results = dispatcher.runSync("createContentAssoc", serviceIn);
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, results(3b):" + results , module);
+                    }
+                } else if ( UtilValidate.isNotEmpty(origSubContentId)) {
+                    // if no current link is passed in, look to see if there is an existing link that must be disabled
+                    if (origFromDate != null) {
+                        serviceIn.put("contentIdTo", origSubContentId);
+                        serviceIn.put("thruDate", nowTimestamp);
+                        serviceIn.put("fromDate", origFromDate);
+                        results = dispatcher.runSync("updateContentAssoc", serviceIn);
+
+                        responseMessage = (String)results.get(ModelService.RESPONSE_MESSAGE); 
+                        if (UtilValidate.isNotEmpty(responseMessage)) {
+                            errorMessage = (String)results.get(ModelService.ERROR_MESSAGE);
+                            Debug.logError("in updatePublishLinks, serviceIn(3a):" + serviceIn , module);
+                            Debug.logError(errorMessage, module);
+                            request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                            return "error";
+                        }
+
+                        serviceIn = new HashMap();
+                        serviceIn.put("userLogin", userLogin);
+                        serviceIn.put("contentId", targContentId);
+                        serviceIn.put("contentAssocTypeId", "SUB_CONTENT");
+                        serviceIn.put("contentIdTo", contentId);
+                        serviceIn.put("fromDate", topFromDate);
+                if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, serviceIn(4):" + serviceIn , module);
+                        results = dispatcher.runSync("updateContentAssoc", serviceIn);
+
+                        responseMessage = (String)results.get(ModelService.RESPONSE_MESSAGE); 
+                        if (UtilValidate.isNotEmpty(responseMessage)) {
+                            errorMessage = (String)results.get(ModelService.ERROR_MESSAGE);
+                            Debug.logError("in updatePublishLinks, serviceIn(3a):" + serviceIn , module);
+                            Debug.logError(errorMessage, module);
+                            request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                            return "error";
+                        }
+                    }
+                }
+            } catch(GenericServiceException e) {
+                    Debug.logError(e.getMessage(), module);
+                    request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+                    return "error";
+            }
+        }
+        return "success";
+    }
+
+}
+
