@@ -68,8 +68,10 @@ public class PosButton {
         for (int i = 0; i < component.length; i++) {
             if (component[i] instanceof XButton) {
                 XButton button = (XButton) component[i];
-                PosButtonWrapper wrapper = new PosButtonWrapper(button);
-                if (UtilValidate.isEmpty(button.getName())) {
+                String buttonName = button.getName();
+                String styleName = buttonName == null ? null : (String) pos.getAttribute("style", buttonName);
+                PosButtonWrapper wrapper = new PosButtonWrapper(button, styleName);
+                if (UtilValidate.isEmpty(buttonName)) {
                     wrapper.setEnabled(false);
                 } else {
                     pos.addActionHandler(button, PosScreen.BUTTON_ACTION_METHOD);

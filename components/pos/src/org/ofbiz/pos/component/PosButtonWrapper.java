@@ -50,9 +50,6 @@ public class PosButtonWrapper {
 
     private static final String disabledAll = "buttonDisabled";
     private static final String enabledMenu = "posButton";
-    private static final String enabledNum = "numButton";
-    private static final String enabledSku = "skuButton";
-    private static final String enabledAlt = "altButton";
 
     protected XStyle disabledStyle = null;
     protected XStyle enabledStyle = null;
@@ -62,7 +59,7 @@ public class PosButtonWrapper {
     protected String origText = null;
     protected String name = null;
 
-    public PosButtonWrapper(XButton button) {
+    public PosButtonWrapper(XButton button, String styleName) {
         this.xbutton = button;
         this.name = xbutton.getName();
         this.origText = xbutton.getText();
@@ -73,21 +70,11 @@ public class PosButtonWrapper {
             Debug.logError("ERROR: The disabled button style \"buttonDisabled\" was not found!", module);
         }
 
-        // load the enabled style         
-        if (name != null && name.startsWith("num")) {
-            this.enabledStyle = XProjectManager.getStyleManager().getStyle(enabledNum);
+        // load the enabled style
+        if (styleName != null) {
+            this.enabledStyle = XProjectManager.getStyleManager().getStyle(styleName);
             if (this.enabledStyle == null) {
-                Debug.logError("ERROR: The enabled button style \""+ enabledNum + "\" was not found!", module);
-            }
-        } else if (name != null && name.startsWith("SKU.")) {
-            this.enabledStyle = XProjectManager.getStyleManager().getStyle(enabledSku);
-            if (this.enabledStyle == null) {
-                Debug.logError("ERROR: The enabled button style \""+ enabledSku + "\" was not found!", module);
-            }
-        } else if (name != null && name.startsWith("ALT.")) {
-            this.enabledStyle = XProjectManager.getStyleManager().getStyle(enabledAlt);
-            if (this.enabledStyle == null) {
-                Debug.logError("ERROR: The enabled button style \""+ enabledAlt + "\" was not found!", module);
+                Debug.logError("ERROR: The enabled button style \""+ styleName + "\" was not found!", module);
             }
         } else {
             this.enabledStyle = XProjectManager.getStyleManager().getStyle(enabledMenu);
