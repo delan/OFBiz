@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -48,7 +48,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<#assign totalQuantityToPackage = shipmentItemData.totalQuantityToPackage>
 	<tr>
 		<td><div class="tabletext">${shipmentItem.shipmentItemSeqId}</div></td>
-		<td colspan="2"><div class="tabletext">${(product.internalName)?if_exists} [<a href="<@ofbizUrl>/EditProduct?productId=${shipmentItem.productId?if_exists}</@ofbizUrl>" class="buttontext">${shipmentItem.productId?if_exists}</a>]</div></td>
+		<td colspan="2"><div class="tabletext">${(product.internalName)?if_exists} [<a href="/catalog/control/EditProduct?productId=${shipmentItem.productId?if_exists}" class="buttontext">${shipmentItem.productId?if_exists}</a>]</div></td>
 		<td><div class="tabletext">${shipmentItem.quantity?default("&nbsp;")}</div></td>
 		<td colspan="2"><div class="tabletext">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</div></td>
 		<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentItem?shipmentId=${shipmentId}&shipmentItemSeqId=${shipmentItem.shipmentItemSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
