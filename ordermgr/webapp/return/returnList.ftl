@@ -45,7 +45,13 @@
   <tr>
     <td><a href="<@ofbizUrl>/returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="buttontext">${returnHeader.returnId}</a></td>
     <td><div class="tabletext">${returnHeader.entryDate.toString()}</div></td>
-    <td><a href="/partymgr/control/viewprofile?partyId=${returnHeader.fromPartyId}${requestAttributes.externalKeyParam}" class='buttontext'>${returnHeader.fromPartyId}</a></td>
+    <td>
+      <#if returnHeader.fromPartyId?exists>
+        <a href="/partymgr/control/viewprofile?partyId=${returnHeader.fromPartyId}${requestAttributes.externalKeyParam}" class='buttontext'>${returnHeader.fromPartyId}</a>
+      <#else>
+        <span class="tabletext">N/A</span>
+      </#if>
+    </td>
     <td><div class="tabletext"><#if facility?exists>${facility.facilityName?default(facility.facilityId)}<#else>None</#if></div></td>
     <td><div class="tabletext">${statusItem.description}</div></td>   
   </tr>
