@@ -477,6 +477,10 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.FindByPrimaryKey(curOperElem, simpleMethod));
                 } else if ("find-by-and".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.FindByAnd(curOperElem, simpleMethod));
+                } else if ("filter-list-by-and".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.FilterListByAnd(curOperElem, simpleMethod));
+                } else if ("filter-list-by-date".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.FilterListByDate(curOperElem, simpleMethod));
 
                 } else if ("make-value".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.MakeValue(curOperElem, simpleMethod));

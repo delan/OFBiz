@@ -1164,6 +1164,43 @@ environment using the specified value-name.</p>
 anding the fields passed in the map. The resulting GenericValue objects will be 
 placed in the method environment using the specified list-name.</p>
 
+<p><b><u>filter-list-by-and</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>list-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the list of GenericValue objects.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of a map in the method environment that will be used for the
+    entity fields.</td>
+</tr>
+</table>
+<p>The filter-list-by-and tag filters the given list by the fields in the specified map.</p>
+
+<p><b><u>filter-list-by-date</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>list-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the list of GenericValue objects.</td>
+</tr>
+<tr>
+    <td>valid-date-name</td><td>N</td>
+    <td>The name of a field in the method environment date to filter by. Defaults to now.</td>
+</tr>
+</table>
+<p>The filter-list-by-date tag filters the given list by the valid date using the from and thru dates in each value object.</p>
+
 <p><b><u>make-value</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>

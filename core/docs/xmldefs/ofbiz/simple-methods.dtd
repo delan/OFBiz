@@ -45,7 +45,7 @@
 <!ENTITY % ServiceOperations "field-to-result">
 <!ENTITY % EnvOperations "field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | property-to-field | to-string | iterate">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env | set-current-user-login">
-<!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and">
+<!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and | filter-list-by-and">
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-by-and | clear-cache-line | set-pk-fields | set-nonpk-fields">
 <!ENTITY % EntityListOperations "store-list | remove-list">
 <!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty | if-has-permission | check-permission">
@@ -357,6 +357,16 @@ engine and facilitate related operations.
     entity-name CDATA #REQUIRED
     map-name CDATA #REQUIRED
     use-cache ( true | false ) "false"
+>
+<!ELEMENT filter-list-by-and EMPTY>
+<!ATTLIST filter-list-by-and
+    list-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
+>
+<!ELEMENT filter-list-by-date EMPTY>
+<!ATTLIST filter-list-by-date
+    list-name CDATA #REQUIRED
+    valid-date-name CDATA #IMPLIED
 >
 
 <!ELEMENT make-value EMPTY>
