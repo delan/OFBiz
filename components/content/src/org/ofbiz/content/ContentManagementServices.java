@@ -35,14 +35,15 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceAuthException;
 import org.ofbiz.service.ServiceUtil;
-
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 
 
 /**
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  *
  * 
@@ -434,6 +435,7 @@ public class ContentManagementServices {
       } catch(GenericEntityException e) {
           return ServiceUtil.returnError( e.getMessage());
       }
+        
       Iterator siteRoleIter = siteRoles.iterator();
       while (siteRoleIter.hasNext()) {
           Map serviceContext = new HashMap();
@@ -463,15 +465,19 @@ public class ContentManagementServices {
                       newContext.put("roleTypeId", serviceContext.get("roleTypeId"));
                       newContext.put("userLogin", userLogin);
                       Map permResults = dispatcher.runSync("deactivateAllContentRoles", newContext);
-
                       serviceContext.put("fromDate", UtilDateTime.nowTimestamp());
                       if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, serviceContext(1):" + serviceContext, module);
                       permResults = dispatcher.runSync("createContentRole", serviceContext);
-                      addRoleToUser(delegator, dispatcher, serviceContext);
+                      String errMsg = ServiceUtil.getErrorMessage(permResults);
+                      if (UtilValidate.isNotEmpty(errMsg)) 
+                        return ServiceUtil.returnError(errMsg);
+                      //addRoleToUser(delegator, dispatcher, serviceContext);
                   } catch (GenericServiceException e) {
                       Debug.logError(e, e.getMessage(), module);
+                      return ServiceUtil.returnError( e.getMessage());
                   } catch (Exception e2) {
                       Debug.logError(e2, e2.getMessage(), module);
+                      return ServiceUtil.returnError( e2.getMessage());
                   }
               }
           } else {
@@ -489,10 +495,15 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
                       newContext.put("roleTypeId", serviceContext.get("roleTypeId"));
                       newContext.put("userLogin", userLogin);
                       Map permResults = dispatcher.runSync("deactivateAllContentRoles", newContext);
+                      String errMsg = ServiceUtil.getErrorMessage(permResults);
+                      if (UtilValidate.isNotEmpty(errMsg)) 
+                        return ServiceUtil.returnError(errMsg);
                   } catch (GenericServiceException e) {
                       Debug.logError(e, e.getMessage(), module);
+                      return ServiceUtil.returnError( e.getMessage());
                   } catch (Exception e2) {
                       Debug.logError(e2, e2.getMessage(), module);
+                      return ServiceUtil.returnError( e2.getMessage());
                   }
               }
           }
@@ -500,10 +511,9 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
       return results;
   }
 
-  public static void addRoleToUser(GenericDelegator delegator, LocalDispatcher dispatcher, Map serviceContext) throws GenericServiceException {
+  public static void addRoleToUser(GenericDelegator delegator, LocalDispatcher dispatcher, Map serviceContext) throws GenericServiceException, GenericEntityException {
     String partyId = (String)serviceContext.get("partyId");
     Map findMap = UtilMisc.toMap("partyId", partyId);
-    try {
         List userLoginList = delegator.findByAnd("UserLogin", findMap);
         Iterator iter = userLoginList.iterator();
         while (iter.hasNext()) {
@@ -512,9 +522,6 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             serviceContext.put("contentId", partyUserLoginId); // author contentId
             dispatcher.runSync("createContentRole", serviceContext);
         }
-    } catch(GenericEntityException e) {
-        Debug.logError(e, "No action, except returning, taken.", module);
-    }
 }
 
   public static Map updateSiteRolesDyn(DispatchContext dctx, Map context) {
