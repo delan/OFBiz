@@ -82,19 +82,45 @@
     <#assign target = target + "?previousSort=" + previousSort>
   </#if>
 
+  <#if eventList?has_content>
+    <tr>
+      <td colspan="9" width="50%">
+        <div align='right'>
+          <#if (eventListSize > 0)>
+            <#if (viewIndex > 1)>
+              <a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">Previous</a>
+            <#else>
+              &nbsp;
+            </#if>
+            <#if (eventListSize > 0)>
+              <span class="tableheadtext">${lowIndex} - ${highIndex} of ${eventListSize}</span>
+            </#if>
+            <#if (eventListSize > highIndex)>
+              <a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">Next</a>
+            <#else>
+              &nbsp;
+            </#if>
+          </#if>
+          &nbsp;
+        </div>
+      </td>
+    </tr>    
+    <tr><td colspan="9">&nbsp;</td></tr>
+  </#if>
+
   <tr>
-    <td><a href="<@ofbizUrl>${target}&sort=communicationEventId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyCommEvent} #</a></td>
-    <td><a href="<@ofbizUrl>${target}&sort=communicationEventTypeId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyType}</a></td>
-    <td><a href="<@ofbizUrl>${target}&sort=contactMechTypeId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyContactType}</a></td>
-    <td><a href="<@ofbizUrl>${target}&sort=statusId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyStatus}</a></td>
-    <td><a href="<@ofbizUrl>${target}&sort=subject</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartySubject}</a></td>
-    <td><a href="<@ofbizUrl>${target}&sort=partyIdFrom</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyPartyFrom}</a></td>
-    <td><a href="<@ofbizUrl>${target}&sort=partyIdTo</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyPartyTo}</a></td>
-    <td><a href="<@ofbizUrl>${target}&sort=entryDate</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyEnteredDate}</a></td>
+    <td><a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&sort=communicationEventId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyCommEvent} #</a></td>
+    <td><a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&sort=communicationEventTypeId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyType}</a></td>
+    <td><a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&sort=contactMechTypeId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyContactType}</a></td>
+    <td><a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&sort=statusId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyStatus}</a></td>
+    <td><a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&sort=subject</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartySubject}</a></td>
+    <td><a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&sort=partyIdFrom</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyPartyFrom}</a></td>
+    <td><a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&sort=partyIdTo</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyPartyTo}</a></td>
+    <td><a href="<@ofbizUrl>${target}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&sort=entryDate</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyEnteredDate}</a></td>
   </tr> 
   <tr><td colspan="9"><hr class="sepbar"></td></tr>
-  <#if events?has_content>
-    <#list events as event>
+  <#if eventList?has_content>
+    <#list eventList as event>
       <#assign eventType = event.getRelatedOne("CommunicationEventType")?if_exists>
       <#assign contactMechType = event.getRelatedOne("ContactMechType")?if_exists>
       <#if event.statusId?exists>
