@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.3  2001/08/25 17:29:11  azeneski
  * Started migrating Debug.log to Debug.logInfo and Debug.logError
  *
@@ -49,6 +52,20 @@ import java.util.Date;
  * Created on July 1, 2001, 5:03 PM
  */
 public final class Debug {
+    protected static PrintStream printStream = System.out;
+    protected static PrintWriter printWriter = new PrintWriter(printStream);
+    
+    public static PrintStream getPrintStream() {
+        return printStream;
+    }
+    public static void setPrintStream(PrintStream printStream) {
+        Debug.printStream = printStream;
+        Debug.printWriter = new PrintWriter(printStream);
+    }
+    
+    public static PrintWriter getPrintWriter() {
+        return printWriter;
+    }
     
     public static void print(String msg) {
         long timeStamp = System.currentTimeMillis();
