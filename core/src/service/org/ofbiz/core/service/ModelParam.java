@@ -73,5 +73,11 @@ public class ModelParam {
         buf.append(internal);
         return buf.toString();
     }
+    
+    public boolean equals(ModelParam model) {
+        if (model.name.equals(this.name))
+            return true;
+        return false;
+    }
 }
 
