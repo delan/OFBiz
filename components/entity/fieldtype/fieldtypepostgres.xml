@@ -3,7 +3,7 @@
 
 <!--
 /**
- *  $Id: fieldtypepostgres.xml,v 1.1 2003/08/16 22:05:47 ajzeneski Exp $
+ *  $Id: fieldtypepostgres.xml,v 1.2 2004/01/20 18:10:18 ajzeneski Exp $
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
@@ -57,7 +57,7 @@
     
     <field-type-def type="comment" sql-type="VARCHAR(255)" java-type="String"></field-type-def>
     <field-type-def type="description" sql-type="VARCHAR(255)" java-type="String"></field-type-def>
-    <field-type-def type="name" sql-type="VARCHAR(60)" java-type="String"></field-type-def>
+    <field-type-def type="name" sql-type="VARCHAR(100)" java-type="String"></field-type-def>
     <field-type-def type="value" sql-type="VARCHAR(255)" java-type="String"></field-type-def>
     
    <!-- Specialized Types -->
