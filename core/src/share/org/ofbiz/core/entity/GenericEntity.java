@@ -1,19 +1,19 @@
 /*
  * $Id$
  *
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
@@ -89,7 +89,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
     public GenericEntity(ModelEntity modelEntity) {
         if (modelEntity == null) throw new IllegalArgumentException("Cannont create a GenericEntity with a null modelEntity parameter");
         this.modelEntity = modelEntity;
-        this.entityName = modelEntity.entityName;
+        this.entityName = modelEntity.getEntityName();
         this.fields = new HashMap();
     }
 
@@ -97,14 +97,14 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
     public GenericEntity(ModelEntity modelEntity, Map fields) {
         if (modelEntity == null) throw new IllegalArgumentException("Cannont create a GenericEntity with a null modelEntity parameter");
         this.modelEntity = modelEntity;
-        this.entityName = modelEntity.entityName;
+        this.entityName = modelEntity.getEntityName();
         this.fields = new HashMap();
         setFields(fields);
     }
 
     /** Copy Constructor: Creates new GenericEntity from existing GenericEntity */
     public GenericEntity(GenericEntity value) {
-        this.entityName = value.modelEntity.entityName;
+        this.entityName = value.modelEntity.getEntityName();
         this.modelEntity = value.modelEntity;
         this.fields = (value.fields == null?new HashMap():new HashMap(value.fields));
         this.delegatorName = value.delegatorName;
@@ -161,11 +161,11 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
     /** Returns true if the entity contains all of the primary key fields, but NO others. */
     public boolean isPrimaryKey() {
-        Vector pks = getModelEntity().pks;
+        Vector pks = getModelEntity().getPks();
         TreeSet fieldKeys = new TreeSet(fields.keySet());
         for (int i = 0; i < pks.size(); i++) {
-            if (!fieldKeys.contains(((ModelField) pks.elementAt(i)).name)) return false;
-            fieldKeys.remove(((ModelField) pks.elementAt(i)).name);
+            if (!fieldKeys.contains(((ModelField) pks.elementAt(i)).getName())) return false;
+            fieldKeys.remove(((ModelField) pks.elementAt(i)).getName());
         }
         if (!fieldKeys.isEmpty()) return false;
         return true;
@@ -173,10 +173,10 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
     /** Returns true if the entity contains all of the primary key fields. */
     public boolean containsPrimaryKey() {
-        Vector pks = getModelEntity().pks;
+        Vector pks = getModelEntity().getPks();
         TreeSet fieldKeys = new TreeSet(fields.keySet());
         for (int i = 0; i < pks.size(); i++) {
-            if (!fieldKeys.contains(((ModelField) pks.elementAt(i)).name)) return false;
+            if (!fieldKeys.contains(((ModelField) pks.elementAt(i)).getName())) return false;
         }
         return true;
     }
@@ -227,12 +227,12 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
         ModelFieldType type = null;
         try {
-            type = getDelegator().getEntityFieldType(getModelEntity(), field.type);
+            type = getDelegator().getEntityFieldType(getModelEntity(), field.getType());
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
-        if (type == null) throw new IllegalArgumentException("Type " + field.type + " not found");
-        String fieldType = type.javaType;
+        if (type == null) throw new IllegalArgumentException("Type " + field.getType() + " not found");
+        String fieldType = type.getJavaType();
         if (fieldType.equals("java.lang.String") || fieldType.equals("String"))
             set(name, value);
         else if (fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
@@ -309,10 +309,10 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
     public GenericPK getPrimaryKey() {
         Collection pkNames = new LinkedList();
-        Iterator iter = this.getModelEntity().pks.iterator();
+        Iterator iter = this.getModelEntity().getPks().iterator();
         while (iter != null && iter.hasNext()) {
             ModelField curField = (ModelField) iter.next();
-            pkNames.add(curField.name);
+            pkNames.add(curField.getName());
         }
         return new GenericPK(getModelEntity(), this.getFields(pkNames));
     }
@@ -320,10 +320,10 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
     public void setNonPKFields(Map fields) {
         //make a copy of the fields, remove the primary keys, set the rest
         Map keyValuePairs = new HashMap(fields);
-        Iterator iter = this.getModelEntity().pks.iterator();
+        Iterator iter = this.getModelEntity().getPks().iterator();
         while (iter != null && iter.hasNext()) {
             ModelField curField = (ModelField) iter.next();
-            keyValuePairs.remove(curField.name);
+            keyValuePairs.remove(curField.getName());
         }
         this.setFields(keyValuePairs);
     }
@@ -436,10 +436,10 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
         ModelEntity modelEntity = this.getModelEntity();
 
-        Iterator modelFields = modelEntity.fields.iterator();
+        Iterator modelFields = modelEntity.getFields().iterator();
         while (modelFields.hasNext()) {
             ModelField modelField = (ModelField) modelFields.next();
-            String name = modelField.name;
+            String name = modelField.getName();
             String value = this.getString(name);
             if (value == null) value = "";
             element.setAttribute(name, value);
@@ -527,10 +527,10 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         if (tempResult != 0) return tempResult;
 
         //both have same entityName, should be the same so let's compare PKs
-        for (int i = 0; i < modelEntity.pks.size(); i++) {
-            ModelField curField = (ModelField) modelEntity.pks.get(i);
-            Comparable thisVal = (Comparable) this.get(curField.name);
-            Comparable thatVal = (Comparable) that.get(curField.name);
+        for (int i = 0; i < modelEntity.getPks().size(); i++) {
+            ModelField curField = (ModelField) modelEntity.getPks().get(i);
+            Comparable thisVal = (Comparable) this.get(curField.getName());
+            Comparable thatVal = (Comparable) that.get(curField.getName());
             if (thisVal == null) {
                 if (thatVal == null)
                     tempResult = 0;
@@ -548,10 +548,10 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         }
 
         //okay, if we got here it means the primaryKeys are exactly the SAME, so compare the rest of the fields
-        for (int i = 0; i < modelEntity.nopks.size(); i++) {
-            ModelField curField = (ModelField) modelEntity.nopks.get(i);
-            Comparable thisVal = (Comparable) this.get(curField.name);
-            Comparable thatVal = (Comparable) that.get(curField.name);
+        for (int i = 0; i < modelEntity.getNopks().size(); i++) {
+            ModelField curField = (ModelField) modelEntity.getNopks().get(i);
+            Comparable thisVal = (Comparable) this.get(curField.getName());
+            Comparable thatVal = (Comparable) that.get(curField.getName());
             if (thisVal == null) {
                 if (thatVal == null)
                     tempResult = 0;

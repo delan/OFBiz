@@ -25,6 +25,13 @@
 package org.ofbiz.core.entity.model;
 
 import java.util.*;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import org.ofbiz.core.util.*;
 
 /**
@@ -40,10 +47,68 @@ public class ModelViewEntity extends ModelEntity {
     protected Map memberEntityNames = new HashMap();
     /** Contains member-entity ModelEntities: key is alias, value is ModelEntity; populated with fields */
     protected Map memberModelEntities = null;
+
     /** List of aliases with information in addition to what is in the standard field list */
-    public Vector aliases = new Vector();
+    protected Vector aliases = new Vector();
     /** List of view links to define how entities are connected (or "joined") */
-    public Vector viewLinks = new Vector();
+    protected Vector viewLinks = new Vector();
+    
+    public ModelViewEntity(ModelReader reader, Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
+        this.modelReader = reader;
+
+        if (utilTimer != null) utilTimer.timerString("  createModelViewEntity: before general/basic info");
+        this.populateBasicInfo(entityElement, docElement, docElementValues);
+
+        if (utilTimer != null) utilTimer.timerString("  createModelViewEntity: before \"member-entity\"s");
+        NodeList membEntList = entityElement.getElementsByTagName("member-entity");
+        for (int i = 0; i < membEntList.getLength(); i++) {
+            Element membEnt = (Element) membEntList.item(i);
+            String alias = UtilXml.checkEmpty(membEnt.getAttribute("entity-alias"));
+            String name = UtilXml.checkEmpty(membEnt.getAttribute("entity-name"));
+            if (name.length() <= 0 || alias.length() <= 0) {
+                Debug.logWarning("[ModelReader.createModelViewEntity] Warning: entity-alias or " +
+                                 "entity-name missing on member-entity element", module);
+            } else {
+                this.addMemberEntityName(alias, name);
+            }
+        }
+
+        //when reading aliases, just read them into the alias list, there will be a pass
+        // after loading all entities to go back and fill in all of the ModelField entries
+        if (utilTimer != null) utilTimer.timerString("  createModelViewEntity: before aliases");
+        NodeList aliasList = entityElement.getElementsByTagName("alias");
+        for (int i = 0; i < aliasList.getLength(); i++) {
+            ModelViewEntity.ModelAlias alias = this.makeModelAlias();
+            Element aliasElement = (Element) aliasList.item(i);
+            alias.entityAlias = UtilXml.checkEmpty(aliasElement.getAttribute("entity-alias"));
+            alias.name = UtilXml.checkEmpty(aliasElement.getAttribute("name"));
+            alias.field = UtilXml.checkEmpty(aliasElement.getAttribute("field"), alias.name);
+            alias.isPk = "true".equals(aliasElement.getAttribute("prim-key"));
+            this.aliases.add(alias);
+        }
+
+        NodeList viewLinkList = entityElement.getElementsByTagName("view-link");
+        for (int i = 0; i < viewLinkList.getLength(); i++) {
+            Element viewLinkElement = (Element) viewLinkList.item(i);
+            ModelViewEntity.ModelViewLink viewLink = this.makeModelViewLink();
+            viewLink.entityAlias = UtilXml.checkEmpty(viewLinkElement.getAttribute("entity-alias"));
+            viewLink.relEntityAlias = UtilXml.checkEmpty(viewLinkElement.getAttribute("rel-entity-alias"));
+
+            NodeList keyMapList = viewLinkElement.getElementsByTagName("key-map");
+            for (int j = 0; j < keyMapList.getLength(); j++) {
+                Element keyMapElement = (Element) keyMapList.item(j);
+                ModelKeyMap keyMap = new ModelKeyMap(keyMapElement);
+                if (keyMap != null) viewLink.keyMaps.add(keyMap);
+            }
+            this.viewLinks.add(viewLink);
+        }
+
+        if (utilTimer != null) utilTimer.timerString("  createModelEntity: before relations");
+        this.populateRelated(reader, entityElement);
+
+        //before finishing, make sure the table name is null, this should help bring up errors early...
+        this.tableName = null;
+    }
     
     public Map getMemberEntityNames() {
         return this.memberEntityNames;
@@ -60,6 +125,11 @@ public class ModelViewEntity extends ModelEntity {
     public void addMemberEntityName(String alias, String aliasedEntityName) {
         this.memberEntityNames.put(alias, aliasedEntityName);
     }
+
+    /** List of aliases with information in addition to what is in the standard field list */
+    public Vector getAliases() { return this.aliases; }
+    /** List of view links to define how entities are connected (or "joined") */
+    public Vector getViewLinks() { return this.viewLinks; }
     
     public void populateFields(Map entityCache) {
         if (this.memberModelEntities == null) {
@@ -121,18 +191,31 @@ public class ModelViewEntity extends ModelEntity {
     }
 
     public class ModelAlias {
+        protected String entityAlias = "";
+        protected String name = "";
+        protected String field = "";
+        protected boolean isPk = false;
+        
+        public ModelAlias() {
+        }
 
-        public String entityAlias = "";
-        public String name = "";
-        public String field = "";
-        public boolean isPk = false;
+        public String getEntityAlias() { return this.entityAlias; }
+        public String getName() { return this.name; }
+        public String getField() { return this.field; }
+        public boolean getIsPk() { return this.isPk; }
     }
 
     public class ModelViewLink {
+        protected String entityAlias = "";
+        protected String relEntityAlias = "";
+        protected Vector keyMaps = new Vector();
+        
+        public ModelViewLink() {
+        }
 
-        public String entityAlias = "";
-        public String relEntityAlias = "";
-        public Vector keyMaps = new Vector();
+        public String getEntityAlias() { return this.entityAlias; }
+        public String getRelEntityAlias() { return this.relEntityAlias; }
+        public Vector getKeyMaps() { return this.keyMaps; }
     }
 }
 

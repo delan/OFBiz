@@ -1,19 +1,19 @@
 /*
  * $Id$
  *
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
@@ -86,8 +86,8 @@ public class GenericWebEvent {
         }
 
         //check permissions before moving on...
-        if (!security.hasEntityPermission(entity.tableName, "_" + updateMode, request.getSession())) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to " + updateMode + " " + entity.entityName + " (" + entity.tableName + "_" + updateMode + " or " + entity.tableName + "_ADMIN needed).");
+        if (!security.hasEntityPermission(entity.getTableName(), "_" + updateMode, request.getSession())) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to " + updateMode + " " + entity.getEntityName() + " (" + entity.getTableName() + "_" + updateMode + " or " + entity.getTableName() + "_ADMIN needed).");
             //not really successful, but error return through ERROR_MESSAGE, so quietly fail
             return "error";
         }
@@ -95,34 +95,34 @@ public class GenericWebEvent {
         GenericValue findByEntity = delegator.makeValue(entityName, null);
 
         //get the primary key parameters...
-        for (int fnum = 0; fnum < entity.pks.size(); fnum++) {
-            ModelField field = (ModelField) entity.pks.get(fnum);
+        for (int fnum = 0; fnum < entity.getPks().size(); fnum++) {
+            ModelField field = (ModelField) entity.getPks().get(fnum);
             ModelFieldType type = null;
             try {
-                type = delegator.getEntityFieldType(entity, field.type);
+                type = delegator.getEntityFieldType(entity, field.getType());
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
-                errMsg += "<li> Fatal error: field type \"" + field.type + "\" not found";
+                errMsg += "<li> Fatal error: field type \"" + field.getType() + "\" not found";
             }
-            if (type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")) {
-                String fvalDate = request.getParameter(field.name + "_DATE");
-                String fvalTime = request.getParameter(field.name + "_TIME");
+            if (type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {
+                String fvalDate = request.getParameter(field.getName() + "_DATE");
+                String fvalTime = request.getParameter(field.getName() + "_TIME");
                 if (fvalDate != null && fvalDate.length() > 0) {
                     try {
-                        findByEntity.setString(field.name, fvalDate + " " + fvalTime);
+                        findByEntity.setString(field.getName(), fvalDate + " " + fvalTime);
                     } catch (Exception e) {
-                        errMsg = errMsg + "<li>" + field.colName + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.javaType;
-                        Debug.logWarning("[updateGeneric] " + field.colName + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.javaType + "; entityName: " + entityName);
+                        errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType();
+                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName);
                     }
                 }
             } else {
-                String fval = request.getParameter(field.name);
+                String fval = request.getParameter(field.getName());
                 if (fval != null && fval.length() > 0) {
                     try {
-                        findByEntity.setString(field.name, fval);
+                        findByEntity.setString(field.getName(), fval);
                     } catch (Exception e) {
-                        errMsg = errMsg + "<li>" + field.colName + " conversion failed: \"" + fval + "\" is not a valid " + type.javaType;
-                        Debug.logWarning("[updateGeneric] " + field.colName + " conversion failed: \"" + fval + "\" is not a valid " + type.javaType + "; entityName: " + entityName);
+                        errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType();
+                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName);
                     }
                 }
             }
@@ -144,34 +144,34 @@ public class GenericWebEvent {
         }
 
         //get the non-primary key parameters
-        for (int fnum = 0; fnum < entity.nopks.size(); fnum++) {
-            ModelField field = (ModelField) entity.nopks.get(fnum);
+        for (int fnum = 0; fnum < entity.getNopks().size(); fnum++) {
+            ModelField field = (ModelField) entity.getNopks().get(fnum);
             ModelFieldType type = null;
             try {
-                type = delegator.getEntityFieldType(entity, field.type);
+                type = delegator.getEntityFieldType(entity, field.getType());
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
-                errMsg += "<li> Fatal error: field type \"" + field.type + "\" not found";
+                errMsg += "<li> Fatal error: field type \"" + field.getType() + "\" not found";
             }
-            if (type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")) {
-                String fvalDate = request.getParameter(field.name + "_DATE");
-                String fvalTime = request.getParameter(field.name + "_TIME");
+            if (type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")) {
+                String fvalDate = request.getParameter(field.getName() + "_DATE");
+                String fvalTime = request.getParameter(field.getName() + "_TIME");
                 if (fvalDate != null && fvalDate.length() > 0) {
                     try {
-                        findByEntity.setString(field.name, fvalDate + " " + fvalTime);
+                        findByEntity.setString(field.getName(), fvalDate + " " + fvalTime);
                     } catch (Exception e) {
-                        errMsg = errMsg + "<li>" + field.colName + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.javaType;
-                        Debug.logWarning("[updateGeneric] " + field.colName + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.javaType + "; entityName: " + entityName);
+                        errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType();
+                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName);
                     }
                 }
             } else {
-                String fval = request.getParameter(field.name);
+                String fval = request.getParameter(field.getName());
                 if (fval != null && fval.length() > 0) {
                     try {
-                        findByEntity.setString(field.name, fval);
+                        findByEntity.setString(field.getName(), fval);
                     } catch (Exception e) {
-                        errMsg = errMsg + "<li>" + field.colName + " conversion failed: \"" + fval + "\" is not a valid " + type.javaType;
-                        Debug.logWarning("[updateGeneric] " + field.colName + " conversion failed: \"" + fval + "\" is not a valid " + type.javaType + "; entityName: " + entityName);
+                        errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType();
+                        Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName);
                     }
                 }
             }
@@ -188,19 +188,19 @@ public class GenericWebEvent {
                 return "error";
             }
             if (tempEntity != null) {
-                errMsg = errMsg + "<li>" + entity.entityName + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.";
-                Debug.logWarning("[updateGeneric] " + entity.entityName + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.");
+                errMsg = errMsg + "<li>" + entity.getEntityName() + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.";
+                Debug.logWarning("[updateGeneric] " + entity.getEntityName() + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.");
             }
         }
 
         //Validate parameters...
-        for (int fnum = 0; fnum < entity.fields.size(); fnum++) {
-            ModelField field = (ModelField) entity.fields.get(fnum);
+        for (int fnum = 0; fnum < entity.getFields().size(); fnum++) {
+            ModelField field = (ModelField) entity.getFields().get(fnum);
 
-            for (int j = 0; j < field.validators.size(); j++) {
-                String curValidate = (String) field.validators.elementAt(j);
+            for (int j = 0; j < field.getValidators().size(); j++) {
+                String curValidate = (String) field.getValidators().elementAt(j);
                 Class[] paramTypes = new Class[]{String.class};
-                Object[] params = new Object[]{findByEntity.get(field.name).toString()};
+                Object[] params = new Object[]{findByEntity.get(field.getName()).toString()};
 
                 String className = "org.ofbiz.core.util.UtilValidate";
                 String methodName = curValidate;
@@ -241,8 +241,8 @@ public class GenericWebEvent {
                         Debug.logError("[updateGeneric] Could not find validation message field: " + curValidate + "Msg of class " + className + "; returning generic validation failure message.");
                         message = "validation failed.";
                     }
-                    errMsg = errMsg + "<li>" + field.colName + " " + curValidate + " failed: " + message;
-                    Debug.logWarning("[updateGeneric] " + field.colName + " " + curValidate + " failed: " + message);
+                    errMsg = errMsg + "<li>" + field.getColName() + " " + curValidate + " failed: " + message;
+                    Debug.logWarning("[updateGeneric] " + field.getColName() + " " + curValidate + " failed: " + message);
                 }
             }
         }
@@ -262,7 +262,7 @@ public class GenericWebEvent {
                 value = null;
             }
             if (value == null) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Creation of " + entity.entityName + " failed for entity: " + findByEntity.toString());
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Creation of " + entity.getEntityName() + " failed for entity: " + findByEntity.toString());
                 return "error";
             }
         } else if (updateMode.equals("UPDATE")) {
@@ -271,7 +271,7 @@ public class GenericWebEvent {
                 value.store();
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update of " + entity.entityName + " failed for value: " + value.toString());
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update of " + entity.getEntityName() + " failed for value: " + value.toString());
                 return "error";
             }
         } else {

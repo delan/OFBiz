@@ -1,19 +1,19 @@
 /*
  * $Id$
  *
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
@@ -26,10 +26,18 @@ package org.ofbiz.core.entity.model;
 
 import java.util.*;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import org.ofbiz.core.util.*;
+
 /**
  * Generic Entity - Relation model class
  *
- *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    May 31, 2001
  *@version    1.0
  */
@@ -49,6 +57,26 @@ public class ModelRelation {
 
     /** Default Constructor */
     public ModelRelation() {
+    }
+    
+    /** XML Constructor */
+    public ModelRelation(ModelEntity entity, Element relationElement) {
+        this.mainEntity = entity;
+
+        this.type = UtilXml.checkEmpty(relationElement.getAttribute("type"));
+        this.title = UtilXml.checkEmpty(relationElement.getAttribute("title"));
+        this.relEntityName = UtilXml.checkEmpty(relationElement.getAttribute("rel-entity-name"));
+
+        NodeList keyMapList = relationElement.getElementsByTagName("key-map");
+        for (int i = 0; i < keyMapList.getLength(); i++) {
+            Element keyMapElement = (Element) keyMapList.item(i);
+            if (keyMapElement.getParentNode() == relationElement) {
+                ModelKeyMap keyMap = new ModelKeyMap(keyMapElement);
+                if (keyMap != null) {
+                    this.keyMaps.add(keyMap);
+                }
+            }
+        }
     }
 
     /** Find a KeyMap with the specified fieldName */

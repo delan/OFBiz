@@ -1,19 +1,19 @@
 /*
  * $Id$
  *
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
@@ -209,7 +209,7 @@ public class GenericDelegator {
             String ename = (String) enames.next();
             ModelEntity entity = this.getModelEntity(ename);
             if (entity != null)
-                entities.put(entity.entityName, entity);
+                entities.put(entity.getEntityName(), entity);
         }
         return entities;
     }
@@ -238,7 +238,7 @@ public class GenericDelegator {
     public String getEntityHelperName(ModelEntity entity) {
         if (entity == null)
             return null;
-        return getEntityHelperName(entity.entityName);
+        return getEntityHelperName(entity.getEntityName());
     }
 
     /** Gets the an instance of helper that corresponds to this delegator and the specified entityName
@@ -258,7 +258,7 @@ public class GenericDelegator {
      *@return GenericHelper that corresponds to this delegator and the specified entity
      */
     public GenericHelper getEntityHelper(ModelEntity entity) throws GenericEntityException {
-        return getEntityHelper(entity.entityName);
+        return getEntityHelper(entity.getEntityName());
     }
 
     /** Gets a field type instance by name from the helper that corresponds to the specified entity
@@ -272,7 +272,7 @@ public class GenericDelegator {
             return null;
         ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
         if (modelFieldTypeReader == null)
-            throw new GenericEntityException("ModelFieldTypeReader not found for entity " + entity.entityName + " with helper name " + helperName);
+            throw new GenericEntityException("ModelFieldTypeReader not found for entity " + entity.getEntityName() + " with helper name " + helperName);
         return modelFieldTypeReader.getModelFieldType(type);
     }
 
@@ -286,7 +286,7 @@ public class GenericDelegator {
             return null;
         ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
         if (modelFieldTypeReader == null)
-            throw new GenericEntityException("ModelFieldTypeReader not found for entity " + entity.entityName + " with helper name " + helperName);
+            throw new GenericEntityException("ModelFieldTypeReader not found for entity " + entity.getEntityName() + " with helper name " + helperName);
         return modelFieldTypeReader.getFieldTypeNames();
     }
 
@@ -785,10 +785,10 @@ public class GenericDelegator {
         Map fields = byAndFields == null ? new HashMap() : new HashMap(byAndFields);
         for (int i = 0; i < relation.keyMaps.size(); i++) {
             ModelKeyMap keyMap = (ModelKeyMap) relation.keyMaps.get(i);
-            fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
+            fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        return this.findByAnd(relatedEntity.entityName, fields, orderBy);
+        return this.findByAnd(relatedEntity.getEntityName(), fields, orderBy);
     }
 
     /** Get a dummy primary key for the named Related Entity for the GenericValue
@@ -811,7 +811,7 @@ public class GenericDelegator {
         Map fields = byAndFields == null ? new HashMap() : new HashMap(byAndFields);
         for (int i = 0; i < relation.keyMaps.size(); i++) {
             ModelKeyMap keyMap = (ModelKeyMap) relation.keyMaps.get(i);
-            fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
+            fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
         GenericPK dummyPK = new GenericPK(relatedEntity, fields);
@@ -836,10 +836,10 @@ public class GenericDelegator {
         Map fields = new HashMap();
         for (int i = 0; i < relation.keyMaps.size(); i++) {
             ModelKeyMap keyMap = (ModelKeyMap) relation.keyMaps.get(i);
-            fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
+            fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        return this.findByAndCache(relatedEntity.entityName, fields, null);
+        return this.findByAndCache(relatedEntity.getEntityName(), fields, null);
     }
 
     /** Get related entity where relation is of type one, uses findByPrimaryKey
@@ -857,10 +857,10 @@ public class GenericDelegator {
         Map fields = new HashMap();
         for (int i = 0; i < relation.keyMaps.size(); i++) {
             ModelKeyMap keyMap = (ModelKeyMap) relation.keyMaps.get(i);
-            fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
+            fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        return this.findByPrimaryKey(relatedEntity.entityName, fields);
+        return this.findByPrimaryKey(relatedEntity.getEntityName(), fields);
     }
 
     /** Get related entity where relation is of type one, uses findByPrimaryKey, checking first in the cache to see if the desired value is there
@@ -878,10 +878,10 @@ public class GenericDelegator {
         Map fields = new HashMap();
         for (int i = 0; i < relation.keyMaps.size(); i++) {
             ModelKeyMap keyMap = (ModelKeyMap) relation.keyMaps.get(i);
-            fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
+            fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        return this.findByPrimaryKeyCache(relatedEntity.entityName, fields);
+        return this.findByPrimaryKeyCache(relatedEntity.getEntityName(), fields);
     }
 
     /** Remove the named Related Entity for the GenericValue from the persistent store
@@ -898,10 +898,10 @@ public class GenericDelegator {
         Map fields = new HashMap();
         for (int i = 0; i < relation.keyMaps.size(); i++) {
             ModelKeyMap keyMap = (ModelKeyMap) relation.keyMaps.get(i);
-            fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
+            fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        this.removeByAnd(relatedEntity.entityName, fields);
+        this.removeByAnd(relatedEntity.getEntityName(), fields);
     }
 
     /** Refresh the Entity for the GenericValue from the persistent store
@@ -1233,10 +1233,10 @@ public class GenericDelegator {
 
         ModelEntity modelEntity = value.getModelEntity();
 
-        Iterator modelFields = modelEntity.fields.iterator();
+        Iterator modelFields = modelEntity.getFields().iterator();
         while (modelFields.hasNext()) {
             ModelField modelField = (ModelField) modelFields.next();
-            String name = modelField.name;
+            String name = modelField.getName();
             String attr = element.getAttribute(name);
             if (attr != null && attr.length() > 0)
                 value.setString(name, attr);

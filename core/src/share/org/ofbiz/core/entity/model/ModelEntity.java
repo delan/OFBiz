@@ -26,7 +26,14 @@ package org.ofbiz.core.entity.model;
 
 import java.util.*;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
 
 /**
  * Generic Entity - Entity model class
@@ -38,51 +45,181 @@ import org.ofbiz.core.util.*;
  */
 
 public class ModelEntity {
+    public static final String module = ModelEntity.class.getName();
 
     /** The name of the time stamp field for locking/syncronization */
     public static final String STAMP_FIELD = "lastUpdatedStamp";
 
     /** The ModelReader that created this Entity */
-    public ModelReader modelReader = null;
+    protected ModelReader modelReader = null;
 
     /** The entity-name of the Entity */
-    public String entityName = "";
+    protected String entityName = "";
     /** The table-name of the Entity */
-    public String tableName = "";
+    protected String tableName = "";
 
     /** The package-name of the Entity */
-    public String packageName = "";
+    protected String packageName = "";
 
     /** The entity-name of the Entity that this Entity is dependent on, if empty then no dependency */
-    public String dependentOn = "";
+    protected String dependentOn = "";
 
     //Strings to go in the comment header.
     /** The title for documentation purposes */
-    public String title = "";
+    protected String title = "";
     /** The description for documentation purposes */
-    public String description = "";
+    protected String description = "";
     /** The copyright for documentation purposes */
-    public String copyright = "";
+    protected String copyright = "";
     /** The author for documentation purposes */
-    public String author = "";
+    protected String author = "";
     /** The version for documentation purposes */
-    public String version = "";
+    protected String version = "";
 
     /** A Vector of the Field objects for the Entity */
-    public Vector fields = new Vector();
+    protected Vector fields = new Vector();
     /** A Vector of the Field objects for the Entity, one for each Primary Key */
-    public Vector pks = new Vector();
+    protected Vector pks = new Vector();
     /** A Vector of the Field objects for the Entity, one for each NON Primary Key */
-    public Vector nopks = new Vector();
+    protected Vector nopks = new Vector();
     /** relations defining relationships between this entity and other entities */
-    public Vector relations = new Vector();
+    protected Vector relations = new Vector();
 
-    /** An indicator to specifiy if this entity requires locking for updates */
-    public boolean doLock = false;
+    /** An indicator to specify if this entity requires locking for updates */
+    protected boolean doLock = false;
 
-    public ModelReader getModelReader() {
-        return modelReader;
+    // ===== CONSTRUCTORS =====
+    /** Default Constructor */
+    public ModelEntity() {
     }
+    
+    /** XML Constructor */
+    public ModelEntity(ModelReader reader, Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
+        this.modelReader = reader;
+
+        if (utilTimer != null) utilTimer.timerString("  createModelEntity: before general/basic info");
+        this.populateBasicInfo(entityElement, docElement, docElementValues);
+
+        if (utilTimer != null) utilTimer.timerString("  createModelEntity: before fields");
+        NodeList fieldList = entityElement.getElementsByTagName("field");
+        for (int i = 0; i < fieldList.getLength(); i++) {
+            ModelField field = reader.createModelField((Element) fieldList.item(i), docElement, docElementValues);
+            if (field != null) this.fields.add(field);
+        }
+
+        if (utilTimer != null) utilTimer.timerString("  createModelEntity: before prim-keys");
+        NodeList pkList = entityElement.getElementsByTagName("prim-key");
+        for (int i = 0; i < pkList.getLength(); i++) {
+            ModelField field = reader.findModelField(this, ((Element) pkList.item(i)).getAttribute("field"));
+            if (field != null) {
+                this.pks.add(field);
+                field.isPk = true;
+            } else {
+                Debug.logError("[ModelReader.createModelEntity] ERROR: Could not find field \"" +
+                               ((Element) pkList.item(i)).getAttribute("field") + "\" specified in a prim-key", module);
+            }
+        }
+
+        //now that we have the pks and the fields, make the nopks vector
+        this.nopks = new Vector();
+        for (int ind = 0; ind < this.fields.size(); ind++) {
+            ModelField field = (ModelField) this.fields.elementAt(ind);
+            if (!field.isPk) this.nopks.add(field);
+        }
+
+        if (utilTimer != null) utilTimer.timerString("  createModelEntity: before relations");
+        this.populateRelated(reader, entityElement);
+    }
+
+    /** DB Names Constructor */
+    public ModelEntity(String tableName, Vector colList, ModelFieldTypeReader modelFieldTypeReader) {
+        this.tableName = tableName.toUpperCase();
+        this.entityName = ModelUtil.dbNameToClassName(this.tableName);
+        Iterator columns = colList.iterator();
+        while (columns.hasNext()) {
+            GenericDAO.ColumnCheckInfo ccInfo = (GenericDAO.ColumnCheckInfo) columns.next();
+            ModelField newField = new ModelField(ccInfo, modelFieldTypeReader);
+            this.fields.add(newField);
+        }
+        this.updatePkLists();
+    }
+    
+    protected void populateBasicInfo(Element entityElement, Element docElement, Hashtable docElementValues) {
+        this.entityName = UtilXml.checkEmpty(entityElement.getAttribute("entity-name"));
+        this.tableName = UtilXml.checkEmpty(entityElement.getAttribute("table-name"), ModelUtil.javaNameToDbName(this.entityName));
+        this.packageName = UtilXml.checkEmpty(entityElement.getAttribute("package-name"));
+        this.dependentOn = UtilXml.checkEmpty(entityElement.getAttribute("dependent-on"));
+        this.doLock = UtilXml.checkBoolean(entityElement.getAttribute("enable-lock"));
+
+        if (docElementValues == null) {
+            this.title = UtilXml.checkEmpty(entityElement.getAttribute("title"), UtilXml.childElementValue(docElement, "title"), "None");
+            this.description = UtilXml.checkEmpty(UtilXml.childElementValue(entityElement, "description"), UtilXml.childElementValue(docElement, "description"), "None");
+            this.copyright = UtilXml.checkEmpty(entityElement.getAttribute("copyright"), UtilXml.childElementValue(docElement, "copyright"), "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org");
+            this.author = UtilXml.checkEmpty(entityElement.getAttribute("author"), UtilXml.childElementValue(docElement, "author"), "None");
+            this.version = UtilXml.checkEmpty(entityElement.getAttribute("version"), UtilXml.childElementValue(docElement, "version"), "1.0");
+        } else {
+            if (!docElementValues.containsKey("title")) docElementValues.put("title", UtilXml.childElementValue(docElement, "title"));
+            if (!docElementValues.containsKey("description")) docElementValues.put("description", UtilXml.childElementValue(docElement, "description"));
+            if (!docElementValues.containsKey("copyright")) docElementValues.put("copyright", UtilXml.childElementValue(docElement, "copyright"));
+            if (!docElementValues.containsKey("author")) docElementValues.put("author", UtilXml.childElementValue(docElement, "author"));
+            if (!docElementValues.containsKey("version")) docElementValues.put("version", UtilXml.childElementValue(docElement, "version"));
+            this.title = UtilXml.checkEmpty(entityElement.getAttribute("title"), (String) docElementValues.get("title"), "None");
+            this.description = UtilXml.checkEmpty(UtilXml.childElementValue(entityElement, "description"), (String) docElementValues.get("description"), "None");
+            this.copyright = UtilXml.checkEmpty(entityElement.getAttribute("copyright"), (String) docElementValues.get("copyright"), "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org");
+            this.author = UtilXml.checkEmpty(entityElement.getAttribute("author"), (String) docElementValues.get("author"), "None");
+            this.version = UtilXml.checkEmpty(entityElement.getAttribute("version"), (String) docElementValues.get("version"), "1.0");
+        }
+    }
+
+    protected void populateRelated(ModelReader reader, Element entityElement) {
+        NodeList relationList = entityElement.getElementsByTagName("relation");
+        for (int i = 0; i < relationList.getLength(); i++) {
+            Element relationElement = (Element) relationList.item(i);
+            if (relationElement.getParentNode() == entityElement) {
+                ModelRelation relation = reader.createRelation(this, relationElement);
+                if (relation != null) this.relations.add(relation);
+            }
+        }
+    }
+
+    // ===== GETTERS/SETTERS =====
+    
+    public ModelReader getModelReader() { return modelReader; }
+
+    /** The entity-name of the Entity */
+    public String getEntityName() { return this.entityName; }
+    /** The table-name of the Entity */
+    public String getTableName() { return this.tableName; }
+
+    /** The package-name of the Entity */
+    public String getPackageName() { return this.packageName; }
+
+    /** The entity-name of the Entity that this Entity is dependent on, if empty then no dependency */
+    public String getDependentOn() { return this.dependentOn; }
+
+    //Strings to go in the comment header.
+    /** The title for documentation purposes */
+    public String getTitle() { return this.title; }
+    /** The description for documentation purposes */
+    public String getDescription() { return this.description; }
+    /** The copyright for documentation purposes */
+    public String getCopyright() { return this.copyright; }
+    /** The author for documentation purposes */
+    public String getAuthor() { return this.author; }
+    /** The version for documentation purposes */
+    public String getVersion() { return this.version; }
+
+    /** A Vector of the Field objects for the Entity */
+    public Vector getFields() { return this.fields; }
+    /** A Vector of the Field objects for the Entity, one for each Primary Key */
+    public Vector getPks() { return this.pks; }
+    /** A Vector of the Field objects for the Entity, one for each NON Primary Key */
+    public Vector getNopks() { return this.nopks; }
+    /** relations defining relationships between this entity and other entities */
+    public Vector getRelations() { return this.relations; }
+
+    /** An indicator to specify if this entity requires locking for updates */
+    public boolean getDoLock() { return this.doLock; }
 
     public boolean lock() {
         if (doLock && isField(STAMP_FIELD)) {
