@@ -136,7 +136,17 @@ public class EntityFieldTag extends TagSupport {
             else
                 fieldString = "No";            
         }
-        else if ( javaType.equals("java.sql.Date") || javaType.equals("java.sql.Time") || javaType.equals("java.sql.Timestamp") ) {
+        else if ( javaType.equals("java.sql.Timestamp") ) {
+            Date dateValue = (Date) fieldObject;
+            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.FULL,userLocale);
+            fieldString = df.format(dateValue);                                    
+        }
+        else if ( javaType.equals("java.sql.Time") ) {
+            Date dateValue = (Date) fieldObject;
+            DateFormat df = DateFormat.getTimeInstance(DateFormat.FULL,userLocale);
+            fieldString = df.format(dateValue);                                    
+        }
+        else if ( javaType.equals("java.sql.Date") ) {
             Date dateValue = (Date) fieldObject;
             DateFormat df = DateFormat.getDateInstance(DateFormat.LONG,userLocale);
             fieldString = df.format(dateValue);                                    
