@@ -58,9 +58,10 @@
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteInventoryItem you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="inventoryItem"/>
-        <remove-value value-name="inventoryItem"/>
+        <make-value entity-name="InventoryItem" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
     <!-- ProductFacility methods -->
@@ -87,9 +88,10 @@
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductFacility you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProductFacility" map-name="lookupPKMap" value-name="inventoryItem"/>
-        <remove-value value-name="inventoryItem"/>
+        <make-value entity-name="ProductFacility" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductFacility" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
     <!-- ================================================================ -->
