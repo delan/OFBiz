@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.17 2004/01/16 21:17:11 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.18 2004/01/17 17:05:44 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -1168,7 +1168,7 @@ public class OrderReadHelper {
         if (unitPrice == null || quantity == null) {
             Debug.logWarning("[getOrderItemTotal] unitPrice or quantity are null, using 0 for the item base price", module);
         } else {
-            Debug.log("Unit Price : " + unitPrice.doubleValue() + " / " + "Quantity : " + quantity.doubleValue(), module);
+            if (Debug.verboseOn()) Debug.logVerbose("Unit Price : " + unitPrice.doubleValue() + " / " + "Quantity : " + quantity.doubleValue(), module);
             result = unitPrice.doubleValue() * quantity.doubleValue();
         }
 

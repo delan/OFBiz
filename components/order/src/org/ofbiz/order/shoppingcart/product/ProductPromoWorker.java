@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.36 2004/01/17 10:28:57 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.37 2004/01/17 17:05:44 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.36 $
+ * @version    $Revision: 1.37 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -327,21 +327,30 @@ public class ProductPromoWorker {
                 candidateUseLimit = useLimitPerOrder;
             }
         }
+        
+        // Debug.logInfo("Promo [" + productPromoId + "] use limit after per order check: " + candidateUseLimit, module);
 
         Long useLimitPerCustomer = productPromo.getLong("useLimitPerCustomer");
-        if (useLimitPerCustomer != null && UtilValidate.isNotEmpty(partyId)) {
-            // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
-            EntityCondition checkCondition = new EntityConditionList(UtilMisc.toList(
-                    new EntityExpr("productPromoId", EntityOperator.EQUALS, productPromoId),
-                    new EntityExpr("partyId", EntityOperator.EQUALS, partyId),
-                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
-                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED")), EntityOperator.AND);
-            long productPromoCustomerUseSize = delegator.findCountByCondition("ProductPromoUseCheck", checkCondition, null);
+        // check this whether or not there is a party right now
+        if (useLimitPerCustomer != null) {
+            // if partyId is not empty check previous usage
+            long productPromoCustomerUseSize = 0;
+            if (UtilValidate.isNotEmpty(partyId)) {
+                // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
+                EntityCondition checkCondition = new EntityConditionList(UtilMisc.toList(
+                        new EntityExpr("productPromoId", EntityOperator.EQUALS, productPromoId),
+                        new EntityExpr("partyId", EntityOperator.EQUALS, partyId),
+                        new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"),
+                        new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED")), EntityOperator.AND);
+                productPromoCustomerUseSize = delegator.findCountByCondition("ProductPromoUseCheck", checkCondition, null);
+            }
             long perCustomerThisOrder = useLimitPerCustomer.longValue() - productPromoCustomerUseSize;
             if (candidateUseLimit == null || candidateUseLimit.longValue() > perCustomerThisOrder) {
                 candidateUseLimit = new Long(perCustomerThisOrder);
             }
         }
+
+        // Debug.logInfo("Promo [" + productPromoId + "] use limit after per customer check: " + candidateUseLimit, module);
 
         Long useLimitPerPromotion = productPromo.getLong("useLimitPerPromotion");
         if (useLimitPerPromotion != null) {
@@ -356,6 +365,8 @@ public class ProductPromoWorker {
                 candidateUseLimit = new Long(perPromotionThisOrder);
             }
         }
+
+        // Debug.logInfo("Promo [" + productPromoId + "] use limit after per promotion check: " + candidateUseLimit, module);
 
         return candidateUseLimit;
     }
@@ -539,6 +550,7 @@ public class ProductPromoWorker {
         int compare = 0;
 
         if ("PPIP_PRODUCT_AMOUNT".equals(inputParamEnumId)) {
+            // this type of condition requires items involved to not be involved in any other quantity consuming cond/action, and does not pro-rate the price, just uses the base price
             double amountNeeded = 0.0;
             if (UtilValidate.isNotEmpty(condValue)) {
                 amountNeeded = Double.parseDouble(condValue);
@@ -556,11 +568,15 @@ public class ProductPromoWorker {
                 if (!cartItem.getIsPromo() && 
                         (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) && 
                         (product == null || !"N".equals(product.getString("includeInPromotions")))) {
+                    
+                    double basePrice = cartItem.getBasePrice();
+                    // get a rough price, round it up to an integer
+                    double quantityNeeded = Math.ceil(amountNeeded / basePrice);
+                    
                     // reduce amount still needed to qualify for promo (amountNeeded)
-                    double quantity = cartItem.addPromoQuantityCandidateUse(amountNeeded, productPromoCond, false);
+                    double quantity = cartItem.addPromoQuantityCandidateUse(quantityNeeded, productPromoCond, false);
                     // get pro-rated amount based on discount
-                    double proRatedPrice = cartItem.getItemSubTotal() / cartItem.getQuantity();
-                    amountNeeded -= (quantity * proRatedPrice);
+                    amountNeeded -= (quantity * basePrice);
                 }
             }
 
@@ -572,7 +588,39 @@ public class ProductPromoWorker {
             } else {
                 // we got it, the conditions are in place...
                 compare = 0;
-                // NOTE: don't confirm rpomo rule use here, wait until actions are complete for the rule to do that
+                // NOTE: don't confirm promo rule use here, wait until actions are complete for the rule to do that
+            }
+        } else if ("PPIP_PRODUCT_AMTNC".equals(inputParamEnumId)) {
+            // this type of condition allows items involved to be involved in other quantity consuming cond/action, and does pro-rate the price
+            double amountNeeded = 0.0;
+            if (UtilValidate.isNotEmpty(condValue)) {
+                amountNeeded = Double.parseDouble(condValue);
+            }
+
+            Set productIds = ProductPromoWorker.getPromoRuleCondProductIds(productPromoCond, delegator, nowTimestamp);
+
+            List lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
+            Iterator lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
+            while (amountNeeded > 0 && lineOrderedByBasePriceIter.hasNext()) {
+                ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
+                // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
+                GenericValue product = cartItem.getProduct();
+                String parentProductId = cartItem.getParentProductId();
+                if (!cartItem.getIsPromo() && 
+                        (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) && 
+                        (product == null || !"N".equals(product.getString("includeInPromotions")))) {
+                    
+                    // just count the entire sub-total of the item
+                    amountNeeded -= cartItem.getItemSubTotal();
+                }
+            }
+
+            if (amountNeeded > 0) {
+                // no counting of quantities used, so nothing to reset here, just fail
+                compare = -1;
+            } else {
+                // we got it, the conditions are in place...
+                compare = 0;
             }
         } else if ("PPIP_PRODUCT_QUANT".equals(inputParamEnumId)) {
             double quantityNeeded = 1.0;
