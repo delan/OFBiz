@@ -576,7 +576,7 @@ public class PartyServices {
             exprs.add(new EntityExpr("infoString", true, EntityOperator.LIKE, "%" + email.toUpperCase() + "%", true));
             Collection c = EntityUtil.filterByDate(delegator.findByAnd("PartyAndContactMech", exprs, UtilMisc.toList("infoString")), true);
             if (Debug.verboseOn()) Debug.logVerbose("Collection: " + c);
-            if (Debug.infoOn()) Debug.logVerbose("PartyFromEmail number found: " + c.size());
+            if (Debug.infoOn()) Debug.logInfo("PartyFromEmail number found: " + c.size());
             if (c != null) {
                 Iterator i = c.iterator();
                 while (i.hasNext()) {
@@ -610,7 +610,7 @@ public class PartyServices {
             exprs.add(new EntityExpr("userLoginId", true, EntityOperator.LIKE, "%" + userLoginId.toUpperCase() + "%", true));
             Collection ulc = delegator.findByAnd("PartyAndUserLogin", exprs, UtilMisc.toList("userloginId"));
             if (Debug.verboseOn()) Debug.logVerbose("Collection: " + ulc);
-            if (Debug.infoOn()) Debug.logVerbose("PartyFromUserLogin number found: " + ulc.size());
+            if (Debug.infoOn()) Debug.logInfo("PartyFromUserLogin number found: " + ulc.size());
             if (ulc != null) {
                 Iterator i = ulc.iterator();
                 while (i.hasNext()) {
@@ -651,7 +651,7 @@ public class PartyServices {
             exprs.add(new EntityExpr("firstName", true, EntityOperator.LIKE, "%" + firstName.toUpperCase() + "%", true));
             exprs.add(new EntityExpr("lastName", true, EntityOperator.LIKE, "%" + lastName.toUpperCase() + "%", true));
             Collection pc = delegator.findByAnd("Person", exprs, UtilMisc.toList("lastName", "firstName", "partyId"));
-            if (Debug.infoOn()) Debug.logVerbose("PartyFromPerson number found: " + pc.size());
+            if (Debug.infoOn()) Debug.logInfo("PartyFromPerson number found: " + pc.size());
             if (pc != null) {
                 Iterator i = pc.iterator();
                 while (i.hasNext()) {
@@ -685,7 +685,7 @@ public class PartyServices {
             List exprs = new LinkedList();
             exprs.add(new EntityExpr("groupName", true, EntityOperator.LIKE, "%" + groupName.toUpperCase() + "%", true));
             Collection pc = delegator.findByAnd("PartyGroup", exprs, UtilMisc.toList("groupName", "partyId"));
-            if (Debug.infoOn()) Debug.logVerbose("PartyFromGroup number found: " + pc.size());
+            if (Debug.infoOn()) Debug.logInfo("PartyFromGroup number found: " + pc.size());
             if (pc != null) {
                 Iterator i = pc.iterator();
                 while (i.hasNext()) {

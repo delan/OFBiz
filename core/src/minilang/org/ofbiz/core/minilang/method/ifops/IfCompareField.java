@@ -87,7 +87,7 @@ public class IfCompareField extends MethodOperation {
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logVerbose("Map not found with name " + mapName + ", using null for comparison");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", using null for comparison");
             } else {
                 fieldVal1 = fromMap.get(fieldName);
             }
@@ -99,7 +99,7 @@ public class IfCompareField extends MethodOperation {
         if (toMapName != null && toMapName.length() > 0) {
             Map toMap = (Map) methodContext.getEnv(toMapName);
             if (toMap == null) {
-                if (Debug.infoOn()) Debug.logVerbose("To Map not found with name " + toMapName + ", using null for comparison");
+                if (Debug.infoOn()) Debug.logInfo("To Map not found with name " + toMapName + ", using null for comparison");
             } else {
                 fieldVal2 = toMap.get(toFieldName);
             }

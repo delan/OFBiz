@@ -375,7 +375,7 @@ public class CheckOutEvents {
             //as nice as it would be to run this through localhost, we can't because the page has to have the correct host so the urls will be created for the email, etc; we could do this and pass the base url in a parameter...
             //Debug.logInfo("Original URL: " + url, module);
             //url = new URL(url.getProtocol(), "127.0.0.1", url.getPort(), url.getFile());
-            if (Debug.infoOn()) Debug.logVerbose("About to get confirmorder page from the URL: " + url, module);
+            if (Debug.infoOn()) Debug.logInfo("About to get confirmorder page from the URL: " + url, module);
             HttpClient httpClient = new HttpClient(url);
             String content = httpClient.get();
             request.setAttribute("confirmorder", content);

@@ -553,13 +553,13 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         if (this.getClass().equals(obj.getClass())) {
             GenericEntity that = (GenericEntity) obj;
             if (this.getEntityName() != null && !this.getEntityName().equals(that.getEntityName())) {
-                //if (Debug.infoOn()) Debug.logVerbose("[GenericEntity.equals] Not equal: This entityName \"" + this.getEntityName() + "\" is not equal to that entityName \"" + that.getEntityName() + "\"");
+                //if (Debug.infoOn()) Debug.logInfo("[GenericEntity.equals] Not equal: This entityName \"" + this.getEntityName() + "\" is not equal to that entityName \"" + that.getEntityName() + "\"");
                 return false;
             }
             if (this.fields.equals(that.fields)) {
                 return true;
             } else {
-                //if (Debug.infoOn()) Debug.logVerbose("[GenericEntity.equals] Not equal: Fields of this entity: \n" + this.toString() + "\n are not equal to fields of that entity:\n" + that.toString());
+                //if (Debug.infoOn()) Debug.logInfo("[GenericEntity.equals] Not equal: Fields of this entity: \n" + this.toString() + "\n are not equal to fields of that entity:\n" + that.toString());
             }
         }
         return false;

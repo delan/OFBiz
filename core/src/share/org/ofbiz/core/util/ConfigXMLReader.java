@@ -280,7 +280,7 @@ public class ConfigXMLReader {
         if (Debug.verboseOn()) Debug.logVerbose("------ End Request Mappings ------", module);
         /* End Debugging */
 
-        if (Debug.infoOn()) Debug.logVerbose("RequestMap Created: (" + map.size() + ") records.", module);
+        if (Debug.infoOn()) Debug.logInfo("RequestMap Created: (" + map.size() + ") records.", module);
         return map;
     }
 
@@ -410,7 +410,7 @@ public class ConfigXMLReader {
         Debug.logVerbose("------ End View Mappings ------", module);
         /* End Debugging */
 
-        if (Debug.infoOn()) Debug.logVerbose("ViewMap Created: (" + map.size() + ") records.", module);
+        if (Debug.infoOn()) Debug.logInfo("ViewMap Created: (" + map.size() + ") records.", module);
         return map;
     }
 
@@ -548,7 +548,7 @@ public class ConfigXMLReader {
 */
         /* End Debugging */
 
-        if (Debug.infoOn()) Debug.logVerbose("ConfigMap Created: (" + map.size() + ") records.", module);
+        if (Debug.infoOn()) Debug.logInfo("ConfigMap Created: (" + map.size() + ") records.", module);
         return map;
     }
 
@@ -622,7 +622,7 @@ public class ConfigXMLReader {
         Debug.logVerbose("------ End Handler Mappings ------", module);
         /* End Debugging */
 
-        if (Debug.infoOn()) Debug.logVerbose("HandlerMap Created: (" + map.size() + ") records.", module);
+        if (Debug.infoOn()) Debug.logInfo("HandlerMap Created: (" + map.size() + ") records.", module);
         return map;
     }
 

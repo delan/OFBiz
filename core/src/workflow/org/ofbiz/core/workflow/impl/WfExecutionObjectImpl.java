@@ -113,7 +113,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             dataObject = getDelegator().makeValue("WorkEffort", dataMap);
             c.add(dataObject);
             getDelegator().storeAll(c);
-            if (Debug.infoOn()) Debug.logVerbose("Created new runtime object (Workeffort: " + runtimeKey() + ")", module);
+            if (Debug.infoOn()) Debug.logInfo("Created new runtime object (Workeffort: " + runtimeKey() + ")", module);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
@@ -628,7 +628,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         try {
             dataObject.set("serviceLoaderName", loader);
             dataObject.store();
-            if (Debug.infoOn()) Debug.logVerbose("------- EXECUTION OBJECT : Service loader set: " +
+            if (Debug.infoOn()) Debug.logInfo("------- EXECUTION OBJECT : Service loader set: " +
                     dataObject.getString("serviceLoaderName"), module);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);

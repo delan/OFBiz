@@ -73,7 +73,7 @@ public class LocalDispatcher {
         this.ctx = ctx;
         ctx.setDispatcher(this);
         dispatcher = ServiceDispatcher.getInstance(name, ctx, delegator);
-        if (Debug.infoOn()) Debug.logVerbose("[LocalDispatcher] : Created Dispatcher for: " + name);
+        if (Debug.infoOn()) Debug.logInfo("[LocalDispatcher] : Created Dispatcher for: " + name);
     }
 
     /**

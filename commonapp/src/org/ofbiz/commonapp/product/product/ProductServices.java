@@ -92,7 +92,7 @@ public class ProductServices {
             Iterator i = features.iterator();
             while (i.hasNext())
                 featureSet.add(((GenericValue) i.next()).getString("productFeatureTypeId"));
-            if (Debug.infoOn()) Debug.logVerbose("" + featureSet);
+            if (Debug.infoOn()) Debug.logInfo("" + featureSet);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem reading product features: " + e.getMessage());
@@ -299,14 +299,14 @@ public class ProductServices {
                 Collection c = product.getRelatedByAndCache("AssocProductAssoc",
                         UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
                 if (c != null) {
-                    if (Debug.infoOn()) Debug.logVerbose("Found related: " + c);
+                    if (Debug.infoOn()) Debug.logInfo("Found related: " + c);
                     c = EntityUtil.filterByDate(c, true);
-                    if (Debug.infoOn()) Debug.logVerbose("Found Filtered related: " + c);
+                    if (Debug.infoOn()) Debug.logInfo("Found Filtered related: " + c);
                     if (c.size() > 0) {
                         GenericValue asV = (GenericValue) c.iterator().next();
-                        if (Debug.infoOn()) Debug.logVerbose("ASV: " + asV);
+                        if (Debug.infoOn()) Debug.logInfo("ASV: " + asV);
                         mainProduct = asV.getRelatedOneCache("MainProduct");
-                        if (Debug.infoOn()) Debug.logVerbose("Main product = " + mainProduct);
+                        if (Debug.infoOn()) Debug.logInfo("Main product = " + mainProduct);
                     }
                 }
             }

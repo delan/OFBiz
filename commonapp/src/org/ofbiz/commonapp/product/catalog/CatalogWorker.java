@@ -168,7 +168,7 @@ public class CatalogWorker {
         //if prodCatalog is set to not reserve inventory, break here
         if ("N".equals(prodCatalog.getString("reserveInventory"))) {
             //note: if not set, defaults to yes, reserve inventory
-            if (Debug.infoOn()) Debug.logVerbose("Catalog with id " + prodCatalogId + ", is set to NOT reserve inventory, not reserving inventory");
+            if (Debug.infoOn()) Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT reserve inventory, not reserving inventory");
             return null;
         }
         
@@ -219,10 +219,10 @@ public class CatalogWorker {
             
             //whew, finally here: now check to see if we were able to reserve...
             if (quantityNotReserved.doubleValue() == 0) {
-                if (Debug.infoOn()) Debug.logVerbose("Inventory IS reserved in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity was " + quantity);
+                if (Debug.infoOn()) Debug.logInfo("Inventory IS reserved in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity was " + quantity);
                 return null;
             } else {
-                if (Debug.infoOn()) Debug.logVerbose("There is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", amount could not reserve is " + quantityNotReserved);
+                if (Debug.infoOn()) Debug.logInfo("There is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", amount could not reserve is " + quantityNotReserved);
                 return quantityNotReserved;
             }
             
@@ -323,7 +323,7 @@ public class CatalogWorker {
         }
 
         if (!fromSession) {
-            if (Debug.infoOn()) Debug.logVerbose("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId);
+            if (Debug.infoOn()) Debug.logInfo("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId);
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
             CategoryWorker.setTrail(request, new ArrayList());
         }

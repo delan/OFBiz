@@ -339,7 +339,7 @@ public class EntityUtil {
             if (value == null) return value2 == null ? 0 : 1;
             if (value2 == null) return value == null ? 0 : -1;
             int result = ((Comparable) value).compareTo(value2);
-            //if (Debug.infoOn()) Debug.logVerbose("[OrderByComparator.compareAsc] Result is " + result + " for [" + value + "] and [" + value2 + "]");
+            //if (Debug.infoOn()) Debug.logInfo("[OrderByComparator.compareAsc] Result is " + result + " for [" + value + "] and [" + value2 + "]");
             return result;
         }
 

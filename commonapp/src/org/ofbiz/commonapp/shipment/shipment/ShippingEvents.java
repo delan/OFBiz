@@ -92,7 +92,7 @@ public class ShippingEvents {
             return "success";
         }
         
-        if (Debug.infoOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Estimates begin size: " + estimates.size());
+        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates begin size: " + estimates.size());
         
         // Get the PostalAddress
         GenericValue shipAddress = null;
@@ -179,7 +179,7 @@ public class ShippingEvents {
             }
         }
         
-        if (Debug.infoOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Estimates left after GEO filter: " + estimateList.size());
+        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates left after GEO filter: " + estimateList.size());
         
         if ( estimateList.size() < 1 ) {
             Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.");
@@ -220,7 +220,7 @@ public class ShippingEvents {
         // Grab the estimate and work with it.
         GenericValue estimate = (GenericValue) estimateList.get(estimateIndex);
         
-        if (Debug.infoOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Working with estimate: " + estimateIndex);
+        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Working with estimate: " + estimateIndex);
         
         double orderFlat = 0.00;
         if ( estimate.getDouble("orderFlatPrice") != null )
@@ -250,7 +250,7 @@ public class ShippingEvents {
         double orderPercentage = cartTotal * (orderPercent / 100);
         
         double shippingTotal = weightAmount + quantityAmount + priceAmount + orderFlat + itemFlatAmount + orderPercentage;
-        if (Debug.infoOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal);
+        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal);
 
         //remove old shipping adjustments if there
         cart.removeAdjustmentByType("SHIPPING_CHARGES");
@@ -295,7 +295,7 @@ public class ShippingEvents {
             totalWeight += (item.getWeight() * item.getQuantity());
         }
         String weightString = new Double(totalWeight).toString();
-        if (Debug.infoOn()) Debug.logVerbose("[ShippingEvents.getUPSRate] Total Weight: " + weightString);
+        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getUPSRate] Total Weight: " + weightString);
      
         // Set up the UPS arguments.
         arguments.put("AppVersion","1.2");
@@ -345,7 +345,7 @@ public class ShippingEvents {
             Iterator i = respList.iterator();
             while ( i.hasNext() ) {
                 String value = (String) i.next();
-                if (Debug.infoOn()) Debug.logVerbose("[ShippingEvents.getUPSRate] Resp List: " + value);
+                if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getUPSRate] Resp List: " + value);
             }
      
             // Shipping method is index 5

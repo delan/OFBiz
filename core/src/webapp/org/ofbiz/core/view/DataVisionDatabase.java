@@ -48,7 +48,7 @@ public class DataVisionDatabase extends jimm.datavision.sql.Database {
     throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException, UserCancellationException {
         super("", "", report, "", "");
         this.datasourceName = datasourceName;
-        if (Debug.infoOn()) Debug.logVerbose("For DataVision using datasourceName: " + this.datasourceName);
+        if (Debug.infoOn()) Debug.logInfo("For DataVision using datasourceName: " + this.datasourceName);
 
         if (conn != null) {
             conn.close();
@@ -71,7 +71,7 @@ public class DataVisionDatabase extends jimm.datavision.sql.Database {
     public void initializeConnection()
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, UserCancellationException {
         
-        if (Debug.infoOn()) Debug.logVerbose("For DataVision using datasourceName: " + this.datasourceName);
+        if (Debug.infoOn()) Debug.logInfo("For DataVision using datasourceName: " + this.datasourceName);
         //very simple method for this inherited class: just call get connection with the datasourceName
         try {
             this.conn = ConnectionFactory.getConnection(this.datasourceName);

@@ -95,13 +95,13 @@ public class Convert extends SimpleMapOperation {
 
         if (replace) {
             results.put(toField, convertedObject);
-            //if (Debug.infoOn()) Debug.logVerbose("[SimpleMapProcessor.Converted.exec] Put converted value \"" + convertedObject + "\" in field \"" + toField + "\"");
+            //if (Debug.infoOn()) Debug.logInfo("[SimpleMapProcessor.Converted.exec] Put converted value \"" + convertedObject + "\" in field \"" + toField + "\"");
         } else {
             if (results.containsKey(toField)) {
                 //do nothing
             } else {
                 results.put(toField, convertedObject);
-                //if (Debug.infoOn()) Debug.logVerbose("[SimpleMapProcessor.Converted.exec] Put converted value \"" + convertedObject + "\" in field \"" + toField + "\"");
+                //if (Debug.infoOn()) Debug.logInfo("[SimpleMapProcessor.Converted.exec] Put converted value \"" + convertedObject + "\" in field \"" + toField + "\"");
             }
         }
     }

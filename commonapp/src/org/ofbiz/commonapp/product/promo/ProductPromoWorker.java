@@ -89,7 +89,7 @@ public class ProductPromoWorker {
             //loop through promotions
             Iterator prodCatalogPromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum")), true));
             if (prodCatalogPromoAppls == null || !prodCatalogPromoAppls.hasNext()) {
-                if (Debug.infoOn()) Debug.logVerbose("Not doing promotions, none applied to prodCatalog with ID " + prodCatalogId);
+                if (Debug.infoOn()) Debug.logInfo("Not doing promotions, none applied to prodCatalog with ID " + prodCatalogId);
             }
             
             while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()){
@@ -198,7 +198,7 @@ public class ProductPromoWorker {
             if (apply) {
                 Integer itemLoc = findPromoItem(productPromoAction, cart);
                 if (itemLoc != null) {
-                    if (Debug.infoOn()) Debug.logVerbose("Not adding promo item, already there; action: " + productPromoAction);
+                    if (Debug.infoOn()) Debug.logInfo("Not adding promo item, already there; action: " + productPromoAction);
                     return;
                 }
 
@@ -224,7 +224,7 @@ public class ProductPromoWorker {
                 gwpItem.setIsPromo(true);
                 gwpItem.addAdjustment(orderAdjustment);
                 
-                if (Debug.infoOn()) Debug.logVerbose("qwpItem adjustments: " + gwpItem.getAdjustments());
+                if (Debug.infoOn()) Debug.logInfo("qwpItem adjustments: " + gwpItem.getAdjustments());
             } else {
                 //how to remove this? find item that isPromo with the product id and has adjustment with the same promo/rule id, then remove it
 
@@ -299,7 +299,7 @@ public class ProductPromoWorker {
         if (apply) {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cartItem.getAdjustments());
             if (adjLoc != null) {
-                if (Debug.infoOn()) Debug.logVerbose("Not adding promo adjustment, already there; action: " + productPromoAction);
+                if (Debug.infoOn()) Debug.logInfo("Not adding promo adjustment, already there; action: " + productPromoAction);
                 return;
             }
             
@@ -327,7 +327,7 @@ public class ProductPromoWorker {
         if (apply) {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cart.getAdjustments());
             if (adjLoc != null) {
-                if (Debug.infoOn()) Debug.logVerbose("Not adding promo adjustment, already there; action: " + productPromoAction);
+                if (Debug.infoOn()) Debug.logInfo("Not adding promo adjustment, already there; action: " + productPromoAction);
                 return;
             }
             

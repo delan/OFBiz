@@ -146,8 +146,8 @@ public class CategoryWorker {
             //since cache is invalid, should not use prodCatMembers
             prodCatMembers = null;
 
-            if (Debug.infoOn()) Debug.logVerbose("-=-=-=-=- Current Array not found in session, getting new one...");
-            if (Debug.infoOn()) Debug.logVerbose("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
+            if (Debug.infoOn()) Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
+            if (Debug.infoOn()) Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
             GenericValue category = null;
             try {
@@ -223,7 +223,7 @@ public class CategoryWorker {
             topCatName = "CATALOG1";
 
         if (!fromSession) {
-            if (Debug.infoOn()) Debug.logVerbose("[CategoryWorker.getCatalogTopCategory] Setting new top category: " + topCatName);
+            if (Debug.infoOn()) Debug.logInfo("[CategoryWorker.getCatalogTopCategory] Setting new top category: " + topCatName);
             pageContext.getSession().setAttribute("CATALOG_TOP_CATEGORY", topCatName);
         }
         return topCatName;
@@ -257,7 +257,7 @@ public class CategoryWorker {
                 request.getParameter("CATEGORY_ID"));
         if (requestId.equals(""))
             return;
-        if (Debug.infoOn()) Debug.logVerbose("[CatalogHelper.getRelatedCategories] RequestID: " + requestId);
+        if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.getRelatedCategories] RequestID: " + requestId);
         getRelatedCategories(pageContext, attributeName, requestId, limitView);
     }
 
@@ -271,7 +271,7 @@ public class CategoryWorker {
         ArrayList categories = new ArrayList();
         ServletRequest request = pageContext.getRequest();
 
-        if (Debug.infoOn()) Debug.logVerbose("[CatalogHelper.getRelatedCategories] ParentID: " + parentId);
+        if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.getRelatedCategories] ParentID: " + parentId);
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Collection rollups = null;
@@ -312,7 +312,7 @@ public class CategoryWorker {
     
     public static void setTrail(ServletRequest request, String currentCategory) {
         String previousCategory = request.getParameter("pcategory");
-        if (Debug.infoOn()) Debug.logVerbose("[CatalogHelper.setTrail] Start: previousCategory=" + previousCategory +
+        if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] Start: previousCategory=" + previousCategory +
                       " currentCategory=" + currentCategory);
 
         //if there is no current category, just return and do nothing to that the last settings will stay
@@ -332,7 +332,7 @@ public class CategoryWorker {
                 if (cindex < (crumb.size() - 1)) {
                     for (int i = crumb.size() - 1; i > cindex; i--) {
                         String deadCat = (String) crumb.remove(i);
-                        if (Debug.infoOn()) Debug.logVerbose("[CatalogHelper.setTrail] Removed after current category index: " + i +
+                        if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] Removed after current category index: " + i +
                                       " catname: " + deadCat);
                     }
                 }
@@ -342,13 +342,13 @@ public class CategoryWorker {
                 previousCategory = "TOP";
                 crumb.clear();
                 crumb.add(previousCategory);
-                if (Debug.infoOn()) Debug.logVerbose("[CatalogHelper.setTrail] Starting new list, added previousCategory: " + previousCategory);
+                if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] Starting new list, added previousCategory: " + previousCategory);
             }
         }
 
         if (!crumb.contains(previousCategory)) {
             //previous category was NOT in the list, ERROR, start over
-            if (Debug.infoOn()) Debug.logVerbose("[CatalogHelper.setTrail] ERROR: previousCategory (" + previousCategory +
+            if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] ERROR: previousCategory (" + previousCategory +
                           ") was not in the crumb list, position is lost, starting over with TOP");
             previousCategory = "TOP";
             crumb.clear();
@@ -359,7 +359,7 @@ public class CategoryWorker {
             if (index < (crumb.size() - 1)) {
                 for (int i = crumb.size() - 1; i > index; i--) {
                     String deadCat = (String) crumb.remove(i);
-                    if (Debug.infoOn()) Debug.logVerbose("[CatalogHelper.setTrail] Removed after previous category index: " + i +
+                    if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] Removed after previous category index: " + i +
                                   " catname: " + deadCat);
                 }
             }
@@ -367,7 +367,7 @@ public class CategoryWorker {
 
         //add the current category to the end of the list
         crumb.add(currentCategory);
-        if (Debug.infoOn()) Debug.logVerbose("[CatalogHelper.setTrail] Continuing list: Added currentCategory: " + currentCategory);
+        if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] Continuing list: Added currentCategory: " + currentCategory);
         setTrail(request, crumb);
     }
 

@@ -78,7 +78,7 @@ public class RequestHandler implements Serializable {
         if (chain != null) {
             requestUri = RequestHandler.getRequestUri(chain);
             nextView = RequestHandler.getNextPageUri(chain);
-            if (Debug.infoOn()) Debug.logVerbose("[RequestHandler]: Chain in place: requestUri=" + requestUri + " nextView=" + nextView, module);
+            if (Debug.infoOn()) Debug.logInfo("[RequestHandler]: Chain in place: requestUri=" + requestUri + " nextView=" + nextView, module);
         } else {
             // Check if we SHOULD be secure and are not. If we are posting let it pass to not lose data. (too late now anyway)
             if (!request.isSecure() && rm.requiresHttps(requestUri) && !request.getMethod().equalsIgnoreCase("POST")) {
@@ -123,7 +123,7 @@ public class RequestHandler implements Serializable {
             }
         }
 
-        if (Debug.infoOn()) Debug.logVerbose("[Processing Request]: " + requestUri, module);
+        if (Debug.infoOn()) Debug.logInfo("[Processing Request]: " + requestUri, module);
 
         String eventReturnString = null;
         /* Perform security check. */
@@ -205,7 +205,7 @@ public class RequestHandler implements Serializable {
         // if previous request exists, and a login just succeeded, do that now.
         else if (previousRequest != null && loginPass != null && loginPass.equalsIgnoreCase("TRUE")) {
             request.getSession().removeAttribute(SiteDefs.PREVIOUS_REQUEST);
-            if (Debug.infoOn()) Debug.logVerbose("[Doing Previous Request]: " + previousRequest, module);
+            if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest, module);
             doRequest(request, response, previousRequest, userLogin, delegator);
         }
 
@@ -274,7 +274,7 @@ public class RequestHandler implements Serializable {
 
     private void callRedirect(String url, HttpServletRequest req, HttpServletResponse resp)
             throws RequestHandlerException {
-        if (Debug.infoOn()) Debug.logVerbose("[Sending redirect]: " + url, module);
+        if (Debug.infoOn()) Debug.logInfo("[Sending redirect]: " + url, module);
         try {
             resp.sendRedirect(url);
         } catch (IOException ioe) {

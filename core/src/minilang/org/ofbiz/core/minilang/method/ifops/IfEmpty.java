@@ -75,7 +75,7 @@ public class IfEmpty extends MethodOperation {
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logVerbose("Map not found with name " + mapName + ", running operations");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", running operations");
             } else {
                 fieldVal = fromMap.get(fieldName);
             }

@@ -58,7 +58,7 @@ public class ControlServlet extends HttpServlet {
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        if (Debug.infoOn()) Debug.logVerbose("[ControlServlet.init] Loading Control Servlet mounted on path " +
+        if (Debug.infoOn()) Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " +
                       config.getServletContext().getRealPath("/"), module);
 
         //clear the regions cache to avoid problems when reloading a webapp with a different classloader
@@ -126,7 +126,7 @@ public class ControlServlet extends HttpServlet {
 
         // Setup the CONTROL_PATH for JSP dispatching.
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
-        // if (Debug.infoOn()) Debug.logVerbose("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH), module);
+        // if (Debug.infoOn()) Debug.logInfo("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH), module);
 
         StringBuffer request_url = new StringBuffer();
         request_url.append(request.getScheme());
@@ -209,7 +209,7 @@ public class ControlServlet extends HttpServlet {
         }
 
         // Forward to the JSP
-        // if (Debug.infoOn()) Debug.logVerbose("[" + rname + "] Event done, rendering page: " + nextPage, module);
+        // if (Debug.infoOn()) Debug.logInfo("[" + rname + "] Event done, rendering page: " + nextPage, module);
         // if (Debug.timingOn()) timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage, module);
 
         if (errorPage != null) {
@@ -286,7 +286,7 @@ public class ControlServlet extends HttpServlet {
             String delegatorName = getServletContext().getInitParameter(SiteDefs.ENTITY_DELEGATOR_NAME);
             if (delegatorName == null || delegatorName.length() <= 0)
                 delegatorName = "default";
-            if (Debug.infoOn()) Debug.logVerbose("[ControlServlet.init] Getting Entity Engine Delegator with delegator name " +
+            if (Debug.infoOn()) Debug.logInfo("[ControlServlet.init] Getting Entity Engine Delegator with delegator name " +
                           delegatorName, module);
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
             getServletContext().setAttribute("delegator", delegator);

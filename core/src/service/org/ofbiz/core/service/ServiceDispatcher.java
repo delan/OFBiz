@@ -102,7 +102,7 @@ public class ServiceDispatcher {
      * @param loader the classloader of the local dispatcher
      */
     public void register(String name, DispatchContext context) {
-        if (Debug.infoOn()) Debug.logVerbose("[ServiceDispatcher.register] : Registered dispatcher: " +
+        if (Debug.infoOn()) Debug.logInfo("[ServiceDispatcher.register] : Registered dispatcher: " +
                       context.getName(), module);
         this.localContext.put(name, context);
     }

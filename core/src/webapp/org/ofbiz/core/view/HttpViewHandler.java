@@ -56,7 +56,7 @@ public class HttpViewHandler implements ViewHandler {
         if (page == null || page.length() == 0)
             throw new ViewHandlerException("Null or empty source");
 
-        if (Debug.infoOn()) Debug.logVerbose("Retreiving HTTP resource at: " + page);
+        if (Debug.infoOn()) Debug.logInfo("Retreiving HTTP resource at: " + page);
         try {
             HttpClient httpClient = new HttpClient(page);
             String pageText = httpClient.get();

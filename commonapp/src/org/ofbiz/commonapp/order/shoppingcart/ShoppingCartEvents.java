@@ -348,12 +348,12 @@ public class ShoppingCartEvents {
                     int index = Integer.parseInt(indexStr);
                     String quantString = (String) paramMap.get(o);
                     double quantity = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
-                    if (Debug.infoOn()) Debug.logVerbose("Got index: " + index + "  AND  quantity: " + quantity);
+                    if (Debug.infoOn()) Debug.logInfo("Got index: " + index + "  AND  quantity: " + quantity);
                     
                     if (o.toUpperCase().startsWith("UPDATE")) {
                         if (quantity == 0.0) {
                             deleteList.add(cart.findCartItem(index));
-                            if (Debug.infoOn()) Debug.logVerbose("Added index: " + index + " to delete list.");
+                            if (Debug.infoOn()) Debug.logInfo("Added index: " + index + " to delete list.");
                         } else {
                             ShoppingCartItem item = cart.findCartItem(index);
                             if (item != null) {
@@ -369,7 +369,7 @@ public class ShoppingCartEvents {
                     
                     if (o.toUpperCase().startsWith("DELETE")) {
                         deleteList.add(cart.findCartItem(index));
-                        if (Debug.infoOn()) Debug.logVerbose("Added index: " + index + " to delete list.");
+                        if (Debug.infoOn()) Debug.logInfo("Added index: " + index + " to delete list.");
                     }
                 } catch (NumberFormatException nfe) {
                     Debug.logWarning(nfe, "Caught number format exception on cart update.");
@@ -385,7 +385,7 @@ public class ShoppingCartEvents {
         while (di.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) di.next();
             int itemIndex = cart.getItemIndex(item);
-            if (Debug.infoOn()) Debug.logVerbose("Removing item index: " + itemIndex);
+            if (Debug.infoOn()) Debug.logInfo("Removing item index: " + itemIndex);
             try {
                 cart.removeCartItem(itemIndex, dispatcher);
             } catch (CartItemModifyException e) {

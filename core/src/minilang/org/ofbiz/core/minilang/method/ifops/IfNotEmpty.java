@@ -72,7 +72,7 @@ public class IfNotEmpty extends MethodOperation {
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logVerbose("Map not found with name " + mapName + ", not running operations");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", not running operations");
             } else {
                 fieldVal = fromMap.get(fieldName);
             }
@@ -82,7 +82,7 @@ public class IfNotEmpty extends MethodOperation {
         }
 
         if (fieldVal == null) {
-            if (Debug.infoOn()) Debug.logVerbose("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not running operations");
+            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not running operations");
         }
         
         //only run subOps if element is not empty/null

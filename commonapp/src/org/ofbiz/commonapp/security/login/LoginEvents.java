@@ -123,8 +123,8 @@ public class LoginEvents {
                 if (queryString != null)
                     request.getSession().setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
 
-                if (Debug.infoOn()) Debug.logVerbose("SecurityEvents.checkLogin: queryString=" + queryString);
-                if (Debug.infoOn()) Debug.logVerbose("SecurityEvents.checkLogin: PathInfo=" + request.getPathInfo());
+                if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: queryString=" + queryString);
+                if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: PathInfo=" + request.getPathInfo());
 
                 return "error";
             }

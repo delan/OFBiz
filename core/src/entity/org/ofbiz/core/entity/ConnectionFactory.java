@@ -87,7 +87,7 @@ public class ConnectionFactory {
                     }
 
                     try {
-                        if (Debug.infoOn()) Debug.logVerbose("Doing JNDI lookup for name " + jndiName, module);
+                        if (Debug.infoOn()) Debug.logInfo("Doing JNDI lookup for name " + jndiName, module);
                         InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
                         if (ic != null)
                             ds = ic.lookup(jndiName);
@@ -95,12 +95,12 @@ public class ConnectionFactory {
                             dsCache.put(jndiName, ds);
                             Connection con = null;
                             if (ds instanceof XADataSource) {
-                                if (Debug.infoOn()) Debug.logVerbose("Got XADataSource for name " + jndiName, module);
+                                if (Debug.infoOn()) Debug.logInfo("Got XADataSource for name " + jndiName, module);
                                 XADataSource xads = (XADataSource) ds;
                                 XAConnection xac = xads.getXAConnection();
                                 con = TransactionUtil.enlistConnection(xac);
                             } else {
-                                if (Debug.infoOn()) Debug.logVerbose("Got DataSource for name " + jndiName, module);
+                                if (Debug.infoOn()) Debug.logInfo("Got DataSource for name " + jndiName, module);
                                 DataSource nds = (DataSource) ds;
                                 con = nds.getConnection();
                             }
@@ -123,7 +123,7 @@ public class ConnectionFactory {
                             }
                              */
 
-                            //if (con != null) if (Debug.infoOn()) Debug.logVerbose("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
+                            //if (con != null) if (Debug.infoOn()) Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
                             return con;
                         }
                     } catch (NamingException ne) {

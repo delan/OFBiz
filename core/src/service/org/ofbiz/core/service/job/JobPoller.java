@@ -72,7 +72,7 @@ public class JobPoller implements Runnable {
     }
 
     public synchronized void run() {
-        if (Debug.infoOn()) Debug.logVerbose("JobPoller: (" + thread.getName() + ") Thread Running...", module);
+        if (Debug.infoOn()) Debug.logInfo("JobPoller: (" + thread.getName() + ") Thread Running...", module);
         while (isRunning) {
             try {
                 // grab a list of jobs to run.
@@ -88,7 +88,7 @@ public class JobPoller implements Runnable {
                 stop();
             }
         }
-        if (Debug.infoOn()) Debug.logVerbose("JobPoller: (" + thread.getName() + ") Thread ending...", module);
+        if (Debug.infoOn()) Debug.logInfo("JobPoller: (" + thread.getName() + ") Thread ending...", module);
     }
 
     /**

@@ -185,7 +185,7 @@ public class WfAssignmentImpl implements WfAssignment {
         try {
             valueObject.set("statusId", status);
             valueObject.store();
-            if (Debug.infoOn()) Debug.logVerbose("[WfAssignment.changeStatus] : changed status to " + status, module);
+            if (Debug.infoOn()) Debug.logInfo("[WfAssignment.changeStatus] : changed status to " + status, module);
         } catch (GenericEntityException e) {
             e.printStackTrace();
             throw new WfException(e.getMessage(), e);

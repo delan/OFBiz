@@ -66,7 +66,7 @@ public class ModelServiceReader {
                 //must check if null again as one of the blocked threads can still enter
                 reader = (ModelServiceReader) readersUrl.get(readerURL);
                 if (reader == null) {
-                    if (Debug.infoOn()) Debug.logVerbose("[Creating reader]: " + readerURL.toExternalForm(), module);
+                    if (Debug.infoOn()) Debug.logInfo("[Creating reader]: " + readerURL.toExternalForm(), module);
                     reader = new ModelServiceReader(readerURL);
                     readersUrl.put(readerURL, reader);
                 }
@@ -83,7 +83,7 @@ public class ModelServiceReader {
                 //must check if null again as one of the blocked threads can still enter
                 reader = (ModelServiceReader) readersLoader.get(handler);
                 if (reader == null) {
-                    if (Debug.infoOn()) Debug.logVerbose("[Creating reader]: " + handler, module);
+                    if (Debug.infoOn()) Debug.logInfo("[Creating reader]: " + handler, module);
                     reader = new ModelServiceReader(handler);
                     readersLoader.put(handler, reader);
                 }

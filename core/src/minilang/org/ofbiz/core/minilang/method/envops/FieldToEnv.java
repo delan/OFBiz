@@ -74,7 +74,7 @@ public class FieldToEnv extends MethodOperation {
         }
 
         if (fieldVal == null) {
-            if (Debug.infoOn()) Debug.logVerbose("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not copying field");
+            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not copying field");
             return true;
         }
 

@@ -90,7 +90,7 @@ public class KeywordSearch {
 
             for (int i = 0; i < params.size(); i++) {
                 statement.setString(i + 1, (String) params.get(i));
-                if (Debug.infoOn()) Debug.logVerbose("[KeywordSearch] Params: " + (String) params.get(i));
+                if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] Params: " + (String) params.get(i));
             }
             resultSet = statement.executeQuery();
 
@@ -101,7 +101,7 @@ public class KeywordSearch {
                     ;
                 return pbkCollection;
             } else {
-                if (Debug.infoOn()) Debug.logVerbose("[KeywordSearch] no results found for search string:" + keywordsString);
+                if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] no results found for search string:" + keywordsString);
                 return null;
             }
         } catch (java.sql.SQLException sqle) {
@@ -245,7 +245,7 @@ public class KeywordSearch {
             sql.append(" ORDER BY PCM.SEQUENCE_NUM");
         }
 
-        if (Debug.infoOn()) Debug.logVerbose("[KeywordSearch] sql=" + sql.toString());
+        if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] sql=" + sql.toString());
         return sql.toString();
     }
 
@@ -290,7 +290,7 @@ public class KeywordSearch {
             toBeStored.add(productKeyword);
         }
         if (toBeStored.size() > 0) {
-            if (Debug.infoOn()) Debug.logVerbose("[KeywordSearch.induceKeywords] Storing " + toBeStored.size() + " keywords for productId " + product.getString("productId"));
+            if (Debug.infoOn()) Debug.logInfo("[KeywordSearch.induceKeywords] Storing " + toBeStored.size() + " keywords for productId " + product.getString("productId"));
             delegator.storeAll(toBeStored);
         }
     }

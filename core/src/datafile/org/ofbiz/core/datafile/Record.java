@@ -271,7 +271,7 @@ public class Record implements Serializable {
             double dnum = multiplier * ((Double) value).doubleValue();
             long number = Math.round(dnum);
             str = padFrontZeros(Long.toString(number), field.length);
-            //if (Debug.infoOn()) Debug.logVerbose("[Record.getFixedString] FixedPointDouble: multiplier=" + multiplier + ", value=" + value + ", dnum=" + dnum + ", number=" + number + ", str=" + str);
+            //if (Debug.infoOn()) Debug.logInfo("[Record.getFixedString] FixedPointDouble: multiplier=" + multiplier + ", value=" + value + ", dnum=" + dnum + ", number=" + number + ", str=" + str);
         }
         //standard types
         else if (fieldType.equals("java.lang.String") || fieldType.equals("String"))
@@ -330,9 +330,9 @@ public class Record implements Serializable {
                 while (modelField.position > lineBuf.length())
                     lineBuf.append(" ");
             }
-            //if (Debug.infoOn()) Debug.logVerbose("Field: " + modelField.name + " Position: " + modelField.position + " BufLen: " + lineBuf.length());
+            //if (Debug.infoOn()) Debug.logInfo("Field: " + modelField.name + " Position: " + modelField.position + " BufLen: " + lineBuf.length());
 
-            //if (Debug.infoOn()) Debug.logVerbose("Got data \"" + data + "\" for field " + modelField.name + " in record " + modelRecord.name);
+            //if (Debug.infoOn()) Debug.logInfo("Got data \"" + data + "\" for field " + modelField.name + " in record " + modelRecord.name);
             if (modelField.length > 0 && data.length() != modelField.length)
                 throw new DataFileException("Got field length " + data.length() + " but expected field length is " + modelField.length + " for field \"" +
                                             modelField.name + "\" of record \"" + modelRecord.name + "\" data is: \"" + data + "\"");

@@ -66,7 +66,7 @@ public class Iterate extends MethodOperation {
         
         Collection theList = (Collection) methodContext.getEnv(listName);
         if (theList == null) {
-            if (Debug.infoOn()) Debug.logVerbose("List not found with name " + listName + ", doing nothing");
+            if (Debug.infoOn()) Debug.logInfo("List not found with name " + listName + ", doing nothing");
             return true;
         }
         if (theList.size() == 0) {

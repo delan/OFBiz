@@ -106,7 +106,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
 
         boolean limitAfterStart = valueObject.getBoolean("limitAfterStart").booleanValue();
-        if (Debug.infoOn()) Debug.logVerbose("[WfActivity.init]: limitAfterStart - " + limitAfterStart, module);
+        if (Debug.infoOn()) Debug.logInfo("[WfActivity.init]: limitAfterStart - " + limitAfterStart, module);
         if (!limitAfterStart && valueObject.get("limitService") != null &&
                 !valueObject.getString("limitService").equals("")) {
             Debug.logVerbose("[WfActivity.init]: limit service is not after start, setting up now.", module);
@@ -702,7 +702,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         } catch (GenericServiceException e) {
             throw new WfException(e.getMessage(), e);
         }
-        if (Debug.infoOn()) Debug.logVerbose("[WfActivity.setLimitService]: Set limit service (" + limitService + " ) to run at " + startTime, module);
+        if (Debug.infoOn()) Debug.logInfo("[WfActivity.setLimitService]: Set limit service (" + limitService + " ) to run at " + startTime, module);
     }
 
     // Invoke the procedure (service) -- This will include sub-workflows

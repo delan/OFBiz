@@ -95,7 +95,7 @@ public class GenericDelegator {
     
     /** Only allow creation through the factory method */
     protected GenericDelegator(String delegatorName) throws GenericEntityException {
-        if (Debug.infoOn()) Debug.logVerbose("Creating new Delegator with name \"" + delegatorName + "\".", module);
+        if (Debug.infoOn()) Debug.logInfo("Creating new Delegator with name \"" + delegatorName + "\".", module);
 
         this.delegatorName = delegatorName;
         if (keepLocalReaders) {
@@ -112,13 +112,13 @@ public class GenericDelegator {
         while (groups != null && groups.hasNext()) {
             String groupName = (String) groups.next();
             String helperName = this.getGroupHelperName(groupName);
-            if (Debug.infoOn()) Debug.logVerbose("Delegator \"" + delegatorName + "\" initializing helper \"" + 
+            if (Debug.infoOn()) Debug.logInfo("Delegator \"" + delegatorName + "\" initializing helper \"" + 
                     helperName + "\" for entity group \"" + groupName + "\".", module);
             TreeSet helpersDone = new TreeSet();
             if (helperName != null && helperName.length() > 0) {
                 //make sure each helper is only loaded once
                 if (helpersDone.contains(helperName)) {
-                    if (Debug.infoOn()) Debug.logVerbose("Helper \"" + helperName + "\" already initialized, not re-initializing.", module);
+                    if (Debug.infoOn()) Debug.logInfo("Helper \"" + helperName + "\" already initialized, not re-initializing.", module);
                     continue;
                 }
                 helpersDone.add(helperName);
@@ -130,7 +130,7 @@ public class GenericDelegator {
                 EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
 
                 if (datasourceInfo.checkOnStart) {
-                    if (Debug.infoOn()) Debug.logVerbose("Doing database check as requested in entityengine.xml with addMissing=" + datasourceInfo.addMissingOnStart, module);
+                    if (Debug.infoOn()) Debug.logInfo("Doing database check as requested in entityengine.xml with addMissing=" + datasourceInfo.addMissingOnStart, module);
                     try {
                         helper.checkDataSource(this.getModelEntityMapByGroup(groupName), null, datasourceInfo.addMissingOnStart);
                     } catch (GenericEntityException e) {
