@@ -965,6 +965,18 @@ public class ShoppingCart implements Serializable {
     // Payment Method
     // =======================================================================
 
+    public String getPaymentMethodTypeId(String paymentMethodId) {
+        try {
+            GenericValue pm = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+            if (pm != null) {
+                return pm.getString("paymentMethodTypeId");
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return null;
+    }
+
     /** Creates a CartPaymentInfo object */
     public CartPaymentInfo makePaymentInfo(String id, String refNum, Double amount) {
         CartPaymentInfo inf = new CartPaymentInfo();
@@ -972,6 +984,7 @@ public class ShoppingCart implements Serializable {
         inf.amount = amount;
 
         if (!isPaymentMethodType(id)) {
+            inf.paymentMethodTypeId = this.getPaymentMethodTypeId(id);
             inf.paymentMethodId = id;
         } else {
             inf.paymentMethodTypeId = id;
@@ -1263,7 +1276,6 @@ public class ShoppingCart implements Serializable {
     }
 
     /* determines if the id supplied is a payment method or not by searching in the entity engine */
-    
     public boolean isPaymentMethodType(String id){
     	GenericValue paymentMethodType = null;
     	try{
