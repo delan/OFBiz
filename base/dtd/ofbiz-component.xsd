@@ -1,0 +1,151 @@
+<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<!--
+  To refer to this Schema in your XML file, use the following declaration:
+-->
+
+<!--
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  $Id: $
+-->
+
+ <xsd:element name='ofbiz-component'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='depends-on' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='resource-loader' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='classpath' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='entity-resource' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='service-resource' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='webapp' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='depends-on'>
+  <xsd:complexType>
+   <xsd:attribute name='component-name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='resource-loader'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='type' default='component'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='component'/>
+      <xsd:enumeration value='file'/>
+      <xsd:enumeration value='classpath'/>
+      <xsd:enumeration value='url'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='prepend-env' type='xsd:string' use='optional'/>
+   <xsd:attribute name='prefix' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='classpath'>
+  <xsd:complexType>
+   <xsd:attribute name='type' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='jar'/>
+      <xsd:enumeration value='dir'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='location' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='entity-resource'>
+  <xsd:complexType>
+   <xsd:attribute name='type' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='model'/>
+      <xsd:enumeration value='group'/>
+      <xsd:enumeration value='eca'/>
+      <xsd:enumeration value='data'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='reader-name' type='xsd:string' use='required'/>
+   <xsd:attribute name='loader' type='xsd:string' use='required'/>
+   <xsd:attribute name='location' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='service-resource'>
+  <xsd:complexType>
+   <xsd:attribute name='type' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='model'/>
+      <xsd:enumeration value='group'/>
+      <xsd:enumeration value='eca'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='loader' type='xsd:string' use='required'/>
+   <xsd:attribute name='location' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='webapp'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='virtual-host' minOccurs='0' maxOccurs='unbounded'/>
+    <xsd:element ref='init-param' minOccurs='0' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='title' type='xsd:string' use='optional'/>
+   <xsd:attribute name='server' type='xsd:string' use='required'/>
+   <xsd:attribute name='location' type='xsd:string' use='required'/>
+   <xsd:attribute name='mount-point' type='xsd:string' use='optional'/>
+   <xsd:attribute name='base-permission' type='xsd:string' use='optional'/>
+   <xsd:attribute name='app-bar-display' default='true'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='virtual-host'>
+  <xsd:complexType>
+   <xsd:attribute name='host-name' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='init-param'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='value' type='xsd:string' use='required'/>
+  </xsd:complexType>
+ </xsd:element>
+</xsd:schema>

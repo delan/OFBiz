@@ -1,0 +1,115 @@
+<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+<!--
+  To refer to this Schema in your XML file, use the following declaration:
+-->
+
+<!--
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  This is the DTD for the Open For Business Data File definition XML file.
+ *
+ *  $Id: $
+-->
+
+ <xsd:element name='data-files'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='data-file' maxOccurs='unbounded'/>
+   </xsd:sequence>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='data-file'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='record' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='type-code' type='xsd:string' use='required'/>
+   <xsd:attribute name='sender' type='xsd:string' use='optional'/>
+   <xsd:attribute name='receiver' type='xsd:string' use='optional'/>
+   <xsd:attribute name='delimiter' type='xsd:string' use='optional'/>
+   <xsd:attribute name='record-length' type='xsd:string' use='optional'/>
+   <xsd:attribute name='separator-style' use='required'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='fixed-length'/>
+      <xsd:enumeration value='fixed-record'/>
+      <xsd:enumeration value='delimited'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='description' type='xsd:string' use='optional'/>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='record'>
+  <xsd:complexType>
+   <xsd:sequence>
+    <xsd:element ref='field' maxOccurs='unbounded'/>
+   </xsd:sequence>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='type-code' type='xsd:string' use='optional'/>
+   <xsd:attribute name='tc-min' type='xsd:string' use='optional'/>
+   <xsd:attribute name='tc-max' type='xsd:string' use='optional'/>
+   <xsd:attribute name='tc-isnum' default='true'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='false'/>
+      <xsd:enumeration value='true'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+   <xsd:attribute name='tc-position' type='xsd:string' use='optional'/>
+   <xsd:attribute name='tc-length' type='xsd:string' use='optional'/>
+   <xsd:attribute name='description' type='xsd:string' use='optional'/>
+   <xsd:attribute name='parent-name' type='xsd:string' use='optional'/>
+   <xsd:attribute name='limit' default='many'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='one'/>
+      <xsd:enumeration value='many'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+
+ <xsd:element name='field'>
+  <xsd:complexType>
+   <xsd:attribute name='name' type='xsd:string' use='required'/>
+   <xsd:attribute name='position' type='xsd:string' use='optional'/>
+   <xsd:attribute name='length' type='xsd:string' use='optional'/>
+   <xsd:attribute name='type' type='xsd:string' use='required'/>
+   <xsd:attribute name='format' type='xsd:string' use='optional'/>
+   <xsd:attribute name='valid-exp' type='xsd:string' use='optional'/>
+   <xsd:attribute name='description' type='xsd:string' use='optional'/>
+   <xsd:attribute name='prim-key' default='false'>
+    <xsd:simpleType>
+     <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='true'/>
+      <xsd:enumeration value='false'/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+  </xsd:complexType>
+ </xsd:element>
+</xsd:schema>
