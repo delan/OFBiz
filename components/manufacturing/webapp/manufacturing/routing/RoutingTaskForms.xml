@@ -125,13 +125,9 @@
         </field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingTaskName}"><display/></field>
         <field name="description"><display/></field>
-        <!--
-        FIXME: this causes problems
         <field name="workEffortPurposeTypeId" title="${uiLabelMap.ManufacturingTaskPurpose}">
             <display-entity entity-name="WorkEffortPurposeType"/>
         </field>
-        -->
-        <field name="workEffortPurposeTypeId" title="${uiLabelMap.ManufacturingTaskPurpose}"><display/></field>
         <field name="fixedAssetId" title="${uiLabelMap.ManufacturingMachineGroup}">
             <display-entity entity-name="FixedAsset" description="${fixedAssetName}"/>
         </field>
