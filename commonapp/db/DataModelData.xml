@@ -313,13 +313,13 @@
   <PriceComponentType description="" hasTable="N" parentTypeId="" priceComponentTypeId="DISCOUNT_COMPONENT"/>
   <PriceComponentType description="" hasTable="N" parentTypeId="" priceComponentTypeId="SURCHARGE_COMPONENT"/>
   <PriceComponentType description="" hasTable="Y" parentTypeId="" priceComponentTypeId="UTILIZATION_SURCHARG"/>
-  <ProductAssocType description="" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_UPGRADE"/>
-  <ProductAssocType description="" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPLEMENT"/>
-  <ProductAssocType description="" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_INCOMPATABLE"/>
-  <ProductAssocType description="" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_OBSOLESCENCE"/>
-  <ProductAssocType description="" hasTable="N" parentTypeId="" productAssocTypeId="MARKETING_PACKAGE"/>
-  <ProductAssocType description="" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPONENT"/>
-  <ProductAssocType description="" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_SUBSTITUTE"/>
+  <ProductAssocType description="Upgrade or Up-Sell" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_UPGRADE"/>
+  <ProductAssocType description="Complementary or Cross-Sell" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPLEMENT"/>
+  <ProductAssocType description="Incompatable" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_INCOMPATABLE"/>
+  <ProductAssocType description="New Version, Replacement" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_OBSOLESCENCE"/>
+  <ProductAssocType description="Marketing Package Component" hasTable="N" parentTypeId="" productAssocTypeId="MARKETING_PACKAGE"/>
+  <ProductAssocType description="Actual Product Component" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPONENT"/>
+  <ProductAssocType description="Equivalent or Substitute" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_SUBSTITUTE"/>
   <ProductCategoryType description="" hasTable="N" parentTypeId="" productCategoryTypeId="PRODUCT_INDUSTRY_CAT"/>
   <ProductCategoryType description="" hasTable="N" parentTypeId="" productCategoryTypeId="PRODUCT_MATERIALS_CA"/>
   <ProductCategoryType description="" hasTable="N" parentTypeId="" productCategoryTypeId="PRODUCT_USAGE_CATEGO"/>
