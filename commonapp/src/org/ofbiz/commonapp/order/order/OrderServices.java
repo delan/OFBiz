@@ -1029,17 +1029,33 @@ public class OrderServices {
     
     /** Service to email a customer with initial order confirmation */
     public static Map prepareOrderConfirmation(DispatchContext ctx, Map context) {
-        return prepareOrderEmail(ctx, (String) context.get("orderId"), "WES_ODR_CONFIRM");
+        context.put("emailType", "WES_ODR_CONFIRM");
+        return prepareOrderEmail(ctx, context);               
     }
     
-    /** Service to email a customer with order status changes */
-    public static Map prepareOrderNotification(DispatchContext ctx, Map context) {  
-        return prepareOrderEmail(ctx, (String) context.get("orderId"), "WES_ODR_CHANGE");         
+    /** Service to email a customer with order changes */
+    public static Map prepareOrderComplete(DispatchContext ctx, Map context) {
+        context.put("emailType", "WES_ODR_COMPLETE");
+        return prepareOrderEmail(ctx, context);                      
+    }
+    
+    /** Service to email a customer with order changes */
+    public static Map prepareOrderBackorder(DispatchContext ctx, Map context) {
+        context.put("emailType", "WES_ODR_BACKORDER");
+        return prepareOrderEmail(ctx, context);                    
+    }           
+    
+    /** Service to email a customer with order changes */
+    public static Map prepareOrderChange(DispatchContext ctx, Map context) {
+        context.put("emailType", "WES_ODR_CHANGE");
+        return prepareOrderEmail(ctx, context);                  
     }    
     
-    private static Map prepareOrderEmail(DispatchContext ctx, String orderId, String emailType) {
+    public static Map prepareOrderEmail(DispatchContext ctx, Map context) {
         Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();                                         
+        GenericDelegator delegator = ctx.getDelegator(); 
+        String orderId = (String) context.get("orderId");
+        String emailType = (String) context.get("orderType");                                        
         String ofbizHome = System.getProperty("ofbiz.home");
         
         // get the order header and website

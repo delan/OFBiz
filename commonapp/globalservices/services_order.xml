@@ -45,8 +45,7 @@
         <attribute name="isGift" type="Boolean" mode="OUT" optional="true"/>
         <attribute name="trackingNumber" type="String" mode="OUT" optional="true"/>
         <attribute name="customerPoNumber" type="String" mode="OUT" optional="true"/>                  
-    </service>
-    
+    </service>    
     <service name="prepareOrderConfirmation" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderConfirmation">
         <description>Service to prepare (template, addresses, etc) the order confirmation</description>
@@ -58,8 +57,7 @@
         <attribute name="sendFrom" type="String" mode="OUT" optional="false"/>
         <attribute name="sendCc" type="String" mode="OUT" optional="true"/>
         <attribute name="sendBcc" type="String" mode="OUT" optional="true"/>
-    </service>
-        
+    </service>        
     <service name="prepareOrderNotification" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderNotification">
         <description>Service to prepare (template, addresses, etc) the order notification</description>
@@ -71,24 +69,38 @@
         <attribute name="sendFrom" type="String" mode="OUT" optional="false"/>
         <attribute name="sendCc" type="String" mode="OUT" optional="true"/>
         <attribute name="sendBcc" type="String" mode="OUT" optional="true"/>
-    </service>
-            	
+    </service>            	
     <service name="sendOrderConfirmation" engine="java"
             location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
         <description>Send a order confirmation</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="emailType" type="String" mode="IN" optional="false"/>        
-    </service>
-                	
-    <service name="sendOrderNotification" engine="java"
+    </service>                	
+    <service name="sendOrderChangeNotification" engine="java"
             location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
         <description>Send a order notification</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="emailType" type="String" mode="IN" optional="false"/>        
-    </service>
+    </service>    
+    <service name="sendOrderCompleteNotification" engine="java"
+            location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
+        <description>Send a order notification</description>
+        <implements service="sendNotificationInterface"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="emailType" type="String" mode="IN" optional="false"/>        
+    </service>    
+    <service name="sendOrderBackorderNotification" engine="java"
+            location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
+        <description>Send a order notification</description>
+        <implements service="sendNotificationInterface"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="emailType" type="String" mode="IN" optional="false"/>        
+    </service>        
 
     <service name="sendProcessNotification" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="sendProcessNotification">

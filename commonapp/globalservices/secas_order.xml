@@ -8,7 +8,7 @@
         <action service="cancelOrderInventoryReservation" mode="sync"/>
         <action service="resetGrandTotal" mode="sync"/>
         <action service="checkOrderItemStatus" mode="sync"/>
-        <action service="sendOrderNotification" mode="async"/>        
+        <action service="sendOrderChangeNotification" mode="async"/>        
     </eca>
     <eca service="changeOrderItemStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="ITEM_COMPLETED"/>
@@ -18,11 +18,13 @@
         <condition field-name="statusId" operator="equals" value="ORDER_COMPLETED"/>        
         <action service="createInvoiceFromOrder" mode="sync" result-to-context="true"/>     
         <action service="captureOrderPayments" mode="sync"/>
-        <action service="sendOrderNotification" mode="async"/>
+        <action service="sendOrderCompleteNotification" mode="async"/>
     </eca>
     <eca service="createOrderAdjustment" event="commit">        
         <action service="resetGrandTotal" mode="sync"/>
     </eca> 
+    
+    <!-- order confirmation/notification email ECAs -->
     <eca service="sendOrderConfirmation" event="in-validate">
     	<action service="prepareOrderConfirmation" mode="sync" result-to-context="true"/>
     	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>        
@@ -30,13 +32,27 @@
     <eca service="sendOrderConfirmation" event="commit">
     	<action service="createOrderNotificationLog" mode="sync"/>
     </eca>
-    <eca service="sendOrderNotification" event="in-validate">
+    <eca service="sendOrderChangeNotification" event="in-validate">
     	<action service="prepareOrderNotification" mode="sync" result-to-context="true"/>
     	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>        
     </eca>
-    <eca service="sendOrderNotification" event="commit">
+    <eca service="sendOrderChangeNotification" event="commit">
     	<action service="createOrderNotificationLog" mode="sync"/>
     </eca>
+    <eca service="sendOrderCompleteNotification" event="in-validate">
+    	<action service="prepareOrderNotification" mode="sync" result-to-context="true"/>
+    	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>        
+    </eca>
+    <eca service="sendOrderCompleteNotification" event="commit">
+    	<action service="createOrderNotificationLog" mode="sync"/>
+    </eca>
+    <eca service="sendOrderBackorderNotification" event="in-validate">
+    	<action service="prepareOrderNotification" mode="sync" result-to-context="true"/>
+    	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>        
+    </eca>
+    <eca service="sendOrderBackorderNotification" event="commit">
+    	<action service="createOrderNotificationLog" mode="sync"/>
+    </eca>        
     
     <!-- Return ECAs -->
     <eca service="updateReturnStatusFromReceipt" event="commit">
