@@ -104,6 +104,9 @@ public class OrderServices {
             result.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resource, "items.none", locale));
             return result;
         }
+        
+        // list of out-of-stock productIds
+        List productOutOfStock = new ArrayList();
 
         // check inventory and other things for each item
         String prodCatalogId = (String) context.get("prodCatalogId");
@@ -177,16 +180,19 @@ public class OrderServices {
             }
                  
             if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {
-                // check to see if we have inventory available    
-                if (CatalogWorker.isCatalogInventoryRequired(prodCatalogId, product, delegator)) {
-                    if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, currentProductId, 
-                    		currentQuantity.doubleValue(), delegator, dispatcher)) {
+                // check to see if we have inventory available  
+                boolean isCatalogInventoryRequired = CatalogWorker.isCatalogInventoryRequired(prodCatalogId, product, delegator);
+                boolean isCatalogInventoryAvailable = CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, currentProductId, currentQuantity.doubleValue(), delegator, dispatcher);               
+                if (isCatalogInventoryRequired) {                                
+                    if (!isCatalogInventoryAvailable) {
                         String invErrMsg = UtilProperties.getMessage(resource, "product.out_of_stock", 
-                        		new Object[] { getProductName(product, itemName), currentProductId }, locale);
+                                new Object[] { getProductName(product, itemName), currentProductId }, locale);
                         Debug.logWarning(invErrMsg);
                         errorMessages.add(invErrMsg);
                         continue;
                     }
+                } else if (!isCatalogInventoryAvailable) {
+                    productOutOfStock.add(product.getString("productId"));
                 }
             }
         }
@@ -309,6 +315,9 @@ public class OrderServices {
         while (oi.hasNext()) {
             GenericValue orderItem = (GenericValue) oi.next();
             orderItem.set("orderId", orderId);
+            if (productOutOfStock.contains(orderItem.getString("productId"))) {
+                orderItem.set("statusId", "ITEM_BACKORDERED");
+            }
             toBeStored.add(orderItem);
         }
 
