@@ -3,6 +3,8 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
 <jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
 <%GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);%>
