@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -36,8 +36,8 @@
       <td><span class="tableheadtext">Survey</span></td>
       <td><span class="tableheadtext">Product</span></td>
       <td><span class="tableheadtext">Category</span></td>
-      <td><span class="tableheadtext">Template</span></td>
       <td><span class="tableheadtext">FromDate</span></td>
+      <td><span class="tableheadtext">Seq #</span></td>
       <td>&nbsp;</td>
     </tr>
 
@@ -46,11 +46,11 @@
       <#assign survey = storeSurvey.getRelatedOne("Survey")>
       <tr>
         <td><span class="tabletext">${surveyType.description}</span></td>
-        <td><a href="/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}" class="buttontext">${survey.description}</a>
+        <td><a href="/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}" class="buttontext">${survey.description?default("[" + survey.surveyId + "]")}</a>
         <td><span class="tabletext">${storeSurvey.productId?default("N/A")}</span></td>
         <td><span class="tabletext">${storeSurvey.productCategoryId?default("N/A")}</span></td>
-        <td><span class="tabletext">${storeSurvey.templatePath?default("N/A")}</span></td>
         <td><span class="tabletext">${storeSurvey.fromDate?string}</span></td>
+        <td><span class="tabletext">${storeSurvey.sequenceNum?if_exists}</span></td>
         <td><a href="<@ofbizUrl>/deleteProductStoreSurveyAppl?productStoreId=${productStoreId}&productStoreSurveyId=${storeSurvey.productStoreSurveyId}</@ofbizUrl>" class="buttontext">[Delete]</a>
     </#list>
   </table>
@@ -75,7 +75,7 @@
         <td>
           <select class="selectBox" name="surveyId">
             <#list surveys as survey>
-              <option value="${survey.surveyId}">${survey.description}</option>
+              <option value="${survey.surveyId}">${survey.description?default("[" + survey.surveyId + "]")}</option>
             </#list>
           </select>
         </td>
