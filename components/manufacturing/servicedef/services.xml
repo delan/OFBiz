@@ -204,6 +204,8 @@
         <attribute name="productFeature" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="ruleOperator" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
     </service>
 
     <service name="addProductManufacturingRule" engine="simple"
@@ -217,6 +219,8 @@
         <attribute name="productFeature" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="ruleOperator" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
     </service>
 
     <service name="deleteProductManufacturingRule" engine="simple"
