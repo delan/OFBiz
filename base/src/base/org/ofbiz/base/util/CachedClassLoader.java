@@ -1,5 +1,5 @@
 /*
- * $Id: CachedClassLoader.java,v 1.4 2003/11/11 18:19:35 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import java.util.Map;
  * Caching Class Loader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class CachedClassLoader extends URLClassLoader {

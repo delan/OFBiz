@@ -1,5 +1,5 @@
 /*
- * $Id: LocalizedMap.java,v 1.1 2004/07/01 07:57:52 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ import java.util.Locale;
  * A simple interface to facilitate the retreival of values based on a Locale.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public interface LocalizedMap {

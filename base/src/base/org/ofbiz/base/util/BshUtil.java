@@ -1,5 +1,5 @@
 /*
- * $Id: BshUtil.java,v 1.3 2004/07/18 09:35:06 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import bsh.ParseException;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Oswin Ondarza and Manuel Soto
  *@created    Oct 22, 2002
- *@version    $Revision: 1.3 $
+ *@version    $Rev:$
  */
 public final class BshUtil {
 

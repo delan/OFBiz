@@ -1,5 +1,5 @@
 /*
- * $Id: UtilCache.java,v 1.8 2004/07/07 08:11:46 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.WeakHashMap;
  * </ul>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class UtilCache {

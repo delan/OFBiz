@@ -1,5 +1,5 @@
 /*
- * $Id: SSLUtil.java,v 1.4 2003/12/04 21:15:08 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import javax.net.ssl.*;
  * KeyStoreUtil - Utilities for setting up SSL connections with specific client certificates
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class SSLUtil {

@@ -1,5 +1,5 @@
 /*
- * $Id: JunitContainer.java,v 1.5 2004/07/31 20:10:12 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.base.util.ObjectType;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class JunitContainer implements Container {

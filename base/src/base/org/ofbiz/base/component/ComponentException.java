@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentException.java,v 1.2 2003/08/20 05:55:59 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import org.ofbiz.base.config.*;
  * ComponentException
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ComponentException extends GenericConfigException {

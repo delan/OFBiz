@@ -1,5 +1,5 @@
 /*
- * $Id: AliasKeyManager.java,v 1.1 2003/10/29 21:21:58 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import javax.net.ssl.X509KeyManager;
  * AliasKeyManager - KeyManager used to specify a certificate alias
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class AliasKeyManager implements X509KeyManager {

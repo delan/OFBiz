@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerLoader.java,v 1.11 2004/07/31 20:10:12 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  * ContainerLoader - StartupLoader for the container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.11 $
+  *@version    $Rev:$
  * @since      3.0
  */
 public class ContainerLoader implements StartupLoader {

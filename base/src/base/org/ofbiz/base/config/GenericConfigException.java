@@ -1,5 +1,5 @@
 /*
- * $Id: GenericConfigException.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id$
  *
  * <p>Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ import org.ofbiz.base.util.*;
  * GenericConfigException
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class GenericConfigException extends GeneralException {

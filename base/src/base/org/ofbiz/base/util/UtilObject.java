@@ -1,5 +1,5 @@
 /*
- * $Id: UtilObject.java,v 1.2 2004/06/17 06:09:25 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.io.ByteArrayInputStream;
  * UtilObject
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class UtilObject {

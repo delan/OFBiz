@@ -1,5 +1,5 @@
 /*
- * $Id: BaseUnitTests.java,v 1.1 2004/05/04 15:36:41 ajzeneski Exp $
+ * $Id$
  *
  */
 package org.ofbiz.base.test;
@@ -11,7 +11,7 @@ import org.ofbiz.base.util.Debug;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      May 4, 2004
  */
 public class BaseUnitTests extends TestCase {

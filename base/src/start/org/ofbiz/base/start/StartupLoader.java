@@ -1,5 +1,5 @@
 /*
- * $Id: StartupLoader.java,v 1.3 2004/07/31 20:10:13 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,7 @@ package org.ofbiz.base.start;
  * StartupLoader - Interface for loading server startup classes
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.3 $
+  *@version    $Rev:$
  * @since      2.2
  */
 public interface StartupLoader {

@@ -1,5 +1,5 @@
 /*
- * $Id: MessageString.java,v 1.2 2004/05/15 13:55:43 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import java.util.TreeSet;
  * Contains extra information about Messages
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class MessageString {

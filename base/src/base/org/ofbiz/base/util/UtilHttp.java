@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.15 2004/07/09 18:14:40 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.base.util.collections.OrderedMap;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.15 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class UtilHttp {

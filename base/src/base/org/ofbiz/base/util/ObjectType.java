@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectType.java,v 1.9 2004/07/30 02:11:15 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a> 
- * @version    $Revision: 1.9 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ObjectType {

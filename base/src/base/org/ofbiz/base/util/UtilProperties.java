@@ -1,5 +1,5 @@
 /*
- * $Id: UtilProperties.java,v 1.14 2004/07/22 05:00:59 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.14 $
+ * @version    $Rev:$
  * @since      1.0
  */
 public class UtilProperties {

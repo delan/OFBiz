@@ -1,5 +1,5 @@
 /*
- * $Id: ClasspathLoader.java,v 1.2 2003/08/20 23:02:13 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Loads resources from the classpath
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ClasspathLoader extends ResourceLoader {

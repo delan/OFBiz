@@ -1,5 +1,5 @@
 /*
- * $Id: ClassLoaderContainer.java,v 1.5 2004/07/31 20:40:42 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import java.net.URL;
  * ClassLoader Container; Created a CachedClassLoader for use by all following containers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ClassLoaderContainer implements Container {

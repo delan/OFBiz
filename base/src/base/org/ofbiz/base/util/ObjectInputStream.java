@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectInputStream.java,v 1.1 2004/06/17 06:09:25 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.lang.reflect.Proxy;
  * ObjectInputStream
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class ObjectInputStream extends java.io.ObjectInputStream {

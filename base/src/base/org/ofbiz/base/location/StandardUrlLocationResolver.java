@@ -1,5 +1,5 @@
 /*
- * $Id: StandardUrlLocationResolver.java,v 1.1 2004/06/30 21:25:58 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import java.net.URL;
  * A special location resolver that uses Strings like URLs, but with more options 
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Revision: 1.1 $
+ *@version    $Rev:$
  *@since      3.1
  */
 

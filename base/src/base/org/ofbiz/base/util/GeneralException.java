@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralException.java,v 1.2 2004/02/19 18:44:37 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import java.io.PrintWriter;
  * Base OFBiz Exception, provides nested exceptions, etc
  *
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.2 $
+ *@version    $Rev:$
  *@since      1.0
  */
 public class GeneralException extends Exception {
