@@ -69,8 +69,6 @@
     </target>
 
     <target name="ejbinit">
-        <property name="ejbsrc.dir"     value="ejbsrc" />
-		
         <!-- Classpath setting -->
         <property name="ejb1.jar"    value="${env.JBOSS_HOME}/lib/ext/jboss-j2ee.jar" />
         <property name="ejb2.jar"    value="${env.JBOSS_HOME}/lib/ext/ejb.jar" />
@@ -102,8 +100,9 @@
     <target name="prepare" depends="clean-lib">
       <mkdir dir="${build.dir}" />
       <mkdir dir="${build.dir}/ejb/META-INF" />
-      <mkdir dir="${build.dir}/jar/webapp/META-INF" />
-      <mkdir dir="${build.dir}/jar/share/META-INF" />
+      <mkdir dir="${build.dir}/webapp/META-INF" />
+      <mkdir dir="${build.dir}/share/META-INF" />
+      <mkdir dir="${build.dir}/crypto/META-INF" />
       <mkdir dir="${lib.dir}" />
     </target>
 	
@@ -118,31 +117,28 @@
     <!-- ================================================================== -->
     <target name="tld" depends="prepare">
         <copy file="${etc.dir}/taglib.tld"
-            tofile="${build.dir}/jar/webapp/META-INF/taglib.tld" />
+            tofile="${build.dir}/webapp/META-INF/taglib.tld" />
     </target>
 
     <target name="classes" depends="tld">
-    	<javac destdir="${build.dir}/jar/share" classpath="${classpath}">
-    		<src path="${src.dir}" />
-    		<exclude name="org/ofbiz/core/control/*" />
-    		<exclude name="org/ofbiz/core/event/*" />
-    		<exclude name="org/ofbiz/core/taglib/*" />
-    		<exclude name="org/ofbiz/core/scheduler/*" />
+    	<javac destdir="${build.dir}/share" classpath="${classpath}">
+    		<src path="${src.dir}/share" />
     	</javac>
-    	<javac destdir="${build.dir}/jar/webapp" classpath="${classpath}:${build.dir}/jar/share">
-    		<src path="${src.dir}" />
-    		<exclude name="org/ofbiz/core/entity/*" />
-    		<exclude name="org/ofbiz/core/entity/model/*" />
-    		<exclude name="org/ofbiz/core/util/*" />
-    		<exclude name="org/ofbiz/core/security/*" />
+    	<javac destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share">
+    		<src path="${src.dir}/webapp" />
     	</javac>
+<!--    	<javac destdir="${build.dir}/crypto" classpath="${classpath}:${build.dir}/share">
+    		<src path="${src.dir}/crypto" />
+    	</javac> -->
     </target>
 
     <target name="jar" depends="classes">
         <jar jarfile="${lib.dir}/${name}-share.jar"
-            basedir="${build.dir}/jar/share" />
+            basedir="${build.dir}/share" />
         <jar jarfile="${lib.dir}/${name}-webapp.jar"
-            basedir="${build.dir}/jar/webapp" />
+            basedir="${build.dir}/webapp" />
+        <jar jarfile="${lib.dir}/${name}-crypto.jar"
+            basedir="${build.dir}/crypto" />
     </target>
 	
     <!-- ================================================================== -->
@@ -157,8 +153,8 @@
     </target>
 	
     <target name="ejbclasses" depends="ejbxml,jar">
-        <javac srcdir="${ejbsrc.dir}"
-            classpath="${ejbclasspath}:${build.dir}/jar"
+        <javac srcdir="${src.dir}/ejb"
+            classpath="${ejbclasspath}:${build.dir}/share"
             destdir="${build.dir}/ejb" />
     </target>
 
