@@ -1,5 +1,5 @@
 /*
- * $Id: GroupModel.java,v 1.2 2003/09/25 21:52:58 ajzeneski Exp $
+ * $Id: GroupModel.java,v 1.3 2003/09/25 23:08:02 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * GroupModel.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class GroupModel {
@@ -137,7 +137,7 @@ public class GroupModel {
             // make sure we didn't fail
             if (((String) thisResult.get(ModelService.RESPONSE_MESSAGE)).equals(ModelService.RESPOND_ERROR)) {
                 Debug.logError("Grouped service [" + model.getName() + "] failed.", module);
-                return result;
+                return thisResult;
             }
             
             result.putAll(thisResult);
