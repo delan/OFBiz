@@ -231,7 +231,7 @@ function ShowTab(lname)
           }
         %>
         Date(YYYY-MM-DD):<input class='editInputBox' type="text" name="<%=field.getName()%>_DATE" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
-        <a href="javascript:show_calendar('updateForm.<%=field.getName()%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+        <a href="javascript:call_cal(document.updateForm.<%=field.getName()%>_DATE, null);" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
         Time(HH:mm:SS.sss):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.getName()%>_TIME" value="<%=UtilFormatOut.checkNull(timeString)%>">
       <%} else if(type.getJavaType().equals("Date") || type.getJavaType().equals("java.sql.Date")){%>
         <%
@@ -244,7 +244,7 @@ function ShowTab(lname)
           }
         %>
         Date(YYYY-MM-DD):<input class='editInputBox' type="text" name="<%=field.getName()%>" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
-        <a href="javascript:show_calendar('updateForm.<%=field.getName()%>');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+        <a href="javascript:call_cal(document.updateForm.<%=field.getName()%>, null);" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
       <%} else if(type.getJavaType().equals("Time") || type.getJavaType().equals("java.sql.Time")){%>
         <%
           String timeString = null;
@@ -359,7 +359,7 @@ function ShowTab(lname)
           }
         %>
         Date(YYYY-MM-DD):<input class='editInputBox' type="text" name="<%=field.getName()%>_DATE" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
-        <a href="javascript:show_calendar('updateForm.<%=field.getName()%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+        <a href="javascript:call_cal(document.updateForm.<%=field.getName()%>_DATE, null);" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
         Time(HH:mm:SS.sss):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.getName()%>_TIME" value="<%=UtilFormatOut.checkNull(timeString)%>">
       <%} else if (type.getJavaType().equals("Date") || type.getJavaType().equals("java.sql.Date")) {%>
         <%
@@ -372,7 +372,7 @@ function ShowTab(lname)
           }
         %>
         Date(YYYY-MM-DD):<input class='editInputBox' type="text" name="<%=field.getName()%>" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
-        <a href="javascript:show_calendar('updateForm.<%=field.getName()%>');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+        <a href="javascript:call_cal(document.updateForm.<%=field.getName()%>, null);" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
       <%} else if (type.getJavaType().equals("Time") || type.getJavaType().equals("java.sql.Time")) {%>
         <%
           String timeString = null;

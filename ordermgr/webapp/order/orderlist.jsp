@@ -224,7 +224,7 @@
                   <td width="25%" align=right><div class="tabletext">Date&nbsp;Span:&nbsp;Min</div></td>
                   <td width="40%">
                     <input type="text" name="minDate" size="22" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("minDate"))%>'>
-                    <a href="javascript:call_cal(document.lookuporderd.minDate, '<%=fromStr%>');"><IMG SRC='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
+                    <a href="javascript:call_cal(document.lookuporderd.minDate, '<%=fromStr%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
                   </td>
                   <td width="35%">&nbsp</td>
                 </tr>
@@ -232,7 +232,7 @@
                   <td width="25%" align=right><div class="tabletext">Date&nbsp;Span:&nbsp;Max</div></td>
                   <td width="40%">
                     <input type="text" name="maxDate" size="22" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("maxDate"))%>'>
-                    <a href="javascript:call_cal(document.lookuporderd.maxDate, '<%=toStr%>');"><IMG SRC='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
+                    <a href="javascript:call_cal(document.lookuporderd.maxDate, '<%=toStr%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
                   </td>
                   <td width="35%"><a href="javascript:document.lookuporderd.submit()" class="buttontext">[Lookup Orders]</a></td>
                 </tr>
