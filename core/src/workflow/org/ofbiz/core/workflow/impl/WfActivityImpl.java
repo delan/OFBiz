@@ -208,17 +208,21 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
     private List getAssignments() throws WfException {
         List assignments = new ArrayList();
-        Collection c = null;
+        List assignList = null;
 
         try {
-            c = getDelegator().findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", runtimeKey()));
+            assignList = getDelegator().findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", runtimeKey()));
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
-        if (c == null)
+        
+        if (assignList != null)
+            assignList = EntityUtil.filterByDate(assignList);
+            
+        if (assignList == null)
             return assignments;
-
-        Iterator i = c.iterator();
+        
+        Iterator i = assignList.iterator();
 
         while (i.hasNext()) {
             GenericValue value = (GenericValue) i.next();
@@ -230,6 +234,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             if (status.equals("CAL_SENT") || status.equals("CAL_ACCEPTED") || status.equals("CAL_TENTATIVE"))
                 assignments.add(WfFactory.getWfAssignment(getDelegator(), runtimeKey(), party, role, from));
         }
+        Debug.logInfo("Found [" + assignments.size() + "] assignment(s)", module);
         return assignments;
     }
 
@@ -682,9 +687,17 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             userLogin = getUserLogin((String) context.get("workflowOwnerId"));
         }
 
+        // some static context values
         context.put("userLogin", userLogin);
         context.put("workEffortId", runtimeKey());
-
+        if (howManyAssignment() == 1) {
+            List assignments = getAssignments();
+            WfAssignment assign = (WfAssignment) assignments.iterator().next();
+            WfResource res = assign.assignee();
+            context.put("assignedPartyId", res.resourcePartyId());
+            context.put("assignedRoleTypeId", res.resourceRoleId());
+        }            
+            
         if (actualParameters != null) {
             List params = StringUtil.split(actualParameters, ",");
             Iterator i = params.iterator();

@@ -171,13 +171,24 @@ public class WfAssignmentImpl implements WfAssignment {
      * @see org.ofbiz.core.workflow.WfAssignment#delegated()
      */
     public void delegated() throws WfException {
-        changeStatus("CAL_DELEGATED");
+        // set the thru-date
+        GenericValue valueObject = valueObject();
+        try {
+            valueObject.set("thruDate", UtilDateTime.nowTimestamp());
+            valueObject.store();
+            if (Debug.infoOn()) Debug.logInfo("[WfAssignment.delegated()] : set the thru-date.", module);
+        } catch (GenericEntityException e) {
+            e.printStackTrace();            
+            throw new WfException(e.getMessage(), e);
+        }        
+        changeStatus("CAL_DELEGATED");     
     }
 
     /**
      * @see org.ofbiz.core.workflow.WfAssignment#changeStatus(java.lang.String)
      */
     public void changeStatus(String status) throws WfException {
+        // change the status
         GenericValue valueObject = valueObject();
         try {
             valueObject.set("statusId", status);
