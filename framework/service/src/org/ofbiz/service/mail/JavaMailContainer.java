@@ -54,7 +54,7 @@ import org.apache.commons.collections.map.LinkedMap;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.3
  */
 public class JavaMailContainer implements Container {
@@ -144,7 +144,7 @@ public class JavaMailContainer implements Container {
     public void stop() throws ContainerException {
         // stop the poller
         this.pollTimer.cancel();
-        Debug.logInfo("Mail poller terminiated", module);
+        Debug.logInfo("stop JavaMail poller", module);
     }
 
     // java-mail methods
