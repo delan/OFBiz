@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.5 2004/06/21 14:54:23 jonesde Exp $
+ * $Id: EntityExpr.java,v 1.6 2004/06/21 15:45:17 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class EntityExpr extends EntityCondition {
@@ -158,34 +158,30 @@ public class EntityExpr extends EntityCondition {
 
                         if (rhs instanceof Collection) {
                             Iterator rhsIter = ((Collection) rhs).iterator();
-
                             while (rhsIter.hasNext()) {
                                 Object inObj = rhsIter.next();
-
                                 addValue(whereStringBuffer, field, inObj, entityConditionParams);
-
                                 if (rhsIter.hasNext()) {
                                     whereStringBuffer.append(", ");
                                 }
-
-                            }
-                        } else if (EntityOperator.BETWEEN.equals(this.getOperator())) {
-                            if ((rhs instanceof Collection) && (((Collection) rhs).size() == 2)) {
-                                Iterator rhsIter = ((Collection) rhs).iterator();
-                                Object beginObj = rhsIter.next();
-                                Object endObj = rhsIter.next();
-
-                                addValue(whereStringBuffer, field, beginObj, entityConditionParams);
-                                whereStringBuffer.append(" AND ");
-                                addValue(whereStringBuffer, field, endObj, entityConditionParams);
-                            } else {
-                                throw new IllegalArgumentException("BETWEEN Operator requires a Collection with 2 elements");
                             }
                         } else {
                             addValue(whereStringBuffer, field, rhs, entityConditionParams);
                         }
 
                         whereStringBuffer.append(')');
+                    } else if (EntityOperator.BETWEEN.equals(this.getOperator())) {
+                        if ((rhs instanceof Collection) && (((Collection) rhs).size() == 2)) {
+                            Iterator rhsIter = ((Collection) rhs).iterator();
+                            Object beginObj = rhsIter.next();
+                            Object endObj = rhsIter.next();
+
+                            addValue(whereStringBuffer, field, beginObj, entityConditionParams);
+                            whereStringBuffer.append(" AND ");
+                            addValue(whereStringBuffer, field, endObj, entityConditionParams);
+                        } else {
+                            throw new IllegalArgumentException("BETWEEN Operator requires a Collection with 2 elements");
+                        }
                     } else {
                         addValue(whereStringBuffer, field, rhs, entityConditionParams);
                     }
