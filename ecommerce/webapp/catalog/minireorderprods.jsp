@@ -7,10 +7,10 @@
 <ofbiz:if name="miniReorderProducts" size="0">
   <%Map miniReorderQuantities = (Map) pageContext.getAttribute("miniReorderQuantities");%>
   <BR>
-  <TABLE border=0 width='100%' cellpadding='<%EntityField.run("layoutSettings", "boxBorderWidth", pageContext);%>' cellspacing=0 bgcolor='<%EntityField.run("layoutSettings", "boxBorderColor", pageContext);%>'>
+  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
       <TD width='100%'>
-        <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxTopPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxTopColor", pageContext);%>'>
+        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
             <td valign="middle" align="center">
               <div class="boxhead">Quick&nbsp;Reorder...</div>
@@ -21,7 +21,7 @@
     </TR>
     <TR>
       <TD width='100%'>
-        <table width='100%' border='0' cellpadding='<%EntityField.run("layoutSettings", "boxBottomPadding", pageContext);%>' cellspacing='0' bgcolor='<%EntityField.run("layoutSettings", "boxBottomColor", pageContext);%>'>
+        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td>
                 <table width='100%' cellspacing="0" cellpadding="2" border="0">

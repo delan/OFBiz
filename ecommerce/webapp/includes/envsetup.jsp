@@ -27,19 +27,4 @@
     layoutSettings.put("headerImageUrl", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.image.url"));
     layoutSettings.put("headerMiddleBackgroundUrl", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.middle.background.url"));
     layoutSettings.put("headerRightBackgroundUrl", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.right.background.url"));
-
-    layoutSettings.put("headerBoxBorderColor", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.box.border.color", "black"));
-    layoutSettings.put("headerBoxBorderWidth", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.box.border.width", "1"));
-    layoutSettings.put("headerBoxTopColor", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.box.top.color", "#678475"));
-    layoutSettings.put("headerBoxBottomColor", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.box.bottom.color", "#cccc99"));
-    layoutSettings.put("headerBoxBottomColorAlt", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.box.bottom.color.alt", "#eeeecc"));
-    layoutSettings.put("headerBoxTopPadding", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.box.top.padding", "4"));
-    layoutSettings.put("headerBoxBottomPadding", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.box.bottom.padding", "2"));
-
-    layoutSettings.put("boxBorderColor", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "box.border.color", "black"));
-    layoutSettings.put("boxBorderWidth", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "box.border.width", "1"));
-    layoutSettings.put("boxTopColor", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "box.top.color", "#678475"));
-    layoutSettings.put("boxBottomColor", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "box.bottom.color", "white"));
-    layoutSettings.put("boxTopPadding", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "box.top.padding", "4"));
-    layoutSettings.put("boxBottomPadding", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "box.bottom.padding", "4"));
 %>
