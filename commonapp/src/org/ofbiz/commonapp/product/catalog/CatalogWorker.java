@@ -700,12 +700,12 @@ public class CatalogWorker {
     
     /* ============================= Special Data Retreival Methods ===========================*/
 
-    public static void getRandomCartProductAssoc(PageContext pageContext, String assocsAttrName) {
-        List returnList = getRandomCartProductAssoc(pageContext.getRequest());
+    public static void getRandomCartProductAssoc(PageContext pageContext, String assocsAttrName, boolean checkViewAllow) {
+        List returnList = getRandomCartProductAssoc(pageContext.getRequest(), checkViewAllow);
         if (returnList != null) pageContext.setAttribute(assocsAttrName, returnList);
     }
                 
-    public static List getRandomCartProductAssoc(ServletRequest request) {
+    public static List getRandomCartProductAssoc(ServletRequest request, boolean checkViewAllow) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         ShoppingCart cart = (ShoppingCart) httpRequest.getSession().getAttribute("shoppingCart");
@@ -726,14 +726,21 @@ public class CatalogWorker {
                 // since ProductAssoc records have a fromDate and thruDate, we can filter by now so that only assocs in the date range are included
                 complementProducts = EntityUtil.filterByDate(complementProducts, true);
 
+                // if desired check view allow category
+                if (checkViewAllow) {
+                    String currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
+                    String viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
+                    if (viewProductCategoryId != null) {
+                        complementProducts = CategoryWorker.filterProductsInCategory(delegator, complementProducts, viewProductCategoryId, "productIdTo");
+                    }
+                }
+
                 // if (upgradeProducts != null && upgradeProducts.size() > 0) pageContext.setAttribute(assocPrefix + "upgrade", upgradeProducts);
                 if (complementProducts != null && complementProducts.size() > 0) {
                     Iterator complIter = complementProducts.iterator();
-
                     while (complIter.hasNext()) {
                         GenericValue productAssoc = (GenericValue) complIter.next();
                         GenericValue product = productAssoc.getRelatedOneCache("AssocProduct");
-
                         products.put(product.getString("productId"), product);
                     }
                 }
