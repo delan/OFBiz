@@ -72,6 +72,7 @@
     <!-- Return ECAs -->
     <eca service="updateReturnStatusFromReceipt" event="commit">
         <condition field-name="returnHeaderStatus" operator="equals" value="RETURN_RECEIVED"/>        
+        <action service="processReplacementReturn" mode="sync"/>
         <action service="processCreditReturn" mode="sync"/>
         <action service="processRefundReturn" mode="sync"/>
     </eca>
