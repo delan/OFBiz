@@ -61,44 +61,75 @@ public class ServerHitBin {
     public static void countHit(String id, int type, long startTime, long runningTime, String userLoginId) {
         countHit(id, type, startTime, runningTime, userLoginId, true);
     }
+
+    public static void advanceAllBins(long toTime) {
+        advanceAllBins(toTime, requestHistory);
+        advanceAllBins(toTime, eventHistory);
+        advanceAllBins(toTime, viewHistory);
+    }
+
+    static void advanceAllBins(long toTime, Map binMap) {
+        Iterator entries = binMap.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry entry = (Map.Entry) entries.next();
+            if (entry.getValue() != null) {
+                ServerHitBin bin = (ServerHitBin) entry.getValue();
+                bin.advanceBin(toTime);
+            }
+        }
+    }
     
     static void countHit(String id, int type, long startTime, long runningTime, String userLoginId, boolean isOriginal) {
         ServerHitBin bin = null;
-        switch (type) {
-            case REQUEST:
-                bin = (ServerHitBin) requestCurrent.get(id);
-                break;
-            case EVENT:
-                bin = (ServerHitBin) eventCurrent.get(id);
-                break;
-            case VIEW:
-                bin = (ServerHitBin) viewCurrent.get(id);
-                break;
-        }
+        LinkedList binList = null;
         
+        switch (type) {
+            case REQUEST: binList = (LinkedList) requestHistory.get(id); break;
+            case EVENT: binList = (LinkedList) eventHistory.get(id); break;
+            case VIEW: binList = (LinkedList) viewHistory.get(id); break;
+        }
+
+        if (binList == null) {
+            synchronized (ServerHitBin.class) {
+                switch (type) {
+                    case REQUEST: binList = (LinkedList) requestHistory.get(id); break;
+                    case EVENT: binList = (LinkedList) eventHistory.get(id); break;
+                    case VIEW: binList = (LinkedList) viewHistory.get(id); break;
+                }
+                if (binList == null) {
+                    binList = new LinkedList();
+                    switch (type) {
+                        case REQUEST: requestHistory.put(id, binList); break;
+                        case EVENT: eventHistory.put(id, binList); break;
+                        case VIEW: viewHistory.put(id, binList); break;
+                    }
+                }
+            }
+        }
+
+        if (binList.size() > 0) {
+            bin = (ServerHitBin) binList.getFirst();
+        }
         if (bin == null) {
-            bin = new ServerHitBin(id, type, true);
-            switch (type) {
-                case REQUEST:
-                    requestCurrent.put(id, bin);
-                    break;
-                case EVENT:
-                    eventCurrent.put(id, bin);
-                    break;
-                case VIEW:
-                    viewCurrent.put(id, bin);
-                    break;
+            synchronized (ServerHitBin.class) {
+                if (binList.size() > 0) {
+                    bin = (ServerHitBin) binList.getFirst();
+                }
+                if (bin == null) {
+                    bin = new ServerHitBin(id, type, true);
+                    binList.addFirst(bin);
+                }
             }
         }
         
-        bin.addHit(runningTime);
+        bin.addHit(startTime, runningTime);
         if (isOriginal) {
             bin.saveHit(startTime, runningTime, userLoginId);
         }
         
         //count since start global and per id hits
         if (!"GLOBAL".equals(id))
-            countHitSinceStart(id, type, runningTime, isOriginal);
+            countHitSinceStart(id, type, startTime, runningTime, isOriginal);
         
         //also count hits up the hierarchy if the id contains a '.'
         if (id.indexOf('.') > 0) {
@@ -109,53 +140,46 @@ public class ServerHitBin {
             countHit("GLOBAL", type, startTime, runningTime, userLoginId, true);
     }
     
-    static void countHitSinceStart(String id, int type, long runningTime, boolean isOriginal) {
+    static void countHitSinceStart(String id, int type, long startTime, long runningTime, boolean isOriginal) {
         ServerHitBin bin = null;
         
         //save in global, and try to get bin by id
         switch (type) {
-            case REQUEST:
-                bin = (ServerHitBin) requestSinceStarted.get(id);
-                break;
-            case EVENT:
-                bin = (ServerHitBin) eventSinceStarted.get(id);
-                break;
-            case VIEW:
-                bin = (ServerHitBin) viewSinceStarted.get(id);
-                break;
+            case REQUEST: bin = (ServerHitBin) requestSinceStarted.get(id); break;
+            case EVENT: bin = (ServerHitBin) eventSinceStarted.get(id); break;
+            case VIEW: bin = (ServerHitBin) viewSinceStarted.get(id); break;
         }
         
         if (bin == null) {
-            bin = new ServerHitBin(id, type, false);
-            switch (type) {
-                case REQUEST:
-                    requestSinceStarted.put(id, bin);
-                    break;
-                case EVENT:
-                    eventSinceStarted.put(id, bin);
-                    break;
-                case VIEW:
-                    viewSinceStarted.put(id, bin);
-                    break;
+            synchronized (ServerHitBin.class) {
+                switch (type) {
+                    case REQUEST: bin = (ServerHitBin) requestSinceStarted.get(id); break;
+                    case EVENT: bin = (ServerHitBin) eventSinceStarted.get(id); break;
+                    case VIEW: bin = (ServerHitBin) viewSinceStarted.get(id); break;
+                }
+
+                if (bin == null) {
+                    bin = new ServerHitBin(id, type, false);
+                    switch (type) {
+                        case REQUEST: requestSinceStarted.put(id, bin); break;
+                        case EVENT: eventSinceStarted.put(id, bin); break;
+                        case VIEW: viewSinceStarted.put(id, bin); break;
+                    }
+                }
             }
         }
         
-        bin.addHit(runningTime);
+        bin.addHit(startTime, runningTime);
 
         if (isOriginal)
-            countHitSinceStart("GLOBAL", type, runningTime, false);
+            countHitSinceStart("GLOBAL", type, startTime, runningTime, false);
     }
     
-    //these Maps contain Lists of ServerHitBin objects by id
+    //these Maps contain Lists of ServerHitBin objects by id, the most recent is first in the list
     public static Map requestHistory = new HashMap();
     public static Map eventHistory = new HashMap();
     public static Map viewHistory = new HashMap();
 
-    //these Maps contain ServerHitBin objects by id
-    public static Map requestCurrent = new HashMap();
-    public static Map eventCurrent = new HashMap();
-    public static Map viewCurrent = new HashMap();
-    
     //these Maps contain ServerHitBin objects by id
     public static Map requestSinceStarted = new HashMap();
     public static Map eventSinceStarted = new HashMap();
@@ -177,14 +201,43 @@ public class ServerHitBin {
         this.id = id;
         this.type = type;
         this.limitLength = limitLength;
-        reset();
+        reset(getEvenStartingTime());
+    }
+    
+    long getEvenStartingTime() {
+        //binLengths should be a divisable evenly into 1 hour
+        long curTime = System.currentTimeMillis();
+        long binLength = getNewBinLength();
+        
+        //find the first previous millis that are even on the hour
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(curTime);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        
+        while (cal.getTimeInMillis() < (curTime - binLength)) {
+            cal.add(Calendar.MILLISECOND, (int) binLength);
+        }
+        
+        return cal.getTimeInMillis();
+    }
+    
+    static long getNewBinLength() {
+        long binLength = (long) UtilProperties.getPropertyNumber("controlservlet", "stats.bin.length.millis");
+        //if no or 0 binLength specified, set to 30 minutes
+        if (binLength <= 0) binLength = 1800000;
+        //if binLength is more than an hour, set it to one hour
+        if (binLength > 3600000) binLength = 3600000;
+        return binLength;
     }
 
-    void reset() {
-        this.startTime = System.currentTimeMillis();
+    void reset(long startTime) {
+        this.startTime = startTime;
         if (limitLength) {
-            long binLength = (long) UtilProperties.getPropertyNumber("controlservlet", "stats.bin.length.millis");
-            this.endTime = startTime + binLength;
+            long binLength = getNewBinLength();
+            //subtract 1 millisecond to keep bin starting times even
+            this.endTime = startTime + binLength - 1;
         } else {
             this.endTime = 0;
         }
@@ -253,45 +306,8 @@ public class ServerHitBin {
         return ((double) this.numberHits) / ((double) this.getBinLengthMinutes());
     }
     
-    void addHit(long runningTime) {
-        //first check to see if this bin has expired, if so save and recycle it
-        if (limitLength && System.currentTimeMillis() > this.endTime) {
-            List binList = null;
-
-            switch (type) {
-                case REQUEST:
-                    binList = (List) requestHistory.get(id);
-                    break;
-                case EVENT:
-                    binList = (List) eventHistory.get(id);
-                    break;
-                case VIEW:
-                    binList = (List) viewHistory.get(id);
-                    break;
-            }
-
-            if (binList == null) {
-                binList = new LinkedList();
-                switch (type) {
-                    case REQUEST:
-                        requestHistory.put(id, binList);
-                        break;
-                    case EVENT:
-                        eventHistory.put(id, binList);
-                        break;
-                    case VIEW:
-                        viewHistory.put(id, binList);
-                        break;
-                }
-            }
-
-            binList.add(new ServerHitBin(this));
-            this.reset();
-            
-            //TODO: persist each bin when time ends if option turned on
-            if (UtilProperties.propertyValueEqualsIgnoreCase("controlservlet", "stats.persist.bins", "true")) {
-            }
-        }
+    synchronized void addHit(long startTime, long runningTime) {
+        advanceBin(startTime + runningTime);
         
         this.numberHits++;
         this.totalRunningTime += runningTime;
@@ -299,6 +315,38 @@ public class ServerHitBin {
             this.minTime = runningTime;
         if (runningTime > this.maxTime)
             this.maxTime = runningTime;
+    }
+    
+    synchronized void advanceBin(long toTime) {
+        //first check to see if this bin has expired, if so save and recycle it
+        while (limitLength && toTime > this.endTime) {
+            LinkedList binList = null;
+            
+            switch (type) {
+                case REQUEST:
+                    binList = (LinkedList) requestHistory.get(id);
+                    break;
+                case EVENT:
+                    binList = (LinkedList) eventHistory.get(id);
+                    break;
+                case VIEW:
+                    binList = (LinkedList) viewHistory.get(id);
+                    break;
+            }
+
+            //the first in the list will be this object, remove and copy it, 
+            // put the copy at the first of the list, then put this object back on
+            binList.removeFirst();
+            if (this.numberHits > 0) {
+                binList.addFirst(new ServerHitBin(this));
+
+                //TODO: persist each bin when time ends if option turned on
+                if (UtilProperties.propertyValueEqualsIgnoreCase("controlservlet", "stats.persist.bins", "true")) {
+                }
+            }
+            this.reset(this.endTime + 1);
+            binList.addFirst(this);
+        }
     }
     
     void saveHit(long startTime, long runningTime, String userLoginId) {
