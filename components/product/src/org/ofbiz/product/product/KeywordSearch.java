@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordSearch.java,v 1.1 2003/08/17 18:04:22 ajzeneski Exp $
+ * $Id: KeywordSearch.java,v 1.2 2003/09/20 18:02:16 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -29,8 +29,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.ofbiz.base.util.Debug;
@@ -47,7 +49,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class KeywordSearch {
@@ -131,10 +133,15 @@ public class KeywordSearch {
                 if (Debug.verboseOn()) Debug.logVerbose("[KeywordSearch] Params: " + (String) params.get(i), module);
             }
             resultSet = statement.executeQuery();
-
+            Set idSet = new HashSet();
             while (resultSet.next()) {
-                pbkList.add(resultSet.getString("PRODUCT_ID"));
-                // Debug.logInfo("PRODUCT_ID=" + resultSet.getString("PRODUCT_ID") + " TOTAL_WEIGHT=" + resultSet.getInt("TOTAL_WEIGHT"), module);
+                //since there is a chance of duplicate IDs, check to see if the ID is already in the list to eliminate all but the first
+                String productId = resultSet.getString("PRODUCT_ID");
+                if (!idSet.contains(productId)) {
+                    pbkList.add(productId);
+                    idSet.add(productId);
+                    // Debug.logInfo("PRODUCT_ID=" + productId + " TOTAL_WEIGHT=" + resultSet.getInt("TOTAL_WEIGHT"), module);
+                }
             }
             if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems, module);
 
