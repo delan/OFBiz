@@ -339,6 +339,9 @@ public class Record implements Serializable {
             } catch (java.text.ParseException e) {
                 throw new DataFileException("Could not parse field " + modelField.name + ", format string \"" + modelField.format + "\" with value " + strVal +
                         " on line " + lineNum, e);
+            } catch (java.lang.NumberFormatException e) {
+                throw new DataFileException("Number not valid for field " + modelField.name + ", format string \"" + modelField.format + "\" with value " + strVal +
+                        " on line " + lineNum, e);
             }
         }
         return record;
