@@ -86,6 +86,9 @@ public class ServiceEventHandler implements EventHandler {
             if ( value != null )
                 serviceContext.put(name,value);
         }
+        
+        // get only the parameters for this service
+        serviceContext = model.makeValid(serviceContext,ModelService.IN_PARAM);
                         
         // invoke the service
         Map result = null;
