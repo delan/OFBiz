@@ -401,8 +401,6 @@ public class RequestHandler implements Serializable {
 
         String viewType = rm.getViewType(view);
         String tempView = rm.getViewPage(view);
-        String contentType = rm.getViewContentType(view);
-        String encoding = rm.getViewEncoding(view);
         String nextPage = null;
 
         if (tempView == null) {
@@ -419,11 +417,42 @@ public class RequestHandler implements Serializable {
 
         long viewStartTime = System.currentTimeMillis();
 
+        // setup chararcter encoding and content type
+        String charset = getServletContext().getInitParameter("charset");
+
+        if (charset == null || charset.length() == 0) charset = req.getCharacterEncoding();
+        if (charset == null || charset.length() == 0) charset = "UTF-8";
+        
+        String viewCharset = rm.getViewEncoding(view);
+        //NOTE: if the viewCharset is "none" then no charset will be used
+        if (viewCharset != null && viewCharset.length() > 0) charset = viewCharset;
+
+        if (!"none".equals(charset)) {
+            try {
+                req.setCharacterEncoding(charset);
+            } catch (UnsupportedEncodingException e) {
+                throw new RequestHandlerException("Could not set character encoding to " + charset, e);
+            }
+        }
+
+        // setup content type
+        String contentType = "text/html";
+        String viewContentType = rm.getViewContentType(view);
+        if (viewContentType != null && viewContentType.length() > 0) contentType = viewContentType;
+        
+        if (charset.length() > 0 && !"none".equals(charset)) {
+            resp.setContentType(contentType + "; charset=" + charset);
+        } else {
+            resp.setContentType(contentType);
+        }
+
+        if (Debug.verboseOn()) Debug.logVerbose("The ContentType for the " + view + " view is: " + contentType);
+        
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]");
             ViewHandler vh = ViewFactory.getViewHandler(this, viewType);
 
-            vh.render(view, nextPage, contentType, encoding, rm.getViewInfo(view), req, resp);
+            vh.render(view, nextPage, contentType, charset, rm.getViewInfo(view), req, resp);
         } catch (ViewHandlerException e) {
             Throwable throwable = e.getNested() != null ? e.getNested() : e;
 
