@@ -24,28 +24,53 @@
  *@since      2.1.1
  */
  
- import java.util.*;
- import org.ofbiz.core.entity.*;
- import org.ofbiz.core.util.*;
+import java.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
 
- delegator = request.getAttribute("delegator");
- userLogin = session.getAttribute("userLogin");
+delegator = request.getAttribute("delegator");
+userLogin = session.getAttribute("userLogin");
  
- parameterMap = UtilHttp.getParameterMap(request);
- shoppingListId = parameterMap.get("shoppingListId");
- if (shoppingListId == null)
-    shoppingListId = request.getAttribute("shoppingListId");
+// get the top level shopping lists for the logged in user
+allShoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId")), UtilMisc.toList("listName"));
+shoppingLists = EntityUtil.filterByAnd(allShoppingLists, UtilMisc.toMap("parentShoppingListId", null));
+context.put("allShoppingLists", allShoppingLists);
+context.put("shoppingLists", shoppingLists);
+
+// get all shoppingListTypes
+shoppingListTypes = delegator.findAllCache("ShoppingListType", UtilMisc.toList("description"));
+context.put("shoppingListTypes", shoppingListTypes);
+
+// get the shoppingListId for this reqest
+parameterMap = UtilHttp.getParameterMap(request);
+shoppingListId = parameterMap.get("shoppingListId");
+if (shoppingListId == null) shoppingListId = request.getAttribute("shoppingListId");
  
- // get the shopping lists for the logged in user
- shoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId")), UtilMisc.toList("listName"));
- context.put("shoppingLists", shoppingLists);
- 
- // if we passed a shoppingListId get the shopping list info
- if (shoppingListId != null) { 
+// if we passed a shoppingListId get the shopping list info
+if (shoppingListId != null) {
     shoppingList = delegator.findByPrimaryKey("ShoppingList", UtilMisc.toMap("shoppingListId", shoppingListId));
-    shoppingListItems = shoppingList.getRelated("ShoppingListItem");   
-     context.put("shoppingList", shoppingList);
-    context.put("shoppingListItems", shoppingListItems);
- }
- 
+    context.put("shoppingList", shoppingList);
+
+	if (shoppingList != null) {
+	    shoppingListItems = shoppingList.getRelated("ShoppingListItem");
+	    context.put("shoppingListItems", shoppingListItems);
+	
+	    shoppingListType = shoppingList.getRelatedOne("ShoppingListType");
+	    context.put("shoppingListType", shoppingListType);
+	
+		// get the child shopping lists of the current list for the logged in user
+		childShoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "parentShoppingListId", shoppingListId), UtilMisc.toList("listName"));
+		context.put("childShoppingLists", childShoppingLists);
+
+		// get the parent shopping list if there is one
+	    parentShoppingList = shoppingList.getRelatedOne("ParentShoppingList");
+		context.put("parentShoppingList", parentShoppingList);
+
+		if (userLogin.getString("partyId").equals(shoppingList.getString("partyId"))) {
+			context.put("canView", Boolean.TRUE);
+		} else {
+			context.put("canView", Boolean.FALSE);
+		}
+	}
+}
  

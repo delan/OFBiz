@@ -97,6 +97,7 @@
             <td class="headerButtonRight"><a href="<@ofbizUrl>/quickadd</@ofbizUrl>" class="headerbuttontext">Quick&nbsp;Add</a></td>
           </#if>
           <td class="headerButtonRight"><a href="<@ofbizUrl>/orderhistory</@ofbizUrl>" class="headerbuttontext">Order&nbsp;History</a></td>
+          <td class="headerButtonRight"><a href="<@ofbizUrl>/editShoppingList</@ofbizUrl>" class="headerbuttontext">Shopping&nbsp;Lists</a></td>
           <td class="headerButtonRight"><a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="headerbuttontext">Profile</a></td>
         </tr>
       </table>

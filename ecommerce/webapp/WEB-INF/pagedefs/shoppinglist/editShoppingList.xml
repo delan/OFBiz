@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
-    <template>main</template> 
+    <template>main_right</template> 
     <property name="title">Shopping List</property>
     <page-action name="/shoppinglist/editShoppingList.bsh"/>
 </page>
