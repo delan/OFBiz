@@ -20,9 +20,8 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.UtilMisc;
 
 
-/**
- *
- * @author  Jacopo Cappellato
+/** An ItemCoinfigurationNode represents a component in a bill of materials.
+ * @author <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
  */
 
 public class ItemConfigurationNode {

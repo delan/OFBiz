@@ -1,5 +1,5 @@
 /*
- * $Id: BOMEvents.java,v 1.3 2004/02/16 11:20:04 jacopo Exp $
+ * $Id: BOMEvents.java,v 1.4 2004/02/17 11:27:39 jacopo Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,17 +40,16 @@ import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.security.Security;
 
 /**
- * Product Information Related Events
+ * Product's Bill of Materials Related Events
  *
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
- * @since      2.0
+ * @author <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
+ *
  */
 public class BOMEvents {
     
     public static final String module = BOMEvents.class.getName();
 
-    /** Updates ProductAssoc information according to UPDATE_MODE parameter
+    /** Updates ProductAssoc information for Bill of Materials
      *@param request The HTTPRequest object for the current request
      *@param response The HTTPResponse object for the current request
      *@return String specifying the exit status of this event
