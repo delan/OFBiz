@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -31,6 +31,4 @@
 <div class='tabContainer'>
         <a href="<@ofbizUrl>/FindRouting</@ofbizUrl>" class="${selectedClassMap.routing?default(unselectedClassName)}">${uiLabelMap.ManufacturingRouting}</a>
         <a href="<@ofbizUrl>/FindRoutingTask</@ofbizUrl>" class="${selectedClassMap.routingTask?default(unselectedClassName)}">${uiLabelMap.ManufacturingRoutingTask}</a>
-        <a href="<@ofbizUrl>/EditMachine</@ofbizUrl>" class="${selectedClassMap.machine?default(unselectedClassName)}">${uiLabelMap.ManufacturingMachine}</a>
-        <a href="<@ofbizUrl>/EditMachineGroup</@ofbizUrl>" class="${selectedClassMap.machineGroup?default(unselectedClassName)}">${uiLabelMap.ManufacturingMachineGroup}</a>
 </div>
