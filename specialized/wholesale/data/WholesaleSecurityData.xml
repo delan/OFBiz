@@ -23,15 +23,11 @@
     <SecurityGroupPermission groupId="REPLEVEL5" permissionId="SALESREP_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.906" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL5" permissionId="SALESREP_ORDER_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.908" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL5" permissionId="SALESREP_ORDER_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.909" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
-    <SecurityGroupPermission groupId="REPLEVEL5" permissionId="ORDERMGR_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.911" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
-    <SecurityGroupPermission groupId="REPLEVEL5" permissionId="ORDERMGR_DELETE" lastUpdatedStamp="2004-01-21 17:11:27.912" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL5" permissionId="PAY_INFO_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.913" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL5" permissionId="INVENTORY_AVAIL" lastUpdatedStamp="2004-01-21 17:11:27.915" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL7" permissionId="SALESREP_CATALOG_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.916" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL7" permissionId="SALESREP_ORDER_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.918" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL7" permissionId="SALESREP_ORDER_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.919" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
-    <SecurityGroupPermission groupId="REPLEVEL7" permissionId="ORDERMGR_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.921" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
-    <SecurityGroupPermission groupId="REPLEVEL7" permissionId="ORDERMGR_DELETE" lastUpdatedStamp="2004-01-21 17:11:27.922" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL7" permissionId="PAY_INFO_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.923" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL7" permissionId="PAY_INFO_UPDATE" lastUpdatedStamp="2004-01-21 17:11:27.925" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL7" permissionId="PAY_INFO_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.926" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
@@ -39,8 +35,6 @@
     <SecurityGroupPermission groupId="REPLEVEL9" permissionId="SALESREP_CATALOG_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.929" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL9" permissionId="SALESREP_ORDER_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.931" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL9" permissionId="SALESREP_ORDER_VIEW" lastUpdatedStamp="2004-01-21 17:11:27.932" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
-    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="ORDERMGR_CREATE" lastUpdatedStamp="2004-01-21 17:11:27.934" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
-    <SecurityGroupPermission groupId="REPLEVEL9" permissionId="ORDERMGR_DELETE" lastUpdatedStamp="2004-01-21 17:11:27.935" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL9" permissionId="PAY_INFO_CREATE" lastUpdatedStamp="2004-01-21 17:11:28.038" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL9" permissionId="PAY_INFO_UPDATE" lastUpdatedStamp="2004-01-21 17:11:28.04" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
     <SecurityGroupPermission groupId="REPLEVEL9" permissionId="PAY_INFO_VIEW" lastUpdatedStamp="2004-01-21 17:11:28.041" lastUpdatedTxStamp="2004-01-21 17:11:27.86"/>
@@ -48,8 +42,6 @@
     <SecurityGroupPermission groupId="REPLEVEL3" permissionId="SALESREP_VIEW" lastUpdatedStamp="2004-01-21 17:56:13.229" lastUpdatedTxStamp="2004-01-21 17:56:13.222"/>
     <SecurityGroupPermission groupId="REPLEVEL3" permissionId="SALESREP_ORDER_CREATE" lastUpdatedStamp="2004-01-21 17:56:13.23" lastUpdatedTxStamp="2004-01-21 17:56:13.222"/>
     <SecurityGroupPermission groupId="REPLEVEL3" permissionId="SALESREP_ORDER_VIEW" lastUpdatedStamp="2004-01-21 17:56:13.232" lastUpdatedTxStamp="2004-01-21 17:56:13.222"/>
-    <SecurityGroupPermission groupId="REPLEVEL3" permissionId="ORDERMGR_CREATE" lastUpdatedStamp="2004-01-21 17:56:13.233" lastUpdatedTxStamp="2004-01-21 17:56:13.222"/>
-    <SecurityGroupPermission groupId="REPLEVEL3" permissionId="ORDERMGR_DELETE" lastUpdatedStamp="2004-01-21 17:56:13.235" lastUpdatedTxStamp="2004-01-21 17:56:13.222"/>
     <SecurityGroupPermission groupId="REPLEVEL9" permissionId="SALESREP_VIEW" lastUpdatedStamp="2004-01-26 14:32:31.635" lastUpdatedTxStamp="2004-01-26 14:32:31.635"/>
     <SecurityGroupPermission groupId="REPLEVEL7" permissionId="SALESREP_VIEW" lastUpdatedStamp="2004-01-26 14:32:51.993" lastUpdatedTxStamp="2004-01-26 14:32:51.993"/>
     <SecurityGroupPermission groupId="REPLEVEL9" permissionId="INVENTORY_AVAIL" lastUpdatedStamp="2004-02-11 12:46:42.72" lastUpdatedTxStamp="2004-02-11 12:46:42.72"/>
