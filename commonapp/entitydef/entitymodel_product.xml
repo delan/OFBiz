@@ -743,6 +743,7 @@
       <field name="quantityOnHand" type="floating-point"></field>
       <field name="availableToPromise" type="floating-point"></field>
       <field name="serialNumber" type="value"></field>
+      <field name="unitCost" type="currency-amount"></field>
       <prim-key field="inventoryItemId"/>
       <relation type="one" fk-name="INV_ITEM_TYPE" rel-entity-name="InventoryItemType">
         <key-map field-name="inventoryItemTypeId"/>
