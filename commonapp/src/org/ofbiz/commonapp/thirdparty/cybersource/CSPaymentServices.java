@@ -210,6 +210,7 @@ public class CSPaymentServices {
         // Send over a line item total offer w/ the total for billing; Don't trust CyberSource for calc.
         Double processAmount = (Double) context.get("processAmount");
         NumberFormat nf = NumberFormat.getCurrencyInstance();
+        nf.setGroupingUsed(false);
         String totalStr = nf.format(processAmount);
         ICSClientOffer mainOffer = new ICSClientOffer();
 
