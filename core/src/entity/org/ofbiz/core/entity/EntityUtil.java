@@ -313,10 +313,12 @@ public class EntityUtil {
      */
     public static List orderBy(List values, List orderBy) {
         if (values == null) return null;
-        if (values.size() == 0) return UtilMisc.toList(values);
+        if (values.size() == 0) return new ArrayList();
+        if (orderBy == null || orderBy.size() == 0) {
+            return new ArrayList(values);
+        }
 
         List result = new ArrayList(values);
-
         Collections.sort(result, new OrderByComparator(orderBy));
         return result;
     }
