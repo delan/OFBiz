@@ -26,6 +26,7 @@ package org.ofbiz.core.util;
 import java.text.*;
 import java.util.*;
 
+
 /**
  * Utilities for analyzing and converting Object types in Java - takes advantage of a lot of reflection and other stuff
  *
@@ -274,7 +275,7 @@ public class ObjectType {
         }
         if ("Object".equals(type)) {
             return obj;
-        }
+        }        
 
         String fromType = null;
 
@@ -629,6 +630,37 @@ public class ObjectType {
                 return loc.toString();
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            }
+        } else if (obj.getClass().getName().equals("org.ofbiz.core.entity.GenericValue")) {
+            fromType = "GenericValue";            
+            if ("GenericValue".equals(type) || "org.ofbiz.core.entity.GenericValue".equals(type)) {
+                return obj;
+            } else if ("Map".equals(type) || "java.util.Map".equals(type)) {
+                return obj;           
+            } else if ("String".equals(type) || "java.lang.String".equals(type)) {
+                return obj.toString();   
+            } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");            
+            }            
+        } else if (obj instanceof java.util.Map) {
+            fromType = "Map";
+            Map map = (Map) obj;
+            if ("Map".equals(type) || "java.util.Map".equals(type)) {
+                return map;
+            } else if ("String".equals(type) || "java.lang.String".equals(type)) {
+                return map.toString();
+            } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");            
+            }
+        } else if (obj instanceof java.util.List) {
+            fromType = "List";
+            List list = (List) obj;
+            if ("List".equals(type) || "java.util.List".equals(type)) {
+                return list;
+            } else if ("String".equals(type) || "java.lang.String".equals(type)) {
+                return list.toString();
+            } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");            
             }
         } else {
             throw new GeneralException("Conversion from " + obj.getClass().getName() + " to " + type + " not currently supported");
