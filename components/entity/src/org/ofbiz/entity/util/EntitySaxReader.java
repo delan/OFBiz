@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySaxReader.java,v 1.10 2004/05/23 03:20:36 jonesde Exp $
+ * $Id: EntitySaxReader.java,v 1.11 2004/06/16 11:57:00 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,30 +25,48 @@
 package org.ofbiz.entity.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilURL;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.dom.NodeModel;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateHashModel;
+
 /**
  * SAX XML Parser Content Handler for Entity Engine XML files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler {
@@ -68,6 +86,12 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     boolean useTryInsertMethod = false;
 
     protected List valuesToWrite = new ArrayList(valuesPerWrite);
+    
+    protected boolean isParseForTemplate = false;
+    protected String templatePath = null;
+    protected Node rootNodeForTemplate = null;
+    protected Node currentNodeForTemplate = null;
+    protected Document documentForTemplate = null;
 
     protected EntitySaxReader() {}
 
@@ -182,6 +206,15 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     }
 
     public void characters(char[] values, int offset, int count) throws org.xml.sax.SAXException {
+        if (isParseForTemplate) {
+            // if null, don't worry about it
+            if (this.currentNodeForTemplate != null) {
+                Node newNode = this.documentForTemplate.createTextNode(new String(values, offset, count));
+                this.currentNodeForTemplate.appendChild(newNode);
+            }
+            return;
+        }
+        
         if (currentValue != null && currentFieldName != null) {
             String value = new String(values, offset, count);
 
@@ -197,10 +230,63 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     public void endDocument() throws org.xml.sax.SAXException {}
 
     public void endElement(String namespaceURI, String localName, String fullName) throws org.xml.sax.SAXException {
-        // Debug.logInfo("endElement: localName=" + localName + ", fullName=" + fullName + ", numberRead=" + numberRead, module);
+        if (Debug.verboseOn()) Debug.logVerbose("endElement: localName=" + localName + ", fullName=" + fullName + ", numberRead=" + numberRead, module);
         if ("entity-engine-xml".equals(fullName)) {
             return;
         }
+        if ("entity-engine-transform-xml".equals(fullName)) {
+            // transform file & parse it, then return
+            URL templateUrl = UtilURL.fromResource(templatePath);
+            
+            if (templateUrl == null) {
+                throw new SAXException("Could not find transform template with resource path: " + templatePath);
+            } else {
+                try {
+                    Reader templateReader = new InputStreamReader(templateUrl.openStream());
+                    
+                    StringWriter outWriter = new StringWriter();
+                    Configuration config = Configuration.getDefaultConfiguration();            
+                    config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+                    config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
+                    
+                    Template template = new Template("FMImportFilter", templateReader, config);
+   
+                    NodeModel nodeModel = NodeModel.wrap(this.rootNodeForTemplate);
+                        
+                    Map context = new HashMap();
+                    BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+                    TemplateHashModel staticModels = wrapper.getStaticModels();
+                    context.put("Static", staticModels);
+                    
+                    context.put("doc", nodeModel);
+                    template.process(context, outWriter);
+                    String s = outWriter.toString();
+                    if (Debug.verboseOn()) Debug.logVerbose("transformed xml: " + s, module);
+
+                    EntitySaxReader reader = new EntitySaxReader(delegator);
+                    reader.setUseTryInsertMethod(this.useTryInsertMethod);
+                    try {
+                        reader.setTransactionTimeout(this.transactionTimeout);
+                    } catch (GenericTransactionException e1) {
+                        // couldn't set tx timeout, shouldn't be a big deal
+                    }
+                    
+                    numberRead += reader.parse(s);
+                } catch (TemplateException e) {
+                    throw new SAXException("Error storing value", e);
+                } catch(IOException e) {
+                    throw new SAXException("Error storing value", e);
+                }
+            }
+            
+            return;
+        }
+
+        if (isParseForTemplate) {
+            this.currentNodeForTemplate = this.currentNodeForTemplate.getParentNode();
+            return;
+        }
+
         if (currentValue != null) {
             if (currentFieldName != null) {
                 if (currentFieldValue != null && currentFieldValue.length() > 0) {
@@ -259,10 +345,41 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     public void startDocument() throws org.xml.sax.SAXException {}
 
     public void startElement(String namepsaceURI, String localName, String fullName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException {
-        // Debug.logInfo("startElement: localName=" + localName + ", fullName=" + fullName + ", attributes=" + attributes, module);
+        if (Debug.verboseOn()) Debug.logVerbose("startElement: localName=" + localName + ", fullName=" + fullName + ", attributes=" + attributes, module);
         if ("entity-engine-xml".equals(fullName)) {
             return;
         }
+        
+        if ("entity-engine-transform-xml".equals(fullName)) {
+            templatePath = attributes.getValue("template");
+            isParseForTemplate = true;
+            documentForTemplate = UtilXml.makeEmptyXmlDocument();
+            return;
+        }
+        
+        if (isParseForTemplate) {
+            Element newElement = this.documentForTemplate.createElement(fullName);
+            int length = attributes.getLength();
+            for (int i = 0; i < length; i++) {
+                String name = attributes.getLocalName(i);
+                String value = attributes.getValue(i);
+
+                if (name == null || name.length() == 0) {
+                    name = attributes.getQName(i);
+                }
+                newElement.setAttribute(name, value);
+            }
+            
+            if (this.currentNodeForTemplate == null) {
+                this.currentNodeForTemplate = newElement;
+                this.rootNodeForTemplate = newElement;
+            } else {
+                this.currentNodeForTemplate.appendChild(newElement);
+                this.currentNodeForTemplate = newElement;
+            }
+            return;
+        }
+        
         if (currentValue != null) {
             // we have a nested value/CDATA element
             currentFieldName = fullName;

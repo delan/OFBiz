@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -31,5 +31,6 @@
     ${pages.get("/catalog/sidedeepcategory.ftl")}
     ${pages.get("/catalog/minireorderprods.ftl")}
     ${pages.get("/forum/forums.ftl")}
+    ${pages.get("/content/content_categories.ftl")}
   </td>
   <td width='5'>&nbsp;&nbsp;&nbsp;</td>

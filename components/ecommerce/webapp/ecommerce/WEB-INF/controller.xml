@@ -964,9 +964,13 @@
         <response name="success" type="view" value="editforumarticle"/>
         <response name="error" type="view" value="editaddforumdata"/>
     </request-map>
-    <request-map uri="catbrowse">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="catbrowse"/>
+    <request-map uri="showcontenttree">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="showcontenttree"/>
+    </request-map>
+    <request-map uri="viewcontent">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="viewcontent"/>
     </request-map>
     <request-map uri="mostrecent">
         <security https="true" auth="true"/>
@@ -1049,7 +1053,8 @@
     <view-map name="editforuminfo" type="jpublish" page="/forum/editforuminfo.ftl"/>
     <view-map name="editaddforumdata" type="jpublish" page="/forum/editaddforumdata.ftl"/>
     <view-map name="editaddimage" type="jpublish" page="/forum/editaddimage.ftl"/>
-    <view-map name="catbrowse" page="/content/catbrowse.ftl" type="jpublish"/>
+    <view-map name="showcontenttree" page="/content/showcontenttree.ftl" type="jpublish"/>
+    <view-map name="viewcontent" page="/content/viewcontent.ftl" type="jpublish"/>
     <view-map name="mostrecent" page="/forum/mostrecent.ftl" type="jpublish"/>
 
     <!-- End of View Mappings -->

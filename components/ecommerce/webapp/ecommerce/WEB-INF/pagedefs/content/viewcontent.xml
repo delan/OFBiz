@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_lr</template> 
+    <property name="title">View Blog</property>
+    <property name="headerItem">Blog</property>    
+    <property name="entityName">Content</property>    
+    <property name="permissionType">none</property>    
+    <content-action name="/forum/nodetrailprep.bsh"/>
+<!--
+    <property name="formDefFile">/BlogForms.xml</property>    
+    <property name="viewSize">10</property>    
+    <page-action name="/trailprep.bsh"/>
+    <content-action name="/forum/listparamprep.bsh"/>
+    <content-action name="/forum/pubinit.bsh"/>
+    <content-action name="/forum/permprep.bsh"/>
+    <content-action name="/forum/viewprep.bsh"/>
+-->
+
+</page>
