@@ -30,16 +30,16 @@ import org.ofbiz.manufacturing.techdata.ProductHelper;
  * @author <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
  */
 
-public class ItemConfigurationNode {
+public class BOMNode {
 
-    private ItemConfigurationNode parentNode; // the parent node (null if it's not present)
-    private ItemConfigurationNode substitutedNode; // The virtual node (if any) that this instance substitutes
+    private BOMNode parentNode; // the parent node (null if it's not present)
+    private BOMNode substitutedNode; // The virtual node (if any) that this instance substitutes
     private GenericValue ruleApplied; // The rule (if any) that that has been applied to configure the current node
     private String productForRules;
     private GenericValue product; // the current product (from Product entity)
     private GenericValue productAssoc; // the product assoc record (from ProductAssoc entity) in which the current product is in productIdTo
     private ArrayList children; // current node's children (ProductAssocs)
-    private ArrayList childrenNodes; // current node's children nodes (ItemConfigurationNode)
+    private ArrayList childrenNodes; // current node's children nodes (BOMNode)
     private double quantityMultiplier; // the necessary quantity as declared in the bom (from ProductAssocs or ProductManufacturingRule)
     private double scrapFactor; // the scrap factor as declared in the bom (from ProductAssocs)
     // Runtime fields
@@ -47,7 +47,7 @@ public class ItemConfigurationNode {
     private double quantity; // the quantity of this node in the current tree
     private String bomTypeId; // the type of the current tree
    
-    public ItemConfigurationNode(GenericValue product) {
+    public BOMNode(GenericValue product) {
         this.product = product;
         children = new ArrayList();
         childrenNodes = new ArrayList();
@@ -61,7 +61,7 @@ public class ItemConfigurationNode {
         quantity = 0;
     }
 
-    public ItemConfigurationNode(String partId, GenericDelegator delegator) throws GenericEntityException {
+    public BOMNode(String partId, GenericDelegator delegator) throws GenericEntityException {
         this(delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", partId)));
     }
 
@@ -91,7 +91,7 @@ public class ItemConfigurationNode {
         childrenNodes = new ArrayList();
         Iterator childrenIterator = children.iterator();
         GenericValue oneChild = null;
-        ItemConfigurationNode oneChildNode = null;
+        BOMNode oneChildNode = null;
         while(childrenIterator.hasNext()) {
             oneChild = (GenericValue)childrenIterator.next();
             // Configurator
@@ -100,10 +100,10 @@ public class ItemConfigurationNode {
             if (oneChildNode != null) {
                 oneChildNode.setParentNode(this);
                 switch (type) {
-                    case ItemConfigurationTree.EXPLOSION:
-                        oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, ItemConfigurationTree.EXPLOSION, dispatcher);
+                    case BOMTree.EXPLOSION:
+                        oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, BOMTree.EXPLOSION, dispatcher);
                     break;
-                    case ItemConfigurationTree.EXPLOSION_MANUFACTURING:
+                    case BOMTree.EXPLOSION_MANUFACTURING:
                         if (!oneChildNode.isPurchased()) {
                             oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, type, dispatcher);
                         }
@@ -114,7 +114,7 @@ public class ItemConfigurationNode {
         }
     }
 
-    private ItemConfigurationNode substituteNode(ItemConfigurationNode oneChildNode, List productFeatures, List productPartRules, GenericDelegator delegator) throws GenericEntityException {
+    private BOMNode substituteNode(BOMNode oneChildNode, List productFeatures, List productPartRules, GenericDelegator delegator) throws GenericEntityException {
         if (productPartRules != null) {
             GenericValue rule = null;
             for (int i = 0; i < productPartRules.size(); i++) {
@@ -145,12 +145,12 @@ public class ItemConfigurationNode {
                     }
                 }
                 if (ruleSatisfied && ruleOperator.equals("OR")) {
-                    ItemConfigurationNode tmpNode = oneChildNode;
+                    BOMNode tmpNode = oneChildNode;
                     if (newPart == null || newPart.equals("")) {
                         oneChildNode = null;
                     } else {
-                        ItemConfigurationNode origNode = oneChildNode;
-                        oneChildNode = new ItemConfigurationNode(newPart, delegator);
+                        BOMNode origNode = oneChildNode;
+                        oneChildNode = new BOMNode(newPart, delegator);
                         oneChildNode.setSubstitutedNode(tmpNode);
                         oneChildNode.setRuleApplied(rule);
                         oneChildNode.setProductAssoc(origNode.getProductAssoc());
@@ -170,8 +170,8 @@ public class ItemConfigurationNode {
         return oneChildNode;
     }
     
-    private ItemConfigurationNode configurator(GenericValue node, List productFeatures, String productIdForRules, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
-        ItemConfigurationNode oneChildNode = new ItemConfigurationNode((String)node.get("productIdTo"), delegator);
+    private BOMNode configurator(GenericValue node, List productFeatures, String productIdForRules, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
+        BOMNode oneChildNode = new BOMNode((String)node.get("productIdTo"), delegator);
         oneChildNode.setProductAssoc(node);
         try {
             oneChildNode.setQuantityMultiplier(node.getDouble("quantity").doubleValue());
@@ -189,7 +189,7 @@ public class ItemConfigurationNode {
         } catch(Exception nfe) {
             oneChildNode.setScrapFactor(1);
         }
-        ItemConfigurationNode newNode = oneChildNode;
+        BOMNode newNode = oneChildNode;
         // CONFIGURATOR
         if (oneChildNode.isVirtual()) {
             // If the part is VIRTUAL and
@@ -263,10 +263,10 @@ public class ItemConfigurationNode {
                                     }
                                 } catch (GenericServiceException e) {
                                     String service = e.getMessage();
-                                    System.out.println("ItemConfigurationNode.configurator(...): " + service);
+                                    System.out.println("BOMNode.configurator(...): " + service);
                                 }
                                 if (variantProduct != null) {
-                                    newNode = new ItemConfigurationNode(variantProduct);
+                                    newNode = new BOMNode(variantProduct);
                                     newNode.setSubstitutedNode(oneChildNode);
                                     newNode.setQuantityMultiplier(oneChildNode.getQuantityMultiplier());
                                     newNode.setScrapFactor(oneChildNode.getScrapFactor());
@@ -310,10 +310,10 @@ public class ItemConfigurationNode {
         childrenNodes = new ArrayList();
         Iterator childrenIterator = children.iterator();
         GenericValue oneChild = null;
-        ItemConfigurationNode oneChildNode = null;
+        BOMNode oneChildNode = null;
         while(childrenIterator.hasNext()) {
             oneChild = (GenericValue)childrenIterator.next();
-            oneChildNode = new ItemConfigurationNode(oneChild.getString("productId"), delegator);
+            oneChildNode = new BOMNode(oneChild.getString("productId"), delegator);
             // Configurator
             //oneChildNode = configurator(oneChild, productFeatures, getRootNode().getProductForRules(), delegator);
             // If the node is null this means that the node has been discarded by the rules.
@@ -330,18 +330,18 @@ public class ItemConfigurationNode {
      * @return Value of property parentNode.
      *
      */
-    public ItemConfigurationNode getParentNode() {
+    public BOMNode getParentNode() {
         return parentNode;
     }
 
-    public ItemConfigurationNode getRootNode() {
+    public BOMNode getRootNode() {
         return (parentNode != null? getParentNode(): this);
     }
     /** Setter for property parentNode.
      * @param parentNode New value of property parentNode.
      *
      */
-    public void setParentNode(ItemConfigurationNode parentNode) {
+    public void setParentNode(BOMNode parentNode) {
         this.parentNode = parentNode;
     }
     // ------------------------------------
@@ -354,7 +354,7 @@ public class ItemConfigurationNode {
         sb.append(" - ");
         sb.append("" + quantity);
         GenericValue oneChild = null;
-        ItemConfigurationNode oneChildNode = null;
+        BOMNode oneChildNode = null;
         depth++;
         for (int i = 0; i < children.size(); i++) {
             oneChild = (GenericValue)children.get(i);
@@ -364,7 +364,7 @@ public class ItemConfigurationNode {
             } catch(Exception exc) {
                 bomQuantity = 1;
             }
-            oneChildNode = (ItemConfigurationNode)childrenNodes.get(i);
+            oneChildNode = (BOMNode)childrenNodes.get(i);
             sb.append("<br>");
             if (oneChildNode != null) {
                 oneChildNode.print(sb, (quantity * bomQuantity), depth);
@@ -382,11 +382,11 @@ public class ItemConfigurationNode {
         arr.add(this);
         // Now (recursively) we visit the children.
         GenericValue oneChild = null;
-        ItemConfigurationNode oneChildNode = null;
+        BOMNode oneChildNode = null;
         depth++;
         for (int i = 0; i < children.size(); i++) {
             oneChild = (GenericValue)children.get(i);
-            oneChildNode = (ItemConfigurationNode)childrenNodes.get(i);
+            oneChildNode = (BOMNode)childrenNodes.get(i);
             // FIXME: phantom flag?
             if (excludePhantoms && "PHANTOM".equals(oneChildNode.getProduct().getString("productTypeId"))) {
                 continue;
@@ -399,18 +399,18 @@ public class ItemConfigurationNode {
 
     public void sumQuantity(HashMap nodes) {
         // First of all, we try to fetch a node with the same partId
-        ItemConfigurationNode sameNode = (ItemConfigurationNode)nodes.get(product.getString("productId"));
+        BOMNode sameNode = (BOMNode)nodes.get(product.getString("productId"));
         // If the node is not found we create a new node for the current product
         if (sameNode == null) {
-            sameNode = new ItemConfigurationNode(product);
+            sameNode = new BOMNode(product);
             nodes.put(product.getString("productId"), sameNode);
         }
         // Now we add the current quantity to the node
         sameNode.setQuantity(sameNode.getQuantity() + quantity);
         // Now (recursively) we visit the children.
-        ItemConfigurationNode oneChildNode = null;
+        BOMNode oneChildNode = null;
         for (int i = 0; i < childrenNodes.size(); i++) {
-            oneChildNode = (ItemConfigurationNode)childrenNodes.get(i);
+            oneChildNode = (BOMNode)childrenNodes.get(i);
             if (oneChildNode != null) {
                 oneChildNode.sumQuantity(nodes);
             }
@@ -450,9 +450,9 @@ public class ItemConfigurationNode {
             } catch (GenericEntityException e) {
                 //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
             }
-            ItemConfigurationNode oneChildNode = null;
+            BOMNode oneChildNode = null;
             for (int i = 0; i < childrenNodes.size(); i++) {
-                oneChildNode = (ItemConfigurationNode)childrenNodes.get(i);
+                oneChildNode = (BOMNode)childrenNodes.get(i);
                 if (oneChildNode != null) {
                     oneChildNode.createManufacturingOrder(productionRunId, null, null, shipmentId, facilityId, date, false, delegator, dispatcher, userLogin);
                 }
@@ -490,7 +490,7 @@ public class ItemConfigurationNode {
                 }
             }
         } catch(GenericEntityException gee) {
-            System.out.println("Error in ItemConfigurationNode.isPurchased() " + gee);
+            System.out.println("Error in BOMNode.isPurchased() " + gee);
         }
         return isPurchased;
     }
@@ -510,10 +510,10 @@ public class ItemConfigurationNode {
         }
         // Now (recursively) we visit the children.
         GenericValue oneChild = null;
-        ItemConfigurationNode oneChildNode = null;
+        BOMNode oneChildNode = null;
         for (int i = 0; i < children.size(); i++) {
             oneChild = (GenericValue)children.get(i);
-            oneChildNode = (ItemConfigurationNode)childrenNodes.get(i);
+            oneChildNode = (BOMNode)childrenNodes.get(i);
             if (oneChildNode != null) {
                 oneChildNode.isConfigured(arr);
             }
@@ -550,7 +550,7 @@ public class ItemConfigurationNode {
      * @return Value of property substitutedNode.
      *
      */
-    public ItemConfigurationNode getSubstitutedNode() {
+    public BOMNode getSubstitutedNode() {
         return substitutedNode;
     }
   
@@ -558,7 +558,7 @@ public class ItemConfigurationNode {
      * @param substitutedNode New value of property substitutedNode.
      *
      */
-    public void setSubstitutedNode(ItemConfigurationNode substitutedNode) {
+    public void setSubstitutedNode(BOMNode substitutedNode) {
         this.substitutedNode = substitutedNode;
     }
  
