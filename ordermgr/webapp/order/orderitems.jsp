@@ -206,6 +206,7 @@
                 <tr>                  
                   <form name="addAdjustmentForm" method="post" action="<ofbiz:url>/addOrderAdjustment?<%=qString%></ofbiz:url>">
                     <input type="hidden" name="orderId" value="<%=orderId%>">
+                    <input type="hidden" name="comments" value="Added manually by '<%=userLogin.getString("userLoginId")%>'">
                     <td align="right" colspan="4">
                       <select name="orderAdjustmentTypeId" style="font-size: x-small;">
                         <ofbiz:iterator name="type" property="adjustmentTypes">

@@ -34,6 +34,7 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="userLogin" type="org.ofbiz.core.entity.GenericValue" scope="session" />
 
 <%if(security.hasRolePermission("ORDERMGR", "_VIEW", request.getParameter("order_id"), "ORDER_CLERK", session)) {%>
 
