@@ -40,6 +40,11 @@
 <head>
 <title>Entity Reference</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+  A.listtext {font-family: Helvetica,sans-serif; font-size: 10pt; font-weight: bold; text-decoration: none; color: blue;}
+  A.listtext:hover {color:red;}
+</style>
+
 </head>
 
 <body bgcolor="#FFFFFF">
@@ -53,7 +58,7 @@
 		if ( search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1 ) {						
 			String url = search == null ? "entityref_main.jsp#"+entityName : "entityref_main.jsp#"+entityName+"?search="+search;
 %>	
-<a href="<%= url %>" target="entityFrame"><%= entityName %></a><br>
+<a href="<%= url %>" target="entityFrame" class='listtext'><%= entityName %></a><br>
 <%
 		}	
 	}

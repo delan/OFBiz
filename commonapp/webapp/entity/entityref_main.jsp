@@ -36,21 +36,32 @@
 	int numberOfEntities = entities.size();
 	int numberShowed = 0;
 	search = (String) request.getParameter("search");
+  //as we are iterating through, check a few things and put any warnings here inside <li></li> tags
+  String warningString = "";
 %>
 
 <html>
 <head>
 <title>Entity Reference</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+  .toptext {font-family: Helvetica,sans-serif; font-size: 16pt; font-weight: bold; text-decoration: none; color: black;}
+  .titletext {font-family: Helvetica,sans-serif; font-size: 12pt; font-weight: bold; text-decoration: none; color: blue;}
+  .headertext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; background-color: blue; color: white;}
+  .enametext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: black;}
+  .entitytext {font-family: Helvetica,sans-serif; font-size: 8pt; text-decoration: none; color: black;}
+  .relationtext {font-family: Helvetica,sans-serif; font-size: 8pt; text-decoration: none; color: black;}
+  A.rlinktext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: blue;}
+  A.rlinktext:hover {color:red;}
+</style>
 </head>
 
 <body bgcolor="#FFFFFF">
 <div align="center">
-  <p><font face="Verdana, Arial, Helvetica, sans-serif" size="3"><b>Entity Reference Chart<br>
+
+  <DIV class='toptext'>Entity Reference Chart<br>
     <%= numberOfEntities %> Total Entities
-    <br>
-    <br>
-    </b></font></p>
+    </DIV>
 	
 <%
 	Iterator i = entities.iterator();
@@ -61,25 +72,17 @@
 			ModelEntity entity = reader.getModelEntity(entityName);			
 %>	
   <a name="<%= entityName %>"></a>
-  <table width="85%" border="1">
+  <table width="95%" border="1" cellpadding='2' cellspacing='0'>
     <tr bgcolor="#CCCCCC"> 
-      <td colspan="3"> 
-        <div align="center"><font color="#3333FF"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="2">ENTITY: 
-          <%= entityName %></font></b></font></div>
+      <td colspan="4"> 
+        <div align="center" class='titletext'>ENTITY: <%= entityName %></div>
       </td>
     </tr>
-    <tr bgcolor="#3333FF"> 
-      <td width="33.3%"> 
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">Java 
-          Name</font></div>
-      </td>
-      <td width="33.3%"> 
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">DB 
-          Name</font></div>
-      </td>
-      <td width="33.3%">  
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">Data-Type</font></div>
-      </td>
+    <tr class='headertext'>
+      <td width="30%" align=center>Java Name</td>
+      <td width="30%" align=center>DB Name</td>
+      <td width="20%" align=center>Java-Type</td>
+      <td width="20%" align=center nowrap>SQL-Type</td>
     </tr>
 	
 <%
@@ -87,18 +90,13 @@
 				ModelField field = (ModelField) entity.fields.elementAt(y);	
 				ModelFieldType type = reader.getModelFieldType(field.type);
 				String javaName = new String();
-				javaName = field.isPk ? "<i>" + field.name + "</i>" : field.name;
+				javaName = field.isPk ? "<div style=\"color: red;\">" + field.name + "</div>" : field.name;
 %>	
-    <tr bgcolor="#EFFFFF"> 
-      <td width="33.3%"> 
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><%= javaName %></i></font></div>
-      </td>
-      <td width="33.3%"> 
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><%= field.colName %></font></div>
-      </td>
-      <td width="33.3%"> 
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><%= type.javaType %></font></div>
-      </td>
+    <tr bgcolor="#EFFFFF">
+      <td><div align="center" class='enametext'><%= javaName %></div></td>
+      <td><div align="center" class='entitytext'><%= field.colName %></div></td>
+      <td><div align="center" class='entitytext'><%= type.javaType %></div></td>
+      <td><div align="center" class='entitytext'><%= type.sqlType %></div></td>
     </tr>
 <%	
 			}
@@ -108,38 +106,38 @@
 			if ( entity.relations != null && entity.relations.size() > 0 ) {
 %>
 	<tr bgcolor="#FFCCCC">
-	  <td colspan="3"><hr></td>
+	  <td colspan="4"><hr></td>
 	</tr>
-    <tr bgcolor="#3333FF"> 
-      <td width="33.3%"> 
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#FFFFFF"> 
-          Relation</font></div>
-      </td>
-      <td width="33.3%"> 
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#FFFFFF"> 
-          Table</font></div>
-      </td>
-	  
-      <td width="33.3%"> 
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#FFFFFF"> 
-          Type</font></div>
-      </td>	  
+    <tr class='headertext'> 
+      <td align="center">Relation</td>
+      <td align="center">Table</td>
+      <td align="center">Type</td>	  
+      <td>&nbsp;</TD>
     </tr>
 
-<%				for ( int r = 0; r < entity.relations.size(); r++ ) {
-					ModelRelation relation = (ModelRelation) entity.relations.elementAt(r);
+<%
+  TreeSet relations = new TreeSet();
+  for ( int r = 0; r < entity.relations.size(); r++ ) {
+    ModelRelation relation = (ModelRelation) entity.relations.elementAt(r);
+    
+    if(!entities.contains(relation.relEntityName))
+      warningString = warningString + "<li>Related entity <b>" + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> not found.</li>";
+    if(relations.contains(relation.title + relation.relEntityName))
+      warningString = warningString + "<li>Relation <b>" + relation.title + relation.relEntityName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is not unique for that entity.</li>";
+    else
+      relations.add(relation.title + relation.relEntityName);
 %>
 
+
     <tr bgcolor="#FEEEEE"> 
-      <td width="33.3%"> 
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><%= relation.title + relation.relEntityName %></i></font></div>
+      <td> 
+        <div align="center">
+          <A href='#<%=relation.relEntityName%>' class='rlinktext'><%= relation.title + relation.relEntityName %></A>
+        </div>
       </td>
-      <td width="33.3%"> 
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><%= relation.relTableName %></i></font></div>
-      </td>
-      <td with="33.3%"> 
-        <div align="center"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><%= relation.type %></i></font></div>
-      </td>	  
+      <td><div align="center" class='relationtext'><%= relation.relTableName %></div></td>
+      <td with="25%"><div align="center" class='relationtext'><%= relation.type %></div></td>
+      <td>&nbsp;</TD>
     </tr>				
 
 <%
@@ -147,7 +145,7 @@
 			}
 %>
     <tr bgcolor="#CCCCCC">
-	  <td colspan="3">&nbsp;</td>
+	  <td colspan="4">&nbsp;</td>
 	</tr>
   </table>
   <br>
@@ -159,5 +157,11 @@
   <br><br>
   <p align="center">Displayed: <%= numberShowed %></p>
 </div>
+
+WARNINGS:
+<OL>
+<%=warningString%>
+</OL>
+
 </body>
 </html>
