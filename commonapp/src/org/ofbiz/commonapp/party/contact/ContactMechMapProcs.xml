@@ -29,6 +29,45 @@
  * Created on January 18, 2001
  -->
 <simple-map-processors>
+  <!-- ContactMech map procs -->
+  <simple-map-processor name="createContactMech">
+    <process field="contactMechTypeId"><copy/><not-empty><fail-message message="Contact Mech Type ID is missing"/></not-empty></process>
+    <process field="infoString"><copy/><not-empty><fail-message message="Info String is missing"/></not-empty></process>
+  </simple-map-processor>
+  <simple-map-processor name="updateContactMech">
+    <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mechanism ID is missing"/></not-empty></process>
+  </simple-map-processor>
+  <simple-map-processor name="deleteContactMech">
+    <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mechanism ID is missing"/></not-empty></process>
+  </simple-map-processor>
+
+  <simple-map-processor name="postalAddress">
+    <process field="toName"><copy/></process>
+    <process field="attnName"><copy/></process>
+    <process field="address1"><copy/><not-empty><fail-message message="Address Line 1 is missing"/></not-empty></process>
+    <process field="address2"><copy/></process>
+    <process field="directions"><copy/></process>
+    <process field="city"><copy/><not-empty><fail-message message="City is missing"/></not-empty></process>
+    <process field="stateProvinceGeoId"><copy/><not-empty><fail-message message="State/Province is missing"/></not-empty></process>
+    <process field="postalCode"><copy/><not-empty><fail-message message="Zip/Postal Code is missing"/></not-empty></process>
+    <process field="countryGeoId"><copy/></process>
+    <process field="postalCodeGeoId"><copy/></process>
+  </simple-map-processor>
+
+  <simple-map-processor name="telecomNumber">
+    <process field="countryCode"><copy/></process>
+    <process field="areaCode"><copy/></process>
+    <process field="contactNumber"><copy/><not-empty><fail-message message="Contact Number is missing"/></not-empty></process>
+    <process field="extension"><copy/></process>
+  </simple-map-processor>
+  
+  <simple-map-processor name="emailAddress">
+    <process field="emailAddress">
+        <copy/>
+        <not-empty><fail-message message="Email Address is missing"/></not-empty>
+        <validate-method method="isEmail"><fail-message message="Email Address is not formatted correctly, must be like foo@bar.com"/></validate-method></process>
+  </simple-map-processor>
+  
   <!-- PartyContactMechPurpose map procs -->
   <simple-map-processor name="createPartyContactMechPurpose">
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>

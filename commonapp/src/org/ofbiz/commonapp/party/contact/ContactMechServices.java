@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/01/21 23:47:02  jonesde
+ * Finished first pass for cm purpose and cc info
+ *
  * Revision 1.1  2002/01/20 06:29:55  jonesde
  * Initial, incomplete pass at refactoring of party contact stuff with services, simple events, etc
  *
@@ -45,8 +48,8 @@ import org.ofbiz.core.service.*;
  * Created on January 18, 2001
  */
 public class ContactMechServices {
-    
     /** Creates a ContactMech
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -56,79 +59,67 @@ public class ContactMechServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp now = UtilDateTime.nowTimestamp();
+        Collection toBeStored = new LinkedList();
         
         String partyId = (String) context.get("partyId");
         if (partyId == null || partyId.length() == 0) {
             partyId = userLogin.getString("partyId");
         }
         
-        Timestamp now = UtilDateTime.nowTimestamp();
-      /*
-        Collection toBeStored = new LinkedList();
+        //partyId might be null, so check it
+        if (partyId == null || partyId.length() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Party ID missing, cannot delete contact mechanism");
+            return result;
+        }
+        
+        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
+        if (!partyId.equals(userLogin.getString("partyId"))) {
+            if (!security.hasEntityPermission("PARTYMGR", "_CREATE", userLogin)) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to delete contact mech for this partyId");
+                return result;
+            }
+        }
 
-        String contactMechTypeId = request.getParameter("CONTACT_MECH_TYPE_ID");
-        if(contactMechTypeId == null) { errMsg = "<li>ERROR: Could not create new contact info, type not specified. Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
+        String contactMechTypeId = (String) context.get("contactMechTypeId");
+        //String contactMechTypeId = "POSTAL_ADDRESS";
+        //String contactMechTypeId = "TELECOM_NUMBER";
+        //String contactMechTypeId = "EMAIL_ADDRESS";
 
-        Long newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new contact info (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
+        Long newCmId = delegator.getNextSeqId("ContactMech"); 
+        if(newCmId == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create contact info (id generation failure)");
+            return result;
+        }
+        
         GenericValue tempContactMech = delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", contactMechTypeId));
         toBeStored.add(tempContactMech);
 
-        String allowSolicitation = request.getParameter("CM_ALLOW_SOL");
-        String extension = request.getParameter("CM_EXTENSION");
-        toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", allowSolicitation, "extension", extension)));
-
-        String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
-        if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0)
-            toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", now)));
+        toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), 
+                "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", context.get("allowSolicitation"), "extension", context.get("extension"))));
 
         if("POSTAL_ADDRESS".equals(contactMechTypeId)) {
-            String toName = request.getParameter("CM_TO_NAME");
-            String attnName = request.getParameter("CM_ATTN_NAME");
-            String address1 = request.getParameter("CM_ADDRESS1");
-            String address2 = request.getParameter("CM_ADDRESS2");
-            String city = request.getParameter("CM_CITY");
-            String state = request.getParameter("CM_STATE");
-            String postalCode = request.getParameter("CM_POSTAL_CODE");
-            String country = request.getParameter("CM_COUNTRY");
-            String directions = "";
-
-            if(!UtilValidate.isNotEmpty(address1)) errMsg += "<li>Address Line 1 missing.";
-            if(!UtilValidate.isNotEmpty(city)) errMsg += "<li>City missing.";
-            if(!UtilValidate.isNotEmpty(state)) errMsg += "<li>State missing.";
-            if(!UtilValidate.isNotEmpty(postalCode)) errMsg += "<li>Zip/Postal Code missing.";
-            if(errMsg.length() > 0) {
-                errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
-                return "error";
-            }
-
             GenericValue newAddr = delegator.makeValue("PostalAddress", null);
             newAddr.set("contactMechId", newCmId.toString());
-            newAddr.set("toName", toName);
-            newAddr.set("attnName", attnName);
-            newAddr.set("address1", address1);
-            newAddr.set("address2", address2);
-            newAddr.set("directions", directions);
-            newAddr.set("city", city);
-            newAddr.set("postalCode", postalCode);
-            newAddr.set("stateProvinceGeoId", state);
-            newAddr.set("countryGeoId", country);
-            //newAddr.set("postalCodeGeoId", postalCodeGeoId);
+            newAddr.set("toName", context.get("toName"));
+            newAddr.set("attnName", context.get("attnName"));
+            newAddr.set("address1", context.get("address1"));
+            newAddr.set("address2", context.get("address2"));
+            newAddr.set("directions", context.get("directions"));
+            newAddr.set("city", context.get("city"));
+            newAddr.set("postalCode", context.get("postalCode"));
+            newAddr.set("stateProvinceGeoId", context.get("stateProvinceGeoId"));
+            newAddr.set("countryGeoId", context.get("countryGeoId"));
+            newAddr.set("postalCodeGeoId", context.get("postalCodeGeoId"));
             toBeStored.add(newAddr);
         } else if("TELECOM_NUMBER".equals(contactMechTypeId)) {
-            String countryCode = request.getParameter("CM_COUNTRY_CODE");
-            String areaCode = request.getParameter("CM_AREA_CODE");
-            String contactNumber = request.getParameter("CM_CONTACT_NUMBER");
-            toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", countryCode, "areaCode", areaCode, "contactNumber", contactNumber)));
+            toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), 
+                    "countryCode", context.get("countryCode"), "areaCode", context.get("areaCode"), "contactNumber", context.get("contactNumber"))));
         } else if("EMAIL_ADDRESS".equals(contactMechTypeId)) {
-            String infoString = request.getParameter("CM_INFO_STRING");
-            if(!UtilValidate.isEmail(infoString)) errMsg += "<li>" + UtilValidate.isEmailMsg;
-            if(errMsg.length() > 0) {
-                errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
-                return "error";
-            }
-            tempContactMech.set("infoString", infoString);
+            tempContactMech.set("infoString", context.get("emailAddress"));
 
             String cmPurposeTypeId;
             try {
@@ -143,24 +134,25 @@ public class ContactMechServices {
                 Debug.logWarning(e.getMessage());
             }
         } else {
-            String infoString = request.getParameter("CM_INFO_STRING");
-            tempContactMech.set("infoString", infoString);
+            tempContactMech.set("infoString", context.get("infoString"));
         }
 
         try { 
             delegator.storeAll(toBeStored);
         } catch(GenericEntityException e) {
-            errMsg = "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.";
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
-            return "error";
+            Debug.logWarning(e.toString());
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Could not create contact info (write failure): " + e.getMessage());
+            return result;
         }
-        request.setAttribute("CONTACT_MECH_ID", newCmId.toString());
-        return "success";
-       */
-        return null;
+
+        result.put("contactMechId", newCmId.toString());
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
     }
 
     /** Updates a ContactMech
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -170,20 +162,39 @@ public class ContactMechServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp now = UtilDateTime.nowTimestamp();
+        Collection toBeStored = new LinkedList();
+        boolean isModified = false;
         
         String partyId = (String) context.get("partyId");
         if (partyId == null || partyId.length() == 0) {
             partyId = userLogin.getString("partyId");
         }
         
-        Timestamp now = UtilDateTime.nowTimestamp();
-      /*
-        Collection toBeStored = new LinkedList();
+        //partyId might be null, so check it
+        if (partyId == null || partyId.length() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Party ID missing, cannot delete contact mechanism");
+            return result;
+        }
+        
+        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
+        if (!partyId.equals(userLogin.getString("partyId"))) {
+            if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", userLogin)) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to delete contact mech for this partyId");
+                return result;
+            }
+        }
 
-        boolean isModified = false;
-        Long newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not change contact info (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
+        Long newCmId = delegator.getNextSeqId("ContactMech"); 
+        if(newCmId == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change contact info (id generation failure)");
+            return result;
+        }
 
-        String contactMechId = request.getParameter("CONTACT_MECH_ID");
+        String contactMechId = (String) context.get("contactMechId");
         GenericValue contactMech = null;
         GenericValue partyContactMech = null;
         try {
@@ -191,18 +202,20 @@ public class ContactMechServices {
             //try to find a PartyContactMech with a valid date range
             Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), null));
             partyContactMech = EntityUtil.getOnly(partyContactMechs);
-        } catch(GenericEntityException e) {
-            Debug.logWarning(e.getMessage()); contactMech = null; partyContactMech = null;
-        } catch(IllegalArgumentException e) {
-            Debug.logWarning(e.getMessage()); partyContactMech = null;
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage());
+            contactMech = null;
+            partyContactMech = null;
         }
-        if(contactMech == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not find specified contact info (read error). Please contact customer service.");
-            return "error";
+        if (contactMech == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not find specified contact info (read error)");
+            return result;
         }
-        if(partyContactMech == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Logged in user cannot update specified contact info because it does not belong to the user. Please contact customer service.");
-            return "error";
+        if (partyContactMech == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Cannot update specified contact info because it does not correspond to the specified party");
+            return result;
         }
         toBeStored.add(partyContactMech);
 
@@ -212,79 +225,53 @@ public class ContactMechServices {
         GenericValue relatedEntityToSet = null;
 
         if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
-            String toName = request.getParameter("CM_TO_NAME");
-            String attnName = request.getParameter("CM_ATTN_NAME");
-            String address1 = request.getParameter("CM_ADDRESS1");
-            String address2 = request.getParameter("CM_ADDRESS2");
-            String city = request.getParameter("CM_CITY");
-            String state = request.getParameter("CM_STATE");
-            String postalCode = request.getParameter("CM_POSTAL_CODE");
-            String country = request.getParameter("CM_COUNTRY");
-            String directions = "";
-
-            if(!UtilValidate.isNotEmpty(address1)) errMsg += "<li>Address Line 1 missing.";
-            if(!UtilValidate.isNotEmpty(city)) errMsg += "<li>City missing.";
-            if(!UtilValidate.isNotEmpty(state)) errMsg += "<li>State missing.";
-            if(!UtilValidate.isNotEmpty(postalCode)) errMsg += "<li>Zip/Postal Code missing.";
-            if(errMsg.length() > 0) {
-                errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
-                return "error";
-            }
-
             GenericValue addr = null;
-            try { addr = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", contactMechId)); }
-            catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); addr = null; }
+            try {
+                addr = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", contactMechId));
+            } catch(GenericEntityException e) {
+                Debug.logWarning(e.toString());
+                addr = null;
+            }
             relatedEntityToSet = new GenericValue(addr);
-            relatedEntityToSet.set("toName", toName);
-            relatedEntityToSet.set("attnName", attnName);
-            relatedEntityToSet.set("address1", address1);
-            relatedEntityToSet.set("address2", address2);
-            relatedEntityToSet.set("directions", directions);
-            relatedEntityToSet.set("city", city);
-            relatedEntityToSet.set("postalCode", postalCode);
-            relatedEntityToSet.set("stateProvinceGeoId", state);
-            relatedEntityToSet.set("countryGeoId", country);
-            //relatedEntityToSet.set("postalCodeGeoId", postalCodeGeoId);
+            relatedEntityToSet.set("toName", context.get("toName"));
+            relatedEntityToSet.set("attnName", context.get("attnName"));
+            relatedEntityToSet.set("address1", context.get("address1"));
+            relatedEntityToSet.set("address2", context.get("address2"));
+            relatedEntityToSet.set("directions", context.get("directions"));
+            relatedEntityToSet.set("city", context.get("city"));
+            relatedEntityToSet.set("postalCode", context.get("postalCode"));
+            relatedEntityToSet.set("stateProvinceGeoId", context.get("stateProvinceGeoId"));
+            relatedEntityToSet.set("countryGeoId", context.get("countryGeoId"));
+            relatedEntityToSet.set("postalCodeGeoId", context.get("postalCodeGeoId"));
             if(addr == null || !relatedEntityToSet.equals(addr)) {
                 isModified = true;
             }
             relatedEntityToSet.set("contactMechId", newCmId.toString());
         } else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {
-            String countryCode = request.getParameter("CM_COUNTRY_CODE");
-            String areaCode = request.getParameter("CM_AREA_CODE");
-            String contactNumber = request.getParameter("CM_CONTACT_NUMBER");
-            String extension = request.getParameter("CM_EXTENSION");
-
             GenericValue telNum = null;
-            try { telNum = delegator.findByPrimaryKey("TelecomNumber", UtilMisc.toMap("contactMechId", contactMechId)); }
-            catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); telNum = null; }
+            try { 
+                telNum = delegator.findByPrimaryKey("TelecomNumber", UtilMisc.toMap("contactMechId", contactMechId));
+            } catch(GenericEntityException e) {
+                Debug.logWarning(e.toString());
+                telNum = null;
+            }
             relatedEntityToSet = new GenericValue(telNum);
-            relatedEntityToSet.set("countryCode", countryCode);
-            relatedEntityToSet.set("areaCode", areaCode);
-            relatedEntityToSet.set("contactNumber", contactNumber);
+            relatedEntityToSet.set("countryCode", context.get("countryCode"));
+            relatedEntityToSet.set("areaCode", context.get("areaCode"));
+            relatedEntityToSet.set("contactNumber", context.get("contactNumber"));
 
             if(telNum == null || !relatedEntityToSet.equals(telNum)) {
                 isModified = true;
             }
             relatedEntityToSet.set("contactMechId", newCmId.toString());
-            newPartyContactMech.set("extension", extension);
-        }  else if("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
-            String infoString = request.getParameter("CM_INFO_STRING");
-            if(!UtilValidate.isEmail(infoString)) errMsg += "<li>" + UtilValidate.isEmailMsg;
-            if(errMsg.length() > 0) {
-                errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
-                return "error";
-            }
-            newContactMech.set("infoString", infoString);
+            newPartyContactMech.set("extension", context.get("extension"));
+        } else if("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
+            newContactMech.set("infoString", context.get("emailAddress"));
         } else {
-            String infoString = request.getParameter("CM_INFO_STRING");
-            newContactMech.set("infoString", infoString);
+            newContactMech.set("infoString", context.get("infoString"));
         }
 
-        String allowSolicitation = request.getParameter("CM_ALLOW_SOL");
-        newPartyContactMech.set("allowSolicitation", allowSolicitation);
+        newPartyContactMech.set("allowSolicitation", context.get("allowSolicitation"));
 
         if(!newContactMech.equals(contactMech)) isModified = true;
         if(!newPartyContactMech.equals(partyContactMech)) isModified = true;
@@ -308,50 +295,34 @@ public class ContactMechServices {
                     toBeStored.add(tempVal);
                 }
             } catch(GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
-                return "error";
-            }
-
-            String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
-            if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0) {
-                toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", now)));
+                Debug.logWarning(e.toString());
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change contact info (read purpose failure): " + e.getMessage());
+                return result;
             }
 
             partyContactMech.set("thruDate", now);
             try { 
                 delegator.storeAll(toBeStored);
             } catch(GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
-                return "error";
+                Debug.logWarning(e.toString());
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change contact info (write failure): " + e.getMessage());
+                return result;
             }
-            request.setAttribute("CONTACT_MECH_ID", newCmId.toString());
         } else {
-            String cmId = contactMech.getString("contactMechId");
-            String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
-            if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0) {
-                try {
-                    if(delegator.create("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", cmId, "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", now)) == null) {
-                        request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
-                        return "error";
-                    }
-                }
-                catch(GenericEntityException e) {
-                    Debug.logWarning(e.getMessage());
-                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
-                    return "error";
-                }
-            }
-            request.setAttribute("CONTACT_MECH_ID", cmId);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating contact mechanism");
+            return result;
         }
 
-        return "success";
-       */
-        return null;
+        result.put("newContactMechId", newCmId.toString());
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
     }
     
     /** Deletes a ContactMech
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_DELETE permission
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
@@ -361,41 +332,61 @@ public class ContactMechServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp now = UtilDateTime.nowTimestamp();
         
         String partyId = (String) context.get("partyId");
         if (partyId == null || partyId.length() == 0) {
             partyId = userLogin.getString("partyId");
         }
         
-        Timestamp now = UtilDateTime.nowTimestamp();
-      /*
+        //partyId might be null, so check it
+        if (partyId == null || partyId.length() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Party ID missing, cannot delete contact mechanism");
+            return result;
+        }
+        
+        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_DELETE permission
+        if (!partyId.equals(userLogin.getString("partyId"))) {
+            if (!security.hasEntityPermission("PARTYMGR", "_DELETE", userLogin)) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to delete contact mech for this partyId");
+                return result;
+            }
+        }
+
         //never delete a contact mechanism, just put a to date on the link to the party
-        String contactMechId = request.getParameter("CONTACT_MECH_ID");
+        String contactMechId = (String) context.get("contactMechId");
         GenericValue partyContactMech = null;
         try {
             //try to find a PartyContactMech with a valid date range
             Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), null));
             partyContactMech = EntityUtil.getOnly(partyContactMechs);
         } catch(GenericEntityException e) {
-            Debug.logWarning(e.getMessage()); partyContactMech = null;
-        } catch(IllegalArgumentException e) {
-            Debug.logWarning(e.getMessage()); partyContactMech = null;
+            Debug.logWarning(e.toString());
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Could not delete contact info (read failure): " + e.getMessage());
+            return result;
         }
+        
         if(partyContactMech == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not delete contact info (read failure or not found: party-contact mech) . Please contact customer service.");
-            return "error";
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Could not delete contact info (party contact mech not found)");
+            return result;
         }
+
         partyContactMech.set("thruDate", UtilDateTime.nowTimestamp());
         try {
             partyContactMech.store();
         } catch(GenericEntityException e) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not delete contact info (write failure) . Please contact customer service.");
-            return "error";
+            Debug.logWarning(e.toString());
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Could not delete contact info (write failure)");
+            return result;
         }
 
-        return "success";
-       */
-        return null;
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
     }
     
     /** Creates a PartyContactMechPurpose
@@ -465,8 +456,8 @@ public class ContactMechServices {
             }
         }
 
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         result.put("fromDate", fromDate);
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
     
