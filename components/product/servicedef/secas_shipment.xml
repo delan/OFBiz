@@ -6,7 +6,7 @@
 	<eca service="updateShipment" event="commit">
         <condition-field field-name="statusId" operator="not-equals" to-field-name="oldStatusId"/>
 		<condition field-name="statusId" operator="equals" value="SHIPMENT_PACKED"/>
-		<action service="createInvoicesFromShipment" mode="async"/>
+		<action service="createInvoicesFromShipment" mode="sync"/>
 	</eca>
 
 	<!-- if new statusId is SHIPMENT_SCHEDULED, send notification -->
