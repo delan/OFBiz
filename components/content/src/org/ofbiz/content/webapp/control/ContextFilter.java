@@ -1,5 +1,5 @@
 /*
- * $Id: ContextFilter.java,v 1.1 2003/08/17 08:40:12 ajzeneski Exp $
+ * $Id: ContextFilter.java,v 1.2 2003/08/20 18:42:06 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.ofbiz.service.WebAppDispatcher;
  * ContextFilter - Restricts access to raw files and configures servlet objects.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ContextFilter implements Filter {
@@ -78,6 +78,8 @@ public class ContextFilter implements Filter {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());        
         
+        // check the serverId
+        getServerId();
         // initialize the delegator
         getDelegator();
         // initialize security
@@ -321,5 +323,14 @@ public class ContextFilter implements Filter {
             }
         }
         return webSiteId;
-    }    
+    }
+    
+    protected String getServerId() {
+        String serverId = (String) config.getServletContext().getAttribute("_serverId");
+        if (serverId == null) {
+            serverId = config.getServletContext().getInitParameter("ofbizServerName");
+            config.getServletContext().setAttribute("_serverId", serverId);
+        }
+        return serverId;
+    }
 }
