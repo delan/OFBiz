@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-menu.xsd">
+  
+  <menu name="blogmenu" default-title-style="tabButton"
+        default-selected-style="tabButtonSelected"
+        default-menu-item-name="all"
+        orientation="horizontal"
+        menu-width="100%"
+        default-tooltip-style="tabletext" default-widget-style="tabButton"
+        menu-wrapper-style="blogmenuwrapper"
+        title="" type="simple">
+        <menu-item name="BLOGROOTJAZ" title="Andy's Blog" >
+            <link target="MainBlog?contentContentId=BLOGROOTJAZ&amp;currentMenuItemName=BLOGROOTJAZ" target-window="_top" style="tabButton" />
+        </menu-item>
+        <menu-item name="BLOGROOTJONES" title="David's Blog" >
+            <link target="MainBlog?contentContentId=BLOGROOTJONES&amp;currentMenuItemName=BLOGROOTJONES" target-window="_top" style="tabButton" />
+        </menu-item>
+        <menu-item name="all" title="All" >
+            <link target="MainBlog?contentContentId=BLOGROOTJAZ|BLOGROOTJONES&amp;currentMenuItemName=all" target-window="_top" style="tabButton" />
+        </menu-item>
+  </menu>
+  <menu name="view_edit" default-title-style="tabButton"
+        default-selected-style="tabButtonSelected"
+        default-menu-item-name="all"
+        orientation="horizontal"
+        menu-width="100%"
+        default-tooltip-style="tabletext" default-widget-style="tabButton"
+        menu-wrapper-style="blogmenuwrapper"
+        title="" type="simple">
+        <menu-item name="view" title="View" >
+                      <link  text="View" target="ViewBlog?articleContentId=${blog.contentId}&amp;ownerContentId=${blog.ownerContentId}" style="tabButton" />
+        </menu-item>
+        <menu-item name="edit" title="Edit" >
+          <condition>
+            <if-entity-permission entity-id="${blog.contentId}" entity-name="Content" target-operation="CONTENT_UPDATE"/>
+          </condition>
+                      <link  text="Edit" target="EditBlog?contentId=${blog.contentId}&amp;caContentIdTo=${blog.caContentIdTo}&amp;caContentAssocTypeId=${blog.caContentAssocTypeId}&amp;caFromDate=${blog.caFromDate}&amp;drDataResourceId=${blog.dataResourceId}" style="tabButton" />
+        </menu-item>
+  </menu>
+</menus>

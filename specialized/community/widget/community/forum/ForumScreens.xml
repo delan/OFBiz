@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+
+  <screen name="CommonForum">
+    <section>
+	  <actions>
+		    <set field="currentForumMenuItemName" from-field="currentForumMenuItemName" default-value="all" from-scope="user"/>
+      </actions>
+      <widgets>
+            <decorator-screen name="main" location="component://community/widget/community/MainCommon.xml" >
+              <decorator-section name="body">
+                <container style="forumhr">
+                <label text="Forums: " style="forumtitle"/>
+                <container style="appbarleft">
+                  <include-menu name="forummenu" location="component://community/widget/community/forum/ForumMenus.xml" />
+                </container>
+                </container>
+                <decorator-section-include name="body" />
+              </decorator-section>
+            </decorator-screen>
+      </widgets>
+    </section>
+  </screen>
+  <screen name="MainForum">
+		<section>
+		<actions>
+		  <set field="currentForumMenuItemName" from-field="parameters.currentForumMenuItemName" default-value="all" to-scope="user"/>
+		  <set field="currentForumMenuItemName" from-field="parameters.currentForumMenuItemName" default-value="all" to-scope="screen"/>
+		  <set  field="forumId" from-field="parameters.contentContentId" />
+		  <set  field="contentId" from-field="parameters.contentContentId" />
+		  <set  field="ownerContentId" from-field="forumId" />
+		  <property-to-field property="root.publish.point.forum" field="defaultWebPubPt" resource="blog"/>
+		  
+		           <entity-condition entity-name="ContentAssocViewFrom" use-cache="false"  list-name="forumResponseList" >
+                    <order-by field-name="caFromDate DESC"/>
+                   <condition-list combine="and">
+                        <condition-expr field-name="caContentIdTo" operator="in" env-name="forumId" />
+                        <condition-expr field-name="caContentAssocTypeId" operator="equals" value="RESPONSE" />
+                        <condition-expr field-name="caThruDate" operator="equals" value=""/>
+                   </condition-list> 
+                   </entity-condition>
+        
+		</actions>
+          <widgets>
+            <decorator-screen name="CommonForum" >
+              <decorator-section name="body">
+                <iterate-section list-name="forumResponseList" entry-name="forumResponse" view-size="20" paginate="true"
+                    paginate-target="MainForum?contentId=${contentId}&amp;currentForumMenuItemName=${currentForumMenuItemName}">
+                  <section >                    
+                    <widgets>
+                      <label text="${forumResponse.contentName}[${forumResponse.contentId}]" style="responseheader" />
+                        <link  text="View" target="ViewForumResponse?forumId=${forumId}&amp;threadContentId=${forumResponse.contentId}&amp;contentId=${forumResponse.contentId}" style="tabButton"/>
+                      <container style="responsetext">
+                        <label text="${rsp.description}" style="responsetext" />
+                      </container>
+                    </widgets>
+                  </section>                    
+                </iterate-section>
+                <include-screen name="AddForumResponse" />
+              </decorator-section>
+            </decorator-screen>
+          </widgets>
+		</section>
+	</screen>
+    <screen name="ViewForumResponse">
+		<section>
+		<actions>
+		  <set  field="contentId" from-field="parameters.contentId" />
+		  <set  field="responseContentId" from-field="parameters.contentId" />
+		  <set  field="threadContentId" from-field="parameters.threadContentId" default-value="${contentId}" />
+		  <set  field="forumId" from-field="parameters.forumId" />
+		    <entity-one entity-name="Content" value-name="content" use-cache="true">
+              <field-map field-name="contentId" env-name="contentId"/>
+            </entity-one>
+		  <set  field="ownerContentId" from-field="content.ownerContentId" default-value="${forumId}" />
+		  <set  field="trail" from-field="threadContentId" />
+			<set field="enableEdit" value="false"/>
+			<property-to-field property="root.publish.point.forum" field="webPutPt" resource="blog"/>
+          <set field="rsp.contentName" value="${content.contentName}" />
+		</actions>
+          <widgets>
+            <decorator-screen name="CommonForum" >
+              <decorator-section name="body">
+                <label text="&lt;p/&gt;" />
+                <container style="forumhr">
+                <label text="${content.contentName}" style="forumtitle" />
+                </container>
+                <container style="forumcontentwrapper">
+                <content content-id="${contentId}"/>
+                </container>
+                <label text="&lt;p/&gt;" />
+                
+                <section>
+                  <condition>
+                    <if-compare field-name="content.statusId" operator="equals" value="BLOG_PUBLISHED" />
+                  </condition>
+                  <widgets>
+                    <include-screen name="AddForumResponse" />
+                  </widgets>
+                </section>
+                
+                <section>
+                  <condition>
+                    <if-compare field-name="content.statusId" operator="equals" value="BLOG_DRAFT"/>
+                  </condition>
+                  <widgets>
+                    <include-screen name="EditForumResponse" />
+                  </widgets>
+                </section>
+                
+                <label text="&lt;p/&gt;" />
+                <container style="forumhr">
+                <label text="Response tree: " style="forumtitle"/>
+                </container>
+                <include-tree  name="ForumResponseTree" location="component://community/widget/community/forum/ForumTrees.xml"/>
+              </decorator-section>
+            </decorator-screen>
+          </widgets>
+		</section>
+	</screen>
+  <screen name="responseTreeLine">
+    <section>
+        <widgets>
+          <section>
+             <condition>
+                <if-compare-field field-name="responseContentId" operator="not-equals" to-field-name="rsp.contentId" />
+             </condition>
+             <widgets>
+              <container>
+                      <label text="${rsp.contentName}[${rsp.contentId}]" style="responseheader" />
+                        <link  text="View" target="ViewForumResponse?contentId=${rsp.contentId}&amp;threadContentId=${threadContentId}&amp;forumId=${forumId}" style="tabButton"/>
+                      <container style="responsetext">
+                        <label text="${rsp.description}" style="responsetext" />
+                      </container>
+              </container>    
+             </widgets>
+          </section>
+          <section>
+             <condition>
+                <if-compare-field field-name="responseContentId" operator="equals" to-field-name="rsp.contentId" />
+             </condition>
+             <widgets>
+              <container style="responseSelected">
+                      <label text="${rsp.contentName}[${rsp.contentId}]" style="responseheader" />
+                        <link  text="View" target="ViewForumResponse?contentId=${rsp.contentId}&amp;threadContentId=${threadContentId}&amp;forumId=${forumId}" style="tabButton"/>
+                      <container style="responsetext">
+                        <label text="${rsp.description}" style="responsetext" />
+                      </container>
+              </container>    
+             </widgets>
+          </section>
+        </widgets>
+    </section>
+  </screen>
+    <screen name="AddForumResponse">
+		<section>
+        <condition>
+          <if-entity-permission entity-id="${ownerContentId}" entity-name="Content" target-operation="HAS_USER_ROLE"/>
+        </condition>
+		<actions>
+		  <set field="rsp.contentTypeId" value="DOCUMENT"/>
+		  <set field="rsp.caContentAssocTypeId" value="RESPONSE"/>
+		  <set field="rsp.drDataResourceTypeId" value="ELECTRONIC_TEXT"/>
+		  <set  field="rsp.caContentIdTo" from-field="contentId" />
+		  <set  field="rsp.forumId" from-field="forumId" />
+		  <set  field="rsp.threadContentId" from-field="threadContentId" />
+		  <set  field="rsp.contentId" value="" />
+		  <set  field="rsp.ownerContentId" from-field="ownerContentId" />
+		</actions>
+          <widgets>
+                <container style="forumhr">
+                <label text="Respond: " style="forumtitle"/>
+                </container>
+                <include-form name="AddForumResponse" location="component://community/widget/community/forum/ForumForms.xml" />
+          </widgets>
+          <fail-widgets>
+            <label text="You must subscribe in order to post comments."/>
+          </fail-widgets>
+		</section>
+	</screen>
+    <screen name="EditForumResponse">
+		<section>
+        <condition>
+          <if-entity-permission entity-id="${ownerContentId}" entity-name="Content" target-operation="CHILD_CREATE"/>
+        </condition>
+		<actions>
+		  <set  field="rsp.forumId" from-field="forumId" />
+		    <entity-one entity-name="DataResource" value-name="dataResource" use-cache="false">
+                        <field-map field-name="dataResourceId" env-name="content.dataResourceId"/>
+            </entity-one>
+		    <entity-one entity-name="ElectronicText" value-name="electronicText" use-cache="false">
+                        <field-map field-name="dataResourceId" env-name="content.dataResourceId"/>
+            </entity-one>
+		</actions>
+          <widgets>
+                <container style="forumhr">
+                        <label text="Edit this response: " style="forumtitle"/>
+                </container>
+                <include-form name="EditForumResponse" location="component://community/widget/community/forum/ForumForms.xml" />
+          </widgets>
+          <fail-widgets>
+            <label text="You must subscribe in order to post comments."/>
+          </fail-widgets>
+		</section>
+	</screen>
+</screens>
+
+

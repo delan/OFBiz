@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+
+    <form name="findBlogContent" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        default-entity-name="ContentAssocDataResourceViewFrom"
+        target="CMSContentFind" title="" type="single">
+        <field name="caContentIdTo" title="Publish-to content" >
+            <drop-down>
+               <option key="OFBIZBLOGROOT" description="Blogs"/> 
+               <option key="OFBIZFORUMROOT" description="Forums"/> 
+            </drop-down>
+        </field>
+        <field name="caMapKey" title="Map Key" ><text-find/></field>
+        <field name="caContentAssocTypeId" title="Assoc Type Id" ><text-find/></field>
+        <field name="caFromDate" title="From Date" ><date-find/></field>
+        <field name="contentId" title="Content Id" ><text-find/></field>
+        <field name="dataResourceId" title="Data Resource Id" ><text-find/></field>
+        <field name="contentName" title="Name" ><text-find/></field>
+        <field name="submitButton" title="Find" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="createBlog" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="New Blog"  target="EditBlogArticle"/>
+        </field>
+        <field name="createForum" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="New Forum"  target="EditForumArticle"/>
+        </field>
+
+    </form>
+
+    <form name="listFindBlogContent" type="list" target="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" paginate-target="/CMSContentFind" view-size="20">
+        <actions>
+            <service service-name="performFind" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+    
+        <field name="editContent" title="">
+            <hyperlink also-hidden="false" description="Edit" target="CMSContentEdit?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}&amp;contentIdTo=${contentIdTo}"/> 
+        </field>
+        <field name="contentId" title="Content Id" ><display/></field>
+        <field name="dataResourceId" title="Data Resource Id" ><display/></field>
+        <field name="contentName" title="Name" ><display/></field>
+    </form>
+
+    <form name="AddBlogResponse" target="persistBlogResponse" title="" type="single"
+        default-title-style="treeHeader"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <sort-order>
+            <sort-field name="contentName"/>
+            <sort-field name="description"/>
+            <sort-field name="textData"/>
+            <sort-field name="statusId"/>
+            <sort-field name="submitButton"/>
+        </sort-order>
+      <auto-fields-entity entity-name="ContentAssocDataResourceViewFrom" default-field-type="hidden"  />
+        <field name="contentName" title="Short title" entry-name="contentName" map-name="rsp">
+          <text size="40"/>
+        </field>
+        <field name="description" title="Slightly longer title (250 chars max)">
+          <textarea cols="40" rows="6"/>
+        </field>
+        <field name="contentId" entry-name="contentId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="articleContentId" entry-name="articleContentId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="ownerContentId" entry-name="ownerContentId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="caContentIdTo" entry-name="caContentIdTo" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="contentContentId" entry-name="caContentIdTo" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="contentTypeId" entry-name="contentTypeId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="drDataResourceTypeId" entry-name="drDataResourceTypeId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="caContentAssocTypeId" entry-name="caContentAssocTypeId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="textData" title="Response" >
+            <textarea cols="60" rows="12"/>
+        </field>
+        <field name="statusId" >
+           <radio no-current-selected-key="BLOG_DRAFT">
+             <option key="BLOG_PUBLISHED" description="POST"/>
+             <option key="BLOG_DRAFT" description="PREVIEW"/>
+           </radio> 
+        </field>
+        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+       <field name="deactivateExisting" >
+                <hidden value="false"/>
+        </field>
+       <field name="contentPurposeString" >
+                <hidden value="RESPONSE"/>
+        </field>
+    </form>
+    <form name="EditBlogResponse" target="persistBlogResponse" title="" type="single"
+        default-title-style="treeHeader"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <sort-order>
+            <sort-field name="contentId"/>
+            <sort-field name="contentName"/>
+            <sort-field name="description"/>
+            <sort-field name="textData"/>
+            <sort-field name="statusId"/>
+            <sort-field name="submitButton"/>
+        </sort-order>
+      <auto-fields-entity entity-name="Content" default-field-type="hidden"  map-name="content" />
+      <auto-fields-entity entity-name="DataResource" default-field-type="hidden"  map-name="dataResource" />
+        <field name="contentName" title="Short title" entry-name="contentName" map-name="rsp">
+          <text size="40"/>
+        </field>
+        <field name="description" title="Slightly longer title (250 chars max)">
+          <textarea cols="40" rows="6"/>
+        </field>
+        <field name="contentId" entry-name="contentId" map-name="content">
+          <display/>
+        </field>
+        <field name="articleContentId" entry-name="articleContentId" map-name="rsp">
+          <hidden/>
+        </field>
+        <field name="textData" title="Response" map-name="electronicText">
+            <textarea cols="60" rows="12"/>
+        </field>
+        <field name="statusId" >
+           <radio no-current-selected-key="BLOG_DRAFT">
+             <option key="BLOG_PUBLISHED" description="POST"/>
+             <option key="BLOG_DRAFT" description="PREVIEW"/>
+           </radio> 
+        </field>
+        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+       <field name="deactivateExisting" >
+                <hidden value="true"/>
+        </field>
+       <field name="contentPurposeString" >
+                <hidden value="RESPONSE"/>
+        </field>
+    </form>
+    <form name="EditBlogAll" target="persistBlogAll" title="" type="upload"
+        default-title-style="treeHeader"
+        skip-end="true"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <sort-order>
+            <sort-field name="contentId"/>
+            <sort-field name="contentName"/>
+            <sort-field name="description"/>
+            <sort-field name="summaryData"/>
+            <sort-field name="textData"/>
+            <sort-field name="statusId"/>
+            <sort-field name="submitButton"/>
+        </sort-order>
+      <auto-fields-entity entity-name="ContentAssocDataResourceViewFrom" default-field-type="hidden"  map-name="view" />
+        <field name="contentName" title="Short title" map-name="view" >
+          <text size="40"/>
+        </field>
+        <field name="description" title="Slightly longer title (250 chars max)" map-name="view" >
+          <textarea cols="40" rows="2"/>
+        </field>
+        <field name="contentId" map-name="view" >
+          <display/>
+        </field>
+        <field name="summaryData" title="Summary" entry-name="textData" map-name="summaryText">
+            <textarea cols="60" rows="4"/>
+        </field>
+        <!--
+        <field name="textData" title="Article" map-name="electronicText">
+            <textarea cols="60" rows="12"/>
+        </field>
+            -->
+        <field name="statusId" >
+           <radio no-current-selected-key="BLOG_DRAFT">
+             <option key="BLOG_PUBLISHED" description="POST"/>
+             <option key="BLOG_DRAFT" description="PREVIEW"/>
+           </radio> 
+        </field>
+       <field name="deactivateExisting" >
+                <hidden value="true"/>
+        </field>
+       <field name="contentPurposeString" >
+                <hidden value="ARTICLE"/>
+        </field>
+    </form>
+    
+    <form name="editFormSubmit" target="" title="" type="single"
+        default-title-style="treeHeader"
+        skip-start="true"
+        skip-end="true"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
+        <field name="submitButton" title="Submit" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="editFormEnd" target="" title="" type="single"
+        default-title-style="treeHeader"
+        skip-start="true"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
+    </form>
+    
+</forms>

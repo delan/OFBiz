@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/service-eca.xsd">
+
+    <!-- Resequence eca -->
+    <eca service="createContentAssoc" event="return">  
+    	<condition field-name="sequenceNum" operator="is-not-empty" />  	
+    	<condition field-name="contentAssocTypeId" operator="equals" value="SUB_CONTENT"/>  	
+        <action service="resequence" mode="sync"/>
+    </eca>
+    <eca service="updateContentAssoc" event="return">  
+    	<condition field-name="sequenceNum" operator="is-not-empty" />  	
+    	<condition field-name="contentAssocTypeId" operator="equals" value="SUB_CONTENT"/>  	
+        <action service="resequence" mode="sync"/>
+    </eca>
+
+    <!-- stats eca -->
+    <eca service="createContentAssoc" event="return">  
+    	<condition field-name="contentAssocTypeId" operator="equals" value="SUB_CONTENT"/>  	
+        <action service="incrementContentChildStats" mode="sync"/>
+    </eca>
+    <eca service="createContentAssoc" event="return">  
+    	<condition field-name="contentAssocTypeId" operator="equals" value="RESPONSE"/>  	
+        <action service="incrementContentChildStats" mode="sync"/>
+    </eca>
+    <eca service="deactivateContentAssoc" event="return">  
+    	<condition field-name="contentAssocTypeId" operator="equals" value="SUB_CONTENT"/>  	
+        <action service="decrementContentChildStats" mode="sync"/>
+        <action service="clearContentAssocViewCache" mode="sync"/>
+    </eca>
+
+    <eca service="updatePageType" event="return">  
+        <action service="clearContentAssocViewCache" mode="sync"/>
+    </eca>
+
+    <eca service="resetToOutlineMode" event="return">  
+        <action service="clearContentAssocViewCache" mode="sync"/>
+    </eca>
+
+    <!-- validity eca -->
+    <!--
+    <eca service="createContentAssoc" event="return">  
+    	<condition field-name="contentAssocTypeId" operator="equals" value="SUB_CONTENT"/>  	
+        <action service="changeLeafToNode" mode="sync"/>
+    </eca>
+    -->
+</service-eca>

@@ -1,0 +1,31 @@
+
+import org.ofbiz.base.util.UtilValidate;
+
+requestAttributes = context.get("requestAttributes");
+parameterMap = context.get("parameters");
+
+contentId = requestAttributes.get("contentId");
+if (contentId != null) contentId = contentId.getAsString();
+if (UtilValidate.isEmpty(contentId)) contentId = parameterMap.get("contentId");
+context.put("contentId", contentId);
+
+caContentIdTo = requestAttributes.get("caContentIdTo");
+if (caContentIdTo != null) caContentIdTo = caContentIdTo.getAsString();
+if (UtilValidate.isEmpty(caContentIdTo)) caContentIdTo = parameterMap.get("caContentIdTo");
+context.put("caContentIdTo", caContentIdTo);
+
+caContentAssocTypeId = requestAttributes.get("caContentAssocTypeId");
+if (caContentAssocTypeId != null) caContentAssocTypeId = caContentAssocTypeId.getAsString();
+if (UtilValidate.isEmpty(caContentAssocTypeId)) caContentAssocTypeId = parameterMap.get("caContentAssocTypeId");
+context.put("caContentAssocTypeId", caContentAssocTypeId);
+
+caFromDate = requestAttributes.get("caFromDate");
+if (caFromDate != null) caFromDate = caFromDate.getAsDate();
+if (UtilValidate.isEmpty(caFromDate)) caFromDate = parameterMap.get("caFromDate");
+context.put("caFromDate", caFromDate);
+
+drDataResourceId = requestAttributes.get("drDataResourceId");
+if (drDataResourceId != null) drDataResourceId = drDataResourceId.getAsString();
+if (UtilValidate.isEmpty(drDataResourceId)) drDataResourceId = parameterMap.get("drDataResourceId");
+context.put("drDataResourceId", drDataResourceId);
+

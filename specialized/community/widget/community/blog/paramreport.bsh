@@ -1,0 +1,23 @@
+import org.ofbiz.base.util.Debug;
+
+//Debug.logInfo("in paramreport, context:" + context, "");
+Debug.logInfo("in paramreport, view:" + context.get("view"), "");
+                
+requestAttributes = context.get("requestAttributes");
+Debug.logInfo("in paramreport, requestAttributes(dataResourceId):" + requestAttributes.get("dataResourceId"), ""); 
+Debug.logInfo("in paramreport, requestAttributes(drDataResourceId):" + requestAttributes.get("drDataResourceId"), ""); 
+parameters = context.get("parameters");
+Debug.logInfo("in paramreport, " 
+ + "  parameters.contentId:" + parameters.get("contentId")
+ + "  parameters.caFromDate:" + parameters.get("caFromDate")
+ + "  parameters.dataResourceId:" + parameters.get("dataResourceId")
+ + "  caContentIdTo:" + context.get("caContentIdTo")
+ , "");
+Debug.logInfo("in paramreport, " 
+ + "  contentId:" + context.get("contentId")
+ + "  caFromDate:" + context.get("caFromDate")
+ + "  drDataResourceId:" + context.get("drDataResourceId")
+ + "  caContentIdTo:" + context.get("caContentIdTo")
+ + "  caContentAssocTypeId:" + context.get("caContentAssocTypeId")
+ , "");
+
