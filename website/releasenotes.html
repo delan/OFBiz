@@ -18,14 +18,31 @@
 <hr>
 <h3><a name="Release 2001.07.20">Release 2001.07.20</a></h3>
 <hr>
-<h4>New Servlet Controller Added</h4>
+<h4>New Controller Servlet Added</h4>
 <p>The architecture used in commonapp for separating presentation logic from 
 other logic and handling authorization was done with a dispatcher that was 
 invoked by each JSP. The new servlet controller handles not only the separation 
 of presentation logic from other logic and security authorization, but also 
 provides a way to control the flow of the application and externalize that
-from the events and views. The definitions to control the servlet controller
-are specified in an XML whose location is specified in the web.xml file.</p>
+from the events and views.&nbsp;</p>
+
+<p> The definitions to control the servlet controller
+are specified in an XML file whose location is specified in the web.xml file.
+This file can be used to define requests and the events and views that
+correspond to them, the security settings for them, and is also used to define
+view maps. The controller is designed to be flexible so that many advanced
+things can be done easily with it, such as logging in or adding an item to the
+shopping cart, and staying on the same page. It also provides added simplicity
+for the JSPs by allowing the combination of views and events in a request such
+as the UpdateUserLogin request which calls the UserLogin update event, and on
+success forward the user to the ViewUserLogin view, which is then mapped to the
+appropriate JSP.</p>
+
+<p>The servlet not only acts as a controller for the web application and its
+views and events, but also has a job scheduler so that events can be run
+repeatedly. An XML file is used to specify optional start and stop date/times,
+intervals and interval units, the event to invoke, and parameters to pass to the
+event. The location of this XML file is also specified in web.xml.</p>
 
 <p>The servlet controller is in the new 'core' module. A number of classes have 
 been moved from the commonapp module into this module, namely from commonapp.common
