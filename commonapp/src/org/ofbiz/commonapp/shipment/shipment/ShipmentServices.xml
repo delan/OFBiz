@@ -124,6 +124,13 @@
         <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="lookupOrderHeaderPKMap"/>
         <find-by-primary-key entity-name="OrderHeader" map-name="lookupOrderHeaderPKMap" value-name="orderHeader"/>
         
+        <if-compare field-name="orderTypeId" map-name="orderHeader" operator="equals" value="SALES_ORDER">
+            <string-to-field string="SALES_SHIPMENT" field-name="shipmentTypeId" map-name="shipment"/>
+        </if-compare>
+        <if-compare field-name="orderTypeId" map-name="orderHeader" operator="equals" value="PURCHASE_ORDER">
+            <string-to-field string="PURCHASE_SHIPMENT" field-name="shipmentTypeId" map-name="shipment"/>
+        </if-compare>
+        
         <!-- partyIdFrom, partyIdTo (vendorPartyId) - NOTE: these work the same for Purchase and Sales Orders... -->
         <find-by-and entity-name="OrderRole" map-name="lookupOrderHeaderPKMap" list-name="orderRoles"/>
         
