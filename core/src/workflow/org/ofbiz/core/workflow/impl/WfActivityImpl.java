@@ -289,7 +289,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             if (Debug.verboseOn()) Debug.logVerbose("Dynamic performer: Found a role expression", module);
             Object value = null;
             try {
-                value = BshUtil.eval(partyId.trim().substring(5).trim(), context);                  
+                value = BshUtil.eval(roleTypeId.trim().substring(5).trim(), context);                  
             } catch (bsh.EvalError e) {
                 throw new WfException("Bsh evaluation error occurred.", e);
             }
