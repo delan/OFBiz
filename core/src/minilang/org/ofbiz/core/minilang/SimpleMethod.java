@@ -46,6 +46,7 @@ public class SimpleMethod {
     
     public static final String module = SimpleMethod.class.getName();
 
+    protected static UtilCache simpleMethodsDirectCache = new UtilCache("minilang.SimpleMethodsDirect", 0, 0);
     protected static UtilCache simpleMethodsResourceCache = new UtilCache("minilang.SimpleMethodsResource", 0, 0);
     protected static UtilCache simpleMethodsURLCache = new UtilCache("minilang.SimpleMethodsURL", 0, 0);
 
@@ -177,7 +178,58 @@ public class SimpleMethod {
         while (simpleMethodIter.hasNext()) {
             Element simpleMethodElement = (Element) simpleMethodIter.next();
             SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement);
+            simpleMethods.put(simpleMethod.getMethodName(), simpleMethod);
+        }
 
+        return simpleMethods;
+    }
+
+    public static Map getDirectSimpleMethods(String name, String content) throws MiniLangException {
+        Map simpleMethods = (Map) simpleMethodsDirectCache.get(name);
+
+        if (simpleMethods == null) {
+            synchronized (SimpleMethod.class) {
+                simpleMethods = (Map) simpleMethodsDirectCache.get(name);
+                if (simpleMethods == null) {
+                    simpleMethods = getAllDirectSimpleMethods(name, content);
+
+                    // put it in the cache
+                    simpleMethodsDirectCache.put(name, simpleMethods);
+                }
+            }
+        }
+
+        return simpleMethods;
+    }
+
+    protected static Map getAllDirectSimpleMethods(String name, String content) throws MiniLangException {
+        Map simpleMethods = new HashMap();
+
+        // read in the file
+        Document document = null;
+
+        try {
+            if (content != null) {
+                document = UtilXml.readXmlDocument(content, true);
+            }
+        } catch (org.xml.sax.SAXException e) {
+            throw new MiniLangException("Could not parse direct XML content", e);
+        } catch (javax.xml.parsers.ParserConfigurationException e) {
+            throw new MiniLangException("XML parser not setup correctly", e);
+        }
+
+        if (document == null) {
+            throw new MiniLangException("Could not load SimpleMethod XML document: " + name);
+        }
+
+        Element rootElement = document.getDocumentElement();
+        List simpleMethodElements = UtilXml.childElementList(rootElement, "simple-method");
+
+        Iterator simpleMethodIter = simpleMethodElements.iterator();
+
+        while (simpleMethodIter.hasNext()) {
+            Element simpleMethodElement = (Element) simpleMethodIter.next();
+            SimpleMethod simpleMethod = new SimpleMethod(simpleMethodElement);
             simpleMethods.put(simpleMethod.getMethodName(), simpleMethod);
         }
 

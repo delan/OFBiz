@@ -74,23 +74,57 @@ public class MethodContext {
         this.security = (Security) request.getAttribute("security");
         this.userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
-        if (this.loader == null)
-            this.loader = Thread.currentThread().getContextClassLoader();
+        if (this.loader == null) {
+            try {
+                this.loader = Thread.currentThread().getContextClassLoader();
+            } catch (SecurityException e) {
+                this.loader = this.getClass().getClassLoader();
+            }
+        }
     }
 
     public MethodContext(DispatchContext ctx, Map context, ClassLoader loader) {
         this.methodType = MethodContext.SERVICE;
         this.parameters = context;
         this.loader = loader;
-        this.locale = (Locale) this.getParameter("locale");
+        this.locale = (Locale) context.get("locale");
         this.dispatcher = ctx.getDispatcher();
         this.delegator = ctx.getDelegator();
         this.security = ctx.getSecurity();
         this.results = new HashMap();
-        this.userLogin = (GenericValue) this.getParameter("userLogin");
+        this.userLogin = (GenericValue) context.get("userLogin");
 
-        if (this.loader == null)
-            this.loader = Thread.currentThread().getContextClassLoader();
+        if (this.loader == null) {
+            try {
+                this.loader = Thread.currentThread().getContextClassLoader();
+            } catch (SecurityException e) {
+                this.loader = this.getClass().getClassLoader();
+            }
+        }
+    }
+
+    /**
+     * This is a very simple constructor which assumes the needed objects (dispatcher, 
+     * delegator, security) are in the context. Will result in calling method as a service.
+     */    
+    public MethodContext(Map context, ClassLoader loader) {
+        this.methodType = MethodContext.SERVICE;
+        this.parameters = context;
+        this.loader = loader;
+        this.locale = (Locale) context.get("locale");
+        this.dispatcher = (LocalDispatcher) context.get("dispatcher");
+        this.delegator = (GenericDelegator) context.get("delegator");
+        this.security = (Security) context.get("security");
+        this.results = new HashMap();
+        this.userLogin = (GenericValue) context.get("userLogin");
+
+        if (this.loader == null) {
+            try {
+                this.loader = Thread.currentThread().getContextClassLoader();
+            } catch (SecurityException e) {
+                this.loader = this.getClass().getClassLoader();
+            }
+        }
     }
     
     public void setErrorReturn(String errMsg, SimpleMethod simpleMethod) {
