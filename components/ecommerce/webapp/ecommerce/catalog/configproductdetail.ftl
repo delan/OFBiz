@@ -24,15 +24,12 @@
  *@since      2.1
 -->
 <#-- variable setup -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign product = requestAttributes.product?if_exists>
-<#assign productContentWrapper = requestAttributes.productContentWrapper?if_exists>
-<#assign price = requestAttributes.priceMap?if_exists>
-<#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
+<#assign productContentWrapper = productContentWrapper?if_exists>
+<#assign price = priceMap?if_exists>
 <#-- end variable setup -->
 
 <#-- virtual product javascript -->
-${requestAttributes.virtualJavaScript?if_exists}
+${virtualJavaScript?if_exists}
 <script language="JavaScript">
 <!--
     var detailImageUrl = null;
@@ -47,7 +44,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
      }
      function isVirtual(product) {
         var isVirtual = false;
-        <#if requestAttributes.virtualJavaScript?exists>
+        <#if virtualJavaScript?exists>
         for (i = 0; i < VIR.length; i++) {
             if (VIR[i] == product) {
                 isVirtual = true;
@@ -56,19 +53,6 @@ ${requestAttributes.virtualJavaScript?if_exists}
         </#if>
         return isVirtual;
      }
-//    function addItem() {
-//       if (document.addform.add_product_id.value == 'NULL') {
-//           alert("Please enter all the required information.");
-//           return;
-//       } else {
-//             if (isVirtual(document.addform.add_product_id.value)) {
-//                document.location = '<@ofbizUrl>/product?category_id=${requestAttributes.categoryId?if_exists}&product_id=</@ofbizUrl>' + document.addform.add_product_id.value;
-//                return;
-//             } else {
-//                 document.addform.submit();
-//             }
-//       }
-//    }
 
     function addItem() {
         document.configform.action = document.addform.action;
@@ -161,18 +145,18 @@ ${requestAttributes.virtualJavaScript?if_exists}
      }
 -->
 </script>
-<table border="0" width="100%" cellpadding="2" cellspacing='0'>
+<table border="0" cellpadding="2" cellspacing='0'>
 
   <#-- Category next/previous -->
-  <#if requestAttributes.category?exists>
+  <#if category?exists>
     <tr>
       <td colspan="2" align="right">
-        <#if requestAttributes.previousProductId?exists>
-          <a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonPrevious}]</a>&nbsp;|&nbsp;
+        <#if previousProductId?exists>
+          <a href='<@ofbizUrl>/product/~category_id=${categoryId?if_exists}/~product_id=${previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonPrevious}]</a>&nbsp;|&nbsp;
         </#if>
-        <a href="<@ofbizUrl>/category/~category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>" class="buttontext">${requestAttributes.category.description?if_exists}</a>
-        <#if requestAttributes.nextProductId?exists>
-          &nbsp;|&nbsp;<a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonNext}]</a>
+        <a href="<@ofbizUrl>/category/~category_id=${categoryId?if_exists}</@ofbizUrl>" class="buttontext">${category.description?if_exists}</a>
+        <#if nextProductId?exists>
+          &nbsp;|&nbsp;<a href='<@ofbizUrl>/product/~category_id=${categoryId?if_exists}/~product_id=${nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
       </td>
     </tr>
@@ -189,7 +173,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <#assign productLargeImageUrl = firstLargeImage>
       </#if>
       <#if productLargeImageUrl?has_content>
-        <a href="javascript:popupDetail();"><img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' border='0' width='200' align='left'></a>
+        <a href="javascript:popupDetail();"><img src='<@ofbizContentUrl>${contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' border='0' width='200' align='left'></a>
       </#if>
     </td>
     <td align="right" valign="top">
@@ -269,9 +253,9 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <a href="javascript:popUpSmall('<@ofbizUrl>/tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" class="buttontext">${uiLabelMap.CommonTellAFriend}</a>
       </div>
 
-      <p>&nbsp;</p>
-      <#if requestAttributes.disFeatureList?exists && 0 < requestAttributes.disFeatureList.size()>
-        <#list requestAttributes.disFeatureList as currentFeature>
+      <#if disFeatureList?exists && 0 < disFeatureList.size()>
+        <p>&nbsp;</p>
+        <#list disFeatureList as currentFeature>
             <div class="tabletext">
                 ${currentFeature.productFeatureTypeId}:&nbsp;${currentFeature.description}
             </div>
@@ -283,11 +267,11 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
-          <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree.size()>
-            <#list requestAttributes.featureSet as currentType>
+          <#if variantTree?exists && 0 < variantTree.size()>
+            <#list featureSet as currentType>
               <div class="tabletext">
                 <select name="FT${currentType}" class="selectBox" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
-                  <option>${requestAttributes.featureTypes.get(currentType)}</option>
+                  <option>${featureTypes.get(currentType)}</option>
                 </select>
               </div>
             </#list>
@@ -303,7 +287,8 @@ ${requestAttributes.virtualJavaScript?if_exists}
           <input type='hidden' name="product_id" value='${product.productId}'>
           <input type='hidden' name="add_product_id" value='${product.productId}'>
           <#if productNotAvailable?exists>
-            <#if Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequiredAndAvailable(request, product, 1.0?double, true, null)>
+            <#assign isStoreInventoryRequired = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
+            <#if isStoreInventoryRequired>
               <div class='tabletext'><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
               <#assign inStock = false>
             <#else>
@@ -312,10 +297,11 @@ ${requestAttributes.virtualJavaScript?if_exists}
           </#if>
         </#if>
 
-        <p>&nbsp;</p>
+        </td></tr><tr><td colspan="2" align="right">
 
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
+          <p>&nbsp;</p>
           <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.after(product.salesDiscontinuationDate)>
@@ -370,14 +356,14 @@ ${requestAttributes.virtualJavaScript?if_exists}
       </#if>
 	  </div>
       <#-- Prefill first select box (virtual products only) -->
-      <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree.size()>
-        <script language="JavaScript">eval("list" + "${requestAttributes.featureOrderFirst}" + "()");</script>
+      <#if variantTree?exists && 0 < variantTree.size()>
+        <script language="JavaScript">eval("list" + "${featureOrderFirst}" + "()");</script>
       </#if>
 
       <#-- Swatches (virtual products only) -->
-      <#if requestAttributes.variantSample?exists && 0 < requestAttributes.variantSample.size()>
-        <#assign imageKeys = requestAttributes.variantSample.keySet()>
-        <#assign imageMap = requestAttributes.variantSample>
+      <#if variantSample?exists && 0 < variantSample.size()>
+        <#assign imageKeys = variantSample.keySet()>
+        <#assign imageMap = variantSample>
         <p>&nbsp;</p>
         <table cellspacing="0" cellpadding="0">
           <tr>
@@ -394,9 +380,9 @@ ${requestAttributes.virtualJavaScript?if_exists}
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
                 <td align="center" valign="bottom">
-                  <a href="javascript:getList('FT${requestAttributes.featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60"></a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix?if_exists}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60"></a>
                   <br>
-                  <a href="javascript:getList('FT${requestAttributes.featureOrderFirst}','${indexer}',1);" class="buttontext">${key}</a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="buttontext">${key}</a>
                 </td>
               </#if>
               <#assign indexer = indexer + 1>
@@ -431,7 +417,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <input type='hidden' name='quantity' value='1'>
 
         <input type='hidden' name='product_id' value='${product.productId}'>
-        <table width='100%'>
+        <table >
           <tr>
             <td>
                 <div class="tabletext">
@@ -455,7 +441,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
                 </#if>
                 <#assign image = question.content.get("IMAGE_URL")?if_exists>
                 <#if image?has_content>
-                  <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${image?if_exists}</@ofbizContentUrl>' vspace='5' hspace='5' border='0' width='200' align='left'>
+                  <img src='<@ofbizContentUrl>${contentPathPrefix?if_exists}${image?if_exists}</@ofbizContentUrl>' vspace='5' hspace='5' border='0' width='200' align='left'>
                 </#if>
               <#else>
                 <div class="tabletext"><a href='#${question.getConfigItem().getString("configItemId")}' class="buttontext">Details</a></div>
@@ -568,7 +554,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
       <#assign postedPerson = postedUserLogin.getRelatedOne("Person")?if_exists>
       <tr>
         <td colspan="2">
-          <table border="0" width="100%" cellpadding="0" cellspacing='0'>
+          <table border="0" cellpadding="0" cellspacing='0'>
             <tr>
               <td>
                 <div class="tabletext"><b>${uiLabelMap.CommonBy}: </b><#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.EcommerceAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></div>
@@ -597,7 +583,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
     </#list>
     <tr>
       <td colspan="2">
-        <a href="<@ofbizUrl>/reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReviewThisProduct}!</a>
+        <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReviewThisProduct}!</a>
       </td>
     </tr>
   <#else>
@@ -608,7 +594,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
     </tr>
     <tr>
       <td colspan="2">
-        <a href="<@ofbizUrl>/reviewProduct?category_id=${requestAttributes.categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
+        <a href="<@ofbizUrl>/reviewProduct?category_id=${categoryId?if_exists}&product_id=${product.productId}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}!</a>
       </td>
     </tr>
   </#if>
@@ -627,7 +613,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
     <#list assocProducts as productAssoc>
       <tr><td>
         <div class="tabletext">
-          <a href='<@ofbizUrl>/${targetRequest}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>' class="buttontext">
+          <a href='<@ofbizUrl>/${targetRequest}/<#if categoryId?exists>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>' class="buttontext">
             ${productAssoc.productIdTo?if_exists}
           </a>
           - <b>${productAssoc.reason?if_exists}</b>
@@ -641,7 +627,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
       </#if>
       <tr>
         <td>
-          ${pages.get("/catalog/productsummary.ftl")}
+          ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
         </td>
       </tr>
       <#local listIndex = listIndex + 1>
@@ -656,7 +642,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
 <#assign listIndex = 1>
 ${setRequestAttribute("productValue", productValue)}
 
-<table width="100%">
+<table >
   <#-- obsolete -->
   <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
   <#-- cross sell -->
@@ -678,7 +664,7 @@ ${setRequestAttribute("productValue", productValue)}
       ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
       ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
       <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
-      ${pages.get("/catalog/productsummary.ftl")}
+      ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
     </div>
     <#if commonFeatureResultId_has_next>
       <hr class="sepbar"/>

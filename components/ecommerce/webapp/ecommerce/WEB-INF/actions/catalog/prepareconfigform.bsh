@@ -29,7 +29,7 @@ import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 
 currencyUomId = ShoppingCartEvents.getCartObject(request).getCurrency();
-product = request.getAttribute("product");
+product = context.get("product");
 
 if (product != null) {
     configWrapper = ProductConfigWorker.getProductConfigWrapper(product.getString("productId"), currencyUomId, request);
