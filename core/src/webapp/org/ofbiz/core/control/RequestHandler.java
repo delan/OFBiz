@@ -69,17 +69,16 @@ public class RequestHandler implements Serializable {
         nextView = getNextPageUri(request.getPathInfo());
         
         /** Check for chained request. */
-        if ( chain != null ) {
+        if (chain != null) {
             requestUri = getRequestUri(chain);
             nextView = getNextPageUri(chain);
             Debug.logInfo("Chain in place: requestUri=" + requestUri + " nextView=" + nextView);
-        }
-        else {
+        } else {
             // Invoke the pre-processor (but NOT in a chain)
             Collection preProcEvents = rm.getPreProcessor();
-            if ( preProcEvents != null ) {
+            if (preProcEvents != null) {
                 Iterator i = preProcEvents.iterator();
-                while ( i.hasNext() ) {
+                while (i.hasNext()) {
                     HashMap eventMap = (HashMap) i.next();
                     String eType = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_TYPE);
                     String ePath = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_PATH);
@@ -90,15 +89,14 @@ public class RequestHandler implements Serializable {
                         String returnString = preEvent.invoke(request,response);
                         if ( !returnString.equalsIgnoreCase("success") )
                             throw new EventHandlerException("Event did not return 'success'.");
-                    }
-                    catch ( EventHandlerException e ) {
+                    } catch (EventHandlerException e) {
                         Debug.logError(e);
                     }
                 }
             }
         }
         
-        Debug.logInfo("***Request: " + requestUri);
+        Debug.logInfo("***Request Name: " + requestUri);
         
         String eventReturnString = null;
         /** Perform security check. */
@@ -128,7 +126,7 @@ public class RequestHandler implements Serializable {
         }
         
         if ( nextView == null ) nextView = rm.getViewName(requestUri);
-        Debug.logInfo("Current View: " + nextView);
+        Debug.logVerbose("Current View: " + nextView);
         
         /** Invoke the event if defined, and if login not already done. */
         if(eventReturnString == null) {
@@ -150,10 +148,10 @@ public class RequestHandler implements Serializable {
         
         /** Process the eventReturn. */
         String eventReturn = rm.getRequestAttribute(requestUri,eventReturnString);
-        Debug.logInfo("Event Qualified: " + eventReturn);
+        Debug.logVerbose("Event Qualified: " + eventReturn);
         
         if(eventReturn != null && !"success".equalsIgnoreCase(eventReturnString)) nextView = eventReturn;
-        Debug.logInfo("Next View after eventReturn: " + nextView);
+        Debug.logVerbose("Next View after eventReturn: " + nextView);
         
         // check for a chain request.
         if ( nextView != null && nextView.startsWith("request:") ) {
@@ -177,14 +175,14 @@ public class RequestHandler implements Serializable {
         if ( !chainRequest && !redirect && !noDispatch ) {
             String tempView = nextView;
             if(tempView != null && tempView.length() > 0 && tempView.charAt(0) == '/') tempView = tempView.substring(1);
-            Debug.logInfo("Getting View Map: " + tempView);
+            Debug.logVerbose("Getting View Map: " + tempView);
             
             /* Before mapping the view, set a session attribute so we know where we are */
             request.setAttribute(SiteDefs.CURRENT_VIEW, tempView);
             
             tempView = rm.getViewPage(tempView);
             nextPage = tempView != null ? tempView : "/" + nextView;
-            Debug.logInfo("Mapped To: " + nextPage);
+            Debug.logVerbose("Mapped To: " + nextPage);
         }
         
         // handle errors

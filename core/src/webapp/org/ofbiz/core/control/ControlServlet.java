@@ -71,6 +71,13 @@ public class ControlServlet extends HttpServlet {
     }
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String rname = request.getPathInfo();
+        UtilTimer timer = null;
+        if (Debug.timingOn()) {
+            timer = new UtilTimer();
+            Debug.logTiming(timer.timerString("[" + rname + "] Servlet Starting, doing setup"));
+        }
+
         HttpSession session = request.getSession(true);
         if (request.getCharacterEncoding() == null)
             request.setCharacterEncoding("UTF-8");
@@ -111,6 +118,8 @@ public class ControlServlet extends HttpServlet {
         // for use in Events the filesystem path of context root.
         request.setAttribute(SiteDefs.CONTEXT_ROOT,getServletContext().getRealPath("/"));
         
+        if (Debug.timingOn()) Debug.logTiming(timer.timerString("[" + rname + "] Setup done, doing Event(s)"));
+        
         try {
             nextPage = getRequestHandler().doRequest(request,response, null);
         } catch ( Exception e ) {
@@ -120,11 +129,15 @@ public class ControlServlet extends HttpServlet {
         }
         
         // Forward to the JSP
-        Debug.logInfo("Dispatching to next page: " + nextPage);
+        Debug.logInfo("[" + rname + "] Event done, rendering page: " + nextPage);
+        if (Debug.timingOn()) Debug.logTiming(timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage));
+
         if(nextPage != null) {
             RequestDispatcher rd = request.getRequestDispatcher(nextPage);
             if(rd != null) rd.forward(request,response);
         }
+
+        if (Debug.timingOn()) Debug.logTiming(timer.timerString("[" + rname + "] Done rendering page, Servlet Finished"));
     }
     
     private RequestHandler getRequestHandler() {
