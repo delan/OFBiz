@@ -1,5 +1,5 @@
 /*
- * $Id: ModelReader.java,v 1.2 2003/08/17 05:55:11 jonesde Exp $
+ * $Id: ModelReader.java,v 1.3 2003/08/17 08:46:58 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ModelReader {
@@ -129,7 +129,9 @@ public class ModelReader {
         Iterator componentResourceInfoIter = componentResourceInfos.iterator();
         while (componentResourceInfoIter.hasNext()) {
             ComponentConfig.EntityResourceInfo componentResourceInfo = (ComponentConfig.EntityResourceInfo) componentResourceInfoIter.next();
-            entityResourceHandlers.add(componentResourceInfo.createResourceHandler());
+            if (modelName.equals(componentResourceInfo.readerName)) {
+                entityResourceHandlers.add(componentResourceInfo.createResourceHandler());
+            }
         }
     }
 

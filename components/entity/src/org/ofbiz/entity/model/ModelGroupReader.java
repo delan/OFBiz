@@ -1,5 +1,5 @@
 /*
- * $Id: ModelGroupReader.java,v 1.2 2003/08/17 05:55:11 jonesde Exp $
+ * $Id: ModelGroupReader.java,v 1.3 2003/08/17 08:46:58 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.w3c.dom.Node;
  * Generic Entity - Entity Group Definition Reader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ModelGroupReader {
@@ -101,12 +101,14 @@ public class ModelGroupReader {
             entityGroupResourceHandlers.add(new MainResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, resourceElement));
         }
 
-        // get all of the component resource model stuff, ie specified in each ofbiz-component.xml file
+        // get all of the component resource group stuff, ie specified in each ofbiz-component.xml file
         List componentResourceInfos = ComponentConfig.getAllEntityResourceInfos("group");
         Iterator componentResourceInfoIter = componentResourceInfos.iterator();
         while (componentResourceInfoIter.hasNext()) {
             ComponentConfig.EntityResourceInfo componentResourceInfo = (ComponentConfig.EntityResourceInfo) componentResourceInfoIter.next();
-            entityGroupResourceHandlers.add(componentResourceInfo.createResourceHandler());
+            if (modelName.equals(componentResourceInfo.readerName)) {
+                entityGroupResourceHandlers.add(componentResourceInfo.createResourceHandler());
+            }
         }
 
         // preload caches...

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityEcaUtil.java,v 1.2 2003/08/17 08:18:38 jonesde Exp $
+ * $Id: EntityEcaUtil.java,v 1.3 2003/08/17 08:46:58 jonesde Exp $
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class EntityEcaUtil {
@@ -97,7 +97,9 @@ public class EntityEcaUtil {
         Iterator componentResourceInfoIter = componentResourceInfos.iterator();
         while (componentResourceInfoIter.hasNext()) {
             ComponentConfig.EntityResourceInfo componentResourceInfo = (ComponentConfig.EntityResourceInfo) componentResourceInfoIter.next();
-            addEcaDefinitions(componentResourceInfo.createResourceHandler(), ecaCache);
+            if (entityEcaReaderName.equals(componentResourceInfo.readerName)) {
+                addEcaDefinitions(componentResourceInfo.createResourceHandler(), ecaCache);
+            }
         }
     }
 
