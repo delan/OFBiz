@@ -132,24 +132,24 @@ public class GenericDAO
     try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
   }
 
-  public boolean update(GenericEntity entity)
+  public boolean updateAll(GenericEntity entity)
   {
     ModelEntity modelEntity = entity.getModelEntity();
     if(modelEntity == null)
     {
-      Debug.logError("[GenericDAO.update] Could not find ModelEntity record for entityName: " + entity.getEntityName());
+      Debug.logError("[GenericDAO.updateAll] Could not find ModelEntity record for entityName: " + entity.getEntityName());
       return false;
     }
     
     return customUpdate(entity, modelEntity, modelEntity.nopks);
   }
 
-  public boolean partialUpdate(GenericEntity entity)
+  public boolean update(GenericEntity entity)
   {
     ModelEntity modelEntity = entity.getModelEntity();
     if(modelEntity == null)
     {
-      Debug.logError("[GenericDAO.partialUpdate] Could not find ModelEntity record for entityName: " + entity.getEntityName());
+      Debug.logError("[GenericDAO.update] Could not find ModelEntity record for entityName: " + entity.getEntityName());
       return false;
     }
     //we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity

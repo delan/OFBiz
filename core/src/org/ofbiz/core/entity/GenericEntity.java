@@ -34,7 +34,13 @@ import org.ofbiz.core.entity.model.*;
  */
 public class GenericEntity implements Serializable 
 {
-  /** Contains the fields for this entity */
+  /** Contains the fields for this entity. Note that this should always be a 
+   *  HashMap to allow for two things: non-synchronized reads (synchronized 
+   *  writes are done through synchronized setters) and being able to store
+   *  null values. Null values are important because with them we can distinguish
+   *  between desiring to set a value to null and desiring to not modify the 
+   *  current value on an update.
+   */
   protected Map fields;
   /** Map to store related entities that will be updated if modified when this entity is stored; populated with preStoreRelated(String, Collection). This is here so that it can be implicitly stored in the same transaction context. */
   public Collection otherToStore = new LinkedList();
@@ -69,15 +75,36 @@ public class GenericEntity implements Serializable
     }
     return fields.get(name);
   }
-  public synchronized void set(String name, Object value) 
-  { 
+
+  /** Sets the named field to the passed value, even if the value is null
+   * @param name The field name to set
+   * @param value The value to set
+   */
+  public void set(String name, Object value) 
+  {
+    set(name, value, true);
+  }
+  /** Sets the named field to the passed value. If value is null, it is only 
+   *  set if the setIfNull parameter is true. This is useful because an update
+   *  will only set values that are included in the HashMap and will store null
+   *  values in the HashMap to the datastore. If a value is not in the HashMap,
+   *  it will be left unmodified in the datastore.
+   * @param name The field name to set
+   * @param value The value to set
+   * @param setIfNull Specifies whether or not to set the value if it is null
+   */
+  public synchronized void set(String name, Object value, boolean setIfNull)
+  {
     if(modelEntity.getField(name) == null)
     {
-      throw new IllegalArgumentException("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName);
+      throw new IllegalArgumentException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName);
       //Debug.logWarning("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", but setting anyway...");
     }
-    fields.put(name, value); 
-    modified = true;
+    if(value != null || setIfNull)
+    {
+      fields.put(name, value); 
+      modified = true;
+    }
   }
 
   /** Sets the named field to the passed value, converting the value from a String to the corrent type using <code>Type.valueOf()</code>
