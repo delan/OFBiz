@@ -78,7 +78,7 @@ public class I18nMessageTag extends BodyTagSupport {
     public int doStartTag() throws JspException {
         try {
             if (this.bundle == null) {
-                I18nBundleTag bundleTag = (I18nBundleTag) this.findAncestorWithClass(this, I18nBundleTag.class);
+                I18nBundleTag bundleTag = (I18nBundleTag) TagSupport.findAncestorWithClass(this, I18nBundleTag.class);
 
                 if (bundleTag != null) {
                     this.bundle = bundleTag.getBundle();
