@@ -136,12 +136,14 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <datasource name="localpostgres"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             schema-name="public"
-            result-fetch-size="50"
             field-type-name="postgres72"
             check-on-start="true"
             add-missing-on-start="true"
             use-fk-initially-deferred="false"
             join-style="ansi">
+            <!-- use this attribute to make the EntityListIterator more effective for pgsql 7.4 and later: 
+                result-fetch-size="50"
+            -->
         <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="org.postgresql.Driver"
