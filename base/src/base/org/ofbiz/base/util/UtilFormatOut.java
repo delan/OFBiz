@@ -423,4 +423,30 @@ public class UtilFormatOut {
         retString = StringUtil.replaceString(retString, "'", "&apos;");
         return retString;
     }
+
+    public static String padString(String str, int setLen, boolean padEnd, char padChar) {
+        if (str == null) {
+            return null;
+        }
+        if (setLen == 0) {
+            return str;
+        }
+        int stringLen = str.length();
+        int diff = setLen - stringLen;
+        if (diff < 0) {
+            return str.substring(0, setLen);
+        } else {
+            String newString = new String();
+            if (padEnd) {
+                newString = newString + str;
+            }
+            for (int i = 0; i < diff; i++) {
+                newString = newString + padChar;
+            }
+            if (!padEnd) {
+                newString = newString + str;
+            }
+            return newString;
+        }
+    }
 }
