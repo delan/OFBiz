@@ -37,6 +37,9 @@
 
     <service-location name="main-rmi" location="rmi://localhost:1099/RMIDispatcher"/>
     <service-location name="main-http" location="http://localhost:8080/webtools/control/httpService"/>
+
+    <service-location name="entity-sync-rmi" location="rmi://localhost:1099/RMIDispatcher"/>
+    <service-location name="entity-sync-http" location="http://localhost:8080/webtools/control/httpService"/>
     
     <service-location name="eedcc-test" location="http://localhost:8080/webtools/control/httpService"/>
 

@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -121,38 +122,15 @@ public class EntitySyncServices {
                 return ServiceUtil.returnError("Could not start Entity Sync service, could not mark as running", null, null, startEntitySyncRes);
             }
             
-            Timestamp lastSuccessfulSynchTime = entitySync.getTimestamp("lastSuccessfulSynchTime");
-            Timestamp currentRunStartTime = lastSuccessfulSynchTime;
-            
             Long syncSplitMillis = entitySync.getLong("syncSplitMillis");
             long splitMillis = defaultSyncSplitMillis;
             if (syncSplitMillis != null) {
                 splitMillis = syncSplitMillis.longValue();
             }
             
+            Timestamp lastSuccessfulSynchTime = entitySync.getTimestamp("lastSuccessfulSynchTime");
             List entityModelToUseList = makeEntityModelToUseList(delegator, entitySync);
-            
-            // if currentRunStartTime is null, what to do? I guess iterate through all entities and find earliest tx stamp
-            if (currentRunStartTime == null) {
-                Iterator entityModelToUseIter = entityModelToUseList.iterator();
-                while (entityModelToUseIter.hasNext()) {
-                    ModelEntity modelEntity = (ModelEntity) entityModelToUseIter.next();
-                    // fields to select will be PK and the STAMP_TX_FIELD, slimmed down so we don't get a ton of data back
-                    List fieldsToSelect = new LinkedList(modelEntity.getPkFieldNames());
-                    // find all instances of this entity with the STAMP_TX_FIELD != null, sort ascending to get lowest/oldest value first, then grab first and consider as candidate currentRunStartTime
-                    fieldsToSelect.add(ModelEntity.STAMP_TX_FIELD);
-                    EntityListIterator eli = delegator.findListIteratorByCondition(modelEntity.getEntityName(), new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.NOT_EQUAL, null), fieldsToSelect, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD));
-                    GenericValue nextValue = (GenericValue) eli.next();
-                    eli.close();
-                    if (nextValue != null) {
-                        Timestamp candidateTime = nextValue.getTimestamp(ModelEntity.STAMP_TX_FIELD);
-                        if (currentRunStartTime == null || candidateTime.before(currentRunStartTime)) {
-                            currentRunStartTime = candidateTime;
-                        }
-                    }
-                }
-                if (Debug.infoOn()) Debug.logInfo("No currentRunStartTime was stored on the EntitySync record, so searched for the earliest value and got: " + currentRunStartTime, module);
-            }
+            Timestamp currentRunStartTime = getCurrentRunStartTime(lastSuccessfulSynchTime, entityModelToUseList, delegator);
             
             // create history record, should run in own tx
             Map initialHistoryRes = dispatcher.runSync("createEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING", "beginningSynchTime", currentRunStartTime, "userLogin", userLogin));
@@ -539,6 +517,34 @@ public class EntitySyncServices {
         return entityModelToUseList;
     }
 
+    protected static Timestamp getCurrentRunStartTime(Timestamp lastSuccessfulSynchTime, List entityModelToUseList, GenericDelegator delegator) throws GenericEntityException {
+        // if currentRunStartTime is null, what to do? I guess iterate through all entities and find earliest tx stamp
+        if (lastSuccessfulSynchTime == null) {
+            Timestamp currentRunStartTime = null;
+            Iterator entityModelToUseIter = entityModelToUseList.iterator();
+            while (entityModelToUseIter.hasNext()) {
+                ModelEntity modelEntity = (ModelEntity) entityModelToUseIter.next();
+                // fields to select will be PK and the STAMP_TX_FIELD, slimmed down so we don't get a ton of data back
+                List fieldsToSelect = new LinkedList(modelEntity.getPkFieldNames());
+                // find all instances of this entity with the STAMP_TX_FIELD != null, sort ascending to get lowest/oldest value first, then grab first and consider as candidate currentRunStartTime
+                fieldsToSelect.add(ModelEntity.STAMP_TX_FIELD);
+                EntityListIterator eli = delegator.findListIteratorByCondition(modelEntity.getEntityName(), new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.NOT_EQUAL, null), fieldsToSelect, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD));
+                GenericValue nextValue = (GenericValue) eli.next();
+                eli.close();
+                if (nextValue != null) {
+                    Timestamp candidateTime = nextValue.getTimestamp(ModelEntity.STAMP_TX_FIELD);
+                    if (currentRunStartTime == null || candidateTime.before(currentRunStartTime)) {
+                        currentRunStartTime = candidateTime;
+                    }
+                }
+            }
+            if (Debug.infoOn()) Debug.logInfo("No currentRunStartTime was stored on the EntitySync record, so searched for the earliest value and got: " + currentRunStartTime, module);
+            return currentRunStartTime;
+        } else {
+            return lastSuccessfulSynchTime;
+        }
+    }
+
     /**
      * Store Entity Sync Data
      *@param dctx The DispatchContext that this service is operating in
@@ -684,18 +690,105 @@ public class EntitySyncServices {
     public static Map runPullEntitySync(DispatchContext dctx, Map context) {
         Debug.logInfo("Running cleanSyncRemoveInfo", module);
         GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         
         String entitySyncId = (String) context.get("entitySyncId");
         String remotePullAndReportEntitySyncDataName = (String) context.get("remotePullAndReportEntitySyncDataName");
         
         // loop until no data is returned to store
+        boolean gotMoreData = true;
         
-        // call pullAndReportEntitySyncData with no results
+        Timestamp startDate = null;
+        Long toCreateInserted = null;
+        Long toCreateUpdated = null;
+        Long toCreateNotUpdated = null;
+        Long toStoreInserted = null;
+        Long toStoreUpdated = null;
+        Long toStoreNotUpdated = null;
+        Long toRemoveDeleted = null;
+        Long toRemoveAlreadyDeleted = null;
         
-        // store data returned, get results (just call storeEntitySyncData locally, get the numbers back and boom shakalaka)
+        while (gotMoreData) {
+            gotMoreData = false;
+            
+            // call pullAndReportEntitySyncData, initially with no results, then with results from last loop
+            Map remoteCallContext = new HashMap();
+            remoteCallContext.put("entitySyncId", entitySyncId);
+            remoteCallContext.put("delegatorName", context.get("remoteDelegatorName"));
+
+            remoteCallContext.put("startDate", startDate);
+            remoteCallContext.put("toCreateInserted", toCreateInserted);
+            remoteCallContext.put("toCreateUpdated", toCreateUpdated);
+            remoteCallContext.put("toCreateNotUpdated", toCreateNotUpdated);
+            remoteCallContext.put("toStoreInserted", toStoreInserted);
+            remoteCallContext.put("toStoreUpdated", toStoreUpdated);
+            remoteCallContext.put("toStoreNotUpdated", toStoreNotUpdated);
+            remoteCallContext.put("toRemoveDeleted", toRemoveDeleted);
+            remoteCallContext.put("toRemoveAlreadyDeleted", toRemoveAlreadyDeleted);
+            
+            try {
+                Map result = dispatcher.runSync(remotePullAndReportEntitySyncDataName, remoteCallContext);
+                if (ServiceUtil.isError(result)) {
+                    String errMsg = "Error calling remote pull and report EntitySync service with name: " + remotePullAndReportEntitySyncDataName;
+                    return ServiceUtil.returnError(errMsg, null, null, result);
+                }
+                
+                startDate = (Timestamp) result.get("startDate");
+                if (startDate != null) {
+                    gotMoreData = true;
+                }
+                
+                try {
+                    // store data returned, get results (just call storeEntitySyncData locally, get the numbers back and boom shakalaka)
+                    Map callLocalStoreContext = UtilMisc.toMap("entitySyncId", entitySyncId, "delegatorName", context.get("localDelegatorName"),
+                            "valuesToCreate", result.get("valuesToCreate"), "valuesToStore", result.get("valuesToStore"), 
+                            "keysToRemove", result.get("keysToRemove"));
+                    
+                    Map storeResult = dispatcher.runSync("storeEntitySyncData", callLocalStoreContext);
+                    if (ServiceUtil.isError(storeResult)) {
+                        String errMsg = "Error calling service to store data locally";
+                        return ServiceUtil.returnError(errMsg, null, null, storeResult);
+                    }
+                    
+                    // get results for next pass
+                    toCreateInserted = (Long) storeResult.get("toCreateInserted");
+                    toCreateUpdated = (Long) storeResult.get("toCreateUpdated");
+                    toCreateNotUpdated = (Long) storeResult.get("toCreateNotUpdated");
+                    toStoreInserted = (Long) storeResult.get("toStoreInserted");
+                    toStoreUpdated = (Long) storeResult.get("toStoreUpdated");
+                    toStoreNotUpdated = (Long) storeResult.get("toStoreNotUpdated");
+                    toRemoveDeleted = (Long) storeResult.get("toRemoveDeleted");
+                    toRemoveAlreadyDeleted = (Long) storeResult.get("toRemoveAlreadyDeleted");
+                } catch (GenericServiceException e) {
+                    String errMsg = "Error calling service to store data locally: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+            } catch (GenericServiceException e) {
+                String errMsg = "Error calling remote pull and report EntitySync service with name: " + remotePullAndReportEntitySyncDataName + "; " + e.toString();
+                Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            }
+        }
         
         return ServiceUtil.returnSuccess();
     }
+    /*
+        <attribute name="valuesToCreate" type="List" mode="OUT" optional="true"/>
+        <attribute name="valuesToStore" type="List" mode="OUT" optional="true"/>
+        <attribute name="keysToRemove" type="List" mode="OUT" optional="true"/>
+        <!-- fields for results of storage on the calling machine -->
+        <attribute name="startDate" type="Timestamp" mode="INOUT" optional="true"/>
+        <attribute name="toCreateInserted" type="Long" mode="IN" optional="true"/>
+        <attribute name="toCreateUpdated" type="Long" mode="IN" optional="true"/>
+        <attribute name="toCreateNotUpdated" type="Long" mode="IN" optional="true"/>
+        <attribute name="toStoreInserted" type="Long" mode="IN" optional="true"/>
+        <attribute name="toStoreUpdated" type="Long" mode="IN" optional="true"/>
+        <attribute name="toStoreNotUpdated" type="Long" mode="IN" optional="true"/>
+        <attribute name="toRemoveDeleted" type="Long" mode="IN" optional="true"/>
+        <attribute name="toRemoveAlreadyDeleted" type="Long" mode="IN" optional="true"/>
+     * 
+     */
 
     /**
      * Pull and Report Entity Sync Data - Called Remotely to Push Results from last pull, the Pull next set of results.
@@ -713,9 +806,12 @@ public class EntitySyncServices {
         // report info from last pull
         Timestamp startDate = (Timestamp) context.get("startDate");
         
-        // Part 1: if any results are passed, store the results for the given startDate, update EntitySync, etc
+        // TODO: if EntitySync.statusId is ESR_RUNNING, make sure startDate matches EntitySync.lastHistoryStartDate
         
-        // Part 2: get the next set of data for the given entitySyncId, return if back for storage but leave the EntitySyncHistory without results, and don't update the EntitySync last time
+        // TODO: Part 1: if any results are passed, store the results for the given startDate, update EntitySync, etc
+        
+        // TODO: Part 2: get the next set of data for the given entitySyncId
+        // TODO: Part 2a: return it back for storage but leave the EntitySyncHistory without results, and don't update the EntitySync last time
         
         return ServiceUtil.returnSuccess();
     }
