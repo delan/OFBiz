@@ -80,7 +80,7 @@
             package-name="org.ofbiz.shark.audit"
             title="">
       <field name="eventAuditId" type="id-ne"></field>
-      <field name="utcTime" type="long-varchar"></field>
+      <field name="auditTime" type="long-varchar"></field>
       <field name="auditType" type="long-varchar"></field>
       <field name="packageId" type="long-varchar"></field>
       <field name="processId" type="long-varchar"></field>
