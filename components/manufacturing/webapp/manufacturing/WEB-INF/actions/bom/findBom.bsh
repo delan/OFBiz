@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 */
 
@@ -51,13 +51,8 @@ if (currentTreeType == null || currentTreeType.length() == 0) {
 }
 
 // create the fromDate for calendar
-fromCal = Calendar.getInstance();
-fromCal.setTime(new java.util.Date());
-fromCal.set(Calendar.HOUR_OF_DAY, fromCal.getActualMinimum(Calendar.HOUR_OF_DAY));
-fromCal.set(Calendar.MINUTE, fromCal.getActualMinimum(Calendar.MINUTE));
-fromCal.set(Calendar.SECOND, fromCal.getActualMinimum(Calendar.SECOND));
-fromCal.set(Calendar.MILLISECOND, fromCal.getActualMinimum(Calendar.MILLISECOND));
-fromTs = new Timestamp(fromCal.getTimeInMillis());
+
+fromTs = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 fromStr = fromTs.toString();
 fromStr = fromStr.substring(0, fromStr.indexOf('.'));
 context.put("fromDateStr", fromStr);
