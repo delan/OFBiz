@@ -1,5 +1,5 @@
 /*
- * $Id: TestEvents.java,v 1.1 2004/08/10 18:58:56 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev$
  * @since      Aug 8, 2004
  */
 public class TestEvents {

@@ -1,5 +1,5 @@
 /*
- * $Id: ErrorEventAdaptor.java,v 1.1 2004/08/07 06:03:42 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ import jpos.events.ErrorEvent;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev$
  * @since      3.2
  */
 public class ErrorEventAdaptor implements jpos.events.ErrorListener {

@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentEvents.java,v 1.4 2004/08/19 18:49:15 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev$
  * @since      3.1
  */
 public class PaymentEvents {
