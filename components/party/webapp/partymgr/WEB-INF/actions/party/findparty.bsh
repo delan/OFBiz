@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      3.0
  */
 
@@ -101,17 +101,10 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
 
     // default view settings
     dynamicView.addMemberEntity("PT", "Party");
-    dynamicView.addMemberEntity("PE", "Person");
-    dynamicView.addMemberEntity("PG", "PartyGroup");
     dynamicView.addMemberEntity("UL", "UserLogin");
     dynamicView.addAlias("PT", "partyId");
     dynamicView.addAlias("PT", "partyTypeId");
-    dynamicView.addAlias("PE", "firstName");
-    dynamicView.addAlias("PE", "lastName");
-    dynamicView.addAlias("PG", "groupName");
     dynamicView.addAlias("UL", "userLoginId");
-    dynamicView.addViewLink("PT", "PE", Boolean.TRUE, ModelKeyMap.makeKeyMapList("partyId"));
-    dynamicView.addViewLink("PT", "PG", Boolean.TRUE, ModelKeyMap.makeKeyMapList("partyId"));
     dynamicView.addViewLink("PT", "UL", Boolean.TRUE, ModelKeyMap.makeKeyMapList("partyId"));
     dynamicView.addRelation("one-nofk", "", "PartyType", ModelKeyMap.makeKeyMapList("partyTypeId"));
 
@@ -145,6 +138,13 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
     groupName = request.getParameter("groupName");
     if (groupName != null && groupName.length() > 0) {
         paramList = paramList + "&groupName=" + groupName;
+
+        // modify the dynamic view
+        dynamicView.addMemberEntity("PG", "PartyGroup");
+        dynamicView.addAlias("PE", "firstName");
+        dynamicView.addViewLink("PT", "PG", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+
+        // add the expr
         andExprs.add(new EntityExpr("groupName", true, EntityOperator.LIKE, "%"+groupName+"%", true));
     }
 
@@ -152,20 +152,29 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
     // Person Fields
     // ----
 
-    // filter on firstName
+    // get the params
     firstName = request.getParameter("firstName");
+    lastName = request.getParameter("lastName");
+
+    // modify the dynamic view
+    if ((firstName != null && firstName.length() > 0) || (lastName != null && lastName.lenght() > 0)) {
+        dynamicView.addMemberEntity("PE", "Person");
+        dynamicView.addAlias("PE", "firstName");
+        dynamicView.addAlias("PE", "lastName");
+        dynamicView.addViewLink("PT", "PE", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+    }
+
+    // filter on firstName
     if (firstName != null && firstName.length() > 0) {
         paramList = paramList + "&firstName=" + firstName;
         andExprs.add(new EntityExpr("firstName", true, EntityOperator.LIKE, "%"+firstName+"%", true));
     }
 
     // filter on lastName
-    lastName = request.getParameter("lastName");
     if (lastName != null && lastName.length() > 0) {
         paramList = paramList + "&lastName=" + lastName;
         andExprs.add(new EntityExpr("lastName", true, EntityOperator.LIKE, "%"+lastName+"%", true));
     }
-
 
     // ----
     // RoleType Fields
@@ -302,9 +311,6 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         // set distinct on so we only get one row per order
         EntityFindOptions findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
 
-        // get the count
-        partyListSize = delegator.findCountByCondition(entityName, mainCond, null);
-
         // using list iterator
         EntityListIterator pli = delegator.findListIteratorByCondition(dynamicView, mainCond, null, fieldsToSelect, orderBy, findOpts);
 
@@ -312,19 +318,17 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
         lowIndex = (((viewIndex - 1) * viewSize) + 1);
         highIndex = viewIndex * viewSize;
 
-        // attempt to get the full size
-        //pli.last();
-        //partyListSize = pli.currentIndex();
-        if (highIndex > partyListSize) {
-            highIndex = partyListSize;
+        // get the partial list for this page
+        partyList = pli.getPartialList(lowIndex, viewSize);
+        if (partyList == null) {
+            partyList = new ArrayList();
         }
 
-        // get the partial list for this page
-        //pli.first();
-        if (partyListSize > 0) {
-            partyList = pli.getPartialList(lowIndex, viewSize);
-        } else {
-            partyList = new ArrayList();
+        // attempt to get the full size
+        pli.last();
+        partyListSize = pli.currentIndex();
+        if (highIndex > partyListSize) {
+            highIndex = partyListSize;
         }
 
         // close the list iterator
