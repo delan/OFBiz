@@ -352,7 +352,7 @@
         <description>Update a ReturnHeader</description>
         <auto-attributes entity-name="ReturnHeader" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="ReturnHeader" include="nonpk" mode="IN" optional="true"/>
-        <attribute name="currentStatusId" type="String" mode="IN" optional="true"/>
+        <attribute name="currentStatusId" type="String" mode="OUT" optional="false"/>
     </service>
 
     <service name="returnItemInterface" engine="interface" location="" invoke="">
@@ -378,6 +378,7 @@
         <description>Update a ReturnItem</description>
         <implements service="returnItemInterface"/>
         <attribute entity-name="ReturnItem" name="returnItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="currentStatusId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="removeReturnItem" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="removeReturnItem">
@@ -739,7 +740,8 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="totalOrders" type="Long" mode="OUT" optional="false"/>
-        <attribute name="totalAmount" type="Long" mode="OUT" optional="false"/>
+        <attribute name="totalGrandAmount" type="Long" mode="OUT" optional="false"/>
+        <attribute name="totalSubRemainingAmount" type="Long" mode="OUT" optional="false"/>
     </service>
     
     <service name="getOrderInformation" engine="java"

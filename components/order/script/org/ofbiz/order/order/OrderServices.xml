@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  -->
 
@@ -63,13 +63,15 @@
             </condition-list>
             <select-field field-name="partyId"/>
             <select-field field-name="roleTypeId"/>
-            <select-field field-name="totalAmount"/>
+            <select-field field-name="totalGrandAmount"/>
+            <select-field field-name="totalSubRemainingAmount"/>
             <select-field field-name="totalOrders"/>
         </entity-condition>
         
         <!-- because we specified the partyId and the roleTypeId, should only be one item in list returned -->
         <first-from-list list-name="orderInfoList" entry-name="orderInfo"/>
-        <field-to-result field-name="orderInfo.totalAmount" result-name="totalAmount"/>
+        <field-to-result field-name="orderInfo.totalGrandAmount" result-name="totalGrandAmount"/>
+        <field-to-result field-name="orderInfo.totalSubRemainingAmount" result-name="totalSubRemainingAmount"/>
         <field-to-result field-name="orderInfo.totalOrders" result-name="totalOrders"/>
     </simple-method>
 </simple-methods>
