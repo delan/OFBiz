@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenWidget.java,v 1.6 2004/07/27 20:29:40 byersa Exp $
+ * $Id: ModelScreenWidget.java,v 1.7 2004/07/28 00:03:49 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.1
  */
 public abstract class ModelScreenWidget {
@@ -924,8 +924,8 @@ public abstract class ModelScreenWidget {
             setStyle(imageElement.getAttribute("style"));
             setWidth(imageElement.getAttribute("width"));
             setHeight(imageElement.getAttribute("height"));
-            setBorder(imageElement.getAttribute("border"));
-            setUrlMode(imageElement.getAttribute("url-mode"));
+            setBorder(UtilFormatOut.checkEmpty(imageElement.getAttribute("border"), "0"));
+            setUrlMode(UtilFormatOut.checkEmpty(imageElement.getAttribute("url-mode"), "content"));
 
         }
 
