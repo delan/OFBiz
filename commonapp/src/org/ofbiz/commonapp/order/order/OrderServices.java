@@ -174,17 +174,6 @@ public class OrderServices {
             }
         }
 
-        // set the item price info
-        List orderItemPriceInfo = (List) context.get("orderItemPriceInfos");
-        if (orderItemPriceInfo != null && orderItemPriceInfo.size() > 0) {
-            Iterator oipii = orderItemPriceInfo.iterator();
-            while (oipii.hasNext()) {
-                GenericValue oipi = (GenericValue) oipii.next();
-                oipi.set("orderId", orderId);
-                toBeStored.add(oipi);
-            }
-        }
-
         // set the shipment preference
         String shipmentMethodTypeId = (String) context.get("shipmentMethodTypeId");
         String carrierPartyId = (String) context.get("carrierPartyId");
@@ -204,6 +193,24 @@ public class OrderServices {
             GenericValue orderItem = (GenericValue) oi.next();
             orderItem.set("orderId", orderId);
             toBeStored.add(orderItem);
+        }
+
+        // set the item price info; NOTE: this must be after the orderItems are stored for referential integrity
+        List orderItemPriceInfo = (List) context.get("orderItemPriceInfos");
+        if (orderItemPriceInfo != null && orderItemPriceInfo.size() > 0) {
+            Iterator oipii = orderItemPriceInfo.iterator();
+            while (oipii.hasNext()) {
+                GenericValue oipi = (GenericValue) oipii.next();
+                Long oipiSeqId = delegator.getNextSeqId("OrderItemPriceInfo");
+                if (oipiSeqId == null) {
+                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                    result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get next sequence id for OrderItemPriceInfo, cannot create order.");
+                    return result;
+                }
+                oipi.set("orderItemPriceInfoId", oipiSeqId.toString());
+                oipi.set("orderId", orderId);
+                toBeStored.add(oipi);
+            }
         }
 
         // set the roles

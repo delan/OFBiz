@@ -342,8 +342,12 @@ public class ShoppingCartItem implements java.io.Serializable {
     public void removeAdjustment(int index) {
         itemAdjustments.remove(index);
     }
-    public Collection getAdjustments() {
+    public List getAdjustments() {
         return itemAdjustments;
+    }
+    
+    public List getOrderItemPriceInfos() {
+        return orderItemPriceInfos;
     }
 
     public void setIsPromo(boolean isPromo) {

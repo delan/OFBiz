@@ -616,7 +616,6 @@ public class ShoppingCart implements java.io.Serializable {
         
         //add all of the item adjustments to this list too
         Iterator itemIter = cartLines.iterator();
-        int seqId = 1;
         while (itemIter.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
             Collection adjs = item.getAdjustments();
@@ -632,11 +631,35 @@ public class ShoppingCart implements java.io.Serializable {
         
         return allAdjs;
     }
-    /** Returns a Map of cart values */
+
+    /** make a list of OrderItemPriceInfos from the ShoppingCartItems */
+    public List makeAllOrderItemPriceInfos(GenericDelegator delegator) {
+        List allInfos = new LinkedList();
+        
+        //add all of the item adjustments to this list too
+        Iterator itemIter = cartLines.iterator();
+        while (itemIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
+            Collection infos = item.getOrderItemPriceInfos();
+            if (infos != null) {
+                Iterator infosIter = infos.iterator();
+                while (infosIter.hasNext()) {
+                    GenericValue orderItemPriceInfo = (GenericValue) infosIter.next();
+                    orderItemPriceInfo.set("orderItemSeqId", item.getOrderItemSeqId());
+                    allInfos.add(orderItemPriceInfo);
+                }
+            }
+        }
+        
+        return allInfos;
+    }
+    
+    /** Returns a Map of cart values to pass to the storeOrder service */
     public Map makeCartMap(GenericDelegator delegator) {
         Map result = new HashMap();
         result.put("orderItems", makeOrderItems(delegator));
         result.put("orderAdjustments", makeAllAdjustments(delegator));
+        result.put("orderItemPriceInfos", makeAllOrderItemPriceInfos(delegator));
 
         result.put("billingAccountId", getBillingAccountId());
         result.put("shippingContactMechId", getShippingContactMechId());
