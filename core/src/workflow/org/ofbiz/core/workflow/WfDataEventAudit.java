@@ -7,8 +7,8 @@ package org.ofbiz.core.workflow;
 import java.util.Map;
 
 /**
- * <p><b>Title:</b> Workflow Interface
- * <p><b>Description:</b> Needs Description
+ * <p><b>Title:</b>  WfDataEventAudit.java
+ * <p><b>Description:</b> Workflow Data Event Audit Interface
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a

@@ -8,8 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * <p><b>Title:</b> Workflow Interface
- * <p><b>Description:</b> Needs Description
+ * <p><b>Title:</b> WfRequester.java
+ * <p><b>Description:</b> Workflow Requester Interface
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a

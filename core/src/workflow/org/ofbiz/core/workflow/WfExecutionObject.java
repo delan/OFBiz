@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.List;
 
 /**
- * <p><b>Title:</b> Workflow Interface
- * <p><b>Description:</b> Needs Description
+ * <p><b>Title:</b> WfExecutionObject
+ * <p><b>Description:</b> Workflow Execution Object Interface 
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a

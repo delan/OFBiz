@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.io.PrintStream;
 
 /**
- * <p><b>Title:</b> Workflow Exception
+ * <p><b>Title:</b> WfException.java
  * <p><b>Description:</b> Generic Workflow Exception
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *

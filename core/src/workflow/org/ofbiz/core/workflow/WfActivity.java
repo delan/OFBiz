@@ -9,8 +9,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * <p><b>Title:</b> Workflow Interface
- * <p><b>Description:</b> Needs Description
+ * <p><b>Title:</b> WfActivity.java
+ * <p><b>Description:</b> Workflow Activity Interface
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a

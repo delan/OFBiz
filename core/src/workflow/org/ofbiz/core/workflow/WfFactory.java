@@ -4,11 +4,9 @@
 
 package org.ofbiz.core.workflow;
 
-import java.sql.Timestamp;
-
 /**
- * <p><b>Title:</b> WfEventAudit.java
- * <p><b>Description:</b> Workflow Event Audit Interface
+ * <p><b>Title:</b> WfFactory.java
+ * <p><b>Description:</b> Workflow Factory Class
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -30,65 +28,55 @@ import java.sql.Timestamp;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@zsolv.com)
- *@created    October 29, 2001
+ *@created    October 31, 2001
  *@version    1.0
  */
 
-public interface WfEventAudit  {
+public class WfFactory {
   
-  /**
+  
+  /** Creates a new {@link WfActivity} instance.
    * @throws WfException
-   * @throws SourceNotAvailable
-   * @return
+   * @return An instance of the WfActivify Interface
    */
-  public WfExecutionObject source() throws WfException, SourceNotAvailable;
+  public static WfActivity newWfActivity() throws WfException {
+  }
   
-  /**
+  
+  /** Creates a new {@link WfAssignment} instance.
    * @throws WfException
-   * @return
+   * @return An instance of the WfAssignment Interface
    */
-  public Timestamp timeStamp() throws WfException;
+  public static WfAssignment newWfAssignment() throws WfException {
+  }
   
-  /**
+  
+  /** Creates a new {@link WfProcess} instance.
    * @throws WfException
-   * @return
+   * @return An instance of the WfProcess Interface.
    */
-  public String eventType() throws WfException;
+  public static WfProcess newWfProcess() throws WfException {
+  }
   
-  /**
+  
+  /** Creates a new {@link WfProcessMgr} instance.
    * @throws WfException
-   * @return
+   * @return An instance of the WfProcessMgr Interface.
    */
-  public String activityKey() throws WfException;
+  public static WfProcessMgr newWfProcessMgr() throws WfException {
+  }
   
-  /**
+  /** Creates a new {@link WfRequester} instance.
    * @throws WfException
-   * @return
+   * @return An instance of the WfRequester Interface.
    */
-  public String activityName() throws WfException;
+  public static WfRequester newWfRequester() throws WfException {
+  }
   
-  /**
+  /** Creates a new {@link WfResource} instance.
    * @throws WfException
-   * @return
+   * @return An instance of the WfResource Interface.
    */
-  public String processKey() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String processName() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String processMgrName() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String processMgrVersion() throws WfException;
-  
-} // interface WfEventAuditOperations
+  public static WfResource newWfResource() throws WfException {
+  }
+}
