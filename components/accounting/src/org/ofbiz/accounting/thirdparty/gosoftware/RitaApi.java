@@ -26,25 +26,23 @@ package org.ofbiz.accounting.thirdparty.gosoftware;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.DataInputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Map;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.ObjectType;
-import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ObjectType;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
+import org.apache.commons.collections.MapIterator;
+import org.apache.commons.collections.map.LinkedMap;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
- * @since      Sep 28, 2004
+ * @version    $Rev$
+ * @since      3.2
  */
 public class RitaApi {
 
@@ -108,49 +106,25 @@ public class RitaApi {
     protected static final int MODE_IN = 10;
 
     // instance variables
-    protected Document document = null;
-    protected Element req = null;
+    protected LinkedMap document = null;
     protected String host = null;
     protected int port = 0;
     protected int mode = 0;
 
-    public RitaApi(Document document) {
-        this.document = document;
-        Element rootElement = this.document.getDocumentElement();
-        if (reqElement.equals(rootElement.getNodeName())) {
-            this.req = rootElement;
-        } else {
-            this.req = UtilXml.firstChildElement(rootElement, reqElement);
-        }
+    public RitaApi(Map document) {
+        this.document = new LinkedMap(document);
         this.mode = MODE_OUT;
     }
 
-    public RitaApi(boolean isFile) {
-        // initialize the document
-        String initialElement = rootElement;
-        if (!isFile) {
-            initialElement = reqElement;
-        }
-
-        this.document = UtilXml.makeEmptyXmlDocument(initialElement);
-        Element root = this.document.getDocumentElement();
-        if (isFile) {
-            root.setAttribute("xmlns", xschema);
-            this.req = UtilXml.addChildElement(root, reqElement, document);
-        } else {
-            this.req = root;
-        }
+    public RitaApi() {
+        this.document = new LinkedMap();
         this.mode = MODE_IN;
     }
 
     public RitaApi(String host, int port) {
-        this(false);
+        this();
         this.host = host;
         this.port = port;
-    }
-
-    public RitaApi() {
-        this(true);
     }
 
     public void set(String name, Object value) {
@@ -175,7 +149,7 @@ public class RitaApi {
         }
 
         // append to the XML document
-        UtilXml.addChildElementValue(req, name, objString, document);
+        document.put(name, objString);
     }
 
     public String get(String name) {
@@ -183,19 +157,25 @@ public class RitaApi {
             throw new IllegalArgumentException("Field [" + name + "] is not a valid OUT parameter");
         }
 
-        return UtilXml.childElementValue(req, name);
+        return (String) document.get(name);
     }
 
     public String toString() {
-        try {
-            return UtilXml.writeXmlDocument(document);
-        } catch (IOException e) {
-            Debug.logError(e, module);
-            throw new IllegalStateException("Unable to write document as String");
+        StringBuffer buf = new StringBuffer();
+        MapIterator i = document.mapIterator();
+        while (i.hasNext()) {
+            String name = (String) i.next();
+            String value = (String) i.getValue();
+            buf.append(name);
+            buf.append(" ");
+            buf.append(value);
+            buf.append("\r\n");
         }
+        buf.append(".\r\n");
+        return buf.toString();
     }
 
-    public Document getDocument() {
+    public Map getDocument() {
         return this.document;
     }
 
@@ -204,29 +184,47 @@ public class RitaApi {
             throw new GeneralException("TCP transaction not supported without valid host/port configuration");
         }
 
-        byte readBuffer[] = new byte[2250];
+        Debug.log("Sending - \n" + this.toString(), module);
         if (mode == MODE_IN) {
             Socket sock = new Socket(host, port);
+
+            // get the streams
+            BufferedReader br = new BufferedReader(new InputStreamReader(sock.getInputStream()));
             PrintStream ps = new PrintStream(sock.getOutputStream());
-            DataInputStream dis = new DataInputStream(sock.getInputStream());
+
+            // send the request
             ps.print(this.toString());
             ps.flush();
 
-            StringBuffer buf = new StringBuffer();
-            int size;
-            while ((size = dis.read(readBuffer)) > -1) {
-                buf.append(new String(readBuffer, 0, size));
-            }
-            Document outDoc = null;
-            try {
-                outDoc = UtilXml.readXmlDocument(buf.toString(), false);
-            } catch (ParserConfigurationException e) {
-                throw new GeneralException(e);
-            } catch (SAXException e) {
-                throw new GeneralException(e);
-            }
+            // the output map
+            LinkedMap docMap = new LinkedMap();
+            String line;
 
-            RitaApi out = new RitaApi(outDoc);
+            // read the response
+            while ((line = br.readLine()) != null) {
+                Debug.log(line, module);
+                if (!line.trim().equals(".")) {
+                    String[] lineSplit = line.trim().split(" ");
+                    if (lineSplit != null && lineSplit.length == 2) {
+                        docMap.put(lineSplit[0], lineSplit[1]);
+                    } else {
+                        Debug.logWarning("Line split error - " + line, module);
+                    }
+                } else {
+                    break;
+                }
+            }
+            Debug.log("Reading finished.", module);
+
+            // send session finished signal
+            ps.print("..\r\n");
+            ps.flush();
+
+            // close the streams
+            ps.close();
+            br.close();
+
+            RitaApi out = new RitaApi(docMap);
             return out;
         } else {
             throw new IllegalStateException("Cannot send output object");
