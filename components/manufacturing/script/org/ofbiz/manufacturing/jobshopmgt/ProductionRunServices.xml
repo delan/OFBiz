@@ -107,7 +107,7 @@
                     <field-to-field field-name="workEffortId" map-name="parameters" to-map-name="issuanceCreateMap"/>
                     <field-to-field field-name="inventoryItemId" map-name="lastNonSerInventoryItem" to-map-name="issuanceCreateMap"/>
                     <env-to-env env-name="parameters.quantityNotIssued" to-env-name="issuanceCreateMap.quantity"/>
-                    <call-service service-name="createWorkEffortInventoryAssign" in-map-name="issuanceCreateMap">
+                    <call-service service-name="assignInventoryToWorkEffort" in-map-name="issuanceCreateMap">
                     </call-service>
 
                     <!-- subtract from quantityNotIssued from the availableToPromise and quantityOnHand of existing inventory item -->
@@ -136,7 +136,7 @@
                     <field-to-field field-name="workEffortId" map-name="parameters" to-map-name="issuanceCreateMap"/>
                     <field-to-field field-name="inventoryItemId" map-name="newNonSerInventoryItem" to-map-name="issuanceCreateMap"/>
                     <env-to-env env-name="parameters.quantityNotIssued" to-env-name="issuanceCreateMap.quantity"/>
-                    <call-service service-name="createWorkEffortInventoryAssign" in-map-name="issuanceCreateMap">
+                    <call-service service-name="assignInventoryToWorkEffort" in-map-name="issuanceCreateMap">
                     </call-service>
 
                     <!-- also create a detail record with the quantities -->
@@ -173,7 +173,7 @@
                     <field-to-field field-name="workEffortId" map-name="parameters" to-map-name="issuanceCreateMap"/>
                     <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="issuanceCreateMap"/>
                     <calculate field-name="quantity" map-name="issuanceCreateMap"><number value="1"/></calculate>
-                    <call-service service-name="createWorkEffortInventoryAssign" in-map-name="issuanceCreateMap"/>
+                    <call-service service-name="assignInventoryToWorkEffort" in-map-name="issuanceCreateMap"/>
                     <clear-field field-name="issuanceCreateMap"/>
 
                     <calculate field-name="parameters.quantityNotIssued">
@@ -196,7 +196,7 @@
                         <field-to-field field-name="workEffortId" map-name="parameters" to-map-name="issuanceCreateMap"/>
                         <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="issuanceCreateMap"/>
                         <field-to-field field-name="deductAmount" map-name="parameters" to-field-name="quantity" to-map-name="issuanceCreateMap"/>
-                        <call-service service-name="createWorkEffortInventoryAssign" in-map-name="issuanceCreateMap">
+                        <call-service service-name="assignInventoryToWorkEffort" in-map-name="issuanceCreateMap">
                         </call-service>
 
                         <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
