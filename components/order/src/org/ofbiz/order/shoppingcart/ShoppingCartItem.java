@@ -54,6 +54,7 @@ import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
+import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -104,7 +105,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Map quantityUsedPerPromoActual = new HashMap();
     private Map additionalProductFeatureAndAppls = new HashMap();
     private List alternativeOptionProductIds = null;
-
+    private ProductConfigWrapper configWrapper = null;
 
     /**
      * Makes a ShoppingCartItem and adds it to the cart.
@@ -122,6 +123,26 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @throws CartItemModifyException
      */
     public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException, ItemNotFoundException {
+        return ShoppingCartItem.makeItem(cartLocation, productId, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, null, dispatcher, cart);
+    }
+    
+    /**
+     * Makes a ShoppingCartItem and adds it to the cart.
+     * NOTE: This method will get the product entity and check to make sure it can be purchased.
+     *
+     * @param cartLocation The location to place this item; null will place at the end
+     * @param productId The primary key of the product being added
+     * @param quantity The quantity to add
+     * @param additionalProductFeatureAndAppls Product feature/appls map
+     * @param attributes All unique attributes for this item (NOT features)
+     * @param prodCatalogId The catalog this item was added from
+     * @param configWrapper The product configuration wrapper (null if the product is not configurable)
+     * @param dispatcher LocalDispatcher object for doing promotions, etc
+     * @param cart The parent shopping cart object this item will belong to
+     * @return a new ShoppingCartItem object
+     * @throws CartItemModifyException
+     */
+    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException, ItemNotFoundException {
         GenericDelegator delegator = cart.getDelegator();
         GenericValue product = null;
 
@@ -151,9 +172,9 @@ public class ShoppingCartItem implements java.io.Serializable {
             throw new ItemNotFoundException(excMsg);
         }
 
-        return makeItem(cartLocation, product, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, dispatcher, cart, true);
+        return makeItem(cartLocation, product, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, true);
     }
-
+    
     /**
      * Makes a ShoppingCartItem and adds it to the cart.
      * WARNING: This method does not check if the product is in a purchase category.
@@ -171,7 +192,28 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @throws CartItemModifyException
      */
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
-        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, cart.getLocale());
+        return ShoppingCartItem.makeItem(cartLocation, product, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, null, dispatcher, cart, doPromotions);
+    }
+    
+    /**
+     * Makes a ShoppingCartItem and adds it to the cart.
+     * WARNING: This method does not check if the product is in a purchase category.
+     *
+     * @param cartLocation The location to place this item; null will place at the end
+     * @param product The product entity relating to the product being added
+     * @param quantity The quantity to add
+     * @param additionalProductFeatureAndAppls Product feature/appls map
+     * @param attributes All unique attributes for this item (NOT features)
+     * @param prodCatalogId The catalog this item was added from
+     * @param configWrapper The product configuration wrapper (null if the product is not configurable)
+     * @param dispatcher LocalDispatcher object for doing promotions, etc
+     * @param cart The parent shopping cart object this item will belong to
+     * @param doPromotions Indicates if we should run promotions
+     * @return a new ShoppingCartItem object
+     * @throws CartItemModifyException
+     */
+    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
+        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale());
 
         // check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
@@ -201,7 +243,18 @@ public class ShoppingCartItem implements java.io.Serializable {
             Debug.logWarning(excMsg, module);
             throw new CartItemModifyException(excMsg);
         }
+        
+        // check to see if the product is fully configured
+        if ("AGGREGATED".equals(product.getString("productTypeId"))) {
+            if (configWrapper == null || !configWrapper.isCompleted()) {
+                String excMsg = "Tried to add the Product " + product.getString("productName") +
+                    " (productId: " + product.getString("productId") + ") to the cart, not adding: the product is not configured correctly.";
 
+                Debug.logWarning(excMsg, module);
+                throw new CartItemModifyException(excMsg);
+            }
+        }
+        
         // add to cart before setting quantity so that we can get order total, etc
         if (cartLocation == null) {
             cart.addItemToEnd(newItem);
@@ -222,6 +275,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         return newItem;
     }
+    
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
         return makeItem(cartLocation, product, 0.00, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, dispatcher, cart, doPromotions);
     }
@@ -309,6 +363,11 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Creates new ShoppingCartItem object. */
     protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, Locale locale) {
+        this(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, null, locale);
+    }
+
+    /** Creates new ShoppingCartItem object. */
+    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, Locale locale) {
         this._product = product;
         this.productId = _product.getString("productId");
         this.itemType = "PRODUCT_ORDER_ITEM";
@@ -319,6 +378,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
         this.addAllProductFeatureAndAppls(additionalProductFeatureAndAppls);
         this.locale = locale;
+        this.configWrapper = configWrapper;
     }
 
     /** Creates new ShopingCartItem object. */
@@ -441,6 +501,11 @@ public class ShoppingCartItem implements java.io.Serializable {
                 }
 
                 this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
+                
+                // If product is configurable, the price is taken from the configWrapper.
+                if (configWrapper != null) {
+                    this.basePrice = configWrapper.getTotalPrice();
+                }
             } catch (GenericServiceException e) {
                 throw new CartItemModifyException("There was an error while calculating the price", e);
             }
@@ -754,7 +819,11 @@ public class ShoppingCartItem implements java.io.Serializable {
             return null;
         }
     }
-   
+
+    public ProductConfigWrapper getConfigWrapper() {
+        return configWrapper;
+    }
+    
     /** Returns the item's unit weight */
     public double getWeight() {
         GenericValue product = getProduct();
@@ -1174,8 +1243,18 @@ public class ShoppingCartItem implements java.io.Serializable {
         return equals(productId, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, false);
     }
 
-    /** Compares the specified object with this cart item. */
+    /** Compares the specified object with this cart item. Defaults isPromo to false. */
+    public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, double selectedAmount) {
+        return equals(productId, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, configWrapper, false);
+    }
+
+    /** Compares the specified object with this cart item. Defaults isPromo to false. */
     public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, double selectedAmount, boolean isPromo) {
+        return equals(productId, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, null, isPromo);
+    }
+    
+    /** Compares the specified object with this cart item. */
+    public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, double selectedAmount, ProductConfigWrapper configWrapper, boolean isPromo) {
         if (this.productId == null || productId == null) {
             // all non-product items are unique
             return false;
@@ -1211,6 +1290,10 @@ public class ShoppingCartItem implements java.io.Serializable {
             return false;
         }
 
+        if (configWrapper != null && !configWrapper.equals(this.configWrapper)) {
+            return false;
+        }
+        
         return true;
     }
 

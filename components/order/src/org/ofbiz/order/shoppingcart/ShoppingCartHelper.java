@@ -46,6 +46,7 @@ import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.product.config.ProductConfigWrapper;
 
 /**
  * A facade over the 
@@ -97,7 +98,7 @@ public class ShoppingCartHelper {
     /** Event to add an item to the shopping cart. */
     public Map addToCart(String catalogId, String shoppingListId, String shoppingListItemSeqId, String productId,
             String productCategoryId, String itemType, String itemDescription, double price,
-            double amount, double quantity, Map context) {
+            double amount, double quantity, ProductConfigWrapper configWrapper, Map context) {
         Map result;
         Map attributes = null;
         String errMsg = null;
@@ -181,7 +182,7 @@ public class ShoppingCartHelper {
         try {
             int itemId = -1;
             if (productId != null) {
-                itemId = cart.addOrIncreaseItem(productId, amount, quantity, null, attributes, catalogId, dispatcher);
+                itemId = cart.addOrIncreaseItem(productId, amount, quantity, null, attributes, catalogId, configWrapper, dispatcher);
             } else {
                 itemId = cart.addNonProductItem(itemType, itemDescription, productCategoryId, price, quantity, attributes, catalogId, dispatcher);
             }

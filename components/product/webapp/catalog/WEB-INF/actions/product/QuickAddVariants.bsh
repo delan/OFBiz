@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -97,7 +97,7 @@ while (true) {
 	
     curProductFeatureAndAppls = new ArrayList();
     existingVariantProductIds = new ArrayList();
-    defaultVariantProductId = productId + "_";
+    defaultVariantProductId = productId;
     featureCombinationInfo.put("curProductFeatureAndAppls", curProductFeatureAndAppls);
     featureCombinationInfo.put("existingVariantProductIds", existingVariantProductIds);
     
@@ -108,9 +108,10 @@ while (true) {
         productFeatureAndAppl = featureValues.get(indices[featureTypeIndex]);
         idCode = productFeatureAndAppl.getString("idCode");
         if (idCode != null) {
-            if (idCode.length() > 2) {
-                idCode = idCode.substring(0, 2);
-            }
+            // Uncomment the following lines if you want to shorten the idCodes in the productId
+            //if (idCode.length() > 2) {
+            //    idCode = idCode.substring(0, 2);
+            //}
             defaultVariantProductId += idCode;
         }
         // add to list of features for this combination: productFeatureAndAppl

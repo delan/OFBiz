@@ -244,6 +244,18 @@ function setAlternateGwp(field) {
                     <#-- <b>${cartLineIndex}</b> - -->
                     <a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} -
                     ${cartLine.getName()?if_exists}</a> : ${cartLine.getDescription()?if_exists}
+                    <#-- For configurable products, the selected options are shown -->
+                    <#if cartLine.getConfigWrapper()?exists>
+                      <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()?if_exists>
+                      <#if selectedOptions?exists>
+                        <div>&nbsp;</div>
+                        <#list selectedOptions as option>
+                          <div>
+                            ${option.getDescription()}
+                          </div>
+                        </#list>
+                      </#if>
+                    </#if>
 
                     <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
                     <#assign itemProduct = cartLine.getProduct()>
