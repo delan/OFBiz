@@ -146,7 +146,7 @@
     <request-map uri="processorder">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="createOrder"/>
-        <response name="success" type="request" value="renderconfirmorder"/>
+        <response name="success" type="request" value="clearCartForOrder"/>
         <response name="eft" type="request" value="authorizePayment"/>
         <response name="cc" type="request" value="authorizePayment"/>
         <response name="error" type="view" value="checkout"/>
