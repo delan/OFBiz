@@ -135,7 +135,7 @@ public class ServiceUtil {
         if (outMsg.length() > 0) {
             StringBuffer strBuf = new StringBuffer();
             if (errorPrefix != null) strBuf.append(errorPrefix);
-            strBuf.append(outMsg);
+            strBuf.append(outMsg.toString());
             if (errorSuffix != null) strBuf.append(errorSuffix);
             return strBuf.toString();
         } else {
@@ -159,7 +159,7 @@ public class ServiceUtil {
         if (outMsg.length() > 0) {
             StringBuffer strBuf = new StringBuffer();
             if (successPrefix != null) strBuf.append(successPrefix);
-            strBuf.append(outMsg);
+            strBuf.append(outMsg.toString());
             if (successSuffix != null) strBuf.append(successSuffix);
             return strBuf.toString();
         } else {
