@@ -61,7 +61,7 @@
 
     <request-map uri="autoLogout">
         <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="autoLoginRemove"/>
-        <response name="success" type="success" value="checkLogin"/>
+        <response name="success" type="request" value="checkLogin"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <!-- End of Security Mappings -->
