@@ -53,8 +53,7 @@
 
     <entity entity-name="WorkflowActivity" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Activity Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Activity Entity">
       <field name="packageId" type="id-long-ne"></field>
       <field name="processId" type="id-long-ne"></field>
       <field name="activityId" type="id-long-ne"></field>
@@ -165,8 +164,7 @@
     </entity>
     <entity entity-name="WorkflowActivityLoop" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Activity Loop Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Activity Loop Entity">
       <field name="packageId" type="id-long-ne"></field>
       <field name="processId" type="id-long-ne"></field>
       <field name="activityId" type="id-long-ne"></field>
@@ -183,8 +181,7 @@
     </entity>
     <entity entity-name="WorkflowActivitySubFlow" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Activity SubFlow Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Activity SubFlow Entity">
       <field name="packageId" type="id-long-ne"></field>
       <field name="processId" type="id-long-ne"></field>
       <field name="activityId" type="id-long-ne"></field>
@@ -206,8 +203,7 @@
     </entity>
     <entity entity-name="WorkflowActivityTool" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Activity Tool Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Activity Tool Entity">
       <field name="packageId" type="id-long-ne"></field>
       <field name="processId" type="id-long-ne"></field>
       <field name="activityId" type="id-long-ne"></field>
@@ -228,8 +224,7 @@
     </entity>
     <entity entity-name="WorkflowApplication" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Application Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Application Entity">
       <description>The primary key of a WorkflowApplication is funny because it can be associated with either a WorkflowPackage or a WorkflowProcess. If it is associated with a WorkflowPackage, then the processId will be set to the constant "_NA_".</description>
       <field name="packageId" type="id-long-ne"></field>
       <field name="processId" type="id-long-ne"></field>
@@ -254,8 +249,7 @@
     </entity>
     <entity entity-name="WorkflowComplexTypeInfo" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Complex Type Information Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Complex Type Information Entity">
       <field name="complexTypeInfoId" type="id-ne"></field>
       <field name="memberParentInfoId" type="id"></field>
       <field name="dataTypeEnumId" type="id"></field>
@@ -278,8 +272,7 @@
     </entity>
     <entity entity-name="WorkflowDataField" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Data Field Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Data Field Entity">
       <description>The primary key of a WorkflowDataField is funny because it can be associated with either a WorkflowPackage or a WorkflowProcess. If it is associated with a WorkflowPackage, then the processId will be set to the constant "_NA_".</description>
       <field name="packageId" type="id-long-ne"></field>
       <field name="processId" type="id-long-ne"></field>
@@ -310,8 +303,7 @@
     </entity>
     <entity entity-name="WorkflowFormalParam" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Formal Parameter Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Formal Parameter Entity">
       <description>The primary key of a WorkflowFormalParam is funny because it can be associated with either a WorkflowProcess or a WorkflowApplication. If it is associated with a WorkflowProcess, then the applicationId will be set to the constant "_NA_". Note that if it is associated with a WorkflowApplication, that entity may be associated with either a package or a process, so see the description on the WorkflowApplication entity.</description>
       <field name="packageId" type="id-long-ne"></field>
       <field name="processId" type="id-long-ne"></field>
@@ -347,8 +339,7 @@
     </entity>
     <entity entity-name="WorkflowPackage" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Package Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Package Entity">
       <field name="packageId" type="id-long-ne"></field>
       <field name="packageName" type="name"></field>
       <field name="description" type="description"></field>
@@ -417,8 +408,7 @@
     </entity>
     <entity entity-name="WorkflowPackageExternal" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Package External Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Package External Entity">
       <field name="packageId" type="id-long-ne"></field>
       <field name="externalPackageId" type="id-long-ne"></field>	
       <prim-key field="packageId" />	
@@ -432,8 +422,7 @@
     </entity>
     <entity entity-name="WorkflowParticipant" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Participant Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Participant Entity">
       <field name="participantId" type="id-ne"></field>
       <field name="participantName" type="name"></field>
       <field name="partyId" type="id"></field>
@@ -466,8 +455,7 @@
     </entity>
     <entity entity-name="WorkflowParticipantList" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Participant List Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Participant List Entity">
       <field name="participantListId" type="id-ne"></field>
       <field name="participantId" type="id"></field>
       <field name="participantIndex" type="numeric"></field>	
@@ -491,8 +479,7 @@
     </entity>
     <entity entity-name="WorkflowParticipantType" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Participant Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Participant Type Entity">
       <field name="participantTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="typeCode" type="short-varchar"></field>
@@ -508,8 +495,7 @@
     </entity>	
     <view-entity entity-name="WorkflowParticipantsView" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Participants View Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">	
+            title="Workflow Participants View Entity">	
       <member-entity entity-alias="WP" entity-name="WorkflowParticipant" />	
       <member-entity entity-alias="WPL" entity-name="WorkflowParticipantList" />
       <alias entity-alias="WP" name="participantId" prim-key="true" />
@@ -556,8 +542,7 @@
     </view-entity>
     <entity entity-name="WorkflowProcess" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Process Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Process Entity">
       <field name="packageId" type="id-long-ne"></field>
       <field name="processId" type="id-long-ne"></field>
       <field name="objectName" type="name"></field>
@@ -634,8 +619,7 @@
     </entity>
     <entity entity-name="WorkflowSpecification" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Specification Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Specification Entity">
       <field name="specificationId" type="id-ne"></field>
       <field name="specificationName" type="name"></field>
       <field name="description" type="description"></field>
@@ -647,8 +631,7 @@
     </entity>
     <entity entity-name="WorkflowTransition" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Transition Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Transition Entity">
       <field name="packageId" type="id-long-ne"></field>
       <field name="processId" type="id-long-ne"></field>
       <field name="transitionId" type="id-long-ne"></field>
@@ -690,8 +673,7 @@
     </entity>
     <entity entity-name="WorkflowTransitionRef" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Transition Reference Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Transition Reference Entity">
       <field name="packageId" type="id-long-ne"></field>
       <field name="processId" type="id-long-ne"></field>
       <field name="activityId" type="id-long-ne"></field>
@@ -713,8 +695,7 @@
     </entity>
     <entity entity-name="WorkflowTypeDeclaration" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Type Declaration Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Workflow Type Declaration Entity">
       <field name="packageId" type="id-long-ne"></field>
       <field name="typeId" type="id-ne"></field>
       <field name="typeName" type="name"></field>

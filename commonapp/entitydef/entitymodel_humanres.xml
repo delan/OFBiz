@@ -55,8 +55,7 @@
 
     <entity entity-name="EmployeePerformanceReview" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Employee Performance Review Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Employee Performance Review Entity">
       <field name="employeePartyId" type="id-ne"></field>
       <field name="employeeRoleTypeId" type="id-ne"></field>
       <field name="perfReviewId" type="id-ne"></field>
@@ -78,8 +77,7 @@
     </entity>
     <entity entity-name="PartyQual" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Party Qualification Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Party Qualification Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="partyQualTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -93,8 +91,7 @@
     </entity>
     <entity entity-name="PartyQualType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Party Qualification Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Party Qualification Type Entity">
       <field name="partyQualTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -112,8 +109,7 @@
     </entity>
     <entity entity-name="PartyResume" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Resume Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Resume Entity">
       <field name="resumeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="resumeDate" type="date-time"></field>
@@ -123,8 +119,7 @@
     </entity>
     <entity entity-name="PartySkill" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Party Skill Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Party Skill Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="skillTypeId" type="id-ne"></field>
       <field name="yearsExperience" type="numeric"></field>
@@ -136,24 +131,21 @@
     </entity>
     <entity entity-name="PerfRatingType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Performance Rating Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Performance Rating Type Entity">
       <field name="perfRatingTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="perfRatingTypeId" />
     </entity>
     <entity entity-name="PerfReviewItemType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Performance Review Item Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Performance Review Item Type Entity">
       <field name="perfReviewItemTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="perfReviewItemTypeId" />
     </entity>
     <entity entity-name="PerformanceNote" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Performance Note Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Performance Note Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -166,8 +158,7 @@
     </entity>
     <entity entity-name="PerformanceReviewItem" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Performance Review Item Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Performance Review Item Entity">
       <field name="employeePartyId" type="id-ne"></field>
       <field name="employeeRoleTypeId" type="id-ne"></field>
       <field name="perfReviewId" type="id-ne"></field>
@@ -182,8 +173,7 @@
     </entity>
     <entity entity-name="PersonTraining" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Person Training Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Person Training Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="trainingClassTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -194,24 +184,21 @@
     </entity>
     <entity entity-name="ResponsibilityType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Responsibility Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Responsibility Type Entity">
       <field name="responsibilityTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="responsibilityTypeId" />
     </entity>
     <entity entity-name="SkillType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Skill Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Skill Type Entity">
       <field name="skillTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="skillTypeId" />
     </entity>
     <entity entity-name="TrainingClassType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Training Class Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Training Class Type Entity">
       <field name="trainingClassTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="trainingClassTypeId" />
@@ -223,8 +210,7 @@
 
     <entity entity-name="BenefitType" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Benefit Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Benefit Type Entity">
       <field name="benefitTypeId" type="id-ne"></field>
       <field name="benefitName" type="name"></field>
       <field name="description" type="description"></field>
@@ -233,8 +219,7 @@
     </entity>
     <entity entity-name="Employment" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Employment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Employment Entity">
       <field name="roleTypeIdFrom" type="id-ne"></field>
       <field name="roleTypeIdTo" type="id-ne"></field>
       <field name="partyIdFrom" type="id-ne"></field>
@@ -251,8 +236,7 @@
     </entity>
     <entity entity-name="EmploymentApp" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Employment Application Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Employment Application Entity">
       <field name="applicationId" type="id-ne"></field>
       <field name="positionId" type="id"></field>
       <field name="statusId" type="id"></field>
@@ -264,16 +248,14 @@
     </entity>
     <entity entity-name="EmploymentAppSourceType" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Employment Application Source Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Employment Application Source Type Entity">
       <field name="employmentAppSourceTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="employmentAppSourceTypeId" />
     </entity>
     <entity entity-name="PartyBenefit" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Party Benefit Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Party Benefit Entity">
       <field name="roleTypeIdFrom" type="id-ne"></field>
       <field name="roleTypeIdTo" type="id-ne"></field>
       <field name="partyIdFrom" type="id-ne"></field>
@@ -294,8 +276,7 @@
     </entity>
     <entity entity-name="PayCheck" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Pay Check Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Pay Check Entity">
       <field name="paymentId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>	
@@ -303,8 +284,7 @@
     </entity>
     <entity entity-name="PayGrade" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Pay Grade Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Pay Grade Entity">
       <field name="payGradeId" type="id-ne"></field>
       <field name="payGradeName" type="name"></field>
       <field name="comments" type="comment"></field>	
@@ -312,8 +292,7 @@
     </entity>
     <entity entity-name="PayHistory" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Pay History Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Pay History Entity">
       <field name="roleTypeIdFrom" type="id-ne"></field>
       <field name="roleTypeIdTo" type="id-ne"></field>
       <field name="partyIdFrom" type="id-ne"></field>
@@ -333,8 +312,7 @@
     </entity>
     <entity entity-name="PayrollPreference" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Payroll Preference Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Payroll Preference Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
       <field name="payrollPreferenceSeqId" type="id-ne"></field>
@@ -354,16 +332,14 @@
     </entity>
     <entity entity-name="RejectionReason" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Rejection Reason Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Rejection Reason Entity">
       <field name="rejectionId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="rejectionId" />
     </entity>
     <entity entity-name="SalaryStep" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Salary Step Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Salary Step Entity">
       <field name="salaryStepSeqId" type="id-ne"></field>
       <field name="payGradeId" type="id-ne"></field>
       <field name="dateModified" type="date-time"></field>
@@ -373,24 +349,21 @@
     </entity>
     <entity entity-name="TerminationReason" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Termination Reason Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Termination Reason Entity">
       <field name="terminationReasonId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="terminationReasonId" />
     </entity>
     <entity entity-name="TerminationType" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Termination Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Termination Type Entity">
       <field name="terminationTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="terminationTypeId" />
     </entity>
     <entity entity-name="UnemploymentClaim" 
             package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Unemployment Claim Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Unemployment Claim Entity">
       <field name="unemploymentClaimId" type="id-ne"></field>
       <field name="unemploymentClaimDate" type="date-time"></field>
       <field name="description" type="description"></field>
@@ -409,8 +382,7 @@
 
     <entity entity-name="EmplPosition" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="EmplPosition Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="EmplPosition Entity">
       <field name="positionId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
       <field name="partyId" type="id"></field>
@@ -429,16 +401,14 @@
     </entity>
     <entity entity-name="EmplPositionClassType" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="EmplPosition Classification Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="EmplPosition Classification Type Entity">
       <field name="positionClassTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="positionClassTypeId" />
     </entity>
     <entity entity-name="EmplPositionFulfillment" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="EmplPosition Fulfillment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="EmplPosition Fulfillment Entity">
       <field name="positionId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -450,8 +420,7 @@
     </entity>
     <entity entity-name="EmplPositionReportingStruct" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="EmplPosition Reporting Structure Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="EmplPosition Reporting Structure Entity">
       <field name="positionIdReportingTo" type="id-ne"></field>
       <field name="positionIdManagedBy" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -464,8 +433,7 @@
     </entity>
     <entity entity-name="EmplPositionResponsibility" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="EmplPosition Responsibility Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="EmplPosition Responsibility Entity">
       <field name="positionId" type="id-ne"></field>
       <field name="responsibilityTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -477,8 +445,7 @@
     </entity>
     <entity entity-name="EmplPositionType" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="EmplPosition Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="EmplPosition Type Entity">
       <field name="positionTypeId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
@@ -487,8 +454,7 @@
     </entity>
     <entity entity-name="EmplPositionTypeClass" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="EmplPosition Type Class Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="EmplPosition Type Class Entity">
       <field name="positionTypeId" type="id-ne"></field>
       <field name="positionClassTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -500,8 +466,7 @@
     </entity>
     <entity entity-name="ValidResponsibility" 
             package-name="org.ofbiz.commonapp.humanres.position"
-            title="Valid Responsibility Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Valid Responsibility Entity">
       <field name="positionTypeId" type="id-ne"></field>
       <field name="responsibilityTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>

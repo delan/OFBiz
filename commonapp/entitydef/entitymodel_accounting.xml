@@ -57,8 +57,7 @@
 
     <entity entity-name="Budget" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="budgetTypeId" type="id"></field>
       <field name="standardTimePeriodId" type="id"></field>
@@ -76,8 +75,7 @@
     </entity>
     <entity entity-name="BudgetAttribute" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Attribute Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -92,8 +90,7 @@
     </entity>
     <entity entity-name="BudgetItem" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Item Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Item Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="budgetItemSeqId" type="id-ne"></field>
       <field name="budgetItemTypeId" type="id"></field>
@@ -115,8 +112,7 @@
     </entity>
     <entity entity-name="BudgetItemAttribute" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Item Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Item Attribute Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="budgetItemSeqId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
@@ -134,8 +130,7 @@
     </entity>
     <entity entity-name="BudgetItemType" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Item Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Item Type Entity">
       <field name="budgetItemTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -156,8 +151,7 @@
     </entity>
     <entity entity-name="BudgetItemTypeAttr" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Item Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Item Type Attribute Entity">
       <field name="budgetItemTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="budgetItemTypeId" />	
@@ -174,8 +168,7 @@
     </entity>
     <entity entity-name="BudgetReview" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Review Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Review Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="budgetReviewId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
@@ -188,8 +181,7 @@
     </entity>
     <entity entity-name="BudgetReviewResultType" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Review Result Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Review Result Type Entity">
       <field name="budgetReviewResultTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="comments" type="comment"></field>	
@@ -197,8 +189,7 @@
     </entity>
     <entity entity-name="BudgetRevision" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Revision Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Revision Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="revisionSeqId" type="id-ne"></field>
       <field name="dateRevised" type="date-time"></field>	
@@ -207,8 +198,7 @@
     </entity>
     <entity entity-name="BudgetRevisionImpact" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Revision Impact Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Revision Impact Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="budgetItemSeqId" type="id-ne"></field>
       <field name="revisionSeqId" type="id-ne"></field>
@@ -221,8 +211,7 @@
     </entity>
     <entity entity-name="BudgetRole" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Role Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
@@ -232,16 +221,14 @@
     </entity>
     <entity entity-name="BudgetScenario" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Scenario Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Scenario Entity">
       <field name="budgetScenarioId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="budgetScenarioId" />
     </entity>
     <entity entity-name="BudgetScenarioApplication" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Scenario Application Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Scenario Application Entity">
       <field name="budgetScenarioApplicId" type="id-ne"></field>
       <field name="budgetScenarioId" type="id-ne"></field>
       <field name="budgetId" type="id"></field>
@@ -253,8 +240,7 @@
     </entity>
     <entity entity-name="BudgetScenarioRule" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Scenario Rule Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Scenario Rule Entity">
       <field name="budgetScenarioId" type="id-ne"></field>
       <field name="budgetItemTypeId" type="id-ne"></field>
       <field name="amountChange" type="currency-amount"></field>
@@ -264,8 +250,7 @@
     </entity>
     <entity entity-name="BudgetStatus" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Status Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Status Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="statusDate" type="date-time"></field>
@@ -275,8 +260,7 @@
     </entity>
     <entity entity-name="BudgetType" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Type Entity">
       <field name="budgetTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -297,8 +281,7 @@
     </entity>
     <entity entity-name="BudgetTypeAttr" 
             package-name="org.ofbiz.commonapp.accounting.budget"
-            title="Budget Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Budget Type Attribute Entity">
       <field name="budgetTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="budgetTypeId" />	
@@ -320,8 +303,7 @@
 
     <entity entity-name="Depreciation" 
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
-            title="Depreciation Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Depreciation Entity">
       <field name="acctgTransId" type="id-ne"></field>
       <field name="assetId" type="id"></field>
       <field name="fixedAssetId" type="id"></field>	
@@ -329,8 +311,7 @@
     </entity>
     <entity entity-name="DepreciationMethod" 
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
-            title="Depreciation Method Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Depreciation Method Entity">
       <field name="depreciationMethodId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="formula" type="long-varchar"></field>	
@@ -338,8 +319,7 @@
     </entity>
     <entity entity-name="FixedAsset" 
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
-            title="Fixed Asset Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Fixed Asset Entity">
       <field name="fixedAssetId" type="id-ne"></field>
       <field name="fixedAssetTypeId" type="id"></field>
       <field name="partyId" type="id"></field>
@@ -366,8 +346,7 @@
     </entity>
     <entity entity-name="FixedAssetAttribute" 
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
-            title="Fixed Asset Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Fixed Asset Attribute Entity">
       <field name="fixedAssetId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -382,8 +361,7 @@
     </entity>
     <entity entity-name="FixedAssetDepMethod" 
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
-            title="Fixed Asset Depreciation Method Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Fixed Asset Depreciation Method Entity">
       <field name="depreciationMethodId" type="id-ne"></field>
       <field name="fixedAssetId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -393,8 +371,7 @@
     </entity>
     <entity entity-name="FixedAssetType" 
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
-            title="Fixed Asset Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Fixed Asset Type Entity">
       <field name="fixedAssetTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -415,8 +392,7 @@
     </entity>
     <entity entity-name="FixedAssetTypeAttr" 
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
-            title="Fixed Asset Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Fixed Asset Type Attribute Entity">
       <field name="fixedAssetTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="fixedAssetTypeId" />	
@@ -433,8 +409,7 @@
     </entity>
     <entity entity-name="PartyFixedAssetAssignment" 
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
-            title="Party Fixed Asset Assignment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Party Fixed Asset Assignment Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="fixedAssetId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
@@ -454,8 +429,7 @@
 
     <entity entity-name="Invoice" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
-            title="Invoice Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Invoice Entity">
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceTypeId" type="id"></field>
       <field name="partyId" type="id"></field>
@@ -482,8 +456,7 @@
     </entity>
     <entity entity-name="InvoiceAttribute" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
-            title="Invoice Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Invoice Attribute Entity">
       <field name="invoiceId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -498,8 +471,7 @@
     </entity>
     <entity entity-name="InvoiceItem" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
-            title="Invoice Item Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Invoice Item Entity">
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>
       <field name="invoiceItemTypeId" type="id"></field>
@@ -530,8 +502,7 @@
     </entity>
     <entity entity-name="InvoiceItemAttribute" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
-            title="Invoice Item Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Invoice Item Attribute Entity">
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
@@ -549,8 +520,7 @@
     </entity>
     <entity entity-name="InvoiceItemType" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
-            title="Invoice Item Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Invoice Item Type Entity">
       <field name="invoiceItemTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -571,8 +541,7 @@
     </entity>
     <entity entity-name="InvoiceItemTypeAttr" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
-            title="Invoice Item Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Invoice Item Type Attribute Entity">
       <field name="invoiceItemTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="invoiceItemTypeId" />	
@@ -589,8 +558,7 @@
     </entity>
     <entity entity-name="InvoiceRole" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
-            title="Invoice Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Invoice Role Entity">
       <field name="invoiceId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
@@ -602,8 +570,7 @@
     </entity>
     <entity entity-name="InvoiceStatus" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
-            title="Invoice Status Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Invoice Status Entity">
       <field name="statusId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
       <field name="statusDate" type="date-time"></field>	
@@ -613,8 +580,7 @@
     </entity>
     <entity entity-name="InvoiceTerm" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
-            title="Invoice Term Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Invoice Term Entity">
       <field name="invoiceTermId" type="id-ne"></field>
       <field name="termTypeId" type="id"></field>
       <field name="invoiceId" type="id"></field>
@@ -624,8 +590,7 @@
     </entity>
     <entity entity-name="InvoiceTermAttribute" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
-            title="Invoice Term Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Invoice Term Attribute Entity">
       <field name="invoiceTermId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -640,8 +605,7 @@
     </entity>
     <entity entity-name="InvoiceType" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
-            title="Invoice Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Invoice Type Entity">
       <field name="invoiceTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -662,8 +626,7 @@
     </entity>
     <entity entity-name="InvoiceTypeAttr" 
             package-name="org.ofbiz.commonapp.accounting.invoice"
-            title="Invoice Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Invoice Type Attribute Entity">
       <field name="invoiceTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="invoiceTypeId" />	
@@ -685,8 +648,7 @@
 
     <entity entity-name="AccoutingPeriod" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Accounting Period Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Accounting Period Entity">
       <field name="accountingPeriodId" type="id-ne"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="periodTypeId" type="id"></field>
@@ -698,8 +660,7 @@
     </entity>
     <entity entity-name="AcctgTrans" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Accounting Transaction Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Accounting Transaction Entity">
       <field name="acctgTransId" type="id-ne"></field>
       <field name="acctgTransTypeId" type="id"></field>
       <field name="description" type="description"></field>
@@ -733,8 +694,7 @@
     </entity>
     <entity entity-name="AcctgTransAttribute" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Accounting Transaction Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Accounting Transaction Attribute Entity">
       <field name="acctgTransId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -749,8 +709,7 @@
     </entity>
     <entity entity-name="AcctgTransDetail" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Transaction Detail Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Transaction Detail Entity">
       <field name="acctgTransId" type="id-ne"></field>
       <field name="acctgTransDetailSeqId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
@@ -763,8 +722,7 @@
     </entity>
     <entity entity-name="AcctgTransType" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Accounting Transaction Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Accounting Transaction Type Entity">
       <field name="acctgTransTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -785,8 +743,7 @@
     </entity>
     <entity entity-name="AcctgTransTypeAttr" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Accounting Transaction Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Accounting Transaction Type Attribute Entity">
       <field name="acctgTransTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="acctgTransTypeId" />	
@@ -803,8 +760,7 @@
     </entity>
     <entity entity-name="ExternalAcctgTrans" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="External Accounting Transaction Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="External Accounting Transaction Entity">
       <description>Data Type Of: Accounting Transaction</description>
       <field name="acctgTransId" type="id-ne"></field>
       <field name="partyId" type="id"></field>	
@@ -815,8 +771,7 @@
     </entity>
     <entity entity-name="GeneralLedgerAccount" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="General Ledger Account Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="General Ledger Account Entity">
       <field name="generalLedgerAccountId" type="id-ne"></field>
       <field name="generalLedgerAccountTypeId" type="id"></field>
       <field name="accountName" type="name"></field>
@@ -825,16 +780,14 @@
     </entity>
     <entity entity-name="GeneralLedgerAccountType" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="General Ledger Account Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="General Ledger Account Type Entity">
       <field name="generalLedgerAccountTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="generalLedgerAccountTypeId" />
     </entity>
     <entity entity-name="GeneralLedgerBudgetXref" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="General Ledger Budget XREF Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="General Ledger Budget XREF Entity">
       <field name="generalLedgerAccountId" type="id-ne"></field>
       <field name="budgetItemTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -846,8 +799,7 @@
     </entity>
     <entity entity-name="InternalAcctgTrans" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Internal Accounting Transaction Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Internal Accounting Transaction Entity">
       <description>Data Type Of: Accounting Transaction</description>
       <field name="acctgTransId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
@@ -859,8 +811,7 @@
     </entity>
     <entity entity-name="OrganizationGlAccount" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Organization GL Account Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Organization GL Account Entity">
       <field name="generalLedgerAccountId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
@@ -875,8 +826,7 @@
     </entity>
     <entity entity-name="SalesAcctgTrans" 
             package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Sales Accounting Transaction Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Sales Accounting Transaction Entity">
       <field name="acctgTransId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>	
       <prim-key field="acctgTransId" />
@@ -891,8 +841,7 @@
 
     <entity entity-name="BillingAccount" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Billing Account Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Billing Account Entity">
       <field name="billingAccountId" type="id-ne"></field>
       <field name="contactMechId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
@@ -920,8 +869,7 @@
     </entity>
     <entity entity-name="BillingAccountRole" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Billing Account Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Billing Account Role Entity">
       <field name="billingAccountId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
@@ -943,8 +891,7 @@
     </entity>
     <entity entity-name="Deduction" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Deduction Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Deduction Entity">
       <field name="deductionId" type="id-ne"></field>
       <field name="deductionTypeId" type="id"></field>
       <field name="paymentId" type="id"></field>
@@ -953,16 +900,14 @@
     </entity>
     <entity entity-name="DeductionType" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Deduction Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Deduction Type Entity">
       <field name="deductionTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="deductionTypeId" />
     </entity>
     <entity entity-name="FinAccount" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Financial Account Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Financial Account Entity">
       <field name="finAccountId" type="id-ne"></field>
       <field name="finAccountTypeId" type="id"></field>
       <field name="finAccountName" type="name"></field>	
@@ -979,15 +924,13 @@
     </entity>
     <entity entity-name="FinAccountAdjustment" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Financial Account Adjustment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Financial Account Adjustment Entity">
       <field name="finAccountTransId" type="id-ne"></field>	
       <prim-key field="finAccountTransId" />
     </entity>
     <entity entity-name="FinAccountAttribute" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Financial Account Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Financial Account Attribute Entity">
       <field name="finAccountId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -1002,8 +945,7 @@
     </entity>
     <entity entity-name="FinAccountRole" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Financial Account Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Financial Account Role Entity">
       <field name="finAccountId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
@@ -1016,8 +958,7 @@
     </entity>
     <entity entity-name="FinAccountTrans" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Financial Account Transaction Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Financial Account Transaction Entity">
       <field name="finAccountTransId" type="id-ne"></field>
       <field name="finAccountTransTypeId" type="id-ne"></field>
       <field name="finAccountId" type="id"></field>
@@ -1037,8 +978,7 @@
     </entity>
     <entity entity-name="FinAccountTransAttribute" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Financial Account Transaction Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Financial Account Transaction Attribute Entity">
       <field name="finAccountTransId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -1053,8 +993,7 @@
     </entity>
     <entity entity-name="FinAccountTransType" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Financial Account Transaction Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Financial Account Transaction Type Entity">
       <field name="finAccountTransTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -1075,8 +1014,7 @@
     </entity>
     <entity entity-name="FinAccountTransTypeAttr" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Financial Account Transaction Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Financial Account Transaction Type Attribute Entity">
       <field name="finAccountTransTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="finAccountTransTypeId" />	
@@ -1093,8 +1031,7 @@
     </entity>
     <entity entity-name="FinAccountType" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Financial Account Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Financial Account Type Entity">
       <field name="finAccountTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -1115,8 +1052,7 @@
     </entity>
     <entity entity-name="FinAccountTypeAttr" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Financial Account Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Financial Account Type Attribute Entity">
       <field name="finAccountTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="finAccountTypeId" />	
@@ -1133,8 +1069,7 @@
     </entity>
     <entity entity-name="Payment" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Payment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Payment Entity">
       <field name="paymentId" type="id-ne"></field>
       <field name="paymentTypeId" type="id-ne"></field>
       <field name="paymentMethodTypeId" type="id-ne"></field>
@@ -1157,8 +1092,7 @@
     </entity>
     <entity entity-name="PaymentAcctgTrans" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Payment Accounting Transaction Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Payment Accounting Transaction Entity">
       <field name="acctgTransId" type="id-ne"></field>
       <field name="paymentId" type="id-ne"></field>	
       <prim-key field="acctgTransId" />
@@ -1168,8 +1102,7 @@
     </entity>
     <entity entity-name="PaymentApplication" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Payment Application Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Payment Application Entity">
       <field name="paymentId" type="id-ne"></field>
       <field name="paymentApplicationId" type="id-ne"></field>
       <field name="invoiceId" type="id"></field>
@@ -1181,8 +1114,7 @@
     </entity>
     <entity entity-name="PaymentAttribute" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Payment Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Payment Attribute Entity">
       <field name="paymentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -1197,8 +1129,7 @@
     </entity>
     <entity entity-name="PaymentBudgetAllocation" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Payment Budget Allocation Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Payment Budget Allocation Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="budgetItemSeqId" type="id-ne"></field>
       <field name="paymentId" type="id-ne"></field>
@@ -1209,8 +1140,7 @@
     </entity>
     <entity entity-name="PaymentMethodType" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Payment Method Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Payment Method Type Entity">
       <field name="paymentMethodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="paymentMethodTypeId" />
@@ -1220,8 +1150,7 @@
     </entity>
     <entity entity-name="PaymentType" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Payment Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Payment Type Entity">
       <field name="paymentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -1242,8 +1171,7 @@
     </entity>
     <entity entity-name="PaymentTypeAttr" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Payment Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Payment Type Attribute Entity">
       <field name="paymentTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="paymentTypeId" />	
@@ -1260,16 +1188,14 @@
     </entity>
     <entity entity-name="Receipt" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Receipt Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Receipt Entity">
       <field name="paymentId" type="id-ne"></field>
       <field name="finAccountTransId" type="id"></field>	
       <prim-key field="paymentId" />
     </entity>
     <entity entity-name="Withdrawal" 
             package-name="org.ofbiz.commonapp.accounting.payment"
-            title="Withdrawal Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Withdrawal Entity">
       <field name="finAccountTransId" type="id-ne"></field>
       <field name="paymentId" type="id-ne"></field>	
       <prim-key field="finAccountTransId" />

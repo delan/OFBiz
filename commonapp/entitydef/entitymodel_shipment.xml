@@ -56,8 +56,7 @@
 
     <entity entity-name="ItemIssuance" 
             package-name="org.ofbiz.commonapp.shipment.issuance"
-            title="Item Issuance Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Item Issuance Entity">
       <field name="itemIssuanceId" type="id-ne"></field>
       <field name="inventoryItemId" type="id"></field>
       <field name="picklistId" type="id"></field>
@@ -69,8 +68,7 @@
     </entity>
     <entity entity-name="ItemIssuanceRole" 
             package-name="org.ofbiz.commonapp.shipment.issuance"
-            title="Item Issuance Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Item Issuance Role Entity">
       <field name="itemIssuanceId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
@@ -85,8 +83,7 @@
 
     <entity entity-name="ShipmentReceipt" 
             package-name="org.ofbiz.commonapp.shipment.receipt"
-            title="Shipment Receipt Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Receipt Entity">
       <field name="receiptId" type="id-ne"></field>
       <field name="inventoryItemId" type="id"></field>
       <field name="productId" type="id"></field>
@@ -102,8 +99,7 @@
     </entity>
     <entity entity-name="ShipmentReceiptRole" 
             package-name="org.ofbiz.commonapp.shipment.receipt"
-            title="Shipment Receipt Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Receipt Role Entity">
       <field name="receiptId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
@@ -118,8 +114,7 @@
 
     <entity entity-name="ShipmentRouteSegment" 
             package-name="org.ofbiz.commonapp.shipment.route"
-            title="Shipment Route Segment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Route Segment Entity">
       <field name="shipmentRouteSegmentId" type="id-ne"></field>
       <field name="shipmentId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
@@ -144,8 +139,7 @@
 
     <entity entity-name="CarrierShipmentMethod" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Carrier Shipment Method Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Carrier Shipment Method Entity">
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
@@ -169,8 +163,7 @@
     </entity>
     <entity entity-name="PackagingContent" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Packaging Content Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Packaging Content Entity">
       <field name="shipmentPackageId" type="id-ne"></field>
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id-ne"></field>
@@ -181,8 +174,7 @@
     </entity>
     <entity entity-name="Shipment" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Shipment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Entity">
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentTypeId" type="id"></field>
       <field name="contactMechId" type="id"></field>
@@ -211,8 +203,7 @@
     </entity>
     <entity entity-name="ShipmentAttribute" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Shipment Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Attribute Entity">
       <field name="shipmentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -227,8 +218,7 @@
     </entity>
     <entity entity-name="ShipmentCostEstimate" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Shipment Cost Estimate Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Cost Estimate Entity">
       <field name="shipmentCostEstimateId" type="id-ne"></field>
       <field name="shipmentMethodTypeId" type="id"></field>
       <field name="partyId" type="id"></field>
@@ -283,8 +273,7 @@
     </entity>
     <entity entity-name="ShipmentItem" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Shipment Item Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Item Entity">
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id-ne"></field>
       <field name="productId" type="id"></field>
@@ -299,8 +288,7 @@
     </entity>
     <entity entity-name="ShipmentItemBilling" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Shipment Item Billing Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Item Billing Entity">
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
@@ -312,8 +300,7 @@
     </entity>
     <entity entity-name="ShipmentItemFeature" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Shipment Item Feature Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Item Feature Entity">
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id-ne"></field>
       <field name="productFeatureId" type="id-ne"></field>	
@@ -323,8 +310,7 @@
     </entity>
     <entity entity-name="ShipmentMethodType" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Shipment Method Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Method Type Entity">
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="shipmentMethodTypeId" />
@@ -334,16 +320,14 @@
     </entity>
     <entity entity-name="ShipmentPackage" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Shipment Package Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Package Entity">
       <field name="shipmentPackageId" type="id-ne"></field>
       <field name="dateCreated" type="date-time"></field>	
       <prim-key field="shipmentPackageId" />
     </entity>
     <entity entity-name="ShipmentStatus" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Shipment Status Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Status Entity">
       <field name="statusId" type="id-ne"></field>
       <field name="shipmentId" type="id-ne"></field>
       <field name="statusDate" type="date-time"></field>	
@@ -352,8 +336,7 @@
     </entity>
     <entity entity-name="ShipmentType" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Shipment Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Type Entity">
       <field name="shipmentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -374,8 +357,7 @@
     </entity>
     <entity entity-name="ShipmentTypeAttr" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Shipment Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipment Type Attribute Entity">
       <field name="shipmentTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="shipmentTypeId" />	
@@ -392,8 +374,7 @@
     </entity>
     <entity entity-name="ShippingDocument" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Shipping Document Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shipping Document Entity">
       <field name="documentId" type="id-ne"></field>
       <field name="shipmentId" type="id"></field>
       <field name="shipmentItemSeqId" type="id"></field>

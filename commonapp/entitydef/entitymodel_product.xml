@@ -60,8 +60,7 @@
 
     <entity entity-name="ProductCategory" 
             package-name="org.ofbiz.commonapp.product.category"
-            title="Product Category Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Category Entity">
       <field name="productCategoryId" type="id-ne"></field>
       <field name="productCategoryTypeId" type="id"></field>
       <field name="primaryParentCategoryId" type="id"></field>
@@ -108,8 +107,7 @@
     </entity>
     <entity entity-name="ProductCategoryAttribute" 
             package-name="org.ofbiz.commonapp.product.category"
-            title="Product Category Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Category Attribute Entity">
       <field name="productCategoryId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -124,8 +122,7 @@
     </entity>
     <entity entity-name="ProductCategoryMember" 
             package-name="org.ofbiz.commonapp.product.category"
-            title="Product Category Member Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Category Member Entity">
       <field name="productCategoryId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -144,8 +141,7 @@
     </entity>
     <entity entity-name="ProductCategoryRollup" 
             package-name="org.ofbiz.commonapp.product.category"
-            title="Product Category Rollup Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Category Rollup Entity">
       <field name="productCategoryId" type="id-ne"></field>
       <field name="parentProductCategoryId" type="id-ne"></field>
       <field name="sequenceNum" type="numeric"></field>	
@@ -169,8 +165,7 @@
     </entity>
     <entity entity-name="ProductCategoryType" 
             package-name="org.ofbiz.commonapp.product.category"
-            title="Product Category Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Category Type Entity">
       <field name="productCategoryTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
@@ -191,8 +186,7 @@
     </entity>
     <entity entity-name="ProductCategoryTypeAttr" 
             package-name="org.ofbiz.commonapp.product.category"
-            title="Product Category Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Category Type Attribute Entity">
       <field name="productCategoryTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="productCategoryTypeId" />	
@@ -214,8 +208,7 @@
 
     <entity entity-name="CostComponent" 
             package-name="org.ofbiz.commonapp.product.cost"
-            title="Cost Component Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Cost Component Entity">
       <field name="costComponentId" type="id-ne"></field>
       <field name="costComponentTypeId" type="id"></field>
       <field name="productId" type="id"></field>
@@ -250,8 +243,7 @@
     </entity>
     <entity entity-name="CostComponentAttribute" 
             package-name="org.ofbiz.commonapp.product.cost"
-            title="Cost Component Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Cost Component Attribute Entity">
       <field name="costComponentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -266,8 +258,7 @@
     </entity>
     <entity entity-name="CostComponentType" 
             package-name="org.ofbiz.commonapp.product.cost"
-            title="Cost Component Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Cost Component Type Entity">
       <field name="costComponentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -288,8 +279,7 @@
     </entity>
     <entity entity-name="CostComponentTypeAttr" 
             package-name="org.ofbiz.commonapp.product.cost"
-            title="Cost Component Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Cost Component Type Attribute Entity">
       <field name="costComponentTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="costComponentTypeId" />	
@@ -311,8 +301,7 @@
 
     <entity entity-name="FeatureDataObject" 
             package-name="org.ofbiz.commonapp.product.feature"
-            title="Feature Data Object Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Feature Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="productFeatureId" type="id-ne"></field>	
       <prim-key field="dataObjectId" />	
@@ -326,8 +315,7 @@
     </entity>
     <entity entity-name="ProductFeature" 
             package-name="org.ofbiz.commonapp.product.feature"
-            title="Product Feature Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Feature Entity">
       <field name="productFeatureId" type="id-ne"></field>
       <field name="productFeatureTypeId" type="id-ne"></field>
       <field name="productFeatureCategoryId" type="id"></field>
@@ -362,8 +350,7 @@
     </entity>
     <entity entity-name="ProductFeatureAppl" 
             package-name="org.ofbiz.commonapp.product.feature"
-            title="Product Feature Applicability Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Feature Applicability Entity">
       <field name="productId" type="id-ne"></field>
       <field name="productFeatureId" type="id-ne"></field>
       <field name="productFeatureApplTypeId" type="id"></field>
@@ -384,8 +371,7 @@
     </entity>
     <entity entity-name="ProductFeatureApplType" 
             package-name="org.ofbiz.commonapp.product.feature"
-            title="Product Feature Applicability Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Feature Applicability Type Entity">
       <field name="productFeatureApplTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
@@ -403,8 +389,7 @@
     </entity>
     <entity entity-name="ProductFeatureCategory" 
             package-name="org.ofbiz.commonapp.product.feature"
-            title="Product Feature Category Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Feature Category Entity">
       <field name="productFeatureCategoryId" type="id-ne"></field>
       <field name="parentCategoryId" type="id"></field>
       <field name="description" type="description"></field>	
@@ -418,8 +403,7 @@
     </entity>
     <entity entity-name="ProductFeatureIactn" 
             package-name="org.ofbiz.commonapp.product.feature"
-            title="Product Feature Interaction Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Feature Interaction Entity">
       <field name="productFeatureId" type="id-ne"></field>
       <field name="productFeatureIdTo" type="id-ne"></field>
       <field name="productFeatureIactnTypeId" type="id"></field>
@@ -438,8 +422,7 @@
     </entity>
     <entity entity-name="ProductFeatureIactnType" 
             package-name="org.ofbiz.commonapp.product.feature"
-            title="Product Feature Interaction Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Feature Interaction Type Entity">
       <field name="productFeatureIactnTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
@@ -457,8 +440,7 @@
     </entity>
     <entity entity-name="ProductFeatureType" 
             package-name="org.ofbiz.commonapp.product.feature"
-            title="Product Feature Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Feature Type Entity">
       <field name="productFeatureTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
@@ -481,8 +463,7 @@
 
     <entity entity-name="InventoryItem" 
             package-name="org.ofbiz.commonapp.product.inventory"
-            title="Inventory Item Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Inventory Item Entity">
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="inventoryItemTypeId" type="id"></field>
       <field name="productId" type="id"></field>
@@ -534,8 +515,7 @@
     </entity>
     <entity entity-name="InventoryItemAttribute" 
             package-name="org.ofbiz.commonapp.product.inventory"
-            title="Inventory Item Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Inventory Item Attribute Entity">
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -550,8 +530,7 @@
     </entity>
     <entity entity-name="InventoryItemType" 
             package-name="org.ofbiz.commonapp.product.inventory"
-            title="Inventory Item Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Inventory Item Type Entity">
       <field name="inventoryItemTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -572,8 +551,7 @@
     </entity>
     <entity entity-name="InventoryItemTypeAttr" 
             package-name="org.ofbiz.commonapp.product.inventory"
-            title="Inventory Item Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Inventory Item Type Attribute Entity">
       <field name="inventoryItemTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="inventoryItemTypeId" />	
@@ -590,8 +568,7 @@
     </entity>
     <entity entity-name="InventoryItemVariance" 
             package-name="org.ofbiz.commonapp.product.inventory"
-            title="Inventory Item Variance Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Inventory Item Variance Entity">
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="physicalInventoryId" type="id-ne"></field>
       <field name="varianceReasonId" type="id"></field>
@@ -615,8 +592,7 @@
     </entity>
     <entity entity-name="ItemVarianceAcctgTrans" 
             package-name="org.ofbiz.commonapp.product.inventory"
-            title="Item Variance Accounting Transaction Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Item Variance Accounting Transaction Entity">
       <field name="acctgTransId" type="id-ne"></field>
       <field name="inventoryItemId" type="id"></field>
       <field name="physicalInventoryId" type="id"></field>	
@@ -637,8 +613,7 @@
     </entity>
     <entity entity-name="Lot" 
             package-name="org.ofbiz.commonapp.product.inventory"
-            title="Lot Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Lot Entity">
       <field name="lotId" type="id-ne"></field>
       <field name="creationDate" type="date-time"></field>
       <field name="quantity" type="floating-point"></field>
@@ -650,8 +625,7 @@
     </entity>
     <entity entity-name="PhysicalInventory" 
             package-name="org.ofbiz.commonapp.product.inventory"
-            title="Physical Inventory Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Physical Inventory Entity">
       <field name="physicalInventoryId" type="id-ne"></field>
       <field name="physicalInventoryDate" type="date-time"></field>
       <field name="partyId" type="id"></field>
@@ -663,8 +637,7 @@
     </entity>
     <entity entity-name="VarianceReason" 
             package-name="org.ofbiz.commonapp.product.inventory"
-            title="Variance Reason Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Variance Reason Entity">
       <field name="varianceReasonId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="varianceReasonId" />
@@ -679,8 +652,7 @@
 
     <entity entity-name="PriceComponent" 
             package-name="org.ofbiz.commonapp.product.price"
-            title="Price Component Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Price Component Entity">
       <field name="priceComponentId" type="id-ne"></field>
       <field name="priceComponentTypeId" type="id"></field>
       <field name="partyId" type="id"></field>
@@ -755,8 +727,7 @@
     </entity>
     <entity entity-name="PriceComponentAttribute" 
             package-name="org.ofbiz.commonapp.product.price"
-            title="Price Component Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Price Component Attribute Entity">
       <field name="priceComponentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -771,8 +742,7 @@
     </entity>
     <entity entity-name="PriceComponentType" 
             package-name="org.ofbiz.commonapp.product.price"
-            title="Price Component Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Price Component Type Entity">
       <field name="priceComponentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -793,8 +763,7 @@
     </entity>
     <entity entity-name="PriceComponentTypeAttr" 
             package-name="org.ofbiz.commonapp.product.price"
-            title="Price Component Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Price Component Type Attribute Entity">
       <field name="priceComponentTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="priceComponentTypeId" />	
@@ -811,8 +780,7 @@
     </entity>
     <entity entity-name="QuantityBreak" 
             package-name="org.ofbiz.commonapp.product.price"
-            title="Quantity Break Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Quantity Break Entity">
       <field name="quantityBreakId" type="id-ne"></field>
       <field name="quantityBreakTypeId" type="id"></field>
       <field name="fromQuantity" type="floating-point"></field>
@@ -827,8 +795,7 @@
     </entity>
     <entity entity-name="QuantityBreakType" 
             package-name="org.ofbiz.commonapp.product.price"
-            title="Quantity Break Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Quantity Break Type Entity">
       <field name="quantityBreakTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="quantityBreakTypeId" />
@@ -838,8 +805,7 @@
     </entity>
     <entity entity-name="SaleType" 
             package-name="org.ofbiz.commonapp.product.price"
-            title="Sale Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Sale Type Entity">
       <field name="saleTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="saleTypeId" />
@@ -854,8 +820,7 @@
 
     <entity entity-name="GoodIdentification" 
             package-name="org.ofbiz.commonapp.product.product"
-            title="Good Identification Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Good Identification Entity">
       <field name="goodIdentificationTypeId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
       <field name="idValue" type="id-long"></field>	
@@ -870,8 +835,7 @@
     </entity>
     <entity entity-name="GoodIdentificationType" 
             package-name="org.ofbiz.commonapp.product.product"
-            title="Good Identification Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Good Identification Type Entity">
       <field name="goodIdentificationTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
@@ -889,8 +853,7 @@
     </entity>
     <entity entity-name="Product" 
             package-name="org.ofbiz.commonapp.product.product"
-            title="Product Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Entity">
       <field name="productId" type="id-ne"></field>
       <field name="productTypeId" type="id"></field>
       <field name="primaryProductCategoryId" type="id"></field>
@@ -981,8 +944,7 @@
     </entity>
     <entity entity-name="ProductAssoc" 
             package-name="org.ofbiz.commonapp.product.product"
-            title="Product Association Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Association Entity">
       <field name="productId" type="id-ne"></field>
       <field name="productIdTo" type="id-ne"></field>
       <field name="productAssocTypeId" type="id-ne"></field>
@@ -1007,8 +969,7 @@
     </entity>
     <entity entity-name="ProductAssocType" 
             package-name="org.ofbiz.commonapp.product.product"
-            title="Product Association Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Association Type Entity">
       <field name="productAssocTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
@@ -1026,8 +987,7 @@
     </entity>
     <entity entity-name="ProductAttribute" 
             package-name="org.ofbiz.commonapp.product.product"
-            title="Product Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Attribute Entity">
       <field name="productId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -1042,8 +1002,7 @@
     </entity>
     <entity entity-name="ProductDataObject" 
             package-name="org.ofbiz.commonapp.product.product"
-            title="Product Data Object Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>	
       <prim-key field="dataObjectId" />	
@@ -1057,8 +1016,7 @@
     </entity>
     <entity entity-name="ProductKeyword" 
             package-name="org.ofbiz.commonapp.product.product"
-            title="Product Keyword Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Keyword Entity">
       <field name="productId" type="id-ne"></field>
       <field name="keyword" type="short-varchar"></field>	
       <prim-key field="productId" />	
@@ -1069,8 +1027,7 @@
     </entity>
     <entity entity-name="ProductType" 
             package-name="org.ofbiz.commonapp.product.product"
-            title="Product Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Type Entity">
       <field name="productTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
@@ -1091,8 +1048,7 @@
     </entity>
     <entity entity-name="ProductTypeAttr" 
             package-name="org.ofbiz.commonapp.product.product"
-            title="Product Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Type Attribute Entity">
       <field name="productTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="productTypeId" />	
@@ -1114,8 +1070,7 @@
 
     <entity entity-name="Container" 
             package-name="org.ofbiz.commonapp.product.storage"
-            title="Container Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Container Entity">
       <field name="containerId" type="id-ne"></field>
       <field name="containerTypeId" type="id"></field>
       <field name="facilityId" type="id"></field>	
@@ -1132,8 +1087,7 @@
     </entity>
     <entity entity-name="ContainerType" 
             package-name="org.ofbiz.commonapp.product.storage"
-            title="Container Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Container Type Entity">
       <field name="containerTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="containerTypeId" />
@@ -1143,8 +1097,7 @@
     </entity>
     <entity entity-name="Facility" 
             package-name="org.ofbiz.commonapp.product.storage"
-            title="Facility Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Facility Entity">
       <field name="facilityId" type="id-ne"></field>
       <field name="facilityTypeId" type="id"></field>
       <field name="facilityName" type="name"></field>
@@ -1181,8 +1134,7 @@
     </entity>
     <entity entity-name="FacilityAttribute" 
             package-name="org.ofbiz.commonapp.product.storage"
-            title="Facility Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Facility Attribute Entity">
       <field name="facilityId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -1197,8 +1149,7 @@
     </entity>
     <entity entity-name="FacilityContactMech" 
             package-name="org.ofbiz.commonapp.product.storage"
-            title="Facility Contact Mechanism Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Facility Contact Mechanism Entity">
       <description>Data Type Of: Contact Mechanism</description>
       <field name="facilityId" type="id-ne"></field>
       <field name="contactMechId" type="id-ne"></field>	
@@ -1213,8 +1164,7 @@
     </entity>
     <entity entity-name="FacilityRoleType" 
             package-name="org.ofbiz.commonapp.product.storage"
-            title="Facility Role Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Facility Role Type Entity">
       <field name="facilityRoleTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="facilityRoleTypeId" />
@@ -1224,8 +1174,7 @@
     </entity>
     <entity entity-name="FacilityType" 
             package-name="org.ofbiz.commonapp.product.storage"
-            title="Facility Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Facility Type Entity">
       <field name="facilityTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -1246,8 +1195,7 @@
     </entity>
     <entity entity-name="FacilityTypeAttr" 
             package-name="org.ofbiz.commonapp.product.storage"
-            title="Facility Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Facility Type Attribute Entity">
       <field name="facilityTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="facilityTypeId" />	
@@ -1264,8 +1212,7 @@
     </entity>
     <entity entity-name="PartyFacility" 
             package-name="org.ofbiz.commonapp.product.storage"
-            title="Party Facility Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Party Facility Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="facilityId" type="id-ne"></field>
       <field name="facilityRoleTypeId" type="id"></field>	
@@ -1288,8 +1235,7 @@
 
     <entity entity-name="MarketInterest" 
             package-name="org.ofbiz.commonapp.product.supplier"
-            title="Market Interest Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Market Interest Entity">
       <field name="productCategoryId" type="id-ne"></field>
       <field name="partyTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -1306,8 +1252,7 @@
     </entity>
     <entity entity-name="ReorderGuideline" 
             package-name="org.ofbiz.commonapp.product.supplier"
-            title="Reorder Guideline Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Reorder Guideline Entity">
       <field name="reorderGuidelineId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
@@ -1334,8 +1279,7 @@
     </entity>
     <entity entity-name="SupplierPrefOrder" 
             package-name="org.ofbiz.commonapp.product.supplier"
-            title="Preference Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Preference Type Entity">
       <field name="supplierPrefOrderId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="supplierPrefOrderId" />
@@ -1345,8 +1289,7 @@
     </entity>
     <entity entity-name="SupplierProduct" 
             package-name="org.ofbiz.commonapp.product.supplier"
-            title="Supplier Product Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Supplier Product Entity">
       <field name="productId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="availableFromDate" type="date-time"></field>
@@ -1372,8 +1315,7 @@
     </entity>
     <entity entity-name="SupplierRatingType" 
             package-name="org.ofbiz.commonapp.product.supplier"
-            title="Supplier Rating Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Supplier Rating Type Entity">
       <field name="supplierRatingTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="supplierRatingTypeId" />

@@ -55,8 +55,7 @@
 
     <entity entity-name="JobSandbox" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
-            title="Job Scheduler Sandbox Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Job Scheduler Sandbox Entity">
       <field name="jobName" type="name"></field>
       <field name="serviceName" type="name"></field>
       <field name="loaderName" type="name"></field>
@@ -74,8 +73,7 @@
     </entity>
     <entity entity-name="RecurrenceInfo" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
-            title="Recurrence Info Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Recurrence Info Entity">
       <field name="recurrenceInfoId" type="id-ne"></field>
       <field name="startDateTime" type="date-time"></field>
       <field name="exceptionDateTimes" type="very-long"></field>
@@ -96,8 +94,7 @@
     </entity>
     <entity entity-name="RecurrenceRule" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
-            title="Recurrence Rule Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Recurrence Rule Entity">
       <field name="recurrenceRuleId" type="id-ne"></field>
       <field name="frequency" type="short-varchar"></field>
       <field name="untilDateTime" type="date-time"></field>
@@ -124,8 +121,7 @@
     </entity>
     <entity entity-name="RuntimeData" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
-            title="Runtime Data Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Runtime Data Entity">
       <field name="runtimeDataId" type="id-ne"></field>
       <field name="runtimeInfo" type="very-long"></field>	
       <prim-key field="runtimeDataId" />
@@ -143,8 +139,7 @@
 
     <entity entity-name="PartyRate" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
-            title="Party Rate Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Party Rate Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="rateTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -156,16 +151,14 @@
     </entity>
     <entity entity-name="RateType" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
-            title="Rate Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Rate Type Entity">
       <field name="rateTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="rateTypeId" />
     </entity>
     <entity entity-name="TimeEntry" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
-            title="Time Entry Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Time Entry Entity">
       <field name="timeEntryId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
@@ -181,8 +174,7 @@
     </entity>
     <entity entity-name="TimeEntryBilling" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
-            title="Time Entry Billing Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Time Entry Billing Entity">
       <field name="timeEntryId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>	
@@ -192,8 +184,7 @@
     </entity>
     <entity entity-name="Timesheet" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
-            title="Timesheet Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Timesheet Entity">
       <field name="timesheetId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
@@ -204,8 +195,7 @@
     </entity>
     <entity entity-name="TimesheetRole" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
-            title="Timesheet Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Timesheet Role Entity">
       <field name="timesheetId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
@@ -215,8 +205,7 @@
     </entity>
     <entity entity-name="WorkEffortAssignmentRate" 
             package-name="org.ofbiz.commonapp.workeffort.timesheet"
-            title="Work Effort Assignment Rate Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Assignment Rate Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="rateTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
@@ -237,8 +226,7 @@
 
     <entity entity-name="CommunicationEventWorkEff" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Communication Event Work Effort Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Communication Event Work Effort Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="communicationEventId" type="id-ne"></field>
       <field name="description" type="description"></field>	
@@ -247,8 +235,7 @@
     </entity>
     <entity entity-name="Deliverable" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Deliverable Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Deliverable Entity">
       <field name="deliverableId" type="id-ne"></field>
       <field name="deliverableTypeId" type="id"></field>
       <field name="deliverableName" type="name"></field>
@@ -257,16 +244,14 @@
     </entity>
     <entity entity-name="DeliverableType" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Deliverable Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Deliverable Type Entity">
       <field name="deliverableTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="deliverableTypeId" />
     </entity>
     <entity entity-name="WorkEffort" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="workEffortTypeId" type="id"></field>
       <field name="workEffortParentId" type="id"></field>
@@ -375,10 +360,9 @@
     </entity>	
     <view-entity entity-name="WorkEffortAndPartyAssign" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort And Party Assignment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">	
-      <member-entity entity-alias="WE" entity-name="WorkEffort" />	
-      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />
+            title="Work Effort And Party Assignment Entity">	
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />	
+      <member-entity entity-alias="WE" entity-name="WorkEffort" />
       <alias entity-alias="WE" name="workEffortId" prim-key="true" />
       <alias entity-alias="WE" name="workEffortTypeId" />
       <alias entity-alias="WE" name="currentStatusId" />
@@ -451,8 +435,7 @@
     </view-entity>
     <entity entity-name="WorkEffortAssoc" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Association Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Association Entity">
       <field name="workEffortIdFrom" type="id-ne"></field>
       <field name="workEffortIdTo" type="id-ne"></field>
       <field name="workEffortAssocTypeId" type="id"></field>	
@@ -477,8 +460,7 @@
     </entity>
     <entity entity-name="WorkEffortAssocAttribute" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Association Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Association Attribute Entity">
       <field name="workEffortIdFrom" type="id-ne"></field>
       <field name="workEffortIdTo" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
@@ -496,8 +478,7 @@
     </entity>
     <entity entity-name="WorkEffortAssocType" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Association Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Association Type Entity">
       <field name="workEffortAssocTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -518,8 +499,7 @@
     </entity>
     <entity entity-name="WorkEffortAssocTypeAttr" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Association Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Association Type Attribute Entity">
       <field name="workEffortAssocTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="workEffortAssocTypeId" />	
@@ -536,8 +516,7 @@
     </entity>
     <entity entity-name="WorkEffortAttribute" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Attribute Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -552,8 +531,7 @@
     </entity>
     <entity entity-name="WorkEffortBilling" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Billing Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Billing Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>
@@ -564,8 +542,7 @@
     </entity>
     <entity entity-name="WorkEffortCategory" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Category Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Category Entity">
       <field name="workEffortCategoryId" type="id-ne"></field>
       <field name="parentCategoryId" type="id"></field>
       <field name="categoryName" type="name"></field>	
@@ -582,8 +559,7 @@
     </entity>
     <entity entity-name="WorkEffortCategoryMember" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Category Member Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Category Member Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="workEffortCategoryId" type="id-ne"></field>	
       <prim-key field="workEffortId" />	
@@ -597,8 +573,7 @@
     </entity>
     <entity entity-name="WorkEffortDeliverableProd" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Deliverable Produced Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Deliverable Produced Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="deliverableId" type="id-ne"></field>	
       <prim-key field="workEffortId" />	
@@ -606,8 +581,7 @@
     </entity>
     <entity entity-name="WorkEffortFixedAssetAssign" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Fixed Asset Assignment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Fixed Asset Assignment Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="fixedAssetId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
@@ -621,8 +595,7 @@
     </entity>
     <entity entity-name="WorkEffortFixedAssetStd" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Fixed Asset Standard Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Fixed Asset Standard Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="fixedAssetTypeId" type="id-ne"></field>
       <field name="estimatedQuantity" type="floating-point"></field>
@@ -633,8 +606,7 @@
     </entity>
     <entity entity-name="WorkEffortGoodStandard" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Good Standard Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Good Standard Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
       <field name="estimatedQuantity" type="floating-point"></field>
@@ -644,8 +616,7 @@
     </entity>
     <entity entity-name="WorkEffortInventoryAssign" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Inventory Assignment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Inventory Assignment Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>	
@@ -654,8 +625,7 @@
     </entity>
     <entity entity-name="WorkEffortInventoryProduced" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Inventory Produced Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Inventory Produced Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>	
       <prim-key field="workEffortId" />	
@@ -663,11 +633,10 @@
     </entity>	
     <view-entity entity-name="WorkEffortPartyAssignByGroup" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort And Party Assignment By Group Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort And Party Assignment By Group Entity">
       <description>Also includes PartyRelationship Link so that a groupPartyId can be specified to find all PartyAssignments for all groups a party is in</description>	
-      <member-entity entity-alias="WE" entity-name="WorkEffort" />	
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />	
+      <member-entity entity-alias="WE" entity-name="WorkEffort" />	
       <member-entity entity-alias="PREL" entity-name="PartyRelationship" />
       <alias entity-alias="WE" name="workEffortId" prim-key="true" />
       <alias entity-alias="WE" name="workEffortTypeId" />
@@ -745,12 +714,11 @@
     </view-entity>	
     <view-entity entity-name="WorkEffortPartyAssignByRole" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort And Party Assignment By Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort And Party Assignment By Role Entity">
       <description>Also includes PartyRole Link so that if a partyId is specified it will find all PartyAssignments for all roles a party is in; does not link on the partyId of the PartyAssignment</description>	
-      <member-entity entity-alias="PR" entity-name="PartyRole" />	
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />	
       <member-entity entity-alias="WE" entity-name="WorkEffort" />	
-      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />
+      <member-entity entity-alias="PR" entity-name="PartyRole" />
       <alias entity-alias="WE" name="workEffortId" prim-key="true" />
       <alias entity-alias="WE" name="workEffortTypeId" />
       <alias entity-alias="WE" name="currentStatusId" />
@@ -827,8 +795,7 @@
     </view-entity>
     <entity entity-name="WorkEffortPartyAssignment" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Party Assignment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Party Assignment Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
@@ -872,8 +839,7 @@
     </entity>
     <entity entity-name="WorkEffortSkillStandard" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Skill Standard Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Skill Standard Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="skillTypeId" type="id-ne"></field>
       <field name="estimatedNumPeople" type="floating-point"></field>
@@ -884,8 +850,7 @@
     </entity>
     <entity entity-name="WorkEffortStatus" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Status Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Status Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="statusDatetime" type="date-time"></field>
@@ -905,8 +870,7 @@
     </entity>
     <entity entity-name="WorkEffortTransBox" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Transition Box Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Transition Box Entity">
       <field name="processWorkEffortId" type="id-ne"></field>
       <field name="toActivityId" type="id-long-ne"></field>
       <field name="transitionId" type="id-long-ne"></field>	
@@ -919,8 +883,7 @@
     </entity>
     <entity entity-name="WorkEffortType" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Type Entity">
       <field name="workEffortTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -941,8 +904,7 @@
     </entity>
     <entity entity-name="WorkEffortTypeAttr" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Effort Type Attribute Entity">
       <field name="workEffortTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="workEffortTypeId" />	

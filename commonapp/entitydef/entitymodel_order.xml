@@ -56,8 +56,7 @@
 
     <entity entity-name="OrderAdjustment" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Adjustment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Adjustment Entity">
       <field name="orderAdjustmentId" type="id-ne"></field>
       <field name="orderAdjustmentTypeId" type="id"></field>
       <field name="orderId" type="id"></field>
@@ -84,8 +83,7 @@
     </entity>
     <entity entity-name="OrderAdjustmentAttribute" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Adjustment Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Adjustment Attribute Entity">
       <field name="orderAdjustmentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -100,8 +98,7 @@
     </entity>
     <entity entity-name="OrderAdjustmentType" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Adjustment Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Adjustment Type Entity">
       <field name="orderAdjustmentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -122,8 +119,7 @@
     </entity>
     <entity entity-name="OrderAdjustmentTypeAttr" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Adjustment Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Adjustment Type Attribute Entity">
       <field name="orderAdjustmentTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="orderAdjustmentTypeId" />	
@@ -140,8 +136,7 @@
     </entity>
     <entity entity-name="OrderAttribute" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Attribute Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -156,8 +151,7 @@
     </entity>
     <entity entity-name="OrderContactMech" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Contact Mechanism Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Contact Mechanism Entity">
       <field name="contactMechId" type="id-ne"></field>
       <field name="contactMechPurposeTypeId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>	
@@ -176,8 +170,7 @@
     </entity>
     <entity entity-name="OrderHeader" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Header Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Header Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderTypeId" type="id"></field>
       <field name="orderDate" type="date-time"></field>
@@ -247,29 +240,26 @@
         <key-map field-name="orderId" />
       </relation>
       <relation type="many" rel-entity-name="OrderHeaderNote">
-	    <key-map field-name="orderId" />
-		<key-map field-name="noteId" />
+        <key-map field-name="orderId" />
       </relation>
     </entity>
     <entity entity-name="OrderHeaderNote" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Header Note Entity"
-			copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Header Note Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="noteId" type="id-ne"></field>	
       <prim-key field="orderId" />	
       <prim-key field="noteId" />
       <relation type="many" rel-entity-name="OrderHeader">
-	    <key-map field-name="orderId" />
+        <key-map field-name="orderId" />
       </relation>
       <relation type="many" rel-entity-name="NoteData">
-	    <key-map field-name="noteId" />
+        <key-map field-name="noteId" />
       </relation>
     </entity>
     <entity entity-name="OrderItem" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Item Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Item Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="orderItemTypeId" type="id-ne"></field>
@@ -357,8 +347,7 @@
     </entity>
     <entity entity-name="OrderItemAssociation" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Item Association Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Item Association Entity">
       <field name="salesOrderId" type="id-ne"></field>
       <field name="soItemSeqId" type="id-ne"></field>
       <field name="purchaseOrderId" type="id-ne"></field>
@@ -384,8 +373,7 @@
     </entity>
     <entity entity-name="OrderItemAttribute" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Item Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Item Attribute Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
@@ -403,8 +391,7 @@
     </entity>
     <entity entity-name="OrderItemBilling" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Item Billing Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Item Billing Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
@@ -432,8 +419,7 @@
     </entity>
     <entity entity-name="OrderItemContactMech" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Item Contact Mechanism Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Item Contact Mechanism Entity">
       <field name="contactMechId" type="id-ne"></field>
       <field name="contactMechPurposeTypeId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
@@ -458,8 +444,7 @@
     </entity>
     <entity entity-name="OrderItemRole" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Item Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Item Role Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
@@ -488,8 +473,7 @@
     </entity>
     <entity entity-name="OrderItemType" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Item Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Item Type Entity">
       <field name="orderItemTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -510,8 +494,7 @@
     </entity>
     <entity entity-name="OrderItemTypeAttr" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Item Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Item Type Attribute Entity">
       <field name="orderItemTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="orderItemTypeId" />	
@@ -528,8 +511,7 @@
     </entity>
     <entity entity-name="OrderPaymentPreference" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="The Order Payment Preference Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="The Order Payment Preference Entity">
       <field name="orderPaymentPreferenceId" type="id-ne"></field>
       <field name="orderId" type="id"></field>
       <field name="paymentMethodTypeId" type="id"></field>
@@ -548,8 +530,7 @@
     </entity>
     <entity entity-name="OrderRole" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Role Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
@@ -575,8 +556,7 @@
     </entity>
     <entity entity-name="OrderShipment" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Shipment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Shipment Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="shipmentId" type="id-ne"></field>
@@ -603,8 +583,7 @@
     </entity>
     <entity entity-name="OrderShipmentPreference" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="The Order Shipment Preference Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="The Order Shipment Preference Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="shipmentMethodTypeId" type="id"></field>
@@ -639,8 +618,7 @@
     </entity>
     <entity entity-name="OrderStatus" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Status Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Status Entity">
       <field name="orderStatusId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
       <field name="orderId" type="id"></field>
@@ -660,8 +638,7 @@
     </entity>
     <entity entity-name="OrderTerm" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Term Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Term Entity">
       <field name="orderTermId" type="id-ne"></field>
       <field name="termTypeId" type="id"></field>
       <field name="orderId" type="id"></field>
@@ -681,8 +658,7 @@
     </entity>
     <entity entity-name="OrderTermAttribute" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Term Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Term Attribute Entity">
       <field name="orderTermId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -697,8 +673,7 @@
     </entity>
     <entity entity-name="OrderType" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Type Entity">
       <field name="orderTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -719,8 +694,7 @@
     </entity>
     <entity entity-name="OrderTypeAttr" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Type Attribute Entity">
       <field name="orderTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="orderTypeId" />	
@@ -737,8 +711,7 @@
     </entity>
     <entity entity-name="Picklist" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Picklist Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Picklist Entity">
       <field name="picklistId" type="id-ne"></field>
       <field name="dateCreated" type="date-time"></field>	
       <prim-key field="picklistId" />
@@ -748,8 +721,7 @@
     </entity>
     <entity entity-name="PicklistItem" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Picklist Item Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Picklist Item Entity">
       <field name="picklistId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>	
@@ -764,8 +736,7 @@
     </entity>
     <entity entity-name="ProductOrderItem" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Product Order Item Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Product Order Item Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="engagementId" type="id-ne"></field>
@@ -795,8 +766,7 @@
     </entity>
     <entity entity-name="SalesTaxLookup" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Sales Tax Lookup Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Sales Tax Lookup Entity">
       <field name="salesTaxLookupId" type="id-ne"></field>
       <field name="geoId" type="id"></field>
       <field name="productCategoryId" type="id"></field>
@@ -811,8 +781,7 @@
     </entity>
     <entity entity-name="WorkOrderItemFulfillment" 
             package-name="org.ofbiz.commonapp.order.order"
-            title="Work Order Item Fulfillment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Order Item Fulfillment Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>	
@@ -837,8 +806,7 @@
 
     <entity entity-name="Quote" 
             package-name="org.ofbiz.commonapp.order.quote"
-            title="Quote Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Quote Entity">
       <field name="quoteId" type="id-ne"></field>
       <field name="quoteTypeId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
@@ -859,8 +827,7 @@
     </entity>
     <entity entity-name="QuoteAttribute" 
             package-name="org.ofbiz.commonapp.order.quote"
-            title="Quote Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Quote Attribute Entity">
       <field name="quoteId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -875,8 +842,7 @@
     </entity>
     <entity entity-name="QuoteItem" 
             package-name="org.ofbiz.commonapp.order.quote"
-            title="Quote Item Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Quote Item Entity">
       <field name="quoteId" type="id-ne"></field>
       <field name="quoteItemSeqId" type="id-ne"></field>
       <field name="productId" type="id"></field>
@@ -896,8 +862,7 @@
     </entity>
     <entity entity-name="QuoteRole" 
             package-name="org.ofbiz.commonapp.order.quote"
-            title="Quote Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Quote Role Entity">
       <field name="quoteId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
@@ -907,8 +872,7 @@
     </entity>
     <entity entity-name="QuoteTerm" 
             package-name="org.ofbiz.commonapp.order.quote"
-            title="Quote Term Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Quote Term Entity">
       <field name="quoteTermId" type="id-ne"></field>
       <field name="termTypeId" type="id"></field>
       <field name="quoteId" type="id"></field>
@@ -918,8 +882,7 @@
     </entity>
     <entity entity-name="QuoteTermAttribute" 
             package-name="org.ofbiz.commonapp.order.quote"
-            title="Quote Term Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Quote Term Attribute Entity">
       <field name="quoteTermId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -934,8 +897,7 @@
     </entity>
     <entity entity-name="QuoteType" 
             package-name="org.ofbiz.commonapp.order.quote"
-            title="Quote Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Quote Type Entity">
       <field name="quoteTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -956,8 +918,7 @@
     </entity>
     <entity entity-name="QuoteTypeAttr" 
             package-name="org.ofbiz.commonapp.order.quote"
-            title="Quote Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Quote Type Attribute Entity">
       <field name="quoteTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="quoteTypeId" />	
@@ -979,8 +940,7 @@
 
     <entity entity-name="CustRequest" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Customer Request Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Customer Request Entity">
       <field name="custRequestId" type="id-ne"></field>
       <field name="custRequestTypeId" type="id"></field>
       <field name="custRequestDate" type="date-time"></field>
@@ -999,8 +959,7 @@
     </entity>
     <entity entity-name="CustRequestAttribute" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Customer Request Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Customer Request Attribute Entity">
       <field name="custRequestId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -1015,8 +974,7 @@
     </entity>
     <entity entity-name="CustRequestItem" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Customer Request Item Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Customer Request Item Entity">
       <field name="custRequestId" type="id-ne"></field>
       <field name="custRequestItemSeqId" type="id-ne"></field>
       <field name="requiredByDate" type="date-time"></field>
@@ -1028,8 +986,7 @@
     </entity>
     <entity entity-name="CustRequestRole" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Customer Request Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Customer Request Role Entity">
       <field name="custRequestId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>	
@@ -1039,8 +996,7 @@
     </entity>
     <entity entity-name="CustRequestType" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Customer Request Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Customer Request Type Entity">
       <field name="custRequestTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -1061,8 +1017,7 @@
     </entity>
     <entity entity-name="CustRequestTypeAttr" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Customer Request Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Customer Request Type Attribute Entity">
       <field name="custRequestTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="custRequestTypeId" />	
@@ -1079,8 +1034,7 @@
     </entity>
     <entity entity-name="DesiredFeature" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Desired Feature Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Desired Feature Entity">
       <field name="desiredFeatureId" type="id-ne"></field>
       <field name="requirementId" type="id-ne"></field>
       <field name="productFeatureId" type="id"></field>
@@ -1090,8 +1044,7 @@
     </entity>
     <entity entity-name="OrderRequirementCommitment" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Order Requirement Commitment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Order Requirement Commitment Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="requirementId" type="id-ne"></field>
@@ -1102,8 +1055,7 @@
     </entity>
     <entity entity-name="Requirement" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Requirement Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Requirement Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="requirementTypeId" type="id"></field>
       <field name="facilityId" type="id"></field>
@@ -1126,8 +1078,7 @@
     </entity>
     <entity entity-name="RequirementAttribute" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Requirement Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Requirement Attribute Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>	
@@ -1142,8 +1093,7 @@
     </entity>
     <entity entity-name="RequirementBudgetAllocation" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Requirement Budget Allocation Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Requirement Budget Allocation Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="budgetItemSeqId" type="id-ne"></field>
       <field name="requirementId" type="id-ne"></field>
@@ -1154,8 +1104,7 @@
     </entity>
     <entity entity-name="RequirementCustRequest" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Requirement Customer Request Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Requirement Customer Request Entity">
       <field name="custRequestId" type="id-ne"></field>
       <field name="custRequestItemSeqId" type="id-ne"></field>
       <field name="requirementId" type="id-ne"></field>	
@@ -1165,8 +1114,7 @@
     </entity>
     <entity entity-name="RequirementRole" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Requirement Role Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Requirement Role Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
@@ -1179,8 +1127,7 @@
     </entity>
     <entity entity-name="RequirementStatus" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Requirement Status Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Requirement Status Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="statusDate" type="date-time"></field>	
@@ -1189,8 +1136,7 @@
     </entity>
     <entity entity-name="RequirementType" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Requirement Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Requirement Type Entity">
       <field name="requirementTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
@@ -1211,8 +1157,7 @@
     </entity>
     <entity entity-name="RequirementTypeAttr" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Requirement Type Attribute Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Requirement Type Attribute Entity">
       <field name="requirementTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="requirementTypeId" />	
@@ -1229,8 +1174,7 @@
     </entity>
     <entity entity-name="RespondingParty" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Responding Party Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Responding Party Entity">
       <field name="respondingPartySeqId" type="id-ne"></field>
       <field name="custRequestId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
@@ -1242,8 +1186,7 @@
     </entity>
     <entity entity-name="WorkRequirement" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Work Requirement Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Requirement Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="deliverableId" type="id"></field>
       <field name="fixedAssetId" type="id"></field>
@@ -1252,8 +1195,7 @@
     </entity>
     <entity entity-name="WorkRequirementFulfillment" 
             package-name="org.ofbiz.commonapp.order.request"
-            title="Work Requirement Fulfillment Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Work Requirement Fulfillment Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="workEffortId" type="id-ne"></field>	
       <prim-key field="requirementId" />	
@@ -1266,8 +1208,7 @@
 
     <entity entity-name="ShoppingList" 
             package-name="org.ofbiz.commonapp.order.shoppinglist"
-            title="Shopping List Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shopping List Entity">
       <field name="shoppingListId" type="id-ne"></field>
       <field name="shoppingListTypeId" type="id"></field>
       <field name="parentShoppingListId" type="id"></field>
@@ -1293,8 +1234,7 @@
     </entity>
     <entity entity-name="ShoppingListItem" 
             package-name="org.ofbiz.commonapp.order.shoppinglist"
-            title="Shopping List Item Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shopping List Item Entity">
       <field name="shoppingListId" type="id-ne"></field>
       <field name="shoppingListItemSeqId" type="id"></field>
       <field name="productId" type="id"></field>
@@ -1310,8 +1250,7 @@
     </entity>
     <entity entity-name="ShoppingListType" 
             package-name="org.ofbiz.commonapp.order.shoppinglist"
-            title="Shopping List Type Entity"
-            copyright="Copyright (c) 2002 The Open For Business Project - www.ofbiz.org">
+            title="Shopping List Type Entity">
       <field name="shoppingListTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="shoppingListTypeId" />
