@@ -17,6 +17,8 @@
     <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
     <handler name="http" type="view" class="org.ofbiz.core.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.core.view.DataVisionViewHandler"/>
+    <handler name="jasperreportspdf" type="view" class="org.ofbiz.core.view.JasperReportsPdfViewHandler"/>
+    <handler name="jasperreportsxml" type="view" class="org.ofbiz.core.view.JasperReportsXmlViewHandler"/>
     
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
@@ -244,6 +246,8 @@
     <view-map name="StatBinsHistory" type="region"/>
 
     <view-map name="UomReport" page="/UomReport.xml" type="datavision" info="Uom"/>
+    <view-map name="JasperDemoPdf" page="/JasperDemo.xml" type="jasperreportspdf" info="Uom"/>
+    <view-map name="JasperDemoXml" page="/JasperDemo.xml" type="jasperreportsxml" info="Uom"/>
     
     <!-- end of view mappings -->
     
