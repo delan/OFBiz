@@ -401,6 +401,11 @@
   <RoleType description="" hasTable="N" parentTypeId="" roleTypeId="SUBSCRIBER"/>
   <RoleType description="" hasTable="N" parentTypeId="" roleTypeId="VISITOR"/>
   <RoleType description="" hasTable="N" parentTypeId="" roleTypeId="WEB_MASTER"/>
+  <RoleType description="" hasTable="N" parentTypeId="" roleTypeId="CALENDAR_ROLE"/>
+  <RoleType description="" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_ATTENDEE"/>
+  <RoleType description="" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_ORGANIZER"/>
+  <RoleType description="" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_OWNER"/>
+  <RoleType description="" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_DELEGATE"/>
   <ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
   <ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
   <ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
@@ -426,6 +431,50 @@
     statusId="BACKORDERED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Cancelled" sequenceId="99"
     statusId="CANCELLED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Needs Action" sequenceId="01"
+    statusId="CAL_NEEDS_ACTION" statusTypeId="CALENDAR_STATUS"/>
+  <StatusItem description="Sent" sequenceId="02"
+    statusId="CAL_SENT" statusTypeId="CALENDAR_STATUS"/>
+  <StatusItem description="Declined" sequenceId="03"
+    statusId="CAL_DECLINED" statusTypeId="CALENDAR_STATUS"/>
+  <StatusItem description="Delegated" sequenceId="04"
+    statusId="CAL_DELEGATED" statusTypeId="CALENDAR_STATUS"/>
+  <StatusItem description="Accepted" sequenceId="01"
+    statusId="CAL_ACCEPTED" statusTypeId="TASK_STATUS"/>
+  <StatusItem description="Completed" sequenceId="02"
+    statusId="CAL_COMPLETED" statusTypeId="TASK_STATUS"/>
+  <StatusItem description="Tentative" sequenceId="01"
+    statusId="CAL_TENTATIVE" statusTypeId="EVENT_STATUS"/>
+  <StatusItem description="Confirmed" sequenceId="02"
+    statusId="CAL_CONFIRMED" statusTypeId="EVENT_STATUS"/>
+  <StatusItem description="open.not_running.not_started" sequenceId="01"
+    statusId="WF_NOT_STARTED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="open.not_running.suspended" sequenceId="02"
+    statusId="WF_SUSPENDED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="open.running" sequenceId="03"
+    statusId="WF_RUNNING" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="closed.completed" sequenceId="04"
+    statusId="WF_COMPLETED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="closed.terminated" sequenceId="05"
+    statusId="WF_TERMINATED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="closed.aborted" sequenceId="06"
+    statusId="WF_ABORTED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="Needs Action" sequenceId="01"
+    statusId="CAL_ASN_NEEDS_ACTION" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Accepted" sequenceId="02"
+    statusId="CAL_ASN_ACCEPTED" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Sent" sequenceId="03"
+    statusId="CAL_ASN_SENT" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Tentative" sequenceId="04"
+    statusId="CAL_ASN_TENTATIVE" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Confirmed" sequenceId="05"
+    statusId="CAL_ASN_CONFIRMED" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Declined" sequenceId="06"
+    statusId="CAL_ASN_DECLINED" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Completed" sequenceId="07"
+    statusId="CAL_ASN_COMPLETED" statusTypeId="CALENDAR_ASSIGN"/>
+  <StatusItem description="Delegated" sequenceId="08"
+    statusId="CAL_ASN_DELEGATED" statusTypeId="CALENDAR_ASSIGN"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="BUDGET_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="CASE_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="COM_EVENT_STATUS"/>
@@ -439,10 +488,16 @@
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="UNEMPL_CLAIM_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFF_ASSET_STTS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="CALENDAR_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="CALENDAR_STATUS" statusTypeId="EVENT_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="CALENDAR_STATUS" statusTypeId="TASK_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="PARTY_ASSET_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="PARTY_REL_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="SERVER_HIT_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WEB_CONTENT_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_ASSIGN"/>
+  <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="CALENDAR_ASSIGN"/>
   <SubscriptionType description="" hasTable="N" parentTypeId="" subscriptionTypeId="NEWSGROUP_SUBSCR"/>
   <SubscriptionType description="" hasTable="N" parentTypeId="" subscriptionTypeId="OTHER_SUBSCR"/>
   <SubscriptionType description="" hasTable="N" parentTypeId="" subscriptionTypeId="PRODUCT_INFO_SUBSCR"/>
@@ -464,15 +519,20 @@
     parentTypeId="WORK_EFF_DEPENDENCY" workEffortAssocTypeId="WORK_EFF_CONCURRENCY"/>
   <WorkEffortAssocType description="" hasTable="N"
     parentTypeId="WORK_EFF_DEPENDENCY" workEffortAssocTypeId="WORK_EFF_PRECEDENCY"/>
+  <WorkEffortExpectation description="For Your Information" expectationId="FYI"/>
+  <WorkEffortExpectation description="Involvement Required" expectationId="REQUIRE"/>
+  <WorkEffortExpectation description="Involvement Requested" expectationId="REQUEST"/>
+  <WorkEffortExpectation description="Immediate Response Requested" expectationId="IMMEDIATE"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PROGRAM"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PHASE"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PROJECT"/>
-  <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="TASK"/>
-  <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="ACTIVITY"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="PRODUCTION_RUN"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="MAINTENANCE"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="RESEARCH"/>
   <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="WORK_FLOW"/>
+  <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="ACTIVITY"/>
+  <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="TASK"/>
+  <WorkEffortType description="" hasTable="N" parentTypeId="" workEffortTypeId="EVENT"/>
   <WorkEffortTypeAttr attrName="QUANTITY_PRODUCED" workEffortTypeId="PRODUCTION_RUN"/>
   <WorkEffortTypeAttr attrName="QUANTITY_REJECTED" workEffortTypeId="PRODUCTION_RUN"/>
   <WorkEffortTypeAttr attrName="QUANTITY_TO_PRODUCE" workEffortTypeId="PRODUCTION_RUN"/>
