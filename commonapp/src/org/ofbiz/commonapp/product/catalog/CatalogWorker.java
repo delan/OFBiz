@@ -365,7 +365,7 @@ public class CatalogWorker {
         }
 
         if (!fromSession) {
-            if (Debug.infoOn()) Debug.logInfo("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId);
+            if (Debug.verboseOn()) Debug.logVerbose("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId);
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
             CategoryWorker.setTrail(request, new ArrayList());
         }
