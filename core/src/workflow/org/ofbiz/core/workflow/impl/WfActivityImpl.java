@@ -699,7 +699,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 } else if (keyStr != null && keyStr.trim().toLowerCase().startsWith("name:")) {
                     List couple = StringUtil.split(keyStr.trim().substring(5).trim(), "=");
                     if (contextSignature.contains(((String) couple.get(0)).trim()))
-                        actualContext.put(((String) couple.get(0)).trim(), context.get(couple.get(1)));
+                        actualContext.put(((String) couple.get(0)).trim(), context.get(((String)couple.get(1)).trim()));
                 } else if (context.containsKey(key)) {
                     if (contextSignature.contains(key))
                         actualContext.put(key, context.get(key));
