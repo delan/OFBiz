@@ -63,7 +63,7 @@ $Id$
     <event button-name="payCheck" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="payCheck" disable-lock="false"/>
     <event button-name="payGiftCard" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="payGiftCard" disable-lock="false"/>
     <event button-name="payCredit" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="payCredit" disable-lock="false"/>
-    <event button-name="payFinish" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="processSale" disable-lock="false"/>
+    <event button-name="ALT.payFinish" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="processSale" disable-lock="false"/>
     <event button-name="paySetRef" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="setRefNum" disable-lock="false"/>
     <event button-name="payClear" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="clearPayment" disable-lock="false"/>
     <event button-name="payClearAll" class-name="org.ofbiz.pos.event.PaymentEvents" method-name="clearAllPayments" disable-lock="false"/>
@@ -71,7 +71,7 @@ $Id$
     <!-- pos main menu events -->
     <event button-name="menuSku" class-name="org.ofbiz.pos.event.MenuEvents" method-name="addItem" disable-lock="false"/>
     <event button-name="menuLock" class-name="org.ofbiz.pos.event.SecurityEvents" method-name="lock" disable-lock="false"/>
-    <event button-name="menuLogout" class-name="org.ofbiz.pos.event.SecurityEvents" method-name="logout" disable-lock="false"/>
+    <event button-name="ALT.menuLogout" class-name="org.ofbiz.pos.event.SecurityEvents" method-name="logout" disable-lock="false"/>
     <event button-name="menuMgr" class-name="org.ofbiz.pos.event.SecurityEvents" method-name="mgrLogin" disable-lock="false"/>
     <event button-name="menuMain" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showPosScreen" disable-lock="false"/>    
     <event button-name="menuPay" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showPayScreen" disable-lock="false"/>

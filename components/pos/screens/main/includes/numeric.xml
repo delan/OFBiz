@@ -10,11 +10,11 @@
             <Button name="numFour" x="0" y="69" w="75" h="68" style="numButton" content="4" alignment="Center"/>
             <Button name="numFive" x="76" y="69" w="75" h="68" style="numButton" content="5" alignment="Center"/>
             <Button name="numSix" x="152" y="69" w="75" h="68" style="numButton" content="6" alignment="Center"/>
-            <Button name="menuEnter" x="228" y="69" w="75" h="206" style="numButton" content="ENTER" alignment="Center"/>
+            <Button name="menuEnter" x="228" y="69" w="75" h="206" style="numButton" content="ENT" alignment="Center"/>
             <Button name="numOne" x="0" y="138" w="75" h="68" style="numButton" content="1" alignment="Center"/>
             <Button name="numTwo" x="76" y="138" w="75" h="68" style="numButton" content="2" alignment="Center"/>
             <Button name="numThree" x="152" y="138" w="75" h="68" style="numButton" content="3" alignment="Center"/>
-            <Button name="menuClear" x="0" y="207" w="75" h="68" style="numButton" content="CLEAR" alignment="Center"/>
+            <Button name="menuClear" x="0" y="207" w="75" h="68" style="numButton" content="CLR" alignment="Center"/>
             <Button name="numZero" x="76" y="207" w="75" h="68" style="numButton" content="0" alignment="Center"/>
             <Button name="numDZero" x="152" y="207" w="75" h="68" style="numButton" content="00" alignment="Center"/>
         </Panel>

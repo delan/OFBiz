@@ -51,6 +51,8 @@ public class PosButtonWrapper {
     private static final String disabledAll = "buttonDisabled";
     private static final String enabledMenu = "posButton";
     private static final String enabledNum = "numButton";
+    private static final String enabledSku = "skuButton";
+    private static final String enabledAlt = "altButton";
 
     protected XStyle disabledStyle = null;
     protected XStyle enabledStyle = null;
@@ -76,6 +78,16 @@ public class PosButtonWrapper {
             this.enabledStyle = XProjectManager.getStyleManager().getStyle(enabledNum);
             if (this.enabledStyle == null) {
                 Debug.logError("ERROR: The enabled button style \""+ enabledNum + "\" was not found!", module);
+            }
+        } else if (name != null && name.startsWith("SKU.")) {
+            this.enabledStyle = XProjectManager.getStyleManager().getStyle(enabledSku);
+            if (this.enabledStyle == null) {
+                Debug.logError("ERROR: The enabled button style \""+ enabledSku + "\" was not found!", module);
+            }
+        } else if (name != null && name.startsWith("ALT.")) {
+            this.enabledStyle = XProjectManager.getStyleManager().getStyle(enabledAlt);
+            if (this.enabledStyle == null) {
+                Debug.logError("ERROR: The enabled button style \""+ enabledAlt + "\" was not found!", module);
             }
         } else {
             this.enabledStyle = XProjectManager.getStyleManager().getStyle(enabledMenu);
@@ -113,7 +125,8 @@ public class PosButtonWrapper {
         }
 
         // get the hex color for the current style
-        String fcolor = Integer.toHexString(style.getStyleAsColor(XStyle.COLOR_FORE).getRGB() & 0x00ffffff);
+        String fcolor = Integer.toHexString(style.getStyleAsColor(XStyle.COLOR_FORE).getRGB() & 0x00ffffff);        
+        xbutton.setBackground(style.getStyleAsColor(XStyle.COLOR_BACK));
 
         // add the # for the HTML color
         if (fcolor.equals("0")) {
@@ -158,12 +171,14 @@ public class PosButtonWrapper {
         // append the suffix (closing tags)
         newContent.append(suffix);
 
-        // update the button text
-        xbutton.setText(newContent.toString());
-
         // set the button font
         Font font = xbutton.getFont().deriveFont(Font.PLAIN);
         xbutton.setFont(font);
+
+        // update the button text
+        xbutton.setRolloverEnabled(false);
+        xbutton.setText(newContent.toString());
+
         //Debug.log("Button [" + name + "] = " + xbutton.getText(), module);
     }
 
