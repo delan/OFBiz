@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.1 2004/05/22 21:14:34 ajzeneski Exp $
+ *  $Id: ofbiz-component.xml,v 1.2 2004/07/04 05:56:40 ajzeneski Exp $
 -->
 
 <ofbiz-component name="catalina">
@@ -30,7 +30,9 @@
     <classpath type="jar" location="lib/common/*"/>
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="config"/>
-    
+    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
+    <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
+
 <!--
     <webapp name="catalina-root"
     	    title="ROOT" 

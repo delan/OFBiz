@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.13 2004/07/04 02:57:12 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.14 2004/07/04 05:56:41 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -44,6 +44,7 @@ import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.component.ComponentConfig;
+import org.ofbiz.entity.GenericDelegator;
 
 import org.apache.catalina.startup.Embedded;
 import org.apache.catalina.logger.LoggerBase;
@@ -124,7 +125,7 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      3.1
  */
 public class CatalinaContainer implements Container {
@@ -135,10 +136,12 @@ public class CatalinaContainer implements Container {
     public static final String module = CatalinaContainer.class.getName();
     protected static Map mimeTypes = new HashMap();
 
+    protected GenericDelegator delegator = null;
     protected Embedded embedded = null;
     protected Map clusterConfig = new HashMap();
     protected Map engines = new HashMap();
     protected Map hosts = new HashMap();
+    protected boolean usePersistentManager = false;
     protected boolean contextReloadable = false;
     protected boolean crossContext = false;
     protected boolean distribute = false;
@@ -165,10 +168,13 @@ public class CatalinaContainer implements Container {
         boolean useNaming = ContainerConfig.getPropertyValue(cc, "use-naming", false);
         int debug = ContainerConfig.getPropertyValue(cc, "debug", 0);
 
+        // grab some global context settings
+        this.delegator = GenericDelegator.getGenericDelegator(ContainerConfig.getPropertyValue(cc, "delegator-name", "default"));
+        this.usePersistentManager = ContainerConfig.getPropertyValue(cc, "apps-persistent-mgr", false);
         this.contextReloadable = ContainerConfig.getPropertyValue(cc, "apps-context-reloadable", false);
         this.crossContext = ContainerConfig.getPropertyValue(cc, "apps-cross-context", true);
-        this.distribute = ContainerConfig.getPropertyValue(cc, "apps-distributable", true);
-                
+        this.distribute = ContainerConfig.getPropertyValue(cc, "apps-distributable", true);        
+
         // create the instance of Embedded
         embedded = new Embedded();
         embedded.setDebug(debug);
@@ -208,7 +214,6 @@ public class CatalinaContainer implements Container {
             throw new ContainerException(e);
         }
 
-        this.logSessionInfo();
         return true;
     }
 
@@ -228,17 +233,6 @@ public class CatalinaContainer implements Container {
         StandardEngine engine = (StandardEngine) embedded.createEngine();
         engine.setName(engineName);
         engine.setDefaultHost(hostName);
-
-        // configure persistent sessions
-        boolean usePersistentManager = ContainerConfig.getPropertyValue(engineConfig, "enable-persistence-mgr", false);
-        Manager sessionMgr = null;
-        if (usePersistentManager) {
-            sessionMgr = new PersistentManager();
-            ((PersistentManager)sessionMgr).setStore(new FileStore());
-        } else {
-            sessionMgr = new StandardManager();
-        }
-        engine.setManager(sessionMgr);
 
         // set the JVM Route property (JK/JK2)
         String jvmRoute = ContainerConfig.getPropertyValue(engineConfig, "jvm-route", null);
@@ -559,6 +553,15 @@ public class CatalinaContainer implements Container {
             mount = mount.substring(0, mount.length() - 2);
         }
 
+        // configure persistent sessions
+        Manager sessionMgr = null;
+        if (usePersistentManager) {
+            sessionMgr = new PersistentManager();
+            ((PersistentManager)sessionMgr).setStore(new OfbizStore(delegator));
+        } else {
+            sessionMgr = new StandardManager();
+        }
+
         // create the web application context
         StandardContext context = (StandardContext) embedded.createContext(mount, location);
         context.setJ2EEApplication(J2EE_APP);
@@ -568,10 +571,10 @@ public class CatalinaContainer implements Container {
         context.setDisplayName(appInfo.name);
         context.setDocBase(location);
 
-        context.setManager(engine.getManager());
         context.setReloadable(contextReloadable);
         context.setDistributable(distribute);
         context.setCrossContext(crossContext);
+        context.setManager(sessionMgr);
         context.getServletContext().setAttribute("_serverId", appInfo.server);
 
         // create the Default Servlet instance to mount
@@ -669,24 +672,6 @@ public class CatalinaContainer implements Container {
             while (i.hasNext()) {
                 Map.Entry entry = (Map.Entry) i.next();
                 context.addMimeMapping((String)entry.getKey(), (String)entry.getValue());
-            }
-        }
-    }
-
-    protected void logSessionInfo() {
-        if (Debug.infoOn() && engines != null) {
-            Iterator i = engines.keySet().iterator();
-            while (i.hasNext()) {
-                Engine engine = (Engine) engines.get(i.next());
-                Manager mgr = engine.getManager();
-
-                String className = null;
-                if (mgr instanceof PersistentManager) {
-                    className = "PersistentManager";
-                } else {
-                    className = "StandardManager";
-                }
-                Debug.logInfo(className + " loaded : [Count]: " + mgr.getSessionCounter() + " [Active]: " + mgr.getActiveSessions() + " [Rejected]: " + mgr.getRejectedSessions(), module);
             }
         }
     }
