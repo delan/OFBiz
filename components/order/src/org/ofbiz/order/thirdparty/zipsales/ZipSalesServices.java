@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.1 2003/12/03 19:43:06 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.2 2003/12/03 20:37:26 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.datafile.DataFile;
 import org.ofbiz.datafile.DataFileException;
 import org.ofbiz.datafile.Record;
@@ -35,9 +36,12 @@ import org.ofbiz.datafile.RecordIterator;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.security.Security;
 
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.sql.Timestamp;
@@ -49,7 +53,7 @@ import java.text.DecimalFormat;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -145,7 +149,7 @@ public class ZipSalesServices {
                 }
 
                 // console log
-                Debug.log(entry.get("zipCode") + "/" + newValue.get("stateCode") + "/" + newValue.get("city") + "/" + newValue.get("county") + "/" + newValue.get("fromDate"));
+                Debug.log(newValue.get("zipCode") + "/" + newValue.get("stateCode") + "/" + newValue.get("city") + "/" + newValue.get("county") + "/" + newValue.get("fromDate"));
             }
         }
 
@@ -153,8 +157,110 @@ public class ZipSalesServices {
     }
 
     // tax calc service
-    public static Map calcTax(DispatchContext dctx, Map context) {
-        return ServiceUtil.returnError("This service is not implemented yet");
+    public static Map flatTaxCalc(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        List itemProductList = (List) context.get("itemProductList");
+        List itemAmountList = (List) context.get("itemAmountList");
+        List itemShippingList = (List) context.get("itemShippingList");
+        Double orderShippingAmount = (Double) context.get("orderShippingAmount");
+        GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
+
+        // flatTaxCalc only uses the Zip + City from the address
+        String postalCode = shippingAddress.getString("postalCode");
+        String city = shippingAddress.getString("city");
+
+        // setup the return lists.
+        List orderAdjustments = new ArrayList();
+        List itemAdjustments = new ArrayList();
+
+        // loop through and get per item tax rates
+        for (int i = 0; i < itemProductList.size(); i++) {
+            GenericValue product = (GenericValue) itemProductList.get(i);
+            Double itemAmount = (Double) itemAmountList.get(i);
+            itemAdjustments.add(getItemTaxList(delegator, product, postalCode, city, itemAmount.doubleValue(), false));
+        }
+
+        Map result = ServiceUtil.returnSuccess();
+        result.put("orderAdjustments", orderAdjustments);
+        result.put("itemAdjustments", itemAdjustments);
+        return result;
+    }
+
+    private static List getItemTaxList(GenericDelegator delegator, GenericValue item, String zipCode, String city, double itemAmount, boolean isUseTax) {
+        List adjustments = new ArrayList();
+
+        // check the item for tax status
+        if (item.get("taxable") != null && "N".equals(item.getString("taxable"))) {
+            // item not taxable
+            return adjustments;
+        }
+
+        // lookup the records
+        List zipLookup = null;
+        try {
+            zipLookup = delegator.findByAnd("ZipSalesTaxLookup", UtilMisc.toMap("zipCode", zipCode), UtilMisc.toList("-fromDate"));
+        } catch (GenericEntityException e) {
+            Debug.logWarning("ZipSalesFlatTaxCalc: No ZipCode Entry Found.", module);
+            return adjustments;
+        }
+
+        // the filtered list
+        List taxLookup = null;
+
+        // first filter by city
+        if (zipLookup != null && zipLookup.size() > 0) {
+            taxLookup = EntityUtil.filterByAnd(zipLookup, UtilMisc.toMap("city", city.toUpperCase()));
+        }
+
+        // no city get the main default
+        if (taxLookup == null) {
+            taxLookup = EntityUtil.filterByAnd(zipLookup, UtilMisc.toMap("generalDefault", "Y"));
+        }
+
+        // now filter the county default since we don't track counties
+        if (taxLookup != null && taxLookup.size() > 1) {
+            taxLookup = EntityUtil.filterByAnd(taxLookup, UtilMisc.toMap("countyDefault", "Y"));
+        }
+
+        // now filter by date
+        if (taxLookup != null && taxLookup.size() > 1) {
+            taxLookup = EntityUtil.filterByDate(taxLookup);
+        }
+
+        // get the first one
+        GenericValue taxEntry = null;
+        if (taxLookup != null) {
+            taxEntry = (GenericValue) taxLookup.iterator().next();
+        }
+
+        if (taxEntry == null) {
+            Debug.logWarning("No tax entry found for : " + zipCode + " / " + city + " - " + itemAmount, module);
+            return adjustments;
+        }
+
+        String fieldName = "comboSalesTax";
+        if (isUseTax) {
+            fieldName = "comboUseTax";
+        }
+
+        Double comboTaxRate = taxEntry.getDouble(fieldName);
+        if (comboTaxRate == null) {
+            Debug.logWarning("No Combo Tax Rate In Field " + fieldName + " @ " + zipCode + " / " + city + " - " + itemAmount, module);
+            return adjustments;
+        }
+
+        // calc tax amount
+        double taxRate = comboTaxRate.doubleValue();
+        double taxCalc = itemAmount * taxRate;
+
+        // get state code for comment
+        String stateCode = taxEntry.getString("stateCode");
+
+        // format the number
+        Double taxAmount = new Double(formatCurrency(taxCalc));
+        adjustments.add(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", "Sales Tax (" + stateCode + ")")));
+
+        return adjustments;
     }
 
     // formatting methods
