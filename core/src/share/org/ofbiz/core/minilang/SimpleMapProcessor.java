@@ -643,6 +643,7 @@ public class SimpleMapProcessor {
 
     public static class Copy extends SimpleMapOperation {
         boolean replace = true;
+        boolean setIfNull = false;
         String toField;
         
         public Copy(Element element, SimpleMapProcess simpleMapProcess) {
@@ -652,13 +653,16 @@ public class SimpleMapProcessor {
                 this.toField = this.fieldName;
             }
             
-            replace = "true".equals(element.getAttribute("replace"));
+            //if anything but false it will be true
+            replace = !"false".equals(element.getAttribute("replace"));
+            //if anything but true it will be false
+            setIfNull = "true".equals(element.getAttribute("set-if-null"));
         }
         
         public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
             Object fieldValue = inMap.get(fieldName);
             
-            if (fieldValue == null)
+            if (fieldValue == null && !setIfNull)
                 return;
             
             if (replace) {
@@ -679,6 +683,7 @@ public class SimpleMapProcessor {
         String toField;
         String type;
         boolean replace = true;
+        boolean setIfNull = false;
         String format;
         
         public Convert(Element element, SimpleMapProcess simpleMapProcess) {
@@ -688,22 +693,32 @@ public class SimpleMapProcessor {
                 this.toField = this.fieldName;
             }
             
-            this.type = element.getAttribute("type");
-            this.replace = !"false".equals(element.getAttribute("replace"));
+            type = element.getAttribute("type");
+            //if anything but false it will be true
+            replace = !"false".equals(element.getAttribute("replace"));
+            //if anything but true it will be false
+            setIfNull = "true".equals(element.getAttribute("set-if-null"));
 
-            this.format = element.getAttribute("format");
+            format = element.getAttribute("format");
         }
         
         public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
             Object fieldObject = inMap.get(fieldName);
             
             if (fieldObject == null) {
+                if (setIfNull && (replace || !results.containsKey(toField)))
+                    results.put(toField, null);
                 return;
             }
             
-            if (fieldObject instanceof java.lang.String) {
-                if (((String)fieldObject).length() == 0)
+            //if converting to anything but a string and an incoming string is empty,
+            // set to null if setIfNull is true, otherwise do nothing, ie treat as if null
+            if (fieldObject instanceof java.lang.String && !"String".equals(type)) {
+                if (((String)fieldObject).length() == 0) {
+                    if (setIfNull && (replace || !results.containsKey(toField)))
+                        results.put(toField, null);
                     return;
+                }
             }
             
             Object convertedObject = null;

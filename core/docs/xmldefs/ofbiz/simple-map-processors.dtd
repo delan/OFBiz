@@ -96,6 +96,7 @@
 <!ATTLIST copy
     to-field CDATA #IMPLIED
     replace ( true | false ) "true"
+    set-if-null ( true | false ) "false"
 >
 
 <!-- Convert operation: if no to-field is specified, it is the same as the field on process -->
@@ -104,6 +105,7 @@
     to-field CDATA #IMPLIED
     type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) #REQUIRED
     replace ( true | false ) "true"
+    set-if-null ( true | false ) "false"
     format CDATA #IMPLIED
 >
 
