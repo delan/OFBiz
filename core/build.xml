@@ -170,7 +170,12 @@
 
     <target name="docs" depends="prepare-docs">
         <javadoc packagenames="org.ofbiz.*" classpath="${classpath}"
-            sourcepath="${src.dir}" destdir="${doc.dir}/api" />
+            destdir="${doc.dir}/api">
+            <sourcepath path="${src.dir}/share" />
+            <sourcepath path="${src.dir}/webapp" />
+            <sourcepath path="${src.dir}/ejb" />
+            <sourcepath path="${src.dir}/crypto" />
+        </javadoc>
     </target> 
 
 
