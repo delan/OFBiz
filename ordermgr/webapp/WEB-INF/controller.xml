@@ -12,6 +12,7 @@
     <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
     <handler name="service-multi" type="request" class="org.ofbiz.core.event.ServiceMultiEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.core.event.SimpleEventHandler"/>
+    <handler name="bsf" type="request" class="org.ofbiz.core.event.BsfEventHandler"/>
 
     <!-- view handlers -->
     <handler name="jpublish" type="view" class="org.ofbiz.core.view.JPublishViewHandler"/>
@@ -470,12 +471,12 @@
         <response name="success" type="none" value=""/>
         <!-- <response name="success" type="view" value="orderreport"/> -->
     </request-map>
-    <request-map uri="orderreportjasper.pdf">
-        <security https="true" auth="true"/>
+    <request-map uri="orderreportjasper.pdf"><security https="true" auth="true"/>
+        <event type="bsf" path="/reports/" invoke="OrderReportPrepare.bsh"/>
         <response name="success" type="view" value="orderreportjasper"/>
     </request-map>
-    <request-map uri="orderitemreportjasper.pdf">
-        <security https="true" auth="true"/>
+    <request-map uri="orderitemreportjasper.pdf"><security https="true" auth="true"/>
+        <event type="bsf" path="/reports/" invoke="OrderReportPrepare.bsh"/>
         <response name="success" type="view" value="orderitemreportjasper"/>
     </request-map>
     <request-map uri="orderreportlist">
@@ -518,8 +519,7 @@
     <view-map name="paysetup" type="jpublish" page="/setup/paymentsetup.ftl"/>
         
     <view-map name="orderreportlist" type="jpublish" page="/reports/reportlist.ftl"/>
-    <view-map name="orderreport" page="/reports/orderreport.jsp" content-type="application/pdf" encoding="none"/>
-    <view-map name="orderreportjasper" page="/reports/orderreport.jasper" type="jasperreportspdf" content-type="application/pdf" encoding="none"/>
-    <view-map name="orderitemreportjasper" page="/reports/orderitemreport.jasper" type="jasperreportspdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="orderreportjasper" type="jasperreportspdf" page="/reports/orderreport.xml" content-type="application/pdf" encoding="none"/>
+    <view-map name="orderitemreportjasper" type="jasperreportspdf" page="/reports/orderitemreport.xml" content-type="application/pdf" encoding="none"/>
     <!-- end of view mappings -->
 </site-conf>
