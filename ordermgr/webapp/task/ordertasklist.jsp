@@ -46,6 +46,8 @@
 		if (sort.equals("name")) {
 			sortOrder.add(0, "firstName");
 			sortOrder.add(0, "lastName");
+		} else if (sort.equals("grandTotal")) {
+			sortOrder.add(0, "-grandTotal");
 		} else {
 			sortOrder.add(0, sort);
 		}
