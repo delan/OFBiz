@@ -523,6 +523,26 @@
     	<response name="error" type="view" value="EditProdCatalogWebSites"/>
     </request-map>
 
+    <!-- ================ ProdCatalog Parties Requests ================= -->
+    <request-map uri="EditProdCatalogParties"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProdCatalogParties"/>
+    </request-map>
+    <request-map uri="addProdCatalogToParty"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="addProdCatalogToParty"/>
+    	<response name="success" type="view" value="EditProdCatalogParties"/>
+    	<response name="error" type="view" value="EditProdCatalogParties"/>
+    </request-map>
+    <request-map uri="updateProdCatalogToParty"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProdCatalogToParty"/>
+    	<response name="success" type="view" value="EditProdCatalogParties"/>
+    	<response name="error" type="view" value="EditProdCatalogParties"/>
+    </request-map>
+    <request-map uri="removeProdCatalogFromParty"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProdCatalogFromParty"/>
+    	<response name="success" type="view" value="EditProdCatalogParties"/>
+    	<response name="error" type="view" value="EditProdCatalogParties"/>
+    </request-map>
+
     <request-map uri="catalog_createWebSite"><security https="true" auth="true"/>
         <event type="service" path="" invoke="createWebSite"/>
     	<response name="success" type="view" value="EditProdCatalogWebSites"/>
@@ -732,6 +752,7 @@
     <view-map name="EditProdCatalogCategories" type="region"/>
     <view-map name="EditProdCatalogPromos" type="region"/>
     <view-map name="EditProdCatalogWebSites" type="region"/>
+    <view-map name="EditProdCatalogParties" type="region"/>
 
     <view-map name="FindProductPromo" type="region"/>
     <view-map name="EditProductPromo" type="region"/>

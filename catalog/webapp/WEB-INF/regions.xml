@@ -177,6 +177,10 @@
         <put section='title'>Edit ProdCatalog WebSites</put>
         <put section='content' content='/catalog/EditProdCatalogWebSites.jsp'/>
     </define>
+    <define id='EditProdCatalogParties' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit ProdCatalog Parties</put>
+        <put section='content' content='/catalog/EditProdCatalogParties.jsp'/>
+    </define>
 
     <define id='FindProductPromo' region='MAIN_REGION'>
         <put section='title'>Edit ProductPromo</put>
