@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/10/18 22:32:31  jonesde
+ * Improved caching, caches used more and events invalidate more
+ *
  * Revision 1.2  2001/10/18 18:07:31  jonesde
  * Added worker methods for multiple catalog, or multiple top category stuff
  *
@@ -49,8 +52,12 @@ import org.ofbiz.core.entity.*;
  */
 public class CategoryWorker {
   
-  public static void getRelatedProducts(PageContext pageContext, String attributeName) {
-    getRelatedProducts(pageContext,attributeName,null);
+  public static void getRelatedProducts(PageContext pageContext, String attributePrefix) {
+    getRelatedProducts(pageContext,attributePrefix,null,true);
+  }
+  
+  public static void getRelatedProducts(PageContext pageContext, String attributePrefix, String parentId) {
+    getRelatedProducts(pageContext,attributePrefix,parentId,true);
   }
   
   /**
@@ -62,7 +69,7 @@ public class CategoryWorker {
    *@param attributePrefix A prefix to put on each attribute name in the pageContext
    *@param parentId The ID of the parent category
    */
-  public static void getRelatedProducts(PageContext pageContext, String attributePrefix, String parentId) {
+  public static void getRelatedProducts(PageContext pageContext, String attributePrefix, String parentId, boolean limitView) {
     GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
     ServletRequest request = pageContext.getRequest();
     if(attributePrefix == null) attributePrefix = "";
@@ -110,11 +117,20 @@ public class CategoryWorker {
       }
     }
     
-    int lowIndex = viewIndex*viewSize+1;
-    int highIndex = (viewIndex+1)*viewSize;
+    int lowIndex;
+    int highIndex;
     int listSize = 0;
     if(prodCatMembers!=null) listSize = prodCatMembers.size();
-    if(listSize<highIndex) highIndex=listSize;
+        
+    if(limitView) {
+      lowIndex = viewIndex*viewSize+1;
+      highIndex = (viewIndex+1)*viewSize;
+      if(listSize<highIndex) highIndex=listSize;
+    }
+    else {
+      lowIndex = 1;
+      highIndex = listSize;
+    }
     
     ArrayList someProducts = new ArrayList();
     if(prodCatMembers != null) {
