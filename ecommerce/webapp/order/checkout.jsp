@@ -194,21 +194,7 @@
         <div class="tabletext"><%=cartItem.getProductId()%></div>
       </td>
       <td valign="top">
-        <div class="tabletext"><%=cartItem.getDescription()%>
-        <%-- //Get the RandomLengthString, if one exists...
-           String RLString = null;
-        %>
-        <% if(cartItem.containsKey("RANDOM_LENGTH_STRING"))
-          {
-            RLString = cartItem.getString("RANDOM_LENGTH_STRING");
-            if(RLString != null)
-            {
-        %>
-              [[RandomLength:<%=(String)RLString%>]]
-        <%
-            }
-          }
-        --%>
+        <div class="tabletext"><%=cartItem.getName()%> : <%=cartItem.getDescription()%>
         </div>
       </td>
       <td align="center" valign="top">

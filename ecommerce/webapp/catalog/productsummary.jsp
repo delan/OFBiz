@@ -15,12 +15,13 @@
         </div>
 
         <div class="tabletext">
-          <p><nobr>
+          <nobr>
             <b><%=product.getString("productId")%></b>,
             <b><%=UtilFormatOut.formatPrice(product.getDouble("defaultPrice"))%></b>
             , Reg. <%=UtilFormatOut.formatPrice(product.getDouble("defaultPrice"))%>
-          </nobr></p>
+          </nobr>
         </div>
+        <div class="tabletext"><%=product.getString("description")%></div>
     </td>
     <td>
       <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="the<%=UtilFormatOut.formatQuantity(listIndex)%>form" style='margin: 0;'>
