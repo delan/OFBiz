@@ -127,21 +127,46 @@ public class CoreEvents {
     }
 
     /** Schedule a service for a specific time or recurrence
+     *  Request Parameters which are used for this service:
+     *
+     *  SERVICE_NAME      - Name of the service to invoke
+     *  SERVICE_TIME      - First time the service will occur
+     *  SERVICE_FREQUENCY - The type of recurrence (SECONDLY,MINUTELY,DAILY,etc)
+     *  SERVICE_INTERVAL  - The interval of the frequency (every 5 minutes, etc)
+     *  SERVICE_COUNT     - The number of time the service should run
+     *
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @return Response code string
      */
     public static String scheduleService(HttpServletRequest request, HttpServletResponse response) {
+        // first do a security check
+        Security security = (Security) request.getAttribute("security");
+        if (!security.hasPermission("ENTITY_MAINT", request.getSession())) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to use this function.");
+            return "error";
+        }
+
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map params = UtilMisc.getParameterMap(request);
         // get the schedule parameters
         String serviceName = (String) params.remove("SERVICE_NAME");
         String serviceTime = (String) params.remove("SERVICE_TIME");
-        String serviceFreq = (String) params.remove("SERVICE_FREQ");
+        String serviceFreq = (String) params.remove("SERVICE_FREQUENCY");
         String serviceIntr = (String) params.remove("SERVICE_INTERVAL");
         String serviceCnt  = (String) params.remove("SERVICE_COUNT");
         // the rest is the service context
         Map context = new HashMap(params);
+
+        // the frequency map
+        Map freqMap = new HashMap();
+        freqMap.put("SECONDLY", new Integer(1));
+        freqMap.put("MINUTELY", new Integer(2));
+        freqMap.put("HOURLY", new Integer(3));
+        freqMap.put("DAILY", new Integer(4));
+        freqMap.put("WEEKLY", new Integer(5));
+        freqMap.put("MONTHLY", new Integer(6));
+        freqMap.put("YEARLY", new Integer(7));
 
         // some defaults
         long startTime = (new Date()).getTime();
@@ -149,18 +174,72 @@ public class CoreEvents {
         int interval = 1;
         int frequency = RecurrenceRule.DAILY;
 
+        StringBuffer errorBuf = new StringBuffer();
+
         // make sure we passed a service
         if (serviceName == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>No service name was specified");
-            return "error";
+            errorBuf.append("<li>No service name was specified");
         }
 
         // some conversions
         if (serviceTime != null) {
+            try {
+                startTime = Long.parseLong(serviceTime);
+            }
+            catch (NumberFormatException nfe) {
+                errorBuf.append("<li>Invalid format for SERVICE_TIME");
+            }
+            if (startTime < (new Date()).getTime()) {
+                errorBuf.append("<li>SERVICE_TIME has already passed");
+            }
+        }
+        if (serviceIntr != null) {
+            try {
+                interval = Integer.parseInt(serviceIntr);
+            } catch (NumberFormatException nfe) {
+                errorBuf.append("<li>Invalid format for SERVICE_INTERVAL");
+            }
+        }
+        if (serviceCnt != null) {
+            try {
+                count = Integer.parseInt(serviceCnt);
+            } catch (NumberFormatException nfe) {
+                errorBuf.append("<li>Invalid format for SERVICE_COUNT");
+            }
+        }
+        if (serviceFreq != null) {
+            int parsedValue = 0;
+            try {
+                parsedValue = Integer.parseInt(serviceFreq);
+                if (parsedValue > 0 && parsedValue < 8)
+                    frequency = parsedValue;
+            } catch (NumberFormatException nfe) {
+                parsedValue = 0;
+            }
+            if (parsedValue == 0) {
+                if (!freqMap.containsKey(serviceFreq.toUpperCase())) {
+                    errorBuf.append("<li>Invalid format for SERIVCE_FREQUENCY");
+                } else {
+                    frequency = ((Integer)freqMap.get(serviceFreq.toUpperCase())).intValue();
+                }
+            }
+        }
+
+        // return the errors
+        if (errorBuf.length() > 0) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errorBuf.toString());
+            return "error";
         }
 
         // schedule service
+        try {
+            dispatcher.schedule(serviceName, context, startTime, frequency, interval, count);
+        } catch (GenericServiceException e) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Service dispatcher threw an exception: " + e.getMessage());
+            return "error";
+        }
 
+        request.setAttribute(SiteDefs.EVENT_MESSAGE, "<li>Service has been scheduled");
         return "success";
     }
 
