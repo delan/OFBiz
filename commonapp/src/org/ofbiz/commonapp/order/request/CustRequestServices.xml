@@ -31,6 +31,16 @@
     <simple-method method-name="createCustRequest" short-description="Create Customer Request">
         <make-value value-name="newEntity" entity-name="CustRequest"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
+        <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>   
+        
+        <if-empty field-name="statusId" map-name="parameters">
+        	<string-to-field string="CRQ_SUBMITTED" field-name="statusId" map-name="newEntity"/>
+        </if-empty>
 
         <sequenced-id-to-env sequence-name="CustRequest" env-name="custRequestId"/>
         <to-string field-name="custRequestId"/>
@@ -46,17 +56,19 @@
         <field-to-field field-name="custRequestId" map-name="newEntity" to-map-name="requesterMap"/>
         <if-not-empty field-name="requestPartyId" map-name="parameters">
             <field-to-field field-name="requestPartyId" map-name="parameters" to-map-name="requesterMap" to-field-name="partyId"/>
-            <else>
+          <else>
               <field-to-field field-name="partyId" map-name="userLogin" to-map-name="requesterMap"/>
             </else>
         </if-not-empty>
         <string-to-field string="REQ_REQUESTER" map-name="requesterMap" field-name="roleTypeId"/>
-        <call-service service-name="createCustRequestRole" in-map-name="requesterMap"/>
-        <field-to-result field-name="custRequestId" result-name="custRequestId"/>
+        <call-service service-name="createCustRequestRole" in-map-name="requesterMap"/>   
     </simple-method>
     <simple-method method-name="updateCustRequest" short-description="Update Customer Request">
         <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="CustRequest" map-name="lookupPKMap" value-name="custRequest"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="custRequest"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="custRequest"/>
         <set-nonpk-fields map-name="parameters" value-name="custRequest"/>
         <store-value value-name="custRequest"/>
     </simple-method>
@@ -79,6 +91,9 @@
         <make-value value-name="newEntity" entity-name="CustRequestItem"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <if-empty field-name="statusId" map-name="parameters">
+        	<string-to-field string="CRQ_SUBMITTED" field-name="statusId" map-name="newEntity"/>
+        </if-empty>        
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateCustRequestItem" short-description="Update Customer Request Item">
