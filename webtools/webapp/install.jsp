@@ -83,7 +83,7 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
             <LI><DIV class='tabletext'><%=dataFile.getAbsolutePath()%></DIV>
           <%}%>
         <%}else{%>
-          <LI><DIV class='tabletext'>No SQL Files found.</DIV>
+          <LI><DIV class='tabletext'>No XML/SQL Files found.</DIV>
         <%}%>
 <%-- NOTE: no longer using these generated settings. Instead we will use the ENTITY_DATA_* permissions for the admin user
         <LI><DIV class='tabletext'>Entity granularity security settings (auto generated, not in a file)</DIV>
