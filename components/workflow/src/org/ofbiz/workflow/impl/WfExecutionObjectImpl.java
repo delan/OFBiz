@@ -1,5 +1,5 @@
 /*
- * $Id: WfExecutionObjectImpl.java,v 1.3 2003/08/19 17:45:18 jonesde Exp $
+ * $Id: WfExecutionObjectImpl.java,v 1.4 2003/08/26 14:04:16 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import org.ofbiz.workflow.WfUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public abstract class WfExecutionObjectImpl implements WfExecutionObject {
@@ -268,16 +268,14 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             possibleStates.remove("open.not_running.not_started");
             possibleStates.remove("open.not_running.suspended");
             possibleStates.remove("closed.completed");
-            possibleStates.remove("closed.terminated");
-            possibleStates.remove("closed.aborted");
+            possibleStates.remove("closed.terminated");            
             return possibleStates;
         }
         if (currentState.equals("open.not_running.suspended")) {
             possibleStates.remove("open.not_running.suspended");
             possibleStates.remove("open.not_running.not_started");
             possibleStates.remove("closed.complete");
-            possibleStates.remove("closed.terminated");
-            possibleStates.remove("closed.aborted");
+            possibleStates.remove("closed.terminated");            
             return possibleStates;
         }
         return new ArrayList();
@@ -296,9 +294,10 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @see org.ofbiz.workflow.WfExecutionObject#abort()
      */
     public void abort() throws WfException, CannotStop, NotRunning {
+        Debug.logInfo("Aborting current state : " + state(), module);
         String stateStr = "closed.aborted";
         
-        if (!state().equals("open.running")) {
+        if (!state().startsWith("open")) {
             throw new NotRunning();
         }
         
