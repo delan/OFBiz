@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.11 2004/02/05 16:45:49 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.12 2004/02/12 05:07:17 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -290,11 +290,11 @@ public class ZipSalesServices {
         // no city get the main default
         if (taxLookup == null) {
             taxLookup = EntityUtil.filterByAnd(zipLookup, UtilMisc.toMap("generalDefault", "Y"));
-        }
-
-        // now filter the county default since we don't track counties
-        if (taxLookup != null && taxLookup.size() > 1) {
-            taxLookup = EntityUtil.filterByAnd(taxLookup, UtilMisc.toMap("countyDefault", "Y"));
+        } else {
+            // now filter the county default since we don't track counties
+            if (taxLookup != null && taxLookup.size() > 1) {
+                taxLookup = EntityUtil.filterByAnd(taxLookup, UtilMisc.toMap("countyDefault", "Y"));
+            }
         }
 
         // now filter by date
