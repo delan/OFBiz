@@ -19,7 +19,7 @@
 # -----------------------------------------------------------------------------
 
 # Do this for Linux/Java conflicts
-ulimit -s 2048
+#ulimit -s 2048
 
 # ----- Verify and Set Required Environment Variables -------------------------
 
@@ -40,20 +40,18 @@ fi
 
 export JAVA_OPTIONS="$JAVA_OPTIONS -Dofbiz.home=$OFBIZ_HOME"
 
-CP=`ls $OFBIZ_HOME/lib/share/*.jar | paste -s -d":" - `
-CP=$CP:`ls $OFBIZ_HOME/lib/common/*.jar | paste -s -d":" - `
+CP=`find $OFBIZ_HOME/core/lib -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/share -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/common -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/datavision -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/jasperreports -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/jotm -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/scripting -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/weka -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/worldpay -name *.jar | paste -s -d":" -`
+CP=$CP:`find $OFBIZ_HOME/lib/wspublisher -name *.jar | paste -s -d":" -`
 CP=$CP:$OFBIZ_HOME/lib/compile/xerces.jar:$OFBIZ_HOME/lib/compile/mail.jar
-CP=$CP:$OFBIZ_HOME/lib/compile/jboss-j2ee.jar:$OFBIZ_HOME/lib/compile/jdbc2_0-stdext.jar
-CP=$CP:$OFBIZ_HOME/lib/datavision/DataVision.jar:$OFBIZ_HOME/lib/datavision/MinML.jar:$OFBIZ_HOME/lib/datavision/jcalendar.jar
-CP=$CP:$OFBIZ_HOME/lib/weka/weka.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-share.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-entity.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-service.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-extutil.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-workflow.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-rules.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-datafile.jar
-CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-minilang.jar
+CP=$CP:$OFBIZ_HOME/lib/compile/activation.jar:$OFBIZ_HOME/lib/compile/jdbc2_0-stdext.jar
 CP=$CP:$OFBIZ_HOME/commonapp/lib/commonapp.jar 
 CP=$CP:$OFBIZ_HOME/commonapp/etc
 
@@ -62,12 +60,17 @@ export CLASSPATH=$CLASSPATH:$CP
 echo
 echo CLASSPATH=$CLASSPATH
 
+ACTION=$1
+if [ -z "$ACTION" ] ; then
+  ACTION="run"
+fi
+
 echo "ofbiz.sh - Running Jetty with the following options:"
 echo " JAVA_HOME=$JAVA_HOME"
 echo " JETTY_HOME=$JETTY_HOME"
 echo " OFBIZ_HOME=$OFBIZ_HOME"
 echo " JAVA_OPTIONS=$JAVA_OPTIONS"
-echo " -- RUNNING $JETTY_HOME/bin/jetty.sh $1 --"
+echo " -- RUNNING $JETTY_HOME/bin/jetty.sh $ACTION --"
 
-$JETTY_HOME/bin/jetty.sh $1 $JETTY_HOME/etc/ofbiz.xml
+$JETTY_HOME/bin/jetty.sh $ACTION $JETTY_HOME/etc/ofbiz.xml
 
