@@ -338,6 +338,13 @@ public class RequestHandler implements Serializable {
             throw new RequestHandlerException(e.getNonNestedMessage(), throwable);
         }
 
+        //before getting the view generation time flush the response output to get more consistent results
+        try {
+            resp.flushBuffer();
+        } catch (java.io.IOException e) {
+            throw new RequestHandlerException("Error flushing response buffer", e);
+        }
+        
         String vname = (String) req.getAttribute(SiteDefs.CURRENT_VIEW);
         if (vname != null) {
             ServerHitBin.countView(cname + "." + vname, req, viewStartTime,
