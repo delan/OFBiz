@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.19 $
+ *@version    $Revision: 1.20 $
  *@since      2.1
  */
 
@@ -241,6 +241,7 @@ if (product != null) {
 	                    virtualDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL");
 	                    virtualLargeImage = productContentWrapper.get("LARGE_IMAGE_URL");
 
+                        // initial image paths
 	                    detailImage = contentWrapper.get("DETAIL_IMAGE_URL");
 	                    largeImage = contentWrapper.get("LARGE_IMAGE_URL");
 
@@ -251,22 +252,26 @@ if (product != null) {
 	                        largeImage = virtualLargeImage;
 	                    }
 
+	                    // full image URLs
+	                    detailImageUrl = null;
+	                    largeImageUrl = null;
+
 	                    // append the content prefix
 	                    if (detailImage != null && detailImage.length() > 0) {
-	                        detailImage = ContentUrlTag.getContentPrefix(request) + detailImage;
+	                        detailImageUrl = ContentUrlTag.getContentPrefix(request) + detailImage;
 	                        // base64 encode the image url for a little protection
-	                        detailImage = Base64.base64Encode(detailImage);
+	                        detailImageUrl = Base64.base64Encode(detailImageUrl);
 	                    }
 	                    if (largeImage != null && largeImage.length() > 0) {
-	                        largeImage = ContentUrlTag.getContentPrefix(request) + largeImage;
+	                        largeImageUrl = ContentUrlTag.getContentPrefix(request) + largeImage;
 	                    }
 
 	                    jsBuf.append("document.forms[\"addform\"].elements[\"FT" + topLevelName + "\"].options[" + (counter+1) + "] = new Option(\"" + key + "\",\"" + opt + "\");");
-	                    jsBuf.append("DET[" + counter + "] = \"" + detailImage +"\";");
-	                    jsBuf.append("IMG[" + counter + "] = \"" + largeImage +"\";");
+	                    jsBuf.append("DET[" + counter + "] = \"" + detailImageUrl +"\";");
+	                    jsBuf.append("IMG[" + counter + "] = \"" + largeImageUrl +"\";");
 
 	                    if (firstDetailImage == null || firstDetailImage.length() == 0) {
-	                        firstDetailImage = detailImage;
+	                        firstDetailImage = detailImageUrl;
 	                    }
 	                    if (firstLargeImage == null || firstLargeImage.length() == 0) {
 	                        firstLargeImage = largeImage;
