@@ -1,5 +1,5 @@
 /*
- * $Id: PriceServices.java,v 1.10 2004/06/04 12:33:19 jonesde Exp $
+ * $Id: PriceServices.java,v 1.11 2004/06/04 20:27:10 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class PriceServices {
@@ -330,14 +330,14 @@ public class PriceServices {
         boolean validPromoPriceFound = false;
         double promoPrice = 0;
         if (promoPriceValue != null && promoPriceValue.get("price") != null) {
-            promoPriceValue.getDouble("price").doubleValue();
+            promoPrice = promoPriceValue.getDouble("price").doubleValue();
             validPromoPriceFound = true;
         }
 
         boolean validPriceFound = false;
         double defaultPrice = 0;
         if (defaultPriceValue != null && defaultPriceValue.get("price") != null) {
-            defaultPriceValue.getDouble("price").doubleValue();
+            defaultPrice = defaultPriceValue.getDouble("price").doubleValue();
             validPriceFound = true;
         }
 
