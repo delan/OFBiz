@@ -73,8 +73,10 @@ public class PaymentEvents {
                     input.setFunction("MSRINFO");
                     pos.getOutput().print(Output.CREDEX);
                 } else {
-                    input.clear();
-                    pos.showDialog("main/dialog/error/invalidcardnumber");                    
+                    Debug.log("Invalid card number - " + input.value(), module);
+                    input.clearFunction("MSRINFO");
+                    input.clearInput();
+                    pos.showDialog("main/dialog/error/invalidcardnumber");
                 }
             } else {
                 String msrInfoStr = msrInfo[1];
