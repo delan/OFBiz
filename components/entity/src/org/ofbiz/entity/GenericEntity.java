@@ -1036,23 +1036,27 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
 
         for (int i = 0; i < nopksSize; i++) {
             ModelField curField = getModelEntity().getNopk(i);
-            Comparable thisVal = (Comparable) this.fields.get(curField.getName());
-            Comparable thatVal = (Comparable) that.fields.get(curField.getName());
+            if (!curField.getIsAutoCreatedInternal()) {
+                Comparable thisVal = (Comparable) this.fields.get(curField.getName());
+                Comparable thatVal = (Comparable) that.fields.get(curField.getName());
 
-            if (thisVal == null) {
-                if (thatVal == null)
-                    tempResult = 0;
-                // if thisVal is null, but thatVal is not, return 1 to put this earlier in the list
-                else
-                    tempResult = 1;
-            } else {
-                // if thatVal is null, put the other earlier in the list
-                if (thatVal == null)
-                    tempResult = -1;
-                else
-                    tempResult = thisVal.compareTo(thatVal);
+                if (thisVal == null) {
+                    if (thatVal == null) {
+                        tempResult = 0;
+                    // if thisVal is null, but thatVal is not, return 1 to put this earlier in the list
+                    } else {
+                        tempResult = 1;
+                    }
+                } else {
+                    // if thatVal is null, put the other earlier in the list
+                    if (thatVal == null) {
+                        tempResult = -1;
+                    } else {
+                        tempResult = thisVal.compareTo(thatVal);
+                    }
+                }
+                if (tempResult != 0) return tempResult;
             }
-            if (tempResult != 0) return tempResult;
         }
 
         // if we got here it means the two are exactly the same, so return tempResult, which should be 0
