@@ -194,6 +194,7 @@
       <field name="entryDate" type="date-time"></field>
       <field name="visitId" type="id"></field>
       <field name="statusId" type="id"></field>
+      <field name="syncStatusId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
       <prim-key field="orderId"/>
       <relation type="one" fk-name="ORDER_HDR_TYPE" rel-entity-name="OrderType">
@@ -261,6 +262,9 @@
       </relation>
       <relation type="one" fk-name="ORDER_HDR_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_HDR_SYST" title="Sync" rel-entity-name="StatusItem">
+        <key-map field-name="syncStatusId" rel-field-name="statusId"/>
       </relation>
     </entity>
     <view-entity entity-name="OrderHeaderAndPaymentPref"
