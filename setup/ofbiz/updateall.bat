@@ -10,8 +10,6 @@ cd ../ordermgr
 cvs update
 cd ../partymgr
 cvs update
-cd ../wfengine
-cvs update
 cd ../setup
 cvs update
 cd ../website
