@@ -65,11 +65,16 @@ public class WfFactory {
   
   
   /** Creates a new {@link WfProcessMgr} instance.
+   * @param name Initial value for attribute 'name'
+   * @param description Initial value for attribute 'description'
+   * @param category Initial value for attribute 'category'
+   * @param version Initial value for attribute 'category'
    * @throws WfException
    * @return An instance of the WfProcessMgr Interface.
    */
-  public static WfProcessMgr newWfProcessMgr()  {
-      return null;
+  public static WfProcessMgr newWfProcessMgr(String name, String description,
+                                             String category, String version)  {
+      return new WfProcessMgrImpl(name, description, category, version);
   }
   
   /** Creates a new {@link WfRequester} instance.

@@ -88,7 +88,8 @@ public class WorkflowEngine implements GenericEngine {
         
         // Build the requester / process manager
         WfRequester req = WfFactory.newWfRequester();
-        WfProcessMgr mgr = WfFactory.newWfProcessMgr();
+        // TODO: pass the valid parameters
+        WfProcessMgr mgr = WfFactory.newWfProcessMgr("name", "description", "category", "version");
         
         // Create the process
         WfProcess process = null;
