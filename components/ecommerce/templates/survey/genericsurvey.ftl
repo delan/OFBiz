@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      3.0
 -->
 
@@ -46,8 +46,28 @@
           </select>
         <#elseif question.surveyQuestionTypeId == "TEXTAREA">
           <textarea class="textAreaBox" cols="40" rows="5" name="answers_${question.surveyQuestionId}"></textarea>
-        <#elseif question.surveyQuestionTypeId == "TEXT">
+        <#elseif question.surveyQuestionTypeId == "TEXT_SHORT">
+          <input type="text" size="15" class="textBox" name="answers_${question.surveyQuestionId}">
+        <#elseif question.surveyQuestionTypeId == "TEXT_LONG">
+          <input type="text" size="35" class="textBox" name="answers_${question.surveyQuestionId}">
+        <#elseif question.surveyQuestionTypeId == "EMAIL">
           <input type="text" size="30" class="textBox" name="answers_${question.surveyQuestionId}">
+        <#elseif question.surveyQuestionTypeId == "URL">
+          <input type="text" size="40" class="textBox" name="answers_${question.surveyQuestionId}">
+        <#elseif question.surveyQuestionTypeId == "DATE">
+          <input type="text" size="12" class="textBox" name="answers_${question.surveyQuestionId}">
+        <#elseif question.surveyQuestionTypeId == "CREDIT_CARD">
+          <input type="text" size="20" class="textBox" name="answers_${question.surveyQuestionId}">
+        <#elseif question.surveyQuestionTypeId == "GIFT_CARD">
+          <input type="text" size="20" class="textBox" name="answers_${question.surveyQuestionId}">
+        <#elseif question.surveyQuestionTypeId == "NUMBER_CURRENCY">
+          <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}">
+          <#elseif question.surveyQuestionTypeId == "NUMBER_FLOAT">
+          <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}">
+          <#elseif question.surveyQuestionTypeId == "NUMBER_LONG">
+          <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}">
+        <#elseif question.surveyQuestionTypeId == "PASSWORD">
+          <input type="password" size="30" class="textBox" name="answers_${question.surveyQuestionId}">
         <#elseif question.surveyQuestionTypeId == "OPTION">
           <div class="tabletext">Question type OPTION is not yet supported</div>
         <#else>

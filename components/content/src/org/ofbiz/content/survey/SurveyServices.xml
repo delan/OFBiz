@@ -316,10 +316,67 @@
 
         <!-- make sure all required fields were responded to -->
         <iterate entry-name="question" list-name="questions">
-            <if-compare field-name="${question.requiredField}" operator="equals" value="Y">
+            <if-compare field-name="requiredField" map-name="question" operator="equals" value="Y">
                 <if-empty field-name="${question.surveyQuestionId}" map-name="answers">
-                    <add-error><fail-message message="${question.question} is required"/></add-error>
+                    <add-error><fail-message message="${question.question} requires a response"/></add-error>
                 </if-empty>
+            </if-compare>
+            <!-- validate the field -->
+            <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="CREDIT_CARD">
+                <if-validate-method field-name="${question.surveyQuestionId}" map-name="answers" method="isCreditCard">
+                <else>
+                    <add-error><fail-message message="${question.question} requires a valid credit-card number"></fail-message></add-error>
+                </else>
+                </if-validate-method>
+            </if-compare>
+            <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="GIFT_CARD">
+                <if-validate-method field-name="${question.surveyQuestionId}" map-name="answers" method="isGiftCard">
+                <else>
+                    <add-error><fail-message message="${question.question} requires a valid credit-card number"></fail-message></add-error>
+                </else>
+                </if-validate-method>
+            </if-compare>
+            <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="DATE">
+                <if-validate-method field-name="${question.surveyQuestionId}" map-name="answers" method="isDate">
+                <else>
+                    <add-error><fail-message message="${question.question} requires a valid date string (mm/dd/yyyy)"></fail-message></add-error>
+                </else>
+                </if-validate-method>
+            </if-compare>
+            <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="EMAIL">
+                <if-validate-method field-name="${question.surveyQuestionId}" map-name="answers" method="isEmail">
+                <else>
+                    <add-error><fail-message message="${question.question} requires a valid email address"></fail-message></add-error>
+                </else>
+                </if-validate-method>
+            </if-compare>
+            <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="NUMBER_CURRENCY">
+                <if-validate-method field-name="${question.surveyQuestionId}" map-name="answers" method="isSignedDouble">
+                <else>
+                    <add-error><fail-message message="${question.question} requires a valid currency amount"></fail-message></add-error>
+                </else>
+                </if-validate-method>
+            </if-compare>
+            <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="NUMBER_FLOAT">
+                <if-validate-method field-name="${question.surveyQuestionId}" map-name="answers" method="isSignedDouble">
+                <else>
+                    <add-error><fail-message message="${question.question} requires a valid decimal number"></fail-message></add-error>
+                </else>
+                </if-validate-method>
+            </if-compare>
+            <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="NUMBER_LONG">
+                <if-validate-method field-name="${question.surveyQuestionId}" map-name="answers" method="isSignedLong">
+                <else>
+                    <add-error><fail-message message="${question.question} requires a valid whole number"></fail-message></add-error>
+                </else>
+                </if-validate-method>
+            </if-compare>
+            <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="URL">
+                <if-validate-method field-name="${question.surveyQuestionId}" map-name="answers" method="isUrl">
+                <else>
+                    <add-error><fail-message message="${question.question} requires a valid URL"></fail-message></add-error>
+                </else>
+                </if-validate-method>
             </if-compare>
         </iterate>
         <check-errors/>
@@ -343,19 +400,51 @@
             <make-value value-name="responseAnswer" entity-name="SurveyResponseAnswer"/>
             <field-to-field field-name="surveyResponseId" map-name="surveyResponse" to-map-name="responseAnswer"/>
             <field-to-field field-name="surveyQuestionId" map-name="question" to-map-name="responseAnswer"/>
-            <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="BOOLEAN">
-                <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="booleanResponse" to-map-name="responseAnswer"/>
-            </if-compare>
-            <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="TEXT">
-                <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="textResponse" to-map-name="responseAnswer"/>
-            </if-compare>
-            <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="TEXTAREA">
-                <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="textResponse" to-map-name="responseAnswer"/>
-            </if-compare>
-            <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="OPTION">
-                <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="surveyOptionSeqId" to-map-name="responseAnswer"/>
-            </if-compare>
+            <if-not-empty field-name="${question.surveyQuestionId}" map-name="answers">
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="BOOLEAN">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="booleanResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="EMAIL">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="DATE">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="URL">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="CREDIT_CARD">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="GIFT_CARD">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="PASSWORD">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="TEXT_SHORT">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="TEXT_LONG">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="TEXTAREA">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="textResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="NUMBER_CURRENCY">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="currencyResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="NUMBER_FLOAT">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="floatResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="NUMBER_LONG">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="numericResponse" to-map-name="responseAnswer"/>
+                </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="OPTION">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="surveyOptionSeqId" to-map-name="responseAnswer"/>
+                </if-compare>
             <create-value value-name="responseAnswer"/>
+            </if-not-empty>
         </iterate>
     </simple-method>
 </simple-methods>
