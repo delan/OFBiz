@@ -29,12 +29,12 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
           <ofbiz:unless name="userLogin">
-            <td class="headerButtonLeft"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext, "checkLogin")%></ofbiz:url>' class='buttontext'>Login</a></td>
+            <td class="headerButtonLeft"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext, "checkLogin")%></ofbiz:url>' class='headerbuttontext'>Login</a></td>
           </ofbiz:unless>
           <ofbiz:if name="userLogin">
-            <td class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
+            <td class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="headerbuttontext">Logout</a></td>
           </ofbiz:if>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
 
           <ofbiz:if name="autoName">
             <TD width="90%" align="center" class="headerCenter">Welcome&nbsp;<ofbiz:print attribute="autoName"/>!</TD>
@@ -44,10 +44,10 @@
           </ofbiz:unless>
 
           <%if(CatalogWorker.getCatalogQuickaddUse(pageContext)) {%>
-            <td class="headerButtonRight"><a href="<ofbiz:url>/quickadd</ofbiz:url>" class="buttontext">Quick&nbsp;Add</a></td>
+            <td class="headerButtonRight"><a href="<ofbiz:url>/quickadd</ofbiz:url>" class="headerbuttontext">Quick&nbsp;Add</a></td>
           <%}%>
-          <td class="headerButtonRight"><a href="<ofbiz:url>/orderhistory</ofbiz:url>" class="buttontext">Order&nbsp;History</a></td>
-          <td class="headerButtonRight"><a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">Profile</a></td>
+          <td class="headerButtonRight"><a href="<ofbiz:url>/orderhistory</ofbiz:url>" class="headerbuttontext">Order&nbsp;History</a></td>
+          <td class="headerButtonRight"><a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="headerbuttontext">Profile</a></td>
         </TR>
       </TABLE>
     </TD>

@@ -39,13 +39,13 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
           <TD width="90%" align=center class='headerCenter'>&nbsp;</TD>
           <ofbiz:unless name="userLogin">
-            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='buttontext'>Login</a></td>
+            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerbuttontext'>Login</a></td>
           </ofbiz:unless>
           <ofbiz:if name="userLogin">
-            <td class="headerButtonRight"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
+            <td class="headerButtonRight"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="headerbuttontext">Logout</a></td>
           </ofbiz:if>
         </TR>
       </TABLE>

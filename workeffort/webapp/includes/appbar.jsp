@@ -26,18 +26,18 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom' style='border-width: 1px 1px 0px 1px;'>
         <tr>
           <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
-            <td class="headerButtonLeft"><a href="javascript:document.partyform.submit()" class="buttontext">Party</a></td>
+            <td class="headerButtonLeft"><a href="javascript:document.partyform.submit()" class="headerbuttontext">Party</a></td>
           <%}%>
           <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
-            <td class="headerButtonLeft"><a href="javascript:document.catalogform.submit()" class="buttontext">Catalog</a></td>
+            <td class="headerButtonLeft"><a href="javascript:document.catalogform.submit()" class="headerbuttontext">Catalog</a></td>
           <%}%>
           <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
-            <td class="headerButtonLeft"><a href="javascript:document.orderform.submit()" class="buttontext">Order</a></td>
+            <td class="headerButtonLeft"><a href="javascript:document.orderform.submit()" class="headerbuttontext">Order</a></td>
           <%}%>
           <%if(security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", session)) {%>
-            <td class="headerButtonLeft"><a href="javascript:document.workeffortform.submit()" class="buttontext">WorkEffort</a></td>
+            <td class="headerButtonLeft"><a href="javascript:document.workeffortform.submit()" class="headerbuttontext">WorkEffort</a></td>
           <%}%>
-          <td class="headerButtonLeft"><a href="javascript:document.webtoolsform.submit()" class="buttontext">WebTools</a></td>
+          <td class="headerButtonLeft"><a href="javascript:document.webtoolsform.submit()" class="headerbuttontext">WebTools</a></td>
           <%--
           <ofbiz:if name="person">
             <TD width="90%" align=right class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>

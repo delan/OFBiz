@@ -39,21 +39,21 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
-          <%--<td class="headerButtonLeft"><a href="<ofbiz:url>/FindProdCatalog</ofbiz:url>" class="buttontext">Catalogs</a></td>--%>
-          <%--<td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Products</a></td>--%>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/EditFeatureCategories</ofbiz:url>" class="buttontext">FeatureCats</a></td>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/FindFacility</ofbiz:url>" class="buttontext">Facilities</a></td>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/FindProductPromo</ofbiz:url>" class="buttontext">Promos</a></td>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/FindProductPriceRules</ofbiz:url>" class="buttontext">PriceRules</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
+          <%--<td class="headerButtonLeft"><a href="<ofbiz:url>/FindProdCatalog</ofbiz:url>" class="headerbuttontext">Catalogs</a></td>--%>
+          <%--<td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Products</a></td>--%>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/EditFeatureCategories</ofbiz:url>" class="headerbuttontext">FeatureCats</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/FindFacility</ofbiz:url>" class="headerbuttontext">Facilities</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/FindProductPromo</ofbiz:url>" class="headerbuttontext">Promos</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/FindProductPriceRules</ofbiz:url>" class="headerbuttontext">PriceRules</a></td>
 
           <td width="90%" align=center class='headerCenter'>&nbsp;</td>
 
           <ofbiz:unless name="userLogin">
-            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='buttontext'>Login</a></td>
+            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerbuttontext'>Login</a></td>
           </ofbiz:unless>
           <ofbiz:if name="userLogin">
-            <td class="headerButtonRight"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
+            <td class="headerButtonRight"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="headerbuttontext">Logout</a></td>
           </ofbiz:if>
         </TR>
       </TABLE>

@@ -40,25 +40,25 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
-          <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/findparty</ofbiz:url>" class="buttontext">Find&nbsp;Party</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
+          <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/findparty</ofbiz:url>" class="headerbuttontext">Find&nbsp;Party</a></td>
           <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
-            <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/editpartygroup?create_new=Y</ofbiz:url>" class="buttontext">New&nbsp;Group</a></td>
+            <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/editpartygroup?create_new=Y</ofbiz:url>" class="headerbuttontext">New&nbsp;Group</a></td>
           <%}%>
           <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
-            <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/editperson?create_new=Y</ofbiz:url>" class="buttontext">New&nbsp;Person</a></td>
+            <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/editperson?create_new=Y</ofbiz:url>" class="headerbuttontext">New&nbsp;Person</a></td>
           <%}%>
           <%if(security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
-            <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="buttontext">Security</a></td>
+            <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="headerbuttontext">Security</a></td>
           <%}%>
 
           <td width="90%" align=center class='headerCenter'>&nbsp;</td>
 
           <ofbiz:unless name="userLogin">
-            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='buttontext'>Login</a></td>
+            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerbuttontext'>Login</a></td>
           </ofbiz:unless>
           <ofbiz:if name="userLogin">
-            <td class="headerButtonRight"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
+            <td class="headerButtonRight"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="headerbuttontext">Logout</a></td>
           </ofbiz:if>
         </TR>
       </TABLE>

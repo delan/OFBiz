@@ -39,18 +39,18 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/mytasks</ofbiz:url>" class="buttontext">Task&nbsp;List</a></td>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/month</ofbiz:url>" class="buttontext">Calendar</a></td>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/projectlist</ofbiz:url>" class="buttontext">Projects</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/mytasks</ofbiz:url>" class="headerbuttontext">Task&nbsp;List</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/month</ofbiz:url>" class="headerbuttontext">Calendar</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/projectlist</ofbiz:url>" class="headerbuttontext">Projects</a></td>
 
           <td width="90%" align=center class='headerCenter'>&nbsp;</td>
 
           <ofbiz:unless name="userLogin">
-            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='buttontext'>Login</a></td>
+            <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerbuttontext'>Login</a></td>
           </ofbiz:unless>
           <ofbiz:if name="userLogin">
-            <td class="headerButtonRight"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
+            <td class="headerButtonRight"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="headerbuttontext">Logout</a></td>
           </ofbiz:if>
         </TR>
       </TABLE>
