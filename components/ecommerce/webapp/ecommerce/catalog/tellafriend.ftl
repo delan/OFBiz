@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -30,32 +30,46 @@
 </head>
 <body class="ecbody">
   <center>
-    <form name="tellafriend" action="<@ofbizUrl>/tellafriend</@ofbizUrl>" method="post">
-      <table>
-        <tr>
-          <td>Your Name:</td>
-          <td><input type="text" name="sendFrom" size="30"></td>
-        </tr>
-        <tr>
-          <td>Email To:</td>
-          <td><input type="text" name="sendTo" size="30"></td>
-        </tr>
-        <tr>
-          <td colspan="2" align="center">Message</td>
-        </tr>
-        <tr>
-          <td colspan="2" align="center">
-            <textarea cols="40"  rows="5" name="message"></textarea>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2" align="center">
-            <input type="submit" value="Send">
-          </td>
-        </tr>
-      </table>
-      <input type="hidden" name="productId" value="${requestParameters.productId?if_exists}">
-      <input type="hidden" name="categoryId" value="${requestParameters.categoryId?if_exists}">
+    <form name="tellafriend" action="<@ofbizUrl>/emailFriend</@ofbizUrl>" method="post">
+      <#if requestParameters.productId?exists>
+        <input type="hidden" name="pageUrl" value="<@ofbizUrl fullPath="true" encode="false" secure="false">/product?product_id=${requestParameters.productId}</@ofbizUrl>">
+      <#elseif requestParameters.categoryId?exists>
+        <input type="hidden" name="pageUrl" value="<@ofbizUrl fullPath="true" encode="false" secure="false">/category?category_id=${requestParameters.categoryId}</@ofbizUrl>">
+      <#else>
+        <#assign cancel = "Y">
+      </#if>
+      <#if !cancel?exists>
+        <table>
+          <tr>
+            <td>Your email:</td>
+            <td><input type="text" name="sendFrom" size="30"></td>
+          </tr>
+          <tr>
+            <td>Email To:</td>
+            <td><input type="text" name="sendTo" size="30"></td>
+          </tr>
+          <tr>
+            <td colspan="2" align="center">Message</td>
+          </tr>
+          <tr>
+            <td colspan="2" align="center">
+              <textarea cols="40"  rows="5" name="message"></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" align="center">
+              <input type="submit" value="Send">
+            </td>
+          </tr>
+        </table>
+      <#else>
+        <script language="javascript">
+        <!-- //
+        window.close();
+        // -->
+        </script>
+        <div class="tabletext">Sorry, you cannot send this page to a friend. Please select from either a category or product.</div>
+      </#if>
     </form>
   </center>
 </body>
