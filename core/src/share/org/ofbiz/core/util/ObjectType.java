@@ -43,17 +43,52 @@ public class ObjectType {
     public static final String LANG_PACKAGE = "java.lang."; // We will test both the raw value and this + raw value
     public static final String SQL_PACKAGE = "java.sql.";   // We will test both the raw value and this + raw value
 
-    public static Map classNameExpandMap = new HashMap();
+    public static Map classNameClassMap = new HashMap();
     
     static {
-        classNameExpandMap.put("String", "java.lang.String");
-        classNameExpandMap.put("Double", "java.lang.Double");
-        classNameExpandMap.put("Float", "java.lang.Float");
-        classNameExpandMap.put("Long", "java.lang.Long");
-        classNameExpandMap.put("Integer", "java.lang.Integer");
+        //setup some commonly used classes...
+        classNameClassMap.put("String", java.lang.String.class);
+        classNameClassMap.put("java.lang.String", java.lang.String.class);
 
-        classNameExpandMap.put("Timestamp", "java.sql.Timestamp");
-        classNameExpandMap.put("Time", "java.sql.Time");
+        classNameClassMap.put("Double", java.lang.Double.class);
+        classNameClassMap.put("java.lang.Double", java.lang.Double.class);
+        classNameClassMap.put("Float", java.lang.Float.class);
+        classNameClassMap.put("java.lang.Float", java.lang.Float.class);
+        classNameClassMap.put("Long", java.lang.Long.class);
+        classNameClassMap.put("java.lang.Long", java.lang.Long.class);
+        classNameClassMap.put("Integer", java.lang.Integer.class);
+        classNameClassMap.put("java.lang.Integer", java.lang.Integer.class);
+        
+        classNameClassMap.put("Timestamp", java.sql.Timestamp.class);
+        classNameClassMap.put("java.sql.Timestamp", java.sql.Timestamp.class);
+        classNameClassMap.put("Time", java.sql.Time.class);
+        classNameClassMap.put("java.sql.Time", java.sql.Time.class);
+        classNameClassMap.put("Date", java.sql.Date.class);
+        classNameClassMap.put("java.sql.Date", java.sql.Date.class);
+        
+        classNameClassMap.put("java.util.Date", java.util.Date.class);
+        classNameClassMap.put("Collection", java.util.Collection.class);
+        classNameClassMap.put("java.util.Collection", java.util.Collection.class);
+        classNameClassMap.put("List", java.util.List.class);
+        classNameClassMap.put("java.util.List", java.util.List.class);
+        classNameClassMap.put("Set", java.util.Set.class);
+        classNameClassMap.put("java.util.Set", java.util.Set.class);
+        classNameClassMap.put("Map", java.util.Map.class);
+        classNameClassMap.put("java.util.Map", java.util.Map.class);
+        classNameClassMap.put("HashMap", java.util.HashMap.class);
+        classNameClassMap.put("java.util.HashMap", java.util.HashMap.class);
+        
+        try {
+            //note: loadClass is necessary for these since the ObjectType class doesn't know anything about the Entity Engine at compile time
+            classNameClassMap.put("GenericValue", loadClass("org.ofbiz.core.entity.GenericValue"));
+            classNameClassMap.put("org.ofbiz.core.entity.GenericValue", loadClass("org.ofbiz.core.entity.GenericValue"));
+            classNameClassMap.put("GenericPK", loadClass("org.ofbiz.core.entity.GenericPK"));
+            classNameClassMap.put("org.ofbiz.core.entity.GenericPK", loadClass("org.ofbiz.core.entity.GenericPK"));
+            classNameClassMap.put("GenericEntity", loadClass("org.ofbiz.core.entity.GenericEntity"));
+            classNameClassMap.put("org.ofbiz.core.entity.GenericEntity", loadClass("org.ofbiz.core.entity.GenericEntity"));
+        } catch (ClassNotFoundException e) {
+            Debug.logError(e, "Could not pre-initialize dynamically loaded class: ");
+        }
     }
     
     /** Loads a class with the current thread's context classloader
@@ -67,7 +102,10 @@ public class ObjectType {
      * @param className The name of the class to load
      */
     public static Class loadClass(String className, ClassLoader loader) throws ClassNotFoundException {
-        Class theClass = null;
+        //small block to speed things up by putting using preloaded classes for common objects, this turns out to help quite a bit...
+        Class theClass = (Class) classNameClassMap.get(className);
+        if (theClass != null) return theClass;
+
         try {
             theClass = loader.loadClass(className);
         } catch (Exception e) {
@@ -186,10 +224,6 @@ public class ObjectType {
      * @param typeObject Object to test against
      */
     public static boolean instanceOf(Object obj, String typeName, ClassLoader loader) {
-        //small block to speed things up by putting in full package names for common objects, this turns out to help quite a bit...
-        String newName = (String) classNameExpandMap.get(typeName);
-        if (newName != null) typeName = newName;
-
         Class infoClass = null;
         try {
             infoClass = ObjectType.loadClass(typeName, loader);
