@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/01 19:09:36  azeneski
+ * Disabled Job Scheduler for re-design.
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -79,7 +82,6 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.ofbiz.core.scheduler.JobManager;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.entity.*;
@@ -114,124 +116,111 @@ import java.lang.reflect.Method;
  * Created on June 28, 2001, 10:12 PM
  */
 public class ControlServlet extends HttpServlet {
-  private JobManager jm = null;
-  
-  /** Creates new ControlServlet  */
-  public ControlServlet() {
-    super();
-  }
-  
-  public void init(ServletConfig config) throws ServletException {
-    super.init(config);
-    Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " + config.getServletContext().getRealPath("/"));
-    // setup the request handler
-    getRequestHandler();
-
-    //if exists, start PoolMan
-    try {
-      Class poolManClass = Class.forName("com.codestudio.sql.PoolMan");
-      Method startMethod = poolManClass.getMethod("start", null);
-      startMethod.invoke(null, null);
-      //Debug.logInfo("Found PoolMan Driver...");
-    }
-    catch(Exception ex) {
-      Debug.logWarning("[ControlServlet.init] WARNING: PoolMan not found");
+    
+    /** Creates new ControlServlet  */
+    public ControlServlet() {
+        super();
     }
     
-    //initialize the entity & security stuff
-    String delegatorName = config.getServletContext().getInitParameter(SiteDefs.ENTITY_DELEGATOR_NAME);
-    if(delegatorName == null || delegatorName.length() <= 0) delegatorName = "default";
-    Debug.logInfo("[ControlServlet.init] Getting Entity Engine Delegator with delegator name " + delegatorName);
-    GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
-    if(delegator == null)
-      Debug.logError("[ControlServlet.init] ERROR: delegator factory returned null for delegatorName \"" + delegatorName + "\"");
-    Security security = new Security(delegator);
-    if(security == null)
-      Debug.logError("[ControlServlet.init] ERROR: security create failed for delegatorName \"" + delegatorName + "\"");
-    //add delegator and security to the context
-    getServletContext().setAttribute("delegator", delegator);
-    getServletContext().setAttribute("security", security);
-
-    // initialize the job scheduler - disabled 2001-11-01
-    //jm = new JobManager(getServletContext(),delegator); 
-    if(jm == null)
-      Debug.logError("[ControlServlet.init] ERROR: job scheduler init failed.");
-  }
-  
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    doGet(request,response);
-  }
-  
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    HttpSession session = request.getSession(true);
-    
-    String nextPage  = null;
-    
-    // Setup the CONTROL_PATH for JSP dispatching.
-    request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
-    // Debug.logInfo("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));
-    request.setAttribute(SiteDefs.JOB_MANAGER,jm);
-    
-    StringBuffer request_url = new StringBuffer();
-    request_url.append(request.getScheme());
-    request_url.append("://" + request.getServerName());
-    if ( request.getServerPort() != 80 && request.getServerPort() != 443 )
-        request_url.append(":" + request.getServerPort());
-    request.setAttribute(SiteDefs.SERVER_ROOT_URL,request_url.toString());
-
-    // Store some first hit client info for later.
-    if ( session.isNew() ) {
-      request_url.append(request.getRequestURI());
-      if ( request.getQueryString() != null )
-        request_url.append("?" + request.getQueryString());
-      session.setAttribute(SiteDefs.CLIENT_LOCALE,request.getLocale());
-      session.setAttribute(SiteDefs.CLIENT_REQUEST,request_url.toString());
-      session.setAttribute(SiteDefs.CLIENT_USER_AGENT,request.getHeader("User-Agent"));
-      session.setAttribute(SiteDefs.CLIENT_REFERER,(request.getHeader("Referer") != null ? request.getHeader("Referer") : "" ));
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " + config.getServletContext().getRealPath("/"));
+        // setup the request handler
+        getRequestHandler();
+        
+        //if exists, start PoolMan
+        try {
+            Class poolManClass = Class.forName("com.codestudio.sql.PoolMan");
+            Method startMethod = poolManClass.getMethod("start", null);
+            startMethod.invoke(null, null);
+            //Debug.logInfo("Found PoolMan Driver...");
+        }
+        catch(Exception ex) {
+            Debug.logWarning("[ControlServlet.init] WARNING: PoolMan not found");
+        }
+        
+        //initialize the entity & security stuff
+        String delegatorName = config.getServletContext().getInitParameter(SiteDefs.ENTITY_DELEGATOR_NAME);
+        if(delegatorName == null || delegatorName.length() <= 0) delegatorName = "default";
+        Debug.logInfo("[ControlServlet.init] Getting Entity Engine Delegator with delegator name " + delegatorName);
+        GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        if(delegator == null)
+            Debug.logError("[ControlServlet.init] ERROR: delegator factory returned null for delegatorName \"" + delegatorName + "\"");
+        Security security = new Security(delegator);
+        if(security == null)
+            Debug.logError("[ControlServlet.init] ERROR: security create failed for delegatorName \"" + delegatorName + "\"");
+        //add delegator and security to the context
+        getServletContext().setAttribute("delegator", delegator);
+        getServletContext().setAttribute("security", security);
     }
     
-    // for convenience, and necessity with event handlers, make security and delegator available in the request:
-    GenericDelegator delegator = (GenericDelegator)getServletContext().getAttribute("delegator");
-    if(delegator == null) Debug.logError("[ControlServlet] ERROR: delegator not found in ServletContext");
-    request.setAttribute("delegator", delegator);
-    
-    Security security = (Security)getServletContext().getAttribute("security");
-    if(security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext");
-    request.setAttribute("security", security);
-    
-    // for use in Events the filesystem path of context root.
-    request.setAttribute(SiteDefs.CONTEXT_ROOT,getServletContext().getRealPath("/"));
-    
-    try {
-      nextPage = getRequestHandler().doRequest(request,response, null);
-    } catch( Exception e ) {
-      e.printStackTrace();
-      request.setAttribute(SiteDefs.ERROR_MESSAGE,e.getMessage());
-      nextPage = getRequestHandler().getDefaultErrorPage(request);
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request,response);
     }
     
-    // Forward to the JSP
-    Debug.logInfo("Dispatching to: " + nextPage);
-    if(nextPage != null) {
-      RequestDispatcher rd = request.getRequestDispatcher(nextPage);
-      if(rd != null) rd.forward(request,response);
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(true);
+        
+        String nextPage  = null;
+        
+        // Setup the CONTROL_PATH for JSP dispatching.
+        request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
+        // Debug.logInfo("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));
+        
+        StringBuffer request_url = new StringBuffer();
+        request_url.append(request.getScheme());
+        request_url.append("://" + request.getServerName());
+        if ( request.getServerPort() != 80 && request.getServerPort() != 443 )
+            request_url.append(":" + request.getServerPort());
+        request.setAttribute(SiteDefs.SERVER_ROOT_URL,request_url.toString());
+        
+        // Store some first hit client info for later.
+        if ( session.isNew() ) {
+            request_url.append(request.getRequestURI());
+            if ( request.getQueryString() != null )
+                request_url.append("?" + request.getQueryString());
+            session.setAttribute(SiteDefs.CLIENT_LOCALE,request.getLocale());
+            session.setAttribute(SiteDefs.CLIENT_REQUEST,request_url.toString());
+            session.setAttribute(SiteDefs.CLIENT_USER_AGENT,request.getHeader("User-Agent"));
+            session.setAttribute(SiteDefs.CLIENT_REFERER,(request.getHeader("Referer") != null ? request.getHeader("Referer") : "" ));
+        }
+        
+        // for convenience, and necessity with event handlers, make security and delegator available in the request:
+        GenericDelegator delegator = (GenericDelegator)getServletContext().getAttribute("delegator");
+        if(delegator == null) Debug.logError("[ControlServlet] ERROR: delegator not found in ServletContext");
+        request.setAttribute("delegator", delegator);
+        
+        Security security = (Security)getServletContext().getAttribute("security");
+        if(security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext");
+        request.setAttribute("security", security);
+        
+        // for use in Events the filesystem path of context root.
+        request.setAttribute(SiteDefs.CONTEXT_ROOT,getServletContext().getRealPath("/"));
+        
+        try {
+            nextPage = getRequestHandler().doRequest(request,response, null);
+        } catch( Exception e ) {
+            e.printStackTrace();
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,e.getMessage());
+            nextPage = getRequestHandler().getDefaultErrorPage(request);
+        }
+        
+        // Forward to the JSP
+        Debug.logInfo("Dispatching to: " + nextPage);
+        if(nextPage != null) {
+            RequestDispatcher rd = request.getRequestDispatcher(nextPage);
+            if(rd != null) rd.forward(request,response);
+        }
     }
-  }
-  
-  private RequestHandler getRequestHandler() {
-    RequestHandler rh = (RequestHandler) getServletContext().getAttribute(SiteDefs.REQUEST_HANDLER);
-    if ( rh == null ) {
-      rh = new RequestHandler();
-      rh.init(getServletContext());
-      getServletContext().setAttribute(SiteDefs.REQUEST_HANDLER,rh);
+    
+    private RequestHandler getRequestHandler() {
+        RequestHandler rh = (RequestHandler) getServletContext().getAttribute(SiteDefs.REQUEST_HANDLER);
+        if ( rh == null ) {
+            rh = new RequestHandler();
+            rh.init(getServletContext());
+            getServletContext().setAttribute(SiteDefs.REQUEST_HANDLER,rh);
+        }
+        return rh;
     }
-    return rh;
-  }
-  
-  public void destroy() {
-    if ( jm != null ) {
-      jm.finalize();
-      jm = null;
-    }
-  }
+    
 }
