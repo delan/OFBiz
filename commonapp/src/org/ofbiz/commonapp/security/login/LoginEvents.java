@@ -43,7 +43,7 @@ import org.ofbiz.commonapp.party.contact.ContactHelper;
  * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @author     <a href="mailto:tom@tomherrick.com">Tom Herrick</a>
+ * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
  * @version    1.0
  * @created    Oct 19, 2001
  */
@@ -335,6 +335,10 @@ public class LoginEvents {
 
         String userLoginId = request.getParameter("USERNAME");
 
+        if ((userLoginId != null) && ("true".equals(UtilProperties.getPropertyValue("security", "username.lowercase")))) {
+            userLoginId = userLoginId.toLowerCase();
+        }
+
         if (!UtilValidate.isNotEmpty(userLoginId)) {
             // the password was incomplete
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was empty, please re-enter.");
@@ -346,6 +350,11 @@ public class LoginEvents {
 
         try {
             supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+            if (supposedUserLogin == null) {
+                // the Username was not found
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was not found, please re-enter.");
+                return "error";
+            }
             if (useEncryption) {
                 // password encrypted, can't send, generate new password and email to user
                 double randNum = Math.random();

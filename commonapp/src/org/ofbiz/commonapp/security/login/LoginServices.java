@@ -360,6 +360,12 @@ public class LoginServices {
         String newPasswordVerify = (String) context.get("newPasswordVerify");
         String passwordHint = (String) context.get("passwordHint");
 
+        if ("true".equals(UtilProperties.getPropertyValue("security", "password.lowercase"))) {
+            currentPassword = currentPassword.toLowerCase();
+            newPassword = newPassword.toLowerCase();
+            newPasswordVerify = newPasswordVerify.toLowerCase();
+        }
+
         List errorMessageList = new LinkedList();
 
         if (newPassword != null && newPassword.length() > 0) {
@@ -402,6 +408,10 @@ public class LoginServices {
 
         String userLoginId = (String) context.get("userLoginId");
 
+        if ((userLoginId != null) && ("true".equals(UtilProperties.getPropertyValue("security", "username.lowercase")))) {
+            userLoginId = userLoginId.toLowerCase();
+        }
+            
         String partyId = loggedInUserLogin.getString("partyId");
         String password = loggedInUserLogin.getString("currentPassword");
         String passwordHint = loggedInUserLogin.getString("passwordHint");
