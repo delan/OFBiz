@@ -1,5 +1,5 @@
 /*
- * $Id: UtilXml.java,v 1.2 2003/09/08 17:30:08 ajzeneski Exp $
+ * $Id: UtilXml.java,v 1.3 2003/12/06 16:00:29 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Utilities methods to simplify dealing with JAXP & DOM XML parsing
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class UtilXml {
@@ -405,8 +405,8 @@ public class UtilXml {
         /**
          * Returns DTD inputSource. If DTD was found in the dtds Map and inputSource was created
          * flag hasDTD is set to true.
-         * @param String publicId - Public ID of DTD
-         * @param String systemId - System ID of DTD
+         * @param publicId - Public ID of DTD
+         * @param systemId - System ID of DTD
          * @return InputSource of DTD
          */
         public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {

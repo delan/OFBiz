@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  */
 -->
 
@@ -2192,6 +2192,7 @@
           <key-map field-name="orderId"/>
       </relation>
       <relation type="one" fk-name="VL_FILL_ODRI" rel-entity-name="OrderItem">
+          <key-map field-name="orderId"/>
           <key-map field-name="orderItemSeqId"/>
       </relation>
       <relation type="one" fk-name="VL_FILL_SURVY" rel-entity-name="SurveyResponse">
