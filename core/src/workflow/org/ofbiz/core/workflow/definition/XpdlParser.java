@@ -3,6 +3,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/11/11 00:15:42  rbb36
+ * Added log4j, began implementation
+ *
  * Revision 1.2  2001/11/09 03:27:42  rbb36
  * This works if run from core/src/workflow
  *
@@ -135,7 +138,8 @@ public class XpdlParser {
             builder = factory.newDocumentBuilder();
             document = builder.parse( file );
             docElement = document.getDocumentElement();
-            pakkage = (Object)parseElement( ELEM_NAME_PACKAGE, docElement );
+            pakkage = (Object)parseElement( ELEM_NAME_PACKAGE,
+                                            docElement );
         } catch( ParserConfigurationException e ) {
             cat.fatal( e.getMessage(), e );
         } catch( SAXException e ) {
@@ -199,9 +203,23 @@ public class XpdlParser {
      * Package object.
      */
     public static Object parsePackage( Element packageElement ) {
+        final Hashtable pakkage = new Hashtable();
+        pakkage.put( "Package.Id", packageElement.getAttribute( "Id" ) );
+        Node child = packageElement.getFirstChild();
+        while( child != null ) {
+            if( child.getNodeType() == Node.ELEMENT_NODE ) {
+                final String nodeName = child.getNodeName();
+                final Object o = parseElement( nodeName, (Element)child );
+                if( o != null ) {
+                    pakkage.put( "Package." + nodeName, o );
+                }
+            }
+            child = child.getNextSibling();
+        }
         cat.fatal( "parsePackage( Element ) has not been implemented",
                    new Exception() );
-        return( null );
+        System.out.println( pakkage.get( "Package.Id" ) );
+        return( pakkage );
     }
     
     /** Parses an XPDL Join element into an instance of a Join object. */
