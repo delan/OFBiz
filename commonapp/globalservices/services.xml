@@ -6,13 +6,20 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
-    <!-- Test service -->
+    <!-- Test services -->
     <service name="testScv" engine="java" export="true"
     location="ServiceTest" invoke="testOne">
       <description>Test service</description>
       <attribute name="message" type="String" mode="IN" optional="true"/>	  
       <attribute name="resp" type="String" mode="OUT"/>
     </service>
+	<service name="testSoap" engine="soap" export="true"
+	location="http://nagoya.apache.org:5049/axis/servlet/AxisServlet" invoke="echoString">
+	  <description>Test SOAP service; calls echoString service on Axis server</description>
+	  <namespace>http://soapinterop.org/</namespace>
+	  <attribute name="message" type="String" mode="IN"/>
+	  <attribute name="result" type="String" mode="OUT"/>
+	</service>
 
     <!-- Security services -->
     <service name="userLogin" engine="java"
