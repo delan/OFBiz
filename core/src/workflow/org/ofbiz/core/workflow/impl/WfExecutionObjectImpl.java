@@ -623,26 +623,65 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         }
         return we;
     }
-        
+            
     /**
-     * Evaluate a condition or expression using the current context
+     * Evaluate a condition expression using an implementation of TransitionCondition
+     * @param className The class name of the TransitionCondition implementation
      * @param expression The expression to evaluate
      * @return The result of the evaluation (True/False)
      * @throws WfException
-     */
-    protected boolean evalCondition(String expression) throws WfException {
-        Map context = processContext();
-        return evalCondition(expression, context);
-    }
+     */    
+    protected boolean evalConditionClass(String className, String expression, Map context, Map attrs) throws WfException {
+        // attempt to load and instance of the class
+        Object conditionObject = null;
+        try {
+            conditionObject = ObjectType.getInstance(className);
+        } catch (ClassNotFoundException e) {
+            Debug.logError(e, "Cannot load class " + className, module);
+            return false;           
+        } catch (InstantiationException e) {
+            Debug.logError(e, "Cannot get instance of class " + className, module);
+            return false;            
+        } catch (IllegalAccessException e) {
+            Debug.logError(e, "Cannot access class " + className, module);
+            return false;            
+        }
+                                
+        // make sure we implement the TransitionCondition interface
+        if (!ObjectType.instanceOf(conditionObject, "org.ofbiz.core.workflow.TransitionCondition")) {
+            Debug.logError("Class " + className + " is not an instance of TransitionCondition", module);
+            return false;
+        }
+        
+        // cast to the interface
+        TransitionCondition cond = (TransitionCondition) conditionObject;
+        
+        // trim up the expression if it isn't empty
+        if (expression != null)
+            expression = expression.trim();
+        
+        // get a DispatchContext object to pass over to the eval
+        DispatchContext dctx = this.getDispatcher().getLocalContext(this.getServiceLoader());
+        
+        // evaluate the condition
+        Boolean evaluation = null;  
+        try {               
+            evaluation = cond.evaluateCondition(context, attrs, expression, dctx);
+        } catch (EvaluationException e) {
+            throw new WfException("Problems evaluating condition", e);
+        }
+        
+        return evaluation.booleanValue();                            
+    }      
 
     /**
-     * Evaluate a condition or expression
+     * Evaluate a condition expression using BeanShell
      * @param expression The expression to evaluate
      * @param context The context to use in evaluation
      * @return The result of the evaluation (True/False)
      * @throws WfException
      */
-    protected boolean evalCondition(String expression, Map context) throws WfException {
+    protected boolean evalBshCondition(String expression, Map context) throws WfException {
         if (expression == null || expression.length() == 0) {
             Debug.logVerbose("Null or empty expression, returning true.", module);
             return true;
@@ -650,7 +689,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         
         Object o = null;
         try {
-            o = BshUtil.eval(expression, context);
+            o = BshUtil.eval(expression.trim(), context);
         } catch (bsh.EvalError e) {
             throw new WfException("Bsh evaluation error.", e);
         }

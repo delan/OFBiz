@@ -382,22 +382,41 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         if (fromActivity.getDefinitionObject().get("splitTypeEnumId") != null)
             split = fromActivity.getDefinitionObject().getString("splitTypeEnumId");
 
-        // Iterate through the possible transitions
-        boolean transitionOk = false;
+        // the default value is TRUE, so if no expression is supplied we evaluate as true
+        boolean transitionOk = true;
+        
+        // the otherwise condition (only used by XOR splits) 
         GenericValue otherwise = null;
 
+        // iterate through the possible transitions
         Iterator fromIt = fromCol.iterator();
-
         while (fromIt.hasNext()) {
             GenericValue transition = (GenericValue) fromIt.next();
 
-            if (transition.get("conditionTypeEnumId") != null &&
-                transition.getString("conditionTypeEnumId").equals("WTC_OTHERWISE")) {
+            // if this transition is OTHERWISE store it for later and continue on
+            if (transition.get("conditionTypeEnumId") != null && transition.getString("conditionTypeEnumId").equals("WTC_OTHERWISE")) {
+                // there should be only one of these, if there is more then one we will use the last one defined
                 otherwise = transition;
                 continue;
             }
-            // evaluate the condition expression
-            transitionOk = evalCondition(transition.getString("conditionExpr").trim());
+            
+            // get the condition body from the condition tag
+            String conditionBody = transition.getString("conditionExpr");
+            
+            // get the extended attributes for the transition
+            Map extendedAttr = StringUtil.strToMap(transition.getString("extendedAttributes")); 
+            
+            // check for a conditionClassName attribute if exists use it
+            if (extendedAttr != null && extendedAttr.get("conditionClassName") != null) {
+                String conditionClassName = (String) extendedAttr.get("conditionClassName");  
+                transitionOk = this.evalConditionClass(conditionClassName, conditionBody, this.processContext(), extendedAttr);              
+            } else {
+                // since no condition class is supplied, evaluate the expression using bsh
+                if (conditionBody != null) {
+                    transitionOk = this.evalBshCondition(conditionBody, this.processContext());
+                }
+            }
+                                   
             if (transitionOk) {
                 transList.add(transition);
                 if (split.equals("WST_XOR"))
@@ -405,7 +424,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             }
         }
 
-        // we only use otherwise transitions for XOR splits
+        // we only use the otherwise transition for XOR splits
         if (split.equals("WST_XOR") && transList.size() == 0 && otherwise != null) {
             transList.add(otherwise);
             Debug.logVerbose("Used OTHERWISE Transition.", module);
