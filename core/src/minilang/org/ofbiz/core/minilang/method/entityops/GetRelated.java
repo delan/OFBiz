@@ -74,7 +74,7 @@ public class GetRelated extends MethodOperation {
 
         GenericValue value = (GenericValue) valueAcsr.get(methodContext);
         if (value == null) {
-            Debug.logWarning("Value not found with name: " + listAcsr + ", not getting related...");
+            Debug.logWarning("Value not found with name: " + valueAcsr + ", not getting related...");
             return true;
         }
         try {

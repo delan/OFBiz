@@ -59,6 +59,10 @@ public class GetRelatedOne extends MethodOperation {
         boolean useCache = "true".equals(useCacheStr);
 
         GenericValue value = (GenericValue) valueAcsr.get(methodContext);
+        if (value == null) {
+            Debug.logWarning("Value not found with name: " + valueAcsr + ", not getting related...");
+            return true;
+        }
         try {
             if (useCache) {
                 toValueAcsr.put(methodContext, value.getRelatedOneCache(relationName));
