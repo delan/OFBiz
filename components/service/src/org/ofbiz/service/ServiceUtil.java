@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.4 2003/09/25 20:38:28 ajzeneski Exp $
+ * $Id: ServiceUtil.java,v 1.5 2003/09/27 21:32:53 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ServiceUtil {
@@ -237,12 +237,12 @@ public class ServiceUtil {
         Timestamp now = UtilDateTime.nowTimestamp();
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(now.getTime());
-        cal.add(Calendar.DAY_OF_YEAR, daysToKeep);
+        cal.add(Calendar.DAY_OF_YEAR, daysToKeep * -1);
         Timestamp purgeTime = new Timestamp(cal.getTimeInMillis());
         
         List exprs = UtilMisc.toList(new EntityExpr("poolId", EntityOperator.EQUALS, sendPool));
         exprs.add(new EntityExpr("finishDateTime", EntityOperator.NOT_EQUAL, null));
-        exprs.add(new EntityExpr("finishDateTime", EntityOperator.GREATER_THAN, purgeTime));
+        exprs.add(new EntityExpr("finishDateTime", EntityOperator.LESS_THAN, purgeTime));
         List foundJobs = null;
         try {
             foundJobs = delegator.findByAnd("JobSandbox", exprs);
