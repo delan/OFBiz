@@ -23,7 +23,7 @@
       <!-- random complementary products -->
       <ofbiz:iterator name="miniProduct" property="miniAssociatedProducts">
         <%if(miniProdListIndex > 1) {%>
-          <tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
+          <tr><td><hr class='sepbar'></td></tr>
         <%}%>
         <tr>
           <td>

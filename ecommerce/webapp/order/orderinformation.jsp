@@ -85,7 +85,7 @@
         </div>
       </td>
     </tr>
-    <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="7"><hr class='sepbar'></td></tr>
    </ofbiz:if>
     <tr>
       <td align="right" valign="top" width="15%">
@@ -102,7 +102,7 @@
       </td>
     </tr>
   <ofbiz:if name="orderHeader">
-    <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="7"><hr class='sepbar'></td></tr>
     <tr>
       <td align="right" valign="top" width="15%">
         <div class="tabletext">&nbsp;<b>Date</b></div>
@@ -118,7 +118,7 @@
   <%String distributorId = localOrder != null ? localOrder.getDistributorId() : DistributorEvents.getDistributorId(request);%>
   <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
   <ofbiz:if name="distributorId">
-    <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="7"><hr class='sepbar'></td></tr>
     <tr>
       <td align="right" valign="top" width="15%">
         <div class="tabletext">&nbsp;<b>Distributor</b></div>
@@ -177,7 +177,7 @@
   </ofbiz:if>
   <ofbiz:if name="billingAccount">
     <ofbiz:if name="outputted">
-    <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="7"><hr class='sepbar'></td></tr>
     </ofbiz:if>
     <%pageContext.setAttribute("outputted", "true");%>
     <tr>
@@ -191,7 +191,7 @@
           </div>
       </td>
     </tr>
-    <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="7"><hr class='sepbar'></td></tr>
     <tr>
       <td align="right" valign="top" width="15%">
         <div class="tabletext">&nbsp;<b>Purchase Order Number</b></div>
@@ -204,7 +204,7 @@
   </ofbiz:if>
   <%--ofbiz:if name="billingAddress">
     <ofbiz:if name="outputted">
-    <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="7"><hr class='sepbar'></td></tr>
     </ofbiz:if>
     <%pageContext.setAttribute("outputted", "true");%>
     <tr>
@@ -274,7 +274,7 @@
           </div>
       </td>
     </tr>
-    <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="7"><hr class='sepbar'></td></tr>
     </ofbiz:if>
     <tr>
       <td align="right" valign="top" width="15%">
@@ -292,7 +292,7 @@
           </div>
       </td>
     </tr>
-    <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="7"><hr class='sepbar'></td></tr>
     <tr>
       <td align="right" valign="top" width="15%">
         <div class="tabletext">&nbsp;<b>Splitting Preference</b></div>
@@ -310,7 +310,7 @@
           </div>
       </td>
     </tr>
-    <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="7"><hr class='sepbar'></td></tr>
     <tr>
       <td align="right" valign="top" width="15%">
         <div class="tabletext">&nbsp;<b>Instructions</b></div>

@@ -17,16 +17,14 @@
 <table border="0" width="100%" cellpadding="3">
 <tr>
   <td colspan="2">
-    <div class="head1">
-    <%=UtilFormatOut.checkNull(category.getString("description"))%>
-    </div>
+    <div class="head1"><%=UtilFormatOut.checkNull(category.getString("description"))%></div>
   </td>
 </tr>
 <%String categoryImageUrl = category.getString("categoryImageUrl");%>
 <%String categoryLongDescription = category.getString("longDescription");%>
 <%if (UtilValidate.isNotEmpty(categoryImageUrl) || UtilValidate.isNotEmpty(categoryLongDescription)) pageContext.setAttribute("showCategoryDetails", "true");%>
 <ofbiz:if name="showCategoryDetails">
-<tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
+<tr><td><hr class='sepbar'></td></tr>
 <tr>
   <td align="left" valign="top" width="0">
     <div class="tabletext">
@@ -92,7 +90,7 @@
   <table width='100%'>
     <%int listIndex = lowIndex.intValue();%>
     <ofbiz:iterator name="product" property="productList">
-      <tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
+      <tr><td><hr class='sepbar'></td></tr>
       <tr>
         <td>
           <%@ include file="/catalog/productsummary.jsp" %>
@@ -105,7 +103,7 @@
 
 <ofbiz:if name="productList" size="0">
 <table border="0" width="100%" cellpadding="2">
-    <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td align=right>
         <b>
@@ -126,7 +124,7 @@
 
 <ofbiz:unless name="productList" size="0">
 <table border="0" width="100%" cellpadding="2">
-    <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td>
           <DIV class='tabletext'>There are no products in this category.</DIV>

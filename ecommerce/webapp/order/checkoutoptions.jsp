@@ -100,7 +100,7 @@
       </td>
     </tr>
 </ofbiz:unless>
-    <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td colspan=2>
         <div class="head2"><b>Ship all at once, or 'as available'?</b></div>
@@ -122,7 +122,7 @@
         <div class="tabletext">Please ship items I ordered as they become available (you may incur additional shipping charges).</div>
       </td>
     </tr>
-    <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td colspan="2">
         <div class="head2"><b>Special Instructions</b></div>
@@ -134,7 +134,7 @@
             ><%=UtilFormatOut.checkNull(cart.getShippingInstructions())%></ofbiz:if></textarea>
       </td>
     </tr>
-    <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td colspan="2">
         <div class="head2"><b>Email Addresses</b></div>
@@ -192,7 +192,7 @@
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
   <tr><td colspan="2"><a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CM_NEW_PURPOSE_TYPE_ID=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add New Address]</a></td></tr>
  <ofbiz:if name="shippingContactMechList" size="0">
-    <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <ofbiz:iterator name="shippingContactMech" property="shippingContactMechList">
     <%GenericValue shippingAddress = shippingContactMech.getRelatedOne("PostalAddress");%>
     <%pageContext.setAttribute("shippingAddress", shippingAddress);%>
@@ -216,7 +216,7 @@
           </div>
         </td>
       </tr>
-      <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
+      <tr><td colspan="2"><hr class='sepbar'></td></tr>
   </ofbiz:iterator>
  </ofbiz:if>
 </table>
@@ -256,7 +256,7 @@
 <table width="100%" cellpadding="4" cellspacing="0" border="0">
   <tr><td colspan="2"><a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add Credit Card]</a></td></tr>
  <ofbiz:if name="creditCardInfoList" size="0"> 
-  <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
+  <tr><td colspan="2"><hr class='sepbar'></td></tr>
   <ofbiz:iterator name="creditCardInfo" property="creditCardInfoList">
       <tr>
         <td width="1%" nowrap>
@@ -271,7 +271,7 @@
             <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions&CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="buttontext">[Update]</a>
         </td>
       </tr>
-      <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
+      <tr><td colspan="2"><hr class='sepbar'></td></tr>
   </ofbiz:iterator>
  </ofbiz:if>
 </table>
@@ -289,7 +289,7 @@
     <br>
 
   <table width="90%" border="0" cellpadding="0" cellspacing="0">
-    <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <ofbiz:iterator name="billingAccountRole" property="billingAccountRoleList">
     <%GenericValue billingAccount = billingAccountRole.getRelatedOne("BillingAccount");%>
     <tr>
@@ -318,7 +318,7 @@
         </div>
       </td>
     </tr>
-    <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
   </ofbiz:iterator>
   </table>
  </ofbiz:if>

@@ -94,7 +94,7 @@
       <%-- XXX should be most recent first --%>
 	<%OrderReadHelper order = new OrderReadHelper(orderHeader); %>
         <%String orderStatusString = order.getStatusString();%>
-        <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+        <tr><td colspan="7"><hr class='sepbar'></td></tr>
         <tr>
           <td>
             <div class="tabletext"><nobr><%=orderHeader.getTimestamp("orderDate")%></nobr></div>

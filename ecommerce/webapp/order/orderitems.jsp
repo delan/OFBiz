@@ -69,7 +69,7 @@
     </tr>
  <%if (orderItemList != null) pageContext.setAttribute("orderItemList", orderItemList);%>
  <ofbiz:iterator name="orderItem" property="orderItemList">
-    <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="7"><hr class='sepbar'></td></tr>
 
     <tr>
       <%pageContext.setAttribute("productId", orderItem.getString("productId"));%>
@@ -111,7 +111,7 @@
   <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
   </ofbiz:unless>
 
-    <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan="7"><hr class='sepbar'></td></tr>
 
     <tr>
         <td align="right" colspan="3"><div class="tabletext"><b>Subtotal</b></div></td>
@@ -127,7 +127,7 @@
         <%total += orderAdjustment.getAmount();%>
     </tr>
     </ofbiz:iterator> 
-    <tr><td colspan=2></td><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+    <tr><td colspan=2></td><td colspan="7"><hr class='sepbar'></td></tr>
     <tr>
         <td align="right" colspan="3"><div class="tabletext"><b>Total Due</b></div></td>
        <td align="right" nowrap>

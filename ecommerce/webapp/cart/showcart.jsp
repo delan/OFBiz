@@ -98,7 +98,7 @@
         </TR>
 
         <ofbiz:iterator name="item" property="cartIter" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCartItem">
-          <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
+          <tr><td colspan="7"><hr class='sepbar'></td></tr>
           <TR>
             <TD><div class='tabletext'><%-- <b><%= cart.getItemIndex(item)%></b> - --%><a href='<ofbiz:url>/product?product_id=<%=item.getProductId()%></ofbiz:url>' class='buttontext'><%= item.getProductId()%> - <%= item.getName()%></a> : <%= item.getDescription()%></div></TD>
             <TD NOWRAP ALIGN="center"><div class='tabletext'><input size="10" type="text" name="update_<%=cart.getItemIndex(item) %>" value="<ofbiz:format><%= item.getQuantity() %></ofbiz:format>"></div></TD>
@@ -201,7 +201,7 @@
       <!-- random complementary products -->
       <ofbiz:iterator name="product" property="associatedProducts">
         <%if(listIndex > 1) {%>
-          <tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
+          <tr><td><hr class='sepbar'></td></tr>
         <%}%>
         <tr>
           <td>
