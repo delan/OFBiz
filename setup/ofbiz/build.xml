@@ -95,7 +95,7 @@
 
     <target name="catalina-clean" depends="catalina-init,sub-clean">
         <delete file="${classes.dir}/serverstats.properties" />
-        <delete file="${classes.dir}/entityengine.properties" />
+        <delete file="${classes.dir}/entityengine.xml" />
         <delete file="${classes.dir}/security.properties" />
         <delete file="${classes.dir}/debug.properties" />
         <delete file="${classes.dir}/cache.properties" />
@@ -267,7 +267,7 @@
     <!-- Copy all files necessary for running IN PLACE (ie: OFBIZ_HOME == .) -->
     <target name="int-deploy" depends="build">
         <copy file="commonapp/etc/serverstats.properties" toFile="${classes.dir}/serverstats.properties" />
-        <copy file="commonapp/etc/entityengine.properties" toFile="${classes.dir}/entityengine.properties" />
+        <copy file="commonapp/etc/entityengine.xml" toFile="${classes.dir}/entityengine.xml" />
         <copy file="commonapp/etc/security.properties" toFile="${classes.dir}/security.properties" />
         <copy file="commonapp/etc/debug.properties" toFile="${classes.dir}/debug.properties" />
         <copy file="commonapp/etc/cache.properties" toFile="${classes.dir}/cache.properties" />
@@ -366,7 +366,7 @@
         <copy file="workeffort/lib/workeffort.war"           toDir="${ext.dir}/webapps"/>
 
         <copy file="commonapp/etc/serverstats.properties"    toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/entityengine.properties"   toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/entityengine.xml"   toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/security.properties"       toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/debug.properties"          toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/cache.properties"          toDir="${ext.dir}/etc"/>

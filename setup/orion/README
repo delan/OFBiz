@@ -27,7 +27,7 @@ application.xml file or put orion and ofbiz as sibling directories.
 By the way, be sure to copy the tools.jar file from your JDK lib directory to
 the Orion root directory, it needs it there for compilation.
 
-The default entityengine.properties file is used at the moment for Orion
+The default entityengine.xml file is used at the moment for Orion
 because of the problem mentioned at the top of this file, ie no access to the
 JTA interfaces. So, the Tyrex configurations there can be used just fine.
 
