@@ -898,49 +898,51 @@ public class OrderServices {
             Debug.logVerbose("Shippable Total : " + orh.getShippableTotal(), module);
         }
 
-        Map shippingEstMap = ShippingEvents.getShipEstimate(dispatcher, delegator, orh);
+        if (orh.hasShippingAddress()) {
+            Map shippingEstMap = ShippingEvents.getShipEstimate(dispatcher, delegator, orh);
 
-        Double shippingTotal = null;
-        if (orh.getValidOrderItems() == null || orh.getValidOrderItems().size() == 0) {
-            shippingTotal = new Double(0.00);
-        } else {
-            shippingTotal = (Double) shippingEstMap.get("shippingTotal");
-        }
-        if (Debug.verboseOn()) {
-            Debug.logVerbose("New Shipping Total : " + shippingTotal, module);
-        }
-
-        double currentShipping = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orh.getOrderItems(), orh.getAdjustments(), false, false, true);
-        currentShipping += OrderReadHelper.calcOrderAdjustments(orh.getOrderHeaderAdjustments(), orh.getOrderItemsSubTotal(), false, false, true);
-
-        if (Debug.verboseOn()) {
-            Debug.log("Old Shipping Total : " + currentShipping);
-        }
-
-        List errorMessageList = (List) shippingEstMap.get(ModelService.ERROR_MESSAGE_LIST);
-        if (errorMessageList != null) {
-            return ServiceUtil.returnError(errorMessageList);
-        }
-
-        if (shippingTotal.doubleValue() != currentShipping) {
-            // place the difference as a new shipping adjustment
-            Double adjustmentAmount = new Double(shippingTotal.doubleValue() - currentShipping);
-            String adjSeqId = delegator.getNextSeqId("OrderAdjustment").toString();
-            GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", adjSeqId));
-            orderAdjustment.set("orderAdjustmentTypeId", "SHIPPING_CHARGES");
-            orderAdjustment.set("amount", adjustmentAmount);
-            orderAdjustment.set("orderId", orh.getOrderId());
-            orderAdjustment.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA);
-            //orderAdjustment.set("comments", "Shipping Re-Calc Adjustment");
-            try {
-                orderAdjustment.create();
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem creating shipping re-calc adjustment : " + orderAdjustment, module);
-                return ServiceUtil.returnError("ERROR: Cannot create adjustment");
+            Double shippingTotal = null;
+            if (orh.getValidOrderItems() == null || orh.getValidOrderItems().size() == 0) {
+                shippingTotal = new Double(0.00);
+            } else {
+                shippingTotal = (Double) shippingEstMap.get("shippingTotal");
             }
-        }
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("New Shipping Total : " + shippingTotal, module);
+            }
 
-        // TODO: re-balance free shipping adjustment
+            double currentShipping = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orh.getOrderItems(), orh.getAdjustments(), false, false, true);
+            currentShipping += OrderReadHelper.calcOrderAdjustments(orh.getOrderHeaderAdjustments(), orh.getOrderItemsSubTotal(), false, false, true);
+
+            if (Debug.verboseOn()) {
+                Debug.log("Old Shipping Total : " + currentShipping);
+            }
+
+            List errorMessageList = (List) shippingEstMap.get(ModelService.ERROR_MESSAGE_LIST);
+            if (errorMessageList != null) {
+                return ServiceUtil.returnError(errorMessageList);
+            }
+
+            if (shippingTotal.doubleValue() != currentShipping) {
+                // place the difference as a new shipping adjustment
+                Double adjustmentAmount = new Double(shippingTotal.doubleValue() - currentShipping);
+                String adjSeqId = delegator.getNextSeqId("OrderAdjustment").toString();
+                GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", adjSeqId));
+                orderAdjustment.set("orderAdjustmentTypeId", "SHIPPING_CHARGES");
+                orderAdjustment.set("amount", adjustmentAmount);
+                orderAdjustment.set("orderId", orh.getOrderId());
+                orderAdjustment.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA);
+                //orderAdjustment.set("comments", "Shipping Re-Calc Adjustment");
+                try {
+                    orderAdjustment.create();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Problem creating shipping re-calc adjustment : " + orderAdjustment, module);
+                    return ServiceUtil.returnError("ERROR: Cannot create adjustment");
+                }
+            }
+
+            // TODO: re-balance free shipping adjustment
+        }
 
         return ServiceUtil.returnSuccess();
 
@@ -1578,7 +1580,7 @@ public class OrderServices {
         }
 
         if (productStoreEmail == null) {
-            return ServiceUtil.returnError("No valid email setting for store");
+            return ServiceUtil.returnFailure("No valid email setting for store");
         }
 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);

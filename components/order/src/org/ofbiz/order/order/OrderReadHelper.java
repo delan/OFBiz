@@ -240,6 +240,13 @@ public class OrderReadHelper {
         return "";
     }
 
+    public boolean hasShippingAddress() {
+        if (this.getShippingAddress() != null) {
+            return true;
+        }
+        return false;
+    }
+
     public GenericValue getShippingAddress() {
         try {
             GenericValue orderContactMech = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderContactMech", UtilMisc.toMap(
@@ -1384,7 +1391,7 @@ public class OrderReadHelper {
         newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints1));
         newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints2));
         newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints3));
-        newOrderStatuses = EntityUtil.orderBy(newOrderStatuses, UtilMisc.toList("statusDatetime"));
+        newOrderStatuses = EntityUtil.orderBy(newOrderStatuses, UtilMisc.toList("-statusDatetime"));
         return newOrderStatuses;
     }
 

@@ -752,9 +752,7 @@ public class CheckOutHelper {
                     boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
                     if (!ok) {
                         throw new GeneralException("Problem with order change; see above error");
-                    }
-
-                    return ServiceUtil.returnSuccess();
+                    }                    
                 } else if (authResp.equals("ERROR")) {
                     // service failed
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);
@@ -834,7 +832,9 @@ public class CheckOutHelper {
 
         // check to see if we should auto-invoice/bill
         if (faceToFace) {
+            Debug.log("Face-To-Face Sale - " + orderId, module);
             boolean ok = OrderChangeHelper.completeOrder(dispatcher, userLogin, orderId);
+            Debug.log("Complete Order Result - " + ok, module);
             if (!ok) {
                 throw new GeneralException("Problem with order change; see error logs");
             }
