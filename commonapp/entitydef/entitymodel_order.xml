@@ -228,9 +228,13 @@
       <field name="createdBy" type="id-vlong"></field>
       <field name="syncStatusId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
+      <field name="originFacilityId" type="id"></field>
       <prim-key field="orderId"/>
       <relation type="one" fk-name="ORDER_HDR_TYPE" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_HDR_OFAC" title="Origin" rel-entity-name="Facility">
+        <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderTypeAttr">
         <key-map field-name="orderTypeId"/>
