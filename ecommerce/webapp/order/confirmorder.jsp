@@ -54,14 +54,14 @@
   <a name="top"></a>
 
 <% 
-   final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(application.getResource("/WEB-INF/ecommerce.properties"), "order.confirmation.securityCode");
+   final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(application.getResource("/WEB-INF/order.properties"), "order.confirmation.securityCode");
    String securityCode = request.getParameter("security_code");
    if (UtilValidate.isNotEmpty(ORDER_SECURITY_CODE)) {
        if (ORDER_SECURITY_CODE.equals(securityCode)) {
            pageContext.setAttribute("validated", "true");
        } 
    } else {
-       response.getWriter().print("ERROR: Order Information is NOT Secure!  Please ask System Administrator to set 'order.confirmation.securityCode' in ecommerce.properties file<p>"); 
+       response.getWriter().print("ERROR: Order Information is NOT Secure!  Please ask System Administrator to set 'order.confirmation.securityCode' in order.properties file<p>");
    }
 %>
     
