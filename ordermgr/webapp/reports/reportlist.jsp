@@ -21,6 +21,7 @@
  *
  *@author     Britton LaRoche
  *@author     David E. Jones
+ *@author     Andy Zeneski
  *@version    1.0
 --%>
 <%@ page import="java.util.*, java.sql.*, java.text.*" %>
@@ -69,8 +70,8 @@ these reports and helping to improve them.</div>
 <FORM METHOD="post" NAME="list" ACTION="<ofbiz:url>/orderreport.pdf</ofbiz:url>" TARGET="OrderReport">   
 <Table>
 <TR>
-<TD>From Date:         
-<INPUT TYPE="TEXT" NAME="fromDate" TABINDEX="10"  SIZE="22" MAXLENGTH="25" ALIGN="MIDDLE">
+<TD><div class="tableheadtext">From Date:</div></td>
+<td><INPUT TYPE="TEXT" NAME="fromDate" TABINDEX="10"  SIZE="22" MAXLENGTH="25" ALIGN="MIDDLE">
  <A
    TABINDEX="10"
    TARGET="_self"
@@ -83,8 +84,8 @@ these reports and helping to improve them.</div>
 </TD>
 </TR>
 <TR>
-<TD>To Date: 
-<INPUT TYPE="TEXT" NAME="toDate" TABINDEX="12"  SIZE="22" MAXLENGTH="25" ALIGN="MIDDLE">
+<TD><div class="tableheadtext">To Date:</div></td>
+<td><INPUT TYPE="TEXT" NAME="toDate" TABINDEX="12"  SIZE="22" MAXLENGTH="25" ALIGN="MIDDLE">
  <A
    TABINDEX="12"
    TARGET="_self"
@@ -96,22 +97,20 @@ these reports and helping to improve them.</div>
  </A>
 </TD>
 </TR>
-<Table>
-
-<table width="100%" border=0 cellspacing=0 cellpadding=0>
-    <tr>
-    <td>
-	<SELECT NAME="groupName" tabindex="14"  CLASS="stateSelectBox">
-		<OPTION VALUE="orderStatus"></OPTION>
-		<OPTION VALUE="orderStatus">Orders by Order Status</OPTION>
-		<OPTION VALUE="ship">Orders by Ship Method</OPTION>
-		<OPTION VALUE="payment">Orders by Payment Method</OPTION>
-		<OPTION VALUE="adjustment">Order Items by Adjustment</OPTION>
-		<OPTION VALUE="itemStatus">Order Items by Status</OPTION>
-		<OPTION VALUE="product">Order Items by Product</OPTION>
-		</SELECT>
-    </td>
-    </tr>
+<tr>
+<td><div class="tableheadtext">Report:</div></td>
+<td>
+   <SELECT NAME="groupName" tabindex="14"  CLASS="stateSelectBox">
+	 <OPTION VALUE="orderStatus"></OPTION>
+	 <OPTION VALUE="orderStatus">Orders by Order Status</OPTION>
+	 <OPTION VALUE="ship">Orders by Ship Method</OPTION>
+	 <OPTION VALUE="payment">Orders by Payment Method</OPTION>
+	 <OPTION VALUE="adjustment">Order Items by Adjustment</OPTION>
+	 <OPTION VALUE="itemStatus">Order Items by Status</OPTION>
+	 <OPTION VALUE="product">Order Items by Product</OPTION>
+   </SELECT>
+</td>
+</tr>
 </table>
  <INPUT TYPE="submit" TABINDEX="16" CLASS="button" NAME="GoReport" VALUE="Run Report">
 </form>
