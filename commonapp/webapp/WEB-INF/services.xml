@@ -4,7 +4,7 @@
   <vendor>OFBiz</vendor>
   <version>1.0</version>
 	
-  <service name="testScv" engine="staticJava" location="ServiceTest" invoke="testOne">
+  <service name="testScv" engine="staticJava" location="ServiceTest" invoke="testOne" export="true">
     <attribute name="message" type="String" mode="IN"/>	  
     <attribute name="resp" type="String" mode="OUT"/>
   </service>

@@ -4,7 +4,10 @@
     <description>CommonApp Site Configuration File</description>
     <owner>The Open For Business Project (c) 2001 </owner>
     <errorpage>/error/error.jsp</errorpage>
-
+    
+    <handler name="java" class="org.ofbiz.core.event.JavaEventHandler"/>
+    <handler name="service" class="org.ofbiz.core.service.ServiceEventHandler"/>
+    
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
     	<event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
@@ -13,7 +16,7 @@
     	<!-- Events to run on every request after all other processing (chains exempt) -->
     	<event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> 
     </postprocessor>
-
+    
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
       <description>Verify a user is logged in.</description>
@@ -40,6 +43,12 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
+	<request-map uri="SOAPService">
+	  <event type="java" path="org.ofbiz.core.service.SOAPServiceEvents" invoke="serviceSOAP"/>
+	  <response name="error" type="view" value="error"/>
+	  <response name="success" type="view" value="error"/>
+	</request-map>
+	
     <request-map uri="view">
         <security https="false" auth="false"/>
         <response name="success" type="view" value="main"/>
