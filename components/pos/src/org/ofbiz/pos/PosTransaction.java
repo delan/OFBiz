@@ -82,6 +82,7 @@ public class PosTransaction implements Serializable {
     protected ShoppingCart cart = null;
     protected CheckOutHelper ch = null;
     protected PrintWriter trace = null;
+    protected GenericValue txLog = null;
 
     protected String productStoreId = null;
     protected String transactionId = null;
@@ -119,7 +120,22 @@ public class PosTransaction implements Serializable {
         if (session.getUserLogin() != null) {
             cart.addAdditionalPartyRole(session.getUserLogin().getString("partyId"), "SALES_REP");
         }
-                
+
+        // setup the TX log
+        String txLogId = session.getDelegator().getNextSeqId("PosTerminalLog");
+        txLog = session.getDelegator().makeValue("PosTerminalLog", null);
+        txLog.set("posTerminalLogId", txLogId);
+        txLog.set("posTerminalId", terminalId);
+        txLog.set("transactionId", transactionId);
+        txLog.set("userLoginId", session.getUserId());
+        txLog.set("statusId", "POSTX_ACTIVE");
+        txLog.set("logStartDateTime", UtilDateTime.nowTimestamp());
+        try {
+            txLog.create();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to create TX log - not fatal", module);
+        }
+
         currentTx = this;
         trace("transaction created");
     }
@@ -437,10 +453,23 @@ public class PosTransaction implements Serializable {
 
     public void voidSale() {
         trace("void sale");
+        txLog.set("statusId", "POSTX_VOIDED");
+        txLog.set("logEndDateTime", UtilDateTime.nowTimestamp());
+        try {
+            txLog.store();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to store TX log - not fatal", module);
+        }
         cart.clear();
         currentTx = null;
     }
 
+    public void nonLoggingClear() {
+        trace("non-logging clear called");
+        cart.clear();
+        currentTx = null;
+    }
+    
     public void calcTax() {
         try {
             ch.calcAndAddTax(this.getStoreOrgAddress());
@@ -524,6 +553,20 @@ public class PosTransaction implements Serializable {
         return cart.selectedPayments();
     }
 
+    public void setTxAsReturn(String returnId) {
+        trace("returned sale");
+        txLog.set("statusId", "POSTX_RETURNED");
+        txLog.set("returnId", returnId);
+        txLog.set("logEndDateTime", UtilDateTime.nowTimestamp());
+        try {
+            txLog.store();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to store TX log - not fatal", module);
+        }
+        cart.clear();
+        currentTx = null;
+    }
+
     public double processSale(Output output) throws GeneralException {
         trace("process sale");
         double grandTotal = this.getGrandTotal();
@@ -579,7 +622,17 @@ public class PosTransaction implements Serializable {
         // print the receipt
         DeviceLoader.receipt.printReceipt(this, true);
 
-        // clear the tx        
+        // save the TX Log
+        txLog.set("statusId", "POSTX_SOLD");
+        txLog.set("orderId", orderId);
+        txLog.set("logEndDateTime", UtilDateTime.nowTimestamp());
+        try {
+            txLog.store();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to store TX log - not fatal", module);
+        }
+
+        // clear the tx
         currentTx = null;
 
         return change;

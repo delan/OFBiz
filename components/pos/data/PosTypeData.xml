@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <StatusType description="Pos Transaction" hasTable="N" parentTypeId="" statusTypeId="POSTX_STATUS"/>
+    <StatusItem description="Active" sequenceId="01" statusCode="ACTIVE" statusId="POSTX_ACTIVE" statusTypeId="POSTX_STATUS"/>
+    <StatusItem description="Sold" sequenceId="10" statusCode="SOLD" statusId="POSTX_SOLD" statusTypeId="POSTX_STATUS"/>
+    <StatusItem description="Returned" sequenceId="15" statusCode="RETURNED" statusId="POSTX_RETURNED" statusTypeId="POSTX_STATUS"/>
+    <StatusItem description="Voided" sequenceId="20" statusCode="PROCESSING" statusId="POSTX_VOIDED" statusTypeId="POSTX_STATUS"/>
+</entity-engine-xml>
