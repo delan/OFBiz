@@ -81,7 +81,8 @@
       <ofbiz:unless type="String" name="productId" value="shoppingcart.CommentLine">
         <td valign="top">
           <div class="tabletext">
-          <a href="<ofbiz:url><%="/product?product_id=" + orderItem.getString("productId")%></ofbiz:url>" class="buttontext"><%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%></a>
+          <a href="<%=response.encodeUrl(serverRoot + controlPath + "/product?product_id=" + orderItem.getString("productId"))%>" class="buttontext"><%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%></a>
+          <%-- <a href="<ofbiz:url><%="/product?product_id=" + orderItem.getString("productId")%></ofbiz:url>" class="buttontext"><%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%></a> --%>
           </div>
         </td>
         <td align="right" valign="top">
