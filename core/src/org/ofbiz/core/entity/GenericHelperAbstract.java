@@ -61,7 +61,7 @@ public abstract class GenericHelperAbstract implements GenericHelper {
   /** Creates a Entity in the form of a GenericValue without persisting it */
   public GenericValue makeValue(String entityName, Map fields) {
     ModelEntity entity = modelReader.getModelEntity(entityName);
-    if(entity == null) throw new IllegalArgumentException("[GenericHelperAbstract.getRelatedOne] could not find entity for entityName: " + entityName);
+    if(entity == null) throw new IllegalArgumentException("[GenericHelperAbstract.makeValue] could not find entity for entityName: " + entityName);
     GenericValue value = new GenericValue(entity, fields);
     value.helper = this;
     return value;
@@ -70,13 +70,14 @@ public abstract class GenericHelperAbstract implements GenericHelper {
   /** Creates a Primary Key in the form of a GenericPK without persisting it */
   public GenericPK makePK(String entityName, Map fields) {
     ModelEntity entity = modelReader.getModelEntity(entityName);
-    if(entity == null) throw new IllegalArgumentException("[GenericHelperAbstract.getRelatedOne] could not find entity for entityName: " + entityName);
+    if(entity == null) throw new IllegalArgumentException("[GenericHelperAbstract.makePK] could not find entity for entityName: " + entityName);
     GenericPK pk = new GenericPK(entity, fields);
     return pk;
   }
   
   /** Find a Generic Entity by its Primary Key
-   *@param primaryKey The primary key to find by.
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param fields The fields of the named entity to query by with their corresponging values
    *@return The GenericValue corresponding to the primaryKey
    */
   public GenericValue findByPrimaryKey(String entityName, Map fields) {
@@ -84,7 +85,8 @@ public abstract class GenericHelperAbstract implements GenericHelper {
   }
   
   /** Find a CACHED Generic Entity by its Primary Key
-   *@param primaryKey The primary key to find by.
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param fields The fields of the named entity to query by with their corresponging values
    *@return The GenericValue corresponding to the primaryKey
    */
   public GenericValue findByPrimaryKeyCache(String entityName, Map fields) {
@@ -104,6 +106,19 @@ public abstract class GenericHelperAbstract implements GenericHelper {
     return value;
   }
   
+  /** Finds all Generic entities
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
+   *@return    Collection containing all Generic entities
+   */
+  public Collection findAll(String entityName, List orderBy)
+  {
+    Collection collection = null;
+    collection = findByAnd(entityName, null, orderBy);
+    absorbCollection(collection);
+    return collection;
+  }
+
   /** Finds all Generic entities, looking first in the cache; uses orderBy for lookup, but only keys results on the entityName and fields
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
@@ -152,7 +167,9 @@ public abstract class GenericHelperAbstract implements GenericHelper {
    *@param value GenericValue instance containing the entity to refresh
    */
   public void refresh(GenericValue value) {
-    GenericValue newValue = findByPrimaryKey(value.getPrimaryKey());
+    GenericPK pk = value.getPrimaryKey();
+    clearCacheLine(pk);
+    GenericValue newValue = findByPrimaryKey(pk);
     if(newValue == null) throw new IllegalArgumentException("[GenericHelperAbstract.refresh] could not refresh value: " + value);
     value.fields = newValue.fields;
     value.helper = this;
@@ -167,5 +184,62 @@ public abstract class GenericHelperAbstract implements GenericHelper {
     if(sequencer == null)
       synchronized(this) { if(sequencer == null) sequencer = new SequenceUtil(serverName); }
       return sequencer.getNextSeqId(seqName);
+  }
+
+  /** Remove a CACHED Generic Entity (Collection) from the cache, either a PK, ByAnd, or All 
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param fields The fields of the named entity to query by with their corresponging values
+   *@return The GenericValue corresponding to the primaryKey
+   */
+  public void clearCacheLine(String entityName, Map fields) {
+    ModelEntity entity = modelReader.getModelEntity(entityName);
+    if(entity == null) throw new IllegalArgumentException("[GenericHelperAbstract.clearCacheLine] could not find entity for entityName: " + entityName);
+    
+    if(fields == null || fields.size() <= 0) {
+      //findAll
+      if(allCache != null) {
+        allCache.remove(entityName);
+      }
+    }
+    else {
+      GenericPK tempPK = new GenericPK(modelReader.getModelEntity(entityName), fields);
+      
+      //check to see if passed fields names exactly make the primary key...
+      Collection pkNames = entity.getPkFieldNames();
+      Collection passedNames = fields.keySet();
+      if(pkNames.containsAll(passedNames) && passedNames.containsAll(pkNames)) {
+        //findByPrimaryKey
+        if(primaryKeyCache != null) {
+          primaryKeyCache.remove(tempPK);
+        }
+      }
+      else {
+        //findByAnd
+        if(andCache != null) {
+          andCache.remove(tempPK);
+        }
+      }
+    }
+  }
+
+  /** Remove a CACHED Generic Entity from the cache by its primary key
+   *@param primaryKey The primary key to find by.
+   *@return The GenericValue corresponding to the primaryKey
+   */
+  public void clearCacheLine(GenericPK primaryKey) {
+    if(primaryKey != null && primaryKeyCache != null) {
+      primaryKeyCache.remove(primaryKey);
+    }
+  }
+
+  protected void absorbCollection(Collection col)
+  {
+    if(col == null) return;
+    Iterator iter = col.iterator();
+    while(iter.hasNext())
+    {
+      GenericValue value = (GenericValue)iter.next();
+      value.helper = this;
+    }
   }
 }

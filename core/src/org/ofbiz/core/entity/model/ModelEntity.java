@@ -8,22 +8,22 @@ import org.ofbiz.core.util.*;
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included 
+ * <p>The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
@@ -31,81 +31,98 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 
-public class ModelEntity
-{
-  /** The entity-name of the Entity */    
+public class ModelEntity {
+  /** The entity-name of the Entity */
   public String entityName = "";
-  /** The table-name of the Entity */  
+  /** The table-name of the Entity */
   public String tableName = "";
   /** Use the Value object cache in the Helper? */
   public boolean useCache = false;
-
-  /** The package-name of the Entity */    
+  
+  /** The package-name of the Entity */
   public String packageName = "";
-
+  
   //Strings to go in the comment header.
-  /** The title for the class JavaDoc comment */  
+  /** The title for the class JavaDoc comment */
   public String title = "";
-  /** The description for the class JavaDoc comment */  
+  /** The description for the class JavaDoc comment */
   public String description = "";
-  /** The copyright for the class JavaDoc comment */  
+  /** The copyright for the class JavaDoc comment */
   public String copyright = "";
-  /** The author for the class JavaDoc comment */  
+  /** The author for the class JavaDoc comment */
   public String author = "";
-  /** The version for the class JavaDoc comment */  
+  /** The version for the class JavaDoc comment */
   public String version = "";
-
-  /** A Vector of the Field objects for the Entity */  
+  
+  /** A Vector of the Field objects for the Entity */
   public Vector fields = new Vector();
-  /** A Vector of the Field objects for the Entity, one for each Primary Key */  
+  /** A Vector of the Field objects for the Entity, one for each Primary Key */
   public Vector pks = new Vector();
-  /** A Vector of the Field objects for the Entity, one for each NON Primary Key */  
+  /** A Vector of the Field objects for the Entity, one for each NON Primary Key */
   public Vector nopks = new Vector();
-  /** relations defining relationships between this entity and other entities */  
+  /** relations defining relationships between this entity and other entities */
   public Vector relations = new Vector();
-
-  /** Default Constructor */  
+  
+  /** Default Constructor */
   public ModelEntity() { }
-
-  public void updatePkLists()
-  {
+  
+  public void updatePkLists() {
     pks = new Vector();
     nopks = new Vector();
-    for(int i=0; i<fields.size(); i++)
-    {
+    for(int i=0; i<fields.size(); i++) {
       ModelField field = (ModelField)fields.get(i);
       if(field.isPk) pks.add(field);
       else nopks.add(field);
     }
   }
   
-  public ModelField getField(String fieldName)
-  {
+  public ModelField getField(String fieldName) {
     if(fieldName == null) return null;
-    for(int i=0; i<fields.size(); i++)
-    {
+    for(int i=0; i<fields.size(); i++) {
       ModelField field = (ModelField)fields.get(i);
       if(field.name.equals(fieldName)) return field;
     }
     return null;
   }
   
-  public void removeField(String fieldName)
-  {
+  public void removeField(String fieldName) {
     if(fieldName == null) return;
-    for(int i=0; i<fields.size(); i++)
-    {
+    for(int i=0; i<fields.size(); i++) {
       ModelField field = (ModelField)fields.get(i);
-      if(field.name.equals(fieldName)) fields.removeElementAt(i);
+      if(field.name.equals(fieldName)) {
+        fields.removeElementAt(i);
+        if(field.isPk) pks.remove(field);
+        else nopks.remove(field);
+      }
     }
     return;
   }
   
-  public ModelRelation getRelation(String relationName)
-  {
+  public List getAllFieldNames() {
+    return getFieldNamesFromFieldVector(fields);
+  }
+  
+  public List getPkFieldNames() {
+    return getFieldNamesFromFieldVector(pks);
+  }
+  
+  public List getNoPkFieldNames() {
+    return getFieldNamesFromFieldVector(nopks);
+  }
+  
+  public List getFieldNamesFromFieldVector(Vector modelFields) {
+    List nameList = new Vector(modelFields.size());
+    if(modelFields == null || modelFields.size() <= 0) return nameList;
+    for(int i=0; i<modelFields.size(); i++) {
+      ModelField field = (ModelField)modelFields.get(i);
+      nameList.add(field.name);
+    }
+    return nameList;
+  }
+  
+  public ModelRelation getRelation(String relationName) {
     if(relationName == null) return null;
-    for(int i=0; i<relations.size(); i++)
-    {
+    for(int i=0; i<relations.size(); i++) {
       ModelRelation relation = (ModelRelation)relations.get(i);
       if(relationName.equals(relation.title + relation.relEntityName)) return relation;
     }
@@ -113,34 +130,30 @@ public class ModelEntity
   }
   
   public String nameString(Vector flds) { return nameString(flds, ", ", ""); }
-  public String nameString(Vector flds, String separator, String afterLast)
-  {
+  public String nameString(Vector flds, String separator, String afterLast) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
-
+    
     int i = 0;
-    for(; i < flds.size() - 1; i++)
-    {
+    for(; i < flds.size() - 1; i++) {
       returnString = returnString + ((ModelField)flds.elementAt(i)).name + separator;
     }
     returnString = returnString + ((ModelField)flds.elementAt(i)).name + afterLast;
     return returnString;
   }
-
-  public String typeNameString(Vector flds)
-  {
+  
+  public String typeNameString(Vector flds) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
-
+    
     int i = 0;
-    for(; i < flds.size() - 1; i++)
-    {
+    for(; i < flds.size() - 1; i++) {
       returnString = returnString + ((ModelField)flds.elementAt(i)).type + " " + ((ModelField)flds.elementAt(i)).name + ", ";
     }
     returnString = returnString + ((ModelField)flds.elementAt(i)).type + " " + ((ModelField)flds.elementAt(i)).name;
     return returnString;
   }
-
+  
   public String fieldNameString() { return fieldNameString(", ", ""); }
   public String fieldNameString(String separator, String afterLast) { return nameString(fields, separator, afterLast); }
   public String fieldTypeNameString() { return typeNameString(fields); }
@@ -148,30 +161,25 @@ public class ModelEntity
   public String primKeyClassNameString() { return typeNameString(pks); }
   public String pkNameString() { return pkNameString(", ", ""); }
   public String pkNameString(String separator, String afterLast) { return nameString(pks, separator, afterLast); }
-
-  public String nonPkNullList()
-  {
+  
+  public String nonPkNullList() {
     return fieldsStringList(fields, "null", ", ", false, true);
   }
-
-  public String fieldsStringList(Vector flds, String eachString, String separator)
-  {
+  
+  public String fieldsStringList(Vector flds, String eachString, String separator) {
     return fieldsStringList(flds, eachString, separator, false, false);
   }
   
-  public String fieldsStringList(Vector flds, String eachString, String separator, boolean appendIndex)
-  {
+  public String fieldsStringList(Vector flds, String eachString, String separator, boolean appendIndex) {
     return fieldsStringList(flds, eachString, separator, appendIndex, false);
   }
   
-  public String fieldsStringList(Vector flds, String eachString, String separator, boolean appendIndex, boolean onlyNonPK)
-  {
+  public String fieldsStringList(Vector flds, String eachString, String separator, boolean appendIndex, boolean onlyNonPK) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
-
+    
     int i = 0;
-    for(; i < flds.size(); i++)
-    {
+    for(; i < flds.size(); i++) {
       if(onlyNonPK && ((ModelField)flds.elementAt(i)).isPk) continue;
       returnString = returnString + eachString;
       if(appendIndex) returnString = returnString + (i+1);
@@ -179,99 +187,85 @@ public class ModelEntity
     }
     return returnString;
   }
-
+  
   public String colNameString(Vector flds) { return colNameString(flds, ", ", ""); }
-  public String colNameString(Vector flds, String separator, String afterLast)
-  {
+  public String colNameString(Vector flds, String separator, String afterLast) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
-
+    
     int i = 0;
-    for(; i < flds.size() - 1; i++)
-    {
+    for(; i < flds.size() - 1; i++) {
       returnString = returnString + ((ModelField)flds.elementAt(i)).colName + separator;
     }
     returnString = returnString + ((ModelField)flds.elementAt(i)).colName + afterLast;
     return returnString;
   }
-
+  
   public String classNameString(Vector flds) { return classNameString(flds, ", ", ""); }
-  public String classNameString(Vector flds, String separator, String afterLast)
-  {
+  public String classNameString(Vector flds, String separator, String afterLast) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
-
+    
     int i = 0;
-    for(; i < flds.size() - 1; i++)
-    {
+    for(; i < flds.size() - 1; i++) {
       returnString = returnString + ModelUtil.upperFirstChar(((ModelField)flds.elementAt(i)).name) + separator;
     }
     returnString = returnString + ModelUtil.upperFirstChar(((ModelField)flds.elementAt(i)).name) + afterLast;
     return returnString;
   }
-
-  public String finderQueryString(Vector flds)
-  {    
+  
+  public String finderQueryString(Vector flds) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
     int i = 0;
-    for(; i < flds.size() - 1; i++)
-    {
+    for(; i < flds.size() - 1; i++) {
       returnString = returnString + ((ModelField)flds.elementAt(i)).colName + " like {" + i + "} AND ";
     }
     returnString = returnString + ((ModelField)flds.elementAt(i)).colName + " like {" + i + "}";
     return returnString;
   }
   
-  public String httpArgList(Vector flds)
-  {
+  public String httpArgList(Vector flds) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
     int i = 0;
-    for(; i < flds.size() - 1; i++)
-    {
+    for(; i < flds.size() - 1; i++) {
       returnString = returnString + "\"" + tableName + "_" + ((ModelField)flds.elementAt(i)).colName + "=\" + " + ((ModelField)flds.elementAt(i)).name + " + \"&\" + ";
     }
     returnString = returnString + "\"" + tableName + "_" + ((ModelField)flds.elementAt(i)).colName + "=\" + " + ((ModelField)flds.elementAt(i)).name;
     return returnString;
   }
-
-  public String httpArgListFromClass(Vector flds)
-  {
+  
+  public String httpArgListFromClass(Vector flds) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
-
+    
     int i = 0;
-    for(; i < flds.size() - 1; i++)
-    {
+    for(; i < flds.size() - 1; i++) {
       returnString = returnString + "\"" + tableName + "_" + ((ModelField)flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + ".get" + ModelUtil.upperFirstChar(((ModelField)flds.elementAt(i)).name) + "() + \"&\" + ";
     }
     returnString = returnString + "\"" + tableName + "_" + ((ModelField)flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + ".get" + ModelUtil.upperFirstChar(((ModelField)flds.elementAt(i)).name) + "()";
     return returnString;
   }
-
-  public String httpArgListFromClass(Vector flds, String entityNameSuffix)
-  {
+  
+  public String httpArgListFromClass(Vector flds, String entityNameSuffix) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
-
+    
     int i = 0;
-    for(; i < flds.size() - 1; i++)
-    {
+    for(; i < flds.size() - 1; i++) {
       returnString = returnString + "\"" + tableName + "_" + ((ModelField)flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + entityNameSuffix + ".get" + ModelUtil.upperFirstChar(((ModelField)flds.elementAt(i)).name) + "() + \"&\" + ";
     }
     returnString = returnString + "\"" + tableName + "_" + ((ModelField)flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + entityNameSuffix + ".get" + ModelUtil.upperFirstChar(((ModelField)flds.elementAt(i)).name) + "()";
     return returnString;
   }
-
-  public String httpRelationArgList(Vector flds, ModelRelation relation)
-  {
+  
+  public String httpRelationArgList(Vector flds, ModelRelation relation) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
-
+    
     int i = 0;
-    for(; i < flds.size() - 1; i++)
-    {
+    for(; i < flds.size() - 1; i++) {
       ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField)flds.elementAt(i)).name);
       if(keyMap != null) returnString = returnString + "\"" + tableName + "_" + ((ModelField)flds.elementAt(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
       else Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField)flds.elementAt(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
@@ -281,15 +275,13 @@ public class ModelEntity
     else Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField)flds.elementAt(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
     return returnString;
   }
-
-  public String httpRelationArgList(ModelRelation relation)
-  {
+  
+  public String httpRelationArgList(ModelRelation relation) {
     String returnString = "";
     if(relation.keyMaps.size() < 1) { return ""; }
-
+    
     int i = 0;
-    for(; i < relation.keyMaps.size() - 1; i++)
-    {
+    for(; i < relation.keyMaps.size() - 1; i++) {
       ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.elementAt(i);
       if(keyMap != null)
         returnString = returnString + "\"" + tableName + "_" + keyMap.relColName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
@@ -298,35 +290,30 @@ public class ModelEntity
     returnString = returnString + "\"" + tableName + "_" + keyMap.relColName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "()";
     return returnString;
   }
-
-  public String typeNameStringRelatedNoMapped(Vector flds, ModelRelation relation)
-  {
+  
+  public String typeNameStringRelatedNoMapped(Vector flds, ModelRelation relation) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
-
+    
     int i = 0;
     if(relation.findKeyMapByRelated(((ModelField)flds.elementAt(i)).name) == null)
       returnString = returnString + ((ModelField)flds.elementAt(i)).type + " " + ((ModelField)flds.elementAt(i)).name;
     i++;
-    for(; i < flds.size(); i++)
-    {
-      if(relation.findKeyMapByRelated(((ModelField)flds.elementAt(i)).name) == null)
-      {
+    for(; i < flds.size(); i++) {
+      if(relation.findKeyMapByRelated(((ModelField)flds.elementAt(i)).name) == null) {
         if(returnString.length() > 0) returnString = returnString + ", ";
         returnString = returnString + ((ModelField)flds.elementAt(i)).type + " " + ((ModelField)flds.elementAt(i)).name;
       }
     }
     return returnString;
   }
-
-  public String typeNameStringRelatedAndMain(Vector flds, ModelRelation relation)
-  {
+  
+  public String typeNameStringRelatedAndMain(Vector flds, ModelRelation relation) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }
-
+    
     int i = 0;
-    for(; i < flds.size() - 1; i++)
-    {
+    for(; i < flds.size() - 1; i++) {
       ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField)flds.elementAt(i)).name);
       if(keyMap != null)
         returnString = returnString + keyMap.fieldName + ", ";

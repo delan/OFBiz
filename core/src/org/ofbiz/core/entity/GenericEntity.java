@@ -141,14 +141,14 @@ public class GenericEntity implements Serializable
   }
   
   //might be nice to add some ClassCastException handling...
-  public String getString(String name) { return (String)fields.get(name); }
-  public java.sql.Timestamp getTimestamp(String name) { return (java.sql.Timestamp)fields.get(name); }
-  public java.sql.Time getTime(String name) { return (java.sql.Time)fields.get(name); }
-  public java.sql.Date getDate(String name) { return (java.sql.Date)fields.get(name); }
-  public Integer getInteger(String name) { return (Integer)fields.get(name); }
-  public Long getLong(String name) { return (Long)fields.get(name); }
-  public Float getFloat(String name) { return (Float)fields.get(name); }
-  public Double getDouble(String name) { return (Double)fields.get(name); }
+  public String getString(String name) { return (String)get(name); }
+  public java.sql.Timestamp getTimestamp(String name) { return (java.sql.Timestamp)get(name); }
+  public java.sql.Time getTime(String name) { return (java.sql.Time)get(name); }
+  public java.sql.Date getDate(String name) { return (java.sql.Date)get(name); }
+  public Integer getInteger(String name) { return (Integer)get(name); }
+  public Long getLong(String name) { return (Long)get(name); }
+  public Float getFloat(String name) { return (Float)get(name); }
+  public Double getDouble(String name) { return (Double)get(name); }
   
   public GenericPK getPrimaryKey() 
   { 

@@ -72,7 +72,8 @@ public interface GenericHelper
    */
   public GenericValue findByPrimaryKey(GenericPK primaryKey);
   /** Find a Generic Entity by its Primary Key
-   *@param primaryKey The primary key to find by.
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param fields The fields of the named entity to query by with their corresponging values
    *@return The GenericValue corresponding to the primaryKey
    */
   public GenericValue findByPrimaryKey(String entityName, Map fields);
@@ -82,7 +83,8 @@ public interface GenericHelper
    */
   public GenericValue findByPrimaryKeyCache(GenericPK primaryKey);
   /** Find a CACHED Generic Entity by its Primary Key
-   *@param primaryKey The primary key to find by.
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param fields The fields of the named entity to query by with their corresponging values
    *@return The GenericValue corresponding to the primaryKey
    */
   public GenericValue findByPrimaryKeyCache(String entityName, Map fields);
@@ -174,4 +176,17 @@ public interface GenericHelper
    *@return Long with the next seq id for the given sequence name
    */
   public Long getNextSeqId(String seqName);
+
+  /** Remove a CACHED Generic Entity (Collection) from the cache, either a PK, ByAnd, or All 
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param fields The fields of the named entity to query by with their corresponging values
+   *@return The GenericValue corresponding to the primaryKey
+   */
+  public void clearCacheLine(String entityName, Map fields);
+
+  /** Remove a CACHED Generic Entity from the cache by its primary key
+   *@param primaryKey The primary key to find by.
+   *@return The GenericValue corresponding to the primaryKey
+   */
+  public void clearCacheLine(GenericPK primaryKey);
 }

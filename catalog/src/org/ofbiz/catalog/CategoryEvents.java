@@ -98,6 +98,8 @@ public class CategoryEvents {
     category.set("description", description);
     category.set("categoryImageUrl", categoryImageUrl);
     
+    category.preStoreOther(helper.makeValue("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", primaryParentCategoryId)));
+    
     if(updateMode.equals("CREATE")) {
       GenericValue newCategory = helper.create(category);
       if(newCategory == null) {
@@ -228,6 +230,7 @@ public class CategoryEvents {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (already exists)");
         return "error";
       }
+      helper.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryRollup.get("parentProductCategoryId")));
       productCategoryRollup = productCategoryRollup.create();
       if(productCategoryRollup == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (write error)");
@@ -240,6 +243,7 @@ public class CategoryEvents {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (does not exist)");
         return "error";
       }
+      helper.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryRollup.get("parentProductCategoryId")));
       try { productCategoryRollup.remove(); }
       catch(Exception e) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (write error)");

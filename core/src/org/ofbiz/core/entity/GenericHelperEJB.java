@@ -157,27 +157,6 @@ public class GenericHelperEJB extends GenericHelperAbstract
     catch(Exception e) { Debug.logWarning(e); }
   }
 
-  /** Finds all Generic entities
-   *@param entityName The Name of the Entity as defined in the entity XML file
-   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
-   *@return    Collection containing all Generic entities
-   */
-  public Collection findAll(String entityName, List orderBy)
-  {
-    if(entityName == null) return null;
-    Collection collection = null;
-    Debug.logInfo("GenericHelper.findAll");
-
-    try 
-    { 
-      Collection remoteCol = (Collection)MyNarrow.narrow(genericHome.findAll(entityName, orderBy), Collection.class); 
-      collection = remoteToValue(remoteCol);
-    }
-    catch(ObjectNotFoundException onfe) { }
-    catch(Exception fe) { Debug.logError(fe); }
-    return collection;
-  }
-
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values
@@ -230,25 +209,6 @@ public class GenericHelperEJB extends GenericHelperAbstract
     }
   }
   
-  public Collection remoteToValue(Collection remoteCol)
-  {
-    Iterator iter = UtilMisc.toIterator(remoteCol);
-    Collection col = new LinkedList();
-    
-    while(iter != null && iter.hasNext())
-    {
-      GenericRemote generic = (GenericRemote)iter.next();
-      try 
-      { 
-        GenericValue value = generic.getValueObject();
-        value.helper = this;
-        col.add(value);
-      }
-      catch(Exception e) {}
-    }
-    return col;
-  }
-  
   /** Store the Entity from the GenericValue to the persistent store
    *@param value GenericValue instance containing the entity
    */
@@ -296,4 +256,23 @@ public class GenericHelperEJB extends GenericHelperAbstract
     try { remote.removeRelated(relationName); }
     catch(java.rmi.RemoteException re) { Debug.logError(re); }
   }  
+
+  private Collection remoteToValue(Collection remoteCol)
+  {
+    Iterator iter = UtilMisc.toIterator(remoteCol);
+    Collection col = new LinkedList();
+    
+    while(iter != null && iter.hasNext())
+    {
+      GenericRemote generic = (GenericRemote)iter.next();
+      try 
+      { 
+        GenericValue value = generic.getValueObject();
+        value.helper = this;
+        col.add(value);
+      }
+      catch(Exception e) {}
+    }
+    return col;
+  }
 }

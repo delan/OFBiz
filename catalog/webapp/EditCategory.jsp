@@ -148,7 +148,7 @@
     <%GenericValue curCategory = productCategoryRollup.getRelatedOne("ParentProductCategory");%>
     <tr valign="middle">
       <td><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("productCategoryId")%></a></td>
-      <td><%if(curCategory!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("description")%></a><%}%>&nbsp;</td>
+      <td><%if(curCategory!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("description")%></a><%}%>&nbsp;</td>
       <td>
         <a href="<ofbiz:url>/UpdateProductCategoryRollup?UPDATE_MODE=DELETE&PRODUCT_CATEGORY_ID=<%=productCategoryId%>&UPDATE_PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("productCategoryId")%>&UPDATE_PARENT_PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("parentProductCategoryId")%></ofbiz:url>" class="buttontext">
         [Delete]</a>
