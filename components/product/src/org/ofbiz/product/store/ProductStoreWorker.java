@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.17 2004/02/10 14:11:42 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.18 2004/02/13 03:13:28 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -281,18 +281,16 @@ public class ProductStoreWorker {
                         Debug.logError(e, "Unable to lookup ProductFeatureGroupAppl records for group : " + includeFeatures, module);
                     }
                     if (includedFeatures != null) {
-                        Map incWorkMap = new HashMap(featureIdMap);
+                        boolean foundOne = true;
                         Iterator ifet = includedFeatures.iterator();
                         while (ifet.hasNext()) {
                             GenericValue appl = (GenericValue) ifet.next();
                             if (!featureIdMap.containsKey(appl.getString("productFeatureId"))) {
-                                incWorkMap.remove(appl.getString("productFeatureId"));
-                                //returnShippingMethods.remove(method);
-                                //continue;
+                                foundOne = false;
+                                break;
                             }
                         }
-                        if (incWorkMap.size() == 0) {
-                            // same size == no features included (this is ANY type)
+                        if (!foundOne) {
                             returnShippingMethods.remove(method);
                             continue;
                         }
