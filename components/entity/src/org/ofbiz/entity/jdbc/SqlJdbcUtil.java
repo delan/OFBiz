@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.8 2003/12/17 19:29:08 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.9 2004/01/20 14:41:24 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,10 +23,12 @@
  */
 package org.ofbiz.entity.jdbc;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.Reader;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -64,11 +66,13 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
     public static final String module = GenericDAO.class.getName();
+    
+    public static final int CHAR_BUFFER_SIZE = 4096;
 
     /** Makes the FROM clause and when necessary the JOIN clause(s) as well */
     public static String makeFromClause(ModelEntity modelEntity, EntityConfigUtil.DatasourceInfo datasourceInfo) throws GenericEntityException {
@@ -539,7 +543,24 @@ public class SqlJdbcUtil {
             if (typeValue <= 4 || typeValue == 10 || typeValue == 11) {
                 switch (typeValue) {
                 case 1:
-                    entity.dangerousSetNoCheckButFast(curField, rs.getString(ind));
+                    String value = rs.getString(ind);
+                    if (value.length() == 0) {
+                        // if the String is empty, try to get a text input stream, this is required for some databases for larger fields, like CLOBs
+                        Reader valueReader = rs.getCharacterStream(ind);
+                        if (valueReader != null) {
+                            char[] inCharBuffer = new char[CHAR_BUFFER_SIZE];
+                            StringBuffer strBuf = new StringBuffer();
+                            int charsRead = 0;
+                            try {
+                                while ((charsRead = valueReader.read(inCharBuffer, 0, CHAR_BUFFER_SIZE)) > 0) {
+                                    strBuf.append(inCharBuffer, 0, charsRead);
+                                }
+                            } catch (IOException e) {
+                                throw new GenericEntityException("Error reading long character stream for field " + curField.getName() + " of entity " + entity.getEntityName(), e);
+                            }
+                        }
+                    }
+                    entity.dangerousSetNoCheckButFast(curField, value);
                     break;
 
                 case 2:
