@@ -5,10 +5,7 @@
 <br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
 <br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
 <br><A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></A>
-<br>Last Updated: July 12, 2001<p>NOTE: This document parallels the <a href="entity-list.html">CommonApp
-Entity List</a> document. Please see it for a list of entities in each
-component. This document will be added to as parts of the data model progress
-and move from datamodel.xml to commonapp.xml and get used in the project.</p>
+<br>Last Updated: July 12, 2001<p>NOTE: This document will be added to as parts of the data model progress.</p>
 <p><b>Status: </b>This document is an early attempt to organize the data
 corresponding to the various components of the overall system.&nbsp; Some parts
 are much more complete and thought out than others. Please send me feed back on
@@ -82,13 +79,11 @@ to other entities.</p>
 
 <p>There are some files that go along with the definitions of these entities.
 These files are located in the ofbiz/commonapp/entitydef directory. The most
-important file is datamodel.xml which contains the XML definitions for all of
-the entities in the project. As components are more completely defined and
-become ready to be used in the project they are moved to the commonapp.xml file
-which represents the entities that currently exist in the CommonApp module.</p>
+important file is entitymodel.xml which contains the XML definitions for all of
+the entities in the project.</p>
 
 
-<p>A third file in this directory named datamodel-data.sql is a series of SQL
+<p>Another file in the ofbiz/commonapp/db directory named datamodel-data.sql is a series of SQL
 insert statements which define various entity types for entities in the data
 model. For an explanation of what these entity types are and how they are used,
 see the Extensibility Pattern section of this document.</p>
