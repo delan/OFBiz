@@ -1,7 +1,7 @@
 /*
- * $Id: IteratorHasNextTag.java,v 1.1 2003/08/17 08:40:11 ajzeneski Exp $
+ * $Id: IteratorHasNextTag.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
  *
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),

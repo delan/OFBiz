@@ -1,7 +1,7 @@
 /*
- * $Id: RegionManager.java,v 1.1 2003/08/17 08:40:11 ajzeneski Exp $
+ * $Id: RegionManager.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
  *
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  * A class to manage the region cache and read a region XML file
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class RegionManager {
