@@ -407,7 +407,7 @@
       J2EE:service=J2eeDeployer;
       JCA:service=RARDeployer
     </attribute>
-    <attribute name="URLs">../deploy,../deploy/lib</attribute>
+    <attribute name="URLs">../deploy,../deploy/lib,../../ofbiz/j2eedeploy</attribute>
   </mbean>
 
   <!-- ==================================================================== -->
