@@ -2391,10 +2391,16 @@
       <field name="shoppingListId" type="id-ne"></field>
       <field name="shoppingListTypeId" type="id"></field>
       <field name="parentShoppingListId" type="id"></field>
+      <field name="productStoreId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="listName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="isPublic" type="indicator"></field>
+      <field name="shipmentMethodTypeId" type="id"></field>
+      <field name="carrierPartyId" type="id"></field>
+      <field name="carrierRoleTypeId" type="id"></field>
+      <field name="contactMechId" type="id"></field>
+      <field name="recurrenceInfoId" type="id"></field>
       <field name="lastAdminModified" type="date-time"></field>
       <prim-key field="shoppingListId"/>
       <relation type="one" fk-name="SHLIST_PARENT" title="Parent" rel-entity-name="ShoppingList">
@@ -2405,6 +2411,29 @@
       </relation>
       <relation type="one" fk-name="SHLIST_TYPE" rel-entity-name="ShoppingListType">
         <key-map field-name="shoppingListTypeId"/>
+      </relation>
+      <relation type="one" fk-name="SHLIST_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="SHLIST_PSSM" rel-entity-name="ProductStoreShipmentMeth">
+        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
+        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
+        <key-map field-name="shipmentMethodTypeId"/>
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="SHLIST_CSSM" rel-entity-name="CarrierShipmentMethod">
+        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
+        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
+        <key-map field-name="shipmentMethodTypeId"/>
+      </relation>
+      <relation type="one" fk-name="SHLIST_CMECH" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PostalAddress">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="SHLIST_RECINFO" rel-entity-name="RecurrenceInfo">
+        <key-map field-name="recurrenceInfoId"/>
       </relation>
     </entity>
     <entity entity-name="ShoppingListItem"
