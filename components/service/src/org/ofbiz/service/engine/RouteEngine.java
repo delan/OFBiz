@@ -35,7 +35,7 @@ import org.ofbiz.service.ServiceDispatcher;
  * RouteEngine.java
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class RouteEngine implements GenericEngine {
@@ -68,5 +68,11 @@ public class RouteEngine implements GenericEngine {
      */
     public void runAsync(String localName, ModelService modelService, Map context, boolean persist) throws GenericServiceException {
         return;
+    }
+
+    /**
+     * @see org.ofbiz.service.engine.GenericEngine#sendCallbacks(org.ofbiz.service.ModelService, java.util.Map, java.lang.Object, int)
+     */
+    public void sendCallbacks(ModelService modelService, Map context, Object cbObj, int mode) throws GenericServiceException {
     }
 }

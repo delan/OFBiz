@@ -35,7 +35,7 @@ import org.ofbiz.service.job.JobManager;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public interface LocalDispatcher {
@@ -167,6 +167,13 @@ public interface LocalDispatcher {
      * @throws GenericServiceException
      */
     public GenericResultWaiter runAsyncWait(String serviceName, Map context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+
+    /**
+     * Register a callback listener on a specific service.
+     * @param serviceName Name of the service to link callback to.
+     * @param cb The callback implementation.
+     */
+    public void registerCallback(String serviceName, GenericServiceCallback cb);
 
     /**
      * Schedule a service to run asynchronously at a specific start time.

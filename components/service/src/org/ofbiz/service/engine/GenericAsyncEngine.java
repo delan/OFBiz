@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -38,7 +38,11 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
-import org.ofbiz.service.*;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericRequester;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.job.GenericServiceJob;
 import org.ofbiz.service.job.Job;
@@ -48,7 +52,7 @@ import org.ofbiz.service.job.JobManagerException;
  * Generic Asynchronous Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public abstract class GenericAsyncEngine extends AbstractEngine {
@@ -145,6 +149,15 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
             } catch (JobManagerException jse) {
                 throw new GenericServiceException("Cannot run job.", jse);
             }
+        }
+    }
+
+    /**
+     * @see org.ofbiz.service.engine.GenericEngine#sendCallbacks(org.ofbiz.service.ModelService, java.util.Map, java.lang.Object, int)
+     */
+    public void sendCallbacks(ModelService model, Map context, Object cbObj, int mode) throws GenericServiceException {
+        if (mode == GenericEngine.SYNC_MODE) {
+            super.sendCallbacks(model, context, cbObj, mode);
         }
     }
 }

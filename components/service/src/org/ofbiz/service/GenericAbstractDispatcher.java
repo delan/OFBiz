@@ -39,7 +39,7 @@ import org.ofbiz.base.util.Debug;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public abstract class GenericAbstractDispatcher implements LocalDispatcher {
@@ -152,5 +152,11 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
         dispatcher.deregister(this);
     }
 
+    /**
+     * @see org.ofbiz.service.LocalDispatcher#registerCallback(String, GenericServiceCallback)
+     */
+    public void registerCallback(String serviceName, GenericServiceCallback cb) {
+        dispatcher.registerCallback(serviceName, cb);
+    }
 }
 

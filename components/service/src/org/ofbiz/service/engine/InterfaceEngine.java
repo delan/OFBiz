@@ -34,7 +34,7 @@ import org.ofbiz.service.ServiceDispatcher;
  * InterfaceEngine.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class InterfaceEngine implements GenericEngine {
@@ -67,5 +67,11 @@ public class InterfaceEngine implements GenericEngine {
      */
     public void runAsync(String localName, ModelService modelService, Map context, boolean persist) throws GenericServiceException {        
         throw new GenericServiceException("Interface services cannot be invoked; try invoking an implementing service.");
+    }
+
+    /**
+     * @see org.ofbiz.service.engine.GenericEngine#sendCallbacks(org.ofbiz.service.ModelService, java.util.Map, java.lang.Object, int)
+     */
+    public void sendCallbacks(ModelService modelService, Map context, Object cbObj, int mode) throws GenericServiceException {
     }
 }
