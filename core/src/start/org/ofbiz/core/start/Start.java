@@ -219,6 +219,9 @@ public class Start implements Runnable {
             //reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             //System.out.println(reader.readLine());
             
+            System.out.println("");
+            System.out.println("");
+            
             socket.close();
         }
     }
