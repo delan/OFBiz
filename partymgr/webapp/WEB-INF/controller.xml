@@ -578,8 +578,8 @@
     <view-map name="EditSecurityGroupPermissions" type="region"/>
     <view-map name="EditSecurityGroupUserLogins" type="region"/>
     
-    <view-map name="showvisits" type="region"/>
-    <view-map name="visitdetail" type="region"/>
+    <view-map name="showvisits" type="jpublish" page="/visit/showvisits.ftl"/>
+    <view-map name="visitdetail" type="jpublish" page="/visit/visitdetail.ftl"/>
     
     <view-map name="listCommunications" type="jpublish" page="/communication/listCommunications.ftl"/>
     <view-map name="communicationEvent" type="jpublish" page="/communication/editCommunication.ftl"/>   
