@@ -148,5 +148,7 @@
 	<classpathentry kind="lib" path="components/catalina/lib/server/catalina.jar"/>
 	<classpathentry kind="lib" path="components/manufacturing/lib/jep-2.24.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/lucene.jar"/>
+	<classpathentry kind="lib" path="components/content/lib/xom-1.0d25.jar"/>
+	<classpathentry kind="lib" path="components/content/lib/krysalis-barcode.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

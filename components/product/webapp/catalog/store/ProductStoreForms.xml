@@ -158,7 +158,7 @@
         <field name="subject" title="${uiLabelMap.ProductSubject}"></field>
         <field name="fromAddress" title="${uiLabelMap.CommonFromAddress}"></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
-        <field name="deleteLink" title="&amp;" widget-style="buttontext">
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="removeProductStoreEmail?productStoreId=${productStoreId}&amp;emailType=${emailType}"
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
@@ -50,7 +50,6 @@ context.put("product", product);
 // NOTE: there was a problem with doing creates with an ID that already exists, the existing pruduct popped up instead, which shouldn't happen here but if it does then we may have to do the whole "isCreate" parameter idea
 
 HtmlFormWrapper productFormWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "EditProduct", request, response);
-productFormWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 context.put("productFormWrapper", productFormWrapper);
 productFormWrapper.putInContext("product", product);
 productFormWrapper.putInContext("productId", productId);
