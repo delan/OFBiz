@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.5 2003/08/17 03:11:28 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.6 2003/08/17 06:12:49 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.base.util.UtilURL;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.5 $
+  *@version    $Revision: 1.6 $
  * @since      2.2
  */
 public class JettyContainer implements Container {
@@ -366,7 +366,7 @@ class Log4jSink implements LogSink {
             return;
         }
 
-        log.log("jetty.log4jSink", priority, "" + msg, null);
+        log.log(Log4jSink.class.getName(), priority, "" + msg, null);
     }
     
     public synchronized void log(String s) {
