@@ -1,0 +1,7 @@
+package newdesigner.model;
+
+import util.*;
+
+public interface INetworkEditorArcModel extends IArcModel{
+	public WFPopup getPopup();
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE NetworkDesign SYSTEM "file:///c:/workflow/newdesigner/dtd/DataClass.dtd">
+
+<!-- 
+	SampleData
+	Revision: 1
+	Tue Dec 09 11:34:55 EST 1998
+-->
+<DataClass>
+  <Name>TargetInfo</Name>
+  <FieldList>
+    <Field>
+      <Type>
+        <SimpleType>string</SimpleType>
+      </Type>
+      <Name>name</Name>
+    </Field>
+    <Field>
+      <Type>
+        <SimpleType>string</SimpleType>
+      </Type>
+      <Name>description</Name>
+    </Field>
+    <Field>
+      <Type>
+        <SimpleType>long</SimpleType>
+      </Type>
+      <Name>x</Name>
+    </Field>
+    <Field>
+      <Type>
+        <SimpleType>long</SimpleType>
+      </Type>
+      <Name>y</Name>
+    </Field>
+    <Field>
+      <Type>
+        <SimpleType>long</SimpleType>
+      </Type>
+      <Name>radius</Name>
+    </Field>
+  </FieldList>
+  <MethodList>
+  </MethodList>
+</DataClass>

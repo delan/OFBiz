@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<!DOCTYPE NetworkDesign SYSTEM "file:///c:/workflow/newdesigner/dtd/networkdesign.dtd">
+
+<NetworkDesign>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="testdb" id="testdb" y="10" x="10">
+    <Realization>
+      <NetworkTaskRealization realizationtype="NonTransactionalNetwork" lasttask="Transactional1" firsttask="Transactional0">
+        <Domain url="/DefaultDomain.xml#Secret" tasks="Transactional0 Transactional1 NonTransactionalWF0" y="18" id="Domain0.987324732984732" height="203" width="654" x="21">
+        </Domain>
+        <InputMappingList>
+        </InputMappingList>
+        <OutputMappingList>
+        </OutputMappingList>
+      </NetworkTaskRealization>
+    </Realization>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="start" host="ewigg:5000" id="Transactional0" outarcs=" Arc0.8506797427282841 " y="52" x="101">
+    <Realization>
+      <SimpleRealization>
+        <TransactionalTaskRealization url="jdbc:odbc:ansbase" username="Admin" userpassword="jim" query="select fieldName from anstable" database="ansbase">
+          <TransactionalOutput>fieldName p1.Author</TransactionalOutput>
+        </TransactionalTaskRealization>
+      </SimpleRealization>
+    </Realization>
+    <Output datatypeurl="Plan" variablename="p1" id="Transactional0_param0"/>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="end" host="ewigg:5000" id="Transactional1" inarcs=" Arc0.10331718725702654 " y="53" x="365">
+    <Realization>
+      <SimpleRealization>
+        <TransactionalTaskRealization url="jdbc:odbc:ansbase" username="Admin" userpassword="jim" query="select answer from anstable where fieldName = $p1.Author" database="ansbase">
+          <TransactionalOutput>answer p1.Author</TransactionalOutput>
+        </TransactionalTaskRealization>
+      </SimpleRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="Plan" variablename="p1" id="Transactional1_input0"/>
+    </Invocation>
+    <DataSecurityMask dataname="Transactional1_input0">
+      <FieldMask accesstype="FullControl" fieldname="Author"/>
+      <FieldMask accesstype="FullControl" fieldname="Description"/>
+      <FieldMask accesstype="FullControl" fieldname="Approved"/>
+    </DataSecurityMask>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="NonTransactionalWF0" id="NonTransactionalWF0" outarcs=" Arc0.10331718725702654 " inarcs=" Arc0.8506797427282841 " y="108" x="240">
+    <Realization>
+      <NetworkTaskRealization realizationtype="NonTransactionalNetwork" lasttask="Transactional3" firsttask="Transactional2">
+        <Domain url="/DefaultDomain.xml#Secret" tasks=" Transactional2 Transactional3" y="51" id="Domain0" height="247" width="335" x="37">
+        </Domain>
+        <InputMappingList>
+          <Mapping secondElement="Transactional2_input0" firstElement="NonTransactionalWF0_input0"/>
+        </InputMappingList>
+        <OutputMappingList>
+          <Mapping secondElement="NonTransactionalWF0_param0" firstElement="Transactional3_param0"/>
+        </OutputMappingList>
+      </NetworkTaskRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="Plan" variablename="p1" id="NonTransactionalWF0_input0"/>
+    </Invocation>
+    <Output datatypeurl="Plan" variablename="p1" id="NonTransactionalWF0_param0"/>
+    <DataSecurityMask dataname="NonTransactionalWF0_input0">
+      <FieldMask accesstype="FullControl" fieldname="Author"/>
+      <FieldMask accesstype="FullControl" fieldname="Description"/>
+      <FieldMask accesstype="FullControl" fieldname="Approved"/>
+    </DataSecurityMask>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="Transactional2" id="Transactional2" outarcs=" Arc0.6585489899490748 " y="71" x="61">
+    <Realization>
+      <SimpleRealization>
+        <TransactionalTaskRealization url="jdbc:odbc:ansbase" username="Admin" userpassword="jim" query="select fieldName from anstable" database="ansbase">
+        </TransactionalTaskRealization>
+      </SimpleRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="Plan" variablename="p1" id="Transactional2_input0"/>
+    </Invocation>
+    <Output datatypeurl="Plan" variablename="p1" id="Transactional2_param0"/>
+    <DataSecurityMask dataname="Transactional2_input0">
+      <FieldMask accesstype="FullControl" fieldname="Author"/>
+      <FieldMask accesstype="FullControl" fieldname="Description"/>
+      <FieldMask accesstype="FullControl" fieldname="Approved"/>
+    </DataSecurityMask>
+  </Task>
+  <Task securitydomainurl="/DefaultDomain.xml#Secret" name="Transactional3" id="Transactional3" inarcs=" Arc0.6585489899490748 " y="73" x="199">
+    <Realization>
+      <SimpleRealization>
+        <TransactionalTaskRealization url="jdbc:odbc:ansbase" username="Admin" userpassword="jim" query="select answer from anstable" database="ansbase">
+        </TransactionalTaskRealization>
+      </SimpleRealization>
+    </Realization>
+    <Invocation>
+      <Parameter datatypeurl="Plan" variablename="p1" id="Transactional3_input0"/>
+    </Invocation>
+    <Output datatypeurl="Plan" variablename="p1" id="Transactional3_param0"/>
+    <DataSecurityMask dataname="Transactional3_input0">
+      <FieldMask accesstype="FullControl" fieldname="Author"/>
+      <FieldMask accesstype="FullControl" fieldname="Description"/>
+      <FieldMask accesstype="FullControl" fieldname="Approved"/>
+    </DataSecurityMask>
+  </Task>
+  <Arc arctype="Success" destination="NonTransactionalWF0" id="Arc0.8506797427282841" source="Transactional0">
+    <Mapping secondElement="NonTransactionalWF0_input0" firstElement="Transactional0_param0"/>
+  </Arc>
+  <Arc arctype="Success" destination="Transactional1" id="Arc0.10331718725702654" source="NonTransactionalWF0">
+    <Mapping secondElement="Transactional1_input0" firstElement="NonTransactionalWF0_param0"/>
+  </Arc>
+  <Arc arctype="Success" destination="Transactional3" id="Arc0.6585489899490748" source="Transactional2">
+    <Mapping secondElement="Transactional3_input0" firstElement="Transactional2_param0"/>
+  </Arc>
+</NetworkDesign>

@@ -1,0 +1,16 @@
+Microsoft Visual Studio Solution File, Format Version 1.00
+Project("{66355F20-A65B-11D0-BFB5-00A0C91EBFA0}") = "util", "util.vjp", "{0D1A1B04-C4AC-4C34-BF2E-2952B7BE2834}"
+EndProject
+Project("{66355F20-A65B-11D0-BFB5-00A0C91EBFA0}") = "Designer", "..\designer\Designer.vjp", "{3549BF34-AFF9-425E-B3C4-872AE654FA1E}"
+EndProject
+Global
+	GlobalSection(LocalDeployment) = postSolution
+		StartupProject = {0D1A1B04-C4AC-4C34-BF2E-2952B7BE2834}
+	EndGlobalSection
+	GlobalSection(BuildOrder) = postSolution
+		0 = {0D1A1B04-C4AC-4C34-BF2E-2952B7BE2834}
+		1 = {3549BF34-AFF9-425E-B3C4-872AE654FA1E}
+	EndGlobalSection
+	GlobalSection(DeploymentRoot) = postSolution
+	EndGlobalSection
+EndGlobal

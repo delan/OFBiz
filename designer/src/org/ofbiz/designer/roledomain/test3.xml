@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE NetworkDesign SYSTEM "file:///c:/workflow/newdesigner/dtd/RoleDomain.dtd">
+
+<RoleDomain id="test3">
+  <Name>test3</Name>
+  <Description></Description>
+  <Role id="Node0">
+    <Name>New</Name>
+    <Description></Description>
+    <Privileges></Privileges>
+    <Color>
+      <Number>0</Number>
+      <Number>0</Number>
+      <Number>0</Number>
+    </Color>
+    <Position>
+      <Number>116</Number>
+      <Number>62</Number>
+    </Position>
+  </Role>
+  <Role id="Node1">
+    <Name>New</Name>
+    <Description></Description>
+    <Privileges></Privileges>
+    <Color>
+      <Number>0</Number>
+      <Number>0</Number>
+      <Number>0</Number>
+    </Color>
+    <Position>
+      <Number>140</Number>
+      <Number>181</Number>
+    </Position>
+  </Role>
+</RoleDomain>

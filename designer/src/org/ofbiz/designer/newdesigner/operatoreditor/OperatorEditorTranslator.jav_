@@ -1,0 +1,67 @@
+package newdesigner.operatoreditor;
+
+import pattern.*;
+import networkdesign.*;
+import newdesigner.model.*;
+import java.util.*;
+import util.*;
+import generic.*;
+
+class OperatorEditorTranslator extends BaseTranslator {
+    String opEditorType;
+    public OperatorEditorTranslator(IOperatorEditorModelWrapper model, Vector vec, String _opEditorType, String mode) {
+        super(model, vec);
+        if(vec.size() != 2 || !(vec.elementAt(0) instanceof IOperatorWrapper) || !(vec.elementAt(1) instanceof ITaskWrapper))
+            throw new RuntimeException("Bad parameters");
+        opEditorType = _opEditorType;
+        synchronize(mode);
+    }
+
+    public void updateDataImpl() {
+        // implementation not required
+    }
+
+    public void updateModelImpl() {
+        util.LOG.println("OperatorEditorTranslator:updateModelImpl");
+        IOperatorEditorModel model = (IOperatorEditorModel)getGuiModel();
+        IOperatorWrapper _operator = (IOperatorWrapper)getDataObjectAt(0);
+        ITaskWrapper task = (ITaskWrapper)getDataObjectAt(1);
+
+        if(!task.getNameAttribute().equals(model.getTaskName()))
+            model.setTaskName(task.getNameAttribute());
+
+        IOperatorModel startingOperator = model.getStartingOperator();
+        if(startingOperator == null || !_operator.getIdAttribute().equals(startingOperator.getID())) {
+            model.setStartingOperator(null);
+            IOperatorModelWrapper operatorModel = (IOperatorModelWrapper)model.createStartingOperator(_operator.getTypeAttribute(), _operator.getIdAttribute(), false);
+            new OperatorTranslator(operatorModel, _operator, BaseTranslator.UPDATE_MODEL);
+        }
+        model.removeAllOtherTasks();
+
+        if(opEditorType.equals(OperatorEditorType.INPUT_OPERATOR)) {
+            String[] arcs = IDRefHelper.getReferenceArray(task.getInarcsAttribute());
+            if(arcs == null) return;
+            for(int i=0; i<arcs.length; i++) {
+                String sourceID = ((IArc)task.getXml().getIdRef(arcs[i])).getSourceAttribute();
+                String sourceName = ((ITask)_operator.getXml().getIdRef(sourceID)).getNameAttribute();
+                model.addOtherTask(sourceName);
+            }
+            if(task.getParentTask().getRealization().getNetworkTaskRealization().getFirsttaskAttribute().equals(task.getIdAttribute()))
+                model.addOtherTask(task.getParentTask().getNameAttribute());
+        } else {
+            String[] arcs = IDRefHelper.getReferenceArray(task.getOutarcsAttribute());
+            util.LOG.println("OperatorEditorTranslator:updateModelImpl: "+arcs.length );
+            if(arcs == null) return;
+            for(int i=0; i<arcs.length; i++) {
+                IArc arc = (IArc)task.getXml().getIdRef(arcs[i]);
+                if(arc.getArctypeAttribute().equals("Success")) {
+                    String destinationID = arc.getDestinationAttribute();
+                    String destinationName = ((ITask)_operator.getXml().getIdRef(destinationID)).getNameAttribute();
+                    model.addOtherTask(destinationName);
+                }
+            }
+            if(task.getParentTask().getRealization().getNetworkTaskRealization().getLasttaskAttribute().equals(task.getIdAttribute()))
+                model.addOtherTask(task.getParentTask().getNameAttribute());
+        }
+    }
+}

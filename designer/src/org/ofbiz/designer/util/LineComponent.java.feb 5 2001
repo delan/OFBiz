@@ -1,0 +1,171 @@
+package util;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+public class LineComponent extends JComponent { 
+	
+	private Line abstractLine;
+	
+	private static float THE_RADIUS = 10;
+	
+	private static int OFFSET_FROM_BORDER = 10;
+	
+	private static int FROM_HEAD = 1;
+	private static int FROM_TAIL = -1;
+	
+	private Color theColor;
+	
+	
+	public LineComponent() {
+		setAbstractLine(new Line(new Point(0,0),new Point(0,0)));
+	}
+	
+	public LineComponent(Point head, Point tail) {
+		setAbstractLine(new Line(head, tail));
+	}
+	
+	public void setColor(Color aColor) {
+		theColor = aColor;
+	}
+	
+	public Color getColor() {
+		return theColor;
+	}
+	
+	protected void updateBounds() {
+		Rectangle lineBounds = abstractLine.getBounds();
+		
+		setLocation(lineBounds.x-OFFSET_FROM_BORDER,
+					lineBounds.y-OFFSET_FROM_BORDER);
+		setSize(lineBounds.width+(OFFSET_FROM_BORDER*2), lineBounds.height+(OFFSET_FROM_BORDER*2));
+	}
+	
+	
+	public boolean contains(int x, int y) {
+		int absX = x+getX();
+		int absY = y+getY();
+		Polygon containRect = abstractLine.containingRect(THE_RADIUS);
+		
+		return containRect.contains(absX,absY);
+	}
+	
+	
+	public void paintComponent(Graphics g) {
+		g.setColor(theColor);
+		g.drawLine(abstractLine.getHeadX()-getX(),
+				   abstractLine.getHeadY()-getY(),
+				   abstractLine.getTailX()-getX(),
+				   abstractLine.getTailY()-getY());
+	}
+	
+	public void setAbstractLine(Line newLine) {
+		abstractLine = newLine;
+		updateBounds();
+	}
+	
+	public Line getAbstractLine() {
+		return abstractLine;
+	}
+	
+	public void setLineOutsideBox(Rectangle headBounds, Rectangle tailBounds) {
+		
+		
+		Point newHead = new Point();
+		newHead.x = (int)headBounds.getCenterX();
+		newHead.y = (int)headBounds.getCenterY();
+		
+		Point newTail = new Point();
+		newTail.x = (int)tailBounds.getCenterX();
+		newTail.y = (int)tailBounds.getCenterY();
+		
+		Line newLine = new Line(newTail, newHead);
+		
+		float lineAngle = newLine.getSlopeAngle();
+		
+		float slopeRatio;
+		
+		if((newHead.x-newTail.x)==0) {
+			slopeRatio =0;
+		}
+		else {
+			slopeRatio = ((float)(newTail.y-newHead.y))/((float)(newTail.x-newHead.x));
+		}
+		
+		Point deltaHead = getDelta(headBounds, lineAngle, slopeRatio, FROM_HEAD);
+		Point deltaTail = getDelta(tailBounds, lineAngle, slopeRatio, FROM_TAIL);
+		
+		newHead.x += Math.rint(deltaHead.x);
+		newHead.y += Math.rint(deltaHead.y);
+		
+		newTail.x += Math.rint(deltaTail.x);
+		newTail.y += Math.rint(deltaTail.y);
+		
+		newLine = new Line(newHead,newTail);
+		setAbstractLine(newLine);
+	}
+	
+
+	private Point getDelta(Rectangle bounds, float lineAngle, float slopeRatio, int direction) {
+		
+		Line diagonal = new Line(0,0,bounds.width,bounds.height);
+		
+		float diag1 = diagonal.getSlopeAngle();
+		
+		float diag2 = 180-(2*diag1);
+		
+		double deltaX, deltaY;
+		
+		if((lineAngle >= diag1) && (lineAngle < (diag1+diag2))) {
+			deltaY = -(bounds.getHeight()/2)*direction;
+			if(slopeRatio == 0) deltaX = 0;
+			else deltaX = (deltaY/slopeRatio);
+		}
+		
+		else if ((lineAngle > (diag1+diag2)) && (lineAngle <= ((3*diag1)+diag2))) {
+			deltaX = (bounds.getWidth()/2)*direction;
+			deltaY = (deltaX*slopeRatio);
+		}
+		
+		else if ((lineAngle >= ((3*diag1)+diag2)) && (lineAngle < ((3*diag1)+(2*diag2)))) {
+			deltaY = (bounds.getHeight()/2)*direction;
+			if(slopeRatio == 0) deltaX = 0;
+			else deltaX = (deltaY/slopeRatio);
+		}
+		
+		else {
+			deltaX = -(bounds.getWidth()/2)*direction;
+			deltaY = (deltaX*slopeRatio);
+		}
+		return new Point((int)Math.rint(deltaX), (int)Math.rint(deltaY));
+	}
+	
+	public void reverse() {
+		setAbstractLine(new Line(abstractLine.getHeadPosition(),abstractLine.getTailPosition()));
+	}
+	
+	public static void main(String[] args){
+		//vec.addElement(new Point(134, 10));
+		//vec.addElement(new Point(110, 400));
+		JFrame frame = new JFrame();
+		frame.setBounds(0, 0, 600, 500);
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		ArrowComponent line = new ArrowComponent(new Point(234, 10), new Point(10, 40));
+		LOG.println("bounds 1 are " + line.getBounds());
+		//ArrowComponent line2 = new ArrowComponent(new Point(234, 10), new Point(110, 400));
+		//LOG.println("bounds 2 are " + line2.getBounds());
+		//ArrowComponent line2 = new ArrowComponent(new Point(100, 100), new Point(100, 200));
+		panel.add(line);
+		//panel.add(line2);
+		frame.getContentPane().add(panel);
+		frame.setVisible(true);
+		frame.getContentPane().repaint();
+		SafeThread.sleep(1000);
+		line.reverse();
+		frame.getContentPane().repaint();
+	}
+	
+}

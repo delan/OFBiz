@@ -1,0 +1,210 @@
+package newdesigner.operatoreditor;
+
+import pattern.*;
+import networkdesign.*;
+import newdesigner.model.*;
+import util.*;
+import java.util.*;
+
+class OperatorTranslator extends BaseTranslator {
+    public OperatorTranslator(IOperatorModelWrapper model, IOperatorWrapper operator, String mode) {
+        super(model, operator);
+        synchronize(mode);
+    }
+
+    public void updateDataImpl() {
+        IOperatorModel operatorModel = (IOperatorModel)getGuiModel();
+        IOperatorWrapper operatorData = (IOperatorWrapper)getDataObject();
+
+        // synchronize operator type
+        String dataType = operatorData.getTypeAttribute();
+        String modelType = operatorModel.getOperatorType();
+        if(!match(dataType, modelType))
+            operatorData.setTypeAttribute(modelType);
+
+        // remove fields in data that aren't in model
+        int dataFieldCount = operatorData.getFieldCount();
+        int modelFieldCount = operatorModel.getFieldCount();
+        loop:
+        for(int i=dataFieldCount-1;i>=0;i--) {
+            IField fieldData = operatorData.getFieldAt(i);
+            for(int j=0;j<modelFieldCount;j++) {
+                IOperatorField fieldModel = operatorModel.getFieldAt(j);                   
+                if(fieldModel.getID().equals(fieldData.getIdAttribute()))
+                    continue loop;
+            }
+            LOG.println("REMOVING FIELD");
+            operatorData.removeFieldAt(i);
+        }
+
+        // add fields to data that aren't in data
+        dataFieldCount = operatorData.getFieldCount();
+        loop:
+        for(int i=modelFieldCount-1;i>=0;i--) {
+            IOperatorFieldWrapper fieldModel = (IOperatorFieldWrapper)operatorModel.getFieldAt(i);
+            for(int j=0;j<dataFieldCount;j++) {
+                IField fieldData = operatorData.getFieldAt(j);                   
+                if(fieldModel.getID().equals(fieldData.getIdAttribute()))
+                    continue loop;
+            }
+            LOG.println("ADDING FIELD");
+            IFieldWrapper newField = (IFieldWrapper)operatorData.createField(fieldModel.getID());
+            new FieldTranslator(fieldModel, newField, BaseTranslator.UPDATE_DATA);
+            operatorData.addField(newField);
+        }
+
+        /*
+        if(!fieldsMatch()) {
+            LOG.println("** 1");
+            Hashtable fields = new Hashtable();
+            while(operatorData.getFieldCount() > 0) {
+                IField field = operatorData.getFieldAt(0);
+                fields.put(field.getIdAttribute(), field);
+                operatorData.removeFieldAt(0);
+            }
+            LOG.println("** 2");
+            int modelFieldCount = operatorModel.getFieldCount();
+            for(int i=0; i<modelFieldCount; i++) {
+                IOperatorFieldWrapper modelField = (IOperatorFieldWrapper)operatorModel.getFieldAt(i);
+                String modelFieldID = modelField.getID();
+                if(fields.containsKey(modelFieldID)){
+                    LOG.println("** 2.5 adding field");
+                    operatorData.addField((IField)fields.get(modelFieldID));
+                }
+                else {
+                    IFieldWrapper newField = (IFieldWrapper)operatorData.createField(modelFieldID);
+                    new FieldTranslator(modelField, newField, BaseTranslator.UPDATE_DATA);
+                    LOG.println("** 2.6 adding CREATED field");
+                    operatorData.addField(newField);
+                }
+            }
+            LOG.println("** 3");
+        }
+        */
+    }
+
+    public void updateModelImpl() {
+        IOperatorModel operatorModel = (IOperatorModel)getGuiModel();
+        IOperatorWrapper operatorData = (IOperatorWrapper)getDataObject();
+        LOG.println(">>>>>>>>>>>***** OPERATOR(" + hashCode() + ") #datafields :" + operatorData.getFieldCount() + " #modelfields :" + operatorModel.getFieldCount());
+
+        //cleanData();
+        // synchronize operator type
+        String dataType = operatorData.getTypeAttribute();
+        String modelType = operatorModel.getOperatorType();
+        if(!dataType.equals(modelType))
+            operatorModel.setOperatorType(dataType);
+
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        // remove fields in model that aren't in data
+        int dataFieldCount = operatorData.getFieldCount();
+        int modelFieldCount = operatorModel.getFieldCount();
+        loop:
+        for(int i=modelFieldCount-1;i>=0;i--) {
+            IOperatorField fieldModel = operatorModel.getFieldAt(i);
+            for(int j=0;j<dataFieldCount;j++) {
+                IField fieldData = operatorData.getFieldAt(j);                   
+                if(fieldModel.getID().equals(fieldData.getIdAttribute()))
+                    continue loop;
+            }
+            LOG.println("REMOVING FIELD");
+            fieldModel.getOperator().die();
+            //operatorModel.removeFieldAt(i);
+        }
+
+        // add fields to model that aren't in model
+        modelFieldCount = operatorModel.getFieldCount();
+        loop:
+        for(int i=dataFieldCount-1;i>=0;i--) {
+            IFieldWrapper fieldData = (IFieldWrapper)operatorData.getFieldAt(i);
+            for(int j=0;j<modelFieldCount;j++) {
+                IOperatorField fieldModel = operatorModel.getFieldAt(j);                   
+                if(fieldModel.getID().equals(fieldData.getIdAttribute()))
+                    continue loop;
+            }
+            LOG.println("ADDING FIELD");
+            IOperatorFieldWrapper nf = (IOperatorFieldWrapper)operatorModel.createField(fieldData.getIdAttribute());
+            new FieldTranslator(nf, fieldData, BaseTranslator.UPDATE_MODEL);
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        /*
+        if(!fieldsMatch()) {
+            Hashtable fields = new Hashtable();
+            while(operatorModel.getFieldCount() > 0) {
+                IOperatorField field = operatorModel.getFieldAt(0);
+                fields.put(field.getID(), field);
+                operatorModel.removeFieldAt(0);
+            }
+
+            //operatorModel.removeAllFields();
+            int dataFieldCount = operatorData.getFieldCount();
+            for(int i=0; i<dataFieldCount; i++) {
+                IFieldWrapper field = (IFieldWrapper)operatorData.getFieldAt(i);
+                String fieldID = field.getIdAttribute();
+                if(fields.containsKey(fieldID)){
+                    operatorModel.addField((IOperatorFieldWrapper)fields.get(fieldID));
+                    fields.remove(fieldID);
+                } else {
+                    IOperatorFieldWrapper nf = (IOperatorFieldWrapper)operatorModel.createField(fieldID);
+                    new FieldTranslator(nf, field, BaseTranslator.UPDATE_MODEL);
+                }
+            }
+
+            Enumeration keys = fields.keys();
+            while(keys.hasMoreElements()) {
+                Object key = keys.nextElement();
+                IOperatorFieldWrapper field = (IOperatorFieldWrapper)fields.get(key);
+                //LOG.println("killing field (and operator), #of siblings :" + field.getParentOperator().getFieldCount());
+                LOG.println("KILLINGKILLINGKILLINGKILLINGKILLINGKILLINGkilling field (and operator), ");
+                // kill operator and cause field to die
+                field.die();
+                LOG.println("done dying");
+            }
+        }
+        */
+
+        LOG.println("END >>>>>>>>>>>***** OPERATOR(" + hashCode() + ") #fields :" + operatorModel.getFieldCount());
+        LOG.println("operatorModel.getParentOperatorEditor().getOperatorCount() is " + operatorModel.getParentOperatorEditor().getOperatorCount());
+        LOG.println("my hashcode is " + hashCode());
+    }
+
+    private static boolean match(String x, String y) {
+        return((x == null && y == null) ||
+               (x != null && y != null && x.equals(y)));
+    }
+
+    /*
+    private boolean fieldsMatch() {
+        IOperatorModel operatorModel = (IOperatorModel)getGuiModel();
+        IOperatorWrapper operatorData = (IOperatorWrapper)getDataObject();
+
+        int modelFieldCount = operatorModel.getFieldCount();
+        int dataFieldCount = operatorData.getFieldCount();
+        if(modelFieldCount != dataFieldCount)
+            return false;
+
+        for(int i=0; i<modelFieldCount; i++) {
+            String modelFieldID = operatorModel.getFieldAt(i).getID();
+            String dataFieldID = operatorData.getFieldAt(i).getIdAttribute();
+            if(!modelFieldID.equals(dataFieldID))
+                return false;
+        }
+        return true;
+    }
+    
+
+    private void cleanData() {
+        IOperatorWrapper operatorData = (IOperatorWrapper)getDataObject();
+        int dataFieldCount = operatorData.getFieldCount();
+        for(int i=dataFieldCount-1; i >= 0 ; i--) {
+            IField dataField = operatorData.getFieldAt(i);
+            String taskID = dataField.getTaskAttribute();
+            if((dataField.getOperator() == null) && (taskID == null || operatorData.getXml().getIdRef(taskID)== null))
+                operatorData.removeFieldAt(i);
+        }
+    }
+    */
+}

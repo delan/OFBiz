@@ -1,0 +1,6 @@
+package newdesigner.model;
+
+import pattern.*;
+
+public interface IOperatorEditorListModelWrapper extends IModelProxySupportClass, IOperatorEditorListModel{
+}

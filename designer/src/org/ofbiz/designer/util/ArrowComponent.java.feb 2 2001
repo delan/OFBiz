@@ -1,0 +1,84 @@
+package util;
+
+import java.awt.*;
+
+//creates a LineComponent with a clickable image of an arrowhead at the head end of it.
+public class ArrowComponent extends LineComponent { 
+	
+	//two conceptual models for lines.  they are useful for performing line-related calculations.
+	protected Line rightProng;
+	protected Line leftProng;
+	
+	//specifies how far the bounds of the clickable area should stand off from the prongs of the arrowhead.
+	static float PRONG_RADIUS = 5;
+	
+	//the length of the two "prongs" of the arrowhead
+	static int PRONG_LENGTH = 10;
+	
+	//the orientation, in degrees of each prong with respect to the shaft of the arrow.
+	static int PRONG_ANGLE = 20;
+	
+	//default constructor
+	public ArrowComponent() {
+		updateProngs();
+	}
+	
+	// ADDED BY AMIT 12-18-2000
+	public ArrowComponent(Point head, Point tail) {
+		super(head, tail);
+		updateProngs();
+	}
+	
+	//overrides LineComponent.paint() in order to produce the image of an arrowhead at the end of the line
+	//representation.
+	public void paintComponent(Graphics g) {
+		//first we paint the line part of the arrow
+		super.paintComponent(g);
+		
+		//then we construct the head
+		updateProngs();
+
+		//now we draw the head
+		g.drawLine(rightProng.getHeadX(),rightProng.getHeadY(),rightProng.getTailX(),rightProng.getTailY());
+		g.drawLine(leftProng.getHeadX(),leftProng.getHeadY(),leftProng.getTailX(),leftProng.getTailY());
+	}
+	
+	//performs all the necessary calculations to create the conceptual model of an arrowhead.  the actual
+	//painting is done in paintComponent.
+	protected void updateProngs() {
+		//start the prongs by duplicating the shaft of the arrow.
+		rightProng = new Line(localTailX, localTailY, localHeadX, localHeadY);
+		leftProng = new Line(localTailX, localTailY, localHeadX, localHeadY);
+		
+		//shorten the prongs to a length appropriate to prongs. 
+		rightProng.setLengthFromHead(PRONG_LENGTH);
+		leftProng.setLengthFromHead(PRONG_LENGTH);
+		
+		//rotate the prongs so that together they form an arrowhead.
+		rightProng.rotateAroundHead(PRONG_ANGLE);
+		leftProng.rotateAroundHead(360-PRONG_ANGLE);
+	}
+	
+	//overrides the LineComponent.contains method so that the arrowhead is clickable in addition to the line
+	//part of the arrow.
+	public boolean contains(int x, int y) {
+		return (super.contains(x,y) ||
+				rightProng.containingRect(PRONG_RADIUS).contains(x,y) ||
+				leftProng.containingRect(PRONG_RADIUS).contains(x,y));
+	}
+		
+	public void reverseDirection(){
+		Point tail = tailPoint;
+		setTail(headPoint);
+		setHead(tail);
+		//tailPoint = headPoint;
+		//headPoint = tail;
+		updateProngs();
+		validate();
+		repaint();
+		//abstractLine = new Line(tailPoint,headPoint);
+		//updateBounds();
+		//updateProngs();
+	}
+	
+}

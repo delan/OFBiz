@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE DomainEnv SYSTEM "file:///c:/workflow/designer//WorkFlowInfo/dtd/DomainEnv.dtd">
+
+<!-- 
+     DefaultDomain
+     Revision: 1
+     Thu Sep 07 12:34:55 EDT 2000
+-->
+<DomainEnv id="DomainEnv_DefaultDomain">
+  <Name>DefaultDomain</Name>
+  <DomainInfo id="Unclassified">
+    <Name>Unclassified</Name>
+    <Color>
+      <Number>0</Number>
+      <Number>135</Number>
+      <Number>200</Number>
+    </Color>
+    <Position>
+      <Number>126</Number>
+      <Number>347</Number>
+    </Position>
+    <Description>This is the Unclassified Domain</Description>
+  </DomainInfo>
+  <DomainInfo id="Secret">
+    <Name>Secret</Name>
+    <Color>
+      <Number>0</Number>
+      <Number>210</Number>
+      <Number>100</Number>
+    </Color>
+    <Position>
+      <Number>133</Number>
+      <Number>209</Number>
+    </Position>
+    <Description>This is the Secret Domain</Description>
+  </DomainInfo>
+  <DomainInfo id="TopSecret">
+    <Name>TopSecret</Name>
+    <Color>
+      <Number>255</Number>
+      <Number>75</Number>
+      <Number>75</Number>
+    </Color>
+    <Position>
+      <Number>132</Number>
+      <Number>67</Number>
+    </Position>
+    <Description>This is the TopSecret Domain</Description>
+  </DomainInfo>
+  <PolicyRecord fromDomain="Secret" toDomain="Unclassified" policyType="Send" id="PolicyRecord0001"></PolicyRecord>
+  <DomainRelationship lowDomain="Unclassified" highDomain="Secret" id="DomainRelationship0001"/>
+</DomainEnv>

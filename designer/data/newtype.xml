@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE NetworkDesign SYSTEM "file:///c:/workflow/newdesigner/dtd/DataClass.dtd">
+
+<DataClass>
+  <Name>newtype</Name>
+  <Package></Package>
+  <Parent>
+    <Url href=""/>
+  </Parent>
+  <FieldList>
+  </FieldList>
+  <MethodList>
+  </MethodList>
+</DataClass>

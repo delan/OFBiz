@@ -1,0 +1,55 @@
+package newdesigner.operatoreditor;
+
+import pattern.*;
+import networkdesign.*;
+import newdesigner.model.*;
+import java.util.*;
+import util.*;
+import generic.*;
+
+class OperatorEditorListTranslator extends BaseTranslator {
+    String opEditorType;
+    public OperatorEditorListTranslator(IOperatorEditorListModelWrapper model, ITaskWrapper task, String _opEditorType, String mode) {
+        super(model, task);
+        opEditorType = _opEditorType;
+        synchronize(mode);
+    }
+
+    public void updateDataImpl() {
+        // implementation not required
+    }
+
+    public void updateModelImpl() {
+        util.LOG.println("OperatorEditorListTranslator:updateModelImpl");
+        IOperatorEditorListModel model = (IOperatorEditorListModel)getGuiModel();
+        ITaskWrapper task = (ITaskWrapper)getDataObject();
+
+        model.removeAllOtherTasks();
+
+        if(opEditorType.equals(OperatorEditorType.INPUT_OPERATOR)) {
+            String[] arcs = IDRefHelper.getReferenceArray(task.getInarcsAttribute());
+            if(arcs == null) return;
+            for(int i=0; i<arcs.length; i++) {
+                String sourceID = ((IArc)task.getXml().getIdRef(arcs[i])).getSourceAttribute();
+                String sourceName = ((ITask)task.getXml().getIdRef(sourceID)).getNameAttribute();
+                model.addOtherTask(sourceName);
+            }
+            if(task.getParentTask().getRealization().getNetworkTaskRealization().getFirsttaskAttribute().equals(task.getIdAttribute()))
+                model.addOtherTask(task.getParentTask().getNameAttribute());
+        } else {
+            String[] arcs = IDRefHelper.getReferenceArray(task.getOutarcsAttribute());
+            util.LOG.println("OperatorEditorTranslator:updateModelImpl: "+arcs.length );
+            if(arcs == null) return;
+            for(int i=0; i<arcs.length; i++) {
+                IArc arc = (IArc)task.getXml().getIdRef(arcs[i]);
+                if(arc.getArctypeAttribute().equals("Success")) {
+                    String destinationID = arc.getDestinationAttribute();
+                    String destinationName = ((ITask)task.getXml().getIdRef(destinationID)).getNameAttribute();
+                    model.addOtherTask(destinationName);
+                }
+            }
+            if(task.getParentTask().getRealization().getNetworkTaskRealization().getLasttaskAttribute().equals(task.getIdAttribute()))
+                model.addOtherTask(task.getParentTask().getNameAttribute());
+        }
+    }
+}

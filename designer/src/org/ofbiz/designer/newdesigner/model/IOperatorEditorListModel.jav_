@@ -1,0 +1,17 @@
+package newdesigner.model;
+
+import java.util.*;
+import util.*;
+
+public interface IOperatorEditorListModel extends IBaseModel, pattern.IModel {
+    public boolean containsOtherTask(String otherTask);
+    public int getOtherTaskCount();
+    public String getOtherTaskAt(int i);
+    public void addOtherTask(String otherTask);
+    public void setOtherTasks(Vector arg0);
+    public void insertOtherTaskAt(String arg0, int arg1 );
+    public void setOtherTaskAt(String arg0, int arg1 );
+    public boolean removeOtherTask(String arg0 );
+    public void removeOtherTaskAt(int arg0 );
+    public void removeAllOtherTasks();
+}
