@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  This is the DTD for the Open For Business Entity Engine configuration XML file.
- *  $Id: entity-config.dtd,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ *  $Id: entity-config.dtd,v 1.2 2003/08/16 23:22:10 ajzeneski Exp $
 -->
 
 <!-- ====================== Root Element ======================= -->
@@ -90,8 +90,8 @@
 <!ELEMENT entity-group-reader ( resource* )>
 <!ATTLIST entity-group-reader
     name CDATA #REQUIRED
-    loader CDATA #REQUIRED
-    location CDATA #REQUIRED
+    loader CDATA #IMPLIED
+    location CDATA #IMPLIED
 >
 
 <!ELEMENT field-type EMPTY>
