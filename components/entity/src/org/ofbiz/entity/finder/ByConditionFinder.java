@@ -23,6 +23,7 @@
  */
 package org.ofbiz.entity.finder;
 
+import java.sql.ResultSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,6 +41,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.finder.EntityFinderUtil.Condition;
 import org.ofbiz.entity.finder.EntityFinderUtil.ConditionExpr;
 import org.ofbiz.entity.finder.EntityFinderUtil.ConditionList;
+import org.ofbiz.entity.finder.EntityFinderUtil.ConditionObject;
 import org.ofbiz.entity.finder.EntityFinderUtil.GetAll;
 import org.ofbiz.entity.finder.EntityFinderUtil.LimitRange;
 import org.ofbiz.entity.finder.EntityFinderUtil.LimitView;
@@ -48,7 +50,6 @@ import org.ofbiz.entity.finder.EntityFinderUtil.UseIterator;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.w3c.dom.Element;
-import java.sql.ResultSet;
 
 /**
  * Uses the delegator to find entity values by a condition
@@ -88,10 +89,13 @@ public class ByConditionFinder {
         // process condition-expr | condition-list
         Element conditionExprElement = UtilXml.firstChildElement(element, "condition-expr");
         Element conditionListElement = UtilXml.firstChildElement(element, "condition-list");
+        Element conditionObjectElement = UtilXml.firstChildElement(element, "condition-object");
         if (conditionExprElement != null) {
             this.whereCondition = new ConditionExpr(conditionExprElement);
         } else if (conditionListElement != null) {
             this.whereCondition = new ConditionList(conditionListElement);
+        } else if (conditionObjectElement != null) {
+            this.whereCondition = new ConditionObject(conditionObjectElement);
         }
         
         // process having-condition-list
