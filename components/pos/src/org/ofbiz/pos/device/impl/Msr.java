@@ -83,7 +83,7 @@ public class Msr extends GenericDevice {
 
                     // verify the acct num exists
                     if (UtilValidate.isEmpty(decodedData[5])) {
-                        PosScreen.currentScreen.showDialog("main/dialog/error/cardreaderror");
+                        PosScreen.currentScreen.showDialog("dialog/error/cardreaderror");
                         msr.clearInput();
                         return;
                     }
@@ -92,7 +92,7 @@ public class Msr extends GenericDevice {
                     if (msr.getExpirationDate() != null && msr.getExpirationDate().length() > 3) {
                         decodedData[6] = msr.getExpirationDate().substring(2) + msr.getExpirationDate().substring(0, 2);
                     } else {
-                        PosScreen.currentScreen.showDialog("main/dialog/error/cardreaderror");
+                        PosScreen.currentScreen.showDialog("dialog/error/cardreaderror");
                         msr.clearInput();
                         return;
                     }
@@ -111,7 +111,7 @@ public class Msr extends GenericDevice {
 
             public void errorOccurred(jpos.events.ErrorEvent event) {
                 Debug.log("Error Occurred : " + event.getErrorCodeExtended(), module);
-                PosScreen.currentScreen.showDialog("main/dialog/error/cardreaderror");
+                PosScreen.currentScreen.showDialog("dialog/error/cardreaderror");
                 try {
                     msr.clearInput();
                 } catch (jpos.JposException e) {
@@ -170,14 +170,14 @@ public class Msr extends GenericDevice {
                 this.callEnter();
                 break;
             case MSR_UNKNOWN:
-                PosScreen.currentScreen.showDialog("main/dialog/error/unknowncardtype");
+                PosScreen.currentScreen.showDialog("dialog/error/unknowncardtype");
                 break;
         }
     }
 
     private void setPayPanel() {
         if (!"main/paypanel".equals(PosScreen.currentScreen.getName())) {
-            PosScreen pos = PosScreen.currentScreen.showPage("main/paypanel", false);            
+            PosScreen pos = PosScreen.currentScreen.showPage("paypanel", false);            
             pos.getInput().setFunction("TOTAL", "");
             pos.refresh();
             Debug.log("Switched to paypanel.xml; triggered TOTAL function", module);

@@ -82,7 +82,7 @@ public class PaymentEvents {
         }
 
         // now for internal payment processing
-        pos.showDialog("main/dialog/error/notyetsupported");
+        pos.showDialog("dialog/error/notyetsupported");
     }
 
     public static synchronized void payGiftCard(PosScreen pos) {
@@ -107,7 +107,7 @@ public class PaymentEvents {
         }
 
         // now for internal payment processing
-        pos.showDialog("main/dialog/error/notyetsupported");
+        pos.showDialog("dialog/error/notyetsupported");
     }
 
     public static synchronized void payCredit(PosScreen pos) {
@@ -146,7 +146,7 @@ public class PaymentEvents {
                     Debug.log("Invalid card number - " + input.value(), module);
                     input.clearFunction("MSRINFO");
                     input.clearInput();
-                    pos.showDialog("main/dialog/error/invalidcardnumber");
+                    pos.showDialog("dialog/error/invalidcardnumber");
                 }
             } else {
                 String msrInfoStr = msrInfo[1];
@@ -297,10 +297,10 @@ public class PaymentEvents {
         PosScreen.currentScreen.getOutput().print("Processing sale...");
 
         if (trans.isEmpty()) {
-            PosScreen newPos = pos.showPage("main/pospanel");
-            newPos.showDialog("main/dialog/error/noitems");            
+            PosScreen newPos = pos.showPage("pospanel");
+            newPos.showDialog("dialog/error/noitems");
         } else if (trans.getTotalDue() > 0) {
-            pos.showDialog("main/dialog/error/notenoughfunds");
+            pos.showDialog("dialog/error/notenoughfunds");
         } else {
             // manual locks (not secured; will be unlocked on clear)
             pos.getInput().setLock(true);
@@ -315,7 +315,7 @@ public class PaymentEvents {
                 Debug.logError(e, e.getMessage(), module);
                 pos.getInput().setLock(false);
                 pos.getButtons().setLock(false);
-                pos.showDialog("main/dialog/error/exception", e.getMessage());
+                pos.showDialog("dialog/error/exception", e.getMessage());
             }
         }
     }

@@ -34,6 +34,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.event.FocusListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.ComponentEvent;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JRootPane;
@@ -44,7 +48,6 @@ import net.xoetrope.xui.XPage;
 import net.xoetrope.xui.XResourceManager;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.cache.UtilCache;
 
 /**
@@ -135,6 +138,35 @@ public class PosDialog {
         dialog.setLocation(appWindow.getLocation().x + (appWindow.getSize().width / 2 - wSize.width / 2),
                 appWindow.getLocation().y + (appWindow.getSize().height / 2 - wSize.height / 2));
 
+        // set the component listener
+        dialog.addComponentListener(new ComponentListener() {
+
+            public void componentResized(ComponentEvent event) {
+                this.reset();
+            }
+
+            public void componentMoved(ComponentEvent event) {
+                this.reset();
+            }
+
+            public void componentShown(ComponentEvent event) {
+                this.reset();
+            }
+
+            public void componentHidden(ComponentEvent event) {
+                this.reset();
+            }
+
+            public void reset() {
+                if (dialog.isEnabled()) {                    
+                    Dimension wSize = dialog.getSize();
+                    dialog.setLocation(appWindow.getLocation().x + (appWindow.getSize().width / 2 - wSize.width / 2),
+                    appWindow.getLocation().y + (appWindow.getSize().height / 2 - wSize.height / 2));
+                    dialog.requestFocus();
+                }
+            }
+        });
+
         // set the window listener
         dialog.addWindowListener(new WindowListener() {
             public void windowClosing(WindowEvent e) {
@@ -144,10 +176,7 @@ public class PosDialog {
             }
 
             public void windowDeactivated(WindowEvent e) {
-                // always keep focus if we are enabled
-                if (dialog.isEnabled()) {
-                    dialog.requestFocus();
-                }
+                this.reset();
             }
 
             public void windowClosed(WindowEvent e) {
@@ -160,6 +189,29 @@ public class PosDialog {
             }
 
             public void windowIconified(WindowEvent e) {
+            }
+
+            public void reset() {
+                // always keep focus if we are enabled
+                if (dialog.isEnabled()) {
+                    dialog.requestFocus();
+                }
+            }
+        });
+
+        // set the focus listener
+        dialog.addFocusListener(new FocusListener() {
+
+            public void focusGained(FocusEvent event) {
+            }
+
+            public void focusLost(FocusEvent event) {
+                if (dialog.isEnabled()) {
+                    Component focused = event.getOppositeComponent();
+                    if (focused == null || !"closeBtn".equals(focused.getName())) {
+                        dialog.requestFocus();
+                    }
+                }
             }
         });
     }
@@ -175,19 +227,17 @@ public class PosDialog {
         appWindow.setFocusable(false);
         parent.setFocusable(false);
 
+        dialog.setFocusable(true);
         dialog.setEnabled(true);
+        dialog.setVisible(true);
         dialog.requestFocus();
         dialog.repaint();
-        dialog.setVisible(true);
     }
 
     public void setText(String text) {
         if (this.output != null) {
-            Debug.log("Setting output (text) text - " + text, module);
             this.output.setText(text);
         } else if (this.closeBtn != null) {
-            Debug.log("Setting output (button) text - " + text, module);
-
             this.closeBtn.setText("<html><center>" + text + "</center></html>");
         } else {
             Debug.log("PosDialog output edit box is NULL!", module);
@@ -200,8 +250,9 @@ public class PosDialog {
 
     protected void close() {
         // close down the dialog
-        dialog.setVisible(false);
         dialog.setEnabled(false);
+        dialog.setVisible(false);
+        dialog.setFocusable(false);
 
         // refocus the parent window
         appWindow.setFocusable(true);
@@ -223,6 +274,7 @@ public class PosDialog {
                     JButton b = (JButton) coms[i];
                     b.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent event) {
+                            dialog.setEnabled(false);
                             close();
                         }
                     });

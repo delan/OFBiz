@@ -104,7 +104,7 @@ public class ManagerEvents {
 
     public static void openTerminal(PosScreen pos) {
         if (!mgrLoggedIn) {
-            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            pos.showDialog("dialog/error/mgrnotloggedin");
             return;
         }
 
@@ -133,7 +133,7 @@ public class ManagerEvents {
                     state.create();
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
-                    pos.showDialog("main/dialog/error/exception", e.getMessage());
+                    pos.showDialog("dialog/error/exception", e.getMessage());
                 }
                 NavagationEvents.showPosScreen(pos);
             } else {
@@ -143,19 +143,19 @@ public class ManagerEvents {
                 return;
             }
         } else {
-            pos.showPage("main/pospanel");
+            pos.showPage("pospanel");
         }
     }
 
     public static void closeTerminal(PosScreen pos) {
         if (!mgrLoggedIn) {
-            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            pos.showDialog("dialog/error/mgrnotloggedin");
             return;
         }
 
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         if (!trans.isOpen()) {
-            pos.showDialog("main/dialog/error/terminalclosed");
+            pos.showDialog("dialog/error/terminalclosed");
             return;
         }
 
@@ -215,7 +215,7 @@ public class ManagerEvents {
                         state.refresh();
                     } catch (GenericEntityException e) {
                         Debug.logError(e, module);
-                        pos.showDialog("main/dialog/error/exception", e.getMessage());
+                        pos.showDialog("dialog/error/exception", e.getMessage());
                     }
 
                     // print the totals report
@@ -233,7 +233,7 @@ public class ManagerEvents {
                         terminal = state.getRelatedOne("PosTerminal");
                     } catch (GenericEntityException e) {
                         Debug.logError(e, module);
-                        pos.showDialog("main/dialog/error/exception", e.getMessage());
+                        pos.showDialog("dialog/error/exception", e.getMessage());
                     }
                     if (terminal != null && terminal.get("pushEntitySyncId") != null) {
                         String syncId = terminal.getString("pushEntitySyncId");
@@ -241,7 +241,7 @@ public class ManagerEvents {
                         pos.getSession().getDispatcher().registerCallback("runEntitySync", cb);
                     } else {
                         // no sync setting; just logout
-                        pos.showDialog("main/dialog/error/terminalclosed");
+                        pos.showDialog("dialog/error/terminalclosed");
                         SecurityEvents.logout(pos);
                     }
             }
@@ -256,19 +256,27 @@ public class ManagerEvents {
 
     public static void voidOrder(PosScreen pos) {
         if (!mgrLoggedIn) {
-            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            pos.showDialog("dialog/error/mgrnotloggedin");
             return;
         }
 
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         if (!trans.isOpen()) {
-            pos.showDialog("main/dialog/error/terminalclosed");
+            pos.showDialog("dialog/error/terminalclosed");
             return;
         }
 
         Output output = pos.getOutput();
         Input input = pos.getInput();
+        boolean lookup = false;
+
         if (input.isFunctionSet("VOID")) {
+            lookup = true;
+        } else if (UtilValidate.isNotEmpty(input.value())) {
+            lookup = true;
+        }
+
+        if (lookup) {
             GenericValue state = trans.getTerminalState();
             Timestamp openDate = state.getTimestamp("openedDate");
 
@@ -281,27 +289,28 @@ public class ManagerEvents {
             }
             if (orderHeader == null) {
                 input.clear();
-                pos.showDialog("main/dialog/error/ordernotfound");
+                pos.showDialog("dialog/error/ordernotfound");
                 return;
             } else {
-                Timestamp orderDate = orderHeader.getTimestamp("");
+                Timestamp orderDate = orderHeader.getTimestamp("orderDate");
                 if (orderDate.after(openDate)) {
                     OrderChangeHelper.cancelOrder(pos.getSession().getDispatcher(), pos.getSession().getUserLogin(), orderId);
                     // todo print void receipt
                 } else {
                     input.clear();
-                    pos.showDialog("main/dialog/error/ordernotfound");
-                    return;    
+                    pos.showDialog("dialog/error/ordernotfound");
+                    return;
                 }
             }
         } else {
+            input.setFunction("VOID");
             output.print("Enter Order Number To Void:");
         }
     }
 
     public static void reprintLastTx(PosScreen pos) {
         if (!mgrLoggedIn) {
-            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            pos.showDialog("dialog/error/mgrnotloggedin");
             return;
         }
         DeviceLoader.receipt.reprintReceipt(true);
@@ -310,7 +319,7 @@ public class ManagerEvents {
 
     public static void popDrawer(PosScreen pos) {
         if (!mgrLoggedIn) {
-            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            pos.showDialog("dialog/error/mgrnotloggedin");
         } else {
             PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
             trans.popDrawer();
@@ -320,7 +329,7 @@ public class ManagerEvents {
 
     public static void clearCache(PosScreen pos) {
         if (!mgrLoggedIn) {
-            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            pos.showDialog("dialog/error/mgrnotloggedin");
         } else {
             UtilCache.clearAllCaches();
             pos.refresh();
@@ -329,7 +338,7 @@ public class ManagerEvents {
 
     public static void resetXui(PosScreen pos) {
         if (!mgrLoggedIn) {
-            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            pos.showDialog("dialog/error/mgrnotloggedin");
         } else {
             XProjectManager.getPageManager().reset();
             pos.refresh();
@@ -338,7 +347,7 @@ public class ManagerEvents {
 
     public static void shutdown(PosScreen pos) {
         if (!mgrLoggedIn) {
-            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            pos.showDialog("dialog/error/mgrnotloggedin");
         } else {
             pos.getOutput().print("Shutting down...");
             System.exit(0);
@@ -347,7 +356,7 @@ public class ManagerEvents {
 
     public static void totalsReport(PosScreen pos) {
         if (!mgrLoggedIn) {
-            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            pos.showDialog("dialog/error/mgrnotloggedin");
             return;
         }
         printTotals(pos, null, false);
@@ -356,7 +365,7 @@ public class ManagerEvents {
     private static void printTotals(PosScreen pos, GenericValue state, boolean runBalance) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         if (!trans.isOpen()) {
-            pos.showDialog("main/dialog/error/terminalclosed");
+            pos.showDialog("dialog/error/terminalclosed");
             return;
         }
         if (state == null) {

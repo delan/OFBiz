@@ -88,6 +88,7 @@ $Id$
     <event button-name="mgrCloseTerm" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="closeTerminal" disable-lock="false"/>
     <event button-name="mgrPopDrwr" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="popDrawer" disable-lock="false"/>
     <event button-name="mgrPriceChg" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="modifyPrice" disable-lock="false"/>
+    <event button-name="mgrVoidSale" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="voidOrder" disable-lock="false"/>
     <event button-name="ngrReprintTx" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="reprintLastTx" disable-lock="false"/>
     <event button-name="mgrTotals" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="totalsReport" disable-lock="false"/>
     <event button-name="mgrCacheClear" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="clearCache" disable-lock="false"/>

@@ -40,7 +40,7 @@ public class TestEvents {
     public static final String module = TestEvents.class.getName();
 
     public static void testAlert(PosScreen pos) {
-        pos.showDialog("main/dialog/error/testerror");
+        pos.showDialog("dialog/error/testerror");
     }
 
     public static void logSelectedIndex(PosScreen pos) {
@@ -53,7 +53,7 @@ public class TestEvents {
             org.ofbiz.pos.jpos.service.MsrTestService.sendTest();
         } catch (GeneralException e) {
             Debug.logError(e, module);
-            pos.showDialog("main/dialog/error/exception", e.getMessage());
+            pos.showDialog("dialog/error/exception", e.getMessage());
         }
     }
 }
