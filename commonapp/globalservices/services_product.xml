@@ -91,7 +91,7 @@
         <attribute name="variantTree" type="java.util.Map" mode="OUT"/>
     </service>
     <service name="getAllProductVariants" engine="java"
-            location="org.ofbiz.commonapp.product.product.ProductServices" invoke="prodFindAllVariants"/>
+            location="org.ofbiz.commonapp.product.product.ProductServices" invoke="prodFindAllVariants">
         <description>Gets a Collection of products from a 'virtual' parent product.</description>
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="assocProducts" type="java.util.Collection" mode="OUT"/>
