@@ -68,9 +68,6 @@
         </if-empty>
         
         <create-value value-name="newEntity"/>
-        
-        <field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProdCatalogCategory" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="updateProductCategoryToProdCatalog" short-description="Remove ContactMech From ProdCatalog">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductCategoryToProdCatalog you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -81,9 +78,6 @@
         <find-by-primary-key entity-name="ProdCatalogCategory" map-name="lookupPKMap" value-name="prodCatalogCategory"/>
         <set-nonpk-fields map-name="parameters" value-name="prodCatalogCategory"/>
         <store-value value-name="prodCatalogCategory"/>
-        
-        <field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProdCatalogCategory" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="removeProductCategoryFromProdCatalog" short-description="Remove ContactMech From ProdCatalog">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductCategoryFromProdCatalog you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -93,9 +87,6 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProdCatalogCategory" map-name="lookupPKMap" value-name="prodCatalogCategory"/>
         <remove-value value-name="prodCatalogCategory"/>
-        
-        <field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProdCatalogCategory" map-name="cacheClearMap"/>
     </simple-method>
 
     <!-- WebSite and Catalog services -->
@@ -113,9 +104,6 @@
         </if-empty>
         
         <create-value value-name="newEntity"/>
-        
-        <field-to-field field-name="webSiteId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="WebSiteCatalog" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="updateProdCatalogToWebSite" short-description="Remove ContactMech From ProdCatalog">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProdCatalogToWebSite you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -126,9 +114,6 @@
         <find-by-primary-key entity-name="WebSiteCatalog" map-name="lookupPKMap" value-name="webSiteCatalog"/>
         <set-nonpk-fields map-name="parameters" value-name="webSiteCatalog"/>
         <store-value value-name="webSiteCatalog"/>
-        
-        <field-to-field field-name="webSiteId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="WebSiteCatalog" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="removeProdCatalogFromWebSite" short-description="Remove ContactMech From ProdCatalog">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProdCatalogFromWebSite you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -138,8 +123,5 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="WebSiteCatalog" map-name="lookupPKMap" value-name="webSiteCatalog"/>
         <remove-value value-name="webSiteCatalog"/>
-        
-        <field-to-field field-name="webSiteId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="WebSiteCatalog" map-name="cacheClearMap"/>
     </simple-method>
 </simple-methods>

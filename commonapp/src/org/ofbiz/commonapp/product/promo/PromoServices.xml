@@ -57,9 +57,6 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         
         <create-value value-name="newEntity"/>
-        
-        <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProductPromoRule" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="updateProductPromoRule" short-description="Update an ProductPromoRule">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPromoRule you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -70,9 +67,6 @@
         <find-by-primary-key entity-name="ProductPromoRule" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-        
-        <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProductPromoRule" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="deleteProductPromoRule" short-description="Delete an ProductPromoRule">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPromoRule you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -82,9 +76,6 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPromoRule" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-        
-        <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProductPromoRule" map-name="cacheClearMap"/>
     </simple-method>
 
     <!-- ProductPromoCond methods -->
@@ -97,10 +88,6 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         
         <create-value value-name="newEntity"/>
-        
-        <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <field-to-field field-name="productPromoRuleId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProductPromoCond" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="updateProductPromoCond" short-description="Update an ProductPromoCond">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPromoCond you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -111,10 +98,6 @@
         <find-by-primary-key entity-name="ProductPromoCond" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-        
-        <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <field-to-field field-name="productPromoRuleId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProductPromoCond" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="deleteProductPromoCond" short-description="Delete an ProductPromoCond">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPromoCond you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -124,10 +107,6 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPromoCond" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-        
-        <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <field-to-field field-name="productPromoRuleId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProductPromoCond" map-name="cacheClearMap"/>
     </simple-method>
 
     <!-- ProductPromoAction methods -->
@@ -140,10 +119,6 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         
         <create-value value-name="newEntity"/>
-        
-        <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <field-to-field field-name="productPromoRuleId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProductPromoAction" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="updateProductPromoAction" short-description="Update an ProductPromoAction">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPromoAction you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -154,10 +129,6 @@
         <find-by-primary-key entity-name="ProductPromoAction" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-        
-        <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <field-to-field field-name="productPromoRuleId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProductPromoAction" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="deleteProductPromoAction" short-description="Delete an ProductPromoAction">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPromoAction you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -167,10 +138,6 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPromoAction" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-        
-        <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <field-to-field field-name="productPromoRuleId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProductPromoAction" map-name="cacheClearMap"/>
     </simple-method>
 
     <!-- ProductPromo to ProdCatalog methods -->
@@ -188,9 +155,6 @@
         </if-empty>
         
         <create-value value-name="newEntity"/>
-        
-        <field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProdCatalogPromoAppl" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="updateProductPromoToProdCatalog" short-description="Update ProductPromo to ProdCatalog">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPromoToProdCatalog you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -201,9 +165,6 @@
         <find-by-primary-key entity-name="ProdCatalogPromoAppl" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-        
-        <field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProdCatalogPromoAppl" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="removeProductPromoFromProdCatalog" short-description="Remove ProductPromo From ProdCatalog">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductPromoFromProdCatalog you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -213,8 +174,5 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProdCatalogPromoAppl" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-        
-        <field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProdCatalogPromoAppl" map-name="cacheClearMap"/>
     </simple-method>
 </simple-methods>

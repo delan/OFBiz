@@ -97,7 +97,8 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
 
-        <!-- clear caches -->
+        <!-- clear by and caches for the view-entity -->
+        <!-- NOTE that these cannot be cleared automatically because they are on a view-entity -->
         <field-to-field field-name="productId" map-name="parameters" to-map-name="clearCacheByProductIdMap"/>
         <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearCacheByProductIdMap"/>
         
@@ -126,7 +127,8 @@
         <set-nonpk-fields map-name="parameters" value-name="productFeatureAppl"/>
         <store-value value-name="productFeatureAppl"/>
 
-        <!-- clear caches -->
+        <!-- clear by and caches for the view-entity -->
+        <!-- NOTE that these cannot be cleared automatically because they are on a view-entity -->
         <field-to-field field-name="productId" map-name="parameters" to-map-name="clearCacheByProductIdMap"/>
         <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearCacheByProductIdMap"/>
         
@@ -162,7 +164,8 @@
         -->
         <remove-value value-name="productFeatureAppl"/>
 
-        <!-- clear caches -->
+        <!-- clear by and caches for the view-entity -->
+        <!-- NOTE that these cannot be cleared automatically because they are on a view-entity -->
         <field-to-field field-name="productId" map-name="parameters" to-map-name="clearCacheByProductIdMap"/>
         <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearCacheByProductIdMap"/>
         

@@ -54,9 +54,6 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="SimpleSalesTaxLookup" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-
-        <field-to-field field-name="productPromoId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="SimpleSalesTaxLookup" map-name="lookupPKMap"/>
     </simple-method>
 
 </simple-methods>

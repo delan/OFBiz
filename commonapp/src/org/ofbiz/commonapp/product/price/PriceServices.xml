@@ -37,11 +37,6 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
-
-        <!-- this is for the ecommerce cache of prices for a product, findByAnd by productId and currencyUomId -->
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProductPrice" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="updateProductPrice" short-description="Update an ProductPrice">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPrice you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -52,11 +47,6 @@
         <find-by-primary-key entity-name="ProductPrice" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-
-        <!-- this is for the ecommerce cache of prices for a product, findByAnd by productId and currencyUomId -->
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProductPrice" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="deleteProductPrice" short-description="Delete an ProductPrice">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPrice you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -66,11 +56,6 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPrice" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-
-        <!-- this is for the ecommerce cache of prices for a product, findByAnd by productId and currencyUomId -->
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="cacheClearMap"/>
-        <clear-cache-line entity-name="ProductPrice" map-name="cacheClearMap"/>
     </simple-method>
 
     <!-- ProductPriceRule methods -->
@@ -83,9 +68,6 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
-        
-        <!-- clear the findAll cache -->
-        <clear-cache-line entity-name="ProductPriceRule"/>
     </simple-method>
     <simple-method method-name="updateProductPriceRule" short-description="Update an ProductPriceRule">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPriceRule you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -96,9 +78,6 @@
         <find-by-primary-key entity-name="ProductPriceRule" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-        
-        <!-- clear the findAll cache -->
-        <clear-cache-line entity-name="ProductPriceRule"/>
     </simple-method>
     <simple-method method-name="deleteProductPriceRule" short-description="Delete an ProductPriceRule">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPriceRule you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -108,9 +87,6 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPriceRule" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-        
-        <!-- clear the findAll cache -->
-        <clear-cache-line entity-name="ProductPriceRule"/>
     </simple-method>
 
     <!-- ProductPriceCond methods -->
@@ -123,17 +99,6 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
-
-        <!-- this is for the ecommerce cache of prices for a product, findByAnd -->
-        <field-to-field field-name="inputParamEnumId" map-name="parameters" to-map-name="cacheClearMapOne"/>
-        <clear-cache-line entity-name="ProductPriceCond" map-name="cacheClearMapOne"/>
-
-        <field-to-field field-name="inputParamEnumId" map-name="parameters" to-map-name="cacheClearMapTwo"/>
-        <field-to-field field-name="condValue" map-name="parameters" to-map-name="cacheClearMapTwo"/>
-        <clear-cache-line entity-name="ProductPriceCond" map-name="cacheClearMapTwo"/>
-
-        <field-to-field field-name="productPriceRuleId" map-name="parameters" to-map-name="cacheClearMapThree"/>
-        <clear-cache-line entity-name="ProductPriceCond" map-name="cacheClearMapThree"/>
     </simple-method>
     <simple-method method-name="updateProductPriceCond" short-description="Update an ProductPriceCond">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPriceCond you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -144,17 +109,6 @@
         <find-by-primary-key entity-name="ProductPriceCond" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-
-        <!-- this is for the ecommerce cache of prices for a product, findByAnd -->
-        <field-to-field field-name="inputParamEnumId" map-name="parameters" to-map-name="cacheClearMapOne"/>
-        <clear-cache-line entity-name="ProductPriceCond" map-name="cacheClearMapOne"/>
-
-        <field-to-field field-name="inputParamEnumId" map-name="parameters" to-map-name="cacheClearMapTwo"/>
-        <field-to-field field-name="condValue" map-name="parameters" to-map-name="cacheClearMapTwo"/>
-        <clear-cache-line entity-name="ProductPriceCond" map-name="cacheClearMapTwo"/>
-
-        <field-to-field field-name="productPriceRuleId" map-name="parameters" to-map-name="cacheClearMapThree"/>
-        <clear-cache-line entity-name="ProductPriceCond" map-name="cacheClearMapThree"/>
     </simple-method>
     <simple-method method-name="deleteProductPriceCond" short-description="Delete an ProductPriceCond">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPriceCond you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -164,17 +118,6 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPriceCond" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-
-        <!-- this is for the ecommerce cache of prices for a product, findByAnd -->
-        <field-to-field field-name="inputParamEnumId" map-name="parameters" to-map-name="cacheClearMapOne"/>
-        <clear-cache-line entity-name="ProductPriceCond" map-name="cacheClearMapOne"/>
-
-        <field-to-field field-name="inputParamEnumId" map-name="parameters" to-map-name="cacheClearMapTwo"/>
-        <field-to-field field-name="condValue" map-name="parameters" to-map-name="cacheClearMapTwo"/>
-        <clear-cache-line entity-name="ProductPriceCond" map-name="cacheClearMapTwo"/>
-
-        <field-to-field field-name="productPriceRuleId" map-name="parameters" to-map-name="cacheClearMapThree"/>
-        <clear-cache-line entity-name="ProductPriceCond" map-name="cacheClearMapThree"/>
     </simple-method>
 
     <!-- ProductPriceAction methods -->
@@ -187,10 +130,6 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
-
-        <!-- this is for the ecommerce cache of prices for a product, findByAnd -->
-        <field-to-field field-name="productPriceRuleId" map-name="parameters" to-map-name="cacheClearMapOne"/>
-        <clear-cache-line entity-name="ProductPriceAction" map-name="cacheClearMapOne"/>
     </simple-method>
     <simple-method method-name="updateProductPriceAction" short-description="Update an ProductPriceAction">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPriceAction you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -201,10 +140,6 @@
         <find-by-primary-key entity-name="ProductPriceAction" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
-
-        <!-- this is for the ecommerce cache of prices for a product, findByAnd -->
-        <field-to-field field-name="productPriceRuleId" map-name="parameters" to-map-name="cacheClearMapOne"/>
-        <clear-cache-line entity-name="ProductPriceAction" map-name="cacheClearMapOne"/>
     </simple-method>
     <simple-method method-name="deleteProductPriceAction" short-description="Delete an ProductPriceAction">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductPriceAction you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -214,9 +149,5 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPriceAction" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
-
-        <!-- this is for the ecommerce cache of prices for a product, findByAnd -->
-        <field-to-field field-name="productPriceRuleId" map-name="parameters" to-map-name="cacheClearMapOne"/>
-        <clear-cache-line entity-name="ProductPriceAction" map-name="cacheClearMapOne"/>
     </simple-method>
 </simple-methods>
