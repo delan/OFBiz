@@ -23,7 +23,7 @@
 --%>  
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom' style='border-width: 1px 1px 0px 1px;'>
         <tr>
           <td class="headerButtonLeft"><a href="javascript:document.webtoolsform.submit()" class="buttontext">WebTools</a></td>
           <TD width="90%" align=center class='headerCenter'>App Links</TD>

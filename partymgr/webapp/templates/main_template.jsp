@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/includes/maincss.css" type="text/css">
 </head>
 <body>
-<region:render section='header'/>
 <region:render section='appbar'/>
+<region:render section='header'/>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
