@@ -225,7 +225,7 @@
       <field name="activityId" type="id-long-ne"></field>
       <field name="actualParameters" type="very-long"></field>
       <field name="subFlowProcessId" type="id-long"></field>
-      <field name="subFlowProcessVersion" type="very-short"></field>
+      <field name="subFlowProcessVersion" type="short-varchar"></field>
       <field name="executionEnumId" type="id"></field>
       <prim-key field="packageId"/>
       <prim-key field="packageVersion"/>
