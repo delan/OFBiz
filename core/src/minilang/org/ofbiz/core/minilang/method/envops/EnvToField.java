@@ -67,7 +67,7 @@ public class EnvToField extends MethodOperation {
             Map toMap = (Map) mapAcsr.get(methodContext);
 
             if (toMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", creating new map");
                 toMap = new HashMap();
                 mapAcsr.put(methodContext, toMap);
             }
