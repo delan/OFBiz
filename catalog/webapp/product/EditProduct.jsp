@@ -278,6 +278,15 @@ function insertImageName(size,ext) {
     </td>
   </tr>
 
+  <tr>
+    <td width="26%" align=right><div class="tabletext">Detail Template</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='4'>
+        <input type="text" <ofbiz:inputvalue entityAttr='product' field='detailTemplate' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
+        <br><span class='tabletext'>Defaults to "/catalog/productdetail.jsp"</span>
+    </td>
+  </tr>
+
   <tr><td colspan='6'><hr class="sepbar"></td></tr>
 
   <tr>

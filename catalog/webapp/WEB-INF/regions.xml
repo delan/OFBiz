@@ -15,7 +15,7 @@
         <put section='first' content='/find/keywordsearchbox.jsp'/>
         <put section='second' content='/find/sidedeepcategory.jsp'/>
         <put section='third' content='/find/sidecatalogs.jsp'/>
-        <!--<put section='fourth' content='/find/miniproductlist.jsp'/>-->
+        <put section='fourth' content='/find/miniproductlist.jsp'/>
     </define>
 
     <define id='RIGHTBAR_REGION' template='/templates/rightbar_template.jsp'>

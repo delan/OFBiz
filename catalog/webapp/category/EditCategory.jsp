@@ -89,7 +89,7 @@
       <td align=right><div class="tabletext">Product Category ID</div></td>
       <td>&nbsp;</td>
       <td>
-        <input type="text" name="productCategoryId" size="20" maxlength="40" value="<%=productCategoryId%>">
+        <input type="text" name="productCategoryId" size="20" maxlength="40" value="<%=productCategoryId%>" style='font-size: x-small;'>
       </td>
     </tr>
   <%}else{%>
@@ -99,7 +99,7 @@
       <td align=right><div class="tabletext">Product Category ID</div></td>
       <td>&nbsp;</td>
       <td>
-        <input type="text" name="productCategoryId" size="20" maxlength="40" value="">
+        <input type="text" name="productCategoryId" size="20" maxlength="40" value="" style='font-size: x-small;'>
       </td>
     </tr>
   <%}%>
@@ -120,7 +120,7 @@
         <td width="26%" align=right><div class="tabletext">ProductCategory Type</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <select name="productCategoryTypeId" size=1>
+          <select name="productCategoryTypeId" size=1 style='font-size: x-small;'>
             <option selected value='<ofbiz:inputvalue entityAttr="productCategory" field="productCategoryTypeId"/>'><ofbiz:inputvalue entityAttr="productCategoryType" field="description"/><%-- <ofbiz:entityfield attribute="productCategory" field="productCategoryTypeId" prefix="[" suffix="]"/>--%></option>
             <option value='<ofbiz:inputvalue entityAttr="productCategory" field="productCategoryTypeId"/>'>----</option>
             <ofbiz:iterator name="nextProductCategoryType" property="productCategoryTypes">
@@ -133,12 +133,12 @@
   <tr>
     <td width="26%" align=right><div class="tabletext">Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='description' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="60"></td>
+    <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='description' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="60" style='font-size: x-small;'></td>
   </tr>
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Long Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><textarea cols="60" rows="3" name="longDescription" maxlength="2000"><ofbiz:inputvalue entityAttr='productCategory' field='longDescription' tryEntityAttr="tryEntity"/></textarea></td>
+    <td width="74%"><textarea cols="60" rows="3" name="longDescription" maxlength="2000" style='font-size: small;'><ofbiz:inputvalue entityAttr='productCategory' field='longDescription' tryEntityAttr="tryEntity"/></textarea></td>
   </tr>
 
 <%if (UtilValidate.isNotEmpty(productCategoryId)) {%>
@@ -152,7 +152,7 @@
     <td width="26%" align=right><div class="tabletext">Category Image URL</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='categoryImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250">
+      <input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='categoryImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
       <%if (UtilValidate.isNotEmpty(productCategoryId)) {%>
         <div>
           <a href="<ofbiz:url>/UploadCategoryImage?productCategoryId=<%=productCategoryId%>&upload_file_type=category</ofbiz:url>" class="buttontext">[Upload Category Image]</a>
@@ -167,7 +167,7 @@
     <td width="26%" align=right><div class="tabletext">Link One Image URL</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='linkOneImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250">
+      <input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='linkOneImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
       <%if (UtilValidate.isNotEmpty(productCategoryId)) {%>
         <div>
           <a href="<ofbiz:url>/UploadCategoryImage?productCategoryId=<%=productCategoryId%>&upload_file_type=linkOne</ofbiz:url>" class="buttontext">[Upload Link One Image]</a>
@@ -182,7 +182,7 @@
     <td width="26%" align=right><div class="tabletext">Link Two Image URL</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='linkTwoImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250">
+      <input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='linkTwoImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
       <%if (UtilValidate.isNotEmpty(productCategoryId)) {%>
         <div>
           <a href="<ofbiz:url>/UploadCategoryImage?productCategoryId=<%=productCategoryId%>&upload_file_type=linkTwo</ofbiz:url>" class="buttontext">[Upload Link Two Image]</a>
@@ -195,10 +195,19 @@
   </tr>
 
   <tr>
+    <td width="26%" align=right><div class="tabletext">Detail Template</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='4'>
+        <input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='detailTemplate' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
+        <br><span class='tabletext'>Defaults to "/catalog/categorydetail.jsp"</span>
+    </td>
+  </tr>
+
+  <tr>
     <td align=right><div class="tabletext">Primary Parent Category ID</div></td>
     <td>&nbsp;</td>
     <td>
-      <select name="primaryParentProductCategoryId" size=1>
+      <select name="primaryParentProductCategoryId" size=1 style='font-size: x-small;'>
         <%if(primaryParentCategory != null) {%>
           <option selected value='<%=primaryParentCategory.getString("productCategoryId")%>'><%=primaryParentCategory.getString("description")%> [<%=primaryParentCategory.getString("productCategoryId")%>]</option>
         <%}%>
@@ -217,7 +226,7 @@
   </tr>
   <tr>
     <td colspan='2'>&nbsp;</td>
-    <td><input type="submit" name="Update" value="Update"></td>
+    <td><input type="submit" name="Update" value="Update" style='font-size: x-small;'></td>
   </tr>
 </table>
 </form>
