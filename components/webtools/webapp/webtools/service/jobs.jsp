@@ -42,8 +42,9 @@
 %>
 <div class="head2">Scheduled Jobs</div>
 <a href="<ofbiz:url>/jobList</ofbiz:url>" class="buttontext">[Refresh]</a>&nbsp;
-<a href="<ofbiz:url>/scheduleJob</ofbiz:url>" class="buttontext">[Schedule Job]</a>&nbsp;
 <a href="<ofbiz:url>/threadList</ofbiz:url>" class="buttontext">[Thread List]</a>
+<a href="<ofbiz:url>/serviceList</ofbiz:url>" class="buttontext">[Service Log]</a>&nbsp;
+<a href="<ofbiz:url>/scheduleJob</ofbiz:url>" class="buttontext">[Schedule Job]</a>
 <br>
 
 <br>

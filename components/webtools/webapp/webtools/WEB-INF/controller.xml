@@ -282,6 +282,10 @@
         <response name="error" type="view" value="debuglevels"/>
     </request-map>
 
+    <request-map uri="serviceList">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="serviceList"/>
+    </request-map>
     <request-map uri="threadList">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="threadList"/>
@@ -388,6 +392,7 @@
 
     <view-map name="EditCustomTimePeriod" type="region"/>
 
+    <view-map name="serviceList" type="region"/>
     <view-map name="threadList" type="region"/>
     <view-map name="jobList" type="region"/>
     <view-map name="scheduleJob" type="region"/>
