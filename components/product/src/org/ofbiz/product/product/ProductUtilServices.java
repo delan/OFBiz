@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.10 2004/01/27 09:08:42 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.11 2004/01/27 09:11:04 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -243,6 +243,8 @@ public class ProductUtilServices {
                     duplicateRelated(product, "Main", "ProductAssoc", "productId", variantProductId, nowTimestamp, true, delegator);
                     duplicateRelated(product, "Assoc", "ProductAssoc", "productIdTo", variantProductId, nowTimestamp, true, delegator);
                     
+                    product.removeRelated("ProductKeyword");
+                    
                     product.remove();
                     
                     numWithOneOnly++;
@@ -303,8 +305,6 @@ public class ProductUtilServices {
                     duplicateRelated(product, "Main", "ProductAssoc", "productId", variantProductId, nowTimestamp, false, delegator);
                     duplicateRelated(product, "Assoc", "ProductAssoc", "productIdTo", variantProductId, nowTimestamp, false, delegator);
 
-                    product.removeRelated("ProductKeyword");
-                    
                     numWithOneValid++;
                     if (numWithOneValid % 100 == 0) {
                         Debug.logInfo("Made " + numWithOneValid + " virtual products with one valid variant stand-alone products.", module);
