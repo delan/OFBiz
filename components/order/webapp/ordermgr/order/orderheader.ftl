@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.22 $
+ *@version    $Revision: 1.23 $
  *@since      2.2
 -->
 
@@ -85,7 +85,7 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          ${Static["org.ofbiz.party.party.PartyHelper"].formatPartyId(distributorId, delegator)}
+                          ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, distributorId, false)}
                         </div>
                       </td>
                     </tr>
@@ -99,7 +99,7 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          ${Static["org.ofbiz.party.party.PartyHelper"].formatPartyId(affiliateId, delegator)}
+                          ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, affiliateId, false)}
                         </div>
                       </td>
                     </tr>
