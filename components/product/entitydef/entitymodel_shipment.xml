@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  */
 -->
 
@@ -144,6 +144,7 @@
       <field name="returnId" type="id"></field>
       <field name="returnItemSeqId" type="id"></field>
       <field name="rejectionId" type="id"></field>
+      <field name="receivedByUserLoginId" type="id"></field>
       <field name="datetimeReceived" type="date-time"></field>
       <field name="itemDescription" type="description"></field>
       <field name="quantityAccepted" type="floating-point"></field>
@@ -172,6 +173,9 @@
       <relation type="many" rel-entity-name="ShipmentReceiptRole">
         <key-map field-name="receiptId"/>
       </relation>
+      <relation type="one" fk-name="SHP_RCPT_USERLGN" rel-entity-name="UserLogin">
+        <key-map field-name="receivedByUserLoginId" rel-field-name="userLoginId"/>
+      </relation>      
     </entity>
     <entity entity-name="ShipmentReceiptRole"
             package-name="org.ofbiz.shipment.receipt"
