@@ -31,16 +31,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import freemarker.template.TemplateException;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
-import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
-
 import org.w3c.dom.Element;
+
+import freemarker.template.TemplateException;
 
 /**
  * Widget Library - Screen model HTML class

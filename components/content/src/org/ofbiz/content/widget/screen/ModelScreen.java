@@ -23,17 +23,13 @@
  */
 package org.ofbiz.content.widget.screen;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.LocalDispatcher;
-
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  * Widget Library - Screen model class
@@ -104,31 +100,6 @@ public class ModelScreen {
     
     public String getName() {
         return name;
-    }
-    
-    public static class ScreenRenderer {
-        protected Writer writer;
-        protected Map context;
-        protected ScreenStringRenderer screenStringRenderer;
-        
-        public ScreenRenderer(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
-            this.writer = writer;
-            this.context = context;
-            this.screenStringRenderer = screenStringRenderer;
-        }
-        
-        public void render(String combinedName) throws IOException, SAXException, ParserConfigurationException {
-            String resourceName = ScreenFactory.getResourceNameFromCombined(combinedName);
-            String screenName = ScreenFactory.getScreenNameFromCombined(combinedName);
-            render(resourceName, screenName);
-        }
-        public void render(String resourceName, String screenName) throws IOException, SAXException, ParserConfigurationException {
-            ModelScreen modelScreen = ScreenFactory.getScreenFromLocation(resourceName, screenName);
-            modelScreen.renderScreenString(writer, context, screenStringRenderer);
-        }
-        public ScreenStringRenderer getScreenStringRenderer() {
-            return this.screenStringRenderer;
-        }
     }
 }
 
