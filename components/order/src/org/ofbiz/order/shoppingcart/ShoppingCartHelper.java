@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.7 2003/11/25 12:41:26 jonesde Exp $
+ * $Id: ShoppingCartHelper.java,v 1.8 2003/12/05 18:55:19 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,13 +25,7 @@ package org.ofbiz.order.shoppingcart;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -39,6 +33,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -52,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -427,18 +422,27 @@ public class ShoppingCartHelper {
                     String indexStr = o.substring(underscorePos + 1);
                     int index = Integer.parseInt(indexStr);
                     String quantString = (String) context.get(o);
-                    double quantity = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
+                    double quantity = -1;
 
-                    if (quantity < 0) {
-                        throw new CartItemModifyException("Quantity must be a positive number.");
+                    // get the cart item
+                    ShoppingCartItem item = this.cart.findCartItem(index);
+
+                    if (o.toUpperCase().startsWith("OPTION")) {
+                        GenericValue featureAppl = this.getFeatureAppl(item.getProductId(), o, quantString);
+                        if (featureAppl != null) {
+                            item.putAdditionalProductFeatureAndAppl(featureAppl);
+                        }
+                    } else {
+                        quantity = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
+                        if (quantity < 0) {
+                            throw new CartItemModifyException("Quantity must be a positive number.");
+                        }
                     }
 
                     if (o.toUpperCase().startsWith("UPDATE")) {
                         if (quantity == 0.0) {
-                            deleteList.add(this.cart.findCartItem(index));
+                            deleteList.add(item);
                         } else {
-                            ShoppingCartItem item = this.cart.findCartItem(index);
-
                             if (item != null) {
                                 try {
                                     item.setQuantity(quantity, dispatcher, this.cart);
@@ -451,8 +455,9 @@ public class ShoppingCartHelper {
 
                     if (o.toUpperCase().startsWith("PRICE")) {
                         if (security.hasEntityPermission("ORDERMGR", "_CREATE", userLogin)) {
-                            ShoppingCartItem item = this.cart.findCartItem(index);
-                            item.setBasePrice(quantity); // this is quanity because the parsed number variable is the same as quantity
+                            if (item != null) {
+                                item.setBasePrice(quantity); // this is quanity because the parsed number variable is the same as quantity
+                            }
                         }
                     }
 
@@ -526,5 +531,38 @@ public class ShoppingCartHelper {
     /** Returns the shopping cart this helper is wrapping. */
     public ShoppingCart getCartObject() {
         return this.cart;
+    }
+
+    public GenericValue getFeatureAppl(String productId, String optionField, String featureId) {
+        if (delegator == null) {
+            throw new IllegalArgumentException("No delegator available to lookup ProductFeature");
+        }
+
+        Map fields = UtilMisc.toMap("productId", productId, "productFeatureId", featureId);
+        if (optionField != null) {
+            int featureTypeStartIndex = optionField.indexOf('^') + 1;
+            int featureTypeEndIndex = optionField.lastIndexOf('_');
+            if (featureTypeStartIndex > 0 && featureTypeEndIndex > 0) {
+                fields.put("productFeatureTypeId", optionField.substring(featureTypeStartIndex, featureTypeEndIndex));
+            }
+        }
+
+        GenericValue productFeatureAppl = null;
+        List features = null;
+        try {
+            features = delegator.findByAnd("ProductFeatureAndAppl", fields, UtilMisc.toList("-fromDate"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+
+        if (features != null) {
+            if (features.size() > 1) {
+                features = EntityUtil.filterByDate(features);
+            }
+            productFeatureAppl = EntityUtil.getFirst(features);
+        }
+
+        return productFeatureAppl;
     }
 }
