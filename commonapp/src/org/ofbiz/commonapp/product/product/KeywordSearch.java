@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2002/01/30 06:11:25  jonesde
+ * Formatting changes only, in preparation for other changes
+ *
  * Revision 1.10  2001/12/21 04:23:10  jonesde
  * A few more changes to get XA with tyrex working
  *
@@ -189,13 +192,18 @@ public class KeywordSearch {
 
         //EXAMPLE:
         //  SELECT DISTINCT P1.PRODUCT_ID FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3
-        //  WHERE (P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%')
+        //  WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%'
         //EXAMPLE WITH CATEGORY CONSTRAINT:
         //  SELECT DISTINCT P1.PRODUCT_ID FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3, PRODUCT_CATEGORY_MEMBER PCM
-        //  WHERE (P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%' AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo')
+        //  WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%' AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo'
 
-        String select = "SELECT DISTINCT P1.PRODUCT_ID FROM ";
-        String join = " WHERE (";
+        String select = null;
+        if (useCategory) {
+            select = "SELECT DISTINCT P1.PRODUCT_ID, PCM.SEQUENCE_NUM FROM ";
+        } else {
+            select = "SELECT DISTINCT P1.PRODUCT_ID FROM ";
+        }
+        String join = " WHERE ";
         String where = " ";
 
         int i = 1;
@@ -219,7 +227,10 @@ public class KeywordSearch {
             select += ", PRODUCT_CATEGORY_MEMBER PCM";
             where += " AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID=?";
         }
-        sql = select + join + where + ")";
+        sql = select + join + where;
+        if (useCategory) {
+            sql += " ORDER BY PCM.SEQUENCE_NUM";
+        }
 
         Debug.logInfo("[KeywordSearch] sql=" + sql);
         return sql;
@@ -258,13 +269,16 @@ public class KeywordSearch {
             }
         }
 
+        List toBeStored = new LinkedList();
         Iterator kiter = keywords.iterator();
         while (kiter.hasNext()) {
             String keyword = (String) kiter.next();
             GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", keyword));
-            if (delegator.findByPrimaryKey(productKeyword.getPrimaryKey()) != null)
-                continue;
-            productKeyword.create();
+            toBeStored.add(productKeyword);
+        }
+        if (toBeStored.size() > 0) {
+            Debug.logInfo("[KeywordSearch.induceKeywords] Storing " + toBeStored.size() + " keywords for productId " + product.getString("productId"));
+            delegator.storeAll(toBeStored);
         }
     }
 }
