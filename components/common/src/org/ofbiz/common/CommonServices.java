@@ -1,5 +1,5 @@
 /*
- * $Id: CommonServices.java,v 1.7 2003/12/10 17:51:26 ajzeneski Exp $
+ * $Id: CommonServices.java,v 1.8 2003/12/12 16:16:58 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,9 +25,7 @@
 package org.ofbiz.common;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import javax.transaction.xa.XAException;
 
@@ -37,6 +35,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
@@ -46,7 +45,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class CommonServices {
@@ -244,6 +243,30 @@ public class CommonServices {
         }
         */
 
+        return ServiceUtil.returnSuccess();
+    }
+
+    /** Test entity sorting */
+    public static Map entitySortTest(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        Set set = new TreeSet();
+
+        set.add(delegator.getModelEntity("Person"));
+        set.add(delegator.getModelEntity("PartyRole"));
+        set.add(delegator.getModelEntity("Party"));
+        set.add(delegator.getModelEntity("ContactMech"));
+        set.add(delegator.getModelEntity("PartyContactMech"));
+        set.add(delegator.getModelEntity("OrderHeader"));
+        set.add(delegator.getModelEntity("OrderItem"));
+        set.add(delegator.getModelEntity("OrderContactMech"));
+        set.add(delegator.getModelEntity("OrderRole"));
+        set.add(delegator.getModelEntity("Product"));
+        set.add(delegator.getModelEntity("RoleType"));
+
+        Iterator i = set.iterator();
+        while (i.hasNext()) {
+            Debug.log(((ModelEntity)i.next()).getEntityName(), module);
+        }
         return ServiceUtil.returnSuccess();
     }
 }

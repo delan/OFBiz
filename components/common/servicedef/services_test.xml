@@ -95,4 +95,9 @@
             location="org.ofbiz.common.CommonServices" invoke="entityFailTest">
         <description>Cause a Referential Integrity Error</description>
     </service>
+
+    <service name="entitySortTest" engine="java" auth="false" validate="false"
+            location="org.ofbiz.common.CommonServices" invoke="entitySortTest">
+        <description>Test Entity Comparable</description>
+    </service>
 </services>
