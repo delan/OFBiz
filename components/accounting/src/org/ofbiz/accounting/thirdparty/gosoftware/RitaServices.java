@@ -29,16 +29,23 @@ import java.util.Properties;
 import java.util.List;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.sql.Timestamp;
 
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 
 /**
@@ -67,7 +74,6 @@ public class RitaServices {
         // basic tx info
         api.set(RitaApi.TRANS_AMOUNT, getAmountString(context, "processAmount"));
         api.set(RitaApi.INVOICE, context.get("orderId"));
-        api.set(RitaApi.PRESENT_FLAG, "2"); // todo check this -- 1, no present, 2 present, 3 swiped
 
         // command setting
         if ("1".equals(props.getProperty("autoBill"))) {
@@ -192,7 +198,15 @@ public class RitaServices {
         }
     }
 
-    public static Map ccRelease(DispatchContext dctx, Map context) {
+    public static Map ccVoidRelease(DispatchContext dctx, Map context) {
+        return ccVoid(dctx, context, false);
+    }
+
+    public static Map ccVoidRefund(DispatchContext dctx, Map context) {
+        return ccVoid(dctx, context, true);
+    }
+
+    private static Map ccVoid(DispatchContext dctx, Map context, boolean isRefund) {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
 
         //lets see if there is a auth transaction already in context
@@ -213,6 +227,7 @@ public class RitaServices {
             return ServiceUtil.returnError("RiTA is not configured properly");
         }
 
+        api.set(RitaApi.TRANS_AMOUNT, getAmountString(context, isRefund ? "refundAmount" : "releaseAmount"));
         api.set(RitaApi.ORIG_SEQ_NUM, authTransaction.getString("referenceNum"));
         api.set(RitaApi.COMMAND, "VOID");
 
@@ -237,15 +252,15 @@ public class RitaServices {
             Map result = ServiceUtil.returnSuccess();
             String resultCode = out.get(RitaApi.RESULT);
             if ("VOIDED".equals(resultCode)) {
-                result.put("releaseResult", new Boolean(true));
+                result.put(isRefund ? "refundResult" : "releaseResult", new Boolean(true));
             } else {
-                result.put("releaseResult", new Boolean(false));
+                result.put(isRefund ? "refundResult" : "releaseResult", new Boolean(false));
             }
-            result.put("releaseAmount", context.get("releaseAmount"));
-            result.put("releaseRefNum", out.get(RitaApi.INTRN_SEQ_NUM) != null ? out.get(RitaApi.INTRN_SEQ_NUM) : "");
-            result.put("releaseCode", out.get(RitaApi.AUTH_CODE));
-            result.put("releaseFlag", out.get(RitaApi.REFERENCE));
-            result.put("releaseMessage", out.get(RitaApi.RESULT));
+            result.put(isRefund ? "refundAmount" : "releaseAmount", context.get(isRefund ? "refundAmount" : "releaseAmount"));
+            result.put(isRefund ? "refundRefNum" : "releaseRefNum", out.get(RitaApi.INTRN_SEQ_NUM) != null ? out.get(RitaApi.INTRN_SEQ_NUM) : "");
+            result.put(isRefund ? "refundCode" : "releaseCode", out.get(RitaApi.AUTH_CODE));
+            result.put(isRefund ? "refundFlag" : "releaseFlag", out.get(RitaApi.REFERENCE));
+            result.put(isRefund ? "refundMessage" : "releaseMessage", out.get(RitaApi.RESULT));
 
             return result;
         } else {
@@ -253,7 +268,7 @@ public class RitaServices {
         }
     }
 
-    public static Map ccRefund(DispatchContext dctx, Map context) {
+    public static Map ccCreditRefund(DispatchContext dctx, Map context) {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
 
         //lets see if there is a auth transaction already in context
@@ -274,6 +289,14 @@ public class RitaServices {
             return ServiceUtil.returnError("RiTA is not configured properly");
         }
 
+        // set the required cc info
+        try {
+            RitaServices.setCreditCardInfo(api, context);
+        } catch (GeneralException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        api.set(RitaApi.TRANS_AMOUNT, getAmountString(context, "refundAmount"));
         api.set(RitaApi.ORIG_SEQ_NUM, authTransaction.getString("referenceNum"));
         api.set(RitaApi.COMMAND, "CREDIT");
 
@@ -306,6 +329,60 @@ public class RitaServices {
             return result;
         } else {
             return ServiceUtil.returnError("Receive a null result from RiTA");
+        }
+    }
+
+    public static Map ccRefund(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
+        GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = orderPaymentPreference.getRelatedOne("OrderHeader");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Unable to obtain order header information from payment preference");
+        }
+
+        if (orderHeader != null) {
+            String terminalId = orderHeader.getString("terminalId");
+            boolean isVoid = false;
+            if (terminalId != null) {
+                Timestamp orderDate = orderHeader.getTimestamp("orderDate");
+                GenericValue terminalState = null;
+                try {
+                    List states = delegator.findByAnd("PosTerminalState", UtilMisc.toMap("posTerminalId", terminalId));
+                    states = EntityUtil.filterByDate(states, UtilDateTime.nowTimestamp(), "openedDate", "closedDate", true);
+                    terminalState = EntityUtil.getFirst(states);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+
+                // this is the current opened terminal
+                if (terminalState != null) {
+                    Timestamp openDate = terminalState.getTimestamp("openedDate");
+                    // if the order date is after the open date of the current state
+                    // the order happend within the current open/close of the terminal
+                    if (orderDate.after(openDate)) {
+                        isVoid = true;
+                    }
+                }
+            }
+
+            Map refundResp = null;
+            try {
+                if (isVoid) {
+                    refundResp = dispatcher.runSync("ritaCCVoidRefund", context);
+                } else {
+                    refundResp = dispatcher.runSync("ritaCCCreditRefund", context);
+                }
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError("Service invocation exception");
+            }
+            return refundResp;
+        } else {
+            return ServiceUtil.returnError("Unable to find order information; cannot complete the refund");
         }
     }
 
@@ -362,6 +439,13 @@ public class RitaServices {
                     api.set(RitaApi.CUSTOMER_ZIP, zipCode);
                 }
             }
+
+            // set the present flag
+            String presentFlag = orderPaymentPreference.getString("presentFlag");
+            if (presentFlag == null) {
+                presentFlag = "N";
+            }
+            api.set(RitaApi.PRESENT_FLAG, presentFlag.equals("Y") ? "3" : "1"); // 1, no present, 2 present, 3 swiped
         } else {
             throw new GeneralException("No CreditCard object found");
         }

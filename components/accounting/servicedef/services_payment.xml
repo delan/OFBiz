@@ -114,7 +114,7 @@
         <attribute name="expYear" type="String" mode="IN" optional="true"/>
         <attribute name="newPaymentMethodId" type="String" mode="OUT" optional="true"/>
     </service>
-    
+
     <service name="createEftAccount" engine="java"
             location="org.ofbiz.accounting.payment.PaymentServices" invoke="createEftAccount" auth="true">
         <description>Create EftAccount</description>
@@ -596,13 +596,23 @@
         <implements service="ccCaptureInterface"/>
     </service>
     <service name="ritaCCRelease" engine="java" export="true"
-            location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccRelease">
+            location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccVoidRelease">
         <description>RiTA Credit Card Void</description>
         <implements service="paymentReleaseInterface"/>
     </service>
     <service name="ritaCCRefund" engine="java" export="true"
             location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccRefund">
-        <description>RiTA Credit Card Refund</description>
+        <description>RiTA Credit Card Refund - Main Service</description>
+        <implements service="paymentRefundInterface"/>
+    </service>
+    <service name="ritaCCVoidRefund" engine="java" export="false"
+            location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccVoidRefund">
+        <description>RiTA Credit Card Void Refund - Called from ritaCCRefund</description>
+        <implements service="paymentRefundInterface"/>
+    </service>
+    <service name="ritaCCCreditRefund" engine="java" export="false"
+            location="org.ofbiz.accounting.thirdparty.gosoftware.RitaServices" invoke="ccCreditRefund">
+        <description>RiTA Credit Card Credit Refund - Called from ritaCCRefund</description>
         <implements service="paymentRefundInterface"/>
     </service>
 
