@@ -345,7 +345,7 @@ public class HttpClient {
         return in;
     }
 
-    private String encodeArgs(Map args) {
+    public String encodeArgs(Map args) {
         StringBuffer buf = new StringBuffer();
         Set names = args.keySet();
         Iterator i = names.iterator();
