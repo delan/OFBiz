@@ -66,6 +66,7 @@ public class JNDIFactory implements TransactionFactoryInterface {
                                     transactionManager = (TransactionManager) ic.lookup(jndiName);
                                 }
                             } catch (NamingException ne) {
+                                Debug.logWarning(ne, "NamingException while finding TransactionManager named " + jndiName + " in JNDI.", module);
                                 transactionManager = null;
                             }
                             if (transactionManager == null) {
@@ -100,6 +101,7 @@ public class JNDIFactory implements TransactionFactoryInterface {
                                     userTransaction = (UserTransaction) ic.lookup(jndiName);
                                 }
                             } catch (NamingException ne) {
+                                Debug.logWarning(ne, "NamingException while finding UserTransaction named " + jndiName + " in JNDI.", module);
                                 userTransaction = null;
                             }
                             if (userTransaction == null) {
