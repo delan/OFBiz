@@ -29,10 +29,7 @@ import org.w3c.dom.*;
 
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.config.*;
-import org.ofbiz.core.extentity.*;
 
 /**
  * EntityEcaUtil
@@ -51,9 +48,14 @@ public class EntityEcaUtil {
     public static Map getEntityEcaCache(String entityEcaReaderName) {
         Map ecaCache = (Map) entityEcaReaders.get(entityEcaReaderName);
         if (ecaCache == null) {
-            ecaCache = new HashMap();
-            readConfig(entityEcaReaderName, ecaCache);
-            entityEcaReaders.put(entityEcaReaderName, ecaCache);
+            synchronized (EntityEcaUtil.class) {
+                ecaCache = (Map) entityEcaReaders.get(entityEcaReaderName);
+                if (ecaCache == null) {
+                    ecaCache = new HashMap();
+                    readConfig(entityEcaReaderName, ecaCache);
+                    entityEcaReaders.put(entityEcaReaderName, ecaCache);
+                }
+            }
         }
         return ecaCache;
     }
