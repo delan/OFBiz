@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: install-containers.xml,v 1.1 2004/06/24 02:16:29 jonesde Exp $
+ *  $Id: install-containers.xml,v 1.2 2004/06/25 21:52:42 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -49,10 +49,10 @@
     -->
     
     <!-- load the data load container, runs the entity data load stuff -->
-    <container name="dataload-container" class="org.ofbiz.entity.util.EntityDataLoadContainer">
+    <container name="dataload-container" class="org.ofbiz.entityext.data.EntityDataLoadContainer">
         <property name="delegator-name" value="default"/>
         <property name="entity-group-name" value="org.ofbiz"/>
-    </container>
+    </container>    
 </ofbiz-containers>
 
 
