@@ -219,7 +219,13 @@
                               <div class="tabletext">
                                   <%EntityField.run("creditCard", "nameOnCard", pageContext);%><br>
                                   <%EntityField.run("creditCard", "companyNameOnCard", "", "<br>", pageContext);%>
-                                  <%=ContactHelper.formatCreditCard(creditCard)%>
+                                  <%if (security.hasEntityPermission("PAY_INFO", "_VIEW", session)) {%>
+                                      <%EntityField.run("creditCard", "cardType", pageContext);%>
+                                      <%EntityField.run("creditCard", "cardNumber", pageContext);%>
+                                      <%EntityField.run("creditCard", "expireDate", pageContext);%>
+                                  <%} else {%>
+                                    <%=ContactHelper.formatCreditCard(creditCard)%>
+                                  <%}%>
                               </div>
                           </td>
                         </tr>
