@@ -1617,6 +1617,7 @@
       <table-name>STATUS</table-name>
       <field><col-name>STATUS_ID</col-name><type>id-ne</type></field>
       <field><col-name>STATUS_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>SEQUENCE_ID</col-name><type>id</type></field>
       <field><col-name>DESCRIPTION</col-name><type>description</type></field>	
       <prim-key-col>STATUS_ID</prim-key-col>
       <relation>
@@ -3426,6 +3427,7 @@
       <field><col-name>ORDER_DATE</col-name><type>date-time</type></field>
       <field><col-name>ENTRY_DATE</col-name><type>date-time</type></field>
       <field><col-name>VISIT_ID</col-name><type>id</type></field>	
+      <field><col-name>STATUS_ID</col-name><type>id</type></field>
       <prim-key-col>ORDER_ID</prim-key-col>
       <relation>
         <type>one</type>
@@ -3535,6 +3537,7 @@
       <field><col-name>ITEM_DESCRIPTION</col-name><type>description</type></field>
       <field><col-name>COMMENT</col-name><type>comment</type></field>
       <field><col-name>CORRESPONDING_PO_ID</col-name><type>id</type></field>	
+      <field><col-name>STATUS_ID</col-name><type>id</type></field>
       <prim-key-col>ORDER_ID</prim-key-col>	
       <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>
       <relation>
