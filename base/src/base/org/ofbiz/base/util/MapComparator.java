@@ -1,5 +1,5 @@
 /*
- * $Id: MapComparator.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: MapComparator.java,v 1.2 2003/11/30 18:02:16 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,11 +33,14 @@ import java.util.Map;
  * MapComparator.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class MapComparator implements Comparator {
-
+    
+    public static final String module = MapComparator.class.getName();
+    
     private List keys;
 
     /**
@@ -67,68 +70,64 @@ public class MapComparator implements Comparator {
             throw new IllegalArgumentException("Objects not from the Map interface");
         }
 
-        if (keys == null || keys.size() < 1)
+        if (keys == null || keys.size() < 1) {
             throw new IllegalArgumentException("No sort fields defined");
+        }
 
         Iterator i = keys.iterator();
         while (i.hasNext()) {
+            // if false will be descending, ie reverse order
+            boolean ascending = true;
             Object key = i.next();
-            if (testValue(map1, key) && !testValue(map2, key))
-                return -1;
-            if (!testValue(map1, key) && testValue(map2, key))
-                return 1;
-            if (!testValue(map1, key) && !testValue(map2, key))
-                continue;
-
+            if (key instanceof String) {
+                String keyStr = (String) key;
+                if (keyStr.charAt(0) == '-') {
+                    ascending = false;
+                    key = keyStr.substring(1);
+                } else if (keyStr.charAt(0) == '+') {
+                    ascending = true;
+                    key = keyStr.substring(1);
+                }
+            }
+            
             Object o1 = map1.get(key);
             Object o2 = map2.get(key);
-            try {
-                if (!o1.equals(o2)) {
-                    if (ObjectType.instanceOf(o1, "java.lang.String")) {
-                        String s1 = (String) o1;
-                        String s2 = (String) o2;
-                        if (!s1.equals(s2))
-                            return s1.compareTo(s2);
-                    } else if (ObjectType.instanceOf(o1, "java.lang.Integer")) {
-                        Integer i1 = (Integer) o1;
-                        Integer i2 = (Integer) o2;
-                        if (!i1.equals(i2))
-                            return i1.compareTo(i2);
-                    } else if (ObjectType.instanceOf(o1, "java.lang.Double")) {
-                        Double d1 = (Double) o1;
-                        Double d2 = (Double) o2;
-                        if (!d1.equals(d2))
-                            return d1.compareTo(d2);
-                    } else if (ObjectType.instanceOf(o1, "java.lang.Float")) {
-                        Float f1 = (Float) o1;
-                        Float f2 = (Float) o2;
-                        if (!f1.equals(f2))
-                            return f1.compareTo(f2);
-                    } else if (ObjectType.instanceOf(o1, "java.sql.Timestamp")) {
-                        Timestamp t1 = (Timestamp) o1;
-                        Timestamp t2 = (Timestamp) o2;
-                        if (!t1.equals(t2))
-                            return t1.compareTo(t2);
-                    } else if (ObjectType.instanceOf(o1, "java.util.Date")) {
-                        java.util.Date d1 = (java.util.Date) o1;
-                        java.util.Date d2 = (java.util.Date) o2;
-                        if (!d1.equals(d2))
-                            return d1.compareTo(d2);
-                    }
+            if (o1 == null && o2 == null) {
+                continue;
+            }
+            
+            int compareResult = 0;
+            if (o1 != null && o2 == null) {
+                compareResult = -1;
+            }
+            if (o1 == null && o2 != null) {
+                compareResult = 1;
+            }
+            
+            if (compareResult == 0) {
+                try {
+                    // the map values in question MUST implement the Comparable interface, if not we'll throw an exception
+                    Comparable comp1 = (Comparable) o1;
+                    Comparable comp2 = (Comparable) o2;
+                    compareResult = comp1.compareTo(comp2);
+                } catch (Exception e) {
+                    String errorMessage = "Error sorting list of Maps: " + e.toString();
+                    Debug.logError(e, errorMessage, module);
+                    throw new RuntimeException(errorMessage);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException(e.getMessage());
+            }
+
+            // if zero they are equal, so we carry on to the next key to try and find a difference
+            if (compareResult != 0) {
+                if (ascending) {
+                    return compareResult;
+                } else {
+                    return -compareResult;
+                }
             }
         }
+        
+        // none of them were different, so they are equal
         return 0;
     }
-    
-    private boolean testValue(Map map, Object key) {
-        if (!map.containsKey(key))
-            return false;
-        if (map.get(key) == null)
-            return false;
-        return true;
-    }    
 }
