@@ -1,5 +1,5 @@
 /*
- * $Id: WfExecutionObjectImpl.java,v 1.4 2003/08/26 14:04:16 ajzeneski Exp $
+ * $Id: WfExecutionObjectImpl.java,v 1.5 2003/08/28 19:06:14 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,6 +46,9 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericDispatcher;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.workflow.AlreadySuspended;
 import org.ofbiz.workflow.CannotResume;
@@ -69,12 +72,13 @@ import org.ofbiz.workflow.WfUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public abstract class WfExecutionObjectImpl implements WfExecutionObject {
 
     public static final String module = WfExecutionObjectImpl.class.getName();
+    public static final String dispatcherName = "WFDispatcher";    
 
     protected String packageId = null;
     protected String packageVersion = null;
@@ -90,10 +94,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         this.packageVersion = valueObject.getString("packageVersion");
         this.processId = valueObject.getString("processId");
         this.processVersion = valueObject.getString("processVersion");
-        if (valueObject.getEntityName().equals("WorkflowActivity"))
+        if (valueObject.getEntityName().equals("WorkflowActivity")) {
             this.activityId = valueObject.getString("activityId");
-        else
+        } else {
             this.activityId = null;
+        }
         this.delegator = valueObject.getDelegator();
         createRuntime(parentId);
     }
@@ -111,7 +116,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         if (Debug.verboseOn()) Debug.logVerbose(" Process ID: " + processId + " V: " + processVersion, module);
         if (Debug.verboseOn()) Debug.logVerbose("Activity ID: " + activityId, module);
     }
-
+    
     // creates the stored runtime workeffort data.
     private void createRuntime(String parentId) throws WfException {
         GenericValue valueObject = getDefinitionObject();
@@ -595,50 +600,15 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * Get an instance of the service dispatcher
-     * @return ServiceDispatcher instance for use with this workflow
+     * Get an instance of the local dispatcher
+     * @return LocalDispatcher instance for use with this workflow
      * @throws WfException
      */
-    protected ServiceDispatcher getDispatcher() throws WfException {
-        return ServiceDispatcher.getInstance(getServiceLoader(), getDelegator());
-    }
-
-    /**
-     * Get an instance of the service dispatcher
-     * @param The service loader name
-     * @return ServiceDispatcher instance for use with this workflow
-     * @throws WfException
-     */
-    protected ServiceDispatcher getDispatcher(String loader) throws WfException {
-        return ServiceDispatcher.getInstance(loader, getDelegator());
-    }
-
-    /**
-     * Gets the name of this workflow's service loader
-     * @return String name of the loader
-     * @throws WfException
-     */
-    protected String getServiceLoader() throws WfException {
-        GenericValue dataObject = getRuntimeObject();
-
-        if (dataObject.get("serviceLoaderName") == null)
-            throw new WfException("No service loader name defined");
-        return dataObject.getString("serviceLoaderName");
-    }
-
-    /**
-     * @see org.ofbiz.workflow.WfExecutionObject#setServiceLoader(java.lang.String)
-     */
-    public void setServiceLoader(String loader) throws WfException {
-        GenericValue dataObject = getRuntimeObject();
-
+    protected LocalDispatcher getDispatcher() throws WfException {
         try {
-            dataObject.set("serviceLoaderName", loader);
-            dataObject.store();
-            if (Debug.verboseOn()) Debug.logVerbose("------- EXECUTION OBJECT : Service loader set: " +
-                    dataObject.getString("serviceLoaderName"), module);
-        } catch (GenericEntityException e) {
-            throw new WfException(e.getMessage(), e);
+            return GenericDispatcher.getLocalDispatcher(dispatcherName, getDelegator());
+        } catch (GenericServiceException e) {
+            throw new WfException("No workflow service dispatcher", e);
         }
     }
 
@@ -718,7 +688,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             expression = expression.trim();
         
         // get a DispatchContext object to pass over to the eval
-        DispatchContext dctx = this.getDispatcher().getLocalContext(this.getServiceLoader());
+        DispatchContext dctx = this.getDispatcher().getDispatchContext();
         
         // evaluate the condition
         Boolean evaluation = null;  
