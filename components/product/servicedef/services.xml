@@ -542,11 +542,46 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="getProductInventoryAvailable" engine="simple"
-                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
-        <description>Get Inventory Availability for a Product</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
+    <service name="createInventoryItemVariance" default-entity-name="InventoryItemVariance" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createInventoryItemVariance" auth="true">
+        <description>Create an InventoryItemVariance</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateInventoryItemVariance" default-entity-name="InventoryItemVariance" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="updateInventoryItemVariance" auth="true">
+        <description>Update an InventoryItemVariance</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="createPhysicalInventory" default-entity-name="PhysicalInventory" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createPhysicalInventory" auth="true">
+        <description>Create an PhysicalInventory</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePhysicalInventory" default-entity-name="PhysicalInventory" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="updatePhysicalInventory" auth="true">
+        <description>Update an PhysicalInventory</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="createPhysicalInventoryAndVariance" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createPhysicalInventory" auth="true">
+        <description>Create a PhysicalInventory and an InventoryItemVariance</description>
+        <auto-attributes entity-name="InventoryItemVariance" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="PhysicalInventory" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="InventoryItemVariance" include="nonpk" mode="IN" optional="true"/>
+        <override field-name="physicalInventoryId" mode="OUT"/>
+    </service>
+    <service name="updatePhysicalInventoryAndVariance" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="updatePhysicalInventory" auth="true">
+        <description>Update a PhysicalInventory and an InventoryItemVariance</description>
+        <auto-attributes entity-name="InventoryItemVariance" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="PhysicalInventory" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="InventoryItemVariance" include="nonpk" mode="IN" optional="true"/>
     </service>
 
     <service name="getInventoryAlerts" engine="simple"
@@ -563,6 +598,12 @@
 
     </service>
 
+    <service name="getProductInventoryAvailable" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
+        <description>Get Inventory Availability for a Product</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
+    </service>
     <service name="getInventoryAvailableByFacility" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
         <description>Get Inventory Availability for a Product constrained by a facilityId</description>
