@@ -234,6 +234,28 @@
 	</service>
 
     <!-- Bill of Materials services -->
+    <service name="createProductAssoc" default-entity-name="ProductAssoc" engine="simple"
+                location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="createProductAssoc">
+        <description>Add Product to Product Association</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true" />
+        <!--<auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>-->
+        <!--<override name="contentId" optional="true" mode="INOUT" />-->
+    </service>
+    <service name="updateProductAssoc" default-entity-name="ProductAssoc" engine="simple"
+                location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="updateProductAssoc">
+        <description>Update Product to Product Association</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeProductAssoc" default-entity-name="ProductAssoc" engine="simple"
+                location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="removeProductAssoc">
+        <description>Remove Product to Product Association</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
     <service name="updateProductManufacturingRule" engine="simple"
             location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="updateProductManufacturingRule">
         <description>Update a Product Manufacturing Rule</description>
@@ -283,6 +305,7 @@
             location="org.ofbiz.manufacturing.bom.BOMServices" invoke="updateLowLevelCode">
         <description>Updates the low level code of the product in the Product entity</description>
         <attribute mode="IN" name="productId" optional="false" type="String"/>
+        <attribute mode="IN" name="alsoComponents" optional="true" type="Boolean"/>
         <attribute mode="OUT" name="lowLevelCode" optional="false" type="Integer"/>
     </service>
 

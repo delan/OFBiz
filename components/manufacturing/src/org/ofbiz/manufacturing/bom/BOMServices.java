@@ -1,5 +1,5 @@
 /*
- * $Id: BOMServices.java,v 1.4 2004/04/21 07:01:42 jacopo Exp $
+ * $Id: BOMServices.java,v 1.5 2004/04/21 20:42:48 jacopo Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -120,6 +120,8 @@ public class BOMServices {
 
     /** Updates the product's low level code (llc) 
      * Given a product id, computes and updates the product's low level code (field billOfMaterialLevel in Product entity).
+     * It also updates the llc of all the product's descendants.
+     * For the llc only the manufacturing bom ("MANUF_COMPONENT") is considered.
      * @param dctx
      * @param context
      * @return
@@ -130,14 +132,30 @@ public class BOMServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = (String) context.get("productId");
-    
+        Boolean alsoComponents = (Boolean) context.get("alsoComponents");
+        if (alsoComponents == null) {
+            alsoComponents = new Boolean(true);
+        }
+
         Integer llc = null;
         try {
             GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-            Map depthResult = dispatcher.runSync("getMaxDepth", context);
+            Map depthResult = dispatcher.runSync("getMaxDepth", UtilMisc.toMap("productId", productId, "bomType", "MANUF_COMPONENT"));
             llc = (Integer)depthResult.get("depth");
             product.set("billOfMaterialLevel", llc);
             product.store();
+            if (alsoComponents.booleanValue()) {
+                Map treeResult = dispatcher.runSync("getItemConfigurationTree", UtilMisc.toMap("productId", productId, "bomType", "MANUF_COMPONENT"));
+                ItemConfigurationTree tree = (ItemConfigurationTree)treeResult.get("tree");
+                ArrayList products = new ArrayList();
+                tree.print(products, llc.intValue());
+                for (int i = 0; i < products.size(); i++) {
+                    ItemConfigurationNode oneNode = (ItemConfigurationNode)products.get(i);
+                    GenericValue oneProduct = oneNode.getPart();
+                    oneProduct.set("billOfMaterialLevel", new Integer(oneNode.getDepth()));
+                    oneProduct.store();
+                }
+            }
             // FIXME: also all the variants llc should be updated?
         } catch (Exception e) {
             return ServiceUtil.returnError("Error running updateLowLevelCode: " + e.getMessage());

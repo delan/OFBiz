@@ -1,5 +1,5 @@
 /*
- * $Id: BOMEvents.java,v 1.7 2004/04/21 07:02:17 jacopo Exp $
+ * $Id: BOMEvents.java,v 1.8 2004/04/21 20:42:47 jacopo Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -126,7 +126,7 @@ public class BOMEvents {
         if (errMsg.length() > 0) {
             errMsg = "<b>The following errors occurred:</b><br><ul>" + errMsg + "</ul>";
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            return "error";
+//            return "error";
         }
 
         // clear some cache entries
@@ -144,6 +144,15 @@ public class BOMEvents {
                 UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
 
         if (updateMode.equals("DELETE")) {
+            try {
+                dispatcher.runSync("removeProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
+            } catch (Exception e) {
+                request.setAttribute("_ERROR_MESSAGE_", "Could not remove product association (write error)");
+                Debug.logWarning("[BOMEvents.updateProductBom] Could not remove product association (write error); message: " + e.getMessage(), module);
+                return "error";
+            }
+            return "success";
+            /*
             GenericValue productAssoc = null;
 
             try {
@@ -164,6 +173,7 @@ public class BOMEvents {
                 return "error";
             }
             return "success";
+            */
         }
 
         String thruDateStr = request.getParameter("THRU_DATE");
@@ -263,9 +273,6 @@ public class BOMEvents {
         // The low level code for the product productIdTo is updated in the Product entity.
         try {
             dispatcher.runSync("updateLowLevelCode", UtilMisc.toMap("productId", productIdTo));
-//            int llc = BOMHelper.getMaxDepth(productIdTo, productAssocTypeId, null, delegator); // This is the llc
-//            productIdToValue.set("billOfMaterialLevel", new Integer(llc));
-//            productIdToValue.store();
         } catch (Exception e) {
             request.setAttribute("_ERROR_MESSAGE_", "Could not update product's low level code");
             Debug.logWarning("[BOMEvents.updateProductBom] Could not update product's low level code; message: " + e.getMessage(), module);
