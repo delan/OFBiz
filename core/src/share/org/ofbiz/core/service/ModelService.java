@@ -144,9 +144,7 @@ public class ModelService {
             throw e;
         }
     }
-    
-    
-    
+            
     /** Validates a map of name, object types to a map of name, objects
      * @param info The map of name, object types
      * @param test The map to test its value types.

@@ -1,43 +1,7 @@
-/* $Id$ */
-
 /*
- * $Log$
- * Revision 1.11  2001/12/09 00:50:36  jonesde
- * Added partyId and roleTypeId to readParticipant
- *
- * Revision 1.10  2001/12/04 09:56:54  jonesde
- * Fixed some bugs, now works fine with updated test file
- *
- * Revision 1.9  2001/12/02 12:05:24  jonesde
- * Added error checking, now partially tested
- *
- * Revision 1.8  2001/12/02 10:21:17  jonesde
- * Finished pretty complete first pass; not fully tested, still needs complex data types
- *
- * Revision 1.7  2001/12/01 23:48:32  jonesde
- * A bit of organization and a start at handling data types, etc
- *
- * Revision 1.6  2001/12/01 03:37:10  jonesde
- * Finished activity stuff, now just a bunch of small elements to deal with
- *
- * Revision 1.5  2001/11/30 14:20:24  jonesde
- * Refactored for changes in Application, DataField and FormalParam; started Activity implementations
- *
- * Revision 1.4  2001/11/29 16:14:47  jonesde
- * Added a bit more, changed so handle TransitionRestriction info being in the WorkflowActivity entity
- *
- * Revision 1.3  2001/11/28 16:18:16  jonesde
- * Added stuff for start activities and started transition restriction reading
- *
- * Revision 1.2  2001/11/27 15:44:09  jonesde
- * Not much done, mostly small changes as looked for needed entities
- *
- * Revision 1.1  2001/11/26 14:18:41  jonesde
- * Moved XpdlParser code to XpdlReader in order to restore previous XpdlParser, will be developed in parallel
- *
- *
+ * $Id$
  */
-
+ 
 package org.ofbiz.core.workflow.definition;
 
 import java.io.IOException;
@@ -614,7 +578,9 @@ public class XpdlReader {
 
         //ExtendedAttributes?
         activityValue.set("acceptAllAssignments", getExtendedAttributeValue(activityElement, "acceptAllAssignments", "N"));
-        activityValue.set("completeAllAssignments", getExtendedAttributeValue(activityElement, "completeAllAssignments", "N"));
+        activityValue.set("completeAllAssignments", getExtendedAttributeValue(activityElement, "completeAllAssignments", "N"));       
+        activityValue.set("limitService", getExtendedAttributeValue(activityElement, "limitService", null), false);
+        activityValue.set("limitAfterStart", getExtendedAttributeValue(activityElement, "limitAfterStart", "Y"));
         //by default set the canStart to always be true
         activityValue.set("canStart", getExtendedAttributeValue(activityElement, "canStart", "Y"));
     }
@@ -692,10 +658,13 @@ public class XpdlReader {
         //Description?
         toolValue.set("description", UtilXml.childElementValue(toolElement, "Description"));
 
-        //ActualParameters?
+        //ActualParameters/ExtendedAttributes?
         Element actualParametersElement = UtilXml.firstChildElement(toolElement, "ActualParameters");
+        Element extendedAttributesElement = UtilXml.firstChildElement(toolElement, "ExtendedAttributes");
         List actualParameters = UtilXml.childElementList(actualParametersElement, "ActualParameter");
+        List extendedAttributes = UtilXml.childElementList(extendedAttributesElement, "ExtendedAttribute");
         toolValue.set("actualParameters", readActualParameters(actualParameters), false);
+        toolValue.set("extendedAttributes", readExtendedAttributes(extendedAttributes), false);
     }
 
     protected String readActualParameters(List actualParameters) {
@@ -710,7 +679,18 @@ public class XpdlReader {
         }
         return actualParametersBuf.toString();
     }
-
+    
+    protected String readExtendedAttributes(List extendedAttributes) {        
+        if ( extendedAttributes == null || extendedAttributes.size() == 0) return null;
+        Map ea = new HashMap();
+        Iterator i = extendedAttributes.iterator();
+        while ( i.hasNext() ) {
+            Element e = (Element) i.next();
+            ea.put(e.getAttribute("Name"),e.getAttribute("Value"));
+        }
+        return StringUtil.mapToStr(ea);
+    }
+        
     // ----------------------------------------------------------------
     // Transition
     // ----------------------------------------------------------------

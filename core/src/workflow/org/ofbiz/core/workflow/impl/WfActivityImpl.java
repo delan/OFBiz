@@ -80,6 +80,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
         if ( performer != null )
             createAssignments(performer);
+        
+        boolean limitAfterStart = valueObject.getBoolean("limitAfterStart").booleanValue();
+        if ( limitAfterStart && valueObject.get("limitService") != null )
+            setLimitService();
     }
             
     private void createAssignments(GenericValue performer) throws WfException {
@@ -403,6 +407,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         catch ( TransitionNotAllowed tna ) {
             throw new CannotStart(tna.getMessage(),tna);
         }
+        // check the limit service
+        if ( getDefinitionObject().get("limitService") != null )
+            setLimitService();
+        
         // get the type of this activity
         String type = getDefinitionObject().getString("activityTypeEnumId");
         if ( type == null )
@@ -440,7 +448,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             GenericValue thisTool = (GenericValue) i.next();
             String toolId = thisTool.getString("toolId");
             String params = thisTool.getString("actualParameters");
-            waiters.add(this.runService(toolId,params));
+            String extend = thisTool.getString("extendedAttributes");
+            waiters.add(this.runService(toolId,params,extend));
         }
         
         while ( waiters.size() > 0 ) {
@@ -494,7 +503,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         service.contextInfo = null;  // TODO FIXME
         
         String actualParameters = subFlow.getString("actualParameters");
-        GenericResultWaiter waiter = this.runService(service,actualParameters);
+        GenericResultWaiter waiter = this.runService(service,actualParameters,null);
         if ( type.equals("WSE_SYNCHR") ) {
             Map subResult = waiter.waitForResult();
             this.setResult(subResult);
@@ -503,8 +512,64 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         this.checkComplete();
     }
     
+    // schedule the limit service to run
+    private void setLimitService() throws WfException {
+        DispatchContext dctx = getDispatcher().getLocalContext(getServiceLoader());
+        String limitService = getDefinitionObject().getString("limitService");        
+        ModelService service = null;
+        try {
+            service = dctx.getModelService(limitService);
+        }
+        catch ( GenericServiceException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        if ( service == null )
+            throw new WfException("Cannot determine model service for service name");                
+        
+        List inNames = service.getParameterNames(ModelService.IN_PARAM);
+        String params = StringUtil.join(inNames,",");
+        Map serviceContext = actualContext(params,null);        
+        
+        Double timeLimit = null;
+        if ( getDefinitionObject().get("timeLimit") != null )
+            timeLimit = getDefinitionObject().getDouble("timeLimit");
+        if ( timeLimit == null )
+            return;
+        
+        String durationUOM = null;
+        if ( container().getDefinitionObject().getString("durationUomId") != null )
+            durationUOM = container().getDefinitionObject().getString("durationUomId");        
+        if ( durationUOM == null )
+            return;
+                
+        Map context = new HashMap();
+        context.put("serviceName",limitService);
+        context.put("timeLimit", timeLimit);
+        context.put("durationUom", durationUOM);
+        context.put("serviceContext",serviceContext);
+        
+        ModelService model = new ModelService();
+        model.name = "wf-INTERNAL-schLimit";
+        model.location = "org.ofbiz.core.workflow.WorkflowServices";
+        model.invoke = "activityScheduleLimit";
+        model.engineName = "java";
+        model.contextInfo = null;
+        model.description = null;
+        model.nameSpace = null;
+        model.validate = false;
+        model.export = false;
+        model.auth = false;
+        
+        try {
+            getDispatcher().runSync(getServiceLoader(),model,context);
+        }
+        catch ( GenericServiceException e ) {
+            throw new WfException(e.getMessage(),e);
+        }        
+    }
+    
     // Invoke the procedure (service) -- This will include sub-workflows
-    private GenericResultWaiter runService(String serviceName, String params) throws WfException {       
+    private GenericResultWaiter runService(String serviceName, String params, String extend) throws WfException {       
         DispatchContext dctx = getDispatcher().getLocalContext(getServiceLoader());
         ModelService service = null;
         try {
@@ -515,11 +580,11 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
         if ( service == null )
             throw new WfException("Cannot determine model service for service name");
-        return runService(service,params);
+        return runService(service,params,extend);
     }
     
-    private GenericResultWaiter runService(ModelService service, String params) throws WfException {
-        Map ctx = this.actualContext(params);
+    private GenericResultWaiter runService(ModelService service, String params, String extend) throws WfException {
+        Map ctx = this.actualContext(params,extend);
         GenericResultWaiter waiter = new GenericResultWaiter();
         try {
             getDispatcher().runAsync(getServiceLoader(),service,ctx,waiter);
@@ -531,9 +596,12 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
     
     // Gets the actual context parameters from the context based on the actual paramters field
-    private Map actualContext(String actualParameters) throws WfException {
+    private Map actualContext(String actualParameters, String extendedAttr) throws WfException {
         Map actualContext = new HashMap();
         Map context = processContext();
+        Map extendedAttributes = StringUtil.strToMap(extendedAttr);
+        if ( extendedAttributes != null && extendedAttributes.size() > 0 ) 
+            actualContext.putAll(extendedAttributes);
         if ( actualParameters != null ) {
             List params = StringUtil.split(actualParameters,",");
             Iterator i = params.iterator();
@@ -541,7 +609,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 Object key = i.next();
                 if ( context.containsKey(key) )
                     actualContext.put(key,context.get(key));
-                else
+                else if ( !actualContext.containsKey(key) )
                     throw new WfException("Context does not contain the key: '" + (String)key + "'");
             }
         }

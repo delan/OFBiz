@@ -4,6 +4,7 @@
 
 package org.ofbiz.core.util;
 
+import java.net.*;
 import java.text.*;
 import java.util.*;
 
@@ -79,4 +80,56 @@ public class StringUtil {
         }
         return splitList;
     }
+    
+    /** Creates a Map from an encoded name/value pair string
+     *@param str The string to decode and format
+     *@return a Map of name/value pairs
+     */
+    public static Map strToMap(String str) {
+        if ( str == null ) return null;
+        Map decodedMap = new HashMap();
+        List elements = split(str,"|");
+        Iterator i = elements.iterator();
+        while ( i.hasNext() ) {
+            String s = (String) i.next();
+            List e = split(s,"=");
+            if ( e.size() != 2 )
+                continue;
+            String name = (String) e.get(0);
+            String value = (String) e.get(1);
+            decodedMap.put(URLDecoder.decode(name), URLDecoder.decode(value));
+        }
+        return decodedMap;        
+    }
+    
+    /** Creates an encoded String from a Map of name/value pairs (MUST BE STRINGS!)
+     *@param map The Map of name/value pairs
+     *@return String The encoded String
+     */
+    public static String mapToStr(Map map) {
+        if ( map == null ) return null;
+        StringBuffer buf = new StringBuffer();
+        Set keySet = map.keySet();
+        Iterator i = keySet.iterator();
+        boolean first = true;
+        while ( i.hasNext() ) {
+            Object key = i.next();
+            Object value = map.get(key);
+            if ( !(key instanceof String) || !(value instanceof String) )
+                continue;
+            String encodedName = URLEncoder.encode((String)key);
+            String encodedValue = URLEncoder.encode((String)value);
+            
+            if ( first )
+                first = false;
+            else
+                buf.append("|");
+            
+            buf.append(encodedName);
+            buf.append("=");
+            buf.append(encodedValue);
+        }
+        return buf.toString();
+    }
+    
 }
