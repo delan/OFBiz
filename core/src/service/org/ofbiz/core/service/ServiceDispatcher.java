@@ -268,7 +268,7 @@ public class ServiceDispatcher {
             // if there was an error, rollback transaction, otherwise commit
             if (isError) {
                 // try to log the error
-                Debug.logError("Service Error: " + result.get(ModelService.ERROR_MESSAGE), module);
+                Debug.logError("Service Error [" + service.name + "]: " + result.get(ModelService.ERROR_MESSAGE), module);
                 
                 // rollback the transaction
                 try {
