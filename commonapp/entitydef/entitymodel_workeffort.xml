@@ -140,14 +140,14 @@
       <field name="objectPriority" type="numeric"></field>
       <field name="objectState" type="name"></field>
       <field name="description" type="description"></field>
-      <field name="runtimeDataId" type="id-ne"></field>
       <field name="timeLimit" type="floating-point"></field>
       <field name="startModeEnumId" type="id"></field>
       <field name="finishModeEnumId" type="id"></field>
       <field name="performerParticipantId" type="id"></field>
-      <field name="documentationContentId" type="id"></field>
-      <field name="iconContentId" type="id"></field>
+      <field name="documentationUrl" type="url"></field>
+      <field name="iconUrl" type="url"></field>
       <field name="cost" type="currency-amount"></field>
+      <field name="instantiationLimitEnumId" type="id"></field>
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
       <field name="waitingTime" type="floating-point"></field>	
@@ -159,12 +159,6 @@
       </relation>
       <relation type="one" title="FinishMode" rel-entity-name="Enumeration">
         <key-map field-name="finishModeEnumId" rel-field-name="enumId" />
-      </relation>
-      <relation type="one" title="Documentation" rel-entity-name="Content">
-        <key-map field-name="documentationContentId" rel-field-name="contentId" />
-      </relation>
-      <relation type="one" title="Icon" rel-entity-name="Content">
-        <key-map field-name="iconContentId" rel-field-name="contentId" />
       </relation>
       <relation type="one" title="Performer" rel-entity-name="WorkflowParticipant">
         <key-map field-name="performerParticipantId" rel-field-name="participantId" />
@@ -178,9 +172,6 @@
         <key-map field-name="packageId" />
         <key-map field-name="processId" />
         <key-map field-name="activityId" rel-field-name="toActivityId" />
-      </relation>
-      <relation type="one" rel-entity-name="RuntimeData">
-        <key-map field-name="runtimeDataId" />
       </relation>
       <relation type="many" title="Performer" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="performerParticipantId" rel-field-name="participantId" />
@@ -446,7 +437,7 @@
       <field name="specificationId" type="id"></field>
       <field name="sourceVendorInfo" type="long-varchar"></field>
       <field name="creationDateTime" type="date-time"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="objectVersion" type="very-short"></field>
       <field name="author" type="name"></field>
       <field name="codepage" type="short-varchar"></field>
       <field name="countryGeoId" type="id"></field>
@@ -456,7 +447,6 @@
       <field name="costUomId" type="id"></field>
       <field name="responsibleListId" type="id"></field>
       <field name="documentationUrl" type="url"></field>
-      <field name="iconContentId" type="id"></field>
       <field name="importedFromUrl" type="url"></field>
       <field name="applicationListId" type="id"></field>
       <field name="dataFieldListId" type="id"></field>
@@ -491,9 +481,6 @@
       </relation>
       <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="responsibleListId" rel-field-name="participantListId" />
-      </relation>
-      <relation type="one" title="Icon" rel-entity-name="Content">
-        <key-map field-name="iconContentId" rel-field-name="contentId" />
       </relation>
       <relation type="many" rel-entity-name="WorkflowDataFieldList">
         <key-map field-name="dataFieldListId" />
@@ -652,9 +639,8 @@
       <field name="objectPriority" type="numeric"></field>
       <field name="objectState" type="name"></field>
       <field name="description" type="description"></field>
-      <field name="runtimeDataId" type="id-ne"></field>
       <field name="creationDateTime" type="date-time"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="objectVersion" type="very-short"></field>
       <field name="author" type="name"></field>
       <field name="codepage" type="short-varchar"></field>
       <field name="countryGeoId" type="id"></field>
@@ -668,7 +654,6 @@
       <field name="participantListId" type="id"></field>
       <field name="applicationListId" type="id"></field>
       <field name="documentationUrl" type="url"></field>
-      <field name="iconContentId" type="id"></field>
       <field name="durationUomId" type="id"></field>
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
@@ -698,14 +683,8 @@
       <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="responsibleListId" rel-field-name="participantListId" />
       </relation>
-      <relation type="one" title="Icon" rel-entity-name="Content">
-        <key-map field-name="iconContentId" rel-field-name="contentId" />
-      </relation>
       <relation type="one" title="Duration" rel-entity-name="Uom">
         <key-map field-name="durationUomId" rel-field-name="uomId" />
-      </relation>
-      <relation type="one" rel-entity-name="RuntimeData">
-        <key-map field-name="runtimeDataId" />
       </relation>
       <relation type="many" rel-entity-name="WorkflowFormalParamList">
         <key-map field-name="formalParamListId" />
@@ -753,8 +732,10 @@
       <field name="transitionName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="conditionExpr" type="long-varchar"></field>
+      <field name="conditionTypeEnumId" type="id"></field>
       <field name="fromActivityId" type="id"></field>
-      <field name="toActivityId" type="id"></field>	
+      <field name="toActivityId" type="id"></field>
+      <field name="loopTypeEnumId" type="id"></field>	
       <prim-key field="packageId" />	
       <prim-key field="processId" />	
       <prim-key field="transitionId" />
@@ -771,6 +752,12 @@
         <key-map field-name="packageId" />
         <key-map field-name="processId" />
         <key-map field-name="toActivityId" rel-field-name="activityId" />
+      </relation>
+      <relation type="one" title="ConditionType" rel-entity-name="Enumeration">
+        <key-map field-name="conditionTypeEnumId" rel-field-name="enumId" />
+      </relation>
+      <relation type="one" title="LoopType" rel-entity-name="Enumeration">
+        <key-map field-name="loopTypeEnumId" rel-field-name="enumId" />
       </relation>
     </entity>
     <entity entity-name="WorkflowTypeDeclaration" 
