@@ -2,12 +2,23 @@
 # IMPORTANT:
 # The following five lines should always be at line 4 to 8 of the file!!!
 OFB_SETUPDIR="setup/ofbiz"
-if test -f "$OFB_SETUPDIR/update-all"; then
+if test -f "$OFB_SETUPDIR/flexupdate.sh"; then
 	echo Copying current update script to .
-	cp "$OFB_SETUPDIR/update-all" .
+	cp "$OFB_SETUPDIR/flexupdate.sh" .
 fi
 
-# Here is the place for license / file description
+#Features:
+#o Command parameters are parsed to modify predefined settings
+#o if exists, a rc-file is parsed to overwrite predefined settings
+#o if exists, the script will replace itself with it's newest version
+#o tries to be smart about need to checkout / update modules
+#o copies current setup/ofbiz/build.xml to toplevel
+#
+#try:
+#flexupdate.sh --help
+#
+#Important: if the script is renamed (eg. for integrating in setup module), 
+#update the first few lines to new name / location.
 # 
 # @author Rene Gielen <gielen@aixcept.de>
 
