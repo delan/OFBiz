@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
  */
  
@@ -47,6 +47,15 @@
     
     billingParty = InvoiceWorker.getBillToParty(invoice);
     context.put("billingParty", billingParty);
+    
+    orderItemBillings = delegator.findByAnd("OrderItemBilling", UtilMisc.toMap("invoiceId", invoiceId), UtilMisc.toList("orderId"));
+    orders = new OrderedSet();
+    oibIter = orderItemBillings.iterator();
+    while (oibIter.hasNext()) {
+        orderIb = oibIter.next();
+        orders.add(orderIb.getString("orderId"));
+    }
+    context.put("orders", orders);
         
     if (billingParty != null && billingParty.get("partyTypeId").equals("PERSON"))
         context.put("billingPerson", billingParty.getRelatedOne("Person"));

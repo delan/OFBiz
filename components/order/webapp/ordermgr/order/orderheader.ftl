@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -225,7 +225,7 @@
                         <tr><td>&nbsp;</td><td>&nbsp;</td><td colspan="5"><hr class='sepbar'></td></tr>
                         <tr>
                           <td align="right" valign="top" width="15%">
-                            <div class="tabletext">&nbsp;<b>Address</b></div>
+                            <div class="tabletext">&nbsp;</div>
                           </td>
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
@@ -269,7 +269,23 @@
                           <div class="tabletext">${customerPoNumber?if_exists}</div>
                         </td>
                       </tr>
-                    </#if>              
+                    </#if>
+                    
+                    <#-- invoices -->
+                    <#if invoices?has_content>
+                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr>
+                        <td align="right" valign="top" width="15%">
+                          <div class="tabletext">&nbsp;<b>Invoices</b></div>
+                        </td>
+                        <td width="5">&nbsp;</td>
+                        <td align="left" valign="top" width="80%">
+                          <#list invoices as invoice>
+                            <div class="tabletext">#<a href="/accounting/control/viewInvoice?invoiceId=${invoice}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${invoice}</a></div>
+                          </#list>
+                        </td>
+                      </tr>
+                    </#if>                                                     
                     </table>
                   </td>
                 </tr>
@@ -495,7 +511,7 @@
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                             <#list allShipments as shipment>
-                                <div class="tabletext">Shipment: <a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${shipment.shipmentId}</a></div>
+                                <div class="tabletext">#<a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${shipment.shipmentId}</a></div>
                             </#list>
                         </td>
                       </tr>

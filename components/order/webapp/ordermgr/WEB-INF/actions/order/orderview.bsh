@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 */
 
@@ -178,6 +178,16 @@ if (orderHeader != null) {
     }
     context.put("allShipments", allShipmentsMap.values());
     context.put("itemIssuancesPerItem", itemIssuancesPerItem);
+    
+    // get a list of all invoices
+    allInvoices = new OrderedSet();
+    orderBilling = delegator.findByAnd("OrderItemBilling", UtilMisc.toMap("orderId", orderId), UtilMisc.toList("invoiceId"));
+    obIter = orderBilling.iterator();
+    while (obIter.hasNext()) {
+        billingGv = obIter.next();
+        allInvoices.add(billingGv.getString("invoiceId"));
+    }
+    context.put("invoices", allInvoices);
 
     orderPaymentPreferences = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toList(new EntityExpr("orderId", EntityOperator.EQUALS, orderId)));
     context.put("orderPaymentPreferences", orderPaymentPreferences);  
