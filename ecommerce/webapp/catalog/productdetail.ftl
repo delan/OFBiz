@@ -209,7 +209,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
 </table>
 
 <#-- Upgrades/Up-Sell/Cross-Sell -->
-<#macro associated assocProducts beforeName showName afterName)>
+<#macro associated assocProducts beforeName showName afterName>
   <#if assocProducts?exists && 0 < assocProducts?size>
     <tr><td>&nbsp;</td></tr> 
     <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div></td></tr>
@@ -217,24 +217,23 @@ ${requestAttributes.virtualJavaScript?if_exists}
     <#list assocProducts as productAssoc>
       <tr><td>
         <div class="tabletext">
-          <a href='<ofbiz:url>/product?product_id=${productAssoc.productIdTo?if_exists}</ofbiz:url>' class="buttontext">
+          <a href='<@ofbizUrl>/product?product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>' class="buttontext">
             ${productAssoc.productIdTo?if_exists}
           </a>
           - <b>${productAssoc.reason?if_exists}</b>
         </div>
-      </td></tr>
-      <#assign asscProduct = productAssoc.getRelatedOneCache("AssocProduct")>
-      ${setRequestAttribute("productId", asscProduct.productId)}
+      </td></tr>      
+      ${setRequestAttribute("optProductId", productAssoc.productIdTo)}
       ${setRequestAttribute("listIndex", listIndex)}
       <tr>
         <td>
           ${pages.get("/catalog/productsummary.ftl")}
         </td>
       </tr>
-      <#assign listIndex = listIndex + 1>
+      <#local listIndex = listIndex + 1>
       <tr><td><hr class='sepbar'></td></tr>
     </#list>           
-    ${setRequestAttribute("assocProducts", "")}
+    ${setRequestAttribute("optProductId", "")}
   </#if>      
 </#macro>
 <#assign productValue = product>

@@ -2,8 +2,7 @@
 <page>
     <template>/templates/main_lr.ftl</template>
     <generator name="ofbiz-freemarker"/>
-    <property name="title">Category Page</property>
-    <page-action>catalog/category.js</page-action>
+    <property name="title">Search Results</property>
+    <page-action>catalog/keywordsearch.js</page-action>
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>
-
