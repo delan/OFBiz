@@ -1241,7 +1241,8 @@
         <description>Supply thruDate to all ContentAssoc that come "before" current one</description>
         <attribute mode="IN" name="contentIdTo" optional="false" type="String"/>
         <attribute mode="IN" name="mapKey" optional="true" type="String"/>
-        <attribute mode="IN" name="activeContentId" optional="false" type="String"/>
+        <attribute mode="IN" name="activeContentId" optional="true" type="String"/>
+        <attribute mode="IN" name="contentId" optional="true" type="String"/>
         <attribute mode="IN" name="contentAssocTypeId" optional="false" type="String"/>
         <attribute mode="IN" name="fromDate" optional="true" type="Timestamp"/>
         <attribute mode="OUT" name="deactivatedList" optional="false" type="List"/>
