@@ -120,7 +120,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
             <p>&nbsp;</p>
             <#list requestAttributes.featureSet as currentType>
               <div class="tabletext">
-                <select name="${currentType}" onChange="getList(this.name, this.options[this.selectedIndex].value)">
+                <select name="${currentType}" class="selectBox" onChange="getList(this.name, this.options[this.selectedIndex].value)">
                   <option>${requestAttributes.featureTypes.get(currentType)}</option>
                 </select>
               </div>
