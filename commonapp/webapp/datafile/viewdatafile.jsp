@@ -31,7 +31,9 @@
 <%@ page import="org.ofbiz.core.datafile.*" %>
 
 <%
-  List errorMessages = new LinkedList();
+  List messages = new LinkedList();
+
+  String dataFileSave = request.getParameter("DATAFILE_SAVE");
 
   String dataFileLoc = request.getParameter("DATAFILE_LOCATION");
   String definitionLoc = request.getParameter("DEFINITION_LOCATION");
@@ -41,19 +43,27 @@
 
   URL dataFileUrl = null;
   try { dataFileUrl = dataFileIsUrl?new URL(dataFileLoc):UtilURL.fromFilename(dataFileLoc); }
-  catch(java.net.MalformedURLException e) { errorMessages.add(e.getMessage()); }
+  catch(java.net.MalformedURLException e) { messages.add(e.getMessage()); }
   URL definitionUrl = null;
   try { definitionUrl = definitionIsUrl?new URL(definitionLoc):UtilURL.fromFilename(definitionLoc); }
-  catch(java.net.MalformedURLException e) { errorMessages.add(e.getMessage()); }
+  catch(java.net.MalformedURLException e) { messages.add(e.getMessage()); }
 
   DataFile dataFile = null;
   if(dataFileUrl != null && definitionUrl != null && definitionName != null && definitionName.length() > 0) {
     try { dataFile = DataFile.readFile(dataFileUrl, definitionUrl, definitionName); }
-    catch(Exception e) { errorMessages.add(e.getMessage()); }
+    catch(Exception e) { messages.add(e.getMessage()); }
   }
 
   ModelDataFile modelDataFile = null;
   if(dataFile != null) modelDataFile = dataFile.modelDataFile;
+
+  if(dataFile != null && dataFileSave != null) {
+    try {
+      dataFile.writeDataFile(dataFileSave);
+      messages.add("Data File saved to: " + dataFileSave);
+    }
+    catch(Exception e) { messages.add(e.getMessage()); }
+  }
 %>
 <h3>View Data File</h3>
 <div>This page is used to view data from data files parsed by the configurable data file parser.</div>
@@ -68,10 +78,10 @@
 
   <hr>
 
-  <%if(errorMessages.size() > 0) {%>
-    <H4>The following errors occurred:</H4>
+  <%if(messages.size() > 0) {%>
+    <H4>The following occurred:</H4>
     <UL>
-    <%Iterator errMsgIter = errorMessages.iterator();%>
+    <%Iterator errMsgIter = messages.iterator();%>
     <%while(errMsgIter.hasNext()) {%>
       <LI><%=errMsgIter.next()%>
     <%}%>
@@ -79,6 +89,17 @@
   <%}%>
 
   <%if(dataFile != null && modelDataFile != null) {%>
+    <FORM method=POST action='<ofbiz:url>/viewdatafile</ofbiz:url>'>
+      <INPUT name='DATAFILE_LOCATION' type=hidden value='<%=UtilFormatOut.checkNull(dataFileLoc)%>'>
+      <%=dataFileIsUrl?"<INPUT type=hidden name='DATAFILE_IS_URL' value='true'>":""%>
+      <INPUT name='DEFINITION_LOCATION' type=hidden value='<%=UtilFormatOut.checkNull(definitionLoc)%>'>
+      <%=definitionIsUrl?"<INPUT type=hidden name='DEFINITION_IS_URL' value='true'>":""%>
+      <INPUT name='DEFINITION_NAME' type=hidden value='<%=UtilFormatOut.checkNull(definitionName)%>'>
+      Save to file: <INPUT name='DATAFILE_SAVE' type=text size='60' value='<%=UtilFormatOut.checkNull(dataFileSave)%>'>
+      <INPUT type=submit value='Save'>
+    </FORM>
+    <BR>
+
     <TABLE cellpadding='2' cellspacing='0' border='1'>
       <TR>
         <TD><B>Name</B></TD>
