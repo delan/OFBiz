@@ -43,25 +43,26 @@ public class RegionManager {
     public static Region getRegion(URL regionFile, String regionName) {
         if (regionFile == null) return null;
         
-        Map regions = RegionCache.getRegions(regionFile);
-        if (regions == null) {
-            regions = readRegionXml(regionFile);
-            RegionCache.putRegions(regionFile, regions);
-        }
+        Map regions = getRegions(regionFile);
         return (Region) regions.get(regionName);
     }
     
     public static void putRegion(URL regionFile, String regionName, Object region) {
         if (regionFile == null) throw new IllegalArgumentException("regionFile cannot be null");
         
+        Map regions = getRegions(regionFile);
+        regions.put(regionName, region);
+    }
+
+    public static Map getRegions(URL regionFile) {
         Map regions = RegionCache.getRegions(regionFile);
         if (regions == null) {
             regions = readRegionXml(regionFile);
             RegionCache.putRegions(regionFile, regions);
         }
-        regions.put(regionName, region);
+        return regions;
     }
-
+    
     public static Map readRegionXml(URL regionXmlLocation) {
         Map regions = new HashMap();
         
