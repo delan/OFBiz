@@ -89,7 +89,10 @@ public class ProductServices {
             Map fields = UtilMisc.toMap("productId", productId);
             List order = UtilMisc.toList("sequenceNum", "productFeatureTypeId");
             Collection features = delegator.findByAndCache("ProductFeatureAndAppl", fields, order);
-            featureSet = new OrderedSet(features);
+            Iterator i = features.iterator();
+            featureSet = new OrderedSet();
+            while (i.hasNext())
+                featureSet.add(((GenericValue)i.next()).getString("productFeatureTypeId"));
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem reading product features: " + e.getMessage());
