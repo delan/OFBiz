@@ -776,7 +776,7 @@ public class GenericDAO {
         try {
           String tableName = tableSet.getString("TABLE_NAME");
           String tableType = tableSet.getString("TABLE_TYPE");
-          String remarks = tableSet.getString("REMARKS");
+          //String remarks = tableSet.getString("REMARKS");
           tableNames.add(tableName.toUpperCase());
           //Debug.logInfo("[GenericDAO.checkDb] Found table named \"" + tableName + "\" of type \"" + tableType + "\" with remarks: " + remarks);
         }
