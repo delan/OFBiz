@@ -59,6 +59,12 @@ public interface GenericHelper
    */
   public GenericValue findByPrimaryKeyPartial(GenericPK primaryKey, Set keys) throws GenericEntityException;
 
+  /** Find a number of Generic Value objects by their Primary Keys, all at once
+   *@param primaryKeys A Collection of primary keys to find by.
+   *@return Collection of GenericValue objects corresponding to the passed primaryKey objects
+   */
+  public Collection findAllByPrimaryKeys(Collection primaryKeys) throws GenericEntityException;
+
   /** Remove a Generic Entity corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */

@@ -157,17 +157,17 @@ public class GenericDelegator {
    *@param entityName The name of the entity to get the helper for
    *@return String with the helper name that corresponds to this delegator and the specified entityName
    */
-  public String getEntityHelperName(String entityName) {
-    String groupName = getModelGroupReader().getEntityGroupName(entityName);
-    return this.getGroupHelperName(groupName);
+  public String getGroupHelperName(String groupName) {
+    return UtilProperties.getPropertyValue("servers", delegatorName + ".group." + groupName);
   }
   
   /** Gets the helper name that corresponds to this delegator and the specified entityName
    *@param entityName The name of the entity to get the helper for
    *@return String with the helper name that corresponds to this delegator and the specified entityName
    */
-  public String getGroupHelperName(String groupName) {
-    return UtilProperties.getPropertyValue("servers", delegatorName + ".group." + groupName);
+  public String getEntityHelperName(String entityName) {
+    String groupName = getModelGroupReader().getEntityGroupName(entityName);
+    return this.getGroupHelperName(groupName);
   }
   
   /** Gets the helper name that corresponds to this delegator and the specified entity
@@ -275,7 +275,7 @@ public class GenericDelegator {
    * @return The GenericValue corresponding to the primaryKey
    */
   public GenericValue findByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
-    GenericHelper helper = getEntityHelper(primaryKey.getModelEntity());
+    GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
     GenericValue value = null;
     if(!primaryKey.isPrimaryKey()) throw new IllegalArgumentException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
     try { value = helper.findByPrimaryKey(primaryKey); }
@@ -315,6 +315,66 @@ public class GenericDelegator {
     return findByPrimaryKeyCache(makePK(entityName, fields));
   }
   
+  /** Find a Generic Entity by its Primary Key and only returns the values requested by the passed keys (names)
+   *@param primaryKey The primary key to find by.
+   *@param keys The keys, or names, of the values to retrieve; only these values will be retrieved
+   *@return The GenericValue corresponding to the primaryKey
+   */
+  public GenericValue findByPrimaryKeyPartial(GenericPK primaryKey, Set keys) throws GenericEntityException {
+    GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
+    GenericValue value = null;
+    if(!primaryKey.isPrimaryKey()) throw new IllegalArgumentException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
+    try { value = helper.findByPrimaryKeyPartial(primaryKey, keys); }
+    catch(GenericEntityNotFoundException e) { value = null; }
+    if(value != null) value.delegator = this;
+    return value;
+  }
+
+  /** Find a number of Generic Value objects by their Primary Keys, all at once
+   *@param primaryKeys A Collection of primary keys to find by.
+   *@return Collection of GenericValue objects corresponding to the passed primaryKey objects
+   */
+  public Collection findAllByPrimaryKeys(Collection primaryKeys) throws GenericEntityException {
+    if(primaryKeys == null) return null;
+    Collection results = new LinkedList();
+    
+    //from the delegator level this is complicated because different GenericPK 
+    // objects in the collection may correspond to different helpers
+    HashMap pksPerHelper = new HashMap();
+    Iterator pkiter = primaryKeys.iterator();
+    while(pkiter.hasNext()) {
+      GenericPK curPK = (GenericPK)pkiter.next();
+      String helperName = this.getEntityHelperName(curPK.getEntityName());
+      Collection pks = (Collection)pksPerHelper.get(helperName);
+      if(pks == null) {
+        pks = new LinkedList();
+        pksPerHelper.put(helperName, pks);
+      }
+      pks.add(curPK);
+    }
+    
+    Iterator helperIter = pksPerHelper.entrySet().iterator();
+    while(helperIter.hasNext()) {
+      Map.Entry curEntry = (Map.Entry)helperIter.next();
+      String helperName = (String)curEntry.getKey();
+      GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+      Collection temp = helper.findAllByPrimaryKeys((Collection)curEntry.getValue());
+      results.addAll(temp);
+    }
+    return results;
+  }
+
+  /** Find a number of Generic Value objects by their Primary Keys, all at once; 
+   *  this first looks in the local cache for each PK and if there then it puts it
+   *  in the return collection rather than putting it in the batch to send to
+   *  a given helper.
+   *@param primaryKeys A Collection of primary keys to find by.
+   *@return Collection of GenericValue objects corresponding to the passed primaryKey objects
+   */
+  public Collection findAllByPrimaryKeysCache(Collection primaryKeys) throws GenericEntityException {
+    return null;
+  }
+
   /** Remove a Generic Entity corresponding to the primaryKey
    * @param  primaryKey  The primary key of the entity to remove.
    */

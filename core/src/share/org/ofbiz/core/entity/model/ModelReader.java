@@ -408,6 +408,7 @@ public class ModelReader {
   }
   
   Document getDocument(String filename) {
+    if(filename == null || filename.length() <=0) return null;
     Document document = null;
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setValidating(true);

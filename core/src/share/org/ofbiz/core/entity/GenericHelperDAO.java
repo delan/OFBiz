@@ -84,6 +84,25 @@ public class GenericHelperDAO implements GenericHelper {
     return genericValue;
   }
   
+  /** Find a number of Generic Value objects by their Primary Keys, all at once
+   * This is done here for the DAO GenericHelper; for a client-server helper it
+   * would be done on the server side to reduce network round trips.
+   *@param primaryKeys A Collection of primary keys to find by.
+   *@return Collection of GenericValue objects corresponding to the passed primaryKey objects
+   */
+  public Collection findAllByPrimaryKeys(Collection primaryKeys) throws GenericEntityException {
+    if(primaryKeys == null) return null;
+    Collection results = new LinkedList();
+    
+    Iterator pkiter = primaryKeys.iterator();
+    while(pkiter.hasNext()) {
+      GenericPK primaryKey = (GenericPK)pkiter.next();
+      GenericValue result = this.findByPrimaryKey(primaryKey);
+      if(result != null) results.add(result);
+    }
+    return results;
+  }
+
   /** Remove a Generic Entity corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */
