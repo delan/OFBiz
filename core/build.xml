@@ -54,21 +54,23 @@
         <property name="jdbc3.jar"     value="${env.JBOSS_HOME}/lib/jdbc2_0-stdext.jar" />
         <property name="jdbc.jar"      value="${jdbc1.jar}:${jdbc2.jar}:${jdbc3.jar}" />
 
-        <property name="mail1.jar"    value="${env.CATALINA_HOME}/common/lib/mail.jar" />
-        <property name="mail2.jar"    value="${env.JBOSS_HOME}/lib/ext/mail.jar" />
-        <property name="mail.jar"     value="${mail1.jar}:${mail2.jar}" />
+        <property name="mail1.jar"     value="${env.CATALINA_HOME}/common/lib/mail.jar" />
+        <property name="mail2.jar"     value="${env.JBOSS_HOME}/lib/ext/mail.jar" />
+        <property name="mail.jar"      value="${mail1.jar}:${mail2.jar}" />
 
-        <property name="jaxp1.jar"    value="${env.CATALINA_HOME}/common/lib/jaxp.jar" />
-        <property name="jaxp2.jar"    value="${env.JBOSS_HOME}/lib/jaxp.jar" />
-        <property name="jaxp.jar"     value="${jaxp1.jar}:${jaxp2.jar}" />
+        <property name="jaxp1.jar"     value="${env.CATALINA_HOME}/common/lib/jaxp.jar" />
+        <property name="jaxp2.jar"     value="${env.JBOSS_HOME}/lib/jaxp.jar" />
+        <property name="jaxp.jar"      value="${jaxp1.jar}:${jaxp2.jar}" />
 
         <property name="xerces.jar"    value="${env.CATALINA_HOME}/lib/xerces.jar:${env.CATALINA_HOME}/common/lib/xerces.jar" />
 
         <property name="log4j.jar"     value="../lib/log4j.jar"/>
+		<property name="bsh.jar"       value="../lib/bsh-1.2b3.jar"/>
 
-        <property name="api-jars"      value="${servlet.jar}:${jdbc.jar}:${mail.jar}:${log4j.jar}" />
-        <property name="xml-jars"      value="${jaxp.jar}:${xerces.jar}" />
-        <property name="classpath"     value="${env.CLASSPATH}:${lib.dir}:${api-jars}:${xml-jars}" />
+        <property name="api-jars1"     value="${servlet.jar}:${jdbc.jar}:${mail.jar}:${log4j.jar}" />
+        <property name="api-jars2"     value="${jaxp.jar}:${xerces.jar}:${bsh.jar}" />
+		<property name="api-jars"      value="${api-jars1}:${api-jars2}" />
+        <property name="classpath"     value="${env.CLASSPATH}:${lib.dir}:${api-jars}" />
         <echo message="classpath: ${classpath}" />                
     </target>
 
