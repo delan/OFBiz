@@ -2068,6 +2068,8 @@
       <package-name>org.ofbiz.commonapp.party.contact</package-name>
       <table-name>POSTAL_ADDRESS</table-name>
       <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
+	  <field><col-name>TO_NAME</col-name><type>name</type></field>
+	  <field><col-name>ATTN_NAME</col-name><type>name</type></field>
       <field><col-name>ADDRESS1</col-name><type>long-varchar</type></field>
       <field><col-name>ADDRESS2</col-name><type>long-varchar</type></field>
       <field><col-name>DIRECTIONS</col-name><type>long-varchar</type></field>
