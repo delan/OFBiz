@@ -367,6 +367,11 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="GenericLookup"/>
     </request-map> 
+    <request-map uri="LookupRouting">
+    	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.manufacturing.lookupParams" invoke="lookupRouting"/>
+    	<response name="success" type="view" value="GenericLookup"/>
+    </request-map> 
     <request-map uri="LookupRoutingTask">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.manufacturing.lookupParams" invoke="lookupRoutingTask"/>

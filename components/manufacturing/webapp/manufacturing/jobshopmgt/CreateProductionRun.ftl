@@ -54,7 +54,7 @@
       <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ManufacturingRoutingId}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%"><input type="text" class="inputBox" size="16" name="routingId" value="${productionRunData.routingId?if_exists}">
-<#--					<a href="javascript:call_fieldlookup(document.productionRunform.routingId,'<@ofbizUrl>/fieldLookup</@ofbizUrl>', 'lookupRouting',450,300);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a> -->
+					<a href="javascript:call_fieldlookup(document.productionRunform.routingId,'<@ofbizUrl>/LookupRouting</@ofbizUrl>', 'none',560,460);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
 	   </td>				
     </tr>
     <tr>

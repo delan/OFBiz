@@ -1,5 +1,5 @@
 /*
- * $Id: lookupParams.java,v 1.1 2003/12/12 21:38:37 holivier Exp $
+ * $Id: lookupParams.java,v 1.2 2004/01/05 10:25:18 holivier Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,13 +37,41 @@ import org.ofbiz.base.util.UtilMisc;
  * Product Information Related Events
  *
  * @author     <a href="mailto:holivier@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class lookupParams {
     
     public static final String module = lookupParams.class.getName();
 	
+	/** Set up parameters to be able to start the generic lockup to have LookupRoutingTask
+	 *@param request The HTTPRequest object for the current request
+	 *@param response The HTTPResponse object for the current request
+	 *@return String specifying the exit status of this event
+	 */
+	public static String lookupRouting(HttpServletRequest request, HttpServletResponse response) {
+
+		HttpSession session = ((HttpServletRequest) request).getSession();
+		Map paramLookup = (Map) session.getAttribute("paramLookup");
+		if (paramLookup == null || ! "LookupRouting".equals(paramLookup.get("lookupName"))) { 
+			if (paramLookup == null) {
+				paramLookup = new HashMap();
+				session.setAttribute("paramLookup",paramLookup);
+			} else paramLookup.clear();
+			paramLookup.put("lookupName","LookupRouting");
+			paramLookup.put("titleProperty","PageTitleLookupRouting");
+			paramLookup.put("formDefFile","/lookup/FieldLookupForms.xml");    
+			paramLookup.put("singleFormName","lookupRouting");    
+			paramLookup.put("listFormName","listLookupRouting");    
+			paramLookup.put("entityName","WorkEffort");    
+//			paramLookup.put("listName","entityList");
+			paramLookup.put("viewSize","10");    
+			paramLookup.put("permission","MANUFACTURING");    
+			paramLookup.put("permissionType","simple");
+			paramLookup.put("initialConstraint",UtilMisc.toMap("workEffortTypeId","ROUTING","fixedAssetId_op","equals"));
+		} 
+		return "success";
+	}
     /** Set up parameters to be able to start the generic lockup to have LookupRoutingTask
      *@param request The HTTPRequest object for the current request
      *@param response The HTTPResponse object for the current request
