@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerConfig.java,v 1.9 2004/05/26 16:02:30 ajzeneski Exp $
+ * $Id: ContainerConfig.java,v 1.10 2004/07/01 07:57:50 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -28,17 +28,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.base.util.UtilURL;
-import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.UtilValidate;
-
+import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.collections.OrderedMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -47,7 +46,7 @@ import org.xml.sax.SAXException;
  * ContainerConfig - Container configuration for ofbiz.xml
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  */
 public class ContainerConfig {

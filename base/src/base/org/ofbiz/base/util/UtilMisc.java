@@ -1,5 +1,5 @@
 /*
- * $Id: UtilMisc.java,v 1.6 2003/10/15 06:18:17 ajzeneski Exp $
+ * $Id: UtilMisc.java,v 1.7 2004/07/01 07:57:52 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,12 +34,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.ofbiz.base.util.collections.MapComparator;
+
 /**
  * UtilMisc - Misc Utility Functions
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class UtilMisc {

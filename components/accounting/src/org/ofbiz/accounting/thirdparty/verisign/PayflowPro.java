@@ -1,5 +1,5 @@
 /*
- * $Id: PayflowPro.java,v 1.2 2004/06/25 23:23:34 ajzeneski Exp $
+ * $Id: PayflowPro.java,v 1.3 2004/07/01 07:57:55 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,10 +32,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.collections.OrderedMap;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 
@@ -45,7 +45,7 @@ import com.Verisign.payment.PFProAPI;
  * PayflowPro - Verisign PayFlow Pro <=> OFBiz Service Module
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class PayflowPro {

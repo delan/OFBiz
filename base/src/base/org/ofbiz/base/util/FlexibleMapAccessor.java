@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleMapAccessor.java,v 1.4 2003/11/25 07:48:13 jonesde Exp $
+ * $Id: FlexibleMapAccessor.java,v 1.5 2004/07/01 07:57:50 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -29,13 +29,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.ofbiz.base.util.collections.LocalizedMap;
+
 /**
  * Used to flexibly access Map values, supporting the "." (dot) syntax for
  * accessing sub-map values and the "[]" (square bracket) syntax for accessing
  * list elements. See individual Map operations for more information.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.1
  */
 public class FlexibleMapAccessor {

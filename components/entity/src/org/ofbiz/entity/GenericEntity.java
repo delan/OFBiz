@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.30 2004/06/20 10:44:17 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.31 2004/07/01 07:57:56 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,10 +38,10 @@ import java.util.ResourceBundle;
 import java.util.TreeSet;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.LocalizedMap;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.collections.LocalizedMap;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.jdbc.SqlJdbcUtil;
 import org.ofbiz.entity.model.ModelEntity;
@@ -61,7 +61,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.30 $
+ *@version    $Revision: 1.31 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {

@@ -37,7 +37,7 @@ import org.ofbiz.security.Security;
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      3.0
  *
  * 
@@ -183,7 +183,7 @@ public class ContentManagementWorker {
         currentEntityMap.put(entityName, ent);
     }
 
-    public static String getFromSomewhere(String name, org.ofbiz.base.util.OrderedMap paramMap, HttpServletRequest request, org.jpublish.JPublishContext context) {
+    public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, org.jpublish.JPublishContext context) {
 
         String ret = null;
         if (paramMap != null)
