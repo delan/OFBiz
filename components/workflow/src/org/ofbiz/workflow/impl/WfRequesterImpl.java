@@ -1,5 +1,5 @@
 /*
- * $Id: WfRequesterImpl.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
+ * $Id: WfRequesterImpl.java,v 1.3 2003/08/25 19:30:41 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.workflow.WfRequester;
  * WfRequesterImpl - Workflow Requester implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class WfRequesterImpl implements WfRequester {
@@ -79,7 +79,7 @@ public class WfRequesterImpl implements WfRequester {
         // Validate the process context w/ what was passed.
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Validating w/ signature: " + mgr.contextSignature(), module);
-            ModelService.validate(mgr.contextSignature(), context, true);
+            ModelService.validate(mgr.contextSignature(), context, true, null);
         } catch (GenericServiceException e) {
             throw new WfException("Context passed does not validate against defined signature: ", e);
         }
