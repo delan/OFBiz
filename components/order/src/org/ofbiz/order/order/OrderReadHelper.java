@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.5 2003/08/26 20:37:51 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.6 2003/08/27 22:11:16 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -266,13 +266,15 @@ public class OrderReadHelper {
                 if (paymentPreference != null) {
                     try {
                         GenericValue paymentMethod = paymentPreference.getRelatedOne("PaymentMethod");
-                        GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");
-                        if (creditCard != null) {
-                            billingAddress = creditCard.getRelatedOne("PostalAddress");
-                        } else {
-                            GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount");
-                            if (eftAccount != null) {
-                                billingAddress = eftAccount.getRelatedOne("PostalAddress");
+                        if (paymentMethod != null) {
+                            GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");
+                            if (creditCard != null) {
+                                billingAddress = creditCard.getRelatedOne("PostalAddress");
+                            } else {
+                                GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount");
+                                if (eftAccount != null) {
+                                    billingAddress = eftAccount.getRelatedOne("PostalAddress");
+                                }
                             }
                         }                     
                     } catch (GenericEntityException e) {
