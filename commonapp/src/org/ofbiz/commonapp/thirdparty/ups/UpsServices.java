@@ -36,13 +36,16 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
- * ShipmentServices
+ * UPS ShipmentServices
  *
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @version    $Revision$
- * @since      2.0
+ * @since      2.2
  */
 public class UpsServices {
+    
+    public final static String module = UpsServices.class.getName();
 
     public static Map upsShipmentConfirm(DispatchContext dctx, Map context) {
         Map result = new HashMap();
@@ -518,7 +521,67 @@ public class UpsServices {
             errorList.add(errorMessageBuf.toString());
         }
     }
+    
+    /**
+     * Opens a URL to UPS and makes a request.
+     * @param upsService Name of the UPS service to invoke
+     * @param xmlString XML message to send
+     * @param upsProps UPS configuration properties
+     * @return XML string response from UPS
+     * @throws UpsConnectException
+     */
+    protected static String sendUpsRequest(String upsService, String xmlString, Properties upsProps) throws UpsConnectException {        
+        //String conStr = upsProps.getProperty("connectUrl"); // for now we can test with null props
+        String conStr = "https://wwwcie.ups.com/ups.app/xml";        
+        if (conStr == null) {
+            throw new UpsConnectException("Incomplete connection URL; check your UPS configuration");
+        }
+        
+        // prepare the connect string
+        conStr = conStr.trim();
+        if (!conStr.endsWith("/")) {
+            conStr = conStr + "/";
+        }
+        conStr = conStr + upsService;
+        
+        Debug.logInfo("Opening URL to : " + conStr, module);               
+        Debug.logInfo("UPS XML String : " + xmlString, module);
+        
+        HttpClient http = new HttpClient(conStr);
+        String response = null;
+        try {            
+            response = http.post(xmlString);
+        } catch (HttpClientException e) {            
+            Debug.logError(e, "Problem connecting with UPS server", module);
+            throw new UpsConnectException("URL Connection problem", e);
+        }
+        
+        if (response == null) {
+            throw new UpsConnectException("Received a null response");
+        }
+        
+        return response;
+    }    
 }
+
+class UpsConnectException extends GeneralException {
+    UpsConnectException() {
+        super();
+    }
+    
+    UpsConnectException(String msg) {
+        super(msg);
+    }
+    
+    UpsConnectException(Throwable t) {
+        super(t);
+    }
+    
+    UpsConnectException(String msg, Throwable t) {
+        super(msg, t);
+    }
+}
+
 
 /*
  * UPS Code Reference
