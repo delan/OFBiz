@@ -74,7 +74,11 @@
     <define id='product' region='LEFT_RIGHT_REGION'>
         <put section='title'>Product Page</put>
         <put section='content' content='/entry/catalog/product.jsp'/>
-    </define>    
+    </define>
+    <define id='shipsetting' region='LEFT_RIGHT_REGION'>
+        <put section='title'>Order ShipTo Settings</put>
+        <put section='content' content='/entry/shipsettings.jsp'/>
+    </define>      
         
     <define id='shipsetup' region='MAIN_REGION'>
         <put section='title'>Shipping Estimate Setup</put>

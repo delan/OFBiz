@@ -54,21 +54,21 @@
         <response name="error" type="view" value="error"/>
     </request-map>
 
+	<!-- Main Order Manager Screens -->
     <request-map uri="main">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="main"/>
     </request-map>
-
     <request-map uri="orderview">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderview"/>
     </request-map>
-
     <request-map uri="orderlist">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderlist"/>
     </request-map>
 
+	<!-- Order Manager Edit Requests -->
     <request-map uri="changeOrderStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="changeOrderStatus"/>
@@ -82,6 +82,7 @@
         <response name="error" type="view" value="orderview"/>
     </request-map>
 
+	<!-- Order Note Requests -->
     <request-map uri="createnewnote">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="createnewnote"/>
@@ -93,6 +94,7 @@
         <response name="error" type="view" value="createnewnote"/>
     </request-map>
 
+	<!-- Order Entry Requests -->
     <request-map uri="salesentry">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="salesentry"/>
@@ -125,8 +127,19 @@
     </request-map>
     <request-map uri="product">
         <response name="success" type="view" value="product"/>
-    </request-map>    
+    </request-map>  
+    <request-map uri="setShipping">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="shipsetting"/>
+    </request-map>  
+    <request-map uri="createPostalAddress">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createPostalAddress"/>
+        <response name="success" type="view" value="shipsetting"/>
+        <response name="error" type="view" value="shipsetting"/>
+    </request-map>
 
+	<!-- Shipping Editor Requests -->
     <request-map uri="shipsetup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="shipsetup"/>
@@ -143,7 +156,8 @@
         <response name="success" type="view" value="shipsetup"/>
         <response name="error" type="view" value="shipsetup"/>
     </request-map>
-
+	
+	<!-- Tax Editor Requests -->
     <request-map uri="taxsetup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="taxsetup"/>
@@ -160,12 +174,7 @@
         <response name="success" type="view" value="taxsetup"/>
         <response name="error" type="view" value="taxsetup"/>
     </request-map>
-
-    <request-map uri="changeDelegator">
-        <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
-        <response name="success" type="view" value="main"/>
-        <response name="error" type="view" value="main"/>
-    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -181,6 +190,7 @@
     <view-map name="keywordsearch" type="region"/>  
     <view-map name="category" type="region"/>
     <view-map name="product" type="region"/>  
+    <view-map name="shipsetting" type="region"/>
     
     <view-map name="shipsetup" type="region"/>
     <view-map name="taxsetup" type="region"/>
