@@ -44,9 +44,9 @@
         <field-to-result field-name="sequencedId" result-name="shipmentId"/>
         
         <now-timestamp-to-env env-name="newEntity.createdDate"/>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="createdByUserLogin"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>
         <now-timestamp-to-env env-name="newEntity.lastModifiedDate"/>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="lastModifiedByUserLogin"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
         
         <create-value value-name="newEntity"/>
         
@@ -79,8 +79,8 @@
         </if-not-empty>
         
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        <now-timestamp-to-env env-name="newEntity.lastModifiedDate"/>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="lastModifiedByUserLogin"/>
+        <now-timestamp-to-env env-name="lookedUpValue.lastModifiedDate"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpValue"/>
 
         <store-value value-name="lookedUpValue"/>
     </simple-method>
