@@ -42,7 +42,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<#assign shipmentItem = shipmentItemData.shipmentItem>
 	<#assign itemIssuances = shipmentItemData.itemIssuances>
 	<#assign shipmentPackageContents = shipmentItemData.shipmentPackageContents>
-	<#assign product = shipmentItemData.product>
+	<#assign product = shipmentItemData.product?if_exists>
 	<#assign totalQuantityPackaged = shipmentItemData.totalQuantityPackaged>
 	<#assign totalQuantityToPackage = shipmentItemData.totalQuantityToPackage>
 	<tr>

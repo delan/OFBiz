@@ -129,7 +129,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<#assign shipmentItem = shipmentItemData.shipmentItem>
 	<#assign itemIssuances = shipmentItemData.itemIssuances>
 	<#assign shipmentPackageContents = shipmentItemData.shipmentPackageContents>
-	<#assign product = shipmentItemData.product>
+	<#assign product = shipmentItemData.product?if_exists>
 	<tr>
 		<td><div class="tabletext">${shipmentItem.shipmentItemSeqId}</div></td>
 		<td colspan="2"><div class="tabletext">${(product.productName)?if_exists} [<a href="<@ofbizUrl>/EditProduct?productId=${shipmentItem.productId?if_exists}</@ofbizUrl>" class="buttontext">${shipmentItem.productId?if_exists}</a>]</div></td>
