@@ -25,6 +25,7 @@ package org.ofbiz.core.entity.jdbc;
 
 import java.sql.*;
 import java.io.*;
+import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
@@ -40,6 +41,11 @@ public class SQLProcessor {
 
     /** Module Name Used for debugging */
     public static final String module = SQLProcessor.class.getName();
+    
+    /** Used for testing connections when test is enabled */
+    public static List CONNECTION_TEST_LIST = new ArrayList();
+    public static int MAX_CONNECTIONS = 1000;
+    public static boolean ENABLE_TEST = false;
 
     /** The datasource helper (see entityengine.xml <datasource name="..">) */
     private String helperName;
@@ -225,6 +231,8 @@ public class SQLProcessor {
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
         }
+        
+        testConnection(_connection);
         
         /* causes problems w/ postgres ??
         if (Debug.verboseOn()) {
@@ -697,5 +705,17 @@ public class SQLProcessor {
             Debug.logError(e, "Error closing the result, connection, etc in finalize EntityListIterator", module);
         }
         super.finalize();
+    }
+    
+    protected void testConnection(Connection con) throws GenericEntityException {
+        if (SQLProcessor.ENABLE_TEST) {
+            if (SQLProcessor.CONNECTION_TEST_LIST.contains(con.toString())) {
+                throw new GenericEntityException("Connection the exact same as index " + SQLProcessor.CONNECTION_TEST_LIST.indexOf(con.toString()));            
+            } 
+            SQLProcessor.CONNECTION_TEST_LIST.add(con.toString());
+            if (SQLProcessor.CONNECTION_TEST_LIST.size() > SQLProcessor.MAX_CONNECTIONS) {
+                SQLProcessor.CONNECTION_TEST_LIST.remove(0);    
+            }
+        }
     }
 }
