@@ -331,6 +331,10 @@
     </request-map>    
     
     <!-- Order Return Requests -->
+    <request-map uri="returnlist">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="returnlist"/>
+    </request-map>
     <request-map uri="returnMain">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="returnhead"/>    
@@ -463,6 +467,7 @@
     <view-map name="confirm" type="jpublish" page="/entry/confirmorder.ftl"/>
     <view-map name="ordercomplete" type="jpublish" page="/entry/ordercomplete.ftl"/>
     
+    <view-map name="returnlist" type="jpublish" page="/return/returnList.ftl"/>
     <view-map name="returnhead" type="jpublish" page="/return/returnHeader.ftl"/>
     <view-map name="returnitems" type="jpublish" page="/return/returnItems.ftl"/>
     

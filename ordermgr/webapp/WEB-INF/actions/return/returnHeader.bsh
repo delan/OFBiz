@@ -32,6 +32,7 @@ delegator = request.getAttribute("delegator");
 paramMap = UtilHttp.getParameterMap(request);
 
 orderId = request.getParameter("orderId");
+partyId = request.getParameter("partyId");
 returnId = request.getParameter("returnId");
 if (returnId == null)
     returnId = (String) request.getAttribute("returnId");
@@ -39,9 +40,14 @@ if (returnId == null)
 returnHeader = null;
 if (returnId != null) {
     returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
-    if (returnHeader != null) {    
+    if (returnHeader != null) {   
+        partyId = returnHeader.getString("fromPartyId"); 
         currentStatus = returnHeader.getRelatedOne("StatusItem");
-        context.put("currentStatus", currentStatus);        
+        context.put("currentStatus", currentStatus);
+        currentAccount = returnHeader.getRelatedOne("BillingAccount");
+        context.put("currentAccount", currentAccount);
+        currentFacility = returnHeader.getRelatedOne("Facility");
+        context.put("currentFacility", currentFacility);     
     }
 }
 context.put("returnHeader", returnHeader);
@@ -52,6 +58,13 @@ if (returnHeader != null) {
 } else {
     context.put("returnInfo", paramMap);
 }
+
+billingAccountList = null;
+if (partyId != null) {
+    billingAccountList = delegator.findByAnd("BillingAccountAndRole", UtilMisc.toMap("partyId", partyId));
+    billingAccountList = EntityUtil.filterByDate(billingAccountList);
+}
+context.put("billingAccountList", billingAccountList);
 
 facilityList = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
 context.put("facilityList", facilityList);

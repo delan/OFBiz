@@ -31,7 +31,13 @@
 </div>
 </#if>
 
-<form name="returnhead" method="post" action="<@ofbizUrl>/createReturn</@ofbizUrl>" >
+<#if returnHeader?exists>
+<form name="returnhead" method="post" action="<@ofbizUrl>/updateReturn</@ofbizUrl>">
+<input type="hidden" name="returnId" value="${returnHeader.returnId}">
+<#else>
+<form name="returnhead" method="post" action="<@ofbizUrl>/createReturn</@ofbizUrl>">
+</#if>
+
 <table border='0' cellpadding='2' cellspacing='0'>
   <#if returnHeader?exists>
   <tr>
@@ -65,10 +71,39 @@
   </tr>
   <tr>
     <td width='14%'>&nbsp;</td>
+    <td width='6%' align='right' nowrap><div class="tabletext">Return To Facility:</div></td>
+    <td width='6%'>&nbsp;</td>
+    <td width='74%'>
+      <select name='destinationFacilityId' class='selectBox'>
+        <#if currentFacility?exists>
+          <option value="${currentFacility.facilityId}">${currentFacility.facilityName?default(currentFacility.facilityId)}</option>
+          <option value="${currentFacility.facilityId}">---</option>
+        </#if>
+        <option value="">No Facility</option>
+        <#list facilityList as facility>
+          <option value="${facility.facilityId}">${facility.facilityName?default(facility.facilityId)}</option>
+        </#list>
+    </td>                
+  </tr>  
+  <tr>
+    <td width='14%'>&nbsp;</td>
     <td width='6%' align='right' nowrap><div class="tabletext">Billing Account:</div></td>
     <td width='6%'>&nbsp;</td>
     <td width='74%'>
-      <input type='text' class='inputBox' size='20' name='billingAccountId' value='${returnInfo.billingAccountId?if_exists}'>
+      <#if billingAccountList?has_content>
+        <select name='billingAccountId' class='selectBox'>
+          <#if currentAccount?exists>
+            <option value="${currentAccount.billingAccountId}">${currentAccount.billingAccountId}: ${currentAccount.description?if_exists}</option>
+            <option value="${currentAccount.billingAccountId}">---</option>
+          </#if>
+          <option value="">No Account</option>
+          <#list billingAccountList as ba>
+            <option value="${ba.billingAccountId}">${ba.billingAccountId}: ${ba.description?if_exists}</option>
+          </#list>
+        </select>
+      <#else>
+        <input type='text' class='inputBox' size='20' name='billingAccountId'>
+      </#if>
     </td>                
   </tr>     
   <tr>
@@ -87,32 +122,6 @@
       </select>
     </td>                
   </tr>   
-  <tr>
-    <td width='14%'>&nbsp;</td>
-    <td width='6%'>&nbsp;</td>
-    <td width='6%'><hr class="sepbar"></td>   
-    <td width='74%'>&nbsp;</td>
-  </tr>
-  <tr>
-    <td width='14%'>&nbsp;</td>
-    <td width='6%' align='right' nowrap><div class="tabletext">Return To Facility:</div></td>
-    <td width='6%'>&nbsp;</td>
-    <td width='74%'>
-      <table border='0' cellpadding='1' cellspacing='0'>
-        <tr>
-          <td><input type='radio' name="destinationFacilityId" value="" <#if returnInfo.destinationFacilityId?exists && returnInfo.destinationFacilityId == "">checked</#if>></td>
-          <td><div class='tabletext'>No Facility</div></td>
-        </tr>
-        <#list facilityList as facility>
-        <tr>
-        <tr>
-          <td><input type='radio' name="destinationFacilityId" value="${facility.facilityId}"<#if returnInfo.destinationFacilityId?exists && returnInfo.destinationFacilityId == facility.facilityId>checked</#if>></td>
-          <td><div class='tabletext'>${facility.facilityName}</div></td>
-        </tr>
-        </#list>
-      </table>
-    </td>                
-  </tr>
   <tr>
     <td width='14%'>&nbsp;</td>
     <td width='6%'>&nbsp;</td>

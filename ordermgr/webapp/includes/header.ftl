@@ -41,7 +41,11 @@
   </#if>
   <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
   <div class="col"><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="${selectedLeftClassMap.orderentry?default(unselectedLeftClassName)}">Order&nbsp;Entry</a></div>  
-  </#if>               
+  </#if>
+  <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+  <div class="col"><a href="<@ofbizUrl>/returnlist</@ofbizUrl>" class="${selectedLeftClassMap.return?default(unselectedLeftClassName)}">Returns</a></div>  
+  </#if>
+                   
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">Logout</a></div>
   <#else>
