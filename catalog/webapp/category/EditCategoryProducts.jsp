@@ -1,5 +1,4 @@
-<%
-/**
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,8 +23,7 @@
  *@author     David E. Jones
  *@created    March 10, 2002
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -108,8 +106,6 @@
 <%} else {%>
   <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%>&activeOnly=true</ofbiz:url>" class="buttontext">[Active Only]</a>
 <%}%>
-<a href="<ofbiz:url>/expireAllCategoryProductMembers?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Expire All Product Members]</a>
-<a href="<ofbiz:url>/removeExpiredCategoryProductMembers?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Remove All Expired Product Members]</a>
 
 <br>
 <%-- Edit 'ProductCategoryMember's --%>
@@ -219,6 +215,8 @@
     <input type="submit" value="Add">
   </div>
 </form>
+
+<br>
 <form method="POST" action="<ofbiz:url>/copyCategoryProductMembers</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="useValues" value="true">
@@ -244,7 +242,7 @@
   </div>
 </form>
 
-
+<br>
 <form method="POST" action="<ofbiz:url>/expireAllCategoryProductMembers</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="useValues" value="true">
@@ -253,9 +251,10 @@
   <div class='head2'>Expire All Product Members:</div>
   <div class='tabletext'>
     Optional Expiration Date: <input type=text size='20' name='thruDate'>
-    <input type="submit" value="Expire">
+    <input type="submit" value="Expire All">
   </div>
 </form>
+<br>
 <form method="POST" action="<ofbiz:url>/removeExpiredCategoryProductMembers</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="useValues" value="true">
@@ -264,7 +263,7 @@
   <div class='head2'>Remove Expired Product Members:</div>
   <div class='tabletext'>
     Optional Expired Before Date: <input type=text size='20' name='validDate'>
-    <input type="submit" value="Remove">
+    <input type="submit" value="Remove Expired">
   </div>
 </form>
 <%}%>
