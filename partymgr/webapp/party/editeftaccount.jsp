@@ -37,20 +37,26 @@
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
 
-<%PaymentWorker.getPaymentMethodAndRelated(pageContext, userLogin.getString("partyId"), 
+<%
+    String partyId = request.getParameter("party_id");
+    if (partyId == null) partyId = (String) request.getAttribute("partyId");
+    if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
+    else request.getSession().setAttribute("partyId", partyId);
+%>
+<%PaymentWorker.getPaymentMethodAndRelated(pageContext, partyId, 
     "paymentMethod", "creditCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity");%>
 
 <%
     GenericValue efta = (GenericValue) pageContext.getAttribute("eftAccount");
-    System.out.println("EFT Account: " + efta);
-    System.out.println("Try Entity: " + pageContext.getAttribute("tryEntity"));
+    Debug.logVerbose("EFT Account: " + efta);
+    Debug.logVerbose("Try Entity: " + pageContext.getAttribute("tryEntity"));
 %>
 
-<%ContactMechWorker.getCurrentPostalAddress(pageContext, userLogin.getString("partyId"), 
+<%ContactMechWorker.getCurrentPostalAddress(pageContext, partyId, 
     (String) pageContext.getAttribute("curContactMechId"), "curPartyContactMech", "curContactMech", 
     "curPostalAddress", "curPartyContactMechPurposes");%>
 
-<%ContactMechWorker.getPartyPostalAddresses(pageContext, userLogin.getString("partyId"), (String) pageContext.getAttribute("curContactMechId"), "postalAddressInfos");%>
+<%ContactMechWorker.getPartyPostalAddresses(pageContext, partyId, (String) pageContext.getAttribute("curContactMechId"), "postalAddressInfos");%>
 
 <%if (!security.hasEntityPermission("PAY_INFO", "_VIEW", session) && pageContext.getAttribute("eftAccount") != null && pageContext.getAttribute("paymentMethod") != null && 
       !userLogin.getString("partyId").equals(((GenericValue) pageContext.getAttribute("paymentMethod")).getString("partyId"))) {%>
@@ -60,18 +66,24 @@
     <ofbiz:unless name="eftAccount">
       <p class="head1">Add New EFT Account</p>
       &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
-      &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Save]</a>
+      <%if (security.hasEntityPermission("PAY_INFO", "_CREATE", session)) {%>
+          &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Create]</a>
+      <%}%>
       <form method="post" action='<ofbiz:url>/createEftAccount?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editeftaccountform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     </ofbiz:unless>
     <ofbiz:if name="eftAccount">
       <p class="head1">Edit EFT Account</p>
       &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
-      &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Save]</a>
+      <%if (security.hasEntityPermission("PAY_INFO", "_UPDATE", session)) {%>
+          &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Save]</a>
+      <%}%>
       <form method="post" action='<ofbiz:url>/updateEftAccount?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editeftaccountform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type=hidden name='paymentMethodId' value='<ofbiz:print attribute="paymentMethodId"/>'>
     </ofbiz:if>
+
+    <input type="hidden" name="partyId" value="<%=partyId%>">
 
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Name on Account</div></td>
@@ -215,5 +227,14 @@
   </form>
 
   &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
-  &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Save]</a>
+    <ofbiz:unless name="eftAccount">
+      <%if (security.hasEntityPermission("PAY_INFO", "_CREATE", session)) {%>
+          &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Create]</a>
+      <%}%>
+    </ofbiz:unless>
+    <ofbiz:if name="eftAccount">
+      <%if (security.hasEntityPermission("PAY_INFO", "_UPDATE", session)) {%>
+          &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Save]</a>
+      <%}%>
+    </ofbiz:if>
 <%}%>
