@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/02/02 19:50:30  azeneski
+ * formatting changes (120cols)
+ *
  * Revision 1.1  2001/11/16 14:12:02  jonesde
  * Initial checkin of datafile stuff
  *
