@@ -34,12 +34,14 @@
     <tr>
       <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ProductProductId}</div></td>
       <td width="5">&nbsp;</td>
-      <td width="74%"><input type="text" class="inputBox" size="16" name="productId" value="${productionRunData.productId?if_exists}"></td>
+      <td width="74%"><input type="text" class="inputBox" size="16" name="productId" value="${productionRunData.productId?if_exists}">
+					<a href="javascript:call_fieldlookup(document.productionRunform.productId,'<@ofbizUrl>/LookupProduct</@ofbizUrl>', 'none',640,460);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
+	  </td>			
     </tr>
     <tr>
       <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ManufacturingQuantity}</div></td>
       <td width="5">&nbsp;</td>
-      <td width="74%"><input type="text" class="inputBox" size="6" name="quantity" value="${productionRunData.quantity?if_exists}"></td>
+      <td width="74%"><input type="text" class="inputBox" size="6" name="pRQuantity" value="${productionRunData.pRQuantity?if_exists}"></td>
     </tr>
     <tr>
       <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ManufacturingStartDate}</div></td>
@@ -52,8 +54,18 @@
       <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ManufacturingRoutingId}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%"><input type="text" class="inputBox" size="16" name="routingId" value="${productionRunData.routingId?if_exists}">
-					<a href="javascript:call_fieldlookup(document.productionRunform.routingId,'<@ofbizUrl>/fieldLookup</@ofbizUrl>', 'lookupRouting',450,300);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
+<#--					<a href="javascript:call_fieldlookup(document.productionRunform.routingId,'<@ofbizUrl>/fieldLookup</@ofbizUrl>', 'lookupRouting',450,300);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a> -->
 	   </td>				
+    </tr>
+    <tr>
+      <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ManufacturingProductionRunName}</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%"><input type="text" class="inputBox" size="30" name="workEffortName" value="${productionRunData.workEffortName?if_exists}"></td>
+    </tr>
+    <tr>
+      <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
+      <td width="5">&nbsp;</td>
+      <td width="74%"><input type="text" class="inputBox" size="50" name="description" value="${productionRunData.description?if_exists}"></td>
     </tr>
     <tr>
       <td width="26%" align="right" valign="top">

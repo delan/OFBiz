@@ -280,7 +280,6 @@
     <request-map uri="UpdateRoutingTaskAssoc">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/manufacturing/techdata/RoutingSimpleEvents.xml" invoke="updateRoutingTaskAssoc"/>
-<!--        <event type="service" invoke="updateWorkEffortAssoc"/> -->
         <response name="success" type="view" value="EditRoutingTaskAssoc"/>
         <response name="error" type="view" value="EditRoutingTaskAssoc"/>
     </request-map>
@@ -397,7 +396,8 @@
     </request-map>
     <request-map uri="CreateProductionRunGo">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createProductionRun"/>
+        <event type="simple" path="org/ofbiz/manufacturing/jobshopmgt/ProductionRunSimpleEvents.xml" invoke="checkFieldCreateProductionRun"/>
+<!--        <event type="service" invoke="createProductionRun"/> SAV -->
         <response name="success" type="view" value="CreateProductionRun"/>
         <response name="error" type="view" value="CreateProductionRun"/>
     </request-map>

@@ -23,12 +23,16 @@
  *@version    $Revision: 1.1 $
  *@since      3.0
 -->
+<#-- copy from content component /content/LookupContent.ftl  1.1
+		modification: 
+			- uiLabel migration  first line
+			- comment the IruWrapper line
+		-->
 <div class="head1">${requestAttributes.uiLabelMap.CommonFind}&nbsp;${requestAttributes.uiLabelMap[page.entityName]}</div>
-<br>
-${lruWrapper.renderFormString()}
-<br>
+<#-- <br>
+${lruWrapper.renderFormString()} -->
+<br> 
 ${queryWrapper.renderFormString()}
 <br>
 ${listWrapper.renderFormString()}
 <br>
-

@@ -33,14 +33,19 @@ import org.ofbiz.base.util.*;
 HashMap productionRunData= new HashMap();
 productId = request.getParameter("productId");
 if (productId != null) productionRunData.put("productId",productId);
-quantity = request.getParameter("quantity");
-if (quantity != null) productionRunData.put("quantity",quantity);
+pRQuantity = request.getParameter("pRQuantity");
+if (pRQuantity != null) productionRunData.put("pRQuantity",pRQuantity);
 startDate = request.getParameter("startDate");
 if (startDate != null) productionRunData.put("startDate",startDate);
 routingId = request.getParameter("routingId");
 if (routingId != null) productionRunData.put("routingId",routingId);
+workEffortName = request.getParameter("workEffortName");
+if (workEffortName != null) productionRunData.put("workEffortName",workEffortName);
+description = request.getParameter("description");
+if (description != null) productionRunData.put("description",description);
 List msgResult = new LinkedList();
-msgResult = request.getAttribute("msgResult");
+msgResult = request.getParameter("msgResult");
+if (msgResult == null) msgResult = request.getAttribute("msgResult");
 // if (msgResult == null) { msgResult.add("truc"); }
 
 /*UtilMisc.toMap("routing","crac") if (msgResult != null && ! msgResult.isEmpty()) {
