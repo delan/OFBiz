@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/08/24 02:39:48  azeneski
+ * Added logging of some initial client headers for application use.
+ *
  * Revision 1.8  2001/08/22 14:07:43  jonesde
  * A few changes needed to get GenericWebEvent working
  *
@@ -93,8 +96,8 @@ public class ControlServlet extends HttpServlet {
       Security security = new Security(helper);
       if(security == null) Debug.logError("[ControlServlet.init] ERROR: security create failed for serverName \"" + serverName + "\"");
       //put these two in the "application" scope
-      getServletContext().setAttribute("helper", helper);
-      getServletContext().setAttribute("security", security);
+      getServletContext().setAttribute(SiteDefs.ENTITY_HELPER, helper);
+      getServletContext().setAttribute(SiteDefs.SECURITY_OBJECT, security);
     }
     
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -123,26 +126,28 @@ public class ControlServlet extends HttpServlet {
             request_url.append(request.getRequestURI());
             if ( request.getQueryString() != null )
                 request_url.append("?" + request.getQueryString());            
-            session.setAttribute("_LOCALE_",request.getLocale());
-            session.setAttribute("_REQUESTURL_",request_url.toString());
-            session.setAttribute("_USERAGENT_",request.getHeader("User-Agent"));
-            session.setAttribute("_REFERER_",(request.getHeader("Referer") != null ? request.getHeader("Referer") : "" )); 
+            session.setAttribute(SiteDefs.CLIENT_LOCALE,request.getLocale());
+            session.setAttribute(SiteDefs.CLIENT_REQUEST,request_url.toString());
+            session.setAttribute(SiteDefs.CLIENT_USER_AGENT,request.getHeader("User-Agent"));
+            session.setAttribute(SiteDefs.CLIENT_REFERER,(request.getHeader("Referer") != null ? request.getHeader("Referer") : "" )); 
         }
         
         // for convenience, and necessity with event handlers, make security and helper available in the session:
-        GenericHelper helper = (GenericHelper)session.getAttribute("helper");
-        Security security = (Security)session.getAttribute("security");
+        GenericHelper helper = (GenericHelper)session.getAttribute(SiteDefs.ENTITY_HELPER);
+        Security security = (Security)session.getAttribute(SiteDefs.SECURITY_OBJECT);
         if(helper == null)
         {
-          helper = (GenericHelper)getServletContext().getAttribute("helper");
+          helper = (GenericHelper)getServletContext().getAttribute(SiteDefs.ENTITY_HELPER);
           if(helper == null) Debug.logError("[ControlServlet] ERROR: helper not found in ServletContext");
-          session.setAttribute("helper", helper);
+          session.setAttribute(SiteDefs.ENTITY_HELPER,helper);
+          session.setAttribute("helper", helper);  // TO BE REMOVED ASAP!!
         }
         if(security == null)
         {
-          security = (Security)getServletContext().getAttribute("security");
+          security = (Security)getServletContext().getAttribute(SiteDefs.SECURITY_OBJECT);
           if(security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext");
-          session.setAttribute("security", security);
+          session.setAttribute(SiteDefs.SECURITY_OBJECT,security);
+          session.setAttribute("security", security); // TO BE REMOVED ASAP!!
         }
         
         try {

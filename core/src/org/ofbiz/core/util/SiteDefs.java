@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/08/17 07:39:03  jonesde
+ * Added initialization to ControlServlet, and put security and helper into the application scope (ServletContext). Other small changes to support this.
+ *
  * Revision 1.8  2001/07/29 01:57:31  azeneski
  * *** empty log message ***
  *
@@ -107,5 +110,17 @@ public final class SiteDefs {
 
     /** Session attribute name for UserLogin entity of current logged in user, if one is logged in */
     public static final String USER_LOGIN = "_USER_LOGIN_";
+    
+    /** Context/Session attribute for the Entity Helper */
+    public static final String ENTITY_HELPER = "_ENTITY_HELPER_";
+    
+    /** Context/Session attribute for the SECURITY handler */
+    public static final String SECURITY_OBJECT = "_OFBIZ_SECURITY_";
+    
+    /** Session attributes for the client's initial connect variables */
+    public static final String CLIENT_REFERER = "_CLIENT_REFERER_";
+    public static final String CLIENT_USER_AGENT = "_CLIENT_USER_AGENT_";
+    public static final String CLIENT_REQUEST = "_CLIENT_REQUEST_";
+    public static final String CLIENT_LOCALE = "_CLIENT_LOCALE_";
     
 }
