@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/30 23:03:06  azeneski
+ * Fixed problem which only allowed a 0 or < 0 double.
+ *
  * Revision 1.1  2001/07/16 14:45:48  azeneski
  * Added the missing 'core' directory into the module.
  *
@@ -117,7 +120,7 @@ public class UtilValidate
   public static final String isUSPhoneMsg = "The US Phone must be a 10 digit U.S. phone number(like 415-555-1212). Please reenter it now.";
   public static final String isInternationalPhoneNumberMsg = "The World Phone must be a valid international phone number. Please reenter it now.";
   public static final String isSSNMsg = "The SSN must be a 9 digit U.S. social security number(like 123-45-6789). Please reenter it now.";
-  public static final String isEmailMsg = "The Email must be a valid email address(like foo@bar.com). Please reenter it now.";
+  public static final String isEmailMsg = "The Email must be a valid email address(like john@email.com). Please re-enter it now.";
   public static final String isAnyCardMsg = "The credit card number is not a valid card number.";
   public static final String isCreditCardPrefixMsg = "This is not a valid ";
   public static final String isCreditCardSuffixMsg = " credit card number.(Click the link on this form to see a list of sample numbers.) Please reenter it now.";
