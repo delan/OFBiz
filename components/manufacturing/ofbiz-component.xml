@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.4 2003/12/17 08:38:58 jonesde Exp $
+ *  $Id: ofbiz-component.xml,v 1.5 2004/04/01 20:01:18 jonesde Exp $
  *  *  2003/10/21  Olivier Heintz  *
  *  *  2003/10/27  Jacopo Cappellato  *
 -->
@@ -45,7 +45,7 @@
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     
     <!-- web applications; will be mounted when using the embedded Jetty container -->
-    <webapp name="Manufacturing" 
+    <webapp name="manufacturing" 
             title="Manufacturing" 
     	    server="default-server" 
     	    location="webapp/manufacturing"
