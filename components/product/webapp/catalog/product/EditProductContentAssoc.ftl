@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (johan@oddjob.se)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -41,7 +41,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
     <#list productContentList as entry>
         <#assign productContent=entry.productContent />
         <tr class="tabletext">
-            <td><a href="<@ofbizUrl>/EditProductContentContent?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>">${entry.content.description?default("[No description]")} [${entry.content.contentId}]</td>
+            <td><a href="<@ofbizUrl>/EditProductContentContent?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">${entry.content.description?default("[No description]")} [${entry.content.contentId}]</td>
             <td>${entry.productContent.productContentTypeId}</td>
             <td>${entry.productContent.fromDate?default("N/A")}</td>
             <td>${entry.productContent.thruDate?default("N/A")}</td>
@@ -49,7 +49,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <td>${entry.productContent.purchaseThruDate?default("N/A")}</td>
             <td>${entry.productContent.useCountLimit?default("N/A")}</td>
             <td>${entry.productContent.useDaysLimit?default("N/A")}</td>
-            <td><a href="<@ofbizUrl>/removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>">[Delete]</a></td>
+            <td><a href="<@ofbizUrl>/removeContentFromProduct?productId=${productContent.productId}&amp;contentId=${productContent.contentId}&amp;productContentTypeId=${productContent.productContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="buttontext">[Delete]</a></td>
          </tr>
     </#list>
     </table>
