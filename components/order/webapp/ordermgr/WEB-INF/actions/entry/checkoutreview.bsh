@@ -116,7 +116,7 @@ context.put("isGift", cart.getIsGift());
 shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", cart.getShipmentMethodTypeId()));
 if (shipmentMethodType != null) context.put("shipMethDescription", shipmentMethodType.getString("description"));
 
-OrderReadHelper orh = new OrderReadHelper(null, orderAdjustments, orderItems);
+OrderReadHelper orh = new OrderReadHelper(orderAdjustments, orderItems);
 context.put("localOrderReadHelper", orh);
 
 shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
