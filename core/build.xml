@@ -34,7 +34,7 @@
 
     <target name="init">
         <property environment="env"                                 />
-        <property name="name"           value="core"                />
+        <property name="name"           value="ofbcore"             />
         <property name="src.dir"        value="src"                 />
         <property name="etc.dir"        value="etc"                 />
         <property name="lib.dir"        value="lib"                 />
@@ -64,7 +64,7 @@
     <target name="clean" depends="init">
         <delete dir="${lib.dir}" />
         <delete dir="${build.dir}" />
-        <delete file="${deploy.dir}/${name}.jar" />
+        <delete file="${deploy.dir}/${name}-ejb.jar" />
     </target>
 
 
@@ -74,7 +74,10 @@
 
     <target name="prepare" depends="clean">
         <mkdir dir="${lib.dir}" />
-	<mkdir dir="${lib.dir}/META-INF" />
+		<mkdir dir="${lib.dir}/ejb" />
+	    <mkdir dir="${lib.dir}/ejb/META-INF" />
+		<mkdir dir="$[lib.dir}/jar" />
+		<mkdir dir="${lib.dir}/jar/META-INF" />
         <mkdir dir="${build.dir}" />
         <mkdir dir="${deploy.dir}" />
     </target>
@@ -92,26 +95,32 @@
 
     <target name="tld" depends="prepare">
         <copy file="${etc.dir}/taglib.tld"
-              tofile="${lib.dir}/META-INF/taglib.tld" />
+              tofile="${lib.dir}/jar/META-INF/taglib.tld" />
     </target>
 	
-    <target name="classes" depends="tld">
+    <target name="classes" depends="ejbxml">
         <javac srcdir="${src.dir}"
 		       classpath="${classpath}"
-               destdir="${lib.dir}" />               
+               destdir="${lib.dir}/jar" />               
     </target>
 
-	<target name="ejbxml" depends="prepare">
-		<copy file="${src.dir}/META-INF/ejb-jar.xml"
-		      tofile="${lib.dir}/META-INF/ejb-jar.xml" />
-		<copy file="${src.dir}/META-INF/jboss.xml"
-		      tofile="${lib.dir}/META-INF/jboss.xml" />
+	<target name="ejbxml" depends="tld">
+		<copy file="${etc.dir}/ejb-jar.xml"
+		      tofile="${lib.dir}/ejb/META-INF/ejb-jar.xml" />
+		<copy file="${etc.dir}/jboss.xml"
+		      tofile="${lib.dir}/ejb/META-INF/jboss.xml" />
 	</target>
-
-    <target name="jar" depends="classes,ejbxml">
+	
+	<target name="ejbjar" depends="classes">
+		<jar jarfile="${build.dir}/${name}-ejb.jar"
+		     basedir="${lib.dir}/ejb" />
+	</target>
+	
+    <target name="jar" depends="ejbjar">
         <jar jarfile="${build.dir}/${name}.jar"
-             basedir="${lib.dir}" />
+             basedir="${lib.dir}/jar" />
     </target>
+	
 
 	
     <!-- ================================================================== -->
@@ -160,9 +169,9 @@
     <!-- Deploy the app                                                     -->
     <!-- ================================================================== -->
 	
-    <target name="deploy" depends="jar">
-        <copy file="${build.dir}/${name}.jar"
-              tofile="${deploy.dir}/${name}.jar" />
+    <target name="deploy" depends="ejbjar">
+        <copy file="${build.dir}/${name}-ejb.jar"
+              tofile="${deploy.dir}/${name}-ejb.jar" />
     </target>
 
 </project>

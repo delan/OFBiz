@@ -9,8 +9,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * <p><b>Title:</b> EncryptString.java
- * <p><b>Description:</b> MD5 Encryption for strings.
+ * <p><b>Title:</b> MD5Encrypt.java
+ * <p><b>Description:</b> MD5(One-Way) String Encryption.
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -34,20 +34,20 @@ import java.security.NoSuchAlgorithmException;
  * @version 1.0
  * Created on August 21, 2001, 2:33 PM
  */
-public class EncryptString {
+public class MD5Encrypt {
     
     private String encryptedString = null;
     
     /**
      * Creates a new Encrypted String object.
      */
-    public EncryptString() {}
+    public MD5Encrypt() {}
     
     /**
      * Creates a new Encrypted String object.
      *@param encryptedString The encrypted string to use.
      */
-    public EncryptString(String encryptedString) {
+    public MD5Encrypt(String encryptedString) {
         this.encryptedString = encryptedString;
     }
     
