@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Receive Return</property>
+    <property name="titleProperty">ProductReceiveReturn</property>
     <property name="headerItem">facility</property>
     <property name="tabButtonItem">ReceiveReturn</property>
     <page-action name="/returns/receiveReturn.bsh"/>

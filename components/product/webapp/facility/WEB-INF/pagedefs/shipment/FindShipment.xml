@@ -2,6 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Find Shipment</property>
+    <property name="titleProperty">ProductFindShipment</property>
     <property name="headerItem">shipment</property>
     <page-action name="/shipment/FindShipment.bsh"/> 
 </page>

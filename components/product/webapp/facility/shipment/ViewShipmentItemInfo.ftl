@@ -21,17 +21,18 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if shipmentItemDatas?has_content>
   <table width="100%" cellspacing="0" cellpadding="2" border="1">
 	<tr>
-      <td><div class="tableheadtext">Item#</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.ProductItem}</div></td>
 	  <td><div class="tableheadtext">&nbsp;</div></td>
 	  <td><div class="tableheadtext">&nbsp;</div></td>
-	  <td><div class="tableheadtext">Quantity</div></td>
+	  <td><div class="tableheadtext">${uiLabelMap.ProductQuantity}</div></td>
 	  <td><div class="tableheadtext">&nbsp;</div></td>
 	  <td><div class="tableheadtext">&nbsp;</div></td>
 	</tr>
@@ -49,17 +50,17 @@
 	  <#list itemIssuances as itemIssuance>
 		<tr>
 		  <td><div class="tabletext">&nbsp;</div></td>
-		  <td><div class="tabletext">OrderItem:<a href="/ordermgr/control/orderview?order_id=${itemIssuance.orderId?if_exists}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${itemIssuance.orderId?if_exists}</a>:${itemIssuance.orderItemSeqId?if_exists}</div></td>
-		  <td><div class="tabletext">Inventory:<a href="<@ofbizUrl>/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId?if_exists}</@ofbizUrl>" class="buttontext">${itemIssuance.inventoryItemId?if_exists}</a></div></td>
+		  <td><div class="tabletext">${uiLabelMap.ProductOrderItem} :<a href="/ordermgr/control/orderview?order_id=${itemIssuance.orderId?if_exists}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${itemIssuance.orderId?if_exists}</a>:${itemIssuance.orderItemSeqId?if_exists}</div></td>
+		  <td><div class="tabletext">${uiLabelMap.ProductInventory} :<a href="<@ofbizUrl>/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId?if_exists}</@ofbizUrl>" class="buttontext">${itemIssuance.inventoryItemId?if_exists}</a></div></td>
 		  <td><div class="tabletext">${itemIssuance.quantity?if_exists}</div></td>
 		  <td><div class="tabletext">${itemIssuance.issuedDateTime?if_exists}</div></td>
-		  <td><div class="tabletext">Future Party/Role List</div></td>
+		  <td><div class="tabletext">${uiLabelMap.ProductFuturePartyRoleList}</div></td>
 		</tr>
   	  </#list>
 	  <#list shipmentPackageContents as shipmentPackageContent>
 		<tr>
 	  	  <td><div class="tabletext">&nbsp;</div></td>
-	  	  <td colspan="2"><div class="tabletext">Package:${shipmentPackageContent.shipmentPackageSeqId}</div></td>
+	  	  <td colspan="2"><div class="tabletext">${uiLabelMap.ProductPackage} :${shipmentPackageContent.shipmentPackageSeqId}</div></td>
 		  <td><div class="tabletext">${shipmentPackageContent.quantity?if_exists}</div></td>
 		  <td colspan="2"><div class="tabletext">&nbsp;</div></td>
 		</tr>

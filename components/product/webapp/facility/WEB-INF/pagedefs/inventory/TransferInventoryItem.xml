@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Transfer Inventory Item</property>
+    <property name="titleProperty">PageTitleTransferInventoryItem</property>
     <property name="headerItem">facility</property>
     <property name="tabButtonItem">FindFacilityTransfers</property>
     <content-action name="/inventory/TransferInventoryItem.bsh"/>

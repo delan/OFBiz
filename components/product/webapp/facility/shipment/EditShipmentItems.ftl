@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -31,7 +31,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 <#if shipment?exists>
 <table width="100%" cellspacing="0" cellpadding="2" border="1">
 	<tr>
-		<td><div class="tableheadtext">${uiLabelMap.ProductItem} #</div></td>
+		<td><div class="tableheadtext">${uiLabelMap.ProductItem}</div></td>
 		<td><div class="tableheadtext">&nbsp;</div></td>
 		<td><div class="tableheadtext">&nbsp;</div></td>
 		<td><div class="tableheadtext">${uiLabelMap.ProductQuantity}</div></td>

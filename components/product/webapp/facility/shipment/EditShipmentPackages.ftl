@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -31,7 +31,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 <#if shipment?exists>
 <table width="100%" cellspacing="0" cellpadding="2" border="1">
     <tr>
-        <td><div class="tableheadtext">${uiLabelMap.ProductPackage}#</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.ProductPackage}</div></td>
         <td><div class="tableheadtext">${uiLabelMap.CommonCreated}</div></td>
         <td><div class="tableheadtext">&nbsp;</div></td>
         <td><div class="tableheadtext">&nbsp;</div></td>
@@ -105,8 +105,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <tr>
             <td><div class="tabletext">&nbsp;</div></td>
             <td><div class="tabletext">${uiLabelMap.ProductRouteSegment} :${shipmentPackageRouteSeg.shipmentRouteSegmentId}</div></td>
-            <td><span class="tabletext">${uiLabelMap.ProductTrack} #:</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode?if_exists}" class="inputBox"/></td>
-            <td><span class="tabletext">${uiLabelMap.ProductBox} #:</span><input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber?if_exists}" class="inputBox"/></td>
+            <td><span class="tabletext">${uiLabelMap.ProductTrack} :</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode?if_exists}" class="inputBox"/></td>
+            <td><span class="tabletext">${uiLabelMap.ProductBox} :</span><input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber?if_exists}" class="inputBox"/></td>
             <td><a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="buttontext">${uiLabelMap.CommonUpdate}</a></td>
             <td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentPackageRouteSeg?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
         </tr>

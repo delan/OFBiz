@@ -21,15 +21,16 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
 <#if shipmentId?has_content>
-    <div><a href="<@ofbizUrl>/ShipmentManifestReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_blank">Generate Shipment Manifest Report</a></div>
+    <div><a href="<@ofbizUrl>/ShipmentManifestReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_blank">${uiLabelMap.ProductGenerateShipmentManifestReport}</a></div>
 </#if>
 
 <#if shipment?exists>
@@ -44,9 +45,9 @@ ${pages.get("/shipment/ViewShipmentPackageInfo.ftl")}
 <br/>
 ${pages.get("/shipment/ViewShipmentRouteInfo.ftl")}
 <#else>
-  <h3>The Shipment was not found with ID: [${shipmentId?if_exists}]</h3>
+  <h3>${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId?if_exists}]</h3>
 </#if>
 
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

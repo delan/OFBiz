@@ -2,6 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Picking: Move Stock</property>
+    <property name="titleProperty">PageTitlePickingMoveStock</property>
     <property name="headerItem">facility</property>
     <property name="tabButtonItem">PicklistOptions</property>
     <page-action name="/facility/PickMoveStock.bsh"/>

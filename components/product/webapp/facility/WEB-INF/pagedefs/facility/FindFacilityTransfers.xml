@@ -2,6 +2,7 @@
 <page>
     <template>main</template> 
     <property name="title">Find Facility Transfers</property>
+    <property name="titleProperty">PageTitleFindFacilityTransfers</property>
     <property name="headerItem">facility</property>
     <property name="tabButtonItem">FindFacilityTransfers</property>
     <content-action name="/facility/FindFacilityTransfers.bsh"/>

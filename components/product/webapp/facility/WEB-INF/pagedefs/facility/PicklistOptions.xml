@@ -2,6 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Pick List Options</property>
+    <property name="titleProperty">PageTitlePickListOptions</property>
     <property name="headerItem">facility</property>
     <property name="tabButtonItem">PicklistOptions</property>
     <page-action name="/facility/PicklistOptions.bsh"/> 

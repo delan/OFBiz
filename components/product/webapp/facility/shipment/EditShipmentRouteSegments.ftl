@@ -20,36 +20,37 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
 <#if shipment?exists>
 <table width="100%" cellspacing="0" cellpadding="2" border="1">
     <tr>
-        <td><div class="tableheadtext">Segment#</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.ProductSegment}</div></td>
         <td>
-            <div class="tableheadtext">Carrier-ShipmentMethod</div>
-            <div class="tableheadtext">Origin-Destination Facility</div>
-            <div class="tableheadtext">Origin-Destination Address ID</div>
-            <div class="tableheadtext">Origin-Destination Phone ID</div>
+            <div class="tableheadtext">${uiLabelMap.ProductCarrierShipmentMethod}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductOriginDestinationFacility}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductOriginDestinationAddressId}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductOriginDestinationPhoneId}</div>
         </td>
         <td>
-            <div class="tableheadtext">Carrier Status</div>
-            <div class="tableheadtext">Tracking Number</div>
-            <div class="tableheadtext">Estimated (Start-Arrive)</div>
-            <div class="tableheadtext">Actual (Start-Arrive)</div>
+            <div class="tableheadtext">${uiLabelMap.ProductCarrierStatus}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductTrackingNumber}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductEstimatedStartArrive}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductActualStartArrive}</div>
         </td>
         <td>
-        	<div class="tableheadtext">Billing Weight &amp; UOM</div>
-        	<div class="tableheadtext">Currency UOM</div>
-        	<div class="tableheadtext">Actual Transport</div>
-        	<div class="tableheadtext">Actual Services</div>
-        	<div class="tableheadtext">Actual Other</div>
-        	<div class="tableheadtext">Actual Total</div>
+        	<div class="tableheadtext">${uiLabelMap.ProductBillingWeightUom}</div>
+        	<div class="tableheadtext">${uiLabelMap.ProductCurrencyUom}</div>
+        	<div class="tableheadtext">${uiLabelMap.ProductActualTransport}</div>
+        	<div class="tableheadtext">${uiLabelMap.ProductActualServices}</div>
+        	<div class="tableheadtext">${uiLabelMap.ProductActualOther}</div>
+        	<div class="tableheadtext">${uiLabelMap.ProductActualTotal}</div>
         </td>
         <td><div class="tableheadtext">&nbsp;</div></td>
         <td><div class="tableheadtext">&nbsp;</div></td>
@@ -124,11 +125,11 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <br/>
             <div class="tabletext">
                 <input type="text" size="15" name="originContactMechId" value="${shipmentRouteSegment.originContactMechId?if_exists}" class="inputBox"/>
-                <#if originPostalAddress?has_content>[To: ${originPostalAddress.toName?if_exists}, Attn: ${originPostalAddress.attnName?if_exists}, ${originPostalAddress.address1?if_exists}, ${originPostalAddress.address2?if_exists}, ${originPostalAddress.city?if_exists}, ${originPostalAddress.stateProvinceGeoId?if_exists}, ${originPostalAddress.postalCode?if_exists}, ${originPostalAddress.countryGeoId?if_exists}]</#if>
+                <#if originPostalAddress?has_content>[${uiLabelMap.CommonTo}: ${originPostalAddress.toName?if_exists}, ${uiLabelMap.CommonAttn}: ${originPostalAddress.attnName?if_exists}, ${originPostalAddress.address1?if_exists}, ${originPostalAddress.address2?if_exists}, ${originPostalAddress.city?if_exists}, ${originPostalAddress.stateProvinceGeoId?if_exists}, ${originPostalAddress.postalCode?if_exists}, ${originPostalAddress.countryGeoId?if_exists}]</#if>
             </div>
             <div class="tabletext">
                 <input type="text" size="15" name="destContactMechId" value="${shipmentRouteSegment.destContactMechId?if_exists}" class="inputBox"/>
-                <#if destPostalAddress?has_content>[To: ${destPostalAddress.toName?if_exists}, Attn: ${destPostalAddress.attnName?if_exists}, ${destPostalAddress.address1?if_exists}, ${destPostalAddress.address2?if_exists}, ${destPostalAddress.city?if_exists}, ${destPostalAddress.stateProvinceGeoId?if_exists}, ${destPostalAddress.postalCode?if_exists}, ${destPostalAddress.countryGeoId?if_exists}]</#if>
+                <#if destPostalAddress?has_content>[${uiLabelMap.CommonTo}: ${destPostalAddress.toName?if_exists},${uiLabelMap.CommonAttn}: ${destPostalAddress.attnName?if_exists}, ${destPostalAddress.address1?if_exists}, ${destPostalAddress.address2?if_exists}, ${destPostalAddress.city?if_exists}, ${destPostalAddress.stateProvinceGeoId?if_exists}, ${destPostalAddress.postalCode?if_exists}, ${destPostalAddress.countryGeoId?if_exists}]</#if>
             </div>
             <div class="tabletext">
                 <input type="text" size="15" name="originTelecomNumberId" value="${shipmentRouteSegment.originTelecomNumberId?if_exists}" class="inputBox"/>
@@ -142,15 +143,15 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <td>
         	<#if "UPS" == shipmentRouteSegment.carrierPartyId?if_exists>
         		<#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
-        			<a href="<@ofbizUrl>/upsShipmentConfirm?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[Confirm Shipment with UPS]</a>
+        			<a href="<@ofbizUrl>/upsShipmentConfirm?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductConfirmShipmentUps}]</a>
         		<#elseif "SHRSCS_CONFIRMED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
-        			<a href="<@ofbizUrl>/upsShipmentAccept?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[Accept UPS Shipment Confirmation]</a>
+        			<a href="<@ofbizUrl>/upsShipmentAccept?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductAcceptUpsShipmentConfirmation}]</a>
         			<br/>
-        			<a href="<@ofbizUrl>/upsVoidShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[Void UPS Shipment Confirmation]</a>
+        			<a href="<@ofbizUrl>/upsVoidShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductVoidUpsShipmentConfirmation}]</a>
         		<#elseif "SHRSCS_ACCEPTED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
-        			<a href="<@ofbizUrl>/upsTrackShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[Track UPS Shipment]</a>
+        			<a href="<@ofbizUrl>/upsTrackShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductTrackUpsShipment}]</a>
         			<br/>
-        			<a href="<@ofbizUrl>/upsVoidShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[Void UPS Shipment]</a>
+        			<a href="<@ofbizUrl>/upsVoidShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductVoidUpsShipment}]</a>
         		</#if>
                 <br/>
         	</#if>
@@ -208,8 +209,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <br/>
         	<input type="text" size="8" name="actualCost" value="${shipmentRouteSegment.actualCost?if_exists}" class="inputBox"/>
         </td>
-        <td><a href="javascript:document.updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}.submit();" class="buttontext">Update</a></td>
-        <td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentRouteSegment?shipmentId=${shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
+        <td><a href="javascript:document.updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}.submit();" class="buttontext">${uiLabelMap.CommonUpdate}</a></td>
+        <td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentRouteSegment?shipmentId=${shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
     </tr>
     </form>
     <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
@@ -221,16 +222,16 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <td><div class="tabletext">&nbsp;</div></td>
             <td>
             	<div class="tabletext">
-            		Package:${shipmentPackageRouteSeg.shipmentPackageSeqId}
+            		${uiLabelMap.ProductPackage} :${shipmentPackageRouteSeg.shipmentPackageSeqId}
             		<#if shipmentPackageRouteSeg.labelImage?exists>
-            			<a href="<@ofbizUrl>/viewShipmentPackageRouteSegLabelImage?shipmentId=${shipmentPackageRouteSeg.shipmentId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">[View Label Image]</a>
+            			<a href="<@ofbizUrl>/viewShipmentPackageRouteSegLabelImage?shipmentId=${shipmentPackageRouteSeg.shipmentId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductViewLabelImage}]</a>
             		</#if>
             	</div>
             </td>
-            <td><span class="tabletext">Track#:</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode?if_exists}" class="inputBox"/></td>
-            <td><span class="tabletext">Box#:</span><input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber?if_exists}" class="inputBox"/></td>
-            <td><a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}${shipmentPackageRouteSeg_index}.submit();" class="buttontext">Update</a></td>
-            <td><div class="tabletext"><a href="<@ofbizUrl>/deleteRouteSegmentShipmentPackage?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
+            <td><span class="tabletext">${uiLabelMap.ProductTrack} #:</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode?if_exists}" class="inputBox"/></td>
+            <td><span class="tabletext">${uiLabelMap.ProductBox} #:</span><input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber?if_exists}" class="inputBox"/></td>
+            <td><a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}${shipmentPackageRouteSeg_index}.submit();" class="buttontext">${uiLabelMap.CommonUpdate}</a></td>
+            <td><div class="tabletext"><a href="<@ofbizUrl>/deleteRouteSegmentShipmentPackage?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
         </tr>
         </form>
     </#list>
@@ -241,7 +242,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
         <td><div class="tabletext">&nbsp;</div></td>
         <td>
-            <div class="tabletext">Add Package Info:
+            <div class="tabletext">${uiLabelMap.ProductAddPackageInfo} :
             <select name="shipmentPackageSeqId" class="selectBox">
                 <#list shipmentPackages as shipmentPackage>
                     <option>${shipmentPackage.shipmentPackageSeqId}</option>
@@ -251,7 +252,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         </td>
         <td><span class="tabletext">Track#:</span><input type="text" size="22" name="trackingCode" class="inputBox"/></td>
         <td><span class="tabletext">Box#:</span><input type="text" size="5" name="boxNumber" class="inputBox"/></td>
-        <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}.submit()" class="buttontext">Add</a></td>
+        <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}.submit()" class="buttontext">${uiLabelMap.CommonAdd}</a></td>
         <td><div class="tabletext">&nbsp;</div></td>
         </form>
     </tr>
@@ -260,7 +261,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 <form action="<@ofbizUrl>/createShipmentRouteSegment</@ofbizUrl>" name="createShipmentRouteSegmentForm">
     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
     <tr>
-        <td><div class="tabletext">New Segment:</div></td>
+        <td><div class="tabletext">${uiLabelMap.ProductNewSegment} :</div></td>
         <td><span class="tabletext"></span>
             <select name="carrierPartyId" class="selectBox">
                     <option value="">&nbsp;</option>
@@ -333,15 +334,15 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <br/>
         	<input type="text" size="8" name="actualCost" class="inputBox"/>
         </td>
-        <td><a href="javascript:document.createShipmentRouteSegmentForm.submit();" class="buttontext">Create</a></td>
+        <td><a href="javascript:document.createShipmentRouteSegmentForm.submit();" class="buttontext">${uiLabelMap.CommonCreate}</a></td>
         <td>&nbsp;</td>
     </tr>
 </form>
 </table>
 <#else>
-  <h3>The Shipment was not found with ID: [${shipmentId?if_exists}]</h3>
+  <h3>${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId?if_exists}]</h3>
 </#if>
 
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

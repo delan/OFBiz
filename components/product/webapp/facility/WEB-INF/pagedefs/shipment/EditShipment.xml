@@ -2,6 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Edit Shipment</property>
+    <property name="titleProperty">ProductEditShipment</property>
     <property name="headerItem">shipment</property>
     <property name="tabButtonItem">EditShipment</property>
     <page-action name="/shipment/EditShipment.bsh"/> 
