@@ -112,6 +112,9 @@
                         <container>
                         <container>
                             <label style="head1">Active Categories</label>
+                        <container style="column-left-wide">
+                            <include-tree name="productTree" location="component://opentravelsystem/webapp/hotelbackend/screens/trees.xml" /> 
+                        </container>
                         </container>
                             <platform-specific>
                                 <html>
