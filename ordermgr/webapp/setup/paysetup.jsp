@@ -59,10 +59,10 @@
                 <td nowrap><div class="tableheadtext"><b>Payment Config</b></div></td>               
                 <td nowrap><div class="tableheadtext">&nbsp;</div></td>
               </tr>
-              <tr><td colspan="5"><hr class="sepbar"></td></tr>
+              <tr><td colspan="6"><hr class="sepbar"></td></tr>
               <ofbiz:unless name="paymentSetups">
                 <tr>
-                  <td colspan="5"><div class="tabletext">No settings found.</div></td>
+                  <td colspan="6"><div class="tabletext">No settings found.</div></td>
                 </tr>
               </ofbiz:unless>
               <ofbiz:iterator name="paymentSetting" property="paymentSetups">
