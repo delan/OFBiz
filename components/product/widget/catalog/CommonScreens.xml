@@ -55,6 +55,7 @@
                             <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
                             <decorator-section-include name="body"/>
                         </container>
+                        <container style="endcolumns"/>
                     </container>
                 </container>
                 
