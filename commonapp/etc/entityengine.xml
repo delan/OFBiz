@@ -169,8 +169,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <inline-jdbc
                 jdbc-driver="com.sap.dbtech.jdbc.DriverSapDB"
                 jdbc-uri="jdbc:sapdb://localhost/ofbiz"
-                jdbc-username="ofbiz"
-                jdbc-password="ofbiz"
+                jdbc-username="ofbdba"
+                jdbc-password="ofbdba"
                 isolation-level="Serializable"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/SapDBDataSource" isolation-level="Serializable"/> -->
     </datasource>
