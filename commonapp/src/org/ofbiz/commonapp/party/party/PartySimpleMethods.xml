@@ -52,7 +52,7 @@
         </if-not-empty>
     </simple-method>
 
-    <simple-method method-name="ensureNaPartyRole" short-description="Ensure Party is in _NA_ Role">
+    <simple-method method-name="ensureNaPartyRole" short-description="Ensure Party is in _NA_ Role" login-required="false">
     	<!-- must have a partyId, partyIdFrom, or partyIdTo in the parameters map, should be called through different service defs for each one -->
     	<if-not-empty field-name="partyId" map-name="parameters">
 	    	<field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupPKMap"/>

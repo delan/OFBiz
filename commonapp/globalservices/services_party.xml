@@ -113,7 +113,7 @@
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="ensureNaPartyRole" engine="simple"
-            location="org/ofbiz/commonapp/party/party/PartySimpleMethods.xml" invoke="ensureNaPartyRole" auth="true">
+            location="org/ofbiz/commonapp/party/party/PartySimpleMethods.xml" invoke="ensureNaPartyRole" auth="false">
         <description>Ensure that the party is in the _NA_ role.</description>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
     </service>
