@@ -2,6 +2,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/11/28 16:18:16  jonesde
+ * Added stuff for start activities and started transition restriction reading
+ *
  * Revision 1.2  2001/11/27 15:44:09  jonesde
  * Not much done, mostly small changes as looked for needed entities
  *
@@ -476,7 +479,7 @@ public class XpdlReader {
         //TransitionRestrictions?
         Element transitionRestrictionsElement = UtilXml.firstChildElement(activityElement, "TransitionRestrictions");
         List transitionRestrictions = UtilXml.childElementList(transitionRestrictionsElement, "TransitionRestriction");
-        readTransitionRestrictions(transitionRestrictions, packageId, processId, activityId);
+        readTransitionRestrictions(transitionRestrictions, activityValue);
         
         //for not set the canStart to always be true
         activityValue.set("canStart", "Y");
@@ -531,49 +534,63 @@ public class XpdlReader {
         transitionValue.set("description", UtilXml.childElementValue(transitionElement, "Description"));
     }
 
-    protected void readTransitionRestrictions(List transitionRestrictions, String packageId, String processId, String activityId) throws DefinitionParserException {
+    protected void readTransitionRestrictions(List transitionRestrictions, GenericValue activityValue) throws DefinitionParserException {
         if (transitionRestrictions == null || transitionRestrictions.size() == 0)
             return;
         Iterator transitionRestrictionsIter = transitionRestrictions.iterator();
-        int index = 1;
-        while (transitionRestrictionsIter.hasNext()) {
+        if (transitionRestrictionsIter.hasNext()) {
             Element transitionRestrictionElement = (Element) transitionRestrictionsIter.next();
-            readTransitionRestriction(transitionRestrictionElement, index, packageId, processId, activityId);
-            index++;
+            readTransitionRestriction(transitionRestrictionElement, activityValue);
+        }
+        if (transitionRestrictionsIter.hasNext()) {
+            throw new DefinitionParserException("Multiple TransitionRestriction elements found, this is not currently supported. Please remove extras.");
         }
     }
 
-    protected void readTransitionRestriction(Element transitionRestrictionElement, int index, String packageId, String processId, String activityId) throws DefinitionParserException {
-        GenericValue transRestrictionValue = delegator.makeValue("WorkflowTransRestriction", null);
-        values.add(transRestrictionValue);
-
-        String restrictionSeqId = Integer.toString(index);
-        transRestrictionValue.set("packageId", packageId);
-        transRestrictionValue.set("processId", processId);
-        transRestrictionValue.set("activityId", activityId);
-        transRestrictionValue.set("restrictionSeqId", restrictionSeqId);
+    protected void readTransitionRestriction(Element transitionRestrictionElement, GenericValue activityValue) throws DefinitionParserException {
+        String packageId = activityValue.getString("packageId");
+        String processId = activityValue.getString("processId");
+        String activityId = activityValue.getString("activityId");
         
         //InlineBlock?
         Element inlineBlockElement = UtilXml.firstChildElement(transitionRestrictionElement, "InlineBlock");
         if (inlineBlockElement != null) {
+            activityValue.set("isInlineBlock", "Y");
+            
         }
-        
+/*
+      <field name="blockName" type="name"></field>
+      <field name="blockDocumentationUrl" type="url"></field>
+      <field name="blockIconUrl" type="url"></field>
+      <field name="blockDescription" type="description"></field>
+      <field name="blockBeginActivityId" type="id-long"></field>
+      <field name="blockEndActivityId" type="id-long"></field>
+*/        
         //Join?
         Element joinElement = UtilXml.firstChildElement(transitionRestrictionElement, "Join");
         if (joinElement != null) {
+            String joinType = joinElement.getAttribute("Type");
+            if(joinType != null && joinType.length() > 0) {
+                activityValue.set("joinTypeEnumId", "WJT_" + joinType);
+            }
         }
         
         //Split?
         Element splitElement = UtilXml.firstChildElement(transitionRestrictionElement, "Split");
         if (splitElement != null) {
+            String splitType = splitElement.getAttribute("Type");
+            if(splitType != null && splitType.length() > 0) {
+                activityValue.set("splitTypeEnumId", "WST_" + splitType);
+            }
+            
             //TransitionRefs
             Element transitionRefsElement = UtilXml.firstChildElement(transitionRestrictionElement, "TransitionRefs");
             List transitionRefs = UtilXml.childElementList(transitionRefsElement, "TransitionRef");
-            readTransitionRefs(transitionRefs, packageId, processId, activityId, restrictionSeqId);
+            readTransitionRefs(transitionRefs, packageId, processId, activityId);
         }
     }
     
-    protected void readTransitionRefs(List transitionRefs, String packageId, String processId, String activityId, String restrictionSeqId) throws DefinitionParserException {
+    protected void readTransitionRefs(List transitionRefs, String packageId, String processId, String activityId) throws DefinitionParserException {
         if (transitionRefs == null || transitionRefs.size() == 0)
             return;
         Iterator transitionRefsIter = transitionRefs.iterator();
@@ -585,7 +602,6 @@ public class XpdlReader {
             transitionRefValue.set("packageId", packageId);
             transitionRefValue.set("processId", processId);
             transitionRefValue.set("activityId", activityId);
-            transitionRefValue.set("restrictionSeqId", restrictionSeqId);
             transitionRefValue.set("transitionId", transitionRefElement.getAttribute("Id"));
         }
     }
