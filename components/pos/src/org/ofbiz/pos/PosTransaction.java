@@ -454,6 +454,21 @@ public class PosTransaction implements Serializable {
     public void voidSale() {
         trace("void sale");
         txLog.set("statusId", "POSTX_VOIDED");
+        txLog.set("itemCount", new Long(cart.size()));
+        txLog.set("logEndDateTime", UtilDateTime.nowTimestamp());
+        try {
+            txLog.store();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to store TX log - not fatal", module);
+        }
+        cart.clear();
+        currentTx = null;
+    }
+        
+    public void closeTx() {
+        trace("transaction closed");
+        txLog.set("statusId", "POSTX_CLOSED");
+        txLog.set("itemCount", new Long(cart.size()));
         txLog.set("logEndDateTime", UtilDateTime.nowTimestamp());
         try {
             txLog.store();
@@ -464,12 +479,6 @@ public class PosTransaction implements Serializable {
         currentTx = null;
     }
 
-    public void nonLoggingClear() {
-        trace("non-logging clear called");
-        cart.clear();
-        currentTx = null;
-    }
-    
     public void calcTax() {
         try {
             ch.calcAndAddTax(this.getStoreOrgAddress());
@@ -625,6 +634,7 @@ public class PosTransaction implements Serializable {
         // save the TX Log
         txLog.set("statusId", "POSTX_SOLD");
         txLog.set("orderId", orderId);
+        txLog.set("itemCount", new Long(cart.size()));
         txLog.set("logEndDateTime", UtilDateTime.nowTimestamp());
         try {
             txLog.store();
