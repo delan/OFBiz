@@ -32,16 +32,6 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <!--
-        map-list-name: for list type and other multiple data/form types this is
-        	the name of the list in the context to iterate over
-        list-entry-name: if specified each list entry will be put in the context
-        	with this name; otherwise the list entry must be a Map and the entries
-        	in the Map will be put into the context by name
-        type: a single form is a simple single form with values from a single set of values;
-        	a list form is a list of individual forms in a table (could be called a tabular form), it has a list of sets of values and creates one form for each list element;
-        	a multi form is like a list/tabular form, but it creates a single form to submit all list item forms at once; the field names in the resulting form have an appendage attached to make them unique according to the pattern used for the multi-service event handler that will call one service for each list element
-    -->
     <xs:element name="form">
         <xs:complexType>
             <xs:sequence>
@@ -60,10 +50,17 @@
         <xs:attribute name="type" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:enumeration value="single"/>
-                    <xs:enumeration value="list"/>
-                    <xs:enumeration value="multi"/>
-                    <xs:enumeration value="upload"/>
+                    <xs:enumeration value="single">
+                        <xs:annotation><xs:documentation>a single form is a simple single form with values from a single set of values</xs:documentation></xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="list">
+                        <xs:annotation><xs:documentation>a list form is a list of individual forms in a table (could be called a tabular form), it has a list of sets of values and creates one form for each list element</xs:documentation></xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="multi">
+                        <xs:annotation><xs:documentation>a multi form is like a list/tabular form, but it creates a single form to submit all list item forms at once; the field names in the resulting form have an appendage attached to make them unique according to the pattern used for the multi-service event handler that will call one service for each list element</xs:documentation></xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="upload">
+                    </xs:enumeration>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
@@ -72,8 +69,12 @@
         <xs:attribute name="paginate-target"/>
         <xs:attribute name="title"/>
         <xs:attribute name="tooltip"/>
-        <xs:attribute name="list-name"/>
-        <xs:attribute name="list-entry-name"/>
+        <xs:attribute name="list-name">
+            <xs:annotation><xs:documentation>for list type and other multiple data/form types this is the name of the list in the context to iterate over</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="list-entry-name">
+            <xs:annotation><xs:documentation>if specified each list entry will be put in the context with this name; otherwise the list entry must be a Map and the entries in the Map will be put into the context by name</xs:documentation></xs:annotation>
+        </xs:attribute>
         <xs:attribute name="default-map-name"/>
         <xs:attribute name="default-entity-name"/>
         <xs:attribute name="default-service-name"/>
