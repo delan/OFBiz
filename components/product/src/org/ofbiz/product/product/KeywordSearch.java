@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordSearch.java,v 1.5 2003/10/18 05:13:07 jonesde Exp $
+ * $Id: KeywordSearch.java,v 1.6 2003/10/25 11:24:53 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -49,7 +49,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.1
  */
 public class KeywordSearch {
@@ -136,17 +136,19 @@ public class KeywordSearch {
         return fixedKeywords;
     }
 
-    /** Does a product search by keyword using the PRODUCT_KEYWORD table.
+    /* Does a product search by keyword using the PRODUCT_KEYWORD table.
      *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
      *@param delegator The delegator to look up the name of the helper/server to get a connection to
      *@param categoryId If not null the list of products will be restricted to those in this category
      *@return Collection of productId Strings
      */
+    /* TODO: DEJ 20031025 delete this if not used in the near future
     public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId, String visitId) {
         return productsByKeywords(keywordsString, delegator, categoryId, visitId, false, false, false);
     }
+     */
 
-    /** Does a product search by keyword using the PRODUCT_KEYWORD table.
+    /* Does a product search by keyword using the PRODUCT_KEYWORD table.
      *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
      *@param delegator The delegator to look up the name of the helper/server to get a connection to
      *@param categoryId If not null the list of products will be restricted to those in this category
@@ -155,6 +157,7 @@ public class KeywordSearch {
      *@param isAnd The operator to use inbetween the keywords true for "AND", false for "OR"
      *@return ArrayList of productId Strings
      */
+    /* TODO: DEJ 20031025 delete this if not used in the near future
     public static ArrayList productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
         if (delegator == null) {
             return null;
@@ -263,7 +266,9 @@ public class KeywordSearch {
         }
         return null;
     }
+     */
 
+    /* TODO: DEJ 20031025 delete this if not used in the near future
     protected static String getSearchSQL(List keywords, List params, boolean useCategory, boolean isAnd) {
         if (keywords == null || keywords.size() <= 0)
             return null;
@@ -398,6 +403,7 @@ public class KeywordSearch {
         if (Debug.verboseOn()) Debug.logVerbose("[KeywordSearch] sql=" + sql.toString(), module);
         return sql.toString();
     }
+     */
 
     public static void induceKeywords(GenericValue product) throws GenericEntityException {
         if (product == null) return;
