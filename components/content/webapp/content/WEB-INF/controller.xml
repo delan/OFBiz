@@ -435,6 +435,24 @@
         <response name="error" type="view" value="EditDataResourceRole"/>
     </request-map>
 
+    <!-- ================ DataResourceProductFeature Requests ================= -->
+    <request-map uri="EditDataResourceProductFeatures">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditDataResourceProductFeatures"/>
+    </request-map>
+    <request-map uri="createDataResourceProductFeature">
+        <security auth="true" https="true"/>
+        <event invoke="createProductFeatureDataResource" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceProductFeatures"/>
+        <response name="error" type="view" value="EditDataResourceProductFeatures"/>
+    </request-map>
+    <request-map uri="removeDataResourceProductFeature">
+        <security auth="true" https="true"/>
+        <event invoke="removeProductFeatureDataResource" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceProductFeatures"/>
+        <response name="error" type="view" value="EditDataResourceProductFeature"/>
+    </request-map>
+
     <!-- ================ DataResourceTypeAttr Requests ================= -->
     <request-map uri="EditDataResourceTypeAttr">
         <security auth="true" https="true"/>
@@ -564,13 +582,15 @@
     <request-map uri="LookupDataResource">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupDataResource"/>
-        <response name="error" type="view" value="LookupDataResource"/>
+    </request-map>
+    <request-map uri="LookupProductFeature">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProductFeature"/>
     </request-map>
 
     <request-map uri="LookupSubContent">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupSubContent"/>
-        <response name="error" type="view" value="main"/>
     </request-map>
 
     <request-map uri="gotoDataResource">
@@ -1314,6 +1334,8 @@
     <view-map name="EditElectronicText" page="/data/EditElectronicText.ftl" type="jpublish"/>
     <view-map name="EditDataResourceAttribute" page="/data/EditDataResourceAttribute.ftl" type="jpublish"/>
     <view-map name="EditDataResourceRole" page="/data/EditDataResourceRole.ftl" type="jpublish"/>
+    <view-map name="EditDataResourceProductFeatures" page="/data/EditDataResourceProductFeatures.ftl" type="jpublish"/>
+    <view-map name="LookupProductFeature" page="/data/LookupProductFeature.ftl" type="jpublish"/>
     <view-map name="EditDataResourceType" page="/datasetup/EditDataResourceType.ftl" type="jpublish"/>
     <view-map name="EditDataResourceTypeAttr" page="/datasetup/EditDataResourceTypeAttr.ftl" type="jpublish"/>
     <view-map name="EditDataCategory" page="/datasetup/EditDataCategory.ftl" type="jpublish"/>

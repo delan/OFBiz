@@ -29,6 +29,7 @@
 <a href="<@ofbizUrl>/UploadImage</@ofbizUrl>" class="${selectedClassMap.UploadImage?default(unselectedClassName)}">Image</a>
 <a href="<@ofbizUrl>/EditDataResourceAttribute</@ofbizUrl>" class="${selectedClassMap.EditDataResourceAttribute?default(unselectedClassName)}">Attribute</a>
 <a href="<@ofbizUrl>/EditDataResourceRole</@ofbizUrl>" class="${selectedClassMap.EditDataResourceRole?default(unselectedClassName)}">Role</a>
+<a href="<@ofbizUrl>/EditDataResourceProductFeatures</@ofbizUrl>" class="${selectedClassMap.EditDataResourceProductFeatures?default(unselectedClassName)}">ProductFeatures</a>
 <#if currentValue?has_content>
     <a href="<@ofbizUrl>/FindContent?dataResourceId=${(currentValue.dataResourceId)?if_exists}</@ofbizUrl>" class="${selectedClassMap.FindContent?default(unselectedClassName)}">Find Content</a>
 </#if>
