@@ -81,6 +81,7 @@ public class PosTransaction {
 
     protected String productStoreId = null;
     protected String transactionId = null;
+    protected String facilityId = null;
     protected String terminalId = null;
     protected String currency = null;
     protected String orderId = null;
@@ -98,12 +99,14 @@ public class PosTransaction {
         this.trace = defaultPrintWriter;
 
         this.productStoreId = (String) session.getAttribute("productStoreId");
+        this.facilityId = (String) session.getAttribute("facilityId");
         this.currency = (String) session.getAttribute("currency");
         this.locale = (Locale) session.getAttribute("locale");
 
         this.cart = new ShoppingCart(session.getDelegator(), productStoreId, locale, currency);
         this.transactionId = session.getDelegator().getNextSeqId("PosTransaction");
         this.ch = new CheckOutHelper(session.getDispatcher(), session.getDelegator(), cart);
+        cart.setFacilityId(facilityId);
         currentTx = this;
         trace("transaction created");
     }
