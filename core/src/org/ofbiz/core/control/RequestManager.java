@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/16 22:31:06  azeneski
+ * Moved multi-site support to be handled by the webapp.
+ *
  * Revision 1.1  2001/07/16 14:45:48  azeneski
  * Added the missing 'core' directory into the module.
  *
@@ -154,7 +157,7 @@ public class RequestManager implements Serializable {
     /** Gets the next page (jsp) from the viewMap */
     public String getViewPage(String viewStr) {
         if ( viewStr.startsWith("view:") )
-            viewStr = viewStr.substring(viewStr.indexOf(':') + 1);
+            viewStr = viewStr.substring(viewStr.indexOf(':'));
         if ( viewMap != null && viewMap.containsKey(viewStr) ) {
             HashMap page = (HashMap) viewMap.get(viewStr);
             if ( page != null && page.containsKey(RequestXMLReader.MAPPED_PAGE) )

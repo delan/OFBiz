@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/16 22:31:06  azeneski
+ * Moved multi-site support to be handled by the webapp.
+ *
  * Revision 1.1  2001/07/16 14:45:48  azeneski
  * Added the missing 'core' directory into the module.
  *
@@ -90,6 +93,8 @@ public class RequestHandler implements Serializable {
         if ( nextView == null )
             nextView = rm.getViewName(requestUri);
         
+        Debug.log("Current View: " + nextView);
+        
         /** Perform security check. */
         // Invoke the security handler
         // catch exceptions and throw RequestHandlerException if failed.
@@ -133,7 +138,7 @@ public class RequestHandler implements Serializable {
             nextView = eventReturn;
                 
         /** Check for a chain request. */
-        if ( nextView.indexOf(':') != -1 ) {
+        if ( nextView != null && nextView.indexOf(':') != -1 ) {
             String type = nextView.substring(0,nextView.indexOf(':'));
             String view = nextView.substring(nextView.indexOf(':') + 1);            
             nextView = view;
@@ -176,18 +181,20 @@ public class RequestHandler implements Serializable {
     
     /** Gets the mapped request URI from path_info */
     private String getRequestUri(String path) {
-        if ( path.lastIndexOf('/') == 0 )
+        if ( path.indexOf('/') == -1 )
             return path;
+        if ( path.lastIndexOf('/') == 0 )
+            return path.substring(1);
         int nextIndex = path.indexOf('/',1);
-        return path.substring(0,nextIndex - 1);
+        return path.substring(1,nextIndex - 1);
     }
     
     /** Gets the next page to view from path_info */
     private String getNextPageUri(String path) {
-        if ( path.lastIndexOf('/') == 0 )
+        if ( path.indexOf('/') == -1 || path.lastIndexOf('/') == 0 )
             return null;
         int nextIndex = path.indexOf('/',1);
-        return path.substring(nextIndex);
+        return path.substring(nextIndex + 1);
     }
 }
 
