@@ -531,6 +531,7 @@ public class ContentManagementServices {
             if (Debug.infoOn()) Debug.logInfo("in persistContentAndAssoc, deactivateExistin:" +  deactivateExisting, null);
             Map contentAssocContext = new HashMap();
             contentAssocContext.put("userLogin", userLogin);
+            contentAssocContext.put("displayFailCond", bDisplayFailCond);
             contentAssocContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
             Map thisResult = null;
             try {

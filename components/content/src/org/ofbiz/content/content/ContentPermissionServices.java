@@ -201,6 +201,9 @@ public class ContentPermissionServices {
                 Debug.logInfo("displayFailCond(1):" + displayFailCond, "");
                 if (displayFailCond) {
                      StringBuffer errBuf = new StringBuffer();
+                     errBuf.append("\n    targetOperations:" );
+                     errBuf.append(targetOperations);
+
                      String errMsg = permCondGetter.dumpAsText();
                      errBuf.append(errMsg);
                      errBuf.append("\n    partyId:" );
@@ -218,8 +221,8 @@ public class ContentPermissionServices {
                          errBuf.append(roleGetter.getList());
                      }
                      
-                     Debug.logInfo("displayFailCond(0), errMsg:" + errMsg, "");
-                     results.put(ModelService.ERROR_MESSAGE, errMsg);
+                     Debug.logInfo("displayFailCond(0), errBuf:" + errBuf.toString(), "");
+                     results.put(ModelService.ERROR_MESSAGE, errBuf.toString());
                 }
             }
         } catch (GenericEntityException e) {
