@@ -844,6 +844,7 @@
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>
+      <field name="itemIssuanceId" type="id"></field>      
       <field name="quantity" type="floating-point"></field>
       <field name="amount" type="currency-amount"></field>
       <prim-key field="orderId"/>
