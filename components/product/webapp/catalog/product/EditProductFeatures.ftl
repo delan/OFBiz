@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -74,7 +74,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <td>
                     <#assign hasExpired = false>
                     <#if (productFeatureAndAppl.getTimestamp("thruDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-                    <input type='text' size='25' name='thruDate' value='${(productFeatureAndApp.thruDate)?if_exists}' class='inputBox' <#if hasExpired> style='color: red;'</#if>>
+                    <input type='text' size='25' name='thruDate' value='${(productFeatureAndAppl.thruDate)?if_exists}' class='inputBox' <#if hasExpired> style='color: red;'</#if>>
                     <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productFeatureAndAppl.thruDate)?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                     <input type=text size='6' name='amount' value='${(productFeatureAndAppl.amount)?if_exists}'  class='inputBox'>
                     <input type=text size='5' name='sequenceNum' value='${(productFeatureAndAppl.sequenceNum)?if_exists}' class='inputBox'>
