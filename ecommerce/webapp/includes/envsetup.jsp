@@ -15,9 +15,18 @@
 
 <%URL ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");%>
 
+<%boolean headerShowCompanyText = "true".equals(UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.show.company.text"));%>
 <%String companyName = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name");%>
 <%String companySubtitle = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.subtitle");%>
 <%String headerImageUrl = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.image.url");%>
+<%String headerMiddleBackgroundUrl = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.middle.background.url");%>
+<%String headerRightBackgroundUrl = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.right.background.url");%>
+
+<%String bodyTopMargin = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "body.topmargin");%>
+<%String bodyLeftMargin = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "body.leftmargin");%>
+<%String bodyRightMargin = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "body.rightmargin");%>
+<%String bodyMarginHeight = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "body.marginheight");%>
+<%String bodyMarginWidth = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "body.marginwidth");%>
 
 <%String headerBoxBorderColor = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.box.border.color", "black");%>
 <%String headerBoxBorderWidth = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.box.border.width", "1");%>

@@ -28,7 +28,7 @@ function mClk(src){
 </script>
 </head>
 
-<body>
+<body <%=UtilFormatOut.ifNotEmpty(bodyTopMargin,"topmargin='","'")%> <%=UtilFormatOut.ifNotEmpty(bodyLeftMargin,"leftmargin='","'")%> <%=UtilFormatOut.ifNotEmpty(bodyRightMargin,"rightmargin='","'")%> <%=UtilFormatOut.ifNotEmpty(bodyMarginHeight,"marginheight='","'")%> <%=UtilFormatOut.ifNotEmpty(bodyMarginWidth,"marginwidth='","'")%>>
 
 <TABLE border=0 width='100%' cellpadding='<%=headerBoxBorderWidth%>' cellspacing='0' bgcolor='<%=headerBoxBorderColor%>'>
   <TR>
@@ -40,15 +40,19 @@ function mClk(src){
               <IMG height='50' src='<%=headerImageUrl%>' alt='<%=companyName%>'>
             </TD>
           <%}%>
-          <TD align=left>
-            <%if(companyName != null && companyName.length() > 0) {%>
-              <div class='headerCompanyName'><%=companyName%></div>
-            <%}%>
-            <%if(companySubtitle != null && companySubtitle.length() > 0) {%>
-              <div class='headerCompanySubtitle'><%=companySubtitle%></div>
+          <TD align=left width='98%' <%=UtilFormatOut.ifNotEmpty(headerMiddleBackgroundUrl,"background='","'")%>>
+            <%if(headerShowCompanyText) {%>
+              <%if(companyName != null && companyName.length() > 0) {%>
+                <div class='headerCompanyName'><%=companyName%></div>
+              <%}%>
+              <%if(companySubtitle != null && companySubtitle.length() > 0) {%>
+                <div class='headerCompanySubtitle'><%=companySubtitle%></div>
+              <%}%>
+            <%}else{%>
+              &nbsp;
             <%}%>
           </TD>
-          <TD align=right>
+          <TD align=right width='1%' nowrap <%=UtilFormatOut.ifNotEmpty(headerRightBackgroundUrl,"background='","'")%>>
             <%@ include file="/cart/microcart.jsp"%>
           </td>
         </tr>
