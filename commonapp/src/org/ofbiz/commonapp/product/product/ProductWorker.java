@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/02/02 12:01:47  jonesde
+ * Changed method of getting dispatcher to get from request instead of ServletContext, more control to control servlet and works with Weblogic
+ *
  * Revision 1.5  2002/02/01 12:18:47  jonesde
  * Small speedup to not relead session item list caches on the first page for all loads
  *
@@ -183,10 +186,21 @@ public class ProductWorker {
             return;
 
         try {
-            Collection upgradeProducts = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_UPGRADE"));
-            Collection complementProducts = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_COMPLEMENT"));
-            Collection obsolescenceProducts = product.getRelatedByAndCache("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_OBSOLESCENCE"));
-            Collection obsoleteByProducts = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_OBSOLESCENCE"));
+            Collection upgradeProducts = product.getRelatedByAndCache("MainProductAssoc",
+                                                                      UtilMisc.toMap("productAssocTypeId",
+                                                                                     "PRODUCT_UPGRADE"));
+
+            Collection complementProducts = product.getRelatedByAndCache("MainProductAssoc",
+                                                                         UtilMisc.toMap("productAssocTypeId",
+                                                                                        "PRODUCT_COMPLEMENT"));
+
+            Collection obsolescenceProducts = product.getRelatedByAndCache("AssocProductAssoc",
+                                                                           UtilMisc.toMap("productAssocTypeId",
+                                                                                          "PRODUCT_OBSOLESCENCE"));
+
+            Collection obsoleteByProducts = product.getRelatedByAndCache("MainProductAssoc",
+                                                                         UtilMisc.toMap("productAssocTypeId",
+                                                                                        "PRODUCT_OBSOLESCENCE"));
 
             //since ProductAssoc records have a fromDate and thruDate, we can filter by now so that only assocs in the date range are included
             upgradeProducts = EntityUtil.filterByDate(upgradeProducts);

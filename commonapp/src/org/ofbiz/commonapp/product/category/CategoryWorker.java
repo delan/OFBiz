@@ -59,7 +59,8 @@ public class CategoryWorker {
      *@param attributePrefix A prefix to put on each attribute name in the pageContext
      *@param parentId The ID of the parent category
      */
-    public static void getRelatedProducts(PageContext pageContext, String attributePrefix, String parentId, boolean limitView) {
+    public static void getRelatedProducts(PageContext pageContext, String attributePrefix,
+                                          String parentId, boolean limitView) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         if (attributePrefix == null)
             attributePrefix = "";
@@ -78,7 +79,8 @@ public class CategoryWorker {
                 GenericValue prodCatMember = (GenericValue) prodCatMembers.get(ind - 1);
                 GenericValue prod = null;
                 try {
-                    prod = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", prodCatMember.get("productId")));
+                    prod = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId",
+                                                                                     prodCatMember.get("productId")));
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
                     prod = null;
@@ -101,7 +103,8 @@ public class CategoryWorker {
      *@param attributePrefix A prefix to put on each attribute name in the pageContext
      *@param parentId The ID of the parent category
      */
-    public static void getRelatedProductCategoryMembers(PageContext pageContext, String attributePrefix, String parentId, boolean limitView) {
+    public static void getRelatedProductCategoryMembers(PageContext pageContext, String attributePrefix,
+                                                        String parentId, boolean limitView) {
         ServletRequest request = pageContext.getRequest();
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         if (attributePrefix == null)
@@ -122,7 +125,8 @@ public class CategoryWorker {
         }
 
         if (parentId == null)
-            parentId = UtilFormatOut.checkNull(request.getParameter("catalog_id"), request.getParameter("CATALOG_ID"), request.getParameter("category_id"),
+            parentId = UtilFormatOut.checkNull(request.getParameter("catalog_id"), request.getParameter("CATALOG_ID"),
+                                               request.getParameter("category_id"),
                     request.getParameter("CATEGORY_ID"));
         if (parentId == null || parentId.length() <= 0)
             return;
@@ -150,7 +154,8 @@ public class CategoryWorker {
             if (category != null) {
                 Collection prodCatMemberCol = null;
                 try {
-                    prodCatMemberCol = EntityUtil.filterByDate(category.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum")));
+                    prodCatMemberCol = EntityUtil.filterByDate(category.getRelatedCache("ProductCategoryMember", null,
+                                                                                        UtilMisc.toList("sequenceNum")));
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
                     prodCatMemberCol = null;
@@ -238,7 +243,8 @@ public class CategoryWorker {
     public static void getRelatedCategories(PageContext pageContext, String attributeName) {
         ServletRequest request = pageContext.getRequest();
         String requestId = null;
-        requestId = UtilFormatOut.checkNull(request.getParameter("catalog_id"), request.getParameter("CATALOG_ID"), request.getParameter("category_id"),
+        requestId = UtilFormatOut.checkNull(request.getParameter("catalog_id"), request.getParameter("CATALOG_ID"),
+                                            request.getParameter("category_id"),
                 request.getParameter("CATEGORY_ID"));
         if (requestId.equals(""))
             return;
@@ -261,7 +267,9 @@ public class CategoryWorker {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Collection rollups = null;
         try {
-            rollups = delegator.findByAndCache("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId",parentId), UtilMisc.toList("sequenceNum"));
+            rollups = delegator.findByAndCache("ProductCategoryRollup",
+                                               UtilMisc.toMap("parentProductCategoryId",parentId),
+                                               UtilMisc.toList("sequenceNum"));
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             rollups = null;
@@ -288,7 +296,8 @@ public class CategoryWorker {
 
     public static void setTrail(PageContext pageContext, String currentCategory) {
         String previousCategory = pageContext.getRequest().getParameter("pcategory");
-        Debug.logInfo("[CatalogHelper.setTrail] Start: previousCategory=" + previousCategory + " currentCategory=" + currentCategory);
+        Debug.logInfo("[CatalogHelper.setTrail] Start: previousCategory=" + previousCategory +
+                      " currentCategory=" + currentCategory);
 
         //if there is no current category, just return and do nothing to that the last settings will stay
         if (currentCategory == null || currentCategory.length() <= 0)
@@ -307,7 +316,8 @@ public class CategoryWorker {
                 if (cindex < (crumb.size() - 1)) {
                     for (int i = crumb.size() - 1; i > cindex; i--) {
                         String deadCat = (String) crumb.remove(i);
-                        Debug.logInfo("[CatalogHelper.setTrail] Removed after current category index: " + i + " catname: " + deadCat);
+                        Debug.logInfo("[CatalogHelper.setTrail] Removed after current category index: " + i +
+                                      " catname: " + deadCat);
                     }
                 }
                 return;
@@ -322,7 +332,8 @@ public class CategoryWorker {
 
         if (!crumb.contains(previousCategory)) {
             //previous category was NOT in the list, ERROR, start over
-            Debug.logInfo("[CatalogHelper.setTrail] ERROR: previousCategory (" + previousCategory + ") was not in the crumb list, position is lost, starting over with TOP");
+            Debug.logInfo("[CatalogHelper.setTrail] ERROR: previousCategory (" + previousCategory +
+                          ") was not in the crumb list, position is lost, starting over with TOP");
             previousCategory = "TOP";
             crumb.clear();
             crumb.add(previousCategory);
@@ -332,7 +343,8 @@ public class CategoryWorker {
             if (index < (crumb.size() - 1)) {
                 for (int i = crumb.size() - 1; i > index; i--) {
                     String deadCat = (String) crumb.remove(i);
-                    Debug.logInfo("[CatalogHelper.setTrail] Removed after previous category index: " + i + " catname: " + deadCat);
+                    Debug.logInfo("[CatalogHelper.setTrail] Removed after previous category index: " + i +
+                                  " catname: " + deadCat);
                 }
             }
         }
