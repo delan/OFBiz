@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectType.java,v 1.5 2004/03/22 03:32:05 ajzeneski Exp $
+ * $Id: ObjectType.java,v 1.6 2004/05/01 13:28:12 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ObjectType {
@@ -122,6 +122,31 @@ public class ObjectType {
         return o;
     }
 
+    /** 
+     * Tests if a class properly implements the specified interface
+     * @param objectClass Class to test
+     * @param interfaceName Name of the interface to test against
+     * @return boolean indicating whether interfaceName is an interface of the obj
+     * @throws ClassNotFoundException
+     */
+    public static boolean interfaceOf(Class objectClass, String interfaceName) throws ClassNotFoundException {
+        Class interfaceClass = loadClass(interfaceName);
+
+        return interfaceOf(objectClass, interfaceClass);
+    }
+
+    /** 
+     * Tests if a class properly implements the specified interface
+     * @param objectClass Class to test
+     * @param interfaceObject to test against
+     * @return boolean indicating whether interfaceObject is an interface of the obj
+     */
+    public static boolean interfaceOf(Class objectClass, Object interfaceObject) {
+        Class interfaceClass = interfaceObject.getClass();
+
+        return interfaceOf(objectClass, interfaceClass);
+    }
+
     /**
      * Returns an instance of the specified class using the constructor matching the specified parameters
      * @param className Name of the class to instantiate
@@ -179,6 +204,16 @@ public class ObjectType {
     public static boolean interfaceOf(Object obj, Class interfaceClass) {
         Class objectClass = obj.getClass();
 
+        return interfaceOf(objectClass, interfaceClass);
+    }
+
+    /** 
+     * Tests if a class properly implements the specified interface
+     * @param objectClass Class to test
+     * @param interfaceClass Class to test against
+     * @return boolean indicating whether interfaceClass is an interface of the obj
+     */
+    public static boolean interfaceOf(Class objectClass, Class interfaceClass) {
         while (objectClass != null) {
             Class[] ifaces = objectClass.getInterfaces();
 
@@ -188,6 +223,31 @@ public class ObjectType {
             objectClass = objectClass.getSuperclass();
         }
         return false;
+    }
+
+    /** 
+     * Tests if a class is a class of or a sub-class of the parent
+     * @param objectClass Class to test
+     * @param parentName Name of the parent class to test against
+     * @return
+     * @throws ClassNotFoundException
+     */
+    public static boolean isOrSubOf(Class objectClass, String parentName) throws ClassNotFoundException {
+        Class parentClass = loadClass(parentName);
+
+        return isOrSubOf(objectClass, parentClass);
+    }
+
+    /** 
+     * Tests if a class is a class of or a sub-class of the parent
+     * @param objectClass Class to test
+     * @param parentObject Object to test against
+     * @return
+     */
+    public static boolean isOrSubOf(Class objectClass, Object parentObject) {
+        Class parentClass = parentObject.getClass();
+
+        return isOrSubOf(objectClass, parentClass);
     }
 
     /** 
@@ -224,11 +284,44 @@ public class ObjectType {
     public static boolean isOrSubOf(Object obj, Class parentClass) {
         Class objectClass = obj.getClass();
 
+        return isOrSubOf(objectClass, parentClass);
+    }
+
+    /** 
+     * Tests if a class is a class of or a sub-class of the parent
+     * @param objectClass Class to test
+     * @param parentClass Class to test against
+     * @return
+     */
+    public static boolean isOrSubOf(Class objectClass, Class parentClass) {
+
         while (objectClass != null) {
             if (objectClass == parentClass) return true;
             objectClass = objectClass.getSuperclass();
         }
         return false;
+    }
+
+    /** 
+     * Tests if a class is a class of a sub-class of or properly implements an interface
+     * @param objectClass Class to test
+     * @param typeObject Object to test against
+     * @return
+     */
+    public static boolean instanceOf(Class objectClass, Object typeObject) {
+        Class typeClass = typeObject.getClass();
+
+        return instanceOf(objectClass, typeClass);
+    }
+
+    /** 
+     * Tests if a class is a class of a sub-class of or properly implements an interface
+     * @param objectClass Class to test
+     * @param typeName name to test against
+     * @return
+     */
+    public static boolean instanceOf(Class objectClass, String typeName) {
+        return instanceOf(objectClass, typeName, null);
     }
 
     /** 
@@ -254,6 +347,22 @@ public class ObjectType {
     }
 
     /** 
+     * Tests if a class is a class of a sub-class of or properly implements an interface
+     * @param objectClass Class to test
+     * @param typeName Object to test against
+     * @param loader
+     * @return
+     */
+    public static boolean instanceOf(Class objectClass, String typeName, ClassLoader loader) {
+        Class infoClass = loadInfoClass(typeName, loader);
+
+        if (infoClass == null)
+            throw new IllegalArgumentException("Illegal type found in info map (could not load class for specified type)");
+
+        return instanceOf(objectClass, infoClass);
+    }
+
+    /** 
      * Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
      * @param typeName Object to test against
@@ -261,22 +370,30 @@ public class ObjectType {
      * @return
      */
     public static boolean instanceOf(Object obj, String typeName, ClassLoader loader) {
-        Class infoClass = null;
+        Class infoClass = loadInfoClass(typeName, loader);
 
+        if (infoClass == null)
+            throw new IllegalArgumentException("Illegal type found in info map (could not load class for specified type)");
+
+        return instanceOf(obj, infoClass);
+    }
+
+    public static Class loadInfoClass(String typeName, ClassLoader loader) {
+        Class infoClass = null;
         try {
-            infoClass = ObjectType.loadClass(typeName, loader);
+            return ObjectType.loadClass(typeName, loader);
         } catch (SecurityException se1) {
             throw new IllegalArgumentException("Problems with classloader: security exception (" +
                     se1.getMessage() + ")");
         } catch (ClassNotFoundException e1) {
             try {
-                infoClass = ObjectType.loadClass(LANG_PACKAGE + typeName, loader);
+                return ObjectType.loadClass(LANG_PACKAGE + typeName, loader);
             } catch (SecurityException se2) {
                 throw new IllegalArgumentException("Problems with classloader: security exception (" +
                         se2.getMessage() + ")");
             } catch (ClassNotFoundException e2) {
                 try {
-                    infoClass = ObjectType.loadClass(SQL_PACKAGE + typeName, loader);
+                    return ObjectType.loadClass(SQL_PACKAGE + typeName, loader);
                 } catch (SecurityException se3) {
                     throw new IllegalArgumentException("Problems with classloader: security exception (" +
                             se3.getMessage() + ")");
@@ -287,11 +404,6 @@ public class ObjectType {
                 }
             }
         }
-
-        if (infoClass == null)
-            throw new IllegalArgumentException("Illegal type found in info map (could not load class for specified type)");
-
-        return instanceOf(obj, infoClass);
     }
 
     /** 
@@ -302,10 +414,21 @@ public class ObjectType {
      */
     public static boolean instanceOf(Object obj, Class typeClass) {
         if (obj == null) return true;
+        Class objectClass = obj.getClass();
+        return instanceOf(objectClass, typeClass);
+    }
+
+    /** 
+     * Tests if a class is a class of a sub-class of or properly implements an interface
+     * @param objectClass Class to test
+     * @param typeClass Class to test against
+     * @return
+     */
+    public static boolean instanceOf(Class objectClass, Class typeClass) {
         if (typeClass.isInterface()) {
-            return interfaceOf(obj, typeClass);
+            return interfaceOf(objectClass, typeClass);
         } else {
-            return isOrSubOf(obj, typeClass);
+            return isOrSubOf(objectClass, typeClass);
         }
     }
 
@@ -726,6 +849,24 @@ public class ObjectType {
 
         if (verboseOn) Debug.logVerbose("Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"", module);
 
+        try {
+            Class clz = ObjectType.loadClass(type, loader);
+            type = clz.getName();
+        } catch (ClassNotFoundException e) {
+            messages.add("Could not convert type(" + type + ") for comparison: " + e.getMessage());
+            return null;
+        }
+
+        if ("is-null".equals(operator) && value1 == null) {
+            return Boolean.TRUE;
+        } else if ("is-not-null".equals(operator) && value1 == null) {
+            return Boolean.FALSE;
+        } else if ("is-empty".equals(operator) && value1 == null) {
+            return Boolean.TRUE;
+        } else if ("is-not-empty".equals(operator) && value1 == null) {
+            return Boolean.FALSE;
+        }
+
         int result = 0;
 
         Object convertedValue1 = null;
@@ -810,7 +951,7 @@ public class ObjectType {
             return Boolean.TRUE;    
         }
         
-        if ("String".equals(type) || "PlainString".equals(type)) {
+        if ("java.lang.String".equals(type) || "PlainString".equals(type)) {
             String str1 = (String) convertedValue1;
             String str2 = (String) convertedValue2;
 
@@ -833,7 +974,7 @@ public class ObjectType {
                 }
             }
             result = str1.compareTo(str2);
-        } else if ("Double".equals(type) || "Float".equals(type) || "Long".equals(type) || "Integer".equals(type)) {
+        } else if ("java.lang.Double".equals(type) || "java.lang.Float".equals(type) || "java.lang.Long".equals(type) || "java.lang.Integer".equals(type)) {
             Number tempNum = (Number) convertedValue1;
             double value1Double = tempNum.doubleValue();
 
@@ -846,19 +987,19 @@ public class ObjectType {
                 result = 1;
             else
                 result = 0;
-        } else if ("Date".equals(type)) {
+        } else if ("java.sql.Date".equals(type)) {
             java.sql.Date value1Date = (java.sql.Date) convertedValue1;
             java.sql.Date value2Date = (java.sql.Date) convertedValue2;
             result = value1Date.compareTo(value2Date);
-        } else if ("Time".equals(type)) {
+        } else if ("java.sql.Time".equals(type)) {
             java.sql.Time value1Time = (java.sql.Time) convertedValue1;
             java.sql.Time value2Time = (java.sql.Time) convertedValue2;
             result = value1Time.compareTo(value2Time);
-        } else if ("Timestamp".equals(type)) {
+        } else if ("java.sql.Timestamp".equals(type)) {
             java.sql.Timestamp value1Timestamp = (java.sql.Timestamp) convertedValue1;
             java.sql.Timestamp value2Timestamp = (java.sql.Timestamp) convertedValue2;
             result = value1Timestamp.compareTo(value2Timestamp);
-        } else if ("Boolean".equals(type)) {
+        } else if ("java.lang.Boolean".equals(type)) {
             Boolean value1Boolean = (Boolean) convertedValue1;
             Boolean value2Boolean = (Boolean) convertedValue2;
             if ("equals".equals(operator)) {
@@ -875,7 +1016,7 @@ public class ObjectType {
                 messages.add("Can only compare Booleans using the operators 'equals' or 'not-equals'");
                 return null;
             }
-        } else if ("Object".equals(type)) {
+        } else if ("java.lang.Object".equals(type)) {
             if (convertedValue1.equals(convertedValue2)) {
                 result = 0;
             } else {
