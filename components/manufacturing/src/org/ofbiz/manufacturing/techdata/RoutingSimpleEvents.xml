@@ -25,7 +25,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
  -->
 <simple-methods>
@@ -43,6 +43,11 @@
 	            <result-to-field result-name="workEffortId" map-name="parameters" field-name="workEffortIdTo"/>
 	        </call-service>
         </if-compare>
+        <if-empty field-name="fromDate" map-name="parameters">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="parameters"/>
+            <log level="info" message="Update fromDate with: ${nowTimestamp}"/>             
+        </if-empty>        
         <call-map-processor xml-resource="org/ofbiz/manufacturing/techdata/RoutingMapProcs.xml"
                 processor-name="routingTaskAssoc" in-map-name="parameters" out-map-name="context1"/>
          <check-errors/>
