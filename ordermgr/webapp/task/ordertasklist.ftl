@@ -154,7 +154,11 @@
                             </a>
                           </td>
                           <td>
+                            <#if task.customerPartyId?exists>
                             <a href="/partymgr/control/viewprofile?party_id=${task.customerPartyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${Static["org.ofbiz.ordermgr.task.TaskWorker"].getCustomerName(task)}</a>
+                            <#else>
+                            &nbsp;
+                            </#if>
                           </td>
                           <td>
                             <div class="tabletext">
@@ -234,7 +238,11 @@
                               </a>
                             </td>
                             <td>
+                              <#if task.customerPartyId?exists>
                               <a href="/partymgr/control/viewprofile?party_id=${task.customerPartyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${Static["org.ofbiz.ordermgr.task.TaskWorker"].getCustomerName(task)}</a>
+                              <#else>
+                              &nbsp;
+                              </#if>
                             </td>
                             <td>
                               <div class="tabletext">

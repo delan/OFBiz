@@ -1275,7 +1275,7 @@
       <member-entity entity-alias="PS" entity-name="Person"/>
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
-      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderId" group-by="true"/>
       <alias entity-alias="OH" name="orderTypeId"/>
       <alias entity-alias="OH" name="orderDate"/>
       <alias entity-alias="OH" name="entryDate"/>
@@ -1306,10 +1306,10 @@
       <alias entity-alias="WEPA" name="thruDate"/>
       <alias entity-alias="WEPA" name="statusId"/>
       <alias entity-alias="WEPA" name="statusDateTime"/>
-      <view-link entity-alias="OH" rel-entity-alias="OHR">
+      <view-link entity-alias="OH" rel-entity-alias="OHR" rel-optional="true">
         <key-map field-name="orderId"/>
       </view-link>
-      <view-link entity-alias="OHR" rel-entity-alias="PS">
+      <view-link entity-alias="OHR" rel-entity-alias="PS" rel-optional="true">
         <key-map field-name="partyId"/>
       </view-link>
       <view-link entity-alias="OH" rel-entity-alias="WE">
