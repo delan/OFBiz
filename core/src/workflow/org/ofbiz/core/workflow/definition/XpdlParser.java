@@ -3,6 +3,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/11/11 22:33:34  rbb36
+ * Everything except WorkflowProcess parses
+ *
  * Revision 1.5  2001/11/11 06:13:32  rbb36
  * Now fully parses the first two entities
  *
@@ -36,9 +39,11 @@ import javax.xml.parsers.ParserConfigurationException;
 // FOREIGN IMPORTS
 import org.apache.log4j.Category;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -221,10 +226,12 @@ public class XpdlParser {
     
     public static Method TEXT_ELEM_METHOD = null;
     public static Method VECTOR_ELEM_METHOD = null;
+    public static Method MAP_ELEM_METHOD = null;
     
     static {
         initParseTextMethod();
         initParseVectorMethod();
+        initParseMapMethod();
     }
     
     public static final
@@ -241,7 +248,7 @@ public class XpdlParser {
             TEXT_ELEM_METHOD =
                 XpdlParser.class.getMethod( methodName, argClasses );
         } catch( Exception e ) {
-            cat.fatal( "Can't find parseTextElement method.", e );
+            cat.fatal( "Can't find " + methodName + " method.", e );
         }
     }
     
@@ -252,7 +259,18 @@ public class XpdlParser {
             VECTOR_ELEM_METHOD =
                 XpdlParser.class.getMethod( methodName, argClasses );
         } catch( Exception e ) {
-            cat.fatal( "Can't find parseVectorElement method.", e );
+            cat.fatal( "Can't find " + methodName + " method.", e );
+        }
+    }
+    
+    protected static void initParseMapMethod() {
+        final String methodName = "parseMappedElement";
+        final Class[] argClasses = new Class[]{ Element.class };
+        try {
+            MAP_ELEM_METHOD =
+                XpdlParser.class.getMethod( methodName, argClasses );
+        } catch( Exception e ) {
+            cat.fatal( "Can't find " + methodName + " method.", e );
         }
     }
     
@@ -310,6 +328,8 @@ public class XpdlParser {
             return( TEXT_ELEM_METHOD );
         } else if( isVectorElement( elementName ) && VECTOR_ELEM_METHOD != null ) {
             return( VECTOR_ELEM_METHOD );
+        } else if( MAP_ELEM_METHOD != null ) {
+            return( MAP_ELEM_METHOD );
         }
         final String methodName = "parse" + elementName;
         final Class[] argClasses = new Class[]{ Element.class };
@@ -360,6 +380,13 @@ public class XpdlParser {
     public static Object parseElement( String elementName,
                                        Element element ) {
         try {
+            final String targetClassName = 
+                "org.ofbiz.core.workflow.definition." + elementName;
+            final Class clazz = Class.forName( targetClassName );
+            System.out.println( "Found: " + clazz.getName() );
+        } catch( Exception e ) {
+        }
+        try {
             final Object[] args = new Object[]{ element };
             final Method method = getParseMethod( elementName );
             return( method.invoke( null, args ) );
@@ -375,6 +402,7 @@ public class XpdlParser {
     }
     
     public static String parseTextElement( Element element ) {
+        final String elementName = element.getNodeName();
         String string = null;
         Node child = element.getFirstChild();
         while( child != null && string == null ) {
@@ -383,10 +411,12 @@ public class XpdlParser {
             }
             child = child.getNextSibling();
         }
+        cat.info( "parse " + elementName + " using generic text parser" );
         return( string );
     }
     
     public static Vector parseVectorElement( Element element ) {
+        final String elementName = element.getNodeName();
         final Vector elements = new Vector();
         Node child = element.getFirstChild();
         while( child != null ) {
@@ -394,13 +424,40 @@ public class XpdlParser {
             if( o != null ) { elements.add( o ); }
             child = child.getNextSibling();
         }
+        cat.info( "parse " + elementName + " using generic vector parser" );
         return( elements );
+    }
+    
+    public static HashMap parseMappedElement( Element element ) {
+        final String elementName = element.getNodeName();
+        final HashMap map = new HashMap();
+        final NamedNodeMap attributes = element.getAttributes();
+        if( attributes != null ) {
+            for( int i = 0; i < attributes.getLength(); i++ ) {
+                final Attr attr = (Attr)attributes.item( i );
+                if( attr != null ) {
+                    map.put( attr.getName(), attr.getValue() );
+                }
+            }
+        }
+        final NodeList children = element.getChildNodes();
+        for( int i = 0; i < children.getLength(); i++ ) {
+            final Node child = children.item( i );
+            if( child != null ) {
+                final String name = child.getNodeName();
+                final Object o = parseElement( child );
+                if( o != null ) { map.put( name, o ); }
+            }
+        }
+        cat.info( "parse " + elementName + " using generic map parser" );
+        return( map );
     }
     
     /**
      * Parses an XPDL Package element into an instance of a
      * Package object.
      */
+    /*
     public static Object parsePackage( Element packageElement ) {
         final HashMap pakkage = new HashMap();
         pakkage.put( "Id", packageElement.getAttribute( "Id" ) );
@@ -600,6 +657,53 @@ public class XpdlParser {
         cat.debug( "parseDataField has not been type implemented" );
         return( dataField );
     }
+    
+    public static Object parseWorkflowProcess( Element element ) {
+        final HashMap workflowProcess = new HashMap();
+        workflowProcess.put( "Id", element.getAttribute( "Id" ) );
+        workflowProcess.put( "Name", element.getAttribute( "Name" ) );
+        Node child = element.getFirstChild();
+        while( child != null ) {
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { workflowProcess.put( nodeName, o ); }
+            child = child.getNextSibling();
+        }
+        cat.debug( "parseWorkflowProcess has not been type implemented" );
+        return( workflowProcess );
+    }
+    
+    public static Object parseProcessHeader( Element element ) {
+        final HashMap processHeader = new HashMap();
+        processHeader.put( "DurationUnit", element.getAttribute( "DurationUnit" ) );
+        Node child = element.getFirstChild();
+        while( child != null ) {
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { processHeader.put( nodeName, o ); }
+            child = child.getNextSibling();
+        }
+        cat.debug( "parseProcessHeader has not been type implemented" );
+        return( processHeader );
+    }
+    
+    public static Object parseTimeEstimation( Element element ) {
+        final HashMap timeEstimation = new HashMap();
+        Node child = element.getFirstChild();
+        while( child != null ) {
+            final String nodeName = child.getNodeName();
+            final Object o = parseElement( child );
+            if( o != null ) { timeEstimation.put( nodeName, o ); }
+            child = child.getNextSibling();
+        }
+        cat.debug( "parseTimeEstimation has not been type implemented" );
+        return( timeEstimation );
+    }
+    
+    public static Object parseActivity( Element element ) {
+        return( parseMappedElement( element ) );
+    }
+    */
     
     /** Parses an XPDL Join element into an instance of a Join object. */
     public static Join parseJoin( Element joinElement ) {
