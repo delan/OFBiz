@@ -532,7 +532,7 @@ to do the three-way diff/merge described above, but in an automatic way that
 only requires your involvement for merge collisions.</p>
 
 <p class='contenttext'>To get started do a fresh checkout from the OFBiz CVS 
-repository (tip: checkout the "all" module), then remove all CVS directories 
+repository, then remove all CVS directories 
 and import the tree into a new module in your local CVS repository. Tag this
 set of files with a name like OFBIZ_20030612 (adjust for the current date) 
 using a command like "cvs tag -b OFBIZ_20030612". Now just change/add things 
@@ -541,27 +541,24 @@ on the HEAD branch unless you do something like "cvs update -rOFBIZ_20030612".</
 
 <p class='contenttext'>So, now you have a bona-fide branch of OFBiz with your
 own code mixed in, but there are a ton of cool new things in the latest OFBiz
-base code that you would LOVE to have. What do you do? Just do a checkout in
-a new location on your machine of your modified OFBiz module, but instead of
-checking out HEAD, check out the latest OFBIZ_YYYYMMDD tagged revisions 
-(using something like cvs co -rOFBIZ_20030612). Next,
-do a fresh checkout from the OFBiz repository (again, use the "all" module) and
-then once again remove all CVS directories, then copy this new tree on top of
-the tree you just checked out. Now you have a checkout with only the changes
-between the current OFBiz source and the revisions that you have based your
-changes on. CVS will remember that you are working on the last OFBIZ_YYYYMMDD 
-branch, so when you commit these they will go into the new branch. Now tag this
-as a new branch (ie cvs tag -b) with the name OFBIZ_YYYYMMDD based on the 
-current date. Now you can get rid of this local checkout.</p>
+base code that you would LOVE to have. What do you do? The easiest way to do
+this is to use the "cvs import" command, and you can do this multiple times
+to get a new vendor branch for the latest OFBiz code. For example, checkout
+the latest OFBiz code (with an export or a checkout) and from the root
+directory of that import run something like <code>'cvs import myofbiz OFBIZ_BASE REL_3_0_0 -m "More cool stuff from OFBiz"'</code>, 
+where myofbiz is the name of your local CVS repository module, and OFBIZ_BASE
+string you use to identify this vendor branch, and REL_3_0_0 is a string you
+use to identify the current set of code from OFBiz. This could also be date
+based if it isn't from an official OFBiz release or tag.</p>
 
 <p class='contenttext'>Go back to the place on your machine where you have
 HEAD checked out and merge the branch you just created with the HEAD, or the
 current set of files you have checked out. To do this run something like 
-"cvs update -dP -jOFBIZ_YYYYMMDD".</p>
+"cvs update -dP -j[the-ofbiz-tag]".</p>
 
 <p class='contenttext'>At any time to get a list of all files changed from the base, get
 a list of all tags on the module and compare the HEAD revisions with the 
-revisions tagged using the most recent OFBIZ_YYYYMMDD tag.</p>
+revisions tagged using the most recent OFBiz tag.</p>
 
 <hr class='sepbar'>
 <p class='contenttext'>For information about Open For Business contact David E. Jones at <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
