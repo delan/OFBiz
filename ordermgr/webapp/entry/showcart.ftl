@@ -151,8 +151,7 @@ function addToList() {
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>           
-            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style='margin: 0;'>
-              <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
+            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style='margin: 0;'>              
               <table width="100%" border="0" cellspacing='0' cellpadding='2'>
                 <tr>
                   <td valign='middle'>
@@ -165,11 +164,12 @@ function addToList() {
                       <span class='tabletext'>[Party not defined]</span>
                     </#if>
                   </td>
+                  <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
                   <td align="right" valign="middle">
                     <a href="${response.encodeURL("/catalog/control/EditProduct" + externalKeyParam)}" target="catalog" class="buttontext">[Create New Product]</a>
                   </td>
-                </tr>
-              </#if>
+                  </#if>
+                </tr>              
               </table>            
               <table border='0' cellspacing='0' cellpadding='2'>
                 <tr>
