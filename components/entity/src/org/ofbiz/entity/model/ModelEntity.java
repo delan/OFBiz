@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.7 2003/12/11 05:09:48 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.8 2003/12/17 19:29:08 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.base.util.*;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ModelEntity implements Comparable {
@@ -458,6 +458,13 @@ public class ModelEntity implements Comparable {
 
     public List getFieldsCopy() {
         return new ArrayList(this.fields);
+    }
+
+    /** The col-name of the Field, the alias of the field if this is on a view-entity */
+    public String getColNameOrAlias(String fieldName) {
+        ModelField modelField = this.getField(fieldName);
+        String fieldString = modelField.getColName();
+        return fieldString;
     }
 
     public ModelField getField(String fieldName) {

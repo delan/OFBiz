@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.7 2003/11/07 11:46:17 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.8 2003/12/17 19:29:08 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -388,12 +388,13 @@ public class SqlJdbcUtil {
 
                 for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                     ModelField curField = modelEntity.getField(fi);
+                    String fieldName = curField.getName();
 
-                    if (curField.getName().equals(keyName)) {
+                    if (fieldName.equals(keyName)) {
                         if (ext != null) {
-                            orderByStrings.add(fieldPrefix + curField.getColName() + ext);
+                            orderByStrings.add(fieldPrefix + modelEntity.getColNameOrAlias(fieldName) + ext);
                         } else {
-                            orderByStrings.add(fieldPrefix + curField.getColName());
+                            orderByStrings.add(fieldPrefix + modelEntity.getColNameOrAlias(fieldName));
                         }
                     }
                 }
