@@ -82,14 +82,14 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Event Name</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='workEffortName' value='<ofbiz:inputvalue field="workEffortName" param="workEffortName" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
+                  <td width='74%'><input type='text' size='30' maxlength='30' <ofbiz:inputvalue field="workEffortName" entityAttr="workEffort" tryEntityAttr="tryEntity" fullattrs="true"/>></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Priority</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <SELECT name='priority'>
-                      <OPTION><ofbiz:inputvalue field="priority" param="priority" entityAttr="workEffort" tryEntityAttr="tryEntity"/></OPTION>
+                      <OPTION><ofbiz:inputvalue field="priority" entityAttr="workEffort" tryEntityAttr="tryEntity"/></OPTION>
                       <OPTION value=''>--</OPTION>
                       <OPTION>1</OPTION> <OPTION>2</OPTION> <OPTION>3</OPTION>
                       <OPTION>4</OPTION> <OPTION>5</OPTION> <OPTION>6</OPTION>
@@ -117,23 +117,23 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Location</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='60' maxlength='255' name='locationDesc' value='<ofbiz:inputvalue field="locationDesc" param="locationDesc" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
+                  <td width='74%'><input type='text' size='60' maxlength='255' <ofbiz:inputvalue field="locationDesc" entityAttr="workEffort" tryEntityAttr="tryEntity" fullattrs="true"/>></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Description</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><TEXTAREA name='description' cols='50' rows='4'><ofbiz:inputvalue field="description" param="description" entityAttr="workEffort" tryEntityAttr="tryEntity"/></TEXTAREA>
+                  <td width='74%'><TEXTAREA name='description' cols='50' rows='4'><ofbiz:inputvalue field="description" entityAttr="workEffort" tryEntityAttr="tryEntity"/></TEXTAREA>
                 </tr>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Start Date/Time</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='estimatedStartDate' value='<ofbiz:inputvalue field="estimatedStartDate" param="estimatedStartDate" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
+                  <td width='74%'><input type='text' size='30' maxlength='30' <ofbiz:inputvalue field="estimatedStartDate" entityAttr="workEffort" tryEntityAttr="tryEntity" fullattrs="true"/>><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>End Date/Time</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='estimatedCompletionDate' value='<ofbiz:inputvalue field="estimatedCompletionDate" param="estimatedCompletionDate" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
+                  <td width='74%'><input type='text' size='30' maxlength='30' <ofbiz:inputvalue field="estimatedCompletionDate" entityAttr="workEffort" tryEntityAttr="tryEntity" fullattrs="true"/>><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
 
                 <ofbiz:if name="workEffort">
