@@ -213,6 +213,10 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="readxpdl"/>
     </request-map>
+    <request-map uri="workflowMonitor">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="workflowMonitor"/>
+    </request-map>    
 
     <request-map uri="StatsSinceStart">
     	<security https="true" auth="true"/>
@@ -272,6 +276,7 @@
     <view-map name="viewdatafile" type="region"/>
     <view-map name="logikus" type="region"/>
     <view-map name="readxpdl" type="region"/>
+    <view-map name="workflowMonitor" type="region"/>
     <view-map name="debuglevels" type="region"/>
 
     <view-map name="StatsSinceStart" type="region"/>

@@ -105,6 +105,10 @@
         <put section='title'>Import XPDL File to Workflow Repository</put>
         <put section='content' content='/workflow/readxpdl.jsp'/>
     </define>
+    <define id='workflowMonitor' region='MAIN_REGION'>
+        <put section='title'>Active Workflow Monitor</put>
+        <put section='content' content='/workflow/workflowMonitor.jsp'/>
+    </define>    
 
     <define id='StatsSinceStart' region='MAIN_REGION'>
         <put section='title'>Statistics Since Start</put>

@@ -113,6 +113,7 @@
               <%if(security.hasPermission("WORKFLOW_MAINT", session)){%>
                 <li><div class='tabletext'>Workflow Utilities</div>
                 <ul>
+                  <li><a href="<ofbiz:url>/workflowMonitor</ofbiz:url>" class="buttontext">Workflow Monitor</a>
                   <li><a href="<ofbiz:url>/readxpdl</ofbiz:url>" class='buttontext'>Read XPDL File</A>
                 </ul>
               <%}%>
