@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.2 2003/12/06 00:47:18 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.3 2003/12/06 00:55:20 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -90,7 +90,7 @@ public class EntitySyncServices {
             // set running status on entity sync, run in its own tx
             Map startEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING"));
             if (ModelService.RESPOND_ERROR.equals(startEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
-                return ServiceUtil.returnError("Could not start Entity Sync service", null, null, startEntitySyncRes);
+                return ServiceUtil.returnError("Could not start Entity Sync service, could not mark as running", null, null, startEntitySyncRes);
             }
             
             // TODO: create history record, should run in own tx
@@ -156,7 +156,12 @@ public class EntitySyncServices {
                 currentRunStartTime = currentRunEndTime;
             }
 
-            // TODO: the lastSuccessfulSynchTime on EntitySync will already be set, so just set status as completed 
+            // the lastSuccessfulSynchTime on EntitySync will already be set, so just set status as completed 
+            Map completeEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_COMPLETE"));
+            if (ModelService.RESPOND_ERROR.equals(completeEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
+                // what to do here? try again?
+                return ServiceUtil.returnError("Could not mark Entity Sync as complete, but all synchronization was successful", null, null, completeEntitySyncRes);
+            }
             
         } catch (GenericEntityException e) {
             // TODO: save failure status on history record, should run in own tx
