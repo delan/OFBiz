@@ -3,15 +3,57 @@
 <br>Written By: David E. Jones
 <br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
 <br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
-<br>Last Updated: June 22, 2001
+<br><A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></A>
+<br>
 <h3>Table of Contents</h3>
 <ul>
+  <li><a href="#Release 2001.07.20">Release 2001.07.20</a>
   <li><a href="#Release 2001.06.30">Release 2001.06.30</a>
   <li><a href="#Release 2001.06.22">Release 2001.06.22</a>
   <li><a href="#Release 2001.06.01">Release 2001.06.01</a>
   <li><a href="#Release 2001.05.28">Release 2001.05.28</a>
   <li><a href="#Release 2001.05.24">Release 2001.05.24</a>
 </ul>
+
+<hr>
+<h3><a name="Release 2001.07.20">Release 2001.07.20</a></h3>
+<hr>
+<h4>New Servlet Controller Added</h4>
+<p>The architecture used in commonapp for separating presentation logic from 
+other logic and handling authorization was done with a dispatcher that was 
+invoked by each JSP. The new servlet controller handles not only the separation 
+of presentation logic from other logic and security authorization, but also 
+provides a way to control the flow of the application and externalize that
+from the events and views. The definitions to control the servlet controller
+are specified in an XML whose location is specified in the web.xml file.</p>
+
+<p>The servlet controller is in the new 'core' module. A number of classes have 
+been moved from the commonapp module into this module, namely from commonapp.common
+to core.util. This is part of a move to remove from commonapp everything that
+does not fit the definition of its purpose. The commonapp module is meant to 
+contain the Common Application Components as described in the architecture
+documents. It will contain the entities shared by all of the other applications
+in the ofbiz project. This includes the entity beans, administration pages, and
+other pieces that are entity based.</p>
+
+<h4>Various Enhancements to the Entity Code Generator</h4>
+<p>A number of enhancement have been made to the entitygen module, and the code
+in the commonapp module has been regenerated to reflect the changes to the 
+templates in the entitygen module. Following is a list of those changes, and
+their corresponding task ids on the SourceForge site.</p>
+<ul>
+<li>34237: Merge ViewEntity.jsp.jsp &amp; EditEntity.jsp.jsp
+<li>34259: Optimize entitygen DefReader.java for speed
+<li>32122: Entity relation support
+<li>33906: Add isModified() to EntityBean.java.jsp
+<li>34129: Enhance User Interface: tabs in ViewEntity
+<li>33869: Improve ViewEntity.jsp relation use
+<li>34019: Add title Field to Relation
+<li>33870: Support order-by in Finder definitions
+</ul>
+<p>A number of other small changes have been made that are not associated with
+tasks. These include making EntityHelper generated classes more thread safe,
+and the use of the core.util.Debug class for logging debug messages.</p>
 
 <hr>
 <h3><a name="Release 2001.06.30">Release 2001.06.30</a></h3>
