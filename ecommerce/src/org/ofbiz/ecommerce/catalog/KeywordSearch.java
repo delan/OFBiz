@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/04 19:23:51  jonesde
+ * Initial checkin of keyword search class.
+ *
  */
 package org.ofbiz.ecommerce.catalog;
 
@@ -140,7 +143,7 @@ public class KeywordSearch {
     while(keywordIter.hasNext()) {
       String keyword = (String)keywordIter.next();
       String comparator = "=";
-      if(keyword.indexOf('%') >= 0) comparator = " LIKE ";
+      if(keyword.indexOf('%') >= 0 || keyword.indexOf('_') >= 0) comparator = " LIKE ";
       params.add(keyword);
       if(i == 1) {
         selectBuf.append("PRODUCT_KEYWORD P"); selectBuf.append(i);
