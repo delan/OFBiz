@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
-    <template>main_lookup_lru</template> 
+    <template>lookup</template> 
     <property name="title">Lookup Person</property>
     <property name="formDefFile">/content/ContentForms.xml</property>    
     <property name="singleFormName">lookupPerson</property>    
@@ -11,6 +11,8 @@
     <property name="entityName">Person</property>    
     <property name="listName">entityList</property>    
     <property name="permission">PARTYMGR</property>    
+    <property name="permissionType">simple</property>    
     <page-action name="/includes/findprep.bsh"/>
     <page-action name="/includes/lruprep.bsh"/>
+    <page-action name="/includes/pagelistprep.bsh"/>
 </page>
