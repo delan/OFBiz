@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.0
 --%>
 
@@ -53,7 +53,15 @@
     	currentStatusItem = custRequest.getRelatedOne("StatusItem");
     	if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);
     }
-    
+
+    // get the communication event ID
+    String communicationEventId = request.getParameter("communicationEventId");
+    String partyId = request.getParameter("partyId");
+    if (partyId == null) partyId = "";
+    String custRequestName = request.getParameter("subject");
+    if (custRequest != null) custRequestName = custRequest.getString("custRequestName");
+    if (custRequestName == null) custRequestName = "";
+
 	// status items
 	if (custRequest != null && UtilValidate.isNotEmpty(custRequest.getString("statusId"))) {
 		List statusChange = delegator.findByAnd("StatusValidChange", UtilMisc.toMap("statusId", custRequest.getString("statusId")));	
@@ -109,6 +117,9 @@
                       <form method="post" action="<ofbiz:url>/updaterequest</ofbiz:url>" name="custRequestForm">
                         <input type="hidden" name="custRequestId" value="<%=custRequestId%>">
                     </ofbiz:if>
+                    <%if (communicationEventId != null) {%>
+                      <input type="hidden" name="communicationEventId" value="<%=communicationEventId%>">
+                    <%}%>
                     <table width="100%" cellpadding="2" cellspacing="0" border="0">
                       <tr>
                         <td align="right"><div class="tableheadtext">Request Date</div></td>
@@ -170,7 +181,7 @@
                       </tr>                                          
                       <tr>
                         <td align="right"><div class="tableheadtext">Name</div></td>
-                        <td><input type="text" class="inputBox" size="50" <ofbiz:inputvalue entityAttr="custRequest" field="custRequestName" fullattrs="true"/></td>
+                        <td><input type="text" class="inputBox" size="50" value="<%=custRequestName%>"</td>
                       </tr>
                       <tr>
                         <td align="right"><div class="tableheadtext">Description</div></td>
@@ -180,7 +191,7 @@
                       <ofbiz:unless name="custRequest">
                       <tr>
                         <td align="right"><div class="tableheadtext">Requesting Party</div></td>
-                        <td><input type="text" name="requestPartyId" class="inputBox" size="50"></td>
+                        <td><input type="text" name="requestPartyId" class="inputBox" size="20" value="<%=partyId%>"></td>
                       </tr>
                       </ofbiz:unless>
 
