@@ -129,7 +129,7 @@ public class PrimaryKeyFinder {
                     }
                 }
             } else {
-                Debug.logWarning("Returning null because found incomplete primary key in find: " + entityPK, module);
+                if (Debug.infoOn()) Debug.logInfo("Returning null because found incomplete primary key in find: " + entityPK, module);
             }
             
             //Debug.logInfo("PrimaryKeyFinder: valueOut=" + valueOut, module);
