@@ -1,5 +1,5 @@
 /*
- * $Id: EntityCondition.java,v 1.10 2004/07/14 03:56:31 doogie Exp $
+ * $Id: EntityConditionVisitor.java,v 1.1 2004/07/14 03:56:31 doogie Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -21,16 +21,10 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 package org.ofbiz.entity.condition;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericModelException;
-import org.ofbiz.entity.GenericEntity;
-import org.ofbiz.entity.model.ModelEntity;
 
 /**
  * Represents the conditions to be used to constrain a query
@@ -43,32 +37,27 @@ import org.ofbiz.entity.model.ModelEntity;
  * These can be used in various combinations using the EntityConditionList and EntityExpr objects.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.1 $
  * @since      2.0
  */
-public abstract class EntityCondition extends EntityConditionBase {
+public interface EntityConditionVisitor {
+    void visit(Object obj);
+    void accept(Object obj);
+    void acceptObject(Object obj);
+    void acceptFieldName(String fieldName);
+    void acceptEntityCondition(EntityCondition condition);
+    void acceptEntityJoinOperator(EntityJoinOperator op, List conditions);
+    void acceptEntityOperator(EntityOperator op, Object lhs, Object rhs);
+    void acceptEntityComparisonOperator(EntityComparisonOperator op, Object lhs, Object rhs);
+    void acceptEntityConditionValue(EntityConditionValue value);
+    void acceptEntityFieldValue(EntityFieldValue value);
 
-    public String toString() {
-        return makeWhereString(null, new ArrayList());
-    }
+    void acceptEntityExpr(EntityExpr expr);
+    void acceptEntityConditionList(EntityConditionList list);
+    void acceptEntityFieldMap(EntityFieldMap fieldMap);
+    void acceptEntityConditionFunction(EntityConditionFunction func, EntityCondition nested);
+    void acceptEntityFunction(EntityFunction func);
+    void acceptEntityWhereString(EntityWhereString condition);
 
-    public void accept(EntityConditionVisitor visitor) {
-        throw new IllegalArgumentException(getClass().getName() + ".accept not implemented");
-    }
-
-    abstract public String makeWhereString(ModelEntity modelEntity, List entityConditionParams);
-
-    abstract public void checkCondition(ModelEntity modelEntity) throws GenericModelException;
-
-    public boolean entityMatches(GenericEntity entity) {
-        return mapMatches(entity.getDelegator(), entity);
-    }    
-
-    abstract public boolean mapMatches(GenericDelegator delegator, Map map);
-
-    abstract public EntityCondition freeze();
-
-    public void visit(EntityConditionVisitor visitor) {
-        throw new IllegalArgumentException(getClass().getName() + ".visit not implemented");
-    }
+    void acceptEntityDateFilterCondition(EntityDateFilterCondition condition);
 }
