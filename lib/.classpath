@@ -54,10 +54,8 @@
     <classpathentry exported="true" kind="lib" path="share/cvslib.jar"/>
     <classpathentry exported="true" kind="lib" path="share/dom4j.jar"/>
     <classpathentry exported="true" kind="lib" path="share/fop.jar"/>
-    <classpathentry exported="true" kind="lib" path="share/formproc.jar"/>
     <classpathentry exported="true" kind="lib" path="share/freemarker.jar"/>
     <classpathentry exported="true" kind="lib" path="share/jakarta-poi-1.5.1-final.jar"/>
-    <classpathentry exported="true" kind="lib" path="share/jakarta-taglibs.jar"/>
     <classpathentry exported="true" kind="lib" path="share/junit.jar"/>
     <classpathentry exported="true" kind="lib" path="share/lucene-1.2.jar"/>
     <classpathentry exported="true" kind="lib" path="share/saaj.jar"/>
@@ -65,6 +63,6 @@
     <classpathentry exported="true" kind="lib" path="wspublisher/HTTPClient.jar"/>
     <classpathentry exported="true" kind="lib" path="wspublisher/jazzy-dev.jar"/>
     <classpathentry exported="true" kind="lib" path="wspublisher/tidy.jar"/>
-    <classpathentry exported="true" kind="lib" path="wspublisher/wspublisher-server.jar"/>
+    <classpathentry exported="true" kind="lib" path="wspublisher/wspublisher.jar"/>
     <classpathentry kind="output" path=""/>
 </classpath>

@@ -34,7 +34,7 @@ import org.ofbiz.core.util.*;
 /**
  * ContextSecurityFilter - Security Filter to restrict access to raw JSP pages.
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @version    $Revision$
  * @since      2.0
  */

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Eric Pabst
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    May 22 2001
  *@version    1.0
