@@ -8,7 +8,7 @@
 
     <!-- MarketingCampaign Services -->
     <service name="interfaceMarketingCampaign" engine="interface" location="" invoke="">
-        <attribute name="parentCampaignId" type="String" mode="IN" optional="false"/>
+        <attribute name="parentCampaignId" type="String" mode="IN" optional="true"/>
         <attribute name="campaignName" type="String" mode="IN" optional="true"/>
         <attribute name="campaignSummary" type="String" mode="IN" optional="true"/>
     </service>
