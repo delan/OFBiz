@@ -52,7 +52,7 @@
 
 <script language="JavaScript">
 <!--
-  document.quickaddform.product_id.focus();
+  document.quickaddform.add_product_id.focus();
 //-->
 </script>
 <BR>
