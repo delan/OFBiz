@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.5 2003/11/14 22:17:48 jonesde Exp $
+ * $Id: GenericDAO.java,v 1.6 2003/12/04 01:51:46 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -79,7 +79,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -141,6 +141,8 @@ public class GenericDAO {
         if (modelEntity.isField(ModelEntity.STAMP_FIELD)) {
             entity.set(ModelEntity.STAMP_FIELD, UtilDateTime.nowTimestamp());
         }
+        
+        // TODO: if we have a STAMP_TX_FIELD then set it with NOW.
 
         String sql = "INSERT INTO " + modelEntity.getTableName(datasourceInfo) + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" +
             modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
@@ -232,7 +234,9 @@ public class GenericDAO {
         if (modelEntity.isField(ModelEntity.STAMP_FIELD)) {
             entity.set(ModelEntity.STAMP_FIELD, UtilDateTime.nowTimestamp());
         }
-
+        
+        // TODO: if we have a STAMP_TX_FIELD then set it with NOW.
+        
         String sql = "UPDATE " + modelEntity.getTableName(datasourceInfo) + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?", false) + " WHERE " +
             SqlJdbcUtil.makeWhereStringFromFields(modelEntity.getPksCopy(), entity, "AND");
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TransactionUtil.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
+ * $Id: TransactionUtil.java,v 1.2 2003/12/04 01:51:46 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,12 +25,14 @@ package org.ofbiz.entity.transaction;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import javax.sql.XAConnection;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
+import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
@@ -38,16 +40,17 @@ import javax.transaction.UserTransaction;
 import javax.transaction.xa.XAResource;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 
 /**
  * <p>Transaction Utility to help with some common transaction tasks
  * <p>Provides a wrapper around the transaction objects to allow for changes in underlying implementations in the future.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
-public class TransactionUtil implements javax.transaction.Status {
+public class TransactionUtil implements Status {
     // Debug module name
     public static final String module = TransactionUtil.class.getName();
 
@@ -67,15 +70,14 @@ public class TransactionUtil implements javax.transaction.Status {
      */   
     public static boolean begin(int timeout) throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
-
         if (ut != null) {
             try {
                 int currentStatus = ut.getStatus();
                 Debug.logVerbose("[TransactionUtil.begin] current status code : " + currentStatus, module);
-                if (currentStatus == TransactionUtil.STATUS_ACTIVE) {
+                if (currentStatus == Status.STATUS_ACTIVE) {
                     Debug.logVerbose("[TransactionUtil.begin] active transaction in place, so no transaction begun", module);
                     return false;
-                } else if (currentStatus == TransactionUtil.STATUS_MARKED_ROLLBACK) {
+                } else if (currentStatus == Status.STATUS_MARKED_ROLLBACK) {
                     Debug.logVerbose("[TransactionUtil.begin] active transaction marked for rollback in place, so no transaction begun", module);
                     throw new GenericTransactionException("The current transaction is marked for rollback, should stop immediately.");
                     //return false;
@@ -108,7 +110,6 @@ public class TransactionUtil implements javax.transaction.Status {
      * transactions are available, otherwise returns STATUS_NO_TRANSACTION */
     public static int getStatus() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
-
         if (ut != null) {
             try {
                 return ut.getStatus();
@@ -124,8 +125,9 @@ public class TransactionUtil implements javax.transaction.Status {
      *  AND if beganTransaction is true
      */
     public static void commit(boolean beganTransaction) throws GenericTransactionException {
-        if (beganTransaction)
+        if (beganTransaction) {
             TransactionUtil.commit();
+        }
     }
 
     /** Commits the transaction in the current thread IF transactions are available */
@@ -206,7 +208,6 @@ public class TransactionUtil implements javax.transaction.Status {
     /** Makes a roll back the only possible outcome of the transaction in the current thread IF transactions are available */
     public static void setRollbackOnly() throws GenericTransactionException {        
         UserTransaction ut = TransactionFactory.getUserTransaction();
-
         if (ut != null) {
             try {
                 int status = ut.getStatus();
@@ -231,7 +232,6 @@ public class TransactionUtil implements javax.transaction.Status {
     /** Sets the timeout of the transaction in the current thread IF transactions are available */
     public static void setTransactionTimeout(int seconds) throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
-
         if (ut != null) {
             try {
                 ut.setTransactionTimeout(seconds);
@@ -243,11 +243,11 @@ public class TransactionUtil implements javax.transaction.Status {
 
     /** Enlists the given XAConnection and if a transaction is active in the current thread, returns a plain JDBC Connection */
     public static Connection enlistConnection(XAConnection xacon) throws GenericTransactionException {
-        if (xacon == null)
+        if (xacon == null) {
             return null;
+        }
         try {
             XAResource resource = xacon.getXAResource();
-
             TransactionUtil.enlistResource(resource);
             return xacon.getConnection();
         } catch (SQLException e) {
@@ -256,17 +256,17 @@ public class TransactionUtil implements javax.transaction.Status {
     }
 
     public static void enlistResource(XAResource resource) throws GenericTransactionException {
-        if (resource == null)
+        if (resource == null) {
             return;
+        }
 
         try {
             TransactionManager tm = TransactionFactory.getTransactionManager();
-
             if (tm != null && tm.getStatus() == STATUS_ACTIVE) {
                 Transaction tx = tm.getTransaction();
-
-                if (tx != null)
-                    tx.enlistResource(resource);
+                if (tx != null) {
+                     tx.enlistResource(resource);
+                }
             }
         } catch (RollbackException e) {
             //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
@@ -275,5 +275,35 @@ public class TransactionUtil implements javax.transaction.Status {
             //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
             throw new GenericTransactionException("System error, could not enlist connection in transaction even though transactions are available", e);
         }
+    }
+    
+    private static ThreadLocal transactionStartStamp = new ThreadLocal();
+    private static ThreadLocal transactionLastNowStamp = new ThreadLocal();
+    
+    public static Timestamp getTransactionStartStamp() {
+        Timestamp curStamp = (Timestamp) transactionStartStamp.get();
+        if (curStamp == null) {
+            curStamp = UtilDateTime.nowTimestamp();
+            transactionStartStamp.set(curStamp);
+        }
+        return curStamp;
+    }
+
+    public static Timestamp getTransactionUniqueNowStamp() {
+        Timestamp lastNowStamp = (Timestamp) transactionLastNowStamp.get();
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        
+        // check for an overlap with the lastNowStamp, or if the lastNowStamp is in the future because of incrementing to make each stamp unique
+        if (lastNowStamp != null && (lastNowStamp.equals(nowTimestamp) || lastNowStamp.after(nowTimestamp))) {
+            nowTimestamp = new Timestamp(lastNowStamp.getTime() + 1);
+        }
+        
+        transactionLastNowStamp.set(nowTimestamp);
+        return nowTimestamp;
+    }
+
+    // TODO: consider setting this to protected or private; where will it be called?
+    public static void clearTransactionStartStamp() {
+        transactionStartStamp.set(null);
     }
 }
