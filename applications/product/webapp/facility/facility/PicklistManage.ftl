@@ -115,7 +115,7 @@
 	                        <select name="picklistId" class="smallSelect">
 	                            <#list picklistActiveList as picklistActive>
 	                                <#assign picklistActiveStatusItem = picklistActive.getRelatedOneCache("StatusItem")>
-	                                <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId != picklist.picklistId> selected</#if>>${picklistActive.picklistId} [Date:${picklistActive.picklistDate},Status:${picklistActiveStatusItem.description}]</option>
+	                                <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId == picklist.picklistId> selected</#if>>${picklistActive.picklistId} [Date:${picklistActive.picklistDate},Status:${picklistActiveStatusItem.description}]</option>
 	                            </#list>
 	                        </select>
 	                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
