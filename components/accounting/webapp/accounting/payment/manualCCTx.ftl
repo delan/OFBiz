@@ -20,13 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
-<div class="head1">Manual Credit Card Transaction</div>
+<div class="head1">Manual Electronic Transaction</div>
 <br>
 
+<#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
 <#assign validTx = false>
 <form name="manualCcForm" method="get" action="<@ofbizUrl>/view/manualCcPay</@ofbizUrl>">
   <#if requestParameters.paymentMethodId?exists>
@@ -77,9 +78,7 @@
     <#-- manual credit card information -->
     <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_AUTH">
       <#assign validTx = true>
-      <#if txType?default("") == "PRDS_PAY_CREDIT">
-        <tr><td colspan="3"><hr class="sepbar"></td></tr>
-      </#if>
+      <tr><td colspan="3"><hr class="sepbar"></td></tr>
       <tr>
         <td width="26%" align=right valign=middle><div class="tableheadtext">Name on Card</div></td>
         <td width="5">&nbsp;</td>
@@ -268,3 +267,8 @@
     </#if>
   </table>
 </form>
+
+<#else>
+<h3>You do not have permission for this function.</h3>
+</#if>
+
