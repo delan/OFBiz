@@ -35,10 +35,9 @@
     <UserLogin userLoginId="flexadmin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
     <UserLogin userLoginId="demoadmin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
     <UserLogin userLoginId="ltdadmin" partyId="ltdadmin" currentPassword="ofbiz" passwordHint=""/>
-    <UserLogin userLoginId="system" partyId="admin" currentPassword="" passwordHint="Do Not Enable This Account" enabled="N"/>
+    <UserLogin userLoginId="system" partyId="admin" currentPassword="ofbiz" passwordHint="Do Not Enable This Account" enabled="N" isSystem="Y"/>
 
-    <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
-    <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="system" fromDate="2001-01-01 12:00:00.0"/>
+    <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>    
     <UserLoginSecurityGroup groupId="FLEXADMIN" userLoginId="flexadmin" fromDate="2001-01-01 12:00:00.0"/>
     <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="demoadmin" fromDate="2001-01-01 12:00:00.0"/>
     <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="ltdadmin" fromDate="2001-01-01 12:00:00.0"/>

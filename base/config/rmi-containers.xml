@@ -40,7 +40,7 @@
         <property name="engine-name" value="Shark"/>
         <property name="delegator-name" value="default"/>
         <property name="dispatcher-name" value="WFDispatcher"/>
-        <property name="admin-user" value="admin"/>
+        <property name="admin-user" value="system"/>
         <property name="iiop-host" value="127.0.0.1"/>
         <property name="iiop-port" value="2000"/>
     </container>
