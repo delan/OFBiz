@@ -47,33 +47,39 @@
         <property name="pkg-dist.name"  value="${name}-pkg" />
         <property name="commonapp.etc.dir" value="../commonapp/etc" />
 		
-        <!-- Classpath setting -->
-        <property name="ofbcore-share.jar"  value="../core/lib/ofbcore-share.jar" />
-        <property name="ofbcore-webapp.jar" value="../core/lib/ofbcore-webapp.jar" />
-        <property name="ofbcommonapp.jar"   value="../commonapp/lib/ofbcommonapp.jar" />
-	
-        <property name="servlet1.jar" value="${env.CATALINA_HOME}/common/lib/servlet.jar" />
-        <property name="servlet2.jar" value="${env.TOMCAT_HOME}/lib/servlet.jar" />
-        <property name="servlet.jar"  value="${servlet1.jar}:${servlet2.jar}" />
+	<!-- Classpath setting -->
+        <property name="corelib.dir"       value="../core/lib" />
+        <property name="commonapplib.dir"  value="../commonapp/lib" />
+        <property name="extlib.dir"        value="../lib" />
 
-        <property name="jdbc1.jar"    value="${env.CATALINA_HOME}/common/lib/jdbc2_0-stdext.jar" />
-        <property name="jdbc2.jar"    value="${env.JBOSS_HOME}/lib/jboss-jdbc_ext.jar.jar" />
-        <property name="jdbc3.jar"    value="${env.JBOSS_HOME}/lib/jdbc2_0-stdext.jar" />
-        <property name="jdbc.jar"     value="${jdbc1.jar}:${jdbc2.jar}:${jdbc3.jar}" />
+        <property name="ofbcore-share.jar"    value="${corelib.dir}/ofbcore-share.jar" />
+        <property name="ofbcore-webapp.jar"   value="${corelib.dir}/ofbcore-webapp.jar" />
+        <property name="ofbcore-rules.jar"    value="${corelib.dir}/ofbcore-rules.jar" />
+        <property name="ofbcore-workflow.jar" value="${corelib.dir}/ofbcore-workflow.jar" />
+        <property name="ofbcommonapp.jar"     value="${commonapplib.dir}/ofbcommonapp.jar" />
+        
+        <property name="j2ee.jar"      value="${extlib.dir}/compile/jboss-j2ee.jar" />
+        <property name="jdbc.jar"      value="${extlib.dir}/compile/jdbc2_0-stdext.jar" />
+        <property name="mail.jar"      value="${extlib.dir}/compile/mail.jar" />
+        <property name="servlet.jar"   value="${extlib.dir}/compile/servlet.jar" />
+        <property name="xerces.jar"    value="${extlib.dir}/compile/xerces.jar" />
+        
+        <property name="castor.jar"    value="${extlib.dir}/common/castor-0.9.3.9.jar" />
+        <property name="tyrex.jar"     value="${extlib.dir}/common/tyrex-0.9.8.5.jar" />
+        <property name="log4j.jar"     value="${extlib.dir}/common/log4j.jar"/>
 
-        <property name="mail1.jar"    value="${env.CATALINA_HOME}/common/lib/mail.jar" />
-        <property name="mail2.jar"    value="${env.JBOSS_HOME}/lib/ext/mail.jar" />
-        <property name="mail.jar"     value="${mail1.jar}:${mail2.jar}" />
+	<property name="bsh.jar"       value="${extlib.dir}/share/bsh-1.2b3.jar"/>
+        <property name="axis.jar"      value="${extlib.dir}/share/axis.jar"/>
+        <property name="clutil.jar"    value="${extlib.dir}/share/clutil.jar" />
+        <property name="wsdl4j.jar"    value="${extlib.dir}/share/wsdl4j.jar" />
 
-        <property name="jaxp1.jar"    value="${env.CATALINA_HOME}/common/lib/jaxp.jar" />
-        <property name="jaxp2.jar"    value="${env.JBOSS_HOME}/lib/jaxp.jar" />
-        <property name="jaxp.jar"     value="${jaxp1.jar}:${jaxp2.jar}" />
-
-        <property name="api-jars"     value="${servlet.jar}:${jdbc.jar}:${mail.jar}" />
-        <property name="xml-jars"     value="${jaxp.jar}" />
-	
-        <property name="ofb-jars"     value="${ofbcore-share.jar}:${ofbcore-webapp.jar}:${ofbcommonapp.jar}" />
-        <property name="classpath"    value="${env.CLASSPATH}:${lib.dir}:${ofb-jars}:${api-jars}:${xml-jars}" />
+        <property name="api-jars1"     value="${j2ee.jar}:${jdbc.jar}:${mail.jar}:${servlet.jar}:${xerces.jar}" />
+        <property name="api-jars2"     value="${log4j.jar}:${tyrex.jar}:${castor.jar}" />
+        <property name="api-jars3"     value="${bsh.jar}:${axis.jar}:${clutil.jar}:${wsdl4j.jar}" />
+	<property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
+        
+        <property name="ofb-jars"    value="${ofbcore-share.jar}:${ofbcore-webapp.jar}:${ofbcore-rules.jar}:${ofbcore-workflow.jar}:${ofbcommonapp.jar}" />
+        <property name="classpath"   value="${env.CLASSPATH}:${ofb-jars}:${api-jars}" />
 	<echo message="classpath: ${classpath}" />
     </target>
 
