@@ -1,5 +1,5 @@
 /*
- * $Id: EntityOperator.java,v 1.6 2004/07/07 05:03:40 doogie Exp $
+ * $Id: EntityOperator.java,v 1.7 2004/07/07 05:48:23 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.0
  */
 public abstract class EntityOperator extends EntityConditionBase {
@@ -206,4 +206,5 @@ public abstract class EntityOperator extends EntityConditionBase {
     public abstract boolean mapMatches(GenericDelegator delegator, Map map, Object lhs, Object rhs);
     public abstract void validateSql(ModelEntity entity, Object lhs, Object rhs) throws GenericModelException;
     public abstract void addSqlValue(StringBuffer sql, ModelEntity entity, List entityConditionParams, Object rhs, Object lhs);
+    public abstract EntityCondition freeze(Object lhs, Object rhs);
 }

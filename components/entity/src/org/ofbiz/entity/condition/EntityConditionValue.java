@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionValue.java,v 1.1 2004/07/06 23:40:41 doogie Exp $
+ * $Id: EntityConditionValue.java,v 1.2 2004/07/07 05:48:23 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,8 @@ public abstract class EntityConditionValue extends EntityConditionBase {
     }
 
     public abstract Object getValue(Map map);
- 
+    public abstract EntityConditionValue freeze();
+
     public String toString() {
         StringBuffer sql = new StringBuffer();
         addSqlValue(sql, null, new ArrayList(), false, null);

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionFunction.java,v 1.6 2004/07/07 00:15:24 doogie Exp $
+ * $Id: EntityConditionFunction.java,v 1.7 2004/07/07 05:48:23 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,6 +49,9 @@ public abstract class EntityConditionFunction extends EntityCondition {
         public NOT(EntityCondition nested) { super(ID_NOT, "NOT", nested); }
         public boolean mapMatches(GenericDelegator delegator, Map map) {
             return !condition.mapMatches(delegator, map);
+        }
+        public EntityCondition freeze() {
+            return new NOT(condition.freeze());
         }
     };
 

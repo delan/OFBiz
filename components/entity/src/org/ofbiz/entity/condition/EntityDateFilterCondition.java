@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDateFilterCondition.java,v 1.3 2004/07/07 00:15:24 doogie Exp $
+ * $Id: EntityDateFilterCondition.java,v 1.4 2004/07/07 05:48:23 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -67,6 +67,10 @@ public class EntityDateFilterCondition extends EntityCondition {
 
     public int hashCode() {
         return hashCode(fromDateName) ^ hashCode(thruDateName);
+    }
+
+    public EntityCondition freeze() {
+        return this;
     }
 
     protected EntityCondition makeCondition() {

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.9 2004/07/07 00:15:24 doogie Exp $
+ * $Id: EntityExpr.java,v 1.10 2004/07/07 05:48:23 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class EntityExpr extends EntityCondition {
@@ -172,6 +172,10 @@ public class EntityExpr extends EntityCondition {
 		}
 		super.addValue(buffer, field, value, params);
 	}
+
+    public EntityCondition freeze() {
+        return operator.freeze(lhs, rhs);
+    }
 
     public boolean equals(Object obj) {
         if (!(obj instanceof EntityExpr)) return false;
