@@ -382,6 +382,12 @@ public class EntityUtil {
             } else if (upper.endsWith(" ASC")) {
                 this.descending = false;
                 this.field = fieldAndDirection.substring(0, fieldAndDirection.length() - 4);
+            } else if (upper.startsWith("-")) {
+                this.descending = true;
+                this.field = fieldAndDirection.substring(1);
+            } else if (upper.startsWith("+")) {
+                this.descending = false;
+                this.field = fieldAndDirection.substring(1);
             } else {
                 this.descending = false;
                 this.field = fieldAndDirection;
