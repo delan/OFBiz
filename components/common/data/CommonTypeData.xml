@@ -20,7 +20,8 @@
 
     <EnumerationType enumTypeId="_NA_" description="Not Applicable"/>
     <Enumeration enumId="_NA_" enumTypeId="_NA_" enumCode="_NA_" sequenceId="0" description="Not Applicable"/>
-
+    <Enumeration enumId="_00_" enumTypeId="_NA_" enumCode="_00_" sequenceId="0" description="Not Applicable"/>
+    
     <EnumerationType description="Thesaurus Relationship Type" enumTypeId="KW_THES_REL" hasTable="N" parentTypeId=""/>
     <Enumeration description="Used For" enumCode="UF" enumId="KWTR_UF" sequenceId="01" enumTypeId="KW_THES_REL"/>
     <Enumeration description="Use Instead" enumCode="USE" enumId="KWTR_USE" sequenceId="02" enumTypeId="KW_THES_REL"/>
