@@ -108,9 +108,9 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
       {
         ModelEntity entity = reader.getModelEntity(entityName);
         if(checkWarnings) {
-          if(entity.tableName.length() > 30)
+          if(entity.tableName != null && entity.tableName.length() > 30)
             warningString = warningString + "<li><div style=\"color: red;\">[TableNameGT30]</div> Table name <b>" + entity.tableName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
-          if(reservedWords.contains(entity.tableName.toUpperCase()))
+          if(entity.tableName != null && reservedWords.contains(entity.tableName.toUpperCase()))
             warningString = warningString + "<li><div style=\"color: red;\">[TableNameRW]</div> Table name <b>" + entity.tableName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is a reserved word.</li>";
         }
 %>	
