@@ -90,7 +90,7 @@
         <servlet-class>org.ofbiz.content.webapp.control.ControlServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>      
-    <!-- un-comment for Worldpay -->
+    <!-- un-comment for Worldpay 
     <servlet>
         <servlet-name>select</servlet-name>
         <display-name>SelectHandler</display-name>
@@ -98,18 +98,18 @@
         <servlet-class>com.worldpay.select.merchant.SelectHandler</servlet-class>
         <load-on-startup>5</load-on-startup>
     </servlet>
-    <!-- -->
+    -->
     
     <servlet-mapping>
         <servlet-name>ControlServlet</servlet-name>
         <url-pattern>/control/*</url-pattern>
     </servlet-mapping>      
-    <!-- un-comment for Worldpay -->
+    <!-- un-comment for Worldpay 
     <servlet-mapping>
         <servlet-name>select</servlet-name>
         <url-pattern>/select/*</url-pattern>
     </servlet-mapping>
-    <!-- -->
+    -->
   
     <session-config>
         <session-timeout>60</session-timeout>    
