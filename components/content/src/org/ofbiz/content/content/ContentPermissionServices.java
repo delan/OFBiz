@@ -1435,7 +1435,8 @@ public class ContentPermissionServices {
         
         public void init(GenericDelegator delegator, String entityId, String partyId, GenericValue entity) throws GenericEntityException {
             
-            List lst = ContentWorker.getUserRolesFromList(delegator, UtilMisc.toList(entityId), partyId, this.roleEntityIdName, this.partyFieldName, this.roleTypeFieldName, this.roleEntityName);
+            List lst = ContentWorker.getUserRolesFromList(delegator, UtilMisc.toList(entityId), partyId, this.roleEntityIdName, 
+                                               this.partyFieldName, this.roleTypeFieldName, this.roleEntityName);
             this.roleIdList.addAll(lst);
             if (isOwner(entity, partyId)) {
                 this.roleIdList.add("OWNER");   
