@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -54,15 +54,15 @@ ${pages.get("/promo/PromoTabBar.ftl")}
             <td align="center">
                 <#assign hasExpired = false>
                 <#if (productStorePromoAppl.getTimestamp("thruDate"))?exists && nowTimestamp.after(productStorePromoAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-                <FORM method=POST action="<@ofbizUrl>/promo_updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
-                    <input type=hidden name="productStoreId" value="${productStorePromoAppl.productStoreId}">
-                    <input type=hidden name="productPromoId" value="${productStorePromoAppl.productPromoId}">
-                    <input type=hidden name="fromDate" value="${productStorePromoAppl.fromDate}">
-                    <input type=text size="20" name="thruDate" value="${(productStorePromoAppl.thruDate.toString())?if_exists}" class="inputBox" <#if hasExpired>style="color: red;"></#if>
-                    <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${nowTimestamp.toString()}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-                    <input type=text size="5" name="sequenceNum" value="${(productStorePromoAppl.sequenceNum)?if_exists}" class="inputBox">
-                    <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
-                </FORM>
+                <form method="POST" action="<@ofbizUrl>/promo_updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
+                    <input type="hidden" name="productStoreId" value="${productStorePromoAppl.productStoreId}">
+                    <input type="hidden" name="productPromoId" value="${productStorePromoAppl.productPromoId}">
+                    <input type="hidden" name="fromDate" value="${productStorePromoAppl.fromDate}">
+                    <input type="text" size="20" name="thruDate" value="${(productStorePromoAppl.thruDate.toString())?if_exists}" class="inputBox" <#if hasExpired>style="color: red;"</#if>>
+                    <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${nowTimestamp.toString()}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+                    <input type="text" size="5" name="sequenceNum" value="${(productStorePromoAppl.sequenceNum)?if_exists}" class="inputBox">
+                    <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
+                </form>
             </td>
             <td align="center">
             <a href="<@ofbizUrl>/promo_deleteProductStorePromoAppl?productStoreId=${(productStorePromoAppl.productStoreId)?if_exists}&productPromoId=${(productStorePromoAppl.productPromoId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productStorePromoAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
@@ -84,7 +84,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
         </#list>
         </select>
         <input type=text size="20" name="fromDate" class="inputBox">
-        <a href="javascript:call_cal(document.addProductPromoToCatalog.fromDate, '${nowTimestamp.toString()}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>        
+        <a href="javascript:call_cal(document.addProductPromoToCatalog.fromDate, '${nowTimestamp.toString()}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>        
         <input type="submit" value="${uiLabelMap.CommonAdd}">
         </form>
    </#if>
