@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      3.0
  */
 
@@ -184,6 +184,13 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
     roleType = request.getParameter("roleTypeId");
     if (roleType != null && !"ANY".equals(roleType)) {
         paramList = paramList + "&roleTypeId=" + roleType;
+
+        // add role to view
+        dynamicView.addMemberEntity("PR", "PartyRole");
+        dynamicView.addAlias("PR", "roleTypeId");
+        dynamicView.addViewLink("PT", "PR", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+
+        // add the expr
         andExprs.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, roleType));
     }
 
@@ -191,6 +198,19 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
     // PostalAddress fields
     // ----
     if (extraInfo != null && extraInfo.equals("P")) {
+        // add address to dynamic view
+        dynamicView.addMemberEntity("PC", "PartyContactMech");
+        dynamicView.addMemberEntity("PA", "PostalAddress");
+        dynamicView.addAlias("PC", "contactMechId");
+        dynamicView.addAlias("PA", "address1");
+        dynamicView.addAlias("PA", "address2");
+        dynamicView.addAlias("PA", "city");
+        dynamicView.addAlias("PA", "stateProvinceGeoId");
+        dynamicView.addAlias("PA", "countryGeoId");
+        dynamicView.addAlias("PA", "postalCode");
+        dynamicView.addViewLink("PT", "PC", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+        dynamicView.addViewLink("PC", "PA", Boolean.FALSE, ModelKeyMap.makeKeyMapList("contactMechId"));
+
         // filter on address1
         address1 = request.getParameter("address1");
         if (address1 != null && address1.length() > 0) {
@@ -231,6 +251,14 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
     // Generic CM Fields
     // ----
     if (extraInfo != null && extraInfo.equals("O")) {
+        // add info to dynamic view
+        dynamicView.addMemberEntity("PC", "PartyContactMech");
+        dynamicView.addMemberEntity("CM", "ContactMech");
+        dynamicView.addAlias("PC", "contactMechId");
+        dynamicView.addAlias("CM", "infoString");
+        dynamicView.addViewLink("PT", "PC", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+        dynamicView.addViewLink("PC", "CM", Boolean.FALSE, ModelKeyMap.makeKeyMapList("contactMechId"));
+
         // filter on infoString
         infoString = request.getParameter("infoString");
         if (infoString != null && infoString.length() > 0) {
@@ -243,6 +271,16 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
     // TelecomNumber Fields
     // ----
     if (extraInfo != null && extraInfo.equals("T")) {
+        // add telecom to dynamic view
+        dynamicView.addMemberEntity("PC", "PartyContactMech");
+        dynamicView.addMemberEntity("TM", "TelecomNumber");
+        dynamicView.addAlias("PC", "contactMechId");
+        dynamicView.addAlias("TM", "countryCode");
+        dynamicView.addAlias("TM", "areaCode");
+        dynamicView.addAlias("TM", "contactNumber");
+        dynamicView.addViewLink("PT", "PC", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
+        dynamicView.addViewLink("PC", "TM", Boolean.FALSE, ModelKeyMap.makeKeyMapList("contactMechId"));
+
         // filter on countryCode
         countryCode = request.getParameter("countryCode");
         if (countryCode != null && countryCode.length() > 0) {
