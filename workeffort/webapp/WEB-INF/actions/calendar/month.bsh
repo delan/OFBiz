@@ -34,11 +34,17 @@ import org.ofbiz.commonapp.workeffort.workeffort.*;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-//String currentDay = request.getAttribute("currentDay");
-String startParam = request.getParameter("start");
+delegator = request.getAttribute("delegator");
+dispatcher = request.getAttribute("dispatcher");
 
-Timestamp now = UtilDateTime.getMonthStart(UtilDateTime.nowTimestamp());
-Timestamp start = null;
+allFacilities = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
+context.put("allFacilities", allFacilities);
+
+//currentDay = request.getAttribute("currentDay");
+startParam = request.getParameter("start");
+
+now = UtilDateTime.getMonthStart(UtilDateTime.nowTimestamp());
+start = null;
 if(startParam != null) {
     start = new Timestamp(Long.parseLong(startParam));
 }
@@ -48,31 +54,30 @@ if(start == null) {
     start = UtilDateTime.getMonthStart(start);
 }
 
-Calendar tempCal = Calendar.getInstance();
+tempCal = Calendar.getInstance();
 tempCal.setTime(new java.util.Date(start.getTime()));
-int numDays = tempCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+numDays = tempCal.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-Timestamp prev = UtilDateTime.getMonthStart(start,-1);
-Timestamp next = UtilDateTime.getDayStart(start,numDays+1);
-Timestamp end = UtilDateTime.getDayStart(start,numDays);
+prev = UtilDateTime.getMonthStart(start,-1);
+next = UtilDateTime.getDayStart(start,numDays+1);
+end = UtilDateTime.getDayStart(start,numDays);
 
 //Find out what date to get from
-Timestamp getFrom = null;
-int prevMonthDays =  tempCal.get(Calendar.DAY_OF_WEEK) - tempCal.getFirstDayOfWeek();
+getFrom = null;
+prevMonthDays =  tempCal.get(Calendar.DAY_OF_WEEK) - tempCal.getFirstDayOfWeek();
 if(prevMonthDays < 0) prevMonthDays = 7 + prevMonthDays;
 tempCal.add(Calendar.DATE,-(prevMonthDays));
 numDays += prevMonthDays;
 getFrom = new Timestamp(tempCal.getTime().getTime());
 
+serviceCtx = UtilMisc.toMap("userLogin", session.getAttribute("userLogin"), "start", getFrom,"numPeriods", new Integer(numDays), "periodSeconds", new Integer(3600*24), "partyId", request.getParameter("partyId"), "facilityId", request.getParameter("facilityId"));
+result = dispatcher.runSync("getWorkEffortEventsByPeriod", serviceCtx);
 
-dispatcher = request.getAttribute("dispatcher");
-Map serviceCtx = UtilMisc.toMap("userLogin",context.getSession().getAttribute("userLogin"),"start",getFrom,"numPeriods",new Integer(numDays),"periodSeconds",new Integer(3600*24), "partyId", request.getParameter("partyId"), "facilityId", request.getParameter("facilityId"));
-Map result = dispatcher.runSync("getWorkEffortEventsByPeriod",serviceCtx);
 context.put("periods",result.get("periods"));
-context.put("maxConcurrentEntries",result.get("maxConcurrentEntries"));
-context.put("start",start);
-context.put("end",end);
-context.put("prev",prev);
-context.put("next",next);
-context.put("now",now);
+context.put("maxConcurrentEntries", result.get("maxConcurrentEntries"));
+context.put("start", start);
+context.put("end", end);
+context.put("prev", prev);
+context.put("next", next);
+context.put("now", now);
 request.setAttribute("isCalendarSelected", new Boolean(true));

@@ -99,6 +99,35 @@
   </#if>
   </#list>
 </table>
+<div class="tabletext">&nbsp;</div>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+		<td width="50%" align="center">
+			<div class="tabletext">
+				<form action="<@ofbizUrl>/month</@ofbizUrl>" method="POST">
+					<input type="hidden" name="start" value="${start.time?string("#")}"/>
+					By Party ID: <input type="text" name="partyId" value="${requestParameters.partyId?if_exists}" class="inputbox"/>
+					<input type="submit" value="View" class="smallSubmit"/>
+				</form>
+			</div>
+		</td>
+		<td width="50%" align="center">
+			<div class="tabletext">
+				<form action="<@ofbizUrl>/month</@ofbizUrl>" method="POST">
+					<input type="hidden" name="start" value="${start.time?string("#")}"/>
+					By Facility: 
+						<select name="facilityId" class="selectbox">
+							<#list allFacilities as facility>
+								<option value="${facility.facilityId}"<#if requestParameters.facilityId?has_content && requestParameters.facilityId == facility.facilityId> selected</#if>>${facility.facilityName}</option>
+							</#list>
+						</select>
+					<input type="submit" value="View" class="smallSubmit"/>
+				</form>
+			</div>
+		</td>
+	</tr>
+</table>
+
 <#else> 
 <p>Failed to get calendar entries!</p>
 </#if>
