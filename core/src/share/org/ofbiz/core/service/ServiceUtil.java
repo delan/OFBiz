@@ -46,12 +46,23 @@ public class ServiceUtil {
         return result;
     }
     
+    /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
+    public static Map returnError(List errorMessageList) {
+        Map result = new HashMap();
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+        if (errorMessageList != null) result.put(ModelService.ERROR_MESSAGE_LIST, errorMessageList);
+        return result;
+    }
+    
     /** A small routine used all over to improve code efficiency, make a result map with the message and the success response code */
     public static Map returnSuccess(String successMessage) {
         return returnMessage(ModelService.RESPOND_SUCCESS, successMessage);
     }
     
-    /** A small routine to make a result map with the message and the response code */
+    /** A small routine to make a result map with the message and the response code
+     * NOTE: This brings out some bad points to our message convention: we should be using a single message or message list
+     *  and what type of message that is should be determined by the RESPONSE_MESSAGE (and there's another annoyance, it should be RESPONSE_CODE)
+     */
     public static Map returnMessage(String code, String message) {
         Map result = new HashMap();
         if (code != null) result.put(ModelService.RESPONSE_MESSAGE, code);
