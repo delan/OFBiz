@@ -59,7 +59,7 @@ public class ServiceDispatcher {
         Debug.logInfo("[ServiceDispatcher] : Creating new instance.", module);
         factory = new GenericEngineFactory(this);    
         ServiceGroupReader.readConfig();        
-        ECAUtil.readConfig();
+        ServiceEcaUtil.readConfig();
         
         this.delegator = delegator;
         this.localContext = new HashMap();
@@ -171,10 +171,10 @@ public class ServiceDispatcher {
 
         try {
             // get eventMap once for all calls for speed, don't do event calls if it is null
-            Map eventMap = ECAUtil.getServiceEventMap(service.name);
+            Map eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
 
             // pre-auth ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "auth", ctx, context, null, false);
 
             context = checkAuth(localName, context, service);
             Object userLogin = context.get("userLogin");
@@ -187,7 +187,7 @@ public class ServiceDispatcher {
             GenericEngine engine = getGenericEngine(service.engineName);
             
             // pre-validate ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "in-validate", ctx, context, null, false);
 
             // validate the context
             if (service.validate) {
@@ -199,7 +199,7 @@ public class ServiceDispatcher {
             }
 
             // pre-invoke ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "invoke", ctx, context, null, false);
 
             // ===== invoke the service =====
             Map result = engine.runSync(localName, service, context);
@@ -215,7 +215,7 @@ public class ServiceDispatcher {
 
             // validate the result
             if (service.validate) {
-                if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "out-validate", ctx, ecaContext, result, isError);
+                if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "out-validate", ctx, ecaContext, result, isError);
                 try {
                     service.validate(result, ModelService.OUT_PARAM);
                 } catch (ServiceValidationException e) {
@@ -224,7 +224,7 @@ public class ServiceDispatcher {
             }
 
             // pre-commit ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", ctx, ecaContext, result, isError);
+            if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "commit", ctx, ecaContext, result, isError);
 
             
             //if there was an error, rollback transaction, otherwise commit
@@ -246,7 +246,7 @@ public class ServiceDispatcher {
             }
 
             // pre-return ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", ctx, ecaContext, result, isError);
+            if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "return", ctx, ecaContext, result, isError);
 
             return result;
         } catch (GenericServiceException e) {
@@ -290,10 +290,10 @@ public class ServiceDispatcher {
 
         try {
             // get eventMap once for all calls for speed, don't do event calls if it is null
-            Map eventMap = ECAUtil.getServiceEventMap(service.name);
+            Map eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
 
             // pre-auth ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "auth", ctx, context, null, false);
 
             context = checkAuth(localName, context, service);
             Object userLogin = context.get("userLogin");
@@ -305,7 +305,7 @@ public class ServiceDispatcher {
             GenericEngine engine = getGenericEngine(service.engineName);
             
             // pre-validate ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "in-validate", ctx, context, null, false);
 
             // validate the context
             if (service.validate) {
@@ -317,12 +317,12 @@ public class ServiceDispatcher {
             }
 
             // pre-invoke ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "invoke", ctx, context, null, false);
 
             engine.runSyncIgnore(localName, service, context);
 
             // pre-commit ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "commit", ctx, context, null, false);
 
             // always try to commit the transaction since we don't know in this case if its was an error or not
             try {
@@ -333,7 +333,7 @@ public class ServiceDispatcher {
             }
 
             // pre-return ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "return", ctx, context, null, false);
         } catch (GenericServiceException e) {
             try {
                 TransactionUtil.rollback(beganTrans);
@@ -359,12 +359,12 @@ public class ServiceDispatcher {
         this.checkLocale(context);
         
         // get eventMap once for all calls for speed, don't do event calls if it is null
-        Map eventMap = ECAUtil.getServiceEventMap(service.name);
+        Map eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
 
         DispatchContext ctx = (DispatchContext) localContext.get(localName);
 
         // pre-auth ECA
-        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", ctx, context, null, false);
+        if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "auth", ctx, context, null, false);
 
         context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
@@ -376,7 +376,7 @@ public class ServiceDispatcher {
         GenericEngine engine = getGenericEngine(service.engineName);
         
         // pre-validate ECA
-        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", ctx, context, null, false);
+        if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "in-validate", ctx, context, null, false);
 
         // validate the context
         if (service.validate) {
@@ -409,12 +409,12 @@ public class ServiceDispatcher {
         this.checkLocale(context);
         
         // get eventMap once for all calls for speed, don't do event calls if it is null
-        Map eventMap = ECAUtil.getServiceEventMap(service.name);
+        Map eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
 
         DispatchContext ctx = (DispatchContext) localContext.get(localName);
 
         // pre-auth ECA
-        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", ctx, context, null, false);
+        if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "auth", ctx, context, null, false);
 
         context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
@@ -426,7 +426,7 @@ public class ServiceDispatcher {
         GenericEngine engine = getGenericEngine(service.engineName);
 
         // pre-validate ECA
-        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", ctx, context, null, false);
+        if (eventMap != null) ServiceEcaUtil.evalConditions(service.name, eventMap, "in-validate", ctx, context, null, false);
 
         // validate the context
         if (service.validate) {

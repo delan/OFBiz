@@ -31,13 +31,13 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
- * EventCondition
+ * ServiceEcaCondition
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */
-public class EventCondition {
+public class ServiceEcaCondition {
 
     protected String lhsValueName, rhsValueName;
     protected String lhsMapName, rhsMapName;
@@ -46,9 +46,9 @@ public class EventCondition {
     protected String format;
     protected boolean constant = false;
 
-    protected EventCondition() {}
+    protected ServiceEcaCondition() {}
 
-    public EventCondition(Element condition, boolean constant) {
+    public ServiceEcaCondition(Element condition, boolean constant) {
         this.lhsValueName = condition.getAttribute("field-name");
         this.lhsMapName = condition.getAttribute("map-name");
 
@@ -72,17 +72,17 @@ public class EventCondition {
     }
 
     public boolean eval(String serviceName, DispatchContext dctx, Map context) throws GenericServiceException {
-        if (serviceName == null || dctx == null || context == null || dctx.getClassLoader() == null)
+        if (serviceName == null || dctx == null || context == null || dctx.getClassLoader() == null) {
             throw new GenericServiceException("Cannot have null Service, Context or DispatchContext!");
-        Object lhsValue, rhsValue;
+        }
 
         if (Debug.verboseOn()) Debug.logVerbose(this.toString());
 
+        Object lhsValue, rhsValue;
         if (lhsMapName != null && lhsMapName.length() > 0) {
             try {
                 if (context.containsKey(lhsMapName)) {
                     Map envMap = (Map) context.get(lhsMapName);
-
                     lhsValue = envMap.get(lhsValueName);
                 } else {
                     Debug.logVerbose("Map (" + lhsMapName + ") not found in context.");
@@ -118,16 +118,15 @@ public class EventCondition {
                 return false;
             }
         } else {
-            if (context.containsKey(rhsValueName))
+            if (context.containsKey(rhsValueName)) {
                 rhsValue = context.get(rhsValueName);
-            else {
+            } else {
                 Debug.logVerbose("Field (" + rhsValueName + ") is not found in context.");
                 return false;
             }
         }
 
-        if (Debug.verboseOn())
-            Debug.logVerbose("Comparing : " + lhsValue + " <> " + rhsValue);
+        if (Debug.verboseOn()) Debug.logVerbose("Comparing : " + lhsValue + " <> " + rhsValue);
 
         // evaluate the condition & invoke the action(s)
         List messages = new LinkedList();
@@ -136,9 +135,9 @@ public class EventCondition {
         // if any messages were returned send them out
         if (messages.size() > 0) {
             Iterator m = messages.iterator();
-
-            while (m.hasNext())
+            while (m.hasNext()) {
                 Debug.logWarning((String) m.next());
+            }
         }
         return cond.booleanValue();
     }
@@ -156,5 +155,4 @@ public class EventCondition {
         buf.append("[" + format + "]");
         return buf.toString();
     }
-
 }

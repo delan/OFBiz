@@ -31,13 +31,13 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 
 /**
- * EventAction
+ * ServiceEcaAction
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */
-public class EventAction {
+public class ServiceEcaAction {
 
     protected String serviceName;
     protected String serviceMode;
@@ -45,9 +45,9 @@ public class EventAction {
     protected boolean ignoreError;
     protected boolean persist;
 
-    protected EventAction() {}
+    protected ServiceEcaAction() {}
 
-    public EventAction(Element action) {
+    public ServiceEcaAction(Element action) {
         this.serviceName = action.getAttribute("service");
         this.serviceMode = action.getAttribute("mode");
         // default is true, so anything but false is true
@@ -65,7 +65,6 @@ public class EventAction {
 
         // pull out context parameters needed for this service.
         Map actionContext = dctx.getModelService(serviceName).makeValid(context, ModelService.IN_PARAM);
-
         Map actionResult = null;
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
@@ -100,7 +99,6 @@ public class EventAction {
                 // do something with the errorMessageList
                 if (errorMessageList != null && errorMessageList.size() > 0) {
                     List origErrorMessageList = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
-
                     if (origErrorMessageList == null) {
                         result.put(ModelService.ERROR_MESSAGE_LIST, errorMessageList);
                     } else {
@@ -110,7 +108,6 @@ public class EventAction {
                 // do something with the errorMessageMap
                 if (errorMessageMap != null && errorMessageMap.size() > 0) {
                     Map origErrorMessageMap = (Map) result.get(ModelService.ERROR_MESSAGE_MAP);
-
                     if (origErrorMessageMap == null) {
                         result.put(ModelService.ERROR_MESSAGE_MAP, errorMessageMap);
                     } else {

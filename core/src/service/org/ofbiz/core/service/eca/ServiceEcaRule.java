@@ -31,13 +31,13 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
- * EventConditionAction
+ * ServiceEcaRule
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */
-public class EventConditionAction {
+public class ServiceEcaRule {
 
     String serviceName;
     String eventName;
@@ -45,9 +45,9 @@ public class EventConditionAction {
     List conditions = new LinkedList();
     List actions = new LinkedList();
 
-    protected EventConditionAction() {}
+    protected ServiceEcaRule() {}
 
-    public EventConditionAction(Element eca) {
+    public ServiceEcaRule(Element eca) {
         this.serviceName = eca.getAttribute("service");
         this.eventName = eca.getAttribute("event");
         this.runOnError = "true".equals(eca.getAttribute("run-on-error"));
@@ -56,14 +56,14 @@ public class EventConditionAction {
         Iterator ci = condList.iterator();
 
         while (ci.hasNext()) {
-            conditions.add(new EventCondition((Element) ci.next(), true));
+            conditions.add(new ServiceEcaCondition((Element) ci.next(), true));
         }
 
         List condFList = UtilXml.childElementList(eca, "condition-field");
         Iterator cfi = condFList.iterator();
 
         while (cfi.hasNext()) {
-            conditions.add(new EventCondition((Element) cfi.next(), false));
+            conditions.add(new ServiceEcaCondition((Element) cfi.next(), false));
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("Conditions: " + conditions);
@@ -72,7 +72,7 @@ public class EventConditionAction {
         Iterator ai = actList.iterator();
 
         while (ai.hasNext()) {
-            actions.add(new EventAction((Element) ai.next()));
+            actions.add(new ServiceEcaAction((Element) ai.next()));
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions);
@@ -87,8 +87,7 @@ public class EventConditionAction {
         Iterator c = conditions.iterator();
 
         while (c.hasNext()) {
-            EventCondition ec = (EventCondition) c.next();
-
+            ServiceEcaCondition ec = (ServiceEcaCondition) c.next();
             if (!ec.eval(serviceName, dctx, context)) {
                 allCondTrue = false;
                 break;
@@ -97,10 +96,8 @@ public class EventConditionAction {
 
         if (allCondTrue) {
             Iterator a = actions.iterator();
-
             while (a.hasNext()) {
-                EventAction ea = (EventAction) a.next();
-
+                ServiceEcaAction ea = (ServiceEcaAction) a.next();
                 ea.runAction(serviceName, dctx, context, result);
             }
         }
