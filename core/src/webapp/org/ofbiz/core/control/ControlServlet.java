@@ -15,6 +15,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.stats.*;
+import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 
 
@@ -60,6 +61,13 @@ public class ControlServlet extends HttpServlet {
         Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " +
                       config.getServletContext().getRealPath("/"), module);
 
+        //clear the regions cache to avoid problems when reloading a webapp with a different classloader
+        try {
+            RegionCache.clearRegions(this.getServletContext().getResource(SiteDefs.REGIONS_CONFIG_LOCATION));
+        } catch (java.net.MalformedURLException e) {
+            Debug.logWarning(e, "Error clearing regions");
+        }
+        
         // initialize the delegator
         getDelegator();
         // initialize security

@@ -46,4 +46,8 @@ public class RegionCache {
     public static void putRegions(URL regionFile, Map regions) {
         regionCache.put(regionFile, regions);
     }
+    
+    public static void clearRegions(URL regionFile) {
+        regionCache.remove(regionFile);
+    }
 }
