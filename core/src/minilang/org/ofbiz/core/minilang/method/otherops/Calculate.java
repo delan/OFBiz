@@ -141,7 +141,7 @@ public class Calculate extends MethodOperation {
         String valueStr;
 
         public NumberOp(Element element) {
-            String valueStr = element.getAttribute("value");
+            valueStr = element.getAttribute("value");
         }
 
         public double calcValue(MethodContext methodContext) {
