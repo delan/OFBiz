@@ -23,53 +23,36 @@
 -->
 <forms>
     <!-- ContentFind forms -->
-    <form name="findContent" 
-        default-title-style="tableheadtext"
+    <form name="findContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="FindContent" title="" type="single">
         <auto-fields-entity entity-name="Content" default-field-type="find" />
         <field name="contentTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="ContentType" key-field-name="contentTypeId"/>
+                <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId"/>
             </drop-down>
         </field>
-        <field name="dataResourceId" title="" >
-                <lookup target-form-name="LookupDataResource" />
-        </field>
+        <field name="dataResourceId" title=""><lookup target-form-name="LookupDataResource"/></field>
         <field name="mimeTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="MimeType" key-field-name="mimeTypeId"/>
+                <entity-options description="${description}" entity-name="MimeType" key-field-name="mimeTypeId"/>
             </drop-down>
         </field>
         <field name="statusId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="StatusItem" key-field-name="statusId"/>
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId"/>
             </drop-down>
         </field>
-        <field name="createdByUserLogin">
-             <lookup target-form-name="LookupPerson" />
-        </field>
-        <field name="createdDate">
-            <date-find/>
-        </field>
-        <field name="lastModifiedByUserLogin">
-             <lookup target-form-name="LookupParty" />
-        </field>
-        <field name="lastModifiedDate">
-            <date-find/>
-        </field>
-        <field name="submitButton" title="Find" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="createdByUserLogin"><lookup target-form-name="LookupPerson"/></field>
+        <field name="createdDate"><date-find/></field>
+        <field name="lastModifiedByUserLogin"><lookup target-form-name="LookupParty"/></field>
+        <field name="lastModifiedDate"><date-find/></field>
+        <field name="submitButton" title="Find" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Create New"  target="AddContent"/>
         </field>
     </form>
-    <form name="listFindContent" 
-        default-title-style="tableheadtext"
+    <form name="listFindContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="entityList" target="" paginate-target="/FindContent" title="" type="list">
         <auto-fields-entity entity-name="Content" default-field-type="display"/>
@@ -77,68 +60,51 @@
             <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
         </field>
     </form>
-    <form 
-        name="EditContent" 
-        target="updateContent" title="" type="single"
+    <form name="EditContent" target="updateContent" title="" type="single"
         default-title-style="tableheadtext" default-map-name="currentValue"
         default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="Content" />
-        <field name="contentId">
-            <display/>
-        </field>
+        <field name="contentId"><display/></field>
         <field name="contentTypeId">
             <drop-down allow-empty="false">
-                <entity-options description="${description}"
-                    entity-name="ContentType" key-field-name="contentTypeId"/>
+                <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId"/>
             </drop-down>
         </field>
         <field name="dataResourceId">
             <lookup target-form-name="LookupDataResource">
-				<sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
+            <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
 <!--
-				<sub-hyperlink link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
-				<sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
+            <sub-hyperlink link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
+            <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${currentValue.dataResourceId}" description="Go to Data Resource"/>
 -->
             </lookup>
         </field>
-        <field name="ownerContentId">
-            <lookup target-form-name="LookupContent" />
-        </field>
+        <field name="ownerContentId"><lookup target-form-name="LookupContent"/></field>
         <field name="mimeTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${mimeTypeId} - ${description}"
-                        entity-name="MimeType" key-field-name="mimeTypeId">
+                <entity-options description="${mimeTypeId} - ${description}" entity-name="MimeType" key-field-name="mimeTypeId">
                     <entity-order-by field-name="mimeTypeId"/>
                 </entity-options>
             </drop-down>
         </field>
         <field name="characterSetId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="CharacterSet" key-field-name="characterSetId"/>
+                <entity-options description="${description}" entity-name="CharacterSet" key-field-name="characterSetId"/>
             </drop-down>
         </field>
         <field name="statusId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="StatusItem" key-field-name="statusId"/>
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" value="CONTENT_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
             </drop-down>
         </field>
-        <field name="createdByUserLogin" position="1">
-            <display/>
-        </field>
-        <field name="createdDate" position="2">
-            <display/>
-        </field>
-        <field name="lastModifiedByUserLogin" position="1">
-            <display/>
-        </field>
-        <field name="lastModifiedDate" position="2">
-            <display/>
-        </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="createdByUserLogin" position="1"><display/></field>
+        <field name="createdDate" position="2"><display/></field>
+        <field name="lastModifiedByUserLogin" position="1"><display/></field>
+        <field name="lastModifiedDate" position="2"><display/></field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext" position="1">
             <hyperlink also-hidden="false" description="Create New"  target="AddContent"/>
         </field>
@@ -147,24 +113,14 @@
         </field>
     </form>
 
-    <form 
-        name="AddContent" 
-        target="createContent" title="" type="single"
-        default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
-        >
+    <form name="AddContent" target="createContent" title="" type="single"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="Content" />
-        <field name="contentId">
-            <display/>
-        </field>
-        <field name="dataResourceId" map-name="currentValue" >
-            <lookup target-form-name="LookupDataResource"/>
-        </field>
-        <field name="contentPurposeTypeId" entity-name="ContentPurposeType" 
-               map-name="dummy" >
+        <field name="contentId"><display/></field>
+        <field name="dataResourceId" map-name="currentValue"><lookup target-form-name="LookupDataResource"/></field>
+        <field name="contentPurposeTypeId" entity-name="ContentPurposeType" map-name="dummy">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="ContentPurposeType" key-field-name="contentPurposeTypeId"/>
+                <entity-options description="${description}" entity-name="ContentPurposeType" key-field-name="contentPurposeTypeId"/>
                 <!--
                 <list-options list-name="allowedPurposes" list-entry-name="allowedPurpose"
                        key-name="allowedPurpose.contentPurposeTypeId"
@@ -173,18 +129,13 @@
                 -->
             </drop-down>
         </field>
-        <field name="submitButton" title="Create" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field name="contentTypeId">
             <drop-down allow-empty="false">
-                <entity-options description="${description}"
-                    entity-name="ContentType" key-field-name="contentTypeId"/>
+                <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId"/>
             </drop-down>
         </field>
-        <field name="ownerContentId" title="" >
-                <lookup target-form-name="LookupContent" />
-        </field>
+        <field name="ownerContentId" title=""><lookup target-form-name="LookupContent"/></field>
 <!--
         <field name="dataResourceId" title="" >
                 <lookup target-form-name="LookupDataResource" />
@@ -192,28 +143,18 @@
 -->
         <field name="mimeTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="MimeType" key-field-name="mimeTypeId"/>
+                <entity-options description="${description}" entity-name="MimeType" key-field-name="mimeTypeId"/>
             </drop-down>
         </field>
         <field name="statusId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="StatusItem" key-field-name="statusId"/>
+                <entity-options description="${description}" entity-name="StatusItem" key-field-name="statusId"/>
             </drop-down>
         </field>
-        <field name="createdByUserLogin" position="1">
-            <display/>
-        </field>
-        <field name="createdDate" position="2">
-            <display/>
-        </field>
-        <field name="lastModifiedByUserLogin" position="1">
-            <display/>
-        </field>
-        <field name="lastModifiedDate" position="2">
-            <display/>
-        </field>
+        <field name="createdByUserLogin" position="1"><display/></field>
+        <field name="createdDate" position="2"><display/></field>
+        <field name="lastModifiedByUserLogin" position="1"><display/></field>
+        <field name="lastModifiedDate" position="2"><display/></field>
         <field name="findContent" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="Find"  target="FindContent"/>
         </field>
@@ -221,19 +162,13 @@
 
 
     <!-- Content Lookup forms -->
-    <form
-        name="lookupContent"  
-        default-title-style="tableheadtext"
+    <form name="lookupContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupContent" title="" type="single">
         <auto-fields-entity entity-name="Content" default-field-type="find" />
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-    <form
-        name="listLookupContent"  
-        default-title-style="tableheadtext"
+    <form name="listLookupContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="entityList" target="" paginate-target="/LookupContent" 
         title="" type="list">
@@ -248,70 +183,42 @@
         <field name="lastModifiedByUserLogin"><ignored/></field>
 -->
     </form>
-    <form 
-        name="mruLookupContent" 
-        default-entity-name="Content"
-        default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="mruList" 
-        target="" title="" type="list">
+    <form name="mruLookupContent" default-entity-name="Content"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="mruList" target="" title="" type="list">
         <field name="contentId" title="Id" widget-style="buttontext">
-                
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
         </field>
-        <field name="contentName" title="Content Name" widget-style="buttontext">
-                <display/>
-        </field>
-        <field name="description" title="Description" widget-style="buttontext">
-                <display/>
-        </field>
+        <field name="contentName" title="Content Name" widget-style="buttontext"><display/></field>
+        <field name="description" title="Description" widget-style="buttontext"><display/></field>
     </form>
     <!-- ContentAssoc forms -->
-    <form 
-        name="EditContentAssoc" 
-        default-title-style="tableheadtext"
+    <form name="EditContentAssoc" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        default-map-name="contentAssocValue"
-        target="updateContentAssoc" title="" type="single">
+        default-map-name="contentAssocValue" target="updateContentAssoc" title="" type="single">
         <auto-fields-entity entity-name="ContentAssoc"/>
-        <field name="contentId" title="" widget-style="buttontext">
-            <display />
-        </field>
-        <field name="contentIdTo" title="" widget-style="buttontext">
-            <display />
-        </field>
-        <field name="contentAssocTypeId" title="" widget-style="buttontext">
-            <display />
-        </field>
-        <field name="fromDate" title="" widget-style="buttontext">
-            <display />
-        </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="contentId" title="" widget-style="buttontext"><display/></field>
+        <field name="contentIdTo" title="" widget-style="buttontext"><display/></field>
+        <field name="contentAssocTypeId" title="" widget-style="buttontext"><display/></field>
+        <field name="fromDate" title="" widget-style="buttontext"><display/></field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-    <form 
-        name="AddContentAssoc" 
-        default-title-style="tableheadtext"
+    <form name="AddContentAssoc" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="createContentAssoc" title="" type="single">
         <auto-fields-service service-name="createContentAssoc"/>
-        <field name="contentId" title="" widget-style="buttontext" >
-	    <display description="${contentId}"/>
-        </field>
-        <field name="contentIdTo" title="" widget-style="buttontext" map-name="currentValue" >
-             <lookup target-form-name="LookupContent" />
+        <field name="contentId" title="" widget-style="buttontext"><display description="${contentId}"/></field>
+        <field name="contentIdTo" title="" widget-style="buttontext" map-name="currentValue">
+             <lookup target-form-name="LookupContent"/>
         </field>
         <field name="contentAssocTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="ContentAssocType" key-field-name="contentAssocTypeId"/>
+                <entity-options description="${description}" entity-name="ContentAssocType" key-field-name="contentAssocTypeId"/>
             </drop-down>
         </field>
         <field name="metaDataPredicateId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="MetaDataPredicate" key-field-name="metaDataPredicateId"/>
+                <entity-options description="${description}" entity-name="MetaDataPredicate" key-field-name="metaDataPredicateId"/>
             </drop-down>
         </field>
         <field name="submitButton" title="Create" widget-style="standardSubmit">
@@ -322,12 +229,9 @@
         <field name="lastModifiedDate"><hidden/></field>
         <field name="lastModifiedByUserLogin"><hidden/></field>
     </form>
-    <form 
-        name="ListContentAssocFrom"
-        default-title-style="tableheadtext"
+    <form name="ListContentAssocFrom" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="fromList" 
-        target="" title="Assoc From this Content" type="list">
+        list-name="fromList" target="" title="Assoc From this Content" type="list">
         <auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/>
         <field name="contentId" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
@@ -342,13 +246,9 @@
             <hyperlink also-hidden="false" description="[Edit]" target="EditContentAssoc?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
         </field>
     </form>
-    <form 
-        name="ListContentAssocTo"
-        default-entity-name="Content"
-        default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="toList" 
-        target="EditContentAssoc" title="Assoc To this Content" type="list">
+    <form name="ListContentAssocTo" default-entity-name="Content"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
+        list-name="toList" target="EditContentAssoc" title="Assoc To this Content" type="list">
         <auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/>
         <field name="contentId" title="Content Id " widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
@@ -366,51 +266,35 @@
 
 
     <!-- ContentRole forms -->
-    <form 
-        name="AddContentRole" 
-        default-title-style="tableheadtext"
+    <form name="AddContentRole" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addContentRole" title="" type="single">
         <auto-fields-service service-name="createContentRole"/>
         <field name="contentId" title="" widget-style="buttontext" map-name="currentValue" > 
-                <lookup target-form-name="LookupContent" />
+            <lookup target-form-name="LookupContent" />
         </field>
-        <field name="partyId" title="" widget-style="buttontext"> 
-                <lookup target-form-name="LookupPerson" />
-        </field>
+        <field name="partyId" title="" widget-style="buttontext"><lookup target-form-name="LookupPerson"/></field>
         <field name="roleTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="RoleType" key-field-name="roleTypeId"/>
+                <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/>
             </drop-down>
         </field>
         <field name="submitButton" title="Add" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
-    <form 
-        name="EditContentRole" 
-        default-title-style="tableheadtext"
+    <form name="EditContentRole" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="updateContentRole" title="" type="single">
         <auto-fields-service service-name="createContentRole"/>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-    <form 
-        name="ListContentRole"
-        default-title-style="tableheadtext"
+    <form name="ListContentRole" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" 
-        target="updateContentRole" title="" type="list">
+        list-name="contentList" target="updateContentRole" title="" type="list">
         <auto-fields-service service-name="updateContentRole" default-field-type="display" />
-        <field name="thruDate" widget-style="buttontext">
-            <date-time/>
-        </field>
-        <field name="thruDate" widget-style="buttontext">
-            <date-time/>
-        </field>
+        <field name="thruDate" widget-style="buttontext"><date-time/></field>
+        <field name="thruDate" widget-style="buttontext"><date-time/></field>
         <field name="submitButton" title="Update" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
@@ -420,130 +304,82 @@
     </form>
 
     <!-- ContentPurpose forms -->
-    <form 
-        name="AddContentPurpose" 
+    <form name="AddContentPurpose" 
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addContentPurpose" title="" type="single">
         <auto-fields-service service-name="createContentPurpose"/>
-        <field name="contentId" title="" widget-style="buttontext" map-name="currentValue" > 
-                <lookup target-form-name="LookupContent" />
-        </field>
+        <field name="contentId" title="" widget-style="buttontext" map-name="currentValue"><lookup target-form-name="LookupContent"/></field>
         <field name="contentPurposeTypeId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="ContentPurposeType" key-field-name="contentPurposeTypeId"/>
+                <entity-options description="${description}" entity-name="ContentPurposeType" key-field-name="contentPurposeTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-    <form 
-        name="ListContentPurpose"
-        default-title-style="tableheadtext"
+    <form name="ListContentPurpose" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" 
-        target="updateContentPurpose" title="" type="list">
+        list-name="contentList" target="updateContentPurpose" title="" type="list">
         <auto-fields-service service-name="updateContentPurpose" default-field-type="display" />
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" 
-              target="removeContentPurpose?contentId=${contentId}&amp;contentPurposeTypeId=${contentPurposeTypeId}"/>
+            <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurpose?contentId=${contentId}&amp;contentPurposeTypeId=${contentPurposeTypeId}"/>
         </field>
     </form>
     
     <!-- ContentAttribute forms -->
-    <form 
-        name="AddContentAttribute" 
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
+    <form name="AddContentAttribute" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addContentAttribute" title="" type="single">
         <auto-fields-service service-name="createContentAttribute"/>
-        <field name="contentId" title="" widget-style="buttontext" map-name="currentValue" > 
-	    <display description="${currentValue.contentId}"/>
-        </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="contentId" title="" widget-style="buttontext" map-name="currentValue"><display description="${currentValue.contentId}"/></field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-    <form 
-        default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
+    <form default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" name="ListContentAttribute"
         target="updateContentAttribute" title="" type="list">
         <auto-fields-service service-name="updateContentAttribute" default-field-type="display" />
-        <field name="attrValue" widget-style="buttontext">
-            <text/>
-        </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="attrValue" widget-style="buttontext"><text/></field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentAttribute?contentId=${contentId}&amp;attrName=${attrName}"/>
         </field>
     </form>
     
-    
     <!-- ContentMetaData forms -->
-    <form 
-        name="AddContentMetaData" 
-        default-title-style="tableheadtext"
+    <form name="AddContentMetaData" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addContentMetaData" title="" type="single">
         <auto-fields-service service-name="createContentMetaData"/>
-        <field name="contentId" title="" widget-style="buttontext" map-name="currentValue" > 
-	    <display description="${currentValue.contentId}"/>
-        </field>
+        <field name="contentId" title="" widget-style="buttontext" map-name="currentValue"><display description="${currentValue.contentId}"/></field>
         <field name="metaDataPredicateId">
             <drop-down allow-empty="true">
-                <entity-options description="${description}"
-                    entity-name="MetaDataPredicate" key-field-name="metaDataPredicateId"/>
+                <entity-options description="${description}" entity-name="MetaDataPredicate" key-field-name="metaDataPredicateId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Add" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-    <form 
-        name="ListContentMetaData"
-        list-name="contentList" 
-        default-title-style="tableheadtext"
+    <form name="ListContentMetaData" list-name="contentList" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="updateContentMetaData" title="" type="list">
         <auto-fields-service service-name="updateContentMetaData" default-field-type="edit" />
-        <field name="contentId" title="ContentId" widget-style="buttontext">
-            <display/>
-        </field>
-        <field name="metaDataPredicateId" title="MetaDataPredicateId" widget-style="buttontext">
-            <display/>
-        </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="contentId" title="ContentId" widget-style="buttontext"><display/></field>
+        <field name="metaDataPredicateId" title="MetaDataPredicateId" widget-style="buttontext"><display/></field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentMetaData?contentId=${contentId}&amp;metaDataPredicateId=${metaDataPredicateId}"/>
         </field>
     </form>
     
     <!-- Person Lookup forms -->
-    <form 
-        name="lookupPerson" 
-        default-title-style="tableheadtext"
+    <form name="lookupPerson" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupPerson" title="" type="single">
         <auto-fields-entity entity-name="Person" default-field-type="find" />
-        <field name="submitButton" title="Lookup" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-    <form 
-        name="listLookupPerson" 
-        default-title-style="tableheadtext"
+    <form name="listLookupPerson" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" target="" paginate-target="LookupPerson" 
-        title="" type="list">
+        list-name="entityList" target="" paginate-target="LookupPerson" title="" type="list">
         <auto-fields-entity entity-name="Person" default-field-type="display"/>
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
                 

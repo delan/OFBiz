@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  */
 -->
 
@@ -549,6 +549,7 @@
       <field name="dataTemplateTypeId" type="id"></field>
       <field name="dataCategoryId" type="id-ne"></field>
       <field name="dataSourceId" type="id"></field>
+      <field name="statusId" type="id"></field>
       <field name="dataResourceName" type="name"></field>
       <field name="localeString" type="very-short"></field>
       <field name="mimeTypeId" type="id-long"></field>
@@ -567,6 +568,9 @@
       </relation>
       <relation type="one-nofk" rel-entity-name="OtherDataResource">
         <key-map field-name="dataResourceId"/>
+      </relation>
+      <relation type="one" fk-name="DTRSRC_STATUS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
       <relation type="many" rel-entity-name="Content">
         <key-map field-name="dataResourceId"/>

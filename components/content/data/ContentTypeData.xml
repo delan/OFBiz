@@ -82,6 +82,14 @@
   <StatusType description="Server Hit" hasTable="N" parentTypeId="" statusTypeId="SERVER_HIT_STATUS"/>
   <StatusType description="Web Content" hasTable="N" parentTypeId="" statusTypeId="WEB_CONTENT_STATUS"/>
 
+  <StatusType description="Content" hasTable="N" parentTypeId="" statusTypeId="CONTENT_STATUS"/>
+  <StatusItem description="In Progress" sequenceId="01" statusCode="IN_PROGRESS" statusId="CTNT_IN_PROGRESS" statusTypeId="CONTENT_STATUS"/>
+  <StatusItem description="Initial Draft" sequenceId="02" statusCode="INITIAL_DRAFT" statusId="CTNT_INITIAL_DRAFT" statusTypeId="CONTENT_STATUS"/>
+  <StatusItem description="Revised Draft" sequenceId="03" statusCode="REVISED_DRAFT" statusId="CTNT_REVISED_DRAFT" statusTypeId="CONTENT_STATUS"/>
+  <StatusItem description="Final Draft" sequenceId="04" statusCode="FINAL_DRAFT" statusId="CTNT_FINAL_DRAFT" statusTypeId="CONTENT_STATUS"/>
+  <StatusItem description="Published" sequenceId="05" statusCode="PUBLISHED" statusId="CTNT_PUBLISHED" statusTypeId="CONTENT_STATUS"/>
+  <StatusItem description="Deactivated" sequenceId="99" statusCode="DEACTIVATED" statusId="CTNT_DEACTIVATED" statusTypeId="CONTENT_STATUS"/>
+
   <SubscriptionType description="Newsgroup" hasTable="N" parentTypeId="" subscriptionTypeId="NEWSGROUP_SUBSCR"/>
   <SubscriptionType description="Other" hasTable="N" parentTypeId="" subscriptionTypeId="OTHER_SUBSCR"/>
   <SubscriptionType description="Product Info" hasTable="N" parentTypeId="" subscriptionTypeId="PRODUCT_INFO_SUBSCR"/>
