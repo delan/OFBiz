@@ -38,43 +38,47 @@
 <h2>XML Import to DataSource(s)</h2>
 <div>This page can be used to import exported Entity Engine XML documents. These documents all have a root tag of "&lt;entity-engine-xml&gt;".</div>
 <hr>
-<h3>Import:</h3>
+<%if(security.hasPermission("ENTITY_MAINT", session)){%>
+  <h3>Import:</h3>
 
-<FORM method=POST action='<%=response.encodeURL(controlPath + "/xmldsimport")%>'>
-  <div>Absolute Filename or URL:</div>
-  <INPUT type=text size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'>
-  <INPUT type=submit value='Import'>
-</FORM>
-<hr>
-  <h3>Results:</h3>
+  <FORM method=POST action='<%=response.encodeURL(controlPath + "/xmldsimport")%>'>
+    <div>Absolute Filename or URL:</div>
+    <INPUT type=text size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'>
+    <INPUT type=submit value='Import'>
+  </FORM>
+  <hr>
+    <h3>Results:</h3>
 
 
-<%if(filename != null && filename.length() > 0) {%>
-<%
-  URL url = null;
-  if(filename.charAt(0) == '/') {
-    url = UtilURL.fromFilename(filename);
-  }
-  else {
-    url = new URL(filename);
-  }
+  <%if(filename != null && filename.length() > 0) {%>
+  <%
+    URL url = null;
+    if(filename.charAt(0) == '/') {
+      url = UtilURL.fromFilename(filename);
+    }
+    else {
+      url = new URL(filename);
+    }
 
-  Collection values = null;
-  try {
-    values = delegator.readXmlDocument(url);
-    delegator.storeAll(values);
-  }
-  catch(Exception e) {
-    %><div>ERROR: <%=e.toString()%></div><%
-  }
-%>
-  <%if(values != null) {%>
-    <div>Wrote <%=values.size()%> entities to the datasource.</div>
+    Collection values = null;
+    try {
+      values = delegator.readXmlDocument(url);
+      delegator.storeAll(values);
+    }
+    catch(Exception e) {
+      %><div>ERROR: <%=e.toString()%></div><%
+    }
+  %>
+    <%if(values != null) {%>
+      <div>Wrote <%=values.size()%> entities to the datasource.</div>
+    <%}else{%>
+      <div>Could not get any values from the XML file.</div>
+    <%}%>
   <%}else{%>
-    <div>Could not get any values from the XML file.</div>
+    <div>No filename/URL specified, doing nothing.</div>
   <%}%>
 <%}else{%>
-  <div>No filename/URL specified, doing nothing.</div>
+  <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
 <%}%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %> 
