@@ -28,6 +28,9 @@
 <div class="apptitle">&nbsp;Catalog Manager Application&nbsp;</div>
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerButtonLeft">Main</a></div>  
+  <div class="col"><a href="<ofbiz:url>/EditFeatureCategories</ofbiz:url>" class="headerButtonLeft">FeatureCats</a></div>
+  <div class="col"><a href="<ofbiz:url>/FindProductPromo</ofbiz:url>" class="headerButtonLeft">Promos</a></div>
+  <div class="col"><a href="<ofbiz:url>/FindProductPriceRules</ofbiz:url>" class="headerButtonLeft">PriceRules</a></div>    
 
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
