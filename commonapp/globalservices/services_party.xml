@@ -277,4 +277,35 @@
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
+
+    <!-- Party view services -->
+    <service name="getPerson" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="getPerson">
+        <description>Gets a person entity from the cache/database</description>
+        <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="person" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
+    </service>
+
+    <service name="getPartyFromEmail" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="getPartyFromEmail">
+        <description>Gets a collection of parties from an email address</description>
+        <attribute name="email" type="String" mode="IN"/>
+        <attribute name="parties" type="java.util.Collection" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="getPartyFromUserLogin" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="getPartyFromUserLogin">
+        <description>Gets a collection of parties from an email address</description>
+        <attribute name="userLoginId" type="String" mode="IN"/>
+        <attribute name="parties" type="java.util.Collection" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="getPartyFromName" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="getPartyFromPerson">
+        <description>Gets a collection of parties from an first/last name</description>
+        <attribute name="firstName" type="String" mode="IN" optional="true"/>
+        <attribute name="lastName" type="String" mode="IN" optional="true"/>
+        <attribute name="parties" type="java.util.Collection" mode="OUT" optional="true"/>
+    </service>
+
 </services>
