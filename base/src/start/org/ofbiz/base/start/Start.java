@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.27 2004/07/31 21:54:00 ajzeneski Exp $
+ * $Id: Start.java,v 1.28 2004/08/02 03:26:59 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  * @since 2.1
  */
 public class Start implements Runnable {
@@ -62,6 +62,7 @@ public class Start implements Runnable {
 
     private static final String SHUTDOWN_COMMAND = "SHUTDOWN";
     private static final String STATUS_COMMAND = "STATUS";
+    private static final double REQUIRED_JDK = 1.4;
 
     public void init(String[] args, boolean fullInit) throws IOException {
         String firstArg = args.length > 0 ? args[0] : "";
@@ -437,6 +438,7 @@ public class Start implements Runnable {
         public String awtHeadless;
         public boolean shutdownAfterLoad = false;
         public boolean useShutdownHook = true;
+        public boolean requireToolsJar = false;
 
         private Properties getPropertiesFile(String config) throws IOException {
             InputStream propsStream = null;
@@ -483,6 +485,18 @@ public class Start implements Runnable {
         }
 
         public void readConfig(String config) throws IOException {
+            // check the java_version
+            String javaVersion = System.getProperty("java.version");
+            String javaVendor = System.getProperty("java.vendor");
+            double version = Double.parseDouble(javaVersion.substring(0, javaVersion.indexOf(".") + 2));
+            if (REQUIRED_JDK > version) {
+                System.err.println("");
+                System.err.println("Java Version - " + javaVendor + " " + javaVersion + " - is not supported by OFBiz.");
+                System.err.println("Please install Java2 SDK " + REQUIRED_JDK + "+");
+                System.err.println("");
+                System.exit(-1);
+            }
+
             Properties props = this.getPropertiesFile(config);
 
             // set the ofbiz.home
@@ -516,7 +530,12 @@ public class Start implements Runnable {
             }
 
             // tools jar
-            toolsJar = this.findToolsJar(props);
+            String reqTJ = System.getProperty("java.tools.jar.required");
+            if (reqTJ == null) {
+                reqTJ = props.getProperty("java.tools.jar.required", "false");
+            }
+            requireToolsJar = "true".equalsIgnoreCase(reqTJ);
+            toolsJar = this.findToolsJar(props, javaVendor, javaVersion, requireToolsJar);
 
             // log directory
             logDir = System.getProperty("ofbiz.log.dir");
@@ -611,12 +630,9 @@ public class Start implements Runnable {
             }
         }
 
-        private String findToolsJar(Properties props) {
-            String javaVersion = System.getProperty("java.version");
-            String javaVendor = System.getProperty("java.vendor");
+        private String findToolsJar(Properties props, String javaVendor, String javaVersion, boolean required) {
             String fileSep = System.getProperty("file.separator");
             String javaHome = System.getProperty("java.home");
-            String ofbizHome = System.getProperty("ofbiz.home");
             String errorMsg = "Unable to locate tools.jar - ";
             String foundMsg = "Found tools.jar - ";
             String toolLoc = "lib" + fileSep + "tools.jar";
@@ -633,12 +649,20 @@ public class Start implements Runnable {
                 return null;
             }
 
+            // check to see if it is in the base/lib directory
+            tj = new File(baseLib + fileSep + "tool.jar");
+            if (tj.exists()) {
+                return null;
+            }
+
             // try to locate tools.jar from the properties file
             String toolsProp = props.getProperty("java.tools.jar", null);
             if (toolsProp != null) {
                 tj = new File(toolsProp);
                 if (!tj.exists()) {
-                    System.out.println(errorMsg + tj.getAbsolutePath());
+                    if (required) {
+                        System.err.println(errorMsg + tj.getAbsolutePath());
+                    }
                 } else {
                     System.out.println(foundMsg + tj.getAbsolutePath());
                     return toolsProp;
@@ -648,7 +672,9 @@ public class Start implements Runnable {
             // next check the JAVA_HOME lib dir
             tj = new File(javaHome + fileSep + toolLoc);
             if (!tj.exists()) {
-                System.out.println(errorMsg + tj.getAbsolutePath());
+                if (required) {
+                    System.err.println(errorMsg + tj.getAbsolutePath());
+                }
             } else {
                 System.out.println(foundMsg + tj.getAbsolutePath());
                 return tj.getAbsolutePath();
@@ -660,7 +686,9 @@ public class Start implements Runnable {
                 javaHome = javaHome.substring(0, javaHome.lastIndexOf(fileSep));
                 tj = new File(javaHome + fileSep + toolLoc);
                 if (!tj.exists()) {
-                    System.out.println(errorMsg + tj.getAbsolutePath());
+                    if (required) {
+                        System.err.println(errorMsg + tj.getAbsolutePath());
+                    }
                 } else {
                     System.out.println(foundMsg + tj.getAbsolutePath());
                     return tj.getAbsolutePath();
@@ -673,15 +701,25 @@ public class Start implements Runnable {
                 String windowsPath = driveLetter + fileSep + "j2sdk" + javaVersion;
                 tj = new File(windowsPath + fileSep + toolLoc);
                 if (!tj.exists()) {
-                    System.out.println(errorMsg + tj.getAbsolutePath());
+                    if (required) {
+                        System.err.println(errorMsg + tj.getAbsolutePath());
+                    }
                 } else {
                     System.out.println(foundMsg + tj.getAbsolutePath());
                     return tj.getAbsolutePath();
                 }
             }
 
-            System.out.println("Required library tools.jar could not be located; make sure you using Java SDK and NOT the JRE!");
-            System.out.println("You may need to copy tools.jar into a loadable lib directory (i.e. base/lib)");
+            if (required) {
+                System.err.println("");
+                System.err.println("Required library tools.jar could not be located.");
+                System.err.println("Make sure you using Java2 SDK " + REQUIRED_JDK + "+ and NOT the JRE.");
+                System.err.println("You may need to copy tools.jar into a loadable lib directory");
+                System.err.println("(i.e. OFBIZ_HOME or OFBIZ_HOME/base/lib)");
+                System.err.println("");
+                System.exit(-1);
+            }
+
             return null;
         }
     }
