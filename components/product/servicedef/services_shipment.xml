@@ -34,6 +34,7 @@
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="quickShipEntireOrder" auth="true">
         <description>Quick Ships An Entire Order</description>      
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
     </service>
         
     <service name="createShipment" default-entity-name="Shipment" engine="simple"
