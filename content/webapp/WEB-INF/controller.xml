@@ -537,6 +537,81 @@
         <response name="success" type="view" value="EditDataResource"/>
         <response name="error" type="view" value="EditDataResource"/>
     </request-map>
+
+    <!-- ================ ContentOperation Requests ================= -->
+    <request-map uri="EditContentOperation">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentOperation"/>
+    </request-map>
+    <request-map uri="addContentOperation">
+        <security auth="true" https="true"/>
+        <event invoke="createContentOperation" path="" type="service"/>
+        <response name="success" type="view" value="EditContentOperation"/>
+        <response name="error" type="view" value="EditContentOperation"/>
+    </request-map>
+    <request-map uri="updateContentOperation">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentOperation" path="" type="service"/>
+        <response name="success" type="view" value="EditContentOperation"/>
+        <response name="error" type="view" value="EditContentOperation"/>
+    </request-map>
+    <request-map uri="removeContentOperation">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentOperation" path="" type="service"/>
+        <response name="success" type="view" value="EditContentOperation"/>
+        <response name="error" type="view" value="EditContentOperation"/>
+    </request-map>
+
+
+    <!-- ================ ContentPurpose Requests ================= -->
+    <request-map uri="EditContentPurpose">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentPurpose"/>
+    </request-map>
+    <request-map uri="addContentPurpose">
+        <security auth="true" https="true"/>
+        <event invoke="createContentPurpose" path="" type="service"/>
+        <response name="success" type="view" value="EditContentPurpose"/>
+        <response name="error" type="view" value="EditContentPurpose"/>
+    </request-map>
+    <request-map uri="updateContentPurpose">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentPurpose" path="" type="service"/>
+        <response name="success" type="view" value="EditContentPurpose"/>
+        <response name="error" type="view" value="EditContentPurpose"/>
+    </request-map>
+    <request-map uri="removeContentPurpose">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentPurpose" path="" type="service"/>
+        <response name="success" type="view" value="EditContentPurpose"/>
+        <response name="error" type="view" value="EditContentPurpose"/>
+    </request-map>
+
+
+    <!-- ================ ContentPurposeOperation Requests ================= -->
+    <request-map uri="EditContentPurposeOperation">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentPurposeOperation"/>
+    </request-map>
+    <request-map uri="addContentPurposeOperation">
+        <security auth="true" https="true"/>
+        <event invoke="createContentPurposeOperation" path="" type="service"/>
+        <response name="success" type="view" value="EditContentPurposeOperation"/>
+        <response name="error" type="view" value="EditContentPurposeOperation"/>
+    </request-map>
+    <request-map uri="updateContentPurposeOperation">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentPurposeOperation" path="" type="service"/>
+        <response name="success" type="view" value="EditContentPurposeOperation"/>
+        <response name="error" type="view" value="EditContentPurposeOperation"/>
+    </request-map>
+    <request-map uri="removeContentPurposeOperation">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentPurposeOperation" path="" type="service"/>
+        <response name="success" type="view" value="EditContentPurposeOperation"/>
+        <response name="error" type="view" value="EditContentPurposeOperation"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -550,15 +625,18 @@
     <view-map name="EditWebSiteParties" page="/website/EditWebSiteParties.ftl" type="jpublish"/>
     <view-map name="EditWebSiteProdCatalogs" page="/website/EditWebSiteProdCatalogs.ftl" type="jpublish"/>
     
+    <view-map name="EditContentPurpose" page="/content/EditContentPurpose.ftl" type="jpublish"/>
     <view-map name="FindContent" page="/content/FindContent.ftl" type="jpublish"/>
     <view-map name="EditContent" page="/content/EditContent.ftl" type="jpublish"/>
     <view-map name="LookupDataResource" page="/data/LookupDataResource.ftl" type="jpublish"/>
     <view-map name="EditContentType" page="/contentsetup/EditContentType.ftl" type="jpublish"/>
     <view-map name="EditContentAssocType" page="/contentsetup/EditContentAssocType.ftl" type="jpublish"/>
-    <view-map name="EditContentRole" page="/contentsetup/EditContentRole.ftl" type="jpublish"/>
+    <view-map name="EditContentRole" page="/content/EditContentRole.ftl" type="jpublish"/>
     <view-map name="EditContentPurposeType" page="/contentsetup/EditContentPurposeType.ftl" type="jpublish"/>
     <view-map name="EditContentTypeAttr" page="/contentsetup/EditContentTypeAttr.ftl" type="jpublish"/>
     <view-map name="EditContentAssocPredicate" page="/contentsetup/EditContentAssocPredicate.ftl" type="jpublish"/>
+    <view-map name="EditContentOperation" page="/contentsetup/EditContentOperation.ftl" type="jpublish"/>
+    <view-map name="EditContentPurposeOperation" page="/contentsetup/EditContentPurposeOperation.ftl" type="jpublish"/>
     
     <view-map name="FindDataResource" page="/data/FindDataResource.ftl" type="jpublish"/>
     <view-map name="EditDataResource" page="/data/EditDataResource.ftl" type="jpublish"/>

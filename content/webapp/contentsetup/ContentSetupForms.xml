@@ -155,28 +155,70 @@
         </field>
     </form>
     
-    <!-- ContentRole forms -->
+    <!-- ContentOperation forms -->
     <form default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        name="AddContentRole" target="addContentRole" title="" type="single">
-        <auto-fields-service service-name="createContentRole"/>
+        name="AddContentOperation" target="addContentOperation" title="" type="single">
+        <auto-fields-service service-name="createContentOperation"/>
         <field name="submitButton" title="Add" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
     </form>
     <form default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" name="UpdateContentRole"
-        target="updateContentRole" title="" type="list">
-        <auto-fields-service service-name="updateContentRole"/>
-        <field name="contentRoleId" title="ContentRoleId" widget-style="buttontext">
+        list-name="contentList" name="UpdateContentOperation"
+        target="updateContentOperation" title="" type="list">
+        <auto-fields-service service-name="updateContentOperation"/>
+        <field name="contentOperationId" title="ContentOperationId" widget-style="buttontext">
             <display/>
         </field>
         <field name="submitButton" title="Update" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeContentRole?contentRoleId=${contentRoleId}"/>
+            <hyperlink also-hidden="false" description="[Delete]" target="removeContentOperation?contentOperationId=${contentOperationId}"/>
+        </field>
+    </form>
+    <!-- ContentPurposeOperation forms -->
+    <form default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        name="AddContentPurposeOperation" target="addContentPurposeOperation" title="" type="single">
+        <auto-fields-service service-name="createContentPurposeOperation"/>
+        <field name="contentPurposeTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="ContentPurposeType" key-field-name="contentPurposeTypeId"/>
+            </drop-down>
+        </field>
+        <field name="contentOperationId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="ContentOperation" key-field-name="contentOperationId"/>
+            </drop-down>
+        </field>
+        <field name="roleTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="RoleType" key-field-name="roleTypeId"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        list-name="contentList" name="UpdateContentPurposeOperation"
+        target="updateContentPurposeOperation" title="" type="list">
+        <auto-fields-service service-name="updateContentPurposeOperation"/>
+        <field name="contentPurposeOperationId" title="ContentPurposeOperationId" widget-style="buttontext">
+            <display/>
+        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurposeOperation?contentPurposeOperationId=${contentPurposeOperationId}"/>
         </field>
     </form>
 </forms>
