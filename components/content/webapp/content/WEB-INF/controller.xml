@@ -644,8 +644,7 @@
     </request-map>
     <request-map uri="createContentAssoc">
         <security auth="true" https="true"/>
-        <event invoke="addContentAssoc" 
-            path="org/ofbiz/content/content/ContentEvents.xml" type="simple"/>
+        <event invoke="createContentAssoc" path="" type="service"/>
         <response name="success" type="view" value="EditContentAssoc"/>
         <response name="error" type="view" value="EditContentAssoc"/>
     </request-map>
@@ -974,6 +973,10 @@
     </request-map>
 
     <!-- ================ Layout Requests ================= -->
+    <request-map uri="ListLayout">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="ListLayout"/>
+    </request-map>
     <request-map uri="FindLayout">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="FindLayout"/>
@@ -983,13 +986,10 @@
         <response name="success" type="view" value="EditLayout"/>
         <response name="error" type="view" value="EditLayout"/>
     </request-map>
-    <request-map uri="EditLayoutSubContent">
-        <security auth="true" https="true"/>
-        <response name="success" type="view" value="EditLayoutSubContent"/>
-    </request-map>
     <request-map uri="AddLayout">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="AddLayout"/>
+        <response name="success" type="view" value="EditLayoutTemplate"/>
+        <response name="error" type="view" value="AddLayout"/>
     </request-map>
     <request-map uri="createLayout">
         <security auth="true" https="true"/>
@@ -1008,14 +1008,14 @@
     <request-map uri="createLayoutSubContent">
         <security auth="true" https="true"/>
         <event invoke="createLayoutSubContent"
-            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
         <response name="success" type="view" value="EditLayoutSubContent"/>
-        <response name="error" type="view" value="AddLayoutSubContent"/>
+        <response name="error" type="view" value="EditLayoutSubContent"/>
     </request-map>
     <request-map uri="updateLayoutSubContent">
         <security auth="true" https="true"/>
         <event invoke="updateLayoutSubContent"
-            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
         <response name="success" type="view" value="EditLayoutSubContent"/>
         <response name="error" type="view" value="EditLayoutSubContent"/>
     </request-map>
@@ -1061,6 +1061,11 @@
             path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
         <response name="success" type="view" value="EditLayoutText"/>
         <response name="error" type="view" value="EditLayoutText"/>
+    </request-map>
+    <request-map uri="EditLayoutSubContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditLayoutSubContent"/>
+        <response name="error" type="view" value="EditLayoutSubContent"/>
     </request-map>
     <request-map uri="updateLayoutText">
         <security auth="true" https="true"/>
@@ -1177,6 +1182,7 @@
     <view-map name="EditMimeType" page="/datasetup/EditMimeType.ftl" type="jpublish"/>
     <view-map name="EditHtmlText" page="/data/EditHtmlText.ftl" type="jpublish"/>
 
+    <view-map name="ListLayout" page="/layout/ListLayout.ftl" type="jpublish"/>
     <view-map name="FindLayout" page="/layout/FindLayout.ftl" type="jpublish"/>
     <view-map name="EditLayout" page="/layout/EditLayout.ftl" type="jpublish"/>
     <view-map name="AddLayout" page="/layout/AddLayout.ftl" type="jpublish"/>
