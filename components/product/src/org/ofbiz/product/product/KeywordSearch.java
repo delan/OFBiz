@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordSearch.java,v 1.7 2003/11/06 23:25:49 jonesde Exp $
+ * $Id: KeywordSearch.java,v 1.8 2003/11/07 19:09:29 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -35,10 +35,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -49,7 +46,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.1
  */
 public class KeywordSearch {
@@ -68,6 +65,27 @@ public class KeywordSearch {
             keywords.add(curToken);
         }
         return keywords;
+    }
+
+    public static boolean expandKeyword(String enteredKeyword, List addToList, GenericDelegator delegator) {
+        boolean replaceEnteredKeyword = false;
+
+        try {
+            List thesaurusList = delegator.findByAndCache("KeywordThesaurus", UtilMisc.toMap("enteredKeyword", enteredKeyword));
+            Iterator thesaurusIter = thesaurusList.iterator();
+            while (thesaurusIter.hasNext()) {
+                GenericValue keywordThesaurus = (GenericValue) thesaurusIter.next();
+                addToList.add(keywordThesaurus.get("alternateKeyword"));
+                if ("Y".equals(keywordThesaurus.get("replaceEntered"))) {
+                    replaceEnteredKeyword = true;
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error expanding entered keyword", module);
+        }
+
+        Debug.logInfo("Expanded keyword [" + enteredKeyword + "], got list: " + addToList, module);
+        return replaceEnteredKeyword;
     }
 
     public static List fixKeywords(List keywords, boolean anyPrefix, boolean anySuffix, boolean removeStems, boolean isAnd) {

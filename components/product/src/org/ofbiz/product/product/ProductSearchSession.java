@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchSession.java,v 1.3 2003/11/06 23:25:49 jonesde Exp $
+ * $Id: ProductSearchSession.java,v 1.4 2003/11/07 19:09:29 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -48,7 +48,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class ProductSearchSession {
@@ -78,7 +78,7 @@ public class ProductSearchSession {
                 Object constraint = constraintIter.next();
                 if (constraint instanceof KeywordConstraint) {
                     KeywordConstraint keywordConstraint = (KeywordConstraint) constraint;
-                    List keywordList = keywordConstraint.makeFullKeywordList();
+                    List keywordList = keywordConstraint.makeFullKeywordList(delegator);
                     if (keywordList != null) keywords.addAll(keywordList);
                 }
             }
