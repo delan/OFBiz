@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -36,7 +36,7 @@ if (userLogin != null) request.setAttribute("userLogin", userLogin);
 person = session.getAttribute("_PERSON_");
 partyGroup = session.getAttribute("_PARTY_GROUP_");
 if (person == null) {
-    partyGroup = userLogin == null ? null : userLogin.getRelatedOne("Person");
+    person = userLogin == null ? null : userLogin.getRelatedOne("Person");
     if (person != null) session.setAttribute("_PERSON_", person);
 }
 if (person != null) {
