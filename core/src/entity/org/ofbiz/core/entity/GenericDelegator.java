@@ -302,7 +302,7 @@ public class GenericDelegator implements DelegatorInterface {
                 if (entity != null) {
                     entities.put(entity.getEntityName(), entity);
                 } else {
-                    throw new IllegalStateException("Programm Error: entity was null with name " + ename);
+                    throw new IllegalStateException("Could not find entity with name " + ename);
                 }
             } catch (GenericEntityException ex) {
                 errorCount++;
@@ -460,7 +460,7 @@ public class GenericDelegator implements DelegatorInterface {
         this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_CREATE, value, ecaEventMap, (ecaEventMap == null), false);
 
         if (value == null) {
-            throw new IllegalArgumentException("Cannot create a null value");
+            throw new GenericEntityException("Cannot create a null value");
         }
         GenericHelper helper = getEntityHelper(value.getEntityName());
         
@@ -499,7 +499,7 @@ public class GenericDelegator implements DelegatorInterface {
      */
     public GenericValue create(GenericPK primaryKey, boolean doCacheClear) throws GenericEntityException {
         if (primaryKey == null) {
-            throw new IllegalArgumentException("Cannot create from a null primaryKey");
+            throw new GenericEntityException("Cannot create from a null primaryKey");
         }
         
         return this.create(new GenericValue(primaryKey), doCacheClear);
@@ -517,7 +517,7 @@ public class GenericDelegator implements DelegatorInterface {
         GenericValue value = null;
 
         if (!primaryKey.isPrimaryKey()) {
-            throw new IllegalArgumentException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
+            throw new GenericModelException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
         }
         this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
         try {
@@ -581,7 +581,7 @@ public class GenericDelegator implements DelegatorInterface {
         GenericValue value = null;
 
         if (!primaryKey.isPrimaryKey()) {
-            throw new IllegalArgumentException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
+            throw new GenericModelException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
         }
 
         this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
@@ -804,7 +804,7 @@ public class GenericDelegator implements DelegatorInterface {
         GenericHelper helper = getEntityHelper(entityName);
 
         if (fields != null && !modelEntity.areFields(fields.keySet())) {
-            throw new IllegalArgumentException("[GenericDelegator.findByOr] At least of the passed fields is not valid: " + fields.keySet().toString());
+            throw new GenericModelException("[GenericDelegator.findByOr] At least of the passed fields is not valid: " + fields.keySet().toString());
         }
 
         this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
@@ -1274,7 +1274,7 @@ public class GenericDelegator implements DelegatorInterface {
             throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
         }
         if (!"one".equals(relation.getType()) && !"one-nofk".equals(relation.getType())) {
-            throw new IllegalArgumentException("Relation is not a 'one' or a 'one-nofk' relation: " + relationName + " of entity " + value.getEntityName());
+            throw new GenericModelException("Relation is not a 'one' or a 'one-nofk' relation: " + relationName + " of entity " + value.getEntityName());
         }
 
         Map fields = new HashMap();
@@ -1297,7 +1297,7 @@ public class GenericDelegator implements DelegatorInterface {
             throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
         }
         if (!"one".equals(relation.getType()) && !"one-nofk".equals(relation.getType())) {
-            throw new IllegalArgumentException("Relation is not a 'one' or a 'one-nofk' relation: " + relationName + " of entity " + value.getEntityName());
+            throw new GenericModelException("Relation is not a 'one' or a 'one-nofk' relation: " + relationName + " of entity " + value.getEntityName());
         }
 
         Map fields = new HashMap();
@@ -1365,7 +1365,7 @@ public class GenericDelegator implements DelegatorInterface {
         GenericValue newValue = findByPrimaryKey(pk);
 
         if (newValue == null) {
-            throw new IllegalArgumentException("[GenericDelegator.refresh] could not refresh value: " + value);
+            throw new GenericEntityException("[GenericDelegator.refresh] could not refresh value: " + value);
         }
         value.fields = newValue.fields;
         value.setDelegator(this);
