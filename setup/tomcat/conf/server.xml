@@ -265,15 +265,33 @@
              If security manager is enabled, you'll have read perms.
              in the webapps dir and read/write in the workdir.
          -->
-<!--      
-        <Context path="/entitygen" 
-                 docBase="../ofbiz/entitygen/webapp"
+        <Context path="/commonapp" 
+                 docBase="../ofbiz/commonapp/webapp"
                  debug="2" 
                  reloadable="true" 
                  trusted="false" >
         </Context>
-        <Context path="/commonapp" 
-                 docBase="../ofbiz/commonapp/webapp"
+        <Context path="/ecommerce"
+                 docBase="../ofbiz/ecommerce/webapp"
+                 debug="2" 
+                 reloadable="true" 
+                 trusted="false" >
+        </Context>
+        <Context path="/images"
+                 docBase="../ofbiz/ecommerce/images"
+                 debug="2" 
+                 reloadable="true" 
+                 trusted="false" >
+        </Context>
+<!--      
+        <Context path="/commerce"
+                 docBase="../relmsoft/webapp"
+                 debug="2" 
+                 reloadable="true" 
+                 trusted="false" >
+        </Context>
+        <Context path="/entitygen" 
+                 docBase="../ofbiz/entitygen/webapp"
                  debug="2" 
                  reloadable="true" 
                  trusted="false" >
