@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -61,8 +61,7 @@ public class EntityFieldValue extends EntityConditionValue {
     public boolean equals(Object obj) {
         if (!(obj instanceof EntityFieldValue)) return false;
         EntityFieldValue otherValue = (EntityFieldValue) obj;
-        return
-            fieldName.equals(otherValue.fieldName);
+        return fieldName.equals(otherValue.fieldName);
     }
 
     public ModelField getModelField(ModelEntity modelEntity) {
@@ -75,8 +74,9 @@ public class EntityFieldValue extends EntityConditionValue {
 
     public void validateSql(ModelEntity modelEntity) throws GenericModelException {
         ModelField field = getModelField(modelEntity);
-        if (field == null)
+        if (field == null) {
             throw new GenericModelException("Field with name " + fieldName + " not found in the " + modelEntity.getEntityName() + " Entity");
+        }
     }
 
     public Object getValue(GenericDelegator delegator, Map map) {

@@ -89,14 +89,4 @@ public class EntityFieldMap extends EntityConditionListBase {
     public void accept(EntityConditionVisitor visitor) {
         visitor.acceptEntityFieldMap(this);
     }
-
-    public boolean equals(Object obj) {
-        if (!(obj instanceof EntityFieldMap)) return false;
-        EntityFieldMap other = (EntityFieldMap) obj;
-        return fieldMap.equals(other.fieldMap) && operator.equals(other.operator);
-    }
-
-    public int hashCode() {
-        return (fieldMap != null ? fieldMap.hashCode() : 0) & operator.hashCode();
-    }
 }

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -191,14 +191,20 @@ public class EntityExpr extends EntityCondition {
     public boolean equals(Object obj) {
         if (!(obj instanceof EntityExpr)) return false;
         EntityExpr other = (EntityExpr) obj;
-        return equals(lhs, other.lhs) &&
+        boolean isEqual = equals(lhs, other.lhs) &&
                equals(operator, other.operator) &&
                equals(rhs, other.rhs);
+        //if (!isEqual) {
+        //    Debug.logWarning("EntityExpr.equals is false for: \n-this.lhs=" + this.lhs + "; other.lhs=" + other.lhs +
+        //            "\nthis.operator=" + this.operator + "; other.operator=" + other.operator +
+        //            "\nthis.rhs=" + this.rhs + "other.rhs=" + other.rhs, module);
+        //}
+        return isEqual;
     }
 
     public int hashCode() {
-        return hashCode(lhs) ^
-               hashCode(operator) ^
+        return hashCode(lhs) +
+               hashCode(operator) +
                hashCode(rhs);
     }
 }

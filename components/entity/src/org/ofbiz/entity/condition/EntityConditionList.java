@@ -35,6 +35,7 @@ import java.util.List;
  * @since      2.0
  */
 public class EntityConditionList extends EntityConditionListBase {
+    public static final String module = EntityConditionList.class.getName();
 
     protected EntityConditionList() {
         super();
@@ -54,15 +55,5 @@ public class EntityConditionList extends EntityConditionListBase {
     
     public void accept(EntityConditionVisitor visitor) {
         visitor.acceptEntityConditionList(this);
-    }
-
-    public boolean equals(Object obj) {
-        if (!(obj instanceof EntityConditionList)) return false;
-        EntityConditionList other = (EntityConditionList) obj;
-        return conditionList.equals(other.conditionList) && operator.equals(other.operator);
-    }
-
-    public int hashCode() {
-        return conditionList.hashCode() & operator.hashCode();
     }
 }

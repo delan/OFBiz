@@ -1,5 +1,5 @@
 /*
- * $Id: EntityListCache.java,v 1.2 2004/07/13 11:29:46 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -33,34 +33,38 @@ import org.ofbiz.entity.util.EntityUtil;
 
 public class EntityListCache extends AbstractEntityConditionCache {
 
+    public static final String module = EntityListCache.class.getName();
+
     public EntityListCache(String delegatorName) {
         super(delegatorName, "entity-list");
     }
 
     public List get(String entityName, EntityCondition condition) {
-        return get(entityName, condition, null);
+        return this.get(entityName, condition, null);
     }
 
     public List get(String entityName, EntityCondition condition, List orderBy) {
         Map conditionCache = getConditionCache(entityName, condition);
         if (conditionCache == null) return null;
-        synchronized (conditionCache) {
-            Object orderByKey = getOrderByKey(orderBy);
-            List list = (List) conditionCache.get(orderByKey);
-            if (list == null) {
-                Iterator it = conditionCache.values().iterator();
-                if (it.hasNext()) list = (List) it.next();
-                if (list != null) {
-                    list = EntityUtil.orderBy(list, orderBy);
-                    conditionCache.put(orderByKey, list);
+        Object orderByKey = getOrderByKey(orderBy);
+        List valueList = (List) conditionCache.get(orderByKey);
+        if (valueList == null) {
+            // the valueList was not found for the given ordering, so grab the first one and order it in memory
+            Iterator it = conditionCache.values().iterator();
+            if (it.hasNext()) valueList = (List) it.next();
+            
+            synchronized (conditionCache) {
+                if (valueList != null) {
+                    valueList = EntityUtil.orderBy(valueList, orderBy);
+                    conditionCache.put(orderByKey, valueList);
                 }
             }
-            return list;
         }
+        return valueList;
     }
 
     public void put(String entityName, EntityCondition condition, List entities) {
-        put(entityName, condition, null, entities);
+        this.put(entityName, condition, null, entities);
     }
 
     public List put(String entityName, EntityCondition condition, List orderBy, List entities) {

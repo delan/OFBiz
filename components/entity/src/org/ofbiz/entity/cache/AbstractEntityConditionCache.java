@@ -29,8 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
@@ -39,6 +39,8 @@ import org.ofbiz.entity.model.ModelEntity;
 
 public abstract class AbstractEntityConditionCache extends AbstractCache {
 
+    public static final String module = AbstractEntityConditionCache.class.getName();
+
     protected AbstractEntityConditionCache(String delegatorName, String id) {
         super(delegatorName, id);
     }
@@ -46,9 +48,8 @@ public abstract class AbstractEntityConditionCache extends AbstractCache {
     protected Object get(String entityName, EntityCondition condition, Object key) {
         Map conditionCache = getConditionCache(entityName, condition);
         if (conditionCache == null) return null;
-        synchronized (conditionCache) {
-            return conditionCache.get(key);
-        }
+        // the following line was synchronized, but for pretty good safety and better performance, only syncrhnizing the put; synchronized (conditionCache) {
+        return conditionCache.get(key);
     }
 
     protected Object put(String entityName, EntityCondition condition, Object key, Object value) {
@@ -77,7 +78,15 @@ public abstract class AbstractEntityConditionCache extends AbstractCache {
     }
 
     public static final EntityCondition getFrozenConditionKey(EntityCondition condition) {
-        return condition != null ? condition.freeze() : null;
+        EntityCondition frozenCondition = condition != null ? condition.freeze() : null;
+        // This is no longer needed, fixed issue with unequal conditions after freezing
+        //if (condition != null) {
+        //    if (!condition.equals(frozenCondition)) {
+        //        Debug.logWarning("Frozen condition does not equal condition:\n -=-=-=-Original=" + condition + "\n -=-=-=-Frozen=" + frozenCondition, module);
+        //        Debug.logWarning("Frozen condition not equal info: condition class=" + condition.getClass().getName() + "; frozenCondition class=" + frozenCondition.getClass().getName(), module);
+        //    }
+        //}
+        return frozenCondition;
     }
 
     protected Map getConditionCache(String entityName, EntityCondition condition) {
@@ -134,13 +143,13 @@ public abstract class AbstractEntityConditionCache extends AbstractCache {
         storeHook(true, oldPK, newEntity);
     }
 
-
     protected List convert(boolean isPK, String targetEntityName, GenericEntity entity) {
         if (entity == null || entity == GenericEntity.NULL_ENTITY || entity == GenericValue.NULL_VALUE) return null;
-        if (isPK)
+        if (isPK) {
             return entity.getModelEntity().convertToViewValues(targetEntityName, (GenericPK) entity);
-        else
+        } else {
             return entity.getModelEntity().convertToViewValues(targetEntityName, (GenericEntity) entity);
+        }
     }
 
     public synchronized void storeHook(boolean isPK, GenericEntity oldEntity, GenericEntity newEntity) {

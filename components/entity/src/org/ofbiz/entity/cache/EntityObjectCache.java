@@ -1,5 +1,5 @@
 /*
- * $Id: EntityObjectCache.java,v 1.2 2004/08/09 23:52:22 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,8 @@ package org.ofbiz.entity.cache;
 import org.ofbiz.entity.condition.EntityCondition;
 
 public class EntityObjectCache extends AbstractEntityConditionCache {
+
+    public static final String module = EntityObjectCache.class.getName();
 
     public EntityObjectCache(String delegatorName) {
         super(delegatorName, "object-list");
