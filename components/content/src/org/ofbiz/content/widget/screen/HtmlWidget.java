@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlWidget.java,v 1.3 2004/07/28 03:40:38 jonesde Exp $
+ * $Id: HtmlWidget.java,v 1.4 2004/07/30 02:11:17 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -42,10 +42,10 @@ import org.w3c.dom.Element;
 import freemarker.template.TemplateException;
 
 /**
- * Widget Library - Screen model class
+ * Widget Library - Screen model HTML class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class HtmlWidget extends ModelScreenWidget {
@@ -157,7 +157,8 @@ public class HtmlWidget extends ModelScreenWidget {
             super(modelScreen, htmlTemplateDecoratorSectionElement);
             this.name = htmlTemplateDecoratorSectionElement.getAttribute("name");
             // read sub-widgets
-            this.subWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, htmlTemplateDecoratorSectionElement);
+            List subElementList = UtilXml.childElementList(htmlTemplateDecoratorSectionElement);
+            this.subWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, subElementList);
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {

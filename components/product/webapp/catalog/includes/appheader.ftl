@@ -21,12 +21,14 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
+<#if (requestAttributes.security)?exists><#assign security = requestAttributes.security></#if>
+<#if (requestAttributes.userLogin)?exists><#assign userLogin = requestAttributes.userLogin></#if>
+<#if (requestAttributes.checkLoginUrl)?exists><#assign checkLoginUrl = requestAttributes.checkLoginUrl></#if>
 
-<#assign security = requestAttributes.security>
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
@@ -42,10 +44,10 @@
   <div class="col"><a href="<@ofbizUrl>/editKeywordThesaurus</@ofbizUrl>" class="${selectedLeftClassMap.thesaurus?default(unselectedLeftClassName)}">Thesaurus</a></div>
   <div class="col"><a href="<@ofbizUrl>/pendingReviews</@ofbizUrl>" class="${selectedLeftClassMap.reviews?default(unselectedLeftClassName)}">Reviews</a></div>
 
-  <#if requestAttributes.userLogin?has_content>
+  <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
   <#else>
-    <div class="col-right"><a href="<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>" class="${selectedRightClassMap.login?default(unselectedRightClassName)}">${uiLabelMap.CommonLogin}</a></div>
+    <div class="col-right"><a href="<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>" class="${selectedRightClassMap.login?default(unselectedRightClassName)}">${uiLabelMap.CommonLogin}</a></div>
   </#if>
   <div class="col-fill">&nbsp;</div>
 </div>

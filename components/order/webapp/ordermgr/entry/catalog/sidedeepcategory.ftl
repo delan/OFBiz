@@ -20,13 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#-- variable setup and worker calls -->
-<#assign topLevelList = requestAttributes.topLevelList?if_exists>
-<#assign curCategoryId = requestAttributes.curCategoryId?if_exists>
+<#if (requestAttributes.topLevelList)?exists><#assign topLevelList = requestAttributes.topLevelList></#if>
+<#if (requestAttributes.curCategoryId)?exists><#assign curCategoryId = requestAttributes.curCategoryId></#if>
 
 <#-- looping macro -->
 <#macro categoryList parentCategory category>

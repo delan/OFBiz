@@ -21,10 +21,10 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <#-- looping macro -->
 <#macro categoryList parentCategory category>

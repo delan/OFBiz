@@ -1,5 +1,5 @@
 /*
- * $Id: MethodContext.java,v 1.2 2004/07/01 08:37:51 jonesde Exp $
+ * $Id: MethodContext.java,v 1.3 2004/07/30 02:11:18 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class MethodContext {
@@ -303,5 +303,9 @@ public class MethodContext {
     /** Expands environment variables delimited with ${} */
     public String expandString(String original) {
         return FlexibleStringExpander.expandString(original, this.env);
+    }
+
+    public String expandString(FlexibleStringExpander originalExdr) {
+        return originalExdr.expandString(this.env);
     }
 }

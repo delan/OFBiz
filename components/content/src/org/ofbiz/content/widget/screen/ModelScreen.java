@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreen.java,v 1.7 2004/07/29 04:42:37 byersa Exp $
+ * $Id: ModelScreen.java,v 1.8 2004/07/30 02:11:17 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,6 @@ package org.ofbiz.content.widget.screen;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -40,7 +39,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.1
  */
 public class ModelScreen {
@@ -50,7 +49,6 @@ public class ModelScreen {
     protected String name;
     protected Map modelScreenMap;
     
-    protected List actions;
     protected ModelScreenWidget.Section section;
 
     // ===== CONSTRUCTORS =====
@@ -62,12 +60,6 @@ public class ModelScreen {
         this.name = screenElement.getAttribute("name");
         this.modelScreenMap = modelScreenMap;
 
-        // read all actions under the "actions" element
-        Element actionsElement = UtilXml.firstChildElement(screenElement, "actions");
-        if (actionsElement != null) {
-            this.actions = ModelScreenAction.readSubActions(this, actionsElement);
-        }
-        
         // read in the section, which will read all sub-widgets too
         Element sectionElement = UtilXml.firstChildElement(screenElement, "section");
         if (sectionElement == null) {
@@ -96,10 +88,6 @@ public class ModelScreen {
      *   use the same screen definitions for many types of screen UIs
      */
     public void renderScreenString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
-
-        // run the actions
-        ModelScreenAction.runSubActions(this.actions, context);
-        
         // render the screen, starting with the top-level section
         this.section.renderWidgetString(writer, context, screenStringRenderer);
     }

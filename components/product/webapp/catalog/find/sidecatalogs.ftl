@@ -21,10 +21,10 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>

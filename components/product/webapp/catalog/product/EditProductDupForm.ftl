@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -22,10 +22,10 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
     <#if productId?exists>
         <hr class='sepbar'>

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenAction.java,v 1.7 2004/07/28 03:40:39 jonesde Exp $
+ * $Id: ModelScreenAction.java,v 1.8 2004/07/30 02:11:17 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,12 +27,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
@@ -48,7 +50,7 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.1
  */
 public abstract class ModelScreenAction {
@@ -72,6 +74,8 @@ public abstract class ModelScreenAction {
             Element actionElement = (Element) actionElementIter.next();
             if ("set".equals(actionElement.getNodeName())) {
                 actions.add(new SetField(modelScreen, actionElement));
+            } else if ("property-map".equals(actionElement.getNodeName())) {
+                actions.add(new PropertyMap(modelScreen, actionElement));
             } else if ("script".equals(actionElement.getNodeName())) {
                 actions.add(new Script(modelScreen, actionElement));
             } else if ("service".equals(actionElement.getNodeName())) {
@@ -126,11 +130,11 @@ public abstract class ModelScreenAction {
             Object newValue = null;
             if (this.fromField != null) {
                 newValue = this.fromField.get(context);
-                Debug.logInfo("In screen getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
+                if (Debug.verboseOn()) Debug.logVerbose("In screen getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
             } else if (this.valueExdr != null) {
                 newValue = this.valueExdr.expandString(context);
             }
-            Debug.logInfo("In screen setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
+            if (Debug.verboseOn()) Debug.logVerbose("In screen setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
             this.field.put(context, newValue);
             
             if (global) {
@@ -144,6 +148,37 @@ public abstract class ModelScreenAction {
             Map page = (Map) context.get("page");
             if (page != null) {
                 this.field.put(page, newValue);
+            }
+        }
+    }
+    
+    public static class PropertyMap extends ModelScreenAction {
+        protected FlexibleStringExpander resourceExdr;
+        protected FlexibleMapAccessor mapNameAcsr;
+        protected FlexibleStringExpander globalExdr;
+        
+        public PropertyMap(ModelScreen modelScreen, Element setElement) {
+            super (modelScreen, setElement);
+            this.resourceExdr = new FlexibleStringExpander(setElement.getAttribute("resource"));
+            this.mapNameAcsr = new FlexibleMapAccessor(setElement.getAttribute("map-name"));
+            this.globalExdr = new FlexibleStringExpander(setElement.getAttribute("global"));
+        }
+        
+        public void runAction(Map context) {
+            String globalStr = this.globalExdr.expandString(context);
+            // default to false
+            boolean global = "true".equals(globalStr);
+
+            Locale locale = (Locale) context.get("locale");
+            String resource = this.resourceExdr.expandString(context, locale);
+            Map propertyMap = UtilProperties.getResourceBundleMap(resource, locale);
+            this.mapNameAcsr.put(context, propertyMap);
+
+            if (global) {
+                Map globalCtx = (Map) context.get("globalContext");
+                if (globalCtx != null) {
+                    this.mapNameAcsr.put(globalCtx, propertyMap);
+                }
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectType.java,v 1.8 2004/05/04 16:09:04 ajzeneski Exp $
+ * $Id: ObjectType.java,v 1.9 2004/07/30 02:11:15 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +43,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a> 
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ObjectType {
@@ -1055,5 +1056,24 @@ public class ObjectType {
 
         if (verboseOn) Debug.logVerbose("Returning true", module);
         return Boolean.TRUE;
+    }
+    
+    public static boolean isEmpty(Object value) {
+        if (value == null) {
+            return true;
+        } else if (value instanceof String) {
+            if (((String) value).length() == 0) {
+                return true;
+            }
+        } else if (value instanceof Collection) {
+            if (((Collection) value).size() == 0) {
+                return true;
+            }
+        } else if (value instanceof Map) {
+            if (((Map) value).size() == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }
