@@ -195,7 +195,7 @@
     <target name="clean" depends="catalina-clean">
     </target>
 
-    <target name="catalina-clean" depends="catalina-init,sub-clean">
+    <target name="catalina-clean" depends="catalina41-init,sub-clean">
         <delete file="${classes.dir}/serverstats.properties" />
         <delete file="${classes.dir}/entityengine.xml" />
         <delete file="${classes.dir}/security.properties" />
