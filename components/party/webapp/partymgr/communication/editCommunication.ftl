@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -292,7 +292,7 @@
       </td>
     </tr>
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">Customer Request #</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">Request #</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
@@ -303,25 +303,26 @@
       </td>
     </tr>
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">Start Date</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">Start Date/Time</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
         <input type="text" class="inputBox" size="25" name="datetimeStarted" value="${(communicationEvent.datetimeStarted)?if_exists}">
         <a href="javascript:call_cal(document.addevent.datetimeStarted, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
         <#else>
-        <div class="tabletext">${(communicationEvent.datetimeStarted)?if_exists}</div>
+        <span class="tabletext">${(communicationEvent.datetimeStarted)?if_exists}</span>
         </#if>
       </td>
     </tr> 
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">Finish Date</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">Finish Date/Time</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
         <input type="text" class="inputBox" size="25" name="datetimeEnded" value="${(communicationEvent.datetimeEnded)?if_exists}">
         <a href="javascript:call_cal(document.addevent.datetimeEnded, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-        <div class="tabletext">${(communicationEvent.datetimeEnded)?if_exists}></div>
+        <#else>
+        <span class="tabletext">${(communicationEvent.datetimeEnded)?if_exists}</span>
         </#if>
       </td>
     </tr>
