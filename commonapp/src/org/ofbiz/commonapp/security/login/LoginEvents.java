@@ -37,7 +37,6 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.commonapp.party.contact.ContactHelper;
 import org.ofbiz.commonapp.product.catalog.CatalogWorker;
 import org.ofbiz.commonapp.product.store.ProductStoreWorker;
-import org.ofbiz.core.control.JPublishWrapper;
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;

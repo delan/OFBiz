@@ -43,7 +43,6 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.commonapp.order.order.OrderChangeHelper;
 import org.ofbiz.commonapp.order.order.OrderServices;
 import org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents;
-import org.ofbiz.core.control.JPublishWrapper;
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericTransactionException;
@@ -58,6 +57,7 @@ import org.ofbiz.core.util.GeneralException;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.StringUtil;
 import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.core.view.JPublishWrapper;
 
 import com.worldpay.select.SelectDefs;
 import com.worldpay.select.merchant.SelectServlet;
