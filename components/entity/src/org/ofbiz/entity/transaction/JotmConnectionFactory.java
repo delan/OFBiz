@@ -1,5 +1,5 @@
 /*
- * $Id: JotmConnectionFactory.java,v 1.3 2004/04/22 22:42:15 doogie Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * JotmFactory - Central source for JOTM JDBC Objects
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class JotmConnectionFactory {

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelUtil.java,v 1.5 2004/01/26 17:42:10 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - General Utilities
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ModelUtil {

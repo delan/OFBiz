@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntityChecker.java,v 1.2 2004/08/14 00:58:53 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.GenericEntityException;
  * Generic Entity - Entity Definition Checker
  * 
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones </a>
- * @version $Revision: 1.2 $
+ * @version $Rev:$
  * @since 3.1
  */
 public class ModelEntityChecker {

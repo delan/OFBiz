@@ -1,5 +1,5 @@
 /*
- * $Id: EntityComparisonOperator.java,v 1.12 2004/08/09 23:52:23 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.entity.model.ModelField;
  *
  * @author     <a href="mailto:adam@doogie.org">Adam Heath</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class EntityComparisonOperator extends EntityOperator {

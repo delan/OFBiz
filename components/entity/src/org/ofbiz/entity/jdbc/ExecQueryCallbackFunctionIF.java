@@ -1,5 +1,5 @@
 /*
- * $Id: ExecQueryCallbackFunctionIF.java,v 1.2 2004/04/30 22:28:50 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@ package org.ofbiz.entity.jdbc;
 /**
  *
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.0
  */
 import java.sql.ResultSet;

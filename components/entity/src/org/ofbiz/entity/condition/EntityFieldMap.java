@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldMap.java,v 1.14 2004/08/09 23:52:23 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import java.util.Map;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.14 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class EntityFieldMap extends EntityConditionListBase {

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionValue.java,v 1.7 2004/07/21 06:32:47 doogie Exp $
+ * $Id$
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.7 $
+ *@version    $Rev:$
  */
 public abstract class EntityConditionValue extends EntityConditionBase {
 

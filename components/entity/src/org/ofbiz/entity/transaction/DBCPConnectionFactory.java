@@ -1,5 +1,5 @@
 /*
- * $Id: DBCPConnectionFactory.java,v 1.4 2004/04/22 22:42:15 doogie Exp $
+ * $Id$
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  * transactional datasources yet (DBCP 1.0).
  *
  * @author     <a href="mailto:mike@atlassian.com">Mike Cannon-Brookes</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class DBCPConnectionFactory {

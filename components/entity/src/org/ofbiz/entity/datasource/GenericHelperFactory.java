@@ -1,5 +1,5 @@
 /*
- * $Id: GenericHelperFactory.java,v 1.2 2004/07/17 07:05:07 doogie Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.config.EntityConfigUtil;
  * Generic Entity Helper Factory Class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class GenericHelperFactory {

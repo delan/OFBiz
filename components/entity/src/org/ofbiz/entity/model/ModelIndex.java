@@ -1,5 +1,5 @@
 /*
- * $Id: ModelIndex.java,v 1.3 2004/07/07 05:17:16 doogie Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Relation model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ModelIndex extends ModelChild {

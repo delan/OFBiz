@@ -1,5 +1,5 @@
 /*
- * $Id: GenericPK.java,v 1.2 2003/08/17 04:56:26 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.entity.model.ModelEntity;
  * Generic Entity Primary Key Object
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class GenericPK extends GenericEntity {

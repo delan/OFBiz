@@ -1,5 +1,5 @@
 /*
- * $Id: SQLProcessor.java,v 1.14 2004/08/12 08:24:03 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.14 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class SQLProcessor {

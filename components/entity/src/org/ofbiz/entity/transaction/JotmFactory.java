@@ -1,5 +1,5 @@
 /*
- * $Id: JotmFactory.java,v 1.6 2004/07/17 07:05:10 doogie Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  * JotmFactory - Central source for JOTM JTA objects
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class JotmFactory implements TransactionFactoryInterface {

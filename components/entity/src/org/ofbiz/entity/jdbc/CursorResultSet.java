@@ -1,5 +1,5 @@
 /*
- * $Id: CursorResultSet.java,v 1.2 2004/04/30 22:28:49 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import java.sql.Statement;
 
 /**
  *
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class CursorResultSet extends AbstractCursorHandler {

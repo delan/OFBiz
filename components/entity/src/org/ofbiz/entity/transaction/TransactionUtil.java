@@ -1,5 +1,5 @@
 /*
- * $Id: TransactionUtil.java,v 1.6 2004/05/25 06:30:57 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.base.util.UtilDateTime;
  * <p>Provides a wrapper around the transaction objects to allow for changes in underlying implementations in the future.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class TransactionUtil implements Status {

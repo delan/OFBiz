@@ -1,5 +1,5 @@
 /*
- * $Id: ModelField.java,v 1.6 2004/07/07 05:20:06 doogie Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Field model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ModelField extends ModelChild {

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelReader.java,v 1.15 2004/08/09 23:52:24 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.15 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ModelReader {
