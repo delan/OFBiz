@@ -299,7 +299,7 @@ public class ContentManagementServices {
                         fileContext.put("rootDir", context.get("rootDir"));
                         fileContext.put("dataResourcetype", dataResourceTypeId);
                         fileContext.put("objectInfo", dataResource.get("objectInfo"));
-                        thisResult = dispatcher.runSync("createFileMethod", fileContext);
+                        thisResult = dispatcher.runSync("createFile", fileContext);
                         errorMsg = ServiceUtil.getErrorMessage(thisResult);
                         if (UtilValidate.isNotEmpty(errorMsg)) {
                             return ServiceUtil.returnError(errorMsg);
@@ -350,7 +350,7 @@ public class ContentManagementServices {
                         fileContext.put("rootDir", context.get("rootDir"));
                         fileContext.put("dataResourcetype", dataResourceTypeId);
                         fileContext.put("objectInfo", dataResource.get("objectInfo"));
-                        thisResult = dispatcher.runSync("updateFileMethod", fileContext);
+                        thisResult = dispatcher.runSync("updateFile", fileContext);
                         errorMsg = ServiceUtil.getErrorMessage(thisResult);
                         if (UtilValidate.isNotEmpty(errorMsg)) {
                             return ServiceUtil.returnError(errorMsg);
