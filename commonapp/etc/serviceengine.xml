@@ -55,6 +55,15 @@
                 password="admin"
                 listen="true"/>
     </jms-service>
+    <jms-service name="testTopic" send-mode="all">
+        <server jndi-server-name="default"
+                jndi-name="jms/TopicConnectionFactory"
+                topic-queue="jms/OFBTopic"
+                type="topic"
+                username="admin"
+                password="admin"
+                listen="true"/>
+    </jms-service>
 
 </service-config>
 
