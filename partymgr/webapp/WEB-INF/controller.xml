@@ -492,7 +492,7 @@
     <view-map name="login" type="jpublish" page="/login.ftl"/>
 
     <view-map name="viewprofile" type="jpublish" page="/party/viewprofile.ftl"/>
-    <view-map name="viewroles" type="region"/>
+    <view-map name="viewroles" type="jpublish" page="/party/viewroles.ftl"/>
     <view-map name="viewrelationships" type="region"/>
     <view-map name="editcontactmech" type="jpublish" page="/party/editcontactmech.ftl"/>
     <view-map name="editcreditcard" type="region"/>
