@@ -211,11 +211,11 @@
                 <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(<%=UtilFormatOut.checkNull(partyContactMech.getString("allowSolicitation"))%>)</b></div></td>
                 <td width="5">&nbsp;</td>
                 <td align="right" valign="top" nowrap width="1%">
-                  <div><a href="<ofbiz:url><%="/editcontactmech?CONTACT_MECH_ID=" + contactMech.getString("contactMechId")%></ofbiz:url>" class="button" class="buttontext">
+                  <div><a href="<ofbiz:url><%="/editcontactmech?CONTACT_MECH_ID=" + contactMech.getString("contactMechId")%></ofbiz:url>" class="buttontext">
                   [Update]</a></div>&nbsp;
                 </td>
                 <td align="right" valign="top" width="1%">
-                  <div><a href="<ofbiz:url><%="/updatecontactmech/viewprofile?UPDATE_MODE=DELETE&CONTACT_MECH_ID=" + contactMech.getString("contactMechId")%></ofbiz:url>" class="button" class="buttontext">
+                  <div><a href="<ofbiz:url><%="/updatecontactmech/viewprofile?UPDATE_MODE=DELETE&CONTACT_MECH_ID=" + contactMech.getString("contactMechId")%></ofbiz:url>" class="buttontext">
                   [Delete]</a></div>
                 </td>
               </tr>
@@ -271,11 +271,11 @@
                           </div>
                         <td>
                         <td align="right" width='1%' nowrap>
-                          <a href="<ofbiz:url><%="/editcreditcard?CREDIT_CARD_ID=" + creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="button" class="buttontext">
+                          <a href="<ofbiz:url><%="/editcreditcard?CREDIT_CARD_ID=" + creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="buttontext">
                           [Update]</a>
                         </td>
                         <td align="right" width='1%'>
-                          <a href="<ofbiz:url><%="/updatecreditcard/viewprofile?UPDATE_MODE=DELETE&CREDIT_CARD_ID=" + creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="button" class="buttontext">
+                          <a href="<ofbiz:url><%="/updatecreditcard/viewprofile?UPDATE_MODE=DELETE&CREDIT_CARD_ID=" + creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="buttontext">
                           [Delete]</a>
                         </td>
                       </tr>
