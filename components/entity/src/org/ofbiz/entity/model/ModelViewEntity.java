@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.13 2004/05/26 16:16:45 ajzeneski Exp $
+ * $Id: ModelViewEntity.java,v 1.14 2004/06/29 19:56:02 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -431,6 +431,11 @@ public class ModelViewEntity extends ModelEntity {
                     // never auto-alias these
                     continue;
                 }
+                if (aliasAll.shouldExclude(fieldName)) {
+                    // if specified as excluded, leave it out
+                    continue;
+                }
+                
                 if (UtilValidate.isNotEmpty(prefix)) {
                     StringBuffer newAliasBuffer = new StringBuffer(prefix);
                     //make sure the first letter is uppercase to delineate the field name
@@ -506,6 +511,7 @@ public class ModelViewEntity extends ModelEntity {
     public static class ModelAliasAll {
         protected String entityAlias = "";
         protected String prefix = "";
+        protected Set fieldsToExclude = null;
 
         protected ModelAliasAll() {}
 
@@ -517,6 +523,16 @@ public class ModelViewEntity extends ModelEntity {
         public ModelAliasAll(Element aliasAllElement) {
             this.entityAlias = UtilXml.checkEmpty(aliasAllElement.getAttribute("entity-alias"));
             this.prefix = UtilXml.checkEmpty(aliasAllElement.getAttribute("prefix"));
+            
+            List excludes = UtilXml.childElementList(aliasAllElement, "exclude");
+            if (excludes != null && excludes.size() > 0) {
+                Iterator excludeIter = excludes.iterator();
+                while (excludeIter.hasNext()) {
+                    Element excludeElement = (Element) excludeIter.next();
+                    this.fieldsToExclude.add(excludeElement.getAttribute("field"));
+                }
+            }
+            
         }
 
         public String getEntityAlias() {
@@ -525,6 +541,14 @@ public class ModelViewEntity extends ModelEntity {
 
         public String getPrefix() {
             return this.prefix;
+        }
+
+        public boolean shouldExclude(String fieldName) {
+            if (this.fieldsToExclude == null) {
+                return false;
+            } else {
+                return this.fieldsToExclude.contains(fieldName);
+            }
         }
     }
 

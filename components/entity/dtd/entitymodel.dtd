@@ -107,10 +107,13 @@
 <!ATTLIST member-entity
     entity-alias CDATA #REQUIRED
     entity-name CDATA #REQUIRED >
-<!ELEMENT alias-all EMPTY>
+<!ELEMENT alias-all ( exclude* )>
 <!ATTLIST alias-all
     entity-alias CDATA #REQUIRED
     prefix CDATA #IMPLIED>
+<!ELEMENT exclude EMPTY>
+<!ATTLIST exclude
+    field CDATA #REQUIRED >
 <!ELEMENT alias ( complex-alias? )>
 <!ATTLIST alias
     entity-alias CDATA #REQUIRED
