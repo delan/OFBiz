@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 */
 
@@ -31,9 +31,17 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.manufacturing.bom.*;
+import org.ofbiz.content.widget.html.*;
 
+import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelKeyMap;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.util.EntityListIterator;
 
 delegator = request.getAttribute("delegator");
+
+String productId = request.getParameter("productId");
 
 // get the part types
 bomTypes = delegator.findByAnd("ProductAssocType", UtilMisc.toMap("parentTypeId", "PRODUCT_COMPONENT"), UtilMisc.toList("productAssocTypeId", "description"));
@@ -130,5 +138,6 @@ if (lookupFlag != null) {
         context.put("lookupErrorMessage", lookupErrorMessage);
     }
 }
+
 
 context.put("paramList", paramList);

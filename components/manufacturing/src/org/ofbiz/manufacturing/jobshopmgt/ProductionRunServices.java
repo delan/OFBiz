@@ -1,5 +1,5 @@
 /*
- * $Id: ProductionRunServices.java,v 1.3 2004/04/07 15:39:22 holivier Exp $
+ * $Id: ProductionRunServices.java,v 1.4 2004/04/21 22:30:43 holivier Exp $
  *
  * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.manufacturing.techdata.TechDataServices;
  * Services for Production Run maintenance
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class ProductionRunServices {
@@ -88,13 +88,14 @@ public class ProductionRunServices {
 
     /**
      * Creates a Production Run.
-     *  - check if routing - product link exist
-     *  - check if product have a Bill Of Material
-     *  - check if routing have routingTask
-     *  - create the workEffort for ProductionRun
-     *  - for each valid routingTask of the routing create a workeffort-task
-     *  - for the first routingTask, create for all the valid productIdTo with no associateRoutingTask  a WorkEffortGoodStandard
-     *  - for each valid routingTask of the routing and valid productIdTo associate with this RoutingTask create a WorkEffortGoodStandard
+     *  <li> check if routing - product link exist
+     *  <li> check if product have a Bill Of Material
+     *  <li> check if routing have routingTask
+     *  <li> create the workEffort for ProductionRun
+     *  <li> create the WorkEffortGoodStandard for link between ProductionRun and the product it will produce
+     *  <li> for each valid routingTask of the routing create a workeffort-task
+     *  <li> for the first routingTask, create for all the valid productIdTo with no associateRoutingTask  a WorkEffortGoodStandard
+     *  <li> for each valid routingTask of the routing and valid productIdTo associate with this RoutingTask create a WorkEffortGoodStandard
      * @param ctx The DispatchContext that this service is operating in.
      * @param context Map containing the input parameters, productId, routingId, pRQuantity, startDate, workEffortName, description
      * @return Map with the result of the service, the output parameters.
@@ -141,7 +142,7 @@ public class ProductionRunServices {
 		if (routingTaskAssocs == null || routingTaskAssocs.size()==0) 
 				return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRoutingHasNoRoutingTask", locale));
 
-// ProductionRun header creation,   
+        // ProductionRun header creation,   
         String workEffortName = (String) context.get("workEffortName");
 		String description = (String) context.get("description");
 		Double pRQuantity = (Double) context.get("pRQuantity");
@@ -163,8 +164,22 @@ public class ProductionRunServices {
 		}
 		String productionRunId = (String) resultService.get("workEffortId");
 		if (Debug.infoOn()) Debug.logInfo("ProductioRun created: " + productionRunId, module);
+        
+        // ProductionRun,  product will be produce creation = WorkEffortGoodStandard for the productId
+        serviceContext.clear();
+        serviceContext.put("workEffortId",productionRunId);
+        serviceContext.put("productId",productId);
+        serviceContext.put("statusId","WIP_OUTGOING_FULFIL");
+        serviceContext.put("estimatedQuantity",pRQuantity);
+        serviceContext.put("fromDate",startDate);
+        serviceContext.put("userLogin", userLogin);
+        try {
+            resultService = dispatcher.runSync("createWorkEffortGoodStandard", serviceContext);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Problem calling the createWorkEffortGoodStandard service", module);
+        }
 
- // Multi creation ProductionRunTask and GoodAssoc
+        // Multi creation (like clone) ProductionRunTask and GoodAssoc
 		Iterator  rt = routingTaskAssocs.iterator();
 		boolean first = true;
  		while (rt.hasNext()) {
@@ -176,17 +191,17 @@ public class ProductionRunServices {
 				} catch (GenericEntityException e) {
 				Debug.logError(e.getMessage(),  module);
 			    }   
- // Calculate the estimatedCompletionDate 
+                // Calculate the estimatedCompletionDate 
                 long duringTime = (long)  (routingTask.getDouble("estimatedSetupMillis").doubleValue() + (routingTask.getDouble("estimatedMilliSeconds").doubleValue() * pRQuantity.doubleValue()));
                 Timestamp endDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask),startDate, duringTime);
 
 				serviceContext.clear();
-                serviceContext.put("workEffortPurposeTypeId", routingTask.getString("workEffortPurposeTypeId"));
-                serviceContext.put("workEffortName",routingTask.getString("workEffortName"));
-                serviceContext.put("description",routingTask.getString("description"));
-                serviceContext.put("fixedAssetId",routingTask.getString("fixedAssetId"));
-                serviceContext.put("estimatedSetupMillis",routingTask.getDouble("estimatedSetupMillis"));
-                serviceContext.put("estimatedMilliSeconds",routingTask.getDouble("estimatedMilliSeconds"));
+                serviceContext.put("workEffortPurposeTypeId", routingTask.get("workEffortPurposeTypeId"));
+                serviceContext.put("workEffortName",routingTask.get("workEffortName"));
+                serviceContext.put("description",routingTask.get("description"));
+                serviceContext.put("fixedAssetId",routingTask.get("fixedAssetId"));
+                serviceContext.put("estimatedSetupMillis",routingTask.get("estimatedSetupMillis"));
+                serviceContext.put("estimatedMilliSeconds",routingTask.get("estimatedMilliSeconds"));
 				serviceContext.put("workEffortTypeId", "PROD_ORDER_TASK");
 				serviceContext.put("currentStatusId","PRUN_CREATED");
 				serviceContext.put("workEffortParentId", productionRunId);
@@ -211,9 +226,9 @@ public class ProductionRunServices {
                         (productBom.getString("routingWorkEffortId") == null || productBom.getString("routingWorkEffortId").equals(productionRunTaskId))) {
 							serviceContext.clear();
 							serviceContext.put("workEffortId", productionRunTaskId);
-							serviceContext.put("productId", productBom.getString("productIdTo"));
+							serviceContext.put("productId", productBom.get("productIdTo"));
 							serviceContext.put("statusId","WIP_INCOMING_FULFIL");
-							serviceContext.put("fromDate",productBom.getTimestamp("fromDate"));
+							serviceContext.put("fromDate",productBom.get("fromDate"));
 							double scrapFactor = (productBom.get("scrapFactor") != null)? productBom.getDouble("scrapFactor").doubleValue() : 0;
 							serviceContext.put("estimatedQuantity", new Double(Math.floor((productBom.getDouble("quantity").doubleValue() * pRQuantity.doubleValue() / (1-(scrapFactor / 100))) + 0.5)));
 							serviceContext.put("userLogin", userLogin);
@@ -231,7 +246,7 @@ public class ProductionRunServices {
                 startDate = endDate;
 	 		}
  		}
-// update the estimatedCompletionDate field for the productionRun
+        // update the estimatedCompletionDate field for the productionRun
         serviceContext.clear();
         serviceContext.put("workEffortId",productionRunId);
         serviceContext.put("estimatedCompletionDate",startDate);

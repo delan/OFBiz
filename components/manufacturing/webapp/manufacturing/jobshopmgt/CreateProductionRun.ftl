@@ -24,7 +24,7 @@
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-
+${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
 
   <div class="head1">${uiLabelMap.ManufacturingCreateProductionRun}</div>
   <form name="productionRunform" method="post" action="<@ofbizUrl>/CreateProductionRunGo</@ofbizUrl>">
@@ -75,10 +75,5 @@
   </table>
 </form>
 
-<#if msgResult?has_content>
-	<#list msgResult as result>
-		${result}
-	</#list>
-</#if>
 
 	

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="titleProperty">ManufacturingFindProductionRun</property>
+    <property name="formDefFile">/jobshopmgt/ProductionRunForms.xml</property>    
+    <property name="singleFormName">findProductionRun</property>    
+    <property name="listFormName">listFindProductionRun</property>    
+    <property name="viewSize">20</property>    
+    <property name="headerItem">jobshop</property>    
+    <property name="tabButtonItem">find</property>
+    <property name="entityName">WorkEffort</property>    
+    <property name="showListIfSelection">N</property>    
+<!--    <property name="staticConditions">{"workEffortTypeId","PROD_ORDER_HEADER"}</property>    -->
+    <property name="listName">entityList</property>    
+    <property name="permission">MANUFACTURING</property>    
+    <property name="permissionType">none</property>    
+    <content-action name="/includes/formprep.bsh"/>
+    <content-action name="/jobshopmgt/findProductionRun.bsh"/>
+    <content-action name="/includes/pagelistprep.bsh"/>
+</page>

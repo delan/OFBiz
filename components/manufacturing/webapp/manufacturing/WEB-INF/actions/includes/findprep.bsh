@@ -1,5 +1,5 @@
 /*
- * $Id: findprep.bsh,v 1.3 2003/12/12 21:38:37 holivier Exp $
+ * $Id: findprep.bsh,v 1.4 2004/04/21 22:30:37 holivier Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -22,66 +22,82 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
+/* copy from content component  actions/includes/findprep.bsh 1.8 with no modif, it's possible to copy and paste for the new version */
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @author     <a href="mailto:holivier@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
 
- * Calls performFind service to return an EntityListIterator of the entities found from the paramLookup map 
- *   which contain the selection criteria, the formDefinition ...
- * This script is a piece of the GenericLookup realisation.
+ * Calls performFind service to return an EntityListIterator of the
+ * entities found from the parameter map selection criteria.
  * Also builds a query form wrapper.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.util.*;
+import org.ofbiz.security.*;
 import org.ofbiz.service.*;
+import org.ofbiz.entity.model.*;
 import org.ofbiz.content.widget.html.*;
+import org.ofbiz.content.widget.form.*;
+import org.ofbiz.base.util.BshUtil;
+import bsh.EvalError;
+
 
 import java.util.ListIterator;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 LocalDispatcher dispatcher    = (LocalDispatcher)request.getAttribute("dispatcher");
 
-Map inputFields = UtilHttp.getParameterMap(request);
-Map paramLookup   = (Map) session.getAttribute("paramLookup");
-Map selectFieldsLookup = (Map) paramLookup.get("selectFieldsLookup");
+inputFields    	= UtilHttp.getParameterMap(request);
+entityName    	= page.getProperty("entityName");
+formDefFile		= page.getProperty("formDefFile");
+singleFormName		= page.getProperty("singleFormName");
 
-
-if (! inputFields.containsKey("submitButton") ) {
-	if (selectFieldsLookup != null) {
-		selectFieldsLookup.putAll(inputFields);
-		inputFields = selectFieldsLookup;
-	}	
-	else if (paramLookup.containsKey("initialConstraint")) {
-		inputFields.putAll(paramLookup.get("initialConstraint"));
-		paramLookup.remove("initialConstraint");
-		paramLookup.put("selectFieldsLookup",inputFields);
-	}
-} else paramLookup.put("selectFieldsLookup",inputFields);
-
-String entityName           = paramLookup.get("entityName");
 HashMap inMap    		= new HashMap();
-Map result = null;
 inMap.put("entityName", entityName);
+
+//preload the query 
+staticConditionsStr = page.getProperty("staticConditions");
+if (staticConditionsStr != null && staticConditionsStr.length() > 0) {
+    String [] staticConditions = BshUtil.eval("String [] cond=" 
+                      + staticConditionsStr + "; return cond;",new HashMap());
+    for(int i=0; i < staticConditions.length; i += 2) {
+        inputFields.put(staticConditions[i], staticConditions[i+1]);
+    }
+}
+Debug.logInfo("inputFields:"+ inputFields, "");
 inMap.put("inputFields", inputFields);
-try { 
-    result = dispatcher.runSync("performFind", inMap    );
+Map result    		= null;
+try {
+           result = dispatcher.runSync("performFind", inMap    );
 } catch (GenericServiceException e) {
     request.setAttribute("_ERROR_MESSAGE_", "ERROR: Error in findLookup service. "  + e.getMessage() + ")");
-    Debug.log(e, "findprep.bsh");
-    return "error";
+            Debug.log(e, "findprep.bsh");
+            return "error";
 }
-ListIterator listIt = (ListIterator)result.get("listIt");
+
+listIt = (ListIterator)result.get("listIt");
 request.setAttribute("listIt", listIt);
 
-String formDefFile           = paramLookup.get("formDefFile");
-String singleFormName = paramLookup.get("singleFormName");
-HtmlFormWrapper queryWrapper = new HtmlFormWrapper(formDefFile,singleFormName, request, response);
-queryWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-queryWrapper.putInContext("inputFields", inputFields);
+String queryString = UtilHttp.urlEncodeArgs(inputFields);
+context.put("queryString", queryString);
+context.put("entityName", entityName);
 
+HtmlFormWrapper queryWrapper = new HtmlFormWrapper(formDefFile,
+                        singleFormName, request, response);
 context.put("queryWrapper", queryWrapper);
+
