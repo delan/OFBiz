@@ -231,6 +231,7 @@ public class ProductFeatureServices {
 				      	Map combination = (Map) comboIt.next();
 					  	for (Iterator cFi = currentFeatures.iterator(); cFi.hasNext(); ) {
 					  		GenericEntity currentFeature = (GenericEntity) cFi.next();
+                                                        String defaultVariantProductId = null;
 					  		if (currentFeature.getString("productFeatureApplTypeId").equals("SELECTABLE_FEATURE")) {
 							      Map newCombination = new HashMap();
 							      // .clone() is important, or you'll keep adding to the same List for all the variants
@@ -250,10 +251,20 @@ public class ProductFeatureServices {
 				if (newCombinations.size() >= oldCombinations.size())
 					oldCombinations = newCombinations;	// save the newly expanded list as oldCombinations
 			}
-			
+
+                        int defaultCodeCounter = 1;
+                        HashMap defaultVariantProductIds = new HashMap(); // this map will contain the codes already used (as keys)
+                        defaultVariantProductIds.put(productId, null);
+                        
 			// now figure out which of these combinations already have productIds associated with them
 			for (Iterator fCi = oldCombinations.iterator(); fCi.hasNext(); ) {
 			    Map combination = (Map) fCi.next();
+                            // Verify if the default code is already used, if so add a numeric suffix
+                            if (defaultVariantProductIds.containsKey(combination.get("defaultVariantProductId"))) {
+                                combination.put("defaultVariantProductId", combination.get("defaultVariantProductId") + (defaultCodeCounter < 10? "0" + defaultCodeCounter: "" + defaultCodeCounter));
+                                defaultCodeCounter++;
+                            }
+                            defaultVariantProductIds.put(combination.get("defaultVariantProductId"), null);
 			    results = dispatcher.runSync("getAllExistingVariants", UtilMisc.toMap("productId", productId, 
 											"productFeatureAppls", combination.get("curProductFeatureAndAppls")));
 			    combination.put("existingVariantProductIds", results.get("variantProductIds"));
