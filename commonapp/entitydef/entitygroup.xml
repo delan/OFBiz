@@ -202,6 +202,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="ContentAssocPredicate" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentAssocType" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentAttribute" />
+    <entity-group group="org.ofbiz.commonapp" entity="ContentMetaData" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentRole" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentType" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentTypeAttr" />
@@ -211,15 +212,18 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz.commonapp" entity="DataCategory" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataObject" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataObjectAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataObjectPurpose" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataObjectPurposeType" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataObjectType" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataObjectTypeAttr" />
+    <entity-group group="org.ofbiz.commonapp" entity="DataMetaData" />
+    <entity-group group="org.ofbiz.commonapp" entity="DataResource" />
+    <entity-group group="org.ofbiz.commonapp" entity="DataResourceAttribute" />
+    <entity-group group="org.ofbiz.commonapp" entity="DataResourcePurpose" />
+    <entity-group group="org.ofbiz.commonapp" entity="DataResourcePurposeType" />
+    <entity-group group="org.ofbiz.commonapp" entity="DataResourceRole" />
+    <entity-group group="org.ofbiz.commonapp" entity="DataResourceType" />
+    <entity-group group="org.ofbiz.commonapp" entity="DataResourceTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="ElectronicText" />
-    <entity-group group="org.ofbiz.commonapp" entity="ImageDataObject" />
-    <entity-group group="org.ofbiz.commonapp" entity="OtherDataObject" />
+    <entity-group group="org.ofbiz.commonapp" entity="ImageDataResource" />
+    <entity-group group="org.ofbiz.commonapp" entity="MetaDataPredicate" />
+    <entity-group group="org.ofbiz.commonapp" entity="OtherDataResource" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.content.document -->
@@ -510,7 +514,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="PartyClassificationGroup" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyClassificationType" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyContactWithPurpose" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyDataObject" />
+    <entity-group group="org.ofbiz.commonapp" entity="PartyContent" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyDataSource" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyGroup" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyIcsAvsOverride" />
@@ -564,13 +568,13 @@
   <!-- org.ofbiz.commonapp.product.feature -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="FeatureDataObject" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeature" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureAndAppl" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureAppl" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureApplType" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureCategory" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureCategoryAppl" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureContent" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureIactn" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureIactnType" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureType" />
@@ -614,7 +618,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="ProductAssoc" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductAssocType" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductDataObject" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductContent" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductKeyword" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductKeywordResult" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductType" />

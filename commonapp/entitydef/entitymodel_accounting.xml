@@ -1142,6 +1142,7 @@
             title="General Ledger Account Entity">
       <field name="glAccountId" type="id-ne"></field>
       <field name="glAccountTypeId" type="id"></field>
+      <field name="parentGlAccountId" type="id"></field>
       <field name="accountName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="productId" type="id"></field>
@@ -1149,6 +1150,12 @@
       <prim-key field="glAccountId"/>
       <relation type="one" fk-name="GLACCT_TYPE" rel-entity-name="GlAccountType">
         <key-map field-name="glAccountTypeId"/>
+      </relation>
+      <relation type="one" fk-name="GLACCT_PAR" title="Parent" rel-entity-name="GlAccount">
+        <key-map field-name="parentGlAccountId" rel-field-name="glAccountId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId" rel-field-name="parentGlAccountId"/>
       </relation>
       <relation type="many" rel-entity-name="AcctgTransEntry">
         <key-map field-name="glAccountId"/>

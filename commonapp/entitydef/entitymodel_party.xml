@@ -1034,7 +1034,7 @@
       <relation type="many" title="To" rel-entity-name="PartyRelationship">
         <key-map field-name="partyId" rel-field-name="partyIdTo"/>
       </relation>
-      <relation type="many" rel-entity-name="PartyDataObject">
+      <relation type="many" rel-entity-name="PartyContent">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="PartyGroup">
@@ -1425,18 +1425,18 @@
         <key-map field-name="contactMechId"/>
       </relation>
     </view-entity>
-    <entity entity-name="PartyDataObject"
+    <entity entity-name="PartyContent"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Data Object Entity">
       <field name="partyId" type="id-ne"></field>
-      <field name="dataObjectId" type="id-ne"></field>
+      <field name="contentId" type="id-ne"></field>
       <prim-key field="partyId"/>
-      <prim-key field="dataObjectId"/>
-      <relation type="one" fk-name="PARTY_DATA_PARTY" rel-entity-name="Party">
+      <prim-key field="contentId"/>
+      <relation type="one" fk-name="PARTY_CNT_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="PARTY_DATA_DATA" rel-entity-name="DataObject">
-        <key-map field-name="dataObjectId"/>
+      <relation type="one" fk-name="PARTY_CNT_CNT" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
       </relation>
     </entity>
     <entity entity-name="PartyDataSource"

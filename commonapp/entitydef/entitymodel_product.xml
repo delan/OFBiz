@@ -444,20 +444,6 @@
   <!-- org.ofbiz.commonapp.product.feature -->
   <!-- ========================================================= -->
 
-    <entity entity-name="FeatureDataObject"
-            package-name="org.ofbiz.commonapp.product.feature"
-            title="Feature Data Object Entity">
-      <field name="dataObjectId" type="id-ne"></field>
-      <field name="productFeatureId" type="id-ne"></field>
-      <prim-key field="dataObjectId"/>
-      <prim-key field="productFeatureId"/>
-      <relation type="one" fk-name="FEAT_DATA_FEATURE" rel-entity-name="ProductFeature">
-        <key-map field-name="productFeatureId"/>
-      </relation>
-      <relation type="one" fk-name="FEAT_DATA_DATA" rel-entity-name="DataObject">
-        <key-map field-name="dataObjectId"/>
-      </relation>
-    </entity>
     <entity entity-name="ProductFeature"
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Entity">
@@ -486,7 +472,7 @@
       <relation type="many" title="Assoc" rel-entity-name="ProductFeatureIactn">
         <key-map field-name="productFeatureId" rel-field-name="productFeatureIdTo"/>
       </relation>
-      <relation type="many" rel-entity-name="FeatureDataObject">
+      <relation type="many" rel-entity-name="ProductFeatureContent">
         <key-map field-name="productFeatureId"/>
       </relation>
       <relation type="many" rel-entity-name="CostComponent">
@@ -611,6 +597,20 @@
       </relation>
       <relation type="one" fk-name="PROD_FCAPPL_FCAT" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="productFeatureCategoryId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFeatureContent"
+            package-name="org.ofbiz.commonapp.product.feature"
+            title="Feature Data Object Entity">
+      <field name="contentId" type="id-ne"></field>
+      <field name="productFeatureId" type="id-ne"></field>
+      <prim-key field="contentId"/>
+      <prim-key field="productFeatureId"/>
+      <relation type="one" fk-name="FEAT_CNT_FEATURE" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="one" fk-name="FEAT_CNT_CNT" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
       </relation>
     </entity>
     <entity entity-name="ProductFeatureIactn"
@@ -1139,7 +1139,7 @@
       <relation type="many" rel-entity-name="GoodIdentification">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="many" rel-entity-name="ProductDataObject">
+      <relation type="many" rel-entity-name="ProductContent">
         <key-map field-name="productId"/>
       </relation>
       <relation type="many" title="Main" rel-entity-name="ProductAssoc">
@@ -1275,18 +1275,18 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="ProductDataObject"
+    <entity entity-name="ProductContent"
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Data Object Entity">
-      <field name="dataObjectId" type="id-ne"></field>
+      <field name="contentId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
-      <prim-key field="dataObjectId"/>
+      <prim-key field="contentId"/>
       <prim-key field="productId"/>
-      <relation type="one" fk-name="PROD_DATA_PROD" rel-entity-name="Product">
+      <relation type="one" fk-name="PROD_CNT_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" fk-name="PROD_DATA_DATA" rel-entity-name="DataObject">
-        <key-map field-name="dataObjectId"/>
+      <relation type="one" fk-name="PROD_CNT_CNT" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
       </relation>
     </entity>
     <entity entity-name="ProductKeyword"

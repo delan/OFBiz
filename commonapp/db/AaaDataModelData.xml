@@ -10,6 +10,13 @@
   <ContentAssocPredicate contentAssocPredicateId="defines" description="The object defines the subject."/>
   <ContentAssocPredicate contentAssocPredicateId="extends" description="The object extends the subject."/>
   <ContentAssocPredicate contentAssocPredicateId="related-to" description="The object is related to the subject."/>
+  <ContentAssocPredicate contentAssocPredicateId="references" description="The object references the subject."/>
+
+  <MetaDataPredicate metaDataPredicateId="author-name" description="Name of the author or creator of the subject."/>
+  <MetaDataPredicate metaDataPredicateId="author-email" description="eMail address of the author or creator of the subject."/>
+  <MetaDataPredicate metaDataPredicateId="event-date" description="The date and time the subject event took place, preferably in the descending standard format: [yyyy-MM-dd hh:mm:ss]."/>
+  <MetaDataPredicate metaDataPredicateId="event-location" description="The location where subject event took place."/>
+  <MetaDataPredicate metaDataPredicateId="event-person-name" description="The name of a person involved in the subject event."/>
 
   <!-- These ContentTypes are primarily for structuring documents or content -->  
   <ContentType contentTypeId="ARTICLE" description="Article" hasTable="N" parentTypeId=""/>
@@ -25,12 +32,12 @@
   <ContentType contentTypeId="STRUCTURE_NODE" description="Structure Node" hasTable="N" parentTypeId=""/>
   <ContentType contentTypeId="STRUCTURE_LEAF" description="Structure Leaf" hasTable="N" parentTypeId=""/>
 
-  <DataObjectType dataObjectTypeId="LOCAL_FILE" description="Local File" hasTable="N" parentTypeId=""/>
-  <DataObjectType dataObjectTypeId="URL_RESOURCE" description="URL Resource" hasTable="N" parentTypeId=""/>
-  <DataObjectType dataObjectTypeId="SHORT_TEXT" description="Short Text" hasTable="N" parentTypeId=""/>
-  <DataObjectType dataObjectTypeId="ELECTRONIC_TEXT" description="Long Text" hasTable="Y" parentTypeId=""/>
-  <DataObjectType dataObjectTypeId="IMAGE_OBJECT" description="Image" hasTable="Y" parentTypeId=""/>
-  <DataObjectType dataObjectTypeId="OTHER_OBJECT" description="Other" hasTable="Y" parentTypeId=""/>
+  <DataResourceType dataResourceTypeId="LOCAL_FILE" description="Local File" hasTable="N" parentTypeId=""/>
+  <DataResourceType dataResourceTypeId="URL_RESOURCE" description="URL Resource" hasTable="N" parentTypeId=""/>
+  <DataResourceType dataResourceTypeId="SHORT_TEXT" description="Short Text" hasTable="N" parentTypeId=""/>
+  <DataResourceType dataResourceTypeId="ELECTRONIC_TEXT" description="Long Text" hasTable="Y" parentTypeId=""/>
+  <DataResourceType dataResourceTypeId="IMAGE_OBJECT" description="Image" hasTable="Y" parentTypeId=""/>
+  <DataResourceType dataResourceTypeId="OTHER_OBJECT" description="Other" hasTable="Y" parentTypeId=""/>
 
   <DataSourceType dataSourceTypeId="PURCHASED_DATA" description="Purchased Data"/>
   <DataSourceType dataSourceTypeId="WEBSITE_ENTRY" description="Website Data Entry"/>
@@ -42,6 +49,10 @@
   <DataSource dataSourceId="GENERAL_MAILING" dataSourceTypeId="MAILING_LIST_SIGNUP" description="General Interest Mailing List Signup"/>
   <DataSource dataSourceId="CSR_ENTRY" dataSourceTypeId="ADMIN_ENTRY" description="Customer Service Rep Data Entry"/>
   <DataSource dataSourceId="GEN_ADMIN" dataSourceTypeId="ADMIN_ENTRY" description="General Administrative Data Entry"/>
+
+  <DataSourceType dataSourceTypeId="CONTENT_CREATION" description="Content and Data Resource Creation"/>
+  <DataSource dataSourceId="USER_ENTRY" dataSourceTypeId="CONTENT_CREATION" description="User Entry"/>
+  <DataSource dataSourceId="CONTEXT_INDUCTION" dataSourceTypeId="CONTENT_CREATION" description="Context Induction"/>
 
   <DocumentType description="Shipping" documentTypeId="SHIPPING_DOCUMENT" hasTable="Y" parentTypeId=""/>
   <DocumentType description="Bill Of Lading" documentTypeId="BILL_OF_LADING" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>

@@ -39,16 +39,16 @@
   <FixedAssetType description="Vehicle" fixedAssetTypeId="VEHICLE" hasTable="N" parentTypeId=""/>
   <FixedAssetType description="Real Estate" fixedAssetTypeId="REAL_ESTATE" hasTable="N" parentTypeId=""/>
 
-  <GlAccountType description="Balance" finAccountTypeId="BALANCE_ACCOUNT" hasTable="N" parentTypeId=""/>
-  <GlAccountType description="Bank Settlement" finAccountTypeId="BANK_STLMNT_ACCOUNT" hasTable="N" parentTypeId=""/>
-  <GlAccountType description="Customer" finAccountTypeId="CUSTOMER_ACCOUNT" hasTable="N" parentTypeId=""/>
-  <GlAccountType description="Supplier" finAccountTypeId="SUPPLIER_ACCOUNT" hasTable="N" parentTypeId=""/>
-  <GlAccountType description="Product" finAccountTypeId="PRODUCT_ACCOUNT" hasTable="N" parentTypeId=""/>
-  <GlAccountType description="Tax" finAccountTypeId="TAX_ACCOUNT" hasTable="N" parentTypeId=""/>
-  <GlAccountType description="Profit Loss" finAccountTypeId="PROFIT_LOSS_ACCOUNT" hasTable="N" parentTypeId=""/>
-  <GlAccountType description="Sales" finAccountTypeId="SALES_ACCOUNT" hasTable="N" parentTypeId=""/>
-  <GlAccountType description="Purchase" finAccountTypeId="PURCHASE_ACCOUNT" hasTable="N" parentTypeId=""/>
-  <GlAccountType description="Inventory Change" finAccountTypeId="INV_CHANGE_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Balance" glAccountTypeId="BALANCE_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Bank Settlement" glAccountTypeId="BANK_STLMNT_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Customer" glAccountTypeId="CUSTOMER_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Supplier" glAccountTypeId="SUPPLIER_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Product" glAccountTypeId="PRODUCT_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Tax" glAccountTypeId="TAX_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Profit Loss" glAccountTypeId="PROFIT_LOSS_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Sales" glAccountTypeId="SALES_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Purchase" glAccountTypeId="PURCHASE_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <GlAccountType description="Inventory Change" glAccountTypeId="INV_CHANGE_ACCOUNT" hasTable="N" parentTypeId=""/>
 
   <InvoiceItemType description="Purchase" hasTable="N" invoiceItemTypeId="PURCHASE_INVOICE_ITE" parentTypeId=""/>
   <InvoiceItemType description="Sales" hasTable="N" invoiceItemTypeId="SALES_INVOICE_ITEM" parentTypeId=""/>
