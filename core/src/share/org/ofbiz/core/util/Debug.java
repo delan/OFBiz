@@ -40,6 +40,8 @@ import org.apache.log4j.*;
 public final class Debug {
 
     public static final boolean useLog4J = true;
+    public static final String noModuleModule = "NoModule";  // set to null for previous behavior
+    
     static DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
 
     public static final int ALWAYS = 0;
@@ -165,7 +167,7 @@ public final class Debug {
     }
 
     public static void log(String msg) {
-        log(Debug.ALWAYS, null, msg, null);
+        log(Debug.ALWAYS, null, msg, noModuleModule);
     }
 
     public static void log(String msg, String module) {
@@ -173,11 +175,11 @@ public final class Debug {
     }
 
     public static void log(Throwable t) {
-        log(Debug.ALWAYS, t, null, null);
+        log(Debug.ALWAYS, t, null, noModuleModule);
     }
 
     public static void log(Throwable t, String msg) {
-        log(Debug.ALWAYS, t, msg, null);
+        log(Debug.ALWAYS, t, msg, noModuleModule);
     }
 
     public static void log(Throwable t, String msg, String module) {
@@ -189,7 +191,7 @@ public final class Debug {
     }
 
     public static void logVerbose(String msg) {
-        log(Debug.VERBOSE, null, msg, null);
+        log(Debug.VERBOSE, null, msg, noModuleModule);
     }
 
     public static void logVerbose(String msg, String module) {
@@ -197,11 +199,11 @@ public final class Debug {
     }
 
     public static void logVerbose(Throwable t) {
-        log(Debug.VERBOSE, t, null, null);
+        log(Debug.VERBOSE, t, null, noModuleModule);
     }
 
     public static void logVerbose(Throwable t, String msg) {
-        log(Debug.VERBOSE, t, msg, null);
+        log(Debug.VERBOSE, t, msg, noModuleModule);
     }
 
     public static void logVerbose(Throwable t, String msg, String module) {
@@ -213,7 +215,7 @@ public final class Debug {
     }
 
     public static void logTiming(String msg) {
-        log(Debug.TIMING, null, msg, null);
+        log(Debug.TIMING, null, msg, noModuleModule);
     }
 
     public static void logTiming(String msg, String module) {
@@ -221,11 +223,11 @@ public final class Debug {
     }
 
     public static void logTiming(Throwable t) {
-        log(Debug.TIMING, t, null, null);
+        log(Debug.TIMING, t, null, noModuleModule);
     }
 
     public static void logTiming(Throwable t, String msg) {
-        log(Debug.TIMING, t, msg, null);
+        log(Debug.TIMING, t, msg, noModuleModule);
     }
 
     public static void logTiming(Throwable t, String msg, String module) {
@@ -237,7 +239,7 @@ public final class Debug {
     }
 
     public static void logInfo(String msg) {
-        log(Debug.INFO, null, msg, null);
+        log(Debug.INFO, null, msg, noModuleModule);
     }
 
     public static void logInfo(String msg, String module) {
@@ -245,11 +247,11 @@ public final class Debug {
     }
 
     public static void logInfo(Throwable t) {
-        log(Debug.INFO, t, null, null);
+        log(Debug.INFO, t, null, noModuleModule);
     }
 
     public static void logInfo(Throwable t, String msg) {
-        log(Debug.INFO, t, msg, null);
+        log(Debug.INFO, t, msg, noModuleModule);
     }
 
     public static void logInfo(Throwable t, String msg, String module) {
@@ -261,7 +263,7 @@ public final class Debug {
     }
 
     public static void logImportant(String msg) {
-        log(Debug.IMPORTANT, null, msg, null);
+        log(Debug.IMPORTANT, null, msg, noModuleModule);
     }
 
     public static void logImportant(String msg, String module) {
@@ -269,11 +271,11 @@ public final class Debug {
     }
 
     public static void logImportant(Throwable t) {
-        log(Debug.IMPORTANT, t, null, null);
+        log(Debug.IMPORTANT, t, null, noModuleModule);
     }
 
     public static void logImportant(Throwable t, String msg) {
-        log(Debug.IMPORTANT, t, msg, null);
+        log(Debug.IMPORTANT, t, msg, noModuleModule);
     }
 
     public static void logImportant(Throwable t, String msg, String module) {
@@ -285,7 +287,7 @@ public final class Debug {
     }
 
     public static void logWarning(String msg) {
-        log(Debug.WARNING, null, msg, null);
+        log(Debug.WARNING, null, msg, noModuleModule);
     }
 
     public static void logWarning(String msg, String module) {
@@ -293,11 +295,11 @@ public final class Debug {
     }
 
     public static void logWarning(Throwable t) {
-        log(Debug.WARNING, t, null, null);
+        log(Debug.WARNING, t, null, noModuleModule);
     }
 
     public static void logWarning(Throwable t, String msg) {
-        log(Debug.WARNING, t, msg, null);
+        log(Debug.WARNING, t, msg, noModuleModule);
     }
 
     public static void logWarning(Throwable t, String msg, String module) {
@@ -309,7 +311,7 @@ public final class Debug {
     }
 
     public static void logError(String msg) {
-        log(Debug.ERROR, null, msg, null);
+        log(Debug.ERROR, null, msg, noModuleModule);
     }
 
     public static void logError(String msg, String module) {
@@ -317,11 +319,11 @@ public final class Debug {
     }
 
     public static void logError(Throwable t) {
-        log(Debug.ERROR, t, null, null);
+        log(Debug.ERROR, t, null, noModuleModule);
     }
 
     public static void logError(Throwable t, String msg) {
-        log(Debug.ERROR, t, msg, null);
+        log(Debug.ERROR, t, msg, noModuleModule);
     }
 
     public static void logError(Throwable t, String msg, String module) {
@@ -333,7 +335,7 @@ public final class Debug {
     }
 
     public static void logFatal(String msg) {
-        log(Debug.FATAL, null, msg, null);
+        log(Debug.FATAL, null, msg, noModuleModule);
     }
 
     public static void logFatal(String msg, String module) {
@@ -341,11 +343,11 @@ public final class Debug {
     }
 
     public static void logFatal(Throwable t) {
-        log(Debug.FATAL, t, null, null);
+        log(Debug.FATAL, t, null, noModuleModule);
     }
 
     public static void logFatal(Throwable t, String msg) {
-        log(Debug.FATAL, t, msg, null);
+        log(Debug.FATAL, t, msg, noModuleModule);
     }
 
     public static void logFatal(Throwable t, String msg, String module) {
