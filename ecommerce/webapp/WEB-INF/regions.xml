@@ -126,5 +126,5 @@
     <define id='newAffiliate' region='MAIN_REGION'>
         <put section='title'>New Affiliate</put>
         <put section='content' content='/newaffiliate.jsp'/>
-    </define>
+    </define>       
 </regions>

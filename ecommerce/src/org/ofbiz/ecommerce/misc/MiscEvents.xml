@@ -60,4 +60,9 @@
         <check-errors/>
         <call-service service-name="sendMail" in-map-name="serviceContext"/>
     </simple-method>
+    
+    <simple-method method-name="initiateOrderWorkflow" short-description="Initiates the order processing workflow">
+        <request-to-field map-name="context" field-name="orderId" request-name="order_id"/>                
+        <call-service-asynch service-name="processOrder" in-map-name="context"/>
+    </simple-method>
 </simple-methods>
