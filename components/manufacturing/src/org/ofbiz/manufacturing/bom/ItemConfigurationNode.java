@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Date;
 
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
@@ -55,25 +56,28 @@ public class ItemConfigurationNode {
         this(delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", partId)));
     }
 
-    protected void loadChildren(String partBomTypeId, Date fromDate, List productFeatures) throws GenericEntityException {
+    protected void loadChildren(String partBomTypeId, Date inDate, List productFeatures) throws GenericEntityException {
         if (part == null) {
             throw new GenericEntityException("Part is null");
         }
+        // If the date is null, set it to today.
+        if (inDate == null) inDate = new Date();
+
         bomTypeId = partBomTypeId;
         GenericDelegator delegator = part.getDelegator();
         List rows = delegator.findByAnd("ProductAssoc", 
                                             UtilMisc.toMap("productId", part.get("productId"), 
-                                                  //     "fromDate", fromDate,
                                                        "productAssocTypeId", partBomTypeId),
                                             UtilMisc.toList("sequenceNum"));
+        rows = EntityUtil.filterByDate(rows, inDate);
         if ((rows == null || rows.size() == 0) && substitutedNode != null) {
             // If no child is found and this is a substituted node
             // we try to search for substituted node's children.
             rows = delegator.findByAnd("ProductAssoc", 
                                         UtilMisc.toMap("productId", substitutedNode.getPart().get("productId"), 
-                                                  //     "fromDate", fromDate,
                                                        "productAssocTypeId", partBomTypeId),
                                         UtilMisc.toList("sequenceNum"));
+            rows = EntityUtil.filterByDate(rows, inDate);
         }
         children = new ArrayList(rows);
         childrenNodes = new ArrayList();
@@ -83,11 +87,11 @@ public class ItemConfigurationNode {
         while(childrenIterator.hasNext()) {
             oneChild = (GenericValue)childrenIterator.next();
             // Configurator
-            oneChildNode = configurator(oneChild, productFeatures, getRootNode().getProductForRules(), delegator);
+            oneChildNode = configurator(oneChild, productFeatures, getRootNode().getProductForRules(), inDate, delegator);
             // If the node is null this means that the node has been discarded by the rules.
             if (oneChildNode != null) {
                 oneChildNode.setParentNode(this);
-                oneChildNode.loadChildren(partBomTypeId, fromDate, productFeatures);
+                oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures);
             }
             childrenNodes.add(oneChildNode);
         }
@@ -143,7 +147,7 @@ public class ItemConfigurationNode {
         return oneChildNode;
     }
     
-    private ItemConfigurationNode configurator(GenericValue node, List productFeatures, String productIdForRules, GenericDelegator delegator) throws GenericEntityException {
+    private ItemConfigurationNode configurator(GenericValue node, List productFeatures, String productIdForRules, Date inDate, GenericDelegator delegator) throws GenericEntityException {
         ItemConfigurationNode oneChildNode = new ItemConfigurationNode((String)node.get("productIdTo"), delegator);
         try {
             oneChildNode.setQuantityMultiplier(node.getDouble("quantity").floatValue());
@@ -166,6 +170,7 @@ public class ItemConfigurationNode {
                                                     "productIdFor", substitutedNode.getPart().getString("productId"),
                                                     "productIdIn", node.get("productIdTo"))));
             }
+            productPartRules = EntityUtil.filterByDate(productPartRules, inDate);
             newNode = substituteNode(oneChildNode, productFeatures, productPartRules, delegator);
             if (newNode == oneChildNode) {
                 // If no substitution has been done (no valid rule applied),
@@ -178,6 +183,7 @@ public class ItemConfigurationNode {
                                                         UtilMisc.toMap("productIdFor", substitutedNode.getPart().getString("productId"),
                                                         "productIdIn", node.get("productIdTo"))));
                 }
+                genericLinkRules = EntityUtil.filterByDate(genericLinkRules, inDate);
                 newNode = null;
                 newNode = substituteNode(oneChildNode, productFeatures, genericLinkRules, delegator);
                 if (newNode == oneChildNode) {
@@ -186,6 +192,7 @@ public class ItemConfigurationNode {
                     List genericNodeRules = delegator.findByAnd("ProductManufacturingRule",
                                                             UtilMisc.toMap("productIdIn", node.get("productIdTo")),
                                                             UtilMisc.toList("ruleSeqId"));
+                    genericNodeRules = EntityUtil.filterByDate(genericNodeRules, inDate);
                     newNode = null;
                     newNode = substituteNode(oneChildNode, productFeatures, genericNodeRules, delegator);
                     if (newNode == oneChildNode) {
@@ -202,25 +209,28 @@ public class ItemConfigurationNode {
         return newNode;
     }
 
-    protected void loadParents(String partBomTypeId, Date fromDate, List productFeatures) throws GenericEntityException {
+    protected void loadParents(String partBomTypeId, Date inDate, List productFeatures) throws GenericEntityException {
         if (part == null) {
             throw new GenericEntityException("Part is null");
         }
+        // If the date is null, set it to today.
+        if (inDate == null) inDate = new Date();
+
         bomTypeId = partBomTypeId;
         GenericDelegator delegator = part.getDelegator();
         List rows = delegator.findByAnd("ProductAssoc", 
                                             UtilMisc.toMap("productIdTo", part.get("productId"), 
-                                                  //     "fromDate", fromDate,
                                                        "productAssocTypeId", partBomTypeId),
                                             UtilMisc.toList("sequenceNum"));
+        rows = EntityUtil.filterByDate(rows, inDate);
         if ((rows == null || rows.size() == 0) && substitutedNode != null) {
             // If no parent is found and this is a substituted node
             // we try to search for substituted node's parents.
             rows = delegator.findByAnd("ProductAssoc", 
                                         UtilMisc.toMap("productIdTo", substitutedNode.getPart().get("productId"), 
-                                                  //     "fromDate", fromDate,
                                                        "productAssocTypeId", partBomTypeId),
                                         UtilMisc.toList("sequenceNum"));
+            rows = EntityUtil.filterByDate(rows, inDate);
         }
         children = new ArrayList(rows);
         childrenNodes = new ArrayList();
@@ -235,7 +245,7 @@ public class ItemConfigurationNode {
             // If the node is null this means that the node has been discarded by the rules.
             if (oneChildNode != null) {
                 oneChildNode.setParentNode(this);
-                oneChildNode.loadParents(partBomTypeId, fromDate, productFeatures);
+                oneChildNode.loadParents(partBomTypeId, inDate, productFeatures);
             }
             childrenNodes.add(oneChildNode);
         }
