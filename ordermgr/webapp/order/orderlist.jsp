@@ -37,6 +37,8 @@
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
+<%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
+
 <%
   Collection orderHeaderList = null;
   String listStatusId = request.getParameter("listStatusId");
@@ -156,3 +158,6 @@
     </TD>
   </TR>
 </TABLE>
+<%}else{%>
+  <h3>You do not have permission to view this page. ("ORDERMGR_VIEW" or "ORDERMGR_ADMIN" needed)</h3>
+<%}%>

@@ -56,9 +56,7 @@
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Order <ofbiz:if name="orderHeader">#<%=localOrderHeader.getString("orderId")%> </ofbiz:if>Information</div>
           </td>
-          <td valign="middle" align="right">
-            <a href="javascript:document.statusUpdate.submit();" class="lightbuttontext">[Save]</a>
-          </td>
+          <td valign="middle" align="right">&nbsp;</td>
         </tr>
       </table>
     </TD>
@@ -90,17 +88,18 @@
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
                     <ofbiz:if name="orderHeader"> 
-                    <form name="statusUpdate" method="get" action="<ofbiz:url>/changeOrderStatus</ofbiz:url>">
-                       <input type="hidden" name="orderId" value="<%=localOrderHeader.getString("orderId")%>">        
-                       <select name="statusId">
-                         <option value="<%=localOrderHeader.getString("statusId")%>"><%=localOrderHeader.getString("statusId")%></option>
-                         <option value="<%=localOrderHeader.getString("statusId")%>">----</option>
-                         <ofbiz:iterator name="status" property="statusChange">
-                           <option value="<%=status.getString("statusIdTo")%>"><%=status.getString("statusIdTo")%></option>               
-                         </ofbiz:iterator>
-                       </select>
-                      <%--<div class="tabletext"><%=localOrder.getStatusString()%></div>--%>
-                    </form>
+                        <form name="statusUpdate" method="get" action="<ofbiz:url>/changeOrderStatus</ofbiz:url>">
+                           <input type="hidden" name="orderId" value="<%=localOrderHeader.getString("orderId")%>">        
+                           <select name="statusId">
+                             <option value="<%=localOrderHeader.getString("statusId")%>"><%=localOrderHeader.getString("statusId")%></option>
+                             <option value="<%=localOrderHeader.getString("statusId")%>">----</option>
+                             <ofbiz:iterator name="status" property="statusChange">
+                               <option value="<%=status.getString("statusIdTo")%>"><%=status.getString("statusIdTo")%></option>               
+                             </ofbiz:iterator>
+                           </select>
+                           <a href="javascript:document.statusUpdate.submit();" class="buttontext">[Save]</a>
+                          <%--<div class="tabletext"><%=localOrder.getStatusString()%></div>--%>
+                        </form>
                     </ofbiz:if>
                     <ofbiz:unless name="orderHeader">
                       <div class="tabletext"><b>Not Yet Ordered</b></div>

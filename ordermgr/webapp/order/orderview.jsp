@@ -42,6 +42,8 @@
 
 <% pageContext.setAttribute("PageName", "orderstatus"); %>
 
+<%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
+
 <%
   String orderId = request.getParameter("order_id");
   GenericValue orderHeader = null;
@@ -112,3 +114,7 @@
 <ofbiz:unless name="orderHeader">
 <h3>The specified order was not found, please try again.</h3>
 </ofbiz:unless>
+
+<%}else{%>
+  <h3>You do not have permission to view this page. ("ORDERMGR_VIEW" or "ORDERMGR_ADMIN" needed)</h3>
+<%}%>
