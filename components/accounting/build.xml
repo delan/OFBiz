@@ -21,10 +21,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.1 2003/08/18 17:31:37 ajzeneski Exp $
+ *  $Id: build.xml,v 1.2 2003/08/18 19:27:31 ajzeneski Exp $
 -->
 
-<project name="OFBiz - Order Component" default="jar" basedir=".">
+<project name="OFBiz - Accounting Component" default="jar" basedir=".">
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
@@ -32,8 +32,8 @@
 
     <target name="init">                
         <property environment="env"/>
-        <property name="desc" value="Order Component"/>
-        <property name="name" value="ofbiz-order"/>
+        <property name="desc" value="Accounting Component"/>
+        <property name="name" value="ofbiz-accounting"/>
         <property name="src.dir" value="src"/>
         <property name="dtd.dir" value="dtd"/>
         <property name="lib.dir" value="lib"/>        
