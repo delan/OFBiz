@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.55 $
+ * @version    $Revision: 1.56 $
  */
 -->
 
@@ -2991,6 +2991,18 @@
         <key-map field-name="paymentServiceTypeEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ProductStorePromoAndAppl"
+            package-name="org.ofbiz.product.promo"
+            title="Product Store Promotion and Applicability View Entity">
+      <member-entity entity-alias="PSPA" entity-name="ProductStorePromoAppl"/>
+      <member-entity entity-alias="PP" entity-name="ProductPromo"/>
+      <alias-all entity-alias="PSPA"/>
+      <alias entity-alias="PP" name="promoName"/>
+      <alias entity-alias="PP" name="userEntered"/>
+      <view-link entity-alias="PSPA" rel-entity-alias="PP">
+      	<key-map field-name="productPromoId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="ProductStorePromoAppl"
             package-name="org.ofbiz.product.store"
             title="Product Store Promotion Applicability Entity">
