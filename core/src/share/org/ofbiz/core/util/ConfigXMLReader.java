@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/01 17:12:37  azeneski
+ * Updated ConfigXMLReader w/ simplified XML files.
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -119,7 +122,9 @@ public class ConfigXMLReader {
         try {
             URL url = new URL(location);
             InputSource input = new InputSource(url.openStream());
-            DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setValidating(true);
+            DocumentBuilder parser = factory.newDocumentBuilder();
             document = parser.parse(input);
             Element rootElement = document.getDocumentElement();
             //rootElement.normalize();
