@@ -165,7 +165,7 @@ public class OrderServices {
         }
         
         try {
-            delegator.create(order);
+            delegator.storeAll(toBeStored);
             result.put("orderId",orderId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
