@@ -668,11 +668,19 @@
             <find-by-and entity-name="InventoryItem" map-name="lookupMap" list-name="inventoryItems"/>        
         
             <!-- find all items which have a negative ATP; find their current reservations -->        
-            <iterate list-name="inventoryItems" entry-name="item">            
-                <if-compare field-name="availableToPromise" map-name="item" operator="less" value="0">
-                    <get-related value-name="item" relation-name="OrderItemInventoryRes" list-name="relatedRes"/>
-                    <list-to-list list-name="relatedRes" to-list-name="reservations"/>
-                </if-compare>
+            <iterate list-name="inventoryItems" entry-name="item">
+                <if>
+                    <condition>
+                        <or>
+                            <if-empty field-name="availableToPromise"/>
+                            <if-compare field-name="availableToPromise" map-name="item" operator="less" value="0"/>
+                        </or>
+                    </condition>
+                    <then>
+                        <get-related value-name="item" relation-name="OrderItemInventoryRes" list-name="relatedRes"/>
+                        <list-to-list list-name="relatedRes" to-list-name="reservations"/>
+                    </then>
+                </if>
             </iterate>
         
                 <!-- sort the list by date -->        
