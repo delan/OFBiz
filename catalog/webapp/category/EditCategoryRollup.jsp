@@ -33,6 +33,8 @@
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     boolean useValues = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
@@ -54,11 +56,6 @@
 
 
 %>
-
-<script language='JavaScript'>
-    function setLineThruDateChild(line) { eval('document.lineChildForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
-    function setLineThruDateParent(line) { eval('document.lineParentForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
-</script>
 
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
   <div class='tabContainer'>
@@ -102,8 +99,8 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="parentProductCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" fullattrs="true"/> class='inputBox' style='<%=(productCategoryRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
-            <a href='#' onclick='setLineThruDateParent("<%=lineParent%>")' class='buttontext'>[Now]</a>
+            <input type=text size='25' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" fullattrs="true"/> class='inputBox' style='<%=(productCategoryRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
+            <a href="javascript:call_cal(document.lineParentForm<%=lineParent%>.thruDate, '<ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="sequenceNum" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
@@ -135,11 +132,8 @@
         <%}%>
     <%}%>
     </select>
-  <script language='JavaScript'>
-      function setPctcParentFromDate() { document.addParentForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
-  </script>
-  <a href='#' onclick='setPctcParentFromDate()' class='buttontext'>[Now]</a>
-  <input type=text size='22' name='fromDate' class='inputBox'>
+  <input type=text size='25' name='fromDate' class='inputBox'>
+  <a href="javascript:call_cal(document.addParentForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
   <input type="submit" value="Add">
 </form>
 <br>
@@ -168,8 +162,8 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="parentProductCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" fullattrs="true"/> class='inputBox' style='<%=(productCategoryRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
-            <a href='#' onclick='setLineThruDateChild("<%=lineChild%>")' class='buttontext'>[Now]</a>
+            <input type=text size='25' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" fullattrs="true"/> class='inputBox' style='<%=(productCategoryRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
+            <a href="javascript:call_cal(document.lineChildForm<%=lineChild%>.thruDate, '<ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="sequenceNum" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
@@ -201,11 +195,8 @@
       <%}%>
     <%}%>
     </select>
-  <script language='JavaScript'>
-      function setPctcChildFromDate() { document.addChildForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
-  </script>
-  <a href='#' onclick='setPctcChildFromDate()' class='buttontext'>[Now]</a>
-  <input type=text size='22' name='fromDate' class='inputBox'>
+  <input type=text size='25' name='fromDate' class='inputBox'>
+  <a href="javascript:call_cal(document.addChildForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
   <input type="submit" value="Add">
 </form>
 <%}%>

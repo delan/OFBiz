@@ -34,6 +34,8 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     //default this to true, ie only show active
     boolean activeOnly = !"false".equals(request.getParameter("activeOnly"));
 
@@ -134,9 +136,6 @@
   </table>
 </ofbiz:if>
 
-<script language='JavaScript'>
-    function setLineThruDate(line) { eval('document.lineForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
-</script>
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>Product Name [ID]</b></div></td>
@@ -165,8 +164,8 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
-            <a href='#' onclick='setLineThruDate("<%=line%>")' class='buttontext'>[Now]</a>
+            <input type=text size='25' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/> class='inputBox'>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
@@ -205,13 +204,11 @@
   <input type="hidden" name="useValues" value="true">
   <input type=hidden name='activeOnly' value='<%=new Boolean(activeOnly).toString()%>'>
 
-  <script language='JavaScript'>
-      function setPcmFromDate() { document.addProductCategoryMemberForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
-  </script>
   <div class='head2'>Add ProductCategoryMember:</div>
   <div class='tabletext'>
     Product ID: <input type=text size='20' name='productId' class='inputBox'>
-    From Date: <a href='#' onclick='setPcmFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate' class='inputBox'>
+    From Date: <input type=text size='22' name='fromDate' class='inputBox'>
+    <a href="javascript:call_cal(document.addProductCategoryMemberForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
     <input type="submit" value="Add">
   </div>
 </form>

@@ -33,6 +33,8 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     boolean tryEntity = true;
     if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
@@ -76,7 +78,9 @@
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
+<%int line = 0;%>
 <ofbiz:iterator name="productCategoryRole" property="prodCatalogCategories">
+  <%line++;%>
   <%GenericValue curRoleType = productCategoryRole.getRelatedOneCache("RoleType");%>
   <%if (curRoleType != null) pageContext.setAttribute("curRoleType", curRoleType);%>
   <tr valign="middle">
@@ -86,14 +90,15 @@
     <%if (productCategoryRole.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(productCategoryRole.getTimestamp("fromDate"))) { hasntStarted = true; }%>
     <td><div class='tabletext'<%if (hasntStarted) {%> style='color: red;'<%}%>><ofbiz:inputvalue entityAttr="productCategoryRole" field="fromDate"/></div></td>
     <td align="center">
-        <FORM method=POST action='<ofbiz:url>/updatePartyToCategory</ofbiz:url>'>
+        <FORM method=POST action='<ofbiz:url>/updatePartyToCategory</ofbiz:url>' name='lineForm<%=line%>'>
             <%boolean hasExpired = false;%>
             <%if (productCategoryRole.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRole.getTimestamp("thruDate"))) { hasExpired = true; }%>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRole" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRole" field="partyId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRole" field="roleTypeId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRole" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="productCategoryRole" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='25' <ofbiz:inputvalue entityAttr="productCategoryRole" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="productCategoryRole" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
@@ -105,7 +110,7 @@
 </ofbiz:iterator>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/addPartyToCategory</ofbiz:url>" style='margin: 0;'>
+<form method="POST" action="<ofbiz:url>/addPartyToCategory</ofbiz:url>" style='margin: 0;' name='addNewForm'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="tryEntity" value="true">
 
@@ -118,7 +123,8 @@
       <option value='<%=roleType.getString("roleTypeId")%>'<%if ("_NA_".equals(roleType.getString("roleTypeId"))) {%> selected<%}%>><%=roleType.getString("description")%><%-- [<%=roleType.getString("roleTypeId")%>]--%></option>
     </ofbiz:iterator>
   </select>
-  <input type='text' size='20' name='fromDate' class='inputBox'>
+  <input type='text' size='25' name='fromDate' class='inputBox'>
+  <a href="javascript:call_cal(document.addNewForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
   <input type="submit" value="Add">
 </form>
 <%}%>
