@@ -302,33 +302,20 @@ public class OrderServices {
                     "statusId", "ORDER_ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
 
         // set the order payment preferences
-        List paymentMethods = (List) context.get("paymentMethods");
-        if (paymentMethods != null && paymentMethods.size() > 0) {
-            Iterator pmsIter = paymentMethods.iterator();
-            while (pmsIter.hasNext()) {
-                GenericValue paymentMethod = (GenericValue) pmsIter.next();
-                GenericValue paymentPreference = delegator.makeValue("OrderPaymentPreference",
-                        UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                            "orderId", orderId, "paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"),
-                            "paymentMethodId", paymentMethod.get("paymentMethodId")));
-
-                paymentPreference.set("statusId", "PAYMENT_NOT_AUTH");
+        List paymentPreferences = (List) context.get("orderPaymentPreferences");
+        if (paymentPreferences != null && paymentPreferences.size() > 0) {
+            Iterator oppIter = paymentPreferences.iterator();
+            while (oppIter.hasNext()) {
+                GenericValue paymentPreference = (GenericValue) oppIter.next();
+                if (paymentPreference.get("orderPaymentPreferenceId") == null)
+                    paymentPreference.set("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString());
+                if (paymentPreference.get("statusId") == null)
+                    paymentPreference.set("statusId", "PAYMENT_NOT_RECEIVED");
+                paymentPreference.set("orderId", orderId);
                 toBeStored.add(paymentPreference);
             }
         }
-
-        // set by payment method type ids as well
-        List paymentMethodTypeIds = (List) context.get("paymentMethodTypeIds");
-        if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
-            Iterator pmtsIter = paymentMethodTypeIds.iterator();
-            while (pmtsIter.hasNext()) {
-                String paymentMethodTypeId = (String) pmtsIter.next();
-                toBeStored.add(delegator.makeValue("OrderPaymentPreference",
-                        UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
-                            "orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId)));
-            }
-        }
-
+        
         // store the trackingCodeOrder entities
         List trackingCodeOrders = (List) context.get("trackingCodeOrders");
         if (trackingCodeOrders != null && trackingCodeOrders.size() > 0) {

@@ -37,8 +37,7 @@
         <attribute name="grandTotal" type="Double" mode="IN" optional="true"/>
         <attribute name="taxAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="orderShipmentPreferences" type="java.util.List" mode="IN" optional="true"/>
-        <attribute name="paymentMethods" type="java.util.List" mode="IN" optional="true"/>
-        <attribute name="paymentMethodTypeIds" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="orderPaymentPreferences" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderContactMechs" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderItemContactMechs" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderItemPriceInfos" type="java.util.List" mode="IN" optional="true"/>

@@ -43,10 +43,11 @@ import org.ofbiz.commonapp.order.order.OrderReadHelper;
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
-
-    // either paymentMethodId or poNumber must be null (use one or the other)
+       
     private List paymentMethodIds = new LinkedList();
-    private List paymentMethodTypeIds = new LinkedList();
+    private Map paymentMethodAmounts = new HashMap();
+    private List paymentMethodTypeIds = new LinkedList();   
+    private Map paymentMethodTypeAmounts = new HashMap(); 
     private String poNumber = null;
     private String orderId = null;
     private String firstAttemptOrderId = null;
@@ -299,30 +300,44 @@ public class ShoppingCart implements java.io.Serializable {
     public String getPoNumber() {
         return poNumber;
     }
-
+        
     /** Add the Payment Method Id to the cart. */
     public void addPaymentMethodId(String paymentMethodId) {
-        this.paymentMethodIds.add(paymentMethodId);
+        addPaymentMethodId(paymentMethodId, null);
+    }
+    
+    public void addPaymentMethodId(String paymentMethodId, Double amount) {
+        if (paymentMethodId != null) {        
+            this.paymentMethodIds.add(paymentMethodId);           
+            this.paymentMethodAmounts.put(paymentMethodId, amount);
+        }
     }
 
     /** Returns the Payment Method Ids. */
     public List getPaymentMethodIds() {
         return paymentMethodIds;
     }
-
-    /** Add the Payment Method Type Id to the cart. */
-    public void addPaymentMethodTypeId(String paymentMethodTypeId) {
-        this.paymentMethodTypeIds.add(paymentMethodTypeId);
-    }
-
-    /** Returns the Payment Method Ids. */
-    public List getPaymentMethodTypeIds() {
-        return paymentMethodTypeIds;
-    }
-
+    
     /** Clears the list of Payment Method Ids. */
     public void clearPaymentMethodIds() {
         this.paymentMethodIds.clear();
+    }    
+
+    /** Add the Payment Method Type Id to the cart. */
+    public void addPaymentMethodTypeId(String paymentMethodTypeId) {
+        addPaymentMethodTypeId(paymentMethodTypeId, null);
+    }
+    
+    public void addPaymentMethodTypeId(String paymentMethodTypeId, Double amount) {
+        if (paymentMethodTypeId != null) {
+            this.paymentMethodTypeIds.add(paymentMethodTypeId);            
+            this.paymentMethodTypeAmounts.put(paymentMethodTypeId, amount);
+        }
+    }
+            
+    /** Returns the Payment Method Ids. */
+    public List getPaymentMethodTypeIds() {
+        return paymentMethodTypeIds;
     }
 
     /** Clears the list of Payment Method Type Ids. */
@@ -879,6 +894,40 @@ public class ShoppingCart implements java.io.Serializable {
 
         return allAdjs;
     }
+    
+    /** make a list of all OrderPaymentPreferences including all payment methods and types */
+    public List makeAllOrderPaymentPreferences() {
+        List allOpPrefs = new LinkedList();
+        
+        // first create the payment methods (online payments?)
+        List paymentMethods = this.getPaymentMethods();
+        Iterator pmi = paymentMethods.iterator();
+        while (pmi.hasNext()) {
+            GenericValue paymentMethod = (GenericValue) pmi.next();
+            GenericValue p = delegator.makeValue("OrderPaymentPreference", new HashMap());
+            p.set("paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"));
+            p.set("paymentMethodId", paymentMethod.get("paymentMethodId"));            
+            p.set("statusId", "PAYMENT_NOT_AUTH");            
+            if (this.paymentMethodAmounts.get(paymentMethod.getString("paymentMethodId")) != null)
+                p.set("maxAmount", this.paymentMethodAmounts.get(paymentMethod.getString("paymentMethodId")));
+            allOpPrefs.add(p);                                                    
+        }
+        
+        // next create the payment types (offline payments?)
+        List paymentMethodTypeIds = this.getPaymentMethodTypeIds();
+        Iterator pti = paymentMethodTypeIds.iterator();
+        while (pti.hasNext()) {
+            String paymentMethodTypeId = (String) pti.next();
+            GenericValue p = delegator.makeValue("OrderPaymentPreference", new HashMap());
+            p.set("paymentMethodTypeId", paymentMethodTypeId);
+            p.set("statusId", "PAYMENT_NOT_RECEIVED");
+            if (this.paymentMethodTypeAmounts.get(paymentMethodTypeId) != null)
+                p.set("maxAmount", this.paymentMethodTypeAmounts.get(paymentMethodTypeId));
+            allOpPrefs.add(p);
+        }
+                
+        return allOpPrefs;
+    }
 
     /** make a list of all OrderShipmentPreferences including ones for the order and order lines */
     public List makeAllOrderShipmentPreferences() {
@@ -992,11 +1041,10 @@ public class ShoppingCart implements java.io.Serializable {
 
         result.put("orderContactMechs", makeAllOrderContactMechs());
         result.put("orderItemContactMechs", makeAllOrderItemContactMechs());
+        result.put("orderPaymentPreferences", makeAllOrderPaymentPreferences());
         result.put("orderShipmentPreferences", makeAllOrderShipmentPreferences());
 
-        result.put("billingAccountId", getBillingAccountId());
-        result.put("paymentMethods", getPaymentMethods());
-        result.put("paymentMethodTypeIds", getPaymentMethodTypeIds());
+        result.put("billingAccountId", getBillingAccountId());          
         return result;
     }
 }
