@@ -335,7 +335,8 @@ public class CSPaymentServices {
         if (shippingAddress.get("address2") != null)
             request.setShipToAddress2(shippingAddress.getString("address2"));
         request.setShipToCity(shippingAddress.getString("city"));
-        request.setShipToCountry(shippingAddress.getString("countryGeoId"));
+        String country = shippingAddress.get("countryGeoId") != null ? shippingAddress.getString("countryGeoId") : "USA";
+        request.setShipToCountry(country);
         request.setShipToZip(shippingAddress.getString("postalCode"));
         if (shippingAddress.get("stateProvinceGeoId") != null)
             request.setShipToState(shippingAddress.getString("stateProvinceGeoId"));
