@@ -47,6 +47,11 @@ import org.ofbiz.base.util.collections.OrderedMap;
 public class KeyboardAdaptor {
 
     public static final String module = KeyboardAdaptor.class.getName();
+
+    public static final int EVENT_RELEASED = 2;
+    public static final int EVENT_PRESSED = 1;
+    public static final int EVENT_TYPED = 3;
+
     public static final int KEYBOARD_DATA = 100;
     public static final int SCANNER_DATA = 101;
     public static final int MSR_DATA = 102;
@@ -72,13 +77,16 @@ public class KeyboardAdaptor {
             }
         }
 
+        KeyboardAdaptor.attachComponents(coms);
+        receivers.put(receiver, new Integer(dataType));
+        return adaptor;
+    }
+
+    public static void attachComponents(Component[] coms) {
         // add the new components to listen on
         if (adaptor != null && coms != null) {
             adaptor.addComponents(coms);
         }
-
-        receivers.put(receiver, new Integer(dataType));
-        return adaptor;
     }
 
     public static void stop() {
@@ -99,7 +107,7 @@ public class KeyboardAdaptor {
 
     private class KeyboardListener extends Thread {
 
-        private static final long MAX_WAIT = 200;
+        private static final long MAX_WAIT = 100;
         private List keyCodeData = new LinkedList();
         private List keyCharData = new LinkedList();
         private long lastKey = -1;
@@ -159,7 +167,34 @@ public class KeyboardAdaptor {
             }
         }
 
-        public void run() {            
+        protected synchronized void sendEvent(int eventType, KeyEvent event) {
+            lastKey = System.currentTimeMillis();
+            if (KeyboardAdaptor.receivers.size() > 0) {
+                Iterator ri = KeyboardAdaptor.receivers.keySet().iterator();
+                KeyboardReceiver receiver = (KeyboardReceiver) ri.next();
+                if (receiver instanceof KeyListener) {
+                    Debug.log(receiver.getClass().getName() + " is a KeyListener, sending event!", module);
+                    switch (eventType) {
+                        case 1:
+                            ((KeyListener) receiver).keyPressed(event);
+                            break;
+                        case 2:
+                            ((KeyListener) receiver).keyTyped(event);
+                            break;
+                        case 3:
+                            ((KeyListener) receiver).keyReleased(event);
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    Debug.log(receiver.getClass().getName() + " is NOT a KeyListener!", module);
+                }
+
+            }
+        }
+
+        public void run() {
             while (running) {
                 long now = System.currentTimeMillis();
                 if ((now - lastKey) >= MAX_WAIT) {
@@ -199,18 +234,18 @@ public class KeyboardAdaptor {
         }
 
         public void keyTyped(KeyEvent e) {
-            //Debug.log("Key Typed : " + e.getKeyChar(), module);
             char keyChar = e.getKeyChar();
             int keyCode = e.getKeyCode();
             k.receiveKey(keyCode, keyChar);
+            k.sendEvent(EVENT_TYPED, e);
         }
 
         public void keyPressed(KeyEvent e) {            
-            //Debug.log("Key Pressed : " + e.getKeyCode(), module);
+            k.sendEvent(EVENT_PRESSED, e);
         }
 
         public void keyReleased(KeyEvent e) {
-            //Debug.log("Key Released : " + e.getKeyCode(), module);
+            k.sendEvent(EVENT_RELEASED, e);
         }
     }
 }

@@ -27,6 +27,9 @@ package org.ofbiz.pos.device;
 import jpos.JposException;
 import jpos.JposConst;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.pos.adaptor.DataEventAdaptor;
+
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
@@ -43,6 +46,13 @@ public class Keyboard extends GenericDevice {
     }
 
     protected void initialize() throws JposException {
-        throw new JposException(JposConst.JPOS_E_NOEXIST, "Device not yet implemented");
+        Debug.logInfo("Keyboard [" + control.getPhysicalDeviceName() + "] Claimed : " + control.getClaimed(), module);
+        final jpos.POSKeyboard keyboard = (jpos.POSKeyboard) control;
+
+        keyboard.addDataListener(new DataEventAdaptor() {
+            public void dataOccurred(jpos.events.DataEvent event) {
+                Debug.log("Event Source - " + event.getSource().getClass().getName(), module);    
+            }
+        });
     }
 }

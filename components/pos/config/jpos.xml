@@ -5,11 +5,76 @@ $Id$
 -->
 
 <JposEntries>
+    <!-- Generic POSKeyboard Device Implementation (included w/ OFBiz) -->
+    <JposEntry logicalName="GenericKeyboard">
+        <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.KeyboardService"/>
+        <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
+        <jpos category="POSKeyboard" version="1.7"/>
+        <product description="Generic Keyboard Device" name="Keyboard" url="www.ofbiz.org"/>
+
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
+        <prop name="key.VK_ESCAPE" type="String" value="51"/>
+        <prop name="key.VK_ENTER" type="String" value="50"/>
+        <prop name="key.VK_9" type="String" value="109"/>
+        <prop name="key.VK_8" type="String" value="108"/>
+        <prop name="key.VK_7" type="String" value="107"/>
+        <prop name="key.VK_6" type="String" value="106"/>
+        <prop name="key.VK_5" type="String" value="105"/>
+        <prop name="key.VK_4" type="String" value="104"/>
+        <prop name="key.VK_3" type="String" value="103"/>
+        <prop name="key.VK_2" type="String" value="102"/>
+        <prop name="key.VK_1" type="String" value="101"/>
+        <prop name="key.VK_0" type="String" value="100"/>
+        <prop name="key.VK_MULTIPLY" type="String" value="301"/>
+        <prop name="key.VK_NUMPAD9" type="String" value="109"/>
+        <prop name="key.VK_NUMPAD8" type="String" value="108"/>
+        <prop name="key.VK_NUMPAD7" type="String" value="107"/>
+        <prop name="key.VK_NUMPAD6" type="String" value="106"/>
+        <prop name="key.VK_NUMPAD5" type="String" value="105"/>
+        <prop name="key.VK_NUMPAD4" type="String" value="104"/>
+        <prop name="key.VK_NUMPAD3" type="String" value="103"/>
+        <prop name="key.VK_NUMPAD2" type="String" value="102"/>
+        <prop name="key.VK_NUMPAD1" type="String" value="101"/>
+        <prop name="key.VK_NUMPAD0" type="String" value="100"/>
+        <prop name="key.VK_DECIMAL" type="String" value="111"/>
+        <prop name="key.VK_BACK_SPACE" type="String" value="112"/>
+        <prop name="key.VK_ADD" type="String" value="400"/>
+        <prop name="key.VK_DIVIDE" type="String" value="300"/>
+        <prop name="key.VK_SUBTRACT" type="String" value="501"/>
+        <prop name="key.VK_DELETE" type="String" value="502"/>
+        <prop name="key.VK_UP" type="String" value="801"/>
+        <prop name="key.VK_DOWN" type="String" value="802"/>
+        <prop name="key.VK_PAGE_UP" type="String" value="803"/>
+        <prop name="key.VK_PAGE_DOWN" type="String" value="804"/>
+
+        <prop name="key.VK_F1" type="String" value="201"/>
+        <prop name="key.VK_F2" type="String" value="202"/>
+        <prop name="key.VK_F2+CTRL" type="String" value="203"/>
+        <prop name="key.VK_F3" type="String" value="204"/>
+        <prop name="key.VK_F3+CTRL" type="String" value="205"/>
+        <prop name="key.VK_F3+SHIFT" type="String" value="210"/>
+        <prop name="key.VK_F4" type="String" value="401"/>
+        <prop name="key.VK_F5" type="String" value="402"/>
+        <prop name="key.VK_F6" type="String" value="206"/>
+        <prop name="key.VK_F6+CTRL" type="String" value="207"/>
+        <prop name="key.VK_F7" type="String" value="604"/>
+        <prop name="key.VK_F7+CTRL" type="String" value="605"/>
+        <prop name="key.VK_F7+CTRL+SHIFT" type="String" value="220"/>
+        <prop name="key.VK_F8" type="String" value="208"/>
+        <prop name="key.VK_F9" type="String" value="209"/>
+        <prop name="key.VK_F10" type="String" value="223"/>
+        <prop name="key.VK_F10+SHIFT" type="String" value="222"/>
+        <prop name="key.VK_F10+CTRL" type="String" value="224"/>
+        <prop name="key.VK_F11" type="String" value="211"/>
+        <prop name="key.VK_F12" type="String" value="212"/>
+        <prop name="key.VK_F12+CTRL" type="String" value="221"/>
+    </JposEntry>
+
     <!-- Generic Keyboard Wedge Scanner Device (included w/ OFBiz) -->
     <JposEntry logicalName="GenericScanner">
-        <creation factoryClass="org.ofbiz.pos.jpos.factory.KybServiceInstanceFactory" serviceClass="org.ofbiz.pos.jpos.service.ScannerKybService"/>
+        <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.ScannerKybService"/>
         <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
-        <jpos category="Scanner" version="1.8"/>
+        <jpos category="Scanner" version="1.7"/>
         <product description="Generic Keyboard Wedge Scanner" name="KybScanner" url="www.ofbiz.org"/>
 
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
@@ -30,9 +95,9 @@ $Id$
 
     <!-- Generic Keyboard Wedge MSR Device (included w/ OFBiz) -->
     <JposEntry logicalName="GenericMsr">
-        <creation factoryClass="org.ofbiz.pos.jpos.factory.KybServiceInstanceFactory" serviceClass="org.ofbiz.pos.jpos.service.MsrKybService"/>
+        <creation factoryClass="org.ofbiz.pos.jpos.factory.OfbizJposServiceFactory" serviceClass="org.ofbiz.pos.jpos.service.MsrKybService"/>
         <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
-        <jpos category="MSR" version="1.8"/>
+        <jpos category="MSR" version="1.7"/>
         <product description="Generic Keyboard Wedge Msr" name="KybMsr" url="www.ofbiz.org"/>
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
 
@@ -46,7 +111,7 @@ $Id$
         <product description="Thermal receipt printer" name="TSP600" url="http://www.star-micronics.co.jp"/>
 
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
-        <prop name="portName" type="String" value="COM1"/>
+        <prop name="portName" type="String" value="COM2"/>
         <prop name="errorResponseTimeout" type="Long" value="5000"/>
         <prop name="capLogoStore" type="Boolean" value="false"/>
         <prop name="statusTimeout" type="Long" value="500"/>
@@ -66,7 +131,7 @@ $Id$
         <product description="Printer controlled Cash Drawer" name="TSP600" url="http://www.star-micronics.co.jp"/>
 
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
-        <prop name="portName" type="String" value="COM1"/>
+        <prop name="portName" type="String" value="COM2"/>
         <prop name="errorResponseTimeout" type="Long" value="5000"/>
         <prop name="statusTimeout" type="Long" value="500"/>
         <prop name="timeout" type="Long" value="10000"/>
