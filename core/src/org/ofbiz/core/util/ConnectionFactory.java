@@ -27,7 +27,7 @@ public class ConnectionFactory
           return ds.getConnection();
         }
       }
-      catch(NamingException ne) { Debug.logWarning("Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database."); }
+      catch(NamingException ne) { /* Debug.logWarning("Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database."); */ }
     }
     
     String driverClassName = UtilProperties.getPropertyValue("servers", serverName + ".jdbc.driver");
