@@ -352,7 +352,7 @@ public class UtilProperties {
      * @param arguments An array of Objects to insert into the message argument place holders
      * @return The value of the property in the properties file
      */
-    public static String getMessage(String resource, String name, Locale locale, Object[] arguments) {
+    public static String getMessage(String resource, String name, Object[] arguments, Locale locale) {
         String value = getMessage(resource, name, locale);
         
         if (value == null || value.length() == 0) {
@@ -373,7 +373,7 @@ public class UtilProperties {
      * @param arguments A list of Objects to insert into the message argument place holders
      * @return The value of the property in the properties file
      */
-    public static String getMessage(String resource, String name, Locale locale, List arguments) {
+    public static String getMessage(String resource, String name, List arguments, Locale locale) {
         String value = getMessage(resource, name, locale);
         
         if (value == null || value.length() == 0) {
