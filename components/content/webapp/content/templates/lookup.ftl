@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -39,20 +39,18 @@
 
 
     <script language="JavaScript">
-        var obj_caller = window.opener;
+        var win_opener = window.opener;
         
-        
-        // function passing selected value to calling window
-        function replaceContent(dataResourceId, contentId, contentIdTo, mapKey) {
-                if (!obj_caller) return;
-                var url = "<@ofbizUrl>/replaceSubContent?dataResourceId=" 
+        function execRemoteCall(requestName,dataResourceId, contentId, contentIdTo, mapKey) {
+                if (!win_opener) return;
+                var url = "<@ofbizUrl>/" + requestName + "/~dataResourceId=" 
                         + dataResourceId 
-                        + "&contentId=" + contentId 
-                        + "&contentIdTo=" + contentIdTo 
-                        + "&mapKey=" + mapKey 
+                        + "/~contentId=" + contentId 
+                        + "/~contentIdTo=" + contentIdTo 
+                        + "/~mapKey=" + mapKey 
                         + "</@ofbizUrl>";
                 window.close();
-                obj_caller.location.replace(url);
+                win_opener.location.replace(url);
         }
     </script>
 
