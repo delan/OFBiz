@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/04 19:48:32  jonesde
+ * Added support for a '?' single char wildcard to accompany the '*' wildcard.
+ *
  * Revision 1.3  2001/09/04 19:40:52  jonesde
  * Cleaned up a bit.
  *
@@ -14,10 +17,9 @@
 package org.ofbiz.ecommerce.catalog;
 
 import java.util.*;
-import javax.naming.InitialContext;
 import java.sql.*;
-import javax.sql.*;
 
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -160,5 +162,43 @@ public class KeywordSearch {
     
     Debug.logInfo("[KeywordSearch] sql=" + sql);
     return sql;
+  }
+
+  public static String tokens = ";: ,.!?\t\"\'\r\n()[]{}*%<>";
+  public static void induceKeywords(GenericValue product, GenericHelper helper) throws java.rmi.RemoteException
+  {
+    if(product == null || helper == null) return;
+
+    Collection keywords = new TreeSet();
+    keywords.add(product.getString("productId").toLowerCase());
+    
+    Collection strings = new ArrayList();
+    if(product.getString("name") != null) strings.add(product.getString("name"));
+    if(product.getString("comment") != null) strings.add(product.getString("comment"));
+    if(product.getString("description") != null) strings.add(product.getString("description"));
+    if(product.getString("longDescription") != null) strings.add(product.getString("longDescription"));
+    
+    Iterator strIter = strings.iterator();
+    while(strIter.hasNext())
+    {
+      String str = (String)strIter.next();
+      if(str.length() > 0)
+      {
+        StringTokenizer tokener = new StringTokenizer(str, tokens, false);
+
+        while(tokener.hasMoreTokens())
+        {
+          keywords.add(tokener.nextToken().toLowerCase());
+        }
+      }
+    }
+    
+    Iterator kiter = keywords.iterator();
+    while(kiter.hasNext())
+    {
+      String keyword = (String)kiter.next();
+      try { helper.create("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", keyword)); }
+      catch(Exception e) {}
+    }
   }
 }

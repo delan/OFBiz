@@ -103,6 +103,8 @@
     <request-map><uri>catalog</uri><success>view:catalog</success></request-map>
     <request-map><uri>category</uri><success>view:category</success></request-map>
     <request-map><uri>product</uri><success>view:product</success></request-map>	
+    <request-map><uri>keywordsearch</uri><success>view:keywordsearch</success></request-map>	
+
     <request-map><uri>shippingAddress</uri><success>view:shippingAddress</success></request-map>
 
     <request-map>
@@ -171,6 +173,7 @@
     <view-map><view>catalog</view><mapped-page>/catalog/catalog.jsp</mapped-page></view-map>
     <view-map><view>category</view><mapped-page>/catalog/category.jsp</mapped-page></view-map>
     <view-map><view>product</view><mapped-page>/catalog/product.jsp</mapped-page></view-map>
+    <view-map><view>keywordsearch</view><mapped-page>/catalog/keywordsearch.jsp</mapped-page></view-map>
 
     <view-map><view>shippingAddress</view><mapped-page>/shipping/shipping.jsp</mapped-page></view-map>
 
