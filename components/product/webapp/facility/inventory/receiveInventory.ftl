@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -312,6 +312,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </tr>               
         <#list purchaseOrderItems as orderItem>
           <#assign defaultQuantity = orderItem.quantity - receivedQuantities[orderItem.orderItemSeqId]?double>
+          <#if shipment?has_content>
+          <#assign defaultQuantity = shippedQuantities[orderItem.orderItemSeqId]?double - receivedQuantities[orderItem.orderItemSeqId]?double>
+          </#if>
           <#if 0 < defaultQuantity>
           <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")>
           <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}">
