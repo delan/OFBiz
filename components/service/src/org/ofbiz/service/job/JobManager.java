@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.8 2003/12/05 21:02:46 ajzeneski Exp $
+ * $Id: JobManager.java,v 1.9 2003/12/14 02:16:47 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,6 +35,7 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -58,7 +59,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class JobManager {
@@ -178,7 +179,55 @@ public class JobManager {
         return poll.iterator();
     }
 
-    /** 
+    public synchronized void reloadCrashedJobs() {
+        String instanceId = UtilProperties.getPropertyValue("general.properties", "unique.instanceId", "ofbiz0");
+        List toStore = new ArrayList();
+        List crashed = null;
+
+        List exprs = UtilMisc.toList(new EntityExpr("startDateTime", EntityOperator.NOT_EQUAL, null));
+        exprs.add(new EntityExpr("finishDateTime", EntityOperator.EQUALS, null));
+        exprs.add(new EntityExpr("cancelDateTime", EntityOperator.EQUALS, null));
+        exprs.add(new EntityExpr("runByInstanceId", EntityOperator.EQUALS, instanceId));
+        try {
+            crashed = delegator.findByAnd("JobSandbox", exprs, UtilMisc.toList("startDateTime"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to load crashed jobs", module);
+        }
+
+        if (crashed != null && crashed.size() > 0) {
+            Iterator i = crashed.iterator();
+            while (i.hasNext()) {
+                GenericValue job = (GenericValue) i.next();
+                long runtime = job.getTimestamp("runTime").getTime();
+                RecurrenceInfo ri = JobManager.getRecurrenceInfo(job);
+                if (ri != null) {
+                    long next = ri.next();
+                    if (next <= runtime) {
+                        // only re-schedule if there is no new recurrences since last run
+                        Debug.log("Scheduling Job : " + job, module);
+                        GenericValue newJob = new GenericValue(job);
+                        newJob.set("runTime", UtilDateTime.nowTimestamp());
+                        newJob.set("startDateTime", null);
+                        toStore.add(newJob);
+                    }
+                }
+            }
+
+            if (toStore.size() > 0) {
+                try {
+                    delegator.storeAll(toStore);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+                if (Debug.infoOn()) Debug.logInfo("-- " + toStore.size() + " jobs re-scheduled", module);
+            }
+
+        } else {
+            if (Debug.infoOn()) Debug.logInfo("No crashed jobs to re-schedule", module);
+        }
+    }
+
+    /**
      * Schedule a job to start at a specific time with specific recurrence info
      *@param serviceName The name of the service to invoke
      *@param context The context for the service
@@ -286,6 +335,30 @@ public class JobManager {
             jp = null;
             Debug.logInfo("JobManager: Stopped Scheduler Thread.", module);
         }
+    }
+
+    /** gets the recurrence info object for a job. */
+    public static RecurrenceInfo getRecurrenceInfo(GenericValue job) {
+        try {
+            if (job != null) {
+                GenericValue ri = job.getRelatedOne("RecurrenceInfo");
+
+                if (ri != null) {
+                    return new RecurrenceInfo(ri);
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } catch (GenericEntityException e) {
+            e.printStackTrace();
+            Debug.logError(e, "Problem getting RecurrenceInfo entity from JobSandbox", module);
+        } catch (RecurrenceInfoException re) {
+            re.printStackTrace();
+            Debug.logError(re, "Problem creating RecurrenceInfo instance: " + re.getMessage(), module);
+        }
+        return null;
     }
 
 }
