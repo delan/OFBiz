@@ -378,7 +378,7 @@
     <service name="shoppingListItemInterface" engine="interface" location="" invoke="">
         <description>Interface of shopping list items</description>
         <attribute name="shoppingListId" type="String" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="quantityPurchased" type="Double" mode="IN" optional="true"/>
     </service>
@@ -387,6 +387,7 @@
         <description>Create a shopping list item</description>
         <implements service="shoppingListItemInterface"/>
         <attribute name="shoppingListId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="shoppingListItemSeqId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateShoppingListItem" engine="simple" auth="true"
