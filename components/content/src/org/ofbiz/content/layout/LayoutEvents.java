@@ -42,7 +42,7 @@ import javax.servlet.http.HttpSession;
  * LayoutEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  *
  * 
@@ -104,7 +104,7 @@ public class LayoutEvents {
     
             String dataResourceId = (String)result.get("dataResourceId");
             String activeContentId = (String)result.get("contentId");
-            if (UtilValidate.isNotEmpty(activeContentId) {
+            if (UtilValidate.isNotEmpty(activeContentId)) {
                 Map context2 = new HashMap();
                 context2.put("activeContentId", activeContentId);
                 //context2.put("dataResourceId", dataResourceId);
