@@ -38,6 +38,7 @@ import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.TreeSet;
 
+import javolution.lang.Reusable;
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Base64;
@@ -68,7 +69,7 @@ import org.w3c.dom.Element;
  *@version    $Rev:$
  *@since      2.0
  */
-public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
+public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable, Reusable {
     public static final String module = GenericEntity.class.getName();
 
     public static final GenericEntity NULL_ENTITY = new NullGenericEntity();
@@ -93,7 +94,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
      *  between desiring to set a value to null and desiring to not modify the
      *  current value on an update.
      */
-    protected Map fields;
+    protected Map fields = FastMap.newInstance();
 
     /** Contains the entityName of this entity, necessary for efficiency when creating EJBs */
     protected String entityName = null;
@@ -113,18 +114,36 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     protected boolean isFromEntitySync = false;
     
     /** Creates new GenericEntity - Should never be used, prefer the other options. */
-    public GenericEntity() {
-        this.fields = FastMap.newInstance();
+    protected GenericEntity() { }
+    
+    /** Creates new GenericEntity */
+    public static GenericEntity createGenericEntity(ModelEntity modelEntity) {
+        GenericEntity newEntity = new GenericEntity();
+        newEntity.init(modelEntity);
+        return newEntity;
+    }
+
+    /** Creates new GenericEntity from existing Map */
+    public static GenericEntity createGenericEntity(ModelEntity modelEntity, Map fields) {
+        GenericEntity newEntity = new GenericEntity();
+        newEntity.init(modelEntity, fields);
+        return newEntity;
+    }
+
+    /** Copy Factory Method: Creates new GenericEntity from existing GenericEntity */
+    public static GenericEntity createGenericEntity(GenericEntity value) {
+        GenericEntity newEntity = new GenericEntity();
+        newEntity.init(value);
+        return newEntity;
     }
 
     /** Creates new GenericEntity */
-    public GenericEntity(ModelEntity modelEntity) {
+    protected void init(ModelEntity modelEntity) {
         if (modelEntity == null) {
             throw new IllegalArgumentException("Cannont create a GenericEntity with a null modelEntity parameter");
         }
         this.modelEntity = modelEntity;
         this.entityName = modelEntity.getEntityName();
-        this.fields = FastMap.newInstance();
         
         // check some things
         if (this.entityName == null) {
@@ -133,13 +152,12 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     }
 
     /** Creates new GenericEntity from existing Map */
-    public GenericEntity(ModelEntity modelEntity, Map fields) {
+    protected void init(ModelEntity modelEntity, Map fields) {
         if (modelEntity == null) {
             throw new IllegalArgumentException("Cannont create a GenericEntity with a null modelEntity parameter");
         }
         this.modelEntity = modelEntity;
         this.entityName = modelEntity.getEntityName();
-        this.fields = FastMap.newInstance();
         setFields(fields);
         
         // check some things
@@ -149,13 +167,12 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     }
 
     /** Copy Constructor: Creates new GenericEntity from existing GenericEntity */
-    public GenericEntity(GenericEntity value) {
+    protected void init(GenericEntity value) {
         if (value.modelEntity == null) {
             throw new IllegalArgumentException("Cannont create a GenericEntity from another GenericEntity with a null modelEntity in the value parameter");
         }
         this.entityName = value.modelEntity.getEntityName();
         this.modelEntity = value.modelEntity;
-        this.fields = FastMap.newInstance();
         if (value.fields != null) this.fields.putAll(value.fields);
         this.delegatorName = value.delegatorName;
         this.internalDelegator = value.internalDelegator;
@@ -166,6 +183,20 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         }
     }
 
+    public void reset() {
+        // from GenericEntity
+        this.delegatorName = null;
+        this.internalDelegator = null;
+        this.fields = FastMap.newInstance();
+        this.entityName = null;
+        this.modelEntity = null;
+        this.modified = false;
+        this.generateHashCode = true;
+        this.cachedHashCode = 0;
+        this.mutable = true;
+        this.isFromEntitySync = false;
+    }
+    
     public void refreshFromValue(GenericEntity newValue) throws GenericEntityException {
         if (newValue == null) {
             throw new GenericEntityException("Could not refresh value, new value not found for: " + this);
@@ -1114,7 +1145,8 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
      *@return Object that is a clone of this GenericEntity
      */
     public Object clone() {
-        GenericEntity newEntity = new GenericEntity(this);
+        GenericEntity newEntity = new GenericEntity();
+        newEntity.init(this);
 
         newEntity.setDelegator(internalDelegator);
         return newEntity;

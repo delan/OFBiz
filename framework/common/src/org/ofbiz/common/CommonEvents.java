@@ -188,7 +188,7 @@ public class CommonEvents {
             }
 
             if (userLogin != null) {
-                GenericValue ulUpdate = new GenericValue(userLogin);
+                GenericValue ulUpdate = GenericValue.create(userLogin);
                 ulUpdate.set("lastLocale", localeString);
                 try {
                     ulUpdate.store();
@@ -215,7 +215,7 @@ public class CommonEvents {
             }
 
             if (userLogin != null) {
-                GenericValue ulUpdate = new GenericValue(userLogin);
+                GenericValue ulUpdate = GenericValue.create(userLogin);
                 ulUpdate.set("lastCurrencyUom", currencyUom);
                 try {
                     ulUpdate.store();

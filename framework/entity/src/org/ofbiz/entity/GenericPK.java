@@ -36,19 +36,21 @@ import org.ofbiz.entity.model.ModelEntity;
  */
 public class GenericPK extends GenericEntity {
 
+    protected GenericPK() { }
+    
     /** Creates new GenericPK */
     public GenericPK(ModelEntity modelEntity) {
-        super(modelEntity);
+        init(modelEntity);
     }
 
     /** Creates new GenericPK from existing Map */
     public GenericPK(ModelEntity modelEntity, Map fields) {
-        super(modelEntity, fields);
+        init(modelEntity, fields);
     }
 
     /** Creates new GenericPK from existing GenericPK */
     public GenericPK(GenericPK value) {
-        super(value);
+        init(value);
     }
 
     /** Clones this GenericPK, this is a shallow clone & uses the default shallow HashMap clone

@@ -507,7 +507,7 @@ public class ContentManagementWorker {
             //webSitePublishPoint = getWebSitePublishPoint(delegator, contentIdTo, false);
             webSitePublishPoint = delegator.findByPrimaryKeyCache("WebSitePublishPoint", UtilMisc.toMap("contentId", contentIdTo));
             if (webSitePublishPoint != null) {
-                webSitePublishPoint = new GenericValue(webSitePublishPoint);
+                webSitePublishPoint = GenericValue.create(webSitePublishPoint);
                 webSitePublishPoint = overrideWebSitePublishPoint(delegator, webSitePublishPoint);
                 webSitePublishPoint.setNonPKFields(passedValue, false);
                 webSitePublishPoint.setPKFields(passedValue, false);

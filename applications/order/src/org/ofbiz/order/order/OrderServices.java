@@ -3052,7 +3052,7 @@ public class OrderServices {
                     Iterator orderCmi = orderCm.iterator();
                     while (orderCmi.hasNext()) {
                         GenericValue v = (GenericValue) orderCmi.next();
-                        contactMechs.add(new GenericValue(v));
+                        contactMechs.add(GenericValue.create(v));
                     }
                     orderMap.put("orderContactMechs", contactMechs);
                 }
@@ -3069,7 +3069,7 @@ public class OrderServices {
                     Iterator orderSpi = orderSp.iterator();
                     while (orderSpi.hasNext()) {
                         GenericValue v = (GenericValue) orderSpi.next();
-                        shipmentPrefs.add(new GenericValue(v));
+                        shipmentPrefs.add(GenericValue.create(v));
                     }
                     orderMap.put("orderShipmentPreferences", shipmentPrefs);
                 }

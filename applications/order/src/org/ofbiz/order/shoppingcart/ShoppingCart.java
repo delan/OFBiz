@@ -1948,7 +1948,7 @@ public class ShoppingCart implements Serializable {
 
     /** Add an orderTerm to the order */
     public int addOrderTerm(String termTypeId,Double termValue,Long termDays) {
-        GenericValue orderTerm = new GenericValue(delegator.getModelEntity("OrderTerm"));
+        GenericValue orderTerm = GenericValue.create(delegator.getModelEntity("OrderTerm"));
         orderTerm.put("termTypeId", termTypeId);
         orderTerm.put("termValue", termValue);
         orderTerm.put("termDays", termDays);

@@ -85,7 +85,7 @@ public class GenericHelperDAO implements GenericHelper {
         if (primaryKey == null) {
             return null;
         }
-        GenericValue genericValue = new GenericValue(primaryKey);
+        GenericValue genericValue = GenericValue.create(primaryKey);
 
         genericDAO.select(genericValue);
         return genericValue;
@@ -100,7 +100,7 @@ public class GenericHelperDAO implements GenericHelper {
         if (primaryKey == null) {
             return null;
         }
-        GenericValue genericValue = new GenericValue(primaryKey);
+        GenericValue genericValue = GenericValue.create(primaryKey);
 
         genericDAO.partialSelect(genericValue, keys);
         return genericValue;

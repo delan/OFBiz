@@ -296,7 +296,7 @@ public class MemoryHelper implements GenericHelper {
     }
 
     public GenericValue create(GenericPK primaryKey) throws GenericEntityException {
-        return create(new GenericValue(primaryKey));
+        return create(GenericValue.create(primaryKey));
     }
 
     public GenericValue findByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {

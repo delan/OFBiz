@@ -144,7 +144,7 @@ public class EntityListIterator implements ListIterator {
     public GenericValue currentGenericValue() throws GenericEntityException {
         if (closed) throw new GenericResultSetClosedException("This EntityListIterator has been closed, this operation cannot be performed");
 
-        GenericValue value = new GenericValue(modelEntity);
+        GenericValue value = GenericValue.create(modelEntity);
 
         for (int j = 0; j < selectFields.size(); j++) {
             ModelField curField = (ModelField) selectFields.get(j);

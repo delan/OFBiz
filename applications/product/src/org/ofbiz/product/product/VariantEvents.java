@@ -108,7 +108,7 @@ public class VariantEvents {
                 GenericValue variantProduct = delegator.findByPrimaryKey("Product",UtilMisc.toMap("productId", variantProductId));
                 if (variantProduct == null) {
                     //if product does not exist
-                    variantProduct = new GenericValue(product);
+                    variantProduct = GenericValue.create(product);
                     variantProduct.set("productId", variantProductId);
                     variantProduct.set("isVirtual", "N");
                     variantProduct.set("isVariant", "Y");

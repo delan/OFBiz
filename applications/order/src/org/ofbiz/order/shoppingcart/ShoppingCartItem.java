@@ -1786,7 +1786,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
                         if (adjustment != null) {
                             item.removeAdjustment(adjustment);
-                            GenericValue newAdjustment = new GenericValue(adjustment);
+                            GenericValue newAdjustment = GenericValue.create(adjustment);
                             Double adjAmount = newAdjustment.getDouble("amount");
 
                             // we use != becuase adjustments can be +/-
@@ -1818,7 +1818,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
                     if (adjustment != null) {
                         this.removeAdjustment(adjustment);
-                        GenericValue newAdjustment = new GenericValue(adjustment);
+                        GenericValue newAdjustment = GenericValue.create(adjustment);
                         Double adjAmount = newAdjustment.getDouble("amount");
 
                         // we use != becuase adjustments can be +/-

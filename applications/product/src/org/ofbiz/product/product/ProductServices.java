@@ -694,7 +694,7 @@ public class ProductServices {
             boolean variantProductExists = (variantProduct != null);
             if (variantProduct == null) {
                 //if product does not exist
-                variantProduct = new GenericValue(product);
+                variantProduct = GenericValue.create(product);
                 variantProduct.set("productId", variantProductId);
                 variantProduct.set("isVirtual", "N");
                 variantProduct.set("isVariant", "Y");

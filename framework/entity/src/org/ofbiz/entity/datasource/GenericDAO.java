@@ -235,7 +235,7 @@ public class GenericDAO {
         }
 
         if (modelEntity.lock()) {
-            GenericEntity entityCopy = new GenericEntity(entity);
+            GenericEntity entityCopy = GenericEntity.createGenericEntity(entity);
 
             select(entityCopy, sqlP);
             Object stampField = entity.get(ModelEntity.STAMP_FIELD);
@@ -1059,7 +1059,7 @@ public class GenericDAO {
             }
         }
 
-        GenericValue dummyValue = new GenericValue(modelEntity, fields);
+        GenericValue dummyValue = GenericValue.create(modelEntity, fields);
         String sql = "DELETE FROM " + modelEntity.getTableName(datasourceInfo);
         if (fields != null && fields.size() > 0) {
             sql += " WHERE " + SqlJdbcUtil.makeWhereStringFromFields(whereFields, dummyValue, "AND");
