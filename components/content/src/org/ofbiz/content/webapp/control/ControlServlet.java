@@ -1,5 +1,5 @@
 /*
- * $Id: ControlServlet.java,v 1.1 2003/08/17 08:40:12 ajzeneski Exp $
+ * $Id: ControlServlet.java,v 1.2 2003/08/18 01:00:24 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import com.ibm.bsf.BSFManager;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ControlServlet extends HttpServlet {
@@ -252,13 +252,13 @@ public class ControlServlet extends HttpServlet {
         
     protected void configureBsf() {
         String[] bshExtensions = {"bsh"};
-        BSFManager.registerScriptingEngine("beanshell", "org.ofbiz.core.util.OfbizBshBsfEngine", bshExtensions);        
+        BSFManager.registerScriptingEngine("beanshell", "org.ofbiz.base.util.OfbizBshBsfEngine", bshExtensions);        
 
         String[] jsExtensions = {"js"};
-        BSFManager.registerScriptingEngine("javascript", "org.ofbiz.core.util.OfbizJsBsfEngine", jsExtensions);
+        BSFManager.registerScriptingEngine("javascript", "org.ofbiz.base.util.OfbizJsBsfEngine", jsExtensions);
         
         String[] smExtensions = {"sm"};
-        BSFManager.registerScriptingEngine("simplemethod", "org.ofbiz.core.minilang.SimpleMethodBsfEngine", smExtensions);
+        BSFManager.registerScriptingEngine("simplemethod", "org.ofbiz.minilang.SimpleMethodBsfEngine", smExtensions);
     }
     
     protected void logRequestInfo(HttpServletRequest request) {

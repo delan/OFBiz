@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.5 2003/08/17 05:55:11 jonesde Exp $
+ * $Id: ComponentConfig.java,v 1.6 2003/08/18 01:00:24 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class ComponentConfig {
@@ -191,8 +191,11 @@ public class ComponentConfig {
     protected ComponentConfig() {}
     
     protected ComponentConfig(String globalName, String rootLocation) throws ComponentException {
-        this.globalName = globalName;
-        this.rootLocation = rootLocation;
+        this.globalName = globalName;        
+        if (!rootLocation.endsWith("/")) {
+            rootLocation = rootLocation + "/";
+        }
+        this.rootLocation = rootLocation.replace('\\', '/');
         
         File rootLocationDir = new File(rootLocation);
         if (rootLocationDir == null) {
@@ -376,7 +379,7 @@ public class ComponentConfig {
     }
     
     public String getRootLocation() {
-        return rootLocation;
+        return rootLocation;                 
     }
     
     public List getServiceResourceInfos() {

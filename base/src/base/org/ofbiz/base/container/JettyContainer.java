@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.6 2003/08/17 06:12:49 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.7 2003/08/18 01:00:23 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.base.util.UtilURL;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.6 $
+  *@version    $Revision: 1.7 $
  * @since      2.2
  */
 public class JettyContainer implements Container {
@@ -97,8 +97,9 @@ public class JettyContainer implements Container {
                     if (server == null) {
                         Debug.logWarning("Server with name [" + appInfo.server + "] not found; not mounting [" + appInfo.name + "]", module);
                     } else {
-                        try {
-                            String location = appInfo.location;
+                        try {                            
+                            String location = component.getRootLocation() + appInfo.location;
+                            location = location.replace('\\', '/');
                             if (!location.endsWith("/")) {
                                 location = location + "/";
                             }

@@ -1,5 +1,5 @@
 /*
- * $Id: CachedClassLoader.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: CachedClassLoader.java,v 1.2 2003/08/18 01:00:23 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import java.util.Map;
  * Caching Class Loader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class CachedClassLoader extends URLClassLoader {
@@ -100,12 +100,12 @@ public class CachedClassLoader extends URLClassLoader {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
             // note: loadClass is necessary for these since this class doesn't know anything about the Entity Engine at compile time
-            globalClassNameClassMap.put("GenericValue", loader.loadClass("org.ofbiz.core.entity.GenericValue"));
-            globalClassNameClassMap.put("org.ofbiz.core.entity.GenericValue", loader.loadClass("org.ofbiz.core.entity.GenericValue"));
+            globalClassNameClassMap.put("GenericValue", loader.loadClass("org.ofbiz.entity.GenericValue"));
+            globalClassNameClassMap.put("org.ofbiz.entity.GenericValue", loader.loadClass("org.ofbiz.entity.GenericValue"));
             globalClassNameClassMap.put("GenericPK", loader.loadClass("org.ofbiz.core.entity.GenericPK"));
-            globalClassNameClassMap.put("org.ofbiz.core.entity.GenericPK", loader.loadClass("org.ofbiz.core.entity.GenericPK"));
-            globalClassNameClassMap.put("GenericEntity", loader.loadClass("org.ofbiz.core.entity.GenericEntity"));
-            globalClassNameClassMap.put("org.ofbiz.core.entity.GenericEntity", loader.loadClass("org.ofbiz.core.entity.GenericEntity"));
+            globalClassNameClassMap.put("org.ofbiz.entity.GenericPK", loader.loadClass("org.ofbiz.entity.GenericPK"));
+            globalClassNameClassMap.put("GenericEntity", loader.loadClass("org.ofbiz.entity.GenericEntity"));
+            globalClassNameClassMap.put("org.ofbiz.entity.GenericEntity", loader.loadClass("org.ofbiz.entity.GenericEntity"));
         } catch (ClassNotFoundException e) {
             Debug.logError(e, "Could not pre-initialize dynamically loaded class: ", module);
         }
@@ -125,7 +125,7 @@ public class CachedClassLoader extends URLClassLoader {
     }    
     
     public String toString() {
-        return "org.ofbiz.core.util.CachedClassLoader(" + contextName + ") / " + getParent().toString();
+        return "org.ofbiz.base.util.CachedClassLoader(" + contextName + ") / " + getParent().toString();
     }
     
     public Class loadClass(String name) throws ClassNotFoundException {
@@ -224,7 +224,7 @@ public class CachedClassLoader extends URLClassLoader {
         if (name.startsWith("java.") || name.startsWith("java/") || name.startsWith("/java/")) return true;
         if (name.startsWith("javax.") || name.startsWith("javax/") || name.startsWith("/javax/")) return true;
         if (name.startsWith("sun.") || name.startsWith("sun/") || name.startsWith("/sun/")) return true;
-        if (name.startsWith("org.ofbiz.core.")) return true;
+        if (name.startsWith("org.ofbiz.")) return true;
         return false;
     }
 }
