@@ -52,7 +52,7 @@
         </if-not-empty>
     </simple-method>
 
-    <simple-method method-name="ensureNaPartyRole" short-description="Ensure Party is in _NA_ Role" login-required="false">
+    <simple-method method-name="ensureNaPartyRole" short-description="Ensure Party is in _NA_ or the specified Role" login-required="false">
         <!-- must have a partyId, partyIdFrom, or partyIdTo in the parameters map, should be called through different service defs for each one -->
         <if-not-empty field-name="partyId" map-name="parameters">
             <field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -68,7 +68,12 @@
             </else>
         </if-not-empty>
 
-        <string-to-field string="_NA_" field-name="roleTypeId" map-name="lookupPKMap"/>
+        <if-empty field-name="parameters.roleTypeId">
+            <string-to-field string="_NA_" field-name="lookupPKMap.roleTypeId"/>
+        <else>
+            <env-to-env to-env-name="parameters.roleTypeId" env-name="lookupPKMap.roleTypeId"/>
+        </else>
+        </if-empty>
         <find-by-primary-key entity-name="PartyRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <if-empty field-name="lookedUpValue">
             <make-value value-name="newValue" entity-name="PartyRole" map-name="lookupPKMap"/>
