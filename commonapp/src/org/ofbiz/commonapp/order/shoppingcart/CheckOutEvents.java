@@ -769,8 +769,11 @@ public class CheckOutEvents {
 
         // Get the orderId from the cart.
         String orderId = cart.getOrderId();
+        
+        // Get the paymentMethodTypeId - this will need to change when ecom supports multiple payments
+        List paymentMethodTypeId = cart.getPaymentMethodTypeIds(); 
 
-        // Check the payment preferences; if we hace ANY w/ status PAYMENT_NOT_AUTH invoke payment service.
+        // Check the payment preferences; if we have ANY w/ status PAYMENT_NOT_AUTH invoke payment service.
         boolean requireAuth = false;
         List paymentPreferences = null;
         try {
@@ -832,8 +835,9 @@ public class CheckOutEvents {
                 cart.setOrderId(null);
                 return false;                                                                                        
             }
-        } else if (cart.getBillingAccountId() != null) {
-            // approve all billing account transactions (would not be able to use account if limit is reached)
+        } else if (cart.getBillingAccountId() != null || paymentMethodTypeId.contains("EXT_COD")) {
+            // approve all billing account or COD transactions (would not be able to use account if limit is reached)
+            // note this is okay for now since only one payment method can be used; but this will need to be adjusted later
             boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
             if (!ok)
                 throw new GeneralException("Problem with order change; see above error");   

@@ -240,6 +240,7 @@
     	<response name="worldpay" type="request" value="callWorldPay"/>
     	<response name="paypal" type="request" value="callPayPal"/>
     	<response name="billact" type="request" value="emailorder"/>
+    	<response name="cod" type="request" value="emailorder"/>
     	<response name="error" type="view" value="checkout"/>
     </request-map> 
 

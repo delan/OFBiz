@@ -292,9 +292,17 @@ function submitForm(form, mode, value) {
                           <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == context.checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
-                          <span class="tabletext">Offline:&nbsp;Check/Money Order</span>
+                          <span class="tabletext">Mail&nbsp;Check/Money Order</span>
                         </td>
-                      </tr> 
+                      </tr>
+                      <tr>
+                        <td width="1%" nowrap>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == context.checkOutPaymentId>checked</#if>>
+                        </td>
+                        <td width="50%" nowrap>
+                          <span class="tabletext">COD</span>
+                        </td>
+                      </tr>                       
                       <tr>
                         <td width="1%" nowrap>
                           <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == context.checkOutPaymentId>checked</#if>>
