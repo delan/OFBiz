@@ -62,8 +62,10 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
     
     // Invoke the static java method service.
     private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {
-        Class[] paramTypes = new Class[] { Map.class };
-        Object[] params = new Object[] { context };
+        // static java service methods should be: public Map methodName(DispatchContext dctx, Map context)
+        DispatchContext dctx = dispatcher.getLocalContext(loader);
+        Class[] paramTypes = new Class[] { DispatchContext.class, Map.class };
+        Object[] params = new Object[] { dctx, context };
         Object result = null;
         
         if ( modelService.location == null || modelService.invoke == null )
@@ -75,10 +77,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
             cl = this.getClass().getClassLoader();
         else
             cl = dispatcher.getLocalContext(loader).getClassLoader();
-        
-        // Add the DispatchContext to the service context
-        context.put("DISPATCHCONTEXT",dispatcher.getLocalContext(loader));
-        
+                        
         try {
             Class c = cl.loadClass(modelService.location);
             Method m = c.getMethod(modelService.invoke, paramTypes);

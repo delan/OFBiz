@@ -86,7 +86,7 @@ public class ServiceEventHandler implements EventHandler {
             if ( value != null )
                 serviceContext.put(name,value);
         }
-        
+                        
         // invoke the service
         Map result = null;
         try {
@@ -95,7 +95,7 @@ public class ServiceEventHandler implements EventHandler {
         catch ( GenericServiceException e ) {
             throw new EventHandlerException("Service invocation error",e);
         }
-        
+                        
         String responseString = null;
         if ( result == null || !result.containsKey("response") )
             responseString = "success";

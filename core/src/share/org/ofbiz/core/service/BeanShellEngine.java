@@ -73,10 +73,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
             cl = this.getClass().getClassLoader();
         else
             cl = dispatcher.getLocalContext(loader).getClassLoader();
-        
-        // Add the DispatchContext to the service context
-        context.put("DISPATCHCONTEXT",dispatcher.getLocalContext(loader));
-        
+                      
         Interpreter bsh = null;
         try {
             Class c = cl.loadClass("bsh.Interpreter");
@@ -94,8 +91,9 @@ public final class BeanShellEngine extends GenericAsyncEngine {
         
         Map result = null;
         try {
-            bsh.set("context",context);             // set the context for the BSH script
-            bsh.set("result",new HashMap());     // set the result for the script
+            bsh.set("dctx",dispatcher.getLocalContext(loader)); // set the dispatch context
+            bsh.set("context",context); // set the parameter context
+            bsh.set("result",new HashMap()); // define a new result map
             bsh.source(modelService.location);
             result = (Map) bsh.get("result");
         }

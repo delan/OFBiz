@@ -62,6 +62,7 @@ public class RequestHandler implements Serializable {
         String nextView = null;
         String nextPage = null;
         boolean chainRequest = false;
+        boolean noDispatch = false;
         
         /** Grab data from request object to process. */
         requestUri = getRequestUri(request.getPathInfo());
@@ -154,16 +155,16 @@ public class RequestHandler implements Serializable {
         if(eventReturn != null && !"success".equalsIgnoreCase(eventReturnString)) nextView = eventReturn;
         Debug.logInfo("Next View after eventReturn: " + nextView);
         
-        /** Check for a chain request. */
-        if ( nextView != null && nextView.length() > 0 && nextView.indexOf(':') != -1 ) {
-            String type = nextView.substring(0,nextView.indexOf(':'));
-            String view = nextView.substring(nextView.indexOf(':') + 1);
-            nextView = view;
-            chainRequest = type.equalsIgnoreCase("request") ? true : false;
-        }
+        // check for a chain request. 
+        if ( nextView != null && nextView.startsWith("request:") )
+            chainRequest = true;
+                            
+        // check for a no dispatch return (meaning the return was processed by the event
+        if ( nextView != null && nextView.startsWith("none:") )
+            noDispatch = true;
         
-        /** Get the next view. */
-        if ( !chainRequest ) {
+        // get the next view. 
+        if ( !chainRequest && !noDispatch ) {
             String tempView = nextView;
             if(tempView != null && tempView.length() > 0 && tempView.charAt(0) == '/') tempView = tempView.substring(1);
             Debug.logInfo("Getting View Map: " + tempView);
@@ -176,19 +177,19 @@ public class RequestHandler implements Serializable {
             Debug.logInfo("Mapped To: " + nextPage);
         }
         
-        /** Handle Errors. */
+        // handle errors
         if ( eventPath == null && nextPage == null && eventReturn == null && !chainRequest )
             throw new RequestHandlerException("RequestHandler: Unknown Request.");
         if ( nextPage == null && eventReturn == null && !chainRequest )
             throw new RequestHandlerException("RequestHandler: No Next Page To Display");
         
-        /** Invoke chained requests. */
+        // invoke chained requests
         if ( chainRequest ) {
             Debug.logInfo("Running Chained Request: " + nextView);
             nextPage = doRequest(request,response,nextView);
         }
-        
-        /** If previous request exists, and a login just succeeded, do that now... */
+               
+        // if previous request exists, and a login just succeeded, do that now... 
         if(requestUri.equals(SiteDefs.LOGIN_REQUEST_URI) && "success".equalsIgnoreCase(eventReturnString)) {
             String previousRequest = (String) request.getSession().getAttribute(SiteDefs.PREVIOUS_REQUEST);
             if ( previousRequest != null ) {
@@ -199,6 +200,10 @@ public class RequestHandler implements Serializable {
             }
         }
         
+        // if noDispatch return null to the control servlet
+        if ( noDispatch )
+            return null;
+                
         return nextPage;
     }
     
