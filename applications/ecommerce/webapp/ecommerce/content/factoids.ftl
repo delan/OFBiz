@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,12 +23,11 @@
  *@version    $Rev$
  *@since      3.1
 -->
-<#assign factoidRootId = "WebStoreFACTOID" />
+<#assign factoidRootId = "WebStoreFACTOID"/>
 
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#-- variable setup and worker calls -->
 <#assign curCategoryId = requestAttributes.curCategoryId?if_exists>
-<#assign factoidTrailCsv=requestParameters.factoidTrailCsv?if_exists/>
+<#assign factoidTrailCsv = requestParameters.factoidTrailCsv?if_exists/>
 <#assign factoidTrail=[]/>
 <#assign firstContentId=""/>
 <#if factoidTrailCsv?has_content>
@@ -38,49 +37,17 @@
   </#if>
 </#if>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign=middle align=center>
-            <div class="boxhead">${uiLabelMap.Factoids}</div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-            <div style='margin-left: 10px;'>
-
-                <#assign count_1=0 />
-                <@limitedSubContent subContentId=factoidRootId
-                    viewIndex=0
-                    viewSize=9999
-                    orderBy="contentName"
-                    contentAssocTypeId="SUBSITE"
-                    limitSize="2"
-                >
-                       <tr>
-                         <td >
-                           <div class="browsecategorytext" style="margin-left: 10px">
-                             - <@renderSubContentCache subContentId=subContentId/>
-                           </div>
-                         </td >
-                       </tr>
-                    <#assign count_1=count_1 + 1 />
-                </@limitedSubContent >
+<div class="ecom-screenlet">
+    <div class="ecom-screenlet-header">
+        <div class="boxhead">${uiLabelMap.Factoids}</div>
+    </div>
+    <div class="ecom-screenlet-body">
+        <#assign count_1=0/>
+        <@limitedSubContent subContentId=factoidRootId viewIndex=0 viewSize=9999 orderBy="contentName" contentAssocTypeId="SUBSITE" limitSize="2">
+            <div class="browsecategorytext" style="margin-left: 10px">
+              -&nbsp;<@renderSubContentCache subContentId=subContentId/>
             </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-        <br>
-
-
+            <#assign count_1=(count_1 + 1)/>
+        </@limitedSubContent>
+    </div>
+</div>

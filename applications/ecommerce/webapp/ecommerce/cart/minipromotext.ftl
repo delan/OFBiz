@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,51 +24,21 @@
  *@since      2.1
 -->
 
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-
 <#if showPromoText>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-          <tr>
-            <td valign="middle" align="center">
-              <div class="boxhead">${uiLabelMap.EcommerceSpecialOffers}</div>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
-          <tr>
-            <td>
-                <table width="100%" cellspacing="0" cellpadding="1" border="0">
-                  <#-- show promotions text -->
-                  <#list productPromos as productPromo>
-                    <tr>
-                      <td>
-                        <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[Details]</a> ${productPromo.promoText}</div>
-                      </td>
-                    </tr>
-                    <#if productPromo_has_next>
-                      <tr><td><hr class="sepbar"></td></tr>
-                    </#if>
-                  </#list>
-                  <tr><td><hr class="sepbar"></td></tr>
-                  <tr>
-                    <td>
-                      <div class="tabletext"><a href="<@ofbizUrl>/showAllPromotions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewAllPromotions}]</a></div>
-                    </td>
-                  </tr>
-                </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-  <br>
+<div class="ecom-screenlet">
+    <div class="ecom-screenlet-header">
+        <div class="boxhead">${uiLabelMap.EcommerceSpecialOffers}</div>
+    </div>
+    <div class="ecom-screenlet-body">
+        <#-- show promotions text -->
+        <#list productPromos as productPromo>
+            <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[Details]</a> ${productPromo.promoText}</div>
+            <#if productPromo_has_next>
+                <div><hr class="sepbar"></div>
+            </#if>
+        </#list>
+        <div><hr class="sepbar"></div>
+        <div class="tabletext"><a href="<@ofbizUrl>/showAllPromotions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewAllPromotions}]</a></div>
+    </div>
+</div>
 </#if>
-

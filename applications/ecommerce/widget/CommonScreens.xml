@@ -68,6 +68,7 @@
                     <include-screen name="sidedeepcategory" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="minireorderprods" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="minipoll" location="component://ecommerce/widget/ContentScreens.xml"/>
+                    <include-screen name="factoids" location="component://ecommerce/widget/ContentScreens.xml"/>
                     <include-screen name="forums" location="component://ecommerce/widget/ForumScreens.xml"/>
                     <include-screen name="content_categories" location="component://ecommerce/widget/ContentScreens.xml"/>
                 </container>
@@ -85,7 +86,6 @@
                     <include-screen name="minilastviewedcategories" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="minilastviewedproducts" location="component://ecommerce/widget/CatalogScreens.xml"/>
                     <include-screen name="minilastproductsearches" location="component://ecommerce/widget/CatalogScreens.xml"/>
-                    <include-screen name="factoids" location="component://ecommerce/widget/ContentScreens.xml"/>
                     <include-screen name="recentlyviewed" location="component://ecommerce/widget/ContentScreens.xml"/>
                 </container>
             </widgets>
@@ -147,4 +147,3 @@
         </section>
     </screen>
 </screens>
-

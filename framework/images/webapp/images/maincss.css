@@ -1,54 +1,6 @@
 
-/* ===== eCommerce specific styles ===== */
-BODY.ecbody {
-background-color: #FFFFFF;
-margin-top: 10px;
-margin-right: 10px;
-margin-bottom: 10px;
-margin-left: 10px;
-}
-
-DIV.ecom-mainarea {
-background-color: #FFFFFF;
-width: auto;
-}
-
-DIV.ecom-column-left {
-float: left;
-margin-right: 10px;
-width: 150px;
-}
-DIV.ecom-column-main {
-width: auto;
-text-align: left;
-valign: top;
-}
-DIV.ecom-column-right {
-float: right;
-margin-left: 10px;
-width: 200px;
-}
-
-DIV.ecom-endcolumns {
-  clear: both;
-}  
-
-DIV.ecom-screenlet {
-background-color: #FFFFFF;
-border: 1px solid #999999;
-margin-bottom: 10px;
-}
-DIV.ecom-screenlet-header {
-background-color: #000099;
-padding-top: 1px;
-padding-bottom: 1px;
-padding-right: 4px;
-padding-left: 4px;
-}
-DIV.ecom-screenlet-body {
-background-color: #FFFFFF;
-padding: 4px;
-}
+/* This CSS file is used for all OFBiz applications EXCEPT ecommerce. */
+/* See the "ecommain.css" file for ecommerce. */
 
 /* ===== General Styles ===== */
 BODY {

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -30,37 +30,14 @@
 </#if>
 
 <#if randomSurvey?has_content>
-  <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-    <tr>
-      <td width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-          <tr>
-            <td valign=middle align=center>
-              <div class="boxhead">${randomSurvey.getSurveyName()?if_exists}</div>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td width='100%'>
-        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-          <tr>
-            <td>
-              <table border="0" cellpadding="1">
-                <tr>
-                  <td>
-                    <form method="post" action="<@ofbizUrl>/minipoll<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" style="margin: 0;">
-                      ${randomSurvey.render().toString()}
-                    </form>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-  <br>
+<div class="ecom-screenlet">
+    <div class="ecom-screenlet-header">
+        <div class="boxhead">${randomSurvey.getSurveyName()?if_exists}</div>
+    </div>
+    <div class="ecom-screenlet-body">
+        <form method="post" action="<@ofbizUrl>/minipoll<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" style="margin: 0;">
+          ${randomSurvey.render().toString()}
+        </form>
+    </div>
+</div>
 </#if>

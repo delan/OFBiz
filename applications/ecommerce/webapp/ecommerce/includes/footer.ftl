@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -27,7 +27,7 @@
 
 <br><br>
 <div class="tabletext" align="center">
-  <div class="tabletext">(c) 2004 The Open For Business Project - <a href="http://www.ofbiz.org" class="tabletext" target="_blank">www.ofbiz.org</a></div>
+  <div class="tabletext">(c) 2001-2005 The Open For Business Project - <a href="http://www.ofbiz.org" class="tabletext" target="_blank">www.ofbiz.org</a></div>
   <div class="tabletext">Powered By <a href="http://www.ofbiz.org" class="tabletext" target="_blank">OFBiz</a></div>
 </div>
 <br>

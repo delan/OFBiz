@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,6 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
 <#if shoppingCart?has_content>
@@ -33,72 +32,45 @@
     <#assign shoppingCartSize = 0>
 </#if>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign=middle align=center>
-      <div class='boxhead'><b>${uiLabelMap.EcommerceCartSummary}</b></div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-            <table width="100%" border="0" cellpadding="2" cellspacing="0">
-              <#if (shoppingCartSize > 0)>
-                <tr>
-                  <td colspan="3">
-                    <a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewCart}]</a>&nbsp;<a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceCheckout}]</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td valign="bottom"><div class="tabletext"><b>#<b></div></td>
-                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.EcommerceItem}<b></div></td>
-                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.CommonSubtotal}<b></div></td>
-                </tr>
-                <#list shoppingCart.items() as cartLine>
-                  <tr>
-                    <td valign="top"><div class="tabletext" nowrap>${cartLine.getQuantity()?string.number}</div></td>
-                    <td valign="top">
-                      <#if cartLine.getProductId()?exists>
-                        <div><a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getName()}</a></div>
-                      <#else>
-                        <div class="tabletext"><b>${cartLine.getItemTypeDescription()?if_exists}</b></div>
-                      </#if>
-                    </td>
-                    <td align="right" valign="top"><div class="tabletext" nowrap><@ofbizCurrency amount=cartLine.getItemSubTotal() isoCode=shoppingCart.getCurrency()/></div></td>
-                  </tr>
-                  <#if cartLine.getReservStart()?exists>
-                  <tr><td>&nbsp;</td><td colspan="2"><div class="tabletext">(${cartLine.getReservStart()?string("yyyy-MM-dd")}, ${cartLine.getReservLength()} days)</div></td></tr>
-                      </#if>
-                </#list>
-                <tr>
-                  <td colspan="3" align="right">
-                    <div class="tabletext"><b>${uiLabelMap.EcommerceTotal}: <@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=shoppingCart.getCurrency()/></b></div>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="3">
-                    <div><a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewCart}]</a>&nbsp;<a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceCheckout}]</a></div>
-                    <div><a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceCheckoutQuick}]</a></div>
-                  </td>
-                </tr>
-              <#else>
-                <tr>
-                  <td nowrap colspan="3"><div class="tabletext">${uiLabelMap.EcommerceShoppingCartEmpty}.</div></td>
-                </tr>
+<div class="ecom-screenlet">
+    <div class="ecom-screenlet-header">
+        <div class='boxhead'><b>${uiLabelMap.EcommerceCartSummary}</b></div>
+    </div>
+    <div class="ecom-screenlet-body">
+        <#if (shoppingCartSize > 0)>
+          <div><a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewCart}]</a>&nbsp;<a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceCheckout}]</a></div>
+          <table width="100%" cellpadding="0" cellspacing="2">
+            <tr>
+              <td valign="bottom"><div class="tabletext"><b>#<b></div></td>
+              <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.EcommerceItem}<b></div></td>
+              <td valign="bottom" align="right"><div class="tabletext"><b>${uiLabelMap.CommonSubtotal}<b></div></td>
+            </tr>
+            <#list shoppingCart.items() as cartLine>
+              <tr>
+                <td valign="top"><div class="tabletext">${cartLine.getQuantity()?string.number}</div></td>
+                <td valign="top">
+                  <#if cartLine.getProductId()?exists>
+                    <div><a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getName()}</a></div>
+                  <#else>
+                    <div class="tabletext"><b>${cartLine.getItemTypeDescription()?if_exists}</b></div>
+                  </#if>
+                </td>
+                <td align="right" valign="top"><div class="tabletext"><@ofbizCurrency amount=cartLine.getItemSubTotal() isoCode=shoppingCart.getCurrency()/></div></td>
+              </tr>
+              <#if cartLine.getReservStart()?exists>
+                <tr><td>&nbsp;</td><td colspan="2"><div class="tabletext">(${cartLine.getReservStart()?string("yyyy-MM-dd")}, ${cartLine.getReservLength()} days)</div></td></tr>
               </#if>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<br>
+            </#list>
+            <tr>
+              <td colspan="3" align="right">
+                <div class="tabletext"><b>${uiLabelMap.EcommerceTotal}: <@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=shoppingCart.getCurrency()/></b></div>
+              </td>
+            </tr>
+          </table>
+          <div><a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewCart}]</a>&nbsp;<a href="<@ofbizUrl>checkoutoptions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceCheckout}]</a></div>
+          <div><a href="<@ofbizUrl>quickcheckout</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceCheckoutQuick}]</a></div>
+        <#else>
+          <div class="tabletext">${uiLabelMap.EcommerceShoppingCartEmpty}</div>
+        </#if>
+    </div>
+</div>

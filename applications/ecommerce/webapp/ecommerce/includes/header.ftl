@@ -36,7 +36,7 @@
     <title>${(productStore.storeName)?if_exists}: ${page.title?if_exists}</title>
     <script language="javascript" src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"></script>
     <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
-    <link rel="stylesheet" href="<@ofbizContentUrl>${(productStore.styleSheet)?default("/images/maincss.css")}</@ofbizContentUrl>" type="text/css"/>
+    <link rel="stylesheet" href="<@ofbizContentUrl>${(productStore.styleSheet)?default("/images/ecommain.css")}</@ofbizContentUrl>" type="text/css"/>
 
     <#-- Append CSS for catalog -->
     <#if catalogStyleSheet?exists>
@@ -90,7 +90,7 @@
     </#if>
 </head>
 
-<body class="ecbody"<#if includeHtmlArea> onLoad="init_all()"</#if>>
+<body<#if includeHtmlArea> onLoad="init_all()"</#if>>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="headerboxoutside">
   <tr>

@@ -23,9 +23,8 @@
  *@version    $Rev$
  *@since      3.1
 -->
-<#assign forumRootId = "WebStoreCONTENT" />
+<#assign forumRootId = "WebStoreCONTENT"/>
 
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#-- variable setup and worker calls -->
 <#assign curCategoryId = requestAttributes.curCategoryId?if_exists>
 <#assign forumTrailCsv=requestParameters.forumTrailCsv?if_exists/>
@@ -38,48 +37,17 @@
   </#if>
 </#if>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign=middle align=center>
-            <div class="boxhead">${uiLabelMap.ProductBrowseContent}</div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-            <div style='margin-left: 10px;'>
-
-                <#assign count_1=0 />
-                <@loopSubContentCache subContentId=forumRootId
-                    viewIndex=0
-                    viewSize=9999
-                    orderBy="contentName"
-                    contentAssocTypeId="SUBSITE"
-                >
-                       <tr>
-                         <td >
-                           <div class="browsecategorytext" style="margin-left: 10px">
-                             -&nbsp;<a href="<@ofbizUrl>/showcontenttree?contentId=${subContentId}&nodeTrailCsv=${subContentId}</@ofbizUrl>" class="browsecategorybutton">${content.contentName}</a>
-                           </div>
-                         </td >
-                       </tr>
-                    <#assign count_1=count_1 + 1 />
-                </@loopSubContentCache >
+<div class="ecom-screenlet">
+    <div class="ecom-screenlet-header">
+        <div class="boxhead">${uiLabelMap.ProductBrowseContent}</div>
+    </div>
+    <div class="ecom-screenlet-body">
+        <#assign count_1=0/>
+        <@loopSubContentCache subContentId=forumRootId viewIndex=0 viewSize=9999 orderBy="contentName" contentAssocTypeId="SUBSITE">
+            <div class="browsecategorytext" style="margin-left: 10px">
+               -&nbsp;<a href="<@ofbizUrl>/showcontenttree?contentId=${subContentId}&nodeTrailCsv=${subContentId}</@ofbizUrl>" class="browsecategorybutton">${content.contentName}</a>
             </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<br>
-
-
+            <#assign count_1=(count_1 + 1)/>
+        </@loopSubContentCache>
+    </div>
+</div>
