@@ -90,17 +90,6 @@ public class ControlServlet extends HttpServlet {
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         
-        // ==================
-        try {
-            FileOutputStream ostream = new FileOutputStream("outtest.ser");
-            ObjectOutputStream p = new ObjectOutputStream(ostream);
-            p.writeObject(session);
-            p.flush();
-            ostream.close();
-        } catch (Exception e) {
-            Debug.logError(e);
-        }
-        // ==================
         // workaraound if we are in the root webapp
         String webappName = UtilMisc.getApplicationName(request);
 		
