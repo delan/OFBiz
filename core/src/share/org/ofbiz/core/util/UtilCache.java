@@ -53,8 +53,8 @@ public class UtilCache {
 
     /** A list of the elements order by Least Recent Use */
     public LinkedList keyLRUList = new LinkedList();
-    /** A hashtable containing a value for each element. */
-    public Map valueTable = new HashMap();
+    /** A hashtable containing a CacheLine object with a value and a loadTime for each element. */
+    public Map cacheLineTable = new WeakHashMap();
     /** A count of the number of cache hits */
     protected long hitCount = 0;
     /** A count of the number of cache misses */
@@ -64,8 +64,6 @@ public class UtilCache {
      */
     protected long maxSize = 0;
 
-    /** A Map containing a Long integer representing the time that the corresponding element was first loaded */
-    public Map expireTable = new HashMap();
     /** Specifies the amount of time since initial loading before an element will be reported as expired.
      * If set to 0, elements will never expire.
      */
@@ -160,7 +158,7 @@ public class UtilCache {
 
         if (maxSize > 0) {
             //when maxSize is changed, the setter will take care of filling the LRU list
-            if (valueTable.containsKey(key)) {
+            if (cacheLineTable.containsKey(key)) {
                 keyLRUList.remove(key);
                 keyLRUList.addFirst(key);
             } else {
@@ -168,10 +166,13 @@ public class UtilCache {
             }
         }
 
-        valueTable.put(key, value);
-        if (expireTime > 0)
-            expireTable.put(key, new Long(new Date().getTime()));
-        if (maxSize > 0 && valueTable.size() > maxSize) {
+        
+        if (expireTime > 0) {
+            cacheLineTable.put(key, new UtilCache.CacheLine(value, System.currentTimeMillis()));
+        } else {
+            cacheLineTable.put(key, new UtilCache.CacheLine(value));
+        }
+        if (maxSize > 0 && cacheLineTable.size() > maxSize) {
             Object lastKey = keyLRUList.getLast();
             remove(lastKey);
         }
@@ -187,13 +188,15 @@ public class UtilCache {
             missCount++;
             return null;
         }
-        if (hasExpired(key)) {
+        UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
+        if (hasExpired(line)) {
             //note that print.info in debug.properties cannot be checked through UtilProperties here, it would cause infinite recursion...
             //Debug.logInfo("Element has expired with key " + key);
             remove(key);
+            line = null;
         }
-        Object value = valueTable.get(key);
-        if (value == null) {
+        
+        if (line == null) {
             //Debug.logInfo("Element not found with key " + key);
             missCount++;
             return null;
@@ -205,7 +208,7 @@ public class UtilCache {
             keyLRUList.remove(key);
             keyLRUList.addFirst(key);
         }
-        return value;
+        return line.value;
     }
 
     /** Removes an element from the cache according to the specified key
@@ -213,12 +216,11 @@ public class UtilCache {
      * @return The value of the removed element specified by the key
      */
     public synchronized Object remove(Object key) {
-        if (key != null && valueTable.containsKey(key)) {
-            Object value = valueTable.get(key);
-            valueTable.remove(key);
-            expireTable.remove(key);
+        if (key != null && cacheLineTable.containsKey(key)) {
+            UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
+            cacheLineTable.remove(key);
             keyLRUList.remove(key);
-            return value;
+            return line.value;
         } else {
             missCount++;
             return null;
@@ -229,9 +231,8 @@ public class UtilCache {
      */
     public synchronized void clear() {
         //Enumeration e;
-        //for (e = valueTable.keys(); e.hasMoreElements();) remove(e.nextElement());
-        valueTable.clear();
-        expireTable.clear();
+        //for (e = cacheLineTable.keys(); e.hasMoreElements();) remove(e.nextElement());
+        cacheLineTable.clear();
         keyLRUList.clear();
         clearCounters();
     }
@@ -270,20 +271,19 @@ public class UtilCache {
      */
     public void setMaxSize(long maxSize) {
         //if the new maxSize is <= 0, clear keyLRUList
-        if (maxSize <= 0)
+        if (maxSize <= 0) {
             keyLRUList.clear();
-        //if the new maxSize > 0 and the old is <= 0, fill in LRU list - order will be meaningless for now
-        else if (maxSize > 0 && this.maxSize <= 0) {
-            Iterator entries = valueTable.entrySet().iterator();
-            while (entries.hasNext()) {
-                Map.Entry entry = (Map.Entry) entries.next();
-                keyLRUList.add(entry.getKey());
+        } else if (maxSize > 0 && this.maxSize <= 0) {
+            //if the new maxSize > 0 and the old is <= 0, fill in LRU list - order will be meaningless for now
+            Iterator keys = cacheLineTable.keySet().iterator();
+            while (keys.hasNext()) {
+                keyLRUList.add(keys.next());
             }
         }
 
         //if the new maxSize is less than the current cache size, shrink the cache.
-        if (maxSize > 0 && valueTable.size() > maxSize) {
-            while (valueTable.size() > maxSize) {
+        if (maxSize > 0 && cacheLineTable.size() > maxSize) {
+            while (cacheLineTable.size() > maxSize) {
                 Object lastKey = keyLRUList.getLast();
                 remove(lastKey);
             }
@@ -306,15 +306,14 @@ public class UtilCache {
     public void setExpireTime(long expireTime) {
         //if expire time was <= 0 and is now greater, fill expire table now
         if (this.expireTime <= 0 && expireTime > 0) {
-            Iterator entries = valueTable.entrySet().iterator();
-            while (entries.hasNext()) {
-                Map.Entry entry = (Map.Entry) entries.next();
-                expireTable.put(entry.getKey(), new Long(new Date().getTime()));
+            long currentTime = System.currentTimeMillis();
+            Iterator values = cacheLineTable.values().iterator();
+            while (values.hasNext()) {
+                UtilCache.CacheLine line = (UtilCache.CacheLine) values.next();
+                line.loadTime = currentTime;
             }
-        }
-        //if expire time was > 0 and is now <=, clear expire table now
-        else if (this.expireTime <= 0 && expireTime > 0) {
-            expireTable.clear();
+        } else if (this.expireTime <= 0 && expireTime > 0) {
+            //if expire time was > 0 and is now <=, do nothing, just leave the load times in place, won't hurt anything...
         }
 
         this.expireTime = expireTime;
@@ -331,7 +330,7 @@ public class UtilCache {
      * @return The number of elements currently in the cache
      */
     public long size() {
-        return valueTable.size();
+        return cacheLineTable.size();
     }
 
     /** Returns a boolean specifying whether or not an element with the specified key is in the cache.
@@ -340,9 +339,10 @@ public class UtilCache {
      * @return True is the cache contains an element corresponding to the specified key, otherwise false
      */
     public boolean containsKey(Object key) {
-        if (hasExpired(key))
+        if (hasExpired(key)) {
             remove(key);
-        return valueTable.containsKey(key);
+        }
+        return cacheLineTable.containsKey(key);
     }
 
     /** Returns a boolean specifying whether or not the element corresponding to the key has expired.
@@ -353,27 +353,33 @@ public class UtilCache {
      * @return True is the element corresponding to the specified key has expired, otherwise false
      */
     public boolean hasExpired(Object key) {
-        if (expireTime <= 0)
-            return false;
-        if (key == null)
-            return false;
-        Long time = (Long) expireTable.get(key);
-        if (time == null)
-            return true;
-        Long curTime = new Long(new Date().getTime());
-        if (time.longValue() + expireTime < curTime.longValue())
-            return true;
-        else
-            return false;
+        if (expireTime <= 0) return false;
+        if (key == null) return false;
+        
+        UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
+        return hasExpired(line);
     }
 
+    protected boolean hasExpired(UtilCache.CacheLine line) {
+        if (expireTime <= 0) return false;
+        if (line == null) return false;
+        
+        if (line.loadTime <= 0) return true;
+        if ((line.loadTime + expireTime) < System.currentTimeMillis()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /** Clears all expired cache entries */
     public void clearExpired() {
-        Iterator entries = valueTable.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry entry = (Map.Entry) entries.next();
-            if (hasExpired(entry.getKey()))
-                remove(entry.getKey());
+        Iterator keys = cacheLineTable.keySet().iterator();
+        while (keys.hasNext()) {
+            Object key = keys.next();
+            if (hasExpired(key)) {
+                remove(key);
+            }
         }
     }
 
@@ -417,7 +423,7 @@ public class UtilCache {
                 }
             } else {
                 //no LRU, try looping through the keySet to see if we find the specified index...
-                Iterator ksIter = utilCache.valueTable.keySet().iterator();
+                Iterator ksIter = utilCache.cacheLineTable.keySet().iterator();
                 int curNum = 0;
                 while (ksIter.hasNext()) {
                     if (number == curNum) {
@@ -496,6 +502,20 @@ public class UtilCache {
                 utilCache.setExpireTime(expireTime.longValue());
         }
         return "success";
+    }
+    
+    protected static class CacheLine {
+        public Object value = null;
+        public long loadTime = 0;
+        
+        public CacheLine(Object value) {
+            this.value = value;
+        }
+        
+        public CacheLine(Object value, long loadTime) {
+            this.value = value;
+            this.loadTime = loadTime;
+        }
     }
 }
 
