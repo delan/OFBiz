@@ -49,16 +49,7 @@ public class ShippingEvents {
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-
-        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-        URL ecommercePropertiesUrl = null;
-
-        try {
-            ecommercePropertiesUrl = application.getResource("/WEB-INF/order.properties");
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, module);
-        }
-
+                
         StringBuffer errorMessage = new StringBuffer();
 
         // String shippingMethod = request.getParameter("shipping_method");
@@ -202,12 +193,12 @@ public class ShippingEvents {
         }
 
         // Calculate priority based on available data.
-        double PRIORITY_PARTY = UtilProperties.getPropertyNumber(ecommercePropertiesUrl, "shipping.priority.partyId");
-        double PRIORITY_ROLE = UtilProperties.getPropertyNumber(ecommercePropertiesUrl, "shipping.priority.roleTypeId");
-        double PRIORITY_GEO = UtilProperties.getPropertyNumber(ecommercePropertiesUrl, "shipping.priority.geoId");
-        double PRIORITY_WEIGHT = UtilProperties.getPropertyNumber(ecommercePropertiesUrl, "shipping.priority.weightSpan");
-        double PRIORITY_QTY = UtilProperties.getPropertyNumber(ecommercePropertiesUrl, "shipping.priority.qtySpan");
-        double PRIORITY_PRICE = UtilProperties.getPropertyNumber(ecommercePropertiesUrl, "shipping.priority.priceSpan");
+        double PRIORITY_PARTY = 9;
+        double PRIORITY_ROLE = 8;
+        double PRIORITY_GEO = 4;
+        double PRIORITY_WEIGHT = 1;
+        double PRIORITY_QTY = 1;
+        double PRIORITY_PRICE = 1;
 
         int estimateIndex = 0;
 
