@@ -112,33 +112,7 @@ public class ModelForm {
         }
 
     }
-    
-    public static class AltTarget {
-        public String useWhen;
-        public String target;
-        public AltTarget(Element altTargetElement) {
-            this.useWhen = altTargetElement.getAttribute("use-when");
-            this.target = altTargetElement.getAttribute("target");
-        }
-    }
-    
-    public static class AutoFieldsService {
-        public String serviceName;
-        public String mapName;
-        public AutoFieldsService(Element element) {
-            this.serviceName = element.getAttribute("service-name");
-            this.mapName = element.getAttribute("map-name");
-        }
-    }
-    
-    public static class AutoFieldsEntity {
-        public String entityName;
-        public String mapName;
-        public AutoFieldsEntity(Element element) {
-            this.entityName = element.getAttribute("entity-name");
-            this.mapName = element.getAttribute("map-name");
-        }
-    }
+
     /**
      * @return
      */
@@ -277,5 +251,32 @@ public class ModelForm {
      */
     public void setType(String string) {
         type = string;
+    }
+    
+    public static class AltTarget {
+        public String useWhen;
+        public String target;
+        public AltTarget(Element altTargetElement) {
+            this.useWhen = altTargetElement.getAttribute("use-when");
+            this.target = altTargetElement.getAttribute("target");
+        }
+    }
+    
+    public static class AutoFieldsService {
+        public String serviceName;
+        public String mapName;
+        public AutoFieldsService(Element element) {
+            this.serviceName = element.getAttribute("service-name");
+            this.mapName = element.getAttribute("map-name");
+        }
+    }
+    
+    public static class AutoFieldsEntity {
+        public String entityName;
+        public String mapName;
+        public AutoFieldsEntity(Element element) {
+            this.entityName = element.getAttribute("entity-name");
+            this.mapName = element.getAttribute("map-name");
+        }
     }
 }
