@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -53,7 +53,7 @@
             <input type=text size="22" name="thruDate" value="${productPriceRule.thruDate?if_exists}" class="inputBox">
             &nbsp;&nbsp;
             <#assign saleRule = productPriceRule.isSale?exists && productPriceRule.isSale == "Y">
-            <span class="tabletext"><b>Sale Price:</b>&nbsp;<input type=RADIO class="radioButton" name="isSale" value="Y" <#if saleRule>CHECKED</#if>>Yes&nbsp;<input type=RADIO name="isSale" value="N" <#if saleRule>CHECKED</#if>>No</span>
+            <span class="tabletext"><b>Sale Price:</b>&nbsp;<input type=RADIO class="radioButton" name="isSale" value="Y" <#if saleRule>CHECKED</#if>>Yes&nbsp;<input type=RADIO name="isSale" value="N" <#if !saleRule>CHECKED</#if>>No</span>
             &nbsp;&nbsp;
             <INPUT type=submit value="Update" style="font-size: x-small;">
         </FORM>
