@@ -260,13 +260,13 @@ public class ModelReader {
         return resourceHandlerEntities.keySet().iterator();
     }
 
-    public Collection getResourceHandlerEntities(String entityFileName) {
+    public Collection getResourceHandlerEntities(ResourceHandler resourceHandler) {
         if (resourceHandlerEntities == null) return null;
-        return (Collection) resourceHandlerEntities.get(entityFileName);
+        return (Collection) resourceHandlerEntities.get(resourceHandler);
     }
 
-    public void addEntityToFile(String entityName, String filename) {
-        entityResourceHandlerMap.put(entityName, filename);
+    public void addEntityToResourceHandler(String entityName, String loaderName, String location) {
+        entityResourceHandlerMap.put(entityName, new ResourceHandler(loaderName, location));
     }
     
     public ResourceHandler getEntityResourceHandler(String entityName) {
