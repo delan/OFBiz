@@ -2,16 +2,10 @@
 
 <!-- example scheduled job: -->
 <scheduler>
-  <schedule>
-    <name>MainTestJob</name>
-    <start-date>2001-07-19 15:08</start-date>
-    <end-date>2001-07-19 15:10</end-date> 
-    <interval>1</interval>
-    <interval-type>minute</interval-type>
-    <event-type>java</event-type>
-    <event-path>org.ofbiz.core.event.SchedulerTestEvent</event-path>
-    <event-invoke>testJob</event-invoke>
-    <repeat>true</repeat>
+  <schedule name="MainTestJob">
+   	<duration start="2001-10-01 00:00" end="2001-10-01 23:59"/>
+   	<interval type="minute" value="1" repeat="true"/>  
+    <event type="java" path="org.ofbiz.core.event.SchedulerTestEvent" invoke="testJob"/>    
     <parameter name="parmName" value="parmValue"/>
   </schedule>
 </scheduler>
