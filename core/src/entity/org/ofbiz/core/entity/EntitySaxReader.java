@@ -135,9 +135,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
 
         numberRead = 0;
         try {
-            boolean beganTransaction = TransactionUtil.begin();
-
-            TransactionUtil.setTransactionTimeout(transactionTimeout);
+            boolean beganTransaction = TransactionUtil.begin(transactionTimeout);            
             Debug.logImportant("Transaction Timeout set to " + transactionTimeout / 3600 + " hours (" + transactionTimeout + " seconds)");
             try {
                 reader.parse(new InputSource(is));
