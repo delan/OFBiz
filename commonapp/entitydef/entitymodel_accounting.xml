@@ -149,6 +149,10 @@
         <key-map field-name="budgetId"/>
         <key-map field-name="budgetItemSeqId"/>
       </relation>
+      <relation type="many" rel-entity-name="EmplPosition">
+        <key-map field-name="budgetId"/>
+        <key-map field-name="budgetItemSeqId"/>
+      </relation>
     </entity>
     <entity entity-name="BudgetItemAttribute"
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -1264,6 +1268,9 @@
       <field name="deductionTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="deductionTypeId"/>
+      <relation type="many" rel-entity-name="PayrollPreference">
+        <key-map field-name="deductionTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="EftAccount"
             package-name="org.ofbiz.commonapp.accounting.payment"
@@ -1544,6 +1551,9 @@
       <relation type="many" rel-entity-name="PaymentBudgetAllocation">
         <key-map field-name="paymentId"/>
       </relation>
+      <relation type="many" rel-entity-name="PerfReview">
+        <key-map field-name="paymentId"/>
+      </relation>
     </entity>
     <entity entity-name="PaymentApplication"
             package-name="org.ofbiz.commonapp.accounting.payment"
@@ -1643,6 +1653,9 @@
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderPaymentPreference">
+        <key-map field-name="paymentMethodTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PayrollPreference">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
     </entity>

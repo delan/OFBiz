@@ -256,6 +256,15 @@
       <relation type="many" rel-entity-name="AccoutingPeriod">
         <key-map field-name="periodTypeId"/>
       </relation>
+      <relation type="many" rel-entity-name="PayrollPreference">
+        <key-map field-name="periodTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PayHistory">
+        <key-map field-name="periodTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyBenefit">
+        <key-map field-name="periodTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="StandardTimePeriod"
             package-name="org.ofbiz.commonapp.common.period"
@@ -329,6 +338,15 @@
         <key-map field-name="statusId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentStatus">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="EmploymentApp">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="UnemploymentClaim">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="EmplPosition">
         <key-map field-name="statusId"/>
       </relation>
     </entity>
