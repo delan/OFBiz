@@ -142,6 +142,21 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
+    <!-- communication event workeffort -->
+    <simple-method method-name="makeCommunicationEventWorkEffort" short-description="Make a Communication Event WorkEffort">
+    	<make-value entity-name="CommunicationEventWorkEff" value-name="lookupMap"/>
+    	<set-pk-fields map-name="parameters" value-name="lookupMap"/>
+    	<find-by-primary-key entity-name="CommunicationEventWorkEff" map-name="lookupMap" value-name="eventWe"/>
+    	<if-not-empty field-name="workEffortId" map-name="eventWe">
+    		<set-nonpk-fields map-name="parameters" value-name="eventWe"/>
+    		<store-value value-name="eventWe"/>
+    	</if-not-empty>
+    	<if-empty field-name="workEffortId" map-name="eventWe">
+    		<set-nonpk-fields map-name="parameters" value-name="lookupMap"/>
+    		<create-value value-name="lookupMap"/>
+    	</if-empty>
+    </simple-method>
+    
     <simple-method method-name="createWorkEffortContactMech" short-description="Create a WorkEffortContactMech">
         <check-permission permission="WORKEFFORTMGR" action="_CREATE"><fail-message message="You do not have permission to perform this operation for this work effort."/></check-permission>
         <check-errors/>

@@ -58,6 +58,10 @@
   <tr>
     <td colspan="2" align="right" nowrap>
       <a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}</@ofbizUrl>" class="buttontext">[New Communication]</a>
+      <#if communicationEvent?has_content>
+        <a href="/workeffort/control/task?communicationEventId=${communicationEvent.communicationEventId}${requestAttributes.externalKeyParam}" class="buttontext">[New Task]</a>
+        <a href="/workeffort/control/event?communicationEventId=${communicationEvent.communicationEventId}${requestAttributes.externalKeyParam}" class="buttontext">[New Event]</a>
+      </#if>
     </td>
   </tr>
 </table>

@@ -59,6 +59,9 @@
                     <div class='tabletext'>ERROR: Could not find Task with ID "${workEffortId}"</div>
                   </#if>
               </#if>
+              <#if requestParameters.communicationEventId?exists>
+                <input type="hidden" name="communicationEventId" value="${requestParameters.communicationEventId}">
+              </#if>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Task Name</div></td>

@@ -6,4 +6,13 @@
         <condition field-name="quickAssignPartyId" operator="is-not-empty"/>
         <action service="quickAssignPartyToWorkEffort" mode="sync"/>
     </eca>
+    <eca service="createWorkEffort" event="commit">
+        <condition field-name="communicationEventId" operator="is-not-empty"/>
+        <action service="makeCommunicationEventWorkEffort" mode="sync"/>
+    </eca>
+    
+    <eca service="updateWorkEffort" event="commit">
+        <condition field-name="communicationEventId" operator="is-not-empty"/>
+        <action service="makeCommunicationEventWorkEffort" mode="sync"/>
+    </eca>    
 </service-eca>

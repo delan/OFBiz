@@ -25,6 +25,7 @@
         <auto-attributes mode="OUT" include="pk" optional="false"/>
         <attribute name="quickAssignPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="requirementId" type="String" mode="IN" optional="true"/>
+        <attribute name="communicationEventId" type="String" mode="IN" optional="true"/>
         <override name="workEffortTypeId" optional="false"/>
         <override name="workEffortName" optional="false"/>
         <override name="currentStatusId" optional="false"/>
@@ -34,14 +35,23 @@
         <description>Update a WorkEffort Entity</description>
         <implements service="interfaceWorkEffort"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
+        <attribute name="communicationEventId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="deleteWorkEffort" default-entity-name="WorkEffort" engine="simple"
             location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="deleteWorkEffort">
         <description>Delete a WorkEffort Entity</description>
-        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>        
+    </service>
+    
+    <!-- Communication Event WorkEffort -->
+    <service name="makeCommunicationEventWorkEffort" default-entity-name="CommunicationEventWorkEff" engine="simple"
+            location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="makeCommunicationEventWorkEffort" auth="true">
+        <description>Make a Communication Event Workeffort</description>
+        <auto-attributes include="all" mode="IN" optional="false"/>
+        <override name="description" optional="true"/>
     </service>
 
-  <!-- WorkEffortPartyAssignment services -->
+    <!-- WorkEffortPartyAssignment services -->
     <service name="assignPartyToWorkEffort" default-entity-name="WorkEffortPartyAssignment" engine="java"
             location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortPartyAssignmentServices" invoke="assignPartyToWorkEffort">
         <description>Create a WorkEffortPartyAssignment Entity</description>
