@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev: 3227 $
  *@since      2.2
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <script language="JavaScript">
 <!-- //
@@ -51,15 +53,15 @@ function lookupOrders(click) {
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td><div class='boxhead'>Find Order(s)</div></td>
+          <td><div class='boxhead'>${uiLabelMap.OrderFindOrder}</div></td>
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/findorders?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
+                <a href="<@ofbizUrl>/findorders?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
               <#else>
-                <#if orderHeaderList?exists><a href="<@ofbizUrl>/findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
-                <a href="javascript:lookupOrders(true);" class="submenutext">Lookup Order(s)</a>
-                <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="submenutextright">Lookup Party</a>
+                <#if orderHeaderList?exists><a href="<@ofbizUrl>/findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
+                <a href="javascript:lookupOrders(true);" class="submenutext">${uiLabelMap.OrderLookupOrder}</a>
+                <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="submenutextright">${uiLabelMap.PartyLookupParty}</a>
               </#if>
             </div>
           </td>
@@ -71,22 +73,22 @@ function lookupOrders(click) {
           <td align='center' width='100%'>
             <table border='0' cellspacing='0' cellpadding='2'>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Order ID:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderOrderId}</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='order_id'></td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Customer PO#:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderCustomerPo}</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='correspondingPoId' value='${requestParameters.correspondingPoId?if_exists}'></td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Product ID:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.ProductProductId}</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='productId' value='${requestParameters.productId?if_exists}'></td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Role Type:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyRoleType}</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <select name='roleTypeId' class='selectBox'>
@@ -102,17 +104,17 @@ function lookupOrders(click) {
                 </td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Party ID:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPartyId}</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='partyId' value='${requestParameters.partyId?if_exists}'></td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>UserLogin ID:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyUserLoginId}</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'></td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Order Type:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderOrderType}</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <select name='orderTypeId' class='selectBox'>
@@ -128,17 +130,17 @@ function lookupOrders(click) {
                 </td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Billing Acct:</div>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.AccountingBillingAccount}</div>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='billingAccountId' value='${requestParameters.billingAccountId?if_exists}'></td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Created By:</div>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonCreatedBy}</div>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='createdBy' value='${requestParameters.createdBy?if_exists}'></td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Store:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.ProductProductStore}</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <select name='productStoreId' class='selectBox'>
@@ -154,7 +156,7 @@ function lookupOrders(click) {
                 </td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Web Site:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.ProductWebSite}</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <select name='webSiteId' class='selectBox'>
@@ -170,7 +172,7 @@ function lookupOrders(click) {
                 </td>
               </tr>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Status:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonStatus}</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <select name='orderStatusId' class='selectBox'>
@@ -187,7 +189,7 @@ function lookupOrders(click) {
               </tr>
               <tr>
                 <td width='25%' align='right'>
-                  <div class='tableheadtext'>Date Filter:</div>
+                  <div class='tableheadtext'>${uiLabelMap.CommonDateFilter}</div>
                 </td>
                 <td width='5%'>&nbsp;</td>
                 <td>
@@ -196,14 +198,14 @@ function lookupOrders(click) {
                       <td nowrap>
                         <input type='text' size='25' class='inputBox' name='minDate' value='${requestParameters.minDate?if_exists}'>
                         <a href="javascript:call_cal(document.lookuporder.minDate, '${fromDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-                        <span class='tabletext'>From</span>
+                        <span class='tabletext'>${uiLabelMap.CommonFrom}</span>
                       </td>
                     </tr>
                     <tr>
                       <td nowrap>
                         <input type='text' size='25' class='inputBox' name='maxDate' value='${requestParameters.maxDate?if_exists}'>
                         <a href="javascript:call_cal(document.lookuporder.maxDate, '${thruDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-                        <span class='tabletext'>Thru</span>
+                        <span class='tabletext'>${uiLabelMap.CommonThru}</span>
                       </td>
                     </tr>
                   </table>
@@ -215,7 +217,7 @@ function lookupOrders(click) {
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <div class="tabletext">
-                    <input type='checkbox' name='showAll' value='Y' onclick="javascript:lookupOrders(true);">&nbsp;Show All Records
+                    <input type='checkbox' name='showAll' value='Y' onclick="javascript:lookupOrders(true);">&nbsp;${uiLabelMap.CommonShowAllRecords}
                   </div>
                 </td>
               </tr>
@@ -244,14 +246,14 @@ document.lookuporder.order_id.focus();
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td width="50%"><div class="boxhead">Order(s) Found</div></td>
+          <td width="50%"><div class="boxhead">${uiLabelMap.OrderOrderFound}</div></td>
           <td width="50%">
             <div class="boxhead" align=right>
               <#if 0 < orderHeaderList?size>
                 <#if (viewIndex > 1)>
                   <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
                 <#else>
-                  <span class="submenutextdisabled">Previous</span>
+                  <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                 </#if>
                 <#if (orderHeaderListSize > 0)>
                   <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${orderHeaderListSize}</span>
@@ -259,7 +261,7 @@ document.lookuporder.order_id.focus();
                 <#if (orderHeaderListSize > highIndex)>
                   <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
                 <#else>
-                  <span class="submenutextrightdisabled">Next</span>
+                  <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                 </#if>
               </#if>
               &nbsp;
@@ -269,18 +271,18 @@ document.lookuporder.order_id.focus();
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
-          <td width="5%" align="left"><div class="tableheadtext">Type</div></td>
-          <td width="5%" align="left"><div class="tableheadtext">OrderID</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Name</div></td>
           <td width="5%" align="right"><div class="tableheadtext">Survey</div></td>
-          <td width="5%" align="right"><div class="tableheadtext">Items Ordered</div></td>
-          <td width="5%" align="right"><div class="tableheadtext">Items Returned</div></td>
-          <td width="10%" align="right"><div class="tableheadtext">Remaining Sub Total</div></td>
-          <td width="10%" align="right"><div class="tableheadtext">Order Total</div></td>
+          <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderType}</div></td>
+          <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderId}</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.PartyUserLoginId}</div></td>
+          <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderItemsOrdered}</div></td>
+          <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderItemsReturned}</div></td>
+          <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderRemainingSubTotal}</div></td>
+          <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderOrderTotal}</div></td>
           <td width="5%" align="left"><div class="tableheadtext">&nbsp;</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Status</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Order Date</div></td>
-          <td width="5%" align="left"><div class="tableheadtext">PartyID</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.CommonStatus}</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.OrderDate}</div></td>
+          <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.PartyPartyId}</div></td>
           <td width="10%">&nbsp;</td>
         </tr>
         <tr>
@@ -362,7 +364,7 @@ document.lookuporder.order_id.focus();
           </#list>
         <#else>
           <tr>
-            <td colspan='4'><div class='head3'>No order(s) found.</div></td>
+            <td colspan='4'><div class='head3'>${uiLabelMap.OrderNoOrderFound}</div></td>
           </tr>
         </#if>
         <#if lookupErrorMessage?exists>
@@ -377,5 +379,5 @@ document.lookuporder.order_id.focus();
 
 </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("ORDERMGR_VIEW" or "ORDERMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>

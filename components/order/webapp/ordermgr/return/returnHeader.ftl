@@ -20,22 +20,25 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev: 3227 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
 <#if returnHeader?exists>
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return Header</a>  
-    <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}<#if requestParameters.orderId?exists>&orderId=${requestParameters.orderId}</#if></@ofbizUrl>" class="tabButton">Return Items</a>
+    <a href="<@ofbizUrl>/returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.OrderReturnHeader}</a>  
+    <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}<#if requestParameters.orderId?exists>&orderId=${requestParameters.orderId}</#if></@ofbizUrl>" class="tabButton">${uiLabelMap.OrderReturnItems}</a>
     <#if returnHeader?has_content && returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED">
-      <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${requestAttributes.externalKeyParam}" class="tabButton">Receive Return</a>
+      <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${requestAttributes.externalKeyParam}" class="tabButton">${uiLabelMap.OrderReceiveReturn}</a>
     </#if>
 </div>
 <#else>
-  <div class="head1">Create New Return</div>
+  <div class="head1">${uiLabelMap.OrderCreateNewReturn}</div>
   <#if requestParameters.returnId?has_content>
-    <div class="head2">No return found with return ID : ${requestParameters.returnId}</div>
+    <div class="head2">${uiLabelMap.OrderNoReturnFoundWithId} : ${requestParameters.returnId}</div>
   </#if>
   <br>
 </#if>
@@ -52,7 +55,7 @@
   <#if returnHeader?exists>
   <tr>
     <td width='14%'>&nbsp;</td>
-    <td width='6%' align='right' nowrap><div class="tabletext">Return ID:</div></td>
+    <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.OrderReturnId}</div></td>
     <td width='6%'>&nbsp;</td>
     <td width='74%'>
       <b>${returnHeader.returnId}</b>
@@ -61,7 +64,7 @@
   </#if>
   <tr>
     <td width='14%'>&nbsp;</td>
-    <td width='6%' align='right' nowrap><div class="tabletext">Entry Date:</div></td>
+    <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.OrderEntryDate}</div></td>
     <td width='6%'>&nbsp;</td>
     <td width='74%'>
       <#if returnInfo.entryDate?exists>
@@ -73,7 +76,7 @@
   </tr>
   <tr>
     <td width='14%'>&nbsp;</td>
-    <td width='6%' align='right' nowrap><div class="tabletext">Return From Party:</div></td>
+    <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.OrderReturnFromParty}</div></td>
     <td width='6%'>&nbsp;</td>
     <td width='74%'>
       <input type='text' class='inputBox' size='20' name='fromPartyId' value='${returnInfo.fromPartyId?if_exists}'>
@@ -81,7 +84,7 @@
   </tr>
   <tr>
     <td width='14%'>&nbsp;</td>
-    <td width='6%' align='right' nowrap><div class="tabletext">Return To Facility:</div></td>
+    <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.OrderReturnToFacility}</div></td>
     <td width='6%'>&nbsp;</td>
     <td width='74%'>
       <select name='destinationFacilityId' class='selectBox'>
@@ -89,7 +92,7 @@
           <option value="${currentFacility.facilityId}">${currentFacility.facilityName?default(currentFacility.facilityId)}</option>
           <option value="${currentFacility.facilityId}">---</option>
         </#if>
-        <option value="">No Facility</option>
+        <option value="">${uiLabelMap.FacilityNoFacility}</option>
         <#list facilityList as facility>
           <option value="${facility.facilityId}">${facility.facilityName?default(facility.facilityId)}</option>
         </#list>
@@ -97,7 +100,7 @@
   </tr>  
   <tr>
     <td width='14%'>&nbsp;</td>
-    <td width='6%' align='right' nowrap><div class="tabletext">Billing Account:</div></td>
+    <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.AccountingBillingAccount}</div></td>
     <td width='6%'>&nbsp;</td>
     <td width='74%'>
       <#if billingAccountList?has_content>
@@ -106,7 +109,7 @@
             <option value="${currentAccount.billingAccountId}">${currentAccount.billingAccountId}: ${currentAccount.description?if_exists}</option>
             <option value="${currentAccount.billingAccountId}">---</option>
           </#if>
-          <option value="">No Account</option>
+          <option value="">${uiLabelMap.AccountingNoAccount}</option>
           <#list billingAccountList as ba>
             <option value="${ba.billingAccountId}">${ba.billingAccountId}: ${ba.description?if_exists}</option>
           </#list>
@@ -119,7 +122,7 @@
   <#if returnHeader?has_content>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' nowrap><div class="tabletext">Return Status:</div></td>
+      <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.CommonReturnStatus}</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <select name="statusId" class="selectBox">
@@ -135,7 +138,7 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
-      <td width='6%' align='right' valign='top' nowrap><div class="tabletext">Return From Address:</div></td>
+      <td width='6%' align='right' valign='top' nowrap><div class="tabletext">${uiLabelMap.OrderReturnFromAddress}</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>
         <#if postalAddresses?has_content>
@@ -154,7 +157,7 @@
             </div>
           </#list>
         </#if>          
-        <div class='tabletext'><input type='radio' name="originContactMechId" value="">No Address</div>
+        <div class='tabletext'><input type='radio' name="originContactMechId" value="">${uiLabelMap.CommonNoAddress}</div>
       </td>                
     </tr>     
     <tr>
@@ -162,7 +165,7 @@
       <td width='6%'>&nbsp;</td>
       <td width='6%'>&nbsp;</td>   
       <td width='74%'>
-        <input type="submit" class="standardButton" value="Update">      
+        <input type="submit" class="standardButton" value="${uiLabelMap.CommonUpdate}">      
       </td>
     </tr>     
   <#else>
@@ -172,7 +175,7 @@
     <td width='6%'>&nbsp;</td>
     <td width='6%'>&nbsp;</td>   
     <td width='74%'>
-      <input type="submit" class="standardButton" value="Create New">      
+      <input type="submit" class="standardButton" value="${uiLabelMap.CommonCreateNew}">      
     </td>
   </tr>     
   </#if>

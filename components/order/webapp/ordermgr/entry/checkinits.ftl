@@ -20,9 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev: 3227 $
  *@since      2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
 
 <script language="JavaScript">
 <!--
@@ -41,7 +45,7 @@ function setOrderType(po) {
         if (defaultStoreValue == "!") {
             defaultStoreValue = storeBox.options[storeBox.selectedIndex].value;
         }
-        storeBox.options[storeBox.selectedIndex].text = "Not Used For Purchase Orders";
+        storeBox.options[storeBox.selectedIndex].text = ${uiLabelMap.OrderNotUsedForPurchase};
         storeBox.options[storeBox.selectedIndex].value = "";
 
         if (defaultSuppText != "!") {
@@ -64,7 +68,7 @@ function setOrderType(po) {
         if (defaultSuppValue == "!") {
             defaultSuppValue = suppBox.options[suppBox.selectedIndex].value;
         }
-        suppBox.options[suppBox.selectedIndex].text = "Not Used For Sales Orders";
+        suppBox.options[suppBox.selectedIndex].text = ${uiLabelMap.OrderNotUsedForSales};
         suppBox.options[suppBox.selectedIndex].value = "";
     }
     storeBox.disabled = po;
@@ -80,10 +84,10 @@ function setOrderType(po) {
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Order Entry</div>
+            <div class="boxhead">${uiLabelMap.OrderOrderEntry}</div>
           </td>
           <td valign="middle" align="right"> 
-            <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="submenutext">Find Party</a><a href="javascript:document.entryform.submit();" class="submenutextright">Continue</a>
+            <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="submenutext">${uiLabelMap.PartyFindParty}</a><a href="javascript:document.entryform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
           </td>
         </tr>
       </table>
@@ -96,30 +100,30 @@ function setOrderType(po) {
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td width='14%'>&nbsp;</td>
-          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>Order Type:</div></td>
+          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.OrderOrderType}</div></td>
           <td width='6%'>&nbsp;</td>
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
-              <input type='radio' name='orderMode' onChange="javascript:setOrderType(false)" value='SALES_ORDER'<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Sales Order&nbsp;
-              <input type='radio' name='orderMode' onChange="javascript:setOrderType(true)" value='PURCHASE_ORDER'<#if sessionAttributes.orderMode?default("") == "PURCHASE_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Purchase Order&nbsp;
-              <#if !sessionAttributes.orderMode?exists>*<font color='red'>required</font><#else>(cannot be changed without clearing order.)</#if>
+              <input type='radio' name='orderMode' onChange="javascript:setOrderType(false)" value='SALES_ORDER'<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>${uiLabelMap.OrderSalesOrder}
+              <input type='radio' name='orderMode' onChange="javascript:setOrderType(true)" value='PURCHASE_ORDER'<#if sessionAttributes.orderMode?default("") == "PURCHASE_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>${uiLabelMap.OrderPurchaseOrder}&nbsp;&nbsp;
+              <#if !sessionAttributes.orderMode?exists>*<font color='red'>${uiLabelMap.CommonRequired}</font><#else>${uiLabelMap.OrderCannotBeChanged}</#if>
             </div>
           </td>
         </tr>
         <tr><td colspan="4">&nbsp;</td></tr>
         <tr>
           <td width='14%'>&nbsp;</td>
-          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>Product Store:</div></td>
+          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.ProductProductStore}</div></td>
           <td width='6%'>&nbsp;</td>
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
-              <select class="selectBox" name="productStoreId"<#if sessionAttributes.orderMode?exists> disabled</#if>>
+              <select class="selectBox" name="productStoreId"<#if sessionAttributes.orderMode?exists>${uiLabelMap.CommonDisabled}</#if>>
                 <#assign currentStore = shoppingCart.getProductStoreId()?default("NA")>
                 <#list productStores as productStore>
                   <option value="${productStore.productStoreId}"<#if productStore.productStoreId == currentStore> selected</#if>>${productStore.storeName}</option>
                 </#list>
               </select>
-              <#if !sessionAttributes.orderMode?exists>*<font color='red'>required for SO</font><#else>(cannot be changed without clearing order.)</#if>
+              <#if !sessionAttributes.orderMode?exists>&nbsp;&nbsp;*<font color='red'>${uiLabelMap.OrderRequiredForSO}</font><#else>${uiLabelMap.OrderCannotBeChanged}</#if>
             </div>
           </td>
         </tr>
@@ -132,14 +136,14 @@ function setOrderType(po) {
         </#if>
         <tr>
           <td width='14%'>&nbsp;</td>
-          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>Supplier:</div></td>
+          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.PartySupplier}</div></td>
           <td width='6%'>&nbsp;</td>
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
-              <select class="selectBox" name="supplierPartyId"<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> disabled</#if>>
-                <option value="">No Supplier</option>
+              <select class="selectBox" name="supplierPartyId"<#if sessionAttributes.orderMode?default("") == "SALES_ORDER">${uiLabelMap.CommonDisabled}</#if>>
+                <option value="">${uiLabelMap.PartyNoSupplier}</option>
                 <#list suppliers as supplier>
-                  <option value="${supplier.partyId}"<#if supplier.partyId == thisPartyId> selected</#if>>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(supplier, true)}</option>
+                  <option value="${supplier.partyId}"<#if supplier.partyId == thisPartyId>${uiLabelMap.CommonSelected}</#if>>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(supplier, true)}</option>
                 </#list>
               </select>
             </div>
@@ -147,7 +151,7 @@ function setOrderType(po) {
         </tr>
         <tr>
           <td width='14%'>&nbsp;</td>
-          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>UserLogin ID:</div></td>
+          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.PartyUserLoginId}</div></td>
           <td width='6%'>&nbsp;</td>
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
@@ -157,12 +161,12 @@ function setOrderType(po) {
         </tr>                 
         <tr>
           <td width='14%'>&nbsp;</td>
-          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>Party ID:</div></td>
+          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.PartyPartyId}</div></td>
           <td width='6%'>&nbsp;</td>
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
               <input type='text' class='inputBox' name='partyId' value='${thisPartyId?if_exists}'>
-              (overrides either of the above selections.)
+              ${uiLabelMap.CommonOverridesSelection}
             </div>
           </td>
         </tr>         

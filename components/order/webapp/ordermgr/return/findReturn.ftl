@@ -20,9 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
- *@since      3.0
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev: 3227 $ 
+ *@since       2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <script language="JavaScript">
 <!-- //
@@ -51,14 +54,14 @@ function lookupReturn(click) {
         <td width='100%'>
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
             <tr>
-              <td><div class='boxhead'>Find Return(s)</div></td>
+              <td><div class='boxhead'>${uiLabelMap.OrderFindReturn}</div></td>
               <td align='right'>
                 <div class="tabletext">
                   <#if requestParameters.hideFields?default("N") == "Y">
-                    <a href="<@ofbizUrl>/findreturn?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
+                    <a href="<@ofbizUrl>/findreturn?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonShowLookupFields}</a>
                   <#else>
-                    <#if returnHeaderList?exists><a href="<@ofbizUrl>/findreturn?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
-                    <a href="javascript:void();" onclick="javascript:lookupReturn(true);" class="submenutext">Lookup Return(s)</a><a href="<@ofbizUrl>/returnMain</@ofbizUrl>" class="submenutextright">Create Return</a>
+                    <#if returnHeaderList?exists><a href="<@ofbizUrl>/findreturn?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
+                    <a href="javascript:void();" onclick="javascript:lookupReturn(true);" class="submenutext">${uiLabelMap.OrderLookupReturn}</a><a href="<@ofbizUrl>/returnMain</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCreateReturn}</a>
                   </#if>
                 </div>
               </td>
@@ -70,27 +73,27 @@ function lookupReturn(click) {
                 <td align='center' width='100%'>
                   <table border='0' cellspacing='0' cellpadding='2'>
                     <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>Return ID:</div></td>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.OrderReturnId}</div></td>
                       <td width='5%'>&nbsp;</td>
                       <td><input type='text' class='inputBox' name='returnId'></td>
                     </tr>
                     <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>Party ID:</div></td>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyPartyId}</div></td>
                       <td width='5%'>&nbsp;</td>
                       <td><input type='text' class='inputBox' name='partyId' value='${requestParameters.partyId?if_exists}'></td>
                     </tr>
                     <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>UserLogin ID:</div></td>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.PartyUserLoginId}</div></td>
                       <td width='5%'>&nbsp;</td>
                       <td><input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'></td>
                     </tr>
                     <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>Billing Acct:</div>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.AccountingBillingAccount}</div>
                       <td width='5%'>&nbsp;</td>
                       <td><input type='text' class='inputBox' name='billingAccountId' value='${requestParameters.billingAccountId?if_exists}'></td>
                     </tr>
                     <tr>
-                      <td width='25%' align='right'><div class='tableheadtext'>Status:</div></td>
+                      <td width='25%' align='right'><div class='tableheadtext'>${uiLabelMap.CommonStatus}</div></td>
                       <td width='5%'>&nbsp;</td>
                       <td>
                         <select name='returnStatusId' class='selectBox'>
@@ -98,7 +101,7 @@ function lookupReturn(click) {
                             <option value="${currentStatus.statusId}">${currentStatus.description}</option>
                             <option value="${currentStatus.statusId}">---</option>
                           </#if>
-                          <option value="ANY">Any Return Status</option>
+                          <option value="ANY">${uiLabelMap.CommonAnyReturnStatus}</option>
                           <#list returnStatuses as returnStatus>
                             <option value="${returnStatus.statusId}">${returnStatus.description}</option>
                           </#list>
@@ -107,7 +110,7 @@ function lookupReturn(click) {
                     </tr>
                     <tr>
                       <td width='25%' align='right'>
-                        <div class='tableheadtext'>Date Filter:</div>
+                        <div class='tableheadtext'>${uiLabelMap.CommonDateFilter}</div>
                       </td>
                       <td width='5%'>&nbsp;</td>
                       <td>
@@ -116,14 +119,14 @@ function lookupReturn(click) {
                             <td nowrap>
                               <input type='text' size='25' class='inputBox' name='minDate' value='${requestParameters.minDate?if_exists}'>
                               <a href="javascript:call_cal(document.lookupreturn.minDate, '${fromDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-                              <span class='tabletext'>From</span>
+                              <span class='tabletext'>${uiLabelMap.CommonFrom}</span>
                             </td>
                           </tr>
                           <tr>
                             <td nowrap>
                               <input type='text' size='25' class='inputBox' name='maxDate' value='${requestParameters.maxDate?if_exists}'>
                               <a href="javascript:call_cal(document.lookupreturn.maxDate, '${thruDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-                              <span class='tabletext'>Thru</span>
+                              <span class='tabletext'>${uiLabelMap.CommonThru}</span>
                             </td>
                           </tr>
                         </table>
@@ -135,7 +138,7 @@ function lookupReturn(click) {
                       <td width='5%'>&nbsp;</td>
                       <td>
                         <div class="tabletext">
-                          <input type='checkbox' name='showAll' value='Y' onclick="javascript:lookupReturn(true);">&nbsp;Show All Records
+                          <input type='checkbox' name='showAll' value='Y' onclick="javascript:lookupReturn(true);">&nbsp;${uiLabelMap.CommonShowAllRecords}
                         </div>
                       </td>
                     </tr>
@@ -163,14 +166,14 @@ function lookupReturn(click) {
         <td width='100%'>
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
             <tr>
-              <td width="50%"><div class="boxhead">Return(s) Found</div></td>
+              <td width="50%"><div class="boxhead">${uiLabelMap.OrderReturnFound}</div></td>
               <td width="50%">
                  <div class="boxhead" align=right>
                   <#if (returnHeaderListSize > 0)>
                     <#if (viewIndex > 1)>
-                      <a href="<@ofbizUrl>/findreturn?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
+                      <a href="<@ofbizUrl>/findreturn?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonPrevious}</a>
                     <#else>
-                      <span class="submenutextdisabled">Previous</span>
+                      <span class="submenutextdisabled">${uiLabelMap.CommonPrevious}</span>
                     </#if>
                     <#if (returnHeaderListSize > 0)>
                       <span class="submenutextinfo">${lowIndex} - ${highIndex} of ${returnHeaderListSize}</span>
@@ -178,7 +181,7 @@ function lookupReturn(click) {
                     <#if (returnHeaderListSize > highIndex)>
                       <a href="<@ofbizUrl>/findreturn?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
                     <#else>
-                      <span class="submenutextrightdisabled">Next</span>
+                      <span class="submenutextrightdisabled">${uiLabelMap.CommonNext}</span>
                     </#if>
                   </#if>
                   &nbsp;
@@ -189,11 +192,11 @@ function lookupReturn(click) {
 
           <table width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr>
-              <td><div class="tableheadtext">Return #</div></td>
-              <td><div class="tableheadtext">Entry Date</div></td>
-              <td><div class="tableheadtext">Party</div></td>
-              <td><div class="tableheadtext">Facility</div></td>
-              <td><div class="tableheadtext">Status</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.OrderOrderReturn} #</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.OrderEntryDate}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.PartyParty}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.FacilityFacility}</div></td>
+              <td><div class="tableheadtext">${uiLabelMap.CommonStatus}</div></td>
               <td>&nbsp;</td>
             </tr>
             <tr><td colspan="6"><hr class="sepbar"></td></tr>
@@ -214,9 +217,9 @@ function lookupReturn(click) {
                       <span class="tabletext">N/A</span>
                     </#if>
                   </td>
-                  <td><div class="tabletext"><#if facility?exists>${facility.facilityName?default(facility.facilityId)}<#else>None</#if></div></td>
+                  <td><div class="tabletext"><#if facility?exists>${facility.facilityName?default(facility.facilityId)}<#else>${uiLabelMap.CommonNone}</#if></div></td>
                   <td><div class="tabletext">${statusItem.description}</div></td>
-                  <td align="center"><a href="<@ofbizUrl>/returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="buttontext">View</a>
+                  <td align="center"><a href="<@ofbizUrl>/returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonView}</a>
                 </tr>
                 <#-- toggle the row color -->
                 <#if rowClass == "viewManyTR2">
@@ -227,7 +230,7 @@ function lookupReturn(click) {
               </#list>
             <#else>
               <tr>
-                <td colspan='5'><div class='head3'>No return(s) found.</div></td>
+                <td colspan='5'><div class='head3'>${uiLabelMap.OrderNoReturnFound}</div></td>
               </tr>
             </#if>
             <#if lookupErrorMessage?exists>

@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev: 3227 $
  *@since      2.2
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <script language="JavaScript">
 <!-- //
@@ -53,7 +55,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align=left width='70%' >
-            <div class='boxhead'>&nbsp;Orders Needing Attention</div>
+            <div class='boxhead'>${uiLabelMap.OrderOrderNeedingAttention}</div>
           </td>             
         </tr>
       </table>
@@ -69,13 +71,13 @@
               <table width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
                 <tr>
                   <td>
-                    <div class='head3'>Purchase Orders To Be Scheduled</div>
+                    <div class='head3'>${uiLabelMap.OrderOrderPurchaseToBeScheduled}</div>
                     <table width='100%' cellpadding='2' cellspacing='0' border='0'>
                       <tr>
-                        <td><div class="tableheadtext">Order&nbsp;Number</div></td>
-                        <td><div class="tableheadtext">Name</div></td>
-                        <td><div class="tableheadtext">Order&nbsp;Date</div></td>
-                        <td><div class="tableheadtext">Status</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.OrderOrderNumber}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.CommonName}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.OrderOrderDate}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.CommonStatus}</div></td>
                         <td width="1" align="right"><div class="tableheadtext">Items</div></td>
                         <td width="1" align="right"><div class="tableheadtext">Total</div></td>
                         <td width="1">&nbsp;&nbsp;</td>
@@ -132,17 +134,17 @@
               <table width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
                 <tr>
                   <td>
-                    <div class='head3'>Workflow Activities Assigned to User</div>
+                    <div class='head3'>${uiLabelMap.OrderWorkflow}</div>
                     <table width='100%' cellpadding='2' cellspacing='0' border='0'>
                       <tr>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=orderId</@ofbizUrl>" class="tableheadbutton">Order&nbsp;Number</a></td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=name</@ofbizUrl>" class="tableheadbutton">Name</a></td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=orderDate</@ofbizUrl>" class="tableheadbutton">Order&nbsp;Date</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=orderId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.OrderOrderNumber}</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=name</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.CommonName}</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=orderDate</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.OrderOrderDate}</a></td>
                         <td width="1" align="right"><a href="<@ofbizUrl>/tasklist?sort=grandTotal</@ofbizUrl>" class="tableheadbutton">Total</a></td>
                         <td width="1">&nbsp;&nbsp;</td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=actualStartDate</@ofbizUrl>" class="tableheadbutton">Start&nbsp;Date/Time</a></td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=priority</@ofbizUrl>" class="tableheadbutton">Priority</a></td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=currentStatusId</@ofbizUrl>" class="tableheadbutton">My&nbsp;Status</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=actualStartDate</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.OrderStartdateTime}</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=priority</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.CommonPriority}</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=currentStatusId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.CommonMyStatus}</a></td>
                       </tr>
                       <tr><td colspan='8'><hr class='sepbar'></td></tr>
                       <#list partyTasks as task>
@@ -196,19 +198,19 @@
               <table width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
                 <tr>
                   <td>
-                    <div class='head3'>Workflow Activities Assigned to User Role</div>
+                    <div class='head3'>${uiLabelMap.CommonWorkflowActivityUserRole}</div>
                     <table width='100%' cellpadding='2' cellspacing='0' border='0'>
                       <tr>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=orderId</@ofbizUrl>" class="tableheadbutton">Order&nbsp;Number</a></td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=name</@ofbizUrl>" class="tableheadbutton">Name</a></td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=orderDate</@ofbizUrl>" class="tableheadbutton">Order&nbsp;Date</a></td>                                  
-                        <td width="1" align="right"><a href="<@ofbizUrl>/tasklist?sort=grandTotal</@ofbizUrl>" class="tableheadbutton">Total</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=orderId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.OrderOrderNumber}</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=name</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.CommonName}</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=orderDate</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.OrderOrderDate}</a></td>                                  
+                        <td width="1" align="right"><a href="<@ofbizUrl>/tasklist?sort=grandTotal</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.CommonTotal}</a></td>
                         <td width="1">&nbsp;&nbsp;</td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=actualStartDate</@ofbizUrl>" class="tableheadbutton">Start&nbsp;Date/Time</a></td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=wepaPartyId</@ofbizUrl>" class="tableheadbutton">Party</a></td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=roleTypeId</@ofbizUrl>" class="tableheadbutton">Role</a></td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=priority</@ofbizUrl>" class="tableheadbutton">Priority</a></td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=currentStatusId</@ofbizUrl>" class="tableheadbutton">Status</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=actualStartDate</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.CommonStartDateTime}</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=wepaPartyId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyParty}</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=roleTypeId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyRole}</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=priority</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.CommonPriority}</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=currentStatusId</@ofbizUrl>" class="tableheadbutton">${uiLabelMap.CommonStatus}</a></td>
                         <td>&nbsp;</td>
                       </tr>
                       <tr><td colspan='11'><hr class='sepbar'></td></tr>
@@ -289,7 +291,7 @@
               </table>  
             </#if>
             <#if !tasksFound>
-              <div class="tabletext">No tasks currently require your attention.</div>
+              <div class="tabletext">${uiLabelMap.CommonNoTaskAssigned}</div>
             </#if>                                                                       
           </td>
         </tr>

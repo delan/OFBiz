@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
@@ -36,26 +36,26 @@
 
 <div class="apptitle">&nbsp;Order Manager Application&nbsp;</div>
 <div class="row">
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>
+  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>
   <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session) || security.hasRolePermission("ORDERMGR_ROLE", "_VIEW", "", "", session)>
-  <div class="col"><a href="<@ofbizUrl>/tasklist</@ofbizUrl>" class="${selectedLeftClassMap.orderlist?default(unselectedLeftClassName)}">Order&nbsp;List</a></div>
+  <div class="col"><a href="<@ofbizUrl>/tasklist</@ofbizUrl>" class="${selectedLeftClassMap.orderlist?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderList}</a></div>
   </#if>
   <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-  <div class="col"><a href="<@ofbizUrl>/findorders</@ofbizUrl>" class="${selectedLeftClassMap.findorders?default(unselectedLeftClassName)}">Find&nbsp;Orders</a></div>  
+  <div class="col"><a href="<@ofbizUrl>/findorders</@ofbizUrl>" class="${selectedLeftClassMap.findorders?default(unselectedLeftClassName)}">${uiLabelMap.CommonFind}</a></div>  
   </#if>
   <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-  <div class="col"><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="${selectedLeftClassMap.orderentry?default(unselectedLeftClassName)}">Order&nbsp;Entry</a></div>  
+  <div class="col"><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="${selectedLeftClassMap.orderentry?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderEntry}</a></div>  
   </#if>
   <#if security.hasEntityPermission("ORDERMGR", "_RETURN", session)>
-  <div class="col"><a href="<@ofbizUrl>/findreturn</@ofbizUrl>" class="${selectedLeftClassMap.return?default(unselectedLeftClassName)}">Returns</a></div>
+  <div class="col"><a href="<@ofbizUrl>/findreturn</@ofbizUrl>" class="${selectedLeftClassMap.return?default(unselectedLeftClassName)}">${uiLabelMap.OrderOrderReturns}</a></div>
   </#if>
-                   
-  <#if userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">Logout</a></div>
+
+  <#if requestAttributes.userLogin?has_content>
+    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
+    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
   </#if>  
-  <div class="col-right"><a href='<@ofbizUrl>/orderreportlist</@ofbizUrl>' class="${selectedRightClassMap.reports?default(unselectedRightClassName)}">Reports</a></div>
-  <div class="col-right"><a href='<@ofbizUrl>/orderstats</@ofbizUrl>' class="${selectedRightClassMap.stats?default(unselectedRightClassName)}">Stats</a></div>
+  <div class="col-right"><a href='<@ofbizUrl>/orderreportlist</@ofbizUrl>' class="${selectedRightClassMap.reports?default(unselectedRightClassName)}">${uiLabelMap.CommonReports}</a></div>
+  <div class="col-right"><a href='<@ofbizUrl>/orderstats</@ofbizUrl>' class="${selectedRightClassMap.stats?default(unselectedRightClassName)}">${uiLabelMap.CommonStats}</a></div>
   <div class="col-fill">&nbsp;</div>
 </div>
