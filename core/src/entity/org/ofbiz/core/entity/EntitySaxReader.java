@@ -27,6 +27,7 @@ package org.ofbiz.core.entity;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import javax.xml.parsers.*;
 
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
@@ -97,9 +98,22 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     }
     
     public long parse(InputStream is, String docDescription) throws SAXException, java.io.IOException {
+        /* NOTE: this method is not used because it doesn't work with various parsers...
         String orgXmlSaxDriver = System.getProperty("org.xml.sax.driver");
         if (UtilValidate.isEmpty(orgXmlSaxDriver)) orgXmlSaxDriver = "org.apache.xerces.parsers.SAXParser";
         XMLReader reader = XMLReaderFactory.createXMLReader(orgXmlSaxDriver);
+         */
+        
+        XMLReader reader = null;
+        try {
+            SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+            SAXParser parser = parserFactory.newSAXParser();
+            reader = parser.getXMLReader();
+        } catch (javax.xml.parsers.ParserConfigurationException e) {
+            Debug.logError(e, "Failed to get a SAX XML parser");
+            throw new IllegalStateException("Failed to get a SAX XML parser");
+        }
+        
         reader.setContentHandler(this);
         reader.setErrorHandler(this);
         //LocalResolver lr = new UtilXml.LocalResolver(new DefaultHandler());
