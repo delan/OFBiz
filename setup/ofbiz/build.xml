@@ -115,16 +115,18 @@
         <delete file="${etc.dir}/cache.properties" />
         <delete file="${etc.dir}/poolman.xml" />
         <delete file="${etc.dir}/jndi.properties" />
+<!--
         <delete file="${lib.dir}/ofbcommonapp.jar" />        
-
-        <delete file="${lib.dir}/ofbcore.jar" />        
+-->
+        <delete file="${lib.dir}/ofbcore-share.jar" />
 
         <delete file="${etc.dir}/ecommerce.properties" />
+<!--
         <delete file="${lib.dir}/ofbecom.jar" />
-
         <delete file="${lib.dir}/ofbcatalog.jar" />
         <delete file="${lib.dir}/ofbpartymgr.jar" />
         <delete file="${lib.dir}/ofbordermgr.jar" />
+-->
 
         <delete file="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
 
@@ -282,14 +284,17 @@
             toFile="${etc.dir}/poolman.xml" />
         <copy file="commonapp/etc/jndi.properties"
             toFile="${etc.dir}/jndi.properties" />
+<!--
         <copy file="commonapp/lib/ofbcommonapp.jar"
-            toFile="${lib.dir}/ofbcommonapp.jar" />        
+            toFile="${lib.dir}/ofbcommonapp.jar" />
+-->
         
-        <copy file="core/lib/ofbcore.jar"
-            toFile="${lib.dir}/ofbcore.jar" />        
+        <copy file="core/lib/ofbcore-share.jar"
+            toFile="${lib.dir}/ofbcore-share.jar" />        
 
         <copy file="ecommerce/etc/ecommerce.properties"
             toFile="${etc.dir}/ecommerce.properties" />
+<!--
         <copy file="ecommerce/lib/ofbecom.jar"
             toFile="${lib.dir}/ofbecom.jar" />
     
@@ -299,6 +304,7 @@
             toFile="${lib.dir}/ofbpartymgr.jar" />
         <copy file="ordermgr/lib/ofbordermgr.jar"
             toFile="${lib.dir}/ofbordermgr.jar" />
+-->
     </target>
 
     <target name="ejbdeploy" depends="deploy">

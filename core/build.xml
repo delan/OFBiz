@@ -142,7 +142,7 @@
         <jar jarfile="${lib.dir}/${name}-share.jar"
             basedir="${build.dir}/jar/share" />
         <jar jarfile="${lib.dir}/${name}-webapp.jar"
-        	basedir="${build.dir}/jar/webapp" />
+            basedir="${build.dir}/jar/webapp" />
     </target>
 	
     <!-- ================================================================== -->

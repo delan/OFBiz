@@ -25,7 +25,7 @@
  *  $Id$
 -->
 
-<project name="Open For Business Order Manager Component" default="jar" basedir=".">
+<project name="Open For Business Order Manager Component" default="jar-deploy" basedir=".">
 
 
     <!-- ================================================================== -->
@@ -48,8 +48,9 @@
         <property name="commonapp.etc.dir" value="../commonapp/etc" />
 		
 	<!-- Classpath setting -->
-	<property name="ofbcore.jar"      value="../core/lib/ofbcore.jar"             />
-	<property name="ofbcommonapp.jar" value="../commonapp/lib/ofbcommonapp.jar"             />
+        <property name="ofbcore-share.jar"  value="../core/lib/ofbcore-share.jar" />
+        <property name="ofbcore-webapp.jar" value="../core/lib/ofbcore-webapp.jar" />
+        <property name="ofbcommonapp.jar"   value="../commonapp/lib/ofbcommonapp.jar" />
 	
         <property name="servlet1.jar"  value="${env.CATALINA_HOME}/common/lib/servlet.jar" />
         <property name="servlet2.jar"  value="${env.TOMCAT_HOME}/lib/servlet.jar" />
@@ -71,7 +72,7 @@
         <property name="api-jars"      value="${servlet.jar}:${jdbc.jar}:${mail.jar}" />
         <property name="xml-jars"      value="${jaxp.jar}" />
 	
-        <property name="ofb-jars"    value="${ofbcore.jar}:${ofbcommonapp.jar}" />
+        <property name="ofb-jars"     value="${ofbcore-share.jar}:${ofbcore-webapp.jar}:${ofbcommonapp.jar}" />
         <property name="classpath"   value="${env.CLASSPATH}:${lib.dir}:${ofb-jars}:${api-jars}:${xml-jars}" />
 	<echo message="classpath: ${classpath}" />
     </target>
@@ -128,6 +129,15 @@
     <target name="jar" depends="classes">
         <jar jarfile="${lib.dir}/${name}.jar"
              basedir="${build.dir}/jar" />
+    </target>
+
+    <target name="jar-deploy" depends="jar">
+    	<copy file="${lib.dir}/${name}.jar"
+    		tofile="${walib.dir}/${name}.jar" />
+    	<copy file="${ofbcore-webapp.jar}"
+    		tofile="${walib.dir}/ofbcore-webapp.jar" />
+    	<copy file="${ofbcommonapp.jar}"
+    		tofile="${walib.dir}/ofbcommonapp.jar" />
     </target>
 
     <!-- ================================================================== -->

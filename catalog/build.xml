@@ -25,7 +25,7 @@
  *  $Id$
 -->
 
-<project name="Open For Business Catalog Component" default="jar" basedir=".">
+<project name="Open For Business Catalog Component" default="jar-deploy" basedir=".">
 
 
     <!-- ================================================================== -->
@@ -33,7 +33,7 @@
     <!-- ================================================================== -->
 
     <target name="init">
-		<property environment="env" />
+        <property environment="env" />
         <property name="name"           value="ofbcatalog" />
         <property name="src.dir"        value="src" />
         <property name="etc.dir"        value="etc" />
@@ -41,16 +41,16 @@
         <property name="webapp.dir"     value="./webapp" />
         <property name="walib.dir"      value="${webapp.dir}/WEB-INF/lib" />
         <property name="waclasses.dir"  value="${webapp.dir}/WEB-INF/classes" />
-		<property name="doc.dir"        value="docs" />
+        <property name="doc.dir"        value="docs" />
         <property name="build.dir"      value="build" />
         <property name="build.compiler" value="classic" /> 
         <property name="pkg-dist.name"  value="${name}-pkg" />
         <property name="commonapp.etc.dir" value="../commonapp/etc" />
 		
-		<!-- Classpath setting -->
-		<property name="ofbcore-share.jar"  value="../core/lib/ofbcore-share.jar" />
-		<property name="ofbcore-webapp.jar" value="../core/lib/ofbcore-webapp.jar" />
-		<property name="ofbcommonapp.jar"   value="../commonapp/lib/ofbcommonapp.jar" />
+        <!-- Classpath setting -->
+        <property name="ofbcore-share.jar"  value="../core/lib/ofbcore-share.jar" />
+        <property name="ofbcore-webapp.jar" value="../core/lib/ofbcore-webapp.jar" />
+        <property name="ofbcommonapp.jar"   value="../commonapp/lib/ofbcommonapp.jar" />
 	
         <property name="servlet1.jar" value="${env.CATALINA_HOME}/common/lib/servlet.jar" />
         <property name="servlet2.jar" value="${env.TOMCAT_HOME}/lib/servlet.jar" />
@@ -129,6 +129,15 @@
     <target name="jar" depends="classes">
         <jar jarfile="${lib.dir}/${name}.jar"
              basedir="${build.dir}/jar" />
+    </target>
+
+    <target name="jar-deploy" depends="jar">
+    	<copy file="${lib.dir}/${name}.jar"
+    		tofile="${walib.dir}/${name}.jar" />
+    	<copy file="${ofbcore-webapp.jar}"
+    		tofile="${walib.dir}/ofbcore-webapp.jar" />
+    	<copy file="${ofbcommonapp.jar}"
+    		tofile="${walib.dir}/ofbcommonapp.jar" />
     </target>
 
     <!-- ================================================================== -->

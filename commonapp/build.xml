@@ -38,7 +38,7 @@
         <property name="src.dir"        value="src" />
         <property name="etc.dir"        value="etc" />
         <property name="lib.dir"        value="lib" />
-        <property name="webapp.dir"     value="./webapp" />
+        <property name="webapp.dir"     value="webapp" />
         <property name="walib.dir"      value="${webapp.dir}/WEB-INF/lib" />
         <property name="waclasses.dir"  value="${webapp.dir}/WEB-INF/classes" />
 		<property name="doc.dir"        value="docs" />
