@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -119,7 +119,7 @@ public class ServiceEcaRule {
                 // in order to enable OR logic without multiple calls to the given service, 
                 // only execute a given service name once per service call phase
                 if (!actionsRun.contains(ea.serviceName)) {
-                    if (Debug.infoOn()) Debug.logInfo("Running ECA Service: " + ea.serviceName + ", triggered by rule on Service: " + serviceName, module);
+                    if (Debug.infoOn()) Debug.logInfo("Running Service ECA Service: " + ea.serviceName + ", triggered by rule on Service: " + serviceName, module);
                     if (ea.runAction(serviceName, dctx, context, result)) {
                         actionsRun.add(ea.serviceName);
                     } else {
