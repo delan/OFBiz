@@ -69,7 +69,9 @@ public class TransactionUtil implements javax.transaction.Status {
         UserTransaction ut = TransactionFactory.getUserTransaction();
         if (ut != null) {
             try {
-                ut.commit();
+                int status = ut.getStatus();
+                if (status != STATUS_NO_TRANSACTION)
+                    ut.commit();
             } catch (RollbackException e) {
                 throw new GenericTransactionException("Roll back error, could not commit transaction, was rolled back instead", e);
             } catch (HeuristicMixedException e) {
@@ -87,7 +89,9 @@ public class TransactionUtil implements javax.transaction.Status {
         UserTransaction ut = TransactionFactory.getUserTransaction();
         if (ut != null) {
             try {
-                ut.rollback();
+                int status = ut.getStatus();
+                if (status != STATUS_NO_TRANSACTION)
+                    ut.rollback();
             } catch (SystemException e) {
                 throw new GenericTransactionException("System error, could not roll back transaction", e);
             }
