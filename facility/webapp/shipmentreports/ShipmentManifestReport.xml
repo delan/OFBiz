@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="ShipmentManifest1"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="612"
+		 pageHeight="792"
+		 columnWidth="782"
+		 columnSpacing="0"
+		 leftMargin="36"
+		 rightMargin="36"
+		 topMargin="18"
+		 bottomMargin="18"
+		 whenNoDataType="AllSectionsNoDetail"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<parameter name="shipment" isForPrompting="false" class="java.util.Map"/>
+	<parameter name="shipmentId" isForPrompting="false" class="java.lang.String"/>
+	<field name="shipmentId" class="java.lang.String"/>
+	<field name="shipmentItemSeqId" class="java.lang.String"/>
+	<field name="productId" class="java.lang.String"/>
+	<field name="quantity" class="java.lang.Double"/>
+	<field name="shipmentContentDescription" class="java.lang.String"/>
+	<field name="itemIssuanceId" class="java.lang.String"/>
+	<field name="orderId" class="java.lang.String"/>
+	<field name="orderItemSeqId" class="java.lang.String"/>
+	<field name="inventoryItemId" class="java.lang.String"/>
+	<field name="issuedDateTime" class="java.sql.Timestamp"/>
+	<field name="issuedByUserLoginId" class="java.lang.String"/>
+	<field name="issuedQuantity" class="java.lang.Double"/>
+	<field name="packageQuantity" class="java.lang.Double"/>
+	<field name="shipmentPackageSeqId" class="java.lang.String"/>
+	<field name="packageDateCreated" class="java.sql.Timestamp"/>
+	<field name="weight" class="java.lang.Double"/>
+	<field name="weightUomAbbreviation" class="java.lang.String"/>
+	<field name="weightUomDescription" class="java.lang.String"/>
+	<field name="trackingCode" class="java.lang.String"/>
+	<field name="boxNumber" class="java.lang.String"/>
+	<field name="shipmentRouteSegmentId" class="java.lang.String"/>
+	<field name="deliveryId" class="java.lang.String"/>
+	<field name="originFacilityId" class="java.lang.String"/>
+	<field name="destFacilityId" class="java.lang.String"/>
+	<field name="originContactMechId" class="java.lang.String"/>
+	<field name="destContactMechId" class="java.lang.String"/>
+	<field name="carrierPartyId" class="java.lang.String"/>
+	<field name="shipmentMethodTypeId" class="java.lang.String"/>
+	<field name="actualCost" class="java.lang.Double"/>
+	<field name="actualStartDate" class="java.sql.Timestamp"/>
+	<field name="actualArrivalDate" class="java.sql.Timestamp"/>
+	<field name="estimatedStartDate" class="java.sql.Timestamp"/>
+	<field name="estimatedArrivalDate" class="java.sql.Timestamp"/>
+	<field name="originFacilityName" class="java.lang.String"/>
+	<field name="destFacilityName" class="java.lang.String"/>
+	<field name="originToName" class="java.lang.String"/>
+	<field name="originAttnName" class="java.lang.String"/>
+	<field name="originAddress1" class="java.lang.String"/>
+	<field name="originAddress2" class="java.lang.String"/>
+	<field name="originDirections" class="java.lang.String"/>
+	<field name="originCity" class="java.lang.String"/>
+	<field name="originPostalCode" class="java.lang.String"/>
+	<field name="originCountryGeoId" class="java.lang.String"/>
+	<field name="originStateProvinceGeoId" class="java.lang.String"/>
+	<field name="originPostalCodeGeoId" class="java.lang.String"/>
+	<field name="destToName" class="java.lang.String"/>
+	<field name="destAttnName" class="java.lang.String"/>
+	<field name="destAddress1" class="java.lang.String"/>
+	<field name="destAddress2" class="java.lang.String"/>
+	<field name="destDirections" class="java.lang.String"/>
+	<field name="destCity" class="java.lang.String"/>
+	<field name="destPostalCode" class="java.lang.String"/>
+	<field name="destCountryGeoId" class="java.lang.String"/>
+	<field name="destStateProvinceGeoId" class="java.lang.String"/>
+	<field name="destPostalCodeGeoId" class="java.lang.String"/>
+	<field name="carrierFirstName" class="java.lang.String"/>
+	<field name="carrierLastName" class="java.lang.String"/>
+	<field name="carrierGroupName" class="java.lang.String"/>
+	<field name="shipmentMethodDescription" class="java.lang.String"/>
+		<group  name="ShipmentRouteSegment" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="true" minHeightToStartNewPage="0" >
+			<groupExpression><![CDATA[$F{shipmentRouteSegmentId}]]></groupExpression>
+			<groupHeader>
+			<band height="20">
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="0">
+			</band>
+			</groupFooter>
+		</group>
+		<group  name="ShipmentPackage" isStartNewColumn="false" isStartNewPage="true" isResetPageNumber="false" isReprintHeaderOnEachPage="true" minHeightToStartNewPage="0" >
+			<groupExpression><![CDATA[$F{shipmentPackageSeqId}]]></groupExpression>
+			<groupHeader>
+			<band height="20">
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="0">
+			</band>
+			</groupFooter>
+		</group>
+		<background>
+			<band height="0">
+			</band>
+		</background>
+		<title>
+			<band height="0">
+			</band>
+		</title>
+		<pageHeader>
+			<band height="20">
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+						mode="Opaque"
+						x="3"
+						y="1"
+						width="260"
+						height="20"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="14" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Manifest for Shipment #" + $P{shipmentId}]]></textFieldExpression>
+				</textField>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="30">
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="100">
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0">
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="27">
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+						mode="Transparent"
+						x="318"
+						y="5"
+						width="174"
+						height="19"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="Helvetica" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None" >					<reportElement
+						mode="Transparent"
+						x="493"
+						y="6"
+						width="36"
+						height="19"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="Helvetica" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						mode="Opaque"
+						x="1"
+						y="3"
+						width="537"
+						height="0"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+				</line>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+						mode="Transparent"
+						x="2"
+						y="7"
+						width="209"
+						height="19"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="Helvetica" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+				</textField>
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0">
+			</band>
+		</summary>
+</jasperReport>
