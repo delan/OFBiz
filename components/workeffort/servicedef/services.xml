@@ -225,9 +225,9 @@
         </description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    <service name="createWorkEffortInventoryAssign" default-entity-name="WorkEffortInventoryAssign" engine="simple"
-            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortInventoryAssign" auth="true">
-        <description>Create WorkEffortInventoryAssign</description>
+    <service name="assignInventoryToWorkEffort" default-entity-name="WorkEffortInventoryAssign" engine="simple"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="assignInventoryToWorkEffort" auth="true">
+        <description>Create or update WorkEffortInventoryAssign</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
