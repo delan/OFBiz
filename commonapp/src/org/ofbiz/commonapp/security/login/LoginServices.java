@@ -147,9 +147,11 @@ public class LoginServices {
                             Map userLoginSessionMap = null;
                             try {
                             	userLoginSession = userLogin.getRelatedOne("UserLoginSession");
-                            	Object o = XmlSerializer.deserialize(userLoginSession.getString("sessionData"), delegator);
-                            	if (o instanceof Map)
-                            		userLoginSessionMap = (Map) o;
+                            	if (userLoginSession != null) {
+                            		Object o = XmlSerializer.deserialize(userLoginSession.getString("sessionData"), delegator);
+                            		if (o instanceof Map)
+                            			userLoginSessionMap = (Map) o;
+                            	}
                             } catch (GenericEntityException ge) {
                             	Debug.logWarning(ge, "Cannot get UserLoginSession for UserLogin ID: " + 
                             			userLogin.getString("userLoginId"), module);
