@@ -15,119 +15,104 @@ import org.apache.log4j.Logger;
  * run on any pools which are "pretty close" to their requested time.
  *
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-class PoolGCThread extends Thread
-{
-   private HashSet pools = new HashSet();
-   private static Logger log = Logger.getLogger( ObjectPool.class );
+class PoolGCThread extends Thread {
 
-   PoolGCThread()
-   {
-      super("Minerva ObjectPool GC Thread");
-      setDaemon(true);
-   }
+    private HashSet pools = new HashSet();
+    private static Logger log = Logger.getLogger(ObjectPool.class);
 
-   public void run()
-   {
-      boolean trace = true;
-      while(true)
-      {
-         // Don't do anything while there's nothing to do
-         waitForPools();
-         if( trace )
-            log.debug("gc thread waited for pools");
+    PoolGCThread() {
+        super("Minerva ObjectPool GC Thread");
+        setDaemon(true);
+    }
 
-         // Figure out how long to sleep
-         long delay = getDelay();
-         if( trace )
-            log.debug("gc thread delay: " + delay);
+    public void run() {
+        boolean trace = true;
+        while (true) {
+            // Don't do anything while there's nothing to do
+            waitForPools();
+            if (trace)
+                log.debug("gc thread waited for pools");
 
-         // Sleep
-         if(delay > 0l)
-         {
-            try
-            {
-               sleep(delay);
+            // Figure out how long to sleep
+            long delay = getDelay();
+            if (trace)
+                log.debug("gc thread delay: " + delay);
+
+            // Sleep
+            if (delay > 0l) {
+                try {
+                    sleep(delay);
+                } catch (InterruptedException ignored) {
+                }
             }
-            catch(InterruptedException ignored) {}
-         }
 
-         // Run garbage collection on eligible pools
-         runGC();
-      }
-   }
+            // Run garbage collection on eligible pools
+            runGC();
+        }
+    }
 
-   private synchronized void waitForPools()
-   {
-      while(pools.size() == 0)
-      {
-         try
-         {
-            wait();
-         }
-         catch(InterruptedException ignored)
-         {
-            // Warning level seems appropriate; shouldn't really happen
-            log.warn("waitForPools interrupted");
-         }
-      }
-   }
+    private synchronized void waitForPools() {
+        while (pools.size() == 0) {
+            try {
+                wait();
+            } catch (InterruptedException ignored) {
+                // Warning level seems appropriate; shouldn't really happen
+                log.warn("waitForPools interrupted");
+            }
+        }
+    }
 
-   private synchronized long getDelay()
-   {
-      long next = Long.MAX_VALUE;
-      long now = System.currentTimeMillis();
-      long current;
+    private synchronized long getDelay() {
+        long next = Long.MAX_VALUE;
+        long now = System.currentTimeMillis();
+        long current;
 
-      for(Iterator it = pools.iterator(); it.hasNext();)
-      {
-         ObjectPool pool = (ObjectPool)it.next();
-         current = pool.getNextGCMillis(now);
-         if(current < next)
-            next = current;
-      }
-      return next >= 0l ? next : 0l;
-   }
+        for (Iterator it = pools.iterator(); it.hasNext();) {
+            ObjectPool pool = (ObjectPool) it.next();
+            current = pool.getNextGCMillis(now);
+            if (current < next)
+                next = current;
+        }
+        return next >= 0l ? next : 0l;
+    }
 
-   private synchronized void runGC()
-   {
-      boolean trace = true;
+    private synchronized void runGC() {
+        boolean trace = true;
 
-      if( trace )
-         log.debug("GC thread running GC");
+        if (trace)
+            log.debug("GC thread running GC");
 
-      for(Iterator it = pools.iterator(); it.hasNext();)
-      {
-         ObjectPool pool = (ObjectPool)it.next();
+        for (Iterator it = pools.iterator(); it.hasNext();) {
+            ObjectPool pool = (ObjectPool) it.next();
 
-         if( trace )
-            log.debug("GC Thread pool: " + pool.getName() + ", isTimeToGC(): " + pool.isTimeToGC() );
+            if (trace)
+                log.debug("GC Thread pool: " + pool.getName() + ", isTimeToGC(): " + pool.isTimeToGC());
 
-         if(pool.isTimeToGC())
-            pool.runGCandShrink();
-      }
-   }
+            if (pool.isTimeToGC())
+                pool.runGCandShrink();
+        }
+    }
 
-   synchronized void addPool(ObjectPool pool)
-   {
-      if( log.isDebugEnabled() )
-         log.debug( "Adding pool: " + pool.getName() + ", GC enabled: " + pool.isGCEnabled() );
+    synchronized void addPool(ObjectPool pool) {
+        if (log.isDebugEnabled())
+            log.debug("Adding pool: " + pool.getName() + ", GC enabled: " + pool.isGCEnabled());
 
-      if(pool.isGCEnabled())
-         pools.add(pool);
+        if (pool.isGCEnabled())
+            pools.add(pool);
 
-      notify();
-   }
+        notify();
+    }
 
-   synchronized void removePool(ObjectPool pool)
-   {
-      if( log.isDebugEnabled() )
-         log.debug( "Removing pool: " + pool.getName() );
+    synchronized void removePool(ObjectPool pool) {
+        if (log.isDebugEnabled())
+            log.debug("Removing pool: " + pool.getName());
 
-      pools.remove(pool);
-   }
+        pools.remove(pool);
+    }
 }
+
 /*
 vim:tabstop=3:et:shiftwidth=3
 */

@@ -13,10 +13,12 @@ package org.ofbiz.minerva.pool;
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public interface PooledObject {
+
     /**
      * Adds a new listener.
      */
     public void addPoolEventListener(PoolEventListener listener);
+
     /**
      * Removes a listener.
      */

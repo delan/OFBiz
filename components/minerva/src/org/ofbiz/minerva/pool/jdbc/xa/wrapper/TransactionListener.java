@@ -10,6 +10,7 @@ package org.ofbiz.minerva.pool.jdbc.xa.wrapper;
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public interface TransactionListener {
+
     /**
      * Indicates that the transaction this instance was part of has finished.
      */

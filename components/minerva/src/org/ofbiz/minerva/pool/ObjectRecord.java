@@ -12,6 +12,7 @@ import java.util.ConcurrentModificationException;
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 class ObjectRecord {
+
     private long created;
     private long lastUsed;
     private Object object;
@@ -74,11 +75,11 @@ class ObjectRecord {
      *          in use, or it is not in use and it is set to be not in use.
      */
     public synchronized void setInUse(boolean inUse) throws ConcurrentModificationException {
-        if(this.inUse == inUse)
+        if (this.inUse == inUse)
             throw new ConcurrentModificationException();
         this.inUse = inUse;
         lastUsed = System.currentTimeMillis();
-        if(!inUse) clientObject = null;
+        if (!inUse) clientObject = null;
     }
 
     /**
@@ -101,6 +102,7 @@ class ObjectRecord {
     public void setClientObject(Object o) {
         clientObject = o;
     }
+
     /**
      * Gets the client object associated with this object.  If there is none,
      * returns the normal object (which is the default).

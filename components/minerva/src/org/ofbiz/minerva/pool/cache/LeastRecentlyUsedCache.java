@@ -14,6 +14,7 @@ import java.util.*;
  * @author Aaron Mulder ammulder@alumni.princeton.edu
  */
 public class LeastRecentlyUsedCache implements ObjectCache {
+
     private Object lock = new Object();
     private HashMap keyMap = new HashMap();
     private PrintWriter log = null;
@@ -39,43 +40,46 @@ public class LeastRecentlyUsedCache implements ObjectCache {
         Object pooled = keyMap.get(key);
         Object source = factory.translateObject(value);
 
-        if(pooled == null) {
+        if (pooled == null) {
             factory.deleteObject(source);
-        } else if(pooled instanceof Node) {
-            Node node = (Node)pooled;
-            if(node.data == source) {
+        } else if (pooled instanceof Node) {
+            Node node = (Node) pooled;
+            if (node.data == source) {
                 try {
                     node.setUsed(false);
-                } catch(ConcurrentModificationException e) {}
+                } catch (ConcurrentModificationException e) {
+                }
             } else {
                 factory.deleteObject(source);
             }
-        } else if(pooled instanceof LinkedList) {
-            for(Iterator it = ((LinkedList)pooled).iterator(); it.hasNext(); ) {
-                Node node = (Node)it.next();
-                if(node.data == source) {
+        } else if (pooled instanceof LinkedList) {
+            for (Iterator it = ((LinkedList) pooled).iterator(); it.hasNext();) {
+                Node node = (Node) it.next();
+                if (node.data == source) {
                     try {
                         node.setUsed(false);
-                    } catch(ConcurrentModificationException e) {}
+                    } catch (ConcurrentModificationException e) {
+                    }
                     return;
                 }
             }
             factory.deleteObject(source);
-        } else throw new Error("LRU Cache Assertion Failure: Wrong class '"+pooled.getClass().getName()+"' in keyMap!");
+        } else
+            throw new Error("LRU Cache Assertion Failure: Wrong class '" + pooled.getClass().getName() + "' in keyMap!");
     }
 
     public void removeObjects(Object key) {
-        synchronized(lock) {
+        synchronized (lock) {
             Object value = keyMap.get(key);
-            if(value == null) {
+            if (value == null) {
                 return;
-            } else if(value instanceof Node) {
-                removeNode((Node)value);
-            } else if(value instanceof LinkedList) {
-                LinkedList list = (LinkedList)value;
+            } else if (value instanceof Node) {
+                removeNode((Node) value);
+            } else if (value instanceof LinkedList) {
+                LinkedList list = (LinkedList) value;
                 int max = list.size();
-                for(int i=0; i<max; i++) {
-                    removeNode((Node)list.get(0));
+                for (int i = 0; i < max; i++) {
+                    removeNode((Node) list.get(0));
                 }
             }
         }
@@ -87,10 +91,10 @@ public class LeastRecentlyUsedCache implements ObjectCache {
     }
 
     public void close() {
-        synchronized(lock) {
+        synchronized (lock) {
             Node current = leastRecentNode;
             Node next = current == null ? null : current.moreRecent;
-            while(current != null) {
+            while (current != null) {
                 removeNode(current);
                 current = next;
                 next = current == null ? null : current.moreRecent;
@@ -102,33 +106,34 @@ public class LeastRecentlyUsedCache implements ObjectCache {
         Node node = null;
         try {
             Object value = keyMap.get(key);
-            if(value == null) {
+            if (value == null) {
                 node = addObject(key);
-            } else if(value instanceof Node) {
-                node = (Node)value;
-                if(!node.used) {
+            } else if (value instanceof Node) {
+                node = (Node) value;
+                if (!node.used) {
                     makeMostRecent(node);
                 } else {
                     node = addObject(key);
                 }
-            } else if(value instanceof LinkedList) {
-                for(Iterator it = ((LinkedList)value).iterator(); it.hasNext();) {
-                    node = (Node)it.next();
-                    if(!node.used) {
+            } else if (value instanceof LinkedList) {
+                for (Iterator it = ((LinkedList) value).iterator(); it.hasNext();) {
+                    node = (Node) it.next();
+                    if (!node.used) {
                         makeMostRecent(node);
                         break;
                     } else {
                         node = null;
                     }
                 }
-                if(node == null) {
+                if (node == null) {
                     node = addObject(key);
                 }
-            } else throw new Error("LRU Cache Assertion Failure: Wrong class '"+value.getClass().getName()+"' in keyMap!");
-            if(use) {
+            } else
+                throw new Error("LRU Cache Assertion Failure: Wrong class '" + value.getClass().getName() + "' in keyMap!");
+            if (use) {
                 node.setUsed(true);
             }
-        } catch(ConcurrentModificationException e) {
+        } catch (ConcurrentModificationException e) {
             return getObject(key, use);
         }
         return factory.prepareObject(node.data);
@@ -138,14 +143,14 @@ public class LeastRecentlyUsedCache implements ObjectCache {
         Object data;
         try {
             data = factory.createObject(key);
-        } catch(Exception e) {
-            if(log != null)
+        } catch (Exception e) {
+            if (log != null)
                 e.printStackTrace(log);
             return null;
         }
         Node result;
-        synchronized(lock) {
-            if(mostRecentNode == null) {
+        synchronized (lock) {
+            if (mostRecentNode == null) {
                 result = new Node(null, null, data);
                 mostRecentNode = result;
                 leastRecentNode = result;
@@ -160,24 +165,25 @@ public class LeastRecentlyUsedCache implements ObjectCache {
 
         // Put the key/value(s) and node/key in the map
         Object value = keyMap.get(key);
-        if(value == null) {
+        if (value == null) {
             keyMap.put(key, result);
-        } else if(value instanceof LinkedList) {
-            ((LinkedList)value).add(result);
-        } else if(value instanceof Node) {
+        } else if (value instanceof LinkedList) {
+            ((LinkedList) value).add(result);
+        } else if (value instanceof Node) {
             LinkedList list = new LinkedList();
             list.add(value);
             list.add(result);
             keyMap.put(key, list);
-        } else throw new Error("LRU Cache Assertion Failure: Wrong class '"+value.getClass().getName()+"' in keyMap!");
+        } else
+            throw new Error("LRU Cache Assertion Failure: Wrong class '" + value.getClass().getName() + "' in keyMap!");
         keyMap.put(result, key);
         return result;
     }
 
     private void checkMaxSize() {
-        if(maxSize <= 0)
+        if (maxSize <= 0)
             return;
-        while(size > maxSize) {
+        while (size > maxSize) {
             Node drop = leastRecentNode;
             leastRecentNode = drop.moreRecent;
             leastRecentNode.lessRecent = null;
@@ -188,9 +194,9 @@ public class LeastRecentlyUsedCache implements ObjectCache {
     }
 
     private void makeMostRecent(Node node) {
-        synchronized(lock) {
-            if(node.moreRecent == null) {
-                if(mostRecentNode != node)
+        synchronized (lock) {
+            if (node.moreRecent == null) {
+                if (mostRecentNode != node)
                     throw new ConcurrentModificationException();
                 return;
             }
@@ -199,7 +205,7 @@ public class LeastRecentlyUsedCache implements ObjectCache {
             Node previous = node.moreRecent;
             Node next = node.lessRecent;
             previous.lessRecent = next;
-            if(next == null) {
+            if (next == null) {
                 leastRecentNode = previous;
             } else {
                 next.moreRecent = previous;
@@ -216,30 +222,31 @@ public class LeastRecentlyUsedCache implements ObjectCache {
     // This should be called while holding the lock
     private void removeNode(Node node) {
         boolean used = node.used;
-        if(!used) {
+        if (!used) {
             node.used = true;
         }
         Object key = keyMap.remove(node);
 
 
         Object value = keyMap.get(key);
-        if(value instanceof Node) {
+        if (value instanceof Node) {
             keyMap.remove(key);
-        } else if(value instanceof LinkedList) {
-            LinkedList list = (LinkedList)value;
+        } else if (value instanceof LinkedList) {
+            LinkedList list = (LinkedList) value;
             Iterator it = list.iterator();
-            while(it.hasNext()) {
-                Node current = (Node)it.next();
-                if(current == node) {
+            while (it.hasNext()) {
+                Node current = (Node) it.next();
+                if (current == node) {
                     it.remove();
                     break;
                 }
             }
-            if(list.size() == 1) {
+            if (list.size() == 1) {
                 keyMap.put(key, list.get(0));
             }
-        } else throw new Error("LRU Cache Assertion Failure: Wrong class '"+value.getClass().getName()+"' in keyMap!");
-        if(!used)  {
+        } else
+            throw new Error("LRU Cache Assertion Failure: Wrong class '" + value.getClass().getName() + "' in keyMap!");
+        if (!used) {
             factory.deleteObject(node.data);
         }
         node.moreRecent = null;
@@ -247,6 +254,7 @@ public class LeastRecentlyUsedCache implements ObjectCache {
     }
 
     private class Node {
+
         Node lessRecent;
         Node moreRecent;
         Object data;
@@ -255,6 +263,7 @@ public class LeastRecentlyUsedCache implements ObjectCache {
         public Node(Node lessRecent, Node moreRecent, Object data) {
             this(lessRecent, moreRecent, data, false);
         }
+
         public Node(Node lessRecent, Node moreRecent, Object data, boolean used) {
             this.lessRecent = lessRecent;
             this.moreRecent = moreRecent;
@@ -263,7 +272,7 @@ public class LeastRecentlyUsedCache implements ObjectCache {
         }
 
         public synchronized void setUsed(boolean used) {
-            if(this.used == used)
+            if (this.used == used)
                 throw new ConcurrentModificationException();
             this.used = used;
         }

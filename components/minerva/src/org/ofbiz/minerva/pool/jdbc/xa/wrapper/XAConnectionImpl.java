@@ -43,7 +43,7 @@ import org.ofbiz.minerva.pool.jdbc.ConnectionInPool;
  * XAConnection to a pool when it receives the close event.  Instead, it should
  * also register a TransactionListener that will be notified when the
  * Transaction is finished, and release the XAConnection at that time.</P>
- * @see org.jboss.pool.xa.TransactionListener
+ * @see org.ofbiz.minerva.pool.jdbc.xa.wrapper.TransactionListener
  *
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
@@ -52,11 +52,12 @@ import org.ofbiz.minerva.pool.jdbc.ConnectionInPool;
  * 20010703 bill added code for transaction isolation
  */
 public class XAConnectionImpl implements XAConnection, PooledObject {
+
     private final static String CLOSED = "Connection has been closed!";
     private Connection con;
     private XAResourceImpl resource;
     private Vector listeners, poolListeners;
-   private ArrayList clientConnections;
+    private ArrayList clientConnections;
     private TransactionListener transListener;
     private int preparedStatementCacheSize = 0;
     private int clientConnectionCount = 0;
@@ -64,7 +65,7 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
     private String user;
     /** The JDBC password used to open an underlying connection */
     private String password;
-   private boolean saveStackTrace;
+    private boolean saveStackTrace;
 
     /**
      * Creates a new transactional wrapper.
@@ -116,15 +117,17 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
     public void setTransactionIsolation(int iso) throws SQLException {
         con.setTransactionIsolation(iso);
     }
+
     /**
      * Shuts down this wrapper (and the underlying Connection) permanently.
      */
     public void close() {
         try {
             con.close();
-        } catch(SQLException e) {}
-        ObjectCache cache = (ObjectCache)ConnectionInPool.psCaches.remove(con);
-        if(cache != null)
+        } catch (SQLException e) {
+        }
+        ObjectCache cache = (ObjectCache) ConnectionInPool.psCaches.remove(con);
+        if (cache != null)
             cache.close();
         con = null;
         resource = null;
@@ -138,13 +141,13 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
      * returned to a pool.  If not, it can be closed or returned immediately.
      */
     public void clientConnectionClosed(XAClientConnection clientCon) {
-       clientConnections.remove(clientCon);
-        if(clientConnections.size() > 0)
+        clientConnections.remove(clientCon);
+        if (clientConnections.size() > 0)
             return;  // Only take action if the last connection referring to this is closed
         boolean trans = resource.isTransaction(); // could be committed directly on notification?  Seems unlikely, but let's not rule it out.
-        Vector local = (Vector)listeners.clone();
-        for(int i=local.size()-1; i>=0; i--)
-            ((ConnectionEventListener)local.elementAt(i)).connectionClosed(new ConnectionEvent(this));
+        Vector local = (Vector) listeners.clone();
+        for (int i = local.size() - 1; i >= 0; i--)
+            ((ConnectionEventListener) local.elementAt(i)).connectionClosed(new ConnectionEvent(this));
 //        if(!trans)
 //            transactionFinished();
     }
@@ -156,7 +159,7 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
      * @see #addConnectionEventListener
      */
     public void transactionFinished() {
-        if(transListener != null)
+        if (transListener != null)
             transListener.transactionFinished(this);
     }
 
@@ -167,7 +170,7 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
      * @see #addConnectionEventListener
      */
     public void transactionFailed() {
-        if(transListener != null)
+        if (transListener != null)
             transListener.transactionFailed(this);
     }
 
@@ -177,10 +180,10 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
      * returned to a pool.  If not, it can be closed or returned immediately.
      */
     public void setConnectionError(SQLException e) {
-        Vector local = (Vector)listeners.clone();
-        for(int i=local.size()-1; i>=0; i--) {
+        Vector local = (Vector) listeners.clone();
+        for (int i = local.size() - 1; i >= 0; i--) {
             try {
-                ((ConnectionEventListener)local.elementAt(i)).connectionErrorOccurred(new ConnectionEvent(this, e));
+                ((ConnectionEventListener) local.elementAt(i)).connectionErrorOccurred(new ConnectionEvent(this, e));
             } catch (RuntimeException ex) {
                 // there can be thrown an induced exception,
                 // but we must report to client the original one, right?
@@ -197,8 +200,8 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
      * false.
      */
     public void rollback() throws SQLException {
-       if( con.getAutoCommit() == false )
-          con.rollback();
+        if (con.getAutoCommit() == false)
+            con.rollback();
     }
 
     // ---- Implementation of javax.sql.XAConnection ----
@@ -212,17 +215,16 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
     }
 
     public void removeConnectionEventListener(ConnectionEventListener listener) {
-        if(!listeners.remove(listener))
+        if (!listeners.remove(listener))
             throw new IllegalArgumentException();
     }
 
     public Connection getConnection() {
         XAClientConnection xaCon;
-        synchronized(clientConnections)
-        {
-           xaCon = new XAClientConnection(this, con, saveStackTrace);
-           xaCon.setPSCacheSize(preparedStatementCacheSize);
-           clientConnections.add(xaCon);
+        synchronized (clientConnections) {
+            xaCon = new XAClientConnection(this, con, saveStackTrace);
+            xaCon.setPSCacheSize(preparedStatementCacheSize);
+            clientConnections.add(xaCon);
         }
         return xaCon;
     }
@@ -241,59 +243,52 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
      * Dispatches an event to the pool event listeners.
      */
     void firePoolEvent(PoolEvent evt) {
-        Vector local = (Vector)poolListeners.clone();
-        for(int i=local.size()-1; i >= 0; i--)
-            if(evt.getType() == PoolEvent.OBJECT_CLOSED)
-                ((PoolEventListener)local.elementAt(i)).objectClosed(evt);
-            else if(evt.getType() == PoolEvent.OBJECT_ERROR)
-                ((PoolEventListener)local.elementAt(i)).objectError(evt);
+        Vector local = (Vector) poolListeners.clone();
+        for (int i = local.size() - 1; i >= 0; i--)
+            if (evt.getType() == PoolEvent.OBJECT_CLOSED)
+                ((PoolEventListener) local.elementAt(i)).objectClosed(evt);
+            else if (evt.getType() == PoolEvent.OBJECT_ERROR)
+                ((PoolEventListener) local.elementAt(i)).objectError(evt);
             else
-                ((PoolEventListener)local.elementAt(i)).objectUsed(evt);
+                ((PoolEventListener) local.elementAt(i)).objectUsed(evt);
     }
-    
+
     /** Getter for property password.
      * @return Value of property password.
      */
-    public java.lang.String getPassword()
-    {
-       return password;
+    public java.lang.String getPassword() {
+        return password;
     }
-    
+
     /** Setter for property password.
      * @param password New value of property password.
      */
-    public void setPassword(java.lang.String password)
-    {
-       this.password = password;
+    public void setPassword(java.lang.String password) {
+        this.password = password;
     }
-    
+
     /** Getter for property user.
      * @return Value of property user.
      */
-    public java.lang.String getUser()
-    {
-       return user;
+    public java.lang.String getUser() {
+        return user;
     }
-    
+
     /** Setter for property user.
      * @param user New value of property user.
      */
-    public void setUser(java.lang.String user)
-    {
-       this.user = user;
+    public void setUser(java.lang.String user) {
+        this.user = user;
     }
 
-   public void forceClientConnectionsClose()
-   {
-      for (int i = 0; i < clientConnections.size(); i++)
-      {
-         XAClientConnection client = (XAClientConnection)clientConnections.get(i);
-         try
-         {
-            client.forcedClose();
-         }
-         catch (SQLException ignored) {}
-      }
-      clientConnections.clear();
-   }
+    public void forceClientConnectionsClose() {
+        for (int i = 0; i < clientConnections.size(); i++) {
+            XAClientConnection client = (XAClientConnection) clientConnections.get(i);
+            try {
+                client.forcedClose();
+            } catch (SQLException ignored) {
+            }
+        }
+        clientConnections.clear();
+    }
 }

@@ -41,7 +41,7 @@ public abstract class CachedObjectFactory {
      *         Occurs when the cache is null.
      */
     public void cacheStarted(ObjectCache cache, PrintWriter log) {
-        if(cache == null)
+        if (cache == null)
             throw new IllegalArgumentException("Cannot start factory with null cache!");
     }
 
@@ -86,7 +86,7 @@ public abstract class CachedObjectFactory {
      *         Occurs when the pool is null.
      */
     public void cacheClosing(ObjectCache cache) {
-        if(cache == null)
+        if (cache == null)
             throw new IllegalArgumentException("Cannot close factory with a null cache!");
     }
 

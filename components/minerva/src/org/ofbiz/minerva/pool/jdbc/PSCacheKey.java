@@ -13,6 +13,7 @@ import java.sql.ResultSet;
  * @author Aaron Mulder ammulder@alumni.princeton.edu
  */
 public class PSCacheKey {
+
     public Connection con;
     public String sql;
     public int rsType;
@@ -33,9 +34,8 @@ public class PSCacheKey {
     }
 
     public boolean equals(Object o) {
-        PSCacheKey key = (PSCacheKey)o;
-        return key.con.equals(con) && key.sql.equals(sql) &&
-               key.rsType == rsType && key.rsConcur == rsConcur;
+        PSCacheKey key = (PSCacheKey) o;
+        return key.con.equals(con) && key.sql.equals(sql) && key.rsType == rsType && key.rsConcur == rsConcur;
     }
 
     public int hashCode() {
