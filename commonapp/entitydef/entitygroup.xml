@@ -161,6 +161,12 @@
     <entity-group group="org.ofbiz.commonapp" entity="GeoType" />
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.note -->
+  <!-- ========================================================= -->
+	
+    <entity-group group="org.ofbiz.commonapp" entity="NoteData" />
+
+  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.period -->
   <!-- ========================================================= -->
 	
@@ -616,6 +622,22 @@
     <entity-group group="org.ofbiz.commonapp" entity="ShippingDocument" />
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.workeffort.definition -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDef" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAssoc" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAssocAttr" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAttribute" />	
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.workeffort.scheduler -->
+  <!-- ========================================================= -->
+	
+    <entity-group group="org.ofbiz.commonapp" entity="RecurrenceInfo" />	
+    <entity-group group="org.ofbiz.commonapp" entity="RuntimeData" />	
+  
+  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.workeffort.timesheet -->
   <!-- ========================================================= -->
 	
@@ -641,10 +663,8 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocTypeAttr" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAttribute" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortBilling" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDef" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAssoc" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAssocAttr" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAttribute" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortCategory" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortCategoryMember" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDeliverableProd" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortExpectation" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetAssign" />	
@@ -653,6 +673,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortInventoryAssign" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortInventoryProduced" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignment" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortScope" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortSkillStandard" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortStatus" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortType" />	

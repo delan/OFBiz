@@ -247,6 +247,19 @@
     </entity>
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.note -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="NoteData" 
+            package-name="org.ofbiz.commonapp.common.note"
+            title="Note Data Entity">
+      <field name="noteId" type="id-ne"></field>
+      <field name="noteName" type="name"></field>	
+      <field name="noteInfo" type="very-long"></field>	
+      <prim-key field="noteId" />
+    </entity>	
+	
+  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.period -->
   <!-- ========================================================= -->
 	
@@ -384,7 +397,6 @@
       <field name="contentTypeId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="description" type="description"></field>
-      <field name="fileLocation" type="long-varchar"></field>
       <field name="urlLocation" type="long-varchar"></field>	
       <prim-key field="contentId" />
       <relation type="one" rel-entity-name="StatusItem">
