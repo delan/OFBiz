@@ -39,7 +39,7 @@
           <ofbiz:if name="autoName">
             <TD width="90%" align="center" class="headerCenter">
                 Welcome&nbsp;<ofbiz:print attribute="autoName"/>!
-                (Not&nbsp;<ofbiz:print attribute="autoName"/>?&nbsp;<a href="<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext, "autoLogout")%></ofbiz:url>" class="buttontext">click&nbsp;here</a>)
+                (Not&nbsp;You?&nbsp;<a href="<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext, "autoLogout")%></ofbiz:url>" class="buttontext">click&nbsp;here</a>)
             </TD>
           </ofbiz:if>
           <ofbiz:unless name="autoName">
