@@ -455,8 +455,26 @@ public class ProductStoreWorker {
             Iterator ssi = storeSurveys.iterator();
             while (ssi.hasNext()) {
                 GenericValue surveyAppl = (GenericValue) ssi.next();
-                if (surveyAppl.get("productId") != null && productId.equals(surveyAppl.get("productId"))) {
+                GenericValue product = null;
+                String virtualProductId = null;
+                
+                // if the item is a variant, get its virtual productId 
+                try {
+                    product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+                    if ((product != null) && (product.get("isVariant") != null) && (product.get("isVariant").equals("Y"))) {
+                        virtualProductId = ProductWorker.getVariantVirtualId(product);
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Problem finding product from productId " + productId, module);
+                }
+                
+                // use survey if productId or virtualProductId of the variant product is in the ProductStoreSurveyAppl
+                if (surveyAppl.get("productId") != null) {
+                    if (productId.equals(surveyAppl.get("productId"))) {
                     surveys.add(surveyAppl);
+                    } else if ((virtualProductId != null) && (virtualProductId.equals(surveyAppl.get("productId")))) {
+                        surveys.add(surveyAppl);    
+                    }
                 } else if (surveyAppl.get("productCategoryId") != null) {
                     List categoryMembers = null;
                     try {
@@ -469,6 +487,9 @@ public class ProductStoreWorker {
                         while (cmi.hasNext()) {
                             GenericValue member = (GenericValue) cmi.next();
                             if (productId.equals(member.getString("productId"))) {
+                                surveys.add(surveyAppl);
+                                break;
+                            } else if ((virtualProductId != null) && (virtualProductId.equals(member.getString("productId")))) { // similarly, check if virtual productId is in category
                                 surveys.add(surveyAppl);
                                 break;
                             }
