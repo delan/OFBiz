@@ -1,5 +1,5 @@
 /*
- * $Id: ModelField.java,v 1.2 2003/09/19 21:48:37 jonesde Exp $
+ * $Id: ModelField.java,v 1.3 2003/12/04 20:12:52 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Field model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ModelField {
@@ -50,17 +50,27 @@ public class ModelField {
     /** boolean which specifies whether or not the Field is a Primary Key */
     protected boolean isPk = false;
 
+    protected boolean isAutoCreatedInternal = false;
+    
     /** validators to be called when an update is done */
     protected List validators = new ArrayList();
 
     /** Default Constructor */
     public ModelField() {}
 
+    /** Fields Constructor */
+    public ModelField(String name, String type, String colName, boolean isPk) {
+        this.name = name;
+        this.type = type;
+        this.setColName(colName);
+        this.isPk = isPk;
+    }
+
     /** XML Constructor */
     public ModelField(Element fieldElement) {
         this.type = UtilXml.checkEmpty(fieldElement.getAttribute("type"));
         this.name = UtilXml.checkEmpty(fieldElement.getAttribute("name"));
-        this.colName = UtilXml.checkEmpty(fieldElement.getAttribute("col-name"), ModelUtil.javaNameToDbName(UtilXml.checkEmpty(this.name)));
+        this.setColName(UtilXml.checkEmpty(fieldElement.getAttribute("col-name")));
         this.isPk = false; // is set elsewhere
 
         NodeList validateList = fieldElement.getElementsByTagName("validate");
@@ -113,6 +123,9 @@ public class ModelField {
 
     public void setColName(String colName) {
         this.colName = colName;
+        if (this.colName == null || this.colName.length() == 0) {
+            this.colName = ModelUtil.javaNameToDbName(UtilXml.checkEmpty(this.name));
+        }
     }
 
     /** boolean which specifies whether or not the Field is a Primary Key */
@@ -124,6 +137,14 @@ public class ModelField {
         this.isPk = isPk;
     }
 
+    public boolean getIsAutoCreatedInternal() {
+        return this.isAutoCreatedInternal;
+    }
+
+    public void setIsAutoCreatedInternal(boolean isAutoCreatedInternal) {
+        this.isAutoCreatedInternal = isAutoCreatedInternal;
+    }
+    
     /** validators to be called when an update is done */
     public String getValidator(int index) {
         return (String) this.validators.get(index);
