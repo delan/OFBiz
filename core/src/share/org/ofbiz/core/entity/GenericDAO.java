@@ -1006,6 +1006,9 @@ public class GenericDAO {
       if(rs.getObject(curField.colName) == null) entity.set(curField.name, null);
       else entity.set(curField.name, new Double(rs.getDouble(curField.colName)));
     }
+    else {
+      throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
+    }
   }
   
   public void setValue(PreparedStatement ps, int ind, ModelField curField, GenericEntity entity) throws SQLException, GenericEntityException {
@@ -1059,7 +1062,9 @@ public class GenericDAO {
       if(field != null) ps.setDouble(ind, ((java.lang.Double)field).doubleValue());
       else ps.setNull(ind, Types.NUMERIC);
     }
-    else ps.setNull(ind, Types.NULL);
+    else {
+      throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
+    }
   }
   
 /* ====================================================================== */
