@@ -55,6 +55,7 @@
                         <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"/>
                     </form>
                     <b>created/modified by</b> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
+                    <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" class="buttontext" target="_blank">[Pick/Pack Report]</a>
                 </div>
                 
                 <#-- PicklistRole -->

@@ -28,6 +28,59 @@
  *@since      3.0
 -->
 
+<#macro picklistItemInfoDetail picklistItemInfo product facilityLocation>
+    <#local picklistItem = picklistItemInfo.picklistItem>
+    <#local orderItem = picklistItemInfo.orderItem>
+    <fo:table-row>
+        <fo:table-cell padding="2pt" background-color="${rowColor}">
+            <#if facilityLocation?has_content>
+                <fo:block>${facilityLocation.areaId?if_exists}-${facilityLocation.aisleId?if_exists}-${facilityLocation.sectionId?if_exists}-${facilityLocation.levelId?if_exists}-${facilityLocation.positionId?if_exists}</fo:block>
+            <#elseif product?has_content>
+                <fo:block>[${uiLabelMap.ProductNoLocation}:${product.productId}]</fo:block>
+            <#else>
+                <fo:block>[${uiLabelMap.ProductNoLocation}]</fo:block>
+            </#if>
+        </fo:table-cell>
+        <fo:table-cell padding="2pt" background-color="${rowColor}">
+            <#if product?has_content>
+                <fo:block>${product.internalName} [${product.productId}]</fo:block>
+            <#else>
+                <fo:block> </fo:block>
+            </#if>
+        </fo:table-cell>
+        <fo:table-cell padding="2pt" background-color="${rowColor}">
+            <fo:block>${picklistItem.quantity}</fo:block>
+        </fo:table-cell>
+        <fo:table-cell padding="2pt" background-color="${rowColor}">
+            <fo:block>${orderItem.orderId}:${orderItem.orderItemSeqId} [of total: ${orderItem.quantity}]</fo:block>
+        </fo:table-cell>
+        <fo:table-cell padding="2pt" background-color="${rowColor}">
+            <fo:block>
+                ${picklistItemInfo.inventoryItemAndLocation.inventoryItemId}<#if picklistItemInfo.inventoryItemAndLocation.binNumber?exists>:${picklistItemInfo.inventoryItemAndLocation.binNumber}</#if>
+            </fo:block>
+        </fo:table-cell>
+    </fo:table-row>
+    <#-- toggle the row color -->
+    <#if rowColor == "white">
+        <#assign rowColor = "#D4D0C8">
+    <#else>
+        <#assign rowColor = "white">
+    </#if>
+</#macro>
+
+<!--
+     - picklist
+     - facility
+     - statusItem
+     - statusValidChangeToDetailList
+     - picklistRoleInfoList (picklistRole, partyNameView, roleType)
+     - picklistStatusHistoryInfoList (picklistStatusHistory, statusItem, statusItemTo)
+     - picklistBinInfoList
+       - picklistBin
+       - primaryOrderHeader
+       - primaryOrderItemShipGroup
+       - picklistItemInfoList (picklistItem, orderItem, product, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList) 
+-->
 <fo:layout-master-set>
     <fo:simple-page-master master-name="main" page-height="11in" page-width="8.5in"
             margin-top="0.5in" margin-bottom="1in" margin-left="1in" margin-right="1in">
@@ -39,9 +92,12 @@
 
 <fo:page-sequence master-reference="main">
 <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-    <fo:block font-size="14pt">Items to Pick in Facility ${facility.facilityName} <fo:inline font-size="8pt">[${facility.facilityId}]</fo:inline></fo:block>
 
     <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
+
+    <#if picklistInfo?has_content>
+        <fo:block font-size="14pt">Items to Pick in Facility ${picklistInfo.facility.facilityName} <fo:inline font-size="8pt">[${picklistInfo.facility.facilityId}]</fo:inline></fo:block>
+    </#if>
 
     <fo:block space-after.optimum="10pt" font-size="10pt">
     <fo:table>
@@ -68,43 +124,8 @@
                     <#assign facilityLocation = facilityLocationInfo.facilityLocation>
                     <#assign picklistItemInfoList = facilityLocationInfo.picklistItemInfoList>
                     <#list picklistItemInfoList as picklistItemInfo>
-                        <#assign product = picklistItemInfo.product>
-                        <#assign quantity = picklistItemInfo.quantity>
-                        <#assign inventoryItemList = picklistItemInfo.inventoryItemList>
-                        <#assign orderItemList = picklistItemInfo.orderItemList>
-                        <fo:table-row> <#-- TODO: set the row color -->
-                            <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${facilityLocation.areaId?if_exists}-${facilityLocation.aisleId?if_exists}-${facilityLocation.sectionId?if_exists}-${facilityLocation.levelId?if_exists}-${facilityLocation.positionId?if_exists}</fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <#if product?has_content>
-                                    <fo:block>${product.internalName} [${product.productId}]</fo:block>
-                                <#else>
-                                    <fo:block> </fo:block>
-                                </#if>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${quantity}</fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <#list orderItemList as orderItem>
-                                    <fo:block>${orderItem.orderId}:${orderItem.orderItemSeqId}-${orderItem.quantity}</fo:block>
-                                </#list>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>
-                                <#list inventoryItemList as inventoryItem>
-                                    ${inventoryItem.inventoryItemId}<#if inventoryItem.binNumber?exists>:${inventoryItem.binNumber}</#if>
-                                </#list>
-                                </fo:block>
-                            </fo:table-cell>
-                        </fo:table-row>
-                        <#-- toggle the row color -->
-                        <#if rowColor == "white">
-                            <#assign rowColor = "#D4D0C8">
-                        <#else>
-                            <#assign rowColor = "white">
-                        </#if>
+                        <#assign product = picklistItemInfo.product/>
+                        <@picklistItemInfoDetail picklistItemInfo=picklistItemInfo product=product facilityLocation=facilityLocation/>
                     </#list>
                 </#list>
                 </#if>
@@ -114,39 +135,9 @@
                     <#if !noLocationProductInfo.facilityLocation?exists>
                         <#assign product = noLocationProductInfo.product>
                         <#assign picklistItemInfoList = noLocationProductInfo.picklistItemInfoList>
-                        <fo:table-row>
-                            <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <#if facilityLocation?has_content>
-                                    <fo:block>${facilityLocation.areaId?if_exists}-${facilityLocation.aisleId?if_exists}-${facilityLocation.sectionId?if_exists}-${facilityLocation.levelId?if_exists}-${facilityLocation.positionId?if_exists}</fo:block>
-                                <#else>
-                                    <fo:block>[${uiLabelMap.ProductNoLocation}]</fo:block>
-                                </#if>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <#if product?has_content>
-                                    <fo:block>${product.internalName} [${product.productId}]</fo:block>
-                                <#else>
-                                    <fo:block> </fo:block>
-                                </#if>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${quantity}</fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <#list orderItems as orderItem>
-                                    <fo:block>${orderItem.orderId}:${orderItem.orderItemSeqId}-${orderItem.quantity}</fo:block>
-                                </#list>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${inventoryItem.inventoryItemId}<#if inventoryItem.binNumber?exists>:${inventoryItem.binNumber}</#if></fo:block>
-                            </fo:table-cell>
-                        </fo:table-row>
-                        <#-- toggle the row color -->
-                        <#if rowColor == "white">
-                            <#assign rowColor = "#D4D0C8">
-                        <#else>
-                            <#assign rowColor = "white">
-                        </#if>
+                        <#list picklistItemInfoList as picklistItemInfo>
+                            <@picklistItemInfoDetail picklistItemInfo=picklistItemInfo product=product facilityLocation=null/>
+                        </#list>
                     </#if>
                 </#list>
                 </#if>
@@ -161,15 +152,14 @@
 </fo:flow>
 </fo:page-sequence>
 
-<#if orderHeaderInfoList?has_content>
-    <#list orderHeaderInfoList as orderHeaderInfo>
+<#if picklistInfo?has_content>
+    <#list picklistInfo.picklistBinInfoList as picklistBinInfo>
         <#assign rowColor = "white">
-        <#-- orderHeaderInfoList: List of Maps with orderHeader and orderItemInfoList which is List of Maps with orderItem, product and orderItemShipGrpInvResList -->
-        <#assign orderHeader = orderHeaderInfo.orderHeader>
-        <#assign orderItemInfoList = orderHeaderInfo.orderItemInfoList>
+        <#assign picklistBin = picklistBinInfo.picklistBin>
+        <#assign picklistItemInfoList = picklistBinInfo.picklistItemInfoList>
         <fo:page-sequence master-reference="main">
         <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-            <fo:block font-size="14pt">Order ${orderHeaderInfo_index+1} to Pack, ID: ${orderHeader.orderId}</fo:block>
+            <fo:block font-size="14pt">Order ${picklistBinInfo_index+1} to Pack, ID: ${picklistBinInfo.primaryOrderHeader.orderId}, Ship Group ID: ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</fo:block>
             <fo:block space-after.optimum="10pt" font-size="10pt">
             <fo:table>
                 <fo:table-column column-width="60pt"/>
@@ -185,28 +175,27 @@
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
-                    <#list orderItemInfoList as orderItemInfo>
-                        <#assign orderItemAndShipGroupAssoc = orderItemInfo.orderItemAndShipGroupAssoc>
-                        <#assign product = orderItemInfo.product>
-                        <#assign orderItemShipGrpInvResList = orderItemInfo.orderItemShipGrpInvResList>
+                    <#list picklistItemInfoList as picklistItemInfo>
+                        <#assign picklistItem = picklistItemInfo.picklistItem>
+                        <#assign orderItem = picklistItemInfo.orderItem>
+                        <#assign product = picklistItemInfo.product>
+                        <#assign orderItemShipGrpInvRes = picklistItemInfo.orderItemShipGrpInvRes>
                         <fo:table-row>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${orderItemAndShipGroupAssoc.orderItemSeqId}</fo:block>
+                                <fo:block>${picklistItem.orderId}:${picklistItem.shipGroupSeqId}:${picklistItem.orderItemSeqId}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <#if product?has_content>
                                     <fo:block>${product.internalName} [${product.productId}]</fo:block>
-                                <#else>
+                                <#else/>
                                     <fo:block>&nbsp;</fo:block>
                                 </#if>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${orderItemAndShipGroupAssoc.quantity}</fo:block>
+                                <fo:block>${picklistItem.quantity} of ${orderItem.quantity}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <#list orderItemShipGrpInvResList as orderItemShipGrpInvRes>
-                                    <fo:block>${orderItemShipGrpInvRes.inventoryItemId}:${orderItemShipGrpInvRes.quantity}:${orderItemShipGrpInvRes.quantityNotAvailable?if_exists}</fo:block>
-                                </#list>
+                                <fo:block>${orderItemShipGrpInvRes.inventoryItemId}:${orderItemShipGrpInvRes.quantity}:${orderItemShipGrpInvRes.quantityNotAvailable?if_exists}</fo:block>
                             </fo:table-cell>
                         </fo:table-row>
                         <#-- toggle the row color -->
