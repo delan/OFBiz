@@ -22,10 +22,39 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+<script>
+function setProductVariantId(e, value, fieldname) {
+    var cform = document.selectAllForm;
+    var len = cform.elements.length;
+    for (var i = 0; i < len; i++) {
+        var element = cform.elements[i];
+        if (element.name == fieldname) {
+            if (e.checked) {
+                if (element.value == null || element.value == "") {
+                    element.value = value;
+                }
+            } else {
+                element.value = "";
+            }
+            return;
+        }
+    }
+}
+function clickAll(e) {
+    var cform = document.selectAllForm;
+    var len = cform.elements.length;
+    for (var i = 0; i < len; i++) {
+        var element = cform.elements[i];                   
+        if (element.name.substring(0, 10) == "_rowSubmit" && element.checked != e.checked) {
+            element.click();
+        } 
+    }     
+}
+</script>
 <#if hasPermission>
 
 ${pages.get("/product/ProductTabBar.ftl")}
@@ -39,31 +68,37 @@ ${pages.get("/product/ProductTabBar.ftl")}
     <br>
     <#if (productFeatureAndAppls.size() > 0)>
         <table border="1" cellpadding="2" cellspacing="0">
+                <#assign rowCount = 0>
+                <FORM method=POST action="<@ofbizUrl>/QuickAddChosenVariants</@ofbizUrl>" name="selectAllForm">
+                <input type=hidden name="productId" value="${productId}">
+                <input type="hidden" name="_useRowSubmit" value="Y">
+                <input type="hidden" name="_checkGlobalScope" value="Y">
+
 	        <tr>
 	            <#list featureTypes as featureType>
 	                <td><div class="tabletext"><b>${featureType}</b></div></td>
 	            </#list>
 	            <td><div class="tabletext"><b>${uiLabelMap.ProductNewProductCreate} !</b></div></td>
 	            <td><div class="tabletext"><b>${uiLabelMap.ProductExistingVariant} :</b></div></td>
+                    <td><div class="tabletext"><b>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:clickAll(this);"></div></td>
 	        </tr>
 	        
+
 	        <#list featureCombinationInfos as featureCombinationInfo>
-	        	<#assign curProductFeatureAndAppls = featureCombinationInfo.curProductFeatureAndAppls>
-	        	<#assign existingVariantProductIds = featureCombinationInfo.existingVariantProductIds>
-			    <tr valign="middle">
-			        <FORM method=POST action="<@ofbizUrl>/QuickAddChosenVariant</@ofbizUrl>">
-			            <input type=hidden name="productId" value="${productId}">
-			            <input type=hidden name="featureTypeSize" value="${featureTypeSize}">
-			            
+                    <#assign curProductFeatureAndAppls = featureCombinationInfo.curProductFeatureAndAppls>
+                    <#assign existingVariantProductIds = featureCombinationInfo.existingVariantProductIds>
+                    <#assign defaultVariantProductId = featureCombinationInfo.defaultVariantProductId>
+                    <tr valign="middle">
+                    <#assign productFeatureIds = "">
 			            <#list curProductFeatureAndAppls as productFeatureAndAppl>
 			                <td>
 			                    <div class="tabletext">${productFeatureAndAppl.description?if_exists}</div>
-			                    <input type=hidden name="feature_${productFeatureAndAppl_index}" value="${productFeatureAndAppl.productFeatureId?if_exists}">
+                                            <#assign productFeatureIds = productFeatureIds + "|" + productFeatureAndAppl.productFeatureId>
 			                </td>
 			            </#list>
+                                    <input type=hidden name="productFeatureIds_o_${rowCount}" value="${productFeatureIds}">
 			            <td>
-			                <input type=text size="20" maxlength="20" name="variantProductId">
-			                <INPUT type='submit' class='smallSubmit' value="${uiLabelMap.CommonCreate} !">
+			                <input type=text size="20" maxlength="20" name="productVariantId_o_${rowCount}" value="">
 			            </td>
 			            <td>
 			                <div class="tabletext">&nbsp;
@@ -72,9 +107,21 @@ ${pages.get("/product/ProductTabBar.ftl")}
 			                </#list>
 			                </div>
 			            </td>
-			        </FORM>
-			    </tr>
-			</#list>
+                            <td align="right">              
+                              <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:setProductVariantId(this, '${defaultVariantProductId}', 'productVariantId_o_${rowCount}');">
+                            </td>
+
+			</tr>
+                    <#assign rowCount = rowCount + 1>
+		</#list>
+<tr>
+<#assign columns = featureTypeSize + 3>
+<td colspan="${columns}" align="center">
+<input type="hidden" name="_rowCount" value="${rowCount}">
+<input type="submit" class="smallSubmit" value="${uiLabelMap.CommonCreate}"/>
+</td>
+</tr>
+                </FORM>
 		</table>
 	<#else>
 	    <div class="tabletext"><b>${uiLabelMap.ProductNoSelectableFeaturesFound}</b></div>
