@@ -25,14 +25,19 @@
 package org.ofbiz.core.container;
 
 import java.io.IOException;
-import java.net.*;
-import java.util.*;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.w3c.dom.*;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilURL;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-import org.ofbiz.core.util.*;
 
 /**
  * ContainerConfig - Container configuration for ofbiz.xml
@@ -45,17 +50,57 @@ public class ContainerConfig {
     
     public static final String module = ContainerConfig.class.getName();
     
-    protected List components = new LinkedList();
-    protected List servers = new LinkedList();    
+    protected static List componentContainers = null;
+    protected static List webContainers = null;  
+    
+    public static List getComponentContainers(String configFile) throws ContainerException {
+        if (componentContainers == null) {            
+            synchronized (ContainerConfig.class) {
+                if (componentContainers == null) {
+                    if (configFile == null) {
+                        throw new ContainerException("Container config file cannot be null");
+                    }
+                    new ContainerConfig(configFile);
+                }
+                
+            }            
+        }
+        return componentContainers;
+    }
+    
+    public static List getWebContainers(String configFile) throws ContainerException {
+        if (webContainers == null) {            
+            synchronized (ContainerConfig.class) {
+                if (webContainers == null) {
+                    if (configFile == null) {
+                        throw new ContainerException("Container config file cannot be null");
+                    }
+                    new ContainerConfig(configFile);
+                }
+                
+            }            
+        }
+        return webContainers;
+    }     
     
     protected ContainerConfig() {}
     
     protected ContainerConfig(String configFileLocation) throws ContainerException {
+        if (componentContainers != null) {
+            throw new ContainerException("Containers already loaded");
+        }
+        
+        if (webContainers != null) {
+            throw new ContainerException("Containers already loaded");
+        }
+        
+        // load the config file
         URL xmlUrl = UtilURL.fromFilename(configFileLocation);
         if (xmlUrl == null) {
             throw new ContainerException("Could not find " + configFileLocation + " master OFBiz container configuration");
         }
         
+        // read the document
         Document containerDocument = null;
         try {
             containerDocument = UtilXml.readXmlDocument(xmlUrl, true);
@@ -67,23 +112,26 @@ public class ContainerConfig {
             throw new ContainerException("Error reading the container config file: " + xmlUrl, e);
         } 
         
+        // root element
         Element containers = containerDocument.getDocumentElement();
         Iterator elementIter = null;
           
         // components
+        componentContainers = new LinkedList();
         elementIter = UtilXml.childElementList(containers, "component-container").iterator();
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
             ComponentContainer container = new ComponentContainer(curElement);
-            this.components.add(container);
+            ContainerConfig.componentContainers.add(container);
         }
         
         // servers
+        webContainers = new LinkedList();
         elementIter = UtilXml.childElementList(containers, "web-container").iterator();
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
             WebContainer container = new WebContainer(curElement);
-            this.components.add(container);
+            ContainerConfig.webContainers.add(container);
         }                            
     }
         
