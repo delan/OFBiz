@@ -777,6 +777,7 @@
         
         <mkdir dir="${docsdest.dir}/dtds" />
         <copy toDir="${docsdest.dir}/dtds"><fileset dir="core/docs/xmldefs/ofbiz"/></copy>
+        <copy toDir="${docsdest.dir}/dtds"><fileset dir="core/docs/xmldefs/itext"/></copy>
         <copy toDir="${docsdest.dir}/dtds"><fileset dir="core/docs/xmldefs/wfmc"/></copy>
     </target>
 
