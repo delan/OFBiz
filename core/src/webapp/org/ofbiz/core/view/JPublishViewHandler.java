@@ -85,6 +85,7 @@ public class JPublishViewHandler implements ViewHandler {
             //siteContext = new SiteContext(contextRoot, servletConfig.getInitParameter("config"));
             siteContext = new SiteContext(contextRoot, "WEB-INF/jpublish.xml");
             siteContext.setWebInfPath(webInfPath);
+            context.setAttribute("jPublishSiteContext", siteContext);
         } catch (Exception e) {
             throw new ViewHandlerException("Cannot load SiteContext", e);
         }
