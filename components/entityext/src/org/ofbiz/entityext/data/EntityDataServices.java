@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.5 2003/12/20 20:26:21 ajzeneski Exp $
+ * $Id: EntityDataServices.java,v 1.6 2003/12/22 05:15:10 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,8 @@ package org.ofbiz.entityext.data;
 
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.security.Security;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
@@ -34,10 +36,9 @@ import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
+import org.ofbiz.base.util.UtilMisc;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
@@ -47,7 +48,7 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.1
  */
 public class EntityDataServices {
@@ -59,6 +60,7 @@ public class EntityDataServices {
     }
 
     public static Map importDelimitedFromDirectory(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericDelegator delegator = dctx.getDelegator();
         Security security = dctx.getSecurity();
 
@@ -75,6 +77,12 @@ public class EntityDataServices {
             return ServiceUtil.returnError("Unable to locate root directory : " + rootDirectory);
         }
 
+        String delimiter = (String) context.get("delimiter");
+        if (delimiter == null) {
+            // default delimiter is tab
+            delimiter = "\t";
+        }
+
         File root = null;
         try {
             root = new File(new URI(rootDirectoryUrl.toExternalForm()));
@@ -85,31 +93,18 @@ public class EntityDataServices {
         if (!root.exists() || !root.isDirectory() || !root.canRead()) {
             return ServiceUtil.returnError("Root directory does not exist or is not readable.");
         }
-        String delimiter = (String) context.get("delimiter");
-        if (delimiter == null) {
-            // default delimiter is tab
-            delimiter = "\t";
-        }
 
         // get the file list
-        File[] files = root.listFiles();
-        if (files != null && files.length > 0) {
-            for (int i = 0; i < files.length; i++) {
-                String fileName = files[i].getName();
-                if (!fileName.startsWith("_") && fileName.endsWith(".txt")) {
-                    int records = 0;
-                    try {
-                        records = readEntityFile(files[i], delimiter, delegator);
-                    } catch (GeneralException e) {
-                        return ServiceUtil.returnError(e.getMessage());
-                    } catch (FileNotFoundException e) {
-                        return ServiceUtil.returnError("File not found : " + files[i].getName());
-                    } catch (IOException e) {
-                        Debug.logError(e, module);
-                        return ServiceUtil.returnError("Problem reading file : " + files[i].getName());
-                    }
-
-                    Debug.logInfo("Imported/Updated [" + records + "] from : " + files[i].getAbsolutePath(), module);
+        List files = getFileList(root);
+        if (files != null && files.size() > 0) {
+            Iterator i = files.iterator();
+            while (i.hasNext()) {
+                File file = (File) i.next();
+                try {
+                    Map serviceCtx = UtilMisc.toMap("file", file, "delimiter", delimiter, "userLogin", userLogin);
+                    dispatcher.runSyncIgnore("importDelimitedEntityFile", serviceCtx);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, module);
                 }
             }
         } else {
@@ -117,6 +112,91 @@ public class EntityDataServices {
         }
 
         return ServiceUtil.returnSuccess();
+    }
+
+    public static Map importDelimitedFile(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        Security security = dctx.getSecurity();
+
+        // check permission
+         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (!security.hasPermission("ENTITY_MAINT", userLogin)) {
+            return ServiceUtil.returnError("You do not have permission to run this service.");
+        }
+
+        String delimiter = (String) context.get("delimiter");
+        if (delimiter == null) {
+            // default delimiter is tab
+            delimiter = "\t";
+        }
+
+        File file = (File) context.get("file");
+        int records = 0;
+        try {
+            records = readEntityFile(file, delimiter, delegator);
+        } catch (GeneralException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        } catch (FileNotFoundException e) {
+            return ServiceUtil.returnError("File not found : " + file.getName());
+        } catch (IOException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Problem reading file : " + file.getName());
+        }
+
+        Debug.logInfo("Imported/Updated [" + records + "] from : " + file.getAbsolutePath(), module);
+        Map result = ServiceUtil.returnSuccess();
+        result.put("records", new Integer(records));
+        return result;
+    }
+
+    private static List getFileList(File root) {
+        List fileList = new ArrayList();
+
+        // check for a file list file
+        File listFile = new File(root, "FILELIST.txt");
+        Debug.logInfo("Checking file list - " + listFile.getPath(), module);
+        if (listFile.exists()) {
+            BufferedReader reader = null;
+            try {
+                reader = new BufferedReader(new FileReader(listFile));
+            } catch (FileNotFoundException e) {
+                Debug.logError(e, module);
+            }
+            if (reader != null) {
+                // read each line as a file name to load
+                String line;
+                try {
+                    while ((line = reader.readLine()) != null) {
+                        line = line.trim();
+                        File thisFile = new File(root, line);
+                        if (thisFile.exists()) {
+                            fileList.add(thisFile);
+                        }
+                    }
+                } catch (IOException e) {
+                    Debug.logError(e, module);
+                }
+
+                // close the reader
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    Debug.logError(e, module);
+                }
+                Debug.logInfo("Read file list : " + fileList.size() + " entities.", module);
+            }
+        } else {
+            File[] files = root.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                String fileName = files[i].getName();
+                if (!fileName.startsWith("_") && fileName.endsWith(".txt")) {
+                    fileList.add(files[i]);
+                }
+            }
+            Debug.logInfo("No file list found; using directory order : " + fileList.size() + " entities.", module);
+        }
+
+        return fileList;
     }
 
     private static String[] readEntityHeader(File file, String delimiter, BufferedReader dataReader) throws IOException {
