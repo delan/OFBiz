@@ -379,25 +379,29 @@
         <%-- Optional Images --%>
         <%-- =============== --%>
         <ofbiz:if name="variantSample" size="0">
-          <% Map imageMap = (Map) pageContext.getAttribute("variantSample"); %>
-          <% Set imageSet = imageMap.keySet(); %>
+          <%Map imageMap = (Map) pageContext.getAttribute("variantSample");%>
+          <%Set imageSet = imageMap.keySet();%>
+          <%if (imageSet.size() > 0) {%>
           <p>&nbsp;</p>
           <table cellspacing="0" cellpadding="0">
             <tr>
-              <%int ii=0; Iterator imIt=imageSet.iterator();%>
-              <%while(imIt.hasNext()){%>
-              <%String featureDescription = (String) imIt.next();%>
-              <%String imageUrl = ((GenericValue)imageMap.get(featureDescription)).getString("smallImageUrl");%>
-              <%if (imageUrl != null && imageUrl.length() > 0){%>
-                <td>
-                  <table cellspacing="0" cellpadding="0">
-                    <tr><td><a href="#"><img src="<ofbiz:contenturl><%=contentPathPrefix%><%=imageUrl%></ofbiz:contenturl>" border="0" width="60" height="60" onclick="javascript:getList('<%=featureOrder.get(0)%>','<%=ii%>',1);"></a></td></tr>
-                    <tr><td align="center" valign="top"><span class="tabletext"><%=featureDescription%></span></td></tr>
-                  </table>
-                </td>
-              <%}ii++;}%>
+              <td>
+                <%int ii=0; Iterator imIt=imageSet.iterator();%>
+                <%while(imIt.hasNext()){%>
+                  <%String featureDescription = (String) imIt.next();%>
+                  <%String imageUrl = ((GenericValue)imageMap.get(featureDescription)).getString("smallImageUrl");%>
+                  <%if (imageUrl != null && imageUrl.length() > 0){%>
+                      <table cellspacing="0" cellpadding="0">
+                        <tr><td><a href="#"><img src="<ofbiz:contenturl><%=contentPathPrefix%><%=imageUrl%></ofbiz:contenturl>" border="0" width="60" height="60" onclick="javascript:getList('<%=featureOrder.get(0)%>','<%=ii%>',1);"></a></td></tr>
+                        <tr><td align="center" valign="top"><span class="tabletext"><%=featureDescription%></span></td></tr>
+                      </table>
+                  <%}%>
+                  <%ii++;%>
+                <%}%>
+              </td>
             </tr>
           </table>
+          <%}%>
         </ofbiz:if>
         <%-- ====================== --%>
         <%-- End of optional images --%>
