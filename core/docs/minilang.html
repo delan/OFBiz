@@ -1616,6 +1616,48 @@ operations, including the conditional/if operations.</p>
 if the map field is not empty. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
+<p><b><u>if-has-permission</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>permission</td><td>Y</td>
+    <td>The name of the permission in the database. The user must belong to a
+    security group that has this permission.</td>
+</tr>
+<tr>
+    <td>action</td><td>N</td>
+    <td>If an action is specified the user can have one of two permissions:
+    the permission + "_ADMIN" or permission + action. Examples of actions
+    include "_CREATE", "_VIEW", etc.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>Any Operation</td><td>0 to many</td>
+    <td>Any simple-method operation can be nested under an if-* tag.</td>
+</tr>
+<tr>
+    <td>else</td><td>0 or 1</td>
+    <td>The else tag can be used to contain operations that will run if the
+    condition fails, or in other words if the operations under the if tag do
+    not run. It can also contain any simple-method operation. The else tag
+    must be placed as the last tag under the if-* tag.</td>
+</tr>
+</table>
+<p>The operations contained by the if-has-permission tag will only be executed
+if the user has the specified permission, and optionally the action. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
+
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>

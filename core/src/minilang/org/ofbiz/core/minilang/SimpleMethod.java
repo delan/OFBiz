@@ -508,6 +508,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfEmpty(curOperElem, simpleMethod));
                 } else if ("if-not-empty".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfNotEmpty(curOperElem, simpleMethod));
+                } else if ("if-has-permission".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfHasPermission(curOperElem, simpleMethod));
                 } else if ("else".equals(nodeName)) {
                     //don't add anything, but don't complain either, this one is handled in the individual operations
                 } else {

@@ -48,7 +48,7 @@
 <!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and">
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-by-and | clear-cache-line">
 <!ENTITY % EntityListOperations "store-list | remove-list">
-<!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty">
+<!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty | if-has-permission">
 
 <!ENTITY % SimpleMethodOperations "%CallOperations; | %EventOperations; | 
         %ServiceOperations; | %EnvOperations; | %EntityMiscOperations; | %EntityFindOperations; |
@@ -451,6 +451,12 @@ simple-map-processor process operations that validate incoming data
 <!ATTLIST if-not-empty
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
+>
+
+<!ELEMENT if-has-permission ( (%SimpleMethodOperations;)*, else? )>
+<!ATTLIST if-has-permission
+    permission CDATA #REQUIRED
+    action CDATA #IMPLIED
 >
 
 <!ELEMENT else ( (%SimpleMethodOperations;)* )>
