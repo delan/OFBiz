@@ -157,8 +157,13 @@ public class TransactionUtil implements javax.transaction.Status {
         UserTransaction ut = TransactionFactory.getUserTransaction();
         if (ut != null) {
             try {
-                ut.setRollbackOnly();
-                Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only set", module);
+                int status = ut.getStatus();
+                if (status != STATUS_NO_TRANSACTION) {
+                    ut.setRollbackOnly();
+                    Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only set", module);
+                } else {
+                    Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only set, status is STATUS_NO_TRANSACTION", module);
+                }
             } catch (SystemException e) {
                 throw new GenericTransactionException("System error, could not set roll back only on transaction", e);
             }
