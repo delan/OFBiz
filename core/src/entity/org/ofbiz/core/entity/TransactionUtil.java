@@ -48,6 +48,15 @@ public class TransactionUtil implements javax.transaction.Status {
      * a transaction is already in place it will return false and do nothing.
      */
     public static boolean begin() throws GenericTransactionException {
+        return begin(0);
+    }
+    
+    /** Begins a transaction in the current thread IF transactions are available; only
+     * tries if the current transaction status is ACTIVE, if not active it returns false.
+     * If and on only if it begins a transaction it will return true. In other words, if
+     * a transaction is already in place it will return false and do nothing.
+     */   
+    public static boolean begin(int timeout) throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
 
         if (ut != null) {
@@ -61,6 +70,13 @@ public class TransactionUtil implements javax.transaction.Status {
                     throw new GenericTransactionException("The current transaction is marked for rollback, should stop immediately.");
                     //return false;
                 }
+                
+                // set the timeout for THIS transaction
+                if (timeout > 0) {
+                    ut.setTransactionTimeout(timeout);    
+                }
+                
+                // begin the transaction
                 ut.begin();
                 Debug.logVerbose("[TransactionUtil.begin] transaction begun", module);
                 return true;
