@@ -1,5 +1,5 @@
 /*
- * $Id: NotificationServices.java,v 1.1 2003/11/26 11:52:44 jonesde Exp $
+ * $Id: NotificationServices.java,v 1.2 2003/11/26 16:52:23 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.content.notification;
+package org.ofbiz.content.email;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -107,7 +107,7 @@ import freemarker.template.TemplateHashModel;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class NotificationServices {
