@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/01 17:12:37  azeneski
+ * Updated ConfigXMLReader w/ simplified XML files.
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -34,10 +37,8 @@
 package org.ofbiz.core.control;
 
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
+import java.net.*;
 import javax.servlet.ServletContext;
 
 import org.ofbiz.core.util.ConfigXMLReader;
@@ -71,183 +72,132 @@ import org.ofbiz.core.util.Debug;
  * Created on June 28, 2001, 10:12 PM
  */
 public class RequestManager implements Serializable {
-    
-    HashMap configMap;
-    HashMap requestMap;
-    HashMap viewMap;
-    
-    public RequestManager(ServletContext context) {
-        requestMap = new HashMap();
-        configMap = new HashMap();
-        viewMap = new HashMap();
-        
-        /** Loads the site configuration from servlet context parameter. */
-        String configFileUrl = null;
-        try {
-            configFileUrl = context.getResource(context.getInitParameter(SiteDefs.SITE_CONFIG)).toString();
-        }
-        catch ( Exception e ) {
-            Debug.logError(e,"Error Reading XML Config File: " + configFileUrl);
-        }
-        requestMap = ConfigXMLReader.getRequestMap(configFileUrl);
-        configMap = ConfigXMLReader.getConfigMap(configFileUrl);
-        viewMap = ConfigXMLReader.getViewMap(configFileUrl);
-        
-        /** Debugging */
-        Debug.logInfo("----------------------------------");
-        Debug.logInfo("Request Mappings:");
-        Debug.logInfo("----------------------------------");
-        HashMap debugMap =  requestMap;
-        Set debugSet = debugMap.keySet();
-        Iterator i = debugSet.iterator();
-        while ( i.hasNext() ) {
-            Object o = i.next();
-            String request = (String) o;
-            HashMap thisURI = (HashMap) debugMap.get(o);
-            Debug.log(request);
-            Iterator list = ((Set) thisURI.keySet()).iterator();
-            while ( list.hasNext() ) {
-                Object lo = list.next();
-                String name = (String) lo;
-                String value = (String) thisURI.get(lo);
-                Debug.logInfo("\t" + name + " -> " + value);
-            }
-        }
-        Debug.logInfo("----------------------------------");
-        Debug.logInfo("End Request Mappings.");
-        Debug.logInfo("----------------------------------");
-        /** End Debugging */
+  URL configFileUrl;
+  
+  public RequestManager(ServletContext context) {
+    /** Loads the site configuration from servlet context parameter. */
+    try {
+      configFileUrl = context.getResource(context.getInitParameter(SiteDefs.SITE_CONFIG));
     }
-    
-    public HashMap getRequestMap(String uriStr) {
-        if ( requestMap != null && requestMap.containsKey(uriStr) )
-            return (HashMap) requestMap.get(uriStr);
-        return null;
+    catch ( Exception e ) {
+      Debug.logError(e,"[RequestManager.constructor] Error Finding XML Config File: " + context.getInitParameter(SiteDefs.SITE_CONFIG));
     }
-    
-    public String getRequestAttribute(String uriStr, String attribute) {
-        if ( requestMap != null && requestMap.containsKey(uriStr) ) {
-            HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(attribute) )
-                return (String) uri.get(attribute);
-        }
-        return null;
+    //do quick inits:
+    ConfigXMLReader.getRequestMap(configFileUrl);
+    ConfigXMLReader.getViewMap(configFileUrl);
+    ConfigXMLReader.getConfigMap(configFileUrl);
+  }
+  
+  public HashMap getRequestMapMap(String uriStr) {
+    return (HashMap)ConfigXMLReader.getRequestMap(configFileUrl).get(uriStr);
+  }
+  
+  public String getRequestAttribute(String uriStr, String attribute) {
+    HashMap uri = getRequestMapMap(uriStr);
+    if(uri != null) return (String)uri.get(attribute);
+    else {
+      Debug.logWarning("[RequestManager.getRequestAttribute] Value for attribute \""+ attribute + "\" of uri \""+ uriStr + "\" not found");
+      return null;
     }
-    
-    /** Gets the event class from the requestMap */
-    public String getEventPath(String uriStr) {
-        if ( requestMap != null && requestMap.containsKey(uriStr) ) {
-            HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(ConfigXMLReader.EVENT_PATH) )
-                return (String) uri.get(ConfigXMLReader.EVENT_PATH);
-        }
-        return null;
+  }
+  
+  /** Gets the event class from the requestMap */
+  public String getEventPath(String uriStr) {
+    HashMap uri = getRequestMapMap(uriStr);
+    if(uri != null) return (String) uri.get(ConfigXMLReader.EVENT_PATH);
+    else {
+      Debug.logWarning("[RequestManager.getEventPath] Path of event for request \""+ uriStr + "\" not found");
+      return null;
     }
-    
-    /** Gets the event type from the requestMap */
-    public String getEventType(String uriStr) {
-        if ( requestMap != null && requestMap.containsKey(uriStr) ) {
-            HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(ConfigXMLReader.EVENT_TYPE) )
-                return (String) uri.get(ConfigXMLReader.EVENT_TYPE);
-        }
-        return null;
+  }
+  
+  /** Gets the event type from the requestMap */
+  public String getEventType(String uriStr) {
+    HashMap uri = getRequestMapMap(uriStr);
+    if(uri != null) return (String) uri.get(ConfigXMLReader.EVENT_TYPE);
+    else {
+      Debug.logWarning("[RequestManager.getEventType] Type of event for request \""+ uriStr + "\" not found");
+      return null;
     }
-    
-    /** Gets the event method from the requestMap */
-    public String getEventMethod(String uriStr) {
-        if ( requestMap != null && requestMap.containsKey(uriStr) ) {
-            HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(ConfigXMLReader.EVENT_METHOD) )
-                return (String) uri.get(ConfigXMLReader.EVENT_METHOD);
-        }
-        return null;
+  }
+  
+  /** Gets the event method from the requestMap */
+  public String getEventMethod(String uriStr) {
+    HashMap uri = getRequestMapMap(uriStr);
+    if(uri != null) return (String)uri.get(ConfigXMLReader.EVENT_METHOD);
+    else {
+      Debug.logWarning("[RequestManager.getEventMethod] Method of event for request \""+ uriStr + "\" not found");
+      return null;
     }
-    
-    /** Gets the view name from the requestMap */
-    public String getViewName(String uriStr) {
-        if ( requestMap != null && requestMap.containsKey(uriStr) ) {
-            HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(ConfigXMLReader.NEXT_PAGE) )
-                return (String) uri.get(ConfigXMLReader.NEXT_PAGE);
-        }
-        return null;
+  }
+  
+  /** Gets the view name from the requestMap */
+  public String getViewName(String uriStr) {
+    HashMap uri = getRequestMapMap(uriStr);
+    if(uri != null) return (String) uri.get(ConfigXMLReader.NEXT_PAGE);
+    else {
+      Debug.logWarning("[RequestManager.getViewName] View name for uri \""+ uriStr + "\" not found");
+      return null;
     }
-    
-    /** Gets the next page (jsp) from the viewMap */
-    public String getViewPage(String viewStr) {
-        if ( viewStr != null && viewStr.startsWith("view:") )
-            viewStr = viewStr.substring(viewStr.indexOf(':'));
-        if ( viewMap != null && viewMap.containsKey(viewStr) ) {
-            HashMap page = (HashMap) viewMap.get(viewStr);
-            if ( page != null && page.containsKey(ConfigXMLReader.VIEW_PAGE) )
-                return (String) page.get(ConfigXMLReader.VIEW_PAGE);
-        }
-        return null;
+  }
+  
+  /** Gets the next page (jsp) from the viewMap */
+  public String getViewPage(String viewStr) {
+    if(viewStr != null && viewStr.startsWith("view:")) viewStr = viewStr.substring(viewStr.indexOf(':')+1);
+    HashMap page = (HashMap)ConfigXMLReader.getViewMap(configFileUrl).get(viewStr);
+    if(page != null) return (String)page.get(ConfigXMLReader.VIEW_PAGE);
+    else {
+      Debug.logWarning("[RequestManager.getViewPage] View with name \""+ viewStr + "\" not found");
+      return null;
     }
-    
-    /** Gets the error page from the requestMap, if none uses the default */
-    public String getErrorPage(String uriStr) {
-        if ( requestMap != null && requestMap.containsKey(uriStr) ) {
-            HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(ConfigXMLReader.ERROR_PAGE) ) {
-                String returnPage = getViewPage((String) uri.get(ConfigXMLReader.ERROR_PAGE));
-                if ( returnPage != null )
-                    return returnPage;
-            }
-        }
-        return getDefaultErrorPage();
+  }
+  
+  /** Gets the error page from the requestMap, if none uses the default */
+  public String getErrorPage(String uriStr) {
+    HashMap uri = getRequestMapMap(uriStr);
+    if(uri != null) {
+      String returnPage = getViewPage((String)uri.get(ConfigXMLReader.ERROR_PAGE));
+      if(returnPage != null) return returnPage;
+      else return getDefaultErrorPage();
     }
-    
-    /** Gets the default error page from the configMap or static site default */
-    public String getDefaultErrorPage() {
-        String errorPage = null;
-        if ( configMap.containsKey(ConfigXMLReader.DEFAULT_ERROR_PAGE) )
-            errorPage = (String) configMap.get(ConfigXMLReader.DEFAULT_ERROR_PAGE);
-        if ( errorPage != null )
-            return errorPage;
-        return SiteDefs.ERROR_PAGE;
+    else return getDefaultErrorPage();
+  }
+  
+  /** Gets the default error page from the configMap or static site default */
+  public String getDefaultErrorPage() {
+    String errorPage = null;
+    errorPage = (String)ConfigXMLReader.getConfigMap(configFileUrl).get(ConfigXMLReader.DEFAULT_ERROR_PAGE);
+    if(errorPage != null) return errorPage;
+    return SiteDefs.ERROR_PAGE;
+  }
+  
+  public boolean requiresAuth(String uriStr) {
+    HashMap uri = getRequestMapMap(uriStr);
+    if(uri != null) {
+      String value = (String)uri.get(ConfigXMLReader.SECURITY_AUTH);
+      if("true".equalsIgnoreCase(value)) return true;
+      else return false;      
     }
-    
-    public boolean requiresAuth(String uriStr) {
-        if ( requestMap != null && requestMap.containsKey(uriStr) ) {
-            HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(ConfigXMLReader.SECURITY_AUTH) ) {
-                String value = (String) uri.get(ConfigXMLReader.SECURITY_AUTH);
-                if ( value.equalsIgnoreCase("true") )
-                    return true;
-            }
-        }
-        return false;
+    else return false;
+  }
+  
+  public boolean requiresHttps(String uriStr) {
+    HashMap uri = getRequestMapMap(uriStr);
+    if(uri != null) {
+      String value = (String) uri.get(ConfigXMLReader.SECURITY_HTTPS);
+      if("true".equalsIgnoreCase(value)) return true;
+      else return false;
     }
-    
-    public boolean requiresHttps(String uriStr) {
-        if ( requestMap != null && requestMap.containsKey(uriStr) ) {
-            HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(ConfigXMLReader.SECURITY_HTTPS) ) {
-                String value = (String) uri.get(ConfigXMLReader.SECURITY_HTTPS);
-                if ( value.equalsIgnoreCase("true") )
-                    return true;
-            }
-        }
-        return false;
-    }
-    
-    public Collection getPreProcessor() {
-        if ( configMap != null && configMap.containsKey(ConfigXMLReader.PREPROCESSOR) ) {
-            Collection c = (Collection) configMap.get(ConfigXMLReader.PREPROCESSOR);
-            return c;
-        }
-        return null;
-    }
-    
-    public Collection getPostProcessor() {
-        if ( configMap != null && configMap.containsKey(ConfigXMLReader.POSTPROCESSOR) ) {
-            Collection c = (Collection) configMap.get(ConfigXMLReader.POSTPROCESSOR);
-            return c;
-        }
-        return null;
-    }
-
-        
+    else return false;
+  }
+  
+  public Collection getPreProcessor() {
+    Collection c = (Collection) ConfigXMLReader.getConfigMap(configFileUrl).get(ConfigXMLReader.PREPROCESSOR);
+    return c;
+  }
+  
+  public Collection getPostProcessor() {
+    Collection c = (Collection) ConfigXMLReader.getConfigMap(configFileUrl).get(ConfigXMLReader.POSTPROCESSOR);
+    return c;
+  }
 }

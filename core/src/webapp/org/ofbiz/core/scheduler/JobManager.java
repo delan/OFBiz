@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/10/01 17:12:37  azeneski
+ * Updated ConfigXMLReader w/ simplified XML files.
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -38,6 +41,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.servlet.ServletContext;
+import java.net.*;
 
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.util.ConfigXMLReader;
@@ -87,16 +91,14 @@ public class JobManager {
         this.context = context;
         this.delegator = delegator;
         HashMap config = null;
-        String configFileUrl = null;
+        URL configFileUrl = null;
         try {
-            configFileUrl = context.getResource(context.getInitParameter(SiteDefs.SCHEDULER_CONFIG)).toString();
+            configFileUrl = context.getResource(context.getInitParameter(SiteDefs.SCHEDULER_CONFIG));
         }
         catch ( Exception e ) {
-            Debug.logError(e,"Error Reading Scheduler Config File: " + configFileUrl);
+            Debug.logError(e,"Error Finding Scheduler Config File: " + context.getInitParameter(SiteDefs.SCHEDULER_CONFIG));
         }
-        if ( configFileUrl != null )
-            config = ConfigXMLReader.getSchedulerMap(configFileUrl);
-        
+        if(configFileUrl != null) config = ConfigXMLReader.getSchedulerMap(configFileUrl);
         init(config);
     }
     
@@ -303,15 +305,14 @@ public class JobManager {
             return;
         }
         HashMap config = null;
-        String configFileUrl = null;
+        URL configFileUrl = null;
         try {
-            configFileUrl = context.getResource(context.getInitParameter(SiteDefs.SCHEDULER_CONFIG)).toString();
+            configFileUrl = context.getResource(context.getInitParameter(SiteDefs.SCHEDULER_CONFIG));
         }
         catch ( Exception e ) {
             Debug.logError(e,"Error Reading Scheduler Config File: " + configFileUrl);
         }
-        if ( configFileUrl != null )
-            config = ConfigXMLReader.getSchedulerMap(configFileUrl);
+        if(configFileUrl != null) config = ConfigXMLReader.getSchedulerMap(configFileUrl);
         
         // Get a list of scheduled jobs.
         List jobList = getJobList();
