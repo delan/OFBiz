@@ -236,10 +236,11 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new WfException(e.getMessage(), e);
         }
         
-        if (assignList != null)
+        if (assignList != null) {
             assignList = EntityUtil.filterByDate(assignList);
-        else 
+        } else { 
             return new ArrayList();
+        }
         return assignList;            
     }
 
@@ -387,6 +388,20 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new CannotResume("Attempt to complete activity failed", e);
         } 
     }
+    
+    /**
+     * @see org.ofbiz.core.workflow.WfExecutionObject#abort()
+     */
+    public void abort() throws WfException, CannotStop, NotRunning {
+        super.abort();
+        
+        // cancel the active assignments
+        Iterator assignments = this.getAssignments().iterator();
+        while (assignments.hasNext()) {
+            WfAssignment assignment = (WfAssignment) assignments.next();            
+            assignment.changeStatus("CAL_CANCELLED");
+        }                
+    }    
 
     /**
      * @see org.ofbiz.core.workflow.WfActivity#isMemberOfAssignment(org.ofbiz.core.workflow.WfAssignment)

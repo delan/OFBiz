@@ -90,6 +90,20 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             return new ArrayList(activeSteps().subList(0, maxNumber - 1));
         return activeSteps();
     }
+    
+    /**
+     * @see org.ofbiz.core.workflow.WfExecutionObject#abort()
+     */
+    public void abort() throws WfException, CannotStop, NotRunning {
+        super.abort();
+        
+        // cancel the active activities
+        Iterator activities = this.activeSteps().iterator();
+        while (activities.hasNext()) {
+            WfActivity activity = (WfActivity) activities.next();
+            activity.abort();
+        }                
+    }
   
     /**
      * @see org.ofbiz.core.workflow.WfProcess#start()

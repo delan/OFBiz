@@ -284,6 +284,16 @@ public class WorkflowClient {
 
         activity.resume();
     }
+    
+    /**
+     * Abort a process
+     * @param workEffortId The workeffort entity key for the process to abort
+     * @throws WfException
+     */
+    public void abortProcess(String workEffortId) throws WfException {
+        WfProcess process = WfFactory.getWfProcess(delegator, workEffortId);        
+        process.abort();
+    }
                 
     /**
      * Append data to the execution object's process context.
