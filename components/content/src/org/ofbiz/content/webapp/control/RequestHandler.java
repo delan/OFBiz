@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.4 2003/09/18 16:01:22 jonesde Exp $
+ * $Id: RequestHandler.java,v 1.5 2003/09/20 18:13:22 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
@@ -103,8 +103,9 @@ public class RequestHandler implements Serializable {
             if (Debug.infoOn()) Debug.logInfo("[RequestHandler]: Chain in place: requestUri=" + requestUri + " nextView=" + nextView, module);
         } else {
             // Check to make sure we are allowed to access this request directly. (Also checks if this request is defined.)
-            if (!requestManager.allowDirectRequest(requestUri))
-                throw new RequestHandlerException("Unknown request; this request does not exist or cannot be called directly.");
+            if (!requestManager.allowDirectRequest(requestUri)) {
+                throw new RequestHandlerException("Unknown request [" + requestUri + "]; this request does not exist or cannot be called directly.");
+            }
 
             // Check if we SHOULD be secure and are not. If we are posting let it pass to not lose data. (too late now anyway)
             if (!request.isSecure() && requestManager.requiresHttps(requestUri) && !request.getMethod().equalsIgnoreCase("POST")) {
