@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.45 $
+ * @version    $Revision: 1.46 $
  */
 -->
 
@@ -1686,7 +1686,9 @@
       <field name="sequenceNum" type="numeric"></field>
       <field name="reason" type="long-varchar"></field>
       <field name="quantity" type="floating-point"></field>
+      <field name="scrapFactor" type="floating-point"></field>
       <field name="instruction" type="long-varchar"></field>
+      <field name="routingWorkEffortId" type="id"></field>
       <prim-key field="productId"/>
       <prim-key field="productIdTo"/>
       <prim-key field="productAssocTypeId"/>
@@ -1699,6 +1701,9 @@
       </relation>
       <relation type="one" fk-name="PROD_ASSOC_APROD" title="Assoc" rel-entity-name="Product">
         <key-map field-name="productIdTo" rel-field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_ASSOC_RTWE" title="Routing" rel-entity-name="WorkEffort">
+        <key-map field-name="routingWorkEffortId" rel-field-name="workEffortId"/>
       </relation>
     </entity>
     <entity entity-name="ProductAssocType"
