@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2001/09/05 21:52:34  jonesde
+ * Added manual add of a partyconactmechpurpose on creation of a contactmech.
+ *
  * Revision 1.16  2001/09/03 21:15:38  jonesde
  * Added select address from existing addresses in contact mech list; adds BILLING_LOCATION purpose if not already set.
  *
@@ -359,6 +362,7 @@ public class CustomerEvents {
       catch(Exception e) { errMsg = "<li>ERROR: Could not delete contact info (write failure) . Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
     }
     else if("UPDATE".equals(updateMode)) {
+      boolean isModified = false;
       Long newCmId = helper.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not change contact info (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
       
       String contactMechId = request.getParameter("CONTACT_MECH_ID");
@@ -368,10 +372,7 @@ public class CustomerEvents {
       
       //never change a contact mech, just create a new one with the changes
       GenericValue newContactMech = new GenericValue(contactMech);
-      newContactMech.set("contactMechId", newCmId.toString());
       GenericValue newPartyContactMech = new GenericValue(partyContactMech);
-      newPartyContactMech.set("contactMechId", newCmId.toString());
-      newPartyContactMech.set("fromDate", UtilDateTime.nowTimestamp());
       
       if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
         String toName = request.getParameter("CM_TO_NAME");
@@ -394,8 +395,8 @@ public class CustomerEvents {
           return "error";
         }
         
-        GenericValue newAddr = helper.makeValue("PostalAddress", null);
-        newAddr.set("contactMechId", newCmId.toString());
+        GenericValue addr = helper.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", contactMechId));
+        GenericValue newAddr = new GenericValue(addr);
         newAddr.set("toName", toName);
         newAddr.set("attnName", attnName);
         newAddr.set("address1", address1);
@@ -406,14 +407,29 @@ public class CustomerEvents {
         newAddr.set("stateProvinceGeoId", state);
         newAddr.set("countryGeoId", country);
         //newAddr.set("postalCodeGeoId", postalCodeGeoId);
-        partyContactMech.preStoreOther(newAddr);
+        if(!newAddr.equals(addr)) {
+          isModified = true;
+          newAddr.set("contactMechId", newCmId.toString());
+          partyContactMech.preStoreOther(newAddr);
+        }
       }
       else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {
         String countryCode = request.getParameter("CM_COUNTRY_CODE");
         String areaCode = request.getParameter("CM_AREA_CODE");
         String contactNumber = request.getParameter("CM_CONTACT_NUMBER");
         String extension = request.getParameter("CM_EXTENSION");
-        partyContactMech.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", countryCode, "areaCode", areaCode, "contactNumber", contactNumber)));
+
+        GenericValue telNum = helper.findByPrimaryKey("TelecomNumber", UtilMisc.toMap("contactMechId", contactMechId));
+        GenericValue newTelNum = new GenericValue(telNum);
+        newTelNum.set("countryCode", countryCode);
+        newTelNum.set("areaCode", areaCode);
+        newTelNum.set("contactNumber", contactNumber);
+        
+        if(!newTelNum.equals(telNum)) {
+          isModified = true;
+          newTelNum.set("contactMechId", newCmId.toString());
+          partyContactMech.preStoreOther(newTelNum);
+        }
         newPartyContactMech.set("extension", extension);
       }
       else if("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
@@ -430,28 +446,49 @@ public class CustomerEvents {
         String infoString = request.getParameter("CM_INFO_STRING");
         newContactMech.set("infoString", infoString);
       }
+
       String allowSolicitation = request.getParameter("CM_ALLOW_SOL");
       newPartyContactMech.set("allowSolicitation", allowSolicitation);
-      
-      String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
-      if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0)        
-        partyContactMech.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp())));
 
+      if(!newContactMech.equals(contactMech)) isModified = true;
+      if(!newPartyContactMech.equals(partyContactMech)) isModified = true;
+      
       partyContactMech.preStoreOther(newContactMech);
       partyContactMech.preStoreOther(newPartyContactMech);
-      
-      Iterator partyContactMechPurposes = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
-      while(partyContactMechPurposes != null && partyContactMechPurposes.hasNext()) {
-        GenericValue tempVal = new GenericValue((GenericValue)partyContactMechPurposes.next());
-        tempVal.set("contactMechId", newCmId.toString());
-        partyContactMech.preStoreOther(tempVal);
+
+      if(isModified) {
+        newContactMech.set("contactMechId", newCmId.toString());
+        newPartyContactMech.set("contactMechId", newCmId.toString());
+        newPartyContactMech.set("fromDate", UtilDateTime.nowTimestamp());
+
+        Iterator partyContactMechPurposes = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
+        while(partyContactMechPurposes != null && partyContactMechPurposes.hasNext()) {
+          GenericValue tempVal = new GenericValue((GenericValue)partyContactMechPurposes.next());
+          tempVal.set("contactMechId", newCmId.toString());
+          partyContactMech.preStoreOther(tempVal);
+        }
+
+        String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
+        if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0) {
+          partyContactMech.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp())));
+        }
+
+        partyContactMech.set("thruDate", UtilDateTime.nowTimestamp());
+        try { partyContactMech.store(); }
+        catch(Exception e) { errMsg = "<li>ERROR: Could not change contact info (write failure) . Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+        request.setAttribute("CONTACT_MECH_ID", newCmId.toString());
+      }
+      else {
+        String cmId = contactMech.getString("contactMechId");
+        String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
+        if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0) {
+          if(helper.create("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", cmId, "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp())) == null) {
+            errMsg = "<li>ERROR: Could not change contact info (write failure) . Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error";
+          }
+        }
+        request.setAttribute("CONTACT_MECH_ID", cmId);
       }
       
-      partyContactMech.set("thruDate", UtilDateTime.nowTimestamp());
-      try { partyContactMech.store(); }
-      catch(Exception e) { errMsg = "<li>ERROR: Could not change contact info (write failure) . Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
-      
-      request.setAttribute("CONTACT_MECH_ID", newCmId.toString());
     }
     else {
       errMsg = "<li>ERROR: Specified Update Mode (" + updateMode + ") is not valid. Please contact customer service.";
@@ -479,8 +516,8 @@ public class CustomerEvents {
     if(contactMechPurposeTypeId == null || contactMechPurposeTypeId.length() <= 0) { errMsg = "<li>ERROR: Purpose type not specified, cannot add purpose to contact mechanism. Please try again."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
     
     
-    GenericValue newVal = helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp()));
-    GenericValue tempVal = helper.findByPrimaryKey(newVal.getPrimaryKey());
+    GenericValue newPartyContactMechPurpose = helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp()));
+    GenericValue tempVal = helper.findByPrimaryKey(newPartyContactMechPurpose.getPrimaryKey());
     if(tempVal != null) {
       //if exists already, and has a thruDate, reset it to "undelete"
       if(tempVal.get("thruDate") != null) {
@@ -490,7 +527,7 @@ public class CustomerEvents {
         catch(Exception e) { errMsg = "<li>ERROR: Could not undelete purpose of contact mechanism (write failure) . Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
       }
     }
-    else if(helper.create(newVal) == null) {
+    else if(helper.create(newPartyContactMechPurpose) == null) {
       errMsg = "<li>ERROR: Could not add purpose to contact mechanism (write failure). Please contact customer service.";
       request.setAttribute("ERROR_MESSAGE", errMsg);
       return "error";
@@ -541,8 +578,9 @@ public class CustomerEvents {
     
     String updateMode = request.getParameter("UPDATE_MODE");
     
-    boolean doDelete = false;
     if("CREATE".equals(updateMode) || "UPDATE".equals(updateMode)) {
+      boolean isModified = false;
+  
       String nameOnCard = request.getParameter("CC_NAME_ON_CARD");
       String companyNameOnCard = request.getParameter("CC_COMPANY_NAME_ON_CARD");
       String cardType = request.getParameter("CC_CARD_TYPE");
@@ -566,12 +604,20 @@ public class CustomerEvents {
         request.setAttribute("ERROR_MESSAGE", errMsg);
         return "error";
       }
-      
+
+      GenericValue creditCardInfo = null;
+      GenericValue newCc = null;
+      if("UPDATE".equals(updateMode)) {
+        String creditCardId = request.getParameter("CREDIT_CARD_ID");
+        creditCardInfo = helper.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
+        newCc = new GenericValue(creditCardInfo);
+      }
+      else {
+        newCc = helper.makeValue("CreditCardInfo", null);
+      }
+        
       Long newCcId = helper.getNextSeqId("CreditCardInfo"); if(newCcId == null) { errMsg = "<li>ERROR: Could not create new contact info (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
-      GenericValue newCc = helper.makeValue("CreditCardInfo", null);
-      newCc.set("creditCardId", newCcId.toString());
       newCc.set("partyId", userLogin.get("partyId"));
-      newCc.set("fromDate", UtilDateTime.nowTimestamp());
       newCc.set("nameOnCard", nameOnCard);
       newCc.set("companyNameOnCard", companyNameOnCard);
       newCc.set("cardType", cardType);
@@ -580,53 +626,71 @@ public class CustomerEvents {
       newCc.set("expireDate", expireDate);
       newCc.set("contactMechId", contactMechId);
       
-      if(contactMechId != null && contactMechId.length() > 0)
-      {
-        String contactMechPurposeTypeId = "BILLING_LOCATION";
-        GenericValue newVal = helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp()));
-        GenericValue tempVal = helper.findByPrimaryKey(newVal.getPrimaryKey());
-        if(tempVal != null) {
-          //if exists already, and has a thruDate, reset it to "undelete"
-          if(tempVal.get("thruDate") != null) {
-            tempVal.set("fromDate", UtilDateTime.nowTimestamp());
-            tempVal.set("thruDate", null);
-            newVal = tempVal;
-          }
-          else {
-            newVal = null;
+      if("UPDATE".equals(updateMode)) {
+        if(!newCc.equals(creditCardInfo)) {
+          newCc.set("creditCardId", newCcId.toString());
+          newCc.set("fromDate", UtilDateTime.nowTimestamp());
+          isModified = true;
+        }
+      }
+      else {
+        newCc.set("creditCardId", newCcId.toString());
+        newCc.set("fromDate", UtilDateTime.nowTimestamp());
+        isModified = true;
+      }
+      
+      GenericValue newPartyContactMechPurpose = null;
+      if(contactMechId != null && contactMechId.length() > 0) {
+        if("CREATE".equals(updateMode) || (creditCardInfo != null && !contactMechId.equals(creditCardInfo.getString("contactMechId")))) {
+          //add a PartyContactMechPurpose of BILLING_LOCATION if necessary
+          String contactMechPurposeTypeId = "BILLING_LOCATION";
+          newPartyContactMechPurpose = helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp()));
+          GenericValue tempVal = helper.findByPrimaryKey(newPartyContactMechPurpose.getPrimaryKey());
+          if(tempVal != null) {
+            //if exists already, and has a thruDate, reset or "undelete" it
+            if(tempVal.get("thruDate") != null) {
+              tempVal.set("fromDate", UtilDateTime.nowTimestamp());
+              tempVal.set("thruDate", null);
+              newPartyContactMechPurpose = tempVal;
+            }
+            else {
+              newPartyContactMechPurpose = null;
+            }
           }
         }
-        if(newVal != null) newCc.preStoreOther(newVal);
+      }
+
+      if(isModified) {        
+        if(newPartyContactMechPurpose != null) newCc.preStoreOther(newPartyContactMechPurpose);
+        if("UPDATE".equals(updateMode)) {
+          //if it is an update, set thru date on old card
+          creditCardInfo.set("thruDate", UtilDateTime.nowTimestamp());
+          newCc.preStoreOther(creditCardInfo);
+        }
+
+        if(helper.create(newCc) == null) {
+          errMsg = "<li>ERROR: Could not add credit card (write failure). Please contact customer service.";
+          request.setAttribute("ERROR_MESSAGE", errMsg);
+          return "error";
+        }
+      }
+      else {
+        request.setAttribute("CREDIT_CARD_ID", creditCardInfo.getString("creditCardId"));
       }
       
-      if(helper.create(newCc) == null) {
-        errMsg = "<li>ERROR: Could not add credit card (write failure). Please contact customer service.";
-        request.setAttribute("ERROR_MESSAGE", errMsg);
-        return "error";
-      }
-      request.setAttribute("CREDIT_CARD_ID", newCcId.toString());
-      
-      if("UPDATE".equals(updateMode)) {
-        //if it is an update, set thru date on old card
-        doDelete = true;
-      }
     }
     else if("DELETE".equals(updateMode)) {
-      doDelete = true;
-    }
-    else {
-      errMsg = "<li>ERROR: Specified Update Mode (" + updateMode + ") is not valid. Please contact customer service.";
-      request.setAttribute("ERROR_MESSAGE", errMsg);
-      return "error";
-    }
-    
-    if(doDelete) {
       //never delete a credit card, just put a to date on the link to the party
       String creditCardId = request.getParameter("CREDIT_CARD_ID");
       GenericValue creditCardInfo = helper.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
       creditCardInfo.set("thruDate", UtilDateTime.nowTimestamp());
       try { creditCardInfo.store(); }
       catch(Exception e) { errMsg = "<li>ERROR: Could not delete credit card info (write failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+    }
+    else {
+      errMsg = "<li>ERROR: Specified Update Mode (" + updateMode + ") is not valid. Please contact customer service.";
+      request.setAttribute("ERROR_MESSAGE", errMsg);
+      return "error";
     }
     
     request.setAttribute("EVENT_MESSAGE", "Credit Card Information Updated.");
