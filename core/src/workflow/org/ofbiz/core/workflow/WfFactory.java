@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.workflow;
-
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -32,7 +30,6 @@ import java.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.workflow.impl.*;
-
 
 /**
  * WfFactory - Workflow Factory Class
@@ -63,7 +60,6 @@ public class WfFactory {
         if (process == null) throw new WfException("Parent process WorkEffort key cannot be null");
         WfActivity act = new WfActivityImpl(value, process);
         String mapKey = value.getDelegator().getDelegatorName() + ":" + act.runtimeKey();
-
         activity.put(mapKey, act);
         return act;
     }
@@ -93,7 +89,7 @@ public class WfFactory {
         if (resource == null) throw new WfException("WfResource cannot be null");
         if (fromDate == null) fromDate = new Timestamp(new Date().getTime());
         String mapKey = activity.runtimeKey() + ":" + resource.resourcePartyId() + ":" +
-            resource.resourceRoleId() + ":" + fromDate.getTime();
+                resource.resourceRoleId() + ":" + fromDate.getTime();
 
         if (!assign.containsKey(mapKey)) {
             synchronized (WfFactory.class) {
@@ -108,11 +104,11 @@ public class WfFactory {
         Timestamp from) throws WfException {
         WfActivity act = getWfActivity(delegator, work);
         WfResource res = getWfResource(delegator, null, null, party, role);
-
         return getWfAssignment(act, res, from, false);
     }
 
-    /** Creates a new {@link WfProcess} instance.
+    /** 
+     * Creates a new {@link WfProcess} instance.
      * @param value The GenericValue object for the process definition.
      * @param mgr The WfProcessMgr which is managing this process.
      * @return An instance of the WfProcess Interface.
@@ -123,7 +119,6 @@ public class WfFactory {
         if (mgr == null) throw new WfException("WfProcessMgr cannot be null");
         WfProcess proc = new WfProcessImpl(value, mgr);
         String mapKey = value.getDelegator().getDelegatorName() + ":" + proc.runtimeKey();
-
         process.put(mapKey, proc);
         return proc;
     }
@@ -132,7 +127,6 @@ public class WfFactory {
         if (delegator == null) throw new WfException("The delegator object cannot be null");
         if (workEffortId == null) throw new WfException("The WorkEffort key cannot be null");
         String mapKey = delegator.getDelegatorName() + ":" + workEffortId;
-
         if (!process.containsKey(mapKey)) {
             synchronized (WfFactory.class) {
                 if (!process.containsKey(mapKey))
@@ -142,7 +136,8 @@ public class WfFactory {
         return (WfProcess) process.get(mapKey);
     }
 
-    /** Creates a new {@link WfProcessMgr} instance.
+    /** 
+     * Creates a new {@link WfProcessMgr} instance.
      * @param del The GenericDelegator to use for this manager.
      * @param pkg The Workflow Package ID.
      * @param pkver The Workflow Package Version.
@@ -168,7 +163,8 @@ public class WfFactory {
         return (WfProcessMgr) manager.get(mapKey);
     }
 
-    /** Creates a new {@link WfRequester} instance.
+    /** 
+     * Creates a new {@link WfRequester} instance.
      * @return An instance of the WfRequester Interface.
      * @throws WfException
      */
@@ -176,7 +172,8 @@ public class WfFactory {
         return new WfRequesterImpl();
     }
 
-    /** Creates a new {@link WfResource} instance.
+    /** 
+     * Creates a new {@link WfResource} instance.
      * @param value The GenericValue object of the WorkflowParticipant
      * @throws WfException
      * @return An instance of the WfResource Interface.
@@ -185,13 +182,14 @@ public class WfFactory {
         if (value == null) throw new WfException("Value object for WfResource definition cannot be null");
         WfResource res = new WfResourceImpl(value);
         String mapKey = value.getDelegator().getDelegatorName() + ":" + res.resourceKey() + ":" + res.resourceName() +
-            ":" + res.resourcePartyId() + ":" + res.resourceRoleId();
+                ":" + res.resourcePartyId() + ":" + res.resourceRoleId();
 
         resource.put(mapKey, res);
         return res;
     }
 
-    /** Creates a new {@link WfResource} instance.
+    /** 
+     * Creates a new {@link WfResource} instance.
      * @param delegator The GenericDelegator for this instance
      * @param key The key for the resource
      * @param name The name of the resource
@@ -200,8 +198,7 @@ public class WfFactory {
      * @return An instance of the WfResource Interface.
      * @throws WfException
      */
-    public static WfResource getWfResource(GenericDelegator delegator, String key, String name, String party,
-        String role) throws WfException {
+    public static WfResource getWfResource(GenericDelegator delegator, String key, String name, String party, String role) throws WfException {        
         if (party == null) party = "_NA_";
         if (role == null) role = "_NA_";
         String mapKey = delegator.getDelegatorName() + ":" + key + ":" + name + ":" + party + ":" + role;
@@ -215,7 +212,8 @@ public class WfFactory {
         return (WfResource) resource.get(mapKey);
     }
 
-    /** Creates a new {@link WfEventAudit} instance.
+    /** 
+     * Creates a new {@link WfEventAudit} instance.
      * @return An instance of the WfEventAudit Interface.
      * @throws WfException
      */
