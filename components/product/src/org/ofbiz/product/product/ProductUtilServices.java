@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.20 2004/01/27 23:33:07 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.21 2004/01/28 03:16:48 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -253,6 +253,8 @@ public class ProductUtilServices {
             List valueList = eliOne.getCompleteList();
             eliOne.close();
             
+            Debug.logInfo("Found " + valueList.size() + " virtual products with one variant to turn into a stand alone product.", module);
+            
             int numWithOneOnly = 0;
             Iterator valueIter = valueList.iterator();
             while (valueIter.hasNext()) {
@@ -283,6 +285,8 @@ public class ProductUtilServices {
             EntityListIterator eliMulti = delegator.findListIteratorByCondition(dve, conditionWithDates, havingCond, UtilMisc.toList("productId", "productIdToCount"), null, null);
             List valueMultiList = eliMulti.getCompleteList();
             eliMulti.close();
+            
+            Debug.logInfo("Found " + valueMultiList.size() + " virtual products with one VALID variant to pull the variant from to make a stand alone product.", module);
             
             int numWithOneValid = 0;
             Iterator valueMultiIter = valueMultiList.iterator();
@@ -351,8 +355,8 @@ public class ProductUtilServices {
             newVariantProduct.setAllFields(variantProduct, false, "", null);
             newVariantProduct.store();
             
-            // ProductCategoryMember
-            duplicateRelated(product, "", "ProductCategoryMember", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            // ProductCategoryMember - always remove these to pull the virtual from any categories it might have been in
+            duplicateRelated(product, "", "ProductCategoryMember", "productId", variantProductId, nowTimestamp, true, delegator);
             
             // ProductFeatureAppl
             duplicateRelated(product, "", "ProductFeatureAppl", "productId", variantProductId, nowTimestamp, removeOld, delegator);
