@@ -1,5 +1,5 @@
 /*
- * $Id: StandardJavaEngine.java,v 1.1 2003/08/17 05:12:39 ajzeneski Exp $
+ * $Id: StandardJavaEngine.java,v 1.2 2003/09/03 20:47:59 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  * Standard Java Static Method Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public final class StandardJavaEngine extends GenericAsyncEngine {
@@ -115,8 +115,8 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
             throw new GenericServiceException("Specified object is null", npe);
         } catch (ExceptionInInitializerError eie) {
             throw new GenericServiceException("Initialization failed", eie);
-        } catch (Exception ex) {
-            throw new GenericServiceException("Unknown exception", ex);
+        } catch (Throwable th) {
+            throw new GenericServiceException("Error or nknown exception", th);
         }
 
         return result;
