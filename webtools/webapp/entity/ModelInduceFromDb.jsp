@@ -1,28 +1,39 @@
-<%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, java.sql.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" /><%
+<%@ page import="java.util.*, java.io.*, java.net.*, java.sql.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" /><%
 
 if(security.hasPermission("ENTITY_MAINT", session)) {
   String helperName = request.getParameter("helperName");
-  if(helperName == null || helperName.length() <= 0) helperName = "localmysql";
-  Collection messages = new LinkedList();
-  GenericDAO dao = GenericDAO.getGenericDAO(helperName);
-  List newEntList = dao.induceModelFromDb(messages);
+  if(helperName == null || helperName.length() <= 0) {
+    response.setContentType("text/html");
+%>
 
-  if(messages.size() > 0) {
+<div class='head3'><b>Please specify the helperName to induce from:</b></div>
+<form action='' method=POST>
+    <input type=TEXT size='40' name='helperName'>
+    <input type=SUBMIT value='Induce!'>
+</form>
+<%
+  } else {
+      response.setContentType("text/xml");
+      Collection messages = new LinkedList();
+      GenericDAO dao = GenericDAO.getGenericDAO(helperName);
+      List newEntList = dao.induceModelFromDb(messages);
+
+      if(messages.size() > 0) {
 %>
 ERRORS:
 <%
-    Iterator mIter = messages.iterator();
-    while(mIter.hasNext()) {
+        Iterator mIter = messages.iterator();
+        while(mIter.hasNext()) {
 %>
 <%=(String)mIter.next()%><%
-    }
-  }
-  if(newEntList != null) {
-    String title = "Entity of an Open For Business Project Component";
-    String description = "None";
-    String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org";
-    String author = "None";
-    String version = "1.0";
+        }
+      }
+      if(newEntList != null) {
+        String title = "Entity of an Open For Business Project Component";
+        String description = "None";
+        String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org";
+        String author = "None";
+        String version = "1.0";
 %><?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
 /**
@@ -173,8 +184,9 @@ ERRORS:
   }%>  
 </entitymodel>
 <%
+      }
+    } 
   }
-} 
 else {
   %>ERROR: You do not have permission to use this page (ENTITY_MAINT needed)<%
 }
