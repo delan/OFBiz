@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Andy Zeneski
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      1.0
 --%>
 
@@ -151,6 +151,7 @@
                   <tr>
                     <td colspan='3' align='right'>
                         <form method="post" action="<ofbiz:url>/updatePartyRelationship</ofbiz:url>">
+                            <input type="hidden" name="partyId" value="<%=partyId%>"/>
                             <input type="hidden" <ofbiz:inputvalue entityAttr='partyRelationship' field='partyIdFrom' fullattrs="true"/>/>
                             <input type="hidden" <ofbiz:inputvalue entityAttr='partyRelationship' field='roleTypeIdFrom' fullattrs="true"/>/>
                             <input type="hidden" <ofbiz:inputvalue entityAttr='partyRelationship' field='partyIdTo' fullattrs="true"/>/>
