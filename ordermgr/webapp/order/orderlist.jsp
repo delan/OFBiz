@@ -40,33 +40,66 @@
 <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
 
 <%
-  Collection orderHeaderList = null;
-  String listStatusId = request.getParameter("listStatusId");
-  if (listStatusId == null || listStatusId.length() == 0) listStatusId = "ORDER_ORDERED";
-  String partyId = request.getParameter("partyId");
-  if (partyId != null) {
-      Debug.logInfo("Getting order by party.");
-      pageContext.setAttribute("PARTY_MODE", "YES");
-      Collection orderRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "END_USER_CUSTOMER"));
-      Debug.logInfo("OrderRoles: " + orderRoles);
-      List exprs = new ArrayList();
-      if (orderRoles != null && orderRoles.size() > 0) {
-          Iterator i = orderRoles.iterator();
-          while (i.hasNext() ) {
-              GenericValue v = (GenericValue) i.next();
-              exprs.add(new EntityExpr("orderId", EntityOperator.EQUALS, v.getString("orderId")));
-          }
-          Debug.logInfo("Expressions: " + exprs);
-          orderHeaderList = delegator.findByOr("OrderHeader", exprs, UtilMisc.toList("orderDate DESC"));
-          Debug.logInfo("OrderHeaderList: " + orderHeaderList);
-      }
-  } else {
-      Debug.logInfo("Getting order by status.");
-      Collection statusItems = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "ORDER_STATUS"), UtilMisc.toList("sequenceId"));
-      if (statusItems != null) pageContext.setAttribute("statusItems", statusItems);
-      orderHeaderList = delegator.findByAnd("OrderHeader", UtilMisc.toMap("statusId", listStatusId), UtilMisc.toList("orderDate DESC"));
-  }
-  if (orderHeaderList != null) pageContext.setAttribute("orderHeaderList", orderHeaderList);
+    Collection orderHeaderList = null;
+    String listStatusId = request.getParameter("listStatusId");
+    if (listStatusId == null || listStatusId.length() == 0) listStatusId = "ORDER_ORDERED";
+    String partyId = request.getParameter("partyId");
+    String pageParamString = "";
+    if (partyId != null && partyId.length() > 0) {
+        //TODO: this is not an efficient way to do this, better to use a view or something to make the query easy and to still have all order fields available just in case this is a list by status
+        Debug.logInfo("Getting order by party.");
+        pageParamString = "partyId=" + partyId;
+        pageContext.setAttribute("PARTY_MODE", "YES");
+        Collection orderRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "PLACING_CUSTOMER"));
+        Debug.logInfo("OrderRoles: " + orderRoles);
+        List exprs = new ArrayList();
+        if (orderRoles != null && orderRoles.size() > 0) {
+            Iterator i = orderRoles.iterator();
+            while (i.hasNext() ) {
+                GenericValue v = (GenericValue) i.next();
+                exprs.add(new EntityExpr("orderId", EntityOperator.EQUALS, v.getString("orderId")));
+            }
+            Debug.logInfo("Expressions: " + exprs);
+            orderHeaderList = delegator.findByOr("OrderHeader", exprs, UtilMisc.toList("orderDate DESC"));
+            Debug.logInfo("OrderHeaderList: " + orderHeaderList);
+        }
+    } else {
+        Debug.logInfo("Getting order by status.");
+        pageParamString = "listStatusId=" + listStatusId;
+        Collection statusItems = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "ORDER_STATUS"), UtilMisc.toList("sequenceId"));
+        if (statusItems != null) pageContext.setAttribute("statusItems", statusItems);
+        orderHeaderList = delegator.findByAnd("OrderHeader", UtilMisc.toMap("statusId", listStatusId), UtilMisc.toList("orderDate DESC"));
+    }
+    if (orderHeaderList != null) pageContext.setAttribute("orderHeaderList", orderHeaderList);
+
+
+    int viewIndex = 0;
+    int viewSize = 20;
+    int highIndex = 0;
+    int lowIndex = 0;
+    int listSize = 0;
+
+    try {
+        viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
+    } catch (Exception e) {
+        viewIndex = 0;
+    }
+    try {
+        viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
+    } catch (Exception e) {
+        viewSize = 20;
+    }
+    if (orderHeaderList != null) {
+        listSize = orderHeaderList.size();
+    }
+    lowIndex = viewIndex * viewSize;
+    highIndex = (viewIndex + 1) * viewSize;
+    if (listSize < highIndex) {
+        highIndex = listSize;
+    }
+
+    Debug.logInfo("Low Index: " + lowIndex);
+    Debug.logInfo("View Size: " + viewSize);
 %>
 
 <BR>
@@ -110,6 +143,27 @@
         <tr>
           <td>
 <div class="tabletext"><b>Orders with the status: <%=listStatusId%></b></div>
+
+<ofbiz:if name="orderHeaderList" size="0">
+  <table border="0" width="100%" cellpadding="2">
+    <tr>
+      <td align=right>
+        <b>
+        <%if (viewIndex > 0) {%>
+          <a href="<ofbiz:url><%="/orderlist?" + pageParamString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+        <%}%>
+        <%if (listSize > 0) {%>
+          <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
+        <%}%>
+        <%if (listSize > highIndex) {%>
+          | <a href="<ofbiz:url><%="/orderlist?" + pageParamString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+        <%}%>
+        </b>
+      </td>
+    </tr>
+  </table>
+</ofbiz:if>
+
 <!-- Insert in here -->
 <center>
   <table width="100%" border="0" class="edittable">
@@ -124,24 +178,23 @@
             <td width="10%"><div class="tabletext">&nbsp;</div></td>
           </tr>
           <%String rowClass = "viewManyTR2";%>
-          <ofbiz:iterator name="orderHeader" property="orderHeaderList">
-          
-          <%OrderReadHelper order = new OrderReadHelper(orderHeader); %>
-          <%//pageContext.setAttribute("totalPrice", new Double(order.getTotalPrice()));%>
-          <%String orderStatus = order.getStatusString();%>
-          <%rowClass = rowClass.equals("viewManyTR2") ? "viewManyTR1" : "viewManyTR2";%>
-          <tr class="<%=rowClass%>">
-            <td><div class="tabletext"><nobr><%EntityField.run("orderHeader", "orderDate", pageContext);%></nobr></div></td>
-            <td><div class="tabletext"><%EntityField.run("orderHeader", "orderId", pageContext);%></div></td>
-            <%-- <td><div class="tabletext"><ofbiz:field attribute="totalPrice" type="currency"/></div></td> --%>
-            <td>
-              <%-- <div class="tabletext"><%EntityField.run("orderHeader", "statusId", pageContext);%></div> --%>
-              <div class="tabletext"><%=orderStatus%></div>
-            </td>
-            <td align=right>
-              <a href="<ofbiz:url>/orderview?order_id=<%EntityField.run("orderHeader", "orderId", pageContext);%></ofbiz:url>" class='buttontext'>[View]</a>
-            </td>
-          </tr>
+          <ofbiz:iterator name="orderHeader" property="orderHeaderList" offset="<%=lowIndex%>" limit="<%=viewSize%>">
+              <%OrderReadHelper order = new OrderReadHelper(orderHeader); %>
+              <%//pageContext.setAttribute("totalPrice", new Double(order.getTotalPrice()));%>
+              <%String orderStatus = order.getStatusString();%>
+              <%rowClass = rowClass.equals("viewManyTR2") ? "viewManyTR1" : "viewManyTR2";%>
+              <tr class="<%=rowClass%>">
+                <td><div class="tabletext"><nobr><%EntityField.run("orderHeader", "orderDate", pageContext);%></nobr></div></td>
+                <td><div class="tabletext"><%EntityField.run("orderHeader", "orderId", pageContext);%></div></td>
+                <%-- <td><div class="tabletext"><ofbiz:field attribute="totalPrice" type="currency"/></div></td> --%>
+                <td>
+                  <%-- <div class="tabletext"><%EntityField.run("orderHeader", "statusId", pageContext);%></div> --%>
+                  <div class="tabletext"><%=orderStatus%></div>
+                </td>
+                <td align=right>
+                  <a href="<ofbiz:url>/orderview?order_id=<%EntityField.run("orderHeader", "orderId", pageContext);%></ofbiz:url>" class='buttontext'>[View]</a>
+                </td>
+              </tr>
           </ofbiz:iterator>
           <ofbiz:unless name="orderHeaderList" size="0">
             <tr><td colspan="8"><div class='head3'>No Orders Found</div></td></tr>
@@ -152,6 +205,25 @@
   </table>
 </center>
 <!-- Between here -->
+<ofbiz:if name="orderHeaderList" size="0">
+  <table border="0" width="100%" cellpadding="2">
+    <tr>
+      <td align=right>
+        <b>
+        <%if (viewIndex > 0) {%>
+          <a href="<ofbiz:url><%="/orderlist?" + pageParamString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+        <%}%>
+        <%if (listSize > 0) {%>
+          <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
+        <%}%>
+        <%if (listSize > highIndex) {%>
+          | <a href="<ofbiz:url><%="/orderlist?" + pageParamString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+        <%}%>
+        </b>
+      </td>
+    </tr>
+  </table>
+</ofbiz:if>
           </td>
         </tr>
       </table>
