@@ -447,7 +447,8 @@ public class ProductionRunServices {
             try {
                 List mandatoryWorkEfforts = EntityUtil.filterByDate(delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdTo", productionRunId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY")));
                 for (int i = 0; i < mandatoryWorkEfforts.size(); i++) {
-                    GenericValue mandatoryWorkEffort = (GenericValue)mandatoryWorkEfforts.get(i);
+                    GenericValue mandatoryWorkEffortAssoc = (GenericValue)mandatoryWorkEfforts.get(i);
+                    GenericValue mandatoryWorkEffort = mandatoryWorkEffortAssoc.getRelatedOne("FromWorkEffort");
                     if (!(mandatoryWorkEffort.getString("currentStatusId").equals("PRUN_COMPLETED") ||
                          mandatoryWorkEffort.getString("currentStatusId").equals("PRUN_CLOSED"))) {
                         return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChangedMandatoryProductionRunNotCompleted", locale));
