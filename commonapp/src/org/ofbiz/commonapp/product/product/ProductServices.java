@@ -184,7 +184,7 @@ public class ProductServices {
 
         Map sample = null;
         try {
-            sample = makeVariantSample(dctx.getDelegator(), items, (String) featureOrder.get(0));
+            sample = makeVariantSample(dctx.getDelegator(), features, items, (String) featureOrder.get(0));
         } catch (Exception e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, e.getMessage());
@@ -393,7 +393,8 @@ public class ProductServices {
     }
 
     // builds a variant sample (a single sku for a featureType)
-    private static Map makeVariantSample(GenericDelegator delegator, List items, String feature) {
+    private static Map makeVariantSample(GenericDelegator delegator, Map featureList, List items, String feature) {
+        Map tempSample = new HashMap();
         Map sample = new OrderedMap();
         Iterator itemIt = items.iterator();
         while (itemIt.hasNext()) {
@@ -416,12 +417,22 @@ public class ProductServices {
                 try {
                     GenericValue product = delegator.findByPrimaryKeyCache("Product",
                             UtilMisc.toMap("productId", productId));
-                    sample.put(featureAppl.getString("description"), product);
+                    tempSample.put(featureAppl.getString("description"), product);
                 } catch (GenericEntityException e) {
                     throw new RuntimeException("Cannot get product entity: " + e.getMessage());
                 }
             }
         }
+
+        // Sort the sample based on the feature list.
+        List features = (LinkedList) featureList.get(feature);
+        Iterator fi = features.iterator();
+        while (fi.hasNext()) {
+            String f = (String) fi.next();
+            if (tempSample.containsKey(f))
+                sample.put(f, tempSample.get(f));
+        }
+
         return sample;
     }
 
