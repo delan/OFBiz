@@ -521,6 +521,7 @@
         <attribute name="orderAdjustmentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="actionLimit" type="Long" mode="IN" optional="true"/>
     </service>
     <service name="updateProductPromoAction" engine="simple"
@@ -533,6 +534,7 @@
         <attribute name="orderAdjustmentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="Double" mode="IN" optional="true"/>
         <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="actionLimit" type="Long" mode="IN" optional="true"/>
     </service>
     <service name="deleteProductPromoAction" engine="simple"

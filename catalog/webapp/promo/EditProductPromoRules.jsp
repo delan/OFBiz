@@ -200,7 +200,7 @@
         <table border="1" width="100%" cellpadding='2' cellspacing='0'>
           <tr>
             <td width='5%'><div class="tabletext"><b>SeqId</b></div></td>
-            <td width='85%'><div class="tabletext"><b>ActionType,&nbsp;OrderAdjustmentType,&nbsp;Quantity,&nbsp;ProductId&nbsp;&amp;&nbsp;Limit</b></div></td>
+            <td width='85%'><div class="tabletext"><b>ActionType,&nbsp;OrderAdjustmentType,&nbsp;Quantity,&nbsp;Item&nbsp;ID,&nbsp;Party&nbsp;ID&nbsp;&amp;&nbsp;Limit</b></div></td>
             <td width='10%'><div class="tabletext"><b>&nbsp;</b></div></td>
           </tr>
           <%long maxActionSeqId = 1;%>
@@ -247,6 +247,7 @@
                         </select>
                         <input type=text size='5' <ofbiz:inputvalue entityAttr="productPromoAction" field="quantity" fullattrs="true"/> style='font-size: x-small;'>
                         <input type=text size='15' <ofbiz:inputvalue entityAttr="productPromoAction" field="productId" fullattrs="true"/> style='font-size: x-small;'>
+                        <input type=text size='10' <ofbiz:inputvalue entityAttr="productPromoAction" field="partyId" fullattrs="true"/> style='font-size: x-small;'>
                         <input type=text size='4' <ofbiz:inputvalue entityAttr="productPromoAction" field="actionLimit" fullattrs="true"/> style='font-size: x-small;'>
                         <INPUT type=submit value='Update' style='font-size: x-small;'>
                     </FORM>
@@ -276,16 +277,20 @@
                     </select>
                     <input type=text size='5' name='quantity' style='font-size: x-small;'>
                     <input type=text size='15' name='productId' style='font-size: x-small;'>
+                    <input type=text size='10' name='partyId' style='font-size: x-small;'>
                     <input type=text size='4' name='actionLimit' style='font-size: x-small;'>
                     <INPUT type=submit value='Create' style='font-size: x-small;'>
                 </FORM>
             </td>
           </tr>
         </table>
+        <div class='tabletext'><b>NOTE on Item ID:</b> The Item ID on an action is a Product ID for Gift With Purchase actions or for Free Shipping actions it is Shipment Method Type ID to give free shipping on (if blank any Shipment Method Types may receive free shipping).</div>
+        <div class='tabletext'><b>NOTE on Party ID:</b> The Party ID for Free Shipping actions is Carrier Party ID to give free shipping for (if blank any Carrier Parties may receive free shipping).</div>
     </td>
   </tr>
 </ofbiz:iterator>
 </table>
+
 <br>
 <form method="POST" action="<ofbiz:url>/createProductPromoRule</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="productPromoId" value="<%=productPromoId%>">

@@ -49,23 +49,24 @@ public class ShoppingCart implements java.io.Serializable {
     private List paymentMethodTypeIds = new LinkedList();
     private String poNumber = null;
     private String orderId = null;
-
     private String billingAccountId = null;
+    
     private String shippingInstructions = null;
     private Boolean maySplit = null;
     private String giftMessage = null;
     private Boolean isGift = null;
-
+    
     private String shipmentMethodTypeId = "";
     private String carrierPartyId = "";
+    
     private String orderAdditionalEmails = null;
-    private Map freeShippingInfo = null;
     private boolean viewCartOnAdd = true;
 
     /** Holds value of order adjustments. */
     private List adjustments = new LinkedList();
     private List cartLines = new ArrayList();
     private Map contactMechIdsMap = new HashMap();
+    private List freeShippingProductPromoActions = new ArrayList();
 
     private GenericDelegator delegator;
     private HttpSession session;
@@ -228,7 +229,7 @@ public class ShoppingCart implements java.io.Serializable {
         isGift = null;
 
         orderAdditionalEmails = null;
-        freeShippingInfo = null;
+        this.freeShippingProductPromoActions.clear();
 
         paymentMethodIds.clear();
         paymentMethodTypeIds.clear();
@@ -572,13 +573,26 @@ public class ShoppingCart implements java.io.Serializable {
         this.orderId = orderId;
     }
 
-    /** Returns the productPromoId used for free shipping or null if free shipping is not used. */
-    public Map getFreeShippingInfo() {
-        return this.freeShippingInfo;
+    /** Removes a free shipping ProductPromoAction by trying to find one in the list with the same primary key. */
+    public void removeFreeShippingProductPromoAction(GenericPK productPromoActionPK) {
+        if (productPromoActionPK == null) return;
+        
+        Iterator fsppas = this.freeShippingProductPromoActions.iterator();
+        while (fsppas.hasNext()) {
+            if (productPromoActionPK.equals(((GenericValue) fsppas.next()).getPrimaryKey())) {
+                fsppas.remove();
+            }
+        }
     }
-    /** Sets the productPromoId used for free shipping. */
-    public void setFreeShippingInfo(Map freeShippingInfo) {
-        this.freeShippingInfo = freeShippingInfo;
+    /** Adds a ProductPromoAction to be used for free shipping (must be of type free shipping, or nothing will be done). */
+    public void addFreeShippingProductPromoAction(GenericValue productPromoAction) {
+        if (productPromoAction == null) return;
+        //is this a free shipping action?
+        if (!"PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionTypeId"))) return;
+        
+        // to easily make sure that no duplicate exists, do a remove first
+        this.removeFreeShippingProductPromoAction(productPromoAction.getPrimaryKey());
+        this.freeShippingProductPromoActions.add(productPromoAction);
     }
 
     // =======================================================================
@@ -631,20 +645,37 @@ public class ShoppingCart implements java.io.Serializable {
     }
     /** make a list of all adjustments including order adjustments, order line adjustments, and special adjustments (shipping and tax if applicable) */
     public List makeAllAdjustments(GenericDelegator delegator) {
-        List allAdjs = new LinkedList(this.getAdjustments());
+        List allAdjs = new LinkedList();
         
-        if (this.freeShippingInfo != null) {
-            GenericValue fsOrderAdjustment = delegator.makeValue("OrderAdjustment",
-                    UtilMisc.toMap("orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", new Double(-this.getTotalShipping()),
-                    "productPromoId", freeShippingInfo.get("productPromoId"), "productPromoRuleId", freeShippingInfo.get("productPromoRuleId"),
-                    "productPromoActionSeqId", freeShippingInfo.get("productPromoActionSeqId")));
-            
-            //if an orderAdjustmentTypeId was passed, override the default
-            //NOTE: depending on how some back end processes will work (like recalculating shipping), we may remove this
-            if (UtilValidate.isNotEmpty((String) freeShippingInfo.get("orderAdjustmentTypeId"))) {
-                fsOrderAdjustment.set("orderAdjustmentTypeId", freeShippingInfo.get("orderAdjustmentTypeId"));
+        //before returning adjustments, go through them to find all that need counter adjustments (for instance: free shipping)
+        Iterator allAdjsIter = this.getAdjustments().iterator();
+        while (allAdjsIter.hasNext()) {
+            GenericValue orderAdjustment = (GenericValue) allAdjsIter.next();
+            allAdjs.add(orderAdjustment);
+
+            if ("SHIPPING_CHARGES".equals(orderAdjustment.get("orderAdjustmentTypeId"))) {
+                Iterator fsppas = this.freeShippingProductPromoActions.iterator();
+                while (fsppas.hasNext()) {
+                    GenericValue productPromoAction = (GenericValue) fsppas.next();
+
+                    if ((productPromoAction.get("productId") == null || productPromoAction.getString("productId").equals(this.shipmentMethodTypeId)) &&
+                            (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(this.carrierPartyId))) {
+                        Double shippingAmount = new Double(-OrderReadHelper.calcOrderAdjustment(orderAdjustment, getSubTotal()));
+                        //always set orderAdjustmentTypeId to SHIPPING_CHARGES for free shipping adjustments
+                        GenericValue fsOrderAdjustment = delegator.makeValue("OrderAdjustment",
+                                UtilMisc.toMap("orderItemSeqId", orderAdjustment.get("orderItemSeqId"), "orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", shippingAmount,
+                                "productPromoId", productPromoAction.get("productPromoId"), "productPromoRuleId", productPromoAction.get("productPromoRuleId"),
+                                "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
+                        allAdjs.add(fsOrderAdjustment);
+
+                        //if free shipping IS applied to this orderAdjustment, break 
+                        //  out of the loop so that even if there are multiple free 
+                        //  shipping adjustments that apply to this orderAdjustment it
+                        //  will only be compensated for once
+                        break;
+                    }
+                }
             }
-            allAdjs.add(fsOrderAdjustment);
         }
         
         //add all of the item adjustments to this list too
@@ -658,10 +689,34 @@ public class ShoppingCart implements java.io.Serializable {
                     GenericValue orderAdjustment = (GenericValue) adjIter.next();
                     orderAdjustment.set("orderItemSeqId", item.getOrderItemSeqId());
                     allAdjs.add(orderAdjustment);
+
+                    if ("SHIPPING_CHARGES".equals(orderAdjustment.get("orderAdjustmentTypeId"))) {
+                        Iterator fsppas = this.freeShippingProductPromoActions.iterator();
+                        while (fsppas.hasNext()) {
+                            GenericValue productPromoAction = (GenericValue) fsppas.next();
+
+                            if ((productPromoAction.get("productId") == null || productPromoAction.getString("productId").equals(this.shipmentMethodTypeId)) &&
+                                    (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(this.carrierPartyId))) {
+                                Double shippingAmount = new Double(-OrderReadHelper.calcItemAdjustment(orderAdjustment, new Double(item.getQuantity()), new Double(item.getItemSubTotal())));
+                                //always set orderAdjustmentTypeId to SHIPPING_CHARGES for free shipping adjustments
+                                GenericValue fsOrderAdjustment = delegator.makeValue("OrderAdjustment",
+                                        UtilMisc.toMap("orderItemSeqId", orderAdjustment.get("orderItemSeqId"), "orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", shippingAmount,
+                                        "productPromoId", productPromoAction.get("productPromoId"), "productPromoRuleId", productPromoAction.get("productPromoRuleId"),
+                                        "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
+                                allAdjs.add(fsOrderAdjustment);
+
+                                //if free shipping IS applied to this orderAdjustment, break 
+                                //  out of the loop so that even if there are multiple free 
+                                //  shipping adjustments that apply to this orderAdjustment it
+                                //  will only be compensated for once
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
-        
+
         return allAdjs;
     }
 

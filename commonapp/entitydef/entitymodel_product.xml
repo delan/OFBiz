@@ -1339,6 +1339,7 @@
       <field name="orderAdjustmentTypeId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="productId" type="id"></field>
+      <field name="partyId" type="id"></field>
       <field name="actionLimit" type="numeric"></field>
       <prim-key field="productPromoId"/>
       <prim-key field="productPromoRuleId"/>

@@ -323,22 +323,11 @@ public class ProductPromoWorker {
             //  and on unapply if the promo and rule ids are the same then it will clear it; essentially on any pass
             //  through the promos and rules if any free shipping should be there, it will be there
             if (apply) {
-                cart.setFreeShippingInfo(UtilMisc.toMap("productPromoId", productPromoAction.getString("productPromoId"), 
-                        "productPromoRuleId", productPromoAction.getString("productPromoRuleId"),
-                        "productPromoActionSeqId", productPromoAction.getString("productPromoActionSeqId"),
-                        "orderAdjustmentTypeId", productPromoAction.getString("orderAdjustmentTypeId")));
+                cart.addFreeShippingProductPromoAction(productPromoAction);
                 //don't consider this as a cart change...
                 return false;
             } else {
-                Map freeShippingInfo = cart.getFreeShippingInfo();
-                if (freeShippingInfo != null && freeShippingInfo.get("productPromoId") != null && freeShippingInfo.get("productPromoRuleId") != null ) {
-                    if (productPromoAction.getString("productPromoId").equals(freeShippingInfo.get("productPromoId")) &&
-                            productPromoAction.getString("productPromoRuleId").equals(freeShippingInfo.get("productPromoRuleId")) &&
-                            productPromoAction.getString("productPromoActionSeqId").equals(freeShippingInfo.get("productPromoActionSeqId"))) {
-                        //free shipping was setup by this promo/rule, so go ahead and clear it
-                        cart.setFreeShippingInfo(null);
-                    }
-                }
+                cart.removeFreeShippingProductPromoAction(productPromoAction.getPrimaryKey());
                 return false;
             }
         } else if ("PROMO_ITEM_PERCENT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
