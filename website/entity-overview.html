@@ -11,352 +11,676 @@ are much more complete and thought out than others. Please send me feed back on
 any omissions or errors.</p>
 <h3>Table of Contents</h3>
 <ul>
-  <li><a href="#Common Tool Components">Common Tool Components</a>
-    <ul>
-      <li><a href="#Rule Engine">Rule Engine</a></li>
-      <li><a href="#Workflow Engine">Workflow Engine</a></li>
-      <li><a href="#Content Management">Content Management</a></li>
-    </ul>
-  </li>
-  <li><a href="#Common Application Components">Common Application Components</a>
-    <ul>
-      <li><a href="#Person Management">Person Management</a></li>
-      <li><a href="#Company Management">Company Management</a></li>
-      <li><a href="#Catalog Management">Catalog Management</a></li>
-      <li><a href="#Fixed Asset Management">Fixed Asset Management</a></li>
-      <li><a href="#Transaction Management">Transaction Management</a></li>
-    </ul>
-  </li>
-  <li><a href="#Vertical Applications">Vertical Applications</a>
-    <ul>
-      <li><a href="#Warehouse Management">Warehouse Management</a></li>
-      <li><a href="#Shipping Management">Shipping Management</a></li>
-      <li><a href="#Customer Service">Customer Service</a></li>
-      <li><a href="#Sales Force Automation">Sales Force Automation</a></li>
-      <li><a href="#Marketing Automation">Marketing Automation</a></li>
-      <li><a href="#Financials">Financials</a></li>
-      <li><a href="#Store Front">Store Front</a></li>
-      <li><a href="#Planning">Planning</a></li>
-    </ul>
-  </li>
+  <li><a href="#Common"><b>Common</b></a>
+  <ul>
+    <li><b><i><a href="#common.geo">common.geo</a></i></b>
+  
+    <li><b><i><a href="#common.period">common.period</a></i></b>
+  
+    <li><b><i><a href="#common.status">common.status</a></i></b>
+  
+    <li><b><i><a href="#common.uom">common.uom</a></i></b>
+  
+  </ul>
+  <li><a href="#Content"><b>Content</b></a>
+  <ul>
+    <li><b><i><a href="#content.content">content.content</a></i></b>
+  
+    <li><b><i><a href="#content.document">content.document</a></i></b>
+  
+    <li><b><i><a href="#content.preference">content.preference</a></i></b>
+  
+    <li><b><i><a href="#content.subscription">content.subscription</a></i></b>
+  
+    <li><b><i><a href="#content.visit">content.visit</a></i></b>
+  
+  </ul>
+  <li><a href="#Party"><b>Party</b></a>
+  <ul>
+    <li><b><i><a href="#party.agreement">party.agreement</a></i></b>
+  
+    <li><b><i><a href="#party.communication">party.communication</a></i></b>
+  
+    <li><b><i><a href="#party.contact">party.contact</a></i></b>
+  
+    <li><b><i><a href="#party.need">party.need</a></i></b>
+  
+    <li><b><i><a href="#party.party">party.party</a></i></b>
+  
+  </ul>
+  <li><a href="#Product"><b>Product</b></a>
+  <ul>
+    <li><b><i><a href="#product.category">product.category</a></i></b>
+  
+    <li><b><i><a href="#product.feature">product.feature</a></i></b>
+  
+    <li><b><i><a href="#product.inventory">product.inventory</a></i></b>
+  
+    <li><b><i><a href="#product.marketing">product.marketing</a></i></b>
+  
+    <li><b><i><a href="#product.product">product.product</a></i></b>
+  
+  </ul>
+  <li><a href="#Order"><b>Order</b></a>
+  <ul>
+    <li><b><i><a href="#order.order">order.order</a></i></b>
+  
+    <li><b><i><a href="#order.quote">order.quote</a></i></b>
+  
+    <li><b><i><a href="#order.request">order.request</a></i></b>
+  
+  </ul>
+  <li><a href="#Shipment"><b>Shipment</b></a>
+  <ul>
+    <li><b><i><a href="#shipment.issuance">shipment.issuance</a></i></b>
+  
+    <li><b><i><a href="#shipment.receipt">shipment.receipt</a></i></b>
+  
+    <li><b><i><a href="#shipment.route">shipment.route</a></i></b>
+  
+    <li><b><i><a href="#shipment.shipment">shipment.shipment</a></i></b>
+  
+  </ul>
+  <li><a href="#Workeffort"><b>Workeffort</b></a>
+  <ul>
+    <li><b><i><a href="#workeffort.timesheet">workeffort.timesheet</a></i></b>
+  
+    <li><b><i><a href="#workeffort.workeffort">workeffort.workeffort</a></i></b>
+  
+  </ul>
+  <li><a href="#Accounting"><b>Accounting</b></a>
+  <ul>
+    <li><b><i><a href="#accounting.budget">accounting.budget</a></i></b>
+  
+    <li><b><i><a href="#accounting.fixedasset">accounting.fixedasset</a></i></b>
+  
+    <li><b><i><a href="#accounting.ledger">accounting.ledger</a></i></b>
+  
+    <li><b><i><a href="#accounting.invoice">accounting.invoice</a></i></b>
+  
+    <li><b><i><a href="#accounting.payment">accounting.payment</a></i></b>
+  
+  </ul>
+  <li><a href="#Humanres"><b>Humanres</b></a>
+  <ul>
+    <li><b><i><a href="#humanres.ability">humanres.ability</a></i></b>
+  
+    <li><b><i><a href="#humanres.employment">humanres.employment</a></i></b>
+  
+    <li><b><i><a href="#humanres.position">humanres.position</a></i></b>
+  
+  </ul>
+  <li><a href="#Security"><b>Security</b></a>
+  <ul>
+    <li><b><i><a href="#security.login">security.login</a></i></b>
+  
+    <li><b><i><a href="#security.securitygroup">security.securitygroup</a></i></b>
+  
 </ul>
-
 <p>NOTE: Entries in italics are directories, and normal text entries are entities (Entity EJBs).</p>
 
 <hr>
-<h3><a name="Common Tool Components">Common Tool Components</a></h3>
+<H3><a name="Common">Common</a></H3>
 <hr>
-<h4><a name="Rule Engine">Rule Engine</a></h4>
-<h4><a name="Workflow Engine">Workflow Engine</a></h4>
-<h4><a name="Content Management">Content Management</a></h4>
 <ul>
-  <li><i>Content</i>
-    <ul>
-      <li>Content</li>
-      <li>ContentGroup (makes a content a group of
-        contents)</li>
-      <li>ContentAttribute</li>
-      <li>ContentType (hierarchical, inherits default
-        attributes from parent type)</li>
-      <li>ContentTypeAttribute</li>
-      <li>ContentRelated</li>
-      <li>ContentSequence</li>
-      <li>ContentSequenceLine</li>
-    </ul>
-  </li>
-</ul>
-
-<hr>
-<h3><a name="Common Application Components">Common Application Components</a></h3>
-<p>The Common Application Components are pieces of the overall application that
-all businesses will need.&nbsp; They are based on the general idea of a
-transaction.&nbsp; There are four things involved in any transaction: a seller
-(person/company), a buyer (person/company), the item or service (product), and a
-records of the transaction (for the buyer and the seller).&nbsp; These entities
-support this concept on both the buying (purchasing) and selling (sales) sides
-of the transaction.&nbsp; All other parts of the overall application are
-centered around the Common Application Components.&nbsp; All business systems
-will include these components to one extent or another in their applications,
-and the vertical applications are optional for many companies.</p>
-<hr>
-<h4><a name="Person Management">Person Management</a></h4>
-<ul>
-  <li><i>Person</i>
-    <ul>
-      <li>Person</li>
-      <li>PersonAttribute</li>
-      <li>PersonType</li>
-      <li>PersonTypeAttribute</li>
-      <li>PersonPersonType (necessary to allow a
-            Person to be of multiple types)</li>
-    </ul>
-  </li>
-  <li><i>Security</i>
-    <ul>
-      <li><i>SecurityGroup</i>
-        <ul>
-          <li>SecurityGroup</li>
-          <li>SecurityPermission</li>
-          <li>SecurityGroupPermission</li>
-        </ul>
-      </li>
-      <li><i>Person</i>
-        <ul>
-          <li>PersonSecurityGroup</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
-<h4><a name="Company Management">Company Management</a></h4>
-<ul>
-  <li><i>Company</i>
-    <ul>
-      <li><i>Company</i>
-        <ul>
-          <li>Company (could be partner, supplier, or the owner company)</li>
-          <li>CompanyLocation</li>
-          <li>CompanyUnit (org unit of company, single parent hierarchy)</li>
-          <li>CompanyAttribute</li>
-          <li>CompanyType</li>
-          <li>CompanyTypeAttribute</li>
-          <li>CompanyCompanyType (necessary to allow a Company to be of multiple types)</li>
-          <li>CompanyRelated (relationships between companies: partner, owner,
-            supplier, etc.)</li>
-        </ul>
-      </li>
-      <li><i>Person</i>
-        <ul>
-          <li>PersonCompanyUnit (for employees of a company, unit assigned to)</li>
-          <li>PersonCompanyLocation</li>
-        </ul>
-      </li>
-      <li><i>Product</i>
-        <ul>
-          <li>ProductCompany (source company could be mfg, reseller,
-            etc.)</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
-<h4><a name="Catalog Management">Catalog Management</a></h4>
-<ul>
-  <li><i>Catalog</i>
-    <ul>
-      <li><i>Product</i>
-        <ul>
-          <li>Product</li>
-          <li>ProductGroup (makes a product a group of products, cannot be
-            bought)</li>
-          <li>ProductKit (group of products used to build a product)</li>
-          <li>ProductAttribute</li>
-          <li>ProductType</li>
-          <li>ProductTypeAttribute</li>
-          <li>ProductRelated</li>
-        </ul>
-      </li>
-      <li><i>Category</i>
-        <ul>
-          <li>Category</li>
-          <li>ProductCategory</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
-<h4><a name="Fixed Asset Management">Fixed Asset Management</a></h4>
-<ul>
-  <li><i>FixedAsset</i>
-    <ul>
-      <li><i>FixedAsset</i>
-        <ul>
-          <li>FixedAsset</li>
-          <li>FixedAssetAttribute</li>
-          <li>FixedAssetType</li>
-          <li>FixedAssetTypeAttribute</li>
-        </ul>
-      </li>
-      <li><i>Maintenance</i>
-        <ul>
-          <li>FixedAssetMaintEvent</li>
-          <li>FixedAssetMaintHistory</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
-<h4><a name="Transaction Management">Transaction Management</a></h4>
-<ul>
-  <li><i>Transaction</i>
-    <ul>
-      <li><i>Sale</i>
-        <ul>
-          <li>SaleTrans</li>
-          <li>SaleTransLine</li>
-          <li>SaleTransStatus</li>
-          <li>SaleTransChange</li>
-        </ul>
-      </li>
-      <li><i>Return</i>
-        <ul>
-          <li>ReturnAuthorization</li>
-        </ul>
-      </li>
-      <li><i>Purchase</i>
-        <ul>
-          <li>PurchaseTrans</li>
-          <li>PurchaseTransLine</li>
-          <li>PurchaseTransStatus</li>
-          <li>PurchaseTransChange</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
+  <li><b><i><a name="common.geo">common.geo</a></i></b>
+  <ul>
+    <li>GeoBoundary
+    <li>GeoBoundaryType
+    <li>GeographicBoundaryAssociation
+  </ul>
+  <li><b><i><a name="common.period">common.period</a></i></b>
+  <ul>
+    <li>PeriodType
+    <li>StandardTimePeriod
+  </ul>
+  <li><b><i><a name="common.status">common.status</a></i></b>
+  <ul>
+    <li>StatusType
+    <li>StatusTypeType
+  </ul>
+  <li><b><i><a name="common.uom">common.uom</a></i></b>
+  <ul>
+    <li>UnitOfMeasure
+    <li>UnitOfMeasureType
+    <li>UnitOfMeasureConversion
+  </ul>
 </ul>
 <hr>
-<h3><a name="Vertical Applications">Vertical Applications</a></h3>
+<H3><a name="Content">Content</a></H3>
 <hr>
-<h4><a name="Warehouse Management">Warehouse Management</a></h4>
 <ul>
-  <li><i>Warehouse</i>
-    <ul>
-      <li><i>Warehouse</i>
-        <ul>
-          <li>Warehouse (refers to company unit in a column)</li>
-          <li>WarehouseLocation (location inside the warehouse)</li>
-        </ul>
-      </li>
-      <li><i>Product</i>
-        <ul>
-          <li>ProductWarehouse</li>
-          <li>ProductWarehouseLocation</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
+  <li><b><i><a name="content.content">content.content</a></i></b>
+  <ul>
+    <li>DataObject
+    <li>DataObjectType
+    <li>DataObjectAttribute
+    <li>DataObjectTypeAttr
+    <li>DataObjectPurpose
+    <li>DataObjectPurposeType
+    <li>ElectronicText
+    <li>ImageDataObject
+    <li>OtherDataObject
+    <li>ContentDataObjectUsage
+    <li>Content
+    <li>ContentType
+    <li>ContentAttribute
+    <li>ContentTypeAttr
+    <li>ContentCategory
+    <li>ContentCategoryClassification
+    <li>ContentAssociation
+    <li>FunctionType
+    <li>ContentRole
+  </ul>
+  <li><b><i><a name="content.document">content.document</a></i></b>
+  <ul>
+    <li>Document
+    <li>DocumentType
+    <li>DocumentAttribute
+    <li>DocumentTypeAttr
+  </ul>
+  <li><b><i><a name="content.preference">content.preference</a></i></b>
+  <ul>
+    <li>WebUserPreference
+    <li>WebPreferenceType
+  </ul>
+  <li><b><i><a name="content.subscription">content.subscription</a></i></b>
+  <ul>
+    <li>Subscription
+    <li>SubscriptionType
+    <li>SubscriptionAttribute
+    <li>SubscriptionTypeAttr
+    <li>SubscriptionActivity
+    <li>SubscriptionFulfillmentPiece
+  </ul>
+  <li><b><i><a name="content.visit">content.visit</a></i></b>
+  <ul>
+    <li>BrowserType
+    <li>PlatformType
+    <li>ProtocolType
+    <li>UserAgent
+    <li>UserAgentType
+    <li>UserAgentMethodType
+    <li>Visit
+    <li>ServerHit
+  </ul>
 </ul>
-<h4><a name="Shipping Management">Shipping Management</a></h4>
+<hr>
+<H3><a name="Party">Party</a></H3>
+<hr>
 <ul>
-  <li><i>Shipping</i>
-    <ul>
-      <li>ShippingMethod</li>
-    </ul>
-  </li>
+  <li><b><i><a name="party.agreement">party.agreement</a></i></b>
+  <ul>
+    <li>Addendum
+    <li>Agreement
+    <li>AgreementType
+    <li>AgreementAttribute
+    <li>AgreementTypeAttr
+    <li>AgreementItem
+    <li>AgreementItemType
+    <li>AgreementItemAttribute
+    <li>AgreementItemTypeAttr
+    <li>AgreementGeographicalApplicability
+    <li>AgreementOrganizationalApplicability
+    <li>AgreementProductApplicability
+    <li>AgreementRole
+    <li>AgreementTerm
+    <li>AgreementTermAttribute
+    <li>TermType
+    <li>TermTypeAttr
+  </ul>
+  <li><b><i><a name="party.communication">party.communication</a></i></b>
+  <ul>
+    <li>IssueCase
+    <li>IssueCaseRole
+    <li>CommunicationEvent
+    <li>CommunicationEventType
+    <li>CommunicationEventPurpose
+    <li>CommunicationEventPrpTyp
+    <li>CommunicationEventRole
+  </ul>
+  <li><b><i><a name="party.contact">party.contact</a></i></b>
+  <ul>
+    <li>ContactMechanism
+    <li>ContactMechanismType
+    <li>ContactMechanismAttribute
+    <li>ContactMechanismTypeAttr
+    <li>ContactMechanismLink
+    <li>PartyContactMechanism
+    <li>PartyContactMechanismPurpose
+    <li>ContactMechanismPurposeType
+    <li>PartyPostalAddress
+    <li>PostalAddress
+    <li>PostalAddressBoundary
+    <li>TelecommunicationsNumber
+    <li>ValidContactMechanismRole
+  </ul>
+  <li><b><i><a name="party.need">party.need</a></i></b>
+  <ul>
+    <li>NeedType
+    <li>PartyNeed
+  </ul>
+  <li><b><i><a name="party.party">party.party</a></i></b>
+  <ul>
+    <li>Party
+    <li>PartyClassification
+    <li>PartyClassificationType
+    <li>PartyType
+    <li>PartyAttribute
+    <li>PartyTypeAttr
+    <li>PartyRole
+    <li>RoleType
+    <li>RoleTypeAttr
+    <li>PartyRelationship
+    <li>PriorityType
+    <li>PartyRelationshipType
+    <li>Customer
+    <li>PartyDataObject
+    <li>InternalOrganization
+    <li>Person
+    <li>PersonClassification
+  </ul>
 </ul>
-<h4><a name="Customer Service">Customer Service</a></h4>
+<hr>
+<H3><a name="Product">Product</a></H3>
+<hr>
 <ul>
-  <li><i>Service</i>
-    <ul>
-      <li>TroubleTicket</li>
-      <li>TroubleTicketMessage</li>
-      <li>TroubleTicketStatus</li>
-      <li>PersonInteractionHistory</li>
-    </ul>
-  </li>
-  <li><i>Forum</i>
-    <ul>
-      <li>Forum (hierarchical, has single parent)</li>
-      <li>Message (hierarchical, has single parent)</li>
-    </ul>
-  </li>
+  <li><b><i><a name="product.category">product.category</a></i></b>
+  <ul>
+    <li>ProductCategory
+    <li>ProductCategoryClassification
+    <li>ProductCategoryType
+    <li>ProductCategoryAttribute
+    <li>ProductCategoryTypeAttr
+    <li>ProductCategoryMember
+    <li>ProductCategoryRollup
+  </ul>
+  <li><b><i><a name="product.feature">product.feature</a></i></b>
+  <ul>
+    <li>ProductFeature
+    <li>ProductFeatureClassification
+    <li>ProductFeatureType
+    <li>ProductFeatureAttribute
+    <li>ProductFeatureTypeAttr
+    <li>ProductFeatureCategory
+    <li>ProductFeatureApplicability
+    <li>ProductFeatureApplType
+    <li>ProductFeatureInteraction
+    <li>ProductFeatureIactnType
+    <li>Dimension
+    <li>FeatureDataObject
+    <li>PriceComponent
+    <li>PriceComponentType
+    <li>PriceComponentAttribute
+    <li>PriceComponentTypeAttr
+    <li>CostComponent
+    <li>CostComponentType
+    <li>CostComponentAttribute
+    <li>CostComponentTypeAttr
+    <li>UtilizationCharge
+    <li>QuantityBreak
+    <li>OrderValueBreak
+    <li>SaleType
+  </ul>
+  <li><b><i><a name="product.inventory">product.inventory</a></i></b>
+  <ul>
+    <li>Container
+    <li>ContainerType
+    <li>Facility
+    <li>FacilityType
+    <li>FacilityAttribute
+    <li>FacilityTypeAttr
+    <li>FacilityRoleType
+    <li>FacilityContactMechanism
+    <li>InventoryItem
+    <li>InventoryItemType
+    <li>InventoryItemAttribute
+    <li>InventoryItemTypeAttr
+    <li>InventoryItemVariance
+    <li>Reason
+    <li>ItemVarianceAcctgTrans
+    <li>Lot
+    <li>PartyFacility
+    <li>ReorderGuideline
+  </ul>
+  <li><b><i><a name="product.marketing">product.marketing</a></i></b>
+  <ul>
+    <li>MarketInterest
+    <li>MarketingPackage
+  </ul>
+  <li><b><i><a name="product.product">product.product</a></i></b>
+  <ul>
+    <li>Product
+    <li>ProductClassification
+    <li>ProductType
+    <li>ProductAttribute
+    <li>ProductTypeAttr
+    <li>ProductDataObject
+    <li>Good
+    <li>GoodIdentification
+    <li>GoodIdentificationType
+    <li>Part
+    <li>PartClassification
+    <li>PartType
+    <li>PartAttribute
+    <li>PartTypeAttr
+    <li>ProductAssociation
+    <li>ProductComplement
+    <li>ProductComponent
+    <li>ProductIncompatability
+    <li>ProductObsolescence
+    <li>ProductSubstitute
+    <li>SupplierProduct
+    <li>PreferenceType
+  </ul>
 </ul>
-<h4><a name="Sales Force Automation">Sales Force Automation</a></h4>
-    <ul>
-      <li><i>SalesOffice</i>
-        <ul>
-          <li><i>SalesOffice</i>
-            <ul>
-              <li>SalesOffice (refers to company unit in a column)</li>
-              <li>SalesOfficeSalesPerson</li>
-            </ul>
-          </li>
-          <li><i>Product</i>
-            <ul>
-              <li>ProductSalesOffice</li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-      <li><i>SalesRegion</i>
-        <ul>
-          <li>SalesRegion</li>
-          <li>SalesOfficeSalesRegion</li>
-        </ul>
-      </li>
-    </ul>
-<h4><a name="Marketing Automation">Marketing Automation</a></h4>
+<hr>
+<H3><a name="Order">Order</a></H3>
+<hr>
 <ul>
-  <li><i>CustomerSegment</i>
-    <ul>
-      <li>CustomerSegment</li>
-      <li>PersonCustomerSegment</li>
-    </ul>
-  </li>
-  <li><i>CampaignManagement</i>
-    <ul>
-      <li>Campaign</li>
-    </ul>
-  </li>
-  <li><i>UserActionTracking</i>
-    <ul>
-      <li>ActionEvent</li>
-      <li>ActionEventType</li>
-    </ul>
-  </li>
-  <li><i>EmailCampaign</i></li>
+  <li><b><i><a name="order.order">order.order</a></i></b>
+  <ul>
+    <li>OrderHeader
+    <li>OrderType
+    <li>OrderAttribute
+    <li>OrderTypeAttr
+    <li>OrderAdjustment
+    <li>OrderAdjustmentType
+    <li>OrderAdjustmentAttribute
+    <li>OrderAdjustmentTypeAttr
+    <li>OrderContactMechanism
+    <li>OrderItem
+    <li>OrderItemType
+    <li>OrderItemAttribute
+    <li>OrderItemTypeAttr
+    <li>OrderItemAssociation
+    <li>OrderItemBilling
+    <li>OrderItemContactMechanism
+    <li>OrderItemRole
+    <li>OrderRole
+    <li>OrderShipment
+    <li>OrderStatus
+    <li>OrderTerm
+    <li>OrderTermAttribute
+    <li>Picklist
+    <li>PicklistItem
+    <li>ProductOrderItem
+    <li>PurchaseOrder
+    <li>PurchaseOrderItem
+    <li>SalesOrderItem
+    <li>WorkOrderItemFulfillment
+  </ul>
+  <li><b><i><a name="order.quote">order.quote</a></i></b>
+  <ul>
+    <li>Quote
+    <li>QuoteType
+    <li>QuoteAttribute
+    <li>QuoteTypeAttr
+    <li>QuoteItem
+    <li>QuoteRole
+    <li>QuoteTerm
+    <li>QuoteTermAttribute
+  </ul>
+  <li><b><i><a name="order.request">order.request</a></i></b>
+  <ul>
+    <li>DesiredFeature
+    <li>OrderRequirementCommitment
+    <li>CustRequest
+    <li>CustRequestType
+    <li>CustRequestAttribute
+    <li>CustRequestTypeAttr
+    <li>CustRequestItem
+    <li>CustRequestRole
+    <li>Requirement
+    <li>RequirementType
+    <li>RequirementAttribute
+    <li>RequirementTypeAttr
+    <li>RequirementBudgetAllocation
+    <li>RequirementCustRequest
+    <li>RequirementRole
+    <li>RequirementStatus
+    <li>RespondingParty
+    <li>WorkRequirement
+    <li>WorkRequirementFulfillment
+  </ul>
 </ul>
-<h4><a name="Financials">Financials</a></h4>
+<hr>
+<H3><a name="Shipment">Shipment</a></H3>
+<hr>
 <ul>
-  <li><i>CreditCard</i>
-    <ul>
-      <li>CreditCard (can belong to a Person and/or a
-        Company)</li>
-    </ul>
-  </li>
-  <li><i>Ledger</i>
-    <ul>
-      <li>Ledger (hierarchical, has single parent, can belong to a Person and/or a
-        CompanyUnit)</li>
-      <li>LedgerLine</li>
-    </ul>
-  </li>
-  <li><i>Receivable</i>
-    <ul>
-      <li>Receipt (from Person or company)</li>
-    </ul>
-  </li>
-  <li><i>Payable</i>
-    <ul>
-      <li>Payment (to Person or company)</li>
-    </ul>
-  </li>
+  <li><b><i><a name="shipment.issuance">shipment.issuance</a></i></b>
+  <ul>
+    <li>ItemIssuance
+    <li>ItemIssuanceRole
+  </ul>
+  <li><b><i><a name="shipment.receipt">shipment.receipt</a></i></b>
+  <ul>
+    <li>ShipmentReceipt
+    <li>ShipmentReceiptRole
+  </ul>
+  <li><b><i><a name="shipment.route">shipment.route</a></i></b>
+  <ul>
+    <li>ShipmentRouteSegment
+  </ul>
+  <li><b><i><a name="shipment.shipment">shipment.shipment</a></i></b>
+  <ul>
+    <li>ShipmentStatus
+    <li>ShippingDocument
+    <li>CarrierShipmentMethod
+    <li>Shipment
+    <li>ShipmentType
+    <li>ShipmentAttribute
+    <li>ShipmentTypeAttr
+    <li>ShipmentItem
+    <li>ShipmentItemBilling
+    <li>ShipmentItemFeature
+    <li>ShipmentMethodType
+    <li>PackagingContent
+    <li>ShipmentPackage
+  </ul>
 </ul>
-<h4><a name="Store Front">Store Front</a></h4>
+<hr>
+<H3><a name="Workeffort">Workeffort</a></H3>
+<hr>
 <ul>
-  <li><i>ShoppingList</i>
-    <ul>
-      <li>ShoppingList (hierarchical, has single parent)</li>
-      <li>ShoppingListLine</li>
-    </ul>
-  </li>
+  <li><b><i><a name="workeffort.timesheet">workeffort.timesheet</a></i></b>
+  <ul>
+    <li>TimeEntry
+    <li>TimeEntryBilling
+    <li>Timesheet
+    <li>TimesheetRole
+    <li>WorkEffortAssignmentRate
+    <li>PartyRate
+    <li>RateType
+  </ul>
+  <li><b><i><a name="workeffort.workeffort">workeffort.workeffort</a></i></b>
+  <ul>
+    <li>WorkEffort
+    <li>WorkEffortType
+    <li>WorkEffortAttribute
+    <li>WorkEffortTypeAttr
+    <li>WorkEffortAssoc
+    <li>WorkEffortAssocType
+    <li>WorkEffortAssocAttribute
+    <li>WorkEffortAssocTypeAttr
+    <li>WorkEffortDef
+    <li>WorkEffortDefAttribute
+    <li>WorkEffortDefAssoc
+    <li>WorkEffortDefAssocAttribute
+    <li>WorkEffortBilling
+    <li>WorkEffortDeliverableProduced
+    <li>WorkEffortFixedAssetAssignment
+    <li>WorkEffortFixedAssetStandard
+    <li>WorkEffortGoodStandard
+    <li>WorkEffortInventoryAssignment
+    <li>WorkEffortInventoryProduced
+    <li>WorkEffortPartyAssignment
+    <li>WorkEffortSkillStandard
+    <li>WorkEffortStatus
+    <li>CommunicationEventWorkEffort
+    <li>Deliverable
+    <li>DeliverableType
+  </ul>
 </ul>
-<h4><a name="Planning">Planning</a></h4>
+<hr>
+<H3><a name="Accounting">Accounting</a></H3>
+<hr>
 <ul>
-  <li><i>Planning</i>
-    <ul>
-      <li>ScheduleItemGroup</li>
-      <li><i>Person</i>
-        <ul>
-          <li>PersonTask</li>
-          <li>PersonScheduleItem</li>
-        </ul>
-      </li>
-      <li><i>FixedAsset</i>
-        <ul>
-          <li>FixedAssetScheduleItem</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
+  <li><b><i><a name="accounting.budget">accounting.budget</a></i></b>
+  <ul>
+    <li>Budget
+    <li>BudgetType
+    <li>BudgetAttribute
+    <li>BudgetTypeAttr
+    <li>BudgetItem
+    <li>BudgetItemType
+    <li>BudgetItemAttribute
+    <li>BudgetItemTypeAttr
+    <li>BudgetReview
+    <li>BudgetReviewResultType
+    <li>BudgetRevision
+    <li>BudgetRevisionImpact
+    <li>BudgetRole
+    <li>BudgetScenario
+    <li>BudgetScenarioApplication
+    <li>BudgetScenarioRule
+    <li>BudgetStatus
+  </ul>
+  <li><b><i><a name="accounting.fixedasset">accounting.fixedasset</a></i></b>
+  <ul>
+    <li>FixedAsset
+    <li>FixedAssetType
+    <li>FixedAssetAttribute
+    <li>FixedAssetTypeAttr
+    <li>FixedAssetDepreciationMethod
+    <li>Depreciation
+    <li>DepreciationMethod
+    <li>PartyFixedAssetAssignment
+  </ul>
+  <li><b><i><a name="accounting.ledger">accounting.ledger</a></i></b>
+  <ul>
+    <li>AcctgTrans
+    <li>AcctgTransType
+    <li>AcctgTransAttribute
+    <li>AcctgTransTypeAttr
+    <li>SalesAcctgTrans
+    <li>ExternalAcctgTrans
+    <li>InternalAcctgTrans
+    <li>TransactionDetail
+    <li>AccoutingPeriod
+    <li>GeneralLedgerAccount
+    <li>GeneralLedgerAccountType
+    <li>GeneralLedgerBudgetXref
+    <li>OrganizationGlAccount
+  </ul>
+  <li><b><i><a name="accounting.invoice">accounting.invoice</a></i></b>
+  <ul>
+    <li>Invoice
+    <li>InvoiceType
+    <li>InvoiceAttribute
+    <li>InvoiceTypeAttr
+    <li>InvoiceItem
+    <li>InvoiceItemType
+    <li>InvoiceItemAttribute
+    <li>InvoiceItemTypeAttr
+    <li>InvoiceRole
+    <li>InvoiceStatus
+    <li>InvoiceTerm
+    <li>InvoiceTermAttribute
+  </ul>
+  <li><b><i><a name="accounting.payment">accounting.payment</a></i></b>
+  <ul>
+    <li>BillingAccount
+    <li>BillingAccountRole
+    <li>Deduction
+    <li>DeductionType
+    <li>FinancialAccount
+    <li>FinancialAccountType
+    <li>FinancialAccountAttribute
+    <li>FinancialAccountTypeAttr
+    <li>FinancialAccountAdjustment
+    <li>FinancialAccountRole
+    <li>FinancialAccountTrans
+    <li>FinancialAccountTransType
+    <li>FinancialAccountTransAttribute
+    <li>FinancialAccountTransTypeAttr
+    <li>Withdrawal
+    <li>Payment
+    <li>PaymentType
+    <li>PaymentAttribute
+    <li>PaymentTypeAttr
+    <li>PaymentAcctgTrans
+    <li>PaymentApplication
+    <li>PaymentBudgetAllocation
+    <li>PaymentMethodType
+    <li>Receipt
+  </ul>
+</ul>
+<hr>
+<H3><a name="Humanres">Humanres</a></H3>
+<hr>
+<ul>
+  <li><b><i><a name="humanres.ability">humanres.ability</a></i></b>
+  <ul>
+    <li>PersonTraining
+    <li>EmployeePerformanceReview
+    <li>PartyQual
+    <li>PartyQualType
+    <li>PartyQualAttribute
+    <li>PartyQualTypeAttr
+    <li>PartySkill
+    <li>PerfReviewItemType
+    <li>PerformanceNote
+    <li>PerformanceReviewItem
+    <li>RatingType
+    <li>ResponsibilityType
+    <li>Resume
+    <li>SkillType
+    <li>TrainingClassType
+  </ul>
+  <li><b><i><a name="humanres.employment">humanres.employment</a></i></b>
+  <ul>
+    <li>RejectionReason
+    <li>SalaryStep
+    <li>PayrollPreference
+    <li>PayCheck
+    <li>PayGrade
+    <li>PayHistory
+    <li>Employment
+    <li>EmploymentApplication
+    <li>EmploymentApplicationSourceType
+    <li>BenefitType
+    <li>PartyBenefit
+    <li>TerminationReason
+    <li>TerminationType
+    <li>UnemploymentClaim
+  </ul>
+  <li><b><i><a name="humanres.position">humanres.position</a></i></b>
+  <ul>
+    <li>Position
+    <li>PositionClassificationType
+    <li>PositionFulfillment
+    <li>PositionReportingStructure
+    <li>PositionResponsibility
+    <li>PositionType
+    <li>PositionTypeClass
+    <li>ValidResponsibility
+  </ul>
+</ul>
+<hr>
+<H3><a name="Security">Security</a></H3>
+<hr>
+<ul>
+  <li><b><i><a name="security.login">security.login</a></i></b>
+  <ul>
+    <li>UserLogin
+    <li>LoginAccountHistory
+  </ul>
+  <li><b><i><a name="security.securitygroup">security.securitygroup</a></i></b>
+  <ul>
+    <li>SecurityGroup
+    <li>SecurityPermission
+    <li>SecurityGroupPermission
+    <li>UserLoginSecurityGroup
+  </ul>
 </ul>
