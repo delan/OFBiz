@@ -28,6 +28,7 @@
 
 <h3>Table of Contents</h3>
 <ul>
+  <li class='contenttext'><a href="#2.1.1">Release 2.1.1 - ?? May 2003</a></li>
   <li class='contenttext'><a href="#2.1.0">Release 2.1.0 - 24 April 2003</a></li>
   <li class='contenttext'><a href="#2.0.0">Release 2.0.0 - 20 January 2003</a></li>
   <li class='contenttext'><a href="#2.0Beta3">Release 2.0 Beta 3 - November 6, 2002</a></li>
@@ -45,6 +46,48 @@
   <li class='contenttext'><a href="#2001.05.24">Release 2001.05.24</a></li>
 </ul>
 <br/>
+
+<hr class='sepbar'/>
+<h3><a name="2.1.1">Release 2.1.1 - ?? May 2003</a></h3>
+<hr class='sepbar'/>
+<h4>Overview</h4>
+
+<p class='contenttext'>This is one of those releases you always hope you never
+have to do, but hey bugs happen. So yes, this is a maintenance release that
+fixes a number of bugs. There are also a couple of new features, but not many.</p>
+
+<h4>Bug Fixes</h4>
+<p class='contenttext'>Bug Fixes include:</p>
+<ul>
+    <li class='contenttext'>Service ECAs no longer ignore the first eca rule in
+    each file (yeah, that was pretty bad)</li>
+    <li class='contenttext'>The call-simple-method tag now calls the specified
+    method in the same file when the xml-resource attribute is left off, instead
+    of not calling it and also not telling you about it.</li>
+    <li class='contenttext'>Fixed field types for various *ByUserLogin fields on
+    content entities, ie changed from id to id-vlong</li>
+    <li class='contenttext'>Blob types should finally be fixed. When a Java type
+    of java.lang.Object or Object is declared in the field types XML file the
+    Object will now be serialised using Java serialization and then passed to the
+    JDBC driver as a BinaryStream to be stored in a blob. The old method just
+    passed the Object to the JDBC driver, but that doesn't have the desired
+    effect. Thanks to Juergen Donnerstag for help with this.</li>
+    <li class='contenttext'>Fixed possible NPEs in conditions for Service and
+    Entity ECAs</li>
+    <li class='contenttext'>Added missing ofbcore-extentity.jar reference for
+    Jetty (in the not usually used ofbiz.sh file) and for Tomcat in the Tomcat
+    deploy section of the Ant build script.</li>
+</ul>
+
+<h4>New Features & Improvements</h4>
+<p class='contenttext'>New features and improvements include:</p>
+<ul>
+    <li class='contenttext'>Added initial shopping list implementation (mostly
+    done as a training example, so only so complete for more advanced features)</li>
+    <li class='contenttext'>Schema names specified for datasources in the
+    entityengine.xml file will now be used on all operations instead of just
+    meta data related ops</li>
+</ul>
 
 <hr class='sepbar'/>
 <h3><a name="2.1.0">Release 2.1.0 - 24 April 2003</a></h3>
