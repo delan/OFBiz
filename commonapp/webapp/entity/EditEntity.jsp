@@ -57,7 +57,9 @@
   }
   else if("updateEntity".equals(event))
   {
+    entity.tableName = request.getParameter("tableName");
     entity.packageName = request.getParameter("packageName");
+    entity.dependentOn = request.getParameter("dependentOn");
     entity.title = request.getParameter("title");
     entity.description = request.getParameter("description");
     entity.copyright = request.getParameter("copyright");
@@ -258,7 +260,19 @@ Entity Name: <%=entityName%><br>
 Column Name: <%=entity.tableName%><br>
 
 <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateEntity")%>' style='margin: 0;'>
+  <INPUT type=text size='60' name='tableName' value='<%=entity.tableName%>'> (Table Name)
+  <BR>
   <INPUT type=text size='60' name='packageName' value='<%=entity.packageName%>'> (Package Name)
+  <BR>
+  <SELECT name='dependentOn'>
+    <OPTION selected><%=entity.dependentOn%></OPTION>
+    <OPTION></OPTION>
+    <%Iterator depIter = entSet.iterator();%>
+    <%while(depIter.hasNext()){%>
+      <OPTION><%=(String)depIter.next()%></OPTION>
+    <%}%>
+  </SELECT>
+  (Dependent On Entity)
   <BR>
   <INPUT type=text size='60' name='title' value='<%=entity.title%>'> (Title)
   <BR>

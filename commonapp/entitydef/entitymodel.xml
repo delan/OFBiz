@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Thu Sep 27 16:02:05 PDT 2001
+ *@created    Fri Sep 28 19:34:13 MDT 2001
  *@version    1.0
  */
 -->
@@ -2245,31 +2245,6 @@
       <relation type="one" rel-entity-name="PartyQualType">
         <key-map field-name="partyQualTypeId" />
       </relation>
-      <relation type="many" rel-entity-name="PartyQualTypeAttr">
-        <key-map field-name="partyQualTypeId" />
-      </relation>
-      <relation type="many" rel-entity-name="PartyQualAttribute">
-        <key-map field-name="partyId" />
-        <key-map field-name="partyQualTypeId" />
-      </relation>
-    </entity>	
-    <entity entity-name="PartyQualAttribute" 
-            package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Party Qualification Attribute Entity">
-      <field name="partyId" type="id-ne"></field>
-      <field name="partyQualTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
-      <field name="value" type="value"></field>	
-      <prim-key field="partyId" />	
-      <prim-key field="partyQualTypeId" />	
-      <prim-key field="name" />
-      <relation type="one" rel-entity-name="PartyQual">
-        <key-map field-name="partyId" />
-        <key-map field-name="partyQualTypeId" />
-      </relation>
-      <relation type="many" rel-entity-name="PartyQualTypeAttr">
-        <key-map field-name="name" />
-      </relation>
     </entity>	
     <entity entity-name="PartyQualType" 
             package-name="org.ofbiz.commonapp.humanres.ability"
@@ -2284,26 +2259,6 @@
       </relation>
       <relation type="many" title="Child" rel-entity-name="PartyQualType">
         <key-map field-name="partyQualTypeId" rel-field-name="parentTypeId" />
-      </relation>
-      <relation type="many" rel-entity-name="PartyQualTypeAttr">
-        <key-map field-name="partyQualTypeId" />
-      </relation>
-      <relation type="many" rel-entity-name="PartyQual">
-        <key-map field-name="partyQualTypeId" />
-      </relation>
-    </entity>	
-    <entity entity-name="PartyQualTypeAttr" 
-            package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Party Qualification Type Attribute Entity">
-      <field name="partyQualTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
-      <prim-key field="partyQualTypeId" />	
-      <prim-key field="name" />
-      <relation type="one" rel-entity-name="PartyQualType">
-        <key-map field-name="partyQualTypeId" />
-      </relation>
-      <relation type="many" rel-entity-name="PartyQualAttribute">
-        <key-map field-name="name" />
       </relation>
       <relation type="many" rel-entity-name="PartyQual">
         <key-map field-name="partyQualTypeId" />
@@ -4539,7 +4494,7 @@
       <prim-key field="contactMechId" />	
       <prim-key field="contactMechPurposeTypeId" />	
       <prim-key field="fromDate" />
-      <relation type="one" rel-entity-name="PartyContactMech">
+      <relation type="many" rel-entity-name="PartyContactMech">
         <key-map field-name="partyId" />
         <key-map field-name="contactMechId" />
       </relation>
