@@ -133,6 +133,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <div class="head2">${uiLabelMap.ProductAddProductCategoryMember}:</div>
         <div class="tabletext">
             ${uiLabelMap.ProductProductId}: <input type=text size="20" name="productId" class="inputBox">
+            <a href="javascript:call_fieldlookup2(document.addProductCategoryMemberForm.productId, 'LookupProduct');"><img src="/content/images/fieldlookup.gif" width="16" height="16" border="0" alt="Lookup"></a>
             ${uiLabelMap.CommonFromDate}: <input type=text size="22" name="fromDate" class="inputBox">
             <a href="javascript:call_cal(document.addProductCategoryMemberForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <input type="submit" value="${uiLabelMap.CommonAdd}">
