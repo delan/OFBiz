@@ -161,6 +161,10 @@
   <StatusType description="Party Relationship" hasTable="N" parentTypeId="" statusTypeId="PARTY_REL_STATUS"/>
 
   <TermType description="Financial" hasTable="N" parentTypeId="" termTypeId="FINANCIAL_TERM"/>
+  <TermType description="Payment (net days)" hasTable="N" parentTypeId="FINANCIAL_TERM" termTypeId="FIN_PAYMENT_TERM"/>
+  <TermType description="Late Fee (percent)" hasTable="N" parentTypeId="FINANCIAL_TERM" termTypeId="FIN_LATE_FEE_TERM"/> 
+  <TermType description="Penalty For Collection Agency" hasTable="N" parentTypeId="FINANCIAL_TERM" termTypeId="FIN_COLLECT_TERM"/>
+  <TermType description="Non-Returnable Sales Item" hasTable="N" parentTypeId="FINANCIAL_TERM" termTypeId="FIN_NORTN_ITEM_TERM"/>
   <TermType description="Incentive" hasTable="N" parentTypeId="" termTypeId="INCENTIVE"/>
   <TermType description="Legal" hasTable="N" parentTypeId="" termTypeId="LEGAL_TERM"/>
   <TermType description="Threshold" hasTable="N" parentTypeId="" termTypeId="THRESHOLD"/>
