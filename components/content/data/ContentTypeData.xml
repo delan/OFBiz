@@ -56,6 +56,9 @@
     <ContentOperation contentOperationId="CHILD_UPDATE" description="Child Update"/>
     <ContentOperation contentOperationId="CHILD_DELETE" description="Child Delete"/>
     <ContentOperation contentOperationId="CHILD_VIEW" description="Child View"/>
+    <ContentOperation contentOperationId="CONTENT_LINK" description="Content Link"/>
+    <ContentOperation contentOperationId="CONTENT_LINK_TO" description="Content Link To"/>
+    <ContentOperation contentOperationId="CONTENT_LINK_FROM" description="Content Link From"/>
 
     <!-- These ContentTypes are primarily for structuring documents or content -->
     <ContentPurposeType contentPurposeTypeId="ARTICLE" description="Article"/>
