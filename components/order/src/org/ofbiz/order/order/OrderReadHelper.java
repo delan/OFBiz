@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.20 2004/01/22 17:47:24 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.21 2004/02/24 10:09:02 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,6 +29,7 @@ import java.util.*;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.DataModelConstants;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
@@ -51,7 +52,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -817,6 +818,59 @@ public class OrderReadHelper {
         }
         return EntityUtil.filterByAnd(orderItemInventoryReses, UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId")));
     }
+
+    public static List getOrderItemInventoryResFacilityIds(GenericValue orderHeader) {
+        GenericDelegator delegator = orderHeader.getDelegator();
+        List orderItems = null;
+        List orderItemInventoryRes = new ArrayList();
+        List result = new ArrayList();
+
+        // filter for approved items only
+        try {
+            orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderHeader.getString("orderId"), "statusId", "ITEM_APPROVED"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot locate OrderItems from OrderHeader " + orderHeader.getString("orderId"), module);
+        }
+        if (UtilValidate.isNotEmpty(orderItems)) {
+            Iterator oiIter = orderItems.iterator();
+            GenericValue orderItem = null;
+            List oiInventoryRes = null;
+
+            while (oiIter.hasNext()) {
+                orderItem = (GenericValue) oiIter.next();
+
+                try {
+                    oiInventoryRes = orderItem.getRelated("OrderItemInventoryRes");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Cannot locate OrderItemInventoryRes from OrderItem " + orderItem.getString("orderId") + " sequenceNum " + orderItem.getString("orderItemSeqId"), module);
+                }
+
+                if (UtilValidate.isNotEmpty(oiInventoryRes)) {
+                    orderItemInventoryRes.addAll(oiInventoryRes);
+                }
+                if (oiInventoryRes.size() > 1) {
+                    Debug.logWarning("Warning - Should not use quickShip with more than one orderItemInventoryRes for order " + orderHeader.getString("orderId") + " item sequenceNum " + orderItem.get("orderItemsSeqId"), module);
+                }
+            }
+            if (UtilValidate.isNotEmpty(orderItemInventoryRes)) {
+                Iterator orderItemInventoryResIter = orderItemInventoryRes.iterator();
+                GenericValue anInventoryRes = null;
+
+                while (orderItemInventoryResIter.hasNext()) {
+                    anInventoryRes = (GenericValue) orderItemInventoryResIter.next();
+                    GenericValue inventoryItem = null;
+
+                    try {
+                        inventoryItem = delegator.findByPrimaryKey("InventoryItem", UtilMisc.toMap("inventoryItemId", anInventoryRes.getString("inventoryItemId")));
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Cannot locate InventoryItem for ID " + anInventoryRes.getString("inventoryItemId"), module);
+                    }
+                    result.add(inventoryItem.getString("facilityId"));
+                }
+            }
+        }
+        return result;
+    }    
 
     public List getOrderItemIssuances(GenericValue orderItem) {
         if (orderItem == null) return null;
