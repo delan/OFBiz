@@ -253,7 +253,7 @@ Error messages go on the error list and are handled with the check-errors tag.
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     default CDATA #IMPLIED
-    map-name CDATA #IMPLIED
+    session-name CDATA #IMPLIED
 >
 <!ELEMENT webapp-property-to-field EMPTY>
 <!ATTLIST webapp-property-to-field
