@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceXaWrapper.java,v 1.4 2003/11/25 06:05:36 jonesde Exp $
+ * $Id: ServiceXaWrapper.java,v 1.5 2003/12/05 02:28:42 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,22 +26,21 @@ package org.ofbiz.service;
 
 import java.util.Map;
 
-import javax.transaction.InvalidTransactionException;
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
+import javax.transaction.*;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.transaction.GenericXaResource;
 import org.ofbiz.entity.transaction.TransactionFactory;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 
 /**
  * ServiceXaWrapper - XA Resource wrapper for running services on commit() or rollback()
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class ServiceXaWrapper extends GenericXaResource {
@@ -187,11 +186,36 @@ public class ServiceXaWrapper extends GenericXaResource {
         }
 
         if (this.rollbackService != null) {
+            int currentTxStatus = Status.STATUS_UNKNOWN;
+            try {
+                currentTxStatus = TransactionUtil.getStatus();
+            } catch (GenericTransactionException e) {
+                Debug.logError(e, module);
+            }
+
+            TransactionManager tm = TransactionFactory.getTransactionManager();
+            Transaction parentTransaction = null;
+            if (currentTxStatus != Status.STATUS_NO_TRANSACTION) {
+                try {
+                    parentTransaction = tm.suspend();
+                } catch (SystemException e) {
+                    Debug.logError(e, module);
+                }
+            }
+
             // invoke the service
             try {
                 this.dctx.getDispatcher().runAsync(this.rollbackService, this.rollbackContext, true);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem calling async service : " + this.rollbackService + " / " + this.rollbackContext, module);
+            }
+
+            if (parentTransaction != null) {
+                try {
+                    tm.resume(parentTransaction);
+                } catch (Exception e) {
+                    Debug.logError(e, module);
+                }
             }
         } else {
             Debug.log("No rollback service defined; nothing to do", module);
@@ -202,8 +226,16 @@ public class ServiceXaWrapper extends GenericXaResource {
     }
 
     public int prepare(Xid xid) throws XAException {
-        // overriding to log two phase commits -- seems jotm only uses single phase commits
+        // overriding to log two phase commits
         Debug.log("ServiceXaWrapper#prepare() : " + xid.toString(), module);
-        return super.prepare(xid);
+        int rtn = XA_OK;
+        try {
+            rtn = super.prepare(xid);
+        } catch (XAException e) {
+            Debug.logError(e, module);
+            throw e;
+        }
+        Debug.log("ServiceXaWrapper#prepare() : " + rtn + " / " + (rtn == XA_OK) , module);
+        return rtn;
     }
 }
