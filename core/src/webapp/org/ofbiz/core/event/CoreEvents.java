@@ -214,9 +214,14 @@ public class CoreEvents {
 
         Timestamp ts = null;
         
-        // now do a security check
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        // TODO: now do a security check
         
-        //lookup the service definition to see if this service is externally available, if not require the SERVICE_INVOKE_ANY permission
+        // add the userLogin to the context        
+        if (userLogin != null) 
+            context.put("userLogin", userLogin);
+            
+        // lookup the service definition to see if this service is externally available, if not require the SERVICE_INVOKE_ANY permission
         ModelService modelService = null;
         try {
             modelService = dispatcher.getDispatchContext().getModelService(serviceName);
@@ -229,6 +234,9 @@ public class CoreEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Could not find a service with the serviceName [" + serviceName + "]");
             return "error";
         }
+        
+        // make the context valid; using the makeValid method from ModelService
+        Map validContext = modelService.makeValid(context, ModelService.IN_PARAM);
 
         if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request.getSession())) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to call this non-exported service, you must be logged in and have the SERVICE_INVOKE_ANY permission.");
@@ -304,10 +312,10 @@ public class CoreEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errorBuf.toString());
             return "error";
         }
-
+                      
         // schedule service
         try {
-            dispatcher.schedule(serviceName, context, startTime, frequency, interval, count, endTime);
+            dispatcher.schedule(serviceName, validContext, startTime, frequency, interval, count, endTime);
         } catch (GenericServiceException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Service dispatcher threw an exception: " + e.getMessage());
             return "error";
