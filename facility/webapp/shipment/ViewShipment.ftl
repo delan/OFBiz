@@ -202,7 +202,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <tr>
         <td><div class="tabletext">${shipmentRouteSegment.shipmentRouteSegmentId}</div></td>
         <td>
-            <span class="tabletext">${(carrierPerson.firstName)?if_exists} ${(carrierPerson.middleName)?if_exists} ${(carrierPerson.lastName)?if_exists} ${(carrierPartyGroup.groupName)?if_exists} [${shipmentRouteSegment.carrierPartyId}]</span>
+            <span class="tabletext">${(carrierPerson.firstName)?if_exists} ${(carrierPerson.middleName)?if_exists} ${(carrierPerson.lastName)?if_exists} ${(carrierPartyGroup.groupName)?if_exists} [${shipmentRouteSegment.carrierPartyId?if_exists}]</span>
             <span class="tabletext">${shipmentMethodType.description?default(shipmentRouteSegment.shipmentMethodTypeId?if_exists)}</span>
             <br/>
             <span class="tabletext">${(originFacility.facilityName)?if_exists} [${originFacility.facilityId?if_exists}]</span>
