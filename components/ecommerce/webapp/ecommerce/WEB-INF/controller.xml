@@ -871,6 +871,94 @@
         <security https="true" auth="false"/>
         <response name="success" type="view" value="defaultcontent"/>
     </request-map>
+    <request-map uri="showforum">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="showforum"/>
+    </request-map>
+    <request-map uri="showforumarticle">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="showforumarticle"/>
+    </request-map>
+    <request-map uri="showforumresponse">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="showforumresponse"/>
+    </request-map>
+    <request-map uri="createforumarticle">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createforumarticle"/>
+    </request-map>
+    <request-map uri="editforumarticle">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="editforumarticle"/>
+    </request-map>
+    <request-map uri="createforumresponse">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="createforumresponse"/>
+    </request-map>
+    <request-map uri="editforuminfo">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editforuminfo"/>
+    </request-map>
+    <request-map uri="editaddforumdata">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editaddforumdata"/>
+    </request-map>
+    <request-map uri="editaddimage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editaddimage"/>
+    </request-map>
+    <request-map uri="persistImage">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.content.content.UploadContentAndImage" invoke="uploadContentAndImage"/>
+        <response name="success" type="view" value="editforumarticle"/>
+        <response name="error" type="view" value="editaddimage"/>
+    </request-map>
+    <request-map uri="img">
+        <security auth="false" https="false"/>
+        <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="serveImage" />
+        <response name="success" type="none" />
+        <response name="error" type="view" value="main"/>
+    </request-map>
+    <request-map uri="uploadArticleAndImage">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.content.content.UploadContentAndImage" invoke="uploadContentAndImage"/>
+        <response name="success" type="view" value="editforumarticle"/>
+        <response name="error" type="view" value="createforumarticle"/>
+    </request-map>
+    <request-map uri="updateContent">
+        <security auth="true" https="true"/>
+        <event invoke="updateContent" path="org/ofbiz/content/content/ContentEvents.xml" type="simple"/>
+        <response name="success" type="view" value="editforumarticle"/>
+        <response name="error" type="view" value="editforuminfo"/>
+    </request-map>
+
+    <request-map uri="uploadResponse">
+        <security https="true" auth="true"/>
+        <event invoke="persistContentAndAssoc" path="" type="service"/>
+        <response name="success" type="view" value="showforumresponse"/>
+        <response name="error" type="view" value="createforumresponse"/>
+    </request-map>
+    <request-map uri="persistContent">
+        <security auth="true" https="true"/>
+        <event invoke="persistContentAndAssoc" path="" type="service"/>
+        <response name="success" type="view" value="editforumarticle"/>
+        <response name="error" type="view" value="editaddforumdata"/>
+    </request-map>
+    <request-map uri="catbrowse">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="catbrowse"/>
+    </request-map>
+    <request-map uri="mostrecent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="mostrecent"/>
+    </request-map>
+   <request-map uri="publishResponse">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateContent"/>
+        <response name="success" type="view" value="mostrecent"/>
+        <response name="error" type="view" value="mostrecent"/>
+    </request-map>
+
     <!-- End of Request Mappings -->
 
     <!-- View Mappings -->
@@ -928,5 +1016,18 @@
     <view-map name="profilesurvey" type="jpublish" page="/customer/customersurvey.ftl"/>
     
     <view-map name="defaultcontent" type="jpublish" page="/content/defaultcontent.ftl"/>
+
+    <view-map name="showforum" type="jpublish" page="/forum/showforum.ftl"/>
+    <view-map name="showforumarticle" type="jpublish" page="/forum/showforumarticle.ftl"/>
+    <view-map name="createforumarticle" type="jpublish" page="/forum/createforumarticle.ftl"/>
+    <view-map name="editforumarticle" type="jpublish" page="/forum/editforumarticle.ftl"/>
+    <view-map name="showforumresponse" type="jpublish" page="/forum/showforumresponse.ftl"/>
+    <view-map name="createforumresponse" type="jpublish" page="/forum/createforumresponse.ftl"/>
+    <view-map name="editforuminfo" type="jpublish" page="/forum/editforuminfo.ftl"/>
+    <view-map name="editaddforumdata" type="jpublish" page="/forum/editaddforumdata.ftl"/>
+    <view-map name="editaddimage" type="jpublish" page="/forum/editaddimage.ftl"/>
+    <view-map name="catbrowse" page="/content/catbrowse.ftl" type="jpublish"/>
+    <view-map name="mostrecent" page="/forum/mostrecent.ftl" type="jpublish"/>
+
     <!-- End of View Mappings -->
 </site-conf>

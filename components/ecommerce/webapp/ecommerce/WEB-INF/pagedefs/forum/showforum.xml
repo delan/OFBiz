@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_lr</template> 
+    <property name="title">View Blog</property>
+    <property name="headerItem">Blog</property>    
+    <property name="formDefFile">/BlogForms.xml</property>    
+    <property name="entityName">Content</property>    
+    <property name="permissionType">none</property>    
+    <property name="viewSize">10</property>    
+    <property name="mainMenuDefFile">/AgepsMenus.xml</property>    
+    <property name="mainMenuName">main</property>
+    <content-action name="/forum/pubinit.bsh"/>
+    <content-action name="/forum/viewprep.bsh"/>
+    <content-action name="/forum/listparamprep.bsh"/>
+</page>
