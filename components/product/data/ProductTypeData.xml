@@ -55,8 +55,9 @@
 
   <EnumerationType description="Keyword Override Target Type" enumTypeId="KWOVRD_TRGT_TYPE" hasTable="N" parentTypeId=""/>
   <Enumeration description="Product Category" enumCode="PRODCAT" enumId="KOTT_PRODCAT" enumTypeId="KWOVRD_TRGT_TYPE" sequenceId="01"/>
-  <Enumeration description="Relative URL" enumCode="RURL" enumId="KOTT_RURL" enumTypeId="KWOVRD_TRGT_TYPE" sequenceId="02"/>
-  <Enumeration description="Absolute URL" enumCode="AURL" enumId="KOTT_AURL" enumTypeId="KWOVRD_TRGT_TYPE" sequenceId="03"/>
+  <Enumeration description="Product" enumCode="PRODUCT" enumId="KOTT_PRODUCT" enumTypeId="KWOVRD_TRGT_TYPE" sequenceId="02"/>
+  <Enumeration description="OFBiz URL" enumCode="OFBURL" enumId="KOTT_OFBURL" enumTypeId="KWOVRD_TRGT_TYPE" sequenceId="03"/>
+  <Enumeration description="Absolute URL" enumCode="AURL" enumId="KOTT_AURL" enumTypeId="KWOVRD_TRGT_TYPE" sequenceId="04"/>
 
   <FacilityType description="Building" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
   <FacilityType description="Floor" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>

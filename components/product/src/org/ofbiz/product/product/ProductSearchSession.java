@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchSession.java,v 1.2 2003/10/25 08:19:16 jonesde Exp $
+ * $Id: ProductSearchSession.java,v 1.3 2003/11/06 23:25:49 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -23,34 +23,116 @@
 package org.ofbiz.product.product;
 
 import java.util.*;
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.content.stats.VisitHandler;
+import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.feature.ParametricSearch;
 import org.ofbiz.product.product.ProductSearch.*;
+import org.ofbiz.product.store.ProductStoreWorker;
 
 /**
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class ProductSearchSession {
-    
+
     public static final String module = ProductSearchSession.class.getName();
-    
+
     public static final String PRODUCT_SEARCH_CONSTRAINT_LIST = "_PRODUCT_SEARCH_CONSTRAINT_LIST_";
     public static final String PRODUCT_SEARCH_SORT_ORDER = "_PRODUCT_SEARCH_SORT_ORDER_";
-    
+    public static final String PRODUCT_SEARCH_VIEW_INDEX = "_PRODUCT_SEARCH_VIEW_INDEX_";
+    public static final String PRODUCT_SEARCH_VIEW_SIZE = "_PRODUCT_SEARCH_VIEW_SIZE_";
+
+    /** A ControlServlet event method used to check to see if there is an override for any of the current keywords in the search */
+    public static final String checkDoKeywordOverride(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        Map requestParams = UtilHttp.getParameterMap(request);
+        ProductSearchSession.processSearchParameters(requestParams, session);
+
+        // get the current productStoreId
+        String productStoreId = ProductStoreWorker.getProductStoreId(request);
+        if (productStoreId != null) {
+            // get a Set of all keywords in the search, if there are any...
+            Set keywords = new HashSet();
+            List constraintList = (List) session.getAttribute(PRODUCT_SEARCH_CONSTRAINT_LIST);
+            Iterator constraintIter = constraintList.iterator();
+            while (constraintIter.hasNext()) {
+                Object constraint = constraintIter.next();
+                if (constraint instanceof KeywordConstraint) {
+                    KeywordConstraint keywordConstraint = (KeywordConstraint) constraint;
+                    List keywordList = keywordConstraint.makeFullKeywordList();
+                    if (keywordList != null) keywords.addAll(keywordList);
+                }
+            }
+
+            if (keywords.size() > 0) {
+                List productStoreKeywordOvrdList = null;
+                try {
+                    productStoreKeywordOvrdList = delegator.findByAndCache("ProductStoreKeywordOvrd", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("-fromDate"));
+                    productStoreKeywordOvrdList = EntityUtil.filterByDate(productStoreKeywordOvrdList, true);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Error reading ProductStoreKeywordOvrd list, not doing keyword override", module);
+                }
+
+                if (productStoreKeywordOvrdList != null && productStoreKeywordOvrdList.size() > 0) {
+                    Iterator productStoreKeywordOvrdIter = productStoreKeywordOvrdList.iterator();
+                    while (productStoreKeywordOvrdIter.hasNext()) {
+                        GenericValue productStoreKeywordOvrd = (GenericValue) productStoreKeywordOvrdIter.next();
+                        String ovrdKeyword = productStoreKeywordOvrd.getString("keyword");
+                        if (keywords.contains(ovrdKeyword)) {
+                            String targetTypeEnumId = productStoreKeywordOvrd.getString("targetTypeEnumId");
+                            String target = productStoreKeywordOvrd.getString("target");
+                            ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                            RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+                            if ("KOTT_PRODCAT".equals(targetTypeEnumId)) {
+                                String requestName = "/category/~category_id=" + target;
+                                target = rh.makeLink(request, response, requestName, false, false, false);
+                            } else if ("KOTT_PRODUCT".equals(targetTypeEnumId)) {
+                                String requestName = "/product/~product_id=" + target;
+                                target = rh.makeLink(request, response, requestName, false, false, false);
+                            } else if ("KOTT_OFBURL".equals(targetTypeEnumId)) {
+                                target = rh.makeLink(request, response, target, false, false, false);
+                            } else if ("KOTT_AURL".equals(targetTypeEnumId)) {
+                                // do nothing, is absolute URL
+                            } else {
+                                Debug.logError("The targetTypeEnumId [] is not recognized, not doing keyword override", module);
+                                // might as well see if there are any others...
+                                continue;
+                            }
+                            try {
+                                response.sendRedirect(target);
+                                return "none";
+                            } catch (IOException e) {
+                                Debug.logError(e, "Could not send redirect to: " + target, module);
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return "success";
+    }
+
     public static ArrayList searchDo(HttpSession session, GenericDelegator delegator, String prodCatalogId) {
         String visitId = VisitHandler.getVisitId(session);
         List productSearchConstraintList = (List) session.getAttribute(ProductSearchSession.PRODUCT_SEARCH_CONSTRAINT_LIST);
@@ -58,13 +140,13 @@ public class ProductSearchSession {
             // no constraints, don't do a search...
             return new ArrayList();
         }
-        
+
         // make sure the view allow category is included
         productSearchConstraintList = ensureViewAllowConstraint(productSearchConstraintList, prodCatalogId, delegator);
         ResultSortOrder resultSortOrder = getResultSortOrder(session);
         return ProductSearch.searchProducts(productSearchConstraintList, resultSortOrder, delegator, visitId);
     }
-    
+
     public static List ensureViewAllowConstraint(List productSearchConstraintList, String prodCatalogId, GenericDelegator delegator) {
         String viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, prodCatalogId);
         if (UtilValidate.isNotEmpty(viewProductCategoryId)) {
@@ -77,7 +159,7 @@ public class ProductSearchSession {
         }
         return productSearchConstraintList;
     }
-    
+
     public static ResultSortOrder getResultSortOrder(HttpSession session) {
         ResultSortOrder resultSortOrder = (ResultSortOrder) session.getAttribute(ProductSearchSession.PRODUCT_SEARCH_SORT_ORDER);
         if (resultSortOrder == null) {
@@ -86,12 +168,12 @@ public class ProductSearchSession {
         }
         return resultSortOrder;
     }
-    
+
     public static void searchClear(HttpSession session) {
         session.removeAttribute(ProductSearchSession.PRODUCT_SEARCH_CONSTRAINT_LIST);
         session.removeAttribute(ProductSearchSession.PRODUCT_SEARCH_SORT_ORDER);
     }
-    
+
     public static List searchGetConstraintStrings(boolean detailed, HttpSession session, GenericDelegator delegator) {
         List productSearchConstraintList = (List) session.getAttribute(ProductSearchSession.PRODUCT_SEARCH_CONSTRAINT_LIST);
         List constraintStrings = new ArrayList();
@@ -111,17 +193,17 @@ public class ProductSearchSession {
         }
         return constraintStrings;
     }
-    
+
     public static String searchGetSortOrderString(boolean detailed, HttpSession session) {
         ResultSortOrder resultSortOrder = (ResultSortOrder) session.getAttribute(ProductSearchSession.PRODUCT_SEARCH_SORT_ORDER);
         if (resultSortOrder == null) return "";
         return resultSortOrder.prettyPrintSortOrder(detailed);
     }
-    
+
     public static void searchSetSortOrder(ResultSortOrder resultSortOrder, HttpSession session) {
         session.setAttribute(ProductSearchSession.PRODUCT_SEARCH_SORT_ORDER, resultSortOrder);
     }
-    
+
     public static void searchAddFeatureIdConstraints(Collection featureIds, HttpSession session) {
         if (featureIds == null || featureIds.size() == 0) {
             return;
@@ -132,7 +214,7 @@ public class ProductSearchSession {
             searchAddConstraint(new FeatureConstraint(productFeatureId), session);
         }
     }
-    
+
     public static void searchAddConstraint(ProductSearchConstraint productSearchConstraint, HttpSession session) {
         List productSearchConstraintList = (List) session.getAttribute(ProductSearchSession.PRODUCT_SEARCH_CONSTRAINT_LIST);
         if (productSearchConstraintList == null) {
@@ -143,7 +225,7 @@ public class ProductSearchSession {
             productSearchConstraintList.add(productSearchConstraint);
         }
     }
-    
+
     public static void searchRemoveConstraint(int index, HttpSession session) {
         List productSearchConstraintList = (List) session.getAttribute(ProductSearchSession.PRODUCT_SEARCH_CONSTRAINT_LIST);
         if (productSearchConstraintList == null) {
@@ -154,8 +236,8 @@ public class ProductSearchSession {
             productSearchConstraintList.remove(index);
         }
     }
-    
-    public static Map getProductSearchResult(Map parameters, HttpSession session, GenericDelegator delegator, String prodCatalogId) {
+
+    public static void processSearchParameters(Map parameters, HttpSession session) {
         // clear search? by default yes, but if the clearSearch parameter is N then don't
         String clearSearchString = (String) parameters.get("clearSearch");
         if (!"N".equals(clearSearchString)) {
@@ -209,6 +291,30 @@ public class ProductSearchSession {
             }
         }
 
+        String viewIndexStr = (String) parameters.get("VIEW_INDEX");
+        if (UtilValidate.isNotEmpty(viewIndexStr)) {
+            try {
+                session.setAttribute(PRODUCT_SEARCH_VIEW_INDEX, Integer.valueOf(viewIndexStr));
+            } catch (Exception e) {
+                Debug.logError(e, "Error formatting VIEW_INDEX, setting to 0", module);
+                // we could just do nothing here, but we know something was specified so we don't want to use the previous value from the session
+                session.setAttribute(PRODUCT_SEARCH_VIEW_INDEX, new Integer(0));
+            }
+        }
+
+        String viewSizeStr = (String) parameters.get("VIEW_SIZE");
+        if (UtilValidate.isNotEmpty(viewSizeStr)) {
+            try {
+                session.setAttribute(PRODUCT_SEARCH_VIEW_SIZE, Integer.valueOf(viewSizeStr));
+            } catch (Exception e) {
+                Debug.logError(e, "Error formatting VIEW_SIZE, setting to 20", module);
+                session.setAttribute(PRODUCT_SEARCH_VIEW_SIZE, new Integer(20));
+            }
+        }
+    }
+
+    public static Map getProductSearchResult(HttpSession session, GenericDelegator delegator, String prodCatalogId) {
+
         // ========== Create View Indexes
         int viewIndex = 0;
         int viewSize = 20;
@@ -216,33 +322,18 @@ public class ProductSearchSession {
         int lowIndex = 0;
         int listSize = 0;
 
-        try {
-            String viewIndexStr = (String) parameters.get("VIEW_INDEX");
-            if (UtilValidate.isNotEmpty(viewIndexStr)) {
-                viewIndex = Integer.valueOf(viewIndexStr).intValue();
-            }
-        } catch (Exception e) {
-            Debug.logError(e, "Error formatting VIEW_INDEX", module);
-            viewIndex = 0;
-        }
-
-        try {
-            String viewSizeStr = (String) parameters.get("VIEW_SIZE");
-            if (UtilValidate.isNotEmpty(viewSizeStr)) {
-                viewSize = Integer.valueOf(viewSizeStr).intValue();
-            }
-        } catch (Exception e) {
-            Debug.logError(e, "Error formatting VIEW_SIZE", module);
-            viewSize = 20;
-        }
+        Integer viewIndexInteger = (Integer) session.getAttribute(PRODUCT_SEARCH_VIEW_INDEX);
+        if (viewIndexInteger != null) viewIndex = viewIndexInteger.intValue();
+        Integer viewSizeInteger = (Integer) session.getAttribute(PRODUCT_SEARCH_VIEW_SIZE);
+        if (viewSizeInteger != null) viewSize = viewSizeInteger.intValue();
 
         lowIndex = viewIndex * viewSize;
         highIndex = (viewIndex + 1) * viewSize;
-        
+
         // setup resultOffset and maxResults, noting that resultOffset is 1 based, not zero based as these numbers
         Integer resultOffset = new Integer(lowIndex + 1);
         Integer maxResults = new Integer(viewSize);
-        
+
         // ========== Do the actual search
         ArrayList productIds = null;
         String visitId = VisitHandler.getVisitId(session);
@@ -259,42 +350,33 @@ public class ProductSearchSession {
             productSearchContext.setMaxResults(maxResults);
 
             productIds = productSearchContext.doSearch();
-            
+
             Integer totalResults = productSearchContext.getTotalResults();
             if (totalResults != null) {
                 listSize = totalResults.intValue();
             }
         }
-        
+
         if (listSize < highIndex) {
             highIndex = listSize;
         }
 
         // ========== Setup other display info
-        GenericValue searchCategory = null;
-        try {
-            searchCategory = (searchCategoryId == null || searchCategoryId.length() == 0) ? null : 
-                    delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", searchCategoryId));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up search ProductCategory", module);
-        }
-
         List searchConstraintStrings = searchGetConstraintStrings(false, session, delegator);
         String searchSortOrderString = searchGetSortOrderString(false, session);
 
         // ========== populate the result Map
         Map result = new HashMap();
-        
+
         result.put("productIds", productIds);
         result.put("viewIndex", new Integer(viewIndex));
         result.put("viewSize", new Integer(viewSize));
         result.put("listSize", new Integer(listSize));
         result.put("lowIndex", new Integer(lowIndex));
         result.put("highIndex", new Integer(highIndex));
-        result.put("searchCategory", searchCategory);
         result.put("searchConstraintStrings", searchConstraintStrings);
         result.put("searchSortOrderString", searchSortOrderString);
-        
+
         return result;
     }
 }

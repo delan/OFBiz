@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.20 2003/11/06 15:40:17 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.21 2003/11/06 23:25:49 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -53,7 +53,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -594,9 +594,14 @@ public class ProductSearch {
             }
         }
 
+        public List makeFullKeywordList() {
+            List keywordList = KeywordSearch.makeKeywordList(this.keywordsString);
+            return keywordList;
+        }
+
         public void addConstraint(ProductSearchContext productSearchContext) {
             // just make the fixed keyword lists and put them in the context
-            List keywordFirstPass = KeywordSearch.makeKeywordList(keywordsString);
+            List keywordFirstPass = makeFullKeywordList();
             List keywordList = KeywordSearch.fixKeywords(keywordFirstPass, anyPrefix, anySuffix, removeStems, isAnd);
             if (isAnd) {
                 productSearchContext.andKeywordFixedList.addAll(keywordList);
