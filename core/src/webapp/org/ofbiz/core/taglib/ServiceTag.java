@@ -109,7 +109,7 @@ public class ServiceTag extends AbstractParameterTag {
                 result = dispatcher.runSync(serviceName, context);
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
-            throw new JspTagException("Problems invoking the requested service.");
+            throw new JspTagException("Problems invoking the requested service: " + e.getMessage());
         }
 
         if (result != null) {
