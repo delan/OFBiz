@@ -1,5 +1,26 @@
 /*
  * $Id$
+ *
+ * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package org.ofbiz.core.event;
@@ -18,27 +39,7 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> SOAPEventHandler.java
- * <p><b>Description:</b> SOAP Event Handler implementation
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
- *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * SOAPEventHandler - SOAP Event Handler implementation
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    December 7, 2001
@@ -46,7 +47,8 @@ import org.ofbiz.core.util.*;
  */
 public class SOAPEventHandler implements EventHandler {
 
-    static Category category = Category.getInstance(SOAPEventHandler.class.getName());
+    public static final String module = SOAPEventHandler.class.getName();
+    public static Category category = Category.getInstance(SOAPEventHandler.class.getName());
 
     private String eventPath = null;
     private String eventMethod = null;
@@ -113,7 +115,7 @@ public class SOAPEventHandler implements EventHandler {
             throw new EventHandlerException(e.getMessage(), e);
         }
 
-        Debug.logInfo("[EventHandler] : Processing SOAP event");
+        Debug.logVerbose("[Processing]: SOAP Event", module);
 
         // each is a different service call
         Iterator i = bodies.iterator();
@@ -133,7 +135,7 @@ public class SOAPEventHandler implements EventHandler {
                 Iterator p = params.iterator();
                 while (p.hasNext()) {
                     RPCParam param = (RPCParam) p.next();
-                    Debug.logInfo("[EventHandler] : Reading param - " + param.getName());
+                    Debug.logVerbose("[Reading Param]: " + param.getName(), module);
                     serviceContext.put(param.getName(), param.getValue());
                 }
                 try {
@@ -141,7 +143,7 @@ public class SOAPEventHandler implements EventHandler {
                     ModelService model = dispatcher.getDispatchContext().getModelService(serviceName);
                     if (model != null && model.export) {
                         Map result = dispatcher.runSync(serviceName, serviceContext);
-                        Debug.logInfo("[EventHandler] : Service invoked");
+                        Debug.logVerbose("[EventHandler] : Service invoked", module);
                         RPCElement resBody = new RPCElement(serviceName + "Response");
                         resBody.setPrefix(body.getPrefix());
                         resBody.setNamespaceURI(body.getNamespaceURI());
@@ -166,7 +168,7 @@ public class SOAPEventHandler implements EventHandler {
         }
 
         // setup the response
-        Debug.logInfo("[EventHandler] : Setting up response message");
+        Debug.logVerbose("[EventHandler] : Setting up response message", module);
         msg = new Message(resEnv);
         mctx.setResponseMessage(msg);
         if (msg == null) {
@@ -189,7 +191,7 @@ public class SOAPEventHandler implements EventHandler {
             throw new EventHandlerException("Cannot write to the output stream");
         }
 
-        Debug.logInfo("[EventHandler] : Message sent to requester");
+        Debug.logVerbose("[EventHandler] : Message sent to requester", module);
 
         return "success";
     }

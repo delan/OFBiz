@@ -61,9 +61,11 @@ import org.apache.xml.serialize.*;
  */
 public class UtilXml {
 
+    public static final String module = UtilXml.class.getName();
+
     public static String writeXmlDocument(Document document) throws java.io.IOException {
         if (document == null) {
-            Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing");
+            Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing", module);
             return null;
         }
 
@@ -77,11 +79,11 @@ public class UtilXml {
     public static void writeXmlDocument(String filename, Document document)
             throws java.io.FileNotFoundException, java.io.IOException {
         if (document == null) {
-            Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing");
+            Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing", module);
             return;
         }
         if (filename == null) {
-            Debug.logWarning("[UtilXml.writeXmlDocument] Filename was null, doing nothing");
+            Debug.logWarning("[UtilXml.writeXmlDocument] Filename was null, doing nothing", module);
             return;
         }
 
@@ -98,11 +100,11 @@ public class UtilXml {
 
     public static void writeXmlDocument(OutputStream os, Document document) throws java.io.IOException {
         if (document == null) {
-            Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing");
+            Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing", module);
             return;
         }
         if (os == null) {
-            Debug.logWarning("[UtilXml.writeXmlDocument] OutputStream was null, doing nothing");
+            Debug.logWarning("[UtilXml.writeXmlDocument] OutputStream was null, doing nothing", module);
             return;
         }
 
@@ -129,7 +131,7 @@ public class UtilXml {
     public static Document readXmlDocument(String content, boolean validate)
             throws SAXException, ParserConfigurationException, java.io.IOException {
         if (content == null) {
-            Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing");
+            Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing", module);
             return null;
         }
         ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes());
@@ -144,7 +146,7 @@ public class UtilXml {
     public static Document readXmlDocument(URL url, boolean validate)
             throws SAXException, ParserConfigurationException, java.io.IOException {
         if (url == null) {
-            Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing");
+            Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing", module);
             return null;
         }
         return readXmlDocument(url.openStream(), validate, url.toString());
@@ -158,7 +160,7 @@ public class UtilXml {
     public static Document readXmlDocument(InputStream is, boolean validate, String docDescription)
             throws SAXException, ParserConfigurationException, java.io.IOException {
         if (is == null) {
-            Debug.logWarning("[UtilXml.readXmlDocument] InputStream was null, doing nothing");
+            Debug.logWarning("[UtilXml.readXmlDocument] InputStream was null, doing nothing", module);
             return null;
         }
 
@@ -193,7 +195,7 @@ public class UtilXml {
             DocumentBuilder builder = factory.newDocumentBuilder();
             document = builder.newDocument();
         } catch (Exception e) {
-            Debug.logError(e);
+            Debug.logError(e, module);
         }
 
         if (rootElementName != null) {
@@ -331,7 +333,8 @@ public class UtilXml {
             hasDTD = false;
             String dtd = UtilProperties.getSplitPropertyValue(UtilURL.fromResource("localdtds.properties"), publicId);
 
-            //Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] resolving DTD with publicId [" + publicId + "], systemId [" + systemId + "] and the dtd file is [" + dtd + "]");
+            Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] resolving DTD with publicId [" + publicId +
+                             "], systemId [" + systemId + "] and the dtd file is [" + dtd + "]", module);
             if (dtd != null && dtd.length() > 0) {
                 try {
                     URL dtdURL = UtilURL.fromResource(dtd);
@@ -339,13 +342,15 @@ public class UtilXml {
                     InputSource inputSource = new InputSource(dtdStream);
                     inputSource.setPublicId(publicId);
                     hasDTD = true;
-                    Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD input source with publicId [" + publicId + "] and the dtd file is [" + dtd + "]");
+                    Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD input source with publicId [" +
+                                  publicId + "] and the dtd file is [" + dtd + "]", module);
                     return inputSource;
                 } catch (Exception e) {
-                    Debug.logWarning(e);
+                    Debug.logWarning(e, module);
                 }
             }
-            Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] local resolve failed for DTD with publicId [" + publicId + "] and the dtd file is [" + dtd + "], trying defaultResolver");
+            Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] local resolve failed for DTD with publicId [" +
+                          publicId + "] and the dtd file is [" + dtd + "], trying defaultResolver", module);
             return defaultResolver.resolveEntity(publicId, systemId);
         }
 
@@ -378,7 +383,7 @@ public class UtilXml {
                                + " process error. Line: "
                                + String.valueOf(exception.getLineNumber())
                                + ". Error message: "
-                               + exception.getMessage()
+                               + exception.getMessage(), module
                 );
             }
         }
@@ -390,7 +395,7 @@ public class UtilXml {
                                + " process fatal error. Line: "
                                + String.valueOf(exception.getLineNumber())
                                + ". Error message: "
-                               + exception.getMessage()
+                               + exception.getMessage(), module
                 );
             }
         }
@@ -402,7 +407,7 @@ public class UtilXml {
                                + " process warning. Line: "
                                + String.valueOf(exception.getLineNumber())
                                + ". Error message: "
-                               + exception.getMessage()
+                               + exception.getMessage(), module
                 );
             }
         }

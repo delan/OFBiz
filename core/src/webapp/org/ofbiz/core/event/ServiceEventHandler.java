@@ -1,5 +1,26 @@
 /*
  * $Id$
+ *
+ * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package org.ofbiz.core.event;
@@ -11,34 +32,16 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> ServiceEventHandler.java
- * <p><b>Description:</b> Service Event Handler
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
- *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * <p><b>Title:</b> ServiceEventHandler - Service Event Handler
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    December 7, 2001
  *@version    1.0
  */
 public class ServiceEventHandler implements EventHandler {
-    
+
+    public static final String module = ServiceEventHandler.class.getName();
+
     private String serviceName = null;
     
     /** Initialize the required parameters
@@ -47,6 +50,7 @@ public class ServiceEventHandler implements EventHandler {
      */
     public void initialize(String eventPath, String eventMethod) {
         this.serviceName = eventMethod;
+        Debug.logVerbose("[Set method]: " + eventMethod, module);
     }
     
     /** Invoke the web event
@@ -80,8 +84,8 @@ public class ServiceEventHandler implements EventHandler {
         if ( model == null )
             throw new EventHandlerException("Problems getting the service model");
         
-        Debug.logInfo("[EventHandler] : Processing SERVICE event");
-        Debug.logInfo("[EventHandler] : Using delegator - " + dispatcher.getDelegator().getDelegatorName());
+        Debug.logVerbose("[Processing]: SERVICE Event", module);
+        Debug.logVerbose("[Using delegator]: " + dispatcher.getDelegator().getDelegatorName(), module);
         
         // we have a service and the model; build the context
         Map serviceContext = new HashMap();
@@ -125,7 +129,7 @@ public class ServiceEventHandler implements EventHandler {
                 request.setAttribute(resultKey,resultValue);
         }
         
-        Debug.logInfo("[EventHandler] : Returned - " + responseString);
+        Debug.logVerbose("[Event Return]: " + responseString, module);
         
         return responseString;
         

@@ -39,6 +39,8 @@ import org.w3c.dom.*;
  */
 public class ConfigXMLReader {
 
+    public static final String module = ConfigXMLReader.class.getName();
+
     public static UtilCache requestCache = new UtilCache("ConfigXMLReader-Request");
     public static UtilCache viewCache = new UtilCache("ConfigXMLReader-View");
     public static UtilCache headCache = new UtilCache("ConfigXMLReader-Config");
@@ -94,11 +96,10 @@ public class ConfigXMLReader {
 
             Element rootElement = document.getDocumentElement();
             //rootElement.normalize();
-            //Debug.logInfo("Loaded XML Config - " + location);
+            Debug.logVerbose("Loaded XML Config - " + location, module);
             return rootElement;
         } catch (Exception e) {
-            e.printStackTrace();
-            //Debug.logError(e,"ConfigXMLReader Error");
+            Debug.logError(e, module);
         }
 
         return null;
@@ -216,7 +217,7 @@ public class ConfigXMLReader {
         }
 
         /* Debugging */
-        Debug.logInfo("-------- Request Mappings --------");
+        Debug.logVerbose("-------- Request Mappings --------", module);
         HashMap debugMap = map;
         Set debugSet = debugMap.keySet();
         Iterator i = debugSet.iterator();
@@ -224,19 +225,19 @@ public class ConfigXMLReader {
             Object o = i.next();
             String request = (String) o;
             HashMap thisURI = (HashMap) debugMap.get(o);
-            Debug.log(request);
+            Debug.logVerbose(request, module);
             Iterator debugIter = ((Set) thisURI.keySet()).iterator();
             while (debugIter.hasNext()) {
                 Object lo = debugIter.next();
                 String name = (String) lo;
                 String value = (String) thisURI.get(lo);
-                Debug.logInfo("\t" + name + " -> " + value);
+                Debug.logVerbose("\t" + name + " -> " + value, module);
             }
         }
-        Debug.logInfo("------ End Request Mappings ------");
+        Debug.logVerbose("------ End Request Mappings ------", module);
         /* End Debugging */
 
-        Debug.logInfo("RequestMap Created: (" + map.size() + ") records.");
+        Debug.logInfo("RequestMap Created: (" + map.size() + ") records.", module);
         return map;
     }
 
@@ -306,7 +307,7 @@ public class ConfigXMLReader {
             }
         }
         /* Debugging */
-        Debug.logInfo("-------- View Mappings --------");
+        Debug.logVerbose("-------- View Mappings --------", module);
         HashMap debugMap = map;
         Set debugSet = debugMap.keySet();
         Iterator i = debugSet.iterator();
@@ -314,19 +315,19 @@ public class ConfigXMLReader {
             Object o = i.next();
             String request = (String) o;
             HashMap thisURI = (HashMap) debugMap.get(o);
-            Debug.log(request);
+            Debug.logVerbose(request, module);
             Iterator debugIter = ((Set) thisURI.keySet()).iterator();
             while (debugIter.hasNext()) {
                 Object lo = debugIter.next();
                 String name = (String) lo;
                 String value = (String) thisURI.get(lo);
-                Debug.logInfo("\t" + name + " -> " + value);
+                Debug.logVerbose("\t" + name + " -> " + value, module);
             }
         }
-        Debug.logInfo("------ End View Mappings ------");
+        Debug.logVerbose("------ End View Mappings ------", module);
         /* End Debugging */
 
-        Debug.logInfo("ViewMap Created: (" + map.size() + ") records.");
+        Debug.logInfo("ViewMap Created: (" + map.size() + ") records.", module);
         return map;
     }
 
@@ -443,28 +444,28 @@ public class ConfigXMLReader {
         }
         /* Debugging */
 /*
-    Debug.logInfo("-------- Config Mappings --------");
-    HashMap debugMap =  map;
-    Set debugSet = debugMap.keySet();
-    Iterator i = debugSet.iterator();
-    while (i.hasNext()) {
-      Object o = i.next();
-      String request = (String) o;
-      HashMap thisURI = (HashMap) debugMap.get(o);
-      Debug.log(request);
-      Iterator debugIter = ((Set) thisURI.keySet()).iterator();
-      while (debugIter.hasNext()) {
-        Object lo = debugIter.next();
-        String name = (String) lo;
-        String value = (String) thisURI.get(lo);
-        Debug.logInfo("\t" + name + " -> " + value);
-      }
-    }
-    Debug.logInfo("------ End Config Mappings ------");
- */
+        Debug.logVerbose("-------- Config Mappings --------", module);
+        HashMap debugMap = map;
+        Set debugSet = debugMap.keySet();
+        Iterator i = debugSet.iterator();
+        while (i.hasNext()) {
+            Object o = i.next();
+            String request = (String) o;
+            HashMap thisURI = (HashMap) debugMap.get(o);
+            Debug.logVerbose(request, module);
+            Iterator debugIter = ((Set) thisURI.keySet()).iterator();
+            while (debugIter.hasNext()) {
+                Object lo = debugIter.next();
+                String name = (String) lo;
+                String value = (String) thisURI.get(lo);
+                Debug.logVerbose("\t" + name + " -> " + value, module);
+            }
+        }
+        Debug.logVerbose("------ End Config Mappings ------", module);
+*/
         /* End Debugging */
 
-        Debug.logInfo("ConfigMap Created: (" + map.size() + ") records.");
+        Debug.logInfo("ConfigMap Created: (" + map.size() + ") records.", module);
         return map;
     }
 
@@ -501,6 +502,21 @@ public class ConfigXMLReader {
                 map.put(hName, hClass);
             }
         }
+        /* Debugging */
+        Debug.logVerbose("-------- Handler Mappings --------", module);
+        HashMap debugMap = map;
+        Set debugSet = debugMap.keySet();
+        Iterator i = debugSet.iterator();
+        while (i.hasNext()) {
+            Object o = i.next();
+            String handlerName = (String) o;
+            String className = (String) debugMap.get(o);
+            Debug.logVerbose("[H] : " + handlerName + " => " + className, module);
+        }
+        Debug.logVerbose("------ End Handler Mappings ------", module);
+        /* End Debugging */
+
+        Debug.logInfo("HandlerMap Created: (" + map.size() + ") records.", module);
         return map;
     }
 

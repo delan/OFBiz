@@ -90,7 +90,7 @@ public class UtilURL {
         try {
             if (file.exists()) url = file.toURL();
         } catch (java.net.MalformedURLException e) {
-            Debug.log(e);
+            e.printStackTrace();
             url = null;
         }
         return url;
