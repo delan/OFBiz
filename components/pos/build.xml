@@ -43,7 +43,8 @@
     <target name="classpath">		        
         <path id="local.class.path">
             <fileset dir="${lib.dir}" includes="*.jar"/>
-            <fileset dir="../../base/lib" includes="*.jar"/>          
+            <fileset dir="../../base/lib" includes="*.jar"/>
+            <fileset dir="../../base/lib/commons" includes="*.jar"/>
             <fileset dir="../../base/lib/scripting" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
             <fileset dir="../entity/lib" includes="*.jar"/>
