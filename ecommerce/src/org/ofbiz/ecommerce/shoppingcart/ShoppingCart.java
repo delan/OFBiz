@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2001/10/23 20:06:51  jonesde
+ * Added quick add functionality
+ *
  * Revision 1.14  2001/10/14 09:59:42  jonesde
  * Updated field names for round of resolving reserved word collisions
  *
@@ -212,6 +215,42 @@ public class ShoppingCart {
         }
     }
     
+    /** Returns a List of order item strings */
+    public List makeItemList() {
+        // productId|productName|price|quantity|comment|poNumber
+        List result = new ArrayList();
+        Iterator i = iterator();
+        while ( i.hasNext() ) {
+            StringBuffer buf = new StringBuffer();
+            ShoppingCartItem item = (ShoppingCartItem) i.next();
+            buf.append(item.getProductId()); buf.append("|");            
+            buf.append(item.getName()); buf.append("|");
+            buf.append(item.getPrice()); buf.append("|");
+            buf.append(item.getQuantity()); buf.append("|");
+            buf.append(item.getItemComment()); buf.append("|");
+            buf.append(this.getPoNumber());
+            result.add(buf.toString());
+        }
+        return result;
+    }
+    
+    /** Returns a Map of cart values */
+    public Map makeCartMap() {
+        Map result = new HashMap();
+        result.put("orderItems", makeItemList());
+        result.put("shippingInstructions",getShippingInstructions());
+        result.put("billingAccountId",getBillingAccountId());
+        result.put("cartDiscount", new Double(getCartDiscount()));
+        result.put("shippingAmount", new Double(getShipping()));
+        result.put("taxAmount", new Double(getSalesTax()));
+        result.put("shippingContactMechId", getShippingContactMechId());
+        result.put("shipmentMethodTypeId", getShipmentMethodTypeId());
+        result.put("carrierPartyId", getCarrierPartyId());
+        result.put("maySplit", getMaySplit());
+        result.put("creditCardId", getCreditCardId());
+        return result;
+    }
+                
     public Collection getAdjustments() {
         Collection result = new ArrayList(3);
         result.add(new Adjustment("Shipping and Handling", this.getShipping()));
