@@ -892,6 +892,11 @@ public class ShoppingCart implements Serializable {
         paymentInfo.remove(inf);
     }
 
+    /** removes a specific payment info from the list */
+    public void clearPayment(int index) {
+        paymentInfo.remove(index);
+    }
+
     /** clears all payment method/payment method types */
     public void clearPayments() {
         this.expireSingleUsePayments();
