@@ -261,9 +261,9 @@
         </if-not-empty>
         
         <!-- store the file -->
-        <field-to-field field-name="uploadedFile" map-name="parameters" to-field-name="binData" to-map-name="fileCtx"/>
-        <field-to-field field-name="dataResource" to-map-name="fileCtx"/>
-        <env-to-field env-name="userLogin" map-name="fileCtx"/>
+        <set-service-fields service-name="createAnonFile" map-name="dataResource" to-map-name="fileCtx"/>
+        <field-to-field field-name="parameters.uploadedFile" to-field-name="fileCtx.binData"/>
+        <field-to-field field-name="dataResource" to-field-name="fileCtx.dataResource"/>
         <call-service service-name="createAnonFile" in-map-name="fileCtx" include-user-login="true"/>
 
         <field-to-result field-name="contentId" map-name="content"/>
