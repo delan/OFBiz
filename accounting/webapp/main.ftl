@@ -31,8 +31,7 @@
         <tr>
           <TD align=left width='90%' >
             <div class='boxhead'>&nbsp;Accounting Manager Main Page</div>
-          </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
+          </TD>        
         </tr>
       </table>
     </TD>
@@ -42,11 +41,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <ofbiz:unless name="userLogin">
-              <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
-              <BR>
-            </ofbiz:unless>
-            <DIV class='tabletext'>NOTE: This application is currently empty, so don't bother looking for anything.</DIV>
+            <DIV class='tabletext'>NOTE: This application is currently in development. This page will change.</DIV>  
           </td>
         </tr>
       </table>

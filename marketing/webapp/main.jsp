@@ -35,8 +35,7 @@
         <tr>
           <TD align=left width='90%' >
             <div class='boxhead'>&nbsp;Marketing Manager Main Page</div>
-          </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
+          </TD>         
         </tr>
       </table>
     </TD>

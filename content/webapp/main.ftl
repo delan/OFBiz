@@ -31,8 +31,7 @@
         <tr>
           <TD align=left width='90%' >
             <div class='boxhead'>&nbsp;Content Manager Main Page</div>
-          </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
+          </TD>          
         </tr>
       </table>
     </TD>
@@ -42,7 +41,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>            
-            <DIV class='tabletext'>Welcome to the Content Manager. Check back often more functionality.</DIV>
+            <DIV class='tabletext'>NOTE: This application is currently in development. This page will change.</DIV>  
           </td>
         </tr>
       </table>
