@@ -100,7 +100,9 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <!--
+    <xs:element name="simple-method">
+        <xs:annotation>
+            <xs:documentation>
         A simple method can be called in either an event context from the Control
         Servlet (or another event) or in a service context through the Service
         Engine, or any other component that has access to a service dispatcher.
@@ -112,8 +114,8 @@
         
         The parameter-map-name env entry will contain the HttpRequest parameters for
         running in an event context and and the input context when running in a service.
-    -->
-    <xs:element name="simple-method">
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:group minOccurs="0" maxOccurs="unbounded" ref="SimpleMethodOperations"/>
             <xs:attributeGroup ref="attlist.simple-method"/>
@@ -158,11 +160,13 @@
         <xs:attribute name="dispatcher-name" default="dispatcher"/>
         <xs:attribute name="user-login-name" default="userLogin"/>
     </xs:attributeGroup>
-    <!--
+    <xs:element name="call-map-processor" substitutionGroup="CallOperations">
+        <xs:annotation>
+            <xs:documentation>
         If both an external and an inline map-processor are specified, the external
         one will be called first, allowing the inline one to override its behavior
-    -->
-    <xs:element name="call-map-processor" substitutionGroup="CallOperations">
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" ref="simple-map-processor"/>
@@ -187,11 +191,13 @@
         <xs:attribute name="map-name" use="required"/>
         <xs:attribute name="to-map-name" use="required"/>
     </xs:attributeGroup>
-    <!--
+    <xs:element name="call-service" substitutionGroup="CallOperations">
+        <xs:annotation>
+            <xs:documentation>
         The result-to-request and result-to-session elements will be IGNORED when
         called in a service context. So, they are ONLY used when called in an event context.
-    -->
-    <xs:element name="call-service" substitutionGroup="CallOperations">
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" ref="error-prefix"/>
@@ -333,12 +339,14 @@
         <xs:attribute name="result-name" use="required"/>
         <xs:attribute name="session-name"/>
     </xs:attributeGroup>
-    <!--
+    <xs:element name="result-to-result">
+        <xs:annotation>
+            <xs:documentation>
         NOTE that these attributes are somewhat confusing: result-name is the name of the field in the result of this service call that the value comes FROM; 
         service-result-name is the name of the field in the result of this simple-method called as a service where the value goes TO;
         in other words FROM result-name and TO service-result-name
-    -->
-    <xs:element name="result-to-result">
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attributeGroup ref="attlist.result-to-result"/>
         </xs:complexType>
@@ -347,12 +355,14 @@
         <xs:attribute name="result-name" use="required"/>
         <xs:attribute name="service-result-name"/>
     </xs:attributeGroup>
-    <!--
+    <xs:element name="call-service-asynch" substitutionGroup="CallOperations">
+        <xs:annotation>
+            <xs:documentation>
         Calls a service asynchronously and ignores the result, so no return messages
         are used; that doesn't mean no errors will result, but they would just be
         system errors like database failures, etc which all have system error messages.
-    -->
-    <xs:element name="call-service-asynch" substitutionGroup="CallOperations">
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attributeGroup ref="attlist.call-service-asynch"/>
         </xs:complexType>
@@ -369,7 +379,9 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
-    <!--
+    <xs:element name="call-bsh" substitutionGroup="CallOperations">
+        <xs:annotation>
+            <xs:documentation>
         Runs an external bsh script from the classpath if resource is specified and
         then runs the inlined bsh script if any is specified.
         
@@ -380,8 +392,8 @@
         the entries in the map will be put into the current env.
         
         Error messages go on the error list and are handled with the check-errors tag.
-    -->
-    <xs:element name="call-bsh" substitutionGroup="CallOperations">
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType mixed="true">
             <xs:attributeGroup ref="attlist.call-bsh"/>
         </xs:complexType>
@@ -621,8 +633,8 @@
         <xs:attribute name="map-name"/>
         <xs:attribute name="env-name"/>
     </xs:attributeGroup>
-    <!-- NOTE: the prefix and suffix will only be used IFF the current string and the string to be appended are both not empty -->
     <xs:element name="string-append" substitutionGroup="EnvOperations">
+        <xs:annotation><xs:documentation>NOTE: the prefix and suffix will only be used IFF the current string and the string to be appended are both not empty</xs:documentation></xs:annotation>
         <xs:complexType>
             <xs:attributeGroup ref="attlist.string-append"/>
         </xs:complexType>
@@ -1370,7 +1382,6 @@
         Operations that conditionally execute blocks within them; they mimic the
         simple-map-processor process operations that validate incoming data
     -->
-    <!-- note that while the definitions for the if-* operations are used, the tags should be empty because of the differing semantics -->
     <xs:group name="IfConditions">
         <xs:choice>
             <xs:element ref="or"/>
@@ -1387,6 +1398,7 @@
         </xs:choice>
     </xs:group>
     <xs:element name="if">
+        <xs:annotation><xs:documentation>note that while the definitions for the if-* operations are used, the tags should be empty because of the differing semantics</xs:documentation></xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="condition"/>
@@ -1439,8 +1451,8 @@
             <xs:group ref="IfConditions"/>
         </xs:complexType>
     </xs:element>
-    <!-- if-validate-method calls a static Java method that takes a String and returns a boolean -->
     <xs:element name="if-validate-method">
+        <xs:annotation><xs:documentation>if-validate-method calls a static Java method that takes a String and returns a boolean</xs:documentation></xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:group minOccurs="0" maxOccurs="unbounded" ref="SimpleMethodOperations"/>
@@ -1833,8 +1845,8 @@
     <xs:attributeGroup name="attlist.process">
         <xs:attribute name="field" use="required"/>
     </xs:attributeGroup>
-    <!-- validate-method calls a static Java method that takes a String and returns a boolean -->
     <xs:element name="validate-method">
+        <xs:annotation><xs:documentation>validate-method calls a static Java method that takes a String and returns a boolean</xs:documentation></xs:annotation>
         <xs:complexType>
             <xs:choice>
                 <xs:element ref="fail-message"/>
@@ -1953,8 +1965,8 @@
             </xs:choice>
         </xs:complexType>
     </xs:element>
-    <!-- Copy operation: if no to-field is specified, it is the same as the field on process -->
     <xs:element name="copy">
+        <xs:annotation><xs:documentation>Copy operation: if no to-field is specified, it is the same as the field on process</xs:documentation></xs:annotation>
         <xs:complexType>
             <xs:attributeGroup ref="attlist.copy"/>
         </xs:complexType>
@@ -1978,8 +1990,8 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
-    <!-- Convert operation: if no to-field is specified, it is the same as the field on process -->
     <xs:element name="convert">
+        <xs:annotation><xs:documentation>Convert operation: if no to-field is specified, it is the same as the field on process</xs:documentation></xs:annotation>
         <xs:complexType>
             <xs:choice>
                 <xs:element ref="fail-message"/>
