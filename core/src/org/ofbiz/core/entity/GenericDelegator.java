@@ -73,7 +73,7 @@ public class GenericDelegator {
     Iterator groups = UtilMisc.toIterator(modelGroupReader.getGroupNames());
     while(groups != null && groups.hasNext()) {
       String groupName = (String)groups.next();
-      String helperName = UtilProperties.getPropertyValue("servers", delegatorName + ".group." + groupName);
+      String helperName = this.getGroupHelperName(groupName);
       Debug.logInfo("[GenericDelegator.GenericDelegator] Delegator \"" + delegatorName + "\" initializing helper \"" + helperName + "\" for entity group \"" + groupName + "\".");
       TreeSet helpersDone = new TreeSet();
       if(helperName != null && helperName.length() > 0) {
@@ -157,6 +157,14 @@ public class GenericDelegator {
    */
   public String getEntityHelperName(String entityName) {
     String groupName = getModelGroupReader().getEntityGroupName(entityName);
+    return this.getGroupHelperName(groupName);
+  }
+  
+  /** Gets the helper name that corresponds to this delegator and the specified entityName
+   *@param entityName The name of the entity to get the helper for
+   *@return String with the helper name that corresponds to this delegator and the specified entityName
+   */
+  public String getGroupHelperName(String groupName) {
     return UtilProperties.getPropertyValue("servers", delegatorName + ".group." + groupName);
   }
   
