@@ -69,7 +69,7 @@
               <div class='tabletext'>
                 Any<input type=RADIO name='SEARCH_OPERATOR' value='OR' checked>
                 All<input type=RADIO name='SEARCH_OPERATOR' value='AND'>
-                <a href="javascript:document.keywordsearchform.submit()" class="buttontext">&nbsp;Find</a>
+                &nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">Find</a>
               </div>
             </form>
           </td>
