@@ -32,6 +32,7 @@ import javax.xml.parsers.*;
 
 import org.xml.sax.*;
 import org.w3c.dom.*;
+import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -47,31 +48,62 @@ public class ModelServiceReader {
 
     public static final String module = ModelServiceReader.class.getName();
 
-    protected static UtilCache readers = new UtilCache("ModelServiceReader", 0, 0);
+    protected static UtilCache readersUrl = new UtilCache("ModelServiceReader-ByURL", 0, 0);
+    protected static UtilCache readersLoader = new UtilCache("ModelServiceReader-ByResourceLoader", 0, 0);
+
+    /** is either from a URL or from a ResourceLoader (through the ResourceHandler) */
+    protected boolean isFromURL;
     protected URL readerURL = null;
+    protected ResourceHandler handler = null;
     protected Map modelServices = null;
 
     public static ModelServiceReader getModelServiceReader(URL readerURL) {
         ModelServiceReader reader = null;
-        //if ( readers.containsKey(readerURL) ) <-- this is unnecessary as it will return null below if not found
-        reader = (ModelServiceReader) readers.get(readerURL);
+        //if ( readersUrl.containsKey(readerURL) ) <-- this is unnecessary as it will return null below if not found
+        reader = (ModelServiceReader) readersUrl.get(readerURL);
         if (reader == null) { //don't want to block here
             synchronized (ModelServiceReader.class) {
                 //must check if null again as one of the blocked threads can still enter
-                reader = (ModelServiceReader) readers.get(readerURL);
+                reader = (ModelServiceReader) readersUrl.get(readerURL);
                 if (reader == null) {
                     Debug.logInfo("[Creating reader]: " + readerURL.toExternalForm(), module);
                     reader = new ModelServiceReader(readerURL);
-                    readers.put(readerURL, reader);
+                    readersUrl.put(readerURL, reader);
                 }
             }
         }
         return reader;
     }
 
-    public ModelServiceReader(URL readerURL) {
-        this.readerURL = readerURL;
+    public static ModelServiceReader getModelServiceReader(ResourceHandler handler) {
+        ModelServiceReader reader = null;
+        reader = (ModelServiceReader) readersLoader.get(handler);
+        if (reader == null) { //don't want to block here
+            synchronized (ModelServiceReader.class) {
+                //must check if null again as one of the blocked threads can still enter
+                reader = (ModelServiceReader) readersLoader.get(handler);
+                if (reader == null) {
+                    Debug.logInfo("[Creating reader]: " + handler, module);
+                    reader = new ModelServiceReader(handler);
+                    readersLoader.put(handler, reader);
+                }
+            }
+        }
+        return reader;
+    }
 
+    protected ModelServiceReader(URL readerURL) {
+        this.isFromURL = true;
+        this.readerURL = readerURL;
+        this.handler = null;
+        //preload models...
+        getModelServices();
+    }
+
+    protected ModelServiceReader(ResourceHandler handler) {
+        this.isFromURL = false;
+        this.readerURL = null;
+        this.handler = handler;
         //preload models...
         getModelServices();
     }
@@ -85,14 +117,30 @@ public class ModelServiceReader {
 
                     UtilTimer utilTimer = new UtilTimer();
 
-                    //utilTimer.timerString("Before getDocument in file " + readerURL);
-                    Document document = getDocument(readerURL);
-                    if (document == null) {
-                        modelServices = null;
-                        return null;
+                    Document document = null;
+                    if (this.isFromURL) {
+                        //utilTimer.timerString("Before getDocument in file " + readerURL);
+                        document = getDocument(readerURL);
+                        
+                        if (document == null) {
+                            modelServices = null;
+                            return null;
+                        }
+                    } else {
+                        //utilTimer.timerString("Before getDocument in " + handler);
+                        try {
+                            document = handler.getDocument();
+                        } catch (GenericConfigException e) {
+                            Debug.logError(e, "Error getting XML document from resource");
+                            return null;
+                        }
                     }
-
-                    //utilTimer.timerString("Before getDocumentElement in file " + readerURL);
+                    
+                    if (this.isFromURL) {
+                        //utilTimer.timerString("Before getDocumentElement in file " + readerURL);
+                    } else {
+                        //utilTimer.timerString("Before getDocumentElement in " + handler);
+                    }
                     Element docElement = document.getDocumentElement();
                     if (docElement == null) {
                         modelServices = null;
@@ -103,15 +151,16 @@ public class ModelServiceReader {
 
                     int i = 0;
                     if (curChild != null) {
-                        utilTimer.timerString(
-                                "Before start of service loop in file " + readerURL);
+                        if (this.isFromURL) {
+                            utilTimer.timerString("Before start of service loop in file " + readerURL);
+                        } else {
+                            utilTimer.timerString("Before start of service loop in " + handler);
+                        }
                         do {
-                            if (curChild.getNodeType() == Node.ELEMENT_NODE &&
-                                    "service".equals(curChild.getNodeName())) {
+                            if (curChild.getNodeType() == Node.ELEMENT_NODE && "service".equals(curChild.getNodeName())) {
                                 i++;
                                 Element curService = (Element) curChild;
-                                String serviceName = UtilXml.checkEmpty(
-                                        curService.getAttribute("name"));
+                                String serviceName = UtilXml.checkEmpty(curService.getAttribute("name"));
 
                                 //check to see if service with same name has already been read
                                 if (modelServices.containsKey(serviceName)) {
@@ -132,18 +181,22 @@ public class ModelServiceReader {
                                     String msg = "-- getModelService: # " + i + " Loaded service: " + serviceName +
                                             " (IN) " + reqIn + "/" + optIn + " (OUT) " + reqOut + "/" + optOut;
                                     Debug.logVerbose(msg, module);
-                                } else
+                                } else {
                                     Debug.logWarning(
                                             "-- -- SERVICE ERROR:getModelService: Could not create service for serviceName: " +
                                             serviceName, module);
+                                }
 
                             }
-                        } while ((curChild = curChild.getNextSibling()) != null)
-                                ;
-                    } else
+                        } while ((curChild = curChild.getNextSibling()) != null);
+                    } else {
                         Debug.logWarning("No child nodes found.", module);
-                    utilTimer.timerString("Finished file " + readerURL +
-                                          " - Total Services: " + i + " FINISHED");
+                    }
+                    if (this.isFromURL) {
+                        utilTimer.timerString("Finished file " + readerURL + " - Total Services: " + i + " FINISHED");
+                    } else {
+                        utilTimer.timerString("Finished document in " + handler + " - Total Services: " + i + " FINISHED");
+                    }
                 }
             }
         }

@@ -27,6 +27,7 @@ package org.ofbiz.core.service.job;
 
 import java.util.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -125,9 +126,9 @@ public class JobInvoker implements Runnable {
     private long getTTL() {
         long ttl = THREAD_TTL;
         try {
-            ttl = Long.parseLong(UtilProperties.getPropertyValue("servicesengine", "pool.thread.ttl"));
+            ttl = Long.parseLong(ServiceConfigUtil.getElementAttr("thread-pool", "ttl"));
         } catch (NumberFormatException nfe) {
-           Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
+           Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
         }
         return ttl;
     }

@@ -30,6 +30,7 @@ import java.util.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.job.*;
+import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.security.*;
 
 /**
@@ -318,9 +319,8 @@ public class ServiceDispatcher {
     // gets a value object from name/password pair
     private GenericValue getLoginObject(String localName, String username, String password)
             throws GenericServiceException {
-        String service = UtilProperties.getPropertyValue("servicesengine", "auth.service");
-        Map context = UtilMisc.toMap("login.username", username, "login.password",
-                                     password);
+        String service = ServiceConfigUtil.getElementAttr("authorization", "service-name");
+        Map context = UtilMisc.toMap("login.username", username, "login.password", password);
 
         if (service == null)
             throw new GenericServiceException("No Authentication Service Defined");

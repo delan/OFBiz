@@ -28,19 +28,23 @@ package org.ofbiz.core.service;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import org.w3c.dom.Element;
 
-import org.ofbiz.core.entity.*;
+import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
+import org.ofbiz.core.service.config.*;
 
 /**
  * Dispatcher Context
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    November 8, 2001
  *@version    1.0
  */
-public class DispatchContext implements Serializable{
+public class DispatchContext implements Serializable {
 
     public static final String module = DispatchContext.class.getName();
 
@@ -64,11 +68,13 @@ public class DispatchContext implements Serializable{
         this.dispatcher = dispatcher;
         this.attributes = new HashMap();
         Map localService = addReaders(readers);
-        if (localService != null)
+        if (localService != null) {
             modelService.put(name, localService);
+        }
         Map globalService = addGlobal();
-        if (globalService != null)
+        if (globalService != null) {
             modelService.put(GLOBAL_KEY, globalService);
+        }
     }
 
     /** Returns the service attribute for the given name, or null if there is no attribute by that name.
@@ -195,36 +201,56 @@ public class DispatchContext implements Serializable{
     }
 
     private Map addReader(URL readerURL) {
-        if (readerURL == null)
+        if (readerURL == null) {
+            Debug.logError("Cannot add reader with a null reader URL");
             return null;
-        ModelServiceReader reader =
-                ModelServiceReader.getModelServiceReader(readerURL);
-        if (reader == null)
+        }
+
+        ModelServiceReader reader = ModelServiceReader.getModelServiceReader(readerURL);
+        if (reader == null) {
+            Debug.logError("Could not load the reader for the reader URL " + readerURL);
             return null;
+        }
+        
         Map serviceMap = reader.getModelServices();
-        if (serviceMap == null)
-            return null;
-        else
-            return serviceMap;
+        return serviceMap;
     }
 
+    private Map addReader(ResourceHandler handler) {
+        ModelServiceReader reader = ModelServiceReader.getModelServiceReader(handler);
+        if (reader == null) {
+            Debug.logError("Could not load the reader for " + handler);
+            return null;
+        }
+        
+        Map serviceMap = reader.getModelServices();
+        return serviceMap;
+    }
+    
     private Map addGlobal() {
         Map globalMap = new HashMap();
-        String path = UtilProperties.getPropertyValue("servicesengine", "global.paths");
-        Debug.logVerbose("[addGlobal] paths: " + path, module);
-        if (path == null)
+
+        Element rootElement = null;
+        try {
+            rootElement = ServiceConfigUtil.getXmlRootElement();
+        } catch (GenericConfigException e) {
+            Debug.logError(e, "Error getting Service Engine XML root element");
             return null;
-        List paths = StringUtil.split(path, ";");
-        if (paths == null || paths.size() == 0)
-            return null;
-        Iterator i = paths.iterator();
-        while (i.hasNext()) {
-            URL readerURL = UtilURL.fromFilename((String) i.next());
-            if (readerURL != null)
-                globalMap.putAll(addReader(readerURL));
-            else
-                Debug.logWarning("[DispatchContext.addGlobal] : URL returned a 'null' service map", module);
         }
+        
+        List globalServicesElements = UtilXml.childElementList(rootElement, "global-services");
+        Iterator gseIter = globalServicesElements.iterator();
+        while (gseIter.hasNext()) {
+            Element globalServicesElement = (Element) gseIter.next();
+            ResourceHandler handler = new ResourceHandler(
+                    ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME, globalServicesElement);
+            
+            Map servicesMap = addReader(handler);
+            if (servicesMap != null) {
+                globalMap.putAll(servicesMap);
+            }
+        }
+        
         return globalMap;
     }
 }

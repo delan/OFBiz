@@ -29,6 +29,7 @@ import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -160,9 +161,9 @@ public class JobPoller implements Runnable {
     private int maxThreads() {
         int max = MAX_THREADS;
         try {
-            max = Integer.parseInt(UtilProperties.getPropertyValue("servicesengine", "pool.thread.max"));
+            max = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "max-threads"));
         } catch (NumberFormatException nfe) {
-           Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
+           Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
         }
         return max;
     }
@@ -170,9 +171,9 @@ public class JobPoller implements Runnable {
     private int minThreads() {
         int min = MIN_THREADS;
         try {
-            min = Integer.parseInt(UtilProperties.getPropertyValue("servicesengine", "pool.thread.min"));
+            min = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "min-threads"));
         } catch (NumberFormatException nfe) {
-           Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
+           Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
         }
         return min;
     }
@@ -180,9 +181,9 @@ public class JobPoller implements Runnable {
     private int jobsPerThread() {
         int jobs = MAX_JOBS;
         try {
-            jobs = Integer.parseInt(UtilProperties.getPropertyValue("servicesengine", "pool.thread.jobs"));
+            jobs = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "jobs"));
         } catch (NumberFormatException nfe) {
-           Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
+           Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
         }
         return jobs;
     }
@@ -190,21 +191,21 @@ public class JobPoller implements Runnable {
     private int invokerWaitTime() {
         int wait = JobInvoker.WAIT_TIME;
         try {
-            wait = Integer.parseInt(UtilProperties.getPropertyValue("servicesengine", "pool.thread.wait"));
+            wait = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "wait-millis"));
         } catch (NumberFormatException nfe) {
-           Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
+           Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
         }
         return wait;
     }
 
     private int pollWaitTime() {
-        int wait = POLL_WAIT;
+        int poll = POLL_WAIT;
         try {
-            wait = Integer.parseInt(UtilProperties.getPropertyValue("servicesengine", "pool.thread.poll"));
+            poll = Integer.parseInt(ServiceConfigUtil.getElementAttr("thread-pool", "poll-db-millis"));
         } catch (NumberFormatException nfe) {
-            Debug.logError("Problems reading values from serviceengine.properties file. Using defaults.", module);
+           Debug.logError("Problems reading values from serviceengine.xml file [" + nfe.toString() + "]. Using defaults.", module);
         }
-        return wait;
+        return poll;
     }
 }
 

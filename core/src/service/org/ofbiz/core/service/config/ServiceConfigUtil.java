@@ -51,4 +51,16 @@ public class ServiceConfigUtil {
     public static Document getXmlDocument() throws GenericConfigException {
         return ResourceLoader.getXmlDocument(ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME);
     }
+    
+    public static String getElementAttr(String elementName, String attrName) {
+        Element rootElement = null;
+        try {
+            rootElement = ServiceConfigUtil.getXmlRootElement();
+        } catch (GenericConfigException e) {
+            Debug.logError(e, "Error getting Service Engine XML root element");
+        }
+        Element element = UtilXml.firstChildElement(rootElement, elementName);
+        if (element == null) return null;
+        return element.getAttribute(attrName);
+    }
 }

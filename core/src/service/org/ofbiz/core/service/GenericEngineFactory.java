@@ -27,9 +27,12 @@ package org.ofbiz.core.service;
 
 import java.util.*;
 import java.lang.reflect.*;
+import org.w3c.dom.Element;
 
-import org.ofbiz.core.entity.*;
+import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.config.*;
 
 /**
  * <p><b>Title:</b> Generic Engine Factory Class
@@ -67,9 +70,20 @@ public class GenericEngineFactory {
      */
     public static GenericEngine getGenericEngine(String engineName, ServiceDispatcher dispatcher)
             throws GenericServiceException {
-        String className =
-                UtilProperties.getPropertyValue("servicesengine", engineName + ".engine",
-                                                "org.ofbiz.core.service.StandardJavaEngine");
+        
+        Element rootElement = null;
+        try {
+            rootElement = ServiceConfigUtil.getXmlRootElement();
+        } catch (GenericConfigException e) {
+            throw new GenericServiceException("Error getting Service Engine XML root element", e);
+        }
+        Element engineElement = UtilXml.firstChildElement(rootElement, "engine", "name", engineName);
+        if (engineElement == null) {
+            throw new GenericServiceException("Cannot find an engine definition for the engine name [" + engineName + "] in the serviceengine.xml file");
+        }
+
+        String className = engineElement.getAttribute("class");
+
         Class[] paramTypes = new Class[]{ServiceDispatcher.class};
         Object[] params = new Object[]{dispatcher};
         GenericEngine engine = null;
