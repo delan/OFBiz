@@ -22,8 +22,8 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.4 $
- *@since      2.1
+ *@version    $Revision: 1.5 $
+ *@since      3.0
 -->
 
 <#assign layoutSettings = requestAttributes.layoutSettings>
@@ -35,6 +35,9 @@
     <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
+<#assign primaryHTMLField= page.getProperty("primaryHTMLField")?if_exists />
+<#assign secondaryHTMLField= page.getProperty("secondaryHTMLField")?if_exists />
+<#if primaryHTMLField?exists && (primaryHTMLField?length >0)>
     <script type="text/javascript" language="javascript"> 
       _editor_url = "/content/images/htmlarea/"; // omit the final slash 
     </script> 
@@ -47,7 +50,6 @@
                                                        type='text/javascript'></script>
     <script language='javascript' src='<@ofbizContentUrl>/content/images/htmlarea/popupwin.js</@ofbizContentUrl>' 
                                                        type='text/javascript'></script>
-
     <style type="text/css">
         @import url(<@ofbizContentUrl>/content/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
     
@@ -67,16 +69,15 @@
         var editor = null;
         var summary = null;
         function initEditor() {
-        <#assign primaryHTMLField= page.getProperty("primaryHTMLField")?if_exists />
         <#if primaryHTMLField?exists>
             primaryHTMLArea = new HTMLArea("${primaryHTMLField}"); primaryHTMLArea.generate();
         </#if>
-        <#assign secondaryHTMLField= page.getProperty("secondaryHTMLField")?if_exists />
         <#if secondaryHTMLField?exists>
             secondaryHTMLArea = new HTMLArea("${secondaryHTMLField}"); secondaryHTMLArea.generate();
         </#if>
         }
     </script>
+</#if>
 
     <script language="JavaScript">
         // This code inserts the value lookedup by a popup window back into the associated form element
@@ -96,7 +97,7 @@
 
 </head>
 
-<body <#if primaryHTMLField?exists>onLoad="initEditor()"</#if> >
+<body <#if primaryHTMLField?exists && (primaryHTMLField?length >0)>onLoad="initEditor()"</#if> >
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <tr>
     <td width='100%'>
