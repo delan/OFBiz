@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.30 2004/04/29 00:13:53 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.31 2004/05/08 17:40:35 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,6 +24,7 @@ package org.ofbiz.product.product;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -59,7 +60,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -466,8 +467,10 @@ public class ProductSearch {
 
                     productSearchResult.set("productSearchResultId", productSearchResultId);
                     productSearchResult.set("visitId", this.visitId);
-                    productSearchResult.set("orderByName", this.resultSortOrder.getOrderName());
-                    productSearchResult.set("isAscending", this.resultSortOrder.isAscending() ? "Y" : "N");
+                    if (this.resultSortOrder != null) {
+                        productSearchResult.set("orderByName", this.resultSortOrder.getOrderName());
+                        productSearchResult.set("isAscending", this.resultSortOrder.isAscending() ? "Y" : "N");
+                    }
                     productSearchResult.set("numResults", numResults);
                     productSearchResult.set("secondsTotal", secondsTotal);
                     productSearchResult.set("searchDate", nowTimestamp);
@@ -641,6 +644,96 @@ public class ProductSearch {
                     }
                 } else {
                     if (!this.productFeatureId.equals(that.productFeatureId)) {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public static class FeatureSetConstraint extends ProductSearchConstraint {
+        public static final String constraintName = "Feature Set";
+        protected Set productFeatureIdSet;
+
+        public FeatureSetConstraint(Collection productFeatureIdSet) {
+            this.productFeatureIdSet = new HashSet(productFeatureIdSet);
+        }
+
+        public void addConstraint(ProductSearchContext productSearchContext) {
+            // make index based values and increment
+            String entityAlias = "PFA" + productSearchContext.index;
+            String prefix = "pfa" + productSearchContext.index;
+            productSearchContext.index++;
+
+            productSearchContext.dynamicViewEntity.addMemberEntity(entityAlias, "ProductFeatureAppl");
+            productSearchContext.dynamicViewEntity.addAlias(entityAlias, prefix + "ProductFeatureId", "productFeatureId", null, null, null, null);
+            productSearchContext.dynamicViewEntity.addAlias(entityAlias, prefix + "FromDate", "fromDate", null, null, null, null);
+            productSearchContext.dynamicViewEntity.addAlias(entityAlias, prefix + "ThruDate", "thruDate", null, null, null, null);
+            productSearchContext.dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
+            productSearchContext.entityConditionList.add(new EntityExpr(prefix + "ProductFeatureId", EntityOperator.IN, productFeatureIdSet));
+            productSearchContext.entityConditionList.add(new EntityExpr(new EntityExpr(prefix + "ThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr(prefix + "ThruDate", EntityOperator.GREATER_THAN, productSearchContext.nowTimestamp)));
+            productSearchContext.entityConditionList.add(new EntityExpr(prefix + "FromDate", EntityOperator.LESS_THAN, productSearchContext.nowTimestamp));
+
+            // add in productSearchConstraint, don't worry about the productSearchResultId or constraintSeqId, those will be fill in later
+            StringBuffer featureIdInfo = new StringBuffer();
+            Iterator featureIdIter = this.productFeatureIdSet.iterator();
+            while (featureIdIter.hasNext()) {
+                String featureId = (String) featureIdIter.next();
+                featureIdInfo.append(featureId);
+                if (featureIdIter.hasNext()) {
+                    featureIdInfo.append(",");
+                }
+            }
+            
+            productSearchContext.productSearchConstraintList.add(productSearchContext.getDelegator().makeValue("ProductSearchConstraint", UtilMisc.toMap("constraintName", constraintName, "infoString", featureIdInfo.toString())));
+        }
+
+        public String prettyPrintConstraint(GenericDelegator delegator, boolean detailed) {
+            StringBuffer infoOut = new StringBuffer();
+            try {
+                Iterator featureIdIter = this.productFeatureIdSet.iterator();
+                while (featureIdIter.hasNext()) {
+                    String featureId = (String) featureIdIter.next();
+                    GenericValue productFeature = delegator.findByPrimaryKeyCache("ProductFeature", UtilMisc.toMap("productFeatureId", featureId));
+                    GenericValue productFeatureType = productFeature == null ? null : productFeature.getRelatedOneCache("ProductFeatureType");
+                    if (productFeatureType == null) {
+                        infoOut.append("Feature: ");
+                    } else {
+                        infoOut.append(productFeatureType.getString("description"));
+                        infoOut.append(": ");
+                    }
+                    if (productFeature == null) {
+                        infoOut.append("[");
+                        infoOut.append(featureId);
+                        infoOut.append("]");
+                    } else {
+                        infoOut.append(productFeature.getString("description"));
+                    }
+                    
+                    if (featureIdIter.hasNext()) {
+                        infoOut.append(", ");
+                    }
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error finding ProductFeature and Type information for constraint pretty print", module);
+            }
+            
+            return infoOut.toString();
+        }
+
+        public boolean equals(Object obj) {
+            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
+            if (psc instanceof FeatureConstraint) {
+                FeatureSetConstraint that = (FeatureSetConstraint) psc;
+                if (this.productFeatureIdSet == null) {
+                    if (that.productFeatureIdSet != null) {
+                        return false;
+                    }
+                } else {
+                    if (!this.productFeatureIdSet.equals(that.productFeatureIdSet)) {
                         return false;
                     }
                 }

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.9 2004/04/24 07:33:44 jonesde Exp $
+ * $Id: EntityUtil.java,v 1.10 2004/05/08 17:40:34 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -641,5 +641,58 @@ public class EntityUtil {
             entity.set("thruDate",now);
             entity.store();
         }
+    }
+    
+    public static List getFieldListFromEntityList(List genericValueList, String fieldName, boolean distinct) {
+        if (genericValueList == null || fieldName == null) {
+            return null;
+        }
+        List fieldList = new ArrayList(genericValueList.size());
+        Set distinctSet = null;
+        if (distinct) {
+            distinctSet = new HashSet();
+        }
+        
+        Iterator genericValueIter = genericValueList.iterator();
+        while (genericValueIter.hasNext()) {
+            GenericValue value = (GenericValue) genericValueIter.next();
+            Object fieldValue = value.get(fieldName);
+            if (distinct) {
+                if (!distinctSet.contains(fieldValue)) {
+                    fieldList.add(fieldValue);
+                    distinctSet.add(fieldValue);
+                }
+            } else {
+                fieldList.add(fieldValue);
+            }
+        }
+        
+        return fieldList;
+    }
+    
+    public static List getFieldListFromEntityListIterator(EntityListIterator genericValueEli, String fieldName, boolean distinct) {
+        if (genericValueEli == null || fieldName == null) {
+            return null;
+        }
+        List fieldList = new LinkedList();
+        Set distinctSet = null;
+        if (distinct) {
+            distinctSet = new HashSet();
+        }
+        
+        GenericValue value = null;
+        while ((value = (GenericValue) genericValueEli.next()) != null) {
+            Object fieldValue = value.get(fieldName);
+            if (distinct) {
+                if (!distinctSet.contains(fieldValue)) {
+                    fieldList.add(fieldValue);
+                    distinctSet.add(fieldValue);
+                }
+            } else {
+                fieldList.add(fieldValue);
+            }
+        }
+        
+        return fieldList;
     }
 }

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.32 $
+ *@version    $Revision: 1.33 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -435,7 +435,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
                 <div class="tabletext">${productReview.productReview?if_exists}</div>
               </td>
             </tr>
-            <tr><td colspan="3"><hr class='sepbar'></td></tr>
+            <tr><td colspan="3"><hr class="sepbar"/></td></tr>
           </table>
         </td>
       </tr>
@@ -468,7 +468,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
   <#if assocProducts?has_content>
     <tr><td>&nbsp;</td></tr>
     <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div></td></tr>
-    <tr><td><hr class='sepbar'></td></tr>
+    <tr><td><hr class="sepbar"/></td></tr>
     <#list assocProducts as productAssoc>
       <tr><td>
         <div class="tabletext">
@@ -490,7 +490,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
         </td>
       </tr>
       <#local listIndex = listIndex + 1>
-      <tr><td><hr class='sepbar'></td></tr>
+      <tr><td><hr class="sepbar"/></td></tr>
     </#list>
     ${setRequestAttribute("optProductId", "")}
     ${setRequestAttribute("formNamePrefix", "")}
@@ -501,14 +501,33 @@ ${requestAttributes.virtualJavaScript?if_exists}
 <#assign listIndex = 1>
 ${setRequestAttribute("productValue", productValue)}
 
-<table width='100%'>
+<table width="100%">
   <#-- obsolete -->
-  <@associated assocProducts=requestAttributes.obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
+  <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
   <#-- cross sell -->
-  <@associated assocProducts=requestAttributes.crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:" formNamePrefix="cssl" targetRequestName="crosssell"/>
+  <@associated assocProducts=crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:" formNamePrefix="cssl" targetRequestName="crosssell"/>
   <#-- up sell -->
-  <@associated assocProducts=requestAttributes.upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>
+  <@associated assocProducts=upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>
   <#-- obsolescence -->
-  <@associated assocProducts=requestAttributes.obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce" targetRequestName=""/>
+  <@associated assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce" targetRequestName=""/>
 </table>
+
+<#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
+<#if commonFeatureResultIds?has_content>
+  <div class="head2">Similar Products That Might Interest You...</div>
+  <hr class="sepbar"/>
+
+  <#list commonFeatureResultIds as commonFeatureResultId>
+    <div class="tabletext">
+      ${setRequestAttribute("optProductId", commonFeatureResultId)}
+      ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
+      ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
+      <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
+      ${pages.get("/catalog/productsummary.ftl")}
+    </div>
+    <#if commonFeatureResultId_has_next>
+      <hr class="sepbar"/>
+    </#if>
+  </#list>
+</#if>
 
