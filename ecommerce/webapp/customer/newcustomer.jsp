@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Login Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -36,11 +32,12 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<%String previousParams = (String) session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
+<%String fontColor = "Black";%>
 
 <p class="head1">Request a New Account</p>
 <br>
 <p class='tabletext'>If you already have an account, <a href='<ofbiz:url>/checkLogin/main</ofbiz:url>' class='buttontext'>log in here</a>.</p>
-<%String fontColor = "Black";%>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -59,7 +56,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-<form method="post" action="<ofbiz:url>/createcustomer</ofbiz:url>" name="newuserform" style='margin:0;'>
+<form method="post" action="<ofbiz:url>/createcustomer<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="newuserform" style='margin:0;'>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Title</font></div></td>

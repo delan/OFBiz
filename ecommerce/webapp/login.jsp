@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Login Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
@@ -117,7 +113,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-          <form method="POST" action="<ofbiz:url>/newcustomer</ofbiz:url>" style='margin: 0;'>
+          <form method="POST" action="<ofbiz:url>/newcustomer<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" style='margin: 0;'>
             <div align=center>You may create a new account here:</div>
             <div align=center><input type="submit" value="Create"></div>
           </form>
