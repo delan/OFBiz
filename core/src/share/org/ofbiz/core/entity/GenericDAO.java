@@ -809,14 +809,20 @@ public class GenericDAO {
       ResultSet rsCols = dbData.getColumns(null, null, null, null);
       while(rsCols.next()) {
         try {
-          String tableName = rsCols.getString("TABLE_NAME");
-          String colName = rsCols.getString("COLUMN_NAME");
-          List tableCols = (List)colInfo.get(tableName.toUpperCase());
-          if(tableCols == null) {
-            tableCols = new Vector();
-            colInfo.put(tableName.toUpperCase(), tableCols);
+          ColumnCheckInfo ccInfo = new ColumnCheckInfo();
+          ccInfo.tableName = rsCols.getString("TABLE_NAME").toUpperCase();
+          ccInfo.columnName = rsCols.getString("COLUMN_NAME").toUpperCase();
+          ccInfo.typeName = rsCols.getString("TYPE_NAME").toUpperCase();
+          ccInfo.columnSize = rsCols.getInt("COLUMN_SIZE");
+          ccInfo.decimalDigits = rsCols.getInt("DECIMAL_DIGITS");
+          ccInfo.isNullable = rsCols.getString("IS_NULLABLE").toUpperCase();
+          
+          List tableColInfo = (List)colInfo.get(ccInfo.tableName);
+          if(tableColInfo == null) {
+            tableColInfo = new Vector();
+            colInfo.put(ccInfo.tableName, tableColInfo);
           }
-          tableCols.add(colName.toUpperCase());
+          tableColInfo.add(ccInfo);
         }
         catch(SQLException sqle) {
           String message = "Error getting column info for column. Error was:" + sqle.toString();
@@ -877,16 +883,69 @@ public class GenericDAO {
           List colList = (List)colInfo.get(entity.tableName.toUpperCase());
           int numCols=0;
           for(; numCols<colList.size(); numCols++) {
-            String colName = (String)colList.get(numCols);
+            ColumnCheckInfo ccInfo  = (ColumnCheckInfo)colList.get(numCols);
             //-list all columns that do not have a corresponding field
-            if(fieldColNames.containsKey(colName)) {
+            if(fieldColNames.containsKey(ccInfo.columnName)) {
               ModelField field = null;
-              field = (ModelField)fieldColNames.remove(colName);
+              field = (ModelField)fieldColNames.remove(ccInfo.columnName);
+              ModelFieldType modelFieldType = modelFieldTypeReader.getModelFieldType(field.type);
               
-              //make sure each corresponding column is of the correct type
+              if(modelFieldType != null) {
+                //make sure each corresponding column is of the correct type
+                String fullTypeStr = modelFieldType.sqlType;
+                String typeName;              
+                int columnSize = -1;
+                int decimalDigits = -1;
+
+                int openParen = fullTypeStr.indexOf('(');
+                int closeParen = fullTypeStr.indexOf(')');
+                int comma = fullTypeStr.indexOf(',');
+
+                if(openParen > 0 && closeParen > 0 && closeParen > openParen) {
+                  typeName = fullTypeStr.substring(0, openParen);
+                  if(comma > 0 && comma > openParen && comma < closeParen) {
+                    String csStr = fullTypeStr.substring(openParen+1, comma);
+                    try { columnSize = Integer.parseInt(csStr); }
+                    catch(NumberFormatException e) { Debug.logError(e); }
+
+                    String ddStr = fullTypeStr.substring(comma+1, closeParen);
+                    try { decimalDigits = Integer.parseInt(ddStr); }
+                    catch(NumberFormatException e) { Debug.logError(e); }
+                  }
+                  else {
+                    String csStr = fullTypeStr.substring(openParen+1, closeParen);
+                    try { columnSize = Integer.parseInt(csStr); }
+                    catch(NumberFormatException e) { Debug.logError(e); }
+                  }
+                }
+                else {
+                  typeName = fullTypeStr;
+                }
+
+                if(!ccInfo.typeName.equals(typeName.toUpperCase())) {
+                  String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" is of type \"" + ccInfo.typeName + "\" in the database, but is defined as type \"" + typeName + "\" in the entity definition.";
+                  Debug.logError("[GenericDAO.checkDb] " + message);
+                  if(messages != null) messages.add(message);
+                }
+                if(columnSize != -1 && columnSize != ccInfo.columnSize) {
+                  String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" has a column size of \"" + ccInfo.columnSize + "\" in the database, but is defined to have a column size of \"" + columnSize + "\" in the entity definition.";
+                  Debug.logError("[GenericDAO.checkDb] " + message);
+                  if(messages != null) messages.add(message);
+                }
+                if(decimalDigits != -1 && decimalDigits != ccInfo.decimalDigits) {
+                  String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" has a decimalDigits of \"" + ccInfo.decimalDigits + "\" in the database, but is defined to have a decimalDigits of \"" + decimalDigits + "\" in the entity definition.";
+                  Debug.logError("[GenericDAO.checkDb] " + message);
+                  if(messages != null) messages.add(message);
+                }
+              }
+              else {
+                String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" has a field type name of \"" + field.type + "\" which is not found in the field type definitions";
+                Debug.logError("[GenericDAO.checkDb] " + message);
+                if(messages != null) messages.add(message);
+              }
             }
             else {
-              String message = "Column \"" + colName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" exists in the database but has no corresponding field";
+              String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" exists in the database but has no corresponding field";
               Debug.logError("[GenericDAO.checkDb] " + message);
               if(messages != null) messages.add(message);
             }
@@ -951,5 +1010,14 @@ public class GenericDAO {
       if(messages != null) messages.add(message);
     }
     timer.timerString("[GenericDAO.checkDb] Finished Checking Entity Database");
+  }
+  
+  class ColumnCheckInfo {
+    public String tableName;
+    public String columnName;
+    public String typeName;
+    public int columnSize;
+    public int decimalDigits;
+    public String isNullable; //YES/NO or "" = ie nobody knows
   }
 }

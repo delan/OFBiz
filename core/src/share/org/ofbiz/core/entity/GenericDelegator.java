@@ -86,7 +86,7 @@ public class GenericDelegator {
         }
         helpersDone.add(helperName);
         //pre-load field type defs
-        ModelFieldTypeReader.getModelFieldTypeReader(helperName);
+        ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
         //get the helper and if configured, do the datasource check
         GenericHelper helper = GenericHelperFactory.getHelper(helperName);
         if(UtilProperties.propertyValueEqualsIgnoreCase("servers", helperName + ".datasource.check.on.start", "true"))
