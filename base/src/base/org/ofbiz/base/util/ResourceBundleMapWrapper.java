@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceBundleMapWrapper.java,v 1.2 2004/05/29 16:22:17 jonesde Exp $
+ * $Id: ResourceBundleMapWrapper.java,v 1.3 2004/06/03 01:54:33 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import java.util.Set;
  * Generic ResourceBundle Map Wrapper, given ResourceBundle allows it to be used as a Map
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class ResourceBundleMapWrapper implements Map {
@@ -47,12 +47,14 @@ public class ResourceBundleMapWrapper implements Map {
         this.resourceBundle = resourceBundle;
         topLevelMap = new HashMap();
         // NOTE: this should return all keys, including keys from parent ResourceBundles, if not then something else must be done here...
-        Enumeration keyNum = resourceBundle.getKeys();
-        while (keyNum.hasMoreElements()) {
-            String key = (String) keyNum.nextElement();
-            //resourceBundleMap.put(key, bundle.getObject(key));
-            Object value = resourceBundle.getObject(key);
-            topLevelMap.put(key, value);
+        if (resourceBundle != null) {
+            Enumeration keyNum = resourceBundle.getKeys();
+            while (keyNum.hasMoreElements()) {
+                String key = (String) keyNum.nextElement();
+                //resourceBundleMap.put(key, bundle.getObject(key));
+                Object value = resourceBundle.getObject(key);
+                topLevelMap.put(key, value);
+            }
         }
         topLevelMap.put("_RESOURCE_BUNDLE_", resourceBundle);
     }
@@ -98,11 +100,13 @@ public class ResourceBundleMapWrapper implements Map {
      */
     public Object get(Object arg0) {
         Object value = this.topLevelMap.get(arg0);
-        if (value == null) {
-            value = this.resourceBundle.getObject((String) arg0);
-        }
-        if (value == null) {
-            value = this.resourceBundle.getString((String) arg0);
+        if (resourceBundle != null) {
+            if (value == null) {
+                value = this.resourceBundle.getObject((String) arg0);
+            }
+            if (value == null) {
+                value = this.resourceBundle.getString((String) arg0);
+            }
         }
         if (value == null) {
             value = arg0;
@@ -157,5 +161,9 @@ public class ResourceBundleMapWrapper implements Map {
      */
     public Set entrySet() {
         return this.topLevelMap.entrySet();
+    }
+    
+    public ResourceBundle getResourceBundle() {
+        return this.resourceBundle;
     }
 }
