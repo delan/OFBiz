@@ -188,6 +188,7 @@ public class ProductServices {
             return result;
         }
 
+        productId = productId == null ? productIdTo : productId;
         GenericValue product = null;
         try {
             product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
