@@ -151,7 +151,7 @@
       <%if(partyContactMechIterator != null && partyContactMechIterator.hasNext()){%>
         <table width="100%" border="0" cellpadding="1">
           <tr align=left valign=bottom>
-            <th>Contact Type</th>
+            <th>Contact&nbsp;Type</th>
             <th width="5">&nbsp;</th>
             <th>Information</th>
             <th colspan='2'>Soliciting&nbsp;OK?</th>
