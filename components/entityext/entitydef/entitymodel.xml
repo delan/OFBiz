@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  */
 -->
 
@@ -43,9 +43,34 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
+  <!--  - org.ofbiz.entity.group -->
   <!--  - org.ofbiz.entity.synchronization -->
   <!-- ========================================================= -->
 
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.entity.group -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="EntityGroup"
+            package-name="org.ofbiz.entity.group"
+            title="Entity Grouping Entity">
+      <field name="entityGroupId" type="id-ne"></field>
+      <field name="entityGroupName" type="name"></field>
+      <prim-key field="entityGroupId"/>
+    </entity>
+    <entity entity-name="EntityGroupEntry"
+            package-name="org.ofbiz.entity.group"
+            title="Entity Grouping Entity">
+      <field name="entityGroupId" type="id-ne"></field>
+      <field name="entityOrPackage" type="long-varchar"></field>
+      <field name="applEnumId" type="id-ne"></field>
+      <prim-key field="entityGroupId"/>
+      <prim-key field="entityOrPackage"/>
+      <relation type="one" fk-name="ENTGRP_GRP" rel-entity-name="EntityGroup">
+        <key-map field-name="entityGroupId"/>
+      </relation>
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.entity.synchronization -->
@@ -62,6 +87,9 @@
       <field name="targetDelegatorName" type="long-varchar"></field>
       <field name="keepRemoveInfoHours" type="floating-point"></field>
       <prim-key field="entitySyncId"/>
+      <relation type="many" rel-entity-name="EntitySyncInclGrpDetailView">
+        <key-map field-name="entitySyncId"/>
+      </relation>
     </entity>
     <entity entity-name="EntitySyncHistory"
             package-name="org.ofbiz.entity.synchronization"
@@ -107,6 +135,31 @@
         <key-map field-name="entitySyncId"/>
       </relation>
     </entity>
+    <entity entity-name="EntitySyncIncludeGroup"
+            package-name="org.ofbiz.entity.synchronization"
+            title="Entity Synchronization Include Entity Group Entity">
+      <field name="entitySyncId" type="id-ne"></field>
+      <field name="entityGroupId" type="id-ne"></field>
+      <prim-key field="entitySyncId"/>
+      <prim-key field="entityGroupId"/>
+      <relation type="one" fk-name="ENTSNCGU_GRP" rel-entity-name="EntityGroup">
+        <key-map field-name="entityGroupId"/>
+      </relation>
+      <relation type="one" fk-name="ENTSNCGU_SNC" rel-entity-name="EntitySync">
+        <key-map field-name="entitySyncId"/>
+      </relation>
+    </entity>
+    <view-entity entity-name="EntitySyncInclGrpDetailView"
+    	    package-name="org.ofbiz.entity.synchronization"
+    	    title="Entity Synchronization Include Entity Group Detail View Entity">
+      <member-entity entity-alias="ESIG" entity-name="EntitySyncIncludeGroup"/>
+      <member-entity entity-alias="EGE" entity-name="EntityGroupEntry"/>
+      <alias-all entity-alias="ESIG"/>
+      <alias-all entity-alias="EGE"/>
+      <view-link entity-alias="ESIG" rel-entity-alias="EGE">
+        <key-map field-name="entityGroupId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="EntitySyncRemove"
             package-name="org.ofbiz.entity.synchronization"
             title="Entity Synchronization Remove Entity">
