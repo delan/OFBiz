@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -42,7 +42,7 @@
     <tr>
       <td valign="top">
           <a href="<@ofbizUrl>/${targetRequestName}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>">
-            <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${smallImageUrl}</@ofbizContentUrl>" align="left" height="50" class="imageborder" border="0">
+            <img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${smallImageUrl}</@ofbizContentUrl>" align="left" width="50" class="imageborder" border="0"/>
           </a>
       </td>
       <td align="left" valign="top" width="100%">
