@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.32 2004/08/12 21:33:33 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.32 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ProductStoreWorker {

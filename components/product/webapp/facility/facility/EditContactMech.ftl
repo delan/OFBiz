@@ -25,7 +25,7 @@
  *@author     Andy Zeneski
  *@author     David E. Jones
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.3 $
+ *@version    $Rev:$
  *@since      2.2
  */
 -->

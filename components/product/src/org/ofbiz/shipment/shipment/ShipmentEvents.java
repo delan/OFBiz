@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentEvents.java,v 1.3 2004/04/10 13:55:27 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.entity.util.ByteWrapper;
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class ShipmentEvents {

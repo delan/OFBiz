@@ -21,7 +21,7 @@
  *
  *@author     Nathan De Graw
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.3 $
+ *@version    $Rev:$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>

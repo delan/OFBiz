@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentServices.java,v 1.7 2004/08/13 18:57:03 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.common.geo.GeoWorker;
  * ShipmentServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ShipmentServices {

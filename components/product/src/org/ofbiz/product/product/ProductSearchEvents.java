@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchEvents.java,v 1.10 2004/07/10 06:04:10 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.product.product.ProductSearch.ResultSortOrder;
  * Product Search Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ProductSearchEvents {

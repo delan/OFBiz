@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordSearch.java,v 1.13 2004/02/05 09:45:26 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -44,7 +44,7 @@ import org.ofbiz.entity.GenericValue;
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.13 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class KeywordSearch {

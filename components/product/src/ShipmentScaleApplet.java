@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentScaleApplet.java,v 1.3 2003/09/11 03:10:07 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import netscape.javascript.JSObject;
  * ShipmentScaleApplet - Applet for reading weight from a scale and input into the browser
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ShipmentScaleApplet extends Applet implements SerialPortEventListener, CommPortOwnershipListener {

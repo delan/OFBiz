@@ -1,5 +1,5 @@
 /*
- * $Id: PromoServices.java,v 1.3 2004/05/23 00:08:00 jonesde Exp $
+ * $Id$
  * 
  * Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  * 
@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  * Promotions Services
  * 
  * @author Nathan De Graw
- * @version $Revision: 1.3 $
+ * @version $Rev:$
  * @since 3.0
  */
 public class PromoServices {

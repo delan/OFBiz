@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.3 $
+ *@version    $Rev:$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
