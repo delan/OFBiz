@@ -168,7 +168,7 @@
               <td nowrap><div class="tabletext"><b>FlatBasePrice</b></div></td>
               <td nowrap><div class="tabletext"><b>FlatItemPrice</b></div></td>
             </tr>
-            <tr class="viewManyTR2">
+            <tr class="viewManyTR1">
               <td><div class="tabletext"><input type="text" name="flatPercent" value="0" size="5">&nbsp;%</div></td>
               <td><div class="tabletext"><input type="text" name="flatPrice" value="0.00" size="5"></div></td>
               <td><div class="tabletext"><input type="text" name="flatItemPrice" value="0.00" size="5"></div></td>
@@ -200,7 +200,7 @@
               <td nowrap><div class="tabletext"><b>QtyUOM</b></div></td>
               <td nowrap><div class="tabletext"><b>UnitQtyAmt</b></div></td>
             </tr>
-            <tr class="viewManyTR2">
+            <tr class="viewManyTR1">
               <td><div class="tabletext"><input type="text" name="qmin" size="4"> - <input type="text" name="qmax" size="4"></div></td>
               <td><div class="tabletext"><select name="quom"><%= getUOMList(delegator, "QUANTITY_MEASURE") %></select></div></td>
               <td><div class="tabletext"><input type="text" name="qprice" size="5"></div></td>
