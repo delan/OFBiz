@@ -25,7 +25,8 @@
 
 <%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.w3c.dom.*" %>
-<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.* " %>
+<%@ page import="java.io.InputStream, java.io.StringWriter, java.io.FileReader, freemarker.template.*, freemarker.ext.dom.NodeModel, java.io.IOException, org.xml.sax.InputSource " %>
 <%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -34,10 +35,9 @@
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 <%
   String filename = request.getParameter("filename");
+  String fmfilename = request.getParameter("fmfilename");
   boolean isUrl = request.getParameter("IS_URL") != null;
-  boolean mostlyInserts = request.getParameter("mostlyInserts") != null;
-  String fulltext = request.getParameter("fulltext");
-  
+
   String txTimeoutStr = UtilFormatOut.checkEmpty(request.getParameter("txTimeout"), "7200");
   Integer txTimeout = null;
   try {
@@ -46,6 +46,8 @@
       txTimeout = new Integer(7200);
       %><div>ERROR: TX Timeout not a valid number, setting to 7200 seconds (2 hours): <%=e%><%
   }
+  boolean mostlyInserts = request.getParameter("mostlyInserts") != null;
+  String fulltext = request.getParameter("fulltext");
 %>
 
 <h3>XML Import to DataSource(s)</h3>
@@ -55,6 +57,8 @@
   <h3>Import:</h3>
 
   <FORM method=POST action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
+    <div>Absolute Filename of FreeMarker template file to filter data by (optional):</div>
+    <INPUT type=text class='inputBox' size='60' name='fmfilename' value='<%=UtilFormatOut.checkNull(fmfilename)%>'> 
     <div>Absolute Filename or URL:</div>
     <INPUT type=text class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'> 
     Is URL?:<INPUT type=checkbox name='IS_URL' <%=isUrl?"checked":""%>> 
@@ -71,20 +75,45 @@
     <h3>Results:</h3>
 
 
+
   <%if (filename != null && filename.length() > 0) {%>
   <%
-    URL url = null;
-    try { url = isUrl?new URL(filename):UtilURL.fromFilename(filename); }
-    catch(java.net.MalformedURLException e) { %><div>ERROR: <%=e.toString()%></div><% }
+      long numberRead = -1;
+      EntitySaxReader reader = new EntitySaxReader(delegator);
+      if (mostlyInserts) {
+        reader.setUseTryInsertMethod(true);
+      }
+      if (txTimeout != null) {
+          reader.setTransactionTimeout(txTimeout.intValue());
+      }
+      URL url = null;
+      try { url = isUrl?new URL(filename):UtilURL.fromFilename(filename); }
+      catch(java.net.MalformedURLException e) { %><div>ERROR: <%=e.toString()%></div><% } 
+      if (UtilValidate.isNotEmpty(fmfilename)) {
+        FileReader templateReader = null;
+        try { templateReader = new FileReader(fmfilename);}
+        catch(java.io.FileNotFoundException e) { %><div>ERROR: <%=e.toString()%></div><% } 
+        StringWriter outWriter = new StringWriter();
+        Configuration conf = org.ofbiz.content.webapp.ftl.FreeMarkerWorker.makeDefaultOfbizConfig();
+        Template template = null;
+        try { template = new Template("FMImportFilter", templateReader, conf); }
+        catch(IOException e) { %><div>ERROR: <%=e.toString()%></div><% } 
+        Map context = new HashMap();
+        InputStream is = null;
+        try { is = url.openStream(); }
+        catch(IOException e) { %><div>ERROR: <%=e.toString()%></div><% } 
+        NodeModel nodeModel = NodeModel.parse(new InputSource(is));
+        context.put("doc", nodeModel);
+        template.process(context, outWriter);
+        String s = outWriter.toString();
+        //Debug.logInfo("filtered xml:" + s, "JSP");
 
-    EntitySaxReader reader = new EntitySaxReader(delegator);
-    if (mostlyInserts) {
-      reader.setUseTryInsertMethod(true);
-    }
-    if (txTimeout != null) {
-        reader.setTransactionTimeout(txTimeout.intValue());
-    }
-    long numberRead = reader.parse(url);
+        numberRead = reader.parse(s);
+        Debug.logInfo("numberRead(s):" + numberRead, "JSP");
+      } else {
+        numberRead = reader.parse(url);
+        Debug.logInfo("numberRead(url):" + numberRead, "JSP");
+      }
   %>
       <div>Got <%=numberRead%> entities to write to the datasource.</div>
 
