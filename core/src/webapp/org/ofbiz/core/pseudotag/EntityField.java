@@ -217,7 +217,11 @@ public class EntityField {
             DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, userLocale);
             fieldString = df.format(dateValue);
         } else {
-            fieldString = fieldObject.toString();
+            if (fieldObject != null) {
+                fieldString = fieldObject.toString();
+            } else {
+                fieldString = "";
+            }
         }
 
         JspWriter out = pageContext.getOut();
