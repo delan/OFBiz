@@ -1,5 +1,5 @@
 /*
- * $Id: OrderChangeHelper.java,v 1.5 2003/09/05 17:49:18 ajzeneski Exp $
+ * $Id: OrderChangeHelper.java,v 1.6 2003/10/25 00:47:44 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.workflow.client.WorkflowClient;
  * Order Helper - Helper Methods For Non-Read Actions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class OrderChangeHelper {
@@ -56,20 +56,26 @@ public class OrderChangeHelper {
         GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(dispatcher.getDelegator(), orderId);
         String HEADER_STATUS = "ORDER_PROCESSING";
         String ITEM_STATUS = "ITEM_CREATED";
+        String DIGITAL_ITEM_STATUS = "ITEM_APPROVED";
         if (productStore.get("headerApprovedStatus") != null) {
             HEADER_STATUS = productStore.getString("headerApprovedStatus");
         }
         if (productStore.get("itemApprovedStatus") != null) {
             ITEM_STATUS = productStore.getString("itemApprovedStatus");
         }
+        if (productStore.get("digitalItemApprovedStatus") != null) {
+            DIGITAL_ITEM_STATUS = productStore.getString("digitalItemApprovedStatus");
+        }
         
         try {
-            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, "ITEM_CREATED", ITEM_STATUS);
-            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);                                                                                                                                       
+            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, "ITEM_CREATED", ITEM_STATUS, DIGITAL_ITEM_STATUS);
+            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
+            // TODO: Call the service to check/run digial fulfillment
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
         }
+        
         return true;
     }    
     
@@ -85,7 +91,7 @@ public class OrderChangeHelper {
           }        
         
         try {
-            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS);
+            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS, null);
             OrderChangeHelper.cancelInventoryReservations(dispatcher, userLogin, orderId);
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);                                                                                                                    
         } catch (GenericServiceException e) {
@@ -107,7 +113,7 @@ public class OrderChangeHelper {
           }                  
         
         try {
-            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS);
+            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS, null);
             OrderChangeHelper.cancelInventoryReservations(dispatcher, userLogin, orderId);
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);                                                                                                                    
         } catch (GenericServiceException e) {
@@ -117,7 +123,7 @@ public class OrderChangeHelper {
         return true;
     }  
     
-    public static void orderStatusChanges(LocalDispatcher dispatcher, GenericValue userLogin, String orderId, String orderStatus, String fromItemStatus, String toItemStatus) throws GenericServiceException {                             
+    public static void orderStatusChanges(LocalDispatcher dispatcher, GenericValue userLogin, String orderId, String orderStatus, String fromItemStatus, String toItemStatus, String digitalItemStatus) throws GenericServiceException {                             
         // set the status on the order header
         Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", orderStatus, "userLogin", userLogin);
         Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
@@ -133,7 +139,47 @@ public class OrderChangeHelper {
         Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
         if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
             Debug.logError("Problems adjusting order item status for order #" + orderId, module);
-        }                                                                                                                        
+        }
+        
+        // now set the status for digital items
+        if (digitalItemStatus != null && !digitalItemStatus.equals(toItemStatus)) {
+            GenericDelegator delegator = dispatcher.getDelegator();
+            GenericValue orderHeader = null;
+            try {
+                orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "ERROR: Unable to get OrderHeader for OrderID : " + orderId, module);
+            }
+            if (orderHeader != null) {
+                List orderItems = null;
+                try {
+                    orderItems = orderHeader.getRelated("OrderItem");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "ERROR: Unable to get OrderItem records for OrderHeader : " + orderId, module);
+                }
+                if (orderItems != null && orderItems.size() > 0) {
+                    Iterator oii = orderItems.iterator();
+                    while (oii.hasNext()) {
+                        GenericValue orderItem = (GenericValue) oii.next();
+                        String orderItemSeqId = orderItem.getString("orderItemSeqId");
+                        GenericValue product = null;
+                        try {
+                            product = orderItem.getRelatedOne("Product");
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "ERROR: Unable to get Product record for OrderItem : " + orderId + "/" + orderItemSeqId, module);
+                        }
+                        if (product != null) {
+                            String productType = product.getString("productTypeId");
+                            if (productType.equals("DIGITAL_GOOD")) {                                                                                                
+                                // update the status
+                                Map digitalStatusFields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "statusId", digitalItemStatus, "userLogin", userLogin);
+                                Map digitalStatusChange = dispatcher.runSync("changeOrderItemStatus", digitalStatusFields);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     } 
     
     public static void cancelInventoryReservations(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) throws GenericServiceException {
@@ -279,5 +325,5 @@ public class OrderChangeHelper {
             }             
         }                              
         return false;
-    }                        
+    }
 }
