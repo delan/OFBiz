@@ -179,7 +179,7 @@ public class ProductPromoWorker {
             productStorePromoApplsList = EntityUtil.filterByDate(productStorePromoApplsList, nowTimestamp);
 
             if (productStorePromoApplsList == null || productStorePromoApplsList.size() == 0) {
-                if (Debug.infoOn()) Debug.logInfo("Not doing promotions, none applied to store with ID " + productStoreId, module);
+                if (Debug.verboseOn()) Debug.logVerbose("Not doing promotions, none applied to store with ID " + productStoreId, module);
             }
 
             List productPromoList = new LinkedList();
