@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.34 2003/12/03 06:24:08 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.35 2003/12/03 15:28:59 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.34 $
+ * @version    $Revision: 1.35 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -1062,13 +1062,16 @@ public class ShoppingCart implements java.io.Serializable {
         if (UtilValidate.isNotEmpty(productPromoCodeId) && !this.productPromoCodes.contains(productPromoCodeId)) {
             throw new IllegalStateException("Cannot add a use to a promo code use for a code that has not been entered.");
         }
-        if (Debug.infoOn()) Debug.logInfo("Used promotion [" + productPromoId + "] with code [" + productPromoCodeId + "] for total discount [" + totalDiscountAmount + "] and quantity left in actions [" + quantityLeftInActions + "]", module);
+        if (Debug.verboseOn()) Debug.logVerbose("Used promotion [" + productPromoId + "] with code [" + productPromoCodeId + "] for total discount [" + totalDiscountAmount + "] and quantity left in actions [" + quantityLeftInActions + "]", module);
         this.productPromoUseInfoList.add(new ProductPromoUseInfo(productPromoId, productPromoCodeId, totalDiscountAmount, quantityLeftInActions));
     }
 
     public void clearProductPromoUseInfo() {
         // clear out info for general promo use
         this.productPromoUseInfoList.clear();
+    }
+    
+    public void clearCartItemUseInPromoInfo() {
         // clear out info about which cart items have been used in promos
         Iterator cartLineIter = this.iterator();
         while (cartLineIter.hasNext()) {
@@ -1121,6 +1124,17 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     public void clearAllPromotionInformation() {
+        this.clearAllPromotionAdjustments();
+        
+        // remove all free shipping promo actions
+        this.removeAllFreeShippingProductPromoActions();
+
+        // clear promo uses & reset promo code uses, and reset info about cart items used for promos (ie qualifiers and benefiters)
+        this.clearProductPromoUseInfo();
+        this.clearCartItemUseInPromoInfo();
+    }
+    
+    public void clearAllPromotionAdjustments() {
         // remove cart adjustments from promo actions
         List cartAdjustments = this.getAdjustments();
         if (cartAdjustments != null) {
@@ -1154,12 +1168,6 @@ public class ShoppingCart implements java.io.Serializable {
                 }
             }
         }
-
-        // remove all free shipping promo actions
-        this.removeAllFreeShippingProductPromoActions();
-
-        // clear promo uses & reset promo code uses, and reset info about cart items used for promos (ie qualifiers and benefiters)
-        this.clearProductPromoUseInfo();
     }
     
     /** Adds a promotion code to the cart, checking if it is valid. If it is valid this will return null, otherwise it will return a message stating why it was not valid 
