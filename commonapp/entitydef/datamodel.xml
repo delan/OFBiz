@@ -61,6 +61,7 @@
     <field-type-def><field-type>credit-card-number</field-type><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type><validate>isAnyCard</validate></field-type-def>
     <field-type-def><field-type>credit-card-date</field-type><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type><validate>isDateAfterToday</validate></field-type-def>
     <field-type-def><field-type>email</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type><validate>isEmail</validate></field-type-def>
+    <field-type-def><field-type>url</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><field-type>id-ne</field-type><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
     <field-type-def><field-type>id-long-ne</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
     <field-type-def><field-type>tel-number</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type><validate>isInternationalPhoneNumber</validate></field-type-def>
@@ -119,11 +120,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>GEO_BOUNDARY_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>GEO_BOUNDARY_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>GEO_BOUNDARY_TYPE</related-table-name>
         <key-map><column-name>GEO_BOUNDARY_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -198,11 +201,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>STATUS_TYPE_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>STATUS_TYPE_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>STATUS_TYPE_TYPE</related-table-name>
         <key-map><column-name>STATUS_TYPE_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -244,11 +249,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>UNIT_OF_MEASURE_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>UNIT_OF_MEASURE_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>UNIT_OF_MEASURE_TYPE</related-table-name>
         <key-map><column-name>UNIT_OF_MEASURE_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -342,11 +349,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>DATA_OBJECT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>DATA_OBJECT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>DATA_OBJECT_TYPE</related-table-name>
         <key-map><column-name>DATA_OBJECT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -561,7 +570,7 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
-        <related-table-name>CONTENT_CATEGORY_CLASSIFICATION</related-table-name>
+        <related-table-name>CONTENT_CATEGORY_CLASS</related-table-name>
         <key-map><column-name>CONTENT_ID</column-name></key-map>
       </relation>
     </entity>
@@ -578,11 +587,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>CONTENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>CONTENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>CONTENT_TYPE</related-table-name>
         <key-map><column-name>CONTENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -666,7 +677,7 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
-        <related-table-name>CONTENT_CATEGORY_CLASSIFICATION</related-table-name>
+        <related-table-name>CONTENT_CATEGORY_CLASS</related-table-name>
         <key-map><column-name>CONTENT_CATEGORY_ID</column-name></key-map>
       </relation>
     </entity>
@@ -674,7 +685,7 @@
     <entity>
       <title>Content Category Classification Entity</title>
       <package-name>org.ofbiz.commonapp.content.content</package-name>
-      <table-name>CONTENT_CATEGORY_CLASSIFICATION</table-name>
+      <table-name>CONTENT_CATEGORY_CLASS</table-name>
       <cmp-field><column-name>CONTENT_CATEGORY_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>CONTENT_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>SEQ_ID</column-name><field-type>id-ne</field-type></cmp-field>
@@ -786,11 +797,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>DOCUMENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>DOCUMENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>DOCUMENT_TYPE</related-table-name>
         <key-map><column-name>DOCUMENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -1036,11 +1049,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>SUBSCRIPTION_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>SUBSCRIPTION_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>SUBSCRIPTION_TYPE</related-table-name>
         <key-map><column-name>SUBSCRIPTION_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -1521,11 +1536,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>AGREEMENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>AGREEMENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>AGREEMENT_TYPE</related-table-name>
         <key-map><column-name>AGREEMENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -1638,11 +1655,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>AGREEMENT_ITEM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>AGREEMENT_ITEM_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>AGREEMENT_ITEM_TYPE</related-table-name>
         <key-map><column-name>AGREEMENT_ITEM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -1826,11 +1845,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>TERM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>TERM_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>TERM_TYPE</related-table-name>
         <key-map><column-name>TERM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -2001,11 +2022,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>COMMUNICATION_EVENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>COMMUNICATION_EVENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>COMMUNICATION_EVENT_TYPE</related-table-name>
         <key-map><column-name>COMMUNICATION_EVENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -2122,11 +2145,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>CONTACT_MECHANISM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>CONTACT_MECHANISM_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>CONTACT_MECHANISM_TYPE</related-table-name>
         <key-map><column-name>CONTACT_MECHANISM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -2212,14 +2237,13 @@
       <cmp-field><column-name>PARTY_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>CONTACT_MECHANISM_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>ROLE_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>ROLE_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>NON_SOLICITATION_INDICATOR</column-name><field-type>indicator</field-type></cmp-field>
       <cmp-field><column-name>EXTENSION</column-name><field-type>very-short</field-type></cmp-field>
       <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
       <prim-key-column>PARTY_ID</prim-key-column>
       <prim-key-column>CONTACT_MECHANISM_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>PARTY_ID</column-name></finder>
       <finder><column-name>ROLE_TYPE_ID</column-name></finder>
       <finder><column-name>PARTY_ID</column-name><column-name>ROLE_TYPE_ID</column-name></finder>
@@ -2238,7 +2262,6 @@
       <prim-key-column>PARTY_ID</prim-key-column>
       <prim-key-column>CONTACT_MECHANISM_ID</prim-key-column>
       <prim-key-column>CONTACT_MECHANISM_PURPOSE_TYPE_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>PARTY_ID</column-name></finder>
       <finder><column-name>CONTACT_MECHANISM_ID</column-name></finder>
       <finder><column-name>CONTACT_MECHANISM_PURPOSE_TYPE_ID</column-name></finder>
@@ -2265,7 +2288,6 @@
       <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
       <prim-key-column>PARTY_ID</prim-key-column>
       <prim-key-column>CONTACT_MECHANISM_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>PARTY_ID</column-name></finder>
       <finder><column-name>CONTACT_MECHANISM_ID</column-name></finder>
       <finder><column-name>PARTY_ID</column-name><column-name>CONTACT_MECHANISM_ID</column-name></finder>
@@ -2436,11 +2458,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name><order-by>PARTY_CLASSIFICATION_TYPE_ID</order-by></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>PARTY_CLASSIFICATION_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PARTY_CLASSIFICATION_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>PARTY_CLASSIFICATION_TYPE</related-table-name>
         <key-map><column-name>PARTY_CLASSIFICATION_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -2470,7 +2494,7 @@
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PARTY_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
-        <relation-title>Children</relation-title>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>PARTY_TYPE</related-table-name>
         <key-map><column-name>PARTY_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -2589,11 +2613,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>ROLE_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>ROLE_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>ROLE_TYPE</related-table-name>
         <key-map><column-name>ROLE_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -2656,7 +2682,6 @@
       <prim-key-column>ROLE_TYPE_ID_TO</prim-key-column>
       <prim-key-column>PARTY_ID_FROM</prim-key-column>
       <prim-key-column>PARTY_ID_TO</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>PARTY_ID_FROM</column-name></finder>
       <finder><column-name>PARTY_ID_TO</column-name></finder>
       <finder><column-name>PARTY_ID_FROM</column-name><column-name>ROLE_TYPE_ID_FROM</column-name></finder>
@@ -2695,6 +2720,18 @@
       <finder><column-name>ROLE_TYPE_ID_VALID_FROM</column-name></finder>
       <finder><column-name>ROLE_TYPE_ID_VALID_TO</column-name></finder>
       <finder><column-name>NAME</column-name></finder>
+      <relation>
+        <relation-title>Parent</relation-title>
+        <relation-type>one</relation-type>
+        <related-table-name>PARTY_RELATIONSHIP_TYPE</related-table-name>
+        <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PARTY_RELATIONSHIP_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Child</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_RELATIONSHIP_TYPE</related-table-name>
+        <key-map><column-name>PARTY_RELATIONSHIP_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
@@ -2748,12 +2785,12 @@
       <package-name>org.ofbiz.commonapp.party.party</package-name>
       <table-name>PERSON</table-name>
       <cmp-field><column-name>PARTY_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>CURRENT_LAST_NAME</column-name><field-type>name</field-type></cmp-field>
-      <cmp-field><column-name>CURRENT_FIRST_NAME</column-name><field-type>name</field-type></cmp-field>
-      <cmp-field><column-name>CURRENT_MIDDLE_NAME</column-name><field-type>name</field-type></cmp-field>
-      <cmp-field><column-name>CURRENT_PERSONAL_TITLE</column-name><field-type>name</field-type></cmp-field>
-      <cmp-field><column-name>CURRENT_SUFFIX</column-name><field-type>name</field-type></cmp-field>
-      <cmp-field><column-name>CURRENT_NICKNAME</column-name><field-type>name</field-type></cmp-field>
+      <cmp-field><column-name>LAST_NAME</column-name><field-type>name</field-type></cmp-field>
+      <cmp-field><column-name>FIRST_NAME</column-name><field-type>name</field-type></cmp-field>
+      <cmp-field><column-name>MIDDLE_NAME</column-name><field-type>name</field-type></cmp-field>
+      <cmp-field><column-name>PERSONAL_TITLE</column-name><field-type>name</field-type></cmp-field>
+      <cmp-field><column-name>SUFFIX</column-name><field-type>name</field-type></cmp-field>
+      <cmp-field><column-name>NICKNAME</column-name><field-type>name</field-type></cmp-field>
       <cmp-field><column-name>GENDER</column-name><field-type>indicator</field-type></cmp-field>
       <cmp-field><column-name>BIRTH_DATE</column-name><field-type>date-time</field-type></cmp-field>
       <cmp-field><column-name>HEIGHT</column-name><field-type>floating-point</field-type></cmp-field>
@@ -2761,26 +2798,11 @@
       <cmp-field><column-name>MOTHERS_MAIDEN_NAME</column-name><field-type>name</field-type></cmp-field>
       <cmp-field><column-name>MARITAL_STATUS</column-name><field-type>indicator</field-type></cmp-field>
       <cmp-field><column-name>SOCIAL_SECURITY_NUMBER</column-name><field-type>short-varchar</field-type></cmp-field>
-      <cmp-field><column-name>CURRENT_PASSPORT_NUMBER</column-name><field-type>short-varchar</field-type></cmp-field>
-      <cmp-field><column-name>CURRENT_PASSPORT_EXPIRE_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>PASSPORT_NUMBER</column-name><field-type>short-varchar</field-type></cmp-field>
+      <cmp-field><column-name>PASSPORT_EXPIRE_DATE</column-name><field-type>date-time</field-type></cmp-field>
       <cmp-field><column-name>TOTAL_YEARS_WORK_EXPERIENCE</column-name><field-type>floating-point</field-type></cmp-field>
       <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
       <prim-key-column>PARTY_ID</prim-key-column>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Person Classification Entity</title>
-      <package-name>org.ofbiz.commonapp.party.party</package-name>
-      <table-name>PERSON_CLASSIFICATION</table-name>
-      <cmp-field><column-name>PARTY_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PARTY_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <prim-key-column>PARTY_ID</prim-key-column>
-      <prim-key-column>PARTY_TYPE_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
-      <finder><column-name>PARTY_ID</column-name></finder>
-      <finder><column-name>PARTY_TYPE_ID</column-name></finder>
-      <finder><column-name>PARTY_ID</column-name><column-name>PARTY_TYPE_ID</column-name></finder>
     </entity>
   
   <!-- ========================================================= -->
@@ -2796,12 +2818,27 @@
       <cmp-field><column-name>PRODUCT_CATEGORY_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
       <prim-key-column>PRODUCT_CATEGORY_ID</prim-key-column>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_CATEGORY_CLASS</related-table-name>
+        <key-map><column-name>PRODUCT_CATEGORY_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_CATEGORY_MEMBER</related-table-name>
+        <key-map><column-name>PRODUCT_CATEGORY_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PRODUCT</related-table-name>
+        <key-map><column-name>PRODUCT_CATEGORY_ID</column-name><related-column-name>PRIMARY_PRODUCT_CATEGORY_ID</related-column-name></key-map>
+      </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
       <title>Product Category Classification Entity</title>
       <package-name>org.ofbiz.commonapp.product.category</package-name>
-      <table-name>PRODUCT_CATEGORY_CLASSIFICATION</table-name>
+      <table-name>PRODUCT_CATEGORY_CLASS</table-name>
       <cmp-field><column-name>PRODUCT_CATEGORY_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PRODUCT_CATEGORY_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
@@ -2844,11 +2881,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>PRODUCT_CATEGORY_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PRODUCT_CATEGORY_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>PRODUCT_CATEGORY_TYPE</related-table-name>
         <key-map><column-name>PRODUCT_CATEGORY_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -2860,7 +2899,7 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_CATEGORY_CLASSIFICATION</related-table-name>
+        <related-table-name>PRODUCT_CATEGORY_CLASS</related-table-name>
         <key-map><column-name>PRODUCT_CATEGORY_TYPE_ID</column-name></key-map>
       </relation>
     </entity>
@@ -2912,7 +2951,7 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_CATEGORY_CLASSIFICATION</related-table-name>
+        <related-table-name>PRODUCT_CATEGORY_CLASS</related-table-name>
         <key-map><column-name>PRODUCT_CATEGORY_TYPE_ID</column-name></key-map>
       </relation>
     </entity>    
@@ -2929,10 +2968,18 @@
       <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
       <prim-key-column>PRODUCT_CATEGORY_ID</prim-key-column>
       <prim-key-column>PRODUCT_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>PRODUCT_CATEGORY_ID</column-name></finder>
       <finder><column-name>PRODUCT_ID</column-name></finder>
-      <finder><column-name>PRODUCT_ID</column-name><column-name>PRODUCT_CATEGORY_ID</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PRODUCT</related-table-name>
+        <key-map><column-name>PRODUCT_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PRODUCT_CATEGORY</related-table-name>
+        <key-map><column-name>PRODUCT_CATEGORY_ID</column-name></key-map>
+      </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
@@ -2945,6 +2992,36 @@
       <prim-key-column>PARENT_PRODUCT_CATEGORY_ID</prim-key-column>
       <finder><column-name>PRODUCT_CATEGORY_ID</column-name></finder>
       <finder><column-name>PARENT_PRODUCT_CATEGORY_ID</column-name></finder>
+      <relation>
+        <relation-title>Current</relation-title>
+        <relation-type>one</relation-type>
+        <related-table-name>PRODUCT_CATEGORY</related-table-name>
+        <key-map><column-name>PRODUCT_CATEGORY_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Parent</relation-title>
+        <relation-type>one</relation-type>
+        <related-table-name>PRODUCT_CATEGORY</related-table-name>
+        <key-map><column-name>PARENT_PRODUCT_CATEGORY_ID</column-name><related-column-name>PRODUCT_CATEGORY_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Child</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_CATEGORY_ROLLUP</related-table-name>
+        <key-map><column-name>PRODUCT_CATEGORY_ID</column-name><related-column-name>PARENT_PRODUCT_CATEGORY_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Parent</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_CATEGORY_ROLLUP</related-table-name>
+        <key-map><column-name>PARENT_PRODUCT_CATEGORY_ID</column-name><related-column-name>PRODUCT_CATEGORY_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Sibling</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_CATEGORY_ROLLUP</related-table-name>
+        <key-map><column-name>PARENT_PRODUCT_CATEGORY_ID</column-name></key-map>
+      </relation>
     </entity>
   <!-- ========================================================= -->    
   <!-- ========================================================= -->    
@@ -2953,58 +3030,24 @@
       <package-name>org.ofbiz.commonapp.product.feature</package-name>
       <table-name>PRODUCT_FEATURE</table-name>
       <cmp-field><column-name>PRODUCT_FEATURE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PRODUCT_FEATURE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PRODUCT_FEATURE_CATEGORY_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <cmp-field><column-name>UOM_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>NUMBER_SPECIFIED</column-name><field-type>numeric</field-type></cmp-field>
       <prim-key-column>PRODUCT_FEATURE_ID</prim-key-column>
+      <finder><column-name>PRODUCT_FEATURE_TYPE_ID</column-name></finder>
       <finder><column-name>PRODUCT_FEATURE_CATEGORY_ID</column-name></finder>
+      <finder><column-name>UOM_ID</column-name></finder>
       <relation>
         <relation-type>one</relation-type>
         <related-table-name>PRODUCT_FEATURE_CATEGORY</related-table-name>
         <key-map><column-name>PRODUCT_FEATURE_CATEGORY_ID</column-name></key-map>
       </relation>
       <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_FEATURE_CLASSIFICATION</related-table-name>
-        <key-map><column-name>PRODUCT_FEATURE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_FEATURE_ATTRIBUTE</related-table-name>
-        <key-map><column-name>PRODUCT_FEATURE_ID</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Product Feature Classification Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
-      <table-name>PRODUCT_FEATURE_CLASSIFICATION</table-name>
-      <cmp-field><column-name>PRODUCT_FEATURE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_FEATURE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <prim-key-column>PRODUCT_FEATURE_ID</prim-key-column>
-      <prim-key-column>PRODUCT_FEATURE_TYPE_ID</prim-key-column>
-      <finder><column-name>PRODUCT_FEATURE_ID</column-name></finder>
-      <finder><column-name>PRODUCT_FEATURE_TYPE_ID</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>PRODUCT_FEATURE</related-table-name>
-        <key-map><column-name>PRODUCT_FEATURE_ID</column-name></key-map>
-      </relation>
-      <relation>
         <relation-type>one</relation-type>
         <related-table-name>PRODUCT_FEATURE_TYPE</related-table-name>
         <key-map><column-name>PRODUCT_FEATURE_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_FEATURE_TYPE_ATTR</related-table-name>
-        <key-map><column-name>PRODUCT_FEATURE_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_FEATURE_ATTRIBUTE</related-table-name>
-        <key-map><column-name>PRODUCT_FEATURE_ID</column-name></key-map>
       </relation>
     </entity>
     <!-- ========================================================= -->    
@@ -3020,75 +3063,20 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>PRODUCT_FEATURE_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PRODUCT_FEATURE_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>PRODUCT_FEATURE_TYPE</related-table-name>
         <key-map><column-name>PRODUCT_FEATURE_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_FEATURE_TYPE_ATTR</related-table-name>
-        <key-map><column-name>PRODUCT_FEATURE_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_FEATURE_CLASSIFICATION</related-table-name>
-        <key-map><column-name>PRODUCT_FEATURE_TYPE_ID</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Product Feature Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
-      <table-name>PRODUCT_FEATURE_ATTRIBUTE</table-name>
-      <use-cache>false</use-cache>
-      <cmp-field><column-name>PRODUCT_FEATURE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
-      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
-      <prim-key-column>PRODUCT_FEATURE_ID</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>PRODUCT_FEATURE_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
         <related-table-name>PRODUCT_FEATURE</related-table-name>
-        <key-map><column-name>PRODUCT_FEATURE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_FEATURE_TYPE_ATTR</related-table-name>
-        <key-map><column-name>NAME</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Product Feature Type Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
-      <table-name>PRODUCT_FEATURE_TYPE_ATTR</table-name>
-      <use-cache>false</use-cache>
-      <cmp-field><column-name>PRODUCT_FEATURE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
-      <prim-key-column>PRODUCT_FEATURE_TYPE_ID</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>PRODUCT_FEATURE_TYPE_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>PRODUCT_FEATURE_TYPE</related-table-name>
-        <key-map><column-name>PRODUCT_FEATURE_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_FEATURE_ATTRIBUTE</related-table-name>
-        <key-map><column-name>NAME</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_FEATURE_CLASSIFICATION</related-table-name>
         <key-map><column-name>PRODUCT_FEATURE_TYPE_ID</column-name></key-map>
       </relation>
     </entity>
@@ -3148,11 +3136,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>PRODUCT_FEATURE_APPL_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PRODUCT_FEATURE_APPL_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>PRODUCT_FEATURE_APPL_TYPE</related-table-name>
         <key-map><column-name>PRODUCT_FEATURE_APPL_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -3167,7 +3157,7 @@
     <entity>
       <title>Product Feature Interaction Entity</title>
       <package-name>org.ofbiz.commonapp.product.feature</package-name>
-      <table-name>PRODUCT_FEATURE_INTERACTION</table-name>
+      <table-name>PRODUCT_FEATURE_IACTN</table-name>
       <cmp-field><column-name>PRODUCT_FEATURE_ID_FACTOR_IN</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PRODUCT_FEATURE_ID_OF</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id</field-type></cmp-field>
@@ -3195,32 +3185,22 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>PRODUCT_FEATURE_IACTN_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PRODUCT_FEATURE_IACTN_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>PRODUCT_FEATURE_IACTN_TYPE</related-table-name>
         <key-map><column-name>PRODUCT_FEATURE_IACTN_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_FEATURE_INTERACTION</related-table-name>
+        <related-table-name>PRODUCT_FEATURE_IACTN</related-table-name>
         <key-map><column-name>PRODUCT_FEATURE_IACTN_TYPE</column-name></key-map>
       </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Dimension Entity</title>
-      <description>Data Type Of: Product Feature</description>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
-      <table-name>DIMENSION</table-name>
-      <cmp-field><column-name>PRODUCT_FEATURE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>UOM_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>NUMBER_SPECIFIED</column-name><field-type>numeric</field-type></cmp-field>
-      <prim-key-column>PRODUCT_FEATURE_ID</prim-key-column>
-      <finder><column-name>UOM_ID</column-name></finder>
     </entity>
     <!-- ========================================================= -->    
     <entity>
@@ -3234,10 +3214,11 @@
       <finder><column-name>DATA_OBJECT_ID</column-name></finder>
       <finder><column-name>PRODUCT_FEATURE_ID</column-name></finder>
     </entity>
-    <!-- ========================================================= -->    
+  <!-- ========================================================= -->    
+  <!-- ========================================================= -->    
     <entity>
       <title>Price Component Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
+      <package-name>org.ofbiz.commonapp.product.price</package-name>
       <table-name>PRICE_COMPONENT</table-name>
       <cmp-field><column-name>PRICE_COMPONENT_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PRICE_COMPONENT_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
@@ -3294,7 +3275,7 @@
     <!-- ========================================================= -->    
     <entity>
       <title>Price Component Type Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
+      <package-name>org.ofbiz.commonapp.product.price</package-name>
       <table-name>PRICE_COMPONENT_TYPE</table-name>
       <cmp-field><column-name>PRICE_COMPONENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PARENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
@@ -3304,11 +3285,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>PRICE_COMPONENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PRICE_COMPONENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>PRICE_COMPONENT_TYPE</related-table-name>
         <key-map><column-name>PRICE_COMPONENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -3327,7 +3310,7 @@
     <!-- ========================================================= -->    
     <entity>
       <title>Price Component Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
+      <package-name>org.ofbiz.commonapp.product.price</package-name>
       <table-name>PRICE_COMPONENT_ATTRIBUTE</table-name>
       <use-cache>false</use-cache>
       <cmp-field><column-name>PRICE_COMPONENT_ID</column-name><field-type>id-ne</field-type></cmp-field>
@@ -3351,7 +3334,7 @@
     <!-- ========================================================= -->    
     <entity>
       <title>Price Component Type Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
+      <package-name>org.ofbiz.commonapp.product.price</package-name>
       <table-name>PRICE_COMPONENT_TYPE_ATTR</table-name>
       <use-cache>false</use-cache>
       <cmp-field><column-name>PRICE_COMPONENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
@@ -3378,8 +3361,49 @@
     </entity>
     <!-- ========================================================= -->    
     <entity>
+      <title>Utilization Charge Entity</title>
+      <package-name>org.ofbiz.commonapp.product.price</package-name>
+      <table-name>UTILIZATION_CHARGE</table-name>
+      <cmp-field><column-name>PRICE_COMPONENT_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>UOM_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
+      <prim-key-column>PRICE_COMPONENT_ID</prim-key-column>
+      <finder><column-name>UOM_ID</column-name></finder>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Quantity Break Entity</title>
+      <package-name>org.ofbiz.commonapp.product.price</package-name>
+      <table-name>QUANTITY_BREAK</table-name>
+      <cmp-field><column-name>QUANTITY_BREAK_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>FROM_QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
+      <cmp-field><column-name>THRU_QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
+      <prim-key-column>QUANTITY_BREAK_ID</prim-key-column>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Order Value Break Entity</title>
+      <package-name>org.ofbiz.commonapp.product.price</package-name>
+      <table-name>ORDER_VALUE_BREAK</table-name>
+      <cmp-field><column-name>ORDER_VALUE_BREAK_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>FROM_AMOUNT</column-name><field-type>currency-amount</field-type></cmp-field>
+      <cmp-field><column-name>THRU_AMOUNT</column-name><field-type>currency-amount</field-type></cmp-field>
+      <prim-key-column>ORDER_VALUE_BREAK_ID</prim-key-column>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Sale Type Entity</title>
+      <package-name>org.ofbiz.commonapp.product.price</package-name>
+      <table-name>SALE_TYPE</table-name>
+      <cmp-field><column-name>SALE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>SALE_TYPE_ID</prim-key-column>
+    </entity>
+  <!-- ========================================================= -->    
+  <!-- ========================================================= -->    
+    <entity>
       <title>Cost Component Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
+      <package-name>org.ofbiz.commonapp.product.cost</package-name>
       <table-name>COST_COMPONENT</table-name>
       <cmp-field><column-name>COST_COMPONENT_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>COST_COMPONENT_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
@@ -3416,7 +3440,7 @@
     <!-- ========================================================= -->    
     <entity>
       <title>Cost Component Type Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
+      <package-name>org.ofbiz.commonapp.product.cost</package-name>
       <table-name>COST_COMPONENT_TYPE</table-name>
       <cmp-field><column-name>COST_COMPONENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PARENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
@@ -3426,11 +3450,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>COST_COMPONENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>COST_COMPONENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>COST_COMPONENT_TYPE</related-table-name>
         <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -3449,7 +3475,7 @@
     <!-- ========================================================= -->    
     <entity>
       <title>Cost Component Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
+      <package-name>org.ofbiz.commonapp.product.cost</package-name>
       <table-name>COST_COMPONENT_ATTRIBUTE</table-name>
       <use-cache>false</use-cache>
       <cmp-field><column-name>COST_COMPONENT_ID</column-name><field-type>id-ne</field-type></cmp-field>
@@ -3473,7 +3499,7 @@
     <!-- ========================================================= -->    
     <entity>
       <title>Cost Component Type Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
+      <package-name>org.ofbiz.commonapp.product.cost</package-name>
       <table-name>COST_COMPONENT_TYPE_ATTR</table-name>
       <use-cache>false</use-cache>
       <cmp-field><column-name>COST_COMPONENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
@@ -3497,46 +3523,6 @@
         <related-table-name>COST_COMPONENT</related-table-name>
         <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
       </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Utilization Charge Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
-      <table-name>UTILIZATION_CHARGE</table-name>
-      <cmp-field><column-name>PRICE_COMPONENT_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>UOM_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
-      <prim-key-column>PRICE_COMPONENT_ID</prim-key-column>
-      <finder><column-name>UOM_ID</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Quantity Break Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
-      <table-name>QUANTITY_BREAK</table-name>
-      <cmp-field><column-name>QUANTITY_BREAK_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FROM_QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
-      <cmp-field><column-name>THRU_QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
-      <prim-key-column>QUANTITY_BREAK_ID</prim-key-column>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Order Value Break Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
-      <table-name>ORDER_VALUE_BREAK</table-name>
-      <cmp-field><column-name>ORDER_VALUE_BREAK_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FROM_AMOUNT</column-name><field-type>currency-amount</field-type></cmp-field>
-      <cmp-field><column-name>THRU_AMOUNT</column-name><field-type>currency-amount</field-type></cmp-field>
-      <prim-key-column>ORDER_VALUE_BREAK_ID</prim-key-column>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Sale Type Entity</title>
-      <package-name>org.ofbiz.commonapp.product.feature</package-name>
-      <table-name>SALE_TYPE</table-name>
-      <cmp-field><column-name>SALE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-column>SALE_TYPE_ID</prim-key-column>
     </entity>
   <!-- ========================================================= -->    
   <!-- ========================================================= -->    
@@ -3602,11 +3588,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>FACILITY_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>FACILITY_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>FACILITY_TYPE</related-table-name>
         <key-map><column-name>FACILITY_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -3701,7 +3689,6 @@
       <table-name>INVENTORY_ITEM</table-name>
       <cmp-field><column-name>INVENTORY_ITEM_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>INVENTORY_ITEM_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>PART_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>PARTY_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>STATUS_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
@@ -3713,7 +3700,6 @@
       <cmp-field><column-name>SERIAL_NUMBER</column-name><field-type>value</field-type></cmp-field>
       <prim-key-column>INVENTORY_ITEM_ID</prim-key-column>
       <finder><column-name>INVENTORY_ITEM_TYPE_ID</column-name></finder>
-      <finder><column-name>PART_ID</column-name></finder>
       <finder><column-name>PRODUCT_ID</column-name></finder>
       <finder><column-name>PARTY_ID</column-name></finder>
       <finder><column-name>STATUS_TYPE_ID</column-name></finder>
@@ -3750,11 +3736,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>INVENTORY_ITEM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>INVENTORY_ITEM_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>INVENTORY_ITEM_TYPE</related-table-name>
         <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -3910,11 +3898,39 @@
       <finder><column-name>INTERNAL_ORGANIZATION_ID</column-name></finder>
       <finder><column-name>GEOGRAPHIC_LOCATION_ID</column-name></finder>
     </entity>
-  <!-- ========================================================= -->    
-  <!-- ========================================================= -->    
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Supplier Product Entity</title>
+      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
+      <table-name>SUPPLIER_PRODUCT</table-name>
+      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PARTY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>AVAILABLE_FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>AVAILABLE_THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>PREFERENCE_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>RATING_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>STANDARD_LEAD_TIME</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
+      <prim-key-column>PRODUCT_ID</prim-key-column>
+      <prim-key-column>PARTY_ID</prim-key-column>
+      <finder><column-name>PRODUCT_ID</column-name></finder>
+      <finder><column-name>PARTY_ID</column-name></finder>
+      <finder><column-name>PREFERENCE_TYPE_ID</column-name></finder>
+      <finder><column-name>RATING_TYPE_ID</column-name></finder>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Preference Type Entity</title>
+      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
+      <table-name>PREFERENCE_TYPE</table-name>
+      <cmp-field><column-name>PREFERENCE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>PREFERENCE_TYPE_ID</prim-key-column>
+    </entity>
+    <!-- ========================================================= -->    
     <entity>
       <title>Market Interest Entity</title>
-      <package-name>org.ofbiz.commonapp.product.marketing</package-name>
+      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
       <table-name>MARKET_INTEREST</table-name>
       <cmp-field><column-name>PRODUCT_CATEGORY_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PARTY_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
@@ -3922,25 +3938,8 @@
       <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
       <prim-key-column>PRODUCT_CATEGORY_ID</prim-key-column>
       <prim-key-column>PARTY_TYPE_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>PRODUCT_CATEGORY_ID</column-name></finder>
       <finder><column-name>PARTY_TYPE_ID</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Marketing Package Entity</title>
-      <package-name>org.ofbiz.commonapp.product.marketing</package-name>
-      <table-name>MARKETING_PACKAGE</table-name>
-      <cmp-field><column-name>PRODUCT_ID_FROM</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_ID_TO</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>QUANTITY_USED</column-name><field-type>floating-point</field-type></cmp-field>
-      <cmp-field><column-name>INSTRUCTION</column-name><field-type>long-varchar</field-type></cmp-field>
-      <prim-key-column>PRODUCT_ID_FROM</prim-key-column>
-      <prim-key-column>PRODUCT_ID_TO</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
-      <finder><column-name>PRODUCT_ID_FROM</column-name></finder>
-      <finder><column-name>PRODUCT_ID_TO</column-name></finder>
     </entity>
   <!-- ========================================================= -->    
   <!-- ========================================================= -->    
@@ -3949,22 +3948,26 @@
       <package-name>org.ofbiz.commonapp.product.product</package-name>
       <table-name>PRODUCT</table-name>
       <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PART_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>PRIMARY_PRODUCT_CATEGORY_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>MANUFACTURER_PARTY_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>UOM_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>name</field-type></cmp-field>
       <cmp-field><column-name>INTRODUCTION_DATE</column-name><field-type>date-time</field-type></cmp-field>
       <cmp-field><column-name>SALES_DISCONTINUATION_DATE</column-name><field-type>date-time</field-type></cmp-field>
       <cmp-field><column-name>SUPPORT_DISCONTINUATION_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>name</field-type></cmp-field>
       <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
       <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <cmp-field><column-name>LONG_DESCRIPTION</column-name><field-type>very-long</field-type></cmp-field>
+      <cmp-field><column-name>SMALL_IMAGE_URL</column-name><field-type>url</field-type></cmp-field>
+      <cmp-field><column-name>LARGE_IMAGE_URL</column-name><field-type>url</field-type></cmp-field>
+      <cmp-field><column-name>DEFAULT_PRICE</column-name><field-type>currency-amount</field-type></cmp-field>
       <prim-key-column>PRODUCT_ID</prim-key-column>
-      <finder><column-name>PART_ID</column-name></finder>
+      <finder><column-name>PRIMARY_PRODUCT_CATEGORY_ID</column-name></finder>
       <finder><column-name>MANUFACTURER_PARTY_ID</column-name></finder>
       <finder><column-name>UOM_ID</column-name></finder>
       <relation>
         <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_CLASSIFICATION</related-table-name>
+        <related-table-name>PRODUCT_CLASS</related-table-name>
         <key-map><column-name>PRODUCT_ID</column-name></key-map>
       </relation>
       <relation>
@@ -3972,12 +3975,28 @@
         <related-table-name>PRODUCT_ATTRIBUTE</related-table-name>
         <key-map><column-name>PRODUCT_ID</column-name></key-map>
       </relation>
+      <relation>
+        <relation-title>Primary</relation-title>
+        <relation-type>one</relation-type>
+        <related-table-name>PRODUCT_CATEGORY</related-table-name>
+        <key-map><column-name>PRIMARY_PRODUCT_CATEGORY_ID</column-name><related-column-name>PRODUCT_CATEGORY_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_CATEGORY_MEMBER</related-table-name>
+        <key-map><column-name>PRODUCT_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>GOOD_IDENTIFICATION</related-table-name>
+        <key-map><column-name>PRODUCT_ID</column-name></key-map>
+      </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
       <title>Product Classification Entity</title>
       <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PRODUCT_CLASSIFICATION</table-name>
+      <table-name>PRODUCT_CLASS</table-name>
       <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PRODUCT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
@@ -4020,11 +4039,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>PRODUCT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PRODUCT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>PRODUCT_TYPE</related-table-name>
         <key-map><column-name>PRODUCT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -4036,7 +4057,7 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_CLASSIFICATION</related-table-name>
+        <related-table-name>PRODUCT_CLASS</related-table-name>
         <key-map><column-name>PRODUCT_TYPE_ID</column-name></key-map>
       </relation>
     </entity>
@@ -4086,7 +4107,7 @@
       </relation>
       <relation>
         <relation-type>many</relation-type>
-        <related-table-name>PRODUCT_CLASSIFICATION</related-table-name>
+        <related-table-name>PRODUCT_CLASS</related-table-name>
         <key-map><column-name>PRODUCT_TYPE_ID</column-name></key-map>
       </relation>
     </entity>
@@ -4101,16 +4122,6 @@
       <prim-key-column>PRODUCT_ID</prim-key-column>
       <finder><column-name>DATA_OBJECT_ID</column-name></finder>
       <finder><column-name>PRODUCT_ID</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Good Entity</title>
-      <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>GOOD</table-name>
-      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PART_ID</column-name><field-type>id</field-type></cmp-field>
-      <prim-key-column>PRODUCT_ID</prim-key-column>
-      <finder><column-name>PART_ID</column-name></finder>
     </entity>
     <!-- ========================================================= -->    
     <entity>
@@ -4130,6 +4141,11 @@
         <related-table-name>GOOD_IDENTIFICATION_TYPE</related-table-name>
         <key-map><column-name>GOOD_IDENTIFICATION_TYPE_ID</column-name></key-map>
       </relation>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PRODUCT</related-table-name>
+        <key-map><column-name>PRODUCT_ID</column-name></key-map>
+      </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
@@ -4144,11 +4160,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>GOOD_IDENTIFICATION_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>GOOD_IDENTIFICATION_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>GOOD_IDENTIFICATION_TYPE</related-table-name>
         <key-map><column-name>GOOD_IDENTIFICATION_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -4161,272 +4179,62 @@
     </entity>
     <!-- ========================================================= -->    
     <entity>
-      <title>Part Entity</title>
+      <title>Product Association Entity</title>
       <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PART</table-name>
-      <cmp-field><column-name>PART_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>name</field-type></cmp-field>
-      <prim-key-column>PART_ID</prim-key-column>
-      <finder><column-name>NAME</column-name></finder>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PART_CLASSIFICATION</related-table-name>
-        <key-map><column-name>PART_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PART_ATTRIBUTE</related-table-name>
-        <key-map><column-name>PART_ID</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Part Classification Entity</title>
-      <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PART_CLASSIFICATION</table-name>
-      <cmp-field><column-name>PART_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PART_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <table-name>PRODUCT_ASSOC</table-name>
+      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PRODUCT_ID_TO</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PRODUCT_ASSOC_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
       <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <prim-key-column>PART_ID</prim-key-column>
-      <prim-key-column>PART_TYPE_ID</prim-key-column>
-      <finder><column-name>PART_ID</column-name></finder>
-      <finder><column-name>PART_TYPE_ID</column-name></finder>
+      <cmp-field><column-name>REASON</column-name><field-type>long-varchar</field-type></cmp-field>
+      <cmp-field><column-name>QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
+      <cmp-field><column-name>INSTRUCTION</column-name><field-type>long-varchar</field-type></cmp-field>
+      <prim-key-column>PRODUCT_ID</prim-key-column>
+      <prim-key-column>PRODUCT_ID_TO</prim-key-column>
+      <prim-key-column>PRODUCT_ASSOC_TYPE_ID</prim-key-column>
+      <finder><column-name>PRODUCT_ID</column-name></finder>
+      <finder><column-name>PRODUCT_ID_TO</column-name></finder>
+      <finder><column-name>PRODUCT_ASSOC_TYPE_ID</column-name></finder>
+      <finder><column-name>PRODUCT_ID</column-name><column-name>PRODUCT_ID_TO</column-name></finder>
+      <finder><column-name>PRODUCT_ID</column-name><column-name>PRODUCT_ASSOC_TYPE_ID</column-name></finder>
+      <finder><column-name>PRODUCT_ID_TO</column-name><column-name>PRODUCT_ASSOC_TYPE_ID</column-name></finder>
       <relation>
         <relation-type>one</relation-type>
-        <related-table-name>PART</related-table-name>
-        <key-map><column-name>PART_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>PART_TYPE</related-table-name>
-        <key-map><column-name>PART_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PART_TYPE_ATTR</related-table-name>
-        <key-map><column-name>PART_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PART_ATTRIBUTE</related-table-name>
-        <key-map><column-name>PART_ID</column-name></key-map>
+        <related-table-name>PRODUCT_ASSOC_TYPE</related-table-name>
+        <key-map><column-name>PRODUCT_ASSOC_TYPE_ID</column-name></key-map>
       </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
-      <title>Part Type Entity</title>
+      <title>Product Association Type Entity</title>
       <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PART_TYPE</table-name>
-      <cmp-field><column-name>PART_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <table-name>PRODUCT_ASSOC_TYPE</table-name>
+      <cmp-field><column-name>PRODUCT_ASSOC_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PARENT_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>HAS_TABLE</column-name><field-type>indicator</field-type></cmp-field>
       <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-column>PART_TYPE_ID</prim-key-column>
+      <prim-key-column>PRODUCT_ASSOC_TYPE_ID</prim-key-column>
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
-      <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
-        <related-table-name>PART_TYPE</related-table-name>
-        <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PART_TYPE_ID</related-column-name></key-map>
+        <related-table-name>PRODUCT_ASSOC_TYPE</related-table-name>
+        <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PRODUCT_ASSOC_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Child</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_ASSOC_TYPE</related-table-name>
+        <key-map><column-name>PRODUCT_ASSOC_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
         <relation-type>many</relation-type>
-        <related-table-name>PART_TYPE</related-table-name>
-        <key-map><column-name>PART_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PART_TYPE_ATTR</related-table-name>
-        <key-map><column-name>PART_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PART_CLASSIFICATION</related-table-name>
-        <key-map><column-name>PART_TYPE_ID</column-name></key-map>
+        <related-table-name>PRODUCT_ASSOC</related-table-name>
+        <key-map><column-name>PRODUCT_ASSOC_TYPE_ID</column-name></key-map>
       </relation>
     </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Part Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PART_ATTRIBUTE</table-name>
-      <cmp-field><column-name>PART_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
-      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
-      <prim-key-column>PART_ID</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>PART_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>PART</related-table-name>
-        <key-map><column-name>PART_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PART_TYPE_ATTR</related-table-name>
-        <key-map><column-name>NAME</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Part Type Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PART_TYPE_ATTR</table-name>
-      <cmp-field><column-name>PART_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
-      <prim-key-column>PART_TYPE_ID</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>PART_TYPE_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>PART_TYPE</related-table-name>
-        <key-map><column-name>PART_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PART_ATTRIBUTE</related-table-name>
-        <key-map><column-name>NAME</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>PART_CLASSIFICATION</related-table-name>
-        <key-map><column-name>PART_TYPE_ID</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Product Association Entity</title>
-      <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PRODUCT_ASSOCIATION</table-name>
-      <cmp-field><column-name>PRODUCT_ID_FROM</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_ID_TO</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>REASON</column-name><field-type>long-varchar</field-type></cmp-field>
-      <prim-key-column>PRODUCT_ID_FROM</prim-key-column>
-      <prim-key-column>PRODUCT_ID_TO</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
-      <finder><column-name>PRODUCT_ID_FROM</column-name></finder>
-      <finder><column-name>PRODUCT_ID_TO</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Product Complement Entity</title>
-      <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PRODUCT_COMPLEMENT</table-name>
-      <cmp-field><column-name>PRODUCT_ID_FROM</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_ID_TO</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>REASON</column-name><field-type>long-varchar</field-type></cmp-field>
-      <prim-key-column>PRODUCT_ID_FROM</prim-key-column>
-      <prim-key-column>PRODUCT_ID_TO</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
-      <finder><column-name>PRODUCT_ID_FROM</column-name></finder>
-      <finder><column-name>PRODUCT_ID_TO</column-name></finder>
-      <finder><column-name>PRODUCT_ID_FROM</column-name><column-name>PRODUCT_ID_TO</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Product Component Entity</title>
-      <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PRODUCT_COMPONENT</table-name>
-      <cmp-field><column-name>PRODUCT_ID_FROM</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_ID_TO</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>QUANTITY_USED</column-name><field-type>floating-point</field-type></cmp-field>
-      <cmp-field><column-name>INSTRUCTION</column-name><field-type>long-varchar</field-type></cmp-field>
-      <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
-      <prim-key-column>PRODUCT_ID_FROM</prim-key-column>
-      <prim-key-column>PRODUCT_ID_TO</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
-      <finder><column-name>PRODUCT_ID_FROM</column-name></finder>
-      <finder><column-name>PRODUCT_ID_TO</column-name></finder>
-      <finder><column-name>PRODUCT_ID_FROM</column-name><column-name>PRODUCT_ID_TO</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Product Incompatability Entity</title>
-      <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PRODUCT_INCOMPATABILITY</table-name>
-      <cmp-field><column-name>PRODUCT_ID_FROM</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_ID_TO</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>REASON</column-name><field-type>long-varchar</field-type></cmp-field>
-      <prim-key-column>PRODUCT_ID_FROM</prim-key-column>
-      <prim-key-column>PRODUCT_ID_TO</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
-      <finder><column-name>PRODUCT_ID_FROM</column-name></finder>
-      <finder><column-name>PRODUCT_ID_TO</column-name></finder>
-      <finder><column-name>PRODUCT_ID_FROM</column-name><column-name>PRODUCT_ID_TO</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Product Obsolescence Entity</title>
-      <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PRODUCT_OBSOLESCENCE</table-name>
-      <cmp-field><column-name>PRODUCT_ID_FROM</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_ID_TO</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>SUPERCESSION_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>REASON</column-name><field-type>long-varchar</field-type></cmp-field>
-      <prim-key-column>PRODUCT_ID_FROM</prim-key-column>
-      <prim-key-column>PRODUCT_ID_TO</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
-      <finder><column-name>PRODUCT_ID_FROM</column-name></finder>
-      <finder><column-name>PRODUCT_ID_TO</column-name></finder>
-      <finder><column-name>PRODUCT_ID_FROM</column-name><column-name>PRODUCT_ID_TO</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Product Substitute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PRODUCT_SUBSTITUTE</table-name>
-      <cmp-field><column-name>PRODUCT_ID_FROM</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_ID_TO</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
-      <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
-      <prim-key-column>PRODUCT_ID_FROM</prim-key-column>
-      <prim-key-column>PRODUCT_ID_TO</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
-      <finder><column-name>PRODUCT_ID_FROM</column-name></finder>
-      <finder><column-name>PRODUCT_ID_TO</column-name></finder>
-      <finder><column-name>PRODUCT_ID_FROM</column-name><column-name>PRODUCT_ID_TO</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Supplier Product Entity</title>
-      <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>SUPPLIER_PRODUCT</table-name>
-      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PARTY_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>AVAILABLE_FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>AVAILABLE_THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>PREFERENCE_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>RATING_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>STANDARD_LEAD_TIME</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
-      <prim-key-column>PRODUCT_ID</prim-key-column>
-      <prim-key-column>PARTY_ID</prim-key-column>
-      <prim-key-column>AVAILABLE_FROM_DATE</prim-key-column>
-      <finder><column-name>PRODUCT_ID</column-name></finder>
-      <finder><column-name>PARTY_ID</column-name></finder>
-      <finder><column-name>PREFERENCE_TYPE_ID</column-name></finder>
-      <finder><column-name>RATING_TYPE_ID</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Preference Type Entity</title>
-      <package-name>org.ofbiz.commonapp.product.product</package-name>
-      <table-name>PREFERENCE_TYPE</table-name>
-      <cmp-field><column-name>PREFERENCE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-column>PREFERENCE_TYPE_ID</prim-key-column>
-    </entity>
-  
+
   <!-- ========================================================= -->
   <!-- ========================== Order ======================== -->
   <!-- ========================================================= -->
@@ -4474,11 +4282,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>ORDER_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>ORDER_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>ORDER_TYPE</related-table-name>
         <key-map><column-name>ORDER_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -4588,11 +4398,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>ORDER_ADJUSTMENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>ORDER_ADJUSTMENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>ORDER_ADJUSTMENT_TYPE</related-table-name>
         <key-map><column-name>ORDER_ADJUSTMENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -4738,11 +4550,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>ORDER_ITEM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>ORDER_ITEM_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>ORDER_ITEM_TYPE</related-table-name>
         <key-map><column-name>ORDER_ITEM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -5038,11 +4852,11 @@
       <table-name>PURCHASE_ORDER_ITEM</table-name>
       <cmp-field><column-name>ORDER_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>ORDER_ITEM_SEQ_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PART_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id</field-type></cmp-field>
       <prim-key-column>ORDER_ID</prim-key-column>
       <prim-key-column>ORDER_ITEM_SEQ_ID</prim-key-column>
       <finder><column-name>ORDER_ID</column-name></finder>
-      <finder><column-name>PART_ID</column-name></finder>
+      <finder><column-name>PRODUCT_ID</column-name></finder>
     </entity>
     <!-- ========================================================= -->    
     <entity>
@@ -5117,11 +4931,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>QUOTE_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>QUOTE_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>QUOTE_TYPE</related-table-name>
         <key-map><column-name>QUOTE_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -5346,11 +5162,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>CUST_REQUEST_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>CUST_REQUEST_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>CUST_REQUEST_TYPE</related-table-name>
         <key-map><column-name>CUST_REQUEST_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -5495,11 +5313,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>REQUIREMENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>REQUIREMENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>REQUIREMENT_TYPE</related-table-name>
         <key-map><column-name>REQUIREMENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -5609,7 +5429,6 @@
       <prim-key-column>REQUIREMENT_ID</prim-key-column>
       <prim-key-column>PARTY_ID</prim-key-column>
       <prim-key-column>ROLE_TYPE_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>REQUIREMENT_ID</column-name></finder>
       <finder><column-name>PARTY_ID</column-name></finder>
       <finder><column-name>ROLE_TYPE_ID</column-name></finder>
@@ -5879,11 +5698,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>SHIPMENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>SHIPMENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>SHIPMENT_TYPE</related-table-name>
         <key-map><column-name>SHIPMENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -6127,7 +5948,6 @@
       <prim-key-column>RATE_TYPE_ID</prim-key-column>
       <prim-key-column>PARTY_ID</prim-key-column>
       <prim-key-column>ROLE_TYPE_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>WORK_EFFORT_ID</column-name></finder>
       <finder><column-name>RATE_TYPE_ID</column-name></finder>
       <finder><column-name>PARTY_ID</column-name></finder>
@@ -6146,7 +5966,6 @@
       <cmp-field><column-name>RATE</column-name><field-type>currency-amount</field-type></cmp-field>
       <prim-key-column>PARTY_ID</prim-key-column>
       <prim-key-column>RATE_TYPE_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>PARTY_ID</column-name></finder>
       <finder><column-name>RATE_TYPE_ID</column-name></finder>
       <finder><column-name>PARTY_ID</column-name><column-name>RATE_TYPE_ID</column-name></finder>
@@ -6221,11 +6040,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>WORK_EFFORT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>WORK_EFFORT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>WORK_EFFORT_TYPE</related-table-name>
         <key-map><column-name>WORK_EFFORT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -6349,11 +6170,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>WORK_EFFORT_ASSOC_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>WORK_EFFORT_ASSOC_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>WORK_EFFORT_ASSOC_TYPE</related-table-name>
         <key-map><column-name>WORK_EFFORT_ASSOC_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -6663,7 +6486,6 @@
       <prim-key-column>WORK_EFFORT_ID</prim-key-column>
       <prim-key-column>PARTY_ID</prim-key-column>
       <prim-key-column>ROLE_TYPE_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>WORK_EFFORT_ID</column-name></finder>
       <finder><column-name>PARTY_ID</column-name></finder>
       <finder><column-name>ROLE_TYPE_ID</column-name></finder>
@@ -6780,12 +6602,14 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>BUDGET_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>BUDGET_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
-        <relation-type>many</relation-type>
+        <relation-title>Child</relation-title>
+        <relation-type>many</relation-type>n
         <related-table-name>BUDGET_TYPE</related-table-name>
         <key-map><column-name>BUDGET_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
       </relation>
@@ -6895,11 +6719,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>BUDGET_ITEM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>BUDGET_ITEM_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>BUDGET_ITEM_TYPE</related-table-name>
         <key-map><column-name>BUDGET_ITEM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -7152,11 +6978,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>FIXED_ASSET_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>FIXED_ASSET_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>FIXED_ASSET_TYPE</related-table-name>
         <key-map><column-name>FIXED_ASSET_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -7320,11 +7148,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>ACCTG_TRANS_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>ACCTG_TRANS_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>ACCTG_TRANS_TYPE</related-table-name>
         <key-map><column-name>ACCTG_TRANS_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -7504,7 +7334,6 @@
       <cmp-field><column-name>ALLOCATION_PERCENTAGE</column-name><field-type>floating-point</field-type></cmp-field>
       <prim-key-column>GENERAL_LEDGER_ACCOUNT_ID</prim-key-column>
       <prim-key-column>BUDGET_ITEM_TYPE_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>GENERAL_LEDGER_ACCOUNT_ID</column-name></finder>
       <finder><column-name>BUDGET_ITEM_TYPE_ID</column-name></finder>
       <finder><column-name>GENERAL_LEDGER_ACCOUNT_ID</column-name><column-name>BUDGET_ITEM_TYPE_ID</column-name></finder>
@@ -7590,11 +7419,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>INVOICE_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>INVOICE_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>INVOICE_TYPE</related-table-name>
         <key-map><column-name>INVOICE_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -7715,11 +7546,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>INVOICE_ITEM_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>INVOICE_ITEM_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>INVOICE_ITEM_TYPE</related-table-name>
         <key-map><column-name>INVOICE_ITEM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -7955,11 +7788,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>FINANCIAL_ACCOUNT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>FINANCIAL_ACCOUNT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>FINANCIAL_ACCOUNT_TYPE</related-table-name>
         <key-map><column-name>FINANCIAL_ACCOUNT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -8095,11 +7930,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>FINANCIAL_ACCOUNT_TRANS_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>FINANCIAL_ACCOUNT_TRANS_TYPE</related-table-name>
         <key-map><column-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -8227,11 +8064,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>PAYMENT_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PAYMENT_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>PAYMENT_TYPE</related-table-name>
         <key-map><column-name>PAYMENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -8463,11 +8302,13 @@
       <finder><column-name>PARENT_TYPE_ID</column-name></finder>
       <finder><column-name>HAS_TABLE</column-name></finder>
       <relation>
+        <relation-title>Parent</relation-title>
         <relation-type>one</relation-type>
         <related-table-name>PARTY_QUAL_TYPE</related-table-name>
         <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PARTY_QUAL_TYPE_ID</related-column-name></key-map>
       </relation>
       <relation>
+        <relation-title>Child</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>PARTY_QUAL_TYPE</related-table-name>
         <key-map><column-name>PARTY_QUAL_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
@@ -8755,7 +8596,6 @@
       <prim-key-column>ROLE_TYPE_ID_TO</prim-key-column>
       <prim-key-column>PARTY_ID_FROM</prim-key-column>
       <prim-key-column>PARTY_ID_TO</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>PARTY_ID_FROM</column-name></finder>
       <finder><column-name>PARTY_ID_TO</column-name></finder>
       <finder><column-name>PARTY_ID_FROM</column-name><column-name>ROLE_TYPE_ID_FROM</column-name></finder>
@@ -8783,7 +8623,6 @@
       <prim-key-column>ROLE_TYPE_ID_TO</prim-key-column>
       <prim-key-column>PARTY_ID_FROM</prim-key-column>
       <prim-key-column>PARTY_ID_TO</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>PARTY_ID_FROM</column-name></finder>
       <finder><column-name>PARTY_ID_TO</column-name></finder>
       <finder><column-name>PARTY_ID_FROM</column-name><column-name>ROLE_TYPE_ID_FROM</column-name></finder>
@@ -8853,7 +8692,6 @@
       <prim-key-column>ROLE_TYPE_ID_TO</prim-key-column>
       <prim-key-column>PARTY_ID_FROM</prim-key-column>
       <prim-key-column>PARTY_ID_TO</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <prim-key-column>BENEFIT_TYPE_ID</prim-key-column>
       <finder><column-name>PARTY_ID_FROM</column-name></finder>
       <finder><column-name>PARTY_ID_TO</column-name></finder>
@@ -8938,7 +8776,7 @@
     <entity>
       <title>Position Classification Type Entity</title>
       <package-name>org.ofbiz.commonapp.humanres.position</package-name>
-      <table-name>POSITION_CLASSIFICATION_TYPE</table-name>
+      <table-name>POSITION_CLASS_TYPE</table-name>
       <cmp-field><column-name>POSITION_CLASS_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
       <prim-key-column>POSITION_CLASS_TYPE_ID</prim-key-column>
@@ -8955,7 +8793,6 @@
       <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
       <prim-key-column>POSITION_ID</prim-key-column>
       <prim-key-column>PARTY_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>POSITION_ID</column-name></finder>
       <finder><column-name>PARTY_ID</column-name></finder>
     </entity>
@@ -8972,7 +8809,6 @@
       <cmp-field><column-name>PRIMARY_FLAG</column-name><field-type>indicator</field-type></cmp-field>
       <prim-key-column>POSITION_ID_REPORTING_TO</prim-key-column>
       <prim-key-column>POSITION_ID_MANAGED_BY</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>POSITION_ID_REPORTING_TO</column-name></finder>
       <finder><column-name>POSITION_ID_MANAGED_BY</column-name></finder>
     </entity>
@@ -8988,7 +8824,6 @@
       <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
       <prim-key-column>POSITION_ID</prim-key-column>
       <prim-key-column>RESPONSIBILITY_TYPE_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>POSITION_ID</column-name></finder>
       <finder><column-name>RESPONSIBILITY_TYPE_ID</column-name></finder>
     </entity>
@@ -9015,7 +8850,6 @@
       <cmp-field><column-name>STANDARD_HOURS_PER_WEEK</column-name><field-type>floating-point</field-type></cmp-field>
       <prim-key-column>POSITION_TYPE_ID</prim-key-column>
       <prim-key-column>POSITION_CLASS_TYPE_ID</prim-key-column>
-      <prim-key-column>FROM_DATE</prim-key-column>
       <finder><column-name>POSITION_TYPE_ID</column-name></finder>
       <finder><column-name>POSITION_CLASS_TYPE_ID</column-name></finder>
     </entity>
