@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Element;
 
@@ -77,6 +78,7 @@ public class ModelScreen {
      *    - formStringRenderer
      *    - request, response, session, application (special case, only in HTML contexts, etc) 
      *    - delegator, dispatcher, security
+     *    - null (represents a null field value for entity operations)
      *    - sections (used for decorators to reference the sections to be decorated and render them) 
      * @param screenStringRenderer An implementation of the ScreenStringRenderer
      *   interface that is responsible for the actual text generation for
@@ -84,7 +86,9 @@ public class ModelScreen {
      *   use the same screen definitions for many types of screen UIs
      */
     public void renderScreenString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
-    
+        // make sure the "null" object is in there for entity ops
+        context.put("null", GenericEntity.NULL_FIELD);
+        
         // render the screen, starting with the top-level section
         this.section.renderWidgetString(writer, context, screenStringRenderer);
     }
