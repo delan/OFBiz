@@ -11,7 +11,7 @@
                  jobs="3"
                  min-threads="5"
                  max-threads="20"
-                 poll-enabled="false"
+                 poll-enabled="true"
                  poll-db-millis="20000"/>
 
     <!-- Service Engine Configuration -->
