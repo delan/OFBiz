@@ -42,6 +42,8 @@ import org.ofbiz.core.entity.jdbc.*;
  *@author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
+ *@author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
+ *@author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
  *@created    Wed Aug 08 2001
  *@version    1.0
  */
