@@ -39,19 +39,30 @@ public class WfFactory {
     
     // A cache of WfProcessMgr implementations
     private static Map managers = new HashMap();
-    
+
     /** Creates a new {@link WfActivity} instance. 
-     * @param value GenericValue object defining this activity.
+     * @param value GenericValue object defining this activity.     
      * @param proc The WfProcess which this activity belongs.    
      * @return An instance of the WfActivify Interface
      * @throws WfException
      */
     public static WfActivity newWfActivity(GenericValue value, WfProcess proc) throws WfException {
+        return newWfActivity(value,null,proc);
+    }
+    
+    /** Creates a new {@link WfActivity} instance. 
+     * @param value GenericValue object defining this activity.
+     * @param data GenericValue object for runtime data.
+     * @param proc The WfProcess which this activity belongs.    
+     * @return An instance of the WfActivify Interface
+     * @throws WfException
+     */
+    public static WfActivity newWfActivity(GenericValue value, GenericValue data, WfProcess proc) throws WfException {
         if ( value == null )
             throw new WfException("GenericValue object cannot be null");
         if ( proc == null )
             throw new WfException("WfProcess cannot be null");
-        return new WfActivityImpl(value,proc);
+        return new WfActivityImpl(value,data,proc);
     }
     
     
@@ -69,33 +80,48 @@ public class WfFactory {
     
     
     /** Creates a new {@link WfProcess} instance.
-     * @param value The GenericValue object for the process definition
+     * @param value The GenericValue object for the process definition.
      * @param mgr The WfProcessMgr which is managing this process.
      * @return An instance of the WfProcess Interface.
      * @throws WfException     
      */
     public static WfProcess newWfProcess(GenericValue value, WfProcessMgr mgr) throws WfException {
+       return newWfProcess(value,null,mgr);
+    }
+    
+    /** Creates a new {@link WfProcess} instance.
+     * @param value The GenericValue object for the process definition.
+     * @param data The GenericValue object for the runtime data.
+     * @param mgr The WfProcessMgr which is managing this process.
+     * @return An instance of the WfProcess Interface.
+     * @throws WfException     
+     */
+    public static WfProcess newWfProcess(GenericValue value, GenericValue data, WfProcessMgr mgr) throws WfException {
         if ( value == null )
             throw new WfException("Process definition value object cannot be null");
         if ( mgr == null )
             throw new WfException("WfProcessMgr cannot be null");
-        return new WfProcessImpl(value,mgr);
-    }
-    
+        return new WfProcessImpl(value,data,mgr);
+    }    
     
     /** Creates a new {@link WfProcessMgr} instance.
      * @param del The GenericDelegator to use for this manager.
-     * @param pid The process ID for the workflow.          
+     * @param pkg The Workflow Package ID.
+     * @param pid The Workflow Process ID.
      * @throws WfException
      * @return An instance of the WfProcessMgr Interface.
      */
-    public static WfProcessMgr newWfProcessMgr(GenericDelegator del, String pid) throws WfException {
+    public static WfProcessMgr newWfProcessMgr(GenericDelegator del, String pkg, String pid) throws WfException {
         if ( del == null )
             throw new WfException("Delegator cannot be null");
+        if ( pkg == null )
+            throw new WfException("Workflow package id cannot be null.");
         if ( pid == null )
             throw new WfException("Workflow process id cannot be null");
         
         StringBuffer buf = new StringBuffer();
+        buf.append(pkg);
+        buf.append(":");
         buf.append(pid);
         buf.append(":");
         String name = buf.toString();
@@ -104,7 +130,7 @@ public class WfFactory {
         if ( managers.containsKey(name) )
             mgr = (WfProcessMgr) managers.get(name);
         else
-            mgr = new WfProcessMgrImpl(del,pid);
+            mgr = new WfProcessMgrImpl(del,pkg,pid);
         managers.put(name,mgr);
         return mgr;
     }

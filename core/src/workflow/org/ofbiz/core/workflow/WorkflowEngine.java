@@ -98,7 +98,7 @@ public class WorkflowEngine implements GenericEngine {
         // Build the process manager
         WfProcessMgr mgr = null;
         try {
-            mgr = WfFactory.newWfProcessMgr(dispatcher.getDelegator(),modelService.name);
+            mgr = WfFactory.newWfProcessMgr(dispatcher.getDelegator(),modelService.location,modelService.invoke);
         }
         catch ( WfException e ) {
             throw new GenericServiceException(e.getMessage(),e);

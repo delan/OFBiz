@@ -47,19 +47,32 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     
     // Attribute instance 'assignments'
     private List assignments;
-    
+         
     /**
      * Creates new WfProcessImpl
-     * @param valueObject The GenericValue object of this WfActivity.   
+     * @param valueObject The GenericValue object of this WfActivity.
+     * @param dataObject The GenericValue object of the stored runtime data.
+     * @param process The WfProcess object which created this WfActivity.
      */
-    public WfActivityImpl(GenericValue valueObject, WfProcess process) throws WfException {
-        super(valueObject);
+    public WfActivityImpl(GenericValue valueObject, GenericValue dataObject, WfProcess process) throws WfException {
+        super(valueObject,dataObject);
         this.process = process;
         result = new HashMap();
-        assignments = new ArrayList();                                               
+        assignments = new ArrayList();
+        GenericValue performer = null;
+        try {
+            performer = valueObject.getRelatedOne("PerformerWorkflowParticipant");
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        
+        WfResource resource = WfFactory.newWfResource(performer);
+        WfAssignment assign = WfFactory.newWfAssignment(this,resource);
+        assignments.add(assign);
     }
     
-    /** 
+    /**
      * Activates this activity.
      * @throws WfException
      * @throws CannotStart
@@ -72,7 +85,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         changeState("open.running");
         // implement me
     }
-
+    
     /**
      * Complete this activity.
      * @throws WfException General workflow exception.
@@ -90,7 +103,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @throws WfException General workflow exception.
      * @return true if the assignment is a member of this activity.
      */
-    public boolean isMemberOfAssignment(WfAssignment member) throws 
+    public boolean isMemberOfAssignment(WfAssignment member) throws
     WfException {
         return assignments.contains(member);
     }
@@ -149,7 +162,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @return Assignment Iterator.
      */
     public Iterator getIteratorAssignment() throws WfException {
-            return assignments.iterator();
+        return assignments.iterator();
     }
     
     public String executionObjectType() {

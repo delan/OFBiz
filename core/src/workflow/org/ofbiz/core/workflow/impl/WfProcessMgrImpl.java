@@ -49,9 +49,10 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      * @param processId The unique key of the process definition.
      * @throws WfException
      */
-    public WfProcessMgrImpl(GenericDelegator delegator, String processId) throws WfException {
+    public WfProcessMgrImpl(GenericDelegator delegator, String packageId, String processId) throws WfException {
         try {
-            Collection processes = delegator.findByAnd("WorkflowProcess",UtilMisc.toMap("executionObjectId",processId));
+            Map finder = UtilMisc.toMap("packageId",packageId,"processId",processId);
+            Collection processes = delegator.findByAnd("WorkflowProcess",finder);
             if ( processes.size() > 1 )
                 throw new WfException("Unique processId does not exist. Entity value error");
             if ( processes.size() == 0 )

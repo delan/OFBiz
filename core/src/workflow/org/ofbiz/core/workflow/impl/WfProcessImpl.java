@@ -43,16 +43,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     private WfProcessMgr manager;
     private List steps;                
     private Map result;
-
-    /**
-     * Creates new WfProcessImpl
-     * @param valueObject The GenericValue object of this WfProcess.
-     * @param manager The WfProcessMgr invoking this process. 
-     */
-    public WfProcessImpl(GenericValue valueObject, WfProcessMgr manager) throws WfException {
-        this(valueObject,null,manager);
-    }
-    
+     
     /**
      * Creates new WfProcessImpl
      * @param valueObject The GenericValue object of this WfProcess.
@@ -101,9 +92,9 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
                     }
                 }
                         
-                WfActivity activity = WfFactory.newWfActivity(value,this); // create the activity object
-                activity.setDispatcher(dispatcher,serviceLoader);               // set the dispatcher for the activity
-                steps.add(activity);
+                WfActivity activity = WfFactory.newWfActivity(value,dataObject,this); // create the activity object
+                activity.setDispatcher(dispatcher,serviceLoader);                                 // set the dispatcher for the activity
+                steps.add(activity);     
             }
         }                
     }

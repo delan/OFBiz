@@ -52,15 +52,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     protected List history;
     protected String serviceLoader;
     protected ServiceDispatcher dispatcher;
-    
-    /**
-     * Creates new WfExecutionObjectImpl
-     * @param valueObject The GenericValue object for the definition.
-     */
-    public WfExecutionObjectImpl(GenericValue valueObject) throws WfException {
-        this(valueObject,null);
-    }
-    
+           
     /**
      * Creates a new WfExecutionObjectImpl
      * @param valueObject The GenericValue object for the definition entity.
