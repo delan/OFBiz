@@ -336,7 +336,6 @@ public class PaymentServices {
         newCc.set("cardNumber", context.get("cardNumber"));
         newCc.set("cardSecurityCode", context.get("cardSecurityCode"));
         newCc.set("expireDate", context.get("expireDate"));
-        newCc.set("contactMechId", context.get("contactMechId"));
 
         if (!newCc.equals(creditCard) || !newPm.equals(paymentMethod)) {
             newPm.set("paymentMethodId", newPmId.toString());
@@ -349,7 +348,9 @@ public class PaymentServices {
         GenericValue newPartyContactMechPurpose = null;
         String contactMechId = (String) context.get("contactMechId");
 
-        if (contactMechId != null && contactMechId.length() > 0) {
+        if (contactMechId != null && contactMechId.length() > 0 && !contactMechId.equals("_NEW_")) {
+            // set the contactMechId on the credit card
+            newCc.set("contactMechId", context.get("contactMechId"));
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 
@@ -387,7 +388,9 @@ public class PaymentServices {
         } else {
             result.put("newPaymentMethodId", paymentMethodId);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-            result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating credit card");
+            if (!contactMechId.equals("_NEW_")) {
+                result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating credit card");
+            }
 
             return result;
         }
