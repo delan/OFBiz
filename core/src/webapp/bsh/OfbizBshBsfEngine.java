@@ -37,8 +37,8 @@ import java.util.*;
 
 import com.ibm.bsf.*;
 import com.ibm.bsf.util.*;
-import bsh.*;
-import bsh.util.*;
+//import bsh.*;
+//import bsh.util.*;
 
 import org.ofbiz.core.util.*;
 
@@ -102,7 +102,7 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
     }
     
     public void setDebug(boolean debug) {
-        interpreter.DEBUG=debug;
+        Interpreter.DEBUG=debug;
     }
     
     /**
