@@ -28,8 +28,9 @@
 <#assign currentCatalogId = Static["org.ofbiz.product.catalog.CatalogWorker"].getCurrentCatalogId(request)?if_exists>
 <#assign currentCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, currentCatalogId)?if_exists>
 
-<#if 0 < catalogCol?size>
-  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<#-- Only show if there is more than 1 (one) catalog, no sense selecting when there is only one option... -->
+<#if (catalogCol?size > 1)>
+  <TABLE border="0" width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
       <TD width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
