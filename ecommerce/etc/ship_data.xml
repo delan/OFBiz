@@ -9,11 +9,11 @@
   <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="AIR"/>
   <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="NEXT_DAY"/>
   <CarrierShipmentMethod partyId="Company" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY"/>
-  <QuantityBreak fromQuantity="0.0" quantityBreakId="10000"
+  <QuantityBreak fromQuantity="0.0" quantityBreakId="9000"
     quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
-  <QuantityBreak fromQuantity="0.0" quantityBreakId="10003"
+  <QuantityBreak fromQuantity="0.0" quantityBreakId="9003"
     quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
-  <QuantityBreak fromQuantity="0.0" quantityBreakId="10009"
+  <QuantityBreak fromQuantity="0.0" quantityBreakId="9009"
     quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
   <QuantityBreakType description="Price Component Quantity Break" quantityBreakTypeId="QUANTITY"/>
   <QuantityBreakType description="Price Component Order Value Break" quantityBreakTypeId="ORDER_VALUE"/>
@@ -21,16 +21,16 @@
   <QuantityBreakType description="Shipping Quantity Break" quantityBreakTypeId="SHIP_QUANTITY"/>
   <QuantityBreakType description="Shipping Price Break" quantityBreakTypeId="SHIP_PRICE"/>
   <ShipmentCostEstimate orderFlatPrice="5.0" orderItemFlatPrice="0.0"
-    orderPricePercent="0.0" shipmentCostEstimateId="10000"
-    shipmentMethodTypeId="AIR" weightBreakId="10000" weightUnitPrice="0.2"/>
+    orderPricePercent="0.0" shipmentCostEstimateId="9000"
+    shipmentMethodTypeId="AIR" weightBreakId="9000" weightUnitPrice="0.2"/>
   <ShipmentCostEstimate orderFlatPrice="3.0" orderItemFlatPrice="0.0"
-    orderPricePercent="0.0" shipmentCostEstimateId="10001"
-    shipmentMethodTypeId="GROUND" weightBreakId="10003" weightUnitPrice="0.1"/>
+    orderPricePercent="0.0" shipmentCostEstimateId="9001"
+    shipmentMethodTypeId="GROUND" weightBreakId="9003" weightUnitPrice="0.1"/>
   <ShipmentCostEstimate orderFlatPrice="5.0" orderItemFlatPrice="0.0"
-    orderPricePercent="0.0" shipmentCostEstimateId="10002" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+    orderPricePercent="0.0" shipmentCostEstimateId="9002" shipmentMethodTypeId="LOCAL_DELIVERY"/>
   <ShipmentCostEstimate orderFlatPrice="10.0" orderItemFlatPrice="0.0"
-    orderPricePercent="0.0" shipmentCostEstimateId="10003"
-    shipmentMethodTypeId="NEXT_DAY" weightBreakId="10009" weightUnitPrice="0.35"/>
+    orderPricePercent="0.0" shipmentCostEstimateId="9003"
+    shipmentMethodTypeId="NEXT_DAY" weightBreakId="9009" weightUnitPrice="0.35"/>
 </entity-engine-xml>
 
 
