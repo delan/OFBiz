@@ -95,14 +95,27 @@ public class TrackingCodeEvents {
                     Debug.logError(e, "Error while saving TrackingCodeVisit");
                 }
             }
+
             
-            //write trackingCode cookies with the value set to the trackingCodeId
-            //NOTE: just write these cookies and if others exist from other tracking codes they will be overwritten, ie only keep the newest
+            // write trackingCode cookies with the value set to the trackingCodeId
+            // NOTE: just write these cookies and if others exist from other tracking codes they will be overwritten, ie only keep the newest
             
-            //TODO: if trackingCode.billableLifetime not null and is > 0 write a billable cookie with name in the form: TKCDB_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.billableLifetime
+            // if trackingCode.trackableLifetime not null and is > 0 write a trackable cookie with name in the form: TKCDT_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.trackableLifetime
+            Long trackableLifetime = trackingCode.getLong("trackableLifetime");
+            if (trackableLifetime != null && trackableLifetime.longValue() > 0) {
+                Cookie trackableCookie = new Cookie("TKCDT_" + trackingCode.getString("trackingCodeTypeId"), trackingCode.getString("trackingCodeId"));
+                trackableCookie.setMaxAge(trackableLifetime.intValue());
+                response.addCookie(trackableCookie);
+            }
             
-            //TODO: if trackingCode.trackableLifetime not null and is > 0 write a trackable cookie with name in the form: TKCDT_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.trackableLifetime
-            
+            // if trackingCode.billableLifetime not null and is > 0 write a billable cookie with name in the form: TKCDB_{trackingCode.trackingCodeTypeId} and timeout will be trackingCode.billableLifetime
+            Long billableLifetime = trackingCode.getLong("billableLifetime");
+            if (billableLifetime != null && billableLifetime.longValue() > 0) {
+                Cookie billableCookie = new Cookie("TKCDB_" + trackingCode.getString("trackingCodeTypeId"), trackingCode.getString("trackingCodeId"));
+                billableCookie.setMaxAge(billableLifetime.intValue());
+                response.addCookie(billableCookie);
+            }
+
             
             //if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
             String redirectUrl = trackingCode.getString("redirectUrl");
@@ -123,9 +136,18 @@ public class TrackingCodeEvents {
      * of events that run on the first hit in a visit.
      */
     public static String checkTrackingCodeCookies(HttpServletRequest request, HttpServletResponse response) {
-        //TODO: loop through cookies and look for ones with a name that starts with TKCDT_ for trackable cookies
+        // loop through cookies and look for ones with a name that starts with TKCDT_ for trackable cookies
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (int i = 0; i < cookies.length; i++) {
+                if (cookies[i].getName().startsWith("TKCDT_")) {
+                    String trackingCodeId = cookies[i].getValue();
+                    //TODO: for each trackingCodeId found in this way attach to the visit with the TKCDSRC_COOKIE sourceEnumId
+                }
+            }
+        }
         
-        //TODO: for each trackingCodeId found in this way attach to the visit with the TKCDSRC_COOKIE sourceEnumId
         
         return "success";
     }
