@@ -1,5 +1,5 @@
 /*
- * $Id: WebShoppingCart.java,v 1.6 2004/05/22 20:25:49 ajzeneski Exp $
+ * $Id: WebShoppingCart.java,v 1.7 2004/06/17 06:11:34 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.base.util.UtilHttp;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class WebShoppingCart extends ShoppingCart {
@@ -52,8 +52,7 @@ public class WebShoppingCart extends ShoppingCart {
     /** Creates new empty ShoppingCart object. */
     public WebShoppingCart(HttpServletRequest request) {
         super((GenericDelegator)request.getAttribute("delegator"), ProductStoreWorker.getProductStoreId(request),
-                CatalogWorker.getWebSiteId(request), UtilHttp.getCurrencyUom(request));
-        this.locale = UtilHttp.getLocale(request);
+                CatalogWorker.getWebSiteId(request), UtilHttp.getLocale(request), UtilHttp.getCurrencyUom(request));        
 
         HttpSession session = request.getSession(true);
         if (session != null) {

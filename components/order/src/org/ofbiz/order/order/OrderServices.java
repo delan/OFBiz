@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.38 2004/05/21 22:16:31 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.39 2004/06/17 06:11:33 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -58,6 +58,8 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
+import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
@@ -74,7 +76,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.38 $
+ * @version    $Revision: 1.39 $
  * @since      2.0
  */
 
@@ -3214,4 +3216,28 @@ public class OrderServices {
         return ServiceUtil.returnSuccess();
     }
 
+    // sample test services
+    public static Map shoppingCartTest(DispatchContext dctx, Map context) {
+        Locale locale = (Locale) context.get("locale");
+        ShoppingCart cart = new ShoppingCart(dctx.getDelegator(), "9000", "webStore", locale, "USD");
+        try {
+            cart.addOrIncreaseItem("GZ-1005", 1, null, null, "DemoCatalog", dctx.getDispatcher());
+        } catch (CartItemModifyException e) {
+            Debug.logError(e, module);
+        }
+
+        try {
+            dctx.getDispatcher().runAsync("shoppingCartRemoteTest", UtilMisc.toMap("cart", cart), true);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+        }
+
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map shoppingCartRemoteTest(DispatchContext dctx, Map context) {
+        ShoppingCart cart = (ShoppingCart) context.get("cart");
+        Debug.log("Product ID : " + cart.findCartItem(0).getProductId(), module);
+        return ServiceUtil.returnSuccess();
+    }
 }
