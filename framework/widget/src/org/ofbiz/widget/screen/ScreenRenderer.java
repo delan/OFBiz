@@ -29,6 +29,7 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.ofbiz.base.util.GeneralException;
 import org.xml.sax.SAXException;
 
 /**
@@ -57,7 +58,7 @@ public class ScreenRenderer {
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    public String render(String combinedName) throws IOException, SAXException, ParserConfigurationException {
+    public String render(String combinedName) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         String resourceName = ScreenFactory.getResourceNameFromCombined(combinedName);
         String screenName = ScreenFactory.getScreenNameFromCombined(combinedName);
         this.render(resourceName, screenName);
@@ -73,7 +74,7 @@ public class ScreenRenderer {
      * @throws SAXException
      * @throws ParserConfigurationException
      */
-    public String render(String resourceName, String screenName) throws IOException, SAXException, ParserConfigurationException {
+    public String render(String resourceName, String screenName) throws GeneralException, IOException, SAXException, ParserConfigurationException {
         ModelScreen modelScreen = ScreenFactory.getScreenFromLocation(resourceName, screenName);
         modelScreen.renderScreenString(writer, context, screenStringRenderer);
         return "";

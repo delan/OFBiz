@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -72,7 +72,7 @@ public abstract class ModelScreenAction {
         if (Debug.verboseOn()) Debug.logVerbose("Reading Screen action with name: " + actionElement.getNodeName(), module);
     }
     
-    public abstract void runAction(Map context);
+    public abstract void runAction(Map context) throws GeneralException;
     
     public static List readSubActions(ModelScreen modelScreen, Element parentElement) {
         List actions = new LinkedList();
@@ -105,7 +105,7 @@ public abstract class ModelScreenAction {
         return actions;
     }
     
-    public static void runSubActions(List actions, Map context) {
+    public static void runSubActions(List actions, Map context) throws GeneralException {
         if (actions == null) return;
         
         Iterator actionIter = actions.iterator();
@@ -375,17 +375,17 @@ public abstract class ModelScreenAction {
             this.location = scriptElement.getAttribute("location");
         }
         
-        public void runAction(Map context) {
+        public void runAction(Map context) throws GeneralException {
             if (location.endsWith(".bsh")) {
                 try {
                     BshUtil.runBshAtLocation(location, context);
                 } catch (GeneralException e) {
                     String errMsg = "Error running BSH script at location [" + location + "]: " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    throw new IllegalArgumentException(errMsg);
+                    // throwing nested exception instead of logging full detail: Debug.logError(e, errMsg, module);
+                    throw new GeneralException(errMsg, e);
                 }
             } else {
-                throw new IllegalArgumentException("For screen script actions the script type is not yet support for location:" + location);
+                throw new GeneralException("For screen script actions the script type is not yet support for location:" + location);
             }
         }
     }

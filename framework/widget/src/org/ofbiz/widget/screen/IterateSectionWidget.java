@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -95,7 +96,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
         }
     }
 
-    public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+    public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
     
         boolean isEntrySet = false;
             if (!(context instanceof MapStack)) {

@@ -41,6 +41,7 @@ import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
@@ -111,6 +112,8 @@ public class ScreenWidgetViewHandler implements ViewHandler {
             throw new ViewHandlerException("XML Error rendering page: " + e.toString(), e);
         } catch (ParserConfigurationException e) {
             throw new ViewHandlerException("XML Error rendering page: " + e.toString(), e);
+        } catch (GeneralException e) {
+            throw new ViewHandlerException("Lower level error rendering page: " + e.toString(), e);
         } finally {
             if (writer != null) {
                 try {
