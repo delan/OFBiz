@@ -71,26 +71,166 @@ file (property element), or a constant (constant element).</p>
 <p>The process tag is used to contain the operations to be done on the specified 
 field in the in-Map. It has one required attribute, the field to operate on. The
 operations that it contains are: validate-method, compare, compare-field, regexp, 
-not-empty, equals,  copy,  and convert.</p>
+not-empty, copy,  and convert.</p>
+
+<p>All process operations tags except copy must contain one of two tags: 
+fail-message or fail-property. If the operation fails a message is added to
+the message list that is either the specified fail-message, or the String from
+the properties file value that is specified in fail-property.</p>
+
+<p>Messages are collected in List as the Simple Map Processor runs. If the List
+is not empty when it completes then something failed in the map processor. This
+is done so that all failures will be reported immediately rather than having to 
+fix one failure before another can be discovered.</p>
+
+<p>All process operations automatically convert the field value and other values
+from their current type to the type specified for the operation, where applicable.
+The ObjectType.simpleTypeConvert method is used to do the conversion. It supports
+the following types: String, Double, Float, Long, Integer, Date, Time, and 
+Timestamp. If the type is not specified String is the default.</p>
 
 <p><b><u>process:validate-method</u></b></p>
-<p><b><u>process:compare</u></b></p>
-<p><b><u>process:compare-field</u></b></p>
-<p><b><u>process:regexp</u></b></p>
-<p><b><u>process:not-empty</u></b></p>
-<p><b><u>process:equals</u></b></p>
-<p><b><u>process:copy</u></b></p>
-<p><b><u>process:convert</u></b></p>
+<p>The validate-method tag is used to call any static method that accepts
+a String and returns a boolean. If the field coming in is not a String
+it will be converted to a String before calling the method. The two attributes
+for this tag are class and method which should contain the fully qualified class 
+name and the method name, respectively. If the class name is not specified it 
+will default to org.ofbiz.core.util.UtilValidate.</p>
 
+<p><b><u>process:compare</u></b></p>
+<p>The compare tag is used to compare the field value to the value specified
+in the value attribute. An operator must be specified to indicate
+the comparison desired. Operators available include less, greater, less-equals, 
+greater-equals, equals, not-equals, and contains.</p>
+
+<p><b><u>process:compare-field</u></b></p>
+<p>The compare-field tag is just like the compare tag except that instead
+of specifying a value you specify the name of another field in the in-Map 
+to compare the current field to.</p>
+
+<p><b><u>process:regexp</u></b></p>
+<p>The regexp tag validate the current field against the regular expression 
+specified in the expr attribute of the tag. Standard Perl style regular
+expressions are used with the ORO library from Jakarta.</p>
+
+<p><b><u>process:not-empty</u></b></p>
+<p>The not-empty tag verifies that the current field is not empty. If the
+field is a String it must not be null and must have a length greater than
+zero, otherwise it must simply not be null. The not-empty tag has no attributes.</p>
+
+<p><b><u>process:copy</u></b></p>
+<p>The copy operation simply copies the current field value to the out-Map from
+the in-Map. There are three optional attributes. If a different field name is
+desired in the out-Map it can be specified in the to-field attribute. The replace
+attribute can be used to specify if an existing field in the out-Map should be 
+replaced or not. The replace attribute defaults to true. The set-if-null 
+attribute specifies whether or not the value should be put in the out-Map if
+it is null. The default for set-if-null is false.</p>
+
+<p><b><u>process:convert</u></b></p>
+<p>The convert tag does the same thing as copy except that the type can be
+converted to the type specified in the type attribute. The format attribute
+can be used to specify the format for date/time fields. These two tags are
+in addition to all of the the attributes in the copy tag.</p>
 
 <p><b><u>Example</u></b></p>
-
+<pre>
+&lt;simple-map-processors&gt;
+  &lt;simple-map-processor name="update"&gt;
+    &lt;make-in-string field="estimatedStartDate"&gt;
+        &lt;in-field field="estimatedStartYear"&gt;&lt;constant&gt;-&lt;/constant&gt;
+        &lt;in-field field="estimatedStartMonth"&gt;&lt;constant&gt;-&lt;/constant&gt;
+        &lt;in-field field="estimatedStartDay"&gt;&lt;constant&gt;T&lt;/constant&gt;
+        &lt;in-field field="estimatedStartHour"&gt;&lt;constant&gt;:&lt;/constant&gt;
+        &lt;in-field field="estimatedStartMinute"&gt;&lt;constant&gt;:&lt;/constant&gt;
+        &lt;in-field field="estimatedStartSecond"&gt;
+    &lt;/make-in-string&gt;
+    &lt;process field="workEffortId"&gt;&lt;copy replace="false"/&gt;&lt;/process&gt;
+    &lt;process field="scopeEnumId"&gt;&lt;copy/&gt;&lt;/process&gt;
+    &lt;process field="currentStatusId"&gt;&lt;copy/&gt;&lt;not-empty&gt;&lt;fail-message message="Status is missing."/&gt;&lt;/not-empty&gt;&lt;/process&gt;
+    &lt;process field="priority"&gt;&lt;convert type="Long"&gt;&lt;fail-message message="Priority is not a valid whole number."/&gt;&lt;/convert&gt;&lt;/process&gt;
+    &lt;process field="estimatedStartDate"&gt;
+        &lt;compare-field operator="less" field="estimatedCompletionDate" type="Timestamp" format="yyyy-MM-dd'T'HH:mm:ss"&gt;
+            &lt;fail-message message="Estimated Start date/time must be BEFORE End date/time."/&gt;&lt;/compare-field&gt;
+        &lt;convert type="Timestamp" format="yyyy-MM-dd'T'HH:mm:ss"&gt;
+            &lt;fail-message message="Estimated Start Date is not a valid Date-Time."/&gt;&lt;/convert&gt;&lt;/process&gt;
+    &lt;process field="estimatedCompletionDate"&gt;
+        &lt;convert type="Timestamp"&gt;&lt;fail-message message="Estimated Completion Date is not a valid Date-Time."/&gt;&lt;/convert&gt;&lt;/process&gt;
+    &lt;process field="estimatedMilliSeconds"&gt;
+        &lt;convert type="Double"&gt;&lt;fail-message message="Estimated Milli-seconds is not a valid number."/&gt;&lt;/convert&gt;&lt;/process&gt;
+  &lt;/simple-map-processor&gt;
+  &lt;simple-map-processor name="delete"&gt;
+    &lt;process field="workEffortId"&gt;&lt;copy/&gt;&lt;not-empty&gt;&lt;fail-message message="Work Effort ID is missing."/&gt;&lt;/not-empty&gt;&lt;/process&gt;
+  &lt;/simple-map-processor&gt;
+&lt;/simple-map-processors&gt;
+</pre>
 
 <hr>
 <h3><a name="Simple_Event">The Simple Event Mini-Language</a></h3>
 <hr>
+<p>The Simple Event Mini-Language is a simple way to implement an event
+that is invoked by the Control Servlet when it is attached to a request.
+A Simple Event can be invoked through the static methods on the SimpleEvent
+class, or through a configuration in the controller configuration XML file
+as follows:</p>
+
+<pre>
+        &lt;event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml" invoke="update"/&gt;
+</pre>
+
+<p>The path in the case of a Simple Event is the classpath and filename of the XML file.</p>
+<p>In this Mini-Language you can invoke Simple Map Processors and Services,
+and create error and event messages to put in the request for the view to display.
+You can also put other values into request or session attributes. One of the Maps
+available when the Simple Event starts is the request parameters map. The name
+is specified in the parameter-map-name attribute of the simple-event tag. The default
+map-name is "parameters".</p>
+
+<p><b><u>simple-map-processor</u></b></p>
 <p></p>
 
+<p><b><u>check-errors</u></b></p>
+<p></p>
+
+<p><b><u>service</u></b></p>
+<p></p>
+
+<p><b><u>field-to-request</u></b></p>
+<p></p>
+
+<p><b><u>field-to-session</u></b></p>
+<p></p>
+
+<p><b><u>Example</u></b></p>
+<pre>
+&lt;simple-events&gt;
+    &lt;simple-event event-name="create" short-description="Create Work Effort"&gt;
+        &lt;simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
+                processor-name="update" in-map-name="parameters" out-map-name="context"/&gt;
+        &lt;check-errors&gt;
+            &lt;error-prefix&gt;&lt;![CDATA[The following errors occured:&lt;ul&gt;]]&gt;&lt;/error-prefix&gt;&lt;error-suffix&gt;&lt;![CDATA[&lt;/ul&gt;]]&gt;&lt;/error-suffix&gt;
+            &lt;message-prefix&gt;&lt;![CDATA[&lt;li&gt;]]&gt;&lt;/message-prefix&gt;&lt;message-suffix&gt;&lt;![CDATA[&lt;/li&gt;]]&gt;&lt;/message-suffix&gt;&lt;/check-errors&gt;
+        &lt;service service-name="createWorkEffort" in-map-name="context"&gt;
+            &lt;error-prefix&gt;&lt;![CDATA[The following errors occured:&lt;ul&gt;]]&gt;&lt;/error-prefix&gt;&lt;error-suffix&gt;&lt;![CDATA[&lt;/ul&gt;]]&gt;&lt;/error-suffix&gt;
+            &lt;success-prefix&gt;&lt;![CDATA[&lt;ul&gt;]]&gt;&lt;/success-prefix&gt;&lt;success-suffix&gt;&lt;![CDATA[&lt;/ul&gt;]]&gt;&lt;/success-suffix&gt;
+            &lt;message-prefix&gt;&lt;![CDATA[&lt;li&gt;]]&gt;&lt;/message-prefix&gt;&lt;message-suffix&gt;&lt;![CDATA[&lt;/li&gt;]]&gt;&lt;/message-suffix&gt;
+            &lt;default-message&gt;Work Effort successfully created.&lt;/default-message&gt;
+            &lt;result-to-request result-name="workEffortId"/&gt;&lt;/service&gt;
+    &lt;/simple-event&gt;
+    &lt;simple-event event-name="update" short-description="Update Work Effort"&gt;
+        &lt;simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
+                processor-name="update" in-map-name="parameters" out-map-name="context"/&gt;
+        &lt;check-errors&gt;
+            &lt;error-prefix&gt;&lt;![CDATA[The following errors occured:&lt;ul&gt;]]&gt;&lt;/error-prefix&gt;&lt;error-suffix&gt;&lt;![CDATA[&lt;/ul&gt;]]&gt;&lt;/error-suffix&gt;
+            &lt;message-prefix&gt;&lt;![CDATA[&lt;li&gt;]]&gt;&lt;/message-prefix&gt;&lt;message-suffix&gt;&lt;![CDATA[&lt;/li&gt;]]&gt;&lt;/message-suffix&gt;&lt;/check-errors&gt;
+        &lt;service service-name="updateWorkEffort" in-map-name="context"&gt;
+            &lt;error-prefix&gt;&lt;![CDATA[The following errors occured:&lt;ul&gt;]]&gt;&lt;/error-prefix&gt;&lt;error-suffix&gt;&lt;![CDATA[&lt;/ul&gt;]]&gt;&lt;/error-suffix&gt;
+            &lt;success-prefix&gt;&lt;![CDATA[&lt;ul&gt;]]&gt;&lt;/success-prefix&gt;&lt;success-suffix&gt;&lt;![CDATA[&lt;/ul&gt;]]&gt;&lt;/success-suffix&gt;
+            &lt;message-prefix&gt;&lt;![CDATA[&lt;li&gt;]]&gt;&lt;/message-prefix&gt;&lt;message-suffix&gt;&lt;![CDATA[&lt;/li&gt;]]&gt;&lt;/message-suffix&gt;
+            &lt;default-message&gt;Work Effort successfully updated.&lt;/default-message&gt;&lt;/service&gt;
+    &lt;/simple-event&gt;
+&lt;/simple-events&gt;
+</pre>
 
 </body>
 
