@@ -84,8 +84,10 @@ public class EventConditionAction {
 
         if (evalCond) {
             Iterator a = actions.iterator();
-            EventAction ea = (EventAction) a.next();
-            ea.runAction(serviceName, dctx, context);
+            while (a.hasNext()) {
+                EventAction ea = (EventAction) a.next();
+                ea.runAction(serviceName, dctx, context);
+            }
         }
     }
 }
