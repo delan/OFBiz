@@ -39,6 +39,10 @@ if (shoppingCart != null) {
 }
 context.put("shoppingCart", shoppingCart);
 
+// get all the possible gift wrap options
+allgiftWraps = delegator.findByAnd("ProductFeature", UtilMisc.toMap("productFeatureTypeId", "GIFT_WRAP"), UtilMisc.toList("defaultSequenceNum"));
+context.put("allgiftWraps", allgiftWraps);
+
 // get the shopping lists for the logged in user
 if (userLogin != null) {
     shoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId")), UtilMisc.toList("listName"));
