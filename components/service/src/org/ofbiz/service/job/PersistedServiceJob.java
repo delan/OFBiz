@@ -1,5 +1,5 @@
 /*
- * $Id: PersistedServiceJob.java,v 1.9 2004/06/17 06:13:58 ajzeneski Exp $
+ * $Id: PersistedServiceJob.java,v 1.10 2004/06/17 06:44:11 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.xml.sax.SAXException;
  * Entity Service Job - Store => Schedule => Run
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class PersistedServiceJob extends GenericServiceJob {
@@ -211,10 +211,11 @@ public class PersistedServiceJob extends GenericServiceJob {
         Map context = null;
         try {
             GenericValue jobObj = getJob();
-            GenericValue contextObj = jobObj.getRelatedOne("RuntimeData");
-
-            if (contextObj != null) {
-                context = (Map) XmlSerializer.deserialize(contextObj.getString("runtimeInfo"), delegator);
+            if (!UtilValidate.isEmpty(jobObj.getString("runtimeDataId"))) {
+                GenericValue contextObj = jobObj.getRelatedOne("RuntimeData");
+                if (contextObj != null) {
+                    context = (Map) XmlSerializer.deserialize(contextObj.getString("runtimeInfo"), delegator);
+                }
             }
 
             if (context == null) {
@@ -239,8 +240,10 @@ public class PersistedServiceJob extends GenericServiceJob {
         } catch (IOException e) {
             Debug.logError(e, "PersistedServiceJob.getContext(): IOException", module);
         }
-        if (context == null)
+        if (context == null) {
             Debug.logError("Job context is null", module);
+        }
+        
         return context;
     }
 
