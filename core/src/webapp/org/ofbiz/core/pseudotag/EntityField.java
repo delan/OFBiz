@@ -103,24 +103,32 @@ public class EntityField {
 
         // We should be a ValueObject
         if (type == null) {
-            // Get the ValueObject from PageContext.
-            GenericValue valueObject = (GenericValue) pageContext.findAttribute(attribute);
-            if (valueObject == null) {
-                fieldObject = defaultStr;
-                fieldObjectType = "comment"; // Default for NULL objects.
-            } else {
-                ModelEntity entityModel = valueObject.getModelEntity();
-                fieldObject = valueObject.get(field);
-
-                // Get the Object Type.
-                if (fieldObject != null) {
-                    ModelField fieldModel = entityModel.getField(field);
-                    fieldObjectType = fieldModel.getType();
-                } else {
-                    //Debug.logWarning("[EntityFieldTag] : Null ValueObject passed.");
+            Object attrObject = pageContext.findAttribute(attribute);
+            
+            if (attrObject instanceof GenericValue) {
+                // Get the ValueObject from PageContext.
+                GenericValue valueObject = (GenericValue) attrObject;
+                if (valueObject == null) {
                     fieldObject = defaultStr;
                     fieldObjectType = "comment"; // Default for NULL objects.
+                } else {
+                    ModelEntity entityModel = valueObject.getModelEntity();
+                    fieldObject = valueObject.get(field);
+
+                    // Get the Object Type.
+                    if (fieldObject != null) {
+                        ModelField fieldModel = entityModel.getField(field);
+                        fieldObjectType = fieldModel.getType();
+                    } else {
+                        //Debug.logWarning("[EntityFieldTag] : Null ValueObject passed.");
+                        fieldObject = defaultStr;
+                        fieldObjectType = "comment"; // Default for NULL objects.
+                    }
                 }
+            } else {
+                //kind of weird, but try to do something that will always work:
+                fieldObject = attrObject.toString();
+                fieldObjectType = "comment"; // Default for Strings.
             }
         } else {
             // We should be either a 'currency' or a java type.
