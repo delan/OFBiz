@@ -23,6 +23,7 @@
   
   <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_ODR_CONFIRM" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailconfirmation.ftl" subject="Order Confirmation" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
   <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailstatuschange.ftl" subject="Order Change Notification" fromAddress="ofbiztest@yahoo.com"/>
+  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_PWD_RETRIEVE" templatePath="/commonapp/src/org/ofbiz/commonapp/security/login/passwordemail.ftl" subject="Password Reminder" fromAddress="ofbiztest@yahoo.com"/>
   <WebSiteEmailSetting webSiteId="OrderEntry" emailType="WES_ODR_CONFIRM" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailconfirmation.ftl" subject="Order Confirmation" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
   <WebSiteEmailSetting webSiteId="OrderEntry" emailType="WES_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailstatuschange.ftl" subject="Order Change Notification" fromAddress="ofbiztest@yahoo.com"/>
    
