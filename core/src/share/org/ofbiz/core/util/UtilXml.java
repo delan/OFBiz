@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/12/09 09:29:49  jonesde
+ * Small changes to make it easy to turn off validation, validation now off for deserialization since it is not so easy to maintain there
+ *
  * Revision 1.5  2001/11/24 06:32:17  jonesde
  * Added a few more useful routines
  *
@@ -38,6 +41,7 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 //needed for XML writing with Crimson
 //import org.apache.crimson.tree.*;
@@ -195,6 +199,23 @@ public class UtilXml {
         
         if(document == null) return null;
         return document;
+    }
+    
+    /** Creates a child element with the given name and appends it to the element child node list. */
+    public static Element addChildElement(Element element, String childElementName, Document document) {
+        Element newElement = document.createElement(childElementName);
+        element.appendChild(newElement);
+        return newElement;
+    }
+
+    /** Creates a child element with the given name and appends it to the element child node list. 
+     *  Also creates a Text node with the given value and appends it to the new elements child node list.
+     */
+    public static Element addChildElementValue(Element element, String childElementName, String childElementValue, Document document) {
+        Element newElement = addChildElement(element, childElementName, document);
+        Text newText = document.createTextNode(childElementValue);
+        newElement.appendChild(newText);
+        return newElement;
     }
     
     /** Return a List of Element objects that have the given name and are 
