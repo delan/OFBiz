@@ -216,7 +216,7 @@
     
     <request-map uri="initiateOrderWorkflow">
         <security https="true" auth="true" direct-request="false"/>
-        <event type="simple" path="org/ofbiz/ecommerce/misc/MiscEvents.xml" invoke="initiateOrderWorkflow"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="initiateOrderWorkflow"/>
         <response name="success" type="request" value="renderconfirmorder"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>    
