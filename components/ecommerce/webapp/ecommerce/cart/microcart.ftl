@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -42,7 +42,7 @@
 <div class='insideHeaderDisabled'>
   <a href="<transform ofbizUrl>/view/showcart</transform>" class="insideHeaderLink">[View&nbsp;Cart]</a>
   <#if (shoppingCartSize > 0)>
-    <a href="<transform ofbizUrl>/checkoutoptions</transform>" class="insideHeaderLink">[Checkout]</a>
+    <a href="<transform ofbizUrl>/quickcheckout</transform>" class="insideHeaderLink">[Checkout]</a>
   <#else>
     [Checkout]
   </#if>

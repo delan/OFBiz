@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
@@ -37,31 +37,31 @@ function submitForm(form, mode, value) {
 		form.submit();
 	} else if (mode == "NA") {
 		// new address
-		form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</@ofbizUrl>";
+		form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
 		form.submit();
 	} else if (mode == "EA") {
 		// edit address
-		form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId="+value+"</@ofbizUrl>";
+		form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?contactMechId="+value+"</@ofbizUrl>";
 		form.submit();
 	} else if (mode == "NC") {
 		// new credit card
-		form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutoptions</@ofbizUrl>";
+		form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard</@ofbizUrl>";
 		form.submit();
 	} else if (mode == "EC") {
 		// edit credit card
-		form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutoptions&paymentMethodId="+value+"</@ofbizUrl>";
+		form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?paymentMethodId="+value+"</@ofbizUrl>";
 		form.submit();
 	} else if (mode == "NE") {
 		// new eft account
-		form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions</@ofbizUrl>";
+		form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount</@ofbizUrl>";
 		form.submit();
 	} else if (mode == "EE") {
 		// edit eft account
-		form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions&paymentMethodId="+value+"</@ofbizUrl>";
+		form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?paymentMethodId="+value+"</@ofbizUrl>";
 		form.submit();
 	} else if (mode == "SA") {
         // selected shipping address
-        form.action="<@ofbizUrl>/updateCheckoutOptions/checkoutoptions</@ofbizUrl>";
+        form.action="<@ofbizUrl>/updateCheckoutOptions/quickcheckout</@ofbizUrl>";
         form.submit();
     }
 }
@@ -84,6 +84,7 @@ function toggleBillingAccount(box) {
 <#assign cart = context.shoppingCart?if_exists>
 
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
+  <input type="hidden" name="DONE_PAGE" value="quickcheckout">
   <table width="100%" border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
       <td height='100%'>
@@ -216,7 +217,7 @@ function toggleBillingAccount(box) {
                               </#list>
                             </b>
                           </div>
-                          <div class="tabletext">Your may update these in your <a href="<@ofbizUrl>/viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">profile</a>.</div>
+                          <div class="tabletext">Your may update these in your <a href="<@ofbizUrl>/viewprofile?DONE_PAGE=quickcheckout</@ofbizUrl>" class="buttontext">profile</a>.</div>
                           <br>
                           <div class="tabletext">You may add other comma separated email addresses here that will be used only for the current order:</div>
                           <input type="text" class='inputBox' size="30" name="order_additional_emails" value='${cart.getOrderAdditionalEmails()?if_exists}'>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -81,7 +81,7 @@
                 </tr>
                 <tr>
                   <td colspan="3">
-                    <a href="<transform ofbizUrl>/view/showcart</transform>" class="buttontext">[View&nbsp;Cart]</a>&nbsp;<a href="<transform ofbizUrl>/checkoutoptions</transform>" class="buttontext">[Checkout]</a>
+                    <a href="<transform ofbizUrl>/view/showcart</transform>" class="buttontext">[View&nbsp;Cart]</a>&nbsp;<a href="<transform ofbizUrl>/quickcheckout</transform>" class="buttontext">[Checkout]</a>
                   </td>
                 </tr>
               <#else>
