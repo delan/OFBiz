@@ -281,6 +281,12 @@
         <response name="error" type="view" value="editproject"/>
     </request-map>
 
+    <request-map uri="addprojectassignment"><security https="true" auth="true"/>
+        <event type="service" invoke="quickAssignPartyToWorkEffortWithRole"/>
+    	<response name="success" type="view" value="editproject"/>
+        <response name="error" type="view" value="editproject"/>
+    </request-map>
+    
     <request-map uri="phaselist"><security https="true" auth="true"/>
     	<response name="success" type="view" value="phaselist"/>
     </request-map>
@@ -320,6 +326,16 @@
     	<response name="success" type="view" value="phasetasklist"/>
         <response name="error" type="view" value="editphasetask"/>
     </request-map>
+    
+    <request-map uri="addtasknote"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="edittasknote"/>
+    </request-map>
+    
+    <request-map uri="savetasknote"><security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffortNote"/>
+    	<response name="success" type="view" value="editphasetask"/>
+        <response name="error" type="view" value="edittasknote"/>
+    </request-map>
         
     <!-- end project management requests -->
     
@@ -354,6 +370,7 @@
     <view-map name="editphase" type="region"/>
     <view-map name="phasetasklist" type="region"/>
     <view-map name="editphasetask" type="region"/>
+    <view-map name="edittasknote" type="region"/>
     
     <!-- end project management views -->
     

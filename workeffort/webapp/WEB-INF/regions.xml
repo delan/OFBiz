@@ -129,6 +129,10 @@
         <put section='title'>Edit Phase Task</put>
         <put section='content' content='/project/edittask.jsp'/>
     </define>
+    <define id='edittasknote' region='LEFT_RIGHT_REGION'>
+        <put section='title'>Edit Task Note</put>
+        <put section='content' content='/project/edittasknote.jsp'/>
+    </define>
     <!-- end project management regions -->
     
 </regions>

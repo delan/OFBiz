@@ -51,13 +51,13 @@
 
 <BR>
 
-<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside'>
+<TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside' width='45%'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left>
-            <div class='boxhead'>&nbsp;Project <ofbiz:entityfield attribute="projectWorkEffort" field="workEffortName"/></div>
+            <div class='boxhead'>&nbsp;<b>Project:</b>&nbsp;<ofbiz:entityfield attribute="projectWorkEffort" field="workEffortName"/></div>
           </TD>
         </tr>
       </table>
@@ -67,29 +67,26 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
                 <tr>
-                  <td align=right><div class='tabletext'>
-                    Project Status
-                    </div></td>
+                  <td align=right valign=top><div class='tabletext'><nobr>Project Status:</nobr></div></td>
                   <td>&nbsp;</td>
-                  <td>
-                      <ofbiz:entityfield field="description" attribute="projectWorkEffortStatus"/>
+                  <td valign=top><ofbiz:entityfield field="description" attribute="projectWorkEffortStatus"/>
                   </td>
                 </tr>
                 <tr>
-                  <td align=right><div class='tabletext'>Description</div></td>
+                  <td align=right valign=top><div class='tabletext'><nobr>Description:</nobr></div></td>
                   <td>&nbsp;</td>
-                  <td><ofbiz:inputvalue field="description" param="description" entityAttr="projectWorkEffort" tryEntityAttr="tryEntity"/>
+                  <td valign=top><ofbiz:inputvalue field="description" param="description" entityAttr="projectWorkEffort" tryEntityAttr="tryEntity"/>
                 </tr>
                 <tr>
-                  <td align=right><div class='tabletext'>Start Date/Time</div></td>
+                  <td align=right valign=top><div class='tabletext'><nobr>Start Date/Time:</nobr></div></td>
                   <td>&nbsp;</td>
-                  <td><ofbiz:inputvalue field="estimatedStartDate" param="estimatedStartDate" entityAttr="projectWorkEffort" tryEntityAttr="tryEntity"/>
+                  <td valign=top><ofbiz:inputvalue field="estimatedStartDate" param="estimatedStartDate" entityAttr="projectWorkEffort" tryEntityAttr="tryEntity"/>
                   </td>
                 </tr>
                 <tr>
-                  <td align=right><div class='tabletext'>End Date/Time</div></td>
+                  <td align=right valign=top><div class='tabletext'><nobr>End Date/Time:</nobr></div></td>
                   <td>&nbsp;</td>
-                  <td><ofbiz:inputvalue field="estimatedCompletionDate" param="estimatedCompletionDate" entityAttr="projectWorkEffort" tryEntityAttr="tryEntity"/>
+                  <td valign=top><ofbiz:inputvalue field="estimatedCompletionDate" param="estimatedCompletionDate" entityAttr="projectWorkEffort" tryEntityAttr="tryEntity"/>
                   </td>
                 </tr>
       </table>

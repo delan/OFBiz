@@ -67,7 +67,8 @@
                 <form name='projectForm' action="<ofbiz:url>/createphase</ofbiz:url>" method=POST style='margin: 0;'>
                 <input type='hidden' name='quickAssignPartyId' value='<ofbiz:entityfield field="partyId" attribute="userLogin"/>'>
                 <table border='0' cellpadding='2' cellspacing='0'>
-                  <input type='hidden' name='workEffortTypeId' value='PHASE'>
+                  <input type='hidden' name='workEffortTypeId' value='TASK'>
+                  <input type='hidden' name='workEffortPurposeTypeId' value='WEPT_PHASE'>
                   <ofbiz:if name="workEffortId">
                     <DIV class='tabletext'>ERROR: Could not find Task with ID "<ofbiz:print attribute="workEffortId"/>"</DIV>
                   </ofbiz:if>

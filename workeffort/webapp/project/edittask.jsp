@@ -31,9 +31,18 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
+<%@ page import="org.ofbiz.commonapp.workeffort.project.*" %>
 <%@ page import="org.ofbiz.commonapp.common.status.*" %>
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
 <%StatusWorker.getStatusItems(pageContext, "taskStatusItems", "TASK_STATUS");%>
+<%ProjectWorker.getTaskNotes(pageContext, "notes");%>
+
+<% 
+String phaseWorkEffortId = request.getParameter("phaseWorkEffortId");
+if(phaseWorkEffortId == null) phaseWorkEffortId = (String)session.getAttribute("phaseWorkEffortId");
+
+session.putValue("phaseWorkEffortId", phaseWorkEffortId);
+%>
 
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -73,7 +82,7 @@
                   </ofbiz:if>
               </ofbiz:unless>
 
-                <input type='hidden' name='phaseWorkEffortId' value='<%=request.getParameter("phaseWorkEffortId")%>'>
+                <input type='hidden' name='phaseWorkEffortId' value='<%=phaseWorkEffortId%>'>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Task Name</div></td>
@@ -182,6 +191,43 @@ function insertNowTimestampStart() {
             </ofbiz:unless>
           </td>
         </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
+<BR>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <TD align=left>
+            <div class='boxhead'>&nbsp;Notes</div>
+          </TD>
+          <TD align=right>
+            <table><tr><td align=right>
+              <A href='<ofbiz:url>/addtasknote?workEffortId=<ofbiz:print attribute="workEffortId"/></ofbiz:url>' class='lightbuttontext'>[New&nbsp;Note]</A>
+            </td></tr></table>
+          </TD>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <ofbiz:iterator name="noteItem" property="notes">
+          <% GenericValue person = delegator.findByPrimaryKey("Person", 
+              UtilMisc.toMap("partyId", ((GenericValue)pageContext.getAttribute("noteItem")).getString("noteParty")));%>
+          <tr><td class='tabletext' colspan=2 ><%=person.getString("firstName") + "  " + person.getString("lastName")%>
+              (<ofbiz:entityfield field="noteDateTime" attribute="noteItem"/>)</td>
+          </tr>
+          <tr>
+            <td width='2%' align=left>&nbsp;</td>
+            <td align=left ><pre style='font-size: x-small'><ofbiz:entityfield field="noteInfo" attribute="noteItem"/></pre></td>
+          </tr>
+        </ofbiz:iterator>
       </table>
     </TD>
   </TR>

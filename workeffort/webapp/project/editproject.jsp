@@ -29,11 +29,20 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="userLogin" type="org.ofbiz.core.entity.GenericValue" scope="request" />
 
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 <%@ page import="org.ofbiz.commonapp.common.status.*" %>
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
 <%StatusWorker.getStatusItems(pageContext, "taskStatusItems", "WORKFLOW_STATUS");%>
+<%String workEffortId = request.getParameter("workEffortId");%>
+<%//GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);%>
+<%java.sql.Timestamp now = new java.sql.Timestamp((new java.util.Date()).getTime());%>
+<%Collection assignments = delegator.findByAnd("WorkEffortPartyAssignment",
+        UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
+        new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId),
+        new EntityExpr("roleTypeId", EntityOperator.EQUALS, "CAL_OWNER")));%>
+<%boolean isOwner = assignments.size() > 0;%>
 
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -67,7 +76,8 @@
                 <form name='projectForm' action="<ofbiz:url>/createproject</ofbiz:url>" method=POST style='margin: 0;'>
                 <input type='hidden' name='quickAssignPartyId' value='<ofbiz:entityfield field="partyId" attribute="userLogin"/>'>
                 <table border='0' cellpadding='2' cellspacing='0'>
-                  <input type='hidden' name='workEffortTypeId' value='PROJECT'>
+                  <input type='hidden' name='workEffortTypeId' value='TASK'>
+                  <input type='hidden' name='workEffortPurposeTypeId' value='WEPT_PROJECT'>
                   <ofbiz:if name="workEffortId">
                     <DIV class='tabletext'>ERROR: Could not find Task with ID "<ofbiz:print attribute="workEffortId"/>"</DIV>
                   </ofbiz:if>
@@ -180,6 +190,53 @@ function insertNowTimestampStart() {
             </ofbiz:unless>
           </td>
         </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+<br>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <TD align=left>
+            <div class='boxhead'>&nbsp;Project Assignments</div>
+          </TD>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <% 
+          Iterator assigns = delegator.findByAnd("WorkEffortAndPartyAssign", 
+            UtilMisc.toMap("workEffortId", workEffortId)).iterator();
+          while(assigns.hasNext()) {%>
+            <% GenericValue WEPA = (GenericValue)assigns.next();%>
+            <% GenericValue person = WEPA.getRelatedOne("Person");%>
+            <tr><td><%=person.getString("firstName") + " " + person.getString("lastName")%></td></tr>
+          <%}%>
+        <% if(isOwner) {%>
+        <tr><td><hr></td></tr>
+        <tr>
+          <td align=left>Assign User to Project&nbsp;&nbsp;
+            <% Iterator people = delegator.findAll("Person").iterator();%>
+            <form name='assignform' action='<ofbiz:url>/addprojectassignment</ofbiz:url>' method=POST>
+            <input type=hidden name='roleTypeId' value='CAL_DELEGATE'>
+            <input type=hidden name='workEffortId' value='<%=workEffortId%>'>
+            <select name='quickAssignPartyId' onchange='javascript:window.assignform.submit();'>
+              <option value=''>(Choose User to Assign)
+            <%while(people.hasNext()) {%>
+              <% GenericValue person = (GenericValue)people.next();%>
+              <option value='<%=person.getString("partyId")%>'><%=person.getString("firstName") + " " + person.getString("lastName")%>
+            <%}%>
+            </select>
+            </form>
+          </td>
+        </tr>
+        <%}%>
       </table>
     </TD>
   </TR>
