@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.10 2003/10/17 16:51:37 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.11 2003/10/20 22:08:14 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -503,6 +503,7 @@ public class CheckOutEvents {
 
         // check the userLogin object
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+
         // if null then we must be an anonymous shopper
         if (userLogin == null) {
             // remove auto-login fields
@@ -571,11 +572,20 @@ public class CheckOutEvents {
         }
 
         // determine where to direct the browser
-        String requireCustomer = request.getParameter("finalizeReqCustInfo");
-        String requireShipping = request.getParameter("finalizeReqShipInfo");
-        String requireOptions = request.getParameter("finalizeReqOptions");
-        String requirePayment = request.getParameter("finalizeReqPayInfo");
+        String requireCustomer = null;
+        String requireShipping = null;
+        String requireOptions = null;
+        String requirePayment = null;
 
+        // these options are not available to anonymous shoppers (security)
+        if (userLogin != null && !"anonymous".equals(userLogin.getString("userLoginId"))) {
+            requireCustomer = request.getParameter("finalizeReqCustInfo");
+            requireShipping = request.getParameter("finalizeReqShipInfo");
+            requireOptions = request.getParameter("finalizeReqOptions");
+            requirePayment = request.getParameter("finalizeReqPayInfo");
+        }
+
+        // these are the default values
         if (requireCustomer == null)
             requireCustomer = "true";
         if (requireShipping == null)

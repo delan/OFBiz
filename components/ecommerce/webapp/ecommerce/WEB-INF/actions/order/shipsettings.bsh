@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 */
 
@@ -46,7 +46,7 @@ if (partyId != null && !partyId.equals("_NA_")) {
     context.put("person", person);
 }
 
-if (cart.getShippingContactMechId() != null) {
+if (cart != null && cart.getShippingContactMechId() != null) {
     shippingContactMech = cart.getShippingContactMechId();
     postalAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMech));
     context.put("useEntityFields", "Y");
