@@ -68,6 +68,25 @@ public class ProductWorker {
             pageContext.setAttribute(attributeName, product);
     }
 
+    public static String getVariantVirtualId(GenericValue variantProduct) throws GenericEntityException {
+        List productAssocs = getVariantVirtualAssocs(variantProduct);
+        GenericValue productAssoc = EntityUtil.getFirst(productAssocs);
+        if (productAssoc != null) {
+            return productAssoc.getString("productId");
+        } else {
+            return null;
+        }
+    }
+
+    public static List getVariantVirtualAssocs(GenericValue variantProduct) throws GenericEntityException {
+        if (variantProduct != null && "Y".equals(variantProduct.getString("isVariant"))) {
+            List productAssocs = EntityUtil.filterByDate(variantProduct.getRelatedByAndCache("AssocProductAssoc", 
+                    UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT")), true);
+            return productAssocs;
+        }
+        return null;
+    }
+
     /**
      * Puts the following into the pageContext attribute list with a prefix if specified:
      *  searchProductList, keywordString, viewIndex, viewSize, lowIndex, highIndex, listSize

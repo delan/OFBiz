@@ -23,13 +23,14 @@
  */
 package org.ofbiz.commonapp.product.price;
 
-
 import java.util.*;
 import java.sql.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
+
+import org.ofbiz.commonapp.product.product.*;
 
 /**
  * PriceServices - Workers and Services class for product price related functionality
@@ -85,24 +86,15 @@ public class PriceServices {
         // if this product is variant, find the virtual product and apply checks to it as well
         String virtualProductId = null;
 
-        if ("Y".equals(product.getString("isVariant"))) {
-            try {
-                List productAssocs = EntityUtil.filterByDate(delegator.findByAndCache("ProductAssoc",
-                            UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT")), true);
-                GenericValue productAssoc = EntityUtil.getFirst(productAssocs);
-
-                if (productAssoc != null) {
-                    virtualProductId = productAssoc.getString("productId");
-                }
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Error getting virtual product id from the database while calculating price", module);
-                return ServiceUtil.returnError("Error getting virtual product id from the database while calculating price: " + e.toString());
-            }
+        try {
+            virtualProductId = ProductWorker.getVariantVirtualId(product);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error getting virtual product id from the database while calculating price", module);
+            return ServiceUtil.returnError("Error getting virtual product id from the database while calculating price: " + e.toString());
         }
 
         // get prices for virtual product if one is found; get all ProductPrice entities for this productId and currencyUomId
         List virtualProductPrices = null;
-
         if (virtualProductId != null) {
             try {
                 virtualProductPrices = delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", virtualProductId, "currencyUomId", currencyUomId, "facilityGroupId", facilityGroupId), UtilMisc.toList("-fromDate"));

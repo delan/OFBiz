@@ -31,6 +31,7 @@ import javax.servlet.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 
+import org.ofbiz.commonapp.product.product.*;
 
 /**
  * CategoryWorker - Worker class to reduce code in JSPs.
@@ -302,17 +303,14 @@ public class CategoryWorker {
         if (productCategoryMembers == null || productCategoryMembers.size() == 0) {
             //before giving up see if this is a variant product, and if so look up the virtual product and check it...
             GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-            if ("Y".equals(product.getString("isVariant"))) {
-                List productAssocs = EntityUtil.filterByDate(delegator.findByAndCache("ProductAssoc",
-                            UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT")), true);
-                //this does take into account that a product could be a variant of multiple products, but this shouldn't ever really happen...
-                if (productAssocs != null && productAssocs.size() > 0) {
-                    Iterator pasIter = productAssocs.iterator();
-                    while (pasIter.hasNext()) {
-                        GenericValue productAssoc = (GenericValue) pasIter.next();
-                        if (isProductInCategory(delegator, productAssoc.getString("productId"), productCategoryId)) {
-                            return true;
-                        }
+            List productAssocs = ProductWorker.getVariantVirtualAssocs(product);
+            //this does take into account that a product could be a variant of multiple products, but this shouldn't ever really happen...
+            if (productAssocs != null && productAssocs.size() > 0) {
+                Iterator pasIter = productAssocs.iterator();
+                while (pasIter.hasNext()) {
+                    GenericValue productAssoc = (GenericValue) pasIter.next();
+                    if (isProductInCategory(delegator, productAssoc.getString("productId"), productCategoryId)) {
+                        return true;
                     }
                 }
             }
