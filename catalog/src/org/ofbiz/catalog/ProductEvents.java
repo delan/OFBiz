@@ -75,7 +75,7 @@ public class ProductEvents {
         if (!UtilValidate.isNotEmpty(keyword))
             errMsg += "<li>Keyword is missing.";
         if (errMsg.length() > 0) {
-            errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+            errMsg = "<b>The following errors occurred:</b><br><ul>" + errMsg + "</ul>";
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
@@ -306,7 +306,7 @@ public class ProductEvents {
         if (!updateMode.equals("CREATE") && !UtilValidate.isNotEmpty(fromDateStr))
             errMsg += "<li>From Date is missing.";
         if (errMsg.length() > 0) {
-            errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+            errMsg = "<b>The following errors occurred:</b><br><ul>" + errMsg + "</ul>";
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
@@ -379,7 +379,7 @@ public class ProductEvents {
             }
         }
         if (errMsg.length() > 0) {
-            errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+            errMsg = "<b>The following errors occurred:</b><br><ul>" + errMsg + "</ul>";
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
@@ -462,7 +462,7 @@ public class ProductEvents {
         if (!UtilValidate.isNotEmpty(productId))
             errMsg += "<li>Attribute name is missing.";
         if (errMsg.length() > 0) {
-            errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+            errMsg = "<b>The following errors occurred:</b><br><ul>" + errMsg + "</ul>";
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
