@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentResourceHandler.java,v 1.5 2004/07/07 16:23:10 ajzeneski Exp $
+ * $Id: ComponentResourceHandler.java,v 1.6 2004/07/07 17:10:35 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,8 @@ import java.net.URL;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.Debug;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -37,11 +39,12 @@ import org.w3c.dom.Element;
  * Contains resource information and provides for loading data
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class ComponentResourceHandler implements ResourceHandler {
 
+    public static final String module = ComponentResourceHandler.class.getName();
     protected String componentName;
     protected String loaderName;
     protected String location;
@@ -56,6 +59,7 @@ public class ComponentResourceHandler implements ResourceHandler {
         this.componentName = componentName;
         this.loaderName = loaderName;
         this.location = location;
+        if (Debug.verboseOn()) Debug.logVerbose("Created " + this.toString(), module);
     }
 
     public String getLoaderName() {

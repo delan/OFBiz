@@ -1,5 +1,5 @@
 /*
- * $Id: MainResourceHandler.java,v 1.3 2004/07/07 16:23:10 ajzeneski Exp $
+ * $Id: MainResourceHandler.java,v 1.4 2004/07/07 17:10:36 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.Debug;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -35,11 +37,12 @@ import org.w3c.dom.Element;
  * Contains resource information and provides for loading data
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class MainResourceHandler implements ResourceHandler {
 
+    public static final String module = MainResourceHandler.class.getName();
     protected String xmlFilename;
     protected String loaderName;
     protected String location;
@@ -48,6 +51,7 @@ public class MainResourceHandler implements ResourceHandler {
         this.xmlFilename = xmlFilename;
         this.loaderName = element.getAttribute("loader");
         this.location = element.getAttribute("location");
+        if (Debug.verboseOn()) Debug.logVerbose("Created " + this.toString(), module);
     }
 
     public MainResourceHandler(String xmlFilename, String loaderName, String location) {
