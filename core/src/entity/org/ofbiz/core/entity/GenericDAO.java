@@ -42,7 +42,7 @@ import org.ofbiz.core.entity.jdbc.*;
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
  * @version    $Revision$
- * @since      2.0
+ * @since      1.0
  */
 public class GenericDAO {
 
@@ -241,15 +241,25 @@ public class GenericDAO {
         }
         // select did not fail, so exists, update
 
-        // we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
         List partialFields = new ArrayList();
         Collection keys = entity.getAllKeys();
 
         for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
             ModelField curField = modelEntity.getNopk(fi);
 
-            if (keys.contains(curField.getName()))
-                partialFields.add(curField);
+            // we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
+            if (keys.contains(curField.getName())) {
+                //also, only update the fields that have changed, since we have the selected values in tempPK we can compare
+                if (entity.get(curField.getName()) == null) {
+                    if (tempPK.get(curField.getName()) != null) {
+                        //entity field is null, tempPK is not so are different
+                        partialFields.add(curField);
+                    }
+                } else if (!entity.get(curField.getName()).equals(tempPK.get(curField.getName()))) {
+                    //entity field is not null, and compared to tempPK field is different
+                    partialFields.add(curField);
+                }
+            }
         }
 
         return singleUpdate(entity, modelEntity, partialFields, connection);
