@@ -584,6 +584,16 @@ font-size: x-small;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
+.standardSubmit {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: small;
+}
+
+.specialSubmit {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: small;
+}
+
 .basePrice {
 font-size: x-small;
 font-family: Verdana, Arial, Helvetica, sans-serif;
