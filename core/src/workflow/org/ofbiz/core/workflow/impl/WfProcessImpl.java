@@ -25,8 +25,6 @@
 
 package org.ofbiz.core.workflow.impl;
 
-import bsh.*;
-
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
@@ -395,35 +393,6 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
                 return a;
         }
         throw new WfException("Activity not an active member of this process");
-    }
-
-    // Evaluate the transition condition
-    private boolean evalCondition(String condition) throws WfException {
-        Map context = processContext();
-        Interpreter bsh = new Interpreter();
-        Object o = null;
-        if (condition == null || condition.equals(""))
-            return true;
-        Debug.logVerbose("[WfProcess.evalCondition] : evaluating -- " + condition, module);
-        try {
-            // Set the context for the condition
-            Set keySet = context.keySet();
-            Iterator i = keySet.iterator();
-            while (i.hasNext()) {
-                Object key = i.next();
-                Object value = context.get(key);
-                bsh.set((String) key, value);
-            }
-            // evaluate the condition
-            o = bsh.eval(condition);
-        } catch (EvalError e) {
-            Debug.logError(e, "BSH Evaluation error.", module);
-            return false;
-        }
-        if (o instanceof Number)
-            return (((Number) o).doubleValue() == 0) ? false : true;
-        else
-            return (!o.toString().equalsIgnoreCase("true")) ? false : true;
     }
 
     // Complete this workflow

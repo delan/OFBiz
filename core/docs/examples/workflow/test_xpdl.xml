@@ -180,7 +180,8 @@
 		  <Implementation>
 		    <Tool Id="testScv" Type="PROCEDURE">
               <ActualParameters>
-                <ActualParameter>orderId</ActualParameter>
+                <ActualParameter>expr:message=orderId</ActualParameter>
+                <ActualParameter>message</ActualParameter>
               </ActualParameters>
             </Tool>
 		  </Implementation>

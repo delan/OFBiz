@@ -35,6 +35,8 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
+import bsh.*;
+
 /**
  * WfExecutionObjectImpl - Workflow Execution Object implementation
  *
@@ -681,5 +683,69 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         }
         return context;
     }
+
+    /**
+     * Evaluate a condition or expression using the current context
+     * @param expression The expression to evaluate
+     * @return The result of the evaluation (True/False)
+     * @throws WfException
+     */
+    protected boolean evalCondition(String expression) throws WfException {
+        Map context = processContext();
+        return evalCondition(expression, context);
+    }
+
+    /**
+     * Evaluate a condition or expression
+     * @param expression The expression to evaluate
+     * @param context The context to use in evaluation
+     * @return The result of the evaluation (True/False)
+     * @throws WfException
+     */
+    protected boolean evalCondition(String expression, Map context) throws WfException {
+        if (expression == null || expression.length() == 0)
+            return true;
+        Object o = eval(expression, context);
+        if (o == null)
+            return false;
+        else if (o instanceof Number)
+            return (((Number) o).doubleValue() == 0) ? false : true;
+        else
+            return (!o.toString().equalsIgnoreCase("true")) ? false : true;
+    }
+
+
+    protected Object eval(String expression, Map context) throws WfException {
+        Interpreter bsh = new Interpreter();
+        Object o = null;
+        if (expression == null || expression.equals(""))
+            throw new WfException("Cannot evaluate empty or null expression");
+
+        Debug.logVerbose("Evaluating -- " + expression, module);
+        try {
+            // Set the context for the condition
+            Set keySet = context.keySet();
+            Iterator i = keySet.iterator();
+            while (i.hasNext()) {
+                Object key = i.next();
+                Object value = context.get(key);
+                bsh.set((String) key, value);
+            }
+            // evaluate the expression
+            o = bsh.eval(expression);
+            Debug.logVerbose("Evaluated to -- " + o, module);
+
+            // read back the context info
+            NameSpace ns = bsh.getNameSpace();
+            String[] varNames = ns.getVariableNames();
+            for (int x = 0; x < varNames.length; x++) {
+                context.put(varNames[x], bsh.get(varNames[x]));
+            }
+        } catch (EvalError e) {
+            Debug.logError(e, "BSH Evaluation error.", module);
+        }
+        return o;
+    }
+
 }
 

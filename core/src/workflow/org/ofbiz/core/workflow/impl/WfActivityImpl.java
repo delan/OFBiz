@@ -680,8 +680,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     // Gets the actual context parameters from the context based on the actual paramters field
-    private Map actualContext(String actualParameters,
-                              String extendedAttr) throws WfException {
+    private Map actualContext(String actualParameters, String extendedAttr) throws WfException {
         Map actualContext = new HashMap();
         Map context = processContext();
         Map extendedAttributes = StringUtil.strToMap(extendedAttr);
@@ -692,15 +691,17 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             Iterator i = params.iterator();
             while (i.hasNext()) {
                 Object key = i.next();
-                if (context.containsKey(key))
+                String keyStr = (String) key;
+                if (keyStr.toLowerCase().startsWith("expr:"))
+                   eval(keyStr.substring(2).trim(), context);
+                else if (context.containsKey(key))
                     actualContext.put(key, context.get(key));
                 else if (((String) key).equals("workEffortId"))
                     actualContext.put(key, runtimeKey());
                 else if (((String) key).equals("userLogin"))
                     actualContext.put(key, getUserLogin((String)key));
                 else if (!actualContext.containsKey(key))
-                    throw new WfException("Context does not contain the key: '" +
-                                          (String) key + "'");
+                    throw new WfException("Context does not contain the key: '" + (String) key + "'");
             }
         }
         return actualContext;
