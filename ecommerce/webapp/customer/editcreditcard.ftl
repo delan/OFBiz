@@ -24,6 +24,10 @@
  *@since      2.1
 -->
 
+<#macro maskedCard number>
+<#local size = number?length - 4>
+<#list 0 .. size-1 as foo>*</#list>${number[size .. size + 3]}
+</#macro>
 
 <#if canNotView>
   <p><h3>The credit card specified does not belong to you, you may not view or edit it.</h3></p>
@@ -79,7 +83,7 @@
       <td width="26%" align=right valign=top><div class="tabletext">Card Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" class='inputBox' size="20" maxlength="30" name="cardNumber" value="${creditCardData.cardNumber?if_exists}">
+        <input type="text" class='inputBox' size="20" maxlength="30" name="cardNumber" onfocus="javascript:this.value = '';" value="<@maskedCard creditCardData.cardNumber?if_exists/>">
       *</td>
     </tr>
     <#--<tr>
