@@ -117,7 +117,7 @@ public class EntityFieldTag extends TagSupport {
                         throw new JspTagException("[EntityFieldTag] : Cannot get the ModelFieldType from the Delegator.");
                     }
                 } else {
-                    Debug.logWarning("[EntityFieldTag] : Null ValueObject passed.");
+                    //Debug.logWarning("[EntityFieldTag] : Null ValueObject passed.");
                     fieldObject = defaultStr;
                     fieldObjectType = "comment"; // Default for NULL objects.
                     javaType = "java.lang.String";
@@ -130,7 +130,7 @@ public class EntityFieldTag extends TagSupport {
             javaType = type;
             // Set a default for NULL objects.
             if (fieldObject == null) {
-                Debug.logWarning("[EntityFieldTag] : Null Object passed.");
+                //Debug.logWarning("[EntityFieldTag] : Null Object passed.");
                 fieldObject = defaultStr;
                 javaType = "java.lang.String";
             }
