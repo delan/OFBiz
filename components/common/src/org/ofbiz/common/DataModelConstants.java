@@ -1,5 +1,5 @@
 /*
- * $Id: DataModelConstants.java,v 1.2 2003/08/17 16:29:04 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,7 +27,7 @@
  * Data Model Constants
  *
  * @author     <a href="mailto:epabst@bigfoot.com">Eric Pabst</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public final class DataModelConstants {

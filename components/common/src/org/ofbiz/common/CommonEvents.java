@@ -1,5 +1,5 @@
 /*
- * $Id: CommonEvents.java,v 1.4 2004/07/09 18:18:01 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class CommonEvents {

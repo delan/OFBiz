@@ -1,5 +1,5 @@
 /*
- * $Id: FindServices.java,v 1.10 2004/04/23 02:59:45 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * FindServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.10 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class FindServices {
