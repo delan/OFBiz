@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/09/23 01:35:29  jonesde
+ * Improved exception handling when a bundle is not found.
+ *
  * Revision 1.2  2001/07/18 22:22:53  jonesde
  * A few small changes to use the Debug class for logging instead of straight
  * System.out. Also added conditional logging for info, warning, and error messages
@@ -41,7 +44,7 @@ import java.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David Jones
+ *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    May 22, 2001
  *@version    1.0
  */
@@ -88,28 +91,29 @@ public class UtilProperties {
   }
   
   /** Returns the value of the specified property name from the specified resource/properties file
-   * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+   * @param resource The name of the resource - can be a file, class, or URL
    * @param name The name of the property in the properties file
    * @return The value of the property in the properties file
    */
   public static String getPropertyValue(String resource, String name) {
     if(resource == null || resource.length() <= 0) return "";
     if(name == null || name.length() <= 0) return "";
-    ResourceBundle res = (ResourceBundle)resCache.get(resource);
-    if(res == null) {
+    FlexibleProperties properties = (FlexibleProperties)resCache.get(resource);
+    if(properties == null) {
       try {
-        res = ResourceBundle.getBundle(resource);
-        resCache.put(resource, res);
+        properties = new FlexibleProperties(resource);
+        resCache.put(resource, properties);
       }
-      catch(MissingResourceException e) { Debug.logError(e); }
+      catch(MissingResourceException e) { Debug.log(e.getMessage()); }
     }
-    if(res == null) {
-      Debug.logWarning("UtilProperties.getPropertyValue: could not find resource: " + resource);
+    if(properties == null) {
+      Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource);
       return null;
     }
 
     String value = null;
-    try { value = res.getString(name); } catch(Exception e) { Debug.logWarning(e); }
+    try { value = properties.getProperty(name); } 
+    catch(Exception e) { Debug.log(e.getMessage()); }
     return value;
   }
 }
