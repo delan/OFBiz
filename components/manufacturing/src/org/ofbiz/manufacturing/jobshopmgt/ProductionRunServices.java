@@ -321,6 +321,7 @@ public class ProductionRunServices {
                 startDate = endDate;
             }
         }
+        
         // update the estimatedCompletionDate field for the productionRun
         serviceContext.clear();
         serviceContext.put("workEffortId",productionRunId);
@@ -1327,6 +1328,50 @@ public class ProductionRunServices {
         }
         
         return result;
+    }
+
+    public static Map approveRequirement(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        Timestamp now = UtilDateTime.nowTimestamp();
+        List msgResult = new LinkedList();
+        Locale locale = (Locale) context.get("locale");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        // Mandatory input fields
+        String requirementId = (String)context.get("requirementId");
+        
+        GenericValue requirement = null;
+        try {
+            requirement = delegator.findByPrimaryKey("Requirement", UtilMisc.toMap("requirementId", requirementId));
+        } catch(GenericEntityException gee) {
+        }
+        if (requirement == null) {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRequirementNotExists", locale));
+        }
+
+        // Production Runs
+        if ("MRP_PRO_PROD_ORDER".equals(requirement.getString("requirementTypeId")) ||
+            "WORK_REQUIREMENT".equals(requirement.getString("requirementTypeId"))) {
+            // createProductionRunFromRequirement
+            try {
+                result = dispatcher.runSync("createProductionRunFromRequirement", context);
+            } catch (GenericServiceException e) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunNotCreated", locale));
+            }
+            return result;
+        }
+        // Requirements approval (for purchase order requirements)
+        if ("MRP_PRO_PURCH_ORDER".equals(requirement.getString("requirementTypeId"))) {
+            // updateRequirement
+            try {
+                result = dispatcher.runSync("updateRequirement", UtilMisc.toMap("requirementId", requirementId, "statusId", "REQ_APPROVED", "userLogin", userLogin));
+            } catch (GenericServiceException e) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRequirementNotUpdated", locale));
+            }
+            return result;
+        }
+        return ServiceUtil.returnSuccess();
     }
     
     public static Map createProductionRunFromRequirement(DispatchContext ctx, Map context) {
