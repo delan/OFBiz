@@ -1746,6 +1746,9 @@
       <relation type="many" title="Parent" rel-entity-name="FacilityGroupRollup">
         <key-map field-name="facilityGroupId" rel-field-name="parentFacilityGroupId"/>
       </relation>      
+      <relation type="many" rel-entity-name="FacilityGroupMember">
+        <key-map field-name="facilityGroupId"/>
+      </relation>
     </entity>
     <entity entity-name="FacilityGroupMember"
             package-name="org.ofbiz.commonapp.product.storage"
