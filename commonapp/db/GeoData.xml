@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+  <Geo abbreviation="AZ" geoCode="" geoId="AK" geoName="Alaska" geoTypeId="STATE"/>
+  <Geo abbreviation="AL" geoCode="" geoId="AL" geoName="Alabama" geoTypeId="STATE"/>
+  <Geo abbreviation="AR" geoCode="" geoId="AR" geoName="Akansas" geoTypeId="STATE"/>
+  <Geo abbreviation="AZ" geoCode="" geoId="AZ" geoName="Arizona" geoTypeId="STATE"/>
+  <Geo abbreviation="CA" geoCode="" geoId="CA" geoName="California" geoTypeId="STATE"/>
+  <Geo abbreviation="CO" geoCode="" geoId="CO" geoName="Colorado" geoTypeId="STATE"/>
+  <Geo abbreviation="CT" geoCode="" geoId="CT" geoName="Connecticut" geoTypeId="STATE"/>
+  <Geo abbreviation="DC" geoCode="" geoId="DC" geoName="Washington DC" geoTypeId="STATE"/>
+  <Geo abbreviation="DE" geoCode="" geoId="DE" geoName="Delaware" geoTypeId="STATE"/>
+  <Geo abbreviation="FL" geoCode="" geoId="FL" geoName="Florida" geoTypeId="STATE"/>
+  <Geo abbreviation="GA" geoCode="" geoId="GA" geoName="Georgia" geoTypeId="STATE"/>
+  <Geo abbreviation="GU" geoCode="" geoId="GU" geoName="Guam" geoTypeId="STATE"/>
+  <Geo abbreviation="HI" geoCode="" geoId="HI" geoName="Hawaii" geoTypeId="STATE"/>
+  <Geo abbreviation="IA" geoCode="" geoId="IA" geoName="Iowa" geoTypeId="STATE"/>
+  <Geo abbreviation="ID" geoCode="" geoId="ID" geoName="Idaho" geoTypeId="STATE"/>
+  <Geo abbreviation="IL" geoCode="" geoId="IL" geoName="Illinois" geoTypeId="STATE"/>
+  <Geo abbreviation="IN" geoCode="" geoId="IN" geoName="Indiana" geoTypeId="STATE"/>
+  <Geo abbreviation="KS" geoCode="" geoId="KS" geoName="Kansas" geoTypeId="STATE"/>
+  <Geo abbreviation="KY" geoCode="" geoId="KY" geoName="Kentucky" geoTypeId="STATE"/>
+  <Geo abbreviation="LA" geoCode="" geoId="LA" geoName="Louisianna" geoTypeId="STATE"/>
+  <Geo abbreviation="MA" geoCode="" geoId="MA" geoName="Massachusetts" geoTypeId="STATE"/>
+  <Geo abbreviation="MD" geoCode="" geoId="MD" geoName="Maryland" geoTypeId="STATE"/>
+  <Geo abbreviation="ME" geoCode="" geoId="ME" geoName="Maine" geoTypeId="STATE"/>
+  <Geo abbreviation="MI" geoCode="" geoId="MI" geoName="Michigan" geoTypeId="STATE"/>
+  <Geo abbreviation="MN" geoCode="" geoId="MN" geoName="Minnesota" geoTypeId="STATE"/>
+  <Geo abbreviation="MO" geoCode="" geoId="MO" geoName="Missourri" geoTypeId="STATE"/>
+  <Geo abbreviation="MS" geoCode="" geoId="MS" geoName="Mississippi" geoTypeId="STATE"/>
+  <Geo abbreviation="MT" geoCode="" geoId="MT" geoName="Montana" geoTypeId="STATE"/>
+  <Geo abbreviation="NC" geoCode="" geoId="NC" geoName="North Carolina" geoTypeId="STATE"/>
+  <Geo abbreviation="ND" geoCode="" geoId="ND" geoName="North Dakota" geoTypeId="STATE"/>
+  <Geo abbreviation="NE" geoCode="" geoId="NE" geoName="Nebraska" geoTypeId="STATE"/>
+  <Geo abbreviation="NH" geoCode="" geoId="NH" geoName="New Hampshire" geoTypeId="STATE"/>
+  <Geo abbreviation="NJ" geoCode="" geoId="NJ" geoName="New Jersey" geoTypeId="STATE"/>
+  <Geo abbreviation="NM" geoCode="" geoId="NM" geoName="New Mexico" geoTypeId="STATE"/>
+  <Geo abbreviation="NV" geoCode="" geoId="NV" geoName="Nevada" geoTypeId="STATE"/>
+  <Geo abbreviation="NY" geoCode="" geoId="NY" geoName="New York" geoTypeId="STATE"/>
+  <Geo abbreviation="OH" geoCode="" geoId="OH" geoName="Ohio" geoTypeId="STATE"/>
+  <Geo abbreviation="OK" geoCode="" geoId="OK" geoName="Oklahoma" geoTypeId="STATE"/>
+  <Geo abbreviation="OR" geoCode="" geoId="OR" geoName="Oregon" geoTypeId="STATE"/>
+  <Geo abbreviation="PA" geoCode="" geoId="PA" geoName="Pennsylvania" geoTypeId="STATE"/>
+  <Geo abbreviation="PR" geoCode="" geoId="PR" geoName="Puerto Rico" geoTypeId="STATE"/>
+  <Geo abbreviation="RI" geoCode="" geoId="RI" geoName="Rhode Island" geoTypeId="STATE"/>
+  <Geo abbreviation="SC" geoCode="" geoId="SC" geoName="South Carolina" geoTypeId="STATE"/>
+  <Geo abbreviation="SD" geoCode="" geoId="SD" geoName="South Dakota" geoTypeId="STATE"/>
+  <Geo abbreviation="TN" geoCode="" geoId="TN" geoName="Tennessee" geoTypeId="STATE"/>
+  <Geo abbreviation="TX" geoCode="" geoId="TX" geoName="Texas" geoTypeId="STATE"/>
+  <Geo abbreviation="UT" geoCode="" geoId="UT" geoName="Utah" geoTypeId="STATE"/>
+  <Geo abbreviation="VA" geoCode="" geoId="VA" geoName="Virginia" geoTypeId="STATE"/>
+  <Geo abbreviation="VI" geoCode="" geoId="VI" geoName="" geoTypeId="STATE"/>
+  <Geo abbreviation="VT" geoCode="" geoId="VT" geoName="Vermont" geoTypeId="STATE"/>
+  <Geo abbreviation="WA" geoCode="" geoId="WA" geoName="Washington" geoTypeId="STATE"/>
+  <Geo abbreviation="WI" geoCode="" geoId="WI" geoName="Wisconson" geoTypeId="STATE"/>
+  <Geo abbreviation="WV" geoCode="" geoId="WV" geoName="West Virginia" geoTypeId="STATE"/>
+  <Geo abbreviation="WY" geoCode="" geoId="WY" geoName="Wyoming" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Alberta" geoName="Alberta" geoTypeId="STATE"/>
+  <Geo abbreviation="AZ" geoCode="" geoId="British Columbia"
+    geoName="British Columbia" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Manitoba" geoName="Manitoba" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="New Brunswick"
+    geoName="New Brunswick" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Newfoundland"
+    geoName="Newfoundland" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Nova Scotia"
+    geoName="Nova Scotia" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Northwest Territorie"
+    geoName="Northwest Territories" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Ontario" geoName="Ontario" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Prince Edward Island"
+    geoName="Prince Edward Island" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Quebec" geoName="Quebec" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Sasakatchewan"
+    geoName="Sasakatchewan" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Yukon" geoName="Yukon" geoTypeId="STATE"/>
+  <Geo abbreviation="USA" geoCode="" geoId="USA" geoName="United States" geoTypeId="COUNTRY"/>
+  <Geo abbreviation="CAN" geoCode="" geoId="CAN" geoName="Canada" geoTypeId="COUNTRY"/>
+</entity-engine-xml>
