@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.14 2004/07/04 05:56:41 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.15 2004/07/05 16:56:01 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -125,7 +125,7 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      3.1
  */
 public class CatalinaContainer implements Container {
@@ -170,7 +170,7 @@ public class CatalinaContainer implements Container {
 
         // grab some global context settings
         this.delegator = GenericDelegator.getGenericDelegator(ContainerConfig.getPropertyValue(cc, "delegator-name", "default"));
-        this.usePersistentManager = ContainerConfig.getPropertyValue(cc, "apps-persistent-mgr", false);
+        this.usePersistentManager = ContainerConfig.getPropertyValue(cc, "apps-db-persistent-mgr", false);
         this.contextReloadable = ContainerConfig.getPropertyValue(cc, "apps-context-reloadable", false);
         this.crossContext = ContainerConfig.getPropertyValue(cc, "apps-cross-context", true);
         this.distribute = ContainerConfig.getPropertyValue(cc, "apps-distributable", true);        
