@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  */
 -->
 
@@ -487,6 +487,8 @@
             title="Communication Event Entity">
       <field name="communicationEventId" type="id-ne"></field>
       <field name="communicationEventTypeId" type="id"></field>
+      <field name="origCommEventId" type="id"></field>
+      <field name="parentCommEventId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="custRequestId" type="id"></field>
       <field name="contactMechTypeId" type="id"></field>
@@ -556,6 +558,8 @@
       <alias entity-alias="CR" name="partyId"/>
       <alias entity-alias="CR" name="roleTypeId"/>
       <alias entity-alias="CE" name="communicationEventTypeId"/>
+      <alias entity-alias="CE" name="origCommEventId"/>
+      <alias entity-alias="CE" name="parentCommEventId"/>
       <alias entity-alias="CE" name="statusId"/>
       <alias entity-alias="CE" name="custRequestId"/>
       <alias entity-alias="CE" name="contactMechTypeId"/>
