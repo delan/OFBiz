@@ -345,7 +345,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderCheckField(StringBuffer buffer, Map context, CheckField checkField) {
         // TODO Auto-generated method stub
-
+        buffer.append("<!-- Sorry, check box fields have not been implemented yet -->");
     }
 
     /* (non-Javadoc)
@@ -353,7 +353,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderRadioField(StringBuffer buffer, Map context, RadioField radioField) {
         // TODO Auto-generated method stub
-
+        buffer.append("<!-- Sorry, radio button fields have not been implemented yet -->");
     }
 
     /* (non-Javadoc)
