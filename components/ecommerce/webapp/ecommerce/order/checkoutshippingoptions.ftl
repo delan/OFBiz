@@ -81,7 +81,7 @@ function toggleBillingAccount(box) {
 
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
   <input type="hidden" name="checkoutpage" value="shippingoptions">
-  <table width="100%" border="0" cellpadding='0' cellspacing='0'>
+  <table border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
       <td height='100%'>
         <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -227,7 +227,7 @@ function toggleBillingAccount(box) {
   </table>
 </form>
 
-<table width="100%">
+<table>
   <tr valign="top">
     <td align="left">
       &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">[${uiLabelMap.OrderBacktoShoppingCart}]</a>
