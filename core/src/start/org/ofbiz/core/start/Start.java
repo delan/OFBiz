@@ -281,7 +281,11 @@ class Configuration {
         System.setProperty("java.home", javaHome);
         
         // set the property to tell Log4J to use debug.properties
-        System.setProperty("log4j.configuration", "file:/" + ofbizHome + "/commonapp/etc/debug.properties");
+        String log4jConfig = props.getProperty("log4j.configuration");
+        if (log4jConfig == null) {
+            log4jConfig = "file:/" + ofbizHome + "/commonapp/etc/debug.properties";
+        }
+        System.setProperty("log4j.configuration", log4jConfig);
         
         // set the property to tell Jetty to use 2.4 SessionListeners
         System.setProperty("org.mortbay.jetty.servlet.AbstractSessionManager.24SessionDestroyed", "true");
