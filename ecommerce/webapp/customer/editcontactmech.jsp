@@ -88,11 +88,13 @@
   <%if(contactMechTypeId != null){%>
     <%if(contactMech == null){%>
       <p class="head1">Create New Contact Information</p>
+    &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
       <%String cmNewPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");%>
       <%if(cmNewPurposeTypeId != null){%>
         <%GenericValue contactMechPurposeType = delegator.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));%>
         <%if(contactMechPurposeType != null){%>
-        (Note: this new contact information will have the purpose <b>"<%=UtilFormatOut.checkNull(contactMechPurposeType.getString("description"))%>"</b>)
+        <div>(Note: this new contact information will have the purpose <b>"<%=UtilFormatOut.checkNull(contactMechPurposeType.getString("description"))%>"</b>)</div>
         <%}else{ cmNewPurposeTypeId = null; }%>
       <%}%>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -103,9 +105,12 @@
         <%=UtilFormatOut.ifNotEmpty(cmNewPurposeTypeId, "<input type='hidden' name='CM_NEW_PURPOSE_TYPE_ID' value='", "'>")%>
     <%}else{%>
       <p class="head1">Edit Contact Information</p>
+    &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <tr>
-          <td width="26%" valign=top><div class="tabletext">Contact Purposes</div></td>
+          <td width="26%" align=right valign=top><div class="tabletext">Contact Purposes</div></td>
+          <td width="5">&nbsp;</td>
           <td width="74%">
             <table border='0' cellspacing='1' bgcolor='black'>
               <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose")));%>
@@ -161,37 +166,43 @@
     <%GenericValue postalAddress = null;%>
     <%if(contactMech != null) postalAddress = contactMech.getRelatedOne("PostalAddress");%>
     <tr>
-      <td width="26%"><div class="tabletext">To Name</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">To Name</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" name="CM_TO_NAME" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("toName"):request.getParameter("CM_TO_NAME"))%>" size="30" maxlength="60">
       </td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">Attention Name</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Attention Name</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" name="CM_ATTN_NAME" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("attnName"):request.getParameter("CM_ATTN_NAME"))%>" size="30" maxlength="60">
       </td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">Address Line 1</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Address Line 1</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" name="CM_ADDRESS1" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("address1"):request.getParameter("CM_ADDRESS1"))%>" size="30" maxlength="30">
       *</td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">Address Line 2</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Address Line 2</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" name="CM_ADDRESS2" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("address2"):request.getParameter("CM_ADDRESS2"))%>" size="30" maxlength="30">
       </td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">City</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">City</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" name="CM_CITY" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("city"):request.getParameter("CM_CITY"))%>" size="30" maxlength="30">
       * </td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">State/Province</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">State/Province</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="CM_STATE">
           <option><%=UtilFormatOut.checkNull(useValues?postalAddress.getString("stateProvinceGeoId"):request.getParameter("CM_STATE"))%></option>
@@ -201,13 +212,15 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">Zip/Postal Code</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Zip/Postal Code</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" name="CM_POSTAL_CODE" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("postalCode"):request.getParameter("CM_POSTAL_CODE"))%>" size="12" maxlength="10">
       *</td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext">Country</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Country</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="CM_COUNTRY" >
           <option><%=UtilFormatOut.checkNull(useValues?postalAddress.getString("countryGeoId"):request.getParameter("CM_COUNTRY"))%></option>
@@ -221,7 +234,8 @@
     <%if(contactMech != null) telecomNumber = contactMech.getRelatedOne("TelecomNumber");%>
     <%if(telecomNumber == null) useValues = false;%>
     <tr>
-      <td width="26%"><div class="tabletext">Phone Number</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Phone Number</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" name="CM_COUNTRY_CODE" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("countryCode"):request.getParameter("CM_COUNTRY_CODE"))%>" size="4" maxlength="10">
         -&nbsp;<input type="text" name="CM_AREA_CODE" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("areaCode"):request.getParameter("CM_AREA_CODE"))%>" size="4" maxlength="10">
@@ -230,12 +244,14 @@
       </td>
     </tr>
     <tr>
-      <td width="26%"><div class="tabletext"></div></td>
+      <td width="26%" align=right valign=top><div class="tabletext"></div></td>
+      <td width="5">&nbsp;</td>
       <td><div class="tabletext">[Country Code] [Area Code] [Contact Number] [Extension]</div></td>
     </tr>
   <%}else if("EMAIL_ADDRESS".equals(contactMechTypeId)){%>
     <tr>
-      <td width="26%"><div class="tabletext">Email address</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Email address</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" name="CM_INFO_STRING" value="<%=UtilFormatOut.checkNull(useValues?contactMech.getString("infoString"):request.getParameter("CM_INFO_STRING"))%>" size="60" maxlength="255"> *
       </td>
@@ -243,14 +259,16 @@
   <%}else{%>
     <%GenericValue curContactMechType = delegator.findByPrimaryKey("ContactMechType", UtilMisc.toMap("contactMechTypeId", contactMechTypeId));%>
     <tr>
-      <td width="26%"><div class="tabletext"><%=curContactMechType.getString("description")%></div></td>
+      <td width="26%" align=right valign=top><div class="tabletext"><%=curContactMechType.getString("description")%></div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" name="CM_INFO_STRING" value="<%=UtilFormatOut.checkNull(useValues?contactMech.getString("infoString"):request.getParameter("CM_INFO_STRING"))%>" size="60" maxlength="255"> *
       </td>
     </tr>
   <%}%>
     <tr>
-      <td width="26%"><div class="tabletext">Allow Solicitation?</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">Allow Solicitation?</div></td>
+      <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="CM_ALLOW_SOL">
           <option><%=UtilFormatOut.checkNull(useValues?partyContactMech.getString("allowSolicitation"):request.getParameter("CM_ADDRESS_ALLOW_SOL"), "Y")%></option>
@@ -263,9 +281,8 @@
 
     &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
-    <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
   <%}else{%>
-    &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Back]</a>
+    &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
   <%}%>
 <%}%>
 

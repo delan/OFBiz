@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.31  2001/09/28 21:57:53  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.30  2001/09/27 07:10:16  jonesde
  * Moved ecommerce.properties to WEB-INF
  *
@@ -703,8 +706,7 @@ public class CustomerEvents {
       request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not delete purpose from contact mechanism, from date \"" + fromDateStr + "\" was not valid. Please contact customer service.");
       return "error";
     }
-    
-    
+        
     GenericValue pcmp = null;
     try {
       pcmp = delegator.findByPrimaryKey("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", fromDate));
@@ -810,26 +812,19 @@ public class CustomerEvents {
       
       GenericValue newPartyContactMechPurpose = null;
       if(contactMechId != null && contactMechId.length() > 0) {
-        if("CREATE".equals(updateMode) || (creditCardInfo != null && !contactMechId.equals(creditCardInfo.getString("contactMechId")))) {
-          //add a PartyContactMechPurpose of BILLING_LOCATION if necessary
-          String contactMechPurposeTypeId = "BILLING_LOCATION";
+        //add a PartyContactMechPurpose of BILLING_LOCATION if necessary
+        String contactMechPurposeTypeId = "BILLING_LOCATION";
+
+        GenericValue tempVal = null;
+        try {
+          Collection allPCMPs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId), null));
+          tempVal = EntityUtil.getFirst(allPCMPs);
+        }
+        catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); tempVal = null; }
+
+        if(tempVal == null) {
+          //no value found, create a new one
           newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
-          
-          GenericValue tempVal = null;
-          try { tempVal = delegator.findByPrimaryKey(newPartyContactMechPurpose.getPrimaryKey()); }
-          catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); tempVal = null; }
-          
-          if(tempVal != null) {
-            //if exists already, and has a thruDate, reset or "undelete" it
-            if(tempVal.get("thruDate") != null) {
-              tempVal.set("fromDate", now);
-              tempVal.set("thruDate", null);
-              newPartyContactMechPurpose = tempVal;
-            }
-            else {
-              newPartyContactMechPurpose = null;
-            }
-          }
         }
       }
       
