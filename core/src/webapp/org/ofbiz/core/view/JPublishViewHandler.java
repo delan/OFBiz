@@ -116,7 +116,9 @@ public class JPublishViewHandler implements ViewHandler {
 
     protected void configureBSF() {
         String[] extensions = {"bsh"};
-        BSFManager.registerScriptingEngine("beanshell", "bsh.util.BeanShellBSFEngine", extensions);
+        BSFManager.registerScriptingEngine("beanshell", "bsh.OfbizBshBsfEngine", extensions);
+        //BSFManager.registerScriptingEngine("beanshell", "bsh.util.BeanShellBSFEngine", extensions);
+        
         String[] jsExtensions = {"js"};
         BSFManager.registerScriptingEngine("javascript", "org.ofbiz.core.action.OfbizJsBsfEngine", jsExtensions);
         

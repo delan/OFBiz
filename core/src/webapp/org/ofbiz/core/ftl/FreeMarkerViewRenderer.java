@@ -41,6 +41,7 @@ import freemarker.template.*;
 
 import com.anthonyeden.lib.config.Configuration;
 import com.anthonyeden.lib.config.ConfigurationException;
+import org.jpublish.view.freemarker.JPublishTemplateLoader;
 
 import org.ofbiz.core.util.*;
 
@@ -54,7 +55,12 @@ import org.ofbiz.core.util.*;
 public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMarkerViewRenderer {
         
     public static final String module = FreeMarkerViewRenderer.class.getName();        
-        
+
+    public void init() throws Exception{
+        super.init();
+        fmConfig.setCacheSoftReference(false);
+    }
+    
     protected Object createViewContext(JPublishContext context, String path) throws ViewRenderException {
         HttpServletRequest request = context.getRequest();
         HttpServletResponse response = context.getResponse();
