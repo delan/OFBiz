@@ -29,7 +29,7 @@
 
   ${pages.get("/config/ConfigItemTabBar.ftl")}
 
-  <div class="head1">Config Options - <span class="head2">ID: ${requestParameters.configItemId?if_exists}<#if configItem?exists> - ${configItem.description}</#if></div>
+  <div class="head1">Config Options - <span class="head2">ID: ${requestParameters.configItemId?if_exists}<#if configItem?exists> - ${configItem.description?if_exists}</#if></div>
   <br><br>
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>

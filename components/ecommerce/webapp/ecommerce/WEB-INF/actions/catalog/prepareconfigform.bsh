@@ -24,19 +24,6 @@
  *@since      2.1
  */
 
-/*
- *  WARNING:
- *  the same copy of this file is used in the ecommerce 
- *  application (catalog/productdetail.bsh) and in the ordermgr 
- *  application (entry/catalog/productdetail.bsh).
- *
- *  For this reason this file should only contain code that is
- *  relevant for both the applications.
- *
- *  It's also very important to keep the two files synchronized in SVN.
- *
- */
-
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -47,10 +34,15 @@ product = request.getAttribute("product");
 if (product != null) {
     configWrapper = ProductConfigWorker.getProductConfigWrapper(product.getString("productId"), currencyUomId, request);
     ProductConfigWorker.fillProductConfigWrapper(configWrapper, request);
-   
+
+    if (!configWrapper.isCompleted()) {
+        configWrapper.setDefaultConfig();
+    }
     if (!ProductStoreWorker.isStoreInventoryAvailable(request, configWrapper, 1.0)) {
         context.put("productNotAvailable", "Y");
     }
     context.put("configwrapper", configWrapper);
     context.put("totalPrice", configWrapper.getTotalPrice());
+    context.put("renderSingleChoiceWithRadioButtons", "Y");
+    context.put("showOffsetPrice", "Y");
 }

@@ -103,19 +103,19 @@ ${pages.get("/config/ConfigItemTabBar.ftl")}
         </tr>
         <tr>
             <td width="20%" align=right valign=top>
-                <div class="tabletext"><b>${uiLabelMap.ProductDetailImage}</b></div>
+                <div class="tabletext"><b>${uiLabelMap.ProductSmallImage}</b></div>
                 <#if (productConfigItem.imageUrl)?exists>
                     <a href="<@ofbizContentUrl>${productConfigItem.imageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Image" src="<@ofbizContentUrl>${productConfigItem.imageUrl}</@ofbizContentUrl>" height="40" width="40"></a>
                 </#if>
             </td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
-            <input type="text" class="inputBox" name="imageUrl" value="${(productConfigItem.imageUrl)?default(imageNameDetail + '.jpg')}" size="60" maxlength="255">
+            <input type="text" class="inputBox" name="imageUrl" value="${(productConfigItem.imageUrl)?default(imageNameSmall + '.jpg')}" size="60" maxlength="255">
             <#if configItemId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                <a href="javascript:document.productForm.imageUrl.value='${imageNameDetail}.jpg';" class="buttontext">[.jpg]</a>
-                <a href="javascript:document.productForm.imageUrl.value='${imageNameDetail}.gif';" class="buttontext">[.gif]</a>
+                <a href="javascript:document.productForm.imageUrl.value='${imageNameSmall}.jpg';" class="buttontext">[.jpg]</a>
+                <a href="javascript:document.productForm.imageUrl.value='${imageNameSmall}.gif';" class="buttontext">[.gif]</a>
                 <a href="javascript:document.productForm.imageUrl.value='';" class="buttontext">[clear]</a>
                 </div>
             </#if>
@@ -132,7 +132,7 @@ ${pages.get("/config/ConfigItemTabBar.ftl")}
         <hr class="sepbar"/>
 
         <div class="head3">${uiLabelMap.ProductUploadImage}</div>
-        <form method="POST" enctype="multipart/form-data" action="<@ofbizUrl>/UploadProductConfigItemImage?configItemId=${configItemId}&upload_file_type=detail</@ofbizUrl>" name="imageUploadForm">
+        <form method="POST" enctype="multipart/form-data" action="<@ofbizUrl>/UploadProductConfigItemImage?configItemId=${configItemId}&upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
             <input type="file" class="inputBox" size="50" name="fname">
             <input type="submit" class="smallSubmit" value="${uiLabelMap.ProductUploadImage}">
         </form>

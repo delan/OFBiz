@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-    <Product productId="PC001" productTypeId="AGGREGATED" internalName="PC for tests" createdDate="2004-08-20 12:49:13.418" createdByUserLogin="admin"/>
-    <Product productId="RAM256_BRAND" productTypeId="FINISHED_GOOD" internalName="RAM 256 no parity" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
-    <Product productId="HD2GB_BRAND" productTypeId="FINISHED_GOOD" internalName="HD 2 GB" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
-    <Product productId="HD4GB_BRAND" productTypeId="FINISHED_GOOD" internalName="HD 4 GB" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
-    <Product productId="ETH_BRAND" productTypeId="FINISHED_GOOD" internalName="Ethernet Card 10/100" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
-    <Product productId="MOD_BRAND" productTypeId="FINISHED_GOOD" internalName="Modem Card 56k" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
+    <Product productId="PC001" productTypeId="AGGREGATED" productName="Configurable PC" internalName="Configurable PC" description="Configurable PC" createdDate="2004-08-20 12:49:13.418" createdByUserLogin="admin"/>
+    <Product productId="RAM256_BRAND" productTypeId="FINISHED_GOOD" productName="RAM256" internalName="RAM 256 no parity" description="RAM 256 no parity" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
+    <Product productId="HD2GB_BRAND" productTypeId="FINISHED_GOOD" productName="HD2GB" internalName="HD 2 GB" description="HD 2 GB" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
+    <Product productId="HD4GB_BRAND" productTypeId="FINISHED_GOOD" productName="HD4GB" internalName="HD 4 GB" description="HD 4 GB" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
+    <Product productId="ETH_BRAND" productTypeId="FINISHED_GOOD" productName="Ethernet100" internalName="Ethernet Card 10/100" description="Ethernet Card 10/100" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
+    <Product productId="MOD_BRAND" productTypeId="FINISHED_GOOD" productName="Modem56k" internalName="Modem Card 56k" description="Modem Card 56k" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
     
     <ProductPrice productId="PC001" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:53.223" price="50" createdDate="2004-08-20 12:55:53.223" createdByUserLogin="admin"/>
     <ProductPrice productId="RAM256_BRAND" productPriceTypeId="COMPONENT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:53.223" price="115" createdDate="2004-08-20 12:55:53.223" createdByUserLogin="admin"/>

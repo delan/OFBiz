@@ -22,11 +22,13 @@
 
 package org.ofbiz.product.config;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Locale;
 
 import org.ofbiz.base.util.UtilMisc;
@@ -44,7 +46,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  */
 
-public class ProductConfigWrapper {
+public class ProductConfigWrapper implements java.io.Serializable {
     
     public static final String module = ProductConfigWrapper.class.getName();
     
@@ -79,19 +81,48 @@ public class ProductConfigWrapper {
             questionsValues = delegator.findByAnd("ProductConfig", UtilMisc.toMap("productId", productId), UtilMisc.toList("sequenceNum"));
             questionsValues = EntityUtil.filterByDate(questionsValues);
             Iterator questionsValuesIt = questionsValues.iterator();
+            HashMap itemIds = new HashMap();
             while (questionsValuesIt.hasNext()) {
                 ConfigItem oneQuestion = new ConfigItem((GenericValue)questionsValuesIt.next());
                 oneQuestion.setContent(locale, "text/html"); // TODO: mime-type shouldn't be hardcoded
+                if (itemIds.containsKey(oneQuestion.getConfigItem().getString("configItemId"))) {
+                    oneQuestion.setFirst(false);
+                } else {
+                    itemIds.put(oneQuestion.getConfigItem().getString("configItemId"), null);
+                }
                 questions.add(oneQuestion);
                 List configOptions = delegator.findByAnd("ProductConfigOption", UtilMisc.toMap("configItemId", oneQuestion.getConfigItemAssoc().getString("configItemId")), UtilMisc.toList("sequenceNum"));
                 Iterator configOptionsIt = configOptions.iterator();
-                //List availableOptions = new ArrayList();
                 while (configOptionsIt.hasNext()) {
                     ConfigOption option = new ConfigOption(delegator, dispatcher, (GenericValue)configOptionsIt.next(), catalogId, webSiteId, currencyUomId, autoUserLogin);
                     oneQuestion.addOption(option);
-                    //availableOptions.add(option);
                 }
-                //options.add(availableOptions);
+            }
+        }
+    }
+    
+    public void resetConfig() {
+        for (int i = 0; i < questions.size(); i++) {
+            ConfigItem ci = (ConfigItem)questions.get(i);
+            if (!ci.isStandard()) {
+                List options = ci.getOptions();
+                for (int j = 0; j < options.size(); j++) {
+                    ConfigOption co = (ConfigOption)options.get(j);
+                    co.setSelected(false);
+                }
+            }
+        }
+    }
+    
+    public void setDefaultConfig() {
+        resetConfig();
+        for (int i = 0; i < questions.size(); i++) {
+            ConfigItem ci = (ConfigItem)questions.get(i);
+            if (ci.isMandatory()) {
+                if (ci.getOptions().size() > 0) {
+                    ConfigOption co = (ConfigOption)ci.getOptions().get(0);
+                    co.setSelected(true);
+                }
             }
         }
     }
@@ -199,11 +230,12 @@ public class ProductConfigWrapper {
         return completed;
     }
     
-    public class ConfigItem {
+    public class ConfigItem implements java.io.Serializable {
         GenericValue configItem = null;
         GenericValue configItemAssoc = null;
         ProductConfigItemContentWrapper content = null;
         List options = null;
+        boolean first = true;
         
         public ConfigItem(GenericValue questionAssoc) throws Exception {
             configItemAssoc = questionAssoc;
@@ -239,6 +271,14 @@ public class ProductConfigWrapper {
             return configItemAssoc.getString("isMandatory") != null && configItemAssoc.getString("isMandatory").equals("Y");
         }
         
+        public boolean isFirst() {
+            return first;
+        }
+        
+        public void setFirst(boolean newValue) {
+            first = newValue;
+        }
+        
         public void addOption(ConfigOption option) {
             options.add(option);
         }
@@ -260,8 +300,23 @@ public class ProductConfigWrapper {
             }
             return question;
         }
-        
+
+        public String getDescription() {
+            String description = "";
+            if (UtilValidate.isNotEmpty(configItemAssoc.getString("longDescription"))) {
+                description = configItemAssoc.getString("longDescription");
+            } else {
+                if (content != null) {
+                    description = content.get("LONG_DESCRIPTION");
+                } else {
+                    description = (configItem.getString("longDescription") != null? configItem.getString("longDescription"): "");
+                }
+            }
+            return description;
+        }
+
         public boolean isSelected() {
+            if (isStandard()) return true;
             Iterator availOptions = getOptions().iterator();
             while (availOptions.hasNext()) {
                 ConfigOption oneOption = (ConfigOption)availOptions.next();
@@ -270,6 +325,17 @@ public class ProductConfigWrapper {
                 }
             }
             return false;
+        }
+        
+        public ConfigOption getSelected() {
+            Iterator availOptions = getOptions().iterator();
+            while (availOptions.hasNext()) {
+                ConfigOption oneOption = (ConfigOption)availOptions.next();
+                if (oneOption.isSelected()) {
+                    return oneOption;
+                }
+            }
+            return null;
         }
         
         public boolean equals(Object obj) {
@@ -298,7 +364,7 @@ public class ProductConfigWrapper {
         }
     }
     
-    public class ConfigOption {
+    public class ConfigOption implements java.io.Serializable {
         double optionPrice = 0;
         Date availabilityDate = null;
         List components = null; // lists of ProductConfigProduct
