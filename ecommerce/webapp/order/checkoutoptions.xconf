@@ -3,6 +3,6 @@
     <template>/templates/main.ftl</template>
     <generator name="ofbiz-freemarker"/>
     <property name="title">Checkout Options</property>
-    <page-action>order/checkoutoptions.js</page-action>
+    <page-action>/order/checkoutoptions.js</page-action>
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>

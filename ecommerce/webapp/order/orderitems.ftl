@@ -82,7 +82,7 @@
                     <td align="right" valign="top" nowrap>
                       <div class="tabletext">${itemSubTotal?string.currency}</div>
                     </td>                  
-                    <#if mySelectItems?default(false)>
+                    <#if maySelectItems?default(false)>
                       <td>                                 
                         <input name="item_id" value="${orderItem.orderItemSeqId}" type="checkbox">
                       </td>

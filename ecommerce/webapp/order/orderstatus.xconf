@@ -2,7 +2,7 @@
 <page>
     <template>/templates/main_right.ftl</template>
     <generator name="ofbiz-freemarker"/>
-    <property name="title">Order History</property>
-    <page-action>/order/orderhistory.js</page-action>
+    <property name="title">Order Status</property>
+    <page-action>/order/orderstatus.js</page-action>
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>

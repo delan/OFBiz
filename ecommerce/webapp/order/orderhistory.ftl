@@ -29,10 +29,10 @@
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align=left><div class="boxhead">Order History</div></td>
-          <td align=right>
+          <td align='left'><div class="boxhead">Order History</div></td>
+          <#--<td align='right'>
             <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[Back Home]</a>&nbsp;&nbsp;
-          </td>
+          </td>-->
         </tr>
       </table>      
     </td>

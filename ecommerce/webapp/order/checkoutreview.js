@@ -28,6 +28,7 @@ importPackage(Packages.java.lang);
 importPackage(Packages.org.ofbiz.core.util);
 importPackage(Packages.org.ofbiz.core.entity);
 importPackage(Packages.org.ofbiz.commonapp.order.order);
+importPackage(Packages.org.ofbiz.commonapp.party.contact);
 
 var delegator = request.getAttribute("delegator");
 var userLogin = session.getAttribute("userLogin");
@@ -50,7 +51,7 @@ context.put("shippingAddress", cart.getShippingAddress());
 
 var paymentMethods = cart.getPaymentMethods();
 var paymentMethod = null;
-if (paymentMethod != null && paymentMethods.size() > 0) {
+if (paymentMethods != null && paymentMethods.size() > 0) {
     paymentMethod = paymentMethods.get(0);
 }
 context.put("paymentMethod", paymentMethod);

@@ -538,7 +538,7 @@
     <view-map name="confirmorder" page="/order/confirmorder.jsp"/>
     <view-map name="showconfirmorder" type="region"/>
     <view-map name="orderhistory" type="wsp" page="/order/orderhistory.ftl"/>
-    <view-map name="orderstatus" type="region"/> 
+    <view-map name="orderstatus" type="wsp" page="/order/orderstatus.ftl"/> 
 
     <view-map name="viewprofile" type="wsp" page="/customer/viewprofile.ftl"/>
     <view-map name="newcustomer" type="wsp" page="/customer/newcustomer.ftl"/>

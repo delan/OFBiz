@@ -87,7 +87,7 @@
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
-                          <div class="tabletext"><${orderHeader.orderDate}</div>
+                          <div class="tabletext">${orderHeader.orderDate.toString()}</div>
                         </td>
                       </tr>
                     </#if>
@@ -131,7 +131,7 @@
                 <td>
                   <table width="100%" border="0" cellpadding="1">
                     <#-- offline payment address infomation :: change this to use Company's address -->
-                    <#if !paymentMethod?has_content>
+                    <#if !paymentMethod?has_content && paymentMethodType?has_content>
                       <tr>
                         <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
                           <td colspan="2" valign="top">
