@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.12 $
+ *@version    $Revision: 1.13 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -393,6 +393,56 @@
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="90%"><div class="tabletext">${userLogin.userLoginId}</div></td>
               </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
+<br>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <input type="hidden" name="productStoreId" value="${productStoreId}">
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Messages</div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+            <table width="100%" border="0" cellpadding="1">
+              <#if !messages?has_content>
+                <tr><td><div class="tabletext">No messages.</div></td></tr>
+              <#else>
+                <tr>
+                  <td><div class="tableheadtext">From</div></td>
+                  <td><div class="tableheadtext">Subject</div></td>
+                  <td><div class="tableheadtext">Sent Date</div></td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr><td colspan="4"><hr class="sepbar"></td></tr>
+                <#list messages as message>
+                  <#assign delegator = requestAttributes.delegator>
+                  <#assign partyId = message.partyIdFrom>
+                  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, true)>
+                  <tr>
+                    <td><div class="tabletext">${partyName}</div></td>
+                    <td><div class="tabletext">${message.subject?default("")}</div></td>
+                    <td><div class="tabletext">${message.entryDate}</div></td>
+                    <td align="right"><a href="" class="buttontext">[Read]</a></td>
+                  </tr>
+                </#list>
+              </#if>
             </table>
           </td>
         </tr>
