@@ -48,7 +48,8 @@ import org.ofbiz.pos.adaptor.KeyboardReceiver;
 public class Input implements KeyboardReceiver, KeyListener {
 
     public static final String module = Input.class.getName();
-    private static final String[] validFunc = { "LOGIN", "UNLOCK", "MGRLOGIN", "PAID", "TOTAL", "CREDIT", "MSRINFO", "CHECK", "CHECKINFO", "QTY" };
+    private static final String[] validFunc = { "LOGIN", "UNLOCK", "MGRLOGIN", "PAID", "TOTAL", "CREDIT",
+                                                "MSRINFO", "CHECK", "CHECKINFO", "QTY", "SHIFT" };
 
     protected LifoSet functionStack = new LifoSet();
     protected Component[] pageComs = null;

@@ -29,6 +29,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.pos.PosTransaction;
+import org.ofbiz.pos.config.ButtonEventConfig;
 import org.ofbiz.pos.component.Input;
 import org.ofbiz.pos.component.Journal;
 import org.ofbiz.pos.screen.PosScreen;
@@ -43,6 +44,54 @@ public class MenuEvents {
 
     public static final String module = MenuEvents.class.getName();
 
+    // extended number events
+    public static void triggerClear(PosScreen pos) {
+        // clear the components
+        if (pos.getInput().getFunction("PAID") != null) {
+            pos.getInput().clear();
+            pos.showPage("main/pospanel");
+        } else if (pos.getInput().getFunction("TOTAL") == null) {
+            if (UtilValidate.isEmpty(pos.getInput().value())) {
+                pos.getInput().clear();
+            }
+        }
+
+        // refresh the current screen
+        pos.refresh();
+
+        // clear out the manual locks
+        if (!pos.isLocked()) {
+            pos.getInput().setLock(false);
+            pos.getButtons().setLock(false);
+        } else {
+            // just re-call set lock
+            pos.setLock(true);
+        }
+    }
+
+    public static void triggerQty(PosScreen pos) {
+        pos.getInput().setFunction("QTY");
+    }
+
+    public static void triggerEnter(PosScreen pos) {
+        // enter key maps to various different events; depending on the function
+        Input input = pos.getInput();
+        String[] lastFunc = input.getLastFunction();
+        if (lastFunc != null) {
+            if ("MGRLOGIN".equals(lastFunc[0])) {
+                SecurityEvents.mgrLogin(pos);
+            } else if ("LOGIN".equals(lastFunc[0])) {
+                SecurityEvents.login(pos);
+            } else if ("CREDIT".equals(lastFunc[0]) || "MSRINFO".equals(lastFunc[0])) {
+                PaymentEvents.payCredit(pos);
+            } else if ("SKU".equals(lastFunc[0])) {
+                MenuEvents.addItem(pos);
+            }
+        } else if (input.value().length() > 0) {
+            MenuEvents.addItem(pos);
+        }
+    }
+
     public static void addItem(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         Input input = pos.getInput();
@@ -51,7 +100,15 @@ public class MenuEvents {
 
         // no value; just return
         if (UtilValidate.isEmpty(value)) {
-            return;
+            String buttonName = ButtonEventConfig.getButtonName(pos);
+            if (UtilValidate.isNotEmpty(buttonName)) {
+                if (buttonName.startsWith("SKU.")) {
+                    value = buttonName.substring(4);
+                }
+            }
+            if (UtilValidate.isEmpty(value)) {
+                return;
+            }
         }
 
         // check for quantity
@@ -74,6 +131,9 @@ public class MenuEvents {
             pos.showDialog("main/dialog/error/productnotfound");
         }
 
+        // clear the qty flag
+        input.clearFunction("QTY");
+        
         // re-calc tax
         trans.calcTax();
 
@@ -127,6 +187,9 @@ public class MenuEvents {
             Debug.logError(e, module);
             pos.showDialog("main/dialog/error/producterror");
         }
+
+        // clear the qty flag
+        input.clearFunction("QTY");
 
         // re-calc tax
         trans.calcTax();

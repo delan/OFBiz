@@ -17,10 +17,40 @@ $Id$
     <event button-name="numZero" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerZero" disable-lock="true"/>
     <event button-name="numDZero" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerDZero" disable-lock="true"/>
 
-    <!-- extended numeric events -->
-    <event button-name="numClear" key-code="501" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerClear" disable-lock="true"/>
-    <event button-name="numQty" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerQty" disable-lock="true"/>
-    <event button-name="numEnter" key-code="500" class-name="org.ofbiz.pos.event.NumericEvents" method-name="triggerEnter" disable-lock="true"/>
+    <!-- character events -->
+    <event button-name="charShift" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerShift" disable-lock="false"/>
+    <event button-name="charCap" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerCaps" disable-lock="false"/>
+    <event button-name="charA" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerA" disable-lock="false"/>
+    <event button-name="charB" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerB" disable-lock="false"/>
+    <event button-name="charC" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerC" disable-lock="false"/>
+    <event button-name="charD" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerD" disable-lock="false"/>
+    <event button-name="charE" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerE" disable-lock="false"/>
+    <event button-name="charF" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerF" disable-lock="false"/>
+    <event button-name="charG" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerG" disable-lock="false"/>
+    <event button-name="charH" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerH" disable-lock="false"/>
+    <event button-name="charI" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerI" disable-lock="false"/>
+    <event button-name="charJ" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerJ" disable-lock="false"/>
+    <event button-name="charK" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerK" disable-lock="false"/>
+    <event button-name="charL" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerL" disable-lock="false"/>
+    <event button-name="charM" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerM" disable-lock="false"/>
+    <event button-name="charN" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerN" disable-lock="false"/>
+    <event button-name="charO" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerO" disable-lock="false"/>
+    <event button-name="charP" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerP" disable-lock="false"/>
+    <event button-name="charQ" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerQ" disable-lock="false"/>
+    <event button-name="charR" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerR" disable-lock="false"/>
+    <event button-name="charS" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerS" disable-lock="false"/>
+    <event button-name="charT" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerT" disable-lock="false"/>
+    <event button-name="charU" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerU" disable-lock="false"/>
+    <event button-name="charV" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerV" disable-lock="false"/>
+    <event button-name="charW" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerW" disable-lock="false"/>
+    <event button-name="charX" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerX" disable-lock="false"/>
+    <event button-name="charY" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerY" disable-lock="false"/>
+    <event button-name="charZ" class-name="org.ofbiz.pos.event.CharacterEvents" method-name="triggerZ" disable-lock="false"/>
+
+    <!-- base menu events -->
+    <event button-name="menuClear" key-code="501" class-name="org.ofbiz.pos.event.MenuEvents" method-name="triggerClear" disable-lock="true"/>
+    <event button-name="menuQty" class-name="org.ofbiz.pos.event.MenuEvents" method-name="triggerQty" disable-lock="true"/>
+    <event button-name="menuEnter" key-code="500" class-name="org.ofbiz.pos.event.MenuEvents" method-name="triggerEnter" disable-lock="true"/>
 
     <!-- sales menu events -->
     <event button-name="menuTotal" class-name="org.ofbiz.pos.event.MenuEvents" method-name="calcTotal" disable-lock="false"/>
