@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
 -->
 <simple-methods>
@@ -34,7 +34,7 @@
         	<fail-message message="Security Error: to run createItemIssuance you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <string-to-field string="Create ItemIssuance" field-name="operationName"/>
-        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ItemIssuance"/>
@@ -50,7 +50,7 @@
         	<fail-message message="Security Error: to run updateItemIssuance you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <string-to-field string="Update ItemIssuance" field-name="operationName"/>
-        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ItemIssuance"/>
@@ -64,7 +64,7 @@
         	<fail-message message="Security Error: to run deleteItemIssuance you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
         <string-to-field string="Delete ItemIssuance" field-name="operationName"/>
-        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ItemIssuance"/>
@@ -79,7 +79,7 @@
         	<fail-message message="Security Error: to run createItemIssuanceRole you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <string-to-field string="Create ItemIssuanceRole" field-name="operationName"/>
-        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ItemIssuanceRole"/>
@@ -93,7 +93,7 @@
         	<fail-message message="Security Error: to run deleteItemIssuanceRole you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
         </check-permission>
         <string-to-field string="Delete ItemIssuanceRole" field-name="operationName"/>
-        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ItemIssuanceRole"/>
@@ -111,7 +111,7 @@
         <check-permission permission="FACILITY" action="_UPDATE">
             <fail-message message="Security Error: to run ${operationName} you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
-        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
 
         <!-- get orderHeader -->
         <make-value entity-name="OrderHeader" value-name="orderHeaderLookupPk"/>
@@ -146,7 +146,7 @@
         <check-permission permission="FACILITY" action="_UPDATE">
             <fail-message message="Security Error: to run ${operationName} you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
-        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
 
         <!-- get orderItemInventoryRes -->
         <make-value entity-name="OrderItemInventoryRes" value-name="orderItemInventoryResLookupPk"/>

@@ -23,13 +23,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
 -->
 
 <simple-methods>
     <simple-method method-name="acceptAssignment" short-description="Create Work Effort">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkflowMapProcessors.xml"
+        <call-map-processor xml-resource="org/ofbiz/workeffort/workeffort/WorkflowMapProcessors.xml"
                 processor-name="assignmentMap" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="wfAcceptAssignment" in-map-name="context">
@@ -37,7 +37,7 @@
     </simple-method>
 
     <simple-method method-name="acceptRoleAssignment" short-description="Accept a ROLE Assignment">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkflowMapProcessors.xml"
+        <call-map-processor xml-resource="org/ofbiz/workeffort/workeffort/WorkflowMapProcessors.xml"
                 processor-name="assignmentMap" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="wfAcceptRoleAssignment" in-map-name="context">

@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Security Extensions Build Script.
- *  $Id: build.xml,v 1.5 2003/08/20 18:13:59 ajzeneski Exp $
+ *  $Id: build.xml,v 1.6 2003/08/22 18:21:07 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Security Extensions" default="jar" basedir=".">
@@ -82,7 +82,7 @@
     </target>
     
     <!-- ================================================================== -->
-    <!-- Compilation of the base files                                                                                                                         -->
+    <!-- Compilation of the source files                                                                                                                         -->
     <!-- ================================================================== -->               
 
     <target name="classes" depends="prepare,classpath">
@@ -107,7 +107,7 @@
     <!-- Build JavaDoc                                                      -->
     <!-- ================================================================== -->
 
-    <target name="docs" depends="prepare-docs">
+    <target name="docs" depends="prepare-docs,classpath">
         <javadoc packagenames="org.ofbiz.securityext.*" 
                  classpathref="local.class.path"
                  destdir="${build.dir}/javadocs" 
