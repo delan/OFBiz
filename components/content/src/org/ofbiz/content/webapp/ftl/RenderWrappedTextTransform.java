@@ -1,5 +1,5 @@
 /*
- * $Id: RenderWrappedTextTransform.java,v 1.7 2004/04/30 13:18:32 byersa Exp $
+ * $Id: RenderWrappedTextTransform.java,v 1.8 2004/04/30 22:12:20 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -31,14 +31,14 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 
-import freemarker.core.Environment;
+import freemarker.template.Environment;
 import freemarker.template.TemplateTransformModel;
 
 /**
  * RenderWrappedTextTransform - Freemarker Transform for URLs (links)
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class RenderWrappedTextTransform implements  TemplateTransformModel {

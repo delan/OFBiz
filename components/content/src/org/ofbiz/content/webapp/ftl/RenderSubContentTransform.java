@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentTransform.java,v 1.8 2004/04/30 13:18:32 byersa Exp $
+ * $Id: RenderSubContentTransform.java,v 1.9 2004/04/30 22:12:20 ajzeneski Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -35,13 +35,13 @@ import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 
-import freemarker.core.Environment;
+import freemarker.template.Environment;
 import freemarker.template.TemplateTransformModel;
 /**
  * RenderSubContentTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
