@@ -96,7 +96,6 @@
     <StatusItem description="Delegated" sequenceId="04" statusCode="DELEGATED" statusId="CAL_DELEGATED" statusTypeId="CALENDAR_STATUS"/>
     <StatusItem description="Cancelled" sequenceId="05" statusCode="CANCELLED" statusId="CAL_CANCELLED" statusTypeId="CALENDAR_STATUS"/>
     <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_SENT" transitionName="Send"/>
-    <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_CONFIRMED" transitionName="Confirm"/>
     <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_CANCELLED" transitionName="Cancel"/>
     <StatusValidChange condition="" statusId="CAL_SENT" statusIdTo="CAL_DECLINED" transitionName="Decline"/>
     <StatusValidChange condition="" statusId="CAL_SENT" statusIdTo="CAL_DELEGATED" transitionName="Delegate"/>
@@ -114,6 +113,7 @@
     <StatusItem description="Tentative" sequenceId="01" statusCode="TENTATIVE" statusId="CAL_TENTATIVE" statusTypeId="EVENT_STATUS"/>
     <StatusItem description="Confirmed" sequenceId="02" statusCode="CONFIRMED" statusId="CAL_CONFIRMED" statusTypeId="EVENT_STATUS"/>
     <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_TENTATIVE" transitionName="Tentatively Plan"/>
+    <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_CONFIRMED" transitionName="Confirm"/>
     <StatusValidChange condition="" statusId="CAL_TENTATIVE" statusIdTo="CAL_ACCEPTED" transitionName="Accept"/>
     <StatusValidChange condition="" statusId="CAL_TENTATIVE" statusIdTo="CAL_DECLINED" transitionName="Decline"/>
     <StatusValidChange condition="" statusId="CAL_TENTATIVE" statusIdTo="CAL_DELEGATED" transitionName="Delegate"/>
