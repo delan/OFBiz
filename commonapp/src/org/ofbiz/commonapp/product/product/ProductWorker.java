@@ -214,6 +214,7 @@ public class ProductWorker {
         request.setAttribute(attributePrefix + "highIndex", new Integer(highIndex));
         request.setAttribute(attributePrefix + "listSize", new Integer(listSize));
         request.setAttribute(attributePrefix + "keywordString", keywordString);
+        request.setAttribute(attributePrefix + "featureIdByType", featureIdByType);
         if (products.size() > 0) request.setAttribute(attributePrefix + "searchProductList", products);
     }
 
