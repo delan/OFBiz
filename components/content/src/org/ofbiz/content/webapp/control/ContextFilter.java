@@ -1,5 +1,5 @@
 /*
- * $Id: ContextFilter.java,v 1.5 2004/05/23 03:20:34 jonesde Exp $
+ * $Id: ContextFilter.java,v 1.6 2004/05/25 20:27:16 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.WebAppDispatcher;
  * ContextFilter - Restricts access to raw files and configures servlet objects.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class ContextFilter implements Filter {
@@ -70,6 +70,7 @@ public class ContextFilter implements Filter {
 
     protected ClassLoader localCachedClassLoader = null;
     protected FilterConfig config = null;
+    protected boolean debug = false;
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -80,6 +81,12 @@ public class ContextFilter implements Filter {
         // initialize the cached class loader for this application
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());
+
+        // set debug
+        this.debug = "true".equalsIgnoreCase(config.getInitParameter("debug"));
+        if (!debug) {
+            debug = Debug.verboseOn();
+        }
 
         // load the containers
         getContainers();
@@ -136,7 +143,7 @@ public class ContextFilter implements Filter {
             // little trick here so we don't loop on ourself
             if (httpRequest.getSession().getAttribute("_FORCE_REDIRECT_") == null) {
                 httpRequest.getSession().setAttribute("_FORCE_REDIRECT_", "true");
-                Debug.logWarning("Redirecting user to: " + redirectAllTo, module);                  
+                Debug.logWarning("Redirecting user to: " + redirectAllTo, module);
                 
                 if (!redirectAllTo.toLowerCase().startsWith("http")) {
                     redirectAllTo = httpRequest.getContextPath() + redirectAllTo;
@@ -161,7 +168,7 @@ public class ContextFilter implements Filter {
             allowList.add("/");  // No path is allowed.
             allowList.add("");   // No path is allowed.
 
-            if (Debug.verboseOn()) Debug.logVerbose("[Request]: " + httpRequest.getRequestURI(), module);
+            if (debug) Debug.log("[Request]: " + httpRequest.getRequestURI(), module);
 
             String requestPath = httpRequest.getServletPath();
             if (requestPath == null) requestPath = "";

@@ -1,5 +1,5 @@
 /*
- * $Id: JspViewHandler.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
+ * $Id: JspViewHandler.java,v 1.3 2004/05/25 20:27:16 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.content.webapp.control.ContextFilter;
  * ViewHandlerException - View Handler Exception
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class JspViewHandler implements ViewHandler {
@@ -64,12 +64,25 @@ public class JspViewHandler implements ViewHandler {
             throw new ViewHandlerException("Null or empty source");
         }
 
+        //Debug.log("Requested Page : " + page, module);
+        //Debug.log("Physical Path  : " + context.getRealPath(page));
+
         // tell the ContextFilter we are forwarding
         request.setAttribute(ContextFilter.FORWARDED_FROM_SERVLET, new Boolean(true));
         RequestDispatcher rd = request.getRequestDispatcher(page);
         
-        if (rd == null)
-            throw new ViewHandlerException("Source returned a null dispatcher (" + page + ")");
+        if (rd == null) {
+            Debug.logInfo("HttpServletRequest.getRequestDispatcher() failed; trying ServletContext", module);
+            rd = context.getRequestDispatcher(page);
+            if (rd == null) {
+                Debug.logInfo("ServletContext.getRequestDispatcher() failed; trying ServletContext.getNamedDispatcher(\"jsp\")", module);
+                rd = context.getNamedDispatcher("jsp");
+                if (rd == null) {
+                    throw new ViewHandlerException("Source returned a null dispatcher (" + page + ")");
+                }
+            }
+        }
+
         try {
             rd.include(request, response);
         } catch (IOException ie) {
