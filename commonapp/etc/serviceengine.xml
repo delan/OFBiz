@@ -61,7 +61,8 @@
     <service-ecas loader="mainfile" location="secas_accounting.xml"/>  
     <service-ecas loader="mainfile" location="secas_order.xml"/>  
     <service-ecas loader="mainfile" location="secas_party.xml"/> 
-    <service-ecas loader="mainfile" location="secas_product.xml"/>   
+    <service-ecas loader="mainfile" location="secas_product.xml"/>
+    <service-ecas loader="mainfile" location="secas_shipment.xml"/>
     <service-ecas loader="mainfile" location="secas_workeffort.xml"/>
     
     <!-- JMS Service Queue/Topic Configuration -->
