@@ -286,9 +286,9 @@
       <field name="statusId" type="id-ne"></field>
       <field name="originFacilityId" type="id"></field>
       <field name="destinationFacilityId" type="id"></field>
+      <field name="primaryOrderId" type="id"></field>
       <field name="originContactMechId" type="id"></field>
       <field name="destinationContactMechId" type="id"></field>
-      <field name="primaryOrderId" type="id"></field>
       <field name="partyIdTo" type="id"></field>
       <field name="partyIdFrom" type="id"></field>
       <field name="estimatedReadyDate" type="date-time"></field>
