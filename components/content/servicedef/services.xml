@@ -1533,8 +1533,8 @@
             location="org.ofbiz.content.ContentManagementServices" invoke="updateSubscription">
         <description>Creates or updates ContentRole</description>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="webPubPt" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="contentId" type="String" mode="IN" optional="true"/>
+        <attribute name="useRoleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="useTimeUomId" type="String" mode="IN" optional="false"/>
         <attribute name="useTime" type="Integer" mode="IN" optional="false"/>
     </service>
@@ -1544,15 +1544,11 @@
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="orderCreatedDate" type="Timestamp" mode="IN" optional="true" />
-        <attribute name="webPubPt" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="Integer" mode="IN" optional="false"/>
     </service>
     <service name="updateSubscriptionByOrder" engine="java" transaction-timout="72000" auth="true"
             location="org.ofbiz.content.ContentManagementServices" invoke="updateSubscriptionByOrder">
         <description>Creates or updates ContentRole</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="webPubPt" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
     </service>
 </services>
