@@ -29,28 +29,23 @@ package org.ofbiz.core.entity;
  *@version    1.0
  */
 public class EntityOperator {
-  public static final EntityOperator EQUALS = new EntityOperator(1);
-  public static final EntityOperator NOT_EQUAL = new EntityOperator(2);
-  public static final EntityOperator LESS_THAN = new EntityOperator(3);
-  public static final EntityOperator GREATER_THAN = new EntityOperator(4);
-  public static final EntityOperator LESS_THAN_EQUAL_TO = new EntityOperator(5);
-  public static final EntityOperator GREATER_THAN_EQUAL_TO = new EntityOperator(6);
-  public static final EntityOperator IN = new EntityOperator(7);
-  public static final EntityOperator BETWEEN = new EntityOperator(8);
-  public static final EntityOperator NOT = new EntityOperator(9);
-  public static final EntityOperator AND = new EntityOperator(10);
-  public static final EntityOperator OR = new EntityOperator(11);
+  public static EntityOperator EQUALS = new EntityOperator(" = ");
+  public static EntityOperator NOT_EQUAL = new EntityOperator(" <> ");
+  public static EntityOperator LESS_THAN = new EntityOperator(" < ");
+  public static EntityOperator GREATER_THAN = new EntityOperator(" > ");
+  public static EntityOperator LESS_THAN_EQUAL_TO = new EntityOperator(" <= ");
+  public static EntityOperator GREATER_THAN_EQUAL_TO = new EntityOperator(" >= ");
+  public static EntityOperator IN = new EntityOperator(" IN ");
+  public static EntityOperator BETWEEN = new EntityOperator(" BETWEEN ");
+  public static EntityOperator NOT = new EntityOperator(" NOT ");
+  public static EntityOperator AND = new EntityOperator(" AND ");
+  public static EntityOperator OR = new EntityOperator(" OR ");
   
-  public static final String[] operatorStrings = { "", " = ", " <> ", " < ", " > ", " <= ", " >= ", " IN ", " BETWEEN ", " NOT ", " AND ", " OR " };
+  private String codeString;
   
-  private String codeString = "";
-  
-  public EntityOperator(int code) { putCode(code); }
+  private EntityOperator(String code) {
+    codeString = code;
+  }
   
   public String getCode() { return codeString; }
-
-  private void putCode(int code) {
-    if(code <= 11 && code >= 1) { this.codeString = operatorStrings[code]; }
-    throw new IllegalArgumentException("Code " + code + " is not a valid Entity Operator code.");
-  }
 }

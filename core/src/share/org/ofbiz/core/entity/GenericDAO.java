@@ -331,7 +331,7 @@ public class GenericDAO {
       if(rs.next()) {
         for(int j=0;j<modelEntity.nopks.size();j++) {
           ModelField curField=(ModelField)modelEntity.nopks.elementAt(j);
-          getValue(rs, curField, entity);
+          getValue(rs, j+1, curField, entity);
         }
         
         entity.modified = false;
@@ -404,7 +404,7 @@ public class GenericDAO {
       if(rs.next()) {
         for(int j=0;j<partialFields.size();j++) {
           ModelField curField=(ModelField)partialFields.elementAt(j);
-          getValue(rs, curField, entity);
+          getValue(rs, j+1, curField, entity);
         }
         
         entity.modified = false;
@@ -470,7 +470,8 @@ public class GenericDAO {
       Iterator meIter = modelViewEntity.memberEntities.entrySet().iterator();
       while(meIter.hasNext()) {
         Map.Entry entry = (Map.Entry)meIter.next();
-        sql += (String)entry.getValue() + " " + (String)entry.getKey();
+        ModelEntity fromEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(entry.getKey());
+        sql += fromEntity.tableName + " " + (String)entry.getKey();
         if(meIter.hasNext()) sql += ", ";
       }
     }
@@ -510,8 +511,10 @@ public class GenericDAO {
           String keyName = (String)orderBy.get(oi);
           int spaceIdx = keyName.indexOf(' ');
           if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
-          if(curField.equals(keyName)) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
-          else orderByStrings.add(curField.colName);
+          if(curField.name.equals(keyName)) {
+            if(spaceIdx > 0) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
+            else orderByStrings.add(curField.colName);
+          }
         }
       }
       
@@ -548,7 +551,7 @@ public class GenericDAO {
         
         for(int j=0;j<selectFields.size();j++) {
           ModelField curField=(ModelField)selectFields.elementAt(j);
-          getValue(rs, curField, value);
+          getValue(rs, j+1, curField, value);
         }
         
         value.modified = false;
@@ -609,7 +612,8 @@ public class GenericDAO {
       Iterator meIter = modelViewEntity.memberEntities.entrySet().iterator();
       while(meIter.hasNext()) {
         Map.Entry entry = (Map.Entry)meIter.next();
-        sql += (String)entry.getValue() + " " + (String)entry.getKey();
+        ModelEntity fromEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(entry.getKey());
+        sql += fromEntity.tableName + " " + (String)entry.getKey();
         if(meIter.hasNext()) sql += ", ";
       }
     }
@@ -655,8 +659,10 @@ public class GenericDAO {
           String keyName = (String)orderBy.get(oi);
           int spaceIdx = keyName.indexOf(' ');
           if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
-          if(curField.equals(keyName)) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
-          else orderByStrings.add(curField.colName);
+          if(curField.name.equals(keyName)) {
+            if(spaceIdx > 0) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
+            else orderByStrings.add(curField.colName);
+          }
         }
       }
       
@@ -671,27 +677,26 @@ public class GenericDAO {
         }
       }
     }
-    
+    //Debug.logInfo("[GenericDAO.selectByAnd] sql=" + sql);
+
     try {
       ps = connection.prepareStatement(sql);
-      GenericValue dummyValue = null;
+      GenericValue dummyValue = new GenericValue(modelEntity);
       if(values != null && values.size() > 0 ) {
         for(int i=0;i<whereFields.size();i++) {
-          dummyValue = new GenericValue(modelEntity);
           String fieldName = (String)fields.get(i);
           dummyValue.set(fieldName, values.get(i));
           setValue(ps, i+1, ((ModelField)modelEntity.getField(fieldName)), dummyValue);
         }
       }
-      else dummyValue = new GenericValue(modelEntity);
       rs = ps.executeQuery();
       
       while(rs.next()) {
-        GenericValue value = new GenericValue(dummyValue);
+        GenericValue value = new GenericValue(modelEntity);
         
         for(int j=0;j<selectFields.size();j++) {
           ModelField curField=(ModelField)selectFields.elementAt(j);
-          getValue(rs, curField, value);
+          getValue(rs, j+1, curField, value);
         }
         
         value.modified = false;
@@ -758,8 +763,10 @@ public class GenericDAO {
           String keyName = (String)orderBy.get(oi);
           int spaceIdx = keyName.indexOf(' ');
           if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
-          if(curField.equals(keyName)) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
-          else orderByStrings.add(curField.colName);
+          if(curField.name.equals(keyName)) {
+            if(spaceIdx > 0) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
+            else orderByStrings.add(curField.colName);
+          }
         }
       }
       
@@ -793,7 +800,7 @@ public class GenericDAO {
         GenericValue value = new GenericValue(dummyValue);
         for(int j=0;j<selectFields.size();j++) {
           ModelField curField=(ModelField)selectFields.elementAt(j);
-          getValue(rs, curField, value);
+          getValue(rs, j+1, curField, value);
         }
         value.modified = false;
         collection.add(value);
@@ -908,8 +915,10 @@ public class GenericDAO {
           String keyName = (String)orderBy.get(oi);
           int spaceIdx = keyName.indexOf(' ');
           if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
-          if(curField.equals(keyName)) orderByStrings.add(modelEntity.tableName + "." + curField.colName + keyName.substring(spaceIdx));
-          else orderByStrings.add(modelEntity.tableName + "." + curField.colName);
+          if(curField.name.equals(keyName)) {
+            if(spaceIdx > 0) orderByStrings.add(modelEntity.tableName + "." + curField.colName + keyName.substring(spaceIdx));
+            else orderByStrings.add(modelEntity.tableName + "." + curField.colName);
+          }
         }
       }
       
@@ -947,7 +956,7 @@ public class GenericDAO {
         
         for(int j=0;j<selectFields.size();j++) {
           ModelField curField=(ModelField)selectFields.elementAt(j);
-          getValue(rs, curField, value);
+          getValue(rs, j+1, curField, value);
         }
         
         value.modified = false;
@@ -1096,7 +1105,7 @@ public class GenericDAO {
     return returnString.toString();
   }
   
-  public void getValue(ResultSet rs, ModelField curField, GenericEntity entity) throws SQLException, GenericEntityException {
+  public void getValue(ResultSet rs, int ind, ModelField curField, GenericEntity entity) throws SQLException, GenericEntityException {
     ModelFieldType mft = modelFieldTypeReader.getModelFieldType(curField.type);
     if(mft == null) {
       throw new GenericModelException("GenericDAO.getValue: definition fieldType " + curField.type + " not found, cannot getValue for field " + entity.getEntityName() + "." + curField.name + ".");
@@ -1104,28 +1113,28 @@ public class GenericDAO {
     String fieldType = mft.javaType;
     
     if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
-      entity.set(curField.name, rs.getString(curField.colName));
+      entity.set(curField.name, rs.getString(ind));
     else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
-      entity.set(curField.name, rs.getTimestamp(curField.colName));
+      entity.set(curField.name, rs.getTimestamp(ind));
     else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
-      entity.set(curField.name, rs.getTime(curField.colName));
+      entity.set(curField.name, rs.getTime(ind));
     else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date"))
-      entity.set(curField.name, rs.getDate(curField.colName));
+      entity.set(curField.name, rs.getDate(ind));
     else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer")) {
-      if(rs.getObject(curField.colName) == null) entity.set(curField.name, null);
-      else entity.set(curField.name, new Integer(rs.getInt(curField.colName)));
+      if(rs.getObject(ind) == null) entity.set(curField.name, null);
+      else entity.set(curField.name, new Integer(rs.getInt(ind)));
     }
     else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long")) {
-      if(rs.getObject(curField.colName) == null) entity.set(curField.name, null);
-      else entity.set(curField.name, new Long(rs.getLong(curField.colName)));
+      if(rs.getObject(ind) == null) entity.set(curField.name, null);
+      else entity.set(curField.name, new Long(rs.getLong(ind)));
     }
     else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float")) {
-      if(rs.getObject(curField.colName) == null) entity.set(curField.name, null);
-      else entity.set(curField.name, new Float(rs.getFloat(curField.colName)));
+      if(rs.getObject(ind) == null) entity.set(curField.name, null);
+      else entity.set(curField.name, new Float(rs.getFloat(ind)));
     }
     else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double")) {
-      if(rs.getObject(curField.colName) == null) entity.set(curField.name, null);
-      else entity.set(curField.name, new Double(rs.getDouble(curField.colName)));
+      if(rs.getObject(ind) == null) entity.set(curField.name, null);
+      else entity.set(curField.name, new Double(rs.getDouble(ind)));
     }
     else {
       throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
