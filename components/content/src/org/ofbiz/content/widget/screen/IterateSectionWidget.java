@@ -25,29 +25,25 @@ package org.ofbiz.content.widget.screen;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
-import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.content.ContentManagementWorker;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.w3c.dom.Element;
-
-import freemarker.template.TemplateException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
 
 
 /**

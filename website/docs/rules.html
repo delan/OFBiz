@@ -7,15 +7,15 @@
 <table width='100%'>
   <tr>
     <td width='50%' align='left' valign='center'>
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
+        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'/></a>
     </td>
     <td width='50%' align='right' valign='center'>
-        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
+        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"/></a> 
+        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"/></a>
     </td>
   </tr>
 </table>
-<hr class='sepbar'>
+<hr class="sepbar"/>
 
 <h2 align="center">The Open For Business Project: Rule Engine Guide</h2>
  
@@ -23,30 +23,30 @@
 <div class='contenttext'>Last Updated: 15 March 2002</div>
 <!-- $Id$ -->
 
-<hr class='sepbar'>
+<hr class="sepbar"/>
 <h3>Table of Contents</h3>
 
 <ul>
-  <li><a href="#Related_Documents">Related Documents</a>
-  <li><a href="#Introduction">Introduction</a>
-  <li><a href="#UIs">Rule Engine UIs</a>
-  <li><a href="#Logikus">Logikus Language</a>
-  <li><a href="#RuleML">RuleML Language</a>
-  <li><a href="#API:Logikus">API: Logikus Facade</a>
+  <li><a href="#Related_Documents">Related Documents</a></li>
+  <li><a href="#Introduction">Introduction</a></li>
+  <li><a href="#UIs">Rule Engine UIs</a></li>
+  <li><a href="#Logikus">Logikus Language</a></li>
+  <li><a href="#RuleML">RuleML Language</a></li>
+  <li><a href="#API:Logikus">API: Logikus Facade</a></li>
 </ul>
 
-<hr class='sepbar'>
+<hr class="sepbar"/>
 
 <h3><a name="Related_Documents">Related Documents:</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar"/>
 <ul>
   <li><a href="../documents.html#JavaDocs">JavaDoc List (Documents Page)</a></li>
   <li><a href="coreconfig.html">Core Configuration Guide</a></li>
 </ul>
 
-<hr class='sepbar'>
+<hr class="sepbar"/>
 <h3><a name="Introduction">Introduction</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar"/>
 <p class='contenttext'>The OFBiz Rule Engine is based on logic programming technologies that have existed for
 various decades. The most notable logic programming language is Prolog, although others do
 exist. Since the invention of Prolog many variations on the theme have appeared, and many
@@ -115,9 +115,9 @@ I would like to express thanks here to Steven Metsker for creating an excellent 
 code base that has helped us a lot in getting started. I recomment the book to anyone who plans to
 seriously use or extend the OFBiz Rule Engine.</p>
 
-<hr class='sepbar'>
+<hr class='sepbar'/>
 <h3><a name="UIs">Rule Engine UIs</a></h3>
-<hr class='sepbar'>
+<hr class='sepbar'/>
 <p class='contenttext'>In addition to using rulesets inside a program they can be run and tested through two user
 interfaces that exist as part of the Rule Engine. The first of these is a JSP in the WebTools
 webapp that has a textarea for the ruleset and an input box for the query. There is a link to
@@ -126,9 +126,9 @@ this page from the main page of the WebTools app.</p>
 <p class='contenttext'>The other user interface is a Java Swing application. This looks very similar to the JSP and
 can be run with the following command: <code>java -cp $CLASSPATH:ofbcore-rules.jar org.ofbiz.rules.LogikusIde</code></p>
 
-<hr class='sepbar'>
+<hr class='sepbar'/>
 <h3><a name="Logikus">Logikus Language</a></h3>
-<hr class='sepbar'>
+<hr class='sepbar'/>
 <p class='contenttext'>The Logikus Language is described very well in Steven Metsker's book Building Parsers in Java.
 It is based on the Prolog syntax, for those who are familiar with that.</p>
 
@@ -144,9 +144,9 @@ an entity from the Entity Engine, and for using sensors and effectors.</p>
 
 <p class='contenttext'>There are many examples of Logikus rulesets and queries in the core/docs/examples/rules directory.</p>
 
-<hr class='sepbar'>
+<hr class='sepbar'/>
 <h3><a name="RuleML">RuleML Language</a></h3>
-<hr class='sepbar'>
+<hr class='sepbar'/>
 <p class='contenttext'>RuleML is an XML file type definition for specifying facts and rules. The website for RuleML
 contains links to many interesting resources and has some interesting information about rule and logic
 languages and their applications. The RuleML website is at 
@@ -157,9 +157,9 @@ RuleML interpreter and a Swing app for editing rules.</p>
 
 <p class='contenttext'>The RuleML interpreter for the OFBiz Rule Engine has not yet been written, but it is planned for.</p>
 
-<hr class='sepbar'>
+<hr class='sepbar'/>
 <h3><a name="API:Logikus">API: Logikus Facade &amp; Engine Classes</a></h3>
-<hr class='sepbar'>
+<hr class='sepbar'/>
 <p class='contenttext'>To use Logikus rulesets and queries from your Java applications you can use the LogikusFacade
 class which provides some useful methods for parsing and executing rulesets, and then retrieving
 and evaluating the results. The full path of the class is org.ofbiz.rules.logikus.LogikusFacade.</p>
@@ -171,10 +171,10 @@ chaining example.</p>
 
 <p class='contenttext'>First, the main packages you will deal with are:</p>
 <ul>
-  <li>org.ofbiz.rules.logikus.*
-  <li>org.ofbiz.rules.parse.*
-  <li>org.ofbiz.rules.parse.tokens.*
-  <li>org.ofbiz.rules.engine.*
+  <li>org.ofbiz.rules.logikus.*</li>
+  <li>org.ofbiz.rules.parse.*</li>
+  <li>org.ofbiz.rules.parse.tokens.*</li>
+  <li>org.ofbiz.rules.engine.*</li>
 </ul>
 
 <p class='contenttext'>Next, create a <code>org.ofbiz.rules.engine.Program</code> object from a logikus ruleset

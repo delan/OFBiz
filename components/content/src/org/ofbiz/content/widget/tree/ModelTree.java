@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -43,18 +44,16 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
-import org.ofbiz.content.ContentManagementWorker;
 import org.ofbiz.content.widget.screen.ModelScreen;
 import org.ofbiz.content.widget.screen.ScreenFactory;
 import org.ofbiz.content.widget.screen.ScreenStringRenderer;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.LocalDispatcher;
-
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 

@@ -28,6 +28,7 @@ import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,15 +37,14 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
 import org.ofbiz.content.widget.screen.ModelScreenWidget;
 import org.ofbiz.content.widget.screen.ScreenStringRenderer;
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
 /**
