@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.entity;
-
 
 import java.util.*;
 import java.net.*;
@@ -40,15 +38,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-
 /**
  * Generic Data Source Delegator Class
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    Sep 17 2001
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a
+ * @version    $Revision$
+ * @since      2.0
  */
 public class GenericDelegator {
 
