@@ -132,6 +132,10 @@ public class Msr extends GenericDevice {
         // all implemented types
         switch (msrType) {
             case MSR_CREDIT_CARD:
+                String[] credInfo = PosScreen.currentScreen.getInput().getFunction("CREDIT");
+                if (credInfo == null) {
+                    PosScreen.currentScreen.getInput().setFunction("CREDIT", "");
+                }
                 PosScreen.currentScreen.getInput().setFunction("MSRINFO", msrStr.toString());
                 PosScreen.currentScreen.getOutput().print("Credit Card Read");
                 PosScreen.currentScreen.getInput().clearInput();
