@@ -25,14 +25,22 @@
 -->
 
 <#assign security = requestAttributes.security>
-<div class="apptitle">&nbsp;Facility Manager Application&nbsp;</div>
-<div class="row">
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerButtonLeft">Main</a></div>  
+<#assign unselectedLeftClassName = "headerButtonLeft">
+<#assign unselectedRightClassName = "headerButtonRight">
+<#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
+<#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
 
+<div class="apptitle">&nbsp;Facility Manager Application&nbsp;</div>
+<div class="row"> 
+  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>
+  <div class="col"><a href="<@ofbizUrl>/FindFacility</@ofbizUrl>" class="${selectedLeftClassMap.facility?default(unselectedLeftClassName)}">Facilities</a></div> 
+  <div class="col"><a href="<@ofbizUrl>/FindFacilityGroup</@ofbizUrl>" class="${selectedLeftClassMap.facilityGroup?default(unselectedLeftClassName)}">Facility&nbsp;Groups</a></div>
+  
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='headerButtonRight'>Login</a></div>
+    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
   </#if>
   <div class="col-fill">&nbsp;</div>
 </div>
+
