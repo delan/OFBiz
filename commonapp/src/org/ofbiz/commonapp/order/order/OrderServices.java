@@ -76,6 +76,26 @@ public class OrderServices {
             return result;
         }
 
+        // get the order type
+        String orderTypeId = (String) context.get("orderTypeId");
+        
+        // lookup the order type entity
+        GenericValue orderType = null;
+        try {
+            orderType = delegator.findByPrimaryKeyCache("OrderType", UtilMisc.toMap("orderTypeId", orderTypeId));
+        } catch (GenericEntityException e) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: OrderType lookup failed: " + e.toString());
+            return result;
+        }
+        
+        // make sure we have a valid order type
+        if (orderType == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Invalid OrderType");
+            return result;   
+        }
+        
         // check to make sure we have something to order
         List orderItems = (List) context.get("orderItems");
 
@@ -98,18 +118,21 @@ public class OrderServices {
         while (itemIter.hasNext()) {
             GenericValue orderItem = (GenericValue) itemIter.next();
             String currentProductId = (String) orderItem.get("productId");
-            if (normalizedItemQuantities.get(currentProductId) == null) {
-                normalizedItemQuantities.put(currentProductId, new Double(orderItem.getDouble("quantity").doubleValue()));
-                normalizedItemNames.put(currentProductId, new String(orderItem.getString("itemDescription")));
-            } else {
-                Double currentQuantity = (Double) normalizedItemQuantities.get(currentProductId);
-                normalizedItemQuantities.put(currentProductId, new Double(currentQuantity.doubleValue() + orderItem.getDouble("quantity").doubleValue()));
+            if (currentProductId != null) {    
+                // only normalize items with a product associated (ignore non-product items)        
+                if (normalizedItemQuantities.get(currentProductId) == null) {
+                    normalizedItemQuantities.put(currentProductId, new Double(orderItem.getDouble("quantity").doubleValue()));
+                    normalizedItemNames.put(currentProductId, new String(orderItem.getString("itemDescription")));
+                } else {
+                    Double currentQuantity = (Double) normalizedItemQuantities.get(currentProductId);
+                    normalizedItemQuantities.put(currentProductId, new Double(currentQuantity.doubleValue() + orderItem.getDouble("quantity").doubleValue()));
+                }
             }
         }
 
         Iterator normalizedIter = normalizedItemQuantities.keySet().iterator();   
         while (normalizedIter.hasNext()) {
-            // if the item is out of stock, return an error to that effect
+            // lookup the product entity for each normalized item; error on products not found
             String currentProductId = (String) normalizedIter.next();
             Double currentQuantity = (Double) normalizedItemQuantities.get(currentProductId);
             String itemName = (String) normalizedItemNames.get(currentProductId);
@@ -130,33 +153,40 @@ public class OrderServices {
                 errorMessages.add(errMsg);
                 continue;
             }
-
-            // check to see if introductionDate hasn't passed yet
-            if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
-                String excMsg = UtilProperties.getMessage(resource, "product.not_yet_for_sale", 
-                		new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
-                Debug.logWarning(excMsg);
-                errorMessages.add(excMsg);
-                continue;
-            }
-
-            // check to see if salesDiscontinuationDate has passed
-            if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
-                String excMsg = UtilProperties.getMessage(resource, "product.no_longer_for_sale", 
-                		new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
-                Debug.logWarning(excMsg);
-                errorMessages.add(excMsg);
-                continue;
-            }
-                     
-            if (CatalogWorker.isCatalogInventoryRequired(prodCatalogId, product, delegator)) {
-                if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, currentProductId, 
-                		currentQuantity.doubleValue(), delegator, dispatcher)) {
-                    String invErrMsg = UtilProperties.getMessage(resource, "product.out_of_stock", 
-                    		new Object[] { getProductName(product, itemName), currentProductId }, locale);
-                    Debug.logWarning(invErrMsg);
-                    errorMessages.add(invErrMsg);
+            
+            if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {            
+                // check to see if introductionDate hasn't passed yet
+                if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
+                    String excMsg = UtilProperties.getMessage(resource, "product.not_yet_for_sale", 
+                    		new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
+                    Debug.logWarning(excMsg);
+                    errorMessages.add(excMsg);
                     continue;
+                }
+            }
+
+            if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {
+                // check to see if salesDiscontinuationDate has passed
+                if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
+                    String excMsg = UtilProperties.getMessage(resource, "product.no_longer_for_sale", 
+                    		new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
+                    Debug.logWarning(excMsg);
+                    errorMessages.add(excMsg);
+                    continue;
+                }
+            }
+                 
+            if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {
+                // check to see if we have inventory available    
+                if (CatalogWorker.isCatalogInventoryRequired(prodCatalogId, product, delegator)) {
+                    if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, currentProductId, 
+                    		currentQuantity.doubleValue(), delegator, dispatcher)) {
+                        String invErrMsg = UtilProperties.getMessage(resource, "product.out_of_stock", 
+                        		new Object[] { getProductName(product, itemName), currentProductId }, locale);
+                        Debug.logWarning(invErrMsg);
+                        errorMessages.add(invErrMsg);
+                        continue;
+                    }
                 }
             }
         }
@@ -169,8 +199,7 @@ public class OrderServices {
 
         // create the order object
         String orderId = delegator.getNextSeqId("OrderHeader").toString();
-        String billingAccountId = (String) context.get("billingAccountId");
-        String orderTypeId = (String) context.get("orderTypeId");
+        String billingAccountId = (String) context.get("billingAccountId");       
         GenericValue order = delegator.makeValue("OrderHeader",
                 UtilMisc.toMap("orderId", orderId, "orderTypeId", orderTypeId,
                     "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
@@ -201,36 +230,36 @@ public class OrderServices {
             Debug.logError(e, "Cannot create OrderHeader entity; problems with insert", module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Order creation failed; please notify customer service.");
-        }
-        // Don't do this; if the sequence table fails we don't want to clobber old orders
-        // toBeStored.add(order);        
+            return result;
+        }            
 
         // set the orderId on all adjustments; this list will include order and item adjustments...
         List orderAdjustments = (List) context.get("orderAdjustments");
-        Iterator iter = orderAdjustments.iterator();
-
-        while (iter.hasNext()) {
-            GenericValue orderAdjustment = (GenericValue) iter.next();
-            Long adjSeqId = delegator.getNextSeqId("OrderAdjustment");
-
-            if (adjSeqId == null) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get next sequence id for OrderAdjustment, cannot create order.");
-                return result;
+        if (orderAdjustments != null && orderAdjustments.size() > 0) {        
+            Iterator iter = orderAdjustments.iterator();
+    
+            while (iter.hasNext()) {
+                GenericValue orderAdjustment = (GenericValue) iter.next();
+                Long adjSeqId = delegator.getNextSeqId("OrderAdjustment");
+    
+                if (adjSeqId == null) {
+                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                    result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get next sequence id for OrderAdjustment, cannot create order.");
+                    return result;
+                }
+                orderAdjustment.set("orderAdjustmentId", adjSeqId.toString());
+                orderAdjustment.set("orderId", orderId);
+    
+                if (orderAdjustment.get("orderItemSeqId") == null || orderAdjustment.getString("orderItemSeqId").length() == 0) {
+                    orderAdjustment.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA); // set the orderItemSeqId to _NA_ if not alredy set...
+                }
+    
+                toBeStored.add(orderAdjustment);
             }
-            orderAdjustment.set("orderAdjustmentId", adjSeqId.toString());
-            orderAdjustment.set("orderId", orderId);
-
-            if (orderAdjustment.get("orderItemSeqId") == null || orderAdjustment.getString("orderItemSeqId").length() == 0) {
-                orderAdjustment.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA); // set the orderItemSeqId to _NA_ if not alredy set...
-            }
-
-            toBeStored.add(orderAdjustment);
         }
 
         // set the order contact mechs
         List orderContactMechs = (List) context.get("orderContactMechs");
-
         if (orderContactMechs != null && orderContactMechs.size() > 0) {
             Iterator ocmi = orderContactMechs.iterator();
 
@@ -243,7 +272,6 @@ public class OrderServices {
 
         // set the order item contact mechs
         List orderItemContactMechs = (List) context.get("orderItemContactMechs");
-
         if (orderItemContactMechs != null && orderItemContactMechs.size() > 0) {
             Iterator oicmi = orderItemContactMechs.iterator();
 
@@ -256,7 +284,6 @@ public class OrderServices {
 
         // set the shipment preferences
         List orderShipmentPreferences = (List) context.get("orderShipmentPreferences");
-
         if (orderShipmentPreferences != null && orderShipmentPreferences.size() > 0) {
             Iterator oshprefs = orderShipmentPreferences.iterator();
 
@@ -300,7 +327,7 @@ public class OrderServices {
         }
 
         // set the roles for a sales order
-        if (order.getString("orderTypeId").equals("SALES_ORDER")) {        
+        if ("SALES_ORDER".equals(orderTypeId)) {        
             final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER",
                     "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
     
@@ -314,8 +341,12 @@ public class OrderServices {
             }
             
             // TODO: set some BILL_FROM roles
-        } else {
+        } else if ("PURCHASE_ORDER".equals(orderTypeId)) {
             // TODO: set the purchase order roles
+        } else if ("WORK_ORDER".equals(orderTypeId)) {
+            // TODO: set the work order roles
+        } else {
+            // TODO: some default behavior
         }
 
         // set the affiliate -- This is going to be removed...
@@ -364,51 +395,54 @@ public class OrderServices {
         }
 
         try {           
-            boolean beganTransaction = TransactionUtil.begin();                        
-            
+            boolean beganTransaction = TransactionUtil.begin();                                    
             try {
                 // store line items, etc so that they will be there for the foreign key checks
                 delegator.storeAll(toBeStored);
 
-                // START inventory reservation
-                // decrement inventory available for each item, within the same transaction
-                List resErrorMessages = new LinkedList();
-                Iterator invDecItemIter = orderItems.iterator();
-
-                while (invDecItemIter.hasNext()) {
-                    GenericValue orderItem = (GenericValue) invDecItemIter.next();
-
-                    Double inventoryNotReserved = CatalogWorker.reserveCatalogInventory(prodCatalogId,
-                            orderItem.getString("productId"), orderItem.getDouble("quantity"),
-                            orderItem.getString("orderId"), orderItem.getString("orderItemSeqId"),
-                            userLogin, delegator, dispatcher);
-
-                    if (inventoryNotReserved != null) {
-                        // if inventoryNotReserved is not 0.0 then that is the amount that it couldn't reserve
-                        GenericValue product = null;
-
-                        try {
-                            product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.getString("productId")));
-                        } catch (GenericEntityException e) {
-                            Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory reservation");
+                if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {                
+                    // START inventory reservation
+                    // decrement inventory available for each item, within the same transaction
+                    List resErrorMessages = new LinkedList();
+                    Iterator invDecItemIter = orderItems.iterator();
+    
+                    while (invDecItemIter.hasNext()) {
+                        GenericValue orderItem = (GenericValue) invDecItemIter.next();                        
+                        if (orderItem.get("productId") != null) {
+                            // only reserve product items; ignore non-product items                        
+                            Double inventoryNotReserved = CatalogWorker.reserveCatalogInventory(prodCatalogId,
+                                orderItem.getString("productId"), orderItem.getDouble("quantity"),
+                                orderItem.getString("orderId"), orderItem.getString("orderItemSeqId"),
+                                userLogin, delegator, dispatcher);                        
+    
+                            if (inventoryNotReserved != null) {
+                                // if inventoryNotReserved is not 0.0 then that is the amount that it couldn't reserve
+                                GenericValue product = null;
+        
+                                try {
+                                    product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.getString("productId")));
+                                } catch (GenericEntityException e) {
+                                    Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory reservation");
+                                }
+                                String invErrMsg = "The product ";
+        
+                                if (product != null) {
+                                    invErrMsg += getProductName(product, orderItem);
+                                }
+                                invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
+                                resErrorMessages.add(invErrMsg);
+                            }
                         }
-                        String invErrMsg = "The product ";
-
-                        if (product != null) {
-                            invErrMsg += getProductName(product, orderItem);
-                        }
-                        invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
-                        resErrorMessages.add(invErrMsg);
                     }
+    
+                    if (resErrorMessages.size() > 0) {
+                        TransactionUtil.rollback(beganTransaction);
+                        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                        result.put(ModelService.ERROR_MESSAGE_LIST, resErrorMessages);
+                        return result;
+                    }
+                    // END inventory reservation
                 }
-
-                if (resErrorMessages.size() > 0) {
-                    TransactionUtil.rollback(beganTransaction);
-                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                    result.put(ModelService.ERROR_MESSAGE_LIST, resErrorMessages);
-                    return result;
-                }
-                // END inventory reservation
 
                 TransactionUtil.commit(beganTransaction);
 
