@@ -484,8 +484,7 @@
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
             title="Recurrence Info Entity">
       <field name="recurrenceInfoId" type="id-ne"></field>
-      <field name="startDateTime" type="date-time"></field>
-      <field name="endDateTime" type="date-time"></field>
+      <field name="startDateTime" type="date-time"></field>      
       <field name="exceptionDateTimes" type="very-long"></field>
       <field name="recurrenceDateTimes" type="very-long"></field>
       <field name="exceptionRuleId" type="id-ne"></field>
