@@ -1,7 +1,7 @@
 <table width="170"><tr>
                     <td width="170" height="100%"><table width="170" height="100%" border="0" align="center" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td width="170" height="10" align="center" valign="top"><img src="/images/hotelfrontend/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
+                        <td width="170" height="10" align="center" valign="top"><img src="/hotelfrontend/images/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
                       </tr>
                       <tr>
                         <td width="170" align="center" valign="middle" class="unnamed2"><!-- Clock Part 1 - Put Anywhere Before Part 2 -->
@@ -29,15 +29,15 @@ var dN=new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat'),mN=new Array('Jan','
 <!-- Clock Part 2 - Ends Here --></td>
                       </tr>
                       <tr>
-                        <td width="170" height="10" align="center" valign="middle"><img src="/images/hotelfrontend/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
+                        <td width="170" height="10" align="center" valign="middle"><img src="/hotelfrontend/images/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
                       </tr>
                       <tr>
-                        <td width="170" height="100%" align="center" valign="middle"><script webstyle3>document.write('<scr'+'ipt src="/images/hotelfrontend/dimpleroundend.js">'+'</scr'+'ipt>');/*img src="DimpleRoundend.gif" moduleid="Default (Project)\DimpleRoundend1_off.xws"*/</script>
+                        <td width="170" height="100%" align="center" valign="middle"><script webstyle3>document.write('<scr'+'ipt src="/hotelfrontend/images/dimpleroundend.js">'+'</scr'+'ipt>');/*img src="DimpleRoundend.gif" moduleid="Default (Project)\DimpleRoundend1_off.xws"*/</script>
                         
                           </td>
                       </tr>
                       <tr>
-                        <td width="170" height="10" align="center" valign="top"><img src="/images/hotelfrontend/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
+                        <td width="170" height="10" align="center" valign="top"><img src="/hotelfrontend/images/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
                       </tr>
                       <tr>
                         <td width="170" align="center" valign="top">
