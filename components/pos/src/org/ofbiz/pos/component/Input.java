@@ -177,9 +177,9 @@ public class Input implements KeyboardReceiver, KeyListener {
     }
 
     // KeyboardReceiver
-    public synchronized void receiveData(int[] codes, char[] chars) {        
+    public synchronized void receiveData(int[] codes, char[] chars) {
         if (chars.length > 0 && checkChars(chars))
-            this.appendString(new String(chars));        
+            this.appendString(new String(chars));
     }
 
     // KeyListener
@@ -203,7 +203,7 @@ public class Input implements KeyboardReceiver, KeyListener {
         boolean process = false;
         int remIdx = 0;
         for (int i = 0; i < chars.length; i++) {
-            if (((int) chars[i]) == 10 || ((int) chars[i]) == 8) {
+            if (((int) chars[i]) == 10 || ((int) chars[i]) == 8 || ((int) chars[i] == 27)) {
                 idxToRemove[remIdx++] = i+1;
             } else {
                 process = true;
