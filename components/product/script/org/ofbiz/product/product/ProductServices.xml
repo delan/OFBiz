@@ -567,11 +567,11 @@
         <call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
-        <field-to-field field-name="virtualProductId" map-name="parameters" to-field-name="productId" to-map-name="productFindContext"/>
+        <env-to-env env-name="parameters.virtualProductId" to-env-name="productFindContext.productId"/>
         <find-by-primary-key entity-name="Product" map-name="productFindContext" value-name="oldProduct"/>
         
-        <field-to-field field-name="virtualProductId" map-name="parameters" to-field-name="productId" to-map-name="variantsFindContext"/>
-        <string-to-field string="PRODUCT_VARIANT" to-field-name="productAssocTypeId" to-map-name="variantsFindContext"/>
+        <env-to-env env-name="parameters.virtualProductId" to-env-name="variantsFindContext.productId"/>
+        <string-to-field string="PRODUCT_VARIANT" field-name="variantsFindContext.productAssocTypeId"/>
         <find-by-and entity-name="ProductAssoc" map-name="variantsFindContext" list-name="variants"/>
         <iterate entry-name="newProduct" list-name="variants">
             <field-to-field field-name="productIdTo" map-name="newProduct" to-field-name="productId" to-map-name="productVariantContext"/>
