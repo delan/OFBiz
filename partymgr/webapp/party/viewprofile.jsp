@@ -113,17 +113,17 @@
       </div>
       <nobr>
         <ofbiz:if name="showOld">
-          <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">[Hide Old]</a>&nbsp;&nbsp;
+          <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">[Hide Old]</a>
         </ofbiz:if>      
         <ofbiz:unless name="showOld">
-          <a href="<ofbiz:url>/viewprofile?SHOW_OLD=true</ofbiz:url>" class="buttontext">[Show Old]</a>&nbsp;&nbsp;
+          <a href="<ofbiz:url>/viewprofile?SHOW_OLD=true</ofbiz:url>" class="buttontext">[Show Old]</a>
         </ofbiz:unless>
-        <a href="/accounting/control/findBillingAccount?partyId=<%=partyId%><%=externalKeyParam%>" class="buttontext">[Billing Accounts]</a>&nbsp;&nbsp;
+        <a href="/accounting/control/findBillingAccount?partyId=<%=partyId%><%=externalKeyParam%>" class="buttontext">[Billing Accounts]</a>
         <% if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) { %>
-          <a href="/ordermgr/control/orderlist?partyId=<%=partyId%><%=externalKeyParam%>" class="buttontext">[Orders]</a>&nbsp;&nbsp;
+          <a href="/ordermgr/control/orderlist?partyId=<%=partyId%><%=externalKeyParam%>" class="buttontext">[Orders]</a>
         <% } %>
         <% if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) { %>
-          <a href="/ordermgr/control/salesentry?partyId=<%=partyId%><%=externalKeyParam%>" class="buttontext">[New Order]</a>&nbsp;&nbsp;
+          <a href="/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=<%=partyId%><%=externalKeyParam%>" class="buttontext">[New Order]</a>
         <% } %>      
       </nobr>
     </td>

@@ -4,10 +4,14 @@
 <%@ page import="java.util.*, org.ofbiz.core.service.ModelService" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.commonapp.security.login.*" %>
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
 <%
+    String externalLoginKey = LoginEvents.getExternalLoginKey(request);
+    String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
+    
     boolean findAll = false;
     String searchString = "";
     if (request.getParameter("first_name") != null || request.getParameter("last_name") != null) {
@@ -306,10 +310,10 @@
                   <div class="tabletext"><nobr>
                     <a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext">[View&nbsp;Profile]</a>&nbsp;
                     <% if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) { %>
-                      <a href='/ordermgr/control/orderlist?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' target="ordermgr" class="buttontext">[Orders]</a>&nbsp;
+                      <a href='/ordermgr/control/orderlist?partyId=<ofbiz:entityfield attribute="party" field="partyId"/><%=externalKeyParam%>' class="buttontext">[Orders]</a>&nbsp;
                     <% } %>
                     <% if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) { %>
-                      <a href='/ordermgr/control/salesentry?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' target="ordermgr" class="buttontext">[New Order]</a>&nbsp;
+                      <a href='/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=<ofbiz:entityfield attribute="party" field="partyId"/><%=externalKeyParam%>' class="buttontext">[New Order]</a>&nbsp;
                     <% } %>
                   </nobr></div>
                 </td>
