@@ -647,7 +647,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         try {
             List virtualProductAssocs = this.getDelegator().findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("-fromDate"));
             virtualProductAssocs = EntityUtil.filterByDate(virtualProductAssocs, true);
-            if (virtualProductAssocs == null && virtualProductAssocs.size() > 0) {
+            if (virtualProductAssocs == null || virtualProductAssocs.size() == 0) {
                 //okay, not a variant, try a UNIQUE_ITEM
                 virtualProductAssocs = this.getDelegator().findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "UNIQUE_ITEM"), UtilMisc.toList("-fromDate"));
                 virtualProductAssocs = EntityUtil.filterByDate(virtualProductAssocs, true);
