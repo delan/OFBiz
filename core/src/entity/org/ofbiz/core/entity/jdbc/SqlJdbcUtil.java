@@ -37,6 +37,7 @@ import org.ofbiz.core.entity.*;
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
+ * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
  * @version    $Revision$
  * @since      2.0
  */

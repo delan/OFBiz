@@ -33,6 +33,7 @@ import org.ofbiz.core.entity.jdbc.*;
  * This class extends ModelEntity and provides additional information appropriate to view entities
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
  * @version    $Revision$
  * @since      2.0
  */
