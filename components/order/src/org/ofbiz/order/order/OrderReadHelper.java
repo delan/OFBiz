@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.28 2004/08/16 16:53:21 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.29 2004/08/16 19:20:23 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -1075,12 +1075,6 @@ public class OrderReadHelper {
         Iterator orderItems = this.getOrderItems().iterator();
         while (orderItems.hasNext()) {
             GenericValue orderItem = (GenericValue) orderItems.next();
-            
-            // if the status is not ITEM_COMPLETED or ITEM_APPROVED, continue to next item
-            String statusId = orderItem.getString("statusId");
-            if (!"ITEM_COMPLETED".equals(statusId) && !"ITEM_APPROVED".equals(statusId)) {
-                continue;
-            }
             
             Double itemQuantityDbl = orderItem.getDouble("quantity");
             if (itemQuantityDbl == null) {
