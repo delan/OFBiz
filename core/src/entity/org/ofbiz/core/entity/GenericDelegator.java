@@ -78,7 +78,7 @@ public class GenericDelegator {
                     try {
                         delegator = new GenericDelegator(delegatorName);
                     } catch (GenericEntityException e) {
-                        Debug.logError(e, "Error creating delegator");
+                        Debug.logError(e, "Error creating delegator", module);
                     }
                     if (delegator != null) {
                         delegatorCache.put(delegatorName, delegator);
@@ -131,7 +131,7 @@ public class GenericDelegator {
                 boolean checkOnStart = true;
                 boolean addMissing = false;
                 if (datasourceElement == null) {
-                    Debug.logWarning("datasource def not found with name " + helperName + ", using defaults for check-on-start (true) and add-missing-on-start (false)");
+                    Debug.logWarning("datasource def not found with name " + helperName + ", using defaults for check-on-start (true) and add-missing-on-start (false)", module);
                 } else {
                     checkOnStart = !"false".equals(datasourceElement.getAttribute("check-on-start"));
                     addMissing = "true".equals(datasourceElement.getAttribute("add-missing-on-start"));
@@ -166,7 +166,7 @@ public class GenericDelegator {
             try {
                 return ModelReader.getModelReader(delegatorName);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logError(e, "Error loading entity model", module);
                 return null;
             }
         }
@@ -176,10 +176,16 @@ public class GenericDelegator {
      *@return ModelGroupReader that corresponds to this delegator
      */
     public ModelGroupReader getModelGroupReader() {
-        if (keepLocalReaders)
+        if (keepLocalReaders) {
             return this.modelGroupReader;
-        else
-            return ModelGroupReader.getModelGroupReader(delegatorName);
+        } else {
+            try {
+                return ModelGroupReader.getModelGroupReader(delegatorName);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error loading entity group model", module);
+                return null;
+            }
+        }
     }
 
     /** Gets the instance of ModelEntity that corresponds to this delegator and the specified entityName
@@ -190,7 +196,7 @@ public class GenericDelegator {
         try {
             return getModelReader().getModelEntity(entityName);
         } catch (GenericEntityException e) {
-            Debug.logWarning(e);
+            Debug.logError(e, "Error loading entity definition from model", module);
             return null;
         }
     }
@@ -249,18 +255,18 @@ public class GenericDelegator {
         try {
             rootElement = EntityConfigUtil.getXmlRootElement();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error getting group helper name");
+            Debug.logError(e, "Error getting group helper name", module);
             return null;
         }
 
         Element delegatorElement = UtilXml.firstChildElement(rootElement, "delegator", "name", delegatorName);
         if (delegatorElement == null) {
-            Debug.logWarning("Delegator def not found with name " + delegatorName);
+            Debug.logWarning("Delegator def not found with name " + delegatorName, module);
             return null;
         }
         Element goupMapElement = UtilXml.firstChildElement(delegatorElement, "group-map", "group-name", groupName);
         if (goupMapElement == null) {
-            Debug.logWarning("No entity group definition found with name " + groupName + " in delegator with name " + delegatorName);
+            Debug.logWarning("No entity group definition found with name " + groupName + " in delegator with name " + delegatorName, module);
             return null;
         }
 
@@ -337,14 +343,10 @@ public class GenericDelegator {
 
     /** Creates a Entity in the form of a GenericValue without persisting it */
     public GenericValue makeValue(String entityName, Map fields) {
-        ModelEntity entity = null;
-        try {
-            entity = getModelReader().getModelEntity(entityName);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
-        if (entity == null)
+        ModelEntity entity = this.getModelEntity(entityName);
+        if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.makeValue] could not find entity for entityName: " + entityName);
+        }
         GenericValue value = new GenericValue(entity, fields);
         value.setDelegator(this);
         return value;
@@ -352,14 +354,10 @@ public class GenericDelegator {
 
     /** Creates a Primary Key in the form of a GenericPK without persisting it */
     public GenericPK makePK(String entityName, Map fields) {
-        ModelEntity entity = null;
-        try {
-            entity = getModelReader().getModelEntity(entityName);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
-        if (entity == null)
+        ModelEntity entity = this.getModelEntity(entityName);
+        if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.makePK] could not find entity for entityName: " + entityName);
+        }
         GenericPK pk = new GenericPK(entity, fields);
         pk.setDelegator(this);
         return pk;
@@ -372,12 +370,7 @@ public class GenericDelegator {
         if (entityName == null || fields == null) {
             return null;
         }
-        ModelEntity entity = null;
-        try {
-            entity = getModelReader().getModelEntity(entityName);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
+        ModelEntity entity = this.getModelReader().getModelEntity(entityName);
         GenericValue genericValue = new GenericValue(entity, fields);
         return this.create(genericValue);
     }
@@ -1130,12 +1123,7 @@ public class GenericDelegator {
      *@param fields The fields of the named entity to query by with their corresponging values
      */
     public void clearCacheLine(String entityName, Map fields) {
-        ModelEntity entity = null;
-        try {
-            entity = getModelReader().getModelEntity(entityName);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
+        ModelEntity entity = this.getModelEntity(entityName);
         if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.clearCacheLine] could not find entity for entityName: " + entityName);
         }
@@ -1220,12 +1208,7 @@ public class GenericDelegator {
     public Collection getFromAndCache(String entityName, Map fields) {
         if (entityName == null || fields == null)
             return null;
-        ModelEntity entity = null;
-        try {
-            entity = getModelReader().getModelEntity(entityName);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
+        ModelEntity entity = this.getModelEntity(entityName);
         GenericPK tempPK = new GenericPK(entity, fields);
         if (tempPK == null)
             return null;
@@ -1257,12 +1240,7 @@ public class GenericDelegator {
     public void putInAndCache(String entityName, Map fields, Collection values) {
         if (entityName == null || fields == null || values == null)
             return;
-        ModelEntity entity = null;
-        try {
-            entity = getModelReader().getModelEntity(entityName);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-        }
+        ModelEntity entity = this.getModelEntity(entityName);
         GenericPK tempPK = new GenericPK(entity, fields);
         if (tempPK == null)
             return;

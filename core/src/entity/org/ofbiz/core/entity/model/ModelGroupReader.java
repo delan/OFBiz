@@ -67,22 +67,14 @@ public class ModelGroupReader {
     public String modelName;
     public ResourceHandler entityGroupResourceHandler;
 
-    public static ModelGroupReader getModelGroupReader(String delegatorName) {
-        Element rootElement = null;
-
-        try {
-            rootElement = EntityConfigUtil.getXmlRootElement();
-        } catch (GenericEntityException e) {
-            Debug.logError(e);
-            throw new IllegalStateException("Error loading entityengine.xml file: " + e.toString());
-        }
+    public static ModelGroupReader getModelGroupReader(String delegatorName) throws GenericEntityConfException {
+        Element rootElement = EntityConfigUtil.getXmlRootElement();
         Element delegatorElement = UtilXml.firstChildElement(rootElement, "delegator", "name", delegatorName);
 
         String tempModelName = delegatorElement.getAttribute("entity-group-reader");
         ModelGroupReader reader = (ModelGroupReader) readers.get(tempModelName);
 
-        if (reader == null) //don't want to block here
-        {
+        if (reader == null) { //don't want to block here
             synchronized (ModelGroupReader.class) {
                 //must check if null again as one of the blocked threads can still enter
                 reader = (ModelGroupReader) readers.get(tempModelName);
@@ -95,18 +87,10 @@ public class ModelGroupReader {
         return reader;
     }
 
-    public ModelGroupReader(String modelName) {
+    public ModelGroupReader(String modelName) throws GenericEntityConfException {
         this.modelName = modelName;
-        Element rootElement = null;
-
-        try {
-            rootElement = EntityConfigUtil.getXmlRootElement();
-        } catch (GenericEntityException e) {
-            Debug.logError(e);
-            throw new IllegalStateException("Error loading entityengine.xml file: " + e.toString());
-        }
+        Element rootElement = EntityConfigUtil.getXmlRootElement();
         Element groupReaderElement = UtilXml.firstChildElement(rootElement, "entity-group-reader", "name", modelName);
-
         entityGroupResourceHandler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, groupReaderElement);
 
         //preload caches...
@@ -221,8 +205,10 @@ public class ModelGroupReader {
         return enames;
     }
 
-    protected Document getDocument(String filename) {
-        if (filename == null) return null;
+    protected Document getDocument(String filename) throws GenericEntityConfException {
+        if (filename == null)
+            return null;
+
         Document document = null;
 
         try {
@@ -231,15 +217,19 @@ public class ModelGroupReader {
             // Error generated during parsing)
             Exception x = sxe;
 
-            if (sxe.getException() != null) x = sxe.getException();
-            x.printStackTrace();
+            if (sxe.getException() != null) {
+                x = sxe.getException();
+            }
+
+            throw new GenericEntityConfException( "Error while parsing the XML document", x );
         } catch (ParserConfigurationException pce) {
             // Parser with specified options can't be built
-            pce.printStackTrace();
+            throw new GenericEntityConfException( "XML Parser Configuration Error", pce );
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            throw new GenericEntityConfException( "IO Exception while parsing the XML document", ioe );
         }
 
         return document;
     }
+
 }
