@@ -237,7 +237,9 @@ public class DeviceLoader {
 
             if (drawer != null) {
                 for (int i = 0; i < drawer.length; i++) {
-                    drawer[i].close();
+                    if (drawer[i] != null) {
+                        drawer[i].close();
+                    }
                 }
             }
 

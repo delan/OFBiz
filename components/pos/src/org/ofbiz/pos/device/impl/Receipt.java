@@ -42,6 +42,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.OrderedMap;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.device.GenericDevice;
@@ -74,13 +75,14 @@ public class Receipt extends GenericDevice implements DialogCallback {
     protected SimpleDateFormat[] dateFormat = null;
     protected String[] storeReceiptTmpl = null;
     protected String[] custReceiptTmpl = null;
+    protected OrderedMap reportTmpl = new OrderedMap();
 
-    protected String[] dateFmtStr = { "EEE, d MMM yyyy HH:mm:ss z", "EEE, d MMM yyyy HH:mm:ss z" };
-    protected int[] priceLength = { 7, 7 };
-    protected int[] qtyLength = { 5, 5 };
-    protected int[] descLength = { 25, 25 };
-    protected int[] pridLength = { 25, 25 };
-    protected int[] infoLength = { 34, 34 };
+    protected String[] dateFmtStr = { "EEE, d MMM yyyy HH:mm:ss z", "EEE, d MMM yyyy HH:mm:ss z", "EEE, d MMM yyyy HH:mm:ss z" };
+    protected int[] priceLength = { 7, 7, 7 };
+    protected int[] qtyLength = { 5, 5, 5 };
+    protected int[] descLength = { 25, 25, 0 };
+    protected int[] pridLength = { 25, 25, 0 };
+    protected int[] infoLength = { 34, 34, 0 };
 
     protected PosTransaction lastTransaction = null;
 
@@ -115,6 +117,23 @@ public class Receipt extends GenericDevice implements DialogCallback {
                     10 * 100, 60 * 100, POSPrinterConst.PTR_BC_CENTER, POSPrinterConst.PTR_BC_TEXT_NONE);
         } catch (JposException e) {
             Debug.logError(e, module);
+        }
+    }
+
+    public void printReport(PosTransaction trans, String resource, Map context) {
+        Debug.log("Print Report Requested", module);
+        String[] report = this.readReportTemplate(resource);
+
+        if (report != null) {
+            for (int i = 0; i < report.length; i++) {
+                if (report[i] != null) {
+                    this.printInfo(report[i], context, trans, 2);
+                }
+            }
+
+            this.println();
+            this.println();
+            this.println(PAPER_CUT);
         }
     }
 
@@ -186,7 +205,7 @@ public class Receipt extends GenericDevice implements DialogCallback {
     private synchronized String[] readStoreTemplate() {
         if (this.storeReceiptTmpl == null) {
             this.storeReceiptTmpl = new String[7];
-            this.readCustomerTemplate(storeReceiptTmpl, "storereceipt.txt", 1);
+            this.readTemplate(storeReceiptTmpl, "storereceipt.txt", 1);
         }
 
         return this.storeReceiptTmpl;
@@ -195,13 +214,24 @@ public class Receipt extends GenericDevice implements DialogCallback {
     private synchronized String[] readCustomerTemplate() {
         if (this.custReceiptTmpl == null) {
             this.custReceiptTmpl = new String[7];
-            this.readCustomerTemplate(custReceiptTmpl, "custreceipt.txt", 0);
+            this.readTemplate(custReceiptTmpl, "custreceipt.txt", 0);
         }
 
         return this.custReceiptTmpl;
     }
 
-    private String[] readCustomerTemplate(String[] template, String resource, int type) {
+    private synchronized String[] readReportTemplate(String resource) {
+        String[] template = (String[]) reportTmpl.get(resource);
+        if (template == null) {
+            template = new String[7];
+            this.readTemplate(template, resource, 2);
+            reportTmpl.put(resource, template);
+        }
+
+        return template;
+    }
+
+    private String[] readTemplate(String[] template, String resource, int type) {
         int currentPart = 0;
 
         URL fileUrl = UtilURL.fromResource(resource);
@@ -284,7 +314,7 @@ public class Receipt extends GenericDevice implements DialogCallback {
 
     private synchronized SimpleDateFormat getDateFormat(int type) {
         if (dateFormat == null) {
-            dateFormat = new SimpleDateFormat[2];
+            dateFormat = new SimpleDateFormat[3];
         }
         if (dateFormat[type] == null) {
             dateFormat[type] = new SimpleDateFormat(this.dateFmtStr[type]);
@@ -292,9 +322,20 @@ public class Receipt extends GenericDevice implements DialogCallback {
         return dateFormat[type];
     }
 
-    private void printInfo(String template, PosTransaction trans, int type) {
+    private void printInfo(String template, Map context, PosTransaction trans, int type) {
         Map expandMap = this.makeCodeExpandMap(trans, type);
-        String toPrint = FlexibleStringExpander.expandString(template, expandMap);
+        if (context != null) {
+            expandMap.putAll(context); // context overrides
+        }
+        this.printInfo(template, expandMap);
+    }
+
+    private void printInfo(String template, PosTransaction trans, int type) {
+        this.printInfo(template, null, trans, type);
+    }
+
+    private void printInfo(String template, Map context) {
+        String toPrint = FlexibleStringExpander.expandString(template, context);
         if (toPrint.indexOf("\n") > -1) {
             String[] lines = toPrint.split("\\n");
             for (int i = 0; i < lines.length; i++) {
@@ -312,12 +353,12 @@ public class Receipt extends GenericDevice implements DialogCallback {
             Map expandMap = this.makeCodeExpandMap(trans, type);
             expandMap.putAll(trans.getItemInfo(i));
             // adjust the padding
-            expandMap.put("description", padString((String) expandMap.get("description"), descLength[type], true));
-            expandMap.put("productId", padString((String) expandMap.get("productId"), pridLength[type], true));
-            expandMap.put("basePrice", padString((String) expandMap.get("basePrice"), priceLength[type], false));
-            expandMap.put("subtotal", padString((String) expandMap.get("subtotal"), priceLength[type], false));
-            expandMap.put("quantity", padString((String) expandMap.get("quantity"), qtyLength[type], false));
-            expandMap.put("adjustments", padString((String) expandMap.get("adjustments"), priceLength[type], false));
+            expandMap.put("description", UtilFormatOut.padString((String) expandMap.get("description"), descLength[type], true, ' '));
+            expandMap.put("productId", UtilFormatOut.padString((String) expandMap.get("productId"), pridLength[type], true, ' '));
+            expandMap.put("basePrice", UtilFormatOut.padString((String) expandMap.get("basePrice"), priceLength[type], false, ' '));
+            expandMap.put("subtotal", UtilFormatOut.padString((String) expandMap.get("subtotal"), priceLength[type], false, ' '));
+            expandMap.put("quantity", UtilFormatOut.padString((String) expandMap.get("quantity"), qtyLength[type], false, ' '));
+            expandMap.put("adjustments", UtilFormatOut.padString((String) expandMap.get("adjustments"), priceLength[type], false, ' '));
             String toPrint = FlexibleStringExpander.expandString(loopStr, expandMap);
             if (toPrint.indexOf("\n") > -1) {
                 String[] lines = toPrint.split("\\n");
@@ -343,10 +384,10 @@ public class Receipt extends GenericDevice implements DialogCallback {
         Map expandMap = this.makeCodeExpandMap(trans, type);
         expandMap.putAll(payInfo);
         // adjust the padding
-        expandMap.put("authInfoString", padString((String) expandMap.get("authInfoString"), infoLength[type], false));
-        expandMap.put("nameOnCard", padString((String) expandMap.get("nameOnCard"), infoLength[type], false));
-        expandMap.put("payInfo", padString((String) expandMap.get("payInfo"), infoLength[type], false));
-        expandMap.put("amount", padString((String) expandMap.get("amount"), priceLength[type], false));
+        expandMap.put("authInfoString", UtilFormatOut.padString((String) expandMap.get("authInfoString"), infoLength[type], false, ' '));
+        expandMap.put("nameOnCard", UtilFormatOut.padString((String) expandMap.get("nameOnCard"), infoLength[type], false, ' '));
+        expandMap.put("payInfo", UtilFormatOut.padString((String) expandMap.get("payInfo"), infoLength[type], false, ' '));
+        expandMap.put("amount", UtilFormatOut.padString((String) expandMap.get("amount"), priceLength[type], false, ' '));
         String toPrint = FlexibleStringExpander.expandString(template, expandMap);
         if (toPrint.indexOf("\n") > -1) {
             String[] lines = toPrint.split("\\n");
@@ -368,43 +409,19 @@ public class Receipt extends GenericDevice implements DialogCallback {
         expandMap.put("BOLD", TEXT_BOLD);
         expandMap.put("LF", LF);
         expandMap.put("transactionId", trans.getTransactionId());
+        expandMap.put("terminalId", trans.getTerminalId());
         expandMap.put("userId", trans.getUserId());
         expandMap.put("orderId", trans.getOrderId());
         expandMap.put("dateStamp", dateString);
+        expandMap.put("isMgr", trans.isMgr() ? "Y" : "N");
         expandMap.put("drawerNo", new Integer(trans.getDrawerNumber()).toString());
-        expandMap.put("taxTotal", this.padString(UtilFormatOut.formatPrice(trans.getTaxTotal()), priceLength[type], false));
-        expandMap.put("grandTotal", this.padString(UtilFormatOut.formatPrice(trans.getGrandTotal()), priceLength[type], false));
-        expandMap.put("totalPayments", this.padString(UtilFormatOut.formatPrice(trans.getPaymentTotal()), priceLength[type], false));
-        expandMap.put("change", this.padString((trans.getTotalDue() < 0 ?
-                UtilFormatOut.formatPrice(trans.getTotalDue() * -1) : "0.00"), priceLength[type], false));
+        expandMap.put("taxTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(trans.getTaxTotal()), priceLength[type], false, ' '));
+        expandMap.put("grandTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(trans.getGrandTotal()), priceLength[type], false, ' '));
+        expandMap.put("totalPayments", UtilFormatOut.padString(UtilFormatOut.formatPrice(trans.getPaymentTotal()), priceLength[type], false, ' '));
+        expandMap.put("change", UtilFormatOut.padString((trans.getTotalDue() < 0 ?
+                UtilFormatOut.formatPrice(trans.getTotalDue() * -1) : "0.00"), priceLength[type], false, ' '));
 
         return expandMap;
-    }
-
-    private String padString(String str, int setLen, boolean padEnd) {
-        if (str == null) {
-            return null;
-        }
-        if (setLen == 0) {
-            return str;
-        }
-        int stringLen = str.length();
-        int diff = setLen - stringLen;
-        if (diff < 0) {
-            return str.substring(0, setLen);
-        } else {
-            String newString = new String();
-            if (padEnd) {
-                newString = newString + str;
-            }
-            for (int i = 0; i < diff; i++) {
-                newString = newString + " ";
-            }
-            if (!padEnd) {
-                newString = newString + str;
-            }
-            return newString;
-        }
     }
 
     private boolean checkState(POSPrinter printer) throws JposException {

@@ -24,11 +24,29 @@
  */
 package org.ofbiz.pos.event;
 
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.sql.Timestamp;
+
 import net.xoetrope.xui.XProjectManager;
 
 import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.pos.device.DeviceLoader;
+import org.ofbiz.pos.device.impl.Receipt;
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.pos.PosTransaction;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityConditionList;
 
 /**
  * 
@@ -75,5 +93,84 @@ public class ManagerEvents {
             pos.getOutput().print("Shutting down...");
             System.exit(0);
         }
-    }   
+    }
+
+    public static void totalsReport(PosScreen pos) {
+        if (!mgrLoggedIn) {
+            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            return;
+        }
+
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        double checkTotal = 0.00;
+        double cashTotal = 0.00;
+        double gcTotal = 0.00;
+        double ccTotal = 0.00;
+        double othTotal = 0.00;
+        double total = 0.00;
+
+        GenericDelegator delegator = pos.getSession().getDelegator();
+        List exprs = UtilMisc.toList(new EntityExpr("originFacilityId", EntityOperator.EQUALS, trans.getFacilityId()),
+                new EntityExpr("terminalId", EntityOperator.EQUALS, trans.getTerminalId()));
+        EntityListIterator eli = null;
+
+        try {
+            eli = delegator.findListIteratorByCondition("OrderHeaderAndPaymentPref", new EntityConditionList(exprs, EntityOperator.AND), null, null);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        Timestamp dayStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+        Timestamp dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+        if (eli != null) {
+            GenericValue ohpp;
+            while (((ohpp = (GenericValue) eli.next()) != null)) {
+                Timestamp orderDate = ohpp.getTimestamp("orderDate");
+                if (orderDate.after(dayStart) && orderDate.before(dayEnd)) {
+                    String pmt = ohpp.getString("paymentMethodTypeId");
+                    Double amt = ohpp.getDouble("maxAmount");
+
+                    Debug.log("PMT - " + pmt, module);
+                    if ("CASH".equals(pmt)) {
+                        cashTotal += amt.doubleValue();
+                    } else  if ("CHECK".equals(pmt)) {
+                        checkTotal += amt.doubleValue();
+                    } else if ("GIFT_CARD".equals(pmt)) {
+                        gcTotal += amt.doubleValue();
+                    } else if ("CREDIT_CARD".equals(pmt)) {
+                        ccTotal += amt.doubleValue();
+                    } else {
+                        othTotal += amt.doubleValue();
+                    }
+                    total += amt.doubleValue();
+                }
+            }
+
+            try {
+                eli.close();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, "Trouble closing ELI", module);
+            }
+        }
+
+        Map reportMap = new HashMap();
+        reportMap.put("cashTitle", UtilFormatOut.padString("CASH:", 20, false, ' '));
+        reportMap.put("checkTitle", UtilFormatOut.padString("CHECK:", 20, false, ' '));
+        reportMap.put("giftCardTitle", UtilFormatOut.padString("GIFT CARD:", 20, false, ' '));
+        reportMap.put("creditCardTitel", UtilFormatOut.padString("CREDIT CARD:", 20, false, ' '));
+        reportMap.put("otherTitle", UtilFormatOut.padString("OTHER:", 20, false, ' '));
+        reportMap.put("grossSalesTitle", UtilFormatOut.padString("GROSS SALES:", 20, false, ' '));
+
+        reportMap.put("cashTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(cashTotal), 8, false, ' '));
+        reportMap.put("checkTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(checkTotal), 8, false, ' '));
+        reportMap.put("giftCardTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(gcTotal), 8, false, ' '));
+        reportMap.put("creditCardTotalTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(ccTotal), 8, false, ' '));
+        reportMap.put("otherTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(othTotal), 8, false, ' '));
+        reportMap.put("grossSalesTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(total), 8, false, ' '));
+
+        Receipt receipt = DeviceLoader.receipt;
+        if (receipt.isEnabled()) {
+            receipt.printReport(trans, "totals.txt", reportMap);
+        }
+    }
 }
