@@ -20,7 +20,7 @@ mapKey:${mapKey?if_exists}
 <div id="divOne" class="wrapInner">
 <@renderWrappedText />
 </div>
-<a class="tabButton" href="javascript:lookupSubContent('<@ofbizUrl>/LookupSubContent</@ofbizUrl>', '${contentId?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}') " > 
+<a class="tabButton" href="javascript:lookupSubContent('<@ofbizUrl>/LookupSubContent</@ofbizUrl>', '${contentIdTo?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}') " > 
 &nbsp;&nbsp;&nbsp;&nbsp;Lookup&nbsp;&nbsp;&nbsp;&nbsp;
 </a>
 &nbsp;
