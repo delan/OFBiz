@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.16 2004/07/06 21:49:06 doogie Exp $
+ * $Id: ModelViewEntity.java,v 1.17 2004/07/06 21:54:41 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -488,6 +488,10 @@ public class ModelViewEntity extends ModelEntity {
                 aliases.add(expandedAlias);
             }
         }
+    }
+
+    public String toString() {
+        return "ModelViewEntity[" + getEntityName() + "]";
     }
 
     public static class ModelMemberEntity {

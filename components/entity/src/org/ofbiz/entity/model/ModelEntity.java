@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.14 2004/07/06 21:49:06 doogie Exp $
+ * $Id: ModelEntity.java,v 1.15 2004/07/06 21:54:41 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class ModelEntity extends ModelInfo implements Comparable {
@@ -1011,5 +1011,8 @@ public class ModelEntity extends ModelInfo implements Comparable {
         this.noAutoStamp = noAutoStamp;
     }
 
+    public String toString() {
+        return "ModelEntity[" + getEntityName() + "]";
+    }
 }
 
