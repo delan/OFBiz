@@ -83,7 +83,7 @@ public class GenericDAO {
         try {
             connection = getConnection();
         } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
+            throw new GenericDataSourceException("Unable to establish a connection with the database.", sqle);
         }
         
         try {

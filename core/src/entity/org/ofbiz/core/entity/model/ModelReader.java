@@ -24,23 +24,16 @@
 
 package org.ofbiz.core.entity.model;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
@@ -80,6 +73,10 @@ public class ModelReader {
     public static ModelReader getModelReader(String delegatorName) throws GenericEntityException {
         Element rootElement = EntityConfigUtil.getXmlRootElement();
         Element delegatorElement = UtilXml.firstChildElement(rootElement, "delegator", "name", delegatorName);
+        if (delegatorElement == null) {
+            throw new GenericEntityConfException("Could not find a delegator with the name " + delegatorName);
+        }
+        
         String tempModelName = delegatorElement.getAttribute("entity-model-reader");
         
         ModelReader reader = (ModelReader) readers.get(tempModelName);
@@ -106,6 +103,10 @@ public class ModelReader {
 
         Element rootElement = EntityConfigUtil.getXmlRootElement();
         Element modelElement = UtilXml.firstChildElement(rootElement, "entity-model-reader", "name", modelName);
+        if (modelElement == null) {
+            throw new GenericEntityConfException("Cound not find an entity-model-reader with the name " + modelName);
+        }
+        
         List resourceElements = UtilXml.childElementList(modelElement, "resource");
 
         Iterator resIter = resourceElements.iterator();

@@ -24,7 +24,6 @@
 
 package org.ofbiz.core.entity;
 
-import java.lang.reflect.*;
 import java.util.*;
 import java.sql.*;
 import javax.sql.*;
@@ -112,36 +111,40 @@ public class ConnectionFactory {
         }
 
         Element inlineJdbcElement = UtilXml.firstChildElement(datasourceElement, "inline-jdbc");
-        //If JNDI sources are not specified, or found, try Tyrex
-        try {
-            // For Tyrex 0.9.8.5
-            Class.forName("tyrex.resource.jdbc.xa.EnabledDataSource").newInstance();
-            // For Tyrex 0.9.7.0
-            //Class.forName("tyrex.jdbc.xa.EnabledDataSource").newInstance();
-            //Debug.logInfo("Found Tyrex Driver...");
-
-            Connection con = TyrexConnectionFactory.getConnection(helperName, inlineJdbcElement);
-            if (con != null)
-                return con;
-        } catch (Exception ex) {
-            Debug.logWarning(ex, "There was an error loading Tyrex, this may not be a serious problem, but you probably want to know anyway.");
-        }
-
-        // Default to plain JDBC.
-        String driverClassName = inlineJdbcElement.getAttribute("jdbc-driver");
-        if (driverClassName != null && driverClassName.length() > 0) {
+        if (inlineJdbcElement != null) {
+            //If JNDI sources are not specified, or found, try Tyrex
             try {
-                Class.forName(driverClassName);
-            } catch (ClassNotFoundException cnfe) {
-                Debug.logWarning("Could not find JDBC driver class named " + driverClassName + ".\n");
-                Debug.logWarning(cnfe);
-                return null;
+                // For Tyrex 0.9.8.5
+                Class.forName("tyrex.resource.jdbc.xa.EnabledDataSource").newInstance();
+                // For Tyrex 0.9.7.0
+                //Class.forName("tyrex.jdbc.xa.EnabledDataSource").newInstance();
+                //Debug.logInfo("Found Tyrex Driver...");
+
+                Connection con = TyrexConnectionFactory.getConnection(helperName, inlineJdbcElement);
+                if (con != null)
+                    return con;
+            } catch (Exception ex) {
+                Debug.logWarning(ex, "There was an error loading Tyrex, this may not be a serious problem, but you probably want to know anyway.");
             }
-            return DriverManager.getConnection(inlineJdbcElement.getAttribute("jdbc-uri"),
-                    inlineJdbcElement.getAttribute("jdbc-username"), inlineJdbcElement.getAttribute("jdbc-password"));
+
+            // Default to plain JDBC.
+            String driverClassName = inlineJdbcElement.getAttribute("jdbc-driver");
+            if (driverClassName != null && driverClassName.length() > 0) {
+                try {
+                    Class.forName(driverClassName);
+                } catch (ClassNotFoundException cnfe) {
+                    Debug.logWarning("Could not find JDBC driver class named " + driverClassName + ".\n");
+                    Debug.logWarning(cnfe);
+                    return null;
+                }
+                return DriverManager.getConnection(inlineJdbcElement.getAttribute("jdbc-uri"),
+                        inlineJdbcElement.getAttribute("jdbc-username"), inlineJdbcElement.getAttribute("jdbc-password"));
+            }
+        } else {
+            Debug.logError("Cannot find JDBC definition, no inline-jdbc element found for helperName \"" + helperName + "\"", module);
         }
 
-        Debug.log("******* ERROR: No database connection found for helperName \"" + helperName + "\"", module);
+        Debug.logError("******* ERROR: No database connection found for helperName \"" + helperName + "\"", module);
         return null;
     }
 }

@@ -33,13 +33,10 @@ import org.ofbiz.core.entity.config.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * Generic Data Source Delegator Class
@@ -116,12 +113,12 @@ public class GenericDelegator {
             if (helperName != null && helperName.length() > 0) {
                 //make sure each helper is only loaded once
                 if (helpersDone.contains(helperName)) {
-                    Debug.logInfo("Helper \"" + helperName + "\" alread initialized, not re-initializing.", module);
+                    Debug.logInfo("Helper \"" + helperName + "\" already initialized, not re-initializing.", module);
                     continue;
                 }
                 helpersDone.add(helperName);
-                //pre-load field type defs
-                ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
+                //pre-load field type defs, the return value is ignored
+                ModelFieldTypeReader.getModelFieldTypeReader(helperName);
                 //get the helper and if configured, do the datasource check
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
                 
@@ -240,7 +237,7 @@ public class GenericDelegator {
     }
 
     /** Gets the helper name that corresponds to this delegator and the specified entityName
-     *@param entityName The name of the entity to get the helper for
+     *@param groupName The name of the group to get the helper name for
      *@return String with the helper name that corresponds to this delegator and the specified entityName
      */
     public String getGroupHelperName(String groupName) {
@@ -259,7 +256,7 @@ public class GenericDelegator {
         }
         Element goupMapElement = UtilXml.firstChildElement(delegatorElement, "group-map", "group-name", groupName);
         if (goupMapElement == null) {
-            Debug.logWarning("Group-map def not found with name " + groupName + " in delegator with name " + delegatorName);
+            Debug.logWarning("No entity group definition found with name " + groupName + " in delegator with name " + delegatorName);
             return null;
         }
 
@@ -267,7 +264,7 @@ public class GenericDelegator {
     }
 
     /** Gets the helper name that corresponds to this delegator and the specified entityName
-     *@param entityName The name of the entity to get the helper for
+     *@param entityName The name of the entity to get the helper name for
      *@return String with the helper name that corresponds to this delegator and the specified entityName
      */
     public String getEntityHelperName(String entityName) {
@@ -629,7 +626,7 @@ public class GenericDelegator {
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
      * @param entityName The Name of the Entity as defined in the entity XML file
      * @param fields The fields of the named entity to query by with their corresponging values
-     * @param order The fields of the named entity to order the query by;
+     * @param orderBy The fields of the named entity to order the query by;
      *      optionally add a " ASC" for ascending or " DESC" for descending
      * @return Collection of GenericValue instances that match the query
      */
@@ -781,7 +778,6 @@ public class GenericDelegator {
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      * @param entityName The Name of the Entity as defined in the entity XML file
      * @param fields The fields of the named entity to query by with their corresponging values
-     * @return Collection of GenericValue instances that match the query
      */
     public void removeByAnd(String entityName, Map fields) throws GenericEntityException {
         this.clearCacheLine(entityName, fields);
@@ -931,7 +927,7 @@ public class GenericDelegator {
      */
     public GenericValue getRelatedOneCache(String relationName, GenericValue value) throws GenericEntityException {
         ModelEntity modelEntity = value.getModelEntity();
-        ModelRelation relation = value.getModelEntity().getRelation(relationName);
+        ModelRelation relation = modelEntity.getRelation(relationName);
         if (relation == null)
             throw new GenericModelException("[GenericDelegator.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
         if (!"one".equals(relation.getType()))
@@ -1128,7 +1124,6 @@ public class GenericDelegator {
     /** Remove a CACHED Generic Entity (Collection) from the cache, either a PK, ByAnd, or All
      *@param entityName The Name of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
-     *@return The GenericValue corresponding to the primaryKey
      */
     public void clearCacheLine(String entityName, Map fields) {
         ModelEntity entity = null;
@@ -1165,7 +1160,6 @@ public class GenericDelegator {
 
     /** Remove a CACHED Generic Entity from the cache by its primary key
      *@param primaryKey The primary key to find by.
-     *@return The GenericValue corresponding to the primaryKey
      */
     public void clearCacheLine(GenericPK primaryKey) {
         if (primaryKey != null && primaryKeyCache != null) {

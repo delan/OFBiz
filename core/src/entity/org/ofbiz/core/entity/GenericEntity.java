@@ -25,22 +25,13 @@
 package org.ofbiz.core.entity;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
 import org.w3c.dom.Document;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * Generic Entity Value Object - Handles persisntence for any defined entity.
@@ -129,7 +120,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         return modelEntity;
     }
 
-    /** Get the GenericDelegator implementation instance that created this value object and that is repsonsible for it.
+    /** Get the GenericDelegator instance that created this value object and that is repsonsible for it.
      *@return GenericDelegator object
      */
     public GenericDelegator getDelegator() {
@@ -142,9 +133,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         return internalDelegator;
     }
 
-    /** Get the GenericDelegator implementation instance that created this value object and that is repsonsible for it.
-     *@return GenericDelegator object
-     */
+    /** Set the GenericDelegator instance that created this value object and that is repsonsible for it. */
     public void setDelegator(GenericDelegator internalDelegator) {
         if (internalDelegator == null) return;
         this.delegatorName = internalDelegator.getDelegatorName();
@@ -512,8 +501,8 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         return this.compareTo(that);
     }
 
-    /** Compares this GenericEntity to the passed object
-     *@param obj Object to compare this to
+    /** Compares this GenericEntity to the passed GenericEntity
+     *@param that GenericEntity to compare this to
      *@return int representing the result of the comparison (-1,0, or 1)
      */
     public int compareTo(GenericEntity that) {

@@ -24,7 +24,6 @@
 
 package org.ofbiz.core.entity;
 
-import java.io.*;
 import java.util.*;
 
 import org.ofbiz.core.entity.model.*;
@@ -92,7 +91,7 @@ public class GenericValue extends GenericEntity {
     /** Get the named Related Entity for the GenericValue from the persistent store
      *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
      * @param byAndFields the fields that must equal in order to keep; may be null
-     * @param order The fields of the named entity to order the query by; may be null;
+     * @param orderBy The fields of the named entity to order the query by; may be null;
      *      optionally add a " ASC" for ascending or " DESC" for descending
      *@return Collection of GenericValue instances as specified in the relation definition
      */
@@ -113,7 +112,7 @@ public class GenericValue extends GenericEntity {
      *  store, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
      *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
      * @param byAndFields the fields that must equal in order to keep; may be null
-     * @param order The fields of the named entity to order the query by; may be null;
+     * @param orderBy The fields of the named entity to order the query by; may be null;
      *      optionally add a " ASC" for ascending or " DESC" for descending
      *@return Collection of GenericValue instances as specified in the relation definition
      */
@@ -145,7 +144,7 @@ public class GenericValue extends GenericEntity {
      *  destroyed with this ValueObject when no longer used.
      *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
      * @param byAndFields the fields that must equal in order to keep; may be null
-     * @param order The fields of the named entity to order the query by; may be null;
+     * @param orderBy The fields of the named entity to order the query by; may be null;
      *      optionally add a " ASC" for ascending or " DESC" for descending
      *@return Collection of GenericValue instances as specified in the relation definition
      */

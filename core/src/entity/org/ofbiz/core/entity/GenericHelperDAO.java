@@ -129,9 +129,9 @@ public class GenericHelperDAO implements GenericHelper {
     }
     
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
-     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
-     *@param order The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
+     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@return Collection of GenericValue instances that match the query
      */
     public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
@@ -148,9 +148,9 @@ public class GenericHelperDAO implements GenericHelper {
     }
     
     /** Finds Generic Entity records by all of the specified fields (ie: combined using OR)
-     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
-     *@param order The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
+     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
      *@return Collection of GenericValue instances that match the query
      */
     public Collection findByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
@@ -161,7 +161,7 @@ public class GenericHelperDAO implements GenericHelper {
     }
     
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
-     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
      *@return Collection of GenericValue instances that match the query
      */
