@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
  */
 
@@ -50,7 +50,7 @@ if (sort != null) {
 
 partyBase = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.EQUALS, "CAL_ACCEPTED"), new EntityExpr("wepaPartyId", EntityOperator.EQUALS, userLogin.getString("partyId")));
 partyRole = UtilMisc.toList(new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"), new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
-partyExpr = UtilMisc.toList(new EntityExprList(partyBase, EntityOperator.AND), new EntityExprList(partyRole, EntityOperator.OR));
+partyExpr = UtilMisc.toList(new EntityConditionList(partyBase, EntityOperator.AND), new EntityConditionList(partyRole, EntityOperator.OR));
 partyCond = new EntityConditionList(partyExpr, EntityOperator.AND);
 partyTasks = delegator.findByCondition("OrderTaskList", partyCond, null, sortOrder);
 
@@ -72,9 +72,9 @@ while (pri.hasNext()) {
 custList = UtilMisc.toList(new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"), new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
 baseList = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
 expressions = new LinkedList();
-if (custList.size() > 0) expressions.add(new EntityExprList(custList, EntityOperator.OR));
-if (pRolesList.size() > 0) expressions.add(new EntityExprList(pRolesList, EntityOperator.OR));
-if (baseList.size() > 0) expressions.add(new EntityExprList(baseList, EntityOperator.AND));
+if (custList.size() > 0) expressions.add(new EntityConditionList(custList, EntityOperator.OR));
+if (pRolesList.size() > 0) expressions.add(new EntityConditionList(pRolesList, EntityOperator.OR));
+if (baseList.size() > 0) expressions.add(new EntityConditionList(baseList, EntityOperator.AND));
 conditions = new EntityConditionList(expressions, EntityOperator.AND);
     
 // invoke the query

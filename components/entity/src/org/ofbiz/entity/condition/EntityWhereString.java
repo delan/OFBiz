@@ -1,5 +1,5 @@
 /*
- * $Id: EntityWhereString.java,v 1.1 2003/08/17 04:56:25 jonesde Exp $
+ * $Id: EntityWhereString.java,v 1.2 2003/09/23 17:25:49 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,11 +36,11 @@ import org.ofbiz.entity.model.ModelEntity;
  *  it when the feature you are getting at is implemented in a more automatic way for you.</p>
  *
  * <p>By minimal I mean use this in conjunction with other EntityConditions like the
- *  EntityExpr, EntityExprList and EntityFieldMap objects which more cleanly 
+ *  EntityExpr, EntityConditionList and EntityFieldMap objects which more cleanly 
  *  encapsulate where conditions and don't require you to directly write SQL.</p>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class EntityWhereString extends EntityCondition {

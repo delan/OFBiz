@@ -1,5 +1,5 @@
 /*
- * $Id: EntityCondition.java,v 1.1 2003/08/17 04:56:25 jonesde Exp $
+ * $Id: EntityCondition.java,v 1.2 2003/09/23 17:25:49 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -38,10 +38,9 @@ import org.ofbiz.entity.model.ModelEntity;
  * <ul>
  *  <li>EntityConditionList: a list of EntityConditions, combined with the operator specified
  *  <li>EntityExpr: for simple expressions or expressions that combine EntityConditions
- *  <li>EntityExprList: a list of EntityExprs, combined with the operator specified
  *  <li>EntityFieldMap: a map of fields where the field (key) equals the value, combined with the operator specified
  * </ul>
- * These can be used in various combinations using the EntityExpr object.
+ * These can be used in various combinations using the EntityConditionList and EntityExpr objects.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    July 12, 2002
