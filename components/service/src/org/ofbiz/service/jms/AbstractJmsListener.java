@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractJmsListener.java,v 1.1 2003/08/17 05:12:39 ajzeneski Exp $
+ * $Id: AbstractJmsListener.java,v 1.2 2003/12/02 17:12:55 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,17 +33,13 @@ import javax.jms.Message;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.entity.serialize.XmlSerializer;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericDispatcher;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ServiceDispatcher;
+import org.ofbiz.service.*;
 
 /**
  * AbstractJmsListener
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public abstract class AbstractJmsListener implements GenericMessageListener, ExceptionListener {
@@ -54,14 +50,19 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
     protected boolean isConnected = false;
 
     /**
-     * Initializes the LocalDispatcher for this service listener.     * @param dispatcher     */
+     * Initializes the LocalDispatcher for this service listener.
+     * @param dispatcher
+     */
     protected AbstractJmsListener(ServiceDispatcher dispatcher) {
         DispatchContext dctx = new DispatchContext("JMSDispatcher", null, this.getClass().getClassLoader(), null);
         this.dispatcher = new GenericDispatcher(dctx, dispatcher);
     }
 
     /**
-     * Runs the service defined in the MapMessage     * @param message     * @return Map     */
+     * Runs the service defined in the MapMessage
+     * @param message
+     * @return Map
+     */
     protected Map runService(MapMessage message) {
         Map context = null;
         String serviceName = null;
@@ -86,6 +87,16 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
             Debug.logError(e, "Problems deserializing the service context.", module);
         }
 
+        try {
+            ModelService model = dispatcher.getDispatchContext().getModelService(serviceName);
+            if (!model.export) {
+                Debug.logWarning("Attempt to invoke a non-exported service: " + serviceName, module);
+                return null;
+            }
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Unable to get ModelService for service : " + serviceName, module);
+        }
+
         if (Debug.verboseOn()) Debug.logVerbose("Running service: " + serviceName, module);
         
         Map result = null;
@@ -100,7 +111,9 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
     }
 
     /**
-     * Receives the MapMessage and processes the service.      * @see javax.jms.MessageListener#onMessage(Message)     */
+     * Receives the MapMessage and processes the service. 
+     * @see javax.jms.MessageListener#onMessage(Message)
+     */
     public void onMessage(Message message) {
         MapMessage mapMessage = null;
 
@@ -116,7 +129,9 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
     }
 
     /**
-     * On exception try to re-establish connection to the JMS server.     * @see javax.jms.ExceptionListener#onException(JMSException)     */
+     * On exception try to re-establish connection to the JMS server.
+     * @see javax.jms.ExceptionListener#onException(JMSException)
+     */
     public void onException(JMSException je) {
         this.setConnected(false);
         Debug.logError(je, "JMS connection exception", module);
@@ -133,20 +148,26 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
     }
 
     /**
-     *     * @see org.ofbiz.service.jms.GenericMessageListener#refresh()     */
+     *
+     * @see org.ofbiz.service.jms.GenericMessageListener#refresh()
+     */
     public void refresh() throws GenericServiceException {
         this.close();
         this.load();
     }
 
     /**
-     *      * @see org.ofbiz.service.jms.GenericMessageListener#isConnected()     */
+     * 
+     * @see org.ofbiz.service.jms.GenericMessageListener#isConnected()
+     */
     public boolean isConnected() {
         return this.isConnected;
     }
 
     /**
-     * Setter method for the connected field.     * @param connected     */
+     * Setter method for the connected field.
+     * @param connected
+     */
     protected void setConnected(boolean connected) {
         this.isConnected = connected;
     }

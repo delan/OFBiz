@@ -1,5 +1,5 @@
 /*
- * $Id: HttpEngine.java,v 1.1 2003/08/17 05:12:39 ajzeneski Exp $
+ * $Id: HttpEngine.java,v 1.2 2003/12/02 17:12:55 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceDispatcher;
  * HttpEngine.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class HttpEngine extends GenericAsyncEngine {
@@ -158,7 +158,7 @@ public class HttpEngine extends GenericAsyncEngine {
                     }
                 } else {
                     Debug.logWarning("Attempt to invoke a non-exported service: " + serviceName, module);
-                    throw new GenericServiceException("Cannot find requested service.");
+                    throw new GenericServiceException("Cannot find requested service");
                 }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Service invocation error", module);
