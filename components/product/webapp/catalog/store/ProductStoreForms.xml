@@ -1,4 +1,3 @@
-keyw
 <!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
 
 <!--
@@ -22,7 +21,7 @@ keyw
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-title="${uiLabelMap.Product}"
+
 <forms>
 	<form name="EditProductStore" type="single"
 		target="updateProductStore" title="" default-map-name="productStore"
