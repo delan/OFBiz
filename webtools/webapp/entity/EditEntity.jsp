@@ -270,12 +270,12 @@ A.listtext:hover {color:red;}
   </TR>
   <TR>
     <TD>Table Name</TD>
-    <TD><%=(modelViewEntity == null)?entity.getTableName():"What table name? This is a VIEW Entity."%></TD>
+    <TD><%=(modelViewEntity == null) ? entity.getPlainTableName() : "What table name? This is a VIEW Entity."%></TD>
   </TR>
   <%if (modelViewEntity == null) {%>
     <TR>
       <TD>Table Name</TD>
-      <TD><INPUT type=text class='inputBox' size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.getTableName())%>'></TD>
+      <TD><INPUT type=text class='inputBox' size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.getPlainTableName())%>'></TD>
     </TR>
   <%}%>
   <TR>

@@ -43,10 +43,10 @@
 <%boolean hasAllUpdate = security.hasEntityPermission("ENTITY_DATA", "_UPDATE", session);%>
 <%boolean hasAllDelete = security.hasEntityPermission("ENTITY_DATA", "_DELETE", session);%>
 
-<%boolean hasViewPermission = hasAllView || security.hasEntityPermission(entity.getTableName(), "_VIEW", session);%>
-<%boolean hasCreatePermission = hasAllCreate || security.hasEntityPermission(entity.getTableName(), "_CREATE", session);%>
-<%boolean hasUpdatePermission = hasAllUpdate || security.hasEntityPermission(entity.getTableName(), "_UPDATE", session);%>
-<%boolean hasDeletePermission = hasAllDelete || security.hasEntityPermission(entity.getTableName(), "_DELETE", session);%>
+<%boolean hasViewPermission = hasAllView || security.hasEntityPermission(entity.getPlainTableName(), "_VIEW", session);%>
+<%boolean hasCreatePermission = hasAllCreate || security.hasEntityPermission(entity.getPlainTableName(), "_CREATE", session);%>
+<%boolean hasUpdatePermission = hasAllUpdate || security.hasEntityPermission(entity.getPlainTableName(), "_UPDATE", session);%>
+<%boolean hasDeletePermission = hasAllDelete || security.hasEntityPermission(entity.getPlainTableName(), "_DELETE", session);%>
 <%if(hasViewPermission){%>
 
 <%
@@ -131,7 +131,7 @@ function ShowTab(lname)
   <%for(int tabIndex = 0; tabIndex < entity.getRelationsSize(); tabIndex++){%>
     <%ModelRelation relation = entity.getRelation(tabIndex);%>
     <%ModelEntity relatedEntity = reader.getModelEntity(relation.getRelEntityName());%>
-    <%if (hasAllView || security.hasEntityPermission(relatedEntity.getTableName(), "_VIEW", session)) {%>
+    <%if (hasAllView || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_VIEW", session)) {%>
       <td id='tab<%=tabIndex+3%>' class='offtab'>
         <a href='javascript:ShowTab("tab<%=tabIndex+3%>")' id='lnk<%=tabIndex+3%>' class='offlnk' style='FONT-SIZE: xx-small;'>
           <%=relation.getTitle()%><%=relation.getRelEntityName()%></a><SPAN class='tabletext' style='FONT-SIZE: xx-small;'>(<%=relation.getType()%>)</SPAN>
@@ -279,7 +279,7 @@ function ShowTab(lname)
     <%}%>
   <%}else{%>
     <%showFields=false;%>
-    You do not have permission to create a <%=entityName%> (<%=entity.getTableName()%>_ADMIN, or <%=entity.getTableName()%>_CREATE needed).
+    You do not have permission to create a <%=entityName%> (<%=entity.getPlainTableName()%>_ADMIN, or <%=entity.getPlainTableName()%>_CREATE needed).
   <%}%>
 <%}else{%>
   <%if(hasUpdatePermission){%>
@@ -329,7 +329,7 @@ function ShowTab(lname)
 
   <%} else {%>
     <%showFields=false;%>
-    You do not have permission to update a <%=entityName%> (<%=entity.getTableName()%>_ADMIN, or <%=entity.getTableName()%>_UPDATE needed).
+    You do not have permission to update a <%=entityName%> (<%=entity.getPlainTableName()%>_ADMIN, or <%=entity.getPlainTableName()%>_UPDATE needed).
   <%}%>
 <%} //end if value == null %>
 
@@ -422,7 +422,7 @@ function ShowTab(lname)
     <%if("one".equals(relation.getType()) || "one-nofk".equals(relation.getType())) {%>
 <%-- Start ModelRelation for <%=relation.relatedEjbName%>, type: one --%>
 <%if (value != null) {%>
-  <%if (hasAllView || security.hasEntityPermission(relatedEntity.getTableName(), "_VIEW", session)) {%>
+  <%if (hasAllView || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_VIEW", session)) {%>
     <%-- GenericValue valueRelated = delegator.findByPrimaryKey(value.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.getEntityName()) + ".get", "()")%>); --%>
     <%Iterator tempIter = UtilMisc.toIterator(value.getRelated(relation.getTitle() + relatedEntity.getEntityName()));%>
     <%GenericValue valueRelated = null;%>
@@ -442,7 +442,7 @@ function ShowTab(lname)
     %>
       
     <%if(valueRelated == null){%>
-      <%if(hasAllCreate || security.hasEntityPermission(relatedEntity.getTableName(), "_CREATE", session)){%>
+      <%if(hasAllCreate || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_CREATE", session)){%>
         <a href='<ofbiz:url>/ViewGeneric?<%=findString%></ofbiz:url>' class="buttontext">[Create <%=relatedEntity.getEntityName()%>]</a>
       <%}%>
     <%}else{%>
@@ -495,16 +495,16 @@ function ShowTab(lname)
 <%-- Start ModelRelation for <%=relation.relatedEjbName%>, type: many --%>
 
 <%if(value != null){%>
-  <%if(hasAllView || security.hasEntityPermission(relatedEntity.getTableName(), "_VIEW", session)){%>    
+  <%if(hasAllView || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_VIEW", session)){%>    
     <%-- Iterator relatedIterator = UtilMisc.toIterator(delegator.findBy<%=relation.keyMapRelatedUpperString("And","")%>(value.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.getEntityName()) + ".get", "()")%>)); --%>
     <%Iterator relatedIterator = UtilMisc.toIterator(value.getRelated(relation.getTitle() + relatedEntity.getEntityName()));%>
   <DIV id=area<%=relIndex+3%> class='topcontainerhidden' width="100%">
     <div class=areaheader>
       <b><%=relation.getTitle()%></b> Related Entities: <b><%=relatedEntity.getEntityName()%></b> with 
     </div>
-    <%boolean relatedCreatePerm = hasAllCreate || security.hasEntityPermission(relatedEntity.getTableName(), "_CREATE", session);%>
-    <%boolean relatedUpdatePerm = hasAllUpdate || security.hasEntityPermission(relatedEntity.getTableName(), "_UPDATE", session);%>
-    <%boolean relatedDeletePerm = hasAllDelete || security.hasEntityPermission(relatedEntity.getTableName(), "_DELETE", session);%>
+    <%boolean relatedCreatePerm = hasAllCreate || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_CREATE", session);%>
+    <%boolean relatedUpdatePerm = hasAllUpdate || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_UPDATE", session);%>
+    <%boolean relatedDeletePerm = hasAllDelete || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_DELETE", session);%>
     <%
       String rowClassResultHeader = "viewManyHeaderTR";
       String rowClassResult1 = "viewManyTR1";
@@ -621,6 +621,6 @@ Displaying <%=relatedLoopCount%> entities.
 <%}%>
 <br>
 <%}else{%>
-  <h3>You do not have permission to view this page (<%=entity.getTableName()%>_ADMIN, or <%=entity.getTableName()%>_VIEW needed).</h3>
+  <h3>You do not have permission to view this page (<%=entity.getPlainTableName()%>_ADMIN, or <%=entity.getPlainTableName()%>_VIEW needed).</h3>
 <%}%>
 <%} catch (Exception e) { Debug.logError(e); throw e; }%>

@@ -93,8 +93,8 @@ public class GenericWebEvent {
 
         // check permissions before moving on...
         if (!security.hasEntityPermission("ENTITY_DATA", "_" + updateMode, request.getSession()) &&
-            !security.hasEntityPermission(entity.getTableName(), "_" + updateMode, request.getSession())) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to " + updateMode + " " + entity.getEntityName() + " (" + entity.getTableName() + "_" + updateMode + " or " + entity.getTableName() + "_ADMIN needed).");
+            !security.hasEntityPermission(entity.getPlainTableName(), "_" + updateMode, request.getSession())) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to " + updateMode + " " + entity.getEntityName() + " (" + entity.getPlainTableName() + "_" + updateMode + " or " + entity.getPlainTableName() + "_ADMIN needed).");
             // not really successful, but error return through ERROR_MESSAGE, so quietly fail
             return "error";
         }

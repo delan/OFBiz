@@ -48,8 +48,8 @@ public class DatabaseUtil {
 
     public DatabaseUtil(String helperName) {
         this.helperName = helperName;
-        modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
-        datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+        this.modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
+        this.datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
     }
 
     public Connection getConnection() throws SQLException, GenericEntityException {
@@ -84,7 +84,6 @@ public class DatabaseUtil {
 
         // get ALL column info, put into hashmap by table name
         Map colInfo = this.getColumnInfo(tableNames, messages);
-
         if (colInfo == null) {
             String message = "Could not get column information from the database, aborting.";
 
@@ -130,26 +129,24 @@ public class DatabaseUtil {
             }
 
             String entMessage = "(" + timer.timeSinceLast() + "ms) Checking #" + curEnt + "/" + totalEnt +
-                " Entity " + entity.getEntityName() + " with table " + entity.getTableName();
+                " Entity " + entity.getEntityName() + " with table " + entity.getTableName(datasourceInfo);
 
             Debug.logVerbose(entMessage, module);
             if (messages != null)
                 messages.add(entMessage);
 
             // -make sure all entities have a corresponding table
-            if (tableNames.contains(entity.getTableName().toUpperCase())) {
-                tableNames.remove(entity.getTableName().toUpperCase());
+            if (tableNames.contains(entity.getTableName(datasourceInfo).toUpperCase())) {
+                tableNames.remove(entity.getTableName(datasourceInfo).toUpperCase());
 
                 if (colInfo != null) {
                     Map fieldColNames = new HashMap();
-
                     for (int fnum = 0; fnum < entity.getFieldsSize(); fnum++) {
                         ModelField field = entity.getField(fnum);
-
                         fieldColNames.put(field.getColName().toUpperCase(), field);
                     }
 
-                    List colList = (List) colInfo.get(entity.getTableName().toUpperCase());
+                    List colList = (List) colInfo.get(entity.getTableName(datasourceInfo).toUpperCase());
                     int numCols = 0;
 
                     if (colList != null) {
@@ -211,7 +208,7 @@ public class DatabaseUtil {
                                     }
 
                                     if (!ccInfo.typeName.equals(typeName.toUpperCase())) {
-                                        String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +
+                                        String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName(datasourceInfo) + "\" of entity \"" +
                                             entity.getEntityName() + "\" is of type \"" + ccInfo.typeName + "\" in the database, but is defined as type \"" +
                                             typeName + "\" in the entity definition.";
 
@@ -220,7 +217,7 @@ public class DatabaseUtil {
                                             messages.add(message);
                                     }
                                     if (columnSize != -1 && ccInfo.columnSize != -1 && columnSize != ccInfo.columnSize) {
-                                        String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +
+                                        String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName(datasourceInfo) + "\" of entity \"" +
                                             entity.getEntityName() + "\" has a column size of \"" + ccInfo.columnSize +
                                             "\" in the database, but is defined to have a column size of \"" + columnSize + "\" in the entity definition.";
 
@@ -229,7 +226,7 @@ public class DatabaseUtil {
                                             messages.add(message);
                                     }
                                     if (decimalDigits != -1 && decimalDigits != ccInfo.decimalDigits) {
-                                        String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +
+                                        String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName(datasourceInfo) + "\" of entity \"" +
                                             entity.getEntityName() + "\" has a decimalDigits of \"" + ccInfo.decimalDigits +
                                             "\" in the database, but is defined to have a decimalDigits of \"" + decimalDigits + "\" in the entity definition.";
 
@@ -238,7 +235,7 @@ public class DatabaseUtil {
                                             messages.add(message);
                                     }
                                 } else {
-                                    String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" + entity.getEntityName() +
+                                    String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName(datasourceInfo) + "\" of entity \"" + entity.getEntityName() +
                                         "\" has a field type name of \"" + field.getType() + "\" which is not found in the field type definitions";
 
                                     Debug.logError(message, module);
@@ -246,7 +243,7 @@ public class DatabaseUtil {
                                         messages.add(message);
                                 }
                             } else {
-                                String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" + entity.getEntityName() + "\" exists in the database but has no corresponding field";
+                                String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName(datasourceInfo) + "\" of entity \"" + entity.getEntityName() + "\" exists in the database but has no corresponding field";
 
                                 Debug.logWarning(message, module);
                                 if (messages != null)
@@ -257,7 +254,7 @@ public class DatabaseUtil {
 
                     // -display message if number of table columns does not match number of entity fields
                     if (numCols != entity.getFieldsSize()) {
-                        String message = "Entity \"" + entity.getEntityName() + "\" has " + entity.getFieldsSize() + " fields but table \"" + entity.getTableName() + "\" has " +
+                        String message = "Entity \"" + entity.getEntityName() + "\" has " + entity.getFieldsSize() + " fields but table \"" + entity.getTableName(datasourceInfo) + "\" has " +
                             numCols + " columns.";
 
                         Debug.logWarning(message, module);
@@ -283,13 +280,13 @@ public class DatabaseUtil {
                             String errMsg = addColumn(entity, field);
 
                             if (errMsg != null && errMsg.length() > 0) {
-                                message = "Could not add column \"" + field.getColName() + "\" to table \"" + entity.getTableName() + "\"";
+                                message = "Could not add column \"" + field.getColName() + "\" to table \"" + entity.getTableName(datasourceInfo) + "\"";
                                 Debug.logError(message, module);
                                 if (messages != null) messages.add(message);
                                 Debug.logError(errMsg, module);
                                 if (messages != null) messages.add(errMsg);
                             } else {
-                                message = "Added column \"" + field.getColName() + "\" to table \"" + entity.getTableName() + "\"";
+                                message = "Added column \"" + field.getColName() + "\" to table \"" + entity.getTableName(datasourceInfo) + "\"";
                                 Debug.logImportant(message, module);
                                 if (messages != null) messages.add(message);
                             }
@@ -308,14 +305,14 @@ public class DatabaseUtil {
                     String errMsg = createTable(entity, modelEntities, false, datasourceInfo.usePkConstraintNames, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred);
 
                     if (errMsg != null && errMsg.length() > 0) {
-                        message = "Could not create table \"" + entity.getTableName() + "\"";
+                        message = "Could not create table \"" + entity.getTableName(datasourceInfo) + "\"";
                         Debug.logError(message, module);
                         if (messages != null) messages.add(message);
                         Debug.logError(errMsg, module);
                         if (messages != null) messages.add(errMsg);
                     } else {
                         entitiesAdded.add(entity);
-                        message = "Created table \"" + entity.getTableName() + "\"";
+                        message = "Created table \"" + entity.getTableName(datasourceInfo) + "\"";
                         Debug.logImportant(message, module);
                         if (messages != null) messages.add(message);
                     }
@@ -438,8 +435,8 @@ public class DatabaseUtil {
                     }
 
                     // get existing FK map for this table
-                    Map rcInfoMap = (Map) refTableInfoMap.get(entity.getTableName());
-                    // Debug.logVerbose("Got ref info for table " + entity.getTableName() + ": " + rcInfoMap);
+                    Map rcInfoMap = (Map) refTableInfoMap.get(entity.getTableName(datasourceInfo));
+                    // Debug.logVerbose("Got ref info for table " + entity.getTableName(datasourceInfo) + ": " + rcInfoMap);
 
                     // go through each relation to see if an FK already exists
                     Iterator relations = entity.getRelationsIterator();
@@ -500,7 +497,7 @@ public class DatabaseUtil {
                         while (rcInfoKeysLeft.hasNext()) {
                             String rcKeyLeft = (String) rcInfoKeysLeft.next();
 
-                            Debug.logImportant("Unknown Foreign Key Constraint " + rcKeyLeft + " found in table " + entity.getTableName());
+                            Debug.logImportant("Unknown Foreign Key Constraint " + rcKeyLeft + " found in table " + entity.getTableName(datasourceInfo));
                         }
                     }
                 }
@@ -540,9 +537,9 @@ public class DatabaseUtil {
                     }
 
                     // get existing index list for this table
-                    TreeSet tableIndexList = (TreeSet) tableIndexListMap.get(entity.getTableName());
+                    TreeSet tableIndexList = (TreeSet) tableIndexListMap.get(entity.getTableName(datasourceInfo));
 
-                    // Debug.logVerbose("Got ind info for table " + entity.getTableName() + ": " + tableIndexList);
+                    // Debug.logVerbose("Got ind info for table " + entity.getTableName(datasourceInfo) + ": " + tableIndexList);
 
                     if (tableIndexList == null) {
                         // evidently no indexes in the database for this table, do the create all
@@ -615,7 +612,7 @@ public class DatabaseUtil {
                         while (tableIndexListIter.hasNext()) {
                             String indexLeft = (String) tableIndexListIter.next();
 
-                            Debug.logImportant("Unknown Index " + indexLeft + " found in table " + entity.getTableName());
+                            Debug.logImportant("Unknown Index " + indexLeft + " found in table " + entity.getTableName(datasourceInfo));
                         }
                     }
                 }
@@ -1274,11 +1271,7 @@ public class DatabaseUtil {
         }
 
         StringBuffer sqlBuf = new StringBuffer("CREATE TABLE ");
-        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
-            sqlBuf.append(this.datasourceInfo.schemaName);
-            sqlBuf.append('.');
-        }
-        sqlBuf.append(entity.getTableName());
+        sqlBuf.append(entity.getTableName(datasourceInfo));
         sqlBuf.append(" (");
         for (int i = 0; i < entity.getFieldsSize(); i++) {
             ModelField field = entity.getField(i);
@@ -1297,7 +1290,7 @@ public class DatabaseUtil {
                 sqlBuf.append(", ");
             }
         }
-        String pkName = "PK_" + entity.getTableName();
+        String pkName = "PK_" + entity.getPlainTableName();
 
         if (pkName.length() > constraintNameClipLength) {
             pkName = pkName.substring(0, constraintNameClipLength);
@@ -1383,11 +1376,7 @@ public class DatabaseUtil {
         }
 
         StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
-        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
-            sqlBuf.append(this.datasourceInfo.schemaName);
-            sqlBuf.append('.');
-        }
-        sqlBuf.append(entity.getTableName());
+        sqlBuf.append(entity.getTableName(datasourceInfo));
         sqlBuf.append(" ADD ");
         sqlBuf.append(field.getColName());
         sqlBuf.append(" ");
@@ -1400,7 +1389,7 @@ public class DatabaseUtil {
             stmt.executeUpdate(sql);
         } catch (SQLException sqle) {
             // if that failed try the alternate syntax real quick
-            String sql2 = "ALTER TABLE " + entity.getTableName() + " ADD COLUMN " + field.getColName() + " " + type.getSqlType();
+            String sql2 = "ALTER TABLE " + entity.getTableName(datasourceInfo) + " ADD COLUMN " + field.getColName() + " " + type.getSqlType();
             if (Debug.infoOn()) Debug.logInfo("[addColumn] sql failed, trying sql2=" + sql2);
             try {
                 stmt = connection.createStatement();
@@ -1502,12 +1491,7 @@ public class DatabaseUtil {
 
         // now add constraint clause
         StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
-
-        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
-            sqlBuf.append(this.datasourceInfo.schemaName);
-            sqlBuf.append('.');
-        }
-        sqlBuf.append(entity.getTableName());
+        sqlBuf.append(entity.getTableName(datasourceInfo));
         sqlBuf.append(" ADD ");
         sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle, useFkInitiallyDeferred));
 
@@ -1565,11 +1549,7 @@ public class DatabaseUtil {
             sqlBuf.append(" FOREIGN KEY (");
             sqlBuf.append(mainCols.toString());
             sqlBuf.append(") REFERENCES ");
-            if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
-                sqlBuf.append(this.datasourceInfo.schemaName);
-                sqlBuf.append('.');
-            }
-            sqlBuf.append(relModelEntity.getTableName());
+            sqlBuf.append(relModelEntity.getTableName(datasourceInfo));
             sqlBuf.append(" (");
             sqlBuf.append(relCols.toString());
             sqlBuf.append(")");
@@ -1584,11 +1564,7 @@ public class DatabaseUtil {
             sqlBuf.append(" (");
             sqlBuf.append(mainCols.toString());
             sqlBuf.append(") REFERENCES ");
-            if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
-                sqlBuf.append(this.datasourceInfo.schemaName);
-                sqlBuf.append('.');
-            }
-            sqlBuf.append(relModelEntity.getTableName());
+            sqlBuf.append(relModelEntity.getTableName(datasourceInfo));
             sqlBuf.append(" (");
             sqlBuf.append(relCols.toString());
             sqlBuf.append(")");
@@ -1665,12 +1641,7 @@ public class DatabaseUtil {
 
         // now add constraint clause
         StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
-
-        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
-            sqlBuf.append(this.datasourceInfo.schemaName);
-            sqlBuf.append('.');
-        }
-        sqlBuf.append(entity.getTableName());
+        sqlBuf.append(entity.getTableName(datasourceInfo));
         sqlBuf.append(" DROP CONSTRAINT ");
         sqlBuf.append(relConstraintName);
 
@@ -1780,11 +1751,7 @@ public class DatabaseUtil {
         indexSqlBuf.append("INDEX ");
         indexSqlBuf.append(modelIndex.getName());
         indexSqlBuf.append(" ON ");
-        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
-            indexSqlBuf.append(this.datasourceInfo.schemaName);
-            indexSqlBuf.append('.');
-        }
-        indexSqlBuf.append(entity.getTableName());
+        indexSqlBuf.append(entity.getTableName(datasourceInfo));
 
         indexSqlBuf.append(" (");
         indexSqlBuf.append(mainCols.toString());
@@ -1838,11 +1805,7 @@ public class DatabaseUtil {
         // TODO: also remove the constraing if this was a unique index, in most databases dropping the index does not drop the constraint
 
         StringBuffer indexSqlBuf = new StringBuffer("DROP INDEX ");
-        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
-            indexSqlBuf.append(this.datasourceInfo.schemaName);
-            indexSqlBuf.append('.');
-        }
-        indexSqlBuf.append(entity.getTableName());
+        indexSqlBuf.append(entity.getTableName(datasourceInfo));
         indexSqlBuf.append(".");
         indexSqlBuf.append(modelIndex.getName());
 
@@ -1959,11 +1922,7 @@ public class DatabaseUtil {
 
         indexSqlBuf.append(relConstraintName);
         indexSqlBuf.append(" ON ");
-        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
-            indexSqlBuf.append(this.datasourceInfo.schemaName);
-            indexSqlBuf.append('.');
-        }
-        indexSqlBuf.append(entity.getTableName());
+        indexSqlBuf.append(entity.getTableName(datasourceInfo));
 
         indexSqlBuf.append(" (");
         indexSqlBuf.append(mainCols.toString());
@@ -2021,11 +1980,7 @@ public class DatabaseUtil {
         StringBuffer indexSqlBuf = new StringBuffer("DROP INDEX ");
         String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
 
-        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
-            indexSqlBuf.append(this.datasourceInfo.schemaName);
-            indexSqlBuf.append('.');
-        }
-        indexSqlBuf.append(entity.getTableName());
+        indexSqlBuf.append(entity.getTableName(datasourceInfo));
         indexSqlBuf.append(".");
         indexSqlBuf.append(relConstraintName);
 

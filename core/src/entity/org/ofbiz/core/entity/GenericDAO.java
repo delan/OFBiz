@@ -51,6 +51,7 @@ public class GenericDAO {
     protected static Map genericDAOs = new Hashtable();
     protected String helperName;
     protected ModelFieldTypeReader modelFieldTypeReader = null;
+    protected EntityConfigUtil.DatasourceInfo datasourceInfo;
 
     public static GenericDAO getGenericDAO(String helperName) {
         GenericDAO newGenericDAO = (GenericDAO) genericDAOs.get(helperName);
@@ -70,7 +71,8 @@ public class GenericDAO {
 
     public GenericDAO(String helperName) {
         this.helperName = helperName;
-        modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
+        this.modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
+        this.datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
     }
 
     public int insert(GenericEntity entity) throws GenericEntityException {
@@ -102,7 +104,7 @@ public class GenericDAO {
             entity.set(ModelEntity.STAMP_FIELD, UtilDateTime.nowTimestamp());
         }
 
-        String sql = "INSERT INTO " + modelEntity.getTableName() + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" +
+        String sql = "INSERT INTO " + modelEntity.getTableName(datasourceInfo) + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" +
             modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
 
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
@@ -198,7 +200,7 @@ public class GenericDAO {
             entity.set(ModelEntity.STAMP_FIELD, UtilDateTime.nowTimestamp());
         }
 
-        String sql = "UPDATE " + modelEntity.getTableName() + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " +
+        String sql = "UPDATE " + modelEntity.getTableName(datasourceInfo) + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " +
             SqlJdbcUtil.makeWhereStringFromFields(modelEntity.getPksCopy(), entity, "AND");
 
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
@@ -466,9 +468,6 @@ public class GenericDAO {
             throw new GenericEntityException("Entity has no primary keys, cannot select by primary key");
         }
 
-        // get for query-time config options
-        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
-
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
 
         if (modelEntity.getNopksSize() > 0) {
@@ -477,7 +476,7 @@ public class GenericDAO {
             sqlBuffer.append("*");
         }
 
-        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, datasourceInfo.joinStyle));
+        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, datasourceInfo));
         sqlBuffer.append(SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPksCopy(), entity, "AND", datasourceInfo.joinStyle));
 
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
@@ -518,9 +517,6 @@ public class GenericDAO {
             throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation partialSelect not supported yet for view entities");
         }
 
-        // get for query-time config options
-        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
-
         /*
          if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
          Debug.logWarning("[GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
@@ -552,7 +548,7 @@ public class GenericDAO {
         } else {
             sqlBuffer.append("*");
         }
-        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, datasourceInfo.joinStyle));
+        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, datasourceInfo));
         sqlBuffer.append(SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPksCopy(), entity, "AND", datasourceInfo.joinStyle));
 
         SQLProcessor sqlP = new SQLProcessor(helperName);
@@ -662,7 +658,7 @@ public class GenericDAO {
         List whereTables = new ArrayList();
 
         // Add the main table to the FROM clause in case there are no WHERE clause entries.
-        whereTables.add(modelEntity.getTableName());
+        whereTables.add(modelEntity.getTableName(datasourceInfo));
 
         if (verboseOn) Debug.logVerbose("[selectByClause] Starting to iterate through entity clauses.");
         ModelReader entityModelReader = modelEntity.getModelReader();
@@ -694,16 +690,16 @@ public class GenericDAO {
 
             if (verboseOn) Debug.logVerbose("[selectByClause] Got operations");
             firstModelEntity = entityClause.getFirstModelEntity();
-            if (!whereTables.contains(firstModelEntity.getTableName())) {
-                whereTables.add(firstModelEntity.getTableName());
+            if (!whereTables.contains(firstModelEntity.getTableName(datasourceInfo))) {
+                whereTables.add(firstModelEntity.getTableName(datasourceInfo));
             }
             if (verboseOn) Debug.logVerbose("[selectByClause] Got first model entity.");
 
             if (entityClause.getSecondEntity().trim().length() > 0) {
                 secondModelEntity = entityClause.getSecondModelEntity();
                 if (verboseOn) Debug.logVerbose("[selectByClause] Got second model entity.");
-                if (!whereTables.contains(secondModelEntity.getTableName())) {
-                    whereTables.add(secondModelEntity.getTableName());
+                if (!whereTables.contains(secondModelEntity.getTableName(datasourceInfo))) {
+                    whereTables.add(secondModelEntity.getTableName(datasourceInfo));
                 }
                 secondModelField = secondModelEntity.getField(entityClause.getSecondField());
             }
@@ -725,9 +721,9 @@ public class GenericDAO {
             if (verboseOn) Debug.logVerbose("[selectByClause] About to append entity clause info onto select statement.");
             if (entityClause.getSecondEntity().trim().length() > 0) {
                 // Entity clause has a second entity and field instead of a constant value.
-                where.append(firstModelEntity.getTableName());
+                where.append(firstModelEntity.getTableName(datasourceInfo));
                 if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended first table name: " +
-                        firstModelEntity.getTableName());
+                        firstModelEntity.getTableName(datasourceInfo));
                 where.append(".");
                 if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended \".\"");
                 if (firstModelField == null || firstModelField.getColName() == null) {
@@ -743,9 +739,9 @@ public class GenericDAO {
                 if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended intra field operation: " +
                         intraFieldOperation);
                 where.append(" ");
-                where.append(secondModelEntity.getTableName());
+                where.append(secondModelEntity.getTableName(datasourceInfo));
                 if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - Appended second table name: " +
-                        secondModelEntity.getTableName());
+                        secondModelEntity.getTableName(datasourceInfo));
                 where.append(".");
                 if (secondModelField == null || secondModelField.getColName() == null) {
                     if (verboseOn) Debug.logVerbose("[selectByClause] Method 2 - error 2");
@@ -757,9 +753,9 @@ public class GenericDAO {
                         secondModelField.getColName());
             } else {
                 // Entity clause has a constant value instead of a second entity and field.
-                where.append(firstModelEntity.getTableName());
+                where.append(firstModelEntity.getTableName(datasourceInfo));
                 if (verboseOn) Debug.logVerbose("[selectByClause] Method 1 - Appended first table name: " +
-                        firstModelEntity.getTableName());
+                        firstModelEntity.getTableName(datasourceInfo));
                 where.append(".");
                 if (firstModelField == null || firstModelField.getColName() == null) {
                     if (verboseOn) Debug.logVerbose("[selectByClause] Method 1 - error 1");
@@ -816,7 +812,7 @@ public class GenericDAO {
                 whereFields.add(curField);
         }
 
-        String tableNamePrefix = modelEntity.getTableName() + ".";
+        String tableNamePrefix = modelEntity.getTableName(datasourceInfo) + ".";
 
         // Construct the SELECT clause.
         select.append(tableNamePrefix);
@@ -920,9 +916,6 @@ public class GenericDAO {
             return null;
         }
 
-        // get for query-time config options
-        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
-
         // if no find options passed, use default
         if (findOptions == null) findOptions = new EntityFindOptions();
 
@@ -969,7 +962,7 @@ public class GenericDAO {
         }
 
         // FROM clause and when necessary the JOIN or LEFT JOIN clause(s) as well
-        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, datasourceInfo.joinStyle));
+        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, datasourceInfo));
 
         // WHERE clause
         StringBuffer whereString = new StringBuffer();
@@ -1023,7 +1016,7 @@ public class GenericDAO {
         }
 
         // ORDER BY clause
-        sqlBuffer.append(SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy));
+        sqlBuffer.append(SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy, datasourceInfo));
         String sql = sqlBuffer.toString();
 
         SQLProcessor sqlP = new SQLProcessor(helperName);
@@ -1064,8 +1057,8 @@ public class GenericDAO {
         SQLProcessor sqlP = new SQLProcessor(helperName);
 
         // get the tables names
-        String atable = modelEntityOne.getTableName();
-        String ttable = modelEntityTwo.getTableName();
+        String atable = modelEntityOne.getTableName(datasourceInfo);
+        String ttable = modelEntityTwo.getTableName(datasourceInfo);
 
         // get the column name string to select
         StringBuffer selsb = new StringBuffer();
@@ -1131,7 +1124,7 @@ public class GenericDAO {
         sqlsb.append(atable + ", " + ttable);
         sqlsb.append(" WHERE ");
         sqlsb.append(wheresb.toString());
-        sqlsb.append(SqlJdbcUtil.makeOrderByClause(modelEntityTwo, orderBy, true));
+        sqlsb.append(SqlJdbcUtil.makeOrderByClause(modelEntityTwo, orderBy, true, datasourceInfo));
 
         // now execute the query
         ArrayList retlist = new ArrayList();
@@ -1189,16 +1182,14 @@ public class GenericDAO {
 
     public int delete(GenericEntity entity, Connection connection) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
-
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
-
         if (modelEntity instanceof ModelViewEntity) {
             throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation delete not supported yet for view entities");
         }
 
-        String sql = "DELETE FROM " + modelEntity.getTableName() + " WHERE " + SqlJdbcUtil.makeWhereStringFromFields(modelEntity.getPksCopy(), entity, "AND");
+        String sql = "DELETE FROM " + modelEntity.getTableName(datasourceInfo) + " WHERE " + SqlJdbcUtil.makeWhereStringFromFields(modelEntity.getPksCopy(), entity, "AND");
 
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
 
@@ -1229,14 +1220,12 @@ public class GenericDAO {
     }
 
     public int deleteByAnd(ModelEntity modelEntity, Map fields, Connection connection) throws GenericEntityException {
-        if (modelEntity == null || fields == null)
-            return 0;
+        if (modelEntity == null || fields == null) return 0;
         if (modelEntity instanceof ModelViewEntity) {
             throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation deleteByAnd not supported yet for view entities");
         }
 
         List whereFields = new ArrayList();
-
         if (fields != null && fields.size() > 0) {
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
@@ -1248,14 +1237,12 @@ public class GenericDAO {
         }
 
         GenericValue dummyValue = new GenericValue(modelEntity, fields);
-        String sql = "DELETE FROM " + modelEntity.getTableName();
-
+        String sql = "DELETE FROM " + modelEntity.getTableName(datasourceInfo);
         if (fields != null && fields.size() > 0) {
             sql += " WHERE " + SqlJdbcUtil.makeWhereStringFromFields(whereFields, dummyValue, "AND");
         }
 
         SQLProcessor sqlP = new SQLProcessor(helperName);
-
         try {
             sqlP.prepareStatement(sql);
 
@@ -1276,7 +1263,6 @@ public class GenericDAO {
         }
 
         SQLProcessor sqlP = new SQLProcessor(helperName);
-
         try {
             Iterator iter = dummyPKs.iterator();
 

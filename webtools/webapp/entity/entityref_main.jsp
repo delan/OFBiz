@@ -54,7 +54,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     ModelEntity ent = reader.getModelEntity(eName);
 
     //make sure the table name is in the list of all table names, if not null
-    if (UtilValidate.isNotEmpty(ent.getTableName())) tableNames.add(ent.getTableName());
+    if (UtilValidate.isNotEmpty(ent.getPlainTableName())) tableNames.add(ent.getPlainTableName());
 
     TreeSet entities = (TreeSet)packages.get(ent.getPackageName());
     if(entities == null) {
@@ -123,17 +123,17 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
             if (groupName == null)
               warningString = warningString + "<li><div style=\"color: red;\">[GroupNotFound]</div> No Group Name found for entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
           }
-          if (entity.getTableName() != null && entity.getTableName().length() > 30)
-            warningString = warningString + "<li><div style=\"color: red;\">[TableNameGT30]</div> Table name <b>" + entity.getTableName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is longer than 30 characters.</li>";
-          if (entity.getTableName() != null && reservedWords.contains(entity.getTableName().toUpperCase()))
-            warningString = warningString + "<li><div style=\"color: red;\">[TableNameRW]</div> Table name <b>" + entity.getTableName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is a reserved word.</li>";
+          if (entity.getPlainTableName() != null && entity.getPlainTableName().length() > 30)
+            warningString = warningString + "<li><div style=\"color: red;\">[TableNameGT30]</div> Table name <b>" + entity.getPlainTableName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is longer than 30 characters.</li>";
+          if (entity.getPlainTableName() != null && reservedWords.contains(entity.getPlainTableName().toUpperCase()))
+            warningString = warningString + "<li><div style=\"color: red;\">[TableNameRW]</div> Table name <b>" + entity.getPlainTableName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is a reserved word.</li>";
         }
 %>	
   <a name="<%= entityName %>"></a>
   <table width="95%" border="1" cellpadding='2' cellspacing='0'>
     <tr bgcolor="#CCCCCC"> 
       <td colspan="5"> 
-        <div align="center" class="titletext">ENTITY: <%=entityName%> | TABLE: <%=entity.getTableName()%></div>
+        <div align="center" class="titletext">ENTITY: <%=entityName%> | TABLE: <%=entity.getPlainTableName()%></div>
         <div align="center" class="entitytext"><b><%=entity.getTitle()%></b>&nbsp;
             <%if (!forstatic) {%><a target='main' href="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName + "&find=true&VIEW_SIZE=50&VIEW_INDEX=0")%>">[view data]</a><%}%></div>
         <%if (entity.getDescription() != null && !entity.getDescription().equalsIgnoreCase("NONE") && !entity.getDescription().equalsIgnoreCase("")) {%>

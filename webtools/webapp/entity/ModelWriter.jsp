@@ -186,8 +186,8 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
       }
       else {
 %>
-    <entity entity-name="<%=entity.getEntityName()%>"<%if (!entity.getEntityName().equals(ModelUtil.dbNameToClassName(entity.getTableName()))){
-          %> table-name="<%=entity.getTableName()%>"<%}%>
+    <entity entity-name="<%=entity.getEntityName()%>"<%if (!entity.getEntityName().equals(ModelUtil.dbNameToClassName(entity.getPlainTableName()))){
+          %> table-name="<%=entity.getPlainTableName()%>"<%}%>
             package-name="<%=entity.getPackageName()%>"<%if (entity.getDependentOn().length() > 0) {%>
             dependent-on="<%=entity.getDependentOn()%>"<%}%><%if (entity.getDoLock()) {%>
             enable-lock="true"<%}%><%if (entity.getNeverCache()) {%>

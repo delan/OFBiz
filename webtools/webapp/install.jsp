@@ -251,7 +251,7 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
     Iterator classNamesIterator = entityCol.iterator();
     while(classNamesIterator != null && classNamesIterator.hasNext()) { 
       ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());
-      String baseName = entity.getTableName();
+      String baseName = entity.getPlainTableName();
       if(entity instanceof ModelViewEntity) {
         baseName = ModelUtil.javaNameToDbName(entity.getEntityName());
       }

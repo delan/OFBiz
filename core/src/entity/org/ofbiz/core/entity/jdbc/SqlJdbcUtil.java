@@ -28,6 +28,7 @@ import java.util.*;
 import java.io.*;
 
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.entity.*;
 
@@ -46,13 +47,13 @@ public class SqlJdbcUtil {
     public static final String module = GenericDAO.class.getName();
 
     /** Makes the FROM clause and when necessary the JOIN clause(s) as well */
-    public static String makeFromClause(ModelEntity modelEntity, String joinStyle) throws GenericEntityException {
+    public static String makeFromClause(ModelEntity modelEntity, EntityConfigUtil.DatasourceInfo datasourceInfo) throws GenericEntityException {
         StringBuffer sql = new StringBuffer(" FROM ");
 
         if (modelEntity instanceof ModelViewEntity) {
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
 
-            if ("ansi".equals(joinStyle)) {
+            if ("ansi".equals(datasourceInfo.joinStyle)) {
                 String firstMemberAlias = null;
 
                 // FROM clause: in this case will be a bunch of joins that correspond with the view-links
@@ -88,7 +89,7 @@ public class SqlJdbcUtil {
 
                     if (i == 0) {
                         // this is the first referenced member alias, so keep track of it for future use...
-                        restOfStatement.append(makeViewTable(linkEntity, joinStyle));
+                        restOfStatement.append(makeViewTable(linkEntity, datasourceInfo));
                         restOfStatement.append(" ");
                         restOfStatement.append(viewLink.getEntityAlias());
 
@@ -108,7 +109,7 @@ public class SqlJdbcUtil {
                         restOfStatement.append(" JOIN ");
                     }
 
-                    restOfStatement.append(makeViewTable(relLinkEntity, joinStyle));
+                    restOfStatement.append(makeViewTable(relLinkEntity, datasourceInfo));
                     restOfStatement.append(" ");
                     restOfStatement.append(viewLink.getRelEntityAlias());
                     restOfStatement.append(" ON ");
@@ -157,14 +158,14 @@ public class SqlJdbcUtil {
                         if (!fromEmpty) sql.append(", ");
                         fromEmpty = false;
 
-                        sql.append(makeViewTable(fromEntity, joinStyle));
+                        sql.append(makeViewTable(fromEntity, datasourceInfo));
                         sql.append(" ");
                         sql.append((String) entry.getKey());
                     }
                 }
 
 
-            } else if ("theta-oracle".equals(joinStyle) || "theta-mssql".equals(joinStyle)) {
+            } else if ("theta-oracle".equals(datasourceInfo.joinStyle) || "theta-mssql".equals(datasourceInfo.joinStyle)) {
                 // FROM clause
                 Iterator meIter = modelViewEntity.getMemberModelMemberEntities().entrySet().iterator();
 
@@ -172,7 +173,7 @@ public class SqlJdbcUtil {
                     Map.Entry entry = (Map.Entry) meIter.next();
                     ModelEntity fromEntity = modelViewEntity.getMemberModelEntity((String) entry.getKey());
 
-                    sql.append(makeViewTable(fromEntity, joinStyle));
+                    sql.append(makeViewTable(fromEntity, datasourceInfo));
                     sql.append(" ");
                     sql.append((String) entry.getKey());
                     if (meIter.hasNext()) sql.append(", ");
@@ -180,10 +181,10 @@ public class SqlJdbcUtil {
 
                 // JOIN clause(s): none needed, all the work done in the where clause for theta-oracle
             } else {
-                throw new GenericModelException("The join-style " + joinStyle + " is not yet supported");
+                throw new GenericModelException("The join-style " + datasourceInfo.joinStyle + " is not yet supported");
             }
         } else {
-            sql.append(modelEntity.getTableName());
+            sql.append(modelEntity.getTableName(datasourceInfo));
         }
         return sql.toString();
     }
@@ -319,13 +320,13 @@ public class SqlJdbcUtil {
         return "";
     }
 
-    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy) {
-        return makeOrderByClause(modelEntity, orderBy, false);
+    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy, EntityConfigUtil.DatasourceInfo datasourceInfo) {
+        return makeOrderByClause(modelEntity, orderBy, false, datasourceInfo);
     }
 
-    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy, boolean includeTablenamePrefix) {
+    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy, boolean includeTablenamePrefix, EntityConfigUtil.DatasourceInfo datasourceInfo) {
         StringBuffer sql = new StringBuffer("");
-        String fieldPrefix = includeTablenamePrefix ? (modelEntity.getTableName() + ".") : "";
+        String fieldPrefix = includeTablenamePrefix ? (modelEntity.getTableName(datasourceInfo) + ".") : "";
 
         if (orderBy != null && orderBy.size() > 0) {
             if (Debug.verboseOn()) Debug.logVerbose("Order by list contains: " + orderBy.size() + " entries.", module);
@@ -378,7 +379,7 @@ public class SqlJdbcUtil {
         return sql.toString();
     }
 
-    public static String makeViewTable(ModelEntity modelEntity, String joinStyle) throws GenericEntityException {
+    public static String makeViewTable(ModelEntity modelEntity, EntityConfigUtil.DatasourceInfo datasourceInfo) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
             StringBuffer sql = new StringBuffer("(SELECT ");
             List fields = modelEntity.getFieldsCopy();
@@ -395,8 +396,8 @@ public class SqlJdbcUtil {
                     sql.append(filterColName(colname));
                 }
             }
-            sql.append(makeFromClause(modelEntity, joinStyle));
-            sql.append(makeViewWhereClause(modelEntity, joinStyle));
+            sql.append(makeFromClause(modelEntity, datasourceInfo));
+            sql.append(makeViewWhereClause(modelEntity, datasourceInfo.joinStyle));
             ModelViewEntity modelViewEntity = (ModelViewEntity)modelEntity;
             String groupByString = modelViewEntity.colNameString(modelViewEntity.getGroupBysCopy(), ", ", "");
             if (UtilValidate.isNotEmpty(groupByString)) {
@@ -407,7 +408,7 @@ public class SqlJdbcUtil {
             sql.append(")");
             return sql.toString();
         } else {
-            return modelEntity.getTableName();
+            return modelEntity.getTableName(datasourceInfo);
         }
     }
 

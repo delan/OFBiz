@@ -57,7 +57,7 @@ public class SequenceUtil {
         if (seqEntity == null) {
             throw new IllegalArgumentException("The sequence model entity was null but is required.");
         }
-        this.tableName = seqEntity.getTableName();
+        this.tableName = seqEntity.getTableName(helperName);
 
         ModelField nameField = seqEntity.getField(nameFieldName);
 

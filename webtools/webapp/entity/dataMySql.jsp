@@ -5,17 +5,17 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   TreeSet entities = new TreeSet(ec);
   Iterator classNamesIterator = entities.iterator();
   while(classNamesIterator != null && classNamesIterator.hasNext()) { ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());%>
-INSERT INTO SECURITY_PERMISSION (PERMISSION_ID,DESCRIPTION) VALUES ('<%=entity.getTableName()%>_ADMIN','Permission to Administer a <%=entity.getEntityName()%> entity.');
-INSERT INTO SECURITY_PERMISSION (PERMISSION_ID,DESCRIPTION) VALUES ('<%=entity.getTableName()%>_VIEW','Permission to View a <%=entity.getEntityName()%> entity.');
-INSERT INTO SECURITY_PERMISSION (PERMISSION_ID,DESCRIPTION) VALUES ('<%=entity.getTableName()%>_CREATE','Permission to Create a <%=entity.getEntityName()%> entity.');
-INSERT INTO SECURITY_PERMISSION (PERMISSION_ID,DESCRIPTION) VALUES ('<%=entity.getTableName()%>_UPDATE','Permission to Update a <%=entity.getEntityName()%> entity.');
-INSERT INTO SECURITY_PERMISSION (PERMISSION_ID,DESCRIPTION) VALUES ('<%=entity.getTableName()%>_DELETE','Permission to Delete a <%=entity.getEntityName()%> entity.');
+INSERT INTO SECURITY_PERMISSION (PERMISSION_ID,DESCRIPTION) VALUES ('<%=entity.getPlainTableName()%>_ADMIN','Permission to Administer a <%=entity.getEntityName()%> entity.');
+INSERT INTO SECURITY_PERMISSION (PERMISSION_ID,DESCRIPTION) VALUES ('<%=entity.getPlainTableName()%>_VIEW','Permission to View a <%=entity.getEntityName()%> entity.');
+INSERT INTO SECURITY_PERMISSION (PERMISSION_ID,DESCRIPTION) VALUES ('<%=entity.getPlainTableName()%>_CREATE','Permission to Create a <%=entity.getEntityName()%> entity.');
+INSERT INTO SECURITY_PERMISSION (PERMISSION_ID,DESCRIPTION) VALUES ('<%=entity.getPlainTableName()%>_UPDATE','Permission to Update a <%=entity.getEntityName()%> entity.');
+INSERT INTO SECURITY_PERMISSION (PERMISSION_ID,DESCRIPTION) VALUES ('<%=entity.getPlainTableName()%>_DELETE','Permission to Delete a <%=entity.getEntityName()%> entity.');
 
-INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FULLADMIN','<%=entity.getTableName()%>_ADMIN');
-INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FLEXADMIN','<%=entity.getTableName()%>_VIEW');
-INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FLEXADMIN','<%=entity.getTableName()%>_CREATE');
-INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FLEXADMIN','<%=entity.getTableName()%>_UPDATE');
-INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FLEXADMIN','<%=entity.getTableName()%>_DELETE');
+INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FULLADMIN','<%=entity.getPlainTableName()%>_ADMIN');
+INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FLEXADMIN','<%=entity.getPlainTableName()%>_VIEW');
+INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FLEXADMIN','<%=entity.getPlainTableName()%>_CREATE');
+INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FLEXADMIN','<%=entity.getPlainTableName()%>_UPDATE');
+INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FLEXADMIN','<%=entity.getPlainTableName()%>_DELETE');
 <%
   }
 } 

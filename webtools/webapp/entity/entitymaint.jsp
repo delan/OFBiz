@@ -71,12 +71,12 @@
               <%if (entity instanceof ModelViewEntity) {%>
                     <TD colspan='3' align=center><div class='tabletext' style='FONT-SIZE: xx-small;'>View Entity</div></TD>
               <%} else {%>
-                  <%if (security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(entity.getTableName(), "_CREATE", session)) {%>
+                  <%if (security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(entity.getPlainTableName(), "_CREATE", session)) {%>
                     <TD><a href='<ofbiz:url>/ViewGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>Crt</a></TD>
                   <%} else {%>
                     <TD><div class='tabletext' style='FONT-SIZE: xx-small;'>NP</div></TD>
                   <%}%>
-                  <%if (security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(entity.getTableName(), "_VIEW", session)) {%>
+                  <%if (security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(entity.getPlainTableName(), "_VIEW", session)) {%>
                     <TD><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>Fnd</a></TD>
                     <TD><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%>&find=true&VIEW_SIZE=50&VIEW_INDEX=0</ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>All</a></TD>
                   <%} else {%>

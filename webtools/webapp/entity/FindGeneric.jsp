@@ -38,10 +38,10 @@
 <%ModelReader reader = delegator.getModelReader();%>
 <%ModelEntity modelEntity = reader.getModelEntity(entityName);%>
 
-<%boolean hasViewPermission = security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(modelEntity.getTableName(), "_VIEW", session);%>
-<%boolean hasCreatePermission = security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(modelEntity.getTableName(), "_CREATE", session);%>
-<%boolean hasUpdatePermission = security.hasEntityPermission("ENTITY_DATA", "_UPDATE", session) || security.hasEntityPermission(modelEntity.getTableName(), "_UPDATE", session);%>
-<%boolean hasDeletePermission = security.hasEntityPermission("ENTITY_DATA", "_DELETE", session) || security.hasEntityPermission(modelEntity.getTableName(), "_DELETE", session);%>
+<%boolean hasViewPermission = security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(modelEntity.getPlainTableName(), "_VIEW", session);%>
+<%boolean hasCreatePermission = security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(modelEntity.getPlainTableName(), "_CREATE", session);%>
+<%boolean hasUpdatePermission = security.hasEntityPermission("ENTITY_DATA", "_UPDATE", session) || security.hasEntityPermission(modelEntity.getPlainTableName(), "_UPDATE", session);%>
+<%boolean hasDeletePermission = security.hasEntityPermission("ENTITY_DATA", "_DELETE", session) || security.hasEntityPermission(modelEntity.getPlainTableName(), "_DELETE", session);%>
 <%if(hasViewPermission){%>
 <%
   String rowClassTop1 = "viewOneTR1";
@@ -265,6 +265,6 @@
   <a href='<ofbiz:url>/ViewGeneric?entityName=<%=entityName%></ofbiz:url>' class="buttontext">[Create New <%=modelEntity.getEntityName()%>]</a>
 <%}%>
 <%} else {%>
-  <h3>You do not have permission to view this page (<%=modelEntity.getTableName()%>_ADMIN, or <%=modelEntity.getTableName()%>_VIEW needed).</h3>
+  <h3>You do not have permission to view this page (<%=modelEntity.getPlainTableName()%>_ADMIN, or <%=modelEntity.getPlainTableName()%>_VIEW needed).</h3>
 <%}%>
 <%} catch (Exception e) { Debug.logError(e); throw e; }%>
