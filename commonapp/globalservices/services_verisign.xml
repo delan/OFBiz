@@ -6,23 +6,11 @@
     <vendor>jFlow</vendor>
     <version>1.0</version>
 
-    <service name="creditCardAuthorize" engine="java"
-            location="org.ofbiz.commonapp.thirdpary.verisign.PayflowPro" invoke="authorizePayment">
+    <service name="payFlowAuthorize" engine="java"
+            location="org.ofbiz.commonapp.thirdparty.verisign.PayflowPro" invoke="authorizePayment">
         <description>Authorizes a payment w/ Verisign</description>
-        <attribute name="TRXTYPE" type="String" mode="IN"/>
-        <attribute name="TENDER" type="String" mode="IN"/>
-        <attribute name="ACCT" type="String" mode="IN"/>
-        <attribute name="EXPDATE" type="String" mode="IN"/>
-        <attribute name="AMT" type="Double" mode="IN"/>
-        <attribute name="COMMENT1" type="String" mode="IN" optional="true"/>
-        <attribute name="COMMENT2" type="String" mode="IN" optional="true"/>
-        <attribute name="STREET" type="String" mode="IN" optional="true"/>
-        <attribute name="ZIP" type="String" mode="IN" optional="true"/>
-        <attribute name="RESULT" type="String" mode="OUT"/>
-        <attribute name="PNREF" type="String" mode="OUT" optional="true"/>
-        <attribute name="RESPMSG" type="String" mode="OUT"/>
-        <attribute name="AUTHCODE" type="String" mode="OUT" optional="true"/>
-        <attribute name="AVSADDR" type="String" mode="OUT" optional="true"/>
-        <attribute name="AVSZIP" type="String" mode="OUT" optional="true"/>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="authResponse" type="String" mode="OUT"/>
     </service>
 </services>

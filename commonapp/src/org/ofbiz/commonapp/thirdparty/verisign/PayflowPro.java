@@ -27,10 +27,10 @@ import java.util.*;
 import java.text.*;
 import javax.servlet.http.*;
 
-import org.ofbiz.ecommerce.shoppingcart.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.commonapp.order.order.OrderReadHelper;
 
 import com.Verisign.payment.PFProAPI;
 
@@ -46,124 +46,129 @@ public class PayflowPro {
     public static final String module = PayflowPro.class.getName();
 
     /**
-     * Authorize event; called to process credit cards from inside a chain.
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @return Response code string
-     */
-    public static String authorizeCard(HttpServletRequest request, HttpServletResponse response) {
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
-        if (cart == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>No shopping cart found with this transaction.");
-            return "error";
-        }
-        String orderId = (String) request.getAttribute("order_id");
-        if (orderId == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>No order number found with this transaction.");
-            return "error";
-        }
-
-        String successStatus = (String) request.getAttribute("cc_success_status");
-        if (successStatus == null) successStatus = "PAID";
-
-        // set the credit card sale info
-        Map context = UtilMisc.toMap("TRXTYPE", "S", "TENDER", "C", "COMMENT1", orderId);
-
-        // get the cart total
-        NumberFormat nf = NumberFormat.getCurrencyInstance();
-        String totalStr = nf.format(cart.getGrandTotal());
-        if (totalStr != null) {
-            Double total = Double.valueOf(totalStr.substring(1));
-            context.put("AMT", total);
-        }
-
-        try {
-            // gather the card info
-            GenericValue pm = cart.getPaymentMethod(delegator);
-            GenericValue cc = pm.getRelatedOne("CreditCard");
-            context.put("ACCT", cc.getString("cardNumber"));
-            context.put("COMMENT2", cc.getString("nameOnCard"));
-            if (cc.get("expireDate") != null) {
-                String exp = cc.getString("expireDate");
-                String expDate = exp.substring(0,2);
-                expDate = expDate + exp.substring(exp.length()-2);
-                context.put("EXPDATE", expDate);
-            }
-
-            Debug.logVerbose("Credit Card Object: " + cc, module);
-
-            // gather the address info
-            GenericValue ps = cc.getRelatedOne("PostalAddress");
-            if (ps != null) {
-                String street = ps.getString("address1") +
-                        (ps.get("address2") != null && ps.getString("address2").length() > 0 ? " " +
-                        ps.getString("address2") : "");
-                context.put("STREET", street);
-                context.put("ZIP", ps.getString("postalCode"));
-            }
-        } catch (GenericEntityException e) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Entity exception occured: " + e.getMessage());
-            return "error";
-        }
-
-        Map result = null;
-        try {
-            result = dispatcher.runSync("creditCardAuthorize", context);
-        } catch (GenericServiceException e) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems invoking authorization service: " + e.getMessage());
-            return "error";
-        }
-
-        String respCode = (String) result.get("RESULT");
-        if (!respCode.equals("0")) {
-            String respMessage = (String) result.get("RESPMSG");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Authorization failed: " + respMessage);
-            return "error";
-        }
-
-        result = null;
-        try {
-            result = dispatcher.runSync("changeOrderStatus", UtilMisc.toMap("orderId", orderId, "statusId",  successStatus));
-            if (result.containsKey("errorMessage")) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting order status please contact customer service: " + result.get("errorMessage"));
-                return "error";
-            }
-        } catch (GenericServiceException e) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting order status, please contact customer service: " + e.getMessage());
-            return "error";
-        }
-
-        return "success";
-    }
-
-    /**
      * Authorize payment service. Service wrapper around PayFlow Pro API.
      * @param dctx Service Engine DispatchContext.
      * @param context Map context of parameters.
      * @return Response map, including RESPMSG, and RESULT keys.
      */
     public static Map authorizePayment(DispatchContext dctx, Map context) {
-        PFProAPI pn = init();
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        String orderId = (String) context.get("orderId");
 
-        // get the base params
-        StringBuffer params = makeBaseParams();
+        // get the order header and payment preferences
+        GenericValue orderHeader = null;
+        Collection paymentPrefs = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            paymentPrefs = orderHeader.getRelatedOrderBy("OrderPaymentPreference", UtilMisc.toList("maxAmount"));
 
-        // parse the context parameters
-        params.append("&" + parseContext(context));
+            // filter out payment prefs which have been authorized declined or settled.
+            List exprs = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_AUTHORIZED"),
+                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_DECLINED"),
+                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_SETTLED"));
+            paymentPrefs = EntityUtil.filterByAnd(paymentPrefs, exprs);
+        } catch (GenericEntityException gee) {
+            gee.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
+            return result;
+        }
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        double amountToBill = orh.getTotalPrice();
 
-        // transmit the request
-        String resp = pn.SubmitTransaction(params.toString());
+        Iterator payments = paymentPrefs.iterator();
+        while (payments.hasNext()) {
+            Map data = UtilMisc.toMap("COMMENT1", orderId);
+            GenericValue paymentPref = (GenericValue) payments.next();
+            GenericValue paymentMethod = null;
+            GenericValue cc = null;
+            GenericValue eft = null;
+            GenericValue ps = null;
 
-        // reset for next use
-        pn.DestroyContext();
+            // gather the payment related objects
+            try {
+                paymentMethod = paymentPref.getRelatedOne("PaymentMethod");
+                if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
+                    cc = paymentMethod.getRelatedOne("CreditCard");
+                    ps = cc.getRelatedOne("PostalAddress");
+                    if (UtilProperties.propertyValueEqualsIgnoreCase("payflow", "preAuth", "Y"))
+                        data.put("TRXTYPE", "A");
+                    else
+                        data.put("TRXTYPE", "S");
+                    data.put("TENDER", "C");
+                } else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("EFT_ACCOUNT")) {
+                    eft = paymentMethod.getRelatedOne("EFT_ACCOUNT");
+                    ps = eft.getRelatedOne("PostalAddress");
+                    data.put("TENDER", "C");
+                    data.put("TRXTYPE", "S");
+                } else {
+                    // not a valid payment method type
+                    continue;
+                }
+            } catch (GenericEntityException gee) {
+                gee.printStackTrace();
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order payment information (" + gee.getMessage() + ").");
+                return result;
+            }
 
-        // return the parsed response
-        return parseResponse(resp);
+            // get the order total
+            double thisAmount = amountToBill;
+            if (paymentPref.get("maxAmount") != null)
+                thisAmount = paymentPref.getDouble("maxAmount").doubleValue();
+            amountToBill -= thisAmount;
+            NumberFormat nf = NumberFormat.getCurrencyInstance();
+            String totalStr = nf.format(thisAmount);
+            if (totalStr != null) {
+                Double total = Double.valueOf(totalStr.substring(1));
+                data.put("AMT", total);
+            }
+
+            // get the payment information
+            data.put("ACCT", cc.getString("cardNumber"));
+            data.put("COMMENT2", cc.getString("nameOnCard"));
+            if (cc.get("expireDate") != null) {
+                String exp = cc.getString("expireDate");
+                String expDate = exp.substring(0, 2);
+                expDate = expDate + exp.substring(exp.length() - 2);
+                data.put("EXPDATE", expDate);
+            }
+
+            // gather the address info
+            if (ps != null) {
+                String street = ps.getString("address1") +
+                        (ps.get("address2") != null && ps.getString("address2").length() > 0 ? " " +
+                        ps.getString("address2") : "");
+                data.put("STREET", street);
+                data.put("ZIP", ps.getString("postalCode"));
+            }
+
+            PFProAPI pn = init();
+
+            // get the base params
+            StringBuffer params = makeBaseParams();
+
+            // parse the context parameters
+            params.append("&" + parseContext(data));
+
+            // transmit the request
+            Debug.logVerbose("Sending to Verisign: " + params.toString(), module);
+            String resp = pn.SubmitTransaction(params.toString());
+            Debug.logVerbose("Response from Verisign: " + resp, module);
+
+            // reset for next use
+            pn.DestroyContext();
+
+            // check the response
+            result = parseResponse(resp, result, paymentPref);
+        }
+
+        return result;
     }
 
-    private static Map parseResponse(String resp) {
+    private static Map parseResponse(String resp, Map result, GenericValue paymentPreference) {
+        boolean checkAVS = UtilProperties.propertyValueEqualsIgnoreCase("payflow", "checkAvs", "Y");
         Map parameters = new OrderedMap();
         List params = StringUtil.split(resp, "&");
         Iterator i = params.iterator();
@@ -174,10 +179,31 @@ public class PayflowPro {
                 Object k = kv.get(0);
                 Object v = kv.get(1);
                 if (k != null && v != null)
-                    parameters.put(k,v);
+                    parameters.put(k, v);
             }
         }
-        return parameters;
+        String respCode = (String) parameters.get("RESULT");
+
+        try {
+            if (respCode.equals("0")) {
+                paymentPreference.set("authCode", parameters.get("AUTHCODE"));
+                paymentPreference.set("statusId", "PAYMENT_AUTHORIZED");
+                result.put("authResponse", "SUCCESS");
+            } else {
+                paymentPreference.set("statusId", "PAYMENT_DECLINED");
+                result.put("authResponse", "FAIL");
+            }
+            paymentPreference.set("authRefNum", parameters.get("PNREF"));
+            paymentPreference.set("authFlag", parameters.get("RESULT"));
+            paymentPreference.set("authMessage", parameters.get("RESPMSG"));
+            paymentPreference.store();
+        } catch (GenericEntityException gee) {
+            gee.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not store payment info (" + gee.getMessage() + ").");
+            return result;
+        }
+        return result;
     }
 
     private static String parseContext(Map context) {
@@ -200,16 +226,16 @@ public class PayflowPro {
         StringBuffer buf = new StringBuffer();
         try {
             buf.append("PARTNER=");
-            buf.append(UtilProperties.getPropertyValue("pfpro", "partner", "VeriSign"));
+            buf.append(UtilProperties.getPropertyValue("payflow", "partner", "VeriSign"));
             buf.append("&");
             buf.append("VENDOR=");
-            buf.append(UtilProperties.getPropertyValue("pfpro", "vendor", "nobody"));
+            buf.append(UtilProperties.getPropertyValue("payflow", "vendor", "nobody"));
             buf.append("&");
             buf.append("USER=");
-            buf.append(UtilProperties.getPropertyValue("pfpro", "user", "nobody"));
+            buf.append(UtilProperties.getPropertyValue("payflow", "user", "nobody"));
             buf.append("&");
             buf.append("PWD=");
-            buf.append(UtilProperties.getPropertyValue("pfpro", "pwd", "password"));
+            buf.append(UtilProperties.getPropertyValue("payflow", "pwd", "password"));
         } catch (Exception e) {
             return null;
         }
@@ -227,15 +253,16 @@ public class PayflowPro {
         String certsPath = "certs";
 
         try {
-            certsPath = UtilProperties.getPropertyValue("pfpro", "certsPath", "certs");
-            hostAddress = UtilProperties.getPropertyValue("pfpro", "hostAddress", "test-payflow.verisign.com");
-            hostPort = Integer.decode(UtilProperties.getPropertyValue("pfpro", "hostPort", "443"));
-            timeout = Integer.decode(UtilProperties.getPropertyValue("pfpro", "timeout", "80"));
-            proxyAddress = UtilProperties.getPropertyValue("pfpro", "proxyAddress", "");
-            proxyPort = Integer.decode(UtilProperties.getPropertyValue("pfpro", "proxyPort", "80"));
-            proxyLogon = UtilProperties.getPropertyValue("pfpro", "proxyLogon", "");
-            proxyPassword = UtilProperties.getPropertyValue("pfpro", "proxyPassword", "");
+            certsPath = UtilProperties.getPropertyValue("payflow", "certsPath", "certs");
+            hostAddress = UtilProperties.getPropertyValue("payflow", "hostAddress", "test-payflow.verisign.com");
+            hostPort = Integer.decode(UtilProperties.getPropertyValue("payflow", "hostPort", "443"));
+            timeout = Integer.decode(UtilProperties.getPropertyValue("payflow", "timeout", "80"));
+            proxyAddress = UtilProperties.getPropertyValue("payflow", "proxyAddress", "");
+            proxyPort = Integer.decode(UtilProperties.getPropertyValue("payflow", "proxyPort", "80"));
+            proxyLogon = UtilProperties.getPropertyValue("payflow", "proxyLogon", "");
+            proxyPassword = UtilProperties.getPropertyValue("payflow", "proxyPassword", "");
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         PFProAPI pn = new PFProAPI();
