@@ -784,8 +784,7 @@ public class CheckOutHelper {
                     captCtx.put("orderPaymentPreference", opp);
                     if (opp.get("paymentMethodId") == null) {
                         captCtx.put("serviceTypeEnum", "PRDS_PAY_EXTERNAL");
-                    }
-                    captCtx.put("isFromAuth", new Boolean(false));
+                    }                    
                     captCtx.put("captureResult", new Boolean(true));
                     captCtx.put("captureAmount", opp.getDouble("maxAmount"));
                     captCtx.put("captureRefNum", opp.getString("manualRefNum"));
