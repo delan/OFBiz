@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.10 2003/08/20 02:46:13 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.11 2003/08/20 23:46:27 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -45,15 +45,15 @@ import org.ofbiz.base.util.Debug;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.10 $
+  *@version    $Revision: 1.11 $
  * @since      3.0
  */
 public class ComponentContainer implements Container {
     
-    public static final String module = ComponentContainer.class.getName();
+    public static final String module = ComponentContainer.class.getName();   
     
     protected List loadedComponents = null;
-    protected Classpath classPath = null;    
+    protected Classpath classPath = null;   
 
     /**
      * @see org.ofbiz.base.start.StartupContainer#start(java.lang.String)
@@ -68,14 +68,7 @@ public class ComponentContainer implements Container {
             throw new ContainerException("Components already loaded, cannot start");
         }
         
-        // get the components
-        List componentsToLoad = null;
-        try {            
-            componentsToLoad = ComponentLoaderConfig.getComponentsToLoad(null);
-        } catch (ComponentException e) {            
-            throw new ContainerException(e);    
-        }
-        
+                                      
         // get the config for this container
         ContainerConfig.Container cc = ContainerConfig.getContainer("component-container", configFileLocation);
         
@@ -92,7 +85,7 @@ public class ComponentContainer implements Container {
         } catch (ComponentException e) {
             throw new ContainerException(e);            
         }
-        
+                       
         // load each component
         if (components != null) {
             Iterator ci = components.iterator();
@@ -109,10 +102,10 @@ public class ComponentContainer implements Container {
                         Debug.logError("Cannot load component : " + def.name + " @ " + def.location, module);   
                     } else {
                         loadComponent(config);
-                    }
+                    }                   
                 } else if (def.type == ComponentLoaderConfig.COMPONENT_DIRECTORY) {
                     loadComponentDirectory(def.location);    
-                }                
+                }                                
             }
         }
 
@@ -148,7 +141,7 @@ public class ComponentContainer implements Container {
                             if (config == null) {
                                 Debug.logError("Cannot load component : " + componentPath.getName() + " @ " + componentLocation, module);    
                             } else {
-                                loadComponent(config);
+                                loadComponent(config);                                
                             }                          
                         }
                     }
