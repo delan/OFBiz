@@ -46,7 +46,7 @@ function mClk(src){
       <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
         <TR>
           <TD align=left width='99%' >
-            <div  style="margin: 0; font-size: 18pt; font-weight: bold; color: white;">OFBIZ - Common Application Components</div>
+            <div  style="margin: 0; font-size: 18pt; font-weight: bold; color: white;">OFBiz - Common Application Components</div>
             <div style="FONT-SIZE: 8pt; margin: 0; color: white;">Part&nbsp;of&nbsp;the&nbsp;Open&nbsp;For&nbsp;Business&nbsp;Family&nbsp;of&nbsp;Open&nbsp;Source&nbsp;Software</font></div>
           </TD>
           <TD align=right width='1%'>&nbsp;</TD>
