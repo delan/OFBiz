@@ -3,11 +3,11 @@
 
 <jms-server port="9127">
 
-        <queue-connection-factory location="jms/QueueConnectionFactory" port="9127" />
-        <!--<xa-queue-connection-factory location="jms/XAQueueConnectionFactory" password="ofbiz" username="ofbiz" />-->
+    <queue-connection-factory location="jms/QueueConnectionFactory" port="9127" />
+    <!--<xa-queue-connection-factory location="jms/XAQueueConnectionFactory" password="ofbiz" username="ofbiz" />-->
 
-        <topic-connection-factory location="jms/TopicConnectionFactory" port="9127" password="ofbiz" username="ofbiz" />
-        <!--<xa-topic-connection-factory location="jms/XATopicConnectionFactory" password="ofbiz" username="ofbiz" />-->
+    <topic-connection-factory location="jms/TopicConnectionFactory" port="9127" password="ofbiz" username="ofbiz" />
+    <!--<xa-topic-connection-factory location="jms/XATopicConnectionFactory" password="ofbiz" username="ofbiz" />-->
 
     <queue name="OFB Services Queue" location="jms/OFBQueue">
         <description>Service Engine Queue</description>
