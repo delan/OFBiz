@@ -40,8 +40,12 @@ public class ModelFormField {
 
     protected String name;
     protected String mapName;
+    protected String entityName;
+    protected String serviceName;
     protected String entryName;
     protected String parameterName;
+    protected String fieldName;
+    protected String attributeName;
     protected String title;
     protected String tooltip;
     protected String titleStyle;
@@ -58,8 +62,12 @@ public class ModelFormField {
     public ModelFormField(Element formElement) {
         this.name = formElement.getAttribute("name");
         this.mapName = formElement.getAttribute("map-name");
+        this.entityName = formElement.getAttribute("entity-name");
+        this.serviceName = formElement.getAttribute("service-name");
         this.entryName = UtilXml.checkEmpty(formElement.getAttribute("entry-name"), this.name);
         this.parameterName = UtilXml.checkEmpty(formElement.getAttribute("parameter-name"), this.name);
+        this.fieldName = UtilXml.checkEmpty(formElement.getAttribute("field-name"), this.name);
+        this.attributeName = UtilXml.checkEmpty(formElement.getAttribute("attribute-name"), this.name);
         this.title = formElement.getAttribute("title");
         this.tooltip = formElement.getAttribute("tooltip");
         this.titleStyle = formElement.getAttribute("title-style");
@@ -83,8 +91,29 @@ public class ModelFormField {
     /**
      * @return
      */
+    public String getAttributeName() {
+        return attributeName;
+    }
+
+    /**
+     * @return
+     */
+    public String getEntityName() {
+        return entityName;
+    }
+
+    /**
+     * @return
+     */
     public String getEntryName() {
         return entryName;
+    }
+
+    /**
+     * @return
+     */
+    public String getFieldName() {
+        return fieldName;
     }
 
     /**
@@ -125,6 +154,13 @@ public class ModelFormField {
     /**
      * @return
      */
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    /**
+     * @return
+     */
     public String getTitle() {
         return title;
     }
@@ -160,8 +196,29 @@ public class ModelFormField {
     /**
      * @param string
      */
+    public void setAttributeName(String string) {
+        attributeName = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setEntityName(String string) {
+        entityName = string;
+    }
+
+    /**
+     * @param string
+     */
     public void setEntryName(String string) {
         entryName = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setFieldName(String string) {
+        fieldName = string;
     }
 
     /**
@@ -197,6 +254,13 @@ public class ModelFormField {
      */
     public void setRedWhen(String string) {
         redWhen = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setServiceName(String string) {
+        serviceName = string;
     }
 
     /**
@@ -277,6 +341,136 @@ public class ModelFormField {
         public abstract void renderFieldString(StringBuffer buffer, FormStringRenderer formStringRenderer);
     }
     
+    public static class DisplayField extends FieldInfo {
+        protected boolean alsoHidden = true;
+        protected String description;
+        
+        protected DisplayField() { super(); }
+
+        public DisplayField(String fieldTypeName, ModelFormField modelFormField) {
+            super(fieldTypeName, modelFormField);
+        }
+
+        public DisplayField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+            
+            String description = element.getAttribute("description");
+            String alsoHiddenStr = element.getAttribute("also-hidden");
+            try {
+                alsoHidden = Boolean.getBoolean(alsoHiddenStr);
+            } catch (Exception e) {
+                if (alsoHiddenStr != null && alsoHiddenStr.length() > 0) {
+                    Debug.logError("Could not parse the size value of the text element: [" + alsoHiddenStr + "], setting to default of " + alsoHidden);
+                }
+            }
+        }
+
+        public void renderFieldString(StringBuffer buffer, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderDisplayField(buffer, this);
+        }
+        
+        /**
+         * @return
+         */
+        public boolean isAlsoHidden() {
+            return alsoHidden;
+        }
+
+        /**
+         * @return
+         */
+        public String getDescription() {
+            return description;
+        }
+
+        /**
+         * @param b
+         */
+        public void setAlsoHidden(boolean b) {
+            alsoHidden = b;
+        }
+
+        /**
+         * @param string
+         */
+        public void setDescription(String string) {
+            description = string;
+        }
+    }
+    
+    public static class HyperlinkField extends FieldInfo {
+        protected boolean alsoHidden = true;
+        protected String target;
+        protected String description;
+        
+        protected HyperlinkField() { super(); }
+
+        public HyperlinkField(String fieldTypeName, ModelFormField modelFormField) {
+            super(fieldTypeName, modelFormField);
+        }
+
+        public HyperlinkField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+            
+            String target = element.getAttribute("target");
+            String description = element.getAttribute("description");
+            String alsoHiddenStr = element.getAttribute("also-hidden");
+            try {
+                alsoHidden = Boolean.getBoolean(alsoHiddenStr);
+            } catch (Exception e) {
+                if (alsoHiddenStr != null && alsoHiddenStr.length() > 0) {
+                    Debug.logError("Could not parse the size value of the text element: [" + alsoHiddenStr + "], setting to default of " + alsoHidden);
+                }
+            }
+        }
+
+        public void renderFieldString(StringBuffer buffer, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderHyperlinkField(buffer, this);
+        }
+        
+        /**
+         * @return
+         */
+        public boolean isAlsoHidden() {
+            return alsoHidden;
+        }
+
+        /**
+         * @return
+         */
+        public String getDescription() {
+            return description;
+        }
+
+        /**
+         * @return
+         */
+        public String getTarget() {
+            return target;
+        }
+
+        /**
+         * @param b
+         */
+        public void setAlsoHidden(boolean b) {
+            alsoHidden = b;
+        }
+
+        /**
+         * @param string
+         */
+        public void setDescription(String string) {
+            description = string;
+        }
+
+        /**
+         * @param string
+         */
+        public void setTarget(String string) {
+            target = string;
+        }
+    }
+    
     public static class TextField extends FieldInfo {
         protected int size = 25;
         protected Integer maxlength;
@@ -313,6 +507,7 @@ public class ModelFormField {
         public void renderFieldString(StringBuffer buffer, FormStringRenderer formStringRenderer) {
             formStringRenderer.renderTextField(buffer, this);
         }
+        
         /**
          * @return
          */
@@ -377,6 +572,7 @@ public class ModelFormField {
         public void renderFieldString(StringBuffer buffer, FormStringRenderer formStringRenderer) {
             formStringRenderer.renderTextareaField(buffer, this);
         }
+        
         /**
          * @return
          */
@@ -405,4 +601,5 @@ public class ModelFormField {
             rows = i;
         }
     }
+
 }

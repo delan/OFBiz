@@ -31,6 +31,8 @@ package org.ofbiz.core.widget.form;
  * @since      2.2
  */
 public interface FormStringRenderer {
+    public void renderDisplayField(StringBuffer buffer, ModelFormField.DisplayField displayField);
+    public void renderHyperlinkField(StringBuffer buffer, ModelFormField.HyperlinkField hyperlinkField);
     public void renderTextField(StringBuffer buffer, ModelFormField.TextField textField);
     public void renderTextareaField(StringBuffer buffer, ModelFormField.TextareaField textareaField);
 }

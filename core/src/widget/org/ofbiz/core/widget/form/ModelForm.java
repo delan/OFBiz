@@ -46,6 +46,8 @@ public class ModelForm {
     protected String listName;
     protected String listEntryName;
     protected String defaultMapName;
+    protected String defaultEntityName;
+    protected String defaultServiceName;
     protected String defaultTitleStyle;
     protected String defaultWidgetStyle;
     
@@ -84,6 +86,8 @@ public class ModelForm {
         this.listName = formElement.getAttribute("list-name");
         this.listEntryName = formElement.getAttribute("list-entry-name");
         this.defaultMapName = formElement.getAttribute("default-map-name");
+        this.defaultEntityName = formElement.getAttribute("default-entity-name");
+        this.defaultServiceName = formElement.getAttribute("default-service-name");
         this.defaultTitleStyle = formElement.getAttribute("default-title-style");
         this.defaultWidgetStyle = formElement.getAttribute("default-widget-style");
         
@@ -111,6 +115,13 @@ public class ModelForm {
             autoFieldsEntities.add(new AutoFieldsEntity(autoFieldsEntityElement));
         }
 
+    }
+
+    /**
+     * @return
+     */
+    public String getDefaultEntityName() {
+        return defaultEntityName;
     }
 
     /**
@@ -186,8 +197,22 @@ public class ModelForm {
     /**
      * @param string
      */
+    public void setDefaultEntityName(String string) {
+        defaultEntityName = string;
+    }
+
+    /**
+     * @param string
+     */
     public void setDefaultMapName(String string) {
         defaultMapName = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setDefaultServiceName(String string) {
+        defaultServiceName = string;
     }
 
     /**
