@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.2 2003/12/12 04:02:04 ajzeneski Exp $
+ * $Id: EntityDataServices.java,v 1.3 2003/12/17 16:09:51 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -29,13 +29,15 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.security.Security;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
@@ -45,12 +47,16 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class EntityDataServices {
 
     public static final String module = EntityDataServices.class.getName();
+
+    public static Map exportDelimitedToDirectory(DispatchContext dctx, Map context) {
+        return ServiceUtil.returnError("This service is not implemented yet.");
+    }
 
     public static Map importDelimitedFromDirectory(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
@@ -89,7 +95,8 @@ public class EntityDataServices {
         File[] files = root.listFiles();
         if (files != null && files.length > 0) {
             for (int i = 0; i < files.length; i++) {
-                if (files[i].getName().toLowerCase().endsWith(".txt")) {
+                String fileName = files[i].getName();
+                if (!fileName.startsWith("_") && fileName.endsWith(".txt")) {
                     int records = 0;
                     try {
                         records = readEntityFile(files[i], delimiter, delegator);
@@ -98,6 +105,7 @@ public class EntityDataServices {
                     } catch (FileNotFoundException e) {
                         return ServiceUtil.returnError("File not found : " + files[i].getName());
                     } catch (IOException e) {
+                        Debug.logError(e, module);
                         return ServiceUtil.returnError("Problem reading file : " + files[i].getName());
                     }
 
@@ -111,6 +119,34 @@ public class EntityDataServices {
         return ServiceUtil.returnSuccess();
     }
 
+    private static String[] readEntityHeader(File file, String delimiter, BufferedReader dataReader) throws IOException {
+        String filePath = file.getPath().replace('\\', '/');
+
+        String[] header = null;
+        File headerFile = new File(filePath.substring(0, filePath.lastIndexOf('/')), "_" + file.getName());
+
+        boolean uniqueHeaderFile = true;
+        BufferedReader reader = null;
+        if (headerFile.exists()) {
+            reader = new BufferedReader(new FileReader(headerFile));
+        } else {
+            uniqueHeaderFile = false;
+            reader = dataReader;
+        }
+
+        // read one line from either the header file or the data file if no header file exists
+        String firstLine = reader.readLine();
+        if (firstLine != null) {
+            header = firstLine.split(delimiter);
+        }
+
+        if (uniqueHeaderFile) {
+            reader.close();
+        }
+
+        return header;
+    }
+
     private static int readEntityFile(File file, String delimiter, GenericDelegator delegator) throws IOException, GeneralException {
         String entityName = file.getName().substring(0, file.getName().lastIndexOf('.'));
         if (entityName == null) {
@@ -118,39 +154,65 @@ public class EntityDataServices {
         }
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
-        String[] header = null;
-        boolean first = true;
+        String[] header = readEntityHeader(file, delimiter, reader);
 
+        GeneralException exception = null;
         String line = null;
         int lineNumber = 0;
         while ((line = reader.readLine()) != null) {
-            if (first) {
-                // this is the header line
-                header = line.split(delimiter);
-                first = false;
-            } else {
-                // process the record
-                String fields[] = line.split(delimiter);
-                if (fields.length != header.length) {
-                    throw new GeneralException("Number of fields on line #" + lineNumber + " from file " + file.getName() + " does not match the header.");
-                }
-
-                Map fieldMap = makeMap(header, fields);
-                GenericValue newValue = delegator.makeValue(entityName, fieldMap);
-                newValue = delegator.createOrStore(newValue);
-                //Debug.log("Stored record : " + newValue, module);
+            // process the record
+            String fields[] = line.split(delimiter);
+            if (fields.length != header.length) {
+                // wait till after we close the reader to throw this
+                exception = new GeneralException("Number of fields on line #" + lineNumber + " from file " + file.getName() + " does not match the header.");
+                break;
             }
+
+            Map fieldMap = makeMap(header, fields);
+            GenericValue newValue = delegator.makeValue(entityName, fieldMap);
+            newValue = delegator.createOrStore(newValue);
+
             lineNumber++;
+
+            if (lineNumber % 500 == 0) {
+                Debug.log("Records Stored [" + file.getName() + "]: " + lineNumber, module);
+            }
         }
+        reader.close();
+
+        // now that we closed the reader; throw the exception
+        if (exception != null) {
+            throw exception;
+        }
+
         return lineNumber;
     }
 
     private static Map makeMap(String[] header, String[] line) {
         Map newMap = new HashMap();
         for (int i = 0; i < header.length; i++) {
-            // strip off all whitespace
-            newMap.put(header[i].replaceAll("\\s", ""), line[i].replaceAll("\\s", ""));
+            newMap.put(header[i].trim(), line[i].trim());
         }
         return newMap;
     }
+
+    private String[] getEntityFieldNames(GenericDelegator delegator, String entityName) {
+        ModelEntity entity = delegator.getModelEntity(entityName);
+        if (entity == null) {
+            return null;
+        }
+        List modelFields = entity.getFieldsCopy();
+        if (modelFields == null) {
+            return null;
+        }
+
+        String[] fieldNames = new String[modelFields.size()];
+        for (int i = 0; i < modelFields.size(); i++) {
+            ModelField field = (ModelField) modelFields.get(i);
+            fieldNames[i] = field.getName();
+        }
+
+        return fieldNames;
+    }
+
 }
