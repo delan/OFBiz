@@ -45,7 +45,7 @@ public class JobPoller implements Runnable {
     public static final int MAX_THREADS = 15;
     public static final int MAX_JOBS = 3;
     public static final int POLL_WAIT = 20000;
-    public static final long MAX_TTL = 18000000;
+    //public static final long MAX_TTL = 18000000;
 
     protected boolean isRunning = false;      
     

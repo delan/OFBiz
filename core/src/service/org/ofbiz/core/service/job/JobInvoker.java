@@ -39,7 +39,7 @@ import org.ofbiz.core.util.*;
 public class JobInvoker implements Runnable {
 
     public static final String module = JobInvoker.class.getName();
-    public static final long THREAD_TTL = 10800000;
+    public static final long THREAD_TTL = 18000000;
     public static final int WAIT_TIME = 750;
 
     private JobPoller jp = null;
