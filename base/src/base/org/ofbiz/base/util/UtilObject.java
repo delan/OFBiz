@@ -70,8 +70,7 @@ public class UtilObject {
     
     public static long getByteCount(Object obj) {
         OutputStreamByteCount osbc = null;
-        ObjectOutputStream oos = null;
-        byte[] data = null;
+        ObjectOutputStream oos = null;        
         try {
             osbc = new OutputStreamByteCount();
             oos = new ObjectOutputStream(osbc);

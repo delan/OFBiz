@@ -56,6 +56,7 @@
         <TD>Cache&nbsp;Element&nbsp;Key</TD>
         <%-- <TD>createTime</TD> --%>
         <TD>expireTime</TD>
+        <TD>bytes</TD>
         <TD></TD>
       </TR>
 
@@ -81,6 +82,10 @@
                   <%if (line != null && line.loadTime > 0){%>
                     <%=(new Date(line.loadTime + expireTime)).toString()%>
                   <%}%>
+                  &nbsp;
+                </TD>
+                <TD>
+                  <%=line.getSizeInBytes()%>
                   &nbsp;
                 </TD>
                 <TD>
@@ -111,6 +116,10 @@
                   <%if(line != null && line.loadTime > 0){%>
                     <%=(new Date(line.loadTime + expireTime)).toString()%>
                   <%}%>
+                  &nbsp;
+                </TD>
+                <TD>
+                  <%=line.getSizeInBytes()%>
                   &nbsp;
                 </TD>
                 <TD>

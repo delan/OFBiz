@@ -32,10 +32,11 @@ import org.ofbiz.base.util.*;
  * Loads resources from the file system
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
-public class FileLoader extends ResourceLoader {
+public class FileLoader extends ResourceLoader implements java.io.Serializable {
+
     public URL getURL(String location) throws GenericConfigException {
         String fullLocation = fullLocation(location);
         URL fileUrl = null;

@@ -31,10 +31,10 @@ import java.io.*;
  * Loads resources from a URL
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
-public class UrlLoader extends ResourceLoader {
+public class UrlLoader extends ResourceLoader implements java.io.Serializable {
     
     public URL getURL(String location) throws GenericConfigException {
         String fullLocation = fullLocation(location);
