@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-    <classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
+    <classpathentry exported="true" kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
     <classpathentry exported="true" kind="lib" path="common/castor-0.9.3.9.jar"/>
     <classpathentry exported="true" kind="lib" path="compile/activation.jar"/>
     <classpathentry exported="true" kind="lib" path="datavision/DataVision.jar"/>
     <classpathentry exported="true" kind="lib" path="jasperreports/itext-0.92.jar"/>
     <classpathentry exported="true" kind="lib" path="share/axis.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/jaxrpc.jar"/>
     <classpathentry exported="true" kind="lib" path="weka/remoteExperimentServer.jar"/>
     <classpathentry exported="true" kind="lib" path="common/commons-beanutils.jar"/>
     <classpathentry exported="true" kind="lib" path="common/commons-collections.jar"/>
@@ -40,5 +41,30 @@
     <classpathentry exported="true" kind="lib" path="weka/weka.jar"/>
     <classpathentry exported="true" kind="lib" path="worldpay/cryptix.jar"/>
     <classpathentry exported="true" kind="lib" path="worldpay/select.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/commons-discovery.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/commons-fileupload-1.0-dev.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/logkit-1.0.jar"/>
+    <classpathentry exported="true" kind="lib" path="scripting/bsf.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/batik.jar"/>
+    <classpathentry exported="true" kind="lib" path="wspublisher/EdenLib.jar"/>
+    <classpathentry exported="true" kind="lib" path="scripting/jacl.jar"/>
+    <classpathentry exported="true" kind="lib" path="scripting/js.jar"/>
+    <classpathentry exported="true" kind="lib" path="scripting/jython.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/cactus.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/cvslib.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/dom4j.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/fop.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/formproc.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/freemarker.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/jakarta-poi-1.5.1-final.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/jakarta-taglibs.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/junit.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/lucene-1.2.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/saaj.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/xalan.jar"/>
+    <classpathentry exported="true" kind="lib" path="wspublisher/HTTPClient.jar"/>
+    <classpathentry exported="true" kind="lib" path="wspublisher/jazzy-dev.jar"/>
+    <classpathentry exported="true" kind="lib" path="wspublisher/tidy.jar"/>
+    <classpathentry exported="true" kind="lib" path="wspublisher/wspublisher-server.jar"/>
     <classpathentry kind="output" path=""/>
 </classpath>

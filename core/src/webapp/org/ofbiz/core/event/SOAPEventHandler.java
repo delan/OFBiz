@@ -27,6 +27,7 @@ package org.ofbiz.core.event;
 import java.io.*;
 import java.util.*;
 import javax.servlet.http.*;
+import javax.xml.soap.SOAPException;
 
 import org.apache.axis.*;
 import org.apache.axis.message.*;
@@ -63,8 +64,7 @@ public class SOAPEventHandler implements EventHandler {
         AxisServer axisServer;
 
         try {
-            axisServer = AxisServer.getServer(UtilMisc.toMap("name", "OFBiz/Axis Server", "provider", null));
-        
+            axisServer = AxisServer.getServer(UtilMisc.toMap("name", "OFBiz/Axis Server", "provider", null));                    
         } catch (AxisFault e) {
             sendError(response, e);
             throw new EventHandlerException("Problems with the AXIS server", e);
@@ -94,9 +94,8 @@ public class SOAPEventHandler implements EventHandler {
 
         // get the service name and parameters
         try {
-            reqEnv = (SOAPEnvelope) msg.getSOAPEnvelope();
-        } catch (AxisFault e) {
-            sendError(response, e);
+            reqEnv = (SOAPEnvelope) msg.getSOAPPart().getEnvelope();                    
+        } catch (SOAPException e) {
             throw new EventHandlerException("Cannot get the envelope", e);
         }
         
@@ -158,9 +157,8 @@ public class SOAPEventHandler implements EventHandler {
 
                             resBody.addParam(par);
                         }
-                        resEnv.addBodyElement(resBody);
-                        
-                        resEnv.setEncodingStyle(Constants.URI_SOAP_ENC);
+                        resEnv.addBodyElement(resBody);                        
+                        resEnv.setEncodingStyle(Constants.URI_DEFAULT_SOAP_ENC);
                     } else {
                         sendError(response, "Request service not available");
                         throw new EventHandlerException("Service is not exported");
@@ -184,19 +182,21 @@ public class SOAPEventHandler implements EventHandler {
             throw new EventHandlerException("No response message available");
         }
 
-        try {
-            response.setContentType(msg.getContentType());
-            response.setContentLength(msg.getContentLength());
+        try {            
+            response.setContentType(msg.getContentType(Constants.DEFAULT_SOAP_VERSION));   
+            response.setContentLength(Integer.parseInt(Long.toString(msg.getContentLength())));                                 
         } catch (AxisFault e) {
             sendError(response, e);
             throw new EventHandlerException(e.getMessage(), e);
         }
 
         try {
-            msg.writeContentToStream(response.getOutputStream());
+            msg.writeTo(response.getOutputStream());
             response.flushBuffer();
         } catch (IOException e) {
             throw new EventHandlerException("Cannot write to the output stream");
+        } catch (SOAPException e) {
+            throw new EventHandlerException("Cannot write message to the output stream");
         }
 
         Debug.logVerbose("[EventHandler] : Message sent to requester", module);
@@ -208,9 +208,9 @@ public class SOAPEventHandler implements EventHandler {
         Message msg = new Message(obj);
 
         try {
-            res.setContentType(msg.getContentType());
-            res.setContentLength(msg.getContentLength());
-            msg.writeContentToStream(res.getOutputStream());
+            res.setContentType(msg.getContentType(Constants.DEFAULT_SOAP_VERSION));
+            res.setContentLength(Integer.parseInt(Long.toString(msg.getContentLength())));
+            msg.writeTo(res.getOutputStream());                        
             res.flushBuffer();
         } catch (Exception e) {
             throw new EventHandlerException(e.getMessage(), e);

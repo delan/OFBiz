@@ -27,20 +27,17 @@ package org.ofbiz.core.service.engine;
 import java.net.*;
 import java.util.*;
 
-import org.apache.axis.client.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.service.*;
-import org.apache.axis.Message;
-import org.apache.axis.message.*;
-import org.apache.axis.encoding.DefaultTypeMappingImpl;
-import org.apache.axis.encoding.DefaultSOAP12TypeMappingImpl;
-import org.apache.axis.encoding.TypeMapping;
-import org.apache.axis.encoding.TypeMappingImpl;
-import org.apache.axis.encoding.XMLType;
-import org.apache.axis.Constants;
-import javax.xml.rpc.namespace.QName;
+import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.ServiceException;
+
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.*;
+
+import org.apache.axis.client.*;
+import org.apache.axis.Message;
+import org.apache.axis.message.*;
+import org.apache.axis.encoding.XMLType;
 
 /**
  * Generic Service SOAP Interface
@@ -159,8 +156,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         
         return getResponseParams(call.getMessageContext().getResponseMessage());
     }
-    
-    
+        
     private Map getResponseParams(Message respMessage){
         Map mRet=new Hashtable();
         try{
@@ -194,14 +190,14 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         }
         return mRet;
     }
-    
+        
     private ParameterMode getMode(String sMode) {
         if (sMode.equals("IN")) {
-            return ParameterMode.PARAM_MODE_IN;
+            return ParameterMode.IN;
         } else if (sMode.equals("OUT")) {
-            return ParameterMode.PARAM_MODE_OUT;
+            return ParameterMode.OUT;
         } else if (sMode.equals("INOUT")) {
-            return ParameterMode.PARAM_MODE_INOUT;
+            return ParameterMode.INOUT;
         } else {
             return null;
         }
