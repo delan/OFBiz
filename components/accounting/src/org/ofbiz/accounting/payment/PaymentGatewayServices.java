@@ -893,6 +893,10 @@ public class PaymentGatewayServices {
                     newPref.set("paymentMethodId", paymentPref.get("paymentMethodId"));
                     newPref.set("maxAmount", paymentPref.get("maxAmount"));
                     newPref.set("statusId", "PAYMENT_NOT_AUTH");
+                    newPref.set("createdDate", UtilDateTime.nowTimestamp());
+                    if (userLogin != null) {
+                        newPref.set("createdByUserLogin", userLogin.getString("userLoginId"));
+                    }                    
                     Debug.logInfo("New preference : " + newPref, module);
                     try {
                         // create the new payment preference

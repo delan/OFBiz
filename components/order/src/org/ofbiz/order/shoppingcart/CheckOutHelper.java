@@ -930,7 +930,7 @@ public class CheckOutHelper {
         // check to see if we should auto-invoice/bill
         if (faceToFace) {
             Debug.log("Face-To-Face Sale - " + orderId, module);
-            this.adjustFaceToFacePayment(allPaymentPreferences);
+            this.adjustFaceToFacePayment(allPaymentPreferences, userLogin);
             boolean ok = OrderChangeHelper.completeOrder(dispatcher, userLogin, orderId);
             Debug.log("Complete Order Result - " + ok, module);
             if (!ok) {
@@ -940,7 +940,7 @@ public class CheckOutHelper {
         return ServiceUtil.returnSuccess();
     }
 
-    public void adjustFaceToFacePayment(List allPaymentPrefs) throws GeneralException {
+    public void adjustFaceToFacePayment(List allPaymentPrefs, GenericValue userLogin) throws GeneralException {
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
         DecimalFormat formatter = new DecimalFormat(currencyFormat);
 
@@ -990,6 +990,10 @@ public class CheckOutHelper {
             newPref.set("paymentMethodTypeId", "CASH");
             newPref.set("statusId", "PAYMENT_RECEIVED");
             newPref.set("maxAmount", change);
+            newPref.set("createdDate", UtilDateTime.nowTimestamp());
+            if (userLogin != null) {
+                newPref.set("createdByUserLogin", userLogin.getString("userLoginId"));
+            }
             delegator.create(newPref);
         }
     }

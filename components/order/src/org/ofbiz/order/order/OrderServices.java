@@ -104,8 +104,6 @@ public class OrderServices {
             return resultSecurity;
         }
 
-        String test = new String(UtilDateTime.nowTimestamp().toString());
-        
         boolean isImmediatelyFulfilled = false;
         String productStoreId = (String) context.get("productStoreId");
         GenericValue productStore = null;
@@ -379,6 +377,7 @@ public class OrderServices {
         orderStatus.set("orderId", orderId);
         orderStatus.set("statusId", orderHeader.getString("statusId"));
         orderStatus.set("statusDatetime", nowTimestamp);
+        orderStatus.set("statusUserLogin", userLogin.getString("userLoginId"));
         toBeStored.add(orderStatus);
 
         // set the order items
@@ -395,6 +394,7 @@ public class OrderServices {
             itemStatus.put("orderId", orderId);
             itemStatus.put("orderItemSeqId", orderItem.get("orderItemSeqId"));
             itemStatus.put("statusDatetime", nowTimestamp);
+            itemStatus.set("statusUserLogin", userLogin.getString("userLoginId"));
             toBeStored.add(itemStatus);
         }
 
@@ -514,7 +514,10 @@ public class OrderServices {
                 } catch (IllegalArgumentException e) {
                     return ServiceUtil.returnError("ERROR: Could not get next sequence id for OrderAdjustment, cannot create order.");
                 }
+
                 orderAdjustment.set("orderId", orderId);
+                orderAdjustment.set("createdDate", UtilDateTime.nowTimestamp());
+                orderAdjustment.set("createdByUserLogin", userLogin.getString("userLoginId"));
 
                 if (orderAdjustment.get("orderItemSeqId") == null || orderAdjustment.getString("orderItemSeqId").length() == 0) {
                     orderAdjustment.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA);
@@ -568,6 +571,8 @@ public class OrderServices {
                         valueObj.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA);
                     }
                     valueObj.set("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment"));
+                    valueObj.set("createdDate", UtilDateTime.nowTimestamp());
+                    valueObj.set("createdByUserLogin", userLogin.getString("userLoginId"));
                 }
                 toBeStored.add(valueObj);
             }
@@ -715,6 +720,8 @@ public class OrderServices {
                 if ("OrderPaymentPreference".equals(valueObj.getEntityName())) {
                     if (valueObj.get("orderPaymentPreferenceId") == null) {
                         valueObj.set("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString());
+                        valueObj.set("createdDate", UtilDateTime.nowTimestamp());
+                        valueObj.set("createdByUserLogin", userLogin.getString("userLoginId"));
                     }
                     if (valueObj.get("statusId") == null) {
                         valueObj.set("statusId", "PAYMENT_NOT_RECEIVED");
@@ -1188,6 +1195,8 @@ public class OrderServices {
                     orderAdjustment.set("orderId", orh.getOrderId());
                     orderAdjustment.set("shipGroupSeqId", shipGroupSeqId);
                     orderAdjustment.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA);
+                    orderAdjustment.set("createdDate", UtilDateTime.nowTimestamp());
+                    orderAdjustment.set("createdByUserLogin", userLogin.getString("userLoginId"));
                     //orderAdjustment.set("comments", "Shipping Re-Calc Adjustment");
                     try {
                         orderAdjustment.create();
@@ -1497,6 +1506,7 @@ public class OrderServices {
                 changeFields.put("orderId", orderId);
                 changeFields.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
                 changeFields.put("statusDatetime", UtilDateTime.nowTimestamp());
+                changeFields.put("statusUserLogin", userLogin.getString("userLoginId"));
                 GenericValue orderStatus = delegator.makeValue("OrderStatus", changeFields);
                 toBeStored.add(orderStatus);
             }
@@ -1572,6 +1582,7 @@ public class OrderServices {
             orderStatus.put("statusId", statusId);
             orderStatus.put("orderId", orderId);
             orderStatus.put("statusDatetime", UtilDateTime.nowTimestamp());
+            orderStatus.put("statusUserLogin", userLogin.getString("userLoginId"));
 
             orderHeader.store();
             orderStatus.create();
@@ -1980,6 +1991,7 @@ public class OrderServices {
         String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
         String paymentMethodId = (String) context.get("paymentMethodId");
         Double maxAmount = (Double) context.get("maxAmount");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         String prefId = null;
         
@@ -1994,7 +2006,10 @@ public class OrderServices {
 
         try {
             GenericValue v = delegator.makeValue("OrderPaymentPreference", fields);
-
+            v.set("createdDate", UtilDateTime.nowTimestamp());
+            if (userLogin != null) {
+                v.set("createdByUserLogin", userLogin.getString("userLoginId"));
+            }
             delegator.create(v);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -2152,6 +2167,7 @@ public class OrderServices {
         List itemShippingList = (List) context.get("itemShippingList");
         Double orderShippingAmount = (Double) context.get("orderShippingAmount");
         GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         // Simple Tax Calc only uses the state from the address and the SalesTaxLookup entity.
 
@@ -2260,7 +2276,11 @@ public class OrderServices {
                         throw new GeneralException("Problem getting parsed amount from string", e);
                     }
 
-                    adjustments.add(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", taxLookup.getString("description"))));
+                    Map adjMap = new HashMap();
+                    adjMap.put("amount", taxAmount);
+                    adjMap.put("orderAdjustmentTypeId", "SALES_TAX");
+                    adjMap.put("comments", taxLookup.getString("description"));
+                    adjustments.add(delegator.makeValue("OrderAdjustment", adjMap));
                 }
             }
         } catch (GenericEntityException e) {
@@ -3059,6 +3079,8 @@ public class OrderServices {
                 adj.set("orderAdjustmentTypeId", "REPLACE_ADJUSTMENT");
                 adj.set("amount", new Double(itemTotal * -1));
                 adj.set("comments", "Replacement Item Return #" + returnId);
+                adj.set("createdDate", UtilDateTime.nowTimestamp());
+                adj.set("createdByUserLogin", userLogin.getString("userLoginId"));
                 orderMap.put("orderAdjustments", UtilMisc.toList(adj));
 
                 // create the order

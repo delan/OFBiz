@@ -79,6 +79,8 @@
       <field name="sourceReferenceId" type="id-long"></field>
       <field name="includeInTax" type="indicator"></field>
       <field name="includeInShipping" type="indicator"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
       <prim-key field="orderAdjustmentId"/>
       <relation type="one" fk-name="ORDER_ADJ_TYPE" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="orderAdjustmentTypeId"/>
@@ -88,6 +90,9 @@
       </relation>
       <relation type="one" fk-name="ORDER_ADJ_OHEAD" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ADJ_USERL" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
@@ -723,6 +728,8 @@
       <field name="manualAuthCode" type="short-varchar"></field>
       <field name="manualRefNum" type="short-varchar"></field>
       <field name="statusId" type="id"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
       <prim-key field="orderPaymentPreferenceId"/>
       <relation type="one" fk-name="ORDER_PMPRF_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
@@ -735,6 +742,9 @@
       </relation>
       <relation type="one" fk-name="ORDER_PMPRF_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_PMPRF_USRL" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="CreditCard">
         <key-map field-name="paymentMethodId"/>
@@ -810,6 +820,7 @@
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
       <field name="statusDatetime" type="date-time"></field>
+      <field name="statusUserLogin" type="id-vlong"></field>
       <prim-key field="orderStatusId"/>
       <relation type="one" fk-name="ORDER_STTS_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
@@ -820,6 +831,9 @@
       <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_STTS_USER" rel-entity-name="UserLogin">
+        <key-map field-name="statusUserLogin" rel-field-name="userLoginId"/>
       </relation>
     </entity>
     <entity entity-name="OrderSummaryEntry"
