@@ -817,6 +817,19 @@ public class GenericDelegator {
         return helper.removeByAnd(modelEntity, fields);
     }
 
+
+    public Collection getMultiRelation(GenericValue value, String relationNameOne, String relationNameTwo) throws GenericEntityException {
+        // traverse the relationships
+        ModelEntity modelEntity = value.getModelEntity();
+        ModelRelation modelRelationOne = modelEntity.getRelation(relationNameOne);
+        ModelEntity modelEntityOne = getModelEntity(modelRelationOne.getRelEntityName());
+        ModelRelation modelRelationTwo = modelEntityOne.getRelation(relationNameTwo);
+        ModelEntity modelEntityTwo = getModelEntity(modelRelationTwo.getRelEntityName());
+
+        GenericHelper helper = getEntityHelper(modelEntity);
+        return helper.findByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo);
+    }
+
     /** Get the named Related Entity for the GenericValue from the persistent store
      * @param relationName String containing the relation name which is the
      *      combination of relation.title and relation.rel-entity-name as

@@ -166,7 +166,7 @@ public class GenericDAO {
             sqlP.close();
         }
     }
-    
+
     private int singleUpdate(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave, Connection connection) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
             return singleUpdateView(entity, (ModelViewEntity) modelEntity, fieldsToSave, connection);
@@ -1092,7 +1092,104 @@ public class GenericDAO {
 
         return new EntityListIterator(sqlP, modelEntity, selectFields, modelFieldTypeReader);
     }
-    
+
+    public Collection selectByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne, 
+            ModelRelation modelRelationTwo, ModelEntity modelEntityTwo) throws GenericEntityException {
+        SQLProcessor sqlP = new SQLProcessor(helperName);
+
+        // get the tables names
+        String atable = modelEntityOne.getTableName();
+        String ttable = modelEntityTwo.getTableName();
+
+        // get the column name string to select
+        StringBuffer selsb = new StringBuffer();
+        ArrayList collist = new ArrayList();
+        ArrayList fldlist = new ArrayList();
+        for (Iterator iterator = modelEntityTwo.getFieldsIterator(); iterator.hasNext();) {
+            ModelField mf = (ModelField) iterator.next();
+            collist.add(mf.getColName());
+            fldlist.add(mf.getName());
+            selsb.append(ttable + "." + mf.getColName());
+            if (iterator.hasNext()) {
+                selsb.append(", ");
+            } else {
+                selsb.append(" ");
+            }
+        }
+
+        // construct assoc->target relation string
+        int kmsize = modelRelationTwo.getKeyMapsSize();
+        StringBuffer wheresb = new StringBuffer();
+        for (int i = 0; i < kmsize; i++) {
+            ModelKeyMap mkm = modelRelationTwo.getKeyMap(i);
+            String lfname = mkm.getFieldName();
+            String rfname = mkm.getRelFieldName();
+            if (wheresb.length() > 0) {
+                wheresb.append(" AND ");
+            }
+            wheresb.append(atable + "." + modelEntityOne.getField(lfname).getColName() + " = " + ttable + "." + modelEntityTwo.getField(rfname).getColName());
+        }
+
+        // construct the source entity qualifier
+        // get the fields from relation description
+        kmsize = modelRelationOne.getKeyMapsSize();
+        HashMap bindMap = new HashMap();
+        for (int i = 0; i < kmsize; i++) {
+            // get the equivalent column names in the relation
+            ModelKeyMap mkm = modelRelationOne.getKeyMap(i);
+            String sfldname = mkm.getFieldName();
+            String lfldname = mkm.getRelFieldName();
+            ModelField amf = modelEntityOne.getField(lfldname);
+            String lcolname = amf.getColName();
+            Object rvalue = value.get(sfldname);
+            bindMap.put(amf, rvalue);
+            // construct one condition
+            if (wheresb.length() > 0) {
+                wheresb.append(" AND ");
+            }
+            wheresb.append(atable + "." + lcolname + " = ? ");
+        }
+
+        // construct a join sql query
+        StringBuffer sqlsb = new StringBuffer();
+        sqlsb.append("SELECT ");
+        sqlsb.append(selsb.toString());
+        sqlsb.append(" FROM ");
+        sqlsb.append(atable + ", " + ttable);
+        sqlsb.append(" WHERE ");
+        sqlsb.append(wheresb.toString());
+
+        // now execute the query
+        ArrayList retlist = new ArrayList();
+        GenericDelegator gd = value.getDelegator();
+        try {
+            sqlP.prepareStatement(sqlsb.toString());
+            Set entrySet = bindMap.entrySet();
+            for (Iterator iterator = entrySet.iterator(); iterator.hasNext();) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                ModelField mf = (ModelField) entry.getKey();
+                Object curvalue = entry.getValue();
+                SqlJdbcUtil.setValue(sqlP, mf, modelEntityOne.getEntityName(), curvalue, modelFieldTypeReader);
+            }
+            sqlP.executeQuery();
+            int collsize = collist.size();
+            while (sqlP.next()) {
+                GenericValue gv = gd.makeValue(modelEntityTwo.getEntityName(), Collections.EMPTY_MAP);
+                // loop thru all columns for in one row
+                for (int j = 0; j < collsize; j++) {
+                    String fldname = (String) fldlist.get(j);
+                    ModelField mf = modelEntityTwo.getField(fldname);
+                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j+1, mf, gv, modelFieldTypeReader);
+                }
+                retlist.add(gv);
+            }
+        } finally {
+            sqlP.close();
+        }
+
+        return retlist;
+    }
+
     /* ====================================================================== */
     
     /* ====================================================================== */

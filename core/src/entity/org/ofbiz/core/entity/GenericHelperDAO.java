@@ -23,8 +23,11 @@
 package org.ofbiz.core.entity;
 
 import java.util.*;
+import java.sql.*;
+
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
+import org.ofbiz.core.entity.jdbc.SqlJdbcUtil;
 
 /**
  * Generic Entity Helper Class
@@ -189,7 +192,13 @@ public class GenericHelperDAO implements GenericHelper {
         return genericDAO.selectListIteratorByCondition(modelEntity, whereEntityCondition, havingEntityCondition, fieldsToSelect, 
                 orderBy, findOptions);
     }
-    
+
+    public Collection findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne, 
+            ModelRelation modelRelationTwo, ModelEntity modelEntityTwo) throws GenericEntityException {
+        return genericDAO.selectByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo);
+    }
+
+
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values

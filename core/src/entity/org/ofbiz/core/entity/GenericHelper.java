@@ -109,6 +109,9 @@ public interface GenericHelper {
     public Collection findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, 
             Collection fieldsToSelect, List orderBy) throws GenericEntityException;
 
+    public Collection findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne, 
+            ModelRelation modelRelationTwo, ModelEntity modelEntityTwo) throws GenericEntityException ;
+
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param whereEntityCondition The EntityCondition object that specifies how to constrain this query before any groupings are done (if this is a view entity with group-by aliases)

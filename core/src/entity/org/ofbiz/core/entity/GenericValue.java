@@ -108,6 +108,10 @@ public class GenericValue extends GenericEntity {
         return this.getDelegator().getRelatedCache(relationName, this);
     }
 
+    public Collection getRelatedMulti(String relationNameOne, String relationNameTwo) throws GenericEntityException {
+        return this.getDelegator().getMultiRelation(this, relationNameOne, relationNameTwo);
+    }
+
     /** Get the named Related Entity for the GenericValue from the persistent
      *  store, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
      *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
