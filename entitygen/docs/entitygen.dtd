@@ -1,0 +1,93 @@
+<!--
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*This is the DTD for the Open For Business Entity Code Generator entity 
+  definition XML file.
+*This DTD is meant to be as simple as possible, and is derived from standard 
+  the ejb deployment descriptor ejb-jar.xml.
+
+Example:
+<entitygen>
+  <title>Default Title</title>
+  <description>Default Description</description>
+  <copyright>Default Copyright</copyright>
+  <author>Default Author</author>
+  <version>Default Version Number</version>
+  <entity>
+    <title>Entity Title</title>                     <!-- optional, file default used -->
+    <description>Entity Description</description>   <!-- optional, file default used -->
+    <copyright>Entity Copyright</copyright>         <!-- optional, file default used -->
+    <author>Entity Author</author>                  <!-- optional, file default used -->
+    <version>Entity Version Number</version>        <!-- optional, file default used -->
+    <package-name>org.domain.package</package-name>
+    <ejb-name>SomeName</ejb-name>                   <!-- optional, can be derived from the table-name -->
+    <table-name>SOME_NAME</table-name>
+    <use-cache>true</use-cache>                     <!-- optional, defaults to false -->
+    <cmp-field>
+      <column-name>KEY_FIELD</column-name>
+      <sql-type>VARCHAR(20)</sql-type>
+      <field-name>keyField</field-name>             <!-- optional, can be derived from the column-name -->
+      <java-type>String</java-type>
+    </cmp-field>
+    <cmp-field><column-name>FIRST_FIELD</column-name><sql-type>VARCHAR(80)</sql-type><java-type>String</java-type></cmp-field>
+    <cmp-field><column-name>SECOND_FIELD</column-name><sql-type>NUMERIC</sql-type><java-type>Double</java-type></cmp-field>
+    <prim-key-class>java.lang.String</prim-key-class> <!-- optional, can be derived from the java-type if single primary key, else is "<<package-name>>.<<ejb-name>>PK" -->
+    <prim-key-column>KEY_FIELD</prim-key-column>
+    <finder><column-name>FIRST_FIELD</column-name></finder>
+    <finder><column-name>FIRST_FIELD</column-name><column-name>SECOND_FIELD</column-name></finder>
+  </entity>
+</entitygen>
+-->
+
+<!-- ====================== Root Element ======================= -->
+<!ELEMENT entitygen (entity*, title?, description?, copyright?, author?, version?)>
+
+<!-- ================= Children of entitygen =================== -->
+<!ELEMENT entity (title?, description?, copyright?, author?, version?, 
+                  package-name?, ejb-name?, table-name?, use-cache?, cmp-field*,
+                  prim-key-class?, prim-key-column*, finder*)>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT copyright (#PCDATA)>
+<!ELEMENT author (#PCDATA)>
+<!ELEMENT version (#PCDATA)>
+
+<!-- ================== Children of entity ===================== -->
+<!-- see the children of entitygen section for title, etc. -->
+<!ELEMENT package-name (#PCDATA)>
+<!ELEMENT ejb-name (#PCDATA)>
+<!ELEMENT table-name (#PCDATA)>
+<!ELEMENT use-cache (#PCDATA)>
+<!ELEMENT cmp-field (column-name?, sql-type?, field-name?, java-type?)>
+<!ELEMENT prim-key-class (#PCDATA)>
+<!ELEMENT prim-key-column (#PCDATA)>
+<!ELEMENT finder (column-name*)>
+
+<!-- ================= Children of cmp-field =================== -->
+<!ELEMENT column-name (#PCDATA)>
+<!ELEMENT sql-type (#PCDATA)>
+<!ELEMENT field-name (#PCDATA)>
+<!ELEMENT java-type (#PCDATA)>
+
+<!-- ================== Children of finder ===================== -->
+<!-- the only child of finder is column-name, defined the same as in cmp-field -->
+
+

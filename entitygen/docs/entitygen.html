@@ -1,0 +1,139 @@
+<html>
+<head>
+<title>The Open For Business Project: Entity Code Generator</title>
+</head>
+
+<body>
+
+<h2 align="center">The Open For Business Project: Entity Code Generator</h2>
+
+<br>Written By: David E. Jones
+<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
+<br>Last Updated: May 21, 2001
+
+<h3 align="left"><a name="Table of Contents">Table of Contents</a></h3>
+<ul>
+  <li><a href="#Introduction">Introduction</a></li>
+  <li><a href="#XML Descriptor Files">XML Descriptor Files</a></li>
+  <li><a href="#Using Entity Code Generator">Using Entity Code Generator</a></li>
+  <li><a href="#Modifying Generated Code">Modifying Generated Code</a></li>
+</ul>
+
+<h3><a name="Introduction">Introduction</a></h3>
+<p>The general description of the Entity Code Generator can be found <a href="foundation-technology.html#Entity Code Generator">here</a>
+in the Foundation Technology Components document.</p>
+
+<p>This document describes the usage of the code generator, and the XML files
+used to describe the data and attributes of the code generated to handle that
+data.</p>
+<h3><a name="XML Descriptor Files">XML Descriptor Files</a></h3>
+<p>The DTD for the entity generator descriptor files can be found <a href="entitygen.dtd">here</a>.</p>
+<p>The descriptor file defines an entity which has an Entity EJB, supporting
+Java code, and a corresponding relational database table. It uses Container
+Managed Persistence (CMP), and is meant to be used with one Entity Bean for one
+database table.&nbsp; In the descriptor file all of the basic data for a table
+and mapping Entity Bean can be defined. Anything that is not necessary, or can
+be derived from other information is optional.&nbsp; For instance, the ejb-name
+can be derived from the table-name, and the field-name from the column-name for
+each field.</p>
+<p>The naming conventions used to allow for this are as follows: a database name
+(table or column) is in all capital letters, and the words are separated by an
+underscore (for example: NEAT_ENTITY_NAME or RANDOM_FIELD_NAME); a Java name (ejb
+or field) is in all lower case letters, except the letter at the beginning of
+each word (for example: NeatEntityName or RandomFieldName). The convention of
+using a capital letter at the beginning of a class name in Java, or a lower-case
+letter for the beginning of a variable name in Java is also used along with the
+Java name convention above.</p>
+<p>The first part of the descriptor is for certain parts of the generated
+comment at the top.&nbsp; The tags for this area are title, description,
+copyright, author, and version. The next tags describe the entity in general.
+The package-name tag&nbsp; is the Java package name inserted in the Java files,
+and imported in files that use those classes. The ejb-name is that name of the
+EJB, and is the base name for all of it's classes.&nbsp; For instance, if the
+ejb-name is Foo, the remote interface will be Foo, the home FooHome, the local
+implementation FooBean, the primary key (if needed) FooPK, the value class
+FooValue, and the helper class FooHelper. The ejb-name is optional because it
+can be derived from the table-name, which is that name of the database table.
+The use-cache tag specifies whether caching code should be generated for the
+entity. A generic cache object is used which supports the Least Recently Used
+algorithm, and can expire entries after a given amount of time.</p>
+<p>The fields for the entity are specified in the cmp-field tags of the
+document. Each one of these has a table-name, an sql-type, a field-name, and a
+java-type. The field-name is optional because it can be derived from the
+column-name according to the naming conventions. Next the primary key is
+defined. The prim-key-class tag allows you to specify the primary key class, but
+it is optional because it can be obtained from the java-type for a single key
+entity or the primary key class (&lt;&lt;package-name&gt;&gt;.&lt;&lt;ejb-name&gt;&gt;PK)
+for multiple key entities. The prim-key-column entries specify which columns
+will be used as the primary key.</p>
+<p>The last section of an entity descriptor is the finder section. Each finder
+tag specifies a finder which searches by the columns specified in the
+column-name tags that are the children of the finder tag.&nbsp; When a single
+column-name is specified, a findByColumnName finder is created in the Home
+Interface, and the Helper.&nbsp; A removeByColumnName is also created in the
+Helper class, in addition to a findByColumnName iterator which returns an
+Iterator instead of a Collection. Finders with multiple column-name tags
+generate the same code except that all of the column-name entries, converted to
+their default field name, or the field-name explicitly specified, will be in the
+name like this: findByColumnOneAndColumnTwo for two columns with field-names
+ColumnOne and ColumnTwo.</p>
+<h3><a name="Using Entity Code Generator">Using Entity Code Generator</a></h3>
+<p>The user interface for the Entity Code Generator is all HTML based, and can
+be run in any browser. This is the simplest interface because all of the code
+templates are in JSP files (which can be modified as you desire).</p>
+<p>The first step is to specify which file contains the XML entity descriptors.
+The filename specified must be on the computer where the JSP container is
+running. If you are running it locally, you can use the &quot;Browse&quot;
+button to find the file you want to use.</p>
+<p>Once the file is found, a list of entity names (from the ejb-name tag, or
+derived) will be displated in a drop-down selector. Also, certain links will be
+available for generating files, or snippets, for the entire collection of
+entities in the specified descriptor file.</p>
+<p>If you select one of the entities and click on &quot;Use&quot;, a list of
+files and snippets for that entity will appear.</p>
+<p>The files and snippets listed can be used in a number of ways. These files
+contain no extra markup, so they can be saved as a Java, JSP, XML, or SQL file
+directly from the main page of the entity generator. You can also click on the
+links normally and then view the source of the page to se the properly formatted
+code that was generated.</p>
+<p>Note that with JSP file generation, it is not possible to use the
+&quot;&lt;%&quot; characters for the Java elements, because they would be
+interpreted by the JSP engine at generation time. So, the characters &quot;[ltp]&quot; are inserted
+everywhere there should be a &quot;&lt;%&quot; in the generated JSP. Simply do a
+search and replace on the generated JSP and change &quot;[ltp]&quot; to
+&quot;&lt;%&quot;.</p>
+<p>Everything should compile clean if the descriptor has correct Java types, et
+cetera in it. There are a couple of exceptions. The main one is the
+FindEntity.jsp output file. If there are multiple primary keys, more &quot;searchParamX&quot;
+parameters will have to be added. The same is true for finders with multiple
+fields.</p>
+<h3><a name="Modifying Generated Code">Modifying Generated Code</a></h3>
+
+<p>With any code generator the question always comes up about what to do when
+the generated code is modified, and then the definition for the entity is
+changed, and you want to regenerate the code. There are a number of ways to
+approach this, but in a template driven code generator there are only two good
+ways I can think of.</p>
+<p>The first one is the save the Java files with a suffix like &quot;Gen&quot;
+and then create another class named the same except without the suffux, and have
+it extend the &quot;Gen&quot; class. This has good and bad parts. The biggest
+problem with this is that subtle changes may require a long function to be
+duplicated the non-Gen class, meaning possibly a lot of work in keeping them
+synchronized.</p>
+<p>The best approach I have come up with so far for this is to re-generate the
+file, but save it under a different name so that the original is maintained.
+When that is done you can use a diff/merge utility to get the changes you want
+from each of the two files. This works well for all types of files, and not just
+the Java files, including the SQL, JSP, and XML files.</p>
+<p>The thing to remember is that the real intention of the code generator is to
+get new things off the ground quickly, it is not an exhaustive all including
+code generator that completely models the code to be generated in the descriptor
+file. Rather, the data definition is specified in the descriptor file and the
+entity generator just creates code to handle it. It isn't as useful as a
+maintenance tool. That can be done most efficiently and flexibly with the raw
+source code anyway.</p>
+
+</body>
+
+</html>
