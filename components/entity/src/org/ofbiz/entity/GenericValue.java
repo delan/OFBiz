@@ -411,14 +411,13 @@ public class GenericValue extends GenericEntity {
         while (relItr.hasNext()) {
             ModelRelation relation = (ModelRelation) relItr.next();
             if ("one".equalsIgnoreCase(relation.getType())) {
-                // see if the related value exists
-                String relationName = relation.getTitle() + relation.getRelEntityName();
+                // see if the related value exists                
                 Map fields = new HashMap();
                 for (int i = 0; i < relation.getKeyMapsSize(); i++) {
                     ModelKeyMap keyMap = relation.getKeyMap(i);
                     fields.put(keyMap.getRelFieldName(), this.get(keyMap.getFieldName()));
                 }
-                long count = this.getDelegator().findCountByAnd(relationName, fields);
+                long count = this.getDelegator().findCountByAnd(relation.getRelEntityName(), fields);
                 if (count == 0) {
                     if (insertDummy) {
                         // create the new related value (dummy)
