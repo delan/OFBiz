@@ -679,15 +679,17 @@ public class ContentWorker {
         return;
     }
     
-    public static void getEntityOwners(GenericDelegator delegator, String entityId,  List contentOwnerList, String entityName, String ownerIdFieldName) throws GenericEntityException {
-        
-        ModelEntity modelEntity = delegator.getModelEntity(entityName);
-        String pkFieldName = getPkFieldName(entityName, modelEntity);
-        GenericValue ownerContent = delegator.findByPrimaryKeyCache(entityName, UtilMisc.toMap(pkFieldName, entityId));
-        if (ownerContent != null) {
-            String ownerContentId = ownerContent.getString(ownerIdFieldName);
+    public static void getEntityOwners(GenericDelegator delegator, GenericValue entity,  List contentOwnerList, String entityName, String ownerIdFieldName) throws GenericEntityException {
+
+        String ownerContentId = entity.getString(ownerIdFieldName);
+        if (UtilValidate.isNotEmpty(ownerContentId)) {
             contentOwnerList.add(ownerContentId);
-            getEntityOwners(delegator, ownerContentId, contentOwnerList, entityName, ownerIdFieldName );   
+            ModelEntity modelEntity = delegator.getModelEntity(entityName);
+            String pkFieldName = getPkFieldName(entityName, modelEntity);
+            GenericValue ownerContent = delegator.findByPrimaryKeyCache(entityName, UtilMisc.toMap(pkFieldName, ownerContentId));
+            if (ownerContent != null) {
+                getEntityOwners(delegator, ownerContent, contentOwnerList, entityName, ownerIdFieldName );
+            }
         }
         return;
     }
