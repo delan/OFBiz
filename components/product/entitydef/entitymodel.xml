@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.77 $
+ * @version    $Revision: 1.78 $
  */
 -->
 
@@ -2022,7 +2022,7 @@
       <member-entity entity-alias="PA" entity-name="ProductAssoc"/>
       <member-entity entity-alias="PASC" entity-name="Product"/>
       <member-entity entity-alias="PASCPRC" entity-name="ProductPrice"/>
-      <alias entity-alias="PVIRT" name="productId" group-by="true"/>
+      <alias entity-alias="PVIRT" name="productId"/>
       <alias entity-alias="PVIRT" name="internalName"/>
       <alias entity-alias="PVIRT" name="productName"/>
       <alias entity-alias="PA" name="productAssocTypeId"/>
@@ -2058,6 +2058,7 @@
       <member-entity entity-alias="PVARPRC" entity-name="ProductPrice"/>
       <alias entity-alias="PVIRT" name="productId"/>
       <alias entity-alias="PVIRT" name="productName"/>
+      <alias entity-alias="PVIRT" name="internalName"/>
       <alias entity-alias="PVA" name="productAssocTypeId"/>
       <alias entity-alias="PVA" name="fromDate"/>
       <alias entity-alias="PVA" name="thruDate"/>
