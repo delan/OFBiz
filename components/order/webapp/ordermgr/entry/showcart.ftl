@@ -21,9 +21,11 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.1
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#assign security = requestAttributes.security>
 <#assign externalKeyParam = requestAttributes.externalKeyParam>
@@ -258,7 +260,12 @@ function addToList() {
             <#list shoppingCart.getAdjustments() as cartAdjustment>
               <#assign adjustmentType = cartAdjustment.getRelatedOneCache("OrderAdjustmentType")>
               <tr>
-                <td colspan="4" nowrap align="right"><div class="tabletext"><i>Adjustment</i> - ${adjustmentType.description?if_exists}:</div></td>
+                <td colspan="4" nowrap align="right">
+                  <div class="tabletext">
+                    <i>Adjustment</i> - ${adjustmentType.description?if_exists}
+                    <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a></#if>:
+                  </div>
+                </td>
                 <td nowrap align="right"><div class="tabletext">${Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal())?string.currency}</div></td>
                 <td>&nbsp;</td>
               </tr>
@@ -289,47 +296,92 @@ function addToList() {
   </TR>
 </TABLE>
 
-<#if showPromoText>
-  <BR>
-  <TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-    <TR>
-      <TD width="100%">
+<#if shoppingCart.getOrderType() == "SALES_ORDER">
+  <br/>
+  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+    <tr>
+      <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
             <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;Special Offers</div>
+              <div class="boxhead">&nbsp;Promotion/Coupon Codes</div>
             </td>
             <#--<td valign="middle" align="right">&nbsp;</td>-->
           </tr>
         </table>
-      </TD>
-    </TR>
-    <TR>
-      <TD width="100%">
+      </td>
+    </tr>
+    <tr>
+      <td width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+          <tr>
+            <td>
+              <div class="tabletext">
+	            <form method="POST" action="<@ofbizUrl>/addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
+	              <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="">
+	              <input type="submit" class="smallSubmit" value="Add Code">
+	              <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())?if_exists>
+	              <#if productPromoCodeIds?has_content>
+	                Entered Codes:
+	                <#list productPromoCodeIds as productPromoCodeId>
+	                  ${productPromoCodeId}
+	                </#list>
+	              </#if>
+	            </form>
+	          </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</#if>
+
+<#if showPromoText?exists && showPromoText>
+  <br/>
+  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+    <tr>
+      <td width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+          <tr>
+            <td valign="middle" align="left">
+              <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSpecialOffers}</div>
+            </td>
+            <#--<td valign="middle" align="right">&nbsp;</td>-->
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
             <td>
                 <table width="100%" cellspacing="0" cellpadding="1" border="0">
                   <#-- show promotions text -->
                   <#list productPromos as productPromo>
-                    <#if productPromo.promoText?has_content>
-                        <tr>
-                          <td>
-                            <div class="tabletext">${productPromo.promoText}</div>
-                          </td>
-                        </tr>
-                        <#if productPromo_has_next>
-                          <tr><td><hr class="sepbar"></td></tr>
-                        </#if>
+                    <tr>
+                      <td>
+                        <div class="tabletext"><a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a> ${productPromo.promoText?if_exists}</div>
+                      </td>
+                    </tr>
+                    <#if productPromo_has_next>
+                      <tr><td><hr class="sepbar"></td></tr>
                     </#if>
                   </#list>
+                  <tr><td><hr class="sepbar"></td></tr>
+                  <tr>
+                    <td>
+                      <div class="tabletext"><a href="<@ofbizUrl>/showAllPromotions</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewAllPromotions}]</a></div>
+                    </td>
+                  </tr>
                 </table>
             </td>
           </tr>
         </table>
-      </TD>
-    </TR>
-  </TABLE>
+      </td>
+    </tr>
+  </table>
 </#if>
 
 <#if associatedProducts?has_content>
@@ -374,3 +426,9 @@ function addToList() {
     </TR>
   </TABLE>
 </#if>
+
+<#if (shoppingCartSize?default(0) > 0)>
+  <br/>
+  <#include "/entry/promoUseDetailsInline.ftl"/>
+</#if>
+
