@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilXml;
 import org.apache.avalon.framework.logger.Log4JLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.fop.apps.Driver;
+import org.apache.fop.image.FopImageFactory;
 import org.apache.fop.messaging.MessageHandler;
 import org.apache.fop.tools.DocumentInputSource;
 import org.w3c.dom.Document;
@@ -95,6 +96,7 @@ public class FopPdfViewHandler extends JPublishViewHandler {
         driver.setInputSource(is);        
         try {
             driver.run();
+            FopImageFactory.resetCache();
         } catch (Throwable t) {
             throw new ViewHandlerException("Unable to generate PDF from XSL-FO", t);
         }
@@ -105,11 +107,10 @@ public class FopPdfViewHandler extends JPublishViewHandler {
         
         // write to the browser
         try {            
-            response.getOutputStream().write(out.toByteArray());
+            out.writeTo(response.getOutputStream());
             response.getOutputStream().flush();
         } catch (IOException e) {
             throw new ViewHandlerException("Unable write to browser OutputStream", e);            
         }                             
     }
-
 }
