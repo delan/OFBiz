@@ -80,7 +80,7 @@
         <string-to-field string="CAL_TENTATIVE" field-name="currentStatusId" map-name="arrivalWorkEffortMap"/>
         <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedStartDate" to-map-name="arrivalWorkEffortMap"/>
         <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedCompletionDate" to-map-name="arrivalWorkEffortMap"/>
-        <field-to-field map-name="parameters" field-name="destinationFacilityId" to-field-name="facilityId" to-map-name="shipWorkEffortMap"/>
+        <field-to-field map-name="parameters" field-name="destinationFacilityId" to-field-name="facilityId" to-map-name="arrivalWorkEffortMap"/>
         <env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="arrivalWorkEffortMap"/>
         <call-service service-name="createWorkEffort" in-map-name="arrivalWorkEffortMap">
             <result-to-field result-name="workEffortId" map-name="newEntity" field-name="estimatedArrivalWorkEffId"/>
@@ -178,7 +178,7 @@
                 <find-by-primary-key entity-name="WorkEffort" map-name="estimatedArrivalWorkEffortMap" value-name="estimatedArrivalWorkEffort"/>
                 <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedStartDate" to-map-name="estimatedArrivalWorkEffort"/>
                 <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedCompletionDate" to-map-name="estimatedArrivalWorkEffort"/>
-                <field-to-field map-name="parameters" field-name="destinationFacilityId" to-field-name="facilityId" to-map-name="estimatedShipWorkEffort"/>
+                <field-to-field map-name="parameters" field-name="destinationFacilityId" to-field-name="facilityId" to-map-name="estimatedArrivalWorkEffort"/>
                 <set-service-fields service-name="updateWorkEffort" map-name="estimatedArrivalWorkEffort" to-map-name="estimatedArrivalWorkEffortUpdMap"/>
                 <call-service service-name="updateWorkEffort" in-map-name="estimatedArrivalWorkEffortUpdMap"/>
             </then>
