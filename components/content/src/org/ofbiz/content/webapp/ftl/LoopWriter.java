@@ -3,6 +3,7 @@ package org.ofbiz.content.webapp.ftl;
 import java.io.*;
 import freemarker.template.TransformControl;
 import freemarker.template.TemplateModelException;
+import org.ofbiz.base.util.Debug;
 
 public class LoopWriter extends Writer implements TransformControl {
 
