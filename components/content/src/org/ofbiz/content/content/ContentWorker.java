@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.19 2004/03/24 16:04:17 byersa Exp $
+ * $Id: ContentWorker.java,v 1.20 2004/03/31 16:58:39 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  * @since 2.2
  * 
  *  
@@ -456,8 +456,8 @@ public class ContentWorker {
         if (whenStr != null && whenStr.length() > 0) {
             FlexibleStringExpander fse = new FlexibleStringExpander(whenStr);
             String newWhen = fse.expandString(context);
-        //if (Debug.infoOn()) Debug.logInfo("newWhen:" + newWhen,null);
-        //if (Debug.infoOn()) Debug.logInfo("context:" + context,null);
+            //if (Debug.infoOn()) Debug.logInfo("newWhen:" + newWhen,null);
+            //if (Debug.infoOn()) Debug.logInfo("context:" + context,null);
             try {
                 Boolean isWhenObj = (Boolean) BshUtil.eval(newWhen, context);
                 isWhen = isWhenObj.booleanValue();
@@ -467,7 +467,7 @@ public class ContentWorker {
 
             }
         }
-        //if (Debug.infoOn()) Debug.logInfo("sections:" + context.get("sections") + " isWhen:" + isWhen,null);
+        //if (Debug.infoOn()) Debug.logInfo("isWhen:" + isWhen,null);
         return isWhen;
     }
 
@@ -786,7 +786,7 @@ public class ContentWorker {
     public static GenericValue getSubContentCache(GenericDelegator delegator, String contentId, String mapKey, String subContentId, GenericValue userLogin, List assocTypes, Timestamp fromDate, Boolean nullThruDatesOnly, String contentAssocPredicateId) throws GenericEntityException, MiniLangException, GeneralException {
         //GenericValue content = null;
         GenericValue view = null;
-        if (subContentId == null) {
+        if (UtilValidate.isEmpty(subContentId)) {
             if (contentId == null) {
                 throw new GenericEntityException("contentId and subContentId are null.");
             }
@@ -1094,23 +1094,27 @@ public class ContentWorker {
 
     public static void checkConditions(GenericDelegator delegator, Map trailNode, Map contentAssoc, Map whenMap) {
 
+        Map context = new HashMap();
         GenericValue content = (GenericValue)trailNode.get("value");
         String contentId = (String)trailNode.get("contentId");
-        if (contentAssoc == null) {
+        if (contentAssoc == null && content != null && (content.getEntityName().indexOf("Assoc") >= 0)) {
             contentAssoc = delegator.makeValue("ContentAssoc", null);
             try {
                 // TODO: locale needs to be gotten correctly
                 SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocIn", content, contentAssoc, new ArrayList(), Locale.getDefault());
+                context.put("contentAssocTypeId", contentAssoc.get("contentAssocTypeId"));
+                context.put("contentAssocPredicateId", contentAssoc.get("contentAssocPredicateId"));
+                context.put("mapKey", contentAssoc.get("mapKey"));
             } catch (MiniLangException e) {
                 Debug.logError(e.getMessage(), module);
                 //throw new GeneralException(e.getMessage());
             }
+        } else {
+                context.put("contentAssocTypeId", null);
+                context.put("contentAssocPredicateId", null);
+                context.put("mapKey", null);
         }
-        Map context = new HashMap();
         context.put("content", content);
-        context.put("contentAssocTypeId", contentAssoc.get("contentAssocTypeId"));
-        context.put("contentAssocPredicateId", contentAssoc.get("contentAssocPredicateId"));
-        context.put("mapKey", contentAssoc.get("mapKey"));
         List purposes = getPurposes(content);
         context.put("purposes", purposes);
         List sections = getSections(content);

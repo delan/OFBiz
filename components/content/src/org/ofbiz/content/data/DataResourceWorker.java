@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.22 2004/03/25 16:00:20 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.23 2004/03/31 16:58:40 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import freemarker.template.Template;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -289,8 +289,21 @@ public class DataResourceWorker {
      * Gets image data from ImageDataResource and returns it as a byte array.
      */
     public static byte[] acquireImage(GenericDelegator delegator, String dataResourceId) throws GenericEntityException {
-        GenericValue imageDataResource = delegator.findByPrimaryKey("ImageDataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+
         byte[] b = null;
+        GenericValue dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+        if (dataResource == null)
+            return b;
+
+        b = acquireImage(delegator, dataResource);
+        return b;
+    }
+
+    public static byte[] acquireImage(GenericDelegator delegator, GenericValue dataResource) throws  GenericEntityException {
+        byte[] b = null;
+        String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
+        String dataResourceId = dataResource.getString("dataResourceId");
+        GenericValue imageDataResource = delegator.findByPrimaryKey("ImageDataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
         if (imageDataResource != null) {
             b = (byte[]) imageDataResource.get("imageData");
         }
@@ -302,6 +315,11 @@ public class DataResourceWorker {
      */
     public static String getImageType(GenericDelegator delegator, String dataResourceId) throws GenericEntityException {
         GenericValue dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+        String imageType = getImageType(delegator, dataResource);
+        return imageType;
+    }
+
+    public static String getImageType(GenericDelegator delegator, GenericValue dataResource) {
         String imageType = null;
         if (dataResource != null) { 
             imageType = (String) dataResource.get("mimeTypeId");
@@ -767,7 +785,7 @@ public class DataResourceWorker {
             try {
                 in = new FileReader(file);
             } catch (FileNotFoundException e) {
-                if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(CONTEXT_FILE), in FNFexception:" + e.getMessage(), module);
+                Debug.logError(e, " in renderDataResourceAsHtml(CONTEXT_FILE), in FNFexception:", module);
                 throw new GeneralException("Could not find context file to render", e);
             } catch (Exception e) {
                 Debug.logError(" in renderDataResourceAsHtml(CONTEXT_FILE), got exception:" + e.getMessage(), module);
@@ -776,6 +794,7 @@ public class DataResourceWorker {
             while ((c = in.read()) != -1) {
                 out.write(c);
             }
+            out.flush();
         }
         return;
     }

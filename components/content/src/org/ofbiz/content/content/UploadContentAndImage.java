@@ -48,7 +48,7 @@ import javax.servlet.http.HttpSession;
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -219,7 +219,7 @@ public class UploadContentAndImage {
                 imgContext.put("dataResourceId", passedParams.get("imgDataResourceId"));
                 imgContext.put("dataResourceTypeId", "IMAGE_OBJECT");
                 imgContext.put("contentIdTo", ftlContentId);
-                imgContext.put("contentAssocTypeId", "DESCRIPTION");
+                imgContext.put("contentAssocTypeId", "SUB_CONTENT");
                 imgContext.put("imageData", new ByteWrapper(imageBytes));
                 imgContext.put("mapKey", "IMAGE");
                 imgContext.put("dataTemplateTypeId", "NONE");
