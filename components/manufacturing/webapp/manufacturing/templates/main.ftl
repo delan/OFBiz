@@ -23,7 +23,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -66,7 +66,7 @@
                         <option value="${availableLocale.toString()}">${availableLocale.getDisplayName()}</option>
                     </#list>
                 </select>
-                <input type="submit" value="Set" class="smallSubmit"/>
+                <input type="submit" value="${uiLabelMap.CommonSet}" class="smallSubmit"/>
                 </form>
             </div>
           </td>
