@@ -71,7 +71,7 @@
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
-    
+
     <request-map uri="authview">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
@@ -151,6 +151,13 @@
     <request-map uri="calcShipping">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.commonapp.shipment.shipment.ShippingEvents" invoke="getShipEstimate"/>
+        <response name="success" type="request" value="calcTax"/>
+        <response name="error" type="view" value="checkoutoptions"/>
+    </request-map>
+
+    <request-map uri="calcTax">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
         <response name="success" type="view" value="checkout"/>
         <response name="error" type="view" value="checkoutoptions"/>
     </request-map>
@@ -158,6 +165,20 @@
     <request-map uri="processorder">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>
+        <response name="success" type="request" value="processpayment"/>
+        <response name="error" type="view" value="checkout"/>
+    </request-map>
+
+    <request-map uri="processpayment">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="processPayment"/>
+        <response name="success" type="request" value="clearcart"/>
+        <response name="error" type="view" value="checkout"/>
+    </request-map>
+
+    <request-map uri="clearcart">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="clearCart"/>
         <response name="success" type="request" value="renderconfirmorder"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
