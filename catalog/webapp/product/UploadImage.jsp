@@ -45,6 +45,7 @@
 %>
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
 <%
+  URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");
   String fileType = request.getParameter("upload_file_type");
   if (fileType == null || fileType.length() <= 0) fileType="small";
 
@@ -55,7 +56,7 @@
     <%
       String contentType = request.getContentType();
       if (contentType != null && contentType.indexOf("boundary=") > 0) {
-        String fileName = "/images/catalog/product." + productId + "." + fileType + ".";
+        String fileName = UtilProperties.getPropertyValue(catalogPropertiesURL, "image.url.prefix") + "/product." + productId + "." + fileType + ".";
         String imageUrl = null;
     %>
       <p>Filename: <%=fileName%>
@@ -66,8 +67,7 @@
     <%
 //===============================================================================
         String name = productId + "." + fileType;
-        String dir = UtilProperties.getPropertyValue(application.getResource("/WEB-INF/catalog.properties"), 
-            "image.server.path") + "/catalog";
+        String dir = UtilProperties.getPropertyValue(catalogPropertiesURL, "image.server.path");
         String characterEncoding = request.getCharacterEncoding();
 
         int i1;
@@ -107,7 +107,7 @@
         fileNameToUse = "product." + name;
         out.print("<p>server file name: <b>" + fileNameToUse + "</b>");
         out.print("<p>server directory: <b>" + dir + "</b>");
-        imageUrl = "/images/catalog/" + java.net.URLEncoder.encode(fileNameToUse);
+        imageUrl = UtilProperties.getPropertyValue(catalogPropertiesURL, "image.url.prefix") + "/" + java.net.URLEncoder.encode(fileNameToUse);
         out.print("<p>The URL of your uploaded file: <b><a href=\"" + imageUrl + "\">" + imageUrl + "</a></b>");
           
         try {

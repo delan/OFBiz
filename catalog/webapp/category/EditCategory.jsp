@@ -26,7 +26,7 @@
  */
 %>
 
-<%@ page import="java.util.*, java.io.*" %>
+<%@ page import="java.util.*, java.io.*, java.net.URL" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -36,6 +36,8 @@
 <table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
 <%
+    URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");
+
     boolean useValues = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
@@ -138,7 +140,7 @@
 <%if (UtilValidate.isNotEmpty(productCategoryId)) {%>
     <SCRIPT language='JavaScript'>
     function insertImageName(type,ext) {
-      eval('document.forms.productCategoryForm.' + type + 'ImageUrl.value="/images/catalog/category.<%=productCategoryId%>.' + type + '.' + ext + '";');
+      eval('document.forms.productCategoryForm.' + type + 'ImageUrl.value="<%=UtilProperties.getPropertyValue(catalogPropertiesURL, "image.url.prefix")%>/category.<%=productCategoryId%>.' + type + '.' + ext + '";');
     };
     </SCRIPT>
 <%}%>

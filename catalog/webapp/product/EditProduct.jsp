@@ -28,7 +28,7 @@
  */
 %>
 
-<%@ page import="java.util.*, java.io.*" %>
+<%@ page import="java.util.*, java.io.*, java.net.URL" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -39,6 +39,8 @@
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");
+
     boolean tryEntity = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
@@ -224,7 +226,7 @@
 
 <SCRIPT language='JavaScript'>
 function insertImageName(size,ext) {
-  eval('document.forms.productForm.' + size + 'ImageUrl.value="/images/catalog/product.<%=productId%>.' + size + '.' + ext + '";');
+  eval('document.forms.productForm.' + size + 'ImageUrl.value="<%=UtilProperties.getPropertyValue(catalogPropertiesURL, "image.url.prefix")%>/product.<%=productId%>.' + size + '.' + ext + '";');
 };
 </SCRIPT>
   <tr>
