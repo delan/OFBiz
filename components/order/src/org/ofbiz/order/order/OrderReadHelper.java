@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.25 2004/08/13 18:57:02 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.26 2004/08/15 04:25:17 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -68,6 +68,7 @@ public class OrderReadHelper {
     protected List orderItemPriceInfos = null;
     protected List orderItemInventoryReses = null;
     protected List orderItemIssuances = null;
+    protected List orderReturnItems = null;
     protected Double totalPrice = null;
 
     protected OrderReadHelper() {}
@@ -990,17 +991,22 @@ public class OrderReadHelper {
         }
         return EntityUtil.filterByAnd(orderItemIssuances, UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId")));
     }
+    
+    public List getOrderReturnItems() {
+        GenericDelegator delegator = orderHeader.getDelegator();
+        if (this.orderReturnItems == null) {
+            try {
+                this.orderReturnItems = delegator.findByAnd("ReturnItem", UtilMisc.toMap("orderId", orderHeader.getString("orderId")));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem getting ReturnItem from order", module);
+                return null;
+            }
+        }
+        return this.orderReturnItems;
+    }
 
     public double getOrderReturnedQuantity() {
-        GenericDelegator delegator = orderHeader.getDelegator();
-        List returnedItems = null;
-        try {
-            returnedItems = delegator.findByAnd("ReturnItem", UtilMisc.toMap("orderId", orderHeader.getString("orderId")));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problem getting ReturnItem from order", module);
-            return -1;
-        }
-
+        List returnedItems = getOrderReturnItems();
         double returnedQuantity = 0.00;
         if (returnedItems != null) {
             Iterator i = returnedItems.iterator();
@@ -1012,6 +1018,56 @@ public class OrderReadHelper {
             }
         }
         return returnedQuantity;
+    }
+    
+    public double getOrderReturnedTotal() {
+        List returnedItemsBase = getOrderReturnItems();
+        List returnedItems = new ArrayList(returnedItemsBase.size());
+        
+        // get only the RETURN_RECEIVED and RETURN_COMPLETED statusIds
+        returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_RECEIVED")));
+        returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_COMPLETED")));
+        
+        double returnedAmount = 0.00;
+        Iterator i = returnedItems.iterator();
+        while (i.hasNext()) {
+            GenericValue returnedItem = (GenericValue) i.next();
+            if (returnedItem.get("returnPrice") != null) {
+                returnedAmount += returnedItem.getDouble("returnPrice").doubleValue();
+            }
+        }
+        return returnedAmount;
+    }
+    
+    public double getOrderNonReturnedTaxAndShipping() {
+        // first make a Map of orderItemSeqId key, returnQuantity value
+        List returnedItemsBase = getOrderReturnItems();
+        List returnedItems = new ArrayList(returnedItemsBase.size());
+        
+        // get only the RETURN_RECEIVED and RETURN_COMPLETED statusIds
+        returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_RECEIVED")));
+        returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_COMPLETED")));
+        
+        Map itemReturnedQuantities = new HashMap();
+        Iterator i = returnedItems.iterator();
+        while (i.hasNext()) {
+            GenericValue returnedItem = (GenericValue) i.next();
+            String orderItemSeqId = returnedItem.getString("orderItemSeqId");
+            Double returnedQuantity = returnedItem.getDouble("returnQuantity");
+            if (orderItemSeqId != null && returnedQuantity != null) {
+                Double existingQuantity = (Double) itemReturnedQuantities.get(orderItemSeqId);
+                if (existingQuantity == null) {
+                    itemReturnedQuantities.put(orderItemSeqId, returnedQuantity);
+                } else {
+                    itemReturnedQuantities.put(orderItemSeqId, new Double(returnedQuantity.doubleValue() + existingQuantity.doubleValue()));
+                }
+            }
+        }
+        
+        
+        // TODO: then go through all order items and for the quantity not returned calculate it's portion of the overall tax and shipping charges
+        
+        return 0;
     }
 
     public double getItemShippedQuantity(GenericValue orderItem) {

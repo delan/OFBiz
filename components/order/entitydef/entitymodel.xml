@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  */
 -->
 
@@ -254,6 +254,7 @@
       <field name="originFacilityId" type="id"></field>
       <field name="webSiteId" type="id"></field>
       <field name="productStoreId" type="id"></field>
+      <field name="remainingSubTotal" type="currency-amount"></field>
       <field name="grandTotal" type="currency-amount"></field>
       <prim-key field="orderId"/>
       <relation type="one" fk-name="ORDER_HDR_TYPE" rel-entity-name="OrderType">
@@ -340,7 +341,8 @@
       <alias entity-alias="OH" name="orderTypeId"/>
       <alias entity-alias="OH" name="orderDate"/>
       <alias entity-alias="OH" name="statusId"/>
-      <alias entity-alias="OH" name="totalAmount" field="grandTotal" function="sum"/>
+      <alias entity-alias="OH" name="totalGrandAmount" field="grandTotal" function="sum"/>
+      <alias entity-alias="OH" name="totalSubRemainingAmount" field="remainingSubTotal" function="sum"/>
       <alias entity-alias="OH" name="totalOrders" field="orderId" function="count"/>
       <view-link entity-alias="OR" rel-entity-alias="OH">
         <key-map field-name="orderId"/>

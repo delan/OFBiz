@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.46 2004/08/12 02:18:12 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.47 2004/08/15 04:25:17 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -76,7 +76,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.46 $
+ * @version    $Revision: 1.47 $
  * @since      2.0
  */
 
@@ -622,8 +622,14 @@ public class OrderServices {
         if (orderHeader != null) {
             OrderReadHelper orh = new OrderReadHelper(orderHeader);
             Double currentTotal = orderHeader.getDouble("grandTotal");
-            if (orh.getOrderGrandTotal() != currentTotal.doubleValue()) {
-                orderHeader.set("grandTotal", new Double(orh.getOrderGrandTotal()));
+            double updatedTotal = orh.getOrderGrandTotal();
+            
+            // calculate subTotal as grandTotal - returnsTotal - (tax + shipping of items not returned)
+            double remainingSubTotal = updatedTotal - orh.getOrderReturnedTotal() - orh.getOrderNonReturnedTaxAndShipping();
+            
+            if (updatedTotal != currentTotal.doubleValue()) {
+                orderHeader.set("grandTotal", new Double(updatedTotal));
+                orderHeader.set("remainingSubTotal", new Double(remainingSubTotal));
                 try {
                     orderHeader.store();
                 } catch (GenericEntityException e) {

@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
 -->
 
@@ -80,6 +80,7 @@
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
 
+        <field-to-result field-name="returnHeader.statusId" result-name="currentStatusId"/>
         <set-nonpk-fields map-name="parameters" value-name="returnHeader"/>
         <store-value value-name="returnHeader"/>
     </simple-method>
@@ -181,6 +182,7 @@
         <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
 
+        <field-to-result field-name="returnItem.statusId" result-name="currentStatusId"/>
         <set-nonpk-fields map-name="parameters" value-name="returnItem"/>
         <store-value value-name="returnItem"/>
     </simple-method>
