@@ -58,12 +58,6 @@
         <field name="dataResourceId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${dataResourceId}" target="gotoDataResource?dataResourceId=${dataResourceId}"/>
         </field>
-<!--
-    <field name="createdDate"><ignored/></field>
-    <field name="createdByUserLogin"><ignored/></field>
-    <field name="lastModifiedDate"><ignored/></field>
-    <field name="lastModifiedByUserLogin"><ignored/></field>
--->
     </form>
     <form name="lookupDataResource"
         default-title-style="tableheadtext"
@@ -83,12 +77,6 @@
         <field name="dataResourceId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${dataResourceId}" target="javascript:set_value('${dataResourceId}')"/>
         </field>
-<!--
-    <field name="createdDate"><ignored/></field>
-    <field name="createdByUserLogin"><ignored/></field>
-    <field name="lastModifiedDate"><ignored/></field>
-    <field name="lastModifiedByUserLogin"><ignored/></field>
--->
     </form>
     <form name="mruLookupDataResource" default-entity-name="DataResource"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
@@ -311,6 +299,70 @@
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceRole?dataResourceId=${dataResourceId}&amp;roleTypeId=${roleTypeId}&amp;partyId=${partyId}&amp;fromDate=${fromDate}"/>
         </field>
+    </form>
+
+    <!-- DataResourceProductFeature forms -->
+    <form name="AddDataResourceProductFeature" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="createDataResourceProductFeature" title="" type="single">
+        <auto-fields-service service-name="createProductFeatureDataResource"/>
+        <field name="dataResourceId" title="" widget-style="buttontext" map-name="currentValue"><display description="${currentValue.dataResourceId}"/></field>
+        <field name="productFeatureId" title="" widget-style="buttontext"><lookup target-form-name="LookupProductFeature"/></field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListDataResourceProductFeature"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        list-name="contentList" 
+        target="" title="" type="list">
+        <auto-fields-entity entity-name="ProductFeatureDataResource" default-field-type="display"/>
+        <field name="dataResourceId"><hidden/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Delete]" target="removeDataResourceProductFeature?dataResourceId=${dataResourceId}&amp;productFeatureId=${productFeatureId}"/>
+        </field>
+    </form>
+    <form name="lookupProductFeature"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupProductFeature" title="" type="single">
+        <auto-fields-entity entity-name="ProductFeature" default-field-type="find" />
+        <field name="productFeatureTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="ProductFeatureType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productFeatureCategoryId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="ProductFeatureCategory">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Lookup" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="listLookupProductFeature" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" paginate-target="/LookupProductFeature" 
+        title="" type="list">
+        <auto-fields-entity entity-name="ProductFeature" default-field-type="display"/>
+        <field name="productFeatureId" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${productFeatureId}" target="javascript:set_value('${productFeatureId}')"/>
+        </field>
+    </form>
+    <form name="mruLookupProductFeature" default-entity-name="ProductFeature"
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="mruList" target="" title="" type="list">
+        <field name="contentId" title="Id" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${productFeatureId}" target="javascript:set_value('${productFeatureId}')"/>
+        </field>
+        <field name="description" title="Name" widget-style="buttontext"><display/></field>
+        <field name="productFeatureTypeId" title="Type" widget-style="buttontext"><display/></field>
     </form>
 
     <!-- ElectronicText forms -->
