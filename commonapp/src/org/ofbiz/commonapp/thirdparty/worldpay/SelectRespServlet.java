@@ -104,6 +104,8 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         request.setAttribute("delegator", delegator);
         request.setAttribute("dispatcher", dispatcher);
         request.setAttribute("order_id", orderId);
+        request.setAttribute("orderProperties", request.getParameter("M_"));
+        request.setAttribute("ecommerceProperties", request.getParameter("M_"));
         request.setAttribute(SiteDefs.CONTROL_PATH, UtilProperties.getPropertyValue(configString, "payment.general.controlpath", "/control"));
         
         // load the order.properties file.        

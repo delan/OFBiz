@@ -276,14 +276,8 @@ public class CheckOutEvents {
         String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
         // getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-        URL orderPropertiesUrl = null;
-
-        try {
-            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, module);
-        }
-
+        URL orderPropertiesUrl = getOrderProperties(request);
+       
         final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.securityCode");
 
         String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
@@ -344,15 +338,10 @@ public class CheckOutEvents {
         String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-        URL ecommercePropertiesUrl = null;
-        URL orderPropertiesUrl = null;
-
-        try {
-            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
-            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, module);
-        }
+        
+        URL ecommercePropertiesUrl = CheckOutEvents.getEcommerceProperties(request);
+        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);
+      
         try {
             final String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
             final String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
@@ -569,14 +558,9 @@ public class CheckOutEvents {
 
     public static boolean explodeOrderItems(HttpServletRequest request) {
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+                
         // Load the order.properties file.
-        URL orderPropertiesUrl = null;
-
-        try {
-            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, module);
-        }
+        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);
         return UtilProperties.propertyValueEqualsIgnoreCase(orderPropertiesUrl, "order.item.explode", "Y");
     }
 
@@ -602,12 +586,7 @@ public class CheckOutEvents {
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
 
         // Load the order.properties file.
-        URL orderPropertiesUrl = null;
-        try {
-            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, module);
-        }
+        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);    
 
         // Get some payment related strings from order.properties.
         final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
@@ -815,13 +794,8 @@ public class CheckOutEvents {
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
                                     
         // Load the order.properties file.
-        URL orderPropertiesUrl = null;
-        try {
-            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, module);
-        }
-
+        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);
+     
         // Get some payment related strings from order.properties.       
         final String HEADER_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
         final String ITEM_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");                  
@@ -1125,5 +1099,37 @@ public class CheckOutEvents {
         return "success";
     }
             
-          
+    public static URL getOrderProperties(ServletRequest request) {
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+        // Load the order.properties file.
+        URL propsUrl = null;
+        try {
+            String orderPropertiesStr = (String) request.getAttribute("orderProperties");
+            if (orderPropertiesStr != null) {
+                propsUrl = new URL(orderPropertiesStr);
+            } else {
+                propsUrl = application.getResource("/WEB-INF/order.properties");
+            }                        
+        } catch (MalformedURLException e) {
+            Debug.logWarning(e, "Cannot get order.properties URL", module);
+        } 
+        return propsUrl;       
+    }   
+       
+    public static URL getEcommerceProperties(ServletRequest request) {
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+        // Load the ecommerce.properties file.
+        URL propsUrl = null;
+        try {
+            String ecommercePropertiesStr = (String) request.getAttribute("ecoommerceProperties");
+            if (ecommercePropertiesStr != null) {
+                propsUrl = new URL(ecommercePropertiesStr);
+            } else {
+                propsUrl = application.getResource("/WEB-INF/ecommerce.properties");
+            }                        
+        } catch (MalformedURLException e) {
+            Debug.logWarning(e, "Cannot get ecommerce.properties URL", module);
+        } 
+        return propsUrl;       
+    }             
 }
