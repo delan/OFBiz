@@ -39,6 +39,4 @@
     </#if>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="<@ofbizUrl>/FindRoutingTask</@ofbizUrl>" class="${selectedClassMap.routingTask?default(unselectedClassName)}">${uiLabelMap.ManufacturingRoutingTask}</a>
-    <a href="<@ofbizUrl>/EditMachine</@ofbizUrl>" class="${selectedClassMap.machine?default(unselectedClassName)}">${uiLabelMap.ManufacturingMachine}</a>
-    <a href="<@ofbizUrl>/EditMachineGroup</@ofbizUrl>" class="${selectedClassMap.machineGroup?default(unselectedClassName)}">${uiLabelMap.ManufacturingMachineGroup}</a>
 </div>

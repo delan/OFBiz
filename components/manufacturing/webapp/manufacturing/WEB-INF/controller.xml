@@ -93,46 +93,6 @@
     </request-map>
 
     <!-- Routing requests -->
-    <request-map uri="EditMachine">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditMachine"/>
-    </request-map>
-    <request-map uri="CreateMachine">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createMachine"/>
-        <response name="success" type="view" value="EditMachine"/>
-        <response name="error" type="view" value="EditMachine"/>
-    </request-map>
-    <request-map uri="UpdateMachine">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updateMachine"/>
-        <response name="success" type="view" value="EditMachine"/>
-        <response name="error" type="view" value="EditMachine"/>
-    </request-map>
-    <request-map uri="RemoveMachine">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="removeMachine"/>
-        <response name="success" type="view" value="EditMachine"/>
-        <response name="error" type="view" value="EditMachine"/>
-    </request-map>
-
-    <request-map uri="EditMachineGroup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditMachineGroup"/>
-    </request-map>
-    <request-map uri="CreateMachineGroup">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createMachineGroup"/>
-        <response name="success" type="view" value="EditMachineGroup"/>
-        <response name="error" type="view" value="EditMachineGroup"/>
-    </request-map>
-    <request-map uri="UpdateMachineGroup">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="updateMachineGroup"/>
-        <response name="success" type="view" value="EditMachineGroup"/>
-        <response name="error" type="view" value="EditMachineGroup"/>
-    </request-map>
-
     <request-map uri="FindCalendar">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindCalendar"/>
@@ -524,8 +484,6 @@
     <view-map name="ListCalendarWeek" type="jpublish" page="/routing/ListCalendarWeek.ftl"/>
     <view-map name="EditCalendarExceptionDay" type="jpublish" page="/routing/EditCalendarExceptionDay.ftl"/>
     <view-map name="EditCalendarExceptionWeek" type="jpublish" page="/routing/EditCalendarExceptionWeek.ftl"/>
-    <view-map name="EditMachine" type="jpublish" page="/routing/EditMachine.ftl"/>
-    <view-map name="EditMachineGroup" type="jpublish" page="/routing/EditMachineGroup.ftl"/>
     <view-map name="FindRoutingTask" type="jpublish" page="/routing/FindRoutingTask.ftl"/>
     <view-map name="FindRouting" type="jpublish" page="/routing/FindRouting.ftl"/>
     <view-map name="EditRoutingTaskAssoc" type="jpublish" page="/routing/EditRoutingTaskAssoc.ftl"/>
