@@ -590,7 +590,7 @@ public class ModelService {
      * @param mode The mode which to build the new map
      */
     public Map makeValid(Map source, String mode) {
-        return makeValid(source, mode, true, null);
+        return makeValid(source, mode, true, null, null);
     }
     
     /**
@@ -599,8 +599,20 @@ public class ModelService {
      * @param source The source map
      * @param mode The mode which to build the new map
      * @param includeInternal When false will exclude internal fields
+     */
+    public Map makeValid(Map source, String mode, boolean includeInternal, List errorMessages) {
+        return makeValid(source, mode, includeInternal, errorMessages, null);
+    }
+    
+    /**
+     * Creates a new Map based from an existing map with just valid parameters. 
+     * Tries to convert parameters to required type.
+     * @param source The source map
+     * @param mode The mode which to build the new map
+     * @param includeInternal When false will exclude internal fields
+     * @param locale locale to use to do some type conversion
      */    
-    public Map makeValid(Map source, String mode, boolean includeInternal, List errorMessages) {        
+    public Map makeValid(Map source, String mode, boolean includeInternal, List errorMessages, Locale locale) {
         Map target = new HashMap();
 
         if (source == null) {
@@ -641,7 +653,7 @@ public class ModelService {
     
                             try {
                                 // no need to fail on type conversion; the validator will catch this
-                                value = ObjectType.simpleTypeConvert(value, param.type, null, null, false);
+                                value = ObjectType.simpleTypeConvert(value, param.type, null, locale, false);
                             } catch (GeneralException e) {
                                 String errMsg = "Type conversion of field [" + key + "] to type [" + param.type + "] failed for value \"" + value + "\": " + e.toString();
                                 Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);

@@ -232,7 +232,7 @@ public class ServiceMultiEventHandler implements EventHandler {
             }  
             
             // get only the parameters for this service - converted to proper type
-            serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM);  
+            serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM, true, null, locale);  
 
             // include the UserLogin value object
             if (userLogin != null) {             
