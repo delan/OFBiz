@@ -46,13 +46,11 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   Collection ec = reader.getEntityNames();
   TreeSet entityNames = new TreeSet(ec);
   Iterator ecIter = ec.iterator();
-  while(ecIter.hasNext())
-  {
+  while(ecIter.hasNext()) {
     String eName = (String)ecIter.next();
     ModelEntity ent = reader.getModelEntity(eName);
     TreeSet entities = (TreeSet)packages.get(ent.packageName);
-    if(entities == null)
-    {
+    if(entities == null) {
       entities = new TreeSet();
       packages.put(ent.packageName, entities);
       packageNames.add(ent.packageName);
@@ -96,19 +94,24 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <%}%>
 <%
   Iterator piter = packageNames.iterator();
-  while(piter.hasNext())
-  {
+  while(piter.hasNext()) {
     String pName = (String)piter.next();
     TreeSet entities = (TreeSet)packages.get(pName);
 %><A name='<%=pName%>'></A><HR><DIV class='packagetext'><%=pName%></DIV><HR><%
     Iterator i = entities.iterator();
-    while ( i.hasNext() ) 
-    {
+    while (i.hasNext()) {
       String entityName = (String)i.next();
-      if ( search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1 )
-      {
+      String helperName = delegator.getEntityHelperName(entityName);
+      String groupName = delegator.getEntityGroupName(entityName);
+      if (search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1) {
         ModelEntity entity = reader.getModelEntity(entityName);
         if(checkWarnings) {
+          if(helperName == null) {
+            warningString = warningString + "<li><div style=\"color: red;\">[HelperNotFound]</div> No Helper (DataSource) definition found for entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
+            //only show group name warning if helper name not found
+            if(groupName == null)
+              warningString = warningString + "<li><div style=\"color: red;\">[GroupNotFound]</div> No Group Name found for entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A>.</li>";
+          }
           if(entity.tableName != null && entity.tableName.length() > 30)
             warningString = warningString + "<li><div style=\"color: red;\">[TableNameGT30]</div> Table name <b>" + entity.tableName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
           if(entity.tableName != null && reservedWords.contains(entity.tableName.toUpperCase()))
@@ -136,23 +139,23 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 	
 <%
   TreeSet ufields = new TreeSet();
-  for(int y = 0; y < entity.fields.size(); y++)
-  {
+  for(int y = 0; y < entity.fields.size(); y++) {
     ModelField field = (ModelField) entity.fields.elementAt(y);	
     ModelFieldType type = delegator.getEntityFieldType(entity, field.type);
-    String javaName = new String();
+    String javaName = null;
     javaName = field.isPk ? "<div style=\"color: red;\">" + field.name + "</div>" : field.name;
+
     if(checkWarnings) {
       if(ufields.contains(field.name))
-        warningString = warningString + "<li><div style=\"color: red;\">[FieldNotUnique]</div> Field <b>" + field.name + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is not unique for that entity.</li>";
+        warningString += "<li><div style=\"color: red;\">[FieldNotUnique]</div> Field <b>" + field.name + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is not unique for that entity.</li>";
       else
         ufields.add(field.name);
       if(field.colName.length() > 30)
-        warningString = warningString + "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name <b>" + field.colName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
+        warningString += "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name <b>" + field.colName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
       if(field.colName.length() == 0)
-        warningString = warningString + "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name for field name <b>\"" + field.name + "\"</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is empty (zero length).</li>";
+        warningString += "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name for field name <b>\"" + field.name + "\"</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is empty (zero length).</li>";
       if(reservedWords.contains(field.colName.toUpperCase()))
-        warningString = warningString + "<li><div style=\"color: red;\">[FieldNameRW]</div> Column name <b>" + field.colName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is a reserved word.</li>";
+        warningString += "<li><div style=\"color: red;\">[FieldNameRW]</div> Column name <b>" + field.colName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is a reserved word.</li>";
     }
 %>	
     <tr bgcolor="#EFFFFF">
@@ -165,9 +168,14 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     <%}else{%>
       <td><div align="left" class='entitytext'>NOT FOUND</div></td>
       <td><div align="left" class='entitytext'>NOT FOUND</div></td>
-      <%if(checkWarnings) {%>
-        <%warningString = warningString + "<li><div style=\"color: red;\">[FieldTypeNotFound]</div> Field type <b>" + field.type + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> not found in field type definitions.</li>";%>
-      <%}%>
+      <%
+        if(checkWarnings) {
+            warningString += "<li><div style=\"color: red;\">[FieldTypeNotFound]</div> Field type <b>" + field.type + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> not found in field type definitions";
+            if (helperName == null)
+                warningString += " (no helper definition found)";
+            warningString += ".</li>";
+        }
+      %>
     <%}%>
     </tr>
 <%	
