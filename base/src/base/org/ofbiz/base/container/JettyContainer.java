@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.18 2004/01/24 16:07:48 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.19 2004/01/24 17:50:52 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,13 +48,14 @@ import org.mortbay.util.ThreadedServer;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
+import org.ofbiz.base.util.SSLUtil;
 
 /**
  * JettyContainer - Container implementation for Jetty
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
-  *@version    $Revision: 1.18 $
+  *@version    $Revision: 1.19 $
  * @since      3.0
  */
 public class JettyContainer implements Container {
@@ -63,6 +64,9 @@ public class JettyContainer implements Container {
     private Map servers = new HashMap();
 
     private void init(String configFile) throws ContainerException {
+        // configure JSSE properties
+        SSLUtil.loadJsseProperties();
+
         // configure jetty logging
         Log log = Log.instance();
         log.disableLog();
