@@ -43,12 +43,18 @@
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
     String inventoryItemId = request.getParameter("inventoryItemId");
+    if (UtilValidate.isEmpty(inventoryItemId) && UtilValidate.isNotEmpty((String) request.getAttribute("inventoryItemId"))) {
+        inventoryItemId = (String) request.getAttribute("inventoryItemId");
+    }
     GenericValue inventoryItem = delegator.findByPrimaryKey("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId));
     GenericValue inventoryItemType = null;
     if(inventoryItem == null) {
         tryEntity = false;
     } else {
+        pageContext.setAttribute("inventoryItem", inventoryItem);
+
         inventoryItemType = inventoryItem.getRelatedOne("InventoryItemType");
+        if (inventoryItemType != null) pageContext.setAttribute("inventoryItemType", inventoryItemType);
 
         //statuses
         if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {
@@ -119,14 +125,10 @@
         <td width="74%">
           <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(tryEntity?inventoryItem.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
           <select name="inventoryItemTypeId" size=1>
-            <%if(inventoryItemType != null) {%>
-              <option selected value='<%=inventoryItemType.getString("inventoryItemTypeId")%>'><%=inventoryItemType.getString("description")%> [<%=inventoryItemType.getString("inventoryItemTypeId")%>]</option>
-              <option value='<%=inventoryItemType.getString("inventoryItemTypeId")%>'>&nbsp;</option>
-            <%} else {%>
-              <option value=''>----</option>
-            <%}%>
+            <option selected value='<ofbiz:inputvalue entityAttr="inventoryItemType" field="inventoryItemTypeId"/>'><ofbiz:inputvalue entityAttr="inventoryItemType" field="description"/> <ofbiz:entityfield attribute="inventoryItemType" field="inventoryItemTypeId" prefix="[" suffix="]"/></option>
+            <option value='<ofbiz:inputvalue entityAttr="inventoryItemType" field="inventoryItemTypeId"/>'>----</option>
             <ofbiz:iterator name="nextInventoryItemType" property="inventoryItemTypes">
-              <option value='<%=nextInventoryItemType.getString("inventoryItemTypeId")%>'><%=nextInventoryItemType.getString("description")%> [<%=nextInventoryItemType.getString("inventoryItemTypeId")%>]</option>
+              <option value='<ofbiz:inputvalue entityAttr="nextInventoryItemType" field="inventoryItemTypeId"/>'><ofbiz:inputvalue entityAttr="nextInventoryItemType" field="description"/> <ofbiz:entityfield attribute="nextInventoryItemType" field="inventoryItemTypeId" prefix="[" suffix="]"/></option>
             </ofbiz:iterator>
           </select>
         </td>
@@ -151,14 +153,10 @@
         <td>&nbsp;</td>
         <td width="74%">
            <select name="statusId">
-            <%if(inventoryItem != null) {%>
-               <option value="<%=inventoryItem.getString("statusId")%>"><%=inventoryItem.getString("statusId")%></option>
-               <option value="<%=inventoryItem.getString("statusId")%>">----</option>
-            <%} else {%>
-              <option value=''>----</option>
-            <%}%>
+             <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'><ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/></option>
+             <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'>----</option>
              <ofbiz:iterator name="statusItem" property="statusItems">
-               <option value="<%=statusItem.getString("statusId")%>"><%=statusItem.getString("description")%></option>               
+               <option value='<ofbiz:inputvalue entityAttr="statusItem" field="statusId"/>'><ofbiz:inputvalue entityAttr="statusItem" field="description"/></option>
              </ofbiz:iterator>
            </select>
          </td>
@@ -169,14 +167,10 @@
         <td width="74%">
            Select a Facility:
            <select name="facilityId">
-            <%if(inventoryItem != null) {%>
-                 <option value="<%=inventoryItem.getString("facilityId")%>"><%=inventoryItem.getString("facilityId")%></option>
-                 <option value="<%=inventoryItem.getString("facilityId")%>">----</option>
-            <%} else {%>
-              <option value=''>----</option>
-            <%}%>
+             <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'><ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/></option>
+             <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'>----</option>
              <ofbiz:iterator name="facility" property="facilities">
-               <option value="<%=facility.getString("facilityId")%>"><%=facility.getString("description")%></option>
+               <option value='<ofbiz:inputvalue entityAttr="facility" field="facilityId"/>'><ofbiz:inputvalue entityAttr="facility" field="description"/></option>
              </ofbiz:iterator>
            </select>
            <br>OR enter a Container ID:
