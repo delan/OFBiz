@@ -133,7 +133,6 @@
     
     <target name="jar-deploy" depends="jar">
     	<copy file="${lib.dir}/${name}.jar" tofile="${walib.dir}/${name}.jar" />
-    	<copy file="${corelib.dir}/ofbcore-webapp.jar" toDir="${walib.dir}"/>
     </target>
 
     <!-- ================================================================== -->

@@ -59,13 +59,6 @@ public class ControlServlet extends HttpServlet {
         if (Debug.infoOn()) Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " +
                 config.getServletContext().getRealPath("/"), module);
 
-        // clear the regions cache to avoid problems when reloading a webapp with a different classloader
-        try {
-            RegionCache.clearRegions(this.getServletContext().getResource(SiteDefs.REGIONS_CONFIG_LOCATION));
-        } catch (java.net.MalformedURLException e) {
-            Debug.logWarning(e, "Error clearing regions");
-        }
-
         // initialize the delegator
         getDelegator();
         // initialize security

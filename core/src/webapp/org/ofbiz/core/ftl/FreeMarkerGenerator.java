@@ -43,8 +43,6 @@ import org.jpublish.Repository;
 import org.jpublish.util.JPublishContextMap;
 
 import com.anthonyeden.lib.config.Configuration;
-import com.anthonyeden.lib.log.LogManager;
-import com.anthonyeden.lib.log.Logger;
 import com.wspublisher.WSPException;
 import com.wspublisher.generators.AbstractGenerator;
 import freemarker.ext.beans.BeansWrapper;
@@ -63,8 +61,9 @@ import org.ofbiz.core.util.Debug;
  * @since      2.1
  */
 public class FreeMarkerGenerator extends AbstractGenerator {
+    public static final String module = FreeMarkerGenerator.class.getName();
+
     public static final String NAME = "ofbiz-freemarker";
-    private static Logger log = LogManager.getLogger(FreeMarkerGenerator.class.getName());
     
     public FreeMarkerGenerator() {
         super(NAME);

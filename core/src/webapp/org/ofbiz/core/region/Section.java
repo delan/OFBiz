@@ -52,13 +52,13 @@ public class Section extends Content {
 
     protected final String name;
     protected final String info;
-    protected URL regionFile;
+    protected RegionManager regionManager;
 
-    public Section(String name, String info, String content, String type, URL regionFile) {
+    public Section(String name, String info, String content, String type, RegionManager regionManager) {
         super(content, type);
         this.name = name;
         this.info = info;
-        this.regionFile = regionFile;
+        this.regionManager = regionManager;
     }
 
     public String getName() {
@@ -109,7 +109,7 @@ public class Section extends Content {
                 Region region = null;
 
                 if ("default".equals(type) || "region".equals(type)) {
-                    region = RegionManager.getRegion(regionFile, content);
+                    region = regionManager.getRegion(content);
                 }
 
                 if ("region".equals(type) || region != null) {

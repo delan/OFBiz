@@ -281,6 +281,7 @@
         <delete file="${lib.dir}/ofbcore-rules${ofbiz.version}.jar" />
         <delete file="${lib.dir}/ofbcore-datafile${ofbiz.version}.jar" />
         <delete file="${lib.dir}/ofbcore-minilang${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-webapp${ofbiz.version}.jar" />
 
         <delete file="${lib.dir}/commonapp.jar" />
 
@@ -399,7 +400,6 @@
         <echo message="[build] =======================================" />
         <ant dir="content" inheritAll="false" />
         
-    	<delete file="${ofbcore-webapp.jar}" />
         <echo message="[build] ===== Done Building (Compile) =====" />
     </target>
 
@@ -598,6 +598,7 @@
         <copy file="core/lib/ofbcore-rules${ofbiz.version}.jar" toDir="${lib.dir}" />
         <copy file="core/lib/ofbcore-datafile${ofbiz.version}.jar" toDir="${lib.dir}" />
         <copy file="core/lib/ofbcore-minilang${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-webapp${ofbiz.version}.jar" toDir="${lib.dir}" />
 
         <copy file="commonapp/lib/commonapp.jar" toFile="${lib.dir}/commonapp.jar" />
     </target>
@@ -680,6 +681,7 @@
         <copy file="core/lib/ofbcore-rules${ofbiz.version}.jar"    toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-datafile${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-minilang${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-webapp${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
         <copy file="commonapp/lib/commonapp${ofbiz.version}.jar"   toDir="${ext.dir}/lib"/>
 
         <copy file="webtools/lib/webtools.war"      toDir="${ext.dir}/webapps"/>

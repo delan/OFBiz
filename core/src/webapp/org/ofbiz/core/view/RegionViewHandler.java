@@ -37,17 +37,19 @@ import org.ofbiz.core.region.*;
  * Handles Region type view rendering
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Revision$
  * @since      2.0
  */
 public class RegionViewHandler implements ViewHandler {
 
     protected ServletContext context;
-    protected URL regionFile = null;
+    protected RegionManager regionManager = null;
 
     public void init(ServletContext context) throws ViewHandlerException {
         this.context = context;
 
+        URL regionFile = null;
         try {
             regionFile = context.getResource(SiteDefs.REGIONS_CONFIG_LOCATION);
         } catch (java.net.MalformedURLException e) {
@@ -58,7 +60,7 @@ public class RegionViewHandler implements ViewHandler {
             Debug.logWarning("No " + SiteDefs.REGIONS_CONFIG_LOCATION + " file found in this webapp");
         } else {
             Debug.logVerbose("Loading regions from XML file in: " + regionFile);
-            RegionManager.getRegions(regionFile);
+            regionManager = new RegionManager(regionFile);
         }
     }
 
@@ -75,7 +77,7 @@ public class RegionViewHandler implements ViewHandler {
 
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
 
-        Region region = RegionManager.getRegion(regionFile, page);
+        Region region = regionManager.getRegion(page);
 
         if (region == null) {
             throw new ViewHandlerException("Error: could not find region with name " + page);

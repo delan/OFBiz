@@ -88,7 +88,6 @@
 
     <target name="clean-lib" depends="init-properties">
         <delete dir="${lib.dir}" />
-        <delete file="${walib.dir}/ofbcore-webapp.jar" />
         <delete file="${walib.dir}/accounting.jar" />
         <!-- <delete dir="${walib.dir}" /> -->
         <delete dir="${waclasses.dir}" />
@@ -136,7 +135,6 @@
 
     <target name="jar-deploy" depends="jar">
     	<copy file="${lib.dir}/${name}.jar" tofile="${walib.dir}/${name}.jar" />
-    	<copy file="${corelib.dir}/ofbcore-webapp.jar" toDir="${walib.dir}"/>
     </target>
 
     <!-- ================================================================== -->

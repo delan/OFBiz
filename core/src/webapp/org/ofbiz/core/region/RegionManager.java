@@ -44,40 +44,50 @@ import org.ofbiz.core.config.*;
  */
 public class RegionManager {
 
-    public static Region getRegion(URL regionFile, String regionName) {
-        if (regionFile == null) return null;
-
-        Map regions = getRegions(regionFile);
-
-        return (Region) regions.get(regionName);
-    }
-
-    public static void putRegion(URL regionFile, Region region) {
+    protected static UtilCache regionCache = new UtilCache("webapp.Regions.Config", 0, 0);
+    
+    protected URL regionFile = null;
+    
+    public RegionManager(URL regionFile) {
+        this.regionFile = regionFile;
         if (regionFile == null) throw new IllegalArgumentException("regionFile cannot be null");
-
-        Map regions = getRegions(regionFile);
-
-        regions.put(region.getId(), region);
+        
+        //This may seem a bit funny, but we want to keep it in the cache so that it can be reloaded easily
+        // Also note that we do not check to see if it is already there, in all cases we want to re-load the definition
+        regionCache.put(regionFile, readRegionXml(regionFile));
     }
-
-    public static Map getRegions(URL regionFile) {
-        Map regions = RegionCache.getRegions(regionFile);
-
+    
+    public Map getRegions() {
+        Map regions = (Map) regionCache.get(regionFile);
         if (regions == null) {
-            if (Debug.verboseOn()) Debug.logVerbose("Regions not yet loaded for " + regionFile + ", loading now");
-            regions = readRegionXml(regionFile);
-            RegionCache.putRegions(regionFile, regions);
+            synchronized (this) {
+                regions = (Map) regionCache.get(regionFile);
+                if (regions == null) {
+                    if (Debug.verboseOn()) Debug.logVerbose("Regions not loaded for " + regionFile + ", loading now");
+                    regions = readRegionXml(regionFile);
+                    regionCache.put(regionFile, regions);
+                }
+            }
         }
         return regions;
     }
 
-    public static Map readRegionXml(URL regionXmlLocation) {
+    public Region getRegion(String regionName) {
+        if (regionFile == null) return null;
+        return (Region) getRegions().get(regionName);
+    }
+
+    public void putRegion(Region region) {
+        getRegions().put(region.getId(), region);
+    }
+
+    public Map readRegionXml(URL regionFile) {
         Map regions = new HashMap();
 
         Document document = null;
 
         try {
-            document = UtilXml.readXmlDocument(regionXmlLocation, true);
+            document = UtilXml.readXmlDocument(regionFile, true);
         } catch (java.io.IOException e) {
             Debug.logError(e);
         } catch (org.xml.sax.SAXException e) {
@@ -96,13 +106,13 @@ public class RegionManager {
         while (defineIter.hasNext()) {
             Element defineElement = (Element) defineIter.next();
 
-            addRegion(regionXmlLocation, defineElement, regions);
+            addRegion(defineElement, regions);
         }
 
         return regions;
     }
 
-    protected static void addRegion(URL regionFile, Element defineElement, Map regions) {
+    protected void addRegion(Element defineElement, Map regions) {
         Region newRegion = null;
 
         String idAttr = defineElement.getAttribute("id");
@@ -136,11 +146,11 @@ public class RegionManager {
         while (putIter.hasNext()) {
             Element putElement = (Element) putIter.next();
 
-            newRegion.put(makeSection(putElement, regionFile));
+            newRegion.put(makeSection(putElement));
         }
     }
 
-    protected static Section makeSection(Element putElement, URL readerFile) {
+    protected Section makeSection(Element putElement) {
         String bodyContent = UtilXml.elementValue(putElement);
         String section = putElement.getAttribute("section");
         String info = putElement.getAttribute("info");
@@ -158,6 +168,13 @@ public class RegionManager {
             type = "direct";
         }
 
-        return new Section(section, info, content, type, readerFile);
+        return new Section(section, info, content, type, this);
+    }
+
+    public static Region getRegion(URL regionFile, String regionName) {
+        if (regionFile == null) return null;
+        Map regions = (Map) regionCache.get(regionFile);
+        if (regions == null) return null;
+        return (Region) regions.get(regionName);
     }
 }

@@ -133,7 +133,7 @@
             <fileset dir="${src.dir}/share" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
 		
-    	<javac debug="on" destdir="${build.dir}/entity">
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/entity">
             <classpath>
                 <path refid="local.class.path"/>
                 <pathelement path="${build.dir}/share"/>
@@ -144,7 +144,7 @@
           <fileset dir="${src.dir}/entity" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
 
-    	<javac debug="on" destdir="${build.dir}/extutil">
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/extutil">
             <classpath>
                 <path refid="local.class.path"/>
                 <pathelement path="${build.dir}/share"/>
@@ -156,7 +156,7 @@
           <fileset dir="${src.dir}/extutil" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
 
-    	<javac debug="on" destdir="${build.dir}/service">
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/service">
             <classpath>
                 <path refid="local.class.path"/>
                 <pathelement path="${build.dir}/share"/>
@@ -169,7 +169,7 @@
           <fileset dir="${src.dir}/service" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
 
-    	<javac debug="on" destdir="${build.dir}/extentity">
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/extentity">
             <classpath>
                 <path refid="local.class.path"/>
                 <pathelement path="${build.dir}/share"/>
@@ -183,7 +183,7 @@
           <fileset dir="${src.dir}/extentity" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
 
-    	<javac debug="on" destdir="${build.dir}/minilang">
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/minilang">
             <classpath>
                 <path refid="local.class.path"/>
                 <pathelement path="${build.dir}/share"/>
@@ -197,7 +197,7 @@
           <fileset dir="${src.dir}/minilang" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
 
-    	<javac debug="on" destdir="${build.dir}/webapp">
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/webapp">
             <classpath>
                 <path refid="local.class.path"/>
                 <pathelement path="${build.dir}/share"/>
@@ -212,7 +212,7 @@
           <fileset dir="${src.dir}/webapp" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
     	
-    	<javac debug="on" destdir="${build.dir}/workflow">
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/workflow">
             <classpath>
                 <path refid="local.class.path"/>
                 <pathelement path="${build.dir}/share"/>
@@ -226,7 +226,7 @@
           <fileset dir="${src.dir}/workflow" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
 
-    	<javac debug="on" destdir="${build.dir}/rules">
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/rules">
             <classpath>
                 <path refid="local.class.path"/>
                 <pathelement path="${build.dir}/share"/>
@@ -238,7 +238,7 @@
           <fileset dir="${src.dir}/rules" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
 
-    	<javac debug="on" destdir="${build.dir}/datafile">
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/datafile">
             <classpath>
                 <path refid="local.class.path"/>
                 <pathelement path="${build.dir}/share"/>
