@@ -98,7 +98,11 @@ public class EntityEcaCondition {
                 Debug.logWarning((String) m.next());
             }
         }
-        return cond.booleanValue();
+        if (cond != null) {
+            return cond.booleanValue();
+        } else {
+            return false;
+        }
     }
 
     public String toString() {
