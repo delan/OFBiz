@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.13 2003/11/27 17:46:12 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.14 2003/11/28 18:59:19 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -131,7 +131,7 @@ public class ProductStoreWorker {
         return storePayment;
     }
 
-    public static List getAvailableStoreShippingMethods(GenericDelegator delegator, String productStoreId, GenericValue shippingAddress, List itemSizes, Map featureIdMap, double weight) {
+    public static List getAvailableStoreShippingMethods(GenericDelegator delegator, String productStoreId, GenericValue shippingAddress, List itemSizes, Map featureIdMap, double weight, double orderTotal) {
         if (featureIdMap == null) {
             featureIdMap = new HashMap();
         }
@@ -154,11 +154,23 @@ public class ProductStoreWorker {
                 // test min/max weight first
                 Double minWeight = method.getDouble("minWeight");
                 Double maxWeight = method.getDouble("maxWeight");
-                if (minWeight != null && minWeight.doubleValue() > 0 && minWeight.doubleValue() < weight) {
+                if (minWeight != null && minWeight.doubleValue() > 0 && minWeight.doubleValue() > weight) {
                     returnShippingMethods.remove(method);
                     continue;
                 }
-                if (maxWeight != null && maxWeight.doubleValue() > 0 && maxWeight.doubleValue() > weight) {
+                if (maxWeight != null && maxWeight.doubleValue() > 0 && maxWeight.doubleValue() < weight) {
+                    returnShippingMethods.remove(method);
+                    continue;
+                }
+
+                // test order total
+                Double minTotal = method.getDouble("minTotal");
+                Double maxTotal = method.getDouble("maxTotal");
+                if (minTotal != null && minTotal.doubleValue() > 0 && minTotal.doubleValue() > orderTotal) {
+                    returnShippingMethods.remove(method);
+                    continue;
+                }
+                if (maxTotal != null && maxTotal.doubleValue() > 0 && maxTotal.doubleValue() < orderTotal) {
                     returnShippingMethods.remove(method);
                     continue;
                 }
