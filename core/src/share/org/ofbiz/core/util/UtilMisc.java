@@ -253,13 +253,23 @@ public class UtilMisc {
     public static Map getParameterMap(HttpServletRequest request) {
         HashMap paramMap = new OrderedMap();
         java.util.Enumeration e = request.getParameterNames();
-
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
-
             paramMap.put(name, request.getParameter(name));
         }
         return (Map) paramMap;
+    }
+    
+    /**
+     * Put request parameters in request object as attributes.
+     * @param request
+     */
+    public static void parametersToAttributes(HttpServletRequest request) {
+    	java.util.Enumeration e = request.getParameterNames();
+    	while (e.hasMoreElements()) {
+    		String name = (String) e.nextElement();
+    		request.setAttribute(name, request.getParameter(name));
+    	}
     }
 
     /** 
