@@ -95,12 +95,12 @@
         <put section='title'>View Data File</put>
         <put section='content' content='/datafile/viewdatafile.jsp'/>
     </define>
-    
+
     <define id='logikus' region='MAIN_REGION'>
         <put section='title'>Run Logikus Rulesets</put>
         <put section='content' content='/rules/logikus.jsp'/>
     </define>
-    
+
     <define id='readxpdl' region='MAIN_REGION'>
         <put section='title'>Import XPDL File to Workflow Repository</put>
         <put section='content' content='/workflow/readxpdl.jsp'/>
@@ -113,5 +113,10 @@
     <define id='StatBinsHistory' region='MAIN_REGION'>
         <put section='title'>Statistics Bins History</put>
         <put section='content' content='/stats/StatBinsHistory.jsp'/>
+    </define>
+
+    <define id='debuglevels' region='MAIN_REGION'>
+        <put section='title'>Debugging Levels</put>
+        <put section='content' content='/debug.jsp'/>
     </define>
 </regions>

@@ -70,6 +70,12 @@
                   <li><a href="<ofbiz:url>/FindUtilCache</ofbiz:url>" class='buttontext'>Cache Maintenance</A>
                 </ul>
               <%}%>
+              <%if(security.hasPermission("UTIL_DEBUG_VIEW", session)){%>
+                <li><div class='tabletext'>Debug Utilities</div>
+                <ul>
+                  <li><a href="<ofbiz:url>/debuglevels</ofbiz:url>" class='buttontext'>Adjust Debugging Levels</A>
+                </ul>
+              <%}%>
               <%if(security.hasPermission("ENTITY_MAINT", session)){%>
                 <li><div class='tabletext'>Entity Engine Utilities</div>
                 <ul>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE site-conf 
-  PUBLIC "-//OFBiz//DTD Request Config//EN" 
+<!DOCTYPE site-conf
+  PUBLIC "-//OFBiz//DTD Request Config//EN"
   "http://www.ofbiz.org/dtds/site-conf.dtd">
 
 <site-conf>
     <description>CommonApp Site Configuration File</description>
     <owner>The Open For Business Project (c) 2001 </owner>
     <errorpage>/error/error.jsp</errorpage>
-    
+
     <handler name="java" type="request" class="org.ofbiz.core.event.JavaEventHandler"/>
     <handler name="soap" type="request" class="org.ofbiz.core.event.SOAPEventHandler"/>
     <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
@@ -19,7 +19,7 @@
     <handler name="datavision" type="view" class="org.ofbiz.core.view.DataVisionViewHandler"/>
     <handler name="jasperreportspdf" type="view" class="org.ofbiz.core.view.JasperReportsPdfViewHandler"/>
     <handler name="jasperreportsxml" type="view" class="org.ofbiz.core.view.JasperReportsXmlViewHandler"/>
-    
+
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
       <description>Verify a user is logged in.</description>
@@ -78,7 +78,7 @@
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
-    
+
     <request-map uri="chain">
         <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
         <response name="success" type="request" value="/view"/>
@@ -89,17 +89,17 @@
     	<security https="true" auth="false"/>
     	<response name="success" type="view" value="main"/>
     </request-map>
-    
+
     <request-map uri="sitemap">
     	<security https="false" auth="false"/>
     	<response name="success" type="view" value="sitemap"/>
     </request-map>
-    
+
     <request-map uri="install">
     	<security https="false" auth="false"/>
     	<response name="success" type="view" value="install"/>
     </request-map>
-    
+
     <request-map uri="entitymaint">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="entitymaint"/>
@@ -128,12 +128,12 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="FindGeneric"/>
     </request-map>
-    
+
     <request-map uri="ViewGeneric">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="ViewGeneric"/>
     </request-map>
-    
+
     <request-map uri="UpdateGeneric">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.generic.GenericWebEvent" invoke="updateGeneric"/>
@@ -145,7 +145,7 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="FindUtilCache"/>
     </request-map>
-    
+
     <request-map uri="FindUtilCacheClear">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="clearEvent"/>
@@ -157,14 +157,14 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditUtilCache"/>
     </request-map>
-    
+
     <request-map uri="EditUtilCacheUpdate">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="updateEvent"/>
         <response name="success" type="view" value="EditUtilCache"/>
         <response name="error" type="view" value="EditUtilCache"/>
     </request-map>
-    
+
     <request-map uri="EditUtilCacheClear">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="clearEvent"/>
@@ -177,7 +177,7 @@
     	<response name="success" type="view" value="FindUtilCacheElements"/>
     	<response name="error" type="view" value="FindUtilCacheElements"/>
     </request-map>
-    
+
     <request-map uri="FindUtilCacheElementsRemoveElement">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="removeElementEvent"/>
@@ -199,7 +199,7 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="readxpdl"/>
     </request-map>
-    
+
     <request-map uri="StatsSinceStart">
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="StatsSinceStart"/>
@@ -207,6 +207,17 @@
     <request-map uri="StatBinsHistory">
     	<security https="true" auth="true"/>
         <response name="success" type="view" value="StatBinsHistory"/>
+    </request-map>
+
+    <request-map uri="debuglevels">
+      <security https="true" auth="true"/>
+      <response name="success" type="view" value="debuglevels"/>
+    </request-map>
+    <request-map uri="updateDebugLevel">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateDebugLevel"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="debuglevels"/>
     </request-map>
     <!-- end of request mappings -->
 
@@ -220,7 +231,7 @@
     <view-map name="entityref" page="/entity/entityref.jsp"/>
     <view-map name="entityref_list" page="/entity/entityref_list.jsp"/>
     <view-map name="entityref_main" page="/entity/entityref_main.jsp"/>
-    
+
     <view-map name="entitymaint" type="region"/>
     <view-map name="FindGeneric" type="region"/>
     <view-map name="ViewGeneric" type="region"/>
@@ -247,6 +258,7 @@
     <view-map name="viewdatafile" type="region"/>
     <view-map name="logikus" type="region"/>
     <view-map name="readxpdl" type="region"/>
+    <view-map name="debuglevels" type="region"/>
 
     <view-map name="StatsSinceStart" type="region"/>
     <view-map name="StatBinsHistory" type="region"/>
@@ -254,7 +266,7 @@
     <view-map name="UomReport" page="/UomReport.xml" type="datavision" info="Uom"/>
     <view-map name="JasperDemoPdf" page="/JasperDemo.xml" type="jasperreportspdf" info="Uom"/>
     <view-map name="JasperDemoXml" page="/JasperDemo.xml" type="jasperreportsxml" info="Uom"/>
-    
+
     <!-- end of view mappings -->
-    
+
 </site-conf>
