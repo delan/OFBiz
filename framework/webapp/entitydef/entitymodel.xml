@@ -201,6 +201,7 @@
             title="Visit Entity">
       <field name="visitId" type="id-ne"></field>
       <field name="contactMechId" type="id"></field>
+      <field name="visitorId" type="id"></field>
       <field name="userLoginId" type="id-vlong"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
@@ -224,6 +225,9 @@
       <relation type="one" fk-name="VISIT_CONT_MECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
+      <relation type="one" fk-name="VISIT_VISITOR" rel-entity-name="Visitor">
+        <key-map field-name="visitorId"/>
+      </relation>
       <relation type="one" fk-name="VISIT_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
@@ -240,6 +244,20 @@
       <index name="VISIT_THRU_IDX" unique="false">
         <index-field name="thruDate"/>
       </index>
+    </entity>
+    <entity entity-name="Visitor"
+            package-name="org.ofbiz.webapp.visit"
+            title="Visitor Entity">
+      <field name="visitorId" type="id-ne"></field>
+      <field name="userLoginId" type="id-vlong"></field>
+      <field name="partyId" type="id"></field>
+      <prim-key field="visitorId"/>
+      <relation type="one" fk-name="VISITOR_USRLGN" rel-entity-name="UserLogin">
+        <key-map field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="VISITOR_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
