@@ -76,7 +76,7 @@
       <tr>
         <td>
           <div class='tabletext'>
-            <a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:entityfield attribute="product" field="productId"/></ofbiz:url>' class='buttontext'>
+            <a href='<ofbiz:url>/EditProduct?productId=<ofbiz:entityfield attribute="product" field="productId"/></ofbiz:url>' class='buttontext'>
               <ofbiz:entityfield attribute="product" field="productName"/>
             </a>
             <b>

@@ -75,7 +75,7 @@
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="curInventoryItemType" field="description"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/></div></td>
-    <td><a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:entityfield attribute="inventoryItem" field="productId"/></ofbiz:url>' class='buttontext'>
+    <td><a href='<ofbiz:url>/EditProduct?productId=<ofbiz:entityfield attribute="inventoryItem" field="productId"/></ofbiz:url>' class='buttontext'>
         <ofbiz:entityfield attribute="inventoryItem" field="productId"/></a></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="lotId"/></div></td>
     <%if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>

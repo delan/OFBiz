@@ -27,7 +27,7 @@
                     <ofbiz:iterator name="miniProduct" property="mini_productList">
                       <tr>
                         <td>
-                          <a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:entityfield attribute="miniProduct" field="productId"/></ofbiz:url>' class='buttontext'>
+                          <a href='<ofbiz:url>/EditProduct?productId=<ofbiz:entityfield attribute="miniProduct" field="productId"/></ofbiz:url>' class='buttontext'>
                             <ofbiz:entityfield attribute="miniProduct" field="productName"/>
                           </a>
                           <div class='tabletext'>

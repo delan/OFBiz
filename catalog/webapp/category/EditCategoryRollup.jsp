@@ -71,7 +71,7 @@
 
 <%-- Edit 'ProductCategoryRollup's --%>
 <%if (productCategory!=null){%>
-<hr>
+<br>
 <p class="head2">Category Rollup: Parent Categories</p>
 
 <table border="1" cellpadding='2' cellspacing='0'>
@@ -117,7 +117,7 @@
 <form method="POST" action="<ofbiz:url>/addProductCategoryToCategory</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="showProductCategoryId" value="<%=productCategoryId%>">
-  Add Parent Category (enter Category ID):
+  <div class='tabletext'>Add <b>Parent</b> Category (select Category and enter optional From Date):</div>
     <select name="parentProductCategoryId">
     <%Iterator pit = UtilMisc.toIterator(productCategoryCol);%>
     <%while(pit != null && pit.hasNext()) {%>
@@ -127,10 +127,12 @@
         <%}%>
     <%}%>
     </select>
+  <input type=text size='20' name='fromDate'>
   <input type="submit" value="Add">
 </form>
-
+<br>
 <hr>
+<br>
 <p class="head2">Category Rollup: Child Categories</p>
 
 <table border="1" cellpadding='2' cellspacing='0'>
@@ -176,7 +178,7 @@
 <form method="POST" action="<ofbiz:url>/addProductCategoryToCategory</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="showProductCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="parentProductCategoryId" value="<%=productCategoryId%>">
-  Add Child Category (enter Category ID):
+  <div class='tabletext'>Add <b>Child</b> Category (select Category and enter optional From Date):</div>
     <select name="productCategoryId">
     <%Iterator cit = UtilMisc.toIterator(productCategoryCol);%>
     <%while (cit != null && cit.hasNext()) {%>
@@ -186,6 +188,7 @@
       <%}%>
     <%}%>
     </select>
+  <input type=text size='20' name='fromDate'>
   <input type="submit" value="Add">
 </form>
 <%}%>

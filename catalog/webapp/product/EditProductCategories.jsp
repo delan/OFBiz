@@ -114,7 +114,7 @@
   <input type="hidden" name="productId" value="<%=productId%>">
   <input type="hidden" name="useValues" value="true">
 
-  <div class='head2'>Add ProductCategoryMember (enter Category ID):</div>
+  <div class='head2'>Add ProductCategoryMember (select Category, enter optional From Date):</div>
   <br>
   <select name="productCategoryId">
   <ofbiz:iterator name="category" property="categoryCol">

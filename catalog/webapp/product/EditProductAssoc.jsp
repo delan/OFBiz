@@ -244,8 +244,8 @@ try {
       <%GenericValue listProductAssoc = (GenericValue)pcIterator.next();%>
       <%GenericValue listToProduct = listProductAssoc.getRelatedOneCache("AssocProduct");%>
       <tr valign="middle">
-        <td><a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=listProductAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=listProductAssoc.getString("productIdTo")%></a></td>
-        <td><%if(listToProduct!=null){%><a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=listProductAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=listToProduct.getString("productName")%></a><%}%>&nbsp;</td>
+        <td><a href="<ofbiz:url>/EditProduct?productId=<%=listProductAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=listProductAssoc.getString("productIdTo")%></a></td>
+        <td><%if(listToProduct!=null){%><a href="<ofbiz:url>/EditProduct?productId=<%=listProductAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=listToProduct.getString("productName")%></a><%}%>&nbsp;</td>
         <td><div class='tabletext' <%=(listProductAssoc.getTimestamp("fromDate") != null && nowDate.before(listProductAssoc.getTimestamp("fromDate")))?"style='color: red;'":""%>>
           <%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("fromDate"))%>&nbsp;</div></td>
         <td><div class='tabletext' <%=(listProductAssoc.getTimestamp("thruDate") != null && nowDate.after(listProductAssoc.getTimestamp("thruDate")))?"style='color: red;'":""%>>
@@ -280,8 +280,8 @@ try {
       <%GenericValue listProductAssoc = (GenericValue)tfIterator.next();%>
       <%GenericValue listToProduct = listProductAssoc.getRelatedOneCache("MainProduct");%>
       <tr valign="middle">
-        <td><a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=listProductAssoc.getString("productId")%></ofbiz:url>" class="buttontext"><%=listProductAssoc.getString("productId")%></a></td>
-        <td><%if(listToProduct!=null){%><a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=listProductAssoc.getString("productId")%></ofbiz:url>" class="buttontext"><%=listToProduct.getString("productName")%></a><%}%>&nbsp;</td>
+        <td><a href="<ofbiz:url>/EditProduct?productId=<%=listProductAssoc.getString("productId")%></ofbiz:url>" class="buttontext"><%=listProductAssoc.getString("productId")%></a></td>
+        <td><%if(listToProduct!=null){%><a href="<ofbiz:url>/EditProduct?productId=<%=listProductAssoc.getString("productId")%></ofbiz:url>" class="buttontext"><%=listToProduct.getString("productName")%></a><%}%>&nbsp;</td>
         <td><div class='tabletext'><%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("fromDate"))%>&nbsp;</div></td>
         <td><div class='tabletext'><%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("thruDate"))%>&nbsp;</div></td>
         <td><div class='tabletext'><%=listProductAssoc.getString("productAssocTypeId")%></div></td>

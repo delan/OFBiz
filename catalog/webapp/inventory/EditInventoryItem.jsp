@@ -145,7 +145,7 @@
         <td width="74%">
             <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="productId" fullattrs="true" tryEntityAttr="tryEntity"/> size="20" maxlength="20">
             <%if (inventoryItem != null && UtilValidate.isNotEmpty(inventoryItem.getString("productId"))) {%>
-                <a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/></ofbiz:url>' class='buttontext'>[Edit&nbsp;Product&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/>]</a>
+                <a href='<ofbiz:url>/EditProduct?productId=<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/></ofbiz:url>' class='buttontext'>[Edit&nbsp;Product&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/>]</a>
             <%}%>
         </td>
       </tr>

@@ -70,7 +70,7 @@
             <DIV class='boxhead'>Add product-keyword (enter keyword):</DIV>
           </TD>
           <TD align=right>
-            <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="lightbuttontext">[Edit Product]</a>
+            <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="lightbuttontext">[Edit Product]</a>
           </TD>
         </tr>
       </table>
@@ -164,7 +164,7 @@
             <DIV class='boxhead'>Add product-keyword (enter keyword):</DIV>
           </TD>
           <TD align=right>
-            <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="lightbuttontext">[Edit Product]</a>
+            <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="lightbuttontext">[Edit Product]</a>
           </td>
         </tr>
       </table>

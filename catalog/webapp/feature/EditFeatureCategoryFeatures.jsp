@@ -65,7 +65,7 @@
 <%if (productId != null && productId.length() > 0) {%>
 <div class="head2">And Apply Features to Product with ID "<%=productId%>"</div>
 <div>
-  <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Return to Edit Product]</a>
+  <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="buttontext">[Return to Edit Product]</a>
   <a href="<ofbiz:url>/EditProductFeatures?productId=<%=productId%></ofbiz:url>" class="buttontext">[Return to Edit Product Features]</a>
 </div>
 <%}%>
