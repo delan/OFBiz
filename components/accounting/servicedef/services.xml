@@ -227,6 +227,31 @@
     </service>
 
     <!-- GlJournal -->
+    <service name="createGlJournalEntry" engine="simple" 
+            location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlJournalEntry" auth="true">
+        <description>Calls three services: createGlJournal, createAcctTrans, createAcctgTransEntry</description>
+        <implements service="interfaceAcctgTrans"/>
+        <implements service="interfaceAcctgTransEntry"/>
+        <!-- Didn't work.  Had to use attribute name="acctgTransId" 
+			auto-attributes entity-name="acctgTrans" include="pk" mode="OUT" optional="false"/ -->
+		
+        <!-- implements service="interfaceAcctgTrans"/ -->
+        <auto-attributes entity-name="GlJournal" include="pk" mode="OUT" optional="false"/>
+        <auto-attributes entity-name="GlJournal" include="nonpk" mode="IN" optional="true">
+            <exclude field-name="isPosted"/>
+            <exclude field-name="postedDate"/>
+        </auto-attributes>
+       
+        <attribute name="creditGlAccountId" type="String" mode="IN" optional="false"/>
+        <attribute name="debitGlAccountId" type="String" mode="IN" optional="false"/>
+	    
+        <attribute name="acctgTransId" type="String" mode="OUT" optional="true"/>
+		
+        <override name="glAccountId" optional="true"/>
+        <override name="debitCreditFlag" optional="true"/>
+		
+    </service>
+    
     <service name="createGlJournal" default-entity-name="GlJournal" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlJournal" auth="true">
         <description>Create a GlJournal record</description>
@@ -236,6 +261,8 @@
             <exclude field-name="postedDate"/>
         </auto-attributes>
         <override name="organizationPartyId" optional="false"/>
+        
+        
     </service>
     <service name="updateGlJournal" default-entity-name="GlJournal" engine="simple"
             location="org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="updateGlJournal" auth="true">

@@ -23,6 +23,172 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+        
+        
+    <form name="EditGlJournalEntry" type="single"
+            target="updateGlJournalEntry" title="" default-map-name="journal"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+
+        <alt-target use-when="glJournalId==null" target="createGlJournalEntry"/>
+
+        <field use-when="glJournalId!=null" name="glJournalId" title="${uiLabelMap.AcctgGlJrnlIdLabel}" tooltip="${uiLabelMap.AcctgGlJrnlIdToolTip}"><display/></field>
+        
+        <!-- Drop down list of Party Organizations --> 
+        <field name="partyId" parameter-name="organizationPartyId" title="${uiLabelMap.AcctgGlPartyLabel}" widget-style="selectBox"> 
+            <drop-down>
+                <entity-options entity-name="PartyRoleAndPartyDetail" description="${partyId}" > 
+                <!-- entity-options entity-name="PartyRoleAndPartyDetail" description="${organizationPartyId}" --> 
+                    <entity-constraint name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+                    <entity-order-by field-name="partyId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <!-- Drop down list of Gl Accounts --> 
+        <field name="glAccountId" title="${uiLabelMap.AcctgGlAcctLabel}" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="GlAccount" description="${accountName}"> 
+                    <entity-order-by field-name="accountName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <!-- field use-when="product==null&amp;&amp;productId==null" name="productId" title="${uiLabelMap.ProductProductId}"><text size="20" maxlength="20"/></field>
+        <field use-when="product==null&amp;&amp;productId!=null" name="productId" title="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotFindProductId} [${productId}]"><text size="20" maxlength="20"/></field -->
+
+
+        <field position="1" name="supportDiscontinuationDate" title="${uiLabelMap.ProductSupportThruDate}" red-when="before-now"><date-time/></field>
+        <field position="2" name="glFiscalTypeId" title="${uiLabelMap.AcctgGlFiscalTypeLabel}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="GlFiscalType" description="${description}"> 
+                    <entity-order-by field-name="glFiscalTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="description" title="${uiLabelMap.AcctgGlJrnlDescLabel}"><text size="125" maxlength="250"/></field>
+
+
+        <field position="1" name="manufacturerPartyId" title="${uiLabelMap.ProductOemPartyId}" red-when="before-now"><text size="20" maxlength="20"/></field>
+
+        <field position="1" name="requireInventory" widget-style="selectBox" tooltip="${uiLabelMap.ProductInventoryRequiredProduct}">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field position="2" name="inventoryMessage"  title="${uiLabelMap.ProductInventoryMessage}"><text size="20" maxlength="255"/></field>
+
+        <field position="1" name="ratingTypeEnum">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+                    <entity-constraint name="enumTypeId" value="PROD_RATING_TYPE"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="2" title="Rating" name="productRating"><text size="10" maxlength="20"/></field>
+
+        <field position="1" name="requireAmount" title="${uiLabelMap.ProductRequireAmount}" widget-style="selectBox" tooltip="${uiLabelMap.ProductRequireCustomerAmount}">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field position="2" name="amountUomTypeId" title="${uiLabelMap.ProductAmountUomTypeId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="UomType" key-field-name="uomTypeId" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" title="${uiLabelMap.ProductProductHeight}" name="productHeight"><text size="10" maxlength="20"/></field>
+        <field position="2" name="heightUomId" title="${uiLabelMap.ProductHeightUomId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
+                    <entity-constraint name="uomTypeId" value="LENGTH_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" title="${uiLabelMap.ProductProductWidth}" name="productWidth"><text size="10" maxlength="20"/></field>
+        <field position="2" name="widthUomId" title="${uiLabelMap.ProductWidthUomId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
+                    <entity-constraint name="uomTypeId" value="LENGTH_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" title="${uiLabelMap.ProductProductDepth}" name="productDepth"><text size="10" maxlength="20"/></field>
+        <field position="2" name="depthUomId" title="${uiLabelMap.ProductDepthUomId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
+                    <entity-constraint name="uomTypeId" value="LENGTH_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="weight" title="${uiLabelMap.ProductWeight}"><text size="10" maxlength="20"/></field>
+        <field position="2" name="weightUomId"  title="${uiLabelMap.ProductWeightUomId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
+                    <entity-constraint name="uomTypeId" value="WEIGHT_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="quantityIncluded"  title="${uiLabelMap.ProductQuantityIncluded}"><text size="10" maxlength="20"/></field>
+        <field position="2" name="quantityUomId" title="${uiLabelMap.ProductQuantityUomId}"><text size="10" maxlength="20"/></field>
+        <field position="1" name="piecesIncluded" title="${uiLabelMap.ProductPiecesIncluded}"><text size="10" maxlength="20"/></field>
+
+        <field position="1" name="returnable"  title="${uiLabelMap.ProductReturnable}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field position="2" name="includeInPromotions" title="${uiLabelMap.ProductIncludePromotions}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+
+        <field position="1" name="taxable" title="${uiLabelMap.ProductTaxable}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field position="2" name="taxCategory" title="${uiLabelMap.ProductTaxCategory}"><text size="10" maxlength="20"/></field>
+        <field position="1" name="taxVatCode" title="${uiLabelMap.ProductTaxVatCode}" ><text size="10" maxlength="20"/></field>
+        <field position="2" name="taxDutyCode" title="${uiLabelMap.ProductTaxDutyCode}" ><text size="10" maxlength="20"/></field>
+
+        <field position="1" name="chargeShipping" title="${uiLabelMap.ProductChargeShipping}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field position="2" name="autoCreateKeywords" title="${uiLabelMap.ProductAutoCreateKeywords}" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+
+        <field name="contentInfoText" title="${uiLabelMap.ProductContentInfoText}" widget-style="tabletext">
+            <display description="${uiLabelMap.ProductNoteForContentOptions}" also-hidden="false"/>
+        </field>
+        <!-- These go on the Content tab-button page
+        <field name="productName"><text size="30" maxlength="60"/></field>
+        <field name="description" widget-style="textAreaBox"><textarea cols="60" rows="2"/></field>
+        <field name="longDescription" widget-style="textAreaBox"><textarea cols="60" rows="3"/></field>
+        <field name="smallImageUrl"><text size="60" maxlength="255"/></field>
+        <field name="mediumImageUrl"><text size="60" maxlength="255"/></field>
+        <field name="largeImageUrl"><text size="60" maxlength="255"/></field>
+        <field name="detailImageUrl"><text size="60" maxlength="255"/></field>
+        <field name="detailScreen"><text size="60" maxlength="250"/></field>
+        -->
+
+        <field name="submitButton" title="${uiLabelMap.ProductUpdateProduct}" widget-style="standardSubmit"><submit button-type="button"/></field>
+
+        <field use-when="product!=null" position="1" name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:" widget-style="tabletext">
+            <display description="[${product.lastModifiedByUserLogin}] on ${product.lastModifiedDate}" also-hidden="false"/>
+        </field>
+        <field use-when="product!=null" position="2" name="createdByText" title="${uiLabelMap.ProductCreatedBy}:" widget-style="tabletext">
+            <display description="[${product.createdByUserLogin}] on ${product.createdDate}" also-hidden="false"/>
+        </field>
+    </form>
+
+
+    <form name="ListGlAccountOrganization" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" target="" paginate-target="/EditGlobalAccount" title="" type="list">
+        <auto-fields-entity entity-name="GlAccountOrganization" default-field-type="display"/>
+        <field name="glAccountId" title="Edit" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${glAccountId}" target="GlAccountNavigate?glAccountId=${glAccountId}"/>
+        </field>
+    </form>
 
     <!-- Displays the form for assigning accounts to a party or company -->
     <!-- TODO: Localize field names --> 
@@ -39,32 +205,16 @@
                 </entity-options>
             </drop-down>
         </field>
-        <!-- field name="partyId" title="Party" widget-style="selectBox" -->
-        <field name="partyId" title="Party" widget-style="selectBox">
+        <!-- field name="organizationPartyId" title="Party" widget-style="selectBox" -->
+        <field name="partyId" parameter-name="organizationPartyId" title="Party" widget-style="selectBox"> 
             <drop-down>
-                <entity-options entity-name="PartyRoleAndPartyDetail" description="${partyId}"> 
+                <entity-options entity-name="PartyRoleAndPartyDetail" description="${partyId}" > 
+                <!-- entity-options entity-name="PartyRoleAndPartyDetail" description="${organizationPartyId}" --> 
                     <entity-constraint name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
                     <entity-order-by field-name="partyId"/>
                 </entity-options>
             </drop-down>
         </field>
-
-        <!--field position="1" name="testDt" title="Test Date" red-when="after-now"><date-time/></field -->
-        <!-- field position="1" name="accountId" title="Account" widget-style="selectBox">
-            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}" /><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
-        </field -->
-        <!-- field position="2" name="partyId" title="Party ID" widget-style="selectBox">
-            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
-        </field -->
-        
-        <!-- field name="productTypeId" title="${uiLabelMap.ProductProductType}" widget-style="selectBox">
-            <drop-down>
-                <entity-options entity-name="ProductType" description="${description}"> 
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field -->
-
         <field name="submitButton" title="Create Assignment" widget-style="standardSubmit"><submit button-type="button"/></field>
 
     </form>

@@ -89,7 +89,7 @@
         <create-value value-name="newEntity"/>
 
 		<!-- when changing entries, also update the last modified info for the AcctgTrans -->
-		<call-simple-method method-name="updateAcctgTransLastModified"/>
+		<!-- call-simple-method method-name="updateAcctgTransLastModified"/ -->
     </simple-method>
     <simple-method method-name="updateAcctgTransEntry" short-description="Update Entry To AcctgTrans">
         <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateAcctgTransEntry you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>

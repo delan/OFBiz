@@ -27,10 +27,10 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-tree.xsd">
 <!--	<tree name="GlAccountTree">  -->
 <!-- 	<tree> -->
-
-	<tree name="GlAccountTree" entity-name="GlAccount" root-node-name="node-root" render-style="expand-collapse" default-wrap-style="accountItem">  	
+       
+	<tree name="GlAccountTree" entity-name="GlAccount" root-node-name="node-root" default-render-style="expand-collapse" default-wrap-style="accountItem">  	
 	<!-- tree name="GlAccountTree" root-node-name="node-root" render-style="expand-collapse" default-wrap-style="accountItem" -->  	
-		<node name="node-root">
+		<node name="node-root" render-style="simple" >
 			<!-- entity-one entity-name="GlAccount" use-cache="true">
 				<field-map field-name="glAccountId" env-name="glAccountId" />
 			</entity-one -->

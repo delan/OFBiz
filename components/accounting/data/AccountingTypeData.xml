@@ -21,6 +21,8 @@
     <AcctgTransType acctgTransTypeId="DISBURSEMENT_ACCTG_T" description="Disbursement" hasTable="N" parentTypeId="PAYMENT_ACCTG_TRANS"/>
     <AcctgTransType acctgTransTypeId="RECEIPT_ACCTG_TRANS" description="Receipt" hasTable="N" parentTypeId="PAYMENT_ACCTG_TRANS"/>
 
+    <AcctgTransEntryType acctgTransEntryTypeId="_NA_" description="Not Applicable" hasTable="N" parentTypeId=""/>
+	
     <StatusType description="Acctg Entry Reconcile" hasTable="N" parentTypeId="" statusTypeId="ACCTG_ENREC_STATUS"/>
     <StatusItem description="Not Reconciled" sequenceId="01" statusCode="NOT_RECONCILED" statusId="AES_NOT_RECONCILED" statusTypeId="ACCTG_ENREC_STATUS"/>
     <StatusItem description="Partly Reconciled" sequenceId="02" statusCode="PARTLY_RECONCILED" statusId="AES_PARTLY_RECON" statusTypeId="ACCTG_ENREC_STATUS"/>
