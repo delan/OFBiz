@@ -4,7 +4,7 @@
 
 <title><%=companyName%>: <%=pageName%></title>
 
-<link rel="stylesheet" href="/commonapp/includes/maincss.css" type="text/css">
+<link rel="stylesheet" href="/webtools/includes/maincss.css" type="text/css">
 <%-- <%@ include file="/includes/maincss.jsp"%> --%>
 
 <script language="javascript">
