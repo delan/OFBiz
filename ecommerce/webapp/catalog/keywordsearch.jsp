@@ -15,6 +15,9 @@
 <br>
 <div class='head1'>Search Results for "<%=UtilFormatOut.checkNull((String)pageContext.getAttribute("keywordString"))%>"</div>
 
+<% String nextStr = "SEARCH_STRING="+keywordString+"&SEARCH_CATEGORY_ID="+searchCategoryId+"&VIEW_SIZE="+viewSize+"&VIEW_INDEX="+(viewIndex.intValue()+1);%>
+<% String prevStr = "SEARCH_STRING="+keywordString+"&SEARCH_CATEGORY_ID="+searchCategoryId+"&VIEW_SIZE="+viewSize+"&VIEW_INDEX="+(viewIndex.intValue()-1);%>
+
 <ofbiz:unless name="searchProductList">
   <br><div class='head2'>&nbsp;No results found.</div>
 </ofbiz:unless>
@@ -25,13 +28,13 @@
       <td align=right>
         <b>
         <%if(viewIndex.intValue() > 0){%>
-          <a href="<ofbiz:url><%="/keywordsearch?SEARCH_STRING=" + keywordString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/keywordsearch?" + prevStr%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize.intValue() > 0){%>
           <%=lowIndex%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if(listSize.intValue() > highIndex.intValue()){%>
-          | <a href="<ofbiz:url><%="/keywordsearch?SEARCH_STRING=" + keywordString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/keywordsearch?" + nextStr%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
@@ -61,13 +64,13 @@
       <td align=right>
         <b>
         <%if(viewIndex.intValue() > 0){%>
-          <a href="<ofbiz:url><%="/keywordsearch?SEARCH_STRING=" + keywordString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/keywordsearch?" + prevStr%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize.intValue() > 0){%>
           <%=lowIndex%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if(listSize.intValue() > highIndex.intValue()){%>
-          | <a href="<ofbiz:url><%="/keywordsearch?SEARCH_STRING=" + keywordString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/keywordsearch?" + nextStr%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
