@@ -1,0 +1,148 @@
+<html>
+<head>
+<title>Refactoring Enterprise Automation Systems</title>
+</head>
+
+<body>
+
+  
+    <h2 align="center">Refactoring 
+Enterprise Automation Systems</h2>
+<br>Written By: David E. Jones
+<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
+<br>Last Updated: May 17, 2001
+
+<H4><B>&nbsp;<BR></BR>
+</B><B>Abstract</B></H4>
+<P>This 
+paper describes issues related to the goal of unifying the various disparate 
+components of current business systems.  Current enterprise-wide systems 
+are usually made up of a number of individual applications that communicate 
+through batch data transfer, messaging and transaction middleware, or 
+APIs.  This approach requires independent maintenance of many systems 
+that are often quite different as well as maintenance of the links between 
+them.  On top of having disparate systems inside an organization is 
+the problem of even more disparate systems outside the organization 
+such as those of partners or clients.&nbsp;</P>
+<P>In some large businesses this 
+seems to work all right because divisions of the business are often 
+as fragmented as the systems they use.  Even in those situations greater 
+efficiency could be achieved through systems that communicate and operate 
+in a more uniform way.  Small and medium sized businesses cannot generally 
+afford the cost of maintaining so many disparate systems, so much of 
+the functionality found in the systems of large businesses is not found 
+among smaller businesses.&nbsp;</P>
+<P>This problem has no immediately 
+apparent solution.  Because vendors of different vertical applications 
+do similar things in so many different ways, tighter integrations between 
+them are difficult.  Over the history of enterprise computing some horizontal 
+pieces of enterprise systems that can be shared among vertical applications 
+have started to become their own pieces.  The first major example of 
+this was using databases as a common persistent storage mechanism.  
+More recently some businesses have tried to standardize as much as possible 
+on many other horizontal pieces of the system such as: analysis tools 
+such as reporting and ad-hoc query tools, operating systems, programming 
+languages and so forth.&nbsp;</P>
+<P>Refactoring enterprise automation 
+systems is the idea of identifying pieces of vertical applications that 
+can be converted to common use or horizontal components, then creating those horizontal components
+and using a common set of them as the foundation for all of the vertical applications in the enterprise-wide system.  
+A system like this has many advantages.  It is easier to maintain because 
+the same skill-set can be used throughout the enterprise and it is more efficient 
+to build and customize because tools that are used a lot will be available 
+as part of the core foundation.  Less code will have to be written, 
+tested and maintained because more of it will be shared.  No one (or 
+very few people) would want to write their own compiler, operating system, 
+database, web server or many other components because it requires a 
+lot of work and very stable and affordable options are available.  In 
+the future more and more components of enterprise systems will be viewed 
+in this way.  Some components of vertical applications cannot be shared 
+because they are unique to certain operations, but the industry as a 
+whole is far from reaching the point where all possible components of vertical
+applications are 
+turned into horizontal components.&nbsp;</P>
+<P>This is one of the main goals 
+for the development efforts of the Open For Business Project.  Our goal is 
+to provide an enterprise-wide business automation system as a service 
+to those who use.  We plan to do this by building a large set 
+of vertical applications that all operate on a common foundational 
+framework.  As much of the functionality as possible will live in the 
+foundation layer as horizontal components and will be common among 
+all of the vertical applications in the system.&nbsp;
+</P>
+<P>Here is a list of the major horizontal components that we plan to include in our foundation:
+<OL TYPE="1">
+  <LI>Common 
+  Application Components</LI>
+  <OL TYPE="a">
+    <LI>Item Data: Products, Fixed
+    Assets</LI>
+    <LI>Entity Data: People, Companies</LI>
+    <LI>Transactional
+    Data</LI>
+    </OL>
+  <LI>Common 
+  Tool Components</LI>
+  <OL TYPE="a">
+    <LI>Constraint Based
+    Optimization</LI>
+    <LI>Content 
+    Management</LI>
+    <LI>Data 
+    Analysis</LI>
+    <LI>Knowledge Management</LI>
+    <LI>Personalization</LI>
+    <LI>Rules &amp; Workflow</LI>
+    
+    </OL>
+
+    
+    <LI>Basic 
+  Technology Components</LI>
+  <OL TYPE="a">
+    <LI>Human 
+    Communication Tools</LI>
+    <LI>Development 
+    Tools</LI>
+<LI>Integration 
+    &amp; Connection Components</LI>
+</OL>
+  <OL TYPE="a" start="4">
+    <LI>Quality 
+    Assurance</LI>
+    <OL TYPE="i">
+      <LI>Quality 
+      Testing</LI>
+      <LI>Usability 
+      Testing</LI>
+      <LI>Management 
+      &amp; Monitoring</LI>
+      <LI>Load 
+      Balancing &amp; High Availability</LI>
+      </OL>
+    </OL>
+  <OL TYPE="a" start="5">
+    <LI>Foundation 
+    Technology</LI>
+    <OL TYPE="i">
+      <LI>J2EE 
+      Application Server</LI>
+      <LI>Java 
+      Virtual Machine or Run-time Environment</LI>
+      <LI>Unified 
+      Naming &amp; Directory Service (LDAP)</LI>
+      <LI>Relational 
+      Database Management System (RDBMS)</LI>
+      <LI>Operating 
+      System</LI>
+</OL></OL></OL>
+
+
+    
+
+    
+  
+
+</html>
+

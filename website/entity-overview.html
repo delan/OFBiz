@@ -1,0 +1,362 @@
+
+<h2 align="center">The Open For Business Project - Entity Overview</h2>
+
+<br>Written By: David E. Jones
+<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
+<br>Last Updated: May 18, 2001
+<p><b>Status: </b>This document is an early attempt to organize the data
+corresponding to the various components of the overall system.&nbsp; Some parts
+are much more complete and thought out than others. Please send me feed back on
+any omissions or errors.</p>
+<h3>Table of Contents</h3>
+<ul>
+  <li><a href="#Common Tool Components">Common Tool Components</a>
+    <ul>
+      <li><a href="#Rule Engine">Rule Engine</a></li>
+      <li><a href="#Workflow Engine">Workflow Engine</a></li>
+      <li><a href="#Content Management">Content Management</a></li>
+    </ul>
+  </li>
+  <li><a href="#Common Application Components">Common Application Components</a>
+    <ul>
+      <li><a href="#Person Management">Person Management</a></li>
+      <li><a href="#Company Management">Company Management</a></li>
+      <li><a href="#Catalog Management">Catalog Management</a></li>
+      <li><a href="#Fixed Asset Management">Fixed Asset Management</a></li>
+      <li><a href="#Transaction Management">Transaction Management</a></li>
+    </ul>
+  </li>
+  <li><a href="#Vertical Applications">Vertical Applications</a>
+    <ul>
+      <li><a href="#Warehouse Management">Warehouse Management</a></li>
+      <li><a href="#Shipping Management">Shipping Management</a></li>
+      <li><a href="#Customer Service">Customer Service</a></li>
+      <li><a href="#Sales Force Automation">Sales Force Automation</a></li>
+      <li><a href="#Marketing Automation">Marketing Automation</a></li>
+      <li><a href="#Financials">Financials</a></li>
+      <li><a href="#Store Front">Store Front</a></li>
+      <li><a href="#Planning">Planning</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>NOTE: Entries in italics are directories, and normal text entries are entities (Entity EJBs).</p>
+
+<hr>
+<h3><a name="Common Tool Components">Common Tool Components</a></h3>
+<hr>
+<h4><a name="Rule Engine">Rule Engine</a></h4>
+<h4><a name="Workflow Engine">Workflow Engine</a></h4>
+<h4><a name="Content Management">Content Management</a></h4>
+<ul>
+  <li><i>Content</i>
+    <ul>
+      <li>Content</li>
+      <li>ContentGroup (makes a content a group of
+        contents)</li>
+      <li>ContentAttribute</li>
+      <li>ContentType (hierarchical, inherits default
+        attributes from parent type)</li>
+      <li>ContentTypeAttribute</li>
+      <li>ContentRelated</li>
+      <li>ContentSequence</li>
+      <li>ContentSequenceLine</li>
+    </ul>
+  </li>
+</ul>
+
+<hr>
+<h3><a name="Common Application Components">Common Application Components</a></h3>
+<p>The Common Application Components are pieces of the overall application that
+all businesses will need.&nbsp; They are based on the general idea of a
+transaction.&nbsp; There are four things involved in any transaction: a seller
+(person/company), a buyer (person/company), the item or service (product), and a
+records of the transaction (for the buyer and the seller).&nbsp; These entities
+support this concept on both the buying (purchasing) and selling (sales) sides
+of the transaction.&nbsp; All other parts of the overall application are
+centered around the Common Application Components.&nbsp; All business systems
+will include these components to one extent or another in their applications,
+and the vertical applications are optional for many companies.</p>
+<hr>
+<h4><a name="Person Management">Person Management</a></h4>
+<ul>
+  <li><i>Person</i>
+    <ul>
+      <li>Person</li>
+      <li>PersonAttribute</li>
+      <li>PersonType</li>
+      <li>PersonTypeAttribute</li>
+      <li>PersonPersonType (necessary to allow a
+            Person to be of multiple types)</li>
+    </ul>
+  </li>
+  <li><i>Security</i>
+    <ul>
+      <li><i>SecurityGroup</i>
+        <ul>
+          <li>SecurityGroup</li>
+          <li>SecurityPermission</li>
+          <li>SecurityGroupPermission</li>
+        </ul>
+      </li>
+      <li><i>Person</i>
+        <ul>
+          <li>PersonSecurityGroup</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<h4><a name="Company Management">Company Management</a></h4>
+<ul>
+  <li><i>Company</i>
+    <ul>
+      <li><i>Company</i>
+        <ul>
+          <li>Company (could be partner, supplier, or the owner company)</li>
+          <li>CompanyLocation</li>
+          <li>CompanyUnit (org unit of company, single parent hierarchy)</li>
+          <li>CompanyAttribute</li>
+          <li>CompanyType</li>
+          <li>CompanyTypeAttribute</li>
+          <li>CompanyCompanyType (necessary to allow a Company to be of multiple types)</li>
+          <li>CompanyRelated (relationships between companies: partner, owner,
+            supplier, etc.)</li>
+        </ul>
+      </li>
+      <li><i>Person</i>
+        <ul>
+          <li>PersonCompanyUnit (for employees of a company, unit assigned to)</li>
+          <li>PersonCompanyLocation</li>
+        </ul>
+      </li>
+      <li><i>Product</i>
+        <ul>
+          <li>ProductCompany (source company could be mfg, reseller,
+            etc.)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<h4><a name="Catalog Management">Catalog Management</a></h4>
+<ul>
+  <li><i>Catalog</i>
+    <ul>
+      <li><i>Product</i>
+        <ul>
+          <li>Product</li>
+          <li>ProductGroup (makes a product a group of products, cannot be
+            bought)</li>
+          <li>ProductKit (group of products used to build a product)</li>
+          <li>ProductAttribute</li>
+          <li>ProductType</li>
+          <li>ProductTypeAttribute</li>
+          <li>ProductRelated</li>
+        </ul>
+      </li>
+      <li><i>Category</i>
+        <ul>
+          <li>Category</li>
+          <li>ProductCategory</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<h4><a name="Fixed Asset Management">Fixed Asset Management</a></h4>
+<ul>
+  <li><i>FixedAsset</i>
+    <ul>
+      <li><i>FixedAsset</i>
+        <ul>
+          <li>FixedAsset</li>
+          <li>FixedAssetAttribute</li>
+          <li>FixedAssetType</li>
+          <li>FixedAssetTypeAttribute</li>
+        </ul>
+      </li>
+      <li><i>Maintenance</i>
+        <ul>
+          <li>FixedAssetMaintEvent</li>
+          <li>FixedAssetMaintHistory</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<h4><a name="Transaction Management">Transaction Management</a></h4>
+<ul>
+  <li><i>Transaction</i>
+    <ul>
+      <li><i>Sale</i>
+        <ul>
+          <li>SaleTrans</li>
+          <li>SaleTransLine</li>
+          <li>SaleTransStatus</li>
+          <li>SaleTransChange</li>
+        </ul>
+      </li>
+      <li><i>Return</i>
+        <ul>
+          <li>ReturnAuthorization</li>
+        </ul>
+      </li>
+      <li><i>Purchase</i>
+        <ul>
+          <li>PurchaseTrans</li>
+          <li>PurchaseTransLine</li>
+          <li>PurchaseTransStatus</li>
+          <li>PurchaseTransChange</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<hr>
+<h3><a name="Vertical Applications">Vertical Applications</a></h3>
+<hr>
+<h4><a name="Warehouse Management">Warehouse Management</a></h4>
+<ul>
+  <li><i>Warehouse</i>
+    <ul>
+      <li><i>Warehouse</i>
+        <ul>
+          <li>Warehouse (refers to company unit in a column)</li>
+          <li>WarehouseLocation (location inside the warehouse)</li>
+        </ul>
+      </li>
+      <li><i>Product</i>
+        <ul>
+          <li>ProductWarehouse</li>
+          <li>ProductWarehouseLocation</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<h4><a name="Shipping Management">Shipping Management</a></h4>
+<ul>
+  <li><i>Shipping</i>
+    <ul>
+      <li>ShippingMethod</li>
+    </ul>
+  </li>
+</ul>
+<h4><a name="Customer Service">Customer Service</a></h4>
+<ul>
+  <li><i>Service</i>
+    <ul>
+      <li>TroubleTicket</li>
+      <li>TroubleTicketMessage</li>
+      <li>TroubleTicketStatus</li>
+      <li>PersonInteractionHistory</li>
+    </ul>
+  </li>
+  <li><i>Forum</i>
+    <ul>
+      <li>Forum (hierarchical, has single parent)</li>
+      <li>Message (hierarchical, has single parent)</li>
+    </ul>
+  </li>
+</ul>
+<h4><a name="Sales Force Automation">Sales Force Automation</a></h4>
+    <ul>
+      <li><i>SalesOffice</i>
+        <ul>
+          <li><i>SalesOffice</i>
+            <ul>
+              <li>SalesOffice (refers to company unit in a column)</li>
+              <li>SalesOfficeSalesPerson</li>
+            </ul>
+          </li>
+          <li><i>Product</i>
+            <ul>
+              <li>ProductSalesOffice</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><i>SalesRegion</i>
+        <ul>
+          <li>SalesRegion</li>
+          <li>SalesOfficeSalesRegion</li>
+        </ul>
+      </li>
+    </ul>
+<h4><a name="Marketing Automation">Marketing Automation</a></h4>
+<ul>
+  <li><i>CustomerSegment</i>
+    <ul>
+      <li>CustomerSegment</li>
+      <li>PersonCustomerSegment</li>
+    </ul>
+  </li>
+  <li><i>CampaignManagement</i>
+    <ul>
+      <li>Campaign</li>
+    </ul>
+  </li>
+  <li><i>UserActionTracking</i>
+    <ul>
+      <li>ActionEvent</li>
+      <li>ActionEventType</li>
+    </ul>
+  </li>
+  <li><i>EmailCampaign</i></li>
+</ul>
+<h4><a name="Financials">Financials</a></h4>
+<ul>
+  <li><i>CreditCard</i>
+    <ul>
+      <li>CreditCard (can belong to a Person and/or a
+        Company)</li>
+    </ul>
+  </li>
+  <li><i>Ledger</i>
+    <ul>
+      <li>Ledger (hierarchical, has single parent, can belong to a Person and/or a
+        CompanyUnit)</li>
+      <li>LedgerLine</li>
+    </ul>
+  </li>
+  <li><i>Receivable</i>
+    <ul>
+      <li>Receipt (from Person or company)</li>
+    </ul>
+  </li>
+  <li><i>Payable</i>
+    <ul>
+      <li>Payment (to Person or company)</li>
+    </ul>
+  </li>
+</ul>
+<h4><a name="Store Front">Store Front</a></h4>
+<ul>
+  <li><i>ShoppingList</i>
+    <ul>
+      <li>ShoppingList (hierarchical, has single parent)</li>
+      <li>ShoppingListLine</li>
+    </ul>
+  </li>
+</ul>
+<h4><a name="Planning">Planning</a></h4>
+<ul>
+  <li><i>Planning</i>
+    <ul>
+      <li>ScheduleItemGroup</li>
+      <li><i>Person</i>
+        <ul>
+          <li>PersonTask</li>
+          <li>PersonScheduleItem</li>
+        </ul>
+      </li>
+      <li><i>FixedAsset</i>
+        <ul>
+          <li>FixedAssetScheduleItem</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
