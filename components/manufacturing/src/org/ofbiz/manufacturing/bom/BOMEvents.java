@@ -1,5 +1,5 @@
 /*
- * $Id: BOMEvents.java,v 1.8 2004/04/21 20:42:47 jacopo Exp $
+ * $Id: BOMEvents.java,v 1.9 2004/04/21 20:47:22 jacopo Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -144,6 +144,7 @@ public class BOMEvents {
                 UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
 
         if (updateMode.equals("DELETE")) {
+            /*
             try {
                 dispatcher.runSync("removeProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
             } catch (Exception e) {
@@ -152,7 +153,7 @@ public class BOMEvents {
                 return "error";
             }
             return "success";
-            /*
+             */
             GenericValue productAssoc = null;
 
             try {
@@ -173,7 +174,6 @@ public class BOMEvents {
                 return "error";
             }
             return "success";
-            */
         }
 
         String thruDateStr = request.getParameter("THRU_DATE");
