@@ -180,17 +180,24 @@ public abstract class ModelTreeAction {
             this.location = scriptElement.getAttribute("location");
         }
         
+        public Script(ModelTree.ModelNode.ModelSubNode modelSubNode, Element scriptElement) {
+            super (modelSubNode, scriptElement);
+            this.location = scriptElement.getAttribute("location");
+        }
+        
         public void runAction(Map context) {
             if (location.endsWith(".bsh")) {
                 try {
                     context.put("_LIST_ITERATOR_", null);
                     BshUtil.runBshAtLocation(location, context);
                 	Object obj = context.get("_LIST_ITERATOR_");
-                	if (obj != null && obj instanceof EntityListIterator) {
-                    	this.modelSubNode.setListIterator((ListIterator)obj);
-                	} else {
-                		if (obj instanceof List)
-                        	this.modelSubNode.setListIterator(((List)obj).listIterator());
+                	if (this.modelSubNode != null) {
+                		if (obj != null && (obj instanceof EntityListIterator || obj instanceof ListIterator)) {
+                    		this.modelSubNode.setListIterator((ListIterator)obj);
+                		} else {
+                			if (obj instanceof List)
+                        		this.modelSubNode.setListIterator(((List)obj).listIterator());
+                		}
                 	}
                 } catch (GeneralException e) {
                     String errMsg = "Error running BSH script at location [" + location + "]: " + e.toString();
@@ -354,7 +361,7 @@ public abstract class ModelTreeAction {
                 context.put("_LIST_ITERATOR_", null);
                 finder.runFind(context, this.modelTree.getDelegator());
                 Object obj = context.get("_LIST_ITERATOR_");
-                if (obj != null && obj instanceof EntityListIterator) {
+                if (obj != null && (obj instanceof EntityListIterator || obj instanceof ListIterator)) {
                     this.modelSubNode.setListIterator((ListIterator)obj);
                 } else {
                 	if (obj instanceof List)
@@ -390,7 +397,7 @@ public abstract class ModelTreeAction {
                 context.put("_LIST_ITERATOR_", null);
                 finder.runFind(context, this.modelTree.getDelegator());
                 Object obj = context.get("_LIST_ITERATOR_");
-                if (obj != null && obj instanceof EntityListIterator) {
+                if (obj != null && (obj instanceof EntityListIterator || obj instanceof ListIterator)) {
                     this.modelSubNode.setListIterator((ListIterator)obj);
                 } else {
                 	if (obj instanceof List)

@@ -355,7 +355,7 @@ public class ModelTree {
                     	modelTree.setNodeIndexAtDepth(depth, nodeIndex);
                         Object [] arr = (Object [])nodeIter.next();
                         ModelNode node = (ModelNode)arr[0];
-                        GenericValue val = (GenericValue)arr[1];
+                        Map val = (Map)arr[1];
                         //GenericPK pk = val.getPrimaryKey();
                         //if (Debug.infoOn()) Debug.logInfo(" pk:" + pk, module);
                         Map newContext = ((MapStack) context).standAloneChildStack();
@@ -427,8 +427,8 @@ public class ModelTree {
                  List dataFound = (List)context.get("dataFound");
                  ListIterator dataIter =  subNode.getListIterator();
                  while (dataIter != null && dataIter.hasNext()) {
-                     GenericValue val = (GenericValue)dataIter.next();
-                     if (Debug.infoOn()) Debug.logInfo(" hasChildren, val:" + val.getPrimaryKey(), module);
+                     //GenericValue val = (GenericValue)dataIter.next();
+                     Map val = (Map)dataIter.next();
                      Object [] arr = {node,val};
                      subNodeValues.add(arr);
                  }
@@ -495,7 +495,7 @@ public class ModelTree {
                 
                 actionElement = UtilXml.firstChildElement(nodeElement, "script");
                 if (actionElement != null) {
-                    actions.add(new ModelTreeAction.Script(modelNode, actionElement));
+                    actions.add(new ModelTreeAction.Script(this, actionElement));
                 }
         
             }
