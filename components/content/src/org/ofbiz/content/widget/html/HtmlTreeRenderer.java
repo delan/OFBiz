@@ -75,14 +75,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
         String staticNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
         context.put("staticNodeTrailPiped", staticNodeTrailPiped);
         context.put("nodePathString", pathString);
-        //int idx = node.getModelTree().getNodeIndexAtDepth(depth);
         context.put("depth", Integer.toString(depth));
-        /*
-        StringBuffer sb = new StringBuffer();
-        for (int i=0; i<depth; i++)
-            sb.append("&nbsp;&nbsp;");
-        writer.write(sb.toString());
-        */
         String style = node.getWrapStyle(context);
         if (UtilValidate.isNotEmpty(style)) {
         	writer.write("<div");
@@ -94,14 +87,6 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
 
         String pkName = node.getModelTree().getPkName();
         String entityId = (String)context.get(pkName);
-        /*
-        if (targetNodeTrail == null) {
-            targetNodeTrail = node.getModelTree().getTrailList();
-    
-            Debug.logInfo("HtmlTreeExpandCollapseRenderer, targetNodeTrail(2):" + targetNodeTrail, module);
-            currentNodeTrail = new ArrayList();
-        }
-        */
         boolean hasChildren = node.hasChildren(context, subNodeValues);
             //Debug.logInfo("HtmlTreeExpandCollapseRenderer, hasChildren(1):" + hasChildren, module);
 
@@ -124,7 +109,8 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             //String currentNodeTrailCsv = (String)context.get("currentNodeTrailCsv");
     
             int openDepth = node.getModelTree().getOpenDepth();
-            if (targetEntityId == null || !targetEntityId.equals(entityId)) {
+            if (depth >= openDepth && (targetEntityId == null || !targetEntityId.equals(entityId))) {
+                // Not on the trail
                 if( node.showPeers(depth)) {
                 	context.put("processChildren", new Boolean(false));
                 	//expandCollapseLink.setText("&nbsp;+&nbsp;");

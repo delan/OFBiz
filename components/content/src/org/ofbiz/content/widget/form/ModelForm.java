@@ -835,7 +835,7 @@ public class ModelForm {
         }
         // set low and high index
 
-        getListLimits(context);
+        getListLimits(context, obj);
         
         if (iter != null) {
             // render item rows
@@ -1420,27 +1420,22 @@ public class ModelForm {
         return actualPageSize;
     }
     
-    public void getListLimits(Map context) {
-        try {
-            listSize = ((Integer) context.get("listSize")).intValue();
-        } catch (Exception e) {
-            List items = (List) context.get(this.getListName());
-            if (items != null) {
-                listSize = items.size();
-            } else {
-                ListIterator listIt = getListIterator(context);
-                if (listIt != null && listIt instanceof EntityListIterator) {
-                    try {
-                        ((EntityListIterator)listIt).last();
-                        listSize = ((EntityListIterator)listIt).currentIndex();
-                        ((EntityListIterator)listIt).beforeFirst();
-                    } catch (GenericEntityException e2) {
-                        Debug.logError(e2, "Error getting list size", module);
-                        listSize = 0;
-                    }
-                    
-                }
+    public void getListLimits(Map context, Object obj) {
+        ListIterator iter = null;
+        List items = null;
+        if (obj instanceof ListIterator) {
+            iter = (ListIterator)obj;   
+            try {
+                ((EntityListIterator)iter).last();
+                listSize = ((EntityListIterator)iter).currentIndex();
+                ((EntityListIterator)iter).beforeFirst();
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Error getting list size", module);
+                listSize = 0;
             }
+        } else  if (obj instanceof List) {
+            items = (List)obj;
+            listSize = items.size();
         }
         
        if (paginate) {
@@ -1459,25 +1454,6 @@ public class ModelForm {
             highIndex = (viewIndex + 1) * viewSize;
     
     
-            /*
-            try {
-                listSize = ((Integer) context.get("listSize")).intValue();
-            } catch (Exception e) {
-                listSize = 0;
-            }
-    
-            try {
-                highIndex = ((Integer) context.get("highIndex")).intValue();
-            } catch (Exception e) {
-                highIndex = 0;
-            }
-    
-            try {
-                lowIndex = ((Integer) context.get("lowIndex")).intValue();
-            } catch (Exception e) {
-                lowIndex = 0;
-            }
-            */
         } else {
             viewIndex = 0;
             viewSize = DEFAULT_PAGE_SIZE;

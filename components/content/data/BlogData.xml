@@ -78,4 +78,5 @@
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_PUBLISHER_ROLE" roleTypeId="BLOG_PUBLISHER" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_CREATE_SUB" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_PUBLISHER" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_VIEW_SHORT" roleTypeId="_NA_" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_NA_"/>
 </entity-engine-xml>
