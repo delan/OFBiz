@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.2 2003/08/17 04:56:27 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.3 2003/09/24 20:42:52 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -428,7 +428,11 @@ public class SqlJdbcUtil {
                 }
             }
             sql.append(makeFromClause(modelEntity, datasourceInfo));
-            sql.append(makeViewWhereClause(modelEntity, datasourceInfo.joinStyle));
+            String viewWhereClause = makeViewWhereClause(modelEntity, datasourceInfo.joinStyle);
+            if (viewWhereClause != null && viewWhereClause.length() > 0) {
+                sql.append(" WHERE ");
+                sql.append(viewWhereClause);
+            }
             ModelViewEntity modelViewEntity = (ModelViewEntity)modelEntity;
             String groupByString = modelViewEntity.colNameString(modelViewEntity.getGroupBysCopy(), ", ", "", false);
             if (UtilValidate.isNotEmpty(groupByString)) {
