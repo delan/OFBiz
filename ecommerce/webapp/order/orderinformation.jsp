@@ -245,7 +245,10 @@
                 <td align="left" valign="top" width="80%">
                     <div class="tabletext">
                     <%=UtilFormatOut.checkNull(carrierPartyId)%> 
-                    <%=UtilFormatOut.checkNull(helper.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId)).getString("description"))%>
+                    <%String shipMethDescription = "";%>
+                    <%GenericValue shipmentMethodType = helper.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId));%>
+                    <%if(shipmentMethodType != null) shipMethDescription = shipmentMethodType.getString("description");%>
+                    <%=UtilFormatOut.checkNull(shipMethDescription)%>
                     <%--=UtilFormatOut.ifNotEmpty(shippingAccount, "<br>Use Account: ", "")--%>
                     </div>
                 </td>

@@ -82,7 +82,10 @@
         >
       </td>
       <td valign="top">
-        <div class="tabletext"><%=carrierShipmentMethod.getString("partyId") + " " + carrierShipmentMethod.getRelatedOneCache("ShipmentMethodType").getString("description")%></div>
+        <%String shipMethDescription = "";%>
+        <%GenericValue shipmentMethodType = carrierShipmentMethod.getRelatedOneCache("ShipmentMethodType");%>
+        <%if(shipmentMethodType != null) shipMethDescription = shipmentMethodType.getString("description");%>
+        <div class="tabletext"><%=carrierShipmentMethod.getString("partyId") + " " + UtilFormatOut.checkNull(shipMethDescription)%></div>
       </td>
     </tr>
 </ofbiz:iterator>
