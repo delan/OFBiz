@@ -79,6 +79,16 @@
             </target>
         </menu-item>
 
+        <menu-item name="index" title="Index" default-target-name="dflt" permission-entity-action="_ADMIN">
+            <target name="dflt" request-name="AdminIndex">
+            </target>
+        </menu-item>
+
+        <menu-item name="search" title="Search" default-target-name="dflt" permission-entity-action="_ADMIN">
+            <target name="dflt" request-name="AdminSearch">
+            </target>
+        </menu-item>
+
 
     </menu>
 

@@ -1287,6 +1287,15 @@
         <response name="success" type="view" value="CMSContentEdit"/>
         <response name="error" type="view" value="EditAddImage"/>
     </request-map>
+    <request-map uri="AdminSearch">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AdminSearch"/>
+    </request-map>
+    <request-map uri="AdminIndex">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AdminIndex"/>
+    </request-map>
+
 
 
     <!-- View Mappings -->
@@ -1382,5 +1391,8 @@
     <view-map name="addSubSite" page="/cms/addSubSite.ftl" type="jpublish"/>
     <view-map name="EditAddContent" page="/cms/EditAddContent.ftl" type="jpublish"/>
     <view-map name="EditAddImage" page="/cms/EditAddImage.ftl" type="jpublish"/>
+    <view-map name="AdminSearch" page="/cms/AdminSearch.ftl" type="jpublish"/>
+    <view-map name="AdminIndex" page="/cms/AdminIndex.ftl" type="jpublish"/>
+
     <!-- end of view mappings -->
 </site-conf>

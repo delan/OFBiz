@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.30 2004/06/16 02:36:26 byersa Exp $
+ * $Id: ContentWorker.java,v 1.31 2004/06/16 22:16:03 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  * @since 2.2
  * 
  *  
@@ -656,6 +656,45 @@ public class ContentWorker {
                 GenericValue contentAssoc = (GenericValue)lst2.get(0);
                 getContentAncestry(delegator, contentAssoc.getString(contentIdOtherField), contentAssocTypeId, direction, contentAncestorList);
                 contentAncestorList.add(contentAssoc.getString(contentIdOtherField));
+            }
+        } catch(GenericEntityException e) {
+            Debug.logError(e,module); 
+            return;
+        }
+        return;
+    }
+
+    public static void getContentAncestryAll(GenericDelegator delegator, String contentId, String passedContentTypeId, String direction, List contentAncestorList) {
+        String contentIdField = null;
+        String contentIdOtherField = null;
+        if (direction != null && direction.equalsIgnoreCase("to")) {
+            contentIdField = "contentId";
+            contentIdOtherField = "contentIdTo";
+        } else {
+            contentIdField = "contentIdTo";
+            contentIdOtherField = "contentId";
+        }
+        
+        if (Debug.infoOn()) Debug.logInfo("getContentAncestry, contentId:" + contentId, "");
+        Map andMap = UtilMisc.toMap(contentIdField, contentId);
+        try {
+            List lst = delegator.findByAndCache("ContentAssoc", andMap);
+            //if (Debug.infoOn()) Debug.logInfo("getContentAncestry, lst:" + lst, "");
+            List lst2 = EntityUtil.filterByDate(lst);
+            //if (Debug.infoOn()) Debug.logInfo("getContentAncestry, lst2:" + lst2, "");
+            Iterator iter = lst2.iterator();
+            while (iter.hasNext()) {
+                GenericValue contentAssoc = (GenericValue)iter.next();
+                String contentIdOther = contentAssoc.getString(contentIdOtherField);
+                if (!contentAncestorList.contains(contentIdOther)) {
+                    getContentAncestryAll(delegator, contentIdOther, passedContentTypeId, direction, contentAncestorList);
+                    if (!contentAncestorList.contains(contentIdOther)) {
+                        GenericValue contentTo = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentIdOther));
+                        String contentTypeId = contentTo.getString("contentTypeId");
+                        if (contentTypeId != null && contentTypeId.equals(passedContentTypeId))
+                            contentAncestorList.add(contentIdOther );
+                    }
+                }
             }
         } catch(GenericEntityException e) {
             Debug.logError(e,module); 
