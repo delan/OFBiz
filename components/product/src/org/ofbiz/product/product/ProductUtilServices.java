@@ -61,7 +61,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -503,7 +503,7 @@ public class ProductUtilServices {
     }
 
 
-    /** reset all product image names with a certain pattern, ex: /images/products/${sizeStr}/${productId}.jpg
+    /** reset all product image names with a certain pattern, ex: /images/products/${size}/${productId}.jpg
      * NOTE: only works on fields of Product right now
      */
     public static Map setAllProductImageNames(DispatchContext dctx, Map context) {
@@ -513,16 +513,22 @@ public class ProductUtilServices {
         Locale locale = (Locale) context.get("locale");
         String errMsg = null;
 
+        if (UtilValidate.isEmpty(pattern)) {
+            String imageFilenameFormat = UtilProperties.getPropertyValue("catalog", "image.filename.format");
+            String imageUrlPrefix = UtilProperties.getPropertyValue("catalog", "image.url.prefix");
+            pattern = imageUrlPrefix + "/" + imageFilenameFormat;
+        }
+
         try {
             EntityListIterator eli = delegator.findListIteratorByCondition("Product", null, null, null);
             GenericValue product = null;
             int numSoFar = 0;
             while ((product = (GenericValue) eli.next()) != null) {
                 String productId = (String) product.get("productId");
-                Map smallMap = UtilMisc.toMap("sizeStr", "small", "productId", productId);
-                Map mediumMap = UtilMisc.toMap("sizeStr", "medium", "productId", productId);
-                Map largeMap = UtilMisc.toMap("sizeStr", "large", "productId", productId);
-                Map detailMap = UtilMisc.toMap("sizeStr", "detail", "productId", productId);
+                Map smallMap = UtilMisc.toMap("size", "small", "productId", productId);
+                Map mediumMap = UtilMisc.toMap("size", "medium", "productId", productId);
+                Map largeMap = UtilMisc.toMap("size", "large", "productId", productId);
+                Map detailMap = UtilMisc.toMap("size", "detail", "productId", productId);
 
                 if ("Y".equals(product.getString("isVirtual"))) {
                     // find the first variant, use it's ID for the names...

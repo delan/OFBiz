@@ -59,8 +59,8 @@
     
     <service name="setAllProductImageNames" engine="java"
             location="org.ofbiz.product.product.ProductUtilServices" invoke="setAllProductImageNames" auth="true" transaction-timout="36000000" require-new-transaction="true">
-        <description>Set All Product Image Names</description>
-        <attribute name="pattern" type="String" mode="IN" optional="false"/>
+        <description>Set All Product Image Names; pattern example: /images/products/${size}/${productId}.jpg; defaults to values in the catalog.properties file (image.url.prefix + / + image.filename.format)</description>
+        <attribute name="pattern" type="String" mode="IN" optional="true"/>
     </service>
     <service name="clearAllVirtualProductImageNames" engine="java"
             location="org.ofbiz.product.product.ProductUtilServices" invoke="clearAllVirtualProductImageNames" auth="true" transaction-timout="36000000" require-new-transaction="true">
