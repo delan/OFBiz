@@ -118,7 +118,16 @@
                         <iterate entry-name="orderItemShipGrpInvRes" list-name="orderItemShipGrpInvResList">
                             <if-compare field-name="pickThisOrder" operator="equals" value="Y">
                                 <get-related-one value-name="orderItemShipGrpInvRes" relation-name="InventoryItem" to-value-name="inventoryItem"/>
-                                <get-related value-name="orderItemShipGrpInvRes" relation-name="PicklistItem" list-name="picklistItemList"/>
+                                <!-- We are using entity-condition instead of get-related because we want to exclude cancelled picklists -->
+                                <entity-condition entity-name="PicklistAndBinAndItem" list-name="picklistItemList">
+                                    <condition-list combine="and">
+                                        <condition-expr field-name="orderId" env-name="orderItemShipGrpInvRes.orderId"/>
+                                        <condition-expr field-name="shipGroupSeqId" env-name="orderItemShipGrpInvRes.shipGroupSeqId"/>
+                                        <condition-expr field-name="orderItemSeqId" env-name="orderItemShipGrpInvRes.orderItemSeqId"/>
+                                        <condition-expr field-name="inventoryItemId" env-name="orderItemShipGrpInvRes.inventoryItemId"/>
+                                        <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_CANCELLED"/>
+                                    </condition-list>
+                                </entity-condition>
                                 
                                 <!-- if all picklistItemList are not empty, don't include order as a pick candidate; keep a flag to see -->
                                 <if-empty field-name="picklistItemList">
@@ -587,6 +596,9 @@
             <string-to-field string="PICKLIST_INPUT" field-name="newEntity.statusId"/>
         </if-empty>
 
+        <!-- auto-set the picklistDate, this is not user-changeable -->        
+        <now-timestamp-to-env env-name="newEntity.picklistDate"/>
+
         <!-- set the created and lastModified info -->
         <field-to-field field-name="userLogin.userLoginId" to-field-name="newEntity.createdByUserLogin"/>
         <field-to-field field-name="userLogin.userLoginId" to-field-name="newEntity.lastModifiedByUserLogin"/>
@@ -670,6 +682,7 @@
         <make-value value-name="lookupPKMap" entity-name="PicklistBin"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
 
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -706,6 +719,7 @@
         <make-value value-name="lookupPKMap" entity-name="PicklistItem"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
 
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -746,6 +760,7 @@
         <make-value value-name="lookupPKMap" entity-name="PicklistRole"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
 
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -773,63 +788,73 @@
                 <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_PICKED"/>
                 <condition-expr field-name="statusId" operator="not-equals" value="PICKLIST_CANCELLED"/>
             </condition-list>
+            <order-by field-name="picklistDate"/>
         </entity-condition>
         
         <iterate entry-name="picklist" list-name="picklistList">
-            <clear-field field-name="picklistRoleInfoList"/>
-            <get-related value-name="picklist" relation-name="PicklistRole" list-name="picklistRoleList"/>
-            <iterate entry-name="picklistRole" list-name="picklistRoleList">
-                <clear-field field-name="picklistRoleInfo"/>
-                <get-related-one value-name="picklistRole" relation-name="PartyNameView" to-value-name="picklistRoleInfo.partyNameView" use-cache="true"/>
-                <get-related-one value-name="picklistRole" relation-name="RoleType" to-value-name="picklistRoleInfo.roleType" use-cache="true"/>
-                <env-to-env env-name="picklistRole" to-env-name="picklistRoleInfo.picklistRole"/>
-                <field-to-list field-name="picklistRoleInfo" list-name="picklistRoleInfoList"/>
-            </iterate>
-
-            <clear-field field-name="picklistStatusHistoryInfoList"/>
-            <get-related value-name="picklist" relation-name="PicklistStatusHistory" list-name="picklistStatusHistoryList"/>
-            <iterate entry-name="picklistStatusHistory" list-name="picklistStatusHistoryList">
-                <clear-field field-name="picklistStatusHistoryInfo"/>
-                <get-related-one value-name="picklistStatusHistory" relation-name="StatusItem" to-value-name="picklistStatusHistoryInfo.statusItem" use-cache="true"/>
-                <get-related-one value-name="picklistStatusHistory" relation-name="StatusItemTo" to-value-name="picklistStatusHistoryInfo.statusItemTo" use-cache="true"/>
-                <env-to-env env-name="picklistStatusHistory" to-env-name="picklistStatusHistoryInfo.picklistStatusHistory"/>
-                <field-to-list field-name="picklistStatusHistoryInfo" list-name="picklistStatusHistoryInfoList"/>
-            </iterate>
-
-            <clear-field field-name="picklistBinInfoList"/>
-            <get-related value-name="picklist" relation-name="PicklistBin" list-name="picklistBinList"/>
-            <iterate entry-name="picklistBin" list-name="picklistBinList">
-                <clear-field field-name="picklistBinInfo"/>
-                <get-related-one value-name="picklistBin" relation-name="PrimaryOrderHeader" to-value-name="picklistBinInfo.primaryOrderHeader"/>
-                <get-related-one value-name="picklistBin" relation-name="PrimaryOrderItemShipGroup" to-value-name="picklistBinInfo.primaryOrderItemShipGroup"/>
-
-                <clear-field field-name="picklistItemInfoList"/>
-                <get-related value-name="picklistBin" relation-name="PicklistItem" list-name="picklistItemList" use-cache="true"/>
-                <iterate entry-name="picklistItem" list-name="picklistItemList">
-                    <clear-field field-name="picklistItemInfo"/>
-                    <get-related-one value-name="picklistItem" relation-name="OrderItem" to-value-name="picklistItemInfo.orderItem"/>
-                    <get-related-one value-name="picklistItem" relation-name="InventoryItemAndLocation" to-value-name="picklistItemInfo.inventoryItemAndLocation"/>
-                    <get-related-one value-name="picklistItem" relation-name="OrderItemShipGrpInvRes" to-value-name="picklistItemInfo.orderItemShipGrpInvRes"/>
-                    <env-to-env env-name="picklistItem" to-env-name="picklistItemInfo.picklistItem"/>
-                    <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoList"/>
-                </iterate>
-                <env-to-env env-name="picklistItemInfoList" to-env-name="picklistBinInfo.picklistItemInfoList"/>
-                
-                <env-to-env env-name="picklistBin" to-env-name="picklistBinInfo.picklistBin"/>
-                <field-to-list field-name="picklistBinInfo" list-name="picklistBinInfoList"/>
-            </iterate>
-
-            <clear-field field-name="picklistInfo"/>
-
-            <env-to-env env-name="picklist" to-env-name="picklistInfo.picklist"/>
-            <env-to-env env-name="picklistRoleInfoList" to-env-name="picklistInfo.picklistRoleInfoList"/>
-            <env-to-env env-name="picklistStatusHistoryInfoList" to-env-name="picklistInfo.picklistStatusHistoryInfoList"/>
-            <env-to-env env-name="picklistBinInfoList" to-env-name="picklistInfo.picklistBinInfoList"/>
-            <get-related-one value-name="picklist" relation-name="StatusItem" to-value-name="picklistInfo.statusItem" use-cache="true"/>
-            
+            <call-simple-method method-name="getPicklistSingleDisplayInfoInline"/>
             <field-to-list field-name="picklistInfo" list-name="picklistInfoList"/>
         </iterate>
         
         <field-to-result field-name="picklistInfoList"/>
+    </simple-method>
+
+    <simple-method method-name="getPicklistSingleDisplayInfoInline" short-description="getPicklistSingleDisplayInfoInline">
+        <!-- expects a picklist GenericValue to be in the context, and creates a picklistInfo Map -->
+        <clear-field field-name="picklistRoleInfoList"/>
+        <get-related value-name="picklist" relation-name="PicklistRole" list-name="picklistRoleList"/>
+        <iterate entry-name="picklistRole" list-name="picklistRoleList">
+            <clear-field field-name="picklistRoleInfo"/>
+            <get-related-one value-name="picklistRole" relation-name="PartyNameView" to-value-name="picklistRoleInfo.partyNameView" use-cache="true"/>
+            <get-related-one value-name="picklistRole" relation-name="RoleType" to-value-name="picklistRoleInfo.roleType" use-cache="true"/>
+            <env-to-env env-name="picklistRole" to-env-name="picklistRoleInfo.picklistRole"/>
+            <field-to-list field-name="picklistRoleInfo" list-name="picklistRoleInfoList"/>
+        </iterate>
+
+        <clear-field field-name="picklistStatusHistoryInfoList"/>
+        <get-related value-name="picklist" relation-name="PicklistStatusHistory" list-name="picklistStatusHistoryList"/>
+        <iterate entry-name="picklistStatusHistory" list-name="picklistStatusHistoryList">
+            <clear-field field-name="picklistStatusHistoryInfo"/>
+            <get-related-one value-name="picklistStatusHistory" relation-name="StatusItem" to-value-name="picklistStatusHistoryInfo.statusItem" use-cache="true"/>
+            <get-related-one value-name="picklistStatusHistory" relation-name="ToStatusItem" to-value-name="picklistStatusHistoryInfo.statusItemTo" use-cache="true"/>
+            <env-to-env env-name="picklistStatusHistory" to-env-name="picklistStatusHistoryInfo.picklistStatusHistory"/>
+            <field-to-list field-name="picklistStatusHistoryInfo" list-name="picklistStatusHistoryInfoList"/>
+        </iterate>
+
+        <clear-field field-name="picklistBinInfoList"/>
+        <get-related value-name="picklist" relation-name="PicklistBin" list-name="picklistBinList"/>
+        <iterate entry-name="picklistBin" list-name="picklistBinList">
+            <clear-field field-name="picklistBinInfo"/>
+            <get-related-one value-name="picklistBin" relation-name="PrimaryOrderHeader" to-value-name="picklistBinInfo.primaryOrderHeader"/>
+            <get-related-one value-name="picklistBin" relation-name="PrimaryOrderItemShipGroup" to-value-name="picklistBinInfo.primaryOrderItemShipGroup"/>
+
+            <clear-field field-name="picklistItemInfoList"/>
+            <get-related value-name="picklistBin" relation-name="PicklistItem" list-name="picklistItemList" use-cache="true"/>
+            <iterate entry-name="picklistItem" list-name="picklistItemList">
+                <clear-field field-name="picklistItemInfo"/>
+                <get-related-one value-name="picklistItem" relation-name="OrderItem" to-value-name="picklistItemInfo.orderItem"/>
+                <get-related-one value-name="picklistItem" relation-name="InventoryItemAndLocation" to-value-name="picklistItemInfo.inventoryItemAndLocation"/>
+                <get-related-one value-name="picklistItem" relation-name="OrderItemShipGrpInvRes" to-value-name="picklistItemInfo.orderItemShipGrpInvRes"/>
+                <get-related value-name="picklistItem" relation-name="ItemIssuance" list-name="picklistItemInfo.itemIssuanceList"/>
+                <env-to-env env-name="picklistItem" to-env-name="picklistItemInfo.picklistItem"/>
+                <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoList"/>
+            </iterate>
+            <env-to-env env-name="picklistItemInfoList" to-env-name="picklistBinInfo.picklistItemInfoList"/>
+            
+            <env-to-env env-name="picklistBin" to-env-name="picklistBinInfo.picklistBin"/>
+            <field-to-list field-name="picklistBinInfo" list-name="picklistBinInfoList"/>
+        </iterate>
+
+        <clear-field field-name="picklistInfo"/>
+
+        <env-to-env env-name="picklist" to-env-name="picklistInfo.picklist"/>
+        <env-to-env env-name="picklistRoleInfoList" to-env-name="picklistInfo.picklistRoleInfoList"/>
+        <env-to-env env-name="picklistStatusHistoryInfoList" to-env-name="picklistInfo.picklistStatusHistoryInfoList"/>
+        <env-to-env env-name="picklistBinInfoList" to-env-name="picklistInfo.picklistBinInfoList"/>
+        <get-related-one value-name="picklist" relation-name="StatusItem" to-value-name="picklistInfo.statusItem" use-cache="true"/>
+        <get-related value-name="picklist" relation-name="StatusValidChangeToDetail" list-name="picklistInfo.statusValidChangeToDetailList"/>
+    </simple-method>
+
+    <simple-method method-name="getPickAndPackReportInfo" short-description="getPickAndPackReportInfo">
     </simple-method>
 </simple-methods>

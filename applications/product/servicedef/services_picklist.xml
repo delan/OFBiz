@@ -35,6 +35,8 @@
         <attribute name="shipmentMethodTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="pickMoveByShipmentMethodInfoList" type="List" mode="OUT" optional="true"/>
     </service>
+    
+    <!-- this old service definition is for one that used to get data for the picklist report
     <service name="getPicklistData" engine="simple"
             location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="getPicklistData">
         <description>Gets Picklist Data</description>
@@ -47,6 +49,7 @@
         <attribute name="wrongQuantityReservedList" type="List" mode="OUT" optional="true"/>
         <attribute name="insufficientQohList" type="List" mode="OUT" optional="true"/>
     </service>
+    -->
     
     <!-- Persisted Picklist Services -->
     <service name="createPicklistFromOrders" engine="simple"
@@ -72,6 +75,7 @@
         <description>Create Picklist</description>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="picklistDate"/>
             <exclude field-name="createdByUserLogin"/>
             <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
@@ -81,9 +85,11 @@
         <description>Update Picklist</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="picklistDate"/>
             <exclude field-name="createdByUserLogin"/>
             <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="deletePicklist" default-entity-name="Picklist" engine="simple"
             location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="deletePicklist" auth="true">

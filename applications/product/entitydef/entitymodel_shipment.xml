@@ -129,6 +129,7 @@
       <field name="facilityId" type="id-ne"></field>
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
+      <field name="picklistDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="picklistId"/>
@@ -138,7 +139,26 @@
       <relation type="one" fk-name="PICKLST_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
+      <relation type="many" rel-entity-name="StatusValidChangeToDetail">
+        <key-map field-name="statusId"/>
+      </relation>
     </entity>
+    <view-entity entity-name="PicklistAndBinAndItem" 
+            package-name="org.ofbiz.shipment.picklist"
+            title="Picklist and PicklistBin and PicklistItem View Entity">
+      <member-entity entity-alias="PL" entity-name="Picklist"/>
+      <member-entity entity-alias="PLB" entity-name="PicklistBin"/>
+      <member-entity entity-alias="PLI" entity-name="PicklistItem"/>
+      <alias-all entity-alias="PL"/>
+      <alias-all entity-alias="PLB"/>
+      <alias-all entity-alias="PLI"/>
+      <view-link entity-alias="PL" rel-entity-alias="PLB">
+        <key-map field-name="picklistId"/>
+      </view-link>
+      <view-link entity-alias="PLB" rel-entity-alias="PLI">
+        <key-map field-name="picklistBinId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="PicklistBin"
             package-name="org.ofbiz.shipment.picklist"
             title="Picklist Entity">
@@ -196,6 +216,12 @@
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderItemShipGrpInvRes">
       	<!-- This is a nofk so that the OrderItemShipGrpInvRes can be removed -->
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+        <key-map field-name="shipGroupSeqId"/>
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ItemIssuance">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
         <key-map field-name="shipGroupSeqId"/>
