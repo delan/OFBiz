@@ -379,6 +379,15 @@
         <alt-target use-when="supplierProduct==null" target="createSupplierProduct"/>
 
         <auto-fields-service service-name="updateSupplierProduct" map-name=""/>
+        <field name="partyId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName} ${firstName} ${lastName} [${partyId}]">
+                    <entity-constraint name="roleTypeId" value="SUPPLIER"/>
+                    <entity-order-by field-name="groupName"/>
+                    <entity-order-by field-name="firstName"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="productId"><hidden value="${productId}"/></field>
         <field name="quantityUomId">
             <drop-down allow-empty="true">
