@@ -167,6 +167,10 @@
             target="addContentToProduct" title="Add ProductContent (select Content Id, enter From Date):"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="ProductContent"/>
+        <field name="useDaysLimit"><hidden/></field>
+        <field name="useCountLimit"><hidden/></field>
+        <field name="purchaseThruDate"><hidden/></field>
+        <field name="purchaseFromDate"><hidden/></field>
         <field name="productId" map-name="product"><hidden/></field>
         <field name="productContentTypeId" widget-style="selectBox">
             <drop-down>
@@ -260,6 +264,10 @@
         <field use-when="contentId != null" name="contentId" tooltip="This cannot be changed without re-creating the product content association." map-name="productContentData" ><display/></field>
         <field name="text" map-name="textData" widget-style="textAreaBox" ><textarea cols="60" rows="7"/></field>
         <field name="textDataResourceId" map-name="textData"><hidden/></field>
+        <field name="useDaysLimit"><hidden/></field>
+        <field name="useCountLimit"><hidden/></field>
+        <field name="purchaseThruDate"><hidden/></field>
+        <field name="purchaseFromDate"><hidden/></field>
         <field name="productId"><hidden/></field>
         <field name="productContentTypeId"><hidden/></field>
         <field use-when="contentId == null" name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
