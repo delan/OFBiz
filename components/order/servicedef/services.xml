@@ -225,6 +225,7 @@
     <service name="setEmptyGrandTotals" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="setEmptyGrandTotals">
         <description>Find all OrderHeaders with no grandTotal and call resetGrandTotal</description>
+        <attribute name="forceAll" type="Boolean" mode="IN" optional="true"/>
     </service>
 
     <service name="recalcShippingTotal" engine="java"
