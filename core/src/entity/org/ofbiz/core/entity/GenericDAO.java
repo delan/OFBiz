@@ -2234,8 +2234,7 @@ public class GenericDAO {
             if (messages != null)
                 messages.add(message);
             return null;
-        }
-        catch (GenericEntityException e) {
+        } catch (GenericEntityException e) {
             String message = "Unable to esablish a connection with the database... Error was:" + e.toString();
             Debug.logError(message, module);
             if (messages != null)
@@ -2316,7 +2315,6 @@ public class GenericDAO {
             Debug.logError(message, module);
             if (messages != null)
                 messages.add(message);
-            return tableNames;
         } finally {
             try {
                 tableSet.close();
@@ -2347,8 +2345,7 @@ public class GenericDAO {
             if (messages != null)
                 messages.add(message);
             return null;
-        }
-        catch (GenericEntityException e) {
+        } catch (GenericEntityException e) {
             String message = "Unable to esablish a connection with the database... Error was:" + e.toString();
             Debug.logError(message, module);
             if (messages != null)
@@ -2441,15 +2438,15 @@ public class GenericDAO {
             if (messages != null)
                 messages.add(message);
             colInfo = null;
-        }
-        
-        try {
-            connection.close();
-        } catch (SQLException sqle) {
-            String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
-            Debug.logError(message, module);
-            if (messages != null)
-                messages.add(message);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException sqle) {
+                String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
+                Debug.logError(message, module);
+                if (messages != null)
+                    messages.add(message);
+            }
         }
         return colInfo;
     }
