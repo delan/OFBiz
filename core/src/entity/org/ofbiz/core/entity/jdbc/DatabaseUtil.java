@@ -663,6 +663,10 @@ public class DatabaseUtil {
                 messages.add(message);
             return null;
         }
+        
+        if (dbData == null) {
+            Debug.logWarning("Unable to get database meta data; method returned null", module);
+        }
 
         try {
             if (Debug.infoOn()) Debug.logInfo("Database Product Name is " + dbData.getDatabaseProductName(), module);
@@ -686,8 +690,10 @@ public class DatabaseUtil {
         try {
             String[] types = {"TABLE", "VIEW", "ALIAS", "SYNONYM"};
             String userName = dbData.supportsSchemasInTableDefinitions() ? dbData.getUserName() : null;
-
             tableSet = dbData.getTables(null, userName, null, types);
+            if (tableSet == null) {
+                Debug.logWarning("getTables returned null set", module);
+            }
         } catch (SQLException sqle) {
             String message = "Unable to get list of table information, let's try the create anyway... Error was:" + sqle.toString();
 
