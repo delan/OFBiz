@@ -852,7 +852,7 @@
       <prim-key field="termTypeId"/>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
-      <relation type="one" fk-name="BILLACCT_TRM_UOM" rel-entity-name="Uom">
+      <relation type="one" fk-name="ORDER_TERM_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
       </relation>
       <relation type="one" fk-name="ORDER_TERM_OHDR" rel-entity-name="OrderHeader">
