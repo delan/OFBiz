@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2002/01/05 05:34:41  jonesde
+ * Finished initial pass of simple event handler, now used
+ *
  * Revision 1.15  2002/01/03 18:16:54  jonesde
  * Added locale support
  *
@@ -87,142 +90,6 @@ import org.ofbiz.core.service.*;
  * Created on November 7, 2001
  */
 public class WorkEffortEvents {
-    /** Updates WorkEffort information according to UPDATE_MODE parameter
-     *@param request The HTTPRequest object for the current request
-     *@param response The HTTPResponse object for the current request
-     *@return String specifying the exit status of this event
-     */
-    public static String updateWorkEffort(HttpServletRequest request, HttpServletResponse response) {
-        String updateMode = request.getParameter("UPDATE_MODE");
-        if (updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
-            Debug.logWarning("[WorkEffortEvents.updateWorkEffort] Update Mode was not specified, but is required");
-            return "error";
-        }
-
-        if (updateMode.equals("CREATE")) {
-            try {
-                return SimpleEvent.runSimpleEvent("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml", "createWorkEffort", request);
-            } catch (MiniLangException e) {
-                Debug.logError(e);
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not complete event: " + e.getMessage());
-                return "error";
-            }
-        } else if (updateMode.equals("UPDATE")) {
-            try {
-                return SimpleEvent.runSimpleEvent("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml", "updateWorkEffort", request);
-            } catch (MiniLangException e) {
-                Debug.logError(e);
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not complete event: " + e.getMessage());
-                return "error";
-            }
-        } else if (updateMode.equals("DELETE")) {
-            try {
-                return SimpleEvent.runSimpleEvent("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleEvents.xml", "deleteWorkEffort", request);
-            } catch (MiniLangException e) {
-                Debug.logError(e);
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not complete event: " + e.getMessage());
-                return "error";
-            }
-        } else {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
-            return "error";
-        }
-        
-/*        
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getSession().getServletContext().getAttribute("dispatcher");
-        Security security = (Security) request.getAttribute("security");
-
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        if (userLogin == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You must be logged in to update a Work Effort.");
-            return "error";
-        }
-
-        String updateMode = request.getParameter("UPDATE_MODE");
-        if (updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
-            Debug.logWarning("[WorkEffortEvents.updateWorkEffort] Update Mode was not specified, but is required");
-            return "error";
-        }
-
-        //if this is a delete, do that before getting all of the non-pk parameters and validating them
-        if (updateMode.equals("DELETE")) {
-            // invoke the service
-            Map result = null;
-            Map context = new HashMap();
-            context.put("workEffortId", request.getParameter("workEffortId"));
-            context.put("userLogin", userLogin);
-            try {
-                result = dispatcher.runSync("deleteWorkEffort",context);
-            } catch (GenericServiceException e) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not delete WorkEffort (problem invoking the service: " + e.getMessage() + ")");
-                Debug.logError(e);
-                return "error";
-            }
-
-            ServiceUtil.getMessages(request, result, "Work Effort successfully deleted.", "", "", "", "", "<li>", "</li>");
-            // return the result
-            return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
-        }
-
-        Map context = new HashMap();
-        List messages = new LinkedList();
-        
-        //Map strings = request.getParameterMap();
-        Map parameters = UtilMisc.getParameterMap(request);
-
-        try {
-            SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcUpdate.xml", parameters, context, messages, request.getLocale());
-        } catch (MiniLangException e) {
-            messages.add("Error running SimpleMapProcessor: " + e.toString());
-        }
-        
-        if (messages.size() > 0) {
-            String errMsg = "<b>The following errors occured:</b><br><ul>" + ServiceUtil.makeMessageList(messages, "<li>", "</li>") + "</ul>";
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
-            return "error";
-        }
-
-        context.put("userLogin", userLogin);
-
-        if (updateMode.equals("CREATE")) {
-            // invoke the service
-            Map result = null;
-            try {
-                result = dispatcher.runSync("createWorkEffort",context);
-            } catch (GenericServiceException e) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not create WorkEffort (problem invoking the service: " + e.getMessage() + ")");
-                Debug.logError(e);
-                return "error";
-            }
-
-            ServiceUtil.getMessages(request, result, "Work Effort successfully created.", "", "", "", "", "<li>", "</li>");
-            request.setAttribute("workEffortId", result.get("workEffortId"));
-
-            // return the result
-            return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
-        } else if (updateMode.equals("UPDATE")) {
-            // invoke the service
-            Map result = null;
-            try {
-                result = dispatcher.runSync("updateWorkEffort",context);
-            } catch (GenericServiceException e) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not update WorkEffort (problem invoking the service: " + e.getMessage() + ")");
-                Debug.logError(e);
-                return "error";
-            }
-
-            ServiceUtil.getMessages(request, result, "Work Effort successfully updated.", "", "", "", "", "<li>", "</li>");
-            // return the result
-            return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
-        } else {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
-            return "error";
-        }
- */
-    }
-
     /** Updates WorkEffortPartyAssignment information according to UPDATE_MODE parameter
      *@param request The HTTPRequest object for the current request
      *@param response The HTTPResponse object for the current request
