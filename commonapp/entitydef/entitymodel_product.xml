@@ -901,7 +901,7 @@
       <relation type="one" fk-name="INV_ITEM_LOT" rel-entity-name="Lot">
         <key-map field-name="lotId"/>
       </relation>
-      <relation type="one" fk-name="INV_ITEM_LOCATION" rel-entity-name="FacilityLocation">
+      <relation type="one-nofk" rel-entity-name="FacilityLocation">
         <key-map field-name="facilityId"/>
         <key-map field-name="locationSeqId"/>
       </relation>
