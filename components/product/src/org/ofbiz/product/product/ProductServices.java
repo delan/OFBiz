@@ -827,7 +827,7 @@ public class ProductServices {
                         GenericValue goodIdentification = (GenericValue) goodIdentificationIter.next();
                         GenericValue giProduct = goodIdentification.getRelatedOne("Product");
                         if (giProduct != null) {
-                            variantProductsById.put(variantProductId, giProduct);
+                            variantProductsById.put(giProduct.get("productId"), giProduct);
                         }
                     }
                 }
