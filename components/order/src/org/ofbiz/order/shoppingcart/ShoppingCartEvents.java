@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.17 2004/07/10 07:55:34 ajzeneski Exp $
+ * $Id: ShoppingCartEvents.java,v 1.18 2004/07/19 15:47:33 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -407,16 +407,60 @@ public class ShoppingCartEvents {
         return "success";
     }
 
-    /** Gets the shopping cart from the session. Used by all events. */
-    public static ShoppingCart getCartObject(HttpServletRequest request) {
+    /** Gets or creates the shopping cart object */
+    public static ShoppingCart getCartObject(HttpServletRequest request, Locale locale, String currencyUom) {
+        if (locale == null) {
+            locale = UtilHttp.getLocale(request);
+        }
+        if (currencyUom == null) {
+            currencyUom = UtilHttp.getCurrencyUom(request);
+        }
+
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession(true);
         ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
 
+
         if (cart == null) {
-            cart = new WebShoppingCart(request);
+            cart = new WebShoppingCart(request, locale, currencyUom);
             session.setAttribute("shoppingCart", cart);
+        } else {
+            if (!locale.equals(cart.getLocale())) {
+                cart.setLocale(locale);
+            }
+            if (!currencyUom.equals(cart.getCurrency())) {
+                try {
+                    cart.setCurrency(dispatcher, currencyUom);
+                } catch (CartItemModifyException e) {
+                    Debug.logError(e, "Unable to modify currency in cart", module);
+                }
+            }
         }
         return cart;
+    }
+
+    /** Special get method for getting a cart for a specific store */
+    public static ShoppingCart getCartObject(HttpServletRequest request, String productStoreId) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
+        Locale locale = null;
+        String currency = null;
+
+        if (productStore != null) {
+            String localeStr = productStore.getString("defaultLocaleString");
+            locale = UtilMisc.parseLocale(localeStr);
+            currency = productStore.getString("defaultCurrencyUomId");
+        }
+        ShoppingCart cart = getCartObject(request, locale, currency);
+        if (productStore != null) {
+            cart.setProductStoreId(productStoreId);
+        }
+        return cart;
+    }
+
+    /** Main get cart method; uses the locale & currency from the session */
+    public static ShoppingCart getCartObject(HttpServletRequest request) {
+        return getCartObject(request, null, null);
     }
 
     /** Update the cart's UserLogin object if it isn't already set. */

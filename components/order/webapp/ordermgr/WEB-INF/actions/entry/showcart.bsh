@@ -30,6 +30,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.order.shoppingcart.product.ProductDisplayWorker;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
@@ -58,21 +59,23 @@ context.put("suppliers", suppliers);
 
 // check the selected product store
 productStoreId = request.getParameter("productStoreId");
-if (productStoreId != null) {
-    if (productStoreId.length() > 0) {
-	    // check security on the store
-	    storeReps = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStoreId, "partyId", userLogin.getString("partyId"), "roleTypeId", "SALES_REP"));
-	    storeReps = EntityUtil.filterByDate(storeReps);
-	    if (storeReps != null && storeReps.size() > 0) {
-	        shoppingCart.setProductStoreId(productStoreId);
-	        session.setAttribute("productStoreId", productStoreId);
-	    } else {
-	        request.setAttribute("_ERROR_MESSAGE_", "<li>You do not have permission to take orders for this store.");
-	        shoppingCart.clear();
-	        session.removeAttribute("orderMode");
-	        session.removeAttribute("productStoreId");
-	        return;
-	    }    
+if (UtilValidate.isNotEmpty(productStoreId)) {
+    productStore = ProductStoreWorker.getProductStore(request);
+    if (productStore != null) {
+        // check security on the store
+        storeReps = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStore.getString("productStoreId"),
+                "partyId", userLogin.getString("partyId"), "roleTypeId", "SALES_REP"));
+        storeReps = EntityUtil.filterByDate(storeReps);
+        if (storeReps != null && storeReps.size() > 0) {
+            shoppingCart = ShoppingCartEvents.getCartObject(request, productStore.getString("productStoreId"));
+            session.setAttribute("productStoreId", productStoreId);
+        } else {
+            request.setAttribute("_ERROR_MESSAGE_", "<li>You do not have permission to take orders for this store.");
+            shoppingCart.clear();
+            session.removeAttribute("orderMode");
+            session.removeAttribute("productStoreId");
+            return;
+        }
     } else {
         shoppingCart.setProductStoreId(null);
     }

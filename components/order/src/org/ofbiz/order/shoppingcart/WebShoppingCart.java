@@ -1,5 +1,5 @@
 /*
- * $Id: WebShoppingCart.java,v 1.8 2004/07/10 07:55:34 ajzeneski Exp $
+ * $Id: WebShoppingCart.java,v 1.9 2004/07/19 15:47:33 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,6 +23,7 @@
  */
 package org.ofbiz.order.shoppingcart;
 
+import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -42,19 +43,23 @@ import org.ofbiz.content.website.WebSiteWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class WebShoppingCart extends ShoppingCart {
 
-    public WebShoppingCart(HttpServletRequest request) {
+    public WebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
         super((GenericDelegator)request.getAttribute("delegator"), ProductStoreWorker.getProductStoreId(request),
-                WebSiteWorker.getWebSiteId(request), UtilHttp.getLocale(request), UtilHttp.getCurrencyUom(request));
+                WebSiteWorker.getWebSiteId(request), locale, currencyUom);
 
         HttpSession session = request.getSession(true);
         this.userLogin = (GenericValue) session.getAttribute("userLogin");
         this.autoUserLogin = (GenericValue) session.getAttribute("autoUserLogin");
         this.orderPartyId = (String) session.getAttribute("orderPartyId");
+    }
+
+    public WebShoppingCart(HttpServletRequest request) {
+        this(request, UtilHttp.getLocale(request), UtilHttp.getCurrencyUom(request));        
     }
     
     /** Creates a new cloned ShoppingCart Object. */
