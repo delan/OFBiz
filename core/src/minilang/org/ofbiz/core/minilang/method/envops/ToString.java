@@ -75,23 +75,23 @@ public class ToString extends MethodOperation {
 
             Object obj = fieldAcsr.get(toMap, methodContext);
             if (obj != null) {
-                fieldAcsr.put(toMap, doToString(obj), methodContext);
+                fieldAcsr.put(toMap, doToString(obj, methodContext), methodContext);
             }
         } else {
             Object obj = fieldAcsr.get(methodContext);
             if (obj != null) {
-                fieldAcsr.put(methodContext, doToString(obj));
+                fieldAcsr.put(methodContext, doToString(obj, methodContext));
             }
         }
 
         return true;
     }
     
-    public String doToString(Object obj) {
+    public String doToString(Object obj, MethodContext methodContext) {
         String outStr = null;
         try {
             if (UtilValidate.isNotEmpty(format)) {
-                outStr = (String) ObjectType.simpleTypeConvert(obj, "java.lang.String", format, null);
+                outStr = (String) ObjectType.simpleTypeConvert(obj, "java.lang.String", format, methodContext.getLocale());
             } else {
                 outStr = obj.toString();
             }
