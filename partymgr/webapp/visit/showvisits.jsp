@@ -74,6 +74,11 @@
     
     lowIndex = viewIndex * viewSize;
     highIndex = (viewIndex + 1) * viewSize;
+    
+    // attempt to get the full size
+    visitListIt.last();
+    int visitSize = visitListIt.currentIndex();
+    visitListIt.first();
             
     List visitList = visitListIt.getPartialList(lowIndex + 1, viewSize + 1);
 	if (visitList != null) pageContext.setAttribute("visitList", visitList);
@@ -105,7 +110,7 @@
           <a href="<ofbiz:url><%="/showvisits?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%><%=UtilFormatOut.ifNotEmpty(sort, "&sort=","")%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%>&showAll=<%=new Boolean(showAll).toString()%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if (listSize > 0) {%>
-          <span class="tabletext"><%=lowIndex+1%> - <%=highIndex%></span>
+          <span class="tabletext"><%=lowIndex+1%> - <%=highIndex%> of <%=visitSize%></span>
         <%}%>
         <%if (listSize > highIndex) {%>
           | <a href="<ofbiz:url><%="/showvisits?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%><%=UtilFormatOut.ifNotEmpty(sort, "&sort=","")%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%>&showAll=<%=new Boolean(showAll).toString()%></ofbiz:url>" class="buttontext">[Next]</a>
@@ -161,7 +166,7 @@
           <a href="<ofbiz:url><%="/showvisits?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%><%=UtilFormatOut.ifNotEmpty(sort, "&sort=","")%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%>&showAll=<%=new Boolean(showAll).toString()%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if (listSize > 0) {%>
-          <span class="tabletext"><%=lowIndex+1%> - <%=highIndex%></span>
+          <span class="tabletext"><%=lowIndex+1%> - <%=highIndex%> of <%=visitSize%></span>
         <%}%>
         <%if (listSize > highIndex) {%>
           | <a href="<ofbiz:url><%="/showvisits?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%><%=UtilFormatOut.ifNotEmpty(sort, "&sort=","")%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%>&showAll=<%=new Boolean(showAll).toString()%></ofbiz:url>" class="buttontext">[Next]</a>
