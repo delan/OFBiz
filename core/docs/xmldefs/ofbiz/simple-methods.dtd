@@ -90,6 +90,7 @@
     delegator-name CDATA "delegator"
     security-name CDATA "security"
     dispatcher-name CDATA "dispatcher"
+    user-login-name CDATA "userLogin"
 >
 
 <!-- 

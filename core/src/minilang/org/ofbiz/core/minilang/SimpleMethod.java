@@ -196,6 +196,7 @@ public class SimpleMethod {
     String delegatorName;
     String securityName;
     String dispatcherName;
+    String userLoginName;
     
     public SimpleMethod(Element simpleMethodElement) {
         methodName = simpleMethodElement.getAttribute("method-name");
@@ -245,14 +246,21 @@ public class SimpleMethod {
         useTransaction = !"false".equals(simpleMethodElement.getAttribute("use-transaction"));
 
         delegatorName = simpleMethodElement.getAttribute("delegator-name");
-        if (delegatorName == null || delegatorName.length() == 0)
+        if (delegatorName == null || delegatorName.length() == 0) {
             delegatorName = "delegator";
+        }
         securityName = simpleMethodElement.getAttribute("security-name");
-        if (securityName == null || securityName.length() == 0)
+        if (securityName == null || securityName.length() == 0) {
             securityName = "security";
+        }
         dispatcherName = simpleMethodElement.getAttribute("dispatcher-name");
-        if (dispatcherName == null || dispatcherName.length() == 0)
+        if (dispatcherName == null || dispatcherName.length() == 0) {
             dispatcherName = "dispatcher";
+        }
+        userLoginName = simpleMethodElement.getAttribute("user-login-name");
+        if (userLoginName == null || userLoginName.length() == 0) {
+            userLoginName = "userLogin";
+        }
 
         readOperations(simpleMethodElement, this.methodOperations, this);
     }
@@ -296,8 +304,11 @@ public class SimpleMethod {
             methodContext.putEnv(eventRequestName, methodContext.getRequest());
         }
 
+        GenericValue userLogin = methodContext.getUserLogin();
+        if (userLogin != null) {
+            methodContext.putEnv(userLoginName, userLogin);
+        }
         if (loginRequired) {
-            GenericValue userLogin = methodContext.getUserLogin();
             if (userLogin == null) {
                 String errMsg = "You must be logged in to complete the " + shortDescription + " process.";
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
