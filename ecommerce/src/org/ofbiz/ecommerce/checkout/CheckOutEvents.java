@@ -172,9 +172,9 @@ public class CheckOutEvents {
 
         // get the payment method - return proper result
         GenericValue paymentMethod = cart.getPaymentMethod(delegator);
-        if (paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD"))
+        if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD"))
             return "cc";
-        else if (paymentMethod.getString("paymentMethodTypeId").equals("EFT"))
+        else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("EFT"))
             return "eft";
         else
             return "success";
