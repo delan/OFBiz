@@ -1,4 +1,4 @@
-begat(900, jim, 19350801, male);
+begat(900, "jim", 19350801, "male");
 begat(901, janie, 19370310, female);
 
 begat(902, kyle, 19600829, male);

@@ -3,8 +3,7 @@
 // OutList is a permutation of InList.
 
 select(X, [X | Rest], Rest);
-select(X, [Y | Rest1], [Y | Rest2]) :- 
-    select(X, Rest1, Rest2);
+select(X, [Y | Rest1], [Y | Rest2]) :- select(X, Rest1, Rest2);
 permutation(InList, [H | OutRest]) :- 
     select(H, InList, InOther), 
     permutation(InOther, OutRest);

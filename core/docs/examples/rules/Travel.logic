@@ -1,4 +1,3 @@
-//NOTE: This file has been updated for OFBiz logikus customizations
 //try the query: travel(AltBand, X)
 // travel.txt
 city("abilene", 1718);

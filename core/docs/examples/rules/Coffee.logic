@@ -1,8 +1,8 @@
-coffee("Launch Mi", french, kenya, 6.95);
-coffee("Simple Best", regular, columbia, 5.95);
-coffee("Revit", italian, guatemala, 7.95);
-coffee("Brimful", regular, kenya, 6.95);
-coffee("Smackin", french, columbia, 7.95);
+coffee("Launch Mi", "french", "kenya", 6.95);
+coffee("Simple Best", "regular", "columbia", 5.95);
+coffee("Revit", "italian", "guatemala", 7.95);
+coffee("Brimful", "regular", "kenya", 6.95);
+coffee("Smackin", "french", "columbia", 7.95);
 
 customer("Jim Johnson", 2024);
 customer("Jane Jerrod", 2077);

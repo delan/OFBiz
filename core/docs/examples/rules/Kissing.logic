@@ -1,4 +1,3 @@
-//NOTE: This file has been updated for OFBiz logikus customizations
 // try running the query exposed(Who, 0615)
 
 kiss("jill",  "james", 0321);

@@ -1,4 +1,4 @@
-french([dark, full, high, viennese, continental]);
+french(["dark", "full", "high", "viennese", "continental"]);
 
 ok(N, A, B) :- #(N, 1), french([A, B, C, D, E]);
 ok(N, A, B) :- #(N, 2), french([E, D, C, B, A]);
