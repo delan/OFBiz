@@ -1,5 +1,5 @@
 /*
- * $Id: EntityComparisonOperator.java,v 1.2 2004/07/06 23:40:41 doogie Exp $
+ * $Id: EntityComparisonOperator.java,v 1.3 2004/07/07 00:15:24 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.entity.model.ModelField;
  *
  * @author     <a href="mailto:adam@doogie.org">Adam Heath</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class EntityComparisonOperator extends EntityOperator {
@@ -116,20 +116,20 @@ public class EntityComparisonOperator extends EntityOperator {
         throw new UnsupportedOperationException(codeString);
     }
 
-    public boolean entityMatches(GenericEntity entity, Object lhs, Object rhs) {
+    public boolean mapMatches(GenericDelegator delegator, Map map, Object lhs, Object rhs) {
         Object leftValue;
         if (lhs instanceof EntityConditionValue) {
             EntityConditionValue ecv = (EntityConditionValue) lhs;
-            leftValue = ecv.getValue(entity);
+            leftValue = ecv.getValue(map);
         } else if (lhs instanceof String) {
-            leftValue = entity.get(lhs);
+            leftValue = map.get(lhs);
         } else {
             leftValue = lhs;
         }
         Object rightValue;
         if (rhs instanceof EntityConditionValue) {
             EntityConditionValue ecv = (EntityConditionValue) rhs;
-            rightValue = ecv.getValue(entity);
+            rightValue = ecv.getValue(map);
         } else {
             rightValue = rhs;
         }

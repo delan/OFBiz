@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionFunction.java,v 1.5 2004/05/02 05:08:48 doogie Exp $
+ * $Id: EntityConditionFunction.java,v 1.6 2004/07/07 00:15:24 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,9 @@
 package org.ofbiz.entity.condition;
 
 import java.util.List;
+import java.util.Map;
 
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.model.ModelEntity;
@@ -45,8 +47,8 @@ public abstract class EntityConditionFunction extends EntityCondition {
 
     public static class NOT extends EntityConditionFunction {
         public NOT(EntityCondition nested) { super(ID_NOT, "NOT", nested); }
-        public boolean entityMatches(GenericEntity entity) {
-            return !condition.entityMatches(entity);
+        public boolean mapMatches(GenericDelegator delegator, Map map) {
+            return !condition.mapMatches(delegator, map);
         }
     };
 

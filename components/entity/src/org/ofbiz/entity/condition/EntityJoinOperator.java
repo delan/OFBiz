@@ -1,5 +1,5 @@
 /*
- * $Id: EntityJoinOperator.java,v 1.2 2004/07/06 23:40:42 doogie Exp $
+ * $Id: EntityJoinOperator.java,v 1.3 2004/07/07 00:15:24 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.config.EntityConfigUtil;
@@ -88,10 +89,20 @@ public class EntityJoinOperator extends EntityOperator {
     }
 
     public boolean entityMatches(GenericEntity entity, List conditionList) {
+        return mapMatches(entity.getDelegator(), entity, conditionList);
+    }
+
+    public boolean mapMatches(GenericDelegator delegator, Map map, Object lhs, Object rhs) {
+        if (((EntityCondition) lhs).mapMatches(delegator, map)) return shortCircuitValue;
+        if (((EntityCondition) rhs).mapMatches(delegator, map)) return shortCircuitValue;
+        return !shortCircuitValue;
+    }
+
+    public boolean mapMatches(GenericDelegator delegator, Map map, List conditionList) {
         if (conditionList != null && conditionList.size() > 0) {
             for (int i = 0; i < conditionList.size(); i++) {
                 EntityCondition condition = (EntityCondition) conditionList.get(i);
-                if (condition.entityMatches(entity) == shortCircuitValue) return shortCircuitValue;
+                if (condition.mapMatches(delegator, map) == shortCircuitValue) return shortCircuitValue;
             }
         }
         return !shortCircuitValue;

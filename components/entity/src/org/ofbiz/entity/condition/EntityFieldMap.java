@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldMap.java,v 1.6 2004/07/06 22:45:34 doogie Exp $
+ * $Id: EntityFieldMap.java,v 1.7 2004/07/07 00:15:24 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.jdbc.SqlJdbcUtil;
@@ -39,7 +40,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class EntityFieldMap extends EntityCondition {
@@ -98,12 +99,12 @@ public class EntityFieldMap extends EntityCondition {
         return SqlJdbcUtil.makeWhereStringFromFields(whereFields, fieldMap, operator.getCode(), entityConditionParams);
     }
 
-    public boolean entityMatches(GenericEntity entity) {
+    public boolean mapMatches(GenericDelegator delegator, Map map) {
         Iterator iter = fieldMap.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry entry = (Map.Entry) iter.next();
             String fieldName = (String) entry.getKey();
-            Object value = entity.get( fieldName );
+            Object value = map.get( fieldName );
             if ( value == null ) {
                 if ( entry.getValue() != null ) {
                     return false;
