@@ -5,6 +5,7 @@
 package org.ofbiz.core.workflow;
 
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * <p><b>Title:</b> Workflow Interface
