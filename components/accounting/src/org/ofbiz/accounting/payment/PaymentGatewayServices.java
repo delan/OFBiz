@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.6 2003/08/26 16:08:03 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.7 2003/08/26 17:03:38 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class PaymentGatewayServices {    
@@ -110,7 +110,7 @@ public class PaymentGatewayServices {
         String grandTotalString = formatter.format(orh.getOrderGrandTotal());
         Double grandTotal = null;
         try {
-            grandTotal = (Double) formatter.parse(grandTotalString);
+            grandTotal = new Double(formatter.parse(grandTotalString).doubleValue());            
         } catch (ParseException e) {
             Debug.logError(e, "Problem getting parsed grand total amount", module);
             return ServiceUtil.returnError("ERROR: Cannot parse grand total from formatted string; see logs");
@@ -576,19 +576,21 @@ public class PaymentGatewayServices {
         double orderTotal = orh.getOrderGrandTotal();
         double totalPayments = PaymentWorker.getPaymentsTotal(orh.getOrderPayments());
         double remainingTotal = orderTotal - totalPayments;
+        Debug.log("Remaining Total: "+remainingTotal, module);
         
         // re-format the remaining total
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
         DecimalFormat formatter = new DecimalFormat(currencyFormat);
-        String remainingTotalString = formatter.format(remainingTotal);
-        Double remaining = null;
+        String remainingTotalString = formatter.format(remainingTotal);       
         try {
-            remaining = (Double) formatter.parse(remainingTotalString);
+            Number remaining = formatter.parse(remainingTotalString);
+            if (remaining != null) {
+                remainingTotal = remaining.doubleValue();
+            }
         } catch (ParseException e) {
             Debug.logError(e, "Problem getting parsed remaining total", module);
             return ServiceUtil.returnError("ERROR: Cannot parse grand total from formatted string; see logs");
-        }
-        remainingTotal = remaining.doubleValue();
+        }        
                                    
         if (captureAmount == null) {         
             captureAmount = new Double(remainingTotal);
