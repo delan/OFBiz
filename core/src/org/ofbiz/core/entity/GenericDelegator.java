@@ -474,6 +474,31 @@ public class GenericDelegator {
     return this.findByPrimaryKeyCache(relatedEntity.entityName, fields);
   }
   
+  /** Get the named Related Entity for the GenericValue from the persistent store
+   * @param relationName String containing the relation name which is the
+   *      combination of relation.title and relation.rel-entity-name as
+   *      specified in the entity XML definition file
+   * @param value GenericValue instance containing the entity
+   * @return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelatedByAnd(String relationName, Map fields, GenericValue value) throws GenericEntityException {
+    ModelEntity modelEntity = value.getModelEntity();
+    ModelRelation relation = modelEntity.getRelation(relationName);
+    if(relation == null) throw new IllegalArgumentException("[GenericDAO.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
+    ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
+
+    //put the fields into the hash map first, 
+    //they will be overridden by value's fields if over-specified this is important for security and cleanliness
+    Map filterFields = new HashMap(fields);
+    for(int i=0; i<relation.keyMaps.size(); i++)
+    {
+      ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(i);
+      filterFields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
+    }
+
+    return this.findByAnd(relatedEntity.entityName, filterFields, null);
+  }
+
   /** Remove the named Related Entity for the GenericValue from the persistent store
    * @param relationName String containing the relation name which is the
    *      combination of relation.title and relation.rel-entity-name as

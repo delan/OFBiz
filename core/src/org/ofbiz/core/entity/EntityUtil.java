@@ -45,8 +45,8 @@ public class EntityUtil {
      *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
      *@return Collection of GenericValue's that are currently active
      */
-    public static Collection getActive(Collection datedValues) {
-        return getActive(datedValues, UtilDateTime.nowDate());
+    public static Collection filterByDate(Collection datedValues) {
+        return filterByDate(datedValues, UtilDateTime.nowDate());
     }
 
     /**
@@ -56,7 +56,7 @@ public class EntityUtil {
      *@param moment the moment in question
      *@return Collection of GenericValue's that are active at the moment
      */
-    public static Collection getActive(Collection datedValues, java.util.Date moment) {
+    public static Collection filterByDate(Collection datedValues, java.util.Date moment) {
         if (datedValues == null)  return null;
         
         Collection result = new ArrayList();
@@ -68,7 +68,79 @@ public class EntityUtil {
                 result.add(datedValue);
             }//else not active at moment
         }
-        return result;
+        return result;   
+    }
+    
+    /**
+     *returns the values that match the values in fields
+     *
+     *@param values collection of GenericValues
+     *@param fields the field-name/value pairs that must match
+     *@return Collection of GenericValue's that match the values in fields
+     */
+    public static Collection filterByAnd(Collection values, Map fields) {
+        if (values == null)  return null;
         
+        Collection result = new ArrayList();
+        Iterator iter = values.iterator();
+        while(iter.hasNext()) {
+            GenericValue value = (GenericValue) iter.next();
+            if (isSubset(fields, value.getAllFields())) {
+                result.add(value);
+            }//else did not match
+        }
+        return result;
+    }
+    
+    private static boolean isSubset(Map smallSet, Map largeSet) {
+        Iterator keyIter = smallSet.keySet().iterator();
+        while (keyIter.hasNext()) {
+            String key = (String) keyIter.next();
+            if (!equals(smallSet.get(key), largeSet.get(key))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private static boolean equals(Object a, Object b) {
+        if (a == null) {
+            return b == null;
+        } else {
+            return a.equals(b);
+        }
+    }
+    
+    public static Collection getRelated(String relationName, Collection values) throws GenericEntityException {
+        if (values == null) return null;
+        
+        Collection result = new ArrayList();
+        Iterator iter = values.iterator();
+        while (iter.hasNext()) {
+            result.addAll(((GenericValue) iter.next()).getRelated(relationName));
+        }
+        return result;
+    }
+
+    public static Collection getRelatedCache(String relationName, Collection values) throws GenericEntityException {
+        if (values == null) return null;
+        
+        Collection result = new ArrayList();
+        Iterator iter = values.iterator();
+        while (iter.hasNext()) {
+            result.addAll(((GenericValue) iter.next()).getRelatedCache(relationName));
+        }
+        return result;
+    }
+
+    public static Collection getRelatedByAnd(String relationName, Map fields, Collection values) throws GenericEntityException {
+        if (values == null) return null;
+        
+        Collection result = new ArrayList();
+        Iterator iter = values.iterator();
+        while (iter.hasNext()) {
+            result.addAll(((GenericValue) iter.next()).getRelatedByAnd(relationName, fields));
+        }
+        return result;
     }
 }

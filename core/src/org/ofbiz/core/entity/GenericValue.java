@@ -113,6 +113,34 @@ public class GenericValue extends GenericEntity {
     return value;
   }
   
+  /** Get the named Related Entity for the GenericValue from the persistent store and filter it
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@param fields the fields that must equal in order to keep
+   *@return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelatedByAnd(String relationName, Map fields) throws GenericEntityException {
+    return delegator.getRelatedByAnd(relationName, fields, this);
+  }
+  /** Get the named Related Entity for the GenericValue from the persistent
+   *  store and filter it, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@param fields the fields that must equal in order to keep
+   *@return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelatedByAndCache(String relationName, Map fields) throws GenericEntityException {
+    return EntityUtil.filterByAnd(delegator.getRelatedCache(relationName, this), fields);
+  }
+  /** Get the named Related Entity for the GenericValue from the persistent
+   *  store and filter it, looking first in a cache associated with this entity which is
+   *  destroyed with this ValueObject when no longer used.
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@param fields the fields that must equal in order to keep
+   *@return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelatedByAndEmbeddedCache(String relationName, Map fields) throws GenericEntityException {
+    return EntityUtil.filterByAnd(getRelatedEmbeddedCache(relationName), fields);
+  }
+  
   /** Remove the named Related Entity for the GenericValue from the persistent store
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    */
