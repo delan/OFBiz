@@ -28,7 +28,7 @@
 <p class='tabletext'>${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>/checkLogin/main</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonLoginHere}</a>.</p>
 
 <form method="post" action="<@ofbizUrl>/createcustomer${previousParams}</@ofbizUrl>" name="newuserform" style='margin:0;'>
-	
+<input type="hidden" name="productStoreId" value="${productStoreId}">
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

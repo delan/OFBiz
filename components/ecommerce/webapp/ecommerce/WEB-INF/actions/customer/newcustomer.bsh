@@ -30,6 +30,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
 
 delegator = request.getAttribute("delegator");
 productStore = ProductStoreWorker.getProductStore(request);
+context.put("productStoreId", productStore.get("productStoreId"));
 if (productStore.getString("allowPassword").equals("Y")) {
     context.put("createAllowPassword", true);
 } else {
