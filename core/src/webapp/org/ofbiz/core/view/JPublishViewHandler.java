@@ -24,17 +24,34 @@
  */
 package org.ofbiz.core.view;
 
-import java.io.*;
-import java.util.*;
-import java.security.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Iterator;
 
-import org.jpublish.*;
-import org.jpublish.action.*;
-import org.jpublish.component.*;
-import org.jpublish.page.*;
-import org.jpublish.util.*;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.jpublish.JPublishContext;
+import org.jpublish.Page;
+import org.jpublish.Repository;
+import org.jpublish.RepositoryWrapper;
+import org.jpublish.SiteContext;
+import org.jpublish.StaticResourceManager;
+import org.jpublish.Template;
+import org.jpublish.action.ActionManager;
+import org.jpublish.component.ComponentMap;
+import org.jpublish.page.PageInstance;
+import org.jpublish.util.CharacterEncodingMap;
+import org.jpublish.util.DateUtilities;
+import org.jpublish.util.NumberUtilities;
+import org.jpublish.util.URLUtilities;
 
 /**
  * Handles JPublish type view rendering

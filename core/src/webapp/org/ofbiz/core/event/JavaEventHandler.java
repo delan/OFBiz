@@ -43,15 +43,9 @@ public class JavaEventHandler implements EventHandler {
     public static final String module = JavaEventHandler.class.getName();
 
     private Map eventClassMap = new HashMap();
-
-    /** 
-     * Invoke the web event
-     * @param eventPath The path or location of this event
-     * @param eventMethod The method to invoke
-     * @param request The servlet request object
-     * @param response The servlet response object
-     * @return String Result code
-     * @throws EventHandlerException
+   
+    /**
+     * @see org.ofbiz.core.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         Class eventClass = (Class) this.eventClassMap.get(eventPath);
