@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.32 2003/11/30 01:31:41 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.33 2003/11/30 18:06:40 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.32 $
+ * @version    $Revision: 1.33 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -75,12 +75,18 @@ public class ShoppingCart implements java.io.Serializable {
     public static class ProductPromoUseInfo {
         public String productPromoId;
         public String productPromoCodeId;
-        public ProductPromoUseInfo(String productPromoId, String productPromoCodeId) {
+        public double totalDiscountAmount = 0;
+        public double quantityLeftInActions = 0;
+        public ProductPromoUseInfo(String productPromoId, String productPromoCodeId, double totalDiscountAmount, double quantityLeftInActions) {
             this.productPromoId = productPromoId;
             this.productPromoCodeId = productPromoCodeId;
+            this.totalDiscountAmount = totalDiscountAmount;
+            this.quantityLeftInActions = quantityLeftInActions;
         }
         public String getProductPromoId() { return this.productPromoId; }
         public String getProductPromoCodeId() { return this.productPromoCodeId; }
+        public double getTotalDiscountAmount() { return this.totalDiscountAmount; }
+        public double getQuantityLeftInActions() { return this.quantityLeftInActions; }
     }
     /** Contains a List for each productPromoId (key) containing a productPromoCodeId (or empty string for no code) for each use of the productPromoId */
     private List productPromoUseInfoList = new LinkedList();
@@ -1052,11 +1058,11 @@ public class ShoppingCart implements java.io.Serializable {
         return this.freeShippingProductPromoActions;
     }
 
-    public void addProductPromoUse(String productPromoId, String productPromoCodeId) {
+    public void addProductPromoUse(String productPromoId, String productPromoCodeId, double totalDiscountAmount, double quantityLeftInActions) {
         if (UtilValidate.isNotEmpty(productPromoCodeId) && !this.productPromoCodes.contains(productPromoCodeId)) {
             throw new IllegalStateException("Cannot add a use to a promo code use for a code that has not been entered.");
         }
-        this.productPromoUseInfoList.add(new ProductPromoUseInfo(productPromoId, productPromoCodeId));
+        this.productPromoUseInfoList.add(new ProductPromoUseInfo(productPromoId, productPromoCodeId, totalDiscountAmount, quantityLeftInActions));
     }
 
     public void clearProductPromoUseInfo() {
@@ -1072,6 +1078,19 @@ public class ShoppingCart implements java.io.Serializable {
 
     public Iterator getProductPromoUseInfoIter() {
         return productPromoUseInfoList.iterator();
+    }
+
+    public double getProductPromoUseTotalDiscount(String productPromoId) {
+        if (productPromoId == null) return 0;
+        double totalDiscount = 0;
+        Iterator productPromoUseInfoIter = this.productPromoUseInfoList.iterator();
+        while (productPromoUseInfoIter.hasNext()) {
+            ProductPromoUseInfo productPromoUseInfo = (ProductPromoUseInfo) productPromoUseInfoIter.next();
+            if (productPromoId.equals(productPromoUseInfo.productPromoId)) {
+                totalDiscount += productPromoUseInfo.getTotalDiscountAmount();
+            }
+        }
+        return totalDiscount;
     }
 
     public int getProductPromoUseCount(String productPromoId) {
@@ -1100,6 +1119,48 @@ public class ShoppingCart implements java.io.Serializable {
         return useCount;
     }
 
+    public void clearAllPromotionInformation() {
+        // remove cart adjustments from promo actions
+        List cartAdjustments = this.getAdjustments();
+        if (cartAdjustments != null) {
+            Iterator cartAdjustmentIter = cartAdjustments.iterator();
+            while (cartAdjustmentIter.hasNext()) {
+                GenericValue checkOrderAdjustment = (GenericValue) cartAdjustmentIter.next();
+                if (UtilValidate.isNotEmpty(checkOrderAdjustment.getString("productPromoId")) &&
+                        UtilValidate.isNotEmpty(checkOrderAdjustment.getString("productPromoRuleId")) &&
+                        UtilValidate.isNotEmpty(checkOrderAdjustment.getString("productPromoActionSeqId"))) {
+                    cartAdjustmentIter.remove();
+                }
+            }
+        }
+
+        // remove cart lines that are promos (ie GWPs) and cart line adjustments from promo actions
+        Iterator cartItemIter = this.iterator();
+        while (cartItemIter.hasNext()) {
+            ShoppingCartItem checkItem = (ShoppingCartItem) cartItemIter.next();
+            if (checkItem.getIsPromo()) {
+                cartItemIter.remove();
+            } else {
+                // found a promo item with the productId, see if it has a matching adjustment on it
+                Iterator checkOrderAdjustments = UtilMisc.toIterator(checkItem.getAdjustments());
+                while (checkOrderAdjustments != null && checkOrderAdjustments.hasNext()) {
+                    GenericValue checkOrderAdjustment = (GenericValue) checkOrderAdjustments.next();
+                    if (UtilValidate.isNotEmpty(checkOrderAdjustment.getString("productPromoId")) &&
+                            UtilValidate.isNotEmpty(checkOrderAdjustment.getString("productPromoRuleId")) &&
+                            UtilValidate.isNotEmpty(checkOrderAdjustment.getString("productPromoActionSeqId"))) {
+                        checkOrderAdjustments.remove();
+                    }
+                }
+            }
+        }
+
+        // remove all free shipping promo actions
+        this.removeAllFreeShippingProductPromoActions();
+
+        // clear promo uses & reset promo code uses, and reset info about cart items used for promos (ie qualifiers and benefiters)
+        this.clearProductPromoUseInfo();
+    }
+    
     /** Adds a promotion code to the cart, checking if it is valid. If it is valid this will return null, otherwise it will return a message stating why it was not valid 
      * @param productPromoCodeId The promotion code to check and add
      * @return String that is null if valid, and added to cart, or an error message of the code was not valid and not added to the cart. 
@@ -1414,6 +1475,8 @@ public class ShoppingCart implements java.io.Serializable {
             productPromoUse.set("promoSequenceId", UtilFormatOut.formatPaddedNumber(sequenceValue, 5));
             productPromoUse.set("productPromoId", productPromoUseInfo.getProductPromoId());
             productPromoUse.set("productPromoCodeId", productPromoUseInfo.getProductPromoCodeId());
+            productPromoUse.set("totalDiscountAmount", new Double(productPromoUseInfo.getTotalDiscountAmount()));
+            productPromoUse.set("quantityLeftInActions", new Double(productPromoUseInfo.getQuantityLeftInActions()));
             productPromoUse.set("partyId", partyId);
             productPromoUses.add(productPromoUse);
             sequenceValue++;
