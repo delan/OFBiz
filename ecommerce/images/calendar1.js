@@ -22,7 +22,27 @@ var RE_NUM = /^\-?\d+$/;
 
 var webPath = "";
 
-function call_cal(target, datetime) {      
+var NS4 = (navigator.appName.indexOf("Netscape")>=0 && !document.getElementById)? true : false;
+var IE4 = (document.all && !document.getElementById)? true : false;
+var IE5 = (document.getElementById && document.all)? true : false;
+var NS6 = (document.getElementById && navigator.appName.indexOf("Netscape")>=0 )? true: false;
+var mx, my;
+
+function moveobj(evt) {
+    if (NS4 || NS6) {
+	    mx=evt.screenX;
+    	my=evt.screenY;
+    }
+    else if (IE5 || IE4) {
+    	mx=event.screenX;
+    	my=event.screenY;
+    }
+}
+
+if(NS4)document.captureEvents(Event.MOUSEMOVE);
+document.onmousemove=moveobj;
+
+function call_cal(target, datetime) {   
     var cal3 = new calendar1(target);
     cal3.year_scroll = true;
     cal3.time_comp = true;    
@@ -57,11 +77,11 @@ function calendar1(obj_target) {
 function cal_popup1 (str_datetime) {
 	this.dt_current = this.prs_tsmp(str_datetime ? str_datetime : this.target.value);
 	if (!this.dt_current) return;
-
+	
 	var obj_calwindow = window.open('/images/' +
 		'calendar.html?datetime=' + this.dt_current.valueOf()+ '&id=' + this.id,
-		'Calendar', 'width=200,height='+(this.time_comp ? 215 : 190)+
-		',status=no,resizable=no,top=200,left=200,dependent=yes,alwaysRaised=yes'
+		'Calendar', 'width=150,height='+(this.time_comp ? 130 : 105)+
+		',status=no,resizable=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes'
 	);
 	obj_calwindow.opener = window;
 	obj_calwindow.focus();

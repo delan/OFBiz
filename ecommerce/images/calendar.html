@@ -15,7 +15,11 @@ About us: Our company provides offshore IT consulting services.
 <head>
 <title>Select Date, Please.</title>
 <style>
-	td {font-family: Tahoma, Verdana, sans-serif; font-size: 12px;}
+	td {font-family: Arial, Helvetica, sans-serif; font-size: 10px;}
+	A { text-decoration: none; }
+	A:hover { color: red; }	
+	a.link { font-family: Arial, Helvetia, sans-serif; font-size: 10px; color: #000000; }
+	a.link:hover { font-family: Arial, Helvetia, sans-serif; font-size: 10px; text-decoration: underline; color: red; }
 </style>
 <script language="JavaScript">
 
@@ -90,17 +94,17 @@ function set_datetime(n_datetime, b_close) {
 
 </script>
 </head>
-<body bgcolor="#FFFFFF" marginheight="5" marginwidth="5" topmargin="5" leftmargin="5" rightmargin="5">
+<body bgcolor="#d3d3d3" marginheight="0" marginwidth="0" topmargin="0" leftmargin="0" rightmargin="0">
 <table class="clsOTable" cellspacing="0" border="0" width="100%">
-<tr><td bgcolor="#4682B4">
-<table cellspacing="1" cellpadding="3" border="0" width="100%">
+<tr><td bgcolor="#d3d3d3">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
 <tr><td colspan="7"><table cellspacing="0" cellpadding="0" border="0" width="100%">
 <tr>
 <script language="JavaScript">
 document.write(
-'<td>'+(obj_caller&&obj_caller.year_scroll?'<a href="javascript:set_datetime('+dt_prev_year.valueOf()+')"><img src="'+STR_ICONPATH+'prev_year.gif" width="16" height="16" border="0" alt="previous year"></a>&nbsp;':'')+'<a href="javascript:set_datetime('+dt_prev_month.valueOf()+')"><img src="'+STR_ICONPATH+'prev.gif" width="16" height="16" border="0" alt="previous month"></a></td>'+
-'<td align="center" width="100%"><font color="#ffffff">'+ARR_MONTHS[dt_current.getMonth()]+' '+dt_current.getFullYear() + '</font></td>'+
-'<td><a href="javascript:set_datetime('+dt_next_month.valueOf()+')"><img src="'+STR_ICONPATH+'next.gif" width="16" height="16" border="0" alt="next month"></a>'+(obj_caller && obj_caller.year_scroll?'&nbsp;<a href="javascript:set_datetime('+dt_next_year.valueOf()+')"><img src="'+STR_ICONPATH+'next_year.gif" width="16" height="16" border="0" alt="next year"></a>':'')+'</td>'
+'<td>'+(obj_caller&&obj_caller.year_scroll?'<a href="javascript:set_datetime('+dt_prev_year.valueOf()+')" class="link"><b>&lt;&lt;</b></a>&nbsp;&nbsp;':'')+'<a href="javascript:set_datetime('+dt_prev_month.valueOf()+')" class="link"><b>&lt;</b></a></td>'+
+'<td align="center" width="100%"><font color="#000000">'+ARR_MONTHS[dt_current.getMonth()]+' '+dt_current.getFullYear() + '</font></td>'+
+'<td><a href="javascript:set_datetime('+dt_next_month.valueOf()+')" class="link"><b>&gt;</b></a>'+(obj_caller && obj_caller.year_scroll?'&nbsp;&nbsp;<a href="javascript:set_datetime('+dt_next_year.valueOf()+')" class="link"><b>&gt;&gt;</b></a>':'')+'</td>'
 );
 </script>
 </tr>
@@ -110,7 +114,7 @@ document.write(
 
 // print weekdays titles
 for (var n=0; n<7; n++)
-	document.write('<td bgcolor="#87cefa" align="center"><font color="#ffffff">'+ARR_WEEKDAYS[(NUM_WEEKSTART+n)%7]+'</font></td>');
+	document.write('<td bgcolor="#000000" align="center"><font color="#ffffff">'+ARR_WEEKDAYS[(NUM_WEEKSTART+n)%7]+'</font></td>');
 document.write('</tr>');
 
 // print calendar table
@@ -123,15 +127,15 @@ while (dt_current_day.getMonth() == dt_current.getMonth() ||
 		if (dt_current_day.getDate() == dt_current.getDate() &&
 			dt_current_day.getMonth() == dt_current.getMonth())
 			// print current date
-			document.write('<td bgcolor="#ffb6c1" align="center" width="14%">');
+			document.write('<td bgcolor="#ffffcc" align="center" width="14%">');
 		else if (dt_current_day.getDay() == 0 || dt_current_day.getDay() == 6)
 			// weekend days
-			document.write('<td bgcolor="#dbeaf5" align="center" width="14%">');
+			document.write('<td bgcolor="#c0c0c0" align="center" width="14%">');
 		else
 			// print working days of current month
-			document.write('<td bgcolor="#ffffff" align="center" width="14%">');
+			document.write('<td bgcolor="#d3d3d3" align="center" width="14%">');
 
-		document.write('<a href="javascript:set_datetime('+dt_current_day.valueOf() +', true);">');
+		document.write('<a href="javascript:set_datetime('+dt_current_day.valueOf() +', true);" class="link">');
 
 		if (dt_current_day.getMonth() == this.dt_current.getMonth())
 			// print days of current month
@@ -147,7 +151,7 @@ while (dt_current_day.getMonth() == dt_current.getMonth() ||
 	document.write('</tr>');
 }
 if (obj_caller && obj_caller.time_comp)
-	document.write('<form onsubmit="javascript:set_datetime('+dt_current.valueOf()+', true)" name="cal"><tr><td colspan="7" bgcolor="#87CEFA"><font color="White" face="tahoma, verdana" size="2">Time: <input type="text" name="time" value="'+obj_caller.gen_time(this.dt_current)+'" size="13" maxlength="13"></font></td></tr></form>');
+	document.write('<form onsubmit="javascript:set_datetime('+dt_current.valueOf()+', true)" name="cal"><tr><td colspan="7">&nbsp;</td></tr><tr><td colspan="7" bgcolor="d3d3d3"><font color="#000000" face="tahoma, verdana" size="1">Time: <input type="text" style="font-size: 8pt; font-family: arial;" name="time" value="'+obj_caller.gen_time(this.dt_current)+'" size="13" maxlength="13"></font></td></tr></form>');
 </script>
 </table></tr></td>
 </table>
