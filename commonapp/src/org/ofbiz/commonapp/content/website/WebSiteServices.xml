@@ -27,7 +27,10 @@
  -->
 <simple-methods>
     <simple-method method-name="createWebSite" short-description="Create an WebSite">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createWebSite you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="CATALOG" action="_CREATE">
+        	<alt-permission permission="CONTENT" action="_CREATE"/>
+        	<fail-message message="Security Error: to run createWebSite you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/>
+        </check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="WebSite"/>
@@ -37,7 +40,10 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateWebSite" short-description="Update an WebSite">
-        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateWebSite you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="CATALOG" action="_UPDATE">
+        	<alt-permission permission="CONTENT" action="_UPDATE"/>
+        	<fail-message message="Security Error: to run updateWebSite you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/>
+        </check-permission>
         <check-errors/>
 
         <make-value value-name="lookupKeyValue" entity-name="Content"/>
@@ -46,7 +52,8 @@
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-    
+
+	<!-- WebSite Payment Setting services -->    
     <simple-method method-name="createWebSitePaymentSetting" short-description="Create an WebSite Payment Setting">
         <check-permission permission="PAYPROC" action="_CREATE"><fail-message message="Security Error: to run createWebSitePaymentSetting you must have the PAYPROC_CREATE or PROC_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -77,4 +84,48 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>    
     
+    <!-- Party and WebSite services -->
+    <simple-method method-name="addWebSiteRole" short-description="Add WebSite Role">
+        <check-permission permission="CONTENT" action="_CREATE">
+        	<alt-permission permission="PARTYMGR" action="_CREATE"/>
+        	<fail-message message="Security Error: to run addWebSiteRole you must have the CONTENT_CREATE or CONTENT_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProdCatalogRole"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateWebSiteRole" short-description="Update WebSite Role">
+        <check-permission permission="CONTENT" action="_UPDATE">
+        	<alt-permission permission="PARTYMGR" action="_UPDATE"/>
+        	<fail-message message="Security Error: to run updateWebSiteRole you must have the CONTENT_UPDATE or CONTENT_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProdCatalogRole"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProdCatalogRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeWebSiteRole" short-description="Remove WebSite Role">
+        <check-permission permission="CONTENT" action="_DELETE">
+        	<alt-permission permission="PARTYMGR" action="_DELETE"/>
+        	<fail-message message="Security Error: to run removeWebSiteRole you must have the CONTENT_DELETE or CONTENT_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProdCatalogRole"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProdCatalogRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
 </simple-methods>
