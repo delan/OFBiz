@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
@@ -30,7 +30,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='90%' >
-            <div class='boxhead'>&nbsp;Accounting Manager Main Page</div>
+            <div class='boxhead'>&nbsp;Example Main Page</div>
           </TD>        
         </tr>
       </table>
