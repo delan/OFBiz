@@ -86,7 +86,7 @@
     
   <InvoiceItemType description="Invoice Item Adjustment" hasTable="N" invoiceItemTypeId="INVOICE_ITM_ADJ" parentTypeId=""/>
   <InvoiceItemType description="Invoice Item Promotion" hasTable="N" invoiceItemTypeId="ITM_PROMOTION_ADJ" parentTypeId="INVOICE_ITM_ADJ"/>
-  <InvoiceItemType description="Invoice Item Replacement" hasTable="N" invoiceItemTypeId="ITM_REPLACEMENT_ADJ" parentTypeId="INVOICE_ITM_ADJ"/>
+  <InvoiceItemType description="Invoice Item Replacement" hasTable="N" invoiceItemTypeId="ITM_REPLACE_ADJ" parentTypeId="INVOICE_ITM_ADJ"/>
   <InvoiceItemType description="Invoice Item Discount" hasTable="N" invoiceItemTypeId="ITM_DISCOUNT_ADJ" parentTypeId="INVOICE_ITM_ADJ"/>
   <InvoiceItemType description="Invoice Item Fee" hasTable="N" invoiceItemTypeId="ITM_FEE" parentTypeId="INVOICE_ITM_ADJ"/>
   <InvoiceItemType description="Invoice Item Miscellaneous Charges" hasTable="N" invoiceItemTypeId="ITM_MISC_CHARGE" parentTypeId="INVOICE_ITM_ADJ"/>
