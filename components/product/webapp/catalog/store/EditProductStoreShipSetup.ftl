@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -495,6 +495,8 @@ function setAssocFields(select) {
         <td><span class="tableheadtext">Max Sz</span></td>
         <td><span class="tableheadtext">Min Wt</span></td>
         <td><span class="tableheadtext">Max Wt</span></td>
+        <td><span class="tableheadtext">Min $</span></td>
+        <td><span class="tableheadtext">Max $</span></td>
         <td><span class="tableheadtext">Allow USPS</span></td>
         <td><span class="tableheadtext">Req USPS</span></td>
         <td><span class="tableheadtext">Allow Co</span></td>
@@ -524,6 +526,8 @@ function setAssocFields(select) {
               <td><span class="tabletext">${meth.maxSize?if_exists}</span></td>
               <td><span class="tabletext">${meth.minWeight?if_exists}</span></td>
               <td><span class="tabletext">${meth.maxWeight?if_exists}</span></td>
+              <td><span class="tabletext">${meth.minTotal?default(0)?string("##0.00")}</span></td>
+              <td><span class="tabletext">${meth.maxTotal?default(0)?string("##0.00")}</span></td>
               <td><span class="tabletext">${meth.allowUspsAddr?default("N")}</span></td>
               <td><span class="tabletext">${meth.requireUspsAddr?default("N")}</span></td>
               <td><span class="tabletext">${meth.allowCompanyAddr?default("N")}</span></td>
@@ -590,6 +594,20 @@ function setAssocFields(select) {
           <td>
             <input type="text" class="inputBox" name="maxWeight" size="5">
             <span class="tabletext">Displays only if total weight is equal/less then this value</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Min Total</span></td>
+          <td>
+            <input type="text" class="inputBox" name="minTotal" size="5">
+            <span class="tabletext">Displays only if total price is equal/greater then this value</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Max Total</span></td>
+          <td>
+            <input type="text" class="inputBox" name="maxTotal" size="5">
+            <span class="tabletext">Displays only if total price is equal/less then this value</span>
           </td>
         </tr>
         <tr>

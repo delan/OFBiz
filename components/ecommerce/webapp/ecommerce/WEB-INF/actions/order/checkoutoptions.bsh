@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.1
 */
 
@@ -41,7 +41,8 @@ checkOutPaymentId = "";
 itemSizes = new LinkedList();
 featureIdSet = new HashSet();
 shipAddress = null;
-weight = 0.00;
+shipWeight = 0.00;
+shipTotal = 0.00;
 if (cart != null) {
     if (cart.getPaymentMethodIds().size() > 0) {
         checkOutPaymentId = cart.getPaymentMethodIds().get(0);
@@ -54,7 +55,8 @@ if (cart != null) {
     }
     itemSizes = cart.getShippableSizes();
     featureIdMap = cart.getFeatureIdQtyMap();
-    weight = cart.getTotalWeight();
+    shipWeight = cart.getShippableWeight();
+    shipTotal = cart.getShippableTotal();
 }
 
 context.put("shoppingCart", cart);
@@ -62,7 +64,7 @@ context.put("userLogin", userLogin);
 context.put("productStoreId", productStoreId);
 context.put("checkOutPaymentId", checkOutPaymentId);
 //context.put("carrierShipmentMethodList", delegator.findByAndCache("ProductStoreShipmentMethView", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNumber")));
-context.put("carrierShipmentMethodList", ProductStoreWorker.getAvailableStoreShippingMethods(delegator, productStoreId, shipAddress, itemSizes, featureIdMap, weight));
+context.put("carrierShipmentMethodList", ProductStoreWorker.getAvailableStoreShippingMethods(delegator, productStoreId, shipAddress, itemSizes, featureIdMap, shipWeight, shipTotal));
 context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));
 context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod", null, UtilMisc.toList("paymentMethodTypeId")), true));
 context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
