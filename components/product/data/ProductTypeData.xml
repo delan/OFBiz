@@ -258,6 +258,7 @@
     <ProductPriceType description="Competitive Price" productPriceTypeId="COMPETITIVE_PRICE"/>
     <ProductPriceType description="Recurring Charge" productPriceTypeId="RECURRING_CHARGE"/>
     <ProductPriceType description="Usage Charge" productPriceTypeId="USAGE_CHARGE"/>
+    <ProductPriceType description="Component Price" productPriceTypeId="COMPONENT_PRICE"/>
 
     <ProductPriceActionType description="Percent Of List Price" productPriceActionTypeId="PRICE_POL"/>
     <ProductPriceActionType description="Percent Of Default Price" productPriceActionTypeId="PRICE_POD"/>
@@ -277,6 +278,7 @@
     <ProductType description="Finished Good" hasTable="N" parentTypeId="GOOD" productTypeId="FINISHED_GOOD"/>
     <ProductType description="Digital Good" hasTable="N" parentTypeId="GOOD" productTypeId="DIGITAL_GOOD"/>
     <ProductType description="Finished/Digital Good" hasTable="N" parentTypeId="GOOD" productTypeId="FINDIG_GOOD"/>
+    <ProductType description="Configurable Good" hasTable="N" parentTypeId="GOOD" productTypeId="AGGREGATED"/>
 
     <!-- inventory item status -->
     <StatusType description="Inventory Item" hasTable="N" parentTypeId="" statusTypeId="INVENTORY_ITEM_STTS"/>

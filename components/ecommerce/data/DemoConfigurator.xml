@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <Product productId="PC001" productTypeId="AGGREGATED" internalName="PC for tests" createdDate="2004-08-20 12:49:13.418" createdByUserLogin="admin"/>
+    <Product productId="RAM256_BRAND" productTypeId="FINISHED_GOOD" internalName="RAM 256 no parity" createdDate="2004-08-20 12:50:54.794" createdByUserLogin="admin"/>
+
+    <ProductPrice productId="RAM256_BRAND" productPriceTypeId="COMPONENT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:53.223" price="115" createdDate="2004-08-20 12:55:53.223" createdByUserLogin="admin"/>
+    <ProductPrice productId="RAM256_BRAND" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2004-08-20 12:55:36.479" price="120" createdDate="2004-08-20 12:55:36.479" createdByUserLogin="admin"/>
+
+    <ProductConfigItem configItemId="IT0000" configItemTypeId="SINGLE" configItemName="ITM001" description="Select your RAM configuration:"/>
+
+    <ProductConfigOption configItemId="IT0000" configOptionId="OP000" configOptionName="OPT001" description="RAM 256 MB" sequenceNum="10"/>
+    <ProductConfigOption configItemId="IT0000" configOptionId="OP001" configOptionName="OPT002" description="RAM 512 MB" sequenceNum="20"/>
+    
+    <ProductConfigProduct configItemId="IT0000" configOptionId="OP000" productId="RAM256_BRAND" quantity="1"/>
+    <ProductConfigProduct configItemId="IT0000" configOptionId="OP001" productId="RAM256_BRAND" quantity="2"/>
+    
+    <ProductConfig productId="PC001" configItemId="IT0000" sequenceNum="10" fromDate="2004-08-20 12:59:26.209" configName="RAM" configTypeId="QUESTION" isMandatory="Y"/>
+</entity-engine-xml>
+

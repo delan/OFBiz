@@ -3042,5 +3042,141 @@
       <field name="description" type="description"></field>
       <prim-key field="supplierRatingTypeId"/>
     </entity>
+    
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.config -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ProductConfig"
+            package-name="org.ofbiz.product.config"
+            title="Product Configuration Templates Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="configItemId" type="id-ne"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="configName" type="name"></field>
+      <field name="configTypeId" type="id"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="isMandatory" type="indicator"></field>
+      <prim-key field="productId"/>
+      <prim-key field="configItemId"/>
+      <prim-key field="sequenceNum"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PROD_CONF_PROD" title="Product" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CONF_ITEM" title="ConfigItem" rel-entity-name="ProductConfigItem">
+        <key-map field-name="configItemId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductConfigItem"
+            package-name="org.ofbiz.product.config"
+            title="Product Configuration Question Entity">
+      <field name="configItemId" type="id-ne"></field>
+      <field name="configItemTypeId" type="id"></field>
+      <field name="configItemName" type="name"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="configItemId"/>
+    </entity>
+    <entity entity-name="ProductConfigOption"
+            package-name="org.ofbiz.product.config"
+            title="Product Configuration Options Entity">
+      <field name="configItemId" type="id-ne"></field>
+      <field name="configOptionId" type="id-ne"></field>
+      <field name="configOptionName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="configItemId"/>
+      <prim-key field="configOptionId"/>
+      <relation type="one" fk-name="PROD_OPTN_ITEM" title="ConfigItem" rel-entity-name="ProductConfigItem">
+        <key-map field-name="configItemId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductConfigOptionIactn"
+            package-name="org.ofbiz.product.config"
+            title="Product Configuration Options Entity">
+      <field name="configItemId" type="id-ne"></field>
+      <field name="configOptionId" type="id-ne"></field>
+      <field name="configItemIdTo" type="id-ne"></field>
+      <field name="configOptionIdTo" type="id-ne"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <field name="configIactnTypeId" type="id"></field> <!-- INCOMPATIBLE, etc... -->
+      <field name="description" type="description"></field>
+      <prim-key field="configItemId"/>
+      <prim-key field="configOptionId"/>
+      <prim-key field="configItemIdTo"/>
+      <prim-key field="configOptionIdTo"/>
+      <prim-key field="sequenceNum"/> <!-- OPTIONAL -->
+      <relation type="one" fk-name="PROD_OPTN_ITEM" title="ConfigItem" rel-entity-name="ProductConfigItem">
+        <key-map field-name="configItemId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_OPTN_OPTN" title="ConfigOption" rel-entity-name="ProductConfigOption">
+        <key-map field-name="configItemId"/>
+        <key-map field-name="configOptionId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_OPTN_ITMT" title="ConfigItemTo" rel-entity-name="ProductConfigItem">
+        <key-map field-name="configItemIdTo" rel-field-name="configItemId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_OPTN_OPTT" title="ConfigOptionTo" rel-entity-name="ProductConfigOption">
+        <key-map field-name="configItemIdTo" rel-field-name="configItemId"/>
+        <key-map field-name="configOptionIdTo" rel-field-name="configOptionId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductConfigProduct"
+            package-name="org.ofbiz.product.config"
+            title="Product Configuration Option to Products Entity">
+      <field name="configItemId" type="id-ne"></field>
+      <field name="configOptionId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="configItemId"/>
+      <prim-key field="configOptionId"/>
+      <prim-key field="productId"/>
+      <relation type="one" fk-name="PROD_CONFP_ITEM" title="ConfigItem" rel-entity-name="ProductConfigItem">
+        <key-map field-name="configItemId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CONFP_OPTN" title="ConfigOption" rel-entity-name="ProductConfigOption">
+        <key-map field-name="configItemId"/>
+        <key-map field-name="configOptionId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CONFP_PROD" title="Product" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductConfigConfig"
+            package-name="org.ofbiz.product.config"
+            title="Existing Product Configurations Entity">
+      <field name="configId" type="id-ne"></field>
+      <field name="configItemId" type="id-ne"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <field name="configOptionId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="configId"/>
+      <prim-key field="configItemId"/>
+      <prim-key field="configOptionId"/>
+      <prim-key field="sequenceNum"/>
+      <relation type="one" fk-name="PROD_CONFC_ITEM" title="ConfigItem" rel-entity-name="ProductConfigItem">
+        <key-map field-name="configItemId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CONFC_OPTN" title="ConfigOption" rel-entity-name="ProductConfigOption">
+        <key-map field-name="configItemId"/>
+        <key-map field-name="configOptionId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductConfigStats"
+            package-name="org.ofbiz.product.config"
+            title="Product Configurations Stats Entity">
+      <field name="configId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="numOfConfs" type="numeric"></field>
+      <field name="configTypeId" type="id"></field> <!-- HIDDEN, TEMPLATE, etc... -->
+      <prim-key field="configId"/>
+      <prim-key field="productId"/>
+      <relation type="one" fk-name="PROD_CONFS_PROD" title="Product" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+    </entity>
+
 </entitymodel>
 

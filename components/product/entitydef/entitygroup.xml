@@ -268,5 +268,18 @@
     <entity-group group="org.ofbiz" entity="ShipmentTypeAttr" />
     <entity-group group="org.ofbiz" entity="ShippingDocument" />
     <entity-group group="org.ofbiz" entity="ShipmentPlan" />
+    
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.config -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="ProductConfig" />
+    <entity-group group="org.ofbiz" entity="ProductConfigItem" />
+    <entity-group group="org.ofbiz" entity="ProductConfigOption" />
+    <entity-group group="org.ofbiz" entity="ProductConfigOptionIactn" />
+    <entity-group group="org.ofbiz" entity="ProductConfigProduct" />
+    <entity-group group="org.ofbiz" entity="ProductConfigConfig" />
+    <entity-group group="org.ofbiz" entity="ProductConfigStats" />
+
 </entitygroup>
 

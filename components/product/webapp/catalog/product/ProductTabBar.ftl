@@ -47,5 +47,8 @@
         <#if product?exists && product.isVirtual?if_exists == "Y">
             <a href="<@ofbizUrl>/QuickAddVariants?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.QuickAddVariants?default(unselectedClassName)}">${uiLabelMap.ProductVariants}</a>
         </#if>
+        <#if product?exists && product.productTypeId?if_exists == "AGGREGATED">
+            <a href="<@ofbizUrl>/EditProductConfigs?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductConfigs?default(unselectedClassName)}">${uiLabelMap.ProductConfigs}</a>
+        </#if>
     </div>
 </#if>

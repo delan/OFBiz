@@ -22,7 +22,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id: ProductScreens.xml,v 1.4 2004/07/31 12:17:42 jonesde Exp $
+ *  $Id$
 -->
 
 <screens>
@@ -120,6 +120,32 @@
                     <decorator-section name="body">
                         <form name="UpdateProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                         <form name="AddProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProductConfigs">
+        <section>
+            <actions>
+                <set field="title" value="Edit Product Configs"/>
+                <set field="titleProperty" value="PageTitleEditProductConfigs"/>
+                <set field="tabButtonItem" value="EditProductConfigs"/>
+                <set field="labelTitleProperty" value="ProductConfigs"/>
+    
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+                <entity-and entity-name="ProductConfig" list-name="productConfigs">
+                    <field-map env-name="productId"/>
+                    <order-by field-name="sequenceNum"/>
+                    <order-by field-name="fromDate"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductDecorator">
+                    <decorator-section name="body">
+                        <form name="UpdateProductConfig" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <form name="AddProductConfig" location="component://product/webapp/catalog/product/ProductForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
