@@ -130,23 +130,30 @@ public class ContactMechServices {
 
         try {
             contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
-            // try to find a PartyContactMech with a valid date range
-            List partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), UtilMisc.toList("fromDate")), true);
-
-            partyContactMech = EntityUtil.getFirst(partyContactMechs);
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             contactMech = null;
-            partyContactMech = null;
+        }
+        
+        if (!partyId.equals("_NA_")) {
+            // try to find a PartyContactMech with a valid date range
+            try {
+                List partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), UtilMisc.toList("fromDate")), true);
+                partyContactMech = EntityUtil.getFirst(partyContactMechs);
+                if (partyContactMech == null) {
+                    return ServiceUtil.returnError("ERROR: Cannot update specified contact info because it does not correspond to the specified party");
+                } else {
+                    toBeStored.add(partyContactMech);        
+                }
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage());            
+                contactMech = null;
+            }
         }
         if (contactMech == null) {
             return ServiceUtil.returnError("ERROR: Could not find specified contact info (read error)");
         }
-        if (partyContactMech == null) {
-            return ServiceUtil.returnError("ERROR: Cannot update specified contact info because it does not correspond to the specified party");
-        }
-        toBeStored.add(partyContactMech);
-
+              
         String contactMechTypeId = contactMech.getString("contactMechTypeId");
 
         // never change a contact mech, just create a new one with the changes
@@ -364,26 +371,35 @@ public class ContactMechServices {
 
         try {
             contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
-            // try to find a PartyContactMech with a valid date range
-            List partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), UtilMisc.toList("fromDate")), true);
-
-            partyContactMech = EntityUtil.getFirst(partyContactMechs);
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             contactMech = null;
-            partyContactMech = null;
+        }
+        
+        if (!partyId.equals("_NA_")) {
+            // try to find a PartyContactMech with a valid date range
+            try {
+                List partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), UtilMisc.toList("fromDate")), true);
+                partyContactMech = EntityUtil.getFirst(partyContactMechs);
+                if (partyContactMech == null) {
+                    return ServiceUtil.returnError("ERROR: Cannot update specified contact info because it does not correspond to the specified party");
+                } else {
+                    toBeStored.add(partyContactMech);        
+                }
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage());            
+                contactMech = null;
+            }
         }
         if (contactMech == null) {
             return ServiceUtil.returnError("ERROR: Could not find specified contact info (read error)");
         }
-        if (partyContactMech == null) {
-            return ServiceUtil.returnError("ERROR: Cannot update specified contact info because it does not correspond to the specified party");
-        }
-        toBeStored.add(partyContactMech);
 
         // never change a contact mech, just create a new one with the changes
         GenericValue newContactMech = new GenericValue(contactMech);
-        GenericValue newPartyContactMech = new GenericValue(partyContactMech);
+        GenericValue newPartyContactMech = null;
+        if (partyContactMech != null)
+            newPartyContactMech = new GenericValue(partyContactMech);
         GenericValue relatedEntityToSet = null;
 
         if ("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
@@ -413,39 +429,45 @@ public class ContactMechServices {
         } else {
             return ServiceUtil.returnError("Could not update this contact mech as a POSTAL_ADDRESS the specified contact mech is a " + contactMech.getString("contactMechTypeId"));
         }
-
-        newPartyContactMech.set("roleTypeId", context.get("roleTypeId"));
-        newPartyContactMech.set("allowSolicitation", context.get("allowSolicitation"));
+    
+        if (newPartyContactMech != null) {
+            newPartyContactMech.set("roleTypeId", context.get("roleTypeId"));        
+            newPartyContactMech.set("allowSolicitation", context.get("allowSolicitation"));
+        }
 
         if (!newContactMech.equals(contactMech)) isModified = true;
-        if (!newPartyContactMech.equals(partyContactMech)) isModified = true;
+        if (newPartyContactMech != null && !newPartyContactMech.equals(partyContactMech)) isModified = true;
 
         toBeStored.add(newContactMech);
-        toBeStored.add(newPartyContactMech);
+        if (newPartyContactMech != null)
+            toBeStored.add(newPartyContactMech);
 
         if (isModified) {
             if (relatedEntityToSet != null) toBeStored.add(relatedEntityToSet);
 
             newContactMech.set("contactMechId", newCmId.toString());
-            newPartyContactMech.set("contactMechId", newCmId.toString());
-            newPartyContactMech.set("fromDate", now);
-            newPartyContactMech.set("thruDate", null);
+            if (newPartyContactMech != null) {
+                newPartyContactMech.set("contactMechId", newCmId.toString());            
+                newPartyContactMech.set("fromDate", now);
+                newPartyContactMech.set("thruDate", null);            
 
-            try {
-                Iterator partyContactMechPurposes = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
+                try {
+                    Iterator partyContactMechPurposes = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
 
-                while (partyContactMechPurposes != null && partyContactMechPurposes.hasNext()) {
-                    GenericValue tempVal = new GenericValue((GenericValue) partyContactMechPurposes.next());
+                    while (partyContactMechPurposes != null && partyContactMechPurposes.hasNext()) {
+                        GenericValue tempVal = new GenericValue((GenericValue) partyContactMechPurposes.next());
 
-                    tempVal.set("contactMechId", newCmId.toString());
-                    toBeStored.add(tempVal);
+                        tempVal.set("contactMechId", newCmId.toString());
+                        toBeStored.add(tempVal);
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e.toString());
+                    return ServiceUtil.returnError("ERROR: Could not change contact info (read purpose failure): " + e.getMessage());
                 }
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.toString());
-                return ServiceUtil.returnError("ERROR: Could not change contact info (read purpose failure): " + e.getMessage());
-            }
 
-            partyContactMech.set("thruDate", now);
+                partyContactMech.set("thruDate", now);
+            }
+            
             try {
                 delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
