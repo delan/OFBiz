@@ -31,6 +31,7 @@ import org.w3c.dom.*;
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.service.config.*;
 
 /**
  * ECAUtil
@@ -42,23 +43,45 @@ import org.ofbiz.core.service.*;
 public class ECAUtil {
 
     public static final String module = ECAUtil.class.getName();
-    public static final String SERVICE_ECA_XML_FILENAME = "secaconf.xml";
-    protected static Map ECAMap = new HashMap();
+    
+    //for now just use a Map because we aren't doing reloading right now anyway...
+    //public static UtilCache ecaCache = new UtilCache("service.ServiceECAs", 0, 0, false);
+    public static Map ecaCache = new HashMap();
 
     public static void readConfig() {
         Element rootElement = null;
         try {
-            rootElement = ResourceLoader.getXmlRootElement(ECAUtil.SERVICE_ECA_XML_FILENAME);
+            rootElement = ServiceConfigUtil.getXmlRootElement();
+        } catch (GenericConfigException e) {
+            Debug.logError(e, "Error getting Service Engine XML root element");
+            return;
+        }
+        
+        List serviceEcasElements = UtilXml.childElementList(rootElement, "service-ecas");
+        Iterator secasIter = serviceEcasElements.iterator();
+        while (secasIter.hasNext()) {
+            Element serviceEcasElement = (Element) secasIter.next();
+            ResourceHandler handler = new ResourceHandler(ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME, serviceEcasElement);
+            addEcaDefinitions(handler);
+        }
+    }
+    
+    public static void addEcaDefinitions(ResourceHandler handler) {
+        Element rootElement = null;
+        try {
+            rootElement = handler.getDocument().getDocumentElement();
         } catch (GenericConfigException e) {
             Debug.logError(e);
+            return;
         }
         List ecaList = UtilXml.childElementList(rootElement, "eca");
         Iterator ecaIt = ecaList.iterator();
+        int numDefs = 0;
         while (ecaIt.hasNext()) {
             Element e = (Element) ecaIt.next();
             String serviceName = e.getAttribute("service");
             String eventName = e.getAttribute("event");
-            Map eventMap = (Map) ECAMap.get(serviceName);
+            Map eventMap = (Map) ecaCache.get(serviceName);
             List rules = null;
             if (eventMap == null) {
                 eventMap = new HashMap();
@@ -70,12 +93,14 @@ public class ECAUtil {
             }
             rules.add(new EventConditionAction(e));
             eventMap.put(eventName, rules);
-            ECAMap.put(serviceName, eventMap);
+            ecaCache.put(serviceName, eventMap);
+            numDefs++;
         }
+        Debug.logImportant("Loaded " + numDefs + " ECA definitions from " + handler.getLocation() + " in loader " + handler.getLoaderName());
     }
 
     public static Map getServiceEventMap(String serviceName) {
-        return (Map) ECAMap.get(serviceName);
+        return (Map) ecaCache.get(serviceName);
     }
     
     public static void evalConditions(String serviceName, Map eventMap, String event, DispatchContext dctx, Map context) throws GenericServiceException {

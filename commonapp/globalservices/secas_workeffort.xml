@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
+
+<service-eca>
+    <eca service="createWorkEffort" event="commit">
+        <action service="quickAssignPartyToWorkEffort" mode="sync"/>
+    </eca>
+</service-eca>

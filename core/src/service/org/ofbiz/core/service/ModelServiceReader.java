@@ -66,7 +66,7 @@ public class ModelServiceReader {
                 //must check if null again as one of the blocked threads can still enter
                 reader = (ModelServiceReader) readersUrl.get(readerURL);
                 if (reader == null) {
-                    if (Debug.infoOn()) Debug.logInfo("[Creating reader]: " + readerURL.toExternalForm(), module);
+                    //if (Debug.infoOn()) Debug.logInfo("[Creating reader]: " + readerURL.toExternalForm(), module);
                     reader = new ModelServiceReader(readerURL);
                     readersUrl.put(readerURL, reader);
                 }
@@ -83,7 +83,7 @@ public class ModelServiceReader {
                 //must check if null again as one of the blocked threads can still enter
                 reader = (ModelServiceReader) readersLoader.get(handler);
                 if (reader == null) {
-                    if (Debug.infoOn()) Debug.logInfo("[Creating reader]: " + handler, module);
+                    //if (Debug.infoOn()) Debug.logInfo("[Creating reader]: " + handler, module);
                     reader = new ModelServiceReader(handler);
                     readersLoader.put(handler, reader);
                 }
@@ -156,6 +156,7 @@ public class ModelServiceReader {
                         } else {
                             utilTimer.timerString("Before start of service loop in " + handler);
                         }
+                        int servicesLoaded = 0;
                         do {
                             if (curChild.getNodeType() == Node.ELEMENT_NODE && "service".equals(curChild.getNodeName())) {
                                 i++;
@@ -196,8 +197,10 @@ public class ModelServiceReader {
                     }
                     if (this.isFromURL) {
                         utilTimer.timerString("Finished file " + readerURL + " - Total Services: " + i + " FINISHED");
+                        Debug.logImportant("Loaded " + i + " Service definitions from " + readerURL);
                     } else {
                         utilTimer.timerString("Finished document in " + handler + " - Total Services: " + i + " FINISHED");
+                        Debug.logImportant("Loaded " + i + " Service definitions from " + handler.getLocation() + " in loader " + handler.getLoaderName());
                     }
                 }
             }
