@@ -198,8 +198,9 @@ public class IteratorTag extends BodyTagSupport {
                 Iterator mapEntries = tempMap.entrySet().iterator();
                 while (mapEntries.hasNext()) {
                     Map.Entry entry = (Map.Entry) mapEntries.next();
-                    pageContext.setAttribute((String) entry.getKey(),
-                            entry.getValue());
+                    Object value = entry.getValue();
+                    if (value == null) value = new String();
+                    pageContext.setAttribute((String) entry.getKey(), value);
                 }
             }
 
