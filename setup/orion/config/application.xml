@@ -37,6 +37,11 @@
     <library path="../../ofbiz/lib/common/mm.mysql-2.0.14-bin.jar"/>
     <library path="../../ofbiz/lib/common/postgresql.jar"/>
     <library path="../../ofbiz/lib/common/sapdbc.jar"/>
+    <library path="../../ofbiz/lib/datavision/DataVision.jar"/>
+    <library path="../../ofbiz/lib/datavision/MinML.jar"/>
+    <library path="../../ofbiz/lib/datavision/jcalendar.jar"/>
+    <library path="../../ofbiz/lib/jasperreports/itext-0.92.jar"/>
+    <library path="../../ofbiz/lib/jasperreports/jasperreports.jar"/>
 
         <principals path="./principals.xml" />
 
