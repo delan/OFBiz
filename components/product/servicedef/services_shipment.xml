@@ -167,6 +167,14 @@
         <description>Delete ShipmentPackageContent</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="addShipmentContentToPackage" default-entity-name="ShipmentPackageContent" engine="simple"
+            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="addShipmentContentToPackage" auth="true">
+        <description>Add Shipment Content To Package</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="quantity" mode="IN" optional="false"/>        
+        <override name="shipmentPackageSeqId" mode="INOUT" optional="false"/>        
+    </service>
 
     <!-- ShipmentPackageRouteSeg Services -->
     <service name="createShipmentPackageRouteSeg" default-entity-name="ShipmentPackageRouteSeg" engine="simple"
