@@ -1,5 +1,5 @@
 /*
- * $Id: ButtonEventConfig.java,v 1.1 2004/07/27 18:37:37 ajzeneski Exp $
+ * $Id: ButtonEventConfig.java,v 1.2 2004/08/10 18:58:56 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.pos.config;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +45,7 @@ import org.w3c.dom.Element;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class ButtonEventConfig {
@@ -79,10 +80,10 @@ public class ButtonEventConfig {
         return bef.isLockable();
     }
 
-    public static void invokeButtonEvent(String buttonName, PosScreen pos) throws ButtonEventException {
+    public static void invokeButtonEvent(String buttonName, PosScreen pos) throws ButtonEventNotFound, ButtonEventException {
         ButtonEventConfig bef = (ButtonEventConfig) buttonConfig.get(buttonName);
         if (bef == null) {
-            throw new ButtonEventException("No button definition found for button - " + buttonName);
+            throw new ButtonEventNotFound("No button definition found for button - " + buttonName);
         }
         bef.invoke(pos);
     }
@@ -115,7 +116,7 @@ public class ButtonEventConfig {
         return !disableLock;
     }
 
-    public void invoke(PosScreen pos) throws ButtonEventException {
+    public void invoke(PosScreen pos) throws ButtonEventNotFound, ButtonEventException {
         ClassLoader cl = this.getClass().getClassLoader();
 
         Class[] paramTypes = new Class[] { PosScreen.class };
@@ -124,8 +125,34 @@ public class ButtonEventConfig {
             Class c = cl.loadClass(this.className);
             Method m = c.getMethod(this.method, paramTypes);
             m.invoke(null, params);
-        } catch (Throwable e) {
-           throw new ButtonEventException(e);
+        } catch (NoSuchMethodException e) {
+            throw new ButtonEventNotFound(e);
+        } catch (ClassNotFoundException e) {
+            throw new ButtonEventNotFound(e);
+        } catch (InvocationTargetException e) {
+            throw new ButtonEventException(e);
+        } catch (IllegalAccessException e) {
+            throw new ButtonEventException(e);
+        } catch (Throwable t) {
+            throw new ButtonEventException(t);
+        }
+    }
+
+    public static class ButtonEventNotFound extends GeneralException {
+        public ButtonEventNotFound() {
+            super();
+        }
+
+        public ButtonEventNotFound(String str) {
+            super(str);
+        }
+
+        public ButtonEventNotFound(String str, Throwable nested) {
+            super(str, nested);
+        }
+
+        public ButtonEventNotFound(Throwable nested) {
+            super(nested);
         }
     }
 

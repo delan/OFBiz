@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XPage>
+    <Components>
+        <!-- when used as a PosDialog the x/y will be set to center of screen -->
+        <Panel name="errorPanel" x="0" y="0" w="300" h="50" style="errorpanel" border="1">
+            <Label x="0" y="0" w="300" h="50" name="testLabel" style="error" content="Scanned Product Not Found!" alignment="center"/>
+        </Panel>
+    </Components>
+</XPage>

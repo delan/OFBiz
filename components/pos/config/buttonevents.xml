@@ -39,4 +39,7 @@
     <!-- pos mgr menu events -->
     <event button-name="mgrLogOut" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="logoff" disable-lock="false"/>
     <event button-name="mgrMain" class-name="org.ofbiz.pos.event.NavagationEvents" method-name="showPosScreen" disable-lock="false"/>
+
+    <!-- test events -->
+    <event button-name="testAlert" class-name="org.ofbiz.pos.event.TestEvents" method-name="testAlert" disable-lock="false"/>
 </button-events>

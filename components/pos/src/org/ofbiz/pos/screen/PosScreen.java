@@ -1,5 +1,5 @@
 /*
- * $Id: PosScreen.java,v 1.2 2004/08/06 20:55:13 ajzeneski Exp $
+ * $Id: PosScreen.java,v 1.3 2004/08/10 18:58:57 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,10 @@
 package org.ofbiz.pos.screen;
 
 import net.xoetrope.builder.NavigationHelper;
+import net.xoetrope.xui.XPage;
+import net.xoetrope.xui.XProjectManager;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.content.xui.XuiContainer;
 import org.ofbiz.content.xui.XuiSession;
 import org.ofbiz.pos.component.Input;
@@ -33,60 +36,85 @@ import org.ofbiz.pos.component.Journal;
 import org.ofbiz.pos.component.Output;
 import org.ofbiz.pos.component.PosButton;
 import org.ofbiz.pos.device.DeviceLoader;
-import org.ofbiz.base.util.Debug;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class PosScreen extends NavigationHelper implements Runnable {
 
     public static final String module = PosScreen.class.getName();
-    public static final long maxInactivity = 1800000;
+    public static final String BUTTON_ACTION_METHOD = "buttonPressed";
+    public static final long MAX_INACTIVITY = 1800000;
 
-    protected Output output = null;
-    protected Input input = null;
-    protected Journal journal = null;
+    protected static boolean monitorRunning = false;
+    protected static boolean isLocked = false;
+    protected static boolean initialized = false;
+
+    protected static Thread activityMonitor = null;
+    protected static long lastActivity = 0;
+
+    protected static XuiSession session = null;
+    protected static Output output = null;
+    protected static Input input = null;
+    protected static Journal journal = null;
     protected PosButton buttons = null;
-    protected XuiSession session = null;
-    protected boolean isLocked = false;
-    protected long lastActivity = 0;
-    protected Thread activityMonitor = null;
-    protected boolean monitorRunning = false;
-
 
     public void pageCreated() {
-        this.session = XuiContainer.getSession("pos-1");
-        this.output = new Output(this);
-        this.input = new Input(this);
-        this.journal = new Journal(this);
-        this.buttons = new PosButton(this);
-        this.lastActivity = System.currentTimeMillis();
-        try {
-            DeviceLoader.load(this);
-        } catch (Exception e) {
-            Debug.logError(e, module);
+        super.pageCreated();
+
+        // initial settings
+        this.setEnabled(false);
+        this.setVisible(false);
+
+        if (!initialized) {
+            initialized = true;
+
+            // setup the shared components
+            session = XuiContainer.getSession("pos-1");
+            output = new Output(this);
+            input = new Input(this);
+            journal = new Journal(this);
+            lastActivity = System.currentTimeMillis();
+
+            // create the monitor thread
+            activityMonitor = new Thread(this);
+            activityMonitor.setDaemon(false);
+
+            // load the shared devices
+            try {
+                DeviceLoader.load(this);
+            } catch (Exception e) {
+                Debug.logError(e, module);
+            }
+
+            // pre-load a few screens
+            XProjectManager.getPageManager().loadPage("main/mgrpanel");
+            XProjectManager.getPageManager().loadPage("main/promopanel");
         }
 
-        // create the monitor thread
-        this.activityMonitor = new Thread(this);
-        this.activityMonitor.setDaemon(false);
+        // buttons are different per screen
+        this.buttons = new PosButton(this);
     }
 
     public void pageActivated() {
+        super.pageActivated();
+
+        this.setEnabled(true);
+        this.setVisible(true);
         this.setLastActivity(System.currentTimeMillis());
         if (session.getUserLogin() == null) {
             this.setLock(true);
-        } else {            
+        } else {
             if (!monitorRunning) {
-                this.monitorRunning = true;
-                this.activityMonitor.start();
+                monitorRunning = true;
+                activityMonitor.start();
             }
         }
         this.repaint();
-        this.journal.focus();
+        journal.focus();
     }
 
     public boolean isLocked() {
@@ -95,48 +123,64 @@ public class PosScreen extends NavigationHelper implements Runnable {
 
     public void setLock(boolean lock) {
         this.buttons.setLock(lock);
-        this.input.setLock(lock);
-        this.output.setLock(lock);
-        this.journal.setLock(lock);
-        this.isLocked = lock;
-        this.input.setFunction("LOGIN");
+        input.setLock(lock);
+        output.setLock(lock);
+        journal.setLock(lock);
+        isLocked = lock;
+        input.setFunction("LOGIN");
     }
 
     public XuiSession getSession() {
-        return this.session;
+        return session;
     }
 
     public Input getInput() {
-        return this.input;
+        return input;
     }
 
     public Output getOutput() {
-        return this.output;
+        return output;
     }
 
     public Journal getJournal() {
-        return this.journal;
+        return journal;
     }
 
     public PosButton getButtons() {
-        return this.buttons;
+        return buttons;
     }
 
     public void setLastActivity(long l) {
-        this.lastActivity = l;
+        lastActivity = l;
     }
 
     // generic button XUI event calls into PosButton to lookup the external reference
     public void buttonPressed() {
         this.setLastActivity(System.currentTimeMillis());
-        this.buttons.buttonPressed(this);
-        this.journal.focus();
+        buttons.buttonPressed(this);
+        journal.focus();
+    }
+
+    // generic page display methods - extends those in XPage
+    public void showPage(String pageName) {
+        XProjectManager.getPageManager().showPage(pageName);
+    }
+
+    public void showDialog(String pageName) {
+        XPage dialogPage = XProjectManager.getPageManager().loadPage(pageName);        
+        PosDialog dialog = PosDialog.getInstance(dialogPage);
+        dialog.showDialog(this, "dialogCb");
+    }
+
+    // PosDialog Callback method
+    public void dialogCb(PosDialog dialog) {
+        Debug.log("PosDialog Completed CB - " + dialog.getName(), module);
     }
 
     // run method for auto-locking POS on inactivity
     public void run() {
         while (monitorRunning) {
-            if (!isLocked && (System.currentTimeMillis() - lastActivity) > maxInactivity) {
+            if (!isLocked && (System.currentTimeMillis() - lastActivity) > MAX_INACTIVITY) {
                 this.setLock(true);
             }
             try {

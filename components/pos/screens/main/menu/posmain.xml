@@ -10,7 +10,7 @@
         <Button name="menuLock" x="510" y="0" w="100" h="60" style="posButton" content="LOCK" alignment="Center"/>
 
         <!-- col 2 -->
-        <Button name="" x="0" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
+        <Button name="testAlert" x="0" y="62" w="100" h="60" style="posButton" content="ALERT" alignment="Center"/>
         <Button name="" x="102" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="204" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="306" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
@@ -48,12 +48,5 @@
         <Button name="" x="306" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="408" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="510" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
-    </Components>
-    <Events>
-        <Event method="buttonPressed" target="menuPlu" type="ActionHandler"/>
-        <Event method="buttonPressed" target="menuFunc" type="ActionHandler"/>
-        <Event method="buttonPressed" target="menuMgr" type="ActionHandler"/>
-        <Event method="buttonPressed" target="menuLock" type="ActionHandler"/>
-        <Event method="buttonPressed" target="menuPromo" type="ActionHandler"/>
-    </Events>
+    </Components>    
 </XPage>
