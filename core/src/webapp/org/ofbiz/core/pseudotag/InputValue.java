@@ -127,11 +127,14 @@ public class InputValue {
                     Object fieldVal = map.get(field);
                     if (fieldVal != null)
                         inputValue = fieldVal.toString();
-                }
+                } //else do nothing
             }
-        }
+        } else {
+        //Current code will only get a parameter if we are not trying to get
+        // fields from the entity/map
+        //OLD WAY:
         //if nothing found in entity, or if not checked, try a parameter
-        if (inputValue == null) {
+        //if (inputValue == null) {
             inputValue = pageContext.getRequest().getParameter(paramName);
         }
 
