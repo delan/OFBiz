@@ -57,6 +57,7 @@
         GenericValue orderRole = delegator.findByPrimaryKey("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER"));
         if (orderRole == null) {
             pageContext.removeAttribute("orderHeader");
+            orderHeader = null;
         }
     }
   }%>
