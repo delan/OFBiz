@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.23 2003/12/05 02:25:47 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.24 2004/01/21 16:00:19 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -57,12 +57,13 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.security.Security;
 
 /**
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -1283,6 +1284,112 @@ public class PaymentGatewayServices {
             Debug.logError(e, "ERROR: Problem getting authorization information from PaymentGatewayResponse", module);
         }
         return authTrans;
+    }
+
+    // manual processing service
+    public static Map processManualCcTx(DispatchContext dctx, Map context) {
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
+        Security security = dctx.getSecurity();
+
+        // security check
+        if (!security.hasEntityPermission("MANUAL", "_PAYMENT", userLogin)) {
+            Debug.logWarning("**** Security [" + (new Date()).toString() + "]: " + userLogin.get("userLoginId") + " attempt to run manual payment transaction!", module);
+            return ServiceUtil.returnError("You do not have permission for this transaction.");
+        }
+
+        String paymentMethodTypeId = (String) context.get("paymentMethodTypeId");
+        String productStoreId = (String) context.get("productStoreId");
+        String transactionType = (String) context.get("transactionType");
+        String referenceCode = (String) context.get("referenceCode");
+        if (referenceCode == null) {
+            referenceCode = new Long(System.currentTimeMillis()).toString();
+        }
+
+        // check valid implemented types
+        if (!transactionType.equals("PRDS_PAY_CREDIT")) {
+            return ServiceUtil.returnError("This transaction type is not yet supported.");
+        }
+
+        // transaction request context
+        Map requestContext = new HashMap();
+        String paymentService = null;
+        String paymentConfig = null;
+
+        // get the transaction settings
+        GenericValue paymentSettings = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, paymentMethodTypeId, transactionType, false);
+        if (paymentSettings == null) {
+            return ServiceUtil.returnError("No valid payment settings found for : " + productStoreId + "/" + transactionType);
+        } else {
+            paymentConfig = paymentSettings.getString("paymentPropertiesPath");
+            paymentService = paymentSettings.getString("paymentService");
+            requestContext.put("paymentConfig", paymentConfig);
+        }
+
+        // check the service name
+        if (paymentService == null || paymentConfig == null) {
+            return ServiceUtil.returnError("Invalid product store payment settings");
+        }
+
+        if (paymentMethodTypeId.equals("CREDIT_CARD")) {
+            GenericValue creditCard = delegator.makeValue("CreditCard", null);
+            creditCard.setAllFields(context, true, null, null);
+            if (creditCard.get("nameOnCard") == null || creditCard.get("cardType") == null || creditCard.get("cardNumber") == null) {
+                return ServiceUtil.returnError("Credit card is missing required fields.");
+            }
+            String expMonth = (String) context.get("expMonth");
+            String expYear = (String) context.get("expYear");
+            String expDate = expMonth + "/" + expYear;
+            creditCard.set("expireDate", expDate);
+            requestContext.put("creditCard", creditCard);
+
+            GenericValue billingAddress = delegator.makeValue("PostalAddress", null);
+            billingAddress.setAllFields(context, true, null, null);
+            if (billingAddress.get("address1") == null || billingAddress.get("city") == null || billingAddress.get("postalCode") == null) {
+                return ServiceUtil.returnError("Credit card billing address is missing required fields.");
+            }
+            requestContext.put("billingAddress", billingAddress);
+
+            GenericValue contactPerson = delegator.makeValue("Person", null);
+            contactPerson.setAllFields(context, true, null, null);
+            if (contactPerson.get("firstName") == null || contactPerson.get("lastName") == null) {
+                return ServiceUtil.returnError("Contact person is missing required fields.");
+            }
+            requestContext.put("contactPerson", contactPerson);
+
+            GenericValue contactEmail = delegator.makeValue("ContactMech", null);
+            contactEmail.set("infoString", context.get("infoString"));
+            if (contactEmail.get("infoString") == null) {
+                return ServiceUtil.returnError("Email address field cannot be empty.");
+            }
+            requestContext.put("contactEmail", contactEmail);
+            requestContext.put("referenceCode", referenceCode);
+            requestContext.put("currency", "USD");
+            requestContext.put("creditAmount", context.get("amount")); // TODO fix me to work w/ other services
+        } else {
+            return ServiceUtil.returnError("Payment method type : " + paymentMethodTypeId + " is not yet implemented for manual transactions");
+        }
+
+        // process the transaction
+        Map response = null;
+        try {
+            response = dispatcher.runSync(paymentService, requestContext);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Error calling service : " + paymentService + " / " + requestContext);
+        }
+
+        // check for errors
+        if (ServiceUtil.isError(response)) {
+            return ServiceUtil.returnError(ServiceUtil.makeErrorMessage(response, null, null, null, null));
+        }
+
+        // get the reference number // TODO add support for other tx types
+        String refNum = (String) response.get("creditRefNum");
+        Map returnResults = ServiceUtil.returnSuccess("Transaction reference number : " + refNum);
+        returnResults.put("referenceNum", refNum);
+        return returnResults;
     }
 
     // ****************************************************

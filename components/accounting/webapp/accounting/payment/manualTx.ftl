@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -41,6 +41,7 @@
         <td width='74%'>
           <#if paymentMethodType?has_content>
             <div class="tabletext">${paymentMethodType.description}</div>
+            <input type="hidden" name="paymentMethodTypeId" value="${paymentMethodType.paymentMethodTypeId}">
           <#else>
             <select name="paymentMethodTypeId" class="selectBox">
               <option value="CREDIT_CARD">Credit Card</option>
@@ -54,6 +55,7 @@
         <td width='74%'>
           <#if currentStore?has_content>
             <div class="tabletext">${currentStore.storeName}</div>
+            <input type="hidden" name="productStoreId" value="${currentStore.productStoreId}">
           <#else>
             <select name="productStoreId" class="selectBox">
               <#list productStores as productStore>
@@ -69,6 +71,7 @@
         <td width='74%'>
           <#if currentTx?has_content>
             <div class="tabletext">${currentTx.description}</div>
+            <input type="hidden" name="transactionType" value="${currentTx.enumId}">
           <#else>
             <select name="transactionType" class="selectBox" onclick="javascript:document.manualTxForm.submit();">
               <#list paymentSettings as setting>

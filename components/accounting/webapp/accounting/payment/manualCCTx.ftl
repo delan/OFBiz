@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
 -->
 
@@ -41,6 +41,33 @@
     <#-- manual credit card information -->
     <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_AUTH">
       ${setRequestAttribute("validTx", "true")}
+      <script language="javascript">
+      <!-- //
+        document.manualTxForm.action = "<@ofbizUrl>/processManualCcTx</@ofbizUrl>";
+      // -->
+      </script>
+      <tr><td colspan="3"><hr class="sepbar"></td></tr>
+      <tr>
+        <td width="26%" align=right valign=middle><div class="tableheadtext">First Name</div></td>
+        <td width="5">&nbsp;</td>
+        <td width="74%">
+          <input type="text" class="inputBox" size="30" maxlength="60" name="firstName" value="${(person.firstName)?if_exists}">
+        *</td>
+      </tr>
+      <tr>
+        <td width="26%" align=right valign=middle><div class="tableheadtext">Last Name</div></td>
+        <td width="5">&nbsp;</td>
+        <td width="74%">
+          <input type="text" class="inputBox" size="30" maxlength="60" name="lastName" value="${(person.lastName)?if_exists}">
+        *</td>
+      </tr>
+      <tr>
+        <td width="26%" align=right valign=middle><div class="tableheadtext">Email Address</div></td>
+        <td width="5">&nbsp;</td>
+        <td width="74%">
+          <input type="text" class="inputBox" size="30" maxlength="60" name="infoString" value="">
+        *</td>
+      </tr>
       <tr><td colspan="3"><hr class="sepbar"></td></tr>
       <tr>
         <td width="26%" align=right valign=middle><div class="tableheadtext">Name on Card</div></td>

@@ -332,6 +332,33 @@
     </service>
 
     <!-- Payment Auth/Capture Services -->
+    <service name="manualForcedCcTransaction" engine="java"
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="processManualCcTx" auth="true">
+        <description>Direct link to payment processors to force manual transactions; not logged in system</description>
+        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="transactionType" type="String" mode="IN" optional="false"/>
+        <attribute name="nameOnCard" type="String" mode="IN" optional="false"/>
+        <attribute name="cardType" type="String" mode="IN" optional="false"/>
+        <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
+        <attribute name="expMonth" type="String" mode="IN" optional="false"/>
+        <attribute name="expYear" type="String" mode="IN" optional="false"/>
+        <attribute name="firstName" type="String" mode="IN" optional="false"/>
+        <attribute name="lastName" type="String" mode="IN" optional="false"/>
+        <attribute name="infoString" type="String" mode="IN" optional="false"/>
+        <attribute name="address1" type="String" mode="IN" optional="false"/>
+        <attribute name="address2" type="String" mode="IN" optional="true"/>
+        <attribute name="city" type="String" mode="IN" optional="false"/>
+        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="postalCode" type="String" mode="IN" optional="false"/>
+        <attribute name="countryGeoId" type="String" mode="IN" optional="false"/>
+        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="Double" mode="IN" optional="false"/>
+        <attribute name="referenceCode" type="String" mode="IN" optional="true"/>
+        <attribute name="referenceNum" type="String" mode="OUT" optional="false"/>
+    </service>
+
     <service name="retryFailedAuths" engine="java"
             location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="retryFailedAuths" auth="false">
         <description>(Batch) Retries failed authorizations due to processor/connection problems</description>
