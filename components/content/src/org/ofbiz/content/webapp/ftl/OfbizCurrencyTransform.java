@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizCurrencyTransform.java,v 1.1 2003/11/08 22:44:21 ajzeneski Exp $
+ * $Id: OfbizCurrencyTransform.java,v 1.2 2003/11/27 15:29:31 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import freemarker.template.*;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:ray.barlow@makeyour-point.com">Ray Barlow</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class OfbizCurrencyTransform implements TemplateTransformModel {
@@ -110,7 +110,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
             public void close() throws IOException { 
                 try {
                     if (Debug.verboseOn()) Debug.logVerbose("parms: " + amount + " " + isoCode + " " + locale, module);
-                    if ( locale.length() < 1 ) {
+                    if (locale.length() < 1) {
                         // Load the locale from the session
                         Environment env = Environment.getCurrentEnvironment();
                         BeanModel req = (BeanModel) env.getVariable("request");

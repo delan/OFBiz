@@ -1,5 +1,5 @@
 /*
- * $Id: UtilFormatOut.java,v 1.2 2003/11/08 20:53:18 ajzeneski Exp $
+ * $Id: UtilFormatOut.java,v 1.3 2003/11/27 15:29:45 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import java.util.Currency;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class UtilFormatOut {
@@ -68,6 +68,7 @@ public class UtilFormatOut {
      * @return A String with the formatted price
      */
     public static String formatCurrency(double price, String isoCode, Locale locale) {
+        //Debug.logInfo("formatting currency: " + price + ", isoCode: " + isoCode + ", locale: " + locale, module);
         NumberFormat nf = NumberFormat.getCurrencyInstance(locale);
         if (isoCode != null && isoCode.length() > 1) {
             nf.setCurrency(Currency.getInstance(isoCode));
