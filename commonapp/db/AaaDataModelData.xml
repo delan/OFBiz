@@ -132,6 +132,10 @@
   <EnumerationType description="Product Promotion Input Parameter" enumTypeId="PROD_PROMO_IN_PARAM" hasTable="N" parentTypeId="PROD_PROMO"/>
   <EnumerationType description="Product Promotion Condition" enumTypeId="PROD_PROMO_COND" hasTable="N" parentTypeId="PROD_PROMO"/>
 
+  <EnumerationType description="Product Price Parent Enum Type" enumTypeId="PROD_PRICE" hasTable="N" parentTypeId=""/>
+  <EnumerationType description="Product Price Input Parameter" enumTypeId="PROD_PRICE_IN_PARAM" hasTable="N" parentTypeId="PROD_PRICE"/>
+  <EnumerationType description="Product Price Condition" enumTypeId="PROD_PRICE_COND" hasTable="N" parentTypeId="PROD_PRICE"/>
+
   <Enumeration description="For Your Information" enumCode="FYI" enumId="WEE_FYI" sequenceId="01" enumTypeId="WORK_EFF_EXPECT"/>
   <Enumeration description="Involvement Required" enumCode="REQUIRE" enumId="WEE_REQUIRE" sequenceId="02" enumTypeId="WORK_EFF_EXPECT"/>
   <Enumeration description="Involvement Requested" enumCode="REQUEST" enumId="WEE_REQUEST" sequenceId="03" enumTypeId="WORK_EFF_EXPECT"/>
@@ -208,6 +212,21 @@
   <Enumeration description="Less Than or Equal To" enumCode="LTE" enumId="PPC_LTE" sequenceId="04" enumTypeId="PROD_PROMO_COND"/>
   <Enumeration description="Greater Than" enumCode="GT" enumId="PPC_GT" sequenceId="05" enumTypeId="PROD_PROMO_COND"/>
   <Enumeration description="Greater Than or Equal To" enumCode="GTE" enumId="PPC_GTE" sequenceId="06" enumTypeId="PROD_PROMO_COND"/>
+
+  <Enumeration description="Product" enumCode="PRODUCT_ID" enumId="PRIP_PRODUCT_ID" sequenceId="01" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="Quantity" enumCode="QUANTITY" enumId="PRIP_QUANTITY" sequenceId="02" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="Product Category" enumCode="PRODUCT_CATEGORY_ID" enumId="PRIP_PRODUCT_CATEGORY_ID" sequenceId="03" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="Party" enumCode="PARTY_ID" enumId="PRIP_PARTY_ID" sequenceId="04" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="Party Group Member" enumCode="PARTY_GROUP_MEMBER" enumId="PRIP_PARTY_GROUP_MEMBER" sequenceId="05" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="Party Classification" enumCode="PARTY_CLASS" enumId="PRIP_PARTY_CLASS" sequenceId="06" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="Role Type" enumCode="PRODUCT_ID" enumId="PRIP_PRODUCT_ID" sequenceId="07" enumTypeId="PROD_PRICE_IN_PARAM"/>
+
+  <Enumeration description="Equals" enumCode="EQ" enumId="PRC_EQ" sequenceId="01" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="Not Equals" enumCode="NEQ" enumId="PRC_NEQ" sequenceId="02" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="Less Than" enumCode="LT" enumId="PRC_LT" sequenceId="03" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="Less Than or Equal To" enumCode="LTE" enumId="PRC_LTE" sequenceId="04" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="Greater Than" enumCode="GT" enumId="PRC_GT" sequenceId="05" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="Greater Than or Equal To" enumCode="GTE" enumId="PRC_GTE" sequenceId="06" enumTypeId="PROD_PRICE_COND"/>
 
   <FacilityType description="Building" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
   <FacilityType description="Floor" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>
@@ -369,14 +388,6 @@
   <PaymentType description="" hasTable="N" parentTypeId="" paymentTypeId="DISBURSEMENT"/>
   <PaymentType description="" hasTable="Y" parentTypeId="DISBURSEMENT" paymentTypeId="PAY_CHECK"/>
   <PaymentType description="" hasTable="Y" parentTypeId="" paymentTypeId="RECEIPT"/>
-
-  <PriceComponentType description="" hasTable="N" parentTypeId="" priceComponentTypeId="BASE_PRICE"/>
-  <PriceComponentType description="" hasTable="N" parentTypeId="" priceComponentTypeId="MANUFACTURER_SUGGEST"/>
-  <PriceComponentType description="" hasTable="N" parentTypeId="" priceComponentTypeId="ONE_TIME_CHARGE"/>
-  <PriceComponentType description="" hasTable="Y" parentTypeId="" priceComponentTypeId="RECURRING_CHARGE"/>
-  <PriceComponentType description="" hasTable="N" parentTypeId="" priceComponentTypeId="DISCOUNT_COMPONENT"/>
-  <PriceComponentType description="" hasTable="N" parentTypeId="" priceComponentTypeId="SURCHARGE_COMPONENT"/>
-  <PriceComponentType description="" hasTable="Y" parentTypeId="" priceComponentTypeId="UTILIZATION_SURCHARG"/>
 
   <ProdCatalogCategoryType description="Browse Root Category (One)" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
   <ProdCatalogCategoryType description="Search Constraint Category (One)" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
