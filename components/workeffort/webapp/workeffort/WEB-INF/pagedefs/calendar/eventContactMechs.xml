@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Calendar Contact Mechs</property>
     <property name="headerItem">calendar</property>
-    <page-action name="/calendar/eventContactMechs.bsh"/>
+    <content-action name="/calendar/eventContactMechs.bsh"/>
 </page>

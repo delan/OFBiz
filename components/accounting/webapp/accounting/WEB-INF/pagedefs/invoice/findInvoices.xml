@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Find Invoices</property> 
     <property name="headerItem">invoices</property>   
-    <page-action name="/invoice/findInvoices.bsh"/> 
+    <content-action name="/invoice/findInvoices.bsh"/> 
 </page>

@@ -4,6 +4,6 @@
     <property name="title">Login</property>
     <property name="title.property">PageTitleLogin</property>
     <property name="headerItem">login</property>
-    <page-action name="login.bsh"/>
+    <content-action name="login.bsh"/>
 </page>
 

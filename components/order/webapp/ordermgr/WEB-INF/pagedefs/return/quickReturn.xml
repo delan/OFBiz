@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Quick Return</property>
     <property name="headerItem">return</property>
-    <page-action name="/return/quickReturn.bsh"/>
+    <content-action name="/return/quickReturn.bsh"/>
 </page>

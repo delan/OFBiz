@@ -5,5 +5,5 @@
     <property name="titleProperty">ProductEditFacility</property>
     <property name="headerItem">facility</property>
     <property name="tabButtonItem">EditFacility</property>
-    <page-action name="/facility/EditFacility.bsh"/> 
+    <content-action name="/facility/EditFacility.bsh"/> 
 </page>

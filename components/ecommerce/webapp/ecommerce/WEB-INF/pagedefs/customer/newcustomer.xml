@@ -3,5 +3,5 @@
     <template>main</template>    
     <property name="title">New Customer</property>
      <property name="title.property">PageTitleNewCustomer</property>
-    <page-action name="/customer/newcustomer.bsh"/>
+    <content-action name="/customer/newcustomer.bsh"/>
 </page>

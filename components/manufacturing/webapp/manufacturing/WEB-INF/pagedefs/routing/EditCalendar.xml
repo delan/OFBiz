@@ -4,5 +4,5 @@
     <property name="titleProperty">PageTitleEditCalendar</property>
     <property name="headerItem">calendar</property>   
     <property name="tabButtonItem">calendar</property>
-    <page-action name="/routing/EditCalendar.bsh"/> 
+    <content-action name="/routing/EditCalendar.bsh"/> 
 </page>

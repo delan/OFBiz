@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Task</property>
     <property name="headerItem">task</property>
-    <page-action name="/task/task.bsh"/>
+    <content-action name="/task/task.bsh"/>
 </page>

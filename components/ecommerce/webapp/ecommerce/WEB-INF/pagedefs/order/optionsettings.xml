@@ -2,5 +2,5 @@
 <page>
     <template>main_right</template>
     <property name="title">Shipping Options</property>
-    <page-action name="/order/optionsettings.bsh"/>
+    <content-action name="/order/optionsettings.bsh"/>
 </page>

@@ -3,5 +3,5 @@
     <template>main</template>    
     <property name="title">View Profile</property>
      <property name="title.property">PageTitleViewProfile</property>
-    <page-action name="/customer/viewprofile.bsh"/>
+    <content-action name="/customer/viewprofile.bsh"/>
 </page>

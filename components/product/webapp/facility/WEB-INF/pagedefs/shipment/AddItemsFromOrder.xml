@@ -5,5 +5,5 @@
     <property name="titleProperty">PageTitleAddItemsFromOrder</property>
     <property name="headerItem">shipment</property>
     <property name="tabButtonItem">AddItemsFromOrder</property>
-    <page-action name="/shipment/AddItemsFromOrder.bsh"/> 
+    <content-action name="/shipment/AddItemsFromOrder.bsh"/> 
 </page>

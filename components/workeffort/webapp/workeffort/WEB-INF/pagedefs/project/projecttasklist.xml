@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Project Task List</property>
     <property name="headerItem">project</property>
-    <page-action name="/project/projecttasklist.bsh"/>
+    <content-action name="/project/projecttasklist.bsh"/>
 </page>

@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Purchase Order Schedule Information(s)</property>
     <property name="headerItem">OrderDeliveryScheduleInfo</property>
-    <page-action name="/order/OrderDeliveryScheduleInfo.bsh"/> 
+    <content-action name="/order/OrderDeliveryScheduleInfo.bsh"/> 
 </page>

@@ -2,5 +2,5 @@
 <page>
     <template>main_lr</template>
     <property name="title">Gift Card Link</property>
-    <page-action name="/customer/giftcardlink.bsh"/>
+    <content-action name="/customer/giftcardlink.bsh"/>
 </page>

@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Find Survey</property>
     <property name="headerItem">Survey</property>
-    <page-action name="/survey/FindSurvey.bsh"/>
+    <content-action name="/survey/FindSurvey.bsh"/>
 </page>

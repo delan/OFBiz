@@ -5,5 +5,5 @@
     <property name="titleProperty">PageTitlePickingViewStartedPicks</property>
     <property name="headerItem">facility</property>
     <property name="tabButtonItem">PicklistOptions</property>
-    <page-action name="/facility/PickStarted.bsh"/>
+    <content-action name="/facility/PickStarted.bsh"/>
 </page>

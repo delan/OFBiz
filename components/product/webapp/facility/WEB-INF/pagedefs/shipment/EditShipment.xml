@@ -5,5 +5,5 @@
     <property name="titleProperty">ProductEditShipment</property>
     <property name="headerItem">shipment</property>
     <property name="tabButtonItem">EditShipment</property>
-    <page-action name="/shipment/EditShipment.bsh"/> 
+    <content-action name="/shipment/EditShipment.bsh"/> 
 </page>

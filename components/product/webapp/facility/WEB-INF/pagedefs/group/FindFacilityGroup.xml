@@ -4,5 +4,5 @@
     <property name="title">Find Facility Group</property>
     <property name="titleProperty">PageTitleFindFacilityGroup</property>
     <property name="headerItem">facilityGroup</property>
-    <page-action name="/group/FindFacilityGroup.bsh"/> 
+    <content-action name="/group/FindFacilityGroup.bsh"/> 
 </page>

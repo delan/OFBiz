@@ -4,5 +4,5 @@
     <property name="title">Category Page</property>
     <property name="leftbar">/includes/entry_left.ftl</property>
     <property name="rightbar">/includes/entry_right.ftl</property>
-    <page-action name="/entry/catalog/category.bsh"/>
+    <content-action name="/entry/catalog/category.bsh"/>
 </page>

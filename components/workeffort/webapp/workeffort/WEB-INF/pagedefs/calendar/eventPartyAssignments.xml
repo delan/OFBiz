@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Calendar Week View</property>
     <property name="headerItem">calendar</property>
-    <page-action name="/calendar/eventPartyAssignments.bsh"/>
+    <content-action name="/calendar/eventPartyAssignments.bsh"/>
 </page>

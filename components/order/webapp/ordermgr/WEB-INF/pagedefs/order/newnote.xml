@@ -2,5 +2,5 @@
 <page>
     <template>main</template>
     <property name="title">Create New Note</property>  
-    <page-action name="/order/newnote.bsh"/>
+    <content-action name="/order/newnote.bsh"/>
 </page>

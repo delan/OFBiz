@@ -3,6 +3,6 @@
     <template>main_left</template>
     <property name="title">Show All Promotions</property>
     <!-- <property name="title.property">PageTitleShowAllPromotions</property> -->
-    <page-action name="/cart/showcart.bsh"/>
-    <page-action name="/cart/showpromotext.bsh"/>
+    <content-action name="/cart/showcart.bsh"/>
+    <content-action name="/cart/showpromotext.bsh"/>
 </page>

@@ -5,5 +5,5 @@
     <property name="title.property">PageTitleEditSecurityGroup</property>
     <property name="headerItem">security</property>
     <property name="tabButtonItem">EditSecurityGroup</property>
-    <page-action name="/security/EditSecurityGroup.bsh"/>
+    <content-action name="/security/EditSecurityGroup.bsh"/>
 </page>

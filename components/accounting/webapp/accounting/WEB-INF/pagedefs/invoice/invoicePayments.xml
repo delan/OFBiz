@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Invoices Payments</property> 
     <property name="headerItem">invoices</property>   
-    <page-action name="/invoice/invoicePayments.bsh"/> 
+    <content-action name="/invoice/invoicePayments.bsh"/> 
 </page>

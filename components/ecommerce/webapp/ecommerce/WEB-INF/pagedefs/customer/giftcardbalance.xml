@@ -2,5 +2,5 @@
 <page>
     <template>main_lr</template>
     <property name="title">Gift Card Balance</property>
-    <page-action name="/customer/giftcardbalance.bsh"/>
+    <content-action name="/customer/giftcardbalance.bsh"/>
 </page>

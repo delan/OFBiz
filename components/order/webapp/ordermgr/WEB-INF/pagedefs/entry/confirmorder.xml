@@ -4,5 +4,5 @@
     <property name="title">Order Entry</property>
     <property name="headerItem">orderentry</property>
     <property name="leftbar">/includes/entry_left.ftl</property>
-    <page-action name="/entry/checkoutreview.bsh"/>
+    <content-action name="/entry/checkoutreview.bsh"/>
 </page>

@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Order Statistics</property>
     <property name="headerItem">stats</property>
-    <page-action name="/order/orderstats.bsh"/> 
+    <content-action name="/order/orderstats.bsh"/> 
 </page>
