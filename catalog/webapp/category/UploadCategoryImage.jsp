@@ -46,7 +46,7 @@
   String fileType = request.getParameter("upload_file_type");
   if(fileType == null || fileType.length() <= 0) fileType="small";
 
-  String productCategoryId = request.getParameter("PRODUCT_CATEGORY_ID");
+  String productCategoryId = request.getParameter("productCategoryId");
   GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
   if(productCategory != null) {
 %>
@@ -130,9 +130,9 @@
         }
     %>
     <hr>
-    <a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Return to Edit Category]</a>
+    <a href="<ofbiz:url>/EditCategory?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Return to Edit Category]</a>
   <%}%>
-    <form method="POST" enctype="multipart/form-data" action="<ofbiz:url>/UploadCategoryImage?PRODUCT_CATEGORY_ID=<%=productCategoryId%>&upload_file_type=<%=fileType%></ofbiz:url>">
+    <form method="POST" enctype="multipart/form-data" action="<ofbiz:url>/UploadCategoryImage?productCategoryId=<%=productCategoryId%>&upload_file_type=<%=fileType%></ofbiz:url>">
     Upload an image for the category with the ID: "<b><%=productCategoryId%></b>" and Description "<b><%=productCategory.getString("description")%></b>".
     <br>
     Enter local file name to upload:

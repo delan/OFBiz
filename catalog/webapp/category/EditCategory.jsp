@@ -1,7 +1,5 @@
 <%
 /**
- *  Title: Edit Category Page
- *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -73,6 +71,7 @@
   <a href="<ofbiz:url>/EditCategory?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontextdisabled">[Category]</a>
   <a href="<ofbiz:url>/EditCategoryRollup?showProductCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Rollup]</a>
   <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Products]</a>
+  <a href="<ofbiz:url>/EditCategoryProdCatalogs?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Catalogs]</a>
 <%}%>
 <div class="head1">Edit Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>"</div>
 <%if(productCategory == null){%>
@@ -143,7 +142,7 @@
     <td width="26%" align=right><div class="tabletext">Category Image URL</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productCategory.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255">
+      <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productCategory.getString(fieldName):request.getParameter(paramName))%>" size="60" maxlength="250">
       <%if(productCategoryId != null && productCategoryId.length() > 0) {%><p><a href="<ofbiz:url>/UploadCategoryImage?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Upload Image]</a><%}%>
     </td>
   </tr>

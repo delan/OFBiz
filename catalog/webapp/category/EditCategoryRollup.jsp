@@ -1,7 +1,5 @@
 <%
 /**
- *  Title: Edit Category Page
- *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -66,6 +64,7 @@
   <a href="<ofbiz:url>/EditCategory?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Category]</a>
   <a href="<ofbiz:url>/EditCategoryRollup?showProductCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontextdisabled">[Rollup]</a>
   <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Products]</a>
+  <a href="<ofbiz:url>/EditCategoryProdCatalogs?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Catalogs]</a>
 <%}%>
 <div class="head1">Edit Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>"</div>
 
@@ -113,7 +112,7 @@
   </tr>
 </ofbiz:unless>
 </table>
-
+<br>
 <form method="POST" action="<ofbiz:url>/addProductCategoryToCategory</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="showProductCategoryId" value="<%=productCategoryId%>">
@@ -174,7 +173,7 @@
   </tr>
 </ofbiz:unless>
 </table>
-
+<br>
 <form method="POST" action="<ofbiz:url>/addProductCategoryToCategory</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="showProductCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="parentProductCategoryId" value="<%=productCategoryId%>">

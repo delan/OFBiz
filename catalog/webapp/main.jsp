@@ -60,14 +60,14 @@
             <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
               <DIV class='tabletext'>Edit Category with Category ID:</DIV>
               <FORM method=POST action='<ofbiz:url>/EditCategory</ofbiz:url>' style='margin: 0;'>
-                <INPUT type=text size='20' maxlength='20' name='PRODUCT_CATEGORY_ID' value=''>
+                <INPUT type=text size='20' maxlength='20' name='productCategoryId' value=''>
                 <INPUT type=submit value='Edit Category'>
               </FORM>
               <DIV class='tabletext'>OR: <A href='<ofbiz:url>/EditCategory</ofbiz:url>' class='buttontext'>Create New Category</A></DIV>
             <BR>
               <DIV class='tabletext'>Edit Product with Product ID:</DIV>
               <FORM method=POST action='<ofbiz:url>/EditProduct</ofbiz:url>' style='margin: 0;'>
-                <INPUT type=text size='20' maxlength='20' name='PRODUCT_ID' value=''>
+                <INPUT type=text size='20' maxlength='20' name='productId' value=''>
                 <INPUT type=submit value='Edit Product'>
               </FORM>
               <DIV class='tabletext'>OR: <A href='<ofbiz:url>/EditProduct</ofbiz:url>' class='buttontext'>Create New Product</A></DIV>

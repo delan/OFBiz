@@ -3,7 +3,7 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 <%@page import="org.ofbiz.commonapp.product.category.*"%>
 <%-- Get a list of all products in the current category. --%>
-<%CategoryWorker.getRelatedProducts(pageContext, "mini_", UtilFormatOut.checkNull(request.getParameter("PRODUCT_CATEGORY_ID")),false);%>
+<%CategoryWorker.getRelatedProducts(pageContext, "mini_", UtilFormatOut.checkNull(request.getParameter("productCategoryId")),false);%>
   <BR>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>

@@ -64,8 +64,9 @@
 <a href="<ofbiz:url>/EditProdCatalog</ofbiz:url>" class="buttontext">[New ProdCatalog]</a>
 <%if(prodCatalogId != null && prodCatalogId.length() > 0){%>
   <a href="<ofbiz:url>/EditProdCatalog?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontextdisabled">[Catalog]</a>
+  <a href="<ofbiz:url>/EditProdCatalogWebSites?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[WebSites]</a>
   <a href="<ofbiz:url>/EditProdCatalogCategories?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[Categories]</a>
-  <a href="<ofbiz:url>/EditProdCatalogPromos?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[Promos]</a>
+  <a href="<ofbiz:url>/EditProdCatalogPromos?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[Promotions]</a>
 <%}%>
 <div class="head1">Edit ProdCatalog with ID "<%=UtilFormatOut.checkNull(prodCatalogId)%>"</div>
 <%if (prodCatalog == null) {%>

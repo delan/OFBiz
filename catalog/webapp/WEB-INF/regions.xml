@@ -119,6 +119,10 @@
         <put section='title'>Edit Category Products Page</put>
         <put section='content' content='/category/EditCategoryProducts.jsp'/>
     </define>
+    <define id='EditCategoryProdCatalogs' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Category Product Catalogs Page</put>
+        <put section='content' content='/category/EditCategoryProdCatalogs.jsp'/>
+    </define>
     <define id='UploadCategoryImage' region='MAIN_REGION'>
         <put section='title'>Upload Category Image Page</put>
         <put section='content' content='/category/UploadCategoryImage.jsp'/>
@@ -138,11 +142,23 @@
     </define>
     
     <define id='FindProdCatalog' region='MAIN_REGION'>
-        <put section='title'>Edit ProdCatalog Page</put>
+        <put section='title'>Edit ProdCatalog</put>
         <put section='content' content='/catalog/FindProdCatalog.jsp'/>
     </define>
     <define id='EditProdCatalog' region='MAIN_REGION'>
-        <put section='title'>Edit ProdCatalog Page</put>
+        <put section='title'>Edit ProdCatalog</put>
         <put section='content' content='/catalog/EditProdCatalog.jsp'/>
+    </define>
+    <define id='EditProdCatalogCategories' region='MAIN_REGION'>
+        <put section='title'>Edit ProdCatalog Categories</put>
+        <put section='content' content='/catalog/EditProdCatalogCategories.jsp'/>
+    </define>
+    <define id='EditProdCatalogPromos' region='MAIN_REGION'>
+        <put section='title'>Edit ProdCatalog Promotions</put>
+        <put section='content' content='/catalog/EditProdCatalogPromos.jsp'/>
+    </define>
+    <define id='EditProdCatalogWebSites' region='MAIN_REGION'>
+        <put section='title'>Edit ProdCatalog WebSites</put>
+        <put section='content' content='/catalog/EditProdCatalogWebSites.jsp'/>
     </define>
 </regions>

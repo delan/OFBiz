@@ -63,6 +63,7 @@
     	<response name="success" type="view" value="main"/>
     </request-map>
 
+    <!-- ================ Misc. Requests ================= -->
     <request-map uri="FastLoadCache">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="FastLoadCache"/>
@@ -84,9 +85,14 @@
     	<response name="success" type="view" value="ChooseTopCategory"/>
     </request-map>
 
+    <!-- ================ Category Requests ================= -->
     <request-map uri="EditCategory">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditCategory"/>
+    </request-map>
+    <request-map uri="UploadCategoryImage">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="UploadCategoryImage"/>
     </request-map>
 
     <request-map uri="createProductCategory"><security https="true" auth="true"/>
@@ -100,6 +106,7 @@
         <response name="error" type="view" value="EditCategory"/>
     </request-map>
 
+    <!-- ================ Category Rollup Requests ================= -->
     <request-map uri="EditCategoryRollup">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditCategoryRollup"/>
@@ -120,6 +127,7 @@
         <response name="error" type="view" value="EditCategoryRollup"/>
     </request-map>
 
+    <!-- ================ Category Products Requests ================= -->
     <request-map uri="EditCategoryProducts">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditCategoryProducts"/>
@@ -140,6 +148,27 @@
         <response name="error" type="view" value="EditCategoryProducts"/>
     </request-map>
 
+    <!-- ================ Category ProdCatalog Requests ================= -->
+    <request-map uri="EditCategoryProdCatalogs"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditCategoryProdCatalogs"/>
+    </request-map>
+    <request-map uri="category_addProductCategoryToProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="addProductCategoryToProdCatalog"/>
+    	<response name="success" type="view" value="EditCategoryProdCatalogs"/>
+    	<response name="error" type="view" value="EditCategoryProdCatalogs"/>
+    </request-map>
+    <request-map uri="category_updateProductCategoryToProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductCategoryToProdCatalog"/>
+    	<response name="success" type="view" value="EditCategoryProdCatalogs"/>
+    	<response name="error" type="view" value="EditCategoryProdCatalogs"/>
+    </request-map>
+    <request-map uri="category_removeProductCategoryFromProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductCategoryFromProdCatalog"/>
+    	<response name="success" type="view" value="EditCategoryProdCatalogs"/>
+    	<response name="error" type="view" value="EditCategoryProdCatalogs"/>
+    </request-map>
+
+    <!-- ================ Product Requests ================= -->
     <request-map uri="EditProduct">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProduct"/>
@@ -159,7 +188,12 @@
     	<response name="success" type="view" value="EditProduct"/>
     	<response name="error" type="view" value="EditProduct"/>
     </request-map>
+    <request-map uri="UploadImage">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="UploadImage"/>
+    </request-map>
 
+    <!-- ================ Product Categories Requests ================= -->
     <request-map uri="EditProductCategories">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductCategories"/>
@@ -181,24 +215,22 @@
     </request-map>
 
 
+    <!-- ================ Product Keyword Requests ================= -->
     <request-map uri="EditProductKeyword"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductKeyword"/>
     </request-map>
-
     <request-map uri="UpdateProductKeyword">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeyword"/>
         <response name="success" type="view" value="EditProductKeyword"/>
         <response name="error" type="view" value="EditProductKeyword"/>
     </request-map>
-
     <request-map uri="UpdateProductKeywords">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductKeywords"/>
         <response name="success" type="view" value="EditProductKeyword"/>
         <response name="error" type="view" value="EditProductKeyword"/>
     </request-map>
-
     <request-map uri="UpdateAllKeywords">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateAllKeywords"/>
@@ -206,15 +238,7 @@
         <response name="error" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="UploadImage">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="UploadImage"/>
-    </request-map>
-    <request-map uri="UploadCategoryImage">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="UploadCategoryImage"/>
-    </request-map>
-
+    <!-- ================ Product Associations Requests ================= -->
     <request-map uri="EditProductAssoc"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductAssoc"/>
     </request-map>
@@ -233,25 +257,7 @@
         <response name="error" type="view" value="EditProductAttributes"/>
     </request-map>
 
-    <request-map uri="EditProductFeatures"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditProductFeatures"/>
-    </request-map>
-    <request-map uri="ApplyFeatureToProduct"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="applyFeatureToProduct"/>
-    	<response name="success" type="view" value="EditProductFeatures"/>
-    	<response name="error" type="view" value="EditProductFeatures"/>
-    </request-map>
-    <request-map uri="UpdateFeatureToProductApplication"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateFeatureToProductApplication"/>
-    	<response name="success" type="view" value="EditProductFeatures"/>
-    	<response name="error" type="view" value="EditProductFeatures"/>
-    </request-map>
-    <request-map uri="RemoveFeatureFromProduct"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="removeFeatureFromProduct"/>
-    	<response name="success" type="view" value="EditProductFeatures"/>
-    	<response name="error" type="view" value="EditProductFeatures"/>
-    </request-map>
-
+    <!-- ================ Inventory Requests ================= -->
     <request-map uri="EditProductInventoryItems"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductInventoryItems"/>
     </request-map>
@@ -280,6 +286,7 @@
     	<response name="error" type="view" value="EditInventoryItem"/>
     </request-map>
         
+    <!-- ================ Feature Requests ================= -->
     <request-map uri="EditFeatureCategories"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditFeatureCategories"/>
     </request-map>
@@ -308,6 +315,25 @@
     	<response name="error" type="view" value="EditFeatureCategoryFeatures"/>
     </request-map>
 
+    <request-map uri="EditProductFeatures"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductFeatures"/>
+    </request-map>
+    <request-map uri="ApplyFeatureToProduct"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="applyFeatureToProduct"/>
+    	<response name="success" type="view" value="EditProductFeatures"/>
+    	<response name="error" type="view" value="EditProductFeatures"/>
+    </request-map>
+    <request-map uri="UpdateFeatureToProductApplication"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFeatureToProductApplication"/>
+    	<response name="success" type="view" value="EditProductFeatures"/>
+    	<response name="error" type="view" value="EditProductFeatures"/>
+    </request-map>
+    <request-map uri="RemoveFeatureFromProduct"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeFeatureFromProduct"/>
+    	<response name="success" type="view" value="EditProductFeatures"/>
+    	<response name="error" type="view" value="EditProductFeatures"/>
+    </request-map>
+
     <!-- ================ FACILITY REQUESTS ================= -->
     <request-map uri="FindFacility"><security https="true" auth="true"/>
     	<response name="success" type="view" value="FindFacility"/>
@@ -331,7 +357,7 @@
     	<response name="success" type="view" value="EditFacilityInventoryItems"/>
     </request-map>
 
-    <!-- ================ ProdCatalog REQUESTS ================= -->
+    <!-- ================ ProdCatalog Requests ================= -->
     <request-map uri="FindProdCatalog"><security https="true" auth="true"/>
     	<response name="success" type="view" value="FindProdCatalog"/>
     </request-map>
@@ -350,6 +376,65 @@
     	<response name="error" type="view" value="EditProdCatalog"/>
     </request-map>
 
+    <!-- ================ ProdCatalog Categories Requests ================= -->
+    <request-map uri="EditProdCatalogCategories"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProdCatalogCategories"/>
+    </request-map>
+    <request-map uri="addProductCategoryToProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="addProductCategoryToProdCatalog"/>
+    	<response name="success" type="view" value="EditProdCatalogCategories"/>
+    	<response name="error" type="view" value="EditProdCatalogCategories"/>
+    </request-map>
+    <request-map uri="updateProductCategoryToProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductCategoryToProdCatalog"/>
+    	<response name="success" type="view" value="EditProdCatalogCategories"/>
+    	<response name="error" type="view" value="EditProdCatalogCategories"/>
+    </request-map>
+    <request-map uri="removeProductCategoryFromProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductCategoryFromProdCatalog"/>
+    	<response name="success" type="view" value="EditProdCatalogCategories"/>
+    	<response name="error" type="view" value="EditProdCatalogCategories"/>
+    </request-map>
+
+    <!-- ================ ProdCatalog Promos Requests ================= -->
+    <request-map uri="EditProdCatalogPromos"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProdCatalogPromos"/>
+    </request-map>
+    <request-map uri="addProductPromoToProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="addProductPromoToProdCatalog"/>
+    	<response name="success" type="view" value="EditProdCatalogPromos"/>
+    	<response name="error" type="view" value="EditProdCatalogPromos"/>
+    </request-map>
+    <request-map uri="updateProductPromoToProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductPromoToProdCatalog"/>
+    	<response name="success" type="view" value="EditProdCatalogPromos"/>
+    	<response name="error" type="view" value="EditProdCatalogPromos"/>
+    </request-map>
+    <request-map uri="removeProductPromoFromProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductPromoFromProdCatalog"/>
+    	<response name="success" type="view" value="EditProdCatalogPromos"/>
+    	<response name="error" type="view" value="EditProdCatalogPromos"/>
+    </request-map>
+
+    <!-- ================ ProdCatalog WebSites Requests ================= -->
+    <request-map uri="EditProdCatalogWebSites"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProdCatalogWebSites"/>
+    </request-map>
+    <request-map uri="addProdCatalogToWebSite"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="addProdCatalogToWebSite"/>
+    	<response name="success" type="view" value="EditProdCatalogWebSites"/>
+    	<response name="error" type="view" value="EditProdCatalogWebSites"/>
+    </request-map>
+    <request-map uri="updateProdCatalogToWebSite"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProdCatalogToWebSite"/>
+    	<response name="success" type="view" value="EditProdCatalogWebSites"/>
+    	<response name="error" type="view" value="EditProdCatalogWebSites"/>
+    </request-map>
+    <request-map uri="removeProdCatalogFromWebSite"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProdCatalogFromWebSite"/>
+    	<response name="success" type="view" value="EditProdCatalogWebSites"/>
+    	<response name="error" type="view" value="EditProdCatalogWebSites"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -364,6 +449,7 @@
     <view-map name="EditCategory" type="region"/>
     <view-map name="EditCategoryRollup" type="region"/>
     <view-map name="EditCategoryProducts" type="region"/>
+    <view-map name="EditCategoryProdCatalogs" type="region"/>
     <view-map name="UploadCategoryImage" type="region"/>
 
     <view-map name="EditProduct" type="region"/>
@@ -386,5 +472,8 @@
     
     <view-map name="FindProdCatalog" type="region"/>
     <view-map name="EditProdCatalog" type="region"/>
+    <view-map name="EditProdCatalogCategories" type="region"/>
+    <view-map name="EditProdCatalogPromos" type="region"/>
+    <view-map name="EditProdCatalogWebSites" type="region"/>
     <!-- end of view mappings -->
 </site-conf>
