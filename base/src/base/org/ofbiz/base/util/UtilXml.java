@@ -1,5 +1,5 @@
 /*
- * $Id: UtilXml.java,v 1.5 2004/07/07 16:23:10 ajzeneski Exp $
+ * $Id: UtilXml.java,v 1.6 2004/07/22 04:41:25 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Utilities methods to simplify dealing with JAXP & DOM XML parsing
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class UtilXml {
@@ -149,12 +149,12 @@ public class UtilXml {
     }
 
     public static Document readXmlDocument(String content)
-        throws SAXException, ParserConfigurationException, java.io.IOException {
+            throws SAXException, ParserConfigurationException, java.io.IOException {
         return readXmlDocument(content, true);
     }
 
     public static Document readXmlDocument(String content, boolean validate)
-        throws SAXException, ParserConfigurationException, java.io.IOException {
+            throws SAXException, ParserConfigurationException, java.io.IOException {
         if (content == null) {
             Debug.logWarning("[UtilXml.readXmlDocument] content was null, doing nothing", module);
             return null;
@@ -164,12 +164,12 @@ public class UtilXml {
     }
 
     public static Document readXmlDocument(URL url)
-        throws SAXException, ParserConfigurationException, java.io.IOException {
+            throws SAXException, ParserConfigurationException, java.io.IOException {
         return readXmlDocument(url, true);
     }
 
     public static Document readXmlDocument(URL url, boolean validate)
-        throws SAXException, ParserConfigurationException, java.io.IOException {
+            throws SAXException, ParserConfigurationException, java.io.IOException {
         if (url == null) {
             Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing", module);
             return null;
