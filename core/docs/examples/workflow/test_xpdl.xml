@@ -157,6 +157,9 @@
             </TransitionRestriction>
           </TransitionRestrictions>
           -->
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="canStart" Value="Y"/> <!-- must always be Y or N -->
+          </ExtendedAttributes>
         </Activity>
         <Activity Id="assign_approver" Name="Assign Approver">
           <Description>Assigns a participant to approve the order.</Description>
@@ -187,6 +190,11 @@
               <Split Type="AND"/>
             </TransitionRestriction>
           </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="acceptAllAssignments" Value="N"/> <!-- must always be Y or N -->
+            <ExtendedAttribute Name="completeAllAssignments" Value="N"/> <!-- must always be Y or N -->
+            <ExtendedAttribute Name="canStart" Value="N"/> <!-- must always be Y or N -->
+          </ExtendedAttributes>
         </Activity>
       </Activities>
       
