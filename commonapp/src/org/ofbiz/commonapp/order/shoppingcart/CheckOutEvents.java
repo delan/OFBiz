@@ -402,9 +402,15 @@ public class CheckOutEvents {
         try {
             final String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
             final String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
-            final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email");
+            final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.from");
             final String ORDER_BCC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.bcc");
             final String ORDER_CC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.cc");
+
+            final String NOTIFY_FROM = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.from");
+            final String NOTIFY_TO = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.to");
+            final String NOTIFY_CC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.cc");
+            final String NOTIFY_BCC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.bcc");
+
             GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
             String orderAdditionalEmails = (String) request.getAttribute("orderAdditionalEmails");
             StringBuffer emails = new StringBuffer();
@@ -449,12 +455,39 @@ public class CheckOutEvents {
                 //mail.addHeaderLine("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
                 mail.setContent(content, "text/html");
                 Transport.send(mail);
-                return "success";
             } catch (Exception e) {
                 Debug.logError(e, module);
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
                 return "success"; //"error";
             }
+
+            try {
+                // send off the notification email if defined.
+                if (UtilValidate.isNotEmpty(NOTIFY_FROM) && UtilValidate.isNotEmpty(NOTIFY_TO)) {
+                    Properties props = new Properties();
+                    props.put("mail.smtp.host", SMTP_SERVER);
+                    Session session = Session.getDefaultInstance(props);
+
+                    MimeMessage mail = new MimeMessage(session);
+                    mail.setFrom(new InternetAddress(NOTIFY_FROM));
+                    mail.addRecipients(Message.RecipientType.TO, NOTIFY_TO);
+
+                    if (UtilValidate.isNotEmpty(NOTIFY_CC)) {
+                        mail.addRecipients(Message.RecipientType.CC, NOTIFY_CC);
+                    }
+                    if (UtilValidate.isNotEmpty(NOTIFY_BCC)) {
+                        mail.addRecipients(Message.RecipientType.BCC, NOTIFY_BCC);
+                    }
+
+                    String orderId = (String) request.getAttribute("order_id");
+                    mail.setSubject(UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Notification");
+                    mail.setContent(content, "text/html");
+                    Transport.send(mail);
+                }
+            } catch (Exception e) {
+                Debug.logError(e, module);
+            }
+
         } catch (RuntimeException re) {
             Debug.logError(re, module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
@@ -464,5 +497,6 @@ public class CheckOutEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
             return "success"; //"error";
         }
+        return "success";
     }
 }
