@@ -81,14 +81,14 @@ public class GenericDAO
     }
 /*    
     if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-      Debug.logWarning("ERROR [GenericDAO.insert]: Cannot insert GenericEntity: required primary key field(s) missing.");
+      Debug.logWarning("[GenericDAO.insert]: Cannot insert GenericEntity: required primary key field(s) missing.");
       return false;
     }
 */    
     boolean useTX = true;
     Connection connection = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.insert]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle); }
+    catch (SQLException sqle) { Debug.logWarning("[GenericDAO.insert]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle); }
     
     
     try { connection.setAutoCommit(false); } 
@@ -102,11 +102,11 @@ public class GenericDAO
     } 
     catch (SQLException sqle) 
     {
-      Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while executing insert. Error was:");
+      Debug.logWarning("[GenericDAO.insert]: SQL Exception while executing insert. Error was:");
       Debug.logWarning(sqle.getMessage());
       
       try { if(useTX) connection.rollback(); }
-      catch(SQLException sqle2) { Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while rolling back insert. Error was:"); Debug.logWarning(sqle2); }
+      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:"); Debug.logWarning(sqle2); }
       
       return false;
     } finally {
@@ -168,14 +168,14 @@ public class GenericDAO
   {
 /*
     if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-      Debug.logWarning("ERROR [GenericDAO.update]: Cannot update GenericEntity: required primary key field(s) missing.");
+      Debug.logWarning("[GenericDAO.update]: Cannot update GenericEntity: required primary key field(s) missing.");
       return false;
     }
 */    
     boolean useTX = true;
     Connection connection = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.update]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle); }
+    catch (SQLException sqle) { Debug.logWarning("[GenericDAO.update]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle); }
 
     try { connection.setAutoCommit(false); } 
     catch(SQLException sqle) { useTX = false; }
@@ -188,11 +188,11 @@ public class GenericDAO
     } 
     catch (SQLException sqle) 
     {
-      Debug.logWarning("ERROR [GenericDAO.update]: SQL Exception while executing update. Error was:");
+      Debug.logWarning("[GenericDAO.update]: SQL Exception while executing update. Error was:");
       Debug.logWarning(sqle.getMessage());
 
       try { if(useTX) connection.rollback(); }
-      catch(SQLException sqle2) { Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while rolling back insert. Error was:"); Debug.logWarning(sqle2); }
+      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:"); Debug.logWarning(sqle2); }
 
       return false;
     } finally {
@@ -271,7 +271,7 @@ public class GenericDAO
     }
 /*
     if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-      Debug.logWarning("ERROR [GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
+      Debug.logWarning("[GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
       return false;
     }
 */    
@@ -279,7 +279,7 @@ public class GenericDAO
     PreparedStatement ps = null; 
     ResultSet rs = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.select]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
+    catch (SQLException sqle) { Debug.logWarning("[GenericDAO.select]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
     
     String sql = "SELECT ";
     if(modelEntity.nopks.size() > 0) sql = sql + modelEntity.colNameString(modelEntity.nopks, ", ", "");
@@ -308,11 +308,11 @@ public class GenericDAO
 
         entity.modified = false;
       } else {
-        Debug.logWarning("ERROR [GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString());
+        Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString());
         return false;
       }
     } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       Debug.logWarning(sqle.getMessage());
       return false;
     } finally {
@@ -333,7 +333,7 @@ public class GenericDAO
     }
 /*
     if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-      Debug.logWarning("ERROR [GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
+      Debug.logWarning("[GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
       return false;
     }
 */    
@@ -341,7 +341,7 @@ public class GenericDAO
     PreparedStatement ps = null; 
     ResultSet rs = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.select]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
+    catch (SQLException sqle) { Debug.logWarning("[GenericDAO.select]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
     
     //we don't want to select ALL fields, just the nonpk fields that are in the passed GenericEntity
     Vector partialFields = new Vector();
@@ -373,11 +373,11 @@ public class GenericDAO
 
         entity.modified = false;
       } else {
-        Debug.logWarning("ERROR [GenericDAO.select]: select failed, result set was empty.");
+        Debug.logWarning("[GenericDAO.select]: select failed, result set was empty.");
         return false;
       }
     } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       Debug.logWarning(sqle.getMessage());
       return false;
     } finally {
@@ -403,7 +403,7 @@ public class GenericDAO
     PreparedStatement ps = null;
     ResultSet rs = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.selectByAnd]: Unable to esablish a connection with the database... Error was:" + sqle.toString() ); }
+    catch (SQLException sqle) { Debug.logWarning("[GenericDAO.selectByAnd]: Unable to esablish a connection with the database... Error was:" + sqle.toString() ); }
     
     //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
     Vector whereFields = new Vector();
@@ -484,7 +484,7 @@ public class GenericDAO
         collection.add(value);
       }
     } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       sqle.printStackTrace();
       return null;
     } finally {
@@ -525,14 +525,14 @@ public class GenericDAO
     }
 /*
     if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-      Debug.logWarning("ERROR [GenericDAO.delete]: Cannot delete GenericEntity: required primary key field(s) missing.");
+      Debug.logWarning("[GenericDAO.delete]: Cannot delete GenericEntity: required primary key field(s) missing.");
       return false;
     }
 */    
     Connection connection = null;
     PreparedStatement ps = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.delete]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
+    catch (SQLException sqle) { Debug.logWarning("[GenericDAO.delete]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
     
     String sql = "DELETE FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?");
     try {
@@ -547,7 +547,7 @@ public class GenericDAO
       ps.executeUpdate();
       entity.modified = true;
     } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO.delete]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      Debug.logWarning("[GenericDAO.delete]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       Debug.logWarning(sqle.getMessage());
       return false;
     } finally {
@@ -570,7 +570,7 @@ public class GenericDAO
     Connection connection = null;
     PreparedStatement ps = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.selectByAnd]: Unable to esablish a connection with the database... Error was:" + sqle.toString() ); }
+    catch (SQLException sqle) { Debug.logWarning("[GenericDAO.selectByAnd]: Unable to esablish a connection with the database... Error was:" + sqle.toString() ); }
     
     //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
     Vector whereFields = new Vector();
@@ -601,7 +601,7 @@ public class GenericDAO
       }
       ps.executeUpdate();      
     } catch (SQLException sqle) {
-      Debug.logWarning("ERROR [GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       sqle.printStackTrace();
       return false;
     } finally {
@@ -718,6 +718,87 @@ public class GenericDAO
     else ps.setNull(ind, Types.NULL);
   }
 
+/* ====================================================================== */
+/* ====================================================================== */
+
+  public boolean createTable(String entityName)
+  {
+    return createTable(modelReader.getModelEntity(entityName));
+  }
+  
+  public boolean createTable(ModelEntity entity)
+  {
+    if(entity == null) return false;
+
+    Connection connection = null; 
+    Statement stmt = null; 
+    try { connection = getConnection(); } 
+    catch (SQLException sqle) { Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
+    
+    String sql = "CREATE TABLE " + entity.tableName + "("; 
+    for(int i=0;i<entity.fields.size();i++)
+    {
+      ModelField field=(ModelField)entity.fields.get(i);
+      ModelFieldType type = modelReader.getModelFieldType(field.type);
+      sql = sql + field.colName + " " + type.sqlType;
+      if(field.isPk) sql = sql + " NOT NULL, ";
+      else sql = sql + ", ";
+    }
+    sql = sql + "PRIMARY KEY (" + entity.colNameString(entity.pks) + "))";
+
+    //Debug.logInfo(" create: sql=" + sql);
+    try {
+      stmt = connection.createStatement();      
+      stmt.executeUpdate(sql);      
+    } 
+    catch (SQLException sqle) {
+      Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      Debug.logWarning(sqle.getMessage());
+      return false;
+    } 
+    finally {
+      try { if (stmt != null) stmt.close(); } catch (SQLException sqle) { }
+      try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
+    }
+    return true;
+  }
+  
+  public boolean addColumn(String entityName, String fieldName)
+  {
+    ModelEntity entity = modelReader.getModelEntity(entityName);
+    if(entity == null) return false;
+    return addColumn(entity, entity.getField(fieldName));
+  }
+  
+  public boolean addColumn(ModelEntity entity, ModelField field)
+  {
+    if(entity == null || field == null) return false;
+
+    Connection connection = null; 
+    Statement stmt = null; 
+    try { connection = getConnection(); } 
+    catch (SQLException sqle) { Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
+    
+    ModelFieldType type = modelReader.getModelFieldType(field.type);
+    String sql = "ALTER TABLE " + entity.tableName + " ADD " + field.name + " " + type.sqlType; 
+
+    //Debug.logInfo(" create: sql=" + sql);
+    try {
+      stmt = connection.createStatement();      
+      stmt.executeUpdate(sql);
+    } 
+    catch (SQLException sqle) {
+      Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      Debug.logWarning(sqle.getMessage());
+      return false;
+    } 
+    finally {
+      try { if (stmt != null) stmt.close(); } catch (SQLException sqle) { }
+      try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
+    }
+    return true;
+  }
+  
 /* ====================================================================== */
 /* ====================================================================== */
 
@@ -916,6 +997,15 @@ public class GenericDAO
             String message = "Field \"" + field.name + "\" of entity \"" + entity.entityName + "\" is missing its corresponding column \"" + field.colName + "\"";
             Debug.logError("[GenericDAO.checkDb] " + message);
             if(messages != null) messages.add(message);
+
+            if(addMissing)
+            {
+              //add the column
+              if(addColumn(entity, field)) message = "Added column \"" + field.colName + "\" to table \"" + entity.tableName + "\"";
+              else message = "Could not add column \"" + field.colName + "\" to table \"" + entity.tableName + "\"";
+              Debug.logError("[GenericDAO.checkDb] " + message);
+              if(messages != null) messages.add(message);
+            }
           }
         }
       }
@@ -924,6 +1014,15 @@ public class GenericDAO
         String message = "Entity \"" + entity.entityName + "\" with tableName \"" + entity.tableName + "\" has no corresponding table in the database";
         Debug.logError("[GenericDAO.checkDb] " + message);
         if(messages != null) messages.add(message);
+        
+        if(addMissing)
+        {
+          //create the table
+          if(createTable(entity)) message = "Created table \"" + entity.tableName + "\"";
+          else message = "Could not create table \"" + entity.tableName + "\"";
+          Debug.logError("[GenericDAO.checkDb] " + message);
+          if(messages != null) messages.add(message);
+        }
       }
     }
 
