@@ -44,9 +44,9 @@
 <div class='insideHeaderDisabled'>
   <a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="insideHeaderLink">[${uiLabelMap.EcommerceViewCart}]</a>
   <#if (shoppingCartSize > 0)>
-    <a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="insideHeaderLink">[${uiLabelMap.EcommerceCheckout}]</a>
+    <a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="insideHeaderLink">[${uiLabelMap.EcommerceCheckoutQuick}]</a>
   <#else>
-    [${uiLabelMap.EcommerceCheckout}]
+    [${uiLabelMap.EcommerceCheckoutQuick}]
   </#if>
   &nbsp;&nbsp;
 </div>
