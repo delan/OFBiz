@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -52,32 +52,32 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <#assign line = 0>
         <#list productPrices as productPrice>
         <#assign line = line + 1>
-        <#assign currencyUom = productPrice.getRelatedOneCache("CurrencyUom")>
-        <#assign productPriceType = productPrice.getRelatedOneCache("ProductPriceType")>
-        <#assign facilityGroup = productPrice.getRelatedOneCache("FacilityGroup")>
+        <#assign currencyUom = productPrice.getRelatedOneCache("CurrencyUom")?if_exists>
+        <#assign productPriceType = productPrice.getRelatedOneCache("ProductPriceType")?if_exists>
+        <#assign facilityGroup = productPrice.getRelatedOneCache("FacilityGroup")?if_exists>
         <tr valign="middle">
-            <td><div class='tabletext'><#if productPriceType?has_content> ${(productPriceType.description)?if_exists} <#else> [${productPrice.productPriceTypeId}]</#if></div></td>
-            <td><div class='tabletext'><#if currencyUom?has_content> ${currencyUom.description?if_exists} [${productPrice.currencyUomId}]</#if></div></td>
-            <td><div class='tabletext'><#if facilityGroup.facilityGroupId?has_content> ${facilityGroup.facilityGroupName?if_exists} <#else> [${productPrice.facilityGroupId}]</#if></div></td>
+            <td><div class='tabletext'><#if productPriceType?has_content>${(productPriceType.description)?if_exists}<#else>[${productPrice.productPriceTypeId}]</#if></div></td>
+            <td><div class='tabletext'><#if currencyUom?has_content>${currencyUom.description?if_exists} [${productPrice.currencyUomId}]</#if></div></td>
+            <td><div class='tabletext'><#if (facilityGroup.facilityGroupId)?has_content>${facilityGroup.facilityGroupName?if_exists}<#else>[${productPrice.facilityGroupId}]</#if></div></td>
             <td>
                 <#assign hasntStarted = false>
-                <#if productPrice.getTimestamp("fromDate")?has_content && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(productPrice.getTimestamp("fromDate"))> <#assign hasntStarted = true> </#if>
+                <#if productPrice.fromDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(productPrice.fromDate)><#assign hasntStarted = true></#if>
                 <div class='tabletext' <#if hasntStarted> style='color: red;'</#if>>
                         ${productPrice.getTimestamp("fromDate")}
                 </div>
             </td>
             <td align="center">
                 <#assign hasExpired = false>
-                <#if productPrice.getTimestamp("thruDate")?has_content && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().after(productPrice.getTimestamp("thruDate"))> <#assign hasExpired = true> </#if>
+                <#if productPrice.thruDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().after(productPrice.thruDate)><#assign hasExpired = true></#if>
                 <form method=POST action='<@ofbizUrl>/updateProductPrice</@ofbizUrl>' name='lineForm${line}'>
                     <input type=hidden name='productId' value='${productPrice.productId}'>
                     <input type=hidden name='productPriceTypeId' value='${productPrice.productPriceTypeId}'>
                     <input type=hidden name='currencyUomId' value='${productPrice.currencyUomId?default(defaultCurrencyUomId)}'>
                     <input type=hidden name='facilityGroupId' value='${productPrice.facilityGroupId}'>
                     <input type=hidden name='fromDate' value='${productPrice.fromDate}'>
-                    <input type='text' class='inputBox' size='25' name='thruDate' value='<#if productPrice.thruDate?has_content>${productPrice.thruDate?if_exists}</#if>' <#if hasExpired> style='color: red;'</#if>>
+                    <input type='text' class='inputBox' size='25' name='thruDate' value='<#if productPrice.thruDate?has_content>${(productPrice.thruDate.toString())?if_exists}</#if>' <#if hasExpired> style='color: red;'</#if>>
                     <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productPrice.thruDate.toString())?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-                    <input type='text' class='inputBox' size='8' name='price' value='${productPrice.price}'>
+                    <input type='text' class='inputBox' size='8' name='price' value='${productPrice.price?if_exists}'>
                     <INPUT type='submit' value='Update' style='font-size: x-small;'>
                 </form>
             </td>
