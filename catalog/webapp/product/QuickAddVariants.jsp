@@ -32,7 +32,6 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
-<%try {%>
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
     String productId = request.getParameter("productId");
@@ -75,13 +74,23 @@
 %>
 <br>
 
-<%if (productId != null && productId.length() > 0){%>
-  <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="buttontext">[Back to Product]</a>
-  <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Back to Product Associations]</a>
-  <a href="<ofbiz:url>/EditProductFeatures?productId=<%=productId%></ofbiz:url>" class="buttontext">[Back to Product Features]</a>
+<%if(productId != null && productId.length() > 0){%>
+  <div class='tabContainer'>
+  <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="tabButton">Product</a>
+  <a href="<ofbiz:url>/EditProductPrices?productId=<%=productId%></ofbiz:url>" class="tabButton">Prices</a>
+  <a href="<ofbiz:url>/EditProductCategories?productId=<%=productId%></ofbiz:url>" class="tabButton">Categories</a>
+  <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="tabButton">Keywords</a>
+  <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="tabButton">Associations</a>
+  <a href="<ofbiz:url>/EditProductAttributes?PRODUCT_ID=<%=productId%></ofbiz:url>" class="tabButton">Attributes</a>
+  <a href="<ofbiz:url>/EditProductFeatures?productId=<%=productId%></ofbiz:url>" class="tabButton">Features</a>
+  <a href="<ofbiz:url>/EditProductInventoryItems?productId=<%=productId%></ofbiz:url>" class="tabButton">InventoryItems</a>
+  <%if (product != null && "Y".equals(product.getString("isVirtual"))) {%>
+    <a href="<ofbiz:url>/QuickAddVariants?productId=<%=productId%></ofbiz:url>" class="tabButtonSelected">Variants</a>
+  <%}%>
+  </div>
 <%}%>
 
-<div class="head1">Quick Add Variants for Product with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
+<div class="head1">Quick Add Variants <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(product==null?null:product.getString("productName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productId)%>]</span></div>
 
 <%if (product != null && !"Y".equals(product.getString("isVirtual"))) {%>
     WARNING: This product is not a virtual product, variants will not generally be used.
@@ -194,5 +203,3 @@
 <%}else{%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
-
-<%} catch (Exception e) { Debug.logError(e); throw e; }%>

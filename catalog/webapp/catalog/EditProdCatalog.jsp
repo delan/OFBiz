@@ -23,15 +23,12 @@
  *@created    May 13 2002
  *@version    1.0
 --%>
-<%try {%>
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
-
-<table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
@@ -64,12 +61,12 @@
 
 <br>
 <%if(prodCatalogId != null && prodCatalogId.length() > 0){%>
-  <hr class='sepbar'>
-  <a href="<ofbiz:url>/EditProdCatalog?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontextdisabled">[Catalog]</a>
-  <a href="<ofbiz:url>/EditProdCatalogWebSites?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[WebSites]</a>
-  <a href="<ofbiz:url>/EditProdCatalogCategories?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[Categories]</a>
-  <a href="<ofbiz:url>/EditProdCatalogPromos?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="buttontext">[Promotions]</a>
-  <hr class='sepbar'>
+  <div class='tabContainer'>
+  <a href="<ofbiz:url>/EditProdCatalog?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="tabButtonSelected">Catalog</a>
+  <a href="<ofbiz:url>/EditProdCatalogWebSites?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="tabButton">WebSites</a>
+  <a href="<ofbiz:url>/EditProdCatalogCategories?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="tabButton">Categories</a>
+  <a href="<ofbiz:url>/EditProdCatalogPromos?prodCatalogId=<%=prodCatalogId%></ofbiz:url>" class="tabButton">Promotions</a>
+  </div>
 <%}%>
 <div class="head1">Catalog <span class='head2'><%=UtilFormatOut.ifNotEmpty(prodCatalog==null?null:prodCatalog.getString("catalogName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(prodCatalogId)%>]</span></div>
 <a href="<ofbiz:url>/EditProdCatalog</ofbiz:url>" class="buttontext">[New ProdCatalog]</a>
@@ -213,5 +210,3 @@
 <%} else {%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
-</td><td>&nbsp;&nbsp;</td></tr></table>
-<%} catch (Exception e) { Debug.logError(e); throw e; } %>
