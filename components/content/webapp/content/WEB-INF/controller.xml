@@ -548,6 +548,16 @@
         <response name="error" type="view" value="LookupPerson"/>
     </request-map>
 
+    <request-map uri="ClipBoardDataResource">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="ClipBoardDataResource"/>
+    </request-map>
+
+    <request-map uri="ClipBoardContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="ClipBoardContent"/>
+    </request-map>
+
     <request-map uri="LookupDataResource">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupDataResource"/>
@@ -973,9 +983,19 @@
     </request-map>
 
     <!-- ================ Layout Requests ================= -->
+    <request-map uri="LookupListLayout">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupListLayout"/>
+    </request-map>
     <request-map uri="ListLayout">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="ListLayout"/>
+    </request-map>
+    <request-map uri="clipFindLayout">
+        <security auth="true" https="true"/>
+        <event invoke="copyToClip" path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <response name="success" type="view" value="FindLayout"/>
+        <response name="error" type="view" value="FindLayout"/>
     </request-map>
     <request-map uri="FindLayout">
         <security auth="true" https="true"/>
@@ -993,8 +1013,7 @@
     </request-map>
     <request-map uri="createLayout">
         <security auth="true" https="true"/>
-        <event invoke="createLayout"
-            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <event invoke="createLayout" path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
         <response name="success" type="view" value="EditLayout"/>
         <response name="error" type="view" value="AddLayout"/>
     </request-map>
@@ -1148,6 +1167,8 @@
     <view-map name="AddContent" page="/content/AddContent.ftl" type="jpublish"/>
     <view-map name="LookupContent" page="/content/LookupContent.ftl" type="jpublish"/>
     <view-map name="LookupDataResource" page="/data/LookupDataResource.ftl" type="jpublish"/>
+    <view-map name="ClipBoardContent" page="/content/ClipBoardContent.ftl" type="jpublish"/>
+    <view-map name="ClipBoardDataResource" page="/data/ClipBoardDataResource.ftl" type="jpublish"/>
     <view-map name="LookupPerson" page="/content/LookupPerson.ftl" type="jpublish"/>
     <view-map name="EditContentAttribute" page="/content/EditContentAttribute.ftl" type="jpublish"/>
     <view-map name="EditContentMetaData" page="/content/EditContentMetaData.ftl" type="jpublish"/>
@@ -1182,6 +1203,7 @@
     <view-map name="EditMimeType" page="/datasetup/EditMimeType.ftl" type="jpublish"/>
     <view-map name="EditHtmlText" page="/data/EditHtmlText.ftl" type="jpublish"/>
 
+    <view-map name="LookupListLayout" page="/layout/LookupListLayout.ftl" type="jpublish"/>
     <view-map name="ListLayout" page="/layout/ListLayout.ftl" type="jpublish"/>
     <view-map name="FindLayout" page="/layout/FindLayout.ftl" type="jpublish"/>
     <view-map name="EditLayout" page="/layout/EditLayout.ftl" type="jpublish"/>
