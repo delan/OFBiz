@@ -40,6 +40,11 @@
                 <td valign="middle" align="left">
                   <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder} #${orderId} ${uiLabelMap.CommonInformation}</div>
                 </td>
+                <td valign="middle" align="right">
+                  <#if currentStatus.statusId == "ORDER_CREATED" || currentStatus.statusId == "ORDER_PROCESSING">
+                    <div class="tabletext"><a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_APPROVED&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderApproveOrder}</a></div>
+                  </#if>
+                </td>
               </tr>
             </table>
           </td>
