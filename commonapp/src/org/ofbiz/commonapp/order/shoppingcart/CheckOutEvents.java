@@ -805,8 +805,8 @@ public class CheckOutEvents {
 
         // Get some payment related strings from order.properties.       
         final String HEADER_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
-        final String ITEM_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");          
-        final String DECLINE_MESSAGE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.declined.message", "Error! Set the declined message!");
+        final String ITEM_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");                  
+        final String REJECT_MESSAGE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.rejected.message", "Error! Set the rejected message!");
 
         // Get the orderId from the cart.
         String orderId = cart.getOrderId();
@@ -862,7 +862,8 @@ public class CheckOutEvents {
             Debug.logError(e, "Problems de-activating userLogin.", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Database error.");
             return "error";
-        }        
+        }  
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, REJECT_MESSAGE);      
         
         // wipe the cart and session
         cart.clear();
