@@ -73,7 +73,8 @@ public class ConfigXMLReader {
     public static final String SECURITY = "security";
     public static final String SECURITY_HTTPS = "https";
     public static final String SECURITY_AUTH = "auth";
-    public static final String SECURITY_EXTVIEW = "extView";
+    public static final String SECURITY_EXTVIEW = "external-view";
+    public static final String SECURITY_DIRECT = "direct-request";
 
     public static final String EVENT = "event";
     public static final String EVENT_PATH = "path";
@@ -201,9 +202,11 @@ public class ConfigXMLReader {
                         String securityHttps = security.getAttribute(SECURITY_HTTPS);
                         String securityAuth = security.getAttribute(SECURITY_AUTH);
                         String securityExtView = security.getAttribute(SECURITY_EXTVIEW);
+                        String securityDirectRequest = security.getAttribute(SECURITY_DIRECT);
                         uriMap.put(SECURITY_HTTPS, securityHttps);
                         uriMap.put(SECURITY_AUTH, securityAuth);
                         uriMap.put(SECURITY_EXTVIEW, securityExtView);
+                        uriMap.put(SECURITY_DIRECT, securityDirectRequest);
                     }
                 }
 
@@ -287,8 +290,8 @@ public class ConfigXMLReader {
     }
 
     /** Gets a HashMap of view mappings. */
-    public static HashMap getViewMap(URL xml) {
-        HashMap viewMap = (HashMap) viewCache.get(xml);
+    public static Map getViewMap(URL xml) {
+        Map viewMap = (Map) viewCache.get(xml);
         if (viewMap == null) //don't want to block here
         {
             synchronized (ConfigXMLReader.class) {
@@ -306,7 +309,7 @@ public class ConfigXMLReader {
     }
 
     /** Gets a HashMap of view mappings. */
-    public static HashMap loadViewMap(URL xml) {
+    public static Map loadViewMap(URL xml) {
         HashMap map = new HashMap();
         Element root = loadDocument(xml);
         if (root == null)
@@ -324,7 +327,7 @@ public class ConfigXMLReader {
                     File oldFile = new File(xml.getFile());
                     File newFile = new java.io.File("" + oldFile.getParent() + java.io.File.separator + includeFile);
                     try {
-                        HashMap subMap = loadViewMap(newFile.toURL());
+                        Map subMap = loadViewMap(newFile.toURL());
                         map.putAll(subMap);
                     } catch (MalformedURLException mue) {
                         mue.printStackTrace();
@@ -334,7 +337,7 @@ public class ConfigXMLReader {
                 String includeURL = mapping.getAttribute(INCLUDE_URL);
                 if((includeURL != null) && (includeURL.length() > 0)) {
                     try {
-                        HashMap subMap = loadViewMap(new URL(includeURL));
+                        Map subMap = loadViewMap(new URL(includeURL));
                         map.putAll(subMap);
                     } catch (MalformedURLException mue) {
                         mue.printStackTrace();
@@ -417,8 +420,8 @@ public class ConfigXMLReader {
     }
 
     /** Gets a HashMap of site configuration variables. */
-    public static HashMap getConfigMap(URL xml) {
-        HashMap configMap = (HashMap) headCache.get(xml);
+    public static Map getConfigMap(URL xml) {
+        Map configMap = (Map) headCache.get(xml);
         if (configMap == null) //don't want to block here
         {
             synchronized (ConfigXMLReader.class) {
@@ -436,7 +439,7 @@ public class ConfigXMLReader {
     }
 
     /** Gets a HashMap of site configuration variables. */
-    public static HashMap loadConfigMap(URL xml) {
+    public static Map loadConfigMap(URL xml) {
         HashMap map = new HashMap();
         Element root = loadDocument(xml);
         NodeList list = null;
@@ -582,8 +585,8 @@ public class ConfigXMLReader {
     }
 
     /** Gets a HashMap of handler mappings. */
-    public static HashMap getHandlerMap(URL xml) {
-        HashMap handlerMap = (HashMap) handlerCache.get(xml);
+    public static Map getHandlerMap(URL xml) {
+        Map handlerMap = (Map) handlerCache.get(xml);
         if (handlerMap == null) //don't want to block here
         {
             synchronized (ConfigXMLReader.class) {
@@ -600,7 +603,7 @@ public class ConfigXMLReader {
         return handlerMap;
     }
 
-    public static HashMap loadHandlerMap(URL xml) {
+    public static Map loadHandlerMap(URL xml) {
         HashMap map = new HashMap();
         Element root = loadDocument(xml);
         NodeList list = null;

@@ -51,7 +51,8 @@
 <!ATTLIST security
     https (true|false) "false"
     auth (true|false) "false"
-    extView (true|false) "true"
+    external-view (true|false) "true"
+    direct-request (true|false) "true"
 >
 <!ELEMENT event EMPTY>
 <!ATTLIST event

@@ -43,6 +43,8 @@ import org.ofbiz.core.util.*;
  */
 public class LocalDispatcher {
 
+    public static final String module = LocalDispatcher.class.getName();
+
     protected DispatchContext ctx;
     protected ServiceDispatcher dispatcher;
     protected String name;
@@ -82,7 +84,7 @@ public class LocalDispatcher {
         this.ctx = ctx;
         this.dispatcher = ServiceDispatcher.getInstance(name, ctx, delegator);
         ctx.setDispatcher(this);
-        if (Debug.infoOn()) Debug.logInfo("[LocalDispatcher] : Created Dispatcher for: " + name);
+        if (Debug.infoOn()) Debug.logInfo("[LocalDispatcher] : Created Dispatcher for: " + name, module);
     }
 
     /**
@@ -195,11 +197,11 @@ public class LocalDispatcher {
         try {
             getJobManager().schedule(getName(), serviceName, context, startTime,
                                      frequency, interval, count);
-            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Current time: " + (new Date()).getTime());
-            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Runtime: " + startTime);
-            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Frequency: " + frequency);
-            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Interval: " + interval);
-            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Count: " + count);
+            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Current time: " + (new Date()).getTime(), module);
+            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Runtime: " + startTime, module);
+            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Frequency: " + frequency, module);
+            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Interval: " + interval, module);
+            if (Debug.verboseOn()) Debug.logVerbose("[LocalDispatcher.schedule] : Count: " + count, module);
         } catch (JobManagerException e) {
             throw new GenericServiceException(e.getMessage(), e);
         }

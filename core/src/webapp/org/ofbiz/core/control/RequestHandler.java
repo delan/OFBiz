@@ -37,8 +37,6 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.stats.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.view.*;
-import org.ofbiz.core.util.UtilMisc;
-
 
 /**
  * RequestHandler - Request Processor Object
@@ -82,6 +80,10 @@ public class RequestHandler implements Serializable {
             nextView = RequestHandler.getNextPageUri(chain);
             if (Debug.infoOn()) Debug.logInfo("[RequestHandler]: Chain in place: requestUri=" + requestUri + " nextView=" + nextView, module);
         } else {
+            // Check to make sure we are allowed to access this request directly. (Also checks if this request is defined.)
+            if (!rm.allowDirectRequest(requestUri))
+                throw new RequestHandlerException("Unknown request; this request does not exist or cannot be called directly.");
+
             // Check if we SHOULD be secure and are not. If we are posting let it pass to not lose data. (too late now anyway)
             if (!request.isSecure() && rm.requiresHttps(requestUri) && !request.getMethod().equalsIgnoreCase("POST")) {
                 String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
