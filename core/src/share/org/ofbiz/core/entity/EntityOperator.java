@@ -1,7 +1,7 @@
 package org.ofbiz.core.entity;
 
 /**
- * <p><b>Title:</b> GenericEntityOperation
+ * <p><b>Title:</b> EntityOperator
  * <p><b>Description:</b> Encapsulates operations between entities and entity fields.
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -23,27 +23,28 @@ package org.ofbiz.core.entity;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Chris Maurer
+ *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    Mon Nov 5, 2001
  *@version    1.0
  */
-public class GenericEntityOperation {
+public class EntityOperator {
   
-  public static String EQUALS = " = ";
-  public static String NOT_EQUAL = " <> ";
-  public static String LESS_THAN = " < ";
-  public static String GREATER_THAN = " > ";
-  public static String LESS_THAN_EQUAL_TO = " <= ";
-  public static String GREATER_THAN_EQUAL_TO = " >= ";
-  public static String IN = " IN ";
-  public static String BETWEEN = " BETWEEN ";
-  public static String NOT = " NOT ";
-  public static String AND = " AND ";
-  public static String OR = " OR ";
+  public static final String EQUALS = " = ";
+  public static final String NOT_EQUAL = " <> ";
+  public static final String LESS_THAN = " < ";
+  public static final String GREATER_THAN = " > ";
+  public static final String LESS_THAN_EQUAL_TO = " <= ";
+  public static final String GREATER_THAN_EQUAL_TO = " >= ";
+  public static final String IN = " IN ";
+  public static final String BETWEEN = " BETWEEN ";
+  public static final String NOT = " NOT ";
+  public static final String AND = " AND ";
+  public static final String OR = " OR ";
   
   public String code = "";
   
-  public GenericEntityOperation(String code) {
+  public EntityOperator(String code) {
     setCode(code);
   }
   

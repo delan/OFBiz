@@ -44,6 +44,7 @@ import org.w3c.dom.NodeList;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@created    Sep 17 2001
  *@version    1.0
  */
@@ -555,21 +556,21 @@ public class GenericDelegator {
     return collection;
   }
 
-  public Collection findByClause(String entityName, List genericEntityClauses, Map fields) throws GenericEntityException {
-    return findByClause(entityName, genericEntityClauses, fields, null);
+  public Collection findByClause(String entityName, List entityClauses, Map fields) throws GenericEntityException {
+    return findByClause(entityName, entityClauses, fields, null);
   }
   
-  public Collection findByClause(String entityName, List genericEntityClauses, Map fields, List orderBy) throws GenericEntityException {
-    if(genericEntityClauses == null) return null;
+  public Collection findByClause(String entityName, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
+    if(entityClauses == null) return null;
     ModelEntity modelEntity = modelReader.getModelEntity(entityName);
     GenericHelper helper = getEntityHelper(modelEntity);
 
-    for(int i=0;i<genericEntityClauses.size();i++){
-      GenericEntityClause genEntityClause = (GenericEntityClause)genericEntityClauses.get(i);
+    for(int i=0;i<entityClauses.size();i++){
+      EntityClause genEntityClause = (EntityClause)entityClauses.get(i);
       genEntityClause.setModelEntities(modelReader);
     }
     Collection collection = null;
-    collection = helper.findByClause(modelEntity, genericEntityClauses, fields, orderBy);
+    collection = helper.findByClause(modelEntity, entityClauses, fields, orderBy);
     absorbCollection(collection);
     return collection;
   }

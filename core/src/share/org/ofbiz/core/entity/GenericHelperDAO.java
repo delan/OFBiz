@@ -27,7 +27,8 @@ import org.ofbiz.core.entity.model.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@created    Tue Aug 07 01:10:32 MDT 2001
  *@version    1.0
  */
@@ -130,8 +131,8 @@ public class GenericHelperDAO implements GenericHelper {
     return genericDAO.selectByLike(modelEntity, fields, orderBy);
   }
 
-  public Collection findByClause(ModelEntity modelEntity, List genericEntityClauses, Map fields, List orderBy) throws GenericEntityException {
-    return genericDAO.selectByClause(modelEntity, genericEntityClauses, fields, orderBy);
+  public Collection findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
+    return genericDAO.selectByClause(modelEntity, entityClauses, fields, orderBy);
   }
 
   

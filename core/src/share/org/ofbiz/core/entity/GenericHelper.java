@@ -27,6 +27,7 @@ import org.ofbiz.core.entity.model.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@created    Tue Aug 07 01:10:32 MDT 2001
  *@version    1.0
  */
@@ -83,7 +84,7 @@ public interface GenericHelper
 
   public Collection findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
 
-  public Collection findByClause(ModelEntity modelEntity, List genericEntityClauses, Map fields, List orderBy) throws GenericEntityException;
+  public Collection findByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException;
 
   /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file

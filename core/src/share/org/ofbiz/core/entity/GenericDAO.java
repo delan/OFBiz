@@ -29,7 +29,8 @@ import org.ofbiz.core.entity.model.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@created    Wed Aug 08 2001
  *@version    1.0
  */
@@ -536,9 +537,9 @@ public class GenericDAO {
     if(whereFields != null && whereFields.size() > 0) {
       int i = 0;
       for(; i < whereFields.size() - 1; i++) {
-        sql = sql + ((ModelField)whereFields.elementAt(i)).colName + ((GenericEntityOperation)intraFieldOperations.get(i)).getCode() + " ? AND ";
+        sql = sql + ((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode() + " ? AND ";
       }
-      sql = sql + ((ModelField)whereFields.elementAt(i)).colName + ((GenericEntityOperation)intraFieldOperations.get(i)).getCode() + " ? ";
+      sql = sql + ((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode() + " ? ";
     }
     
     if(orderBy != null && orderBy.size() > 0) {
@@ -703,8 +704,8 @@ public class GenericDAO {
     return collection;
   }
   
-  public Collection selectByClause(ModelEntity modelEntity, List genericEntityClauses, Map fields, List orderBy) throws GenericEntityException {
-    if(genericEntityClauses == null) return null;
+  public Collection selectByClause(ModelEntity modelEntity, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
+    if(entityClauses == null) return null;
     
     Collection collection = new LinkedList();
     Connection connection = null;
@@ -732,23 +733,23 @@ public class GenericDAO {
     }
     
     //each iteration defines one relationship for the query.
-    for(int i=0;i<genericEntityClauses.size();i++){
-      GenericEntityClause genericEntityClause = (GenericEntityClause)genericEntityClauses.get(i);
-      String interFieldOperation = genericEntityClause.getInterFieldOperation().getCode();
-      String intraFieldOperation = genericEntityClause.getIntraFieldOperation().getCode();
+    for(int i=0;i<entityClauses.size();i++){
+      EntityClause entityClause = (EntityClause)entityClauses.get(i);
+      String interFieldOperation = entityClause.getInterFieldOperation().getCode();
+      String intraFieldOperation = entityClause.getIntraFieldOperation().getCode();
       
-      firstModelEntity = genericEntityClause.getFirstModelEntity();
+      firstModelEntity = entityClause.getFirstModelEntity();
       if(!whereTables.contains(firstModelEntity.tableName)){
         whereTables.add(firstModelEntity.tableName);
       }
       
-      secondModelEntity = genericEntityClause.getSecondModelEntity();
+      secondModelEntity = entityClause.getSecondModelEntity();
       if(!whereTables.contains(secondModelEntity.tableName)){
         whereTables.add(secondModelEntity.tableName);
       }
       
-      firstModelField = firstModelEntity.getField(genericEntityClause.getFirstField());
-      secondModelField = secondModelEntity.getField(genericEntityClause.getSecondField());
+      firstModelField = firstModelEntity.getField(entityClause.getFirstField());
+      secondModelField = secondModelEntity.getField(entityClause.getSecondField());
       
       test = where.toString();
       if(i > 0) where.append(interFieldOperation);

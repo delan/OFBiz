@@ -26,24 +26,25 @@ import org.ofbiz.core.entity.model.ModelReader;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Chris Maurer
+ *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    Mon Nov 5, 2001
  *@version    1.0
  */
-public class GenericEntityClause {
+public class EntityClause {
   private String firstEntity = "";
   private String secondEntity = "";
   private String firstField = "";
   private String secondField = "";
   private ModelEntity firstModelEntity = null;
   private ModelEntity secondModelEntity = null;
-  private GenericEntityOperation interFieldOperation = null;
-  private GenericEntityOperation intraFieldOperation = null;
+  private EntityOperator interFieldOperation = null;
+  private EntityOperator intraFieldOperation = null;
   
-  public GenericEntityClause(){
+  public EntityClause(){
   }
   
-  public GenericEntityClause(String firstEntity, String secondEntity, String firstField, String secondField, GenericEntityOperation interFieldOperation, GenericEntityOperation intraFieldOperation) {
+  public EntityClause(String firstEntity, String secondEntity, String firstField, String secondField, EntityOperator interFieldOperation, EntityOperator intraFieldOperation) {
     this.firstEntity = firstEntity;
     this.secondEntity = secondEntity;
     this.firstField = firstField;
@@ -68,11 +69,11 @@ public class GenericEntityClause {
     return secondField;
   }
   
-  public GenericEntityOperation getInterFieldOperation(){
+  public EntityOperator getInterFieldOperation(){
     return interFieldOperation;
   }
   
-  public GenericEntityOperation getIntraFieldOperation(){
+  public EntityOperator getIntraFieldOperation(){
     return intraFieldOperation;
   }
   
@@ -92,11 +93,11 @@ public class GenericEntityClause {
     this.secondField = secondField;
   }
   
-  public void setInterFieldOperation(GenericEntityOperation interFieldOperation){
+  public void setInterFieldOperation(EntityOperator interFieldOperation){
     this.interFieldOperation = interFieldOperation;
   }
   
-  public void setIntraFieldOperation(GenericEntityOperation intraFieldOperation){
+  public void setIntraFieldOperation(EntityOperator intraFieldOperation){
     this.intraFieldOperation = intraFieldOperation;
   }
   
