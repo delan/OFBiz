@@ -42,34 +42,7 @@ public class LogikusFacade {
     public static Axiom axiom(String s) {
         return axiom(new TokenString(s));
     }
-    /**
-     * Translate the tokens for one axiom into an Axiom
-     * object (either a Fact or a Rule);
-     */
-    protected static Axiom axiom(TokenString ts) {
-        Parser p = new LogikusParser().axiom();
-        Object o = parse(ts, p, "axiom");
-        return (Axiom) o;
-    }
-    /**
-     * Parse the given token string with the given parser,
-     * throwing runtime exceptions if parsing fails
-     * or is incomplete.
-     */
-    protected static Object parse(TokenString ts, Parser p, String type) {
-        TokenAssembly ta = new TokenAssembly(ts);
-        Assembly out = p.bestMatch(ta);
-        if (out == null) {
-            reportNoMatch(ts, type);
-        }
-        if (out.hasMoreElements()) {
-            // allow an extra semicolon
-            if (!out.remainder("").equals(";")) {
-                reportLeftovers(out, type);
-            }
-        }
-        return out.pop();
-    }
+    
     /**
      * Parse the text of a Logikus program and return a
      * <code>Program</code> object.
@@ -91,6 +64,7 @@ public class LogikusFacade {
         }
         return p;
     }
+    
     /**
      * Parse the text of a Logikus query and return a
      * <code>Query</code> object.
@@ -107,25 +81,58 @@ public class LogikusFacade {
         }
         return new Query(as, (Rule) o);
     }
+    
+    /**
+     * Translate the tokens for one axiom into an Axiom
+     * object (either a Fact or a Rule);
+     */
+    protected static Axiom axiom(TokenString ts) {
+        Parser p = new LogikusParser().axiom();
+        Object o = parse(ts, p, "axiom");
+        return (Axiom) o;
+    }
+    
+    /**
+     * Parse the given token string with the given parser,
+     * throwing runtime exceptions if parsing fails
+     * or is incomplete.
+     */
+    protected static Object parse(TokenString ts, Parser p, String type) {
+        TokenAssembly ta = new TokenAssembly(ts);
+        Assembly out = p.bestMatch(ta);
+        if (out == null) {
+            reportNoMatch(ts, type);
+        }
+        if (out.hasMoreElements()) {
+            // allow an extra semicolon
+            if (!out.remainder("").equals(";")) {
+                reportLeftovers(out, type);
+            }
+        }
+        return out.pop();
+    }
+    
     /**
      * Throws a runtime exception reporting an incomplete parse.
      */
     protected static Object reportLeftovers(Assembly out, String type) {
-        throw new LogikusException(
-        "> Input for " + type +
-        " appears complete after : \n> " + out.consumed(" ") +
-        "\n");
+        throw new LogikusException("> Input for " + type +
+                " appears complete after : \n> " + out.consumed(" ") + "\n");
     }
+    
     /**
      * Throws a runtime exception reporting failed parse.
      */
     protected static void reportNoMatch(TokenString ts, String type) {
-        checkForUppercase(ts, type);
+        //checkForUppercase(ts, type);
         throw new LogikusException("> Cannot parse " + type + " : " + ts + "\n");
     }
+    
     /**
      * Throws an informative runtime exception if the provided
      * string begins with an uppercase letter.
+     *
+     * NOTE: This is not currently used.
      */
     protected static void checkForUppercase(TokenString ts, String type) {
         if (ts.length() > 0) {
@@ -134,7 +141,7 @@ public class LogikusFacade {
             if (s.length() > 0 &&
             Character.isUpperCase(s.charAt(0))) {
                 throw new LogikusException("> Uppercase " + s +
-                " indicates a variable and cannot begin a " + type + ".\n");
+                        " indicates a variable and cannot begin a " + type + ".\n");
             }
         }
     }

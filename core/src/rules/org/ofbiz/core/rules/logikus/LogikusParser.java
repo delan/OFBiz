@@ -49,8 +49,7 @@ import org.ofbiz.core.rules.parse.tokens.*;
  *     variable     = LowercaseWord | UppercaseWord | '_';
  * <br>
  *     ruleDef      = ":-" commaList(condition);
- *     condition    = structure | not | evaluation |
- *                    comparison | list;
+ *     condition    = structure | not | evaluation | comparison | list;
  * <br>
  *     not          = "not" structure ;
  * <br>
