@@ -25,11 +25,15 @@
 
 import org.ofbiz.service.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.order.shoppingcart.product.ProductDisplayWorker;
+import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
 delegator = request.getAttribute("delegator");
 security = request.getAttribute("security");
@@ -40,53 +44,33 @@ context.put("dispatcher",dispatcher);
 
 // Get the Cart and Prepare Size
 shoppingCart = ShoppingCartEvents.getCartObject(request);
-context.put("shoppingCartSize", shoppingCart.size());
-context.put("shoppingCart", shoppingCart);
-context.put("currencyUomId", shoppingCart.getCurrency());
 
-mode = shoppingCart.getOrderType();
-
-// get all the possible gift wrap options
-allgiftWraps = delegator.findByAnd("ProductFeature", UtilMisc.toMap("productFeatureTypeId", "GIFT_WRAP"), UtilMisc.toList("defaultSequenceNum"));
-context.put("allgiftWraps", allgiftWraps);
-
-if (mode != null && mode.equals("SALES_ORDER")) {
-    // Get Cart Associated Products Data
-    associatedProducts = ProductDisplayWorker.getRandomCartProductAssoc(request, true);
-    if (associatedProducts != null) 
-        context.put("associatedProducts", associatedProducts);
+// check the selected product store
+productStoreId = shoppingCart.getProductStoreId();
+productStore = null;
+if (UtilValidate.isNotEmpty(productStoreId)) {
+    productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
+    if (productStore != null) {
+        // put in the default currency, to help selecting a currency for a purchase order
+        context.put("defaultCurrencyUomId", productStore.getString("defaultCurrencyUomId"));
+        payToPartyId = productStore.getString("payToPartyId");
+        partyId = shoppingCart.getOrderPartyId();
+        agreements = delegator.findByAndCache("Agreement", UtilMisc.toMap("partyIdTo", partyId, "partyIdFrom", payToPartyId));
+        if (agreements != null && agreements.size() > 0) {
+            context.put("hasAgreements","Y");
+            context.put("agreements", agreements);
+        } else {
+            context.put("hasAgreements","N");
+        }
+    }
 }
-context.put("contentPathPrefix", CatalogWorker.getContentPathPrefix(request));
-
-// get productCategory list
-productCategoryList = delegator.findAll("ProductCategory", UtilMisc.toList("description", "productCategoryId"));
-context.put("productCategoryList", productCategoryList);
 
 partyId = shoppingCart.getPartyId();
 if (partyId != null && partyId.equals("_NA_")) partyId = null;
 context.put("partyId", partyId);  
 
-if (partyId != null) {
-    partyMap = PartyWorker.getPartyOtherValues(request, partyId, "party", "person", "partyGroup");
-    if (partyMap != null) {
-        iter = partyMap.entrySet().iterator();
-        while (iter.hasNext()) {
-            entry = iter.next();
-            context.put(entry.getKey(), entry.getValue());
-        }
-    }
-}
+// currencies and shopping cart currency
+currencies = delegator.findByAndCache("Uom", UtilMisc.toMap("uomTypeId","CURRENCY_MEASURE"));
+context.put("currencies", currencies);
+context.put("currencyUomId", shoppingCart.getCurrency());
 
-defaultDesiredDeliveryDate = shoppingCart.getDefaultItemDeliveryDate();
-if (UtilValidate.isEmpty(defaultDesiredDeliveryDate)) {
-    defaultDesiredDeliveryDate = (new java.sql.Date(System.currentTimeMillis())).toString();
-} else {
-    context.put("useAsDefaultDesiredDeliveryDate", "true");
-}
-context.put("defaultDesiredDeliveryDate", defaultDesiredDeliveryDate);
-
-defaultComment = shoppingCart.getDefaultItemComment();
-if (!UtilValidate.isEmpty(defaultComment)) {
-    context.put("useAsDefaultComment", "true");
-}
-context.put("defaultComment", defaultComment);
