@@ -196,7 +196,7 @@ public class GenericDAO {
         }
         
         String sql = "UPDATE " + modelEntity.getTableName() + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " +
-        SqlJdbcUtil.makeWhereStringAnd(modelEntity.getPksCopy(), entity);
+        SqlJdbcUtil.makeWhereStringFromFields(modelEntity.getPksCopy(), entity, "AND");
         
         Debug.logVerbose("[GenericDAO.singleUpdate] sql=" + sql + "\nEntity=" + entity, module);
         
@@ -310,7 +310,7 @@ public class GenericDAO {
             sql += "*";
         
         sql += SqlJdbcUtil.makeFromClause(modelEntity);
-        sql += SqlJdbcUtil.makeWhereClauseAnd(modelEntity, modelEntity.getPksCopy(), entity);
+        sql += SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPksCopy(), entity, "AND");
         
         Debug.logVerbose("[GenericDAO.select] sql=" + sql, module);
         
@@ -380,7 +380,7 @@ public class GenericDAO {
             sql += "*";
         }
         sql += SqlJdbcUtil.makeFromClause(modelEntity);
-        sql += SqlJdbcUtil.makeWhereClauseAnd(modelEntity, modelEntity.getPksCopy(), entity);
+        sql += SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPksCopy(), entity, "AND");
         
         SQLProcessor sqlP = new SQLProcessor(helperName);
         
@@ -416,15 +416,14 @@ public class GenericDAO {
         List selectFields = new ArrayList();
         
         if (fields != null && fields.size() > 0) {
-            Set keys = fields.keySet();
-            
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
                 
-                if (keys.contains(curField.getName()))
+                if (fields.containsKey(curField.getName())) {
                     whereFields.add(curField);
-                else
+                } else {
                     selectFields.add(curField);
+                }
             }
         } else {
             selectFields = modelEntity.getFieldsCopy();
@@ -441,7 +440,7 @@ public class GenericDAO {
         }
         
         sql += SqlJdbcUtil.makeFromClause(modelEntity);
-        sql += SqlJdbcUtil.makeWhereClauseAnd(modelEntity, whereFields, dummyValue);
+        sql += SqlJdbcUtil.makeWhereClause(modelEntity, whereFields, dummyValue, "AND");
         sql += SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy);
         
         Debug.logVerbose("[GenericDAO.selectByAnd] sql=" + sql, module);
@@ -485,12 +484,10 @@ public class GenericDAO {
         List selectFields = new ArrayList();
         
         if (fields != null && fields.size() > 0) {
-            Set keys = fields.keySet();
-            
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
                 
-                if (keys.contains(curField.getName()))
+                if (fields.containsKey(curField.getName()))
                     whereFields.add(curField);
                 else
                     selectFields.add(curField);
@@ -514,7 +511,7 @@ public class GenericDAO {
             sql += "*";
         
         sql += SqlJdbcUtil.makeFromClause(modelEntity);
-        sql += SqlJdbcUtil.makeWhereClauseOr(modelEntity, whereFields, dummyValue);
+        sql += SqlJdbcUtil.makeWhereClause(modelEntity, whereFields, dummyValue, "OR");
         sql += SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy);
         
         Debug.logVerbose("[GenericDAO.selectByOr] sql=" + sql, module);
@@ -568,38 +565,7 @@ public class GenericDAO {
         sqlBuffer.append(" ");
         sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity));
         
-        StringBuffer whereString = new StringBuffer("");
-        
-        if (expressions != null && expressions.size() > 0) {
-            for (int i = 0; i < expressions.size(); i++) {
-                EntityExpr expr = (EntityExpr) expressions.get(i);
-                ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
-                
-                if (field != null) {
-                    if (expr.getRhs() == null) {
-                        whereString.append(field.getColName());
-                        if (expr.getOperator() == EntityOperator.NOT_EQUAL) {
-                            whereString.append(" IS NOT NULL ");
-                        } else {
-                            whereString.append(" IS NULL ");
-                        }
-                    } else {
-                        if (expr.isLUpper())
-                            whereString.append("UPPER(" + field.getColName() + ")");
-                        else
-                            whereString.append(field.getColName());
-                        whereString.append(expr.getOperator());
-                        whereString.append(" ? ");
-                    }
-                    if (i < expressions.size() - 1) {
-                        whereString.append(" AND ");
-                    }
-                } else {
-                    throw new IllegalArgumentException("ModelField with field name " + (String) expr.getLhs() + " not found");
-                }
-            }
-        }
-        
+        StringBuffer whereString = new StringBuffer(SqlJdbcUtil.makeWhereStringFromExpressions(modelEntity, expressions, "AND"));
         String viewClause = SqlJdbcUtil.makeViewWhereClause(modelEntity);
         
         if (viewClause.length() > 0) {
@@ -676,37 +642,7 @@ public class GenericDAO {
         sqlBuffer.append(" ");
         sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity));
         
-        StringBuffer whereString = new StringBuffer("");
-        
-        if (expressions != null && expressions.size() > 0) {
-            whereString.append("(");
-            for (int i = 0; i < expressions.size(); i++) {
-                EntityExpr expr = (EntityExpr) expressions.get(i);
-                ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
-                
-                if (field != null) {
-                    if (expr.getRhs() == null) {
-                        whereString.append(field.getColName());
-                        if (expr.getOperator() == EntityOperator.NOT_EQUAL) {
-                            whereString.append(" IS NOT NULL ");
-                        } else {
-                            whereString.append(" IS NULL ");
-                        }
-                    } else {
-                        whereString.append(field.getColName());
-                        whereString.append(expr.getOperator());
-                        whereString.append(" ? ");
-                    }
-                    if (i < expressions.size() - 1) {
-                        whereString.append(" OR ");
-                    }
-                } else {
-                    throw new IllegalArgumentException("ModelField with field name " + (String) expr.getLhs() + " not found");
-                }
-            }
-            whereString.append(")");
-        }
-        
+        StringBuffer whereString = new StringBuffer(SqlJdbcUtil.makeWhereStringFromExpressions(modelEntity, expressions, "OR"));
         String viewClause = SqlJdbcUtil.makeViewWhereClause(modelEntity);
         
         if (viewClause.length() > 0) {
@@ -1080,6 +1016,94 @@ public class GenericDAO {
     
     /* ====================================================================== */
     
+    public Collection selectByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
+        EntityListIterator entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+
+        Collection collection = entityListIterator.getCompleteCollection();
+        entityListIterator.close();
+        
+        return collection;
+    }
+    
+    public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
+        if (modelEntity == null) {
+            return null;
+        }
+        
+        //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
+        List selectFields = new ArrayList();
+        
+        if (fieldsToSelect != null && fieldsToSelect.size() > 0) {
+            Set tempKeys = new TreeSet(fieldsToSelect);
+            for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
+                ModelField curField = modelEntity.getNopk(fi);
+
+                if (tempKeys.contains(curField.getName())) {
+                    selectFields.add(curField);
+                    tempKeys.remove(curField.getName());
+                }
+            }
+
+            if (tempKeys.size() > 0) {
+                throw new GenericModelException("In partialSelect invalid field names specified: " + tempKeys.toString());
+            }
+        } else {
+            selectFields = modelEntity.getFieldsCopy();
+        }
+        
+        GenericValue dummyValue = new GenericValue(modelEntity);
+        StringBuffer sqlBuffer = new StringBuffer("SELECT ");
+        
+        if (selectFields.size() > 0) {
+            sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", ""));
+        } else {
+            sqlBuffer.append("*");
+        }
+        
+        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity));
+        
+        StringBuffer whereString = new StringBuffer();
+        String entityCondWhereString = "";
+        if (entityCondition != null) {
+            entityCondWhereString = entityCondition.makeWhereString(modelEntity);
+        }
+        
+        String viewClause = SqlJdbcUtil.makeViewWhereClause(modelEntity);
+        if (viewClause.length() > 0) {
+            if (entityCondWhereString.length() > 0) {
+                whereString.append("(");
+                whereString.append(entityCondWhereString);
+                whereString.append(") AND ");
+            }
+            
+            whereString.append(viewClause);
+        } else {
+            whereString.append(entityCondWhereString);
+        }
+        
+        if (whereString.length() > 0) {
+            sqlBuffer.append(" WHERE ");
+            sqlBuffer.append(whereString.toString());
+        }
+
+        sqlBuffer.append(SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy));
+        String sql = sqlBuffer.toString();
+        
+        Debug.logVerbose("[GenericDAO.selectListIteratorByCondition] sql=" + sql, module);
+        
+        SQLProcessor sqlP = new SQLProcessor(helperName);
+        
+        
+        sqlP.prepareStatement(sql);
+        sqlP.executeQuery();
+
+        return new EntityListIterator(sqlP, modelEntity, selectFields, modelFieldTypeReader);
+    }
+    
+    /* ====================================================================== */
+    
+    /* ====================================================================== */
+    
     public int delete(GenericEntity entity) throws GenericEntityException {
         SQLProcessor sqlP = new SQLProcessor(helperName);
         
@@ -1104,7 +1128,7 @@ public class GenericDAO {
             throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation delete not supported yet for view entities");
         }
         
-        String sql = "DELETE FROM " + modelEntity.getTableName() + " WHERE " + SqlJdbcUtil.makeWhereStringAnd(modelEntity.getPksCopy(), entity);
+        String sql = "DELETE FROM " + modelEntity.getTableName() + " WHERE " + SqlJdbcUtil.makeWhereStringFromFields(modelEntity.getPksCopy(), entity, "AND");
         
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
         
@@ -1140,17 +1164,14 @@ public class GenericDAO {
             throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation deleteByAnd not supported yet for view entities");
         }
         
-        //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
         List whereFields = new ArrayList();
-        
         if (fields != null && fields.size() > 0) {
-            Set keys = fields.keySet();
-            
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
                 ModelField curField = modelEntity.getField(fi);
                 
-                if (keys.contains(curField.getName()))
+                if (fields.containsKey(curField.getName())) {
                     whereFields.add(curField);
+                }
             }
         }
         
@@ -1158,7 +1179,7 @@ public class GenericDAO {
         String sql = "DELETE FROM " + modelEntity.getTableName();
         
         if (fields != null && fields.size() > 0) {
-            sql += " WHERE " + SqlJdbcUtil.makeWhereStringAnd(whereFields, dummyValue);
+            sql += " WHERE " + SqlJdbcUtil.makeWhereStringFromFields(whereFields, dummyValue, "AND");
         }
         
         SQLProcessor sqlP = new SQLProcessor(helperName);

@@ -25,26 +25,17 @@
 package org.ofbiz.core.entity;
 
 import java.io.*;
-import org.ofbiz.core.util.*;
+import java.util.*;
+import org.ofbiz.core.entity.model.*;
 
 /**
- * GenericEntityException
+ * Encapsulates simple expressions used for specifying queries
  *
- *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created Sep 17, 2001
- *@version 1.0
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@created    Nov 13, 2001
+ *@version    1.0
  */
-public class GenericEntityException extends GeneralException {
-
-    public GenericEntityException() {
-        super();
-    }
-
-    public GenericEntityException(String str) {
-        super(str);
-    }
-
-    public GenericEntityException(String str, Throwable nested) {
-        super(str, nested);
-    }
+public abstract class EntityCondition implements Serializable {
+    abstract public String makeWhereString(ModelEntity modelEntity);
+    abstract public void checkCondition(ModelEntity modelEntity) throws GenericModelException;
 }

@@ -161,6 +161,14 @@ public class GenericHelperDAO implements GenericHelper {
         return genericDAO.selectByOr(modelEntity, expressions, orderBy);
     }
     
+    public Collection findByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
+        return genericDAO.selectByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+    }
+    
+    public EntityListIterator findListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
+        return genericDAO.selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+    }
+    
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values

@@ -33,42 +33,46 @@ package org.ofbiz.core.entity;
  *@created    Nov 5, 2001
  *@version    1.0
  */
-public class EntityOperator {
-
-    public static final EntityOperator EQUALS = new EntityOperator("EQUALS", " = ");
-    public static final EntityOperator NOT_EQUAL = new EntityOperator("NOT_EQUAL", " <> ");
-    public static final EntityOperator LESS_THAN = new EntityOperator("LESS_THAN", " < ");
-    public static final EntityOperator GREATER_THAN = new EntityOperator("GREATER_THAN", " > ");
-    public static final EntityOperator LESS_THAN_EQUAL_TO = new EntityOperator("LESS_THAN_EQUAL_TO", " <= ");
-    public static final EntityOperator GREATER_THAN_EQUAL_TO = new EntityOperator("GREATER_THAN_EQUAL_TO", " >= ");
-    public static final EntityOperator IN = new EntityOperator("GREATER_THAN_EQUAL_TO", " IN ");
-    public static final EntityOperator BETWEEN = new EntityOperator("IN", " BETWEEN ");
-    public static final EntityOperator NOT = new EntityOperator("NOT", " NOT ");
-    public static final EntityOperator AND = new EntityOperator("AND", " AND ");
-    public static final EntityOperator OR = new EntityOperator("OR", " OR ");
-    public static final EntityOperator LIKE = new EntityOperator("LIKE", " LIKE ");
-
+public class EntityOperator implements java.io.Serializable {
+    
+    public static final EntityOperator EQUALS = new EntityOperator("EQUALS", "=");
+    public static final EntityOperator NOT_EQUAL = new EntityOperator("NOT_EQUAL", "<>");
+    public static final EntityOperator LESS_THAN = new EntityOperator("LESS_THAN", "<");
+    public static final EntityOperator GREATER_THAN = new EntityOperator("GREATER_THAN", ">");
+    public static final EntityOperator LESS_THAN_EQUAL_TO = new EntityOperator("LESS_THAN_EQUAL_TO", "<=");
+    public static final EntityOperator GREATER_THAN_EQUAL_TO = new EntityOperator("GREATER_THAN_EQUAL_TO", ">=");
+    public static final EntityOperator IN = new EntityOperator("IN", "IN");
+    public static final EntityOperator BETWEEN = new EntityOperator("BETWEEN", "BETWEEN");
+    public static final EntityOperator NOT = new EntityOperator("NOT", "NOT");
+    public static final EntityOperator AND = new EntityOperator("AND", "AND");
+    public static final EntityOperator OR = new EntityOperator("OR", "OR");
+    public static final EntityOperator LIKE = new EntityOperator("LIKE", "LIKE");
+    
     private String nameString;
     private String codeString;
-
+    
     public EntityOperator(String name, String code) {
         nameString = name;
         codeString = code;
     }
-
+    
     public String getCode() {
-
-   if (codeString==null)
-    return "null";
-   else
-        return codeString;
+        if (codeString==null)
+            return "null";
+        else
+            return codeString;
     }
-
+    
     public String getName() {
         return nameString;
     }
-
+    
     public String toString() {
         return codeString;
+    }
+    
+    public boolean equals(Object obj) {
+        EntityOperator otherOper = (EntityOperator) obj;
+        return this.getName().equals(otherOper.getName());
     }
 }

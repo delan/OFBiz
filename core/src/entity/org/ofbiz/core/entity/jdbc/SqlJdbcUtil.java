@@ -75,73 +75,78 @@ public class SqlJdbcUtil {
     }
     
     /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
-    public static String makeWhereString(List modelFields, GenericEntity entity, String operator) {
+    public static String makeWhereStringFromFields(List modelFields, Map fields, String operator) {
         StringBuffer returnString = new StringBuffer("");
 
         if (modelFields.size() < 1) {
             return "";
         }
         Iterator iter = modelFields.iterator();
-        while (iter.hasNext())
-        {
+        while (iter.hasNext()) {
             ModelField modelField = (ModelField) iter.next();
 
             returnString.append(modelField.getColName());
-            if (entity.get(modelField.getName()) != null)
+            if (fields.get(modelField.getName()) != null) {
                 returnString.append("=?");
-            else
+            } else {
                 returnString.append(" IS NULL");
+            }
 
-            if (iter.hasNext())
+            if (iter.hasNext()) {
+                returnString.append(' ');
                 returnString.append( operator );
+                returnString.append(' ');
+            }
         }
 
         return returnString.toString();
     }
 
-    public static String makeWhereClause(ModelEntity modelEntity, List modelFields, GenericEntity entity, String operator) {
+    public static String makeWhereClause(ModelEntity modelEntity, List modelFields, Map fields, String operator) {
         StringBuffer whereString = new StringBuffer("");
 
         if (modelFields != null && modelFields.size() > 0) {
-            whereString.append(makeWhereStringAnd(modelFields, entity));
+            whereString.append(makeWhereStringFromFields(modelFields, fields, "AND"));
         }
 
         String viewClause = makeViewWhereClause(modelEntity);
 
         if (viewClause.length() > 0) {
-            if (whereString.length() > 0)
-                whereString.append( operator );
+            if (whereString.length() > 0) {
+                whereString.append(' ');
+                whereString.append(operator);
+                whereString.append(' ');
+            }
 
             whereString.append(viewClause);
         }
 
-        if (whereString.length() > 0)
+        if (whereString.length() > 0) {
             return " WHERE " + whereString.toString();
+        }
 
         return "";
     }
 
-    /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
-    public static String makeWhereStringAnd(List modelFields, GenericEntity entity) {
-        return makeWhereString( modelFields, entity, " AND ");
-    }
-
-    public static String makeWhereClauseAnd(ModelEntity modelEntity, List modelFields, GenericEntity entity) {
-        return makeWhereClause( modelEntity, modelFields, entity, " AND " );
-    }
-
-    public static String makeWhereStringOr(List modelFields, GenericEntity entity) {
-        return makeWhereString( modelFields, entity, " OR " );
-    }
-
-    public static String makeWhereClauseOr(ModelEntity modelEntity, List modelFields, GenericEntity entity) {
-        return makeWhereClause( modelEntity, modelFields, entity, " OR " );
+    public static String makeWhereStringFromExpressions(ModelEntity modelEntity, List expressions, String operator) {
+        StringBuffer whereStringBuffer = new StringBuffer();
+        if (expressions != null && expressions.size() > 0) {
+            for (int i = 0; i < expressions.size(); i++) {
+                EntityExpr expr = (EntityExpr) expressions.get(i);
+                whereStringBuffer.append(expr.makeWhereString(modelEntity));
+                if (i < expressions.size() - 1) {
+                    whereStringBuffer.append(' ');
+                    whereStringBuffer.append(operator);
+                    whereStringBuffer.append(' ');
+                }
+            }
+        }
+        return whereStringBuffer.toString();
     }
     
     public static String makeViewWhereClause(ModelEntity modelEntity) {
-        StringBuffer whereString = new StringBuffer("");
-        
         if (modelEntity instanceof ModelViewEntity) {
+            StringBuffer whereString = new StringBuffer("");
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
             
             for (int i = 0; i < modelViewEntity.getViewLinksSize(); i++) {
@@ -167,8 +172,12 @@ public class SqlJdbcUtil {
                     whereString.append(relLinkField.getColName());
                 }
             }
+            
+            if (whereString.length() > 0) {
+                return "(" + whereString.toString() + ")";
+            }
         }
-        return whereString.toString();
+        return "";
     }
     
     public static String makeOrderByClause(ModelEntity modelEntity, List orderBy) {

@@ -380,7 +380,7 @@ public class GenericDelegator {
      * @return GenericValue instance containing the new instance
      */
     public GenericValue create(GenericValue value) throws GenericEntityException {
-        GenericHelper helper = getEntityHelper(value.getModelEntity());
+        GenericHelper helper = getEntityHelper(value.getEntityName());
         value = helper.create(value);
         if (value != null)
             value.setDelegator(this);
@@ -393,7 +393,7 @@ public class GenericDelegator {
      * @return GenericValue instance containing the new instance
      */
     public GenericValue create(GenericPK primaryKey) throws GenericEntityException {
-        GenericHelper helper = getEntityHelper(primaryKey.getModelEntity());
+        GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
         GenericValue value = helper.create(primaryKey);
         if (value != null)
             value.setDelegator(this);
@@ -558,7 +558,7 @@ public class GenericDelegator {
      *@return int representing number of rows effected by this operation
      */
     public int removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
-        GenericHelper helper = getEntityHelper(primaryKey.getModelEntity());
+        GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
         this.clearCacheLine(primaryKey);
         return helper.removeByPrimaryKey(primaryKey);
     }
@@ -633,10 +633,11 @@ public class GenericDelegator {
         if (modelEntity == null) {
             throw new GenericModelException("Could not find definition for entity name " + entityName);
         }
-        GenericHelper helper = getEntityHelper(modelEntity);
+        GenericHelper helper = getEntityHelper(entityName);
 
-        if (fields != null && !modelEntity.areFields(fields.keySet()))
+        if (fields != null && !modelEntity.areFields(fields.keySet())) {
             throw new GenericModelException("At least one of the passed fields is not valid: " + fields.keySet().toString());
+        }
 
         Collection collection = null;
         collection = helper.findByAnd(modelEntity, fields, orderBy);
@@ -653,7 +654,7 @@ public class GenericDelegator {
      */
     public Collection findByOr(String entityName, Map fields, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericHelper helper = getEntityHelper(modelEntity);
+        GenericHelper helper = getEntityHelper(entityName);
 
         if (fields != null && !modelEntity.areFields(fields.keySet()))
             throw new IllegalArgumentException("[GenericDelegator.findByOr] At least of the passed fields is not valid: " + fields.keySet().toString());
@@ -715,7 +716,7 @@ public class GenericDelegator {
      */
     public Collection findByAnd(String entityName, List expressions, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericHelper helper = getEntityHelper(modelEntity);
+        GenericHelper helper = getEntityHelper(entityName);
 
         Collection collection = null;
         collection = helper.findByAnd(modelEntity, expressions, orderBy);
@@ -731,7 +732,7 @@ public class GenericDelegator {
      */
     public Collection findByOr(String entityName, List expressions, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericHelper helper = getEntityHelper(modelEntity);
+        GenericHelper helper = getEntityHelper(entityName);
 
         Collection collection = null;
         collection = helper.findByOr(modelEntity, expressions, orderBy);
@@ -745,7 +746,7 @@ public class GenericDelegator {
 
     public Collection findByLike(String entityName, Map fields, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericHelper helper = getEntityHelper(modelEntity);
+        GenericHelper helper = getEntityHelper(entityName);
 
         Collection collection = null;
         collection = helper.findByLike(modelEntity, fields, orderBy);
@@ -761,7 +762,7 @@ public class GenericDelegator {
         if (entityClauses == null)
             return null;
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericHelper helper = getEntityHelper(modelEntity);
+        GenericHelper helper = getEntityHelper(entityName);
 
         for (int i = 0; i < entityClauses.size(); i++) {
             EntityClause genEntityClause = (EntityClause) entityClauses.get(i);
@@ -773,6 +774,20 @@ public class GenericDelegator {
         return collection;
     }
 
+    public Collection findByCondition(String entityName, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
+        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        if (entityCondition != null) entityCondition.checkCondition(modelEntity);
+        GenericHelper helper = getEntityHelper(entityName);
+        return helper.findByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+    }
+    
+    public EntityListIterator findListIteratorByCondition(String entityName, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
+        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        if (entityCondition != null) entityCondition.checkCondition(modelEntity);
+        GenericHelper helper = getEntityHelper(entityName);
+        return helper.findListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+    }
+    
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      * @param entityName The Name of the Entity as defined in the entity XML file
      * @param fields The fields of the named entity to query by with their corresponging values
@@ -781,7 +796,7 @@ public class GenericDelegator {
     public int removeByAnd(String entityName, Map fields) throws GenericEntityException {
         this.clearCacheLine(entityName, fields);
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericHelper helper = getEntityHelper(modelEntity);
+        GenericHelper helper = getEntityHelper(entityName);
         return helper.removeByAnd(modelEntity, fields);
     }
 
@@ -986,7 +1001,7 @@ public class GenericDelegator {
      */
     public int store(GenericValue value) throws GenericEntityException {
         this.clearCacheLine(value.getPrimaryKey());
-        GenericHelper helper = getEntityHelper(value.getModelEntity());
+        GenericHelper helper = getEntityHelper(value.getEntityName());
         int retVal = helper.store(value);
         // refresh the valueObject to get the new version
         if (value.lockEnabled()) {

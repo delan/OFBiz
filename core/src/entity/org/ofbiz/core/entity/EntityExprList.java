@@ -25,26 +25,38 @@
 package org.ofbiz.core.entity;
 
 import java.io.*;
-import org.ofbiz.core.util.*;
+import java.util.*;
+import org.ofbiz.core.entity.model.*;
+import org.ofbiz.core.entity.jdbc.*;
 
 /**
- * GenericEntityException
+ * Encapsulates simple expressions used for specifying queries
  *
- *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created Sep 17, 2001
- *@version 1.0
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@created    Nov 13, 2001
+ *@version    1.0
  */
-public class GenericEntityException extends GeneralException {
+public class EntityExprList extends EntityCondition {
 
-    public GenericEntityException() {
-        super();
+    protected List exprList;
+    protected EntityOperator operator;
+
+    protected EntityExprList() { }
+    
+    public EntityExprList(List exprList, EntityOperator operator) {
+        this.exprList = exprList;
+        this.operator = operator;
+    }
+    
+    public String makeWhereString(ModelEntity modelEntity) {
+        return SqlJdbcUtil.makeWhereStringFromExpressions(modelEntity, exprList, operator.getCode());
     }
 
-    public GenericEntityException(String str) {
-        super(str);
-    }
-
-    public GenericEntityException(String str, Throwable nested) {
-        super(str, nested);
+    public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
+        Iterator exprIter = exprList.iterator();
+        while (exprIter.hasNext()) {
+            EntityExpr entityExpr = (EntityExpr) exprIter.next();
+            entityExpr.checkCondition(modelEntity);
+        }
     }
 }

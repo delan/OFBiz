@@ -25,6 +25,8 @@
 package org.ofbiz.core.entity;
 
 import java.io.*;
+import org.ofbiz.core.entity.model.*;
+import org.ofbiz.core.entity.jdbc.*;
 
 /**
  * Encapsulates simple expressions used for specifying queries
@@ -33,47 +35,68 @@ import java.io.*;
  *@created    Nov 13, 2001
  *@version    1.0
  */
-public class EntityExpr implements Serializable {
+public class EntityExpr extends EntityCondition {
 
     private Object lhs;
-    private boolean lUpper;
+    private boolean leftUpper = false;
     private EntityOperator operator;
     private Object rhs;
-    private boolean rUpper;
+    private boolean rightUpper = false;
 
-    public EntityExpr(Object lhs, boolean lUpper, EntityOperator operator, Object rhs, boolean rUpper) {
-        this(lhs, operator, rhs);
-        setLUpper(lUpper);
-        setRUpper(rUpper);
+    protected EntityExpr() { }
+
+    public EntityExpr(String lhs, EntityOperator operator, Object rhs) {
+        if (lhs == null) {
+            throw new IllegalArgumentException("The left EntityCondition argument cannot be null");
+        }
+        if (rhs == null) {
+            throw new IllegalArgumentException("The right EntityCondition argument cannot be null");
+        }
+        if (operator == null) {
+            throw new IllegalArgumentException("The operator argument cannot be null");
+        }
+        
+        this.lhs = lhs;
+        this.operator = operator;
+        this.rhs = rhs;
     }
 
-    public EntityExpr(Object lhs, EntityOperator operator, Object rhs) {
-//        if (!(lhs instanceof String)) {
-//            throw new IllegalArgumentException("At the moment left hand side must be a String");
-//        }
-        if (lhs instanceof EntityExpr || rhs instanceof EntityExpr) {
-            throw new IllegalArgumentException("Nested expressions not yet supported");
-        }
+    public EntityExpr(String lhs, boolean leftUpper, EntityOperator operator, Object rhs, boolean rightUpper) {
+        this(lhs, operator, rhs);
+        this.leftUpper = leftUpper;
+        this.rightUpper = rightUpper;
+    }
 
+    public EntityExpr(EntityCondition lhs, EntityOperator operator, EntityCondition rhs) {
+        if (lhs == null) {
+            throw new IllegalArgumentException("The left EntityCondition argument cannot be null");
+        }
+        if (rhs == null) {
+            throw new IllegalArgumentException("The right EntityCondition argument cannot be null");
+        }
+        if (operator == null) {
+            throw new IllegalArgumentException("The operator argument cannot be null");
+        }
+        
         this.lhs = lhs;
         this.operator = operator;
         this.rhs = rhs;
     }
 
     public void setLUpper(boolean upper) {
-        lUpper = upper;
+        leftUpper = upper;
     }
 
     public boolean isLUpper() {
-        return lUpper;
+        return leftUpper;
     }
 
     public boolean isRUpper() {
-        return rUpper;
+        return rightUpper;
     }
 
     public void setRUpper(boolean upper) {
-        rUpper = upper;
+        rightUpper = upper;
     }
 
     public Object getLhs() {
@@ -87,5 +110,61 @@ public class EntityExpr implements Serializable {
     public Object getRhs() {
         return rhs;
     }
-}
+    
+    public String makeWhereString(ModelEntity modelEntity) {
+        StringBuffer whereStringBuffer = new StringBuffer();
+        if (lhs instanceof String) {
+            ModelField field = (ModelField) modelEntity.getField((String) this.getLhs());
 
+            if (field != null) {
+                if (this.getRhs() == null) {
+                    whereStringBuffer.append(field.getColName());
+                    if (EntityOperator.NOT_EQUAL.equals(this.getOperator())) {
+                        whereStringBuffer.append(" IS NOT NULL ");
+                    } else {
+                        whereStringBuffer.append(" IS NULL ");
+                    }
+                } else {
+                    if (this.isLUpper()) {
+                        whereStringBuffer.append("UPPER(" + field.getColName() + ")");
+                    } else {
+                        whereStringBuffer.append(field.getColName());
+                    }
+                    whereStringBuffer.append(' ');
+                    whereStringBuffer.append(this.getOperator().toString());
+                    whereStringBuffer.append(' ');
+                    whereStringBuffer.append(" ? ");
+                    
+                    if (this.isRUpper()) {
+                        if (rhs instanceof String) {
+                            rhs = ((String) rhs).toUpperCase();
+                        }
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException("ModelField with field name " + (String) this.getLhs() + " not found");
+            }
+        } else if (lhs instanceof EntityCondition) {
+            //then rhs MUST also be an EntityCondition
+            whereStringBuffer.append('(');
+            whereStringBuffer.append(((EntityCondition) lhs).makeWhereString(modelEntity));
+            whereStringBuffer.append(") ");
+            whereStringBuffer.append(this.getOperator().toString());
+            whereStringBuffer.append(" (");
+            whereStringBuffer.append(((EntityCondition) rhs).makeWhereString(modelEntity));
+            whereStringBuffer.append(')');
+        }
+        return whereStringBuffer.toString();
+    }
+
+    public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
+        if (lhs instanceof String) {
+            if (modelEntity.getField((String) lhs) == null) {
+                throw new GenericModelException("Field with name " + lhs + " not found in the " + modelEntity.getEntityName() + " Entity");
+            }
+        } else if (lhs instanceof EntityCondition) {
+            ((EntityCondition) lhs).checkCondition(modelEntity);
+            ((EntityCondition) rhs).checkCondition(modelEntity);
+        }        
+    }
+}
