@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -247,7 +247,7 @@
             <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductComments}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
-            <input type="text" name="comments" value=${(inventoryTransfer.comments)?if_exists}" size="60" maxlength="250" class="inputBox">
+            <input type="text" name="comments" value="${(inventoryTransfer.comments)?if_exists}" size="60" maxlength="250" class="inputBox">
             </td>
         </tr>
     </#if>
