@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business AppServers Build Script.
- *  $Id: build.xml,v 1.1 2004/03/31 02:29:54 ajzeneski Exp $
+ *  $Id: build.xml,v 1.2 2004/08/10 06:04:14 ajzeneski Exp $
 -->
 
 <project name="OFBiz - AppServers" default="jar" basedir=".">
@@ -101,7 +101,7 @@
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs,classpath">
-        <javadoc packagenames="org.ofbiz.common.*" 
+        <javadoc packagenames="org.ofbiz.appservers.*" 
                  classpathref="local.class.path"
                  destdir="${build.dir}/javadocs" 
                  Windowtitle="Open for Business - ${desc}">

@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Common Build Script.
- *  $Id: build.xml,v 1.1 2004/07/27 18:37:31 ajzeneski Exp $
+ *  $Id: build.xml,v 1.2 2004/08/10 06:10:34 ajzeneski Exp $
 -->
 
 <project name="OFBiz - POS" default="jar" basedir=".">
@@ -113,7 +113,7 @@
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs,classpath">
-        <javadoc packagenames="org.ofbiz.common.*" 
+        <javadoc packagenames="org.ofbiz.pos.*" 
                  classpathref="local.class.path"
                  destdir="${build.dir}/javadocs" 
                  Windowtitle="Open for Business - ${desc}">
