@@ -123,6 +123,14 @@ public class CheckId extends MethodOperation {
             isValid = false;
             errorDetails.append("[greater-than sign found at position " + (fieldStr.indexOf('>') + 1) + "]");
         }
+        if (fieldStr.indexOf('\\') >= 0) {
+            isValid = false;
+            errorDetails.append("[back-slash found at position " + (fieldStr.indexOf('\\') + 1) + "]");
+        }
+        if (fieldStr.indexOf('/') >= 0) {
+            isValid = false;
+            errorDetails.append("[forward-slash found at position " + (fieldStr.indexOf('/') + 1) + "]");
+        }
 
         if (!isValid) {
             this.addMessage(messages, methodContext, "The ID value in the field [" + fieldAcsr + "] was not valid", ": " + errorDetails.toString());
