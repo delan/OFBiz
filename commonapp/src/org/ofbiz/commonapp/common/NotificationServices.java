@@ -276,8 +276,7 @@ public class NotificationServices {
     private static void setBaseUrl(GenericDelegator delegator, String webSiteId, Map context) {
         StringBuffer httpBase = null;
         StringBuffer httpsBase = null;
-        
-        InetAddress localHost = null;
+                
         String localServer = null;        
                
         String httpsPort = null;
@@ -289,11 +288,11 @@ public class NotificationServices {
         // If the baseUrl was not specified we can do a best effort instead
         if (!context.containsKey("baseUrl")) {
             try {
-                //Use the fully qualified name of the local host as the default
-                localHost = InetAddress.getLocalHost();
-                localServer = localHost.getCanonicalHostName();
+                // using just the IP address of localhost if we don't have a defined server
+                InetAddress localHost = InetAddress.getLocalHost();
+                localServer = localHost.getHostAddress();
             } catch (UnknownHostException hostException) {
-                Debug.logWarning(hostException, "Could not determine host name, using '127.0.0.1'", module);
+                Debug.logWarning(hostException, "Could not determine localhost, using '127.0.0.1'", module);
                 localServer = "127.0.0.1";
             }
 
