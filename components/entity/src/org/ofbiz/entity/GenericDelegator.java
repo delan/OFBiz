@@ -73,6 +73,8 @@ import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.SequenceUtil;
+import org.ofbiz.entity.util.EntityCrypto;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -94,10 +96,10 @@ public class GenericDelegator implements DelegatorInterface {
     /** the delegatorCache will now be a HashMap, allowing reload of definitions,
      * but the delegator will always be the same object for the given name */
     protected static Map delegatorCache = new HashMap();
-    protected String delegatorName;
+    protected String delegatorName = null;
     protected DelegatorInfo delegatorInfo = null;
 
-    protected Cache cache;
+    protected Cache cache = null;
 
     /** set this to true for better performance; set to false to be able to reload definitions at runtime throught the cache manager */
     public static final boolean keepLocalReaders = true;
@@ -113,6 +115,7 @@ public class GenericDelegator implements DelegatorInterface {
     public static final String ECA_HANDLER_CLASS_NAME = "org.ofbiz.entityext.eca.DelegatorEcaHandler";
 
     protected SequenceUtil sequencer = null;
+    protected EntityCrypto crypto = null;
 
     public static GenericDelegator getGenericDelegator(String delegatorName) {
         if (delegatorName == null) delegatorName = "default";
@@ -237,6 +240,9 @@ public class GenericDelegator implements DelegatorInterface {
         } catch (ClassCastException e) {
             Debug.logWarning(e, "EntityEcaHandler class with name " + ECA_HANDLER_CLASS_NAME + " does not implement the EntityEcaHandler interface, Entity ECA Rules will be disabled", module);
         }
+
+        // setup the crypto class
+        this.crypto = new EntityCrypto(this);
     }
 
     /** Gets the name of the server configuration that corresponds to this delegator
@@ -522,6 +528,7 @@ public class GenericDelegator implements DelegatorInterface {
         this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_CREATE, value, ecaEventMap, (ecaEventMap == null), false);
 
         value.setDelegator(this);
+        this.encryptFields(value);
         value = helper.create(value);
 
         if (value != null) {
@@ -606,7 +613,10 @@ public class GenericDelegator implements DelegatorInterface {
         } catch (GenericEntityNotFoundException e) {
             value = null;
         }
-        if (value != null) value.setDelegator(this);
+        if (value != null) {
+            value.setDelegator(this);
+            this.decryptFields(value);
+        }
 
         this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
         return value;
@@ -686,6 +696,7 @@ public class GenericDelegator implements DelegatorInterface {
      */
     public List findAllByPrimaryKeys(Collection primaryKeys) throws GenericEntityException {
         //TODO: add eca eval calls
+        //TODO: maybe this should use the internal findBy methods
         if (primaryKeys == null) return null;
         List results = new LinkedList();
 
@@ -716,6 +727,8 @@ public class GenericDelegator implements DelegatorInterface {
 
             results.addAll(values);
         }
+
+        this.decryptFields(results);
         return results;
     }
 
@@ -728,6 +741,7 @@ public class GenericDelegator implements DelegatorInterface {
      */
     public List findAllByPrimaryKeysCache(Collection primaryKeys) throws GenericEntityException {
         //TODO: add eca eval calls
+        //TODO: maybe this should use the internal findBy methods
         if (primaryKeys == null)
             return null;
         List results = new LinkedList();
@@ -769,6 +783,8 @@ public class GenericDelegator implements DelegatorInterface {
             this.putAllInPrimaryKeyCache(values);
             results.addAll(values);
         }
+
+        this.decryptFields(results);
         return results;
     }
 
@@ -865,6 +881,7 @@ public class GenericDelegator implements DelegatorInterface {
         List list = null;
         list = helper.findByAnd(modelEntity, fields, orderBy);
         absorbList(list);
+        decryptFields(list);
 
         this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
         return list;
@@ -893,6 +910,7 @@ public class GenericDelegator implements DelegatorInterface {
         List list = null;
         list = helper.findByOr(modelEntity, fields, orderBy);
         absorbList(list);
+        decryptFields(list);
 
         this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
         return list;
@@ -996,8 +1014,9 @@ public class GenericDelegator implements DelegatorInterface {
         List list = null;
         list = helper.findByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
 
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
         absorbList(list);
+        decryptFields(list);
+        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
 
         return list;
     }
@@ -1094,7 +1113,7 @@ public class GenericDelegator implements DelegatorInterface {
         EntityListIterator eli = helper.findListIteratorByCondition(modelViewEntity, whereEntityCondition,
                 havingEntityCondition, fieldsToSelect, orderBy, findOptions);
         eli.setDelegator(this);
-
+        //TODO: add decrypt fields
         return eli;
     }
 
@@ -1576,6 +1595,7 @@ public class GenericDelegator implements DelegatorInterface {
         }
 
         this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
+        this.encryptFields(value);
         int retVal = helper.store(value);
 
         // refresh the valueObject to get the new version
@@ -1639,6 +1659,7 @@ public class GenericDelegator implements DelegatorInterface {
                 GenericValue existing = null;
                 try {
                     existing = helper.findByPrimaryKey(primaryKey);
+                    this.decryptFields(existing);
                 } catch (GenericEntityNotFoundException e) {
                     existing = null;
                 }
@@ -2111,6 +2132,58 @@ public class GenericDelegator implements DelegatorInterface {
     /** Refreshes the ID sequencer clearing all cached bank values. */
     public void refreshSequencer() {
         this.sequencer = null;
+    }
+
+    public void encryptFields(List entities) throws GenericEntityException {
+        if (entities != null) {
+            for (int i = 0; i < entities.size(); i++) {
+                GenericEntity entity = (GenericEntity) entities.get(i);
+                this.encryptFields(entity);
+            }
+        }
+    }
+
+    public void encryptFields(GenericEntity entity) throws GenericEntityException {
+        ModelEntity model = entity.getModelEntity();
+        String entityName = model.getEntityName();
+
+        Iterator i = model.getFieldsIterator();
+        while (i.hasNext()) {
+            ModelField field = (ModelField) i.next();
+            if (field.getEncrypt()) {
+                Object obj = entity.get(field.getName());
+                entity.dangerousSetNoCheckButFast(field, crypto.encrypt(entityName, obj));
+            }
+        }
+    }
+
+    public void decryptFields(List entities) throws GenericEntityException {
+        if (entities != null) {
+            for (int i = 0; i < entities.size(); i++) {
+                GenericEntity entity = (GenericEntity) entities.get(i);
+                this.decryptFields(entity);
+            }
+        }
+    }
+
+    public void decryptFields(GenericEntity entity) throws GenericEntityException {
+        ModelEntity model = entity.getModelEntity();
+        String entityName = model.getEntityName();
+
+        Iterator i = model.getFieldsIterator();
+        while (i.hasNext()) {
+            ModelField field = (ModelField) i.next();
+            if (field.getEncrypt()) {
+                String encHex = (String) entity.get(field.getName());
+                try {
+                    entity.dangerousSetNoCheckButFast(field, crypto.decrypt(entityName, encHex));
+                } catch (EntityCryptoException e) {
+                    // not fatal -- allow returning of the encrypted value
+                    Debug.logWarning(e, "Problem decrypting field [" + entityName + " / " + field.getName() + "]", module);
+                }
+            }
+
+        }
     }
 
     protected void absorbList(List lst) {

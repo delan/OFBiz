@@ -49,7 +49,7 @@ public class ModelField extends ModelChild {
 
     /** boolean which specifies whether or not the Field is a Primary Key */
     protected boolean isPk = false;
-
+    protected boolean encrypt = false;
     protected boolean isAutoCreatedInternal = false;
     
     /** validators to be called when an update is done */
@@ -60,10 +60,15 @@ public class ModelField extends ModelChild {
 
     /** Fields Constructor */
     public ModelField(String name, String type, String colName, boolean isPk) {
+        this(name, type, colName, isPk, false);
+    }
+
+    public ModelField(String name, String type, String colName, boolean isPk, boolean encrypt) {
         this.name = name;
         this.type = type;
         this.setColName(colName);
         this.isPk = isPk;
+        this.encrypt = encrypt;
     }
 
     /** XML Constructor */
@@ -72,6 +77,7 @@ public class ModelField extends ModelChild {
         this.name = UtilXml.checkEmpty(fieldElement.getAttribute("name"));
         this.setColName(UtilXml.checkEmpty(fieldElement.getAttribute("col-name")));
         this.isPk = false; // is set elsewhere
+        this.encrypt = UtilXml.checkBoolean(fieldElement.getAttribute("encrypt"), false);
 
         NodeList validateList = fieldElement.getElementsByTagName("validate");
 
@@ -136,6 +142,14 @@ public class ModelField extends ModelChild {
 
     public void setIsPk(boolean isPk) {
         this.isPk = isPk;
+    }
+
+    public boolean getEncrypt() {
+        return this.encrypt;
+    }
+
+    public void setEncrypt(boolean encrypt) {
+        this.encrypt = encrypt;
     }
 
     public boolean getIsAutoCreatedInternal() {

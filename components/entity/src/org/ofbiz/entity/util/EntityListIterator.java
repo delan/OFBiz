@@ -153,6 +153,9 @@ public class EntityListIterator implements ListIterator {
         value.setDelegator(this.delegator);
         value.synchronizedWithDatasource();
         this.haveMadeValue = true;
+        if (delegator != null) {
+            delegator.decryptFields(value);
+        }
         return value;
     }
 
