@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="titleProperty">ManufacturingCreateProductionRun</property>
-    <property name="headerItem">jobshop</property>   
-    <property name="tabButtonItem">create</property>
-    <content-action name="/jobshopmgt/CreateProductionRun.bsh"/>
-</page>
