@@ -47,6 +47,8 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     private transient GenericDelegator delegator = null;
     private transient GenericValue _product = null;
+    /** this is a virtual product that the current product may inherit information from */
+    private transient GenericValue _parentProduct = null;
 
     private String delegatorName = null;
     private String prodCatalogId = null;
@@ -302,18 +304,40 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns the item's description. */
     public String getName() {
-        return getProduct().getString("productName");
+        String productName = getProduct().getString("productName");
+        
+        // if the productName is null or empty, see if there is an associated virtual product and get the productName of that product
+        if (UtilValidate.isEmpty(productName)) {
+            GenericValue parentProduct = this.getParentProduct();
+            if (parentProduct != null) productName = parentProduct.getString("productName");
+        }
+        
+        return productName;
     }
 
     /** Returns the item's description. */
     public String getDescription() {
-        return getProduct().getString("description");
+        String description = getProduct().getString("description");
+        
+        // if the description is null or empty, see if there is an associated virtual product and get the description of that product
+        if (UtilValidate.isEmpty(description)) {
+            GenericValue parentProduct = this.getParentProduct();
+            if (parentProduct != null) description = parentProduct.getString("description");
+        }
+        
+        return description;
     }
 
     /** Returns the item's unit weight */
     public double getWeight() {
         Double weight = getProduct().getDouble("weight");
 
+        // if the weight is null, see if there is an associated virtual product and get the weight of that product
+        if (weight == null) {
+            GenericValue parentProduct = this.getParentProduct();
+            if (parentProduct != null) weight = parentProduct.getDouble("weight");
+        }
+        
         if (weight == null) {
             return 0;
         } else {
@@ -596,24 +620,53 @@ public class ShoppingCartItem implements java.io.Serializable {
         return true;
     }
 
-    // Gets the Product entity if its not there
+    /** Gets the Product entity. If it is not already retreived gets it from the delegator */
     public GenericValue getProduct() {
-        if (_product != null) {
-            return _product;
+        if (this._product != null) {
+            return this._product;
         }
-        if (delegatorName == null || productId == null) {
-            throw new IllegalStateException("Bad delegator name or product id");
+        if (this.productId == null) {
+            throw new IllegalStateException("Bad product id");
         }
         try {
-            _product = this.getDelegator().findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+            this._product = this.getDelegator().findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
         } catch (GenericEntityException e) {
             throw new RuntimeException("Error with Entity Engine (" + e.getMessage() + ")");
         }
-        return _product;
+        return this._product;
+    }
+    
+    public GenericValue getParentProduct() {
+        if (this._parentProduct != null) {
+            return this._parentProduct;
+        }
+        if (this.productId == null) {
+            throw new IllegalStateException("Bad product id");
+        }
+        
+        try {
+            List virtualProducts = this.getDelegator().findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("-fromDate"));
+            virtualProducts = EntityUtil.filterByDate(virtualProducts, true);
+            if (virtualProducts == null && virtualProducts.size() > 0) {
+                //okay, not a variant, try a UNIQUE_ITEM
+                virtualProducts = this.getDelegator().findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "UNIQUE_ITEM"), UtilMisc.toList("-fromDate"));
+                virtualProducts = EntityUtil.filterByDate(virtualProducts, true);
+            }
+            if (virtualProducts != null && virtualProducts.size() > 0) {
+                //found one, set this first as the parent product
+                this._parentProduct = EntityUtil.getFirst(virtualProducts);
+            }
+        } catch (GenericEntityException e) {
+            throw new RuntimeException("Error with Entity Engine (" + e.getMessage() + ")");
+        }
+        return this._parentProduct;
     }
 
     public GenericDelegator getDelegator() {
         if (delegator == null) {
+            if (UtilValidate.isEmpty(delegatorName)) {
+                throw new IllegalStateException("Bad delegator name");
+            }
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
         }
         return delegator;
