@@ -92,9 +92,23 @@ public class ButtonEventConfig {
     }
 
     public static void invokeButtonEvent(String buttonName, PosScreen pos) throws ButtonEventNotFound, ButtonEventException {
+        // load / re-load the button configs
+        if (buttonConfig.size() == 0) {
+            synchronized(ButtonEventConfig.class) {
+                try {
+                    loadButtonConfig();
+                } catch (GenericConfigException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        }
+
+        // check for sku mapping buttons
         if (buttonName.startsWith("SKU.")) {
             buttonName = "menuSku";
         }
+
+        // invoke the button event
         ButtonEventConfig bef = (ButtonEventConfig) buttonConfig.get(buttonName);
         if (bef == null) {
             throw new ButtonEventNotFound("No button definition found for button - " + buttonName);
