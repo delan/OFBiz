@@ -39,12 +39,14 @@
   <tr><td colspan="5"><hr class="sepbar"></td></tr>
   <#list returnList as returnHeader>
   <#assign statusItem = returnHeader.getRelatedOne("StatusItem")>
-  <#assign facility = returnHeader.getRelatedOne("Facility")>
+  <#if returnHeader.destinationFacilityId?exists>
+    <#assign facility = returnHeader.getRelatedOne("Facility")>
+  </#if>
   <tr>
     <td><a href="<@ofbizUrl>/returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="buttontext">${returnHeader.returnId}</a></td>
     <td><div class="tabletext">${returnHeader.entryDate.toString()}</div></td>
     <td><a href="/partymgr/control/viewprofile?partyId=${returnHeader.fromPartyId}${requestAttributes.externalKeyParam}" class='buttontext'>${returnHeader.fromPartyId}</a></td>
-    <td><div class="tabletext">${facility.facilityName?default(facility.facilityId)}</div></td>
+    <td><div class="tabletext"><#if facility?exists>${facility.facilityName?default(facility.facilityId)}<#else>None</#if></div></td>
     <td><div class="tabletext">${statusItem.description}</div></td>   
   </tr>
   </#list>
