@@ -151,6 +151,7 @@ public class ConfigXMLReader {
 
     /** Gets a HashMap of request mappings. */
     public static HashMap loadRequestMap(URL xml) {
+        long startTime = System.currentTimeMillis();
         HashMap map = new HashMap();
         Element root = loadDocument(xml);
 
@@ -326,7 +327,8 @@ public class ConfigXMLReader {
 
         /* End Debugging */
 
-        if (Debug.infoOn()) Debug.logInfo("RequestMap Created: (" + map.size() + ") records.", module);
+        double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
+        if (Debug.infoOn()) Debug.logInfo("RequestMap Created: (" + map.size() + ") records in " + totalSeconds + "s", module);
         return map;
     }
 
@@ -352,6 +354,7 @@ public class ConfigXMLReader {
 
     /** Gets a HashMap of view mappings. */
     public static Map loadViewMap(URL xml) {
+        long startTime = System.currentTimeMillis();
         HashMap map = new HashMap();
         Element root = loadDocument(xml);
 
@@ -478,7 +481,8 @@ public class ConfigXMLReader {
 
         /* End Debugging */
 
-        if (Debug.infoOn()) Debug.logInfo("ViewMap Created: (" + map.size() + ") records.", module);
+        double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
+        if (Debug.infoOn()) Debug.logInfo("ViewMap Created: (" + map.size() + ") records in " + totalSeconds + "s", module);
         return map;
     }
 
@@ -504,6 +508,7 @@ public class ConfigXMLReader {
 
     /** Gets a HashMap of site configuration variables. */
     public static Map loadConfigMap(URL xml) {
+        long startTime = System.currentTimeMillis();
         HashMap map = new HashMap();
         Element root = loadDocument(xml);
         NodeList list = null;
@@ -662,7 +667,8 @@ public class ConfigXMLReader {
 
         /* End Debugging */
 
-        if (Debug.infoOn()) Debug.logInfo("ConfigMap Created: (" + map.size() + ") records.", module);
+        double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
+        if (Debug.infoOn()) Debug.logInfo("ConfigMap Created: (" + map.size() + ") records in " + totalSeconds + "s", module);
         return map;
     }
 
@@ -687,6 +693,7 @@ public class ConfigXMLReader {
     }
 
     public static Map loadHandlerMap(URL xml) {
+        long startTime = System.currentTimeMillis();
         HashMap map = new HashMap();
         Element root = loadDocument(xml);
         NodeList list = null;
@@ -746,7 +753,8 @@ public class ConfigXMLReader {
 
         /* End Debugging */
 
-        if (Debug.infoOn()) Debug.logInfo("HandlerMap Created: (" + map.size() + ") records.", module);
+        double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
+        if (Debug.infoOn()) Debug.logInfo("HandlerMap Created: (" + map.size() + ") records in " + totalSeconds + "s", module);
         return map;
     }
 

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -50,14 +50,18 @@ public class UtilTimer {
     protected boolean running = false;
     protected boolean log = false;
 
-    /** Default constructor. Starts the timer.
-     */
+    /** Default constructor. Starts the timer. */
     public UtilTimer() {
         this("", true);
     }
 
     public UtilTimer(String timerName, boolean start) {
+        this(timerName, start, false);
+    }
+
+    public UtilTimer(String timerName, boolean start, boolean log) {
         this.timerName = timerName;
+        this.setLog(log);
         if (start) {
             this.startTimer();
         }
@@ -94,9 +98,13 @@ public class UtilTimer {
         // time this call to avoid it interfering with the main timer
         long tsStart = System.currentTimeMillis();
 
-        String retString = "[[" + message + "- total:" + secondsSinceStart() +
-            ",since last(" + ((lastMessage.length() > 20) ? (lastMessage.substring(0, 17) + "...") : lastMessage) + "):" +
-            secondsSinceLast() + "]]";
+        String retString = "[[" + message + "- total:" + secondsSinceStart();
+        if (lastMessage != null) {
+            retString += ",since last(" + ((lastMessage.length() > 20) ? (lastMessage.substring(0, 17) + "...") : lastMessage) + "):" +
+                    secondsSinceLast() + "]]";
+        } else {
+            retString += "]]";
+        }
 
         // append the timer name
         if (UtilValidate.isNotEmpty(timerName)) {
@@ -204,7 +212,7 @@ public class UtilTimer {
         String retString = retStringBuf.toString();
 
         // if(!quiet) Debug.logInfo(retString, module);
-        if (Debug.infoOn()) Debug.logInfo(retString, module);
+        if (log && Debug.timingOn()) Debug.logTiming(retString, module);
         return retString;
     }
 
@@ -255,6 +263,8 @@ public class UtilTimer {
         if (message != null) {
             UtilTimer.timerLog(timerName, message, module);
         }
-        staticTimers.remove(timerName);
+        synchronized(UtilTimer.class) {
+            staticTimers.remove(timerName);
+        }
     }
 }

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -197,6 +197,8 @@ public class UtilXml {
             return null;
         }
 
+        long startTime = System.currentTimeMillis();
+        
         // DON'T do this: seems to be causing problems with Catalina/Tomcat, maybe it is expecting a different parser?
         //System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
         
@@ -235,6 +237,8 @@ public class UtilXml {
         }
         document = builder.parse(is);
         
+        double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
+        if (Debug.timingOn()) Debug.logTiming("XML Read " + totalSeconds + "s: " + docDescription, module);
         return document;
     }
 
