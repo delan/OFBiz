@@ -69,8 +69,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="hsql"
             check-on-start="true"
             add-missing-on-start="true"
-            use-foreign-keys="false"
-            use-foreign-key-indices="false">
+            use-foreign-keys="true"
+            use-foreign-key-indices="true">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc
@@ -78,7 +78,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:hsqldb:../../data/ofbiz"
                 jdbc-username="sa"
                 jdbc-password=""
-                isolation-level="ReadCommitted"/>
+                isolation-level="ReadUncommitted"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/HsqlDataSource" isolation-level="Serializable"/> -->
     </datasource>
 
