@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 */
 
@@ -35,9 +35,14 @@ delegator = request.getAttribute("delegator");
 requestParams = UtilHttp.getParameterMap(request);
 prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
 Map result = ProductSearchSession.getProductSearchResult(requestParams, session, delegator, prodCatalogId);
-Iterator resultIter = result.entrySet().iterator();
-while (resultIter.hasNext()) {
-    Map.Entry entry = resultIter.next();
-    context.put(entry.getKey(), entry.getValue());
-}
+
+context.put("productIds", result.get("productIds"));
+context.put("viewIndex", result.get("viewIndex"));
+context.put("viewSize", result.get("viewSize"));
+context.put("listSize", result.get("listSize"));
+context.put("lowIndex", result.get("lowIndex"));
+context.put("highIndex", result.get("highIndex"));
+context.put("searchCategory", result.get("searchCategory"));
+context.put("searchConstraintStrings", result.get("searchConstraintStrings"));
+context.put("searchSortOrderString", result.get("searchSortOrderString"));
 

@@ -159,6 +159,20 @@ public class EntityListIterator implements ListIterator {
         }
     }
 
+    /** performs the same function as the ResultSet.relative method; 
+     * if rows is positive, goes forward relative to the current position;
+     * if rows is negative, goes backward relative to the current position;
+     */
+    public boolean relative(int rows) throws GenericEntityException {
+        if (closed) throw new GenericResultSetClosedException("This EntityListIterator has been closed, this operation cannot be performed");
+
+        try {
+            return resultSet.relative(rows);
+        } catch (SQLException e) {
+            throw new GenericEntityException("Error going to the relative index " + rows, e);
+        }
+    }
+
     /** PLEASE NOTE: Because of the nature of the JDBC ResultSet interface this method can be very inefficient; it is much better to just use next() until it returns null */
     public boolean hasNext() {
         try {

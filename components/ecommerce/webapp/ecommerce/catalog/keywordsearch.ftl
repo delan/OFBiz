@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 
@@ -60,7 +60,7 @@
 <center>
   <table width="100%" cellpadding="0" cellspacing="0">
     <#assign listIndex = lowIndex>
-    <#list productIds[lowIndex..highIndex-1] as productId>
+    <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
       ${setRequestAttribute("optProductId", productId)}
       ${setRequestAttribute("listIndex", productId_index)}
       <tr><td colspan="2"><hr class="sepbar"></td></tr>

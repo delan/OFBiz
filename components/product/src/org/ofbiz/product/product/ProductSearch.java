@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.16 2003/10/25 04:15:19 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.17 2003/10/25 08:19:16 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -52,7 +52,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -98,13 +98,13 @@ public class ProductSearch {
         
         productSearchContext.addProductSearchConstraints(productSearchConstraintList);
         productSearchContext.setResultSortOrder(resultSortOrder);
-
+        
         ArrayList productIds = productSearchContext.doSearch();
         return productIds;
     }
     
     public static void getAllSubCategoryIds(String productCategoryId, Set productCategoryIdSet, GenericDelegator delegator, Timestamp nowTimestamp) {
-        // TODO: cache the sub-category so this will run faster
+        // cache the sub-category so this will run faster
         Set subCategoryIdSet = (Set) subCategoryCache.get(productCategoryId);
         if (subCategoryIdSet == null) {
             synchronized (ProductSearch.class) {
@@ -153,8 +153,11 @@ public class ProductSearch {
         public List andKeywordFixedList = new LinkedList();
         public List productSearchConstraintList = new LinkedList();
         public ResultSortOrder resultSortOrder = null;
+        public Integer resultOffset = null;
+        public Integer maxResults = null;
         protected GenericDelegator delegator = null;
         protected String visitId = null;
+        protected Integer totalResults = null;
         
         public ProductSearchContext(GenericDelegator delegator, String visitId) {
             this.delegator = delegator;
@@ -177,6 +180,18 @@ public class ProductSearch {
         
         public void setResultSortOrder(ResultSortOrder resultSortOrder) {
             this.resultSortOrder = resultSortOrder;
+        }
+        
+        public void setResultOffset(Integer resultOffset) {
+            this.resultOffset = resultOffset;
+        }
+        
+        public void setMaxResults(Integer maxResults) {
+            this.maxResults = maxResults;
+        }
+        
+        public Integer getTotalResults() {
+            return this.totalResults;
         }
         
         public ArrayList doSearch() {
@@ -280,6 +295,7 @@ public class ProductSearch {
             EntityCondition whereCondition = new EntityConditionList(entityConditionList, EntityOperator.AND);
             EntityFindOptions efo = new EntityFindOptions();
             efo.setDistinct(true);
+            efo.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE);
 
             EntityListIterator eli = null;
             try {
@@ -293,15 +309,60 @@ public class ProductSearch {
         }
         
         public ArrayList makeProductIdList(EntityListIterator eli) {
-            ArrayList productIds = new ArrayList(100);
-            Set productIdSet = new HashSet();
-            GenericValue searchResult = null;
-            while ((searchResult = (GenericValue) eli.next()) != null) {
-                String productId = searchResult.getString("productId");
-                if (!productIdSet.contains(productId)) {
-                    productIds.add(productId);
-                    productIdSet.add(productId);
+            ArrayList productIds = new ArrayList(maxResults == null ? 100 : maxResults.intValue());
+            
+            try {
+                if (resultOffset != null) {
+                    Debug.logInfo("Before relative, current index=" + eli.currentIndex(), module);
+                    eli.relative(resultOffset.intValue());
+                } else {
+                    eli.next();
                 }
+
+                // get the first as the current one
+                GenericValue searchResult = eli.currentGenericValue();
+                if (searchResult == null) {
+                    // nothing to get...
+                    int failTotal = 0;
+                    if (this.resultOffset != null) {
+                        failTotal = this.resultOffset.intValue() - 1;
+                    }
+                    this.totalResults = new Integer(failTotal);
+                    return productIds;
+                }
+                productIds.add(searchResult.getString("productId"));
+
+                // init numRetreived to one since we have already grabbed the initial one
+                int numRetreived = 1;
+
+                Set productIdSet = new HashSet();
+                while (((searchResult = (GenericValue) eli.next()) != null) && (maxResults == null || numRetreived < maxResults.intValue())) {
+                    String productId = searchResult.getString("productId");
+                    if (!productIdSet.contains(productId)) {
+                        productIds.add(productId);
+                        productIdSet.add(productId);
+                        numRetreived++;
+                    }
+                }
+
+                if (searchResult != null) {
+                    // we weren't at the end, so go to the end and get the index
+                    if (eli.last()) {
+                        this.totalResults = new Integer(eli.currentIndex());
+                    }
+                }
+                if (this.totalResults == null || this.totalResults.intValue() == 0) {
+                    int total = numRetreived;
+                    if (this.resultOffset != null) {
+                        total += (this.resultOffset.intValue() - 1);
+                    }
+                    this.totalResults = new Integer(total);
+                }
+                
+                //Debug.logInfo("Got values, numRetreived=" + numRetreived + ", totalResults=" + totalResults + ", maxResults=" + maxResults + ", resultOffset=" + resultOffset, module);
+                
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error getting results from the product search query", module);
             }
             return productIds;
         }
