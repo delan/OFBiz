@@ -95,6 +95,7 @@
         <property file="build.properties"/>
         
         <property name="ofbiz.version" value=""/>
+        <property name="ofbcore-webapp.jar"   value="core/lib/ofbcore-webapp${ofbiz.version}.jar" />
         
         <property environment="env" />
         <property name="home.dir"       value="${env.OFBIZ_HOME}" />
@@ -206,6 +207,7 @@
         <echo message="[build] ===== Building workeffort =====" />
         <ant dir="workeffort" inheritAll="false" />
 
+    	<delete file="${ofbcore-webapp.jar}" />
         <echo message="[build] ===== Done Building (Compile) =====" />
     </target>
 
