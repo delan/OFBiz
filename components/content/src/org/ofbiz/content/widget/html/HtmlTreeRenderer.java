@@ -134,7 +134,9 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
                 	expandCollapseImage.setSrc("/images/expand.gif");
                 	String target = node.getModelTree().getExpandCollapseRequest(context);
                 	String trailName = node.getModelTree().getTrailName(context);
-                	target += "?" + trailName + "=" + currentNodeTrailPiped;
+                    if (target.indexOf("?") < 0)  target += "?";
+                    else target += "&";
+                	target += trailName + "=" + currentNodeTrailPiped;
                     target += "#" + staticNodeTrailPiped;
                 	//expandCollapseLink.setTarget("/ViewOutline?docRootContentId=${docRootContentId}&targetNodeTrailCsv=${currentNodeTrailCsv}");
                 	expandCollapseLink.setTarget(target);
@@ -151,7 +153,9 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
                 expandCollapseImage.setSrc("/images/collapse.gif");
                 String target = node.getModelTree().getExpandCollapseRequest(context);
                 String trailName = node.getModelTree().getTrailName(context);
-                target += "?" + trailName + "=" + currentNodeTrailPiped;
+                if (target.indexOf("?") < 0)  target += "?";
+                else target += "&";
+                target += trailName + "=" + currentNodeTrailPiped;
                 target += "#" + staticNodeTrailPiped;
                 expandCollapseLink.setTarget(target);
                 // add it so it can be remove in renderNodeEnd
