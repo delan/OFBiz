@@ -159,8 +159,47 @@
             </then>
         </if>
         
-        <!-- TODO: if the partyIdTo or partyIdFrom has changed, add WEPAs -->
+        <!-- if the partyIdTo or partyIdFrom has changed, add WEPAs -->
+        <if>
+            <condition>
+                <and>
+                    <not><if-empty field-name="parameters.partyIdFrom"/></not>
+                    <if-compare-field field-name="parameters.partyIdFrom" operator="not-equals" to-field-name="shipment.partyIdFrom"/>
+                </and>
+            </condition>
+            <then>
+                <field-to-field field-name="estimatedShipWorkEffId" map-name="shipment" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortShip"/>
+                <field-to-field field-name="partyIdFrom" map-name="shipment" to-field-name="partyId" to-map-name="assignPartyToWorkEffortShip"/>
+                <find-by-and entity-name="WorkEffortPartyAssignment" list-name="existingShipWepas" map-name="assignPartyToWorkEffortShip"/>
+                <filter-list-by-date list-name="existingShipWepas"/>
+                <if-empty field-name="existingShipWepas">
+                    <string-to-field string="CAL_ATTENDEE" field-name="roleTypeId" map-name="assignPartyToWorkEffortShip"/>
+                    <string-to-field string="CAL_SENT" field-name="statusId" map-name="assignPartyToWorkEffortShip"/>
+                    <call-service service-name="assignPartyToWorkEffort" in-map-name="assignPartyToWorkEffortShip"/>
+                </if-empty>
+            </then>
+        </if>
+        <if>
+            <condition>
+                <and>
+                    <not><if-empty field-name="parameters.partyIdTo"/></not>
+                    <if-compare-field field-name="parameters.partyIdTo" operator="not-equals" to-field-name="shipment.partyIdTo"/>
+                </and>
+            </condition>
+            <then>
+                <field-to-field field-name="estimatedArrivalWorkEffId" map-name="shipment" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortArrival"/>
+                <field-to-field field-name="partyIdTo" map-name="shipment" to-field-name="partyId" to-map-name="assignPartyToWorkEffortArrival"/>
+                <find-by-and entity-name="WorkEffortPartyAssignment" list-name="existingArrivalWepas" map-name="assignPartyToWorkEffortArrival"/>
+                <filter-list-by-date list-name="existingArrivalWepas"/>
+                <if-empty field-name="existingArrivalWepas">
+                    <string-to-field string="CAL_ATTENDEE" field-name="roleTypeId" map-name="assignPartyToWorkEffortArrival"/>
+                    <string-to-field string="CAL_SENT" field-name="statusId" map-name="assignPartyToWorkEffortArrival"/>
+                    <call-service service-name="assignPartyToWorkEffort" in-map-name="assignPartyToWorkEffortArrival"/>
+                </if-empty>
+            </then>
+        </if>
         
+        <!-- now that all changes have been checked, set the nonpks -->
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <now-timestamp-to-env env-name="lookedUpValue.lastModifiedDate"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpValue"/>
