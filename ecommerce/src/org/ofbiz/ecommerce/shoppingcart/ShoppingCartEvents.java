@@ -103,10 +103,13 @@ public class ShoppingCartEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Cannot add a Virtual Product to the cart [productId: " + product.getString("productId") + "]");
             return "error";
         }
+
+        ShoppingCartItem cartItem = cart.findCartItem(product, attributes);
+        double newQuantity = cartItem == null ? quantity : cartItem.getQuantity() + quantity;
         
         //check inventory
-        if (!CatalogWorker.isCatalogInventoryAvailable(request, productId, quantity)) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + productId + "] in stock. Please try back later or call customer service for more information.");
+        if (!CatalogWorker.isCatalogInventoryAvailable(request, productId, newQuantity)) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + productId + "] in stock, not adding to cart. Please try back later or call customer service for more information.");
             //return success since this isn't really a critical error...
             return "success";
         }
@@ -153,7 +156,7 @@ public class ShoppingCartEvents {
                             if (orderItem.get("quantity") != null) {
                                 //check inventory
                                 if (!CatalogWorker.isCatalogInventoryAvailable(request, relProd.getString("productId"), orderItem.getDouble("quantity").doubleValue())) {
-                                    errMsg += "<li>Sorry, we do not have enough of the product " + relProd.getString("productName") + " [product ID: " + relProd.getString("productId") + "] in stock.";
+                                    errMsg += "<li>Sorry, we do not have enough of the product " + relProd.getString("productName") + " [product ID: " + relProd.getString("productId") + "] in stock, not adding to cart.";
                                 } else {
                                     cart.addOrIncreaseItem(relProd, orderItem.getDouble("quantity").doubleValue(), null);
                                     noItems = false;
@@ -195,7 +198,7 @@ public class ShoppingCartEvents {
                                 if (orderItem.get("quantity") != null) {
                                     //check inventory
                                     if (!CatalogWorker.isCatalogInventoryAvailable(request, relProd.getString("productId"), orderItem.getDouble("quantity").doubleValue())) {
-                                        errMsg += "<li>Sorry, we do not have enough of the product " + relProd.getString("productName") + " [product ID: " + relProd.getString("productId") + "] in stock.";
+                                        errMsg += "<li>Sorry, we do not have enough of the product " + relProd.getString("productName") + " [product ID: " + relProd.getString("productId") + "] in stock, not adding to cart.";
                                     } else {
                                         cart.addOrIncreaseItem(relProd, orderItem.getDouble("quantity").doubleValue(), null);
                                         noItems = false;
@@ -273,7 +276,7 @@ public class ShoppingCartEvents {
                         } else {
                             //check inventory
                             if (!CatalogWorker.isCatalogInventoryAvailable(request, product.getString("productId"), quantity)) {
-                                errMsg += "<li>Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + product.getString("productId") + "] in stock.";
+                                errMsg += "<li>Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + product.getString("productId") + "] in stock, not adding to cart.";
                             } else {
                                 cart.addOrIncreaseItem(product, quantity, null);
                             }
@@ -341,7 +344,7 @@ public class ShoppingCartEvents {
                     } else {
                         //check inventory
                         if (!CatalogWorker.isCatalogInventoryAvailable(request, product.getString("productId"), quantity.doubleValue())) {
-                            errMsg += "<li>Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + product.getString("productId") + "] in stock.";
+                            errMsg += "<li>Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + product.getString("productId") + "] in stock, not adding to cart.";
                         } else {
                             cart.addOrIncreaseItem(product, quantity.doubleValue(), null);
                             totalQuantity += quantity.doubleValue();

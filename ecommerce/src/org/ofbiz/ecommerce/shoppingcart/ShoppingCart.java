@@ -81,7 +81,7 @@ public class ShoppingCart implements java.io.Serializable {
     /** Add an item to the shopping cart, or if already there, increase the quantity.
      *  @return the new/increased item index
      */
-    public int addOrIncreaseItem(org.ofbiz.core.entity.GenericValue product, double quantity, HashMap attributes) {
+    public int addOrIncreaseItem(GenericValue product, double quantity, HashMap attributes) {
         if ("Y".equals(product.getString("isVirtual"))) {
             Debug.logWarning("Tried to add a Virtual Product to the cart with productId " + product.getString("productId"));
             return -1;
@@ -96,7 +96,7 @@ public class ShoppingCart implements java.io.Serializable {
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
             Debug.logInfo("Comparing to item: " + sci.getProductId());
-            if ( sci.equals(newItem) ) {
+            if (sci.equals(newItem)) {
                 Debug.logInfo("Found a match, updating quantity.");
                 sci.setQuantity(sci.getQuantity() + quantity);
                 return i;
@@ -108,7 +108,7 @@ public class ShoppingCart implements java.io.Serializable {
     }
     
     /** Add an item to the shopping cart. */
-    public int addItem(org.ofbiz.core.entity.GenericValue product, double quantity, HashMap attributes) {
+    public int addItem(GenericValue product, double quantity, HashMap attributes) {
         if ("Y".equals(product.getString("isVirtual"))) {
             Debug.logWarning("Tried to add a Virtual Product to the cart with productId " + product.getString("productId"));
             return -1;
@@ -128,7 +128,21 @@ public class ShoppingCart implements java.io.Serializable {
         return cartLines.size()-1;
     }
     
-    /** Get an ShoppingCartItem from the cart object. */
+    /** Get a ShoppingCartItem from the cart object. */
+    public ShoppingCartItem findCartItem(GenericValue product, HashMap attributes) {
+        ShoppingCartItem newItem = new ShoppingCartItem(product,0.0,attributes);
+
+        // Check for existing cart item.
+        for (int i = 0; i < this.cartLines.size(); i++) {
+            ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
+            if (sci.equals(newItem)) {
+                return sci;
+            }
+        }
+        return null;
+    }
+
+    /** Get a ShoppingCartItem from the cart object. */
     public ShoppingCartItem findCartItem(int index) {
         if(cartLines.size() <= index)
             return null;
