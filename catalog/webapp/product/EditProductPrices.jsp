@@ -24,7 +24,7 @@
  *@version    1.0
 --%>
 
-<%@ page import="java.util.*, java.io.*" %>
+<%@ page import="java.util.*, java.io.*, java.net.URL" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -33,6 +33,10 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");
+    String defaultCurrencyUomId = UtilProperties.getPropertyValue(catalogPropertiesURL, "currency.uom.id.default");
+    if (UtilValidate.isEmpty(defaultCurrencyUomId)) defaultCurrencyUomId = "USD";
+
     boolean useValues = true;
     if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
@@ -141,7 +145,8 @@
         Currency:
         <select name="currencyUomId">
             <ofbiz:iterator name="currencyUom" property="currencyUoms">
-                <option value='<ofbiz:entityfield attribute="currencyUom" field="uomId"/>'><ofbiz:entityfield attribute="currencyUom" field="description"/> [<ofbiz:entityfield attribute="currencyUom" field="uomId"/>]</option>
+                <%boolean isDefault = defaultCurrencyUomId.equals(currencyUom.getString("uomId"));%>
+                <option value='<ofbiz:entityfield attribute="currencyUom" field="uomId"/>' <%if (isDefault) {%>selected<%}%>><ofbiz:entityfield attribute="currencyUom" field="description"/> [<ofbiz:entityfield attribute="currencyUom" field="uomId"/>]</option>
             </ofbiz:iterator>
         </select>
     </div>
