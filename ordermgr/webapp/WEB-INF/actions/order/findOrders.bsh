@@ -130,6 +130,21 @@ if (lookupFlag != null) {
         andExprs.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));      
     }
     
+    // item related
+    correspondingPoId = request.getParameter("correspondingPoId");    
+    if (correspondingPoId != null && correspondingPoId.length() > 0) {
+        paramList = paramList + "&correspondingPoId=" + correspondingPoId;
+        entityName= "OrderHeaderItemAndRoles";
+        andExprs.add(new EntityExpr("correspondingPoId", EntityOperator.EQUALS, correspondingPoId));
+    }
+    
+    productId = request.getParameter("productId");
+    if (productId != null && productId.length() > 0) {
+        paramList = paramList + "&productId=" + productId;
+        entityName= "OrderHeaderItemAndRoles";
+        andExprs.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
+    }    
+    
     // define the main condition
     mainCond = null;
     

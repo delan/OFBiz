@@ -31,7 +31,7 @@ function lookupOrders() {
     if (orderIdValue.length > 1) {
         document.lookuporder.action = "<@ofbizUrl>/orderview</@ofbizUrl>";
     } else {
-        document.lookuporder.action = "<@ofbizUrl>/view/findorders</@ofbizUrl>";
+        document.lookuporder.action = "<@ofbizUrl>/findorders</@ofbizUrl>";
     }
     document.lookuporder.submit();
 }
@@ -39,8 +39,9 @@ function lookupOrders() {
 </script>
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-<form method='post' name="lookuporder" action="<@ofbizUrl>/view/findorders</@ofbizUrl>">
+<form method='post' name="lookuporder" action="<@ofbizUrl>/findorders</@ofbizUrl>">
 <input type='hidden' name='lookupFlag' value='Y'>
+<input type='hidden' name='hideFields' value='Y'>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
@@ -50,7 +51,7 @@ function lookupOrders() {
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/findorders?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Fields</a>
+                <a href="<@ofbizUrl>/findorders?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
               <#else>
                 <#if orderHeaderList?exists><a href="<@ofbizUrl>/findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
                 <a href="javascript:lookupOrders();" class="submenutext">Lookup Order(s)</a>
@@ -69,6 +70,16 @@ function lookupOrders() {
                 <td width='25%' align='right'><div class='tableheadtext'>Order ID:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='order_id'></td>
+              </tr>
+              <tr>
+                <td width='25%' align='right'><div class='tableheadtext'>Customer PO#:</div></td>
+                <td width='5%'>&nbsp;</td>
+                <td><input type='text' class='inputBox' name='correspondingPoId'></td>
+              </tr>
+              <tr>
+                <td width='25%' align='right'><div class='tableheadtext'>Product ID:</div></td>
+                <td width='5%'>&nbsp;</td>
+                <td><input type='text' class='inputBox' name='productId'></td>
               </tr>             
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Role Type:</div></td>
