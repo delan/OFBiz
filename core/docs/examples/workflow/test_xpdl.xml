@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE Package PUBLIC "-//OFBiz//XPDL Definition//EN" "http://www.ofbiz.org/dtds/xpdl.dtd">
 
-<Package Id="TEST">
+<Package Id="TEST-PKG">
   <PackageHeader>
     <XPDLVersion>0.03</XPDLVersion>
     <Vendor>Open For Business Workflow</Vendor>
@@ -62,7 +62,7 @@
   </DataFields>
 -->
   <WorkflowProcesses>
-    <WorkflowProcess Id="ProcessOrder" Name="Processes incoming orders">
+    <WorkflowProcess Id="TestWorkflow" Name="Processes incoming orders">
 
       <ProcessHeader DurationUnit="s">
         <Created>2001-12-01 12:00:00</Created>
@@ -290,11 +290,15 @@
 
       <Transitions>
         <Transition Id="trans1" From="receive_order" To="assign_approver" Loop="NOLOOP" Name="Go to Assign Approver">
-          <Condition Type="CONDITION">true</Condition>
+          <Condition Type="CONDITION"/>
           <Description>None</Description>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="conditionClassName" Value="org.ofbiz.core.workflow.impl.ServiceCondition"/>
+            <ExtendedAttribute Name="serviceName" Value="testWorkflowCondition"/>
+          </ExtendedAttributes>
         </Transition>
         <Transition Id="trans2" From="receive_order" To="send_notification" Loop="NOLOOP" Name="Go to Send Notify">
-          <Condition Type="CONDITION">true</Condition>
+          <Condition Type="CONDITION"/>
           <Description>None</Description>
         </Transition>
         <Transition Id="trans3" From="assign_approver" To="approve_order" Loop="NOLOOP" Name="Go to Approve Order">
