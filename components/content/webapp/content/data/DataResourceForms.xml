@@ -179,7 +179,7 @@
         <field name="dataResourceTypeIdDisplay" title="Type Id" field-name="dataResourceTypeId">
             <display description="ELECTRONIC_TEXT" also-hidden="false"/>
         </field>
-        <field name="textData" title="Text" id-name="textData"><textarea rows="20" cols="60"/></field>
+        <field name="textData" title="Text" id-name="textData"><textarea rows="20" cols="120"/></field>
         <field name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddDataResourceUrl" target="createDataResourceUrl" title="" type="single"
@@ -217,7 +217,7 @@
         <field name="dataResourceTypeIdDisplay" title="Type Id" field-name="dataResourceTypeId" >
             <display description="ELECTRONIC_TEXT" also-hidden="false" />
         </field>
-        <field name="textData" title="Text" id-name="textData"><textarea rows="20" cols="60"/> </field>
+        <field name="textData" title="Text" id-name="textData"><textarea rows="20" cols="120"/> </field>
         <field name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EditDataResourceUpload" target="updateDataResourceUpload" title="" type="single"
@@ -320,7 +320,7 @@
         target="updateElectronicText" title="" type="single" default-map-name="currentValue">
         <auto-fields-service service-name="createElectronicText"/>
         <field name="dataResourceId" title="" widget-style="buttontext"><display also-hidden="true"/></field>
-        <field name="textData" title="" widget-style="buttontext"><textarea cols="55" rows="24"/></field>
+        <field name="textData" title="" widget-style="buttontext"><textarea cols="120" rows="24"/></field>
         <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddElectronicText" 
@@ -329,7 +329,7 @@
         target="addElectronicText" title="" type="single">
         <auto-fields-service service-name="createElectronicText"/>
         <field name="dataResourceId" title="" widget-style="buttontext" map-name="currentValue"><display also-hidden="true"/></field>
-        <field name="textData" title="" widget-style="buttontext"><textarea cols="55" rows="24"/></field>
+        <field name="textData" title="" widget-style="buttontext"><textarea cols="120" rows="24"/></field>
         <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -341,7 +341,7 @@
         <auto-fields-entity entity-name="ElectronicText"/>
         <field name="dataResourceId" title="" widget-style="buttontext" map-name="currentValue"><display/></field>
         <field name="textData" title="Text" id-name="textData"> 
-        <textarea rows="24" cols="55" />
+        <textarea rows="24" cols="120" />
         </field>
         <field name="submitButton" title="Add" widget-style="standardSubmit">
             <submit button-type="button"/>
@@ -354,7 +354,7 @@
         <auto-fields-entity entity-name="ElectronicText"/>
         <field name="dataResourceId" title="" widget-style="buttontext"><display/></field>
         <field name="textData" title="Text_" id-name="textData" >
-            <textarea rows="20" cols="60" />
+            <textarea rows="20" cols="120" />
         </field>
         <field name="submitButton" title="Update" widget-style="standardSubmit">
             <submit button-type="button"/>

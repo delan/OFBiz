@@ -1,5 +1,5 @@
 /*
- * $Id: mruprep.bsh,v 1.1 2003/12/05 21:49:37 byersa Exp $
+ * $Id: mruprep.bsh,v 1.2 2004/03/16 17:35:24 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  * Builds a list of most recently used EntityValues from a session-kept cache
@@ -102,7 +102,8 @@ Debug.logInfo("contentIdKey:" + contentIdKey, "");
     if (contentIdKey != null && contentIdKey.length() > 0) {
         pk = (GenericEntity)utilCache.cacheLineTable.get(contentIdKey).getValue();
         gv = delegator.findByPrimaryKey(pk);
-        mruList.add(gv);
+        if (gv != null)
+            mruList.add(gv);
     }
 }
 String formDefFile		= page.getProperty("formDefFile");

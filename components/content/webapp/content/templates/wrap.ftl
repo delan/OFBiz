@@ -6,16 +6,6 @@
 <#assign subContentId=wrapSubContentId?if_exists/>
 
 mapKey:${mapKey?if_exists}
-<!--
-<table border="2" bordercolor="blue">
-<tr><th>SUCCESS</th></tr>
-</table>
--->
-
-<!--
-<div id="divTwo" style="border-color:red; border-width:thin; border-style:solid;">
-<div id="divOne" style="border-color:red; border-width:thin; border-style:solid;">
--->
 <div id="divTwo" class="wrapOuter">
 <div id="divOne" class="wrapInner">
 <@renderWrappedText />
