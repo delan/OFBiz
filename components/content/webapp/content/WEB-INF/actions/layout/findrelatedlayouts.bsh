@@ -1,5 +1,5 @@
 /*
- * $Id: findrelatedlayouts.bsh,v 1.1 2003/12/05 21:51:57 byersa Exp $
+ * $Id: findrelatedlayouts.bsh,v 1.2 2003/12/06 06:01:27 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  */
@@ -51,24 +51,26 @@ formDefFile		= page.getProperty("formDefFile");
 listFormName		= page.getProperty("listFormName");
 
 currentValue = (GenericValue)request.getAttribute("currentValue");
-contentId = (String)currentValue.get("contentId");
-HashMap inMap    		= new HashMap();
-inMap.put("assocTypes", UtilMisc.toList("SUB_CONTENT"));
-inMap.put("contentId", contentId);
-inMap.put("direction", "TO");
-
-Debug.logInfo("in findrelatedlayouts, inMap:" + inMap,"");
-Map result    		= null;
-try {
-           result = dispatcher.runSync("getAssocAndContentAndDataResource", inMap    );
-} catch (GenericServiceException e) {
-    request.setAttribute("_ERROR_MESSAGE_", "ERROR: Error in  getAssocAndContentAndDataResourceservice. "
-                 + e.getMessage() + ")");
-            Debug.log(e, "findprep.bsh");
-            return "error";
+if (currentValue != null) {
+    contentId = (String)currentValue.get("contentId");
+    HashMap inMap    		= new HashMap();
+    inMap.put("assocTypes", UtilMisc.toList("SUB_CONTENT"));
+    inMap.put("contentId", contentId);
+    inMap.put("direction", "TO");
+    
+    Debug.logInfo("in findrelatedlayouts, inMap:" + inMap,"");
+    Map result    		= null;
+    try {
+               result = dispatcher.runSync("getAssocAndContentAndDataResource", inMap    );
+    } catch (GenericServiceException e) {
+        request.setAttribute("_ERROR_MESSAGE_", "ERROR: Error in  getAssocAndContentAndDataResourceservice. "
+                     + e.getMessage() + ")");
+                Debug.log(e, "findprep.bsh");
+                return "error";
+    }
+    
+    entityList = (List)result.get("entityList");
+    // These entities are of type ContentAssocDataResourceViewTo
+    request.setAttribute("currentList", entityList);
 }
-
-entityList = (List)result.get("entityList");
-// These entities are of type ContentAssocDataResourceViewTo
-request.setAttribute("currentList", entityList);
 
