@@ -83,7 +83,7 @@ border-width: 0px 1px 1px 1px;
 .boxhead {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 margin: 0px;
-font-size: 10pt;
+font-size: 8pt;
 font-weight: bold;
 text-decoration: none;
 color: #FFFFFF;
@@ -625,7 +625,7 @@ background-color: #FFFFFF;
 font-size: 8pt;
 }
 
-.smallSubmit,.mediumSubmit,.largeSubmit {
+.smallSubmit,.mediumSubmit,.largeSubmit,.loginButton {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 8pt;
 }
