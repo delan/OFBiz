@@ -294,8 +294,8 @@ public class PayPalEvents {
         String paymentStatus = request.getParameter("payment_status");
 
         // attempt to start a transaction
-        boolean beganTransaction = false;
         boolean okay = false;
+        boolean beganTransaction = false;
         try {
             beganTransaction = TransactionUtil.begin();
 
@@ -309,14 +309,6 @@ public class PayPalEvents {
                 // set the payment preference
                 okay = setPaymentPreferences(delegator, orderId, request);
             }
-
-            if (!okay) {
-                try {
-                    TransactionUtil.rollback(beganTransaction);
-                } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to rollback transaction", module);
-                }
-            }
         } catch (Exception e) {
             Debug.logError(e, "Error handling PayPal notification", module);
             try {
@@ -325,10 +317,18 @@ public class PayPalEvents {
                 Debug.logError(gte2, "Unable to rollback transaction", module);
             }
         } finally {
-            try {
-                TransactionUtil.commit(beganTransaction);
-            } catch (GenericTransactionException gte) {
-                Debug.logError(gte, "Unable to commit transaction", module);
+            if (!okay) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to rollback transaction", module);
+                }
+            } else {
+                try {
+                    TransactionUtil.commit(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to commit transaction", module);
+                }
             }
         }
 
