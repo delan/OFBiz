@@ -688,6 +688,7 @@ public class CheckOutHelper {
 
         List product = new ArrayList(totalItems);
         List amount = new ArrayList(totalItems);
+        List price = new ArrayList(totalItems);
         List shipAmt = new ArrayList(totalItems);
 
         Iterator iter = csi.shipItemInfo.keySet().iterator();
@@ -698,7 +699,8 @@ public class CheckOutHelper {
 
             product.add(i, cartItem.getProduct());
             amount.add(i, new Double(cartItem.getItemSubTotal(itemInfo.quantity)));
-            shipAmt.add(i, new Double(0.00)); // no per item shipping
+            price.add(i, new Double(cartItem.getBasePrice()));
+            shipAmt.add(i, new Double(0.00)); // no per item shipping yet
         }
 
         Double shipAmount = new Double(csi.shipEstimate);
@@ -719,9 +721,14 @@ public class CheckOutHelper {
             }
         }
 
-        Map serviceContext = UtilMisc.toMap("productStoreId", productStoreId, "itemProductList", product, "itemAmountList", amount,
-                "itemShippingList", shipAmt, "orderShippingAmount", shipAmount, "shippingAddress", shipAddress);
-
+        Map serviceContext = UtilMisc.toMap("productStoreId", productStoreId);
+        serviceContext.put("itemProductList", product);
+        serviceContext.put("itemAmountList", amount);
+        serviceContext.put("itemPriceList", price);
+        serviceContext.put("itemShippingList", shipAmt);
+        serviceContext.put("orderShippingAmount", shipAmount);
+        serviceContext.put("shippingAddress", shipAddress);
+        
         return serviceContext;
 
     }

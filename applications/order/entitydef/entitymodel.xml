@@ -1009,6 +1009,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="description" type="description"></field>
+      <field name="minItemPrice" type="currency-amount"></field>
       <field name="minPurchase" type="currency-amount"></field>
       <field name="taxShipping" type="indicator"></field>
       <field name="salesTaxPercentage" type="floating-point"></field>
@@ -1016,6 +1017,7 @@
       <prim-key field="countryGeoId"/>
       <prim-key field="stateProvinceGeoId"/>
       <prim-key field="taxCategory"/>
+      <prim-key field="minItemPrice"/>
       <prim-key field="minPurchase"/>
       <prim-key field="fromDate"/>
       <relation type="many" rel-entity-name="Product">
