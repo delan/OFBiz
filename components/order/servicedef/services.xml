@@ -309,6 +309,7 @@
         </auto-attributes>
         <override name="returnItemResponseId" optional="true"/>
         <override name="statusId" optional="true"/>
+        <override name="returnPrice" optional="true"/>
     </service>
     <service name="createReturnItem" engine="simple"
             location="org/ofbiz/order/order/OrderReturnServices.xml" invoke="createReturnItem">

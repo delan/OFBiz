@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 */
 
@@ -139,4 +139,27 @@ if (orderHeader != null) {
         orderItemPo = orderItemPOIter.next();
         context.put("customerPoNumber", orderItemPo.getString("correspondingPoId"));
     }
+    
+    // check if there are returnable items
+    returned = 0.00;
+    totalItems = 0.00;    
+    oii = orderItems.iterator();
+    while (oii.hasNext()) {
+        oitem = oii.next();
+        totalItems += oitem.getDouble("quantity").doubleValue();
+        ritems = oitem.getRelated("ReturnItem");
+        if (ritems != null) {
+            rii = ritems.iterator();
+            while (rii.hasNext()) {
+                ritem = rii.next();
+                rh = ritem.getRelatedOne("ReturnHeader");
+                if (!rh.getString("statusId").equals("RETURN_CANCELLED")) {
+	                returned += ritem.getDouble("returnQuantity").doubleValue();
+	            }
+            }           
+        }
+    }
+    if (totalItems > returned) {
+        context.put("returnLink", "Y");
+    }    
 }
