@@ -299,6 +299,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     private void startActivity(GenericValue value) throws WfException {
         WfActivity activity = WfFactory.newWfActivity(value,this);
         activity.setDispatcher(dispatcher,serviceLoader);
+        activity.setProcessContext(context);
         activeSteps.add(activity); // add to list of active steps
         try {
             activity.activate();

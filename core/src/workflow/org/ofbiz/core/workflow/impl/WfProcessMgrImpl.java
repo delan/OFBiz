@@ -237,10 +237,9 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         Map typeMap = new HashMap();
         typeMap.put("WDT_BOOLEAN","java.lang.Boolean");
         typeMap.put("WDT_STRING","java.lang.String");
-        typeMap.put("WDT_INTEGER","java.lang.Integer");
+        typeMap.put("WDT_INTEGER","java.lang.Long");
         typeMap.put("WDT_FLOAT","java.lang.Double");
-        typeMap.put("WDT_DATETIME","java.sql.Timestamp");
-        typeMap.put("WDT_LIST","java.util.List");
+        typeMap.put("WDT_DATETIME","java.sql.Timestamp");        
         if ( typeMap.containsKey(xpdlType) )
             return (String) typeMap.get(xpdlType);
         else
