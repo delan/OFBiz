@@ -427,7 +427,10 @@ public class ModelFormField {
 
     public String getEntry(Map context, String defaultValue) {
         Boolean isError = (Boolean) context.get("isError");
-        if (isError != null && isError.booleanValue()) {
+        Boolean useRequestParameters = (Boolean) context.get("useRequestParameters");
+        // if useRequestParameters is TRUE then parameters will always be used, if FALSE then parameters will never be used
+        // if isError is TRUE and useRequestParameters is not FALSE (ie is null or TRUE) then parameters will be used
+        if ((Boolean.TRUE.equals(isError) && !Boolean.FALSE.equals(useRequestParameters)) || (Boolean.TRUE.equals(useRequestParameters))) {
             //Debug.logInfo("Getting entry, isError true so getting from parameters for field " + this.getName() + " of form " + this.modelForm.getName());
             Map parameters = (Map) context.get("parameters");
             if (parameters != null) {

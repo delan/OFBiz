@@ -394,6 +394,11 @@ public class ModelForm {
      *   use the same form definitions for many types of form UIs
      */
     public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+        //if useRequestParameters if not set in the context and a default-map-name is specific but does not exist in the context, set useRequestParameters to TRUE
+        if (context.get("useRequestParameters") == null && !this.defaultMapName.isEmpty() && this.defaultMapName.get(context) == null) {
+            context.put("useRequestParameters", Boolean.TRUE);
+        }
+        
         // find the highest position number to get the max positions used
         int positions = 1;
         Iterator fieldIter = this.fieldList.iterator();
