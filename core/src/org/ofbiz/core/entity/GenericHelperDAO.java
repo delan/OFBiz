@@ -116,6 +116,19 @@ public class GenericHelperDAO implements GenericHelper {
     if(value == null) { return; }
     if(!genericDAO.update(value)) Debug.logError("[GenericHelperDAO.store] Could not store GenericValue: " + value.toString());
   }
+  
+  /** Store the Entities from the Collection GenericValue instances to the persistent store.
+   *  This is different than the normal store method in that the store method only does
+   *  an update, while the storeAll method checks to see if each entity exists, then
+   *  either does an insert or an update as appropriate. 
+   *  These updates all happen in one transaction, so they will either all succeed or all fail,
+   *  if the data source supports transactions. This is just like to othersToStore feature
+   *  of the GenericEntity on a create or store.
+   *@param values Collection of GenericValue instances containing the entities to store
+   */
+  public void storeAll(Collection values) throws GenericEntityException {
+    genericDAO.storeAll(values);
+  }
 
   /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server
    *@param modelEntities Map of entityName names and ModelEntity values

@@ -178,6 +178,19 @@ public class GenericHelperEJB implements GenericHelper {
     catch(java.rmi.RemoteException re) { Debug.logError(re); }
   }
   
+  /** Store the Entities from the Collection GenericValue instances to the persistent store.
+   *  This is different than the normal store method in that the store method only does
+   *  an update, while the storeAll method checks to see if each entity exists, then
+   *  either does an insert or an update as appropriate. 
+   *  These updates all happen in one transaction, so they will either all succeed or all fail,
+   *  if the data source supports transactions. This is just like to othersToStore feature
+   *  of the GenericEntity on a create or store.
+   *@param values Collection of GenericValue instances containing the entities to store
+   */
+  public void storeAll(Collection values) throws GenericEntityException {
+    throw new GenericNotImplementedException("Check Data Source not yet implemented for EJB data source.");
+  }
+
   private Collection remoteToValue(Collection remoteCol) {
     Iterator iter = UtilMisc.toIterator(remoteCol);
     Collection col = new LinkedList();

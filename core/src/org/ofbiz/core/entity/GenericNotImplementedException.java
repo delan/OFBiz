@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/19 21:34:00  jonesde
+ * Added field type init and datasource check on start.
+ *
  *
  */
 
@@ -9,7 +12,7 @@ package org.ofbiz.core.entity;
 import java.io.*;
 
 /**
- * <p><b>Title:</b> NotImplementedException.java
+ * <p><b>Title:</b> GenericNotImplementedException.java
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 

@@ -1,12 +1,6 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.2  2001/09/19 21:34:00  jonesde
- * Added field type init and datasource check on start.
- *
- * Revision 1.1  2001/09/19 08:32:01  jonesde
- * Initial checkin of refactored entity engine.
- *
  *
  */
 
@@ -15,7 +9,7 @@ package org.ofbiz.core.entity;
 import java.io.*;
 
 /**
- * <p><b>Title:</b> GenericEntityException.java
+ * <p><b>Title:</b> GenericCreateException.java
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -39,43 +33,16 @@ import java.io.*;
  *@created Sep 17, 2001
  *@version 1.0
  */
-public class GenericEntityException extends Exception {
-  Throwable nested = null;
-  
-  public GenericEntityException() {
+public class GenericCreateException extends GenericEntityException {
+  public GenericCreateException() {
     super();
   }
 
-  public GenericEntityException(String str) {
+  public GenericCreateException(String str) {
     super(str);
   }
 
-  public GenericEntityException(String str, Throwable nested) {
-    super(str);
-    this.nested = nested;
-  }
-  
-  /** Returns the detail message, including the message from the nested exception if there is one. */
-  public String getMessage() {
-    if(nested != null) return this.getMessage() + " (" + nested.getMessage() + ")";
-    else return this.getMessage();
-  }
-  
-  /** Prints the composite message to System.err. */
-  public void printStackTrace() {
-    this.printStackTrace();
-    if(nested != null) nested.printStackTrace();
-  }
-
-  /** Prints the composite message and the embedded stack trace to the specified stream ps. */
-  public void printStackTrace(PrintStream ps) {
-    this.printStackTrace(ps);
-    if(nested != null) nested.printStackTrace(ps);
-  }
-
-  /** Prints the composite message and the embedded stack trace to the specified print writer pw. */
-  public void printStackTrace(PrintWriter pw) {
-    this.printStackTrace(pw);
-    if(nested != null) nested.printStackTrace(pw);
+  public GenericCreateException(String str, Throwable nested) {
+    super(str, nested);
   }
 }
