@@ -349,6 +349,8 @@
   <RoleType description="" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_ORGANIZER"/>
   <RoleType description="" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_OWNER"/>
   <RoleType description="" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_DELEGATE"/>
+  <RoleType description="" hasTable="N" parentTypeId="" roleTypeId="WORKFLOW_ROLE"/>
+  <RoleType description="" hasTable="N" parentTypeId="WORKFLOW_ROLE" roleTypeId="WF_OWNER"/>
   <ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
   <ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
   <ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
