@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.21 2004/02/24 10:09:02 jonesde Exp $
+ * $Id: OrderReadHelper.java,v 1.22 2004/07/27 18:21:30 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -128,10 +128,20 @@ public class OrderReadHelper {
         }
         return paymentPrefs;
     }
-
+    
     public List getOrderPayments() {
+        return getOrderPayments(null);
+    }
+
+    public List getOrderPayments(GenericValue orderPaymentPreference) {
         List orderPayments = new ArrayList();
-        List prefs = getPaymentPreferences();
+        List prefs = null;
+
+        if (orderPaymentPreference == null) {
+            prefs = getPaymentPreferences();
+        } else {
+            prefs = UtilMisc.toList(orderPaymentPreference);
+        }
         if (prefs != null) {
             Iterator i = prefs.iterator();
             while (i.hasNext()) {
@@ -213,8 +223,6 @@ public class OrderReadHelper {
     }
 
     public GenericValue getShippingAddress() {
-        GenericDelegator delegator = orderHeader.getDelegator();
-
         try {
             GenericValue orderContactMech = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderContactMech", UtilMisc.toMap(
                             "contactMechPurposeTypeId", "SHIPPING_LOCATION")));
@@ -233,7 +241,6 @@ public class OrderReadHelper {
     }
 
     public GenericValue getBillingAddress() {
-        GenericDelegator delegator = orderHeader.getDelegator();
         GenericValue billingAddress = null;
         try {
             GenericValue orderContactMech = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId", "BILLING_LOCATION")));
@@ -389,8 +396,6 @@ public class OrderReadHelper {
     }
 
     public String getDistributorId() {
-        GenericDelegator delegator = orderHeader.getDelegator();
-
         try {
             GenericEntity distributorRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "DISTRIBUTOR")));
 
@@ -402,8 +407,6 @@ public class OrderReadHelper {
     }
 
     public String getAffiliateId() {
-        GenericDelegator delegator = orderHeader.getDelegator();
-
         try {
             GenericEntity distributorRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "AFFILIATE")));
 
@@ -1271,7 +1274,7 @@ public class OrderReadHelper {
     public static double getOrderItemAdjustmentsTotal(GenericValue orderItem, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping, boolean forTax, boolean forShipping) {
         return calcItemAdjustments(getOrderItemQuantity(orderItem), orderItem.getDouble("unitPrice"),
                 getOrderItemAdjustmentList(orderItem, adjustments),
-                includeOther, includeTax, includeShipping, false, false);
+                includeOther, includeTax, includeShipping, forTax, forShipping);
     }
 
     public static List getOrderItemAdjustmentList(GenericValue orderItem, List adjustments) {
