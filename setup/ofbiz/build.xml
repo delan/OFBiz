@@ -72,6 +72,9 @@
         <property environment="env" />
         <property name="catalina.dir"      value="${env.CATALINA_HOME}" />
     
+        <!-- do this first because it will fail if we've already installed... -->
+        <move file="${catalina.dir}/common/lib/tyrex-0.9.7.0.jar" toFile="${catalina.dir}/common/tyrex-0.9.7.0.jar"/> 
+        
         <move file="${catalina.dir}/conf/server.xml"
             toFile="${catalina.dir}/conf/server.orig.xml" />
         <copy file="setup/catalina/conf/server.xml"
@@ -83,6 +86,7 @@
         <copy file="lib/common/log4j.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/mm.mysql-2.0.8-bin.jar" toDir="${catalina.dir}/common/lib"/> 
         <copy file="lib/common/poolman.jar" toDir="${catalina.dir}/common/lib"/> 
+        
         <copy file="lib/common/tyrex-0.9.8.5.jar" toDir="${catalina.dir}/common/lib"/> 
 
         <copy file="lib/share/axis.jar" toDir="${catalina.dir}/lib"/>
@@ -130,15 +134,14 @@
         <delete file="${etc.dir}/poolman.xml" />
         <delete file="${etc.dir}/jndi.properties" />
         <delete file="${etc.dir}/tyrexdomain.xml" />
-<!--
-        <delete file="${lib.dir}/ofbcommonapp.jar" />        
--->
+        
         <delete file="${lib.dir}/ofbcore-share.jar" />
+        <delete file="${lib.dir}/ofbcore-rules.jar" />
+        <delete file="${lib.dir}/ofbcore-workflow.jar" />
 
         <delete file="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
 
         <delete file="${j2eedeploy.dir}/commonapp-ext.war" />
-
         <delete file="${j2eedeploy.dir}/ecommerce-ext.war" />
 
         <delete file="${j2eedeploy.dir}/catalog-ext.war" />
