@@ -40,6 +40,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -261,14 +262,6 @@ public class GenericDelegator implements DelegatorInterface {
         return this.delegatorName;
     }
 
-    public String getSequencedIdPrefix() {
-        String sequencedIdPrefix = this.getDelegatorInfo().sequencedIdPrefix;
-        if (sequencedIdPrefix == null) {
-            sequencedIdPrefix = "";
-        }
-        return sequencedIdPrefix;
-    }
-    
     protected DelegatorInfo getDelegatorInfo() {
         if (delegatorInfo == null) {
             delegatorInfo = EntityConfigUtil.getDelegatorInfo(this.delegatorName);
@@ -2103,7 +2096,7 @@ public class GenericDelegator implements DelegatorInterface {
         }
         
         if (UtilValidate.isNotEmpty(this.getDelegatorInfo().sequencedIdPrefix)) {
-            return this.delegatorInfo.sequencedIdPrefix + nextSeqLong.toString();
+            return this.getDelegatorInfo().sequencedIdPrefix + nextSeqLong.toString();
         } else {
             return nextSeqLong.toString();
         }
@@ -2150,6 +2143,52 @@ public class GenericDelegator implements DelegatorInterface {
     /** Refreshes the ID sequencer clearing all cached bank values. */
     public void refreshSequencer() {
         this.sequencer = null;
+    }
+
+
+    /** Look at existing values for a sub-entity with a sequenced secondary ID, and get the highest plus 1 */
+    public void setNextSubSeqId(GenericValue value, String seqFieldName, int numericPadding, int incrementBy) {
+        if (value != null && UtilValidate.isEmpty(value.getString(seqFieldName))) {
+            String sequencedIdPrefix = this.getDelegatorInfo().sequencedIdPrefix;
+
+            value.remove(seqFieldName);
+            GenericValue lookupValue = this.makeValue(value.getEntityName(), null);
+            lookupValue.setPKFields(value);
+            try {
+                // get values in whatever order, we will go through all of them to find the highest value
+                List allValues = this.findByAnd(value.getEntityName(), lookupValue, null);
+                //Debug.logInfo("Get existing values from entity " + value.getEntityName() + " with lookupValue: " + lookupValue + ", and the seqFieldName: " + seqFieldName + ", and the results are: " + allValues, module);
+                Iterator allValueIter = allValues.iterator();
+                int highestSeqVal = 1;
+                while (allValueIter.hasNext()) {
+                    GenericValue curValue = (GenericValue) allValueIter.next();
+                    String currentSeqId = curValue.getString(seqFieldName);
+                    if (currentSeqId != null) {
+                        if (UtilValidate.isNotEmpty(sequencedIdPrefix)) {
+                            if (currentSeqId.startsWith(sequencedIdPrefix)) {
+                                currentSeqId = currentSeqId.substring(sequencedIdPrefix.length());
+                            } else {
+                                continue;
+                            }
+                        }
+                        try {
+                            int seqVal = Integer.parseInt(currentSeqId);
+                            if (seqVal > highestSeqVal) {
+                                highestSeqVal = seqVal;
+                            }
+                        } catch (Exception e) {
+                            Debug.logWarning("Error in make-next-seq-id converting SeqId [" + currentSeqId + "] to a number: " + e.toString(), module);
+                        }
+                    }
+                }
+
+                String newSeqId = sequencedIdPrefix + UtilFormatOut.formatPaddedNumber(highestSeqVal + incrementBy, numericPadding);
+
+                value.set(seqFieldName, newSeqId);
+            } catch (Exception e) {
+                Debug.logError(e, "Error making next seqId", module);
+            }
+        }
     }
 
     public void encryptFields(List entities) throws GenericEntityException {
