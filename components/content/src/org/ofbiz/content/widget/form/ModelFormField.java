@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.7 2003/11/13 14:14:52 byersa Exp $
+ * $Id: ModelFormField.java,v 1.8 2003/12/05 20:42:51 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -2326,7 +2326,7 @@ public class ModelFormField {
         }
 
         public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
-            //formStringRenderer.renderFileField(buffer, context, this);
+            formStringRenderer.renderFileField(buffer, context, this);
         }
     }
 }

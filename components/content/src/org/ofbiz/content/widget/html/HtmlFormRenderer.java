@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormRenderer.java,v 1.5 2003/11/25 20:55:07 jonesde Exp $
+ * $Id: HtmlFormRenderer.java,v 1.6 2003/12/05 20:42:51 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,12 +26,14 @@ package org.ofbiz.content.widget.html;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
 import org.ofbiz.content.widget.form.FormStringRenderer;
@@ -60,7 +62,7 @@ import org.ofbiz.content.widget.form.ModelFormField.TextareaField;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
@@ -250,6 +252,13 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append('"');
         }
 
+        String idName = modelFormField.getIdName();
+        if (UtilValidate.isNotEmpty(idName)) {
+            buffer.append(" id=\"");
+            buffer.append(idName);
+            buffer.append('"');
+        }
+
         buffer.append("/>");
 
         this.makeHyperlinkString(buffer, textField.getSubHyperlink(), context);
@@ -359,6 +368,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(maxlength);
         buffer.append('"');
 
+        String idName = modelFormField.getIdName();
+        if (UtilValidate.isNotEmpty(idName)) {
+            buffer.append(" id=\"");
+            buffer.append(idName);
+            buffer.append('"');
+        }
+
+
         buffer.append("/>");
 
         // add calendar pop-up button and seed data IF this is not a "time" type date-time
@@ -399,6 +416,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append('"');
+
+        String idName = modelFormField.getIdName();
+        if (UtilValidate.isNotEmpty(idName)) {
+            buffer.append(" id=\"");
+            buffer.append(idName);
+            buffer.append('"');
+        }
+
 
         buffer.append(" size=\"1\">");
 
@@ -998,6 +1023,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
     public void renderTextFindField(StringBuffer buffer, Map context, TextFindField textFindField) {
 
         ModelFormField modelFormField = textFindField.getModelFormField();
+        Locale locale = (Locale)context.get("locale");
+        String opEquals = UtilProperties.getMessage("conditional", "equals", locale);
+        String opBeginsWith = UtilProperties.getMessage("conditional", "begins_with", locale);
+        String opContains = UtilProperties.getMessage("conditional", "contains", locale);
+        String opIsEmpty = UtilProperties.getMessage("conditional", "is_empty", locale);
 
         buffer.append("<input type=\"text\"");
 
@@ -1044,19 +1074,19 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append('"');
         }
         buffer.append('>');
-        buffer.append(" Equals<input type=\"radio\" name=\"");
+        buffer.append(" " + opEquals + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"equals\" checked/>");
 
-        buffer.append(" Begins with<input type=\"radio\" name=\"");
+        buffer.append(" " + opBeginsWith + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"like\"/>");
 
-        buffer.append(" Contains<input type=\"radio\" name=\"");
+        buffer.append(" " + opContains + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"contains\"/>");
 
-        buffer.append(" Is Empty<input type=\"radio\" name=\"");
+        buffer.append(" " + opIsEmpty + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"empty\"/>");
         buffer.append("</span>");
@@ -1072,6 +1102,13 @@ public class HtmlFormRenderer implements FormStringRenderer {
     public void renderRangeFindField(StringBuffer buffer, Map context, RangeFindField rangeFindField) {
 
         ModelFormField modelFormField = rangeFindField.getModelFormField();
+        Locale locale = (Locale)context.get("locale");
+        String opEquals = UtilProperties.getMessage("conditional", "equals", locale);
+        String opGreaterThan = UtilProperties.getMessage("conditional", "greater_than", locale);
+        String opGreaterThanEquals = UtilProperties.getMessage("conditional", "greater_than_equals", locale);
+        String opLessThan = UtilProperties.getMessage("conditional", "less_than", locale);
+        String opLessThanEquals = UtilProperties.getMessage("conditional", "less_than_equals", locale);
+        String opIsEmpty = UtilProperties.getMessage("conditional", "is_empty", locale);
 
         buffer.append("<input type=\"text\"");
 
@@ -1119,15 +1156,15 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         buffer.append('>');
 
-        buffer.append(" Equals<input type=\"radio\" name=\"");
+        buffer.append(" " + opEquals + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"equals\" checked/>");
 
-        buffer.append(" Greater than<input type=\"radio\" name=\"");
+        buffer.append(" " + opGreaterThan + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"greaterThan\"/>");
 
-        buffer.append(" Greater than equals<input type=\"radio\" name=\"");
+        buffer.append(" " + opGreaterThanEquals + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"greaterThanEqualTo\"/>");
 
@@ -1180,14 +1217,16 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         buffer.append('>');
 
-        buffer.append(" Less than<input type=\"radio\" name=\"");
+        buffer.append(" " + opLessThan+ " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"lessThan\"/>");
 
+        buffer.append(" " + opLessThanEquals + " <input type=\"radio\" name=\"");
         buffer.append(" Less than equals<input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"lessThanEqualTo\"/>");
 
+        buffer.append(" " + opIsEmpty+ " <input type=\"radio\" name=\"");
         buffer.append(" Is Empty<input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"empty\"/>");
@@ -1204,6 +1243,17 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderDateFindField(StringBuffer buffer, Map context, DateFindField dateFindField) {
         ModelFormField modelFormField = dateFindField.getModelFormField();
+
+        Locale locale = (Locale)context.get("locale");
+        String opEquals = UtilProperties.getMessage("conditional", "equals", locale);
+        String opGreaterThan = UtilProperties.getMessage("conditional", "greater_than", locale);
+        String opSameDay = UtilProperties.getMessage("conditional", "same_day", locale);
+        String opGreaterThanFromDayStart = UtilProperties.getMessage("conditional", 
+                                                "greater_than_from_day_start", locale);
+        String opLessThan = UtilProperties.getMessage("conditional", "less_than", locale);
+        String opUpToDay = UtilProperties.getMessage("conditional", "up_to_day", locale);
+        String opUpThruDay = UtilProperties.getMessage("conditional", "up_thru_day", locale);
+        String opIsEmpty = UtilProperties.getMessage("conditional", "is_empty", locale);
 
         buffer.append("<input type=\"text\"");
 
@@ -1264,19 +1314,19 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         buffer.append('>');
 
-        buffer.append(" Equals<input type=\"radio\" name=\"");
+        buffer.append(" " + opEquals + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"equals\" checked/>");
 
-        buffer.append(" Same day<input type=\"radio\" name=\"");
+        buffer.append(" " + opSameDay +  " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"sameDay\" checked/>");
 
-        buffer.append(" Greater than from day start<input type=\"radio\" name=\"");
+        buffer.append(" " + opGreaterThanFromDayStart + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"greaterThanFromDayStart\"/>");
 
-        buffer.append(" Greater than<input type=\"radio\" name=\"");
+        buffer.append(" " + opGreaterThan + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld0_op\" value=\"greaterThan\"/>");
 
@@ -1338,19 +1388,19 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         buffer.append('>');
 
-        buffer.append(" Less than<input type=\"radio\" name=\"");
+        buffer.append(" " + opLessThan + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"lessThan\"/>");
 
-        buffer.append(" Up TO day<input type=\"radio\" name=\"");
+        buffer.append(" " + opUpToDay + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"upToDay\"/>");
 
-        buffer.append(" Up THRU day<input type=\"radio\" name=\"");
+        buffer.append(" " + opUpThruDay + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"upThruDay\"/>");
 
-        buffer.append(" Is Empty<input type=\"radio\" name=\"");
+        buffer.append(" " + opIsEmpty + " <input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"empty\"/>");
 
