@@ -62,7 +62,7 @@
   String find = request.getParameter("find");
   if(find == null) find="false";
   String curFindString = "entityName=" + entityName + "&find=" + find;
-  GenericEntity findByEntity = new GenericEntity(entity);
+  GenericEntity findByEntity = delegator.makeValue(entityName, null);
   for(int fnum=0; fnum<entity.fields.size(); fnum++)
   {
     ModelField field = (ModelField)entity.fields.get(fnum);
