@@ -184,9 +184,7 @@ public class CoreEvents {
         String serviceEndTime = (String) params.remove("SERVICE_END_TIME");
         String serviceFreq = (String) params.remove("SERVICE_FREQUENCY");
         String serviceIntr = (String) params.remove("SERVICE_INTERVAL");
-        String serviceCnt = (String) params.remove("SERVICE_COUNT");
-        // the rest is the service context
-        Map context = new HashMap(params);
+        String serviceCnt = (String) params.remove("SERVICE_COUNT");        
 
         // the frequency map
         Map freqMap = new HashMap();
@@ -217,12 +215,9 @@ public class CoreEvents {
         Timestamp ts = null;
         
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        Locale locale = UtilHttp.getLocale(request);
         // TODO: now do a security check
-        
-        // add the userLogin to the context        
-        if (userLogin != null) 
-            context.put("userLogin", userLogin);
-        
+                        
         // get the service loader by name
         if (loaderName != null && loaderName.length() > 0) {
             ServiceDispatcher sd = ServiceDispatcher.getInstance(loaderName, delegator);
@@ -280,9 +275,17 @@ public class CoreEvents {
 
             // set even if null so that values will get nulled in the db later on
             serviceContext.put(name, value);
-        }                      
+        }     
         serviceContext = modelService.makeValid(serviceContext, ModelService.IN_PARAM);
-
+        
+        if (userLogin != null) {
+            serviceContext.put("userLogin", userLogin);                             
+        }
+        
+        if (locale != null) {
+            serviceContext.put("locale", locale);
+        }
+                
         if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request.getSession())) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to call this non-exported service, you must be logged in and have the SERVICE_INVOKE_ANY permission.");
             return "error";
