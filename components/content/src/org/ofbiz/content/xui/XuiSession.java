@@ -1,5 +1,5 @@
 /*
- * $Id: XuiSession.java,v 1.2 2004/07/19 02:43:03 ajzeneski Exp $
+ * $Id: XuiSession.java,v 1.3 2004/07/27 06:07:00 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.Debug;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class XuiSession {
@@ -88,9 +88,11 @@ public class XuiSession {
     }
 
     public void checkLogin(String username, String password) throws UserLoginFailure {
-        // if already logged in just return
+        // if already logged in; verify for lock
         if (this.userLogin != null) {
-            return;
+            if (!userLogin.getString("userLoginId").equals(username)) {
+                throw new UserLoginFailure("Username does not match already logged in user!");
+            }
         }
 
         // check the required parameters and objects
