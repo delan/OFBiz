@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/09/13 15:12:25  epabst
+ * cleaned up a little
+ * separated shippingMethod into carrierPartyId and shipmentMethodTypeId
+ *
  * Revision 1.7  2001/09/11 17:27:14  epabst
  * updated order process to be more complete
  *
@@ -32,6 +36,7 @@ import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.commonapp.order.order.Adjustment;
 
 /**
  * <p><b>Title:</b> ShoppingCart.java
@@ -171,6 +176,39 @@ public class ShoppingCart {
         return cartLines.iterator();
     }
     
+    /** Returns an collection of order items. */
+    public Collection makeOrderItems(GenericHelper helper, String orderId) {
+        synchronized(cartLines) {
+            Collection result = new ArrayList(cartLines.size());
+            Iterator itemIter = cartLines.iterator();
+            int seqId = 1;
+            while (itemIter.hasNext()) {
+                ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
+                String orderItemSeqId = String.valueOf(seqId++);
+                GenericValue orderItem = helper.makeValue("OrderItem", UtilMisc.toMap(
+                        "orderId", orderId,
+                        "orderItemSeqId", orderItemSeqId,
+                        "orderItemTypeId", "SALES_ORDER_ITEM",
+                        "productId", item.getProductId(),
+                        "quantity", new Double(item.getQuantity()), 
+                        "unitPrice", new Double(item.getPrice())));
+                orderItem.set("itemDescription", item.getDescription());
+                orderItem.set("comment", item.getItemComment());
+                orderItem.set("correspondingPoId", this.getPoNumber());
+                orderItem.set("statusId", "Ordered");
+                result.add(orderItem);
+            }
+            return result;
+        }
+    }
+    
+    public Collection getAdjustments() {
+        Collection result = new ArrayList(3);
+        result.add(new Adjustment("Shipping and Handling", this.getShipping()));
+        result.add(new Adjustment("Sales Tax", this.getSalesTax()));
+        return result;
+    }
+    
     /** Returns this item's index. */
     public int getItemIndex(Object item) {
         return cartLines.indexOf(item);
@@ -194,12 +232,10 @@ public class ShoppingCart {
     /** Sets the credit card id in the cart. */
     public void setPoNumber(String poNumber) {
         this.poNumber = poNumber;
-        this.creditCardId = null;
     }
     
     /** Sets the credit card id in the cart. */
     public void setCreditCardId(String creditCardId) {
-        this.poNumber = null;
         this.creditCardId = creditCardId;
     }
     
