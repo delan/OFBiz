@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  */
 -->
 
@@ -977,7 +977,8 @@
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="physicalInventoryId" type="id-ne"></field>
       <field name="varianceReasonId" type="id"></field>
-      <field name="quantity" type="floating-point"></field>
+      <field name="availableToPromise" type="floating-point"></field>
+      <field name="quantityOnHand" type="floating-point"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="inventoryItemId"/>
       <prim-key field="physicalInventoryId"/>
