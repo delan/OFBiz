@@ -100,7 +100,7 @@ if (product != null) {
     session.setAttribute("lastViewedProducts", lastViewedProducts);
     if (lastViewedProducts.size() > 10) {
         while (lastViewedProducts.size() > 10) {
-            lastViewedProducts.remove(-1);
+            lastViewedProducts.remove(lastViewedProducts.size() - 1);
         }        
     }
 

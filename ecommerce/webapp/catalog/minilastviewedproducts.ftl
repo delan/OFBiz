@@ -53,7 +53,8 @@
                 <#list sessionAttributes.lastViewedProducts as productId>
                   <#if count < 4>
                     <tr>
-                      <td>                                            
+                      <td>
+                        ${setRequestAttribute("miniProdQuantity", "1")}                                         
                         ${setRequestAttribute("optProductId", productId)}
                         ${setRequestAttribute("miniProdFormName", "lastviewed" + productId_index + "form")}
                         ${pages.get("/catalog/miniproductsummary.ftl")}

@@ -43,7 +43,7 @@
     <#else>
         <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style='margin: 0;'>
             <input type='hidden' name="add_product_id" value='${miniProduct.productId}'>
-            <input type='hidden' name="quantity" value="${miniProdQuantity}">
+            <input type='hidden' name="quantity" value="${miniProdQuantity?default("1")}">
             <#if requestParameters.order_id?has_content><input type='hidden' name='order_id' value='${requestParameters.order_id}'></#if>
             <#if requestParameters.product_id?has_content><input type='hidden' name='product_id' value='${requestParameters.product_id}'></#if>
             <#if requestParameters.category_id?has_content><input type='hidden' name='category_id' value='${requestParameters.category_id}'></#if>
