@@ -291,7 +291,7 @@ public class ModelServiceReader {
     }
     
     protected void createImplDefs(Element baseElement, ModelService service) {
-        List implElements = UtilXml.childElementList(baseElement, "implement");
+        List implElements = UtilXml.childElementList(baseElement, "implements");
         Iterator implIter = implElements.iterator();
                 
         while (implIter.hasNext()) {

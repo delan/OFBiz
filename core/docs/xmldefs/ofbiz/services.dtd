@@ -46,8 +46,8 @@
 	validate (true|false) "true"
 	use-transaction (true|false) "true"
 >
-<!ELEMENT implement EMPTY>
-<!ATTLIST implement
+<!ELEMENT implements EMPTY>
+<!ATTLIST implements
 	service CDATA #REQUIRED
 >
 <!ELEMENT attribute EMPTY>
