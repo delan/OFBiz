@@ -355,15 +355,9 @@
     <request-map uri="clearcart">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
-        <response name="success" type="request" value="initiateOrderWorkflow"/>
-        <response name="error" type="view" value="confirm"/>
-    </request-map>
-    <request-map uri="initiateOrderWorkflow">
-        <security https="true" auth="true" direct-request="false"/>
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="initiateOrderWorkflow"/>
         <response name="success" type="request" value="emailorder"/>
         <response name="error" type="view" value="confirm"/>
-    </request-map>
+    </request-map> 
     <request-map uri="emailorder">
         <security https="true" direct-request="false"/>
         <event type="service" path="async" invoke="sendOrderConfirmation"/>

@@ -285,17 +285,10 @@
     <request-map uri="clearcartfororder">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="clearCart"/>
-        <response name="success" type="request" value="initiateOrderWorkflow"/>
+        <response name="success" type="request" value="checkExternalPayment"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
 
-    <request-map uri="initiateOrderWorkflow">
-        <security https="true" direct-request="false"/>
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="initiateOrderWorkflow"/>
-        <response name="success" type="request" value="checkExternalPayment"/>
-        <response name="error" type="view" value="checkout"/>
-    </request-map>   
-    
     <request-map uri="checkExternalPayment">
     	<security https="true" direct-request="false"/>
     	<event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="checkExternalPayment"/>

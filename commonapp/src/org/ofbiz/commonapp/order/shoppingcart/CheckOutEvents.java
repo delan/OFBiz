@@ -688,31 +688,7 @@ public class CheckOutEvents {
         session.invalidate();
         return "success";
     }   
-    
-    public static String initiateOrderWorkflow(HttpServletRequest request, HttpServletResponse response) {
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        String orderId = (String) request.getAttribute("order_id");
-        GenericValue orderHeader = null;
-        try {
-            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));             
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problems getting order header", module);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems getting order header. WF not started!");
-            return "error";
-        }
-        if (orderHeader != null && orderHeader.getString("orderTypeId").equals("SALES_ORDER")) {
-            try {
-                dispatcher.runAsync("processOrder", UtilMisc.toMap("orderId", orderId, "orderStatusId", orderHeader.getString("statusId")));
-            } catch (GenericServiceException e) {
-                Debug.logError(e, "Cannot invoke processing workflow", module);
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems starting order WF!");
-                return "error";
-            }
-        }
-        return "success";
-    }    
-    
+        
     public static String checkExternalPayment(HttpServletRequest request, HttpServletResponse response) {
         // warning there can only be ONE payment preference for this to work
         // you cannot accept multiple payment type when using an external gateway
