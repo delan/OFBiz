@@ -15,7 +15,11 @@
     <DataSource dataSourceId="USER_ENTRY" dataSourceTypeId="CONTENT_CREATION" description="User Entry"/>
     <DataSource dataSourceId="CONTEXT_INDUCTION" dataSourceTypeId="CONTENT_CREATION" description="Context Induction"/>
 
-    <Enumeration description="NA Enum" enumId="_NA_" enumCode="_NA_" sequenceId="00"/>
+    <StatusType statusTypeId="_NA_" description="Not Applicable"/>
+    <StatusItem statusId="_NA_" statusTypeId="_NA_" statusCode="_NA_" sequenceId="0" description="Not Applicable"/>
+
+    <EnumerationType enumTypeId="_NA_" description="Not Applicable"/>
+    <Enumeration enumId="_NA_" enumTypeId="_NA_" enumCode="_NA_" sequenceId="0" description="Not Applicable"/>
 
     <EnumerationType description="Thesaurus Relationship Type" enumTypeId="KW_THES_REL" hasTable="N" parentTypeId=""/>
     <Enumeration description="Used For" enumCode="UF" enumId="KWTR_UF" sequenceId="01" enumTypeId="KW_THES_REL"/>
