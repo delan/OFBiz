@@ -81,32 +81,43 @@ in the entityengine.properties and other properties files with <b>${env.ofbiz.ho
 <hr>
 <h3><a name="cache">cache.properties</a></h3>
 <hr>
-<p>The cache.properties file contains...</p>
+<p>The cache.properties file contains cache setting used by the UtilCache class.
+Default cache parameters can be passed in when a cache is created but if cache
+parameters exist in this file for the given cache name then they will be
+loaded from the cache.properties file.</p>
 
 <hr>
 <h3><a name="debug">debug.properties</a></h3>
 <hr>
-<p>The debug.properties file contains...</p>
+<p>The debug.properties file contains options to turn OFBiz debug threads on/off 
+and also serves as the Log4J properties file (see jakarta.apache.org for 
+documentation on Log4J).</p>
 
 <hr>
 <h3><a name="localdtds">localdtds.properties</a></h3>
 <hr>
-<p>The localdtds.properties file contains...</p>
+<p>The localdtds.properties file contains DTD names and the name of the .dtd
+file on the classpath that can be used for that name. This is used to accomplish
+local loading of DTDs rather than always getting them over the internet when
+an XML file is loaded and validated. This file is used by the UtilXml class.</p>
 
 <hr>
 <h3><a name="security">security.properties</a></h3>
 <hr>
-<p>The security.properties file contains...</p>
+<p>The security.properties file contains security related settings such as the
+minimum length for passwords.</p>
 
 <hr>
 <h3><a name="serverstats">serverstats.properties</a></h3>
 <hr>
-<p>The serverstats.properties file contains...</p>
+<p>The serverstats.properties file contains settings to control the gathering
+and persistence of server hit statistics.</p>
 
 <hr>
 <h3><a name="servicesengine">servicesengine.properties</a></h3>
 <hr>
-<p>The servicesengine.properties file contains...</p>
+<p>The servicesengine.properties file contains some global settings for 
+the Service Engine.</p>
 
 </body>
 </html>
