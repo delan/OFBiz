@@ -88,5 +88,6 @@
     <classpathentry kind="lib" path="components/content/lib/commons-digester.jar"/>
     <classpathentry kind="lib" path="components/content/lib/fop.jar"/>
     <classpathentry kind="lib" path="components/content/lib/avalon-framework-cvs-20020806.jar"/>
+    <classpathentry kind="var" path="JSOBJECT_JAR"/>
     <classpathentry kind="output" path="bin"/>
 </classpath>
