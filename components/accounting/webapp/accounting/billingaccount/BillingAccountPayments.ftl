@@ -22,12 +22,10 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <div class="head1">${uiLabelMap.AccountingBillingAccountPayments}</div>
 

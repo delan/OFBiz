@@ -25,10 +25,9 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
-
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 <div class="head1">${uiLabelMap.PageTitleEditBillingAccountRoles} - ${uiLabelMap.AccountingAccountId}: ${billingAccount.billingAccountId}</div>
 
 <br>

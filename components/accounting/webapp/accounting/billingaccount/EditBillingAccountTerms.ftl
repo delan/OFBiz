@@ -22,13 +22,15 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign locale = requestAttributes.locale>
-
-${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
+<#if (requestAttributes.locale)?exists>
+    <#assign locale = requestAttributes.locale>
+</#if>
 
 <div class="head1">${uiLabelMap.PageTitleEditBillingAccountTerms} - ${uiLabelMap.AccountingAccountId}: ${billingAccount.billingAccountId}</div>
 

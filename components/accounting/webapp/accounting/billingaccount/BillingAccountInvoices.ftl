@@ -21,12 +21,10 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <div class="head1">${uiLabelMap.AccountingBillingAccountInvoices}</div>
 

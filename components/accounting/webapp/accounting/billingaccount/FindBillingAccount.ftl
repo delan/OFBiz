@@ -25,7 +25,9 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
 <div class="head1">${uiLabelMap.AccountingBillingAccounts}</div>
 <div><a href="<@ofbizUrl>/EditBillingAccount<#if (requestParameters.partyId)?has_content>?partyId=${requestParameters.partyId}&roleTypeId=BILL_TO_CUSTOMER</#if></@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingNewAccount}]</a></div>

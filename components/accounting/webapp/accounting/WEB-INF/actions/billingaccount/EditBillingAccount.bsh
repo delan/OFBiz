@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
  */
 
@@ -49,3 +49,11 @@ billingAccountData = context.get("billingAccount");
 if (!tryEntity) billingAccountData = requestParams;
 if (billingAccountData == null) billingAccountData = new HashMap();
 context.put("billingAccountData", billingAccountData);
+
+// currencies and billing account currency currency
+currencies = delegator.findByAndCache("Uom", UtilMisc.toMap("uomTypeId","CURRENCY_MEASURE"));
+context.put("currencies", currencies);
+if (billingAccountData != null) {
+    context.put("defaultCurrencyUomId", billingAccountData.get("accountCurrencyUomId"));
+}
+
