@@ -1,0 +1,866 @@
+
+(object Petal
+    version    	44
+    _written   	"Rose 7.0.9420.17"
+    charSet    	0)
+
+(object Class_Category "workflow"
+    quid       	"3B32F5B402E3"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class "WfEventAudit"
+	    quid       	"3B32F69603BA"
+	    stereotype 	"Interface"
+	    language   	"Java")
+	(object Class "WfActivity"
+	    quid       	"3B32F6010076"
+	    stereotype 	"Interface"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3B32F81D0127"
+		    supplier   	"Logical View::de::kkh::runenv::service::workflow::WfRequester"
+		    quidu      	"3B32F5D80118")
+		(object Inheritance_Relationship
+		    quid       	"3B32F95E0129"
+		    supplier   	"Logical View::de::kkh::runenv::service::workflow::WfExecutionObject"
+		    quidu      	"3B32F66B0213"))
+	    operations 	(list Operations
+		(object Operation "complete"
+		    quid       	"3B32F73B0212"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0))
+	    language   	"Java")
+	(object Class "WfAssignment"
+	    quid       	"3B32F63003A9"
+	    stereotype 	"Interface"
+	    language   	"Java")
+	(object Class "WfExecutionObject"
+	    quid       	"3B32F66B0213"
+	    stereotype 	"Interface"
+	    operations 	(list Operations
+		(object Operation "resume"
+		    quid       	"3B32F75D0185"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0)
+		(object Operation "terminate"
+		    quid       	"3B32F76501E1"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0)
+		(object Operation "abort"
+		    quid       	"3B32F76B02E4"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0)
+		(object Operation "suspend"
+		    quid       	"3B32F7710224"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0)
+		(object Operation "changeState"
+		    quid       	"3B32F79B02C5"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0))
+	    language   	"Java")
+	(object Class "WfProcess"
+	    quid       	"3B32F5EE00B5"
+	    stereotype 	"Interface"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"3B32F952032A"
+		    supplier   	"Logical View::de::kkh::runenv::service::workflow::WfExecutionObject"
+		    quidu      	"3B32F66B0213"))
+	    operations 	(list Operations
+		(object Operation "start"
+		    quid       	"3B32F72D0118"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0))
+	    language   	"Java")
+	(object Class "WfProcessMgr"
+	    quid       	"3B32F5F50282"
+	    stereotype 	"Interface"
+	    operations 	(list Operations
+		(object Operation "createProcess"
+		    quid       	"3B32F7BC0041"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0))
+	    language   	"Java")
+	(object Class "WfRequester"
+	    quid       	"3B32F5D80118"
+	    stereotype 	"Interface"
+	    operations 	(list Operations
+		(object Operation "receiveEvent"
+		    quid       	"3B32F70C0319"
+		    parameters 	(list Parameters
+			(object Parameter "pEvent"
+			    quid       	"3B32FA1F0203"
+			    type       	"WfEventAudit"))
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0))
+	    language   	"Java")
+	(object Class "WfResource"
+	    quid       	"3B32F68602C6"
+	    stereotype 	"Interface"
+	    operations 	(list Operations
+		(object Operation "release"
+		    quid       	"3B32F7AD037F"
+		    concurrency 	"Sequential"
+		    opExportControl 	"Public"
+		    uid        	0))
+	    language   	"Java")
+	(object Class "InvalidPerformerException"
+	    quid       	"3B32FAF3010D"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "InvalidStateException"
+	    quid       	"3B32FB10029F"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "InvalidDataException"
+	    quid       	"3B32FB3D00AF"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "TransitionNotAllowed"
+	    quid       	"3B32FB5E01A7"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "CannotResumeException"
+	    quid       	"3B32FB7501B4"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "CannotSuspendException"
+	    quid       	"3B32FB8602DB"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "AlreadySuspendedException"
+	    quid       	"3B32FBDA003D"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "CannotStopException"
+	    quid       	"3B32FBFD034A"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "NotRunningException"
+	    quid       	"3B32FC100171"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "HistoryNotAvailableExcpetion"
+	    quid       	"3B32FC23015A"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "NotEnabledException"
+	    quid       	"3B32FC390347"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "AlreadyRunningException"
+	    quid       	"3B32FC4A0265"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "CannotStartException"
+	    quid       	"3B32FC6003B1"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "ResultNotAvailableException"
+	    quid       	"3B32FC70013D"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "CannotCompleteException"
+	    quid       	"3B32FC8E00BE"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "NotAssignedException"
+	    quid       	"3B32FC9F01E5"
+	    stereotype 	"exception"
+	    language   	"Java")
+	(object Class "SourceNotAvailableException"
+	    quid       	"3B32FCAF036E"
+	    stereotype 	"exception"
+	    language   	"Java"))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "Interfaces"
+	    quid       	"3B32F5CB0213"
+	    title      	"Interfaces"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list))
+	(object ClassDiagram "Exceptions"
+	    quid       	"3B32FADC02FF"
+	    title      	"Exceptions"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::InvalidPerformerException" @1
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(352, 288)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(96, 259)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	512
+			justify    	0
+			label      	"InvalidPerformerException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@1
+			location   	(96, 209)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	512
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FAF3010D"
+		    width      	530
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::InvalidStateException" @2
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(992, 288)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@2
+			location   	(780, 259)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	424
+			justify    	0
+			label      	"InvalidStateException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@2
+			location   	(780, 209)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	424
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FB10029F"
+		    width      	442
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::InvalidDataException" @3
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1584, 288)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@3
+			location   	(1378, 259)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	412
+			justify    	0
+			label      	"InvalidDataException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@3
+			location   	(1378, 209)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	412
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FB3D00AF"
+		    width      	430
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::TransitionNotAllowed" @4
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(2160, 288)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@4
+			location   	(1950, 259)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	420
+			justify    	0
+			label      	"TransitionNotAllowed")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@4
+			location   	(1950, 209)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	420
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FB5E01A7"
+		    width      	438
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::CannotResumeException" @5
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1072, 1232)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@5
+			location   	(828, 1203)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	488
+			justify    	0
+			label      	"CannotResumeException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@5
+			location   	(828, 1153)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	488
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FB7501B4"
+		    width      	506
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::CannotSuspendException" @6
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(3424, 160)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@6
+			location   	(3174, 131)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	500
+			justify    	0
+			label      	"CannotSuspendException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@6
+			location   	(3174, 81)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	500
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FB8602DB"
+		    width      	518
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::AlreadySuspendedException" @7
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(4128, 160)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@7
+			location   	(3846, 131)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	564
+			justify    	0
+			label      	"AlreadySuspendedException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@7
+			location   	(3846, 81)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	564
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FBDA003D"
+		    width      	582
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::CannotStopException" @8
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(320, 592)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@8
+			location   	(107, 563)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	426
+			justify    	0
+			label      	"CannotStopException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@8
+			location   	(107, 513)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	426
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FBFD034A"
+		    width      	444
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::NotRunningException" @9
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(912, 592)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@9
+			location   	(701, 563)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	422
+			justify    	0
+			label      	"NotRunningException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@9
+			location   	(701, 513)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	422
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FC100171"
+		    width      	440
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::HistoryNotAvailableExcpetion" @10
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1568, 592)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@10
+			location   	(1288, 563)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	560
+			justify    	0
+			label      	"HistoryNotAvailableExcpetion")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@10
+			location   	(1288, 513)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	560
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FC23015A"
+		    width      	578
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::NotEnabledException" @11
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(2224, 592)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@11
+			location   	(2012, 563)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	424
+			justify    	0
+			label      	"NotEnabledException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@11
+			location   	(2012, 513)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	424
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FC390347"
+		    width      	442
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::AlreadyRunningException" @12
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(384, 1216)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@12
+			location   	(136, 1187)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	496
+			justify    	0
+			label      	"AlreadyRunningException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@12
+			location   	(136, 1137)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	496
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FC4A0265"
+		    width      	514
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::CannotStartException" @13
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(3472, 464)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@13
+			location   	(3260, 435)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	424
+			justify    	0
+			label      	"CannotStartException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@13
+			location   	(3260, 385)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	424
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FC6003B1"
+		    width      	442
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::ResultNotAvailableException" @14
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(4112, 464)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@14
+			location   	(3839, 435)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	546
+			justify    	0
+			label      	"ResultNotAvailableException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@14
+			location   	(3839, 385)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	546
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FC70013D"
+		    width      	564
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::CannotCompleteException" @15
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(352, 896)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@15
+			location   	(96, 867)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	512
+			justify    	0
+			label      	"CannotCompleteException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@15
+			location   	(96, 817)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	512
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FC8E00BE"
+		    width      	530
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::NotAssignedException" @16
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1008, 896)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@16
+			location   	(786, 867)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	444
+			justify    	0
+			label      	"NotAssignedException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@16
+			location   	(786, 817)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	444
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FC9F01E5"
+		    width      	462
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::de::kkh::runenv::service::workflow::SourceNotAvailableException" @17
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1680, 896)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@17
+			location   	(1392, 867)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	576
+			justify    	0
+			label      	"SourceNotAvailableException")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@17
+			location   	(1392, 817)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	576
+			justify    	0
+			label      	"<<exception>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"3B32FCAF036E"
+		    width      	594
+		    height     	182
+		    annotation 	8
+		    autoResize 	TRUE)))))

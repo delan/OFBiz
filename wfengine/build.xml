@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!-- ======================================================================= 	-->
+<!-- Build file for workflow engine						-->
+<!-- owl, 2001-01-27	                                                     	-->
+<!-- $Id$	                						-->
+<!-- ======================================================================= 	-->
+
+<project name="Workflow" default="compile" basedir=".">
+
+	<!-- Give user a chance to override without editing this file 
+	(and without typing -D each time it compiles it -->
+	<property file="${user.home}/wfengine.properties" />
+
+	<property name="Name" value="WORKFLOW"/>
+	<property name="name" value="workflow"/>
+	<property name="version" value=""/>
+
+	<!-- uncomment to use jikes
+	<property name="build.compiler" value="jikes"/>
+	<property name="build.compiler.emacs" value="true"/>
+	-->
+	
+	<!-- Directory settings -->
+	<property name="build.dir" value="${basedir}/build"/>
+	<property name="classes.dir" value="${basedir}/build"/>
+	<property name="lib.dir" value="${basedir}/lib"/>
+	<property name="doc.dir" value="${basedir}/doc"/>
+	<property name="dist.dir" value="${basedir}/dist"/>
+	<property name="tools.dir" value="${basedir}/tools"/>
+	<property name="web.dir" value="web"/>
+	<property name="src.dir" value="./src"/>
+	<property name="classpath" value=""/>
+	<!-- File settings -->
+	<property name="jar.name" value="${name}.jar"/>
+	<property name="jar.file" value="${dist.dir}/${jar.name}"/>	
+	<property name="tar.file" value="${dist.dir}/${Name}-${version}.tar"/>
+	<property name="tgz.file" value="${dist.dir}/${Name}-${version}.tgz"/>
+
+	<!-- =================================================================== -->
+	<!-- Prepares the build directory                                        -->
+	<!-- =================================================================== -->
+	<target name="prepare">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${dist.dir}"/>
+	</target>
+	
+	<!-- =================================================================== -->
+	<!-- Clean up								 -->
+	<!-- =================================================================== -->
+	<target name="clean" depends="prepare">
+		<delete>
+    			<fileset dir="${src.dir}" includes="*/**.old,**/*.bak"/>
+    			<fileset dir="${build.dir}" includes="**/*.class"/>
+    			<fileset dir="${doc.dir}"/>
+    			<fileset dir="${dist.dir}" includes="**/*.jar,**/*.war"/>
+  		</delete>		
+  	</target>
+  	
+	<!-- =================================================================== -->
+	<!-- Compiles the source code                                            -->
+	<!-- =================================================================== -->
+	<target name="compile" depends="prepare">
+		<delete>
+    			<fileset dir="${src.dir}" includes="*.java,*/**.old"/>
+  		</delete>		
+		<javac srcdir="${src.dir}"
+		       destdir="${build.dir}"
+		       classpath="${classpath}"
+		       excludes="**/CVS/*"
+		       optimize="off" >
+		</javac>    
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- build distribution jar			 			 -->
+	<!-- =================================================================== -->
+	<target name="dist" depends="compile">		
+		<jar jarfile="${jar.file}"
+		     basedir="${classes.dir}"         		     
+		     excludes="**/CVS/*" 
+		     includes="**/*.class">		     
+		     <fileset
+				dir="${src.dir}"
+				includes="**/*.properties,**/*.xml, **/*.class"
+		     />
+		</jar>		
+		<!--	
+		 <war warfile="${war.file}" webxml="${src.dir}/de/kkh/runenv/ui/web/web-inf/web.xml" excludes="**/*build*.xml,**/web.xml" includes="**/*.properties,**/*.xml" basedir="${src.dir}/de/kkh/runenv">
+  			<fileset dir="${src.dir}/de/kkh/runenv/ui/web" excludes="**/*.class,**/*.xml" /> 
+  		</war>  	
+  		-->
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- javadoc     				 			 -->
+	<!-- =================================================================== -->
+	<target name="javadoc">		
+		<mkdir dir="${doc.dir}"/>
+		<javadoc packagenames="org.ofbiz.*"
+			windowtitle="Workflow engine"
+	             	doctitle="Workflow engine"
+	             	bottom="Copyright &#169; ${year} The Open For Business Project - www.ofbiz.org"
+		        sourcepath="${src.dir}"
+		        destdir="${doc.dir}">
+	  	</javadoc>	  	
+	</target>	
+ </project>
+
+
+
