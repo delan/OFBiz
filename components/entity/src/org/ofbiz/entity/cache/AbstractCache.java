@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractCache.java,v 1.2 2004/07/13 11:29:46 jonesde Exp $
+ * $Id: AbstractCache.java,v 1.3 2004/07/13 11:34:05 jonesde Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -86,7 +86,7 @@ public abstract class AbstractCache {
             String name = getCacheName(entityName);
             UtilCache cache = (UtilCache) UtilCache.utilCacheTable.get(name);
             if (cache == null) {
-                cache = new UtilCache(name);
+                cache = new UtilCache(name, 0, 0, true);
                 String[] names = getCacheNames(entityName);
                 cache.setPropertiesParams(names);
             }
