@@ -262,7 +262,7 @@
               [Update]</a>&nbsp;</div>
             </td>
             <td align="right" valign="top" width="1%">
-              <div><a href='<ofbiz:url>/deleteContactMech/viewprofile?contactMechId=<%entityField.run("contactMech", "contactMechId");%></ofbiz:url>' class="buttontext">
+              <div><a href='<ofbiz:url>/deleteContactMech/viewprofile?contactMechId=<%entityField.run("contactMech", "contactMechId");%>&partyId=<%=partyId%></ofbiz:url>' class="buttontext">
               [Delete]</a>&nbsp;&nbsp;</div>
             </td>
           </tr>
