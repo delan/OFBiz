@@ -222,30 +222,79 @@ public class EntityUtil {
                 Object lhs = value.get((String) expr.getLhs());
                 Object rhs = expr.getRhs();
 
-                if (EntityOperator.EQUALS.equals(expr.getOperator())) {
-                    // if the field named by lhs is not equal to rhs value, constraint fails
-                    if (lhs == null) {
-                        if (rhs != null) {
+                int operatorId = expr.getOperator().getId();
+                switch (operatorId) {
+                    case EntityOperator.ID_EQUALS:
+                        // if the field named by lhs is not equal to rhs value, constraint fails
+                        if (lhs == null) {
+                            if (rhs != null) {
+                                include = false;
+                            }
+                        } else if (!lhs.equals(rhs)) {
                             include = false;
-                            break;
                         }
-                    } else if (!lhs.equals(rhs)) {
-                        include = false;
                         break;
-                    }
-                } else if (EntityOperator.NOT_EQUAL.equals(expr.getOperator())) {
-                    if (lhs == null) {
-                        if (rhs == null) {
+                    case EntityOperator.ID_NOT_EQUAL:
+                        if (lhs == null) {
+                            if (rhs == null) {
+                                include = false;
+                            }
+                        } else if (lhs.equals(rhs)) {
                             include = false;
-                            break;
                         }
-                    } else if (lhs.equals(rhs)) {
-                        include = false;
                         break;
-                    }
-                } else {
-                    throw new IllegalArgumentException("Operation " + expr.getOperator().getName() + " is not yet supported by filterByAnd");
+                    case EntityOperator.ID_GREATER_THAN:
+                        if (lhs == null) {
+                            if (rhs == null) {
+                                include = false;
+                            }
+                        } else if (((Comparable) lhs).compareTo(rhs) <= 0) {
+                            include = false;
+                        }
+                        break;
+                    case EntityOperator.ID_GREATER_THAN_EQUAL_TO:
+                        if (lhs == null) {
+                            if (rhs != null) {
+                                include = false;
+                            }
+                        } else if (((Comparable) lhs).compareTo(rhs) < 0) {
+                            include = false;
+                        }
+                        break;
+                    case EntityOperator.ID_LESS_THAN:
+                        if (lhs == null) {
+                            if (rhs == null) {
+                                include = false;
+                            }
+                        } else if (((Comparable) lhs).compareTo(rhs) >= 0) {
+                            include = false;
+                        }
+                        break;
+                    case EntityOperator.ID_LESS_THAN_EQUAL_TO:
+                        if (lhs == null) {
+                            if (rhs != null) {
+                                include = false;
+                            }
+                        } else if (((Comparable) lhs).compareTo(rhs) > 0) {
+                            include = false;
+                        }
+                        break;
+                    /*
+                    case EntityOperator.ID_LIKE:
+                        if (lhs == null) {
+                            if (rhs != null) {
+                                include = false;
+                            }
+                        } else if (lhs instanceof String && rhs instanceof String) {
+                            //see if the lhs value is like the rhs value, rhs will have the pattern characters in it...
+                            include = false;
+                        }
+                        break;
+                     */
+                    default:
+                        throw new IllegalArgumentException("The " + expr.getOperator().getCode() + " with id " + expr.getOperator().getId() + " operator is not yet supported by filterByAnd");
                 }
+                if (!include) break;
             }
             if (include) {
                 result.add(value);

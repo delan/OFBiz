@@ -36,24 +36,37 @@ package org.ofbiz.core.entity;
  */
 public class EntityOperator implements java.io.Serializable {
 
-    public static final EntityOperator EQUALS = new EntityOperator("EQUALS", "=");
-    public static final EntityOperator NOT_EQUAL = new EntityOperator("NOT_EQUAL", "<>");
-    public static final EntityOperator LESS_THAN = new EntityOperator("LESS_THAN", "<");
-    public static final EntityOperator GREATER_THAN = new EntityOperator("GREATER_THAN", ">");
-    public static final EntityOperator LESS_THAN_EQUAL_TO = new EntityOperator("LESS_THAN_EQUAL_TO", "<=");
-    public static final EntityOperator GREATER_THAN_EQUAL_TO = new EntityOperator("GREATER_THAN_EQUAL_TO", ">=");
-    public static final EntityOperator IN = new EntityOperator("IN", "IN");
-    public static final EntityOperator BETWEEN = new EntityOperator("BETWEEN", "BETWEEN");
-    public static final EntityOperator NOT = new EntityOperator("NOT", "NOT");
-    public static final EntityOperator AND = new EntityOperator("AND", "AND");
-    public static final EntityOperator OR = new EntityOperator("OR", "OR");
-    public static final EntityOperator LIKE = new EntityOperator("LIKE", "LIKE");
+    public static final int ID_EQUALS = 1;
+    public static final int ID_NOT_EQUAL = 2;
+    public static final int ID_LESS_THAN = 3;
+    public static final int ID_GREATER_THAN = 4;
+    public static final int ID_LESS_THAN_EQUAL_TO = 5;
+    public static final int ID_GREATER_THAN_EQUAL_TO = 6;
+    public static final int ID_IN = 7;
+    public static final int ID_BETWEEN = 8;
+    public static final int ID_NOT = 9;
+    public static final int ID_AND = 10;
+    public static final int ID_OR = 11;
+    public static final int ID_LIKE = 12;
+    
+    public static final EntityOperator EQUALS = new EntityOperator(ID_EQUALS, "=");
+    public static final EntityOperator NOT_EQUAL = new EntityOperator(ID_NOT_EQUAL, "<>");
+    public static final EntityOperator LESS_THAN = new EntityOperator(ID_LESS_THAN, "<");
+    public static final EntityOperator GREATER_THAN = new EntityOperator(ID_GREATER_THAN, ">");
+    public static final EntityOperator LESS_THAN_EQUAL_TO = new EntityOperator(ID_LESS_THAN_EQUAL_TO, "<=");
+    public static final EntityOperator GREATER_THAN_EQUAL_TO = new EntityOperator(ID_GREATER_THAN_EQUAL_TO, ">=");
+    public static final EntityOperator IN = new EntityOperator(ID_IN, "IN");
+    public static final EntityOperator BETWEEN = new EntityOperator(ID_BETWEEN, "BETWEEN");
+    public static final EntityOperator NOT = new EntityOperator(ID_NOT, "NOT");
+    public static final EntityOperator AND = new EntityOperator(ID_AND, "AND");
+    public static final EntityOperator OR = new EntityOperator(ID_OR, "OR");
+    public static final EntityOperator LIKE = new EntityOperator(ID_LIKE, "LIKE");
 
-    private String nameString;
+    private int idInt;
     private String codeString;
 
-    public EntityOperator(String name, String code) {
-        nameString = name;
+    public EntityOperator(int id, String code) {
+        idInt = id;
         codeString = code;
     }
 
@@ -64,8 +77,8 @@ public class EntityOperator implements java.io.Serializable {
             return codeString;
     }
 
-    public String getName() {
-        return nameString;
+    public int getId() {
+        return idInt;
     }
 
     public String toString() {
@@ -74,7 +87,6 @@ public class EntityOperator implements java.io.Serializable {
 
     public boolean equals(Object obj) {
         EntityOperator otherOper = (EntityOperator) obj;
-
-        return this.getName().equals(otherOper.getName());
+        return this.idInt == otherOper.idInt;
     }
 }
