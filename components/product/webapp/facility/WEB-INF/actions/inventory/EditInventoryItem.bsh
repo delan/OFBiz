@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Brad Steiner
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
  
@@ -70,9 +70,6 @@ if(inventoryItem == null) {
     facility = inventoryItem.getRelatedOne("Facility");
 	if (facility != null && facilityId == null) facilityId = facility.getString("facilityId");
 
-	Debug.logInfo("curStatusItem=" + curStatusItem, "bsh");
-	Debug.logInfo("inventoryItem.getString(statusId)=" + inventoryItem.getString("statusId"), "bsh");
-
     //statuses
     if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {
         //do nothing for non-serialized inventory
@@ -97,11 +94,38 @@ if(inventoryItem == null) {
 
 //inv item types
 inventoryItemTypes = delegator.findAll("InventoryItemType", UtilMisc.toList("description"));
-context.put("inventoryItemTypes", inventoryItemTypes);
 
 //facilities
 facilities = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
-context.put("facilities", facilities);
+
+//get physicalInventoryAndVarianceDatas if this is a NON_SERIAL_INV_ITEM
+if (inventoryItem != null && "NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {
+	physicalInventoryAndVariances = delegator.findByAnd("PhysicalInventoryAndVariance", UtilMisc.toMap("inventoryItemId", inventoryItemId), UtilMisc.toList("-physicalInventoryDate", "-physicalInventoryId"));
+	physicalInventoryAndVarianceDatas = new ArrayList(physicalInventoryAndVariances.size());
+	physicalInventoryAndVarianceIter = physicalInventoryAndVariances.iterator();
+	while (physicalInventoryAndVarianceIter.hasNext()) {
+		physicalInventoryAndVariance = physicalInventoryAndVarianceIter.next();
+		physicalInventoryAndVarianceData = new HashMap();
+		physicalInventoryAndVarianceDatas.add(physicalInventoryAndVarianceData);
+	
+		physicalInventoryAndVarianceData.put("physicalInventoryAndVariance", physicalInventoryAndVariance);
+		physicalInventoryAndVarianceData.put("varianceReason", physicalInventoryAndVariance.getRelatedOneCache("VarianceReason"));
+		physicalInventoryAndVarianceData.put("person", physicalInventoryAndVariance.getRelatedOne("Person"));
+		physicalInventoryAndVarianceData.put("partyGroup", physicalInventoryAndVariance.getRelatedOne("PartyGroup"));
+	}
+
+	HtmlFormWrapper viewPhysicalInventoryAndVarianceWrapper = new HtmlFormWrapper("/inventory/InventoryForms.xml", "ViewPhysicalInventoryAndVariance", request, response);
+	viewPhysicalInventoryAndVarianceWrapper.putInContext("physicalInventoryAndVarianceDatas", physicalInventoryAndVarianceDatas);
+	
+	HtmlFormWrapper createPhysicalInventoryAndVarianceWrapper = new HtmlFormWrapper("/inventory/InventoryForms.xml", "CreatePhysicalInventoryAndVariance", request, response);
+	createPhysicalInventoryAndVarianceWrapper.putInContext("inventoryItem", inventoryItem);
+
+	context.put("physicalInventoryAndVarianceDatas", physicalInventoryAndVarianceDatas);
+	context.put("viewPhysicalInventoryAndVarianceWrapper", viewPhysicalInventoryAndVarianceWrapper);
+	context.put("createPhysicalInventoryAndVarianceWrapper", createPhysicalInventoryAndVarianceWrapper);
+}
+
+nowTimestampString = UtilDateTime.nowTimestamp().toString();
 
 context.put("inventoryItem", inventoryItem);
 context.put("inventoryItemId", inventoryItemId);
@@ -111,14 +135,12 @@ context.put("facilityLocation", facilityLocation);
 context.put("facility", facility);
 context.put("facilityId", facilityId);
 context.put("locationSeqId", locationSeqId);
-
-nowTimestampString = UtilDateTime.nowTimestamp().toString();
+context.put("inventoryItemTypes", inventoryItemTypes);
+context.put("facilities", facilities);
 context.put("nowTimestampString", nowTimestampString);
-
+context.put("tryEntity", tryEntity);
 if (tryEntity) {
 	context.put("inventoryItemData", inventoryItem);
 } else {
 	context.put("inventoryItemData", parameterMap);
 }
-
-context.put("tryEntity", tryEntity);

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
  */
 
@@ -48,7 +48,7 @@ product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", prod
 
 productInventoryItems = delegator.findByAnd("InventoryItem", 
         UtilMisc.toMap("productId", productId), 
-        UtilMisc.toList("facilityId", "-receivedDate", "inventoryItemId"));
+        UtilMisc.toList("facilityId", "-receivedDate", "-inventoryItemId"));
 
 // loop through the inventory items and get totals of ATP and QOH per facility
 quantitySummaryByFacility = new HashMap();
@@ -148,4 +148,3 @@ context.put("product", product);
 context.put("productInventoryItems", productInventoryItems);
 context.put("quantitySummaryByFacility", quantitySummaryByFacility);
 context.put("showEmpty", showEmpty);
-

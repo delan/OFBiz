@@ -20,12 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 
 <#if hasPermission>
-
 ${pages.get("/facility/FacilityTabBar.ftl")}
 
 <div class="head1">Edit InventoryItem with ID [${inventoryItemId?if_exists}]</div>
@@ -33,7 +32,6 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 <#if inventoryItemId?exists>
 	<a href="<@ofbizUrl>/TransferInventoryItem?inventoryItemId=${inventoryItemId}<#if facilityId?exists>&facilityId=${facilityId}</#if></@ofbizUrl>" class="buttontext">[Transfer Item]</a>
 </#if>
-
 
 <#if inventoryItem?exists>
   <form action="<@ofbizUrl>/UpdateInventoryItem</@ofbizUrl>" method="POST" style="margin: 0;" name="inventoryItemForm">
@@ -193,8 +191,12 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td align=right><div class="tabletext">Available To Promise / Quantity On Hand</div></td>
         <td>&nbsp;</td>
         <td>
+        	<div class="tabletext">${inventoryItemData.availableToPromise?if_exists} / ${inventoryItemData.quantityOnHand?if_exists}</div>
+        	<div class="tabletext">(This can be changed by doing a physical inventory variance below)</div>
+        	<#-- The OLD, more dangerous, and less controlled/tracked way
             <input type=text size="5" name="availableToPromise" value="${inventoryItemData.availableToPromise?if_exists}" class="inputBox">
             / <input type=text size="5" name="quantityOnHand" value="${inventoryItemData.quantityOnHand?if_exists}" class="inputBox">
+            -->
         </td>
       </tr>
     <#elseif "SERIALIZED_INV_ITEM" == (inventoryItem.inventoryItemTypeId)?if_exists>
@@ -210,13 +212,21 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td><div class="tabletext" style="color: red;">Error: type [${inventoryItem.inventoryItemTypeId?if_exists}] unknown; specify a type.</div></td>
       </tr>
     </#if>
-
   <tr>
     <td colspan="2">&nbsp;</td>
     <td colspan="5"><input type="submit" value="Update" class="smallSubmit"></td>
   </tr>
 </table>
 </form>
+
+<#if "NON_SERIAL_INV_ITEM" == (inventoryItem.inventoryItemTypeId)?if_exists>
+	<hr class="sepbar"/>
+	<div class="head2">Physical Inventory Variances</div>
+	
+	${createPhysicalInventoryAndVarianceWrapper.renderFormString()}
+	<br>
+	${viewPhysicalInventoryAndVarianceWrapper.renderFormString()}
+</#if>
 
 <#else>
   <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
