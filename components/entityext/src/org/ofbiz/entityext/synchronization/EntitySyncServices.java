@@ -24,7 +24,6 @@
  */
 package org.ofbiz.entityext.synchronization;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,8 +32,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -46,8 +43,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
-import org.ofbiz.entity.serialize.SerializeException;
-import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entityext.synchronization.EntitySyncContext.SyncAbortException;
 import org.ofbiz.entityext.synchronization.EntitySyncContext.SyncErrorException;
@@ -55,7 +50,6 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-import org.xml.sax.SAXException;
 
 /**
  * Entity Engine Sync Services
@@ -206,30 +200,9 @@ public class EntitySyncServices {
             // iterate through to remove list and remove each
             Iterator keyToRemoveIter = keysToRemove.iterator();
             while (keyToRemoveIter.hasNext()) {
-                GenericValue entitySyncRemove = (GenericValue) keyToRemoveIter.next();
-                // pull the PK from the EntitySyncRemove in the primaryKeyRemoved field, de-XML-serialize it and check to see if it exists, if so remove and count, if not just count already removed
-                String primaryKeyRemoved = entitySyncRemove.getString("primaryKeyRemoved");
-                GenericEntity pkToRemove = null;
-                try {
-                    pkToRemove = (GenericEntity) XmlSerializer.deserialize(primaryKeyRemoved, delegator);
-                } catch (IOException e) {
-                    String errorMsg = "Error deserializing GenericPK to remove in Entity Sync Data for entitySyncId [" + entitySyncId + "] and entitySyncRemoveId [" + entitySyncRemove.getString("entitySyncRemoveId") + "]: " + e.toString();
-                    Debug.logError(e, errorMsg, module);
-                    return ServiceUtil.returnError(errorMsg);
-                } catch (SAXException e) {
-                    String errorMsg = "Error deserializing GenericPK to remove in Entity Sync Data for entitySyncId [" + entitySyncId + "] and entitySyncRemoveId [" + entitySyncRemove.getString("entitySyncRemoveId") + "]: " + e.toString();
-                    Debug.logError(e, errorMsg, module);
-                    return ServiceUtil.returnError(errorMsg);
-                } catch (ParserConfigurationException e) {
-                    String errorMsg = "Error deserializing GenericPK to remove in Entity Sync Data for entitySyncId [" + entitySyncId + "] and entitySyncRemoveId [" + entitySyncRemove.getString("entitySyncRemoveId") + "]: " + e.toString();
-                    Debug.logError(e, errorMsg, module);
-                    return ServiceUtil.returnError(errorMsg);
-                } catch (SerializeException e) {
-                    String errorMsg = "Error deserializing GenericPK to remove in Entity Sync Data for entitySyncId [" + entitySyncId + "] and entitySyncRemoveId [" + entitySyncRemove.getString("entitySyncRemoveId") + "]: " + e.toString();
-                    Debug.logError(e, errorMsg, module);
-                    return ServiceUtil.returnError(errorMsg);
-                }
+                GenericEntity pkToRemove = (GenericEntity) keyToRemoveIter.next();
                 
+                // check to see if it exists, if so remove and count, if not just count already removed
                 // always do a removeByAnd, if it was a removeByAnd great, if it was a removeByPrimaryKey, this will also work and save us a query
                 pkToRemove.setIsFromEntitySync(true);
                 int numRemByAnd = delegator.removeByAnd(pkToRemove.getEntityName(), pkToRemove);
