@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/09/04 19:40:52  jonesde
+ * Cleaned up a bit.
+ *
  * Revision 1.2  2001/09/04 19:27:51  jonesde
  * Fixed small problem with '_' wild cards.
  *
@@ -46,7 +49,7 @@ import org.ofbiz.core.util.*;
  */
 public class KeywordSearch {  
   /** Does a product search by keyword using the PRODUCT_KEYWORD table.
-   *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' for wildcard for 1 character.
+   *@param keywordsString A space separated list of keywords with '%' or '*' as wildcards for 0..many characters and '_' or '?' for wildcard for 1 character.
    *@param serverName The name of the server to get a connection to
    *@return Collection of productId Strings
    */
@@ -104,6 +107,7 @@ public class KeywordSearch {
     while (tokenizer.hasMoreTokens()) {
       curToken = tokenizer.nextToken().toLowerCase();
       curToken = curToken.replace('*', '%');
+      curToken = curToken.replace('?', '_');
       list.add(curToken);
     }
     String[] keywords = new String[list.size()];
