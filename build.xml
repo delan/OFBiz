@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.38 2004/06/04 02:49:21 jonesde Exp $
+ *  $Id: build.xml,v 1.39 2004/06/10 08:31:24 jonesde Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -199,6 +199,14 @@
 
     <target name="run" depends="build">
         <java jar="ofbiz.jar" fork="true"/>
+    </target>
+    <target name="run-debug" depends="build">
+        <java jar="ofbiz.jar"  fork="true">
+                <jvmarg value="-Xnoagent"/>
+                <jvmarg value="-Djava.compiler=NONE"/>
+                <jvmarg value="-Xdebug"/>
+                <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8091"/>
+            </java>
     </target>
 </project>
 
