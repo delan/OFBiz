@@ -60,21 +60,28 @@ Collection featureTypes = delegator.findAll("ProductFeatureType");
 context.put("featureTypes", featureTypes);
 
 // add/remove feature types
-Hashtable addedFeatureTypes = (Hashtable)session.getAttribute("addedFeatureTypes");
+HashMap addedFeatureTypes = (HashMap) session.getAttribute("addedFeatureTypes");
 if (addedFeatureTypes == null) {
-    addedFeatureTypes = new Hashtable();
+    addedFeatureTypes = new HashMap();
     session.setAttribute("addedFeatureTypes", addedFeatureTypes);
 }
-Hashtable featuresByType = new Hashtable();
+
+HashMap featuresByType = new HashMap();
 String[] addFeatureTypeId = request.getParameterValues("addFeatureTypeId");
+List addFeatureTypeIdList = new ArrayList();
 if (addFeatureTypeId != null) {
-    for (int i = 0; i < addFeatureTypeId.length; i++) {
-        GenericValue featureType = delegator.findByPrimaryKey("ProductFeatureType", UtilMisc.toMap("productFeatureTypeId", addFeatureTypeId[i]));
-        if ((featureType != null) && !addedFeatureTypes.containsKey(addFeatureTypeId[i])) {
-            addedFeatureTypes.put(addFeatureTypeId[i], featureType);
-        }
+    addFeatureTypeIdList.addAll(Arrays.asList(addFeatureTypeId));
+}
+
+addFeatureTypeIdIter = addFeatureTypeIdList.iterator();
+while (addFeatureTypeIdIter.hasNext()) {
+    String curFeatureTypeId = addFeatureTypeIdIter.next();
+    GenericValue featureType = delegator.findByPrimaryKey("ProductFeatureType", UtilMisc.toMap("productFeatureTypeId", curFeatureTypeId));
+    if ((featureType != null) && !addedFeatureTypes.containsKey(curFeatureTypeId)) {
+        addedFeatureTypes.put(curFeatureTypeId, featureType);
     }
 }
+
 String[] removeFeatureTypeId = request.getParameterValues("removeFeatureTypeId");
 if (removeFeatureTypeId != null) {
     for (int i = 0; i < removeFeatureTypeId.length; i++) {
@@ -102,14 +109,14 @@ if (productId != null) context.put("productId", productId);
 
 product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 ArrayList assocProducts = new ArrayList();
-Hashtable featureFloz = new Hashtable();
-Hashtable featureMl = new Hashtable();
-Hashtable featureNtwt = new Hashtable();
-Hashtable featureGrams = new Hashtable();
-Hashtable featureHazmat = new Hashtable();
-Hashtable featureSalesThru = new Hashtable();
-Hashtable featureThruDate = new Hashtable();
-Hashtable selFeatureDesc = new Hashtable();
+HashMap featureFloz = new HashMap();
+HashMap featureMl = new HashMap();
+HashMap featureNtwt = new HashMap();
+HashMap featureGrams = new HashMap();
+HashMap featureHazmat = new HashMap();
+HashMap featureSalesThru = new HashMap();
+HashMap featureThruDate = new HashMap();
+HashMap selFeatureDesc = new HashMap();
 Double floz = null;
 Double ml = null;
 Double ntwt = null;
@@ -137,8 +144,8 @@ if (product != null) {
     
     // get standard features for this product
     List standardFeatureAppls = EntityUtil.filterByAnd(productFeatureAndAppls, UtilMisc.toMap("productFeatureApplTypeId", "STANDARD_FEATURE"));
-    Hashtable productFeatureTypeLookup = new Hashtable();
-    Hashtable standardFeatureLookup = new Hashtable();
+    HashMap productFeatureTypeLookup = new HashMap();
+    HashMap standardFeatureLookup = new HashMap();
     Iterator standardFeatureApplIter = standardFeatureAppls.iterator();
     while (standardFeatureApplIter.hasNext()) {
         GenericValue standardFeatureAndAppl = (GenericValue) standardFeatureApplIter.next();
@@ -151,7 +158,7 @@ if (product != null) {
 
     // get selectable features for this product
     List selectableFeatureAppls = EntityUtil.filterByAnd(productFeatureAndAppls, UtilMisc.toMap("productFeatureApplTypeId", "SELECTABLE_FEATURE"));
-    Hashtable selectableFeatureLookup = new Hashtable();
+    HashMap selectableFeatureLookup = new HashMap();
     // get feature types that are deleteable from selectable features section
     Set selectableFeatureTypes = new HashSet();
 
@@ -330,7 +337,8 @@ context.put("allCategoryId", allCategoryId);
 // show the publish or unpublish section
 List prodCatMembs = delegator.findByAnd("ProductCategoryMember",
         UtilMisc.toMap("productCategoryId", allCategoryId, "productId", productId));
-prodCatMembs = EntityUtil.filterByDate(prodCatMembs);
+//don't filter by date, show all categories: prodCatMembs = EntityUtil.filterByDate(prodCatMembs);
+
 String showPublish = "false";
 if (prodCatMembs.size() == 0) {
     showPublish = "true";

@@ -279,13 +279,12 @@ function doPublish() {
             </tr>
             <#list addedFeatureTypeIds as addedFeatureTypeId>
                 <tr>
-                    <td align=right>${addedFeatureTypes.get(addedFeatureTypeId).getString("description")}</td>
+                    <td align="right">${addedFeatureTypes.get(addedFeatureTypeId).getString("description")}</td>
                     <td>
-
                         <select name="productFeatureId">
-                            <option value="~~any~~">${uiLabelMap.AnyFeatureType}
+                            <option value="~~any~~">${uiLabelMap.AnyFeatureType}</option>
                         <#list featuresByType.get(addedFeatureTypeId) as feature>
-                            <option value="${feature.getString("productFeatureId")}"> ${feature.getString("description")}
+                            <option value="${feature.getString("productFeatureId")}">${feature.getString("description")}</option>
                         </#list>
                         </select>
                     </td>
@@ -296,8 +295,8 @@ function doPublish() {
         </table>
         </form>
     </td>
-    <td width=20>&nbsp;</td>
-    <td valign=top>
+    <td width="20">&nbsp;</td>
+    <td valign="top">
         <table border="0" cellpadding="2" cellspacing="0" class="tabletext">
             <#list standardFeatureAppls as standardFeatureAppl>
                 <#assign featureId = standardFeatureAppl.productFeatureId/>
@@ -339,13 +338,13 @@ function doPublish() {
     <td>
         <table border="0" cellpadding="2" cellspacing="0" class="tabletext">
             <tr>
-                <input type=hidden name="fromDate" value="${nowTimestampString}">
-                <input type=hidden name="productId" value="${product.productId?if_exists}">
-                <td align=right>${uiLabelMap.Categories}</td>
+                <input type="hidden" name="fromDate" value="${nowTimestampString}">
+                <input type="hidden" name="productId" value="${product.productId?if_exists}">
+                <td align="right">${uiLabelMap.Categories}</td>
                 <td>
-                    <select multiple name="categoryId">
+                    <select multiple="true" name="categoryId">
                         <#list allCategories as category>
-                            <option value="${category.productCategoryId?if_exists}">${category.description?if_exists}
+                            <option value="${category.productCategoryId?if_exists}">${category.description?if_exists} [${category.productCategoryId}]</option>
                         </#list>
                     </select>&nbsp;
                 </td>
