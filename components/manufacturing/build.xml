@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.6 2004/07/01 07:55:38 jonesde Exp $
+ *  $Id: build.xml,v 1.7 2004/07/02 08:54:02 jacopo Exp $
  *  *  2003/10/21  Olivier Heintz Exp *
 -->
 
@@ -43,7 +43,7 @@
     
     <target name="classpath">		        
         <path id="local.class.path">
-            <!-- empty for now <fileset dir="${lib.dir}" includes="*.jar"/> -->
+            <!-- <fileset dir="${lib.dir}" includes="*.jar"/> -->
             <fileset dir="../../base/lib" includes="*.jar"/>            
             <fileset dir="../../base/build/lib" includes="*.jar"/>
             <fileset dir="../entity/lib" includes="*.jar"/>
@@ -123,4 +123,8 @@
     
     <target name="all" depends="jar,docs"/>   
 </project>
-
+
+
+
+
+
