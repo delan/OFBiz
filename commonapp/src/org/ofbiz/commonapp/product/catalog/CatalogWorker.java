@@ -674,7 +674,7 @@ public class CatalogWorker {
 
     public static void getRandomCartProductAssoc(PageContext pageContext, String assocsAttrName) {
         List returnList = getRandomCartProductAssoc(pageContext.getRequest());
-        pageContext.setAttribute(assocsAttrName, returnList);
+        if (returnList != null) pageContext.setAttribute(assocsAttrName, returnList);
     }
                 
     public static List getRandomCartProductAssoc(ServletRequest request) {
