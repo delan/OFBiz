@@ -25,7 +25,7 @@
 --%>
 
 <%@ page import="java.util.*, java.io.*" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.widgetimpl.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
@@ -44,8 +44,16 @@
     Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
     if (categoryCol != null) pageContext.setAttribute("categoryCol", categoryCol);
 
+	List productCategoryMemberDatas = new LinkedList();
+	Iterator productCategoryMemberIter = productCategoryMembers.iterator();
+	while (productCategoryMemberIter.hasNext()) {
+		GenericValue productCategoryMember = (GenericValue) productCategoryMemberIter.next();
+		GenericValue productCategory = productCategoryMember.getRelatedOne("ProductCategory");
+		productCategoryMemberDatas.add(UtilMisc.toMap("productCategoryMember", productCategoryMember, "productCategory", productCategory));
+	}
+
     HtmlFormWrapper updateProductCategoryMemberWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "UpdateProductCategoryMemeber", request, response);
-    //productFormWrapper.putInContext("productCategoryMemberDatas", productCategoryMemberDatas);
+    updateProductCategoryMemberWrapper.putInContext("productCategoryMemberDatas", productCategoryMemberDatas);
 
     HtmlFormWrapper addProductCategoryMemberWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "AddProductCategoryMember", request, response);
 %>
@@ -78,6 +86,12 @@
 <%}%>
 <br>
 <br>
+
+<hr/>
+
+<%=updateProductCategoryMemberWrapper.renderFormString()%>
+
+<hr/>
 
 <%if(productId!=null && product!=null){%>
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
@@ -122,6 +136,13 @@
 </ofbiz:iterator>
 </table>
 <br>
+	
+<hr/>
+
+<%=addProductCategoryMemberWrapper.renderFormString()%>
+
+<hr/>
+
 <form method="POST" action="<ofbiz:url>/addProductToCategory</ofbiz:url>" style='margin: 0;' name='addProductCategoryMemberForm'>
   <input type="hidden" name="productId" value="<%=productId%>">
 

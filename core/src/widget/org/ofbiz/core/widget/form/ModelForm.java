@@ -202,14 +202,14 @@ public class ModelForm {
                     case ModelFormField.FieldInfo.DISPLAY:
                     ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
                     if (displayField.getAlsoHidden() && modelFormField.shouldUse(context)) {
-                        formStringRenderer.renderHiddenField(buffer, context, modelFormField);
+                        formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
                     }
                     break;
                     
                     case ModelFormField.FieldInfo.HYPERLINK:
                     ModelFormField.HyperlinkField hyperlinkField = (ModelFormField.HyperlinkField) fieldInfo;
                     if (hyperlinkField.getAlsoHidden() && modelFormField.shouldUse(context)) {
-                        formStringRenderer.renderHiddenField(buffer, context, modelFormField);
+                        formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
                     }
                     break;
                 }
@@ -384,9 +384,8 @@ public class ModelForm {
                 formStringRenderer.renderFormatHeaderRowCellClose(buffer, context, this, modelFormField);
             }
             
-            // render the "form" cell 
-            formStringRenderer.renderFormatHeaderRowFormCellOpen(buffer, context, this);
             
+            List headerFormFields = new LinkedList();
             Iterator formFieldIter = this.fieldList.iterator();
             boolean isFirstFormHeader = true;
             while (formFieldIter.hasNext()) {
@@ -406,15 +405,26 @@ public class ModelForm {
                 if (!modelFormField.shouldUse(context)) {
                     continue;
                 }
-
+                
+                headerFormFields.add(modelFormField);
+            }
+            
+            // render the "form" cell 
+            formStringRenderer.renderFormatHeaderRowFormCellOpen(buffer, context, this);
+            
+            Iterator headerFormFieldIter = headerFormFields.iterator();
+            while (headerFormFieldIter.hasNext()) {
+                ModelFormField modelFormField = (ModelFormField) headerFormFieldIter.next();
+                ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+                
                 // render title (unless this is a submit or a reset field)
                 if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.SUBMIT && fieldInfo.getFieldType() != ModelFormField.FieldInfo.RESET) {
-                    if (!isFirstFormHeader) {
-                        // TODO: determine somehow if this is the last one... how?
-                        formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(buffer, context, this, false);
-                    }
-
                     formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
+
+                    if (headerFormFieldIter.hasNext()) {
+                        // TODO: determine somehow if this is the last one... how?
+                        formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(buffer, context, this, modelFormField, false);
+                    }
                 } else {
                     formStringRenderer.renderFormatEmptySpace(buffer, context, this);
                 }
@@ -459,7 +469,9 @@ public class ModelForm {
             } else {
                 // render item rows
                 Iterator itemIter = items.iterator();
+                int itemIndex = 0;
                 while (itemIter.hasNext()) {
+                    itemIndex++;
                     Map localContext = new HashMap(context);
                     Object item = itemIter.next();
                     if (UtilValidate.isNotEmpty(this.getListEntryName())) {
@@ -468,9 +480,10 @@ public class ModelForm {
                         Map itemMap = (Map) item;
                         localContext.putAll(itemMap);
                     }
+                    localContext.put("itemIndex", new Integer(itemIndex));
                 
                     // render row formatting open
-                    formStringRenderer.renderFormatItemRowOpen(buffer, context, this);
+                    formStringRenderer.renderFormatItemRowOpen(buffer, localContext, this);
                     
                     // do the first part of display and hyperlink fields 
                     Iterator innerDisplayHyperlinkFieldIter = this.fieldList.iterator();
@@ -488,19 +501,52 @@ public class ModelForm {
                             break;
                         }
 
-                        if (!modelFormField.shouldUse(context)) {
+                        if (!modelFormField.shouldUse(localContext)) {
                             continue;
                         }
 
-                        formStringRenderer.renderFormatItemRowCellOpen(buffer, context, this, modelFormField);
+                        formStringRenderer.renderFormatItemRowCellOpen(buffer, localContext, this, modelFormField);
 
-                        modelFormField.renderFieldString(buffer, context, formStringRenderer);
+                        modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
                 
-                        formStringRenderer.renderFormatItemRowCellClose(buffer, context, this, modelFormField);
+                        formStringRenderer.renderFormatItemRowCellClose(buffer, localContext, this, modelFormField);
                     }
             
                     // render the "form" cell 
-                    formStringRenderer.renderFormatItemRowFormCellOpen(buffer, context, this);
+                    formStringRenderer.renderFormatItemRowFormCellOpen(buffer, localContext, this);
+                    
+                    formStringRenderer.renderFormOpen(buffer, localContext, this);
+                    
+                    // do all of the hidden fields...
+                    fieldIter = this.fieldList.iterator();
+                    while (fieldIter.hasNext()) {
+                        ModelFormField modelFormField = (ModelFormField) fieldIter.next();
+                        ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+
+                        // render hidden/ignored field widget
+                        switch (fieldInfo.getFieldType()) {
+                            case ModelFormField.FieldInfo.HIDDEN:
+                            case ModelFormField.FieldInfo.IGNORED:
+                            if (modelFormField.shouldUse(localContext)) {
+                                modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
+                            }
+                            break;
+                    
+                            case ModelFormField.FieldInfo.DISPLAY:
+                            ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
+                            if (displayField.getAlsoHidden() && modelFormField.shouldUse(localContext)) {
+                                formStringRenderer.renderHiddenField(buffer, localContext, modelFormField, modelFormField.getEntry(localContext));
+                            }
+                            break;
+                    
+                            case ModelFormField.FieldInfo.HYPERLINK:
+                            ModelFormField.HyperlinkField hyperlinkField = (ModelFormField.HyperlinkField) fieldInfo;
+                            if (hyperlinkField.getAlsoHidden() && modelFormField.shouldUse(localContext)) {
+                                formStringRenderer.renderHiddenField(buffer, localContext, modelFormField, modelFormField.getEntry(localContext));
+                            }
+                            break;
+                        }
+                    }
             
                     Iterator innerFormFieldIter = this.fieldList.iterator();
                     while (innerFormFieldIter.hasNext()) {
@@ -517,15 +563,17 @@ public class ModelForm {
                             continue;
                         }
 
-                        if (!modelFormField.shouldUse(context)) {
+                        if (!modelFormField.shouldUse(localContext)) {
                             continue;
                         }
 
                         // render field widget
-                        modelFormField.renderFieldString(buffer, context, formStringRenderer);
+                        modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
                     }
 
-                    formStringRenderer.renderFormatItemRowFormCellClose(buffer, context, this);
+                    formStringRenderer.renderFormClose(buffer, localContext, this);
+            
+                    formStringRenderer.renderFormatItemRowFormCellClose(buffer, localContext, this);
             
                     // render the rest of the display/hyperlink fields 
                     while (innerDisplayHyperlinkFieldIter.hasNext()) {
@@ -542,19 +590,19 @@ public class ModelForm {
                             continue;
                         }
 
-                        if (!modelFormField.shouldUse(context)) {
+                        if (!modelFormField.shouldUse(localContext)) {
                             continue;
                         }
 
-                        formStringRenderer.renderFormatItemRowCellOpen(buffer, context, this, modelFormField);
+                        formStringRenderer.renderFormatItemRowCellOpen(buffer, localContext, this, modelFormField);
 
-                        modelFormField.renderFieldString(buffer, context, formStringRenderer);
+                        modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
                 
-                        formStringRenderer.renderFormatItemRowCellClose(buffer, context, this, modelFormField);
+                        formStringRenderer.renderFormatItemRowCellClose(buffer, localContext, this, modelFormField);
                     }
 
                     // render row formatting close
-                    formStringRenderer.renderFormatItemRowClose(buffer, context, this);
+                    formStringRenderer.renderFormatItemRowClose(buffer, localContext, this);
                 }
             }
             
@@ -615,6 +663,7 @@ public class ModelForm {
             if (modelParam.formDisplay) {
                 ModelFormField modelFormField = this.addFieldFromServiceParam(modelService, modelParam);
                 if (UtilValidate.isNotEmpty(autoFieldsService.mapName)) {
+                    Debug.logInfo("Setting mapName " + autoFieldsService.mapName + " on the field " + modelFormField.getName());
                     modelFormField.setMapName(autoFieldsService.mapName);
                 }
             }
@@ -627,7 +676,27 @@ public class ModelForm {
         newFormField.setName(modelParam.name);
         newFormField.setServiceName(modelService.name);
         newFormField.setAttributeName(modelParam.name);
-        newFormField.setFieldInfo(new ModelFormField.TextField(newFormField));
+        
+        if (modelParam.type.indexOf("Double") != -1 || modelParam.type.indexOf("Float") != -1 || modelParam.type.indexOf("Long") != -1 || modelParam.type.indexOf("Integer") != -1) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            textField.setSize(6);
+            newFormField.setFieldInfo(textField);
+        } else if (modelParam.type.indexOf("Timestamp") != -1) {
+            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(newFormField);
+            dateTimeField.setType("timestamp");
+            newFormField.setFieldInfo(dateTimeField);
+        } else if (modelParam.type.indexOf("Date") != -1) {
+            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(newFormField);
+            dateTimeField.setType("date");
+            newFormField.setFieldInfo(dateTimeField);
+        } else if (modelParam.type.indexOf("Time") != -1) {
+            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(newFormField);
+            dateTimeField.setType("time");
+            newFormField.setFieldInfo(dateTimeField);
+        } else {
+            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            newFormField.setFieldInfo(textField);
+        }
         newFormField.setTitle(modelParam.formLabel);
         
         return this.addUpdateField(newFormField);
@@ -657,7 +726,67 @@ public class ModelForm {
         newFormField.setName(modelField.getName());
         newFormField.setEntityName(modelEntity.getEntityName());
         newFormField.setFieldName(modelField.getName());
-        newFormField.setFieldInfo(new ModelFormField.TextField(newFormField));
+        
+        if ("id".equals(modelField.getType()) || "id-ne".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            textField.setSize(20);
+            textField.setMaxlength(new Integer(20));
+            newFormField.setFieldInfo(textField);
+        } else if ("id-long".equals(modelField.getType()) || "id-long-ne".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            textField.setSize(40);
+            textField.setMaxlength(new Integer(60));
+            newFormField.setFieldInfo(textField);
+        } else if ("id-vlong".equals(modelField.getType()) || "id-vlong-ne".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            textField.setSize(60);
+            textField.setMaxlength(new Integer(250));
+            newFormField.setFieldInfo(textField);
+        } else if ("indicator".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            textField.setSize(1);
+            textField.setMaxlength(new Integer(1));
+            newFormField.setFieldInfo(textField);
+        } else if ("very-short".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            textField.setSize(6);
+            textField.setMaxlength(new Integer(10));
+            newFormField.setFieldInfo(textField);
+        } else if ("very-long".equals(modelField.getType())) {
+            ModelFormField.TextareaField textareaField = new ModelFormField.TextareaField(newFormField);
+            textareaField.setCols(60);
+            textareaField.setRows(2);
+            newFormField.setFieldInfo(textareaField);
+        } else if ("name".equals(modelField.getType()) || "short-varchar".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            textField.setSize(40);
+            textField.setMaxlength(new Integer(60));
+            newFormField.setFieldInfo(textField);
+        } else if ("value".equals(modelField.getType()) || "comment".equals(modelField.getType()) || 
+                "description".equals(modelField.getType()) || "long-varchar".equals(modelField.getType()) ||
+                "url".equals(modelField.getType()) || "email".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            textField.setSize(60);
+            textField.setMaxlength(new Integer(250));
+            newFormField.setFieldInfo(textField);
+        } else if ("floating-point".equals(modelField.getType()) || "currency".equals(modelField.getType()) || "numeric".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            textField.setSize(6);
+            newFormField.setFieldInfo(textField);
+        } else if ("date-time".equals(modelField.getType()) || "date".equals(modelField.getType()) || "time".equals(modelField.getType())) {
+            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(newFormField);
+            if ("date-time".equals(modelField.getType())) {
+                dateTimeField.setType("timestamp");
+            } else if ("date".equals(modelField.getType())) {
+                dateTimeField.setType("date");
+            } else if ("time".equals(modelField.getType())) {
+                dateTimeField.setType("time");
+            }
+            newFormField.setFieldInfo(dateTimeField);
+        } else {
+            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            newFormField.setFieldInfo(textField);
+        }
         
         return this.addUpdateField(newFormField);
     }

@@ -47,7 +47,7 @@ public interface FormStringRenderer {
     public void renderSubmitField(StringBuffer buffer, Map context, ModelFormField.SubmitField submitField);
     public void renderResetField(StringBuffer buffer, Map context, ModelFormField.ResetField resetField);
 
-    public void renderHiddenField(StringBuffer buffer, Map context, ModelFormField modelFormField);
+    public void renderHiddenField(StringBuffer buffer, Map context, ModelFormField modelFormField, String value);
     public void renderHiddenField(StringBuffer buffer, Map context, ModelFormField.HiddenField hiddenField);
     public void renderIgnoredField(StringBuffer buffer, Map context, ModelFormField.IgnoredField ignoredField);
 
@@ -66,7 +66,7 @@ public interface FormStringRenderer {
 
     public void renderFormatHeaderRowFormCellOpen(StringBuffer buffer, Map context, ModelForm modelForm);
     public void renderFormatHeaderRowFormCellClose(StringBuffer buffer, Map context, ModelForm modelForm);
-    public void renderFormatHeaderRowFormCellTitleSeparator(StringBuffer buffer, Map context, ModelForm modelForm, boolean isLast);
+    public void renderFormatHeaderRowFormCellTitleSeparator(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField, boolean isLast);
     
     public void renderFormatItemRowOpen(StringBuffer buffer, Map context, ModelForm modelForm);
     public void renderFormatItemRowClose(StringBuffer buffer, Map context, ModelForm modelForm);

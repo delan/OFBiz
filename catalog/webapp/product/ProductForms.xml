@@ -106,7 +106,7 @@
 		<field name="detailImageUrl"><text size="60" maxlength="255"/></field>
 		<field name="detailTemplate"><text size="60" maxlength="250"/></field>
 
-		<field name="submit" title="Update Product" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="submitButton" title="Update Product" widget-style="standardSubmit"><submit button-type="button"/></field>
 
 		<field use-when="product!=null" position="1" name="lastUpdatedByText" title="Last Modified By:" widget-style="tabletext">
 			<display description="[${product.lastModifiedByUserLogin}] on ${product.lastModifiedDate}" also-hidden="false"/>
@@ -116,7 +116,8 @@
 		</field>
 	</form>
 	<form name="AddProductCategoryMember" type="single" 
-		target="addProductToCategory" title="Add ProductCategoryMember (select Category, enter From Date):">
+		target="addProductToCategory" title="Add ProductCategoryMember (select Category, enter From Date):"
+		default-title-style="tableheadtext" default-widget-style="inputBox">
 		<auto-fields-service service-name="safeAddProductToCategory"/>
 		<field name="productId" map-name="product"><hidden/></field>
 		<field name="productCategoryId" widget-style="selectBox">
@@ -126,21 +127,25 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="submit" title="Add"><submit button-type="button"/></field>
+		<field name="submitButton" title="Add"><submit button-type="button"/></field>
 	</form>
 	<form name="UpdateProductCategoryMemeber" type="list" 
-		target="updateProductToCategory" title="" 
-		list-name="productCategoryMemberDatas">
+		target="updateProductToCategory" title="" list-name="productCategoryMemberDatas"
+		default-title-style="tableheadtext" default-widget-style="inputBox">
 		<!-- each entry in the list will be a Map with the entries: productCategoryMember and productCategory -->
 		<auto-fields-service service-name="updateProductToCategory" map-name="productCategoryMember"/>
 		<field name="productId"><hidden/></field>
-		<field name="productCategoryId" title="Category" widget-style="buttontext">
+		<field name="productCategoryId" title="Category [ID]" widget-style="buttontext">
 			<hyperlink target="EditCategory?productCategoryId=${productCategoryMember.productCategoryId}"
 				description="${productCategory.description} [${productCategory.productCategoryId}]"/>
 		</field>
-		<field name="fromDate"><display/></field>
+		<field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
+		<field name="thruDate" title="Thru Date &amp;amp; Time"></field>
 		<field name="comments"><ignored/></field>
-		<field name="deleteLink" title="" widget-style="buttontext">
+		<field name="userLogin"><ignored/></field>
+		<field name="locale"><ignored/></field>
+		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
 			<hyperlink target="removeProductFromCategory?productId=${productCategoryMember.productId}&amp;productCategoryId=${productCategoryMember.productCategoryId}&amp;fromDate=${productCategoryMember.fromDate}"
 				description="[Delete]" also-hidden="false"/>
 		</field>

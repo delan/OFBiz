@@ -131,7 +131,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         
         buffer.append(" href=\"");
-        this.appendOfbizUrl(buffer, hyperlinkField.getTarget(context));
+        this.appendOfbizUrl(buffer, "/" + hyperlinkField.getTarget(context));
         buffer.append("\"");
 
         buffer.append('>');
@@ -504,10 +504,6 @@ public class HtmlFormRenderer implements FormStringRenderer {
         this.renderHiddenField(buffer, context, modelFormField, value);
     }
     
-    public void renderHiddenField(StringBuffer buffer, Map context, ModelFormField modelFormField) {
-        String value = modelFormField.getEntry(context);
-        this.renderHiddenField(buffer, context, modelFormField, value);
-    }
     public void renderHiddenField(StringBuffer buffer, Map context, ModelFormField modelFormField, String value) {
         buffer.append("<input type=\"hidden\"");
         
@@ -638,12 +634,20 @@ public class HtmlFormRenderer implements FormStringRenderer {
     /* (non-Javadoc)
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatHeaderRowFormCellTitleSeparator(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm, boolean)
      */
-    public void renderFormatHeaderRowFormCellTitleSeparator(StringBuffer buffer, Map context, ModelForm modelForm, boolean isLast) {
-        if (isLast) {
-            buffer.append(", &amp; ");
-        } else {
-            buffer.append(", ");
+    public void renderFormatHeaderRowFormCellTitleSeparator(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField, boolean isLast) {
+        buffer.append("<span");
+        if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
+            buffer.append(" class=\"");
+            buffer.append(modelFormField.getTitleStyle());
+            buffer.append("\"");
         }
+        buffer.append(">");
+        if (isLast) {
+            buffer.append(" - ");
+        } else {
+            buffer.append(" - ");
+        }
+        buffer.append("</span>");
     }
 
     /* (non-Javadoc)
