@@ -68,7 +68,14 @@
         <attribute name="picklistInfoList" type="List" mode="OUT" optional="true"/>
     </service>
     
-    
+    <service name="getPickAndPackReportInfo" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="getPickAndPackReportInfo">
+        <description>Get Pick And Pack Report Info</description>
+        <attribute name="picklistId" type="String" mode="IN" optional="false"/>
+        <attribute name="picklistInfo" type="Map" mode="OUT" optional="false"/>
+        <attribute name="inventoryItemAndLocationInfoList" type="List" mode="OUT" optional="false"/>
+    </service>
+        
     <!-- Picklist -->
     <service name="createPicklist" default-entity-name="Picklist" engine="simple"
             location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="createPicklist" auth="true">
