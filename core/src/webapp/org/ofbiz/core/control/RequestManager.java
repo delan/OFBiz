@@ -148,6 +148,17 @@ public class RequestManager implements Serializable {
         }
     }
 
+    /** Gets the type of this view */
+    public String getViewType(String viewStr) {
+        HashMap view = (HashMap) ConfigXMLReader.getViewMap(configFileUrl).get(viewStr);
+        if (view != null) {
+            return (String) view.get(ConfigXMLReader.VIEW_TYPE);
+        } else {
+            Debug.logWarning("[RequestManager.getViewType] View with name \"" + viewStr + "\" not found", module);
+            return null;
+        }
+    }
+
     /** Gets the error page from the requestMap, if none uses the default */
     public String getErrorPage(String uriStr) {
         HashMap uri = getRequestMapMap(uriStr);

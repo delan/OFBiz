@@ -53,11 +53,13 @@ public class RequestHandler implements Serializable {
 
     private ServletContext context;
     private RequestManager rm;
+    private VelocityViewHandler ve;
 
     public void init(ServletContext context) {
         this.context = context;
         Debug.logInfo("[RerquestHandler Loading...]", module);
         rm = new RequestManager(context);
+        ve = null;
     }
 
     public String doRequest(HttpServletRequest request, HttpServletResponse response, String chain,
@@ -71,6 +73,7 @@ public class RequestHandler implements Serializable {
         boolean chainRequest = false;
         boolean noDispatch = false;
         boolean redirect = false;
+        boolean velocity = false;
 
         String cname = request.getContextPath().substring(1);
 
@@ -148,7 +151,8 @@ public class RequestHandler implements Serializable {
                     EventHandler eh = EventFactory.getEventHandler(rm, eventType);
                     eh.initialize(eventPath, eventMethod);
                     eventReturnString = eh.invoke(request, response);
-                    ServerHitBin.countEvent(cname + "." + eventMethod, request.getSession().getId(), eventStartTime, System.currentTimeMillis() - eventStartTime, userLogin, delegator);
+                    ServerHitBin.countEvent(cname + "." + eventMethod, request.getSession().getId(), eventStartTime,
+                                            System.currentTimeMillis() - eventStartTime, userLogin, delegator);
                 } catch (EventHandlerException e) {
                     throw new RequestHandlerException(e.getMessage(), e);
                 }
@@ -174,7 +178,7 @@ public class RequestHandler implements Serializable {
             redirect = true;
         }
 
-        // check for a url for redirection
+        // check for a JSP to dispatch to
         if (nextView != null && nextView.startsWith("view:")) {
             nextView = nextView.substring(5);
         }
@@ -191,12 +195,17 @@ public class RequestHandler implements Serializable {
             if (tempView != null && tempView.length() > 0 && tempView.charAt(0) == '/') tempView = tempView.substring(1);
             Debug.logVerbose("[Getting View Map]: " + tempView, module);
 
-            /* Before mapping the view, set a session attribute so we know where we are */
+            // before mapping the view, set a session attribute so we know where we are
             request.setAttribute(SiteDefs.CURRENT_VIEW, tempView);
+
+            // check the type of view (for velocity)
+            if (rm.getViewType(tempView).equals("velocity"))
+                velocity = true;
 
             tempView = rm.getViewPage(tempView);
             nextPage = tempView != null ? tempView : "/" + nextView;
             Debug.logVerbose("[Mapped To]: " + nextPage, module);
+
         }
 
         // handle errors
@@ -240,6 +249,17 @@ public class RequestHandler implements Serializable {
             } catch (IllegalStateException ise) {
                 throw new RequestHandlerException(ise.getMessage(), ise);
             }
+            return null;
+        }
+
+        // if velocity - call the velocity view handler and return null to the control servlet
+        if (velocity) {
+            Debug.logInfo("[Calling Velocity Template]: " + nextPage, module);
+            if (ve == null) {
+                ve = new VelocityViewHandler();
+                ve.init(context);
+            }
+            ve.eval(nextPage, request, response);
             return null;
         }
 
