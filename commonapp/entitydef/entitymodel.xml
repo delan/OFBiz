@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Fri Sep 07 14:53:46 PDT 2001
+ *@created    Mon Sep 10 16:27:55 PDT 2001
  *@version    1.0
  */
 -->
@@ -3901,10 +3901,6 @@
     </entity>	
     <entity>
       <title>The Order Payment Preference Entity</title>
-      <description></description>
-      <copyright></copyright>
-      <author></author>
-      <version></version>
       <package-name>org.ofbiz.commonapp.order.order</package-name>
       <table-name>ORDER_PAYMENT_PREFERENCE</table-name>
       <field><col-name>ORDER_PAYMENT_PREFERENCE_ID</col-name><type>id-ne</type></field>
@@ -6419,7 +6415,8 @@
       <table-name>PRODUCT_CATEGORY</table-name>
       <field><col-name>PRODUCT_CATEGORY_ID</col-name><type>id-ne</type></field>
       <field><col-name>PRIMARY_PARENT_CATEGORY_ID</col-name><type>id</type></field>
-      <field><col-name>DESCRIPTION</col-name><type>description</type></field>	
+      <field><col-name>DESCRIPTION</col-name><type>description</type></field>
+      <field><col-name>CATEGORY_IMAGE_URL</col-name><type>long-varchar</type></field>	
       <prim-key-col>PRODUCT_CATEGORY_ID</prim-key-col>
       <relation>
         <type>many</type>
@@ -7536,7 +7533,8 @@
       <field><col-name>QUANTITY_INCLUDED</col-name><type>floating-point</type></field>
       <field><col-name>WEIGHT_UOM_ID</col-name><type>id</type></field>
       <field><col-name>WEIGHT</col-name><type>floating-point</type></field>
-      <field><col-name>TAXABLE</col-name><type>indicator</type></field>	
+      <field><col-name>TAXABLE</col-name><type>indicator</type></field>
+      <field><col-name>SHOW_IN_SEARCH</col-name><type>indicator</type></field>	
       <prim-key-col>PRODUCT_ID</prim-key-col>
       <relation>
         <type>many</type>
