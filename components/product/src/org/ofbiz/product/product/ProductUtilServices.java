@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.16 2004/01/27 22:20:41 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.17 2004/01/27 23:04:22 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -51,6 +51,8 @@ import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -58,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -223,6 +225,7 @@ public class ProductUtilServices {
         
     public static Map makeStandAloneFromSingleVariantVirtuals(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         Debug.logInfo("Starting makeStandAloneFromSingleVariantVirtuals", module);
@@ -253,55 +256,13 @@ public class ProductUtilServices {
                 // has only one variant period, is it valid? should already be discontinued if not
 
                 String productId = value.getString("productId");
-                GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-                Debug.logInfo("Processing virtual product with one variant with ID: " + productId + " and name: " + product.getString("internalName"), module);
-                
                 List paList = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT"));
                 // verify the query; tested on a bunch, looks good
                 if (paList.size() != 1) {
                     Debug.logInfo("Virtual product with ID " + productId + " should have 1 assoc, has " + paList.size(), module);
                 } else {
                     // for all virtuals with one variant move all info from virtual to variant and remove virtual, make variant as not a variant
-                    GenericValue productAssoc = EntityUtil.getFirst(paList);
-                    // remove the productAssoc before getting down so it isn't copied over...
-                    productAssoc.remove();
-                    String variantProductId = productAssoc.getString("productIdTo");
-                    
-                    // Product
-                    GenericValue variantProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", variantProductId));
-
-                    Debug.logInfo("--variant has ID: " + productId + " and name: " + product.getString("internalName"), module);
-                    
-                    // start with the values from the virtual product, override from the variant...
-                    GenericValue newVariantProduct = delegator.makeValue("Product", product);
-                    newVariantProduct.setAllFields(variantProduct, false, "", null);
-                    newVariantProduct.store();
-                    
-                    // ProductCategoryMember
-                    duplicateRelated(product, "", "ProductCategoryMember", "productId", variantProductId, nowTimestamp, true, delegator);
-                    
-                    // ProductFeatureAppl
-                    duplicateRelated(product, "", "ProductFeatureAppl", "productId", variantProductId, nowTimestamp, true, delegator);
-                    
-                    // ProductContent
-                    duplicateRelated(product, "", "ProductContent", "productId", variantProductId, nowTimestamp, true, delegator);
-                    
-                    // ProductPrice
-                    duplicateRelated(product, "", "ProductPrice", "productId", variantProductId, nowTimestamp, true, delegator);
-                    
-                    // GoodIdentification
-                    duplicateRelated(product, "", "GoodIdentification", "productId", variantProductId, nowTimestamp, true, delegator);
-                    
-                    // ProductAttribute
-                    duplicateRelated(product, "", "ProductAttribute", "productId", variantProductId, nowTimestamp, true, delegator);
-                    
-                    // ProductAssoc
-                    duplicateRelated(product, "Main", "ProductAssoc", "productId", variantProductId, nowTimestamp, true, delegator);
-                    duplicateRelated(product, "Assoc", "ProductAssoc", "productIdTo", variantProductId, nowTimestamp, true, delegator);
-                    
-                    product.removeRelated("ProductKeyword");
-                    
-                    product.remove();
+                    dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.TRUE));
                     
                     numWithOneOnly++;
                     if (numWithOneOnly % 100 == 0) {
@@ -322,46 +283,14 @@ public class ProductUtilServices {
                 // has only one valid variant
                 String productId = value.getString("productId");
                 
-                GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-                
                 List paList = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT"));
                 // verify the query; tested on a bunch, looks good
                 if (paList.size() != 1) {
                     Debug.logInfo("Virtual product with ID " + productId + " should have 1 assoc, has " + paList.size(), module);
                 } else {
                     // for all virtuals with one valid variant move info from virtual to variant, put variant in categories from virtual, remove virtual from all categories but leave "family" otherwise intact, mark variant as not a variant
-                    GenericValue productAssoc = EntityUtil.getFirst(paList);
-                    String variantProductId = productAssoc.getString("productIdTo");
+                    dispatcher.runSync("mergeVirtualWithSingleVariant", UtilMisc.toMap("productId", productId, "removeOld", Boolean.FALSE));
                     
-                    // Product
-                    GenericValue variantProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", variantProductId));
-                    // start with the values from the virtual product, override from the variant...
-                    GenericValue newVariantProduct = delegator.makeValue("Product", product);
-                    newVariantProduct.setAllFields(variantProduct, false, "", null);
-                    newVariantProduct.store();
-                    
-                    // ProductCategoryMember
-                    duplicateRelated(product, "", "ProductCategoryMember", "productId", variantProductId, nowTimestamp, false, delegator);
-                    
-                    // ProductFeatureAppl
-                    duplicateRelated(product, "", "ProductFeatureAppl", "productId", variantProductId, nowTimestamp, false, delegator);
-                    
-                    // ProductContent
-                    duplicateRelated(product, "", "ProductContent", "productId", variantProductId, nowTimestamp, false, delegator);
-                    
-                    // ProductPrice
-                    duplicateRelated(product, "", "ProductPrice", "productId", variantProductId, nowTimestamp, false, delegator);
-                    
-                    // GoodIdentification
-                    duplicateRelated(product, "", "GoodIdentification", "productId", variantProductId, nowTimestamp, false, delegator);
-                    
-                    // ProductAttribute
-                    duplicateRelated(product, "", "ProductAttribute", "productId", variantProductId, nowTimestamp, false, delegator);
-                    
-                    // ProductAssoc
-                    duplicateRelated(product, "Main", "ProductAssoc", "productId", variantProductId, nowTimestamp, false, delegator);
-                    duplicateRelated(product, "Assoc", "ProductAssoc", "productIdTo", variantProductId, nowTimestamp, false, delegator);
-
                     numWithOneValid++;
                     if (numWithOneValid % 100 == 0) {
                         Debug.logInfo("Made " + numWithOneValid + " virtual products with one valid variant stand-alone products.", module);
@@ -375,7 +304,78 @@ public class ProductUtilServices {
             String errMsg = "Entity error running makeStandAloneFromSingleVariantVirtuals: " + e.toString();
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
+        } catch (GenericServiceException e) {
+            String errMsg = "Entity error running makeStandAloneFromSingleVariantVirtuals: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
         }
+        
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map mergeVirtualWithSingleVariant(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        
+        String productId = (String) context.get("productId");
+        Boolean removeOldBool = (Boolean) context.get("removeOld");
+        boolean removeOld = removeOldBool.booleanValue();
+        
+        try {
+            GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+            Debug.logInfo("Processing virtual product with one variant with ID: " + productId + " and name: " + product.getString("internalName"), module);
+            
+            List paList = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT"));
+            
+            GenericValue productAssoc = EntityUtil.getFirst(paList);
+            if (removeOld) {
+                // remove the productAssoc before getting down so it isn't copied over...
+                productAssoc.remove();
+            }
+            String variantProductId = productAssoc.getString("productIdTo");
+            
+            // Product
+            GenericValue variantProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", variantProductId));
+    
+            Debug.logInfo("--variant has ID: " + productId + " and name: " + product.getString("internalName"), module);
+            
+            // start with the values from the virtual product, override from the variant...
+            GenericValue newVariantProduct = delegator.makeValue("Product", product);
+            newVariantProduct.setAllFields(variantProduct, false, "", null);
+            newVariantProduct.store();
+            
+            // ProductCategoryMember
+            duplicateRelated(product, "", "ProductCategoryMember", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            
+            // ProductFeatureAppl
+            duplicateRelated(product, "", "ProductFeatureAppl", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            
+            // ProductContent
+            duplicateRelated(product, "", "ProductContent", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            
+            // ProductPrice
+            duplicateRelated(product, "", "ProductPrice", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            
+            // GoodIdentification
+            duplicateRelated(product, "", "GoodIdentification", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            
+            // ProductAttribute
+            duplicateRelated(product, "", "ProductAttribute", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            
+            // ProductAssoc
+            duplicateRelated(product, "Main", "ProductAssoc", "productId", variantProductId, nowTimestamp, removeOld, delegator);
+            duplicateRelated(product, "Assoc", "ProductAssoc", "productIdTo", variantProductId, nowTimestamp, removeOld, delegator);
+            
+            if (removeOld) {
+                product.removeRelated("ProductKeyword");
+                product.remove();
+            }
+        } catch (GenericEntityException e) {
+            String errMsg = "Entity error running makeStandAloneFromSingleVariantVirtuals: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+       
         
         return ServiceUtil.returnSuccess();
     }

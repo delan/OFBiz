@@ -1073,6 +1073,13 @@
                 location="org.ofbiz.product.product.ProductUtilServices" invoke="makeStandAloneFromSingleVariantVirtuals" auth="true" transaction-timout="36000000" require-new-transaction="true">
         <description>Make Stand Alone From Single Variant Virtuals</description>
     </service>
+    <service name="mergeVirtualWithSingleVariant" engine="java"
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="mergeVirtualWithSingleVariant" auth="true" transaction-timout="3600000" require-new-transaction="true">
+        <description>A service to be called by the make stand alone service to do the operation for one product.</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="removeOld" type="Boolean" mode="IN" optional="false"/>
+    </service>
+    
     <service name="setAllProductImageNames" engine="java"
                 location="org.ofbiz.product.product.ProductUtilServices" invoke="setAllProductImageNames" auth="true" transaction-timout="36000000" require-new-transaction="true">
         <description>Set All Product Image Names</description>
