@@ -41,6 +41,10 @@ shoppingCart = ShoppingCartEvents.getCartObject(request);
 context.put("shoppingCartSize", shoppingCart.size());
 context.put("shoppingCart", shoppingCart);
 
+// get all the possible gift wrap options
+allgiftWraps = delegator.findByAnd("ProductFeature", UtilMisc.toMap("productFeatureTypeId", "GIFT_WRAP"), UtilMisc.toList("defaultSequenceNum"));
+context.put("allgiftWraps", allgiftWraps);
+
 updateParty = request.getParameter("updateParty");
 if (updateParty != null) {
     context.put("updateParty", updateParty);
