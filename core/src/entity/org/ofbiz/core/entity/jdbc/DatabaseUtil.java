@@ -277,6 +277,11 @@ public class DatabaseUtil {
                                     } else {
                                         typeName = fullTypeStr;
                                     }
+                                    
+                                    //override the default typeName with the sqlTypeAlias if it is specified
+                                    if (UtilValidate.isNotEmpty(modelFieldType.getSqlTypeAlias())) {
+                                        typeName = modelFieldType.getSqlTypeAlias();
+                                    }
 
                                     if (!ccInfo.typeName.equals(typeName.toUpperCase())) {
                                         String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +

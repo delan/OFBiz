@@ -54,6 +54,8 @@ public class ModelFieldType {
 
     /** The sql-type of the Field */
     protected String sqlType = null;
+    /** The sql-type-alias of the Field, this is optional */
+    protected String sqlTypeAlias = null;
 
     /** validators to be called when an update is done */
     protected List validators = new ArrayList();
@@ -66,6 +68,7 @@ public class ModelFieldType {
         this.type = UtilXml.checkEmpty(fieldTypeElement.getAttribute("type"));
         this.javaType = UtilXml.checkEmpty(fieldTypeElement.getAttribute("java-type"));
         this.sqlType = UtilXml.checkEmpty(fieldTypeElement.getAttribute("sql-type"));
+        this.sqlTypeAlias = UtilXml.checkEmpty(fieldTypeElement.getAttribute("sql-type-alias"));
 
         NodeList validateList = fieldTypeElement.getElementsByTagName("validate");
 
@@ -89,6 +92,10 @@ public class ModelFieldType {
     /** The sql-type of the Field */
     public String getSqlType() {
         return this.sqlType;
+    }
+    /** The sql-type-alias of the Field */
+    public String getSqlTypeAlias() {
+        return this.sqlTypeAlias;
     }
 
     /** validators to be called when an update is done */
@@ -116,7 +123,7 @@ public class ModelFieldType {
             } else {
                 return 255;
             }
-        } else if (sqlType.indexOf("TEXT") >= 0) {
+        } else if (sqlType.indexOf("TEXT") >= 0 || sqlType.indexOf("LONG") >= 0) {
             return 5000;
         }
         return 20;

@@ -37,6 +37,7 @@
 <!-- ================= Children of field-type-def =================== -->
 <!ATTLIST field-type-def type CDATA #REQUIRED>
 <!ATTLIST field-type-def sql-type CDATA #REQUIRED>
+<!ATTLIST field-type-def sql-type-alias CDATA #IMPLIED>
 <!ATTLIST field-type-def java-type CDATA #REQUIRED>
 
 <!ELEMENT validate EMPTY>
