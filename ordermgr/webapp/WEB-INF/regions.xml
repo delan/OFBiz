@@ -11,12 +11,15 @@
         <put section='footer' content='/includes/footer.jsp'/>
     </define>
 
-    <define id='LEFTBAR_REGION' template='/templates/leftbar_template.jsp'>
-        <!-- <put section='first' content='/first.jsp'/> -->
+    <define id='LEFTBAR_REGION' template='/templates/leftbar_template.jsp'>  
+    	<put section='first' content='/entry/orderparty.jsp'/>  	
+        <put section='second' content='/entry/catalog/choosecatalog.jsp'/>
+        <put section='third' content='/entry/catalog/keywordsearchbox.jsp'/>
+        <put section='fourth' content='/entry/catalog/sidedeepcategory.jsp'/>                       
     </define>
 
     <define id='RIGHTBAR_REGION' template='/templates/rightbar_template.jsp'>
-        <!-- <put section='first' content='/first.jsp'/> -->
+        <put section='first' content='/entry/minicart.jsp'/>
     </define>
 
     <define id='LEFT_ONLY_REGION' region='MAIN_REGION'>
@@ -55,6 +58,24 @@
         <put section='title'>Create New Note</put>
         <put section='content' content='/order/newnote.jsp'/>
     </define>
+
+    <define id='salesentry' region='LEFT_ONLY_REGION'>
+        <put section='title'>Order Entry Page</put>
+        <put section='content' content='/entry/showcart.jsp'/>
+    </define>
+    <define id='keywordsearch' region='LEFT_RIGHT_REGION'>
+        <put section='title'>Keyword Search Page</put>
+        <put section='content' content='/entry/catalog/keywordsearch.jsp'/>
+    </define>
+    <define id='category' region='LEFT_RIGHT_REGION'>
+        <put section='title'>Product Category Page</put>
+        <put section='content' content='/entry/catalog/category.jsp'/>
+    </define>
+    <define id='product' region='LEFT_RIGHT_REGION'>
+        <put section='title'>Product Page</put>
+        <put section='content' content='/entry/catalog/product.jsp'/>
+    </define>    
+        
     <define id='shipsetup' region='MAIN_REGION'>
         <put section='title'>Shipping Estimate Setup</put>
         <put section='content' content='/shipment/shipsetup.jsp'/>

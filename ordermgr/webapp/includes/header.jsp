@@ -43,7 +43,15 @@
         <tr>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
 
+		  <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/orderlist</ofbiz:url>" class="headerbuttontext">Order&nbsp;List</a></td>
+          <%}%>
+
+		  <%if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) {%>
+		  <td class="headerButtonLeft"><a href="<ofbiz:url>/salesentry</ofbiz:url>" class="headerbuttontext">Sale&nbsp;Entry</a></td>
+		  <td class="headerButtonLeft"><a href="#" class="headerbuttontext">Purchase&nbsp;Entry</a></td>
+          <%}%>
+
           <%if(security.hasEntityPermission("SHIPRATE", "_VIEW", session)) {%>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/shipsetup</ofbiz:url>" class="headerbuttontext">Ship&nbsp;Rates</a></td>
           <%}%>
