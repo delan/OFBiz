@@ -1635,6 +1635,9 @@
       <relation type="one" fk-name="FACILITY_PGRP" rel-entity-name="FacilityGroup">
         <key-map field-name="primaryFacilityGroupId" rel-field-name="facilityGroupId"/>
       </relation>
+      <relation type="many" rel-entity-name="FacilityGroupMember">
+      	<key-map field-name="facilityId"/>
+      </relation>
       <relation type="many" rel-entity-name="FacilityTypeAttr">
         <key-map field-name="facilityTypeId"/>
       </relation>
