@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -69,9 +69,9 @@ ${pages.get("/bom/BomTabBar.ftl")}
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <input type='text' size='25' class='inputBox' name='productId' value='${requestParameters.productId?if_exists}'>
-				  <span class='tabletext'> <a href="javascript:call_fieldlookup(document.lookupbom.productId,'<@ofbizUrl>/LookupProduct</@ofbizUrl>', 'none',640,460);">
-                    	<img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
-                 </span>
+		  <span class='tabletext'> <a href="javascript:call_fieldlookup(document.lookupbom.productId,'<@ofbizUrl>/LookupProduct</@ofbizUrl>', 'none',640,460);">
+                  <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
+                  </span>
                 </td>
               </tr>
               <tr>
