@@ -75,7 +75,7 @@ public class WorkflowServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         String workEffortId = (String) context.get("workEffortId");
-        Map actResults = (Map) context.get("results");
+        Map actResults = (Map) context.get("result");
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (!hasPermission(security, workEffortId, userLogin)) {
@@ -85,8 +85,9 @@ public class WorkflowServices {
         }
         try {
             WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
-            if (actResults != null && actResults.size() > 0)
+            if (actResults != null && actResults.size() > 0) {
                 activity.setResult(actResults);
+            }
             activity.complete();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException e) {
@@ -255,7 +256,7 @@ public class WorkflowServices {
         String partyId = (String) context.get("partyId");
         String roleType = (String) context.get("roleTypeId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
-        Map actResults = (Map) context.get("results");
+        Map actResults = (Map) context.get("result");
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (!hasPermission(security, workEffortId, userLogin)) {
