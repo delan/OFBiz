@@ -248,7 +248,9 @@ public class ProductServices {
 
                 // get the features and filter out expired dates
                 features = thisItem.getDelegator().findByAndCache("ProductFeatureAndAppl", fields, sort);
+                Debug.logInfo("Features: " + features);
                 features = EntityUtil.filterByDate(features);
+                Debug.logInfo("Features: " + features);
             } catch (GenericEntityException e) {
                 throw new IllegalStateException("Problem reading relation: " + e.getMessage());
             }
@@ -262,7 +264,7 @@ public class ProductServices {
                     if (!itemList.contains(thisItem))
                         itemList.add(thisItem);
                 } else {
-                    List itemList = UtilMisc.toList(item);
+                    List itemList = UtilMisc.toList(thisItem);
                     group.put(itemKey, itemList);
                 }
             }
