@@ -173,7 +173,8 @@ can find them. If you need any additional ones put them there.</p>
   </tr>
   <tr><td>hsqldb.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
   <tr><td>postgresql.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
-  <tr><td>mm.mysql-2.0.8-bin.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
+  <tr><td>mm.mysql-2.0.14-bin.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
+  <tr><td>sapdb.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
 </table>
 
 <h4>OFBiz Libraries</h4>
@@ -184,8 +185,14 @@ can find them. If you need any additional ones put them there.</p>
     <td><b>Destination Location</b></td>
   </tr>
   <tr><td>ofbcore-share.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
+  <tr><td>ofbcore-entity.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
+  <tr><td>ofbcore-service.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
+  <tr><td>ofbcore-extutil.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
+  <tr><td>ofbcore-extentity.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
   <tr><td>ofbcore-rules.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
   <tr><td>ofbcore-workflow.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
+  <tr><td>ofbcore-minilang.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
+  <tr><td>ofbcore-datafile.jar</td><td>ofbiz/core/lib</td><td>catalina/lib</td></tr>
   <tr><td>ofbcommonapp.jar</td><td>ofbiz/commonapp/lib</td><td>catalina/lib</td></tr>
 </table>
 
@@ -197,17 +204,28 @@ can find them. If you need any additional ones put them there.</p>
     <td><b>Destination Location</b></td>
   </tr>
   <tr><td>cache.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>cybersource.properties(optional)</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
   <tr><td>debug.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>general.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>prodsearch.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
   <tr><td>entityengine.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>general.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>inventoryalerts.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>jndiservers.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
   <tr><td>localdtds.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>payflow.properties(optional)</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>payment.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>prodsearch.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
   <tr><td>security.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
   <tr><td>security.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
   <tr><td>serverstats.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>servicesengine.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>serviceengine.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>taxware.properties(optional)</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>tyrex.config(optional)</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
   <tr><td>tyrexdomain.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>url.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
 </table>
+
+<p>NOTE: for Tomcat 4.1 and later use catalina/shared/lib instead of catalina/lib and
+use catalina/shared/classes instead of catalina/classes.</p>
 
 <p>NOTE: Poolman is not being used right now, instead we are using Tyrex for
 connection pooling and JTA support. The config files have been left in place just
@@ -330,7 +348,7 @@ a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
         <td><b>Comments</b></td>
     </tr>
     <tr>
-        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later - Catalina</a></td>
+        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later (prefer 4.1.12 or later, much faster) - Catalina</a></td>
         <td><a href='http://tyrex.sf.net'>Tyrex 1.0</a></td>
         <td>Default config; freely available; comparatively slow</td>
     </tr>
@@ -340,9 +358,9 @@ a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
         <td>Freely available; also slow, Jetty appears to run even slower than Tomcat4</td>
     </tr>
     <tr>
-        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later - Catalina</a></td>
+        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later (prefer 4.1.12 or later, much faster) - Catalina</a></td>
         <td><a href='http://www.jboss.org'>JBoss 2.4.4 or later, or many earlier too</a></td>
-        <td>Freely available; same speed at Catalina/Tyrex, but can interoperate 
+        <td>Freely available; similar to Catalina/Tyrex, but can interoperate 
             with other JBoss resources like EJBs, etc</td>
     </tr>
     <tr>
@@ -369,7 +387,8 @@ a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
         <td>Weblogic ~$10,000/CPU (used to be, I don't know how much it is now), 
             OFBiz can interoperate with other Weblogic resources, but is slower 
             than Resin or Orion (this may not be true with the Weblogic 7 series
-            which has been optimized a lot)</td>
+            which has been optimized a lot, we plan to do a sample config for 
+            version 7 sometime, but it should work fine if you'd like to try it doing you own config)</td>
     </tr>
 </table>
 
