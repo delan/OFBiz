@@ -182,119 +182,136 @@
     </service>
 
     <!-- ContactMech services -->
-    <service name="createContactMech" engine="java"
-            location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createContactMech" auth="true">
+    <service name="createContactMech" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/ContactMechServices.xml" invoke="createContactMech" auth="true">
         <description>Create a ContactMech</description>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="contactMechTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="infoString" type="String" mode="IN" optional="false"/>
-        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
+        <auto-attributes entity-name="ContactMech" include="nonpk" mode="IN" optional="false"/>
+        <override name="infoString" optional="true"/>
+        <auto-attributes entity-name="ContactMech" include="pk" mode="OUT" optional="false"/>
     </service>
-    <service name="updateContactMech" engine="java"
-            location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="updateContactMech" auth="true">
+    <service name="createPartyContactMech" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="createPartyContactMech" auth="true">
+        <description>Create a PartyContactMech</description>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="ContactMech" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>     
+    </service>       
+    <service name="updateContactMech" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/ContactMechServices.xml" invoke="updateContactMech" auth="true">
         <description>Update a ContactMech</description>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
         <attribute name="contactMechTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="infoString" type="String" mode="IN" optional="false"/>
-        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
-        <attribute name="newContactMechId" type="String" mode="OUT" optional="true"/>
+        <attribute name="infoString" type="String" mode="IN" optional="true"/>
     </service>
-    <service name="deleteContactMech" engine="java"
-            location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="deleteContactMech" auth="true">
-        <description>Delete a ContactMech</description>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+    <service name="updatePartyContactMech" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="updatePartyContactMech" auth="true">
+        <description>Update a PartyContactMech</description>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>        
+        <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>  
+        <attribute name="contactMechTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="infoString" type="String" mode="IN" optional="true"/>
+        <attribute name="newContactMechId" type="String" mode="IN" optional="true"/>
+    </service>     
+    <service name="deletePartyContactMech" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="deletePartyContactMech" auth="true">
+        <description>Delete a PartyContactMech</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
     </service>
-
-    <service name="createPostalAddress" engine="java"
-            location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createPostalAddress" auth="true">
+    <service name="createPostalAddress" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/ContactMechServices.xml" invoke="createPostalAddress" auth="true">
         <description>Create a Postal Address</description>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="toName" type="String" mode="IN" optional="true"/>
-        <attribute name="attnName" type="String" mode="IN" optional="true"/>
-        <attribute name="address1" type="String" mode="IN" optional="false"/>
-        <attribute name="address2" type="String" mode="IN" optional="true"/>
-        <attribute name="directions" type="String" mode="IN" optional="true"/>
-        <attribute name="city" type="String" mode="IN" optional="true"/>
-        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="true"/>
-        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
-        <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
-        <attribute name="postalCodeGeoId" type="String" mode="IN" optional="true"/>
-        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
+        <auto-attributes entity-name="PostalAddress" include="all" mode="IN" optional="true"/>
+        <override name="address1" optional="false"/>
+        <override name="city" optional="false"/>
+        <override name="zip" optional="false"/>
+        <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
     </service>
-    <service name="updatePostalAddress" engine="java"
-            location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="updatePostalAddress" auth="true">
+    <service name="createPartyPostalAddress" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="createPartyPostalAddress" auth="true">
+        <description>Create a Postal Address</description>
+        <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>         
+        <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
+        <override name="address1" optional="false"/>
+        <override name="city" optional="false"/>
+        <override name="zip" optional="false"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
+    </service>  
+    <service name="updatePostalAddress" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/ContactMechServices.xml" invoke="updatePostalAddress" auth="true">
         <description>Update a Postal Address</description>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
-        <attribute name="toName" type="String" mode="IN" optional="true"/>
-        <attribute name="attnName" type="String" mode="IN" optional="true"/>
-        <attribute name="address1" type="String" mode="IN" optional="false"/>
-        <attribute name="address2" type="String" mode="IN" optional="true"/>
-        <attribute name="directions" type="String" mode="IN" optional="true"/>
-        <attribute name="city" type="String" mode="IN" optional="true"/>
-        <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="true"/>
-        <attribute name="postalCode" type="String" mode="IN" optional="true"/>
-        <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
-        <attribute name="postalCodeGeoId" type="String" mode="IN" optional="true"/>
-        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
+        <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>        
+        <attribute name="directions" type="String" mode="IN" optional="true"/> <!-- ?? -->
+        <attribute name="newContactMechId" type="String" mode="OUT" optional="false"/>
         <!-- <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/> don't think we need this, using technique to find all that need to be updated -->
+    </service>
+    <service name="updatePartyPostalAddress" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="updatePartyPostalAddress" auth="true">
+        <description>Update a Postal Address</description>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>        
+        <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>  
+        <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
+        <attribute name="directions" type="String" mode="IN" optional="true"/> <!-- ?? -->
+        <!-- <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/> don't think we need this, using technique to find all that need to be updated -->
+    </service>
+    <service name="createTelecomNumber" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/ContactMechServices.xml" invoke="createTelecomNumber" auth="true">
+        <description>Create a Telecommunications Number</description>
+        <auto-attributes entity-name="TelecomNumber" include="all" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
+    </service>    
+    <service name="createPartyTelecomNumber" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="createPartyTelecomNumber" auth="true">
+        <description>Create a Telecommunications Number</description>
+        <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>        
+        <auto-attributes entity-name="TelecomNumber" include="nonpk" mode="IN" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateTelecomNumber" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/ContactMechServices.xml" invoke="updateTelecomNumber" auth="true">
+        <description>Update a Telecommunications Number</description>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
+        <auto-attributes entity-name="TelecomNumber" include="nonpk" mode="IN" optional="true"/>        
         <attribute name="newContactMechId" type="String" mode="OUT" optional="false"/>
     </service>
-
-    <service name="createTelecomNumber" engine="java"
-            location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createTelecomNumber" auth="true">
-        <description>Create a Telecommunications Number</description>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="countryCode" type="String" mode="IN" optional="true"/>
-        <attribute name="areaCode" type="String" mode="IN" optional="true"/>
-        <attribute name="contactNumber" type="String" mode="IN" optional="false"/>
-        <attribute name="extension" type="String" mode="IN" optional="true"/>
-        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
-    </service>
-    <service name="updateTelecomNumber" engine="java"
-            location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="updateTelecomNumber" auth="true">
+    <service name="updatePartyTelecomNumber" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="updatePartyTelecomNumber" auth="true">
         <description>Update a Telecommunications Number</description>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
-        <attribute name="countryCode" type="String" mode="IN" optional="true"/>
-        <attribute name="areaCode" type="String" mode="IN" optional="true"/>
-        <attribute name="contactNumber" type="String" mode="IN" optional="false"/>
-        <attribute name="extension" type="String" mode="IN" optional="true"/>
-        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
-        <attribute name="newContactMechId" type="String" mode="OUT" optional="true"/>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>   
+        <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>  
+        <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
     </service>
-
-    <service name="createEmailAddress" engine="java"
-            location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createEmailAddress" auth="true">
+    <service name="createEmailAddress" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/ContactMechServices.xml" invoke="createEmailAddress" auth="true">
         <description>Create an Email Address</description>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <auto-attributes entity-name="ContactMech" include="nonpk" mode="IN" optional="false"/>
+        <override name="infoString" optional="true"/>
         <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
-        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
+        <auto-attributes entity-name="ContactMech" include="pk" mode="OUT" optional="false"/>
     </service>
-    <service name="updateEmailAddress" engine="java"
-            location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="updateEmailAddress" auth="true">
+    <service name="createPartyEmailAddress" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="createPartyEmailAddress" auth="true">
+        <description>Create an Email Address</description>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="ContactMech" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>
+        <attribute name="emailAddress" type="String" mode="IN" optional="false"/>  
+    </service>    
+    <service name="updateEmailAddress" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/ContactMechServices.xml" invoke="updateEmailAddress" auth="true">
         <description>Update an Email Address</description>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
         <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
-        <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
-        <attribute name="newContactMechId" type="String" mode="OUT" optional="true"/>
     </service>
+    <service name="updatePartyEmailAddress" engine="simple"
+            location="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="updatePartyEmailAddress" auth="true">
+        <description>Update an Email Address</description>
+        <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
+        <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>
+    </service>    
 
     <!-- Party ContactMech Purpose services -->
     <service name="createPartyContactMechPurpose" engine="java"

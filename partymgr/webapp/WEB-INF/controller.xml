@@ -97,19 +97,19 @@
     </request-map>
     <request-map uri="createContactMech">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createContactMech"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="createPartyContactMech"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="updateContactMech">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updateContactMech"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="updatePartyContactMech"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
     <request-map uri="deleteContactMech">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="deleteContactMech"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="deletePartyContactMech"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
@@ -123,42 +123,42 @@
 
     <request-map uri="createPostalAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createPostalAddress"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="createPartyPostalAddress"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="updatePostalAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updatePostalAddress"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="updatePartyPostalAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createTelecomNumber">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createTelecomNumber"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="createPartyTelecomNumber"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="updateTelecomNumber">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updateTelecomNumber"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="updatePartyTelecomNumber"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createEmailAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createEmailAddress"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="createPartyEmailAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="updateEmailAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updateEmailAddress"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="updatePartyEmailAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
@@ -513,6 +513,7 @@
     <view-map name="viewroles" type="jpublish" page="/party/viewroles.ftl"/>
     <view-map name="viewrelationships" type="region"/>
     <view-map name="editcontactmech" type="jpublish" page="/party/editcontactmech.ftl"/>
+
     <view-map name="editcreditcard" type="region"/>
     <view-map name="editeftaccount" type="region"/>
     <view-map name="editavsoverride" type="region"/>
