@@ -110,7 +110,7 @@
             <input type=hidden name='userLoginId' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="userLoginId"/>'>
             <input type=hidden name='groupId' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="groupId"/>'>
             <input type=hidden name='fromDate' value='<ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="fromDate"/>'>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="thruDate" fullattrs="true"/>>
+            <input type=text class="inputBox" size='22' <ofbiz:inputvalue entityAttr="userLoginSecurityGroup" field="thruDate" fullattrs="true"/>>
             <input type=submit value='Update'>
         </form>
     </td>
@@ -153,13 +153,13 @@
   <div class='head2'>Add Security Group to this UserLogin:</div>
   <div class='tabletext'>
     Security Group ID: <%-- <input type=text size='60' name='groupId'> --%>
-      <select name="groupId">
+      <select name="groupId" class="selectBox">
       <ofbiz:iterator name="securityGroup" property="securityGroups">
         <option value='<ofbiz:entityfield attribute="securityGroup" field="groupId"/>'><ofbiz:entityfield attribute="securityGroup" field="description"/> [<ofbiz:entityfield attribute="securityGroup" field="groupId"/>]</option>
       </ofbiz:iterator>
       </select>
     <br>
-    From Date: <a href='#' onclick='setUltsgFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate'>
+    From Date: <a href='#' onclick='setUltsgFromDate()' class='buttontext'>[Now]</a> <input type=text class="inputBox" size='22' name='fromDate'>
     <input type="submit" value="Add">
   </div>
 </form>

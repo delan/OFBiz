@@ -84,19 +84,19 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">Group name</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="groupName" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="30" <ofbiz:inputvalue field="groupName" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Federal Tax Number</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="federalTaxId" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="federalTaxId" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Comment</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="comments" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="comments" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
 </table>

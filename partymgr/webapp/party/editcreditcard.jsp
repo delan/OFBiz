@@ -84,21 +84,21 @@
       <td width="26%" align=right valign=top><div class="tabletext">Name on Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="nameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="nameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Company Name on Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="companyNameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="companyNameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Card Type</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <select name="cardType">
+        <select name="cardType" class="selectBox">
           <option><ofbiz:inputvalue field="cardType" entityAttr="creditCard" tryEntityAttr="tryEntity"/></option>
           <option></option>
           <option>Visa</option>
@@ -115,7 +115,7 @@
       <td width="26%" align=right valign=top><div class="tabletext">Card Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="20" maxlength="30" <ofbiz:inputvalue field="cardNumber" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="20" maxlength="30" <ofbiz:inputvalue field="cardNumber" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <%-- Should not be storing this
@@ -140,7 +140,7 @@
             <%expYear = expDate.substring(expDate.indexOf('/')+1);%>
           <%}%>
         <%}%>
-        <select name="expMonth">
+        <select name="expMonth" class="selectBox">
           <option><ofbiz:if name="tryEntity"><%=UtilFormatOut.checkNull(expMonth)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expMonth"))%></ofbiz:unless></option>
           <option></option>
           <option>01</option>
@@ -156,7 +156,7 @@
           <option>11</option>
           <option>12</option>
         </select>
-        <select name="expYear">
+        <select name="expYear" class="selectBox">
           <option><ofbiz:if name="tryEntity"><%=UtilFormatOut.checkNull(expYear)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expYear"))%></ofbiz:unless></option>
           <option></option>
           <option>2001</option>

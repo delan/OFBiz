@@ -37,10 +37,10 @@
       <td width="26%" align=right><div class="tabletext">AVS String</div></td>
       <td width="74%">
         <ofbiz:if name="avsOverride">
-          <input type="text" name="avsDeclineString" size="40" value="<%=avsOverride.getString("avsDeclineString")%>">*
+          <input type="text" class="inputBox" name="avsDeclineString" size="40" value="<%=avsOverride.getString("avsDeclineString")%>">*
         </ofbiz:if>
         <ofbiz:unless name="avsOverride">
-          <input type="text" name="avsDeclineString" size="40" value="">*
+          <input type="text" class="inputBox" name="avsDeclineString" size="40" value="">*
         </ofbiz:unless>
       </td>
     </tr>

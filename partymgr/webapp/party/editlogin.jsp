@@ -62,18 +62,18 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">New Password</div></td>
       <td width="74%">
-        <input type="password" name="newPassword" size="20" maxlength="20">
+        <input type="password" class="inputBox" name="newPassword" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">New Password Verify</div></td>
       <td width="74%">
-        <input type="password" name="newPasswordVerify" size="20" maxlength="20">
+        <input type="password" class="inputBox" name="newPasswordVerify" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Password Hint</div></td>
-      <td width="74%"><input type="text" size="40" maxlength="100" name="passwordHint" value='<ofbiz:entityfield attribute="userUserLogin" field="passwordHint"/>'></td>
+      <td width="74%"><input type="text" class="inputBox" size="40" maxlength="100" name="passwordHint" value='<ofbiz:entityfield attribute="userUserLogin" field="passwordHint"/>'></td>
     </tr>
   </table>
   </form>
@@ -89,7 +89,7 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">Account Enabled?</div></td>
       <td width="74%">
-        <select name="enabled">
+        <select name="enabled" class="selectBox">
           <option><ofbiz:inputvalue field="enabled" entityAttr="userUserLogin"/></option>
           <option value='<ofbiz:inputvalue field="enabled" entityAttr="userUserLogin"/>'></option>
           <option>Y</option>
@@ -99,11 +99,11 @@
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Disabled Date</div></td>
-      <td width="74%"><input type="text" size="20" name="disabledDateTime" value='<ofbiz:inputvalue entityAttr="userUserLogin" field="disabledDateTime"/>'></td>
+      <td width="74%"><input type="text" class="inputBox" size="20" name="disabledDateTime" value='<ofbiz:inputvalue entityAttr="userUserLogin" field="disabledDateTime"/>'></td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Successive Failed Logins</div></td>
-      <td width="74%"><input type="text" size="5" name="successiveFailedLogins" value='<ofbiz:inputvalue entityAttr="userUserLogin" field="successiveFailedLogins"/>'></td>
+      <td width="74%"><input type="text" class="inputBox" size="5" name="successiveFailedLogins" value='<ofbiz:inputvalue entityAttr="userUserLogin" field="successiveFailedLogins"/>'></td>
     </tr>
   </table>
   </form>

@@ -84,43 +84,43 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">Title</div></td>
       <td width="74%" align=left>
-        <input type="text" size="10" maxlength="30" <ofbiz:inputvalue field="personalTitle" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="10" maxlength="30" <ofbiz:inputvalue field="personalTitle" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">First name</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="firstName" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="30" <ofbiz:inputvalue field="firstName" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Middle initial</div></td>
       <td width="74%" align=left>
-          <input type="text" size="4" maxlength="4" <ofbiz:inputvalue field="middleName" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+          <input type="text" class="inputBox" size="4" maxlength="4" <ofbiz:inputvalue field="middleName" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Last name </div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="lastName" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="30" <ofbiz:inputvalue field="lastName" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Suffix</div></td>
       <td width="74%" align=left>
-        <input type="text" size="10" maxlength="30" <ofbiz:inputvalue field="suffix" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="10" maxlength="30" <ofbiz:inputvalue field="suffix" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Nick Name</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="nickname" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="nickname" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Gender</div></td>
       <td width="74%" align=left>
-        <select name="gender">
+        <select name="gender" class="selectBox">
           <option><ofbiz:inputvalue field="gender" entityAttr="lookupPerson" tryEntityAttr="tryEntity"/></option>
           <option></option>
           <option>M</option>
@@ -131,64 +131,64 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">Birth Date</div></td>
       <td width="74%" align=left>
-        <input type="text" size="11" maxlength="20" <ofbiz:inputvalue field="birthDate" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="11" maxlength="20" <ofbiz:inputvalue field="birthDate" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
         (yyyy-MM-dd)
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Height</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="height" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="height" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Weight</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="weight" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="weight" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
 
     <tr>
       <td width="26%" align=right><div class="tabletext">Mothers Maiden Name</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="mothersMaidenName" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="mothersMaidenName" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Marital Status</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="maritalStatus" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="maritalStatus" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Social Security Number</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="socialSecurityNumber" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="socialSecurityNumber" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Passport Number</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="passportNumber" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="passportNumber" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Passport Expire Date</div></td>
       <td width="74%" align=left>
-        <input type="text" size="11" maxlength="20" <ofbiz:inputvalue field="passportExpireDate" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="11" maxlength="20" <ofbiz:inputvalue field="passportExpireDate" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
         (yyyy-MM-dd)
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Total Years Work Experience</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="totalYearsWorkExperience" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="totalYearsWorkExperience" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Comment</div></td>
       <td width="74%" align=left>
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="comments" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class="inputBox" size="30" maxlength="60" <ofbiz:inputvalue field="comments" entityAttr="lookupPerson" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
 </table>
