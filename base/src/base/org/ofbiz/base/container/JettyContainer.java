@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.3 2003/08/15 23:44:08 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.4 2003/08/17 01:44:14 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.base.util.Debug;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.3 $
+  *@version    $Revision: 1.4 $
  * @since      2.2
  */
 public class JettyContainer implements Container {
@@ -115,6 +115,7 @@ public class JettyContainer implements Container {
             ContainerConfig.Container.Property listenerProps = 
                     (ContainerConfig.Container.Property) listeners.next();
             
+            Debug.logInfo(listenerProps.name + " = " + listenerProps.value, module);
             if ("default".equals(listenerProps.getProperty("type").value)) {
                 SocketListener listener = new SocketListener();
                 setListenerOptions(listener, listenerProps);

@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerLoader.java,v 1.2 2003/08/15 22:05:59 ajzeneski Exp $
+ * $Id: ContainerLoader.java,v 1.3 2003/08/17 01:44:14 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  * ContainerLoader - StartupLoader for the container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.2 $
+  *@version    $Revision: 1.3 $
  * @since      2.2
  */
 public class ContainerLoader implements StartupLoader {
@@ -52,7 +52,7 @@ public class ContainerLoader implements StartupLoader {
      * @see org.ofbiz.core.start.StartupLoader#load(java.lang.String)
      */
     public void load(Start.Config config) throws StartupException {
-        Debug.logInfo("[Startup] ContainerLoader : " + config.containerConfig, module);
+        Debug.logInfo("[Startup] Loading ContainerLoader...", module);
               
         // get the master container configuration file
         String configFileLocation = config.containerConfig;
@@ -67,8 +67,9 @@ public class ContainerLoader implements StartupLoader {
         if (containers != null) {
             Iterator i = containers.iterator();
             while (i.hasNext()) {
-                ContainerConfig.Container container = (ContainerConfig.Container) i.next();
-                containers.add(loadContainer(container.className, configFileLocation));
+                ContainerConfig.Container containerCfg = (ContainerConfig.Container) i.next();
+                Container container = loadContainer(containerCfg.className, configFileLocation);
+                //containers.add(loadContainer(containerCfg.className, configFileLocation));
             }
         }                                    
     }

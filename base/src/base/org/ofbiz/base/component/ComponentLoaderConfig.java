@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentLoaderConfig.java,v 1.2 2003/08/15 23:29:45 ajzeneski Exp $
+ * $Id: ComponentLoaderConfig.java,v 1.3 2003/08/17 01:44:14 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,12 +26,18 @@ package org.ofbiz.base.component;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.FlexibleStringExpander;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.Document;
@@ -42,7 +48,7 @@ import org.xml.sax.SAXException;
  * ComponentLoaderConfig - Component Loader configuration
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class ComponentLoaderConfig {
@@ -99,18 +105,19 @@ public class ComponentLoaderConfig {
     public static class ComponentDef {
         public String name;
         public String location;
-        public int type;
+        public int type = -1;
         
-        public ComponentDef(Element element) {
+        public ComponentDef(Element element) {            
+            Properties systemProps = System.getProperties();
             if ("load-component".equals(element.getLocalName())) {
                 name = element.getAttribute("component-name");
-                location = element.getAttribute("component-location");
+                location = FlexibleStringExpander.expandString(element.getAttribute("component-location"), systemProps);
                 type = SINGLE_COMPONENT;
-            } else if ("load-components".equals(element.getLocalName())) {
+            } else if ("load-components".equals(element.getNodeName())) {
                 name = null;
-                location = element.getAttribute("parent-directory");
+                location = FlexibleStringExpander.expandString(element.getAttribute("parent-directory"), systemProps);
                 type = COMPONENT_DIRECTORY;
             }
-        }        
+        }                
     }
 }
