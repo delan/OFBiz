@@ -32,9 +32,10 @@
     <resource-loader name="mainurl" class="org.ofbiz.core.config.UrlLoader"/>
 
     <!-- Service definition files -->
-    <global-services loader="mainfile" location="services.xml"/>
+    <global-services loader="mainfile" location="services_test.xml"/>
     <global-services loader="mainfile" location="services_accounting.xml"/>
     <global-services loader="mainfile" location="services_content.xml"/>
+    <global-services loader="mainfile" location="services_common.xml"/>
     <global-services loader="mainfile" location="services_marketing.xml"/>
     <global-services loader="mainfile" location="services_order.xml"/>
     <global-services loader="mainfile" location="services_party.xml"/>
@@ -47,10 +48,12 @@
 
     <!-- Service-Group definition files -->
     <service-groups loader="mainfile" location="groups_test.xml"/>
+    <service-groups loader="mainfile" location="groups_common.xml"/>
     
 	<!-- ECA definition files -->
     <service-ecas loader="mainfile" location="secas_test.xml"/>
     <service-ecas loader="mainfile" location="secas_accounting.xml"/>
+    <service-ecas loader="mainfile" location="secas_common.xml"/>
     <service-ecas loader="mainfile" location="secas_workeffort.xml"/>
     
     <!-- JMS Service Queue/Topic Configuration -->
