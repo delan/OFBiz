@@ -327,7 +327,7 @@
                                         <%}%>
                                       </b>
                                       (Updated:&nbsp;<%entityField.run("paymentMethod", "fromDate");%>)
-                                      <%entityField.run("paymentMethod", "thruDate", "(Delete:&nbsp;", ")");%>
+                                      <%entityField.run("paymentMethod", "thruDate", "<b>(Delete:&nbsp;", ")</b>");%>
                                     </div>
                                   </td>
                                   <td width="5">&nbsp;</td>
@@ -344,7 +344,7 @@
                                         EFT Account: <%entityField.run("eftAccount", "nameOnAccount");%> - <%entityField.run("eftAccount", "bankName", "Bank: ", "");%> <%entityField.run("eftAccount", "accountNumber", "Account #: ", "");%>
                                       </b>
                                       (Updated:&nbsp;<%entityField.run("paymentMethod", "fromDate");%>)
-                                      <%entityField.run("paymentMethod", "thruDate", "(Delete:&nbsp;", ")");%>
+                                      <%entityField.run("paymentMethod", "thruDate", "<b>(Delete:&nbsp;", ")</b>");%>
                                     </div>
                                   </td>
                                   <td width="5">&nbsp;</td>
