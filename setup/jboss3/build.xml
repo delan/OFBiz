@@ -86,6 +86,7 @@
         <delete file="${conf.dir}/serverstats.properties" />
         <delete file="${conf.dir}/entityengine.xml" />
         <delete file="${conf.dir}/security.properties" />
+        <delete file="${conf.dir}/security.xml" />
         <delete file="${conf.dir}/debug.properties" />
         <delete file="${conf.dir}/cache.properties" />
         <delete file="${conf.dir}/general.properties" />
@@ -130,6 +131,7 @@
         <copy file="commonapp/etc/serverstats.properties" toFile="${conf.dir}/serverstats.properties" />
         <copy file="commonapp/etc/entityengine.xml" toFile="${conf.dir}/entityengine.xml" />
         <copy file="commonapp/etc/security.properties" toFile="${conf.dir}/security.properties" />
+        <copy file="commonapp/etc/security.xml" toFile="${conf.dir}/security.xml" />
         <copy file="commonapp/etc/cache.properties" toFile="${conf.dir}/cache.properties" />
         <copy file="commonapp/etc/localdtds.properties" toFile="${conf.dir}/localdtds.properties" />
         <copy file="commonapp/etc/serviceengine.xml" toFile="${conf.dir}/serviceengine.xml" />

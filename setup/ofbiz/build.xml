@@ -197,6 +197,7 @@
         <delete file="${classes.dir}/serverstats.properties" />
         <delete file="${classes.dir}/entityengine.xml" />
         <delete file="${classes.dir}/security.properties" />
+        <delete file="${classes.dir}/security.xml" />
         <delete file="${classes.dir}/debug.properties" />
         <delete file="${classes.dir}/cache.properties" />
         <delete file="${classes.dir}/general.properties" />
@@ -418,6 +419,7 @@
     <target name="deploy-copy" depends="" if="copy.dirs.exist">
         <copy file="commonapp/etc/serverstats.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/security.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/security.xml" toDir="${classes.dir}" />
         <copy file="commonapp/etc/debug.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/cache.properties" toDir="${classes.dir}" />
         <copy file="commonapp/etc/general.properties" toDir="${classes.dir}" />
@@ -524,6 +526,7 @@
         <copy file="workeffort/lib/workeffort.war"           toDir="${ext.dir}/webapps"/>
 
         <copy file="commonapp/etc/serverstats.properties"    toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/serverstats.xml"           toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/entityengine.xml"          toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/security.properties"       toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/debug.properties"          toDir="${ext.dir}/etc"/>

@@ -351,6 +351,7 @@
         <copy file="commonapp/etc/serverstats.properties"    toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/entityengine.xml"          toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/security.properties"       toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/security.xml"       toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/debug.properties"          toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/cache.properties"          toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/general.properties"        toDir="${ext.dir}/etc"/>
