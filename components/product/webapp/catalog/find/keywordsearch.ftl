@@ -57,6 +57,14 @@
 </#if>
 
 <#if productIds?has_content>
+<script language="JavaScript">
+<!--
+    function addProductToBagTextArea(idValue) {
+        document.forms["quickCreateVirtualWithVariants"].elements["variantProductIdsBag"].value+=idValue;
+        document.forms["quickCreateVirtualWithVariants"].elements["variantProductIdsBag"].value+="\n";
+    }
+//-->
+</script>
 <center>
   <table width="100%" cellpadding="0" cellspacing="0">
     <#assign listIndex = lowIndex>
@@ -64,6 +72,7 @@
       <#assign product = delegator.findByPrimaryKey("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", productId))>
       <tr>
         <td>
+          <input type="checkbox" name="selectResult${productId_index}" onChange="addProductToBagTextArea('${productId}');"/>
           <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="buttontext">[${productId}] ${(product.internalName)?if_exists}</a>
         </td>
       </tr>
@@ -90,6 +99,10 @@
       </td>
     </tr>
 </table>
+
+<hr class="sepbar"/>
+
+<#include "/product/CreateVirtualWithVariantsForm.ftl"/>
 
 <hr class="sepbar"/>
 

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel )
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -104,8 +104,8 @@ ${productCategory.description?if_exists}
 <#if productCategoryId?has_content> 
     <SCRIPT language="JavaScript">
     function insertImageName(type,ext) {
-       var imageUrlPrefix = '${Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(application.getResource("/WEB-INF/catalog.properties"), "image.url.prefix")}';
-      eval('document.forms.productCategoryForm.' + type + 'ImageUrl.value="'+imageUrlPrefix+'.${productCategoryId}.' + type + '.' + ext + '";');
+        var imageUrlPrefix = '${Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("catalog", "image.url.prefix")}';
+        eval('document.forms.productCategoryForm.' + type + 'ImageUrl.value="'+imageUrlPrefix+'.${productCategoryId}.' + type + '.' + ext + '";');
     };
     </SCRIPT>
 </#if>

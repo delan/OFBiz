@@ -876,19 +876,30 @@
         <response name="error" type="view" value="EditProductFeatures"/>
     </request-map>
 
+    <request-map uri="CreateVirtualWithVariantsForm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateVirtualWithVariantsForm"/>
+    </request-map>
+    <request-map uri="quickCreateVirtualWithVariants">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="quickCreateVirtualWithVariants"/>
+        <response name="success" type="view" value="EditProduct"/>
+        <response name="error" type="view" value="CreateVirtualWithVariantsForm"/>
+    </request-map>
+
     <request-map uri="QuickAddVariants">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="QuickAddVariants"/>
     </request-map>
     <request-map uri="QuickAddChosenVariant">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.product.product.VariantEvents" invoke="quickAddChosenVariant" />
+        <event type="java" path="org.ofbiz.product.product.VariantEvents" invoke="quickAddChosenVariant"/>
         <response name="success" type="view" value="QuickAddVariants"/>
         <response name="error" type="view" value="QuickAddVariants"/>
     </request-map>
     <request-map uri="QuickAddChosenVariants">
         <security https="true" auth="true"/>
-        <event type="service-multi" path="" invoke="quickAddVariant" />
+        <event type="service-multi" path="" invoke="quickAddVariant"/>
         <response name="success" type="view" value="QuickAddVariants"/>
         <response name="error" type="view" value="QuickAddVariants"/>
     </request-map>
@@ -1795,6 +1806,7 @@
     <view-map name="UploadImage" type="region"/>
 
     <view-map name="QuickAddVariants" type="jpublish" page="/product/QuickAddVariants.ftl"/>
+    <view-map name="CreateVirtualWithVariantsForm" type="jpublish" page="/product/CreateVirtualWithVariantsForm.ftl"/>
 
     <view-map name="EditFeature" type="jpublish" page="/feature/EditFeature.ftl"/>
     <view-map name="EditFeatureCategories" type="jpublish" page="/feature/EditFeatureCategories.ftl"/>
