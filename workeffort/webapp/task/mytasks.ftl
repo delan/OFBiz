@@ -41,6 +41,38 @@
       </table>
     </td>
   </tr>
+  <tr>
+    <td width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+              <div class='head3'>Assigned Tasks</div>
+              <table width='100%' cellpadding='2' cellspacing='0' border='0'>
+                <tr>
+                  <td><div class='tabletext'><b>Start Date/Time</b></div></td>
+                  <td><div class='tabletext'><b>Priority</b></div></td>
+                  <td><div class='tabletext'><b>Status</b></div></td>
+                  <td><div class='tabletext'><b>Task Name</b></div></td>
+                  <td align=right><div class='tabletext'><b>Edit</b></div></td>
+                </tr>
+                <tr><td colspan='5'><HR class='sepbar'></td></tr>
+                <#list tasks as workEffort>
+                  <tr>
+                    <td><div class='tabletext'>${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
+                    <td><div class='tabletext'>${workEffort.priority?if_exists}</div></td>
+                    <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.core.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
+                    <td><A class='buttontext' href='<@ofbizUrl>/task?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
+                        ${workEffort.workEffortName}</a></div></td>
+                    <td align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/task?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
+                        Edit&nbsp;[${workEffort.workEffortId}]</a></div></td>
+                  </tr>
+                </#list>
+              </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
   <#if (activities.size() > 0)>
       <tr>
         <td width='100%'>
@@ -62,7 +94,7 @@
                     <tr><td colspan='8'><HR class='sepbar'></td></tr>
                     <#list activities as workEffort>
                       <tr>
-                        <td><div class='tabletext'>${workEffort.estimatedStartDate.toString()}</div></td>
+                        <td><div class='tabletext'>${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
                         <td><div class='tabletext'>${workEffort.priority}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
@@ -102,7 +134,7 @@
                     <tr><td colspan='8'><HR class='sepbar'></td></tr>
                     <#list roleActivities as workEffort>
                       <tr>
-                        <td><div class='tabletext'>${workEffort.estimatedStartDate.toString()}</div></td>
+                        <td><div class='tabletext'>${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
                         <td><div class='tabletext'>${workEffort.priority}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
@@ -142,7 +174,7 @@
                     <tr><td colspan='8'><HR class='sepbar'></td></tr>
                     <#list groupActivities as workEffort>
                       <tr>
-                        <td><div class='tabletext'>${workEffort.estimatedStartDate.toString()}</div></td>
+                        <td><div class='tabletext'>${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
                         <td><div class='tabletext'>${workEffort.priority}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
                         <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
@@ -161,36 +193,4 @@
         </td>
       </tr>
   </#if>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-              <div class='head3'>Assigned Tasks</div>
-              <table width='100%' cellpadding='2' cellspacing='0' border='0'>
-                <tr>
-                  <td><div class='tabletext'><b>Start Date/Time</b></div></td>
-                  <td><div class='tabletext'><b>Priority</b></div></td>
-                  <td><div class='tabletext'><b>Status</b></div></td>
-                  <td><div class='tabletext'><b>Task Name</b></div></td>
-                  <td align=right><div class='tabletext'><b>Edit</b></div></td>
-                </tr>
-                <tr><td colspan='5'><HR class='sepbar'></td></tr>
-                <#list tasks as workEffort>
-                  <tr>
-                    <td><div class='tabletext'>${workEffort.estimatedStartDate.toString()}</div></td>
-                    <td><div class='tabletext'>${workEffort.priority?if_exists}</div></td>
-                    <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.core.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
-                    <td><A class='buttontext' href='<@ofbizUrl>/task?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
-                        ${workEffort.workEffortName}</a></div></td>
-                    <td align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/task?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
-                        Edit&nbsp;[${workEffort.workEffortId}]</a></div></td>
-                  </tr>
-                </#list>
-              </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
 </table>
