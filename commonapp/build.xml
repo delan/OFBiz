@@ -12,7 +12,6 @@
         <property name="name"           value="commonapp"           />
         <property name="src.dir"        value="src"                 />
         <property name="etc.dir"        value="etc"                 />
-        <property name="conf.dir"       value="conf"                />
         <property name="lib.dir"        value="lib"                 />
         <property name="webapp.dir"     value="./webapp"            />
         <property name="walib.dir"      value="${webapp.dir}/WEB-INF/lib" />
@@ -21,7 +20,6 @@
         <property name="build.dir"      value="build"               />
         <property name="build.compiler" value="classic"             /> 
         <property name="pkg-dist.name"  value="${name}-pkg"         />
-        <property name="deploy.dir"     value="${env.JBOSS_HOME}/deploy"      /> 
 		
 	<!-- Classpath setting -->
 	<property name="ofbcore.jar"       value="../core/build/ofbcore.jar"             />
@@ -68,7 +66,6 @@
         <mkdir dir="${build.dir}" />
         <mkdir dir="${waclasses.dir}" />
         <mkdir dir="${walib.dir}" />
-        <mkdir dir="${deploy.dir}" />
     </target>
 
 
@@ -89,26 +86,33 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Build the WAR                                                      -->
+    <!-- Build the WARs                                                     -->
     <!-- ================================================================== -->
 	
-    <target name="conf" depends="prepare">
-        <copy file="${conf.dir}/cache.properties"
-              tofile="${waclasses.dir}/cache.properties" />
-        <copy file="${conf.dir}/debug.properties"
-              tofile="${waclasses.dir}/debug.properties" />
-        <copy file="${conf.dir}/servers.properties"
-              tofile="${waclasses.dir}/servers.properties" />
-    </target>
-    
-    <target name="war" depends="prepare,conf">
+    <!-- the external deploy war file which should not include properties files or ofbcore.jar -->
+    <target name="war-ext" depends="prepare">
         <copy file="${build.dir}/${name}.jar"
               tofile="${walib.dir}/${name}.jar" />
-<!-- TODO: don't copy ofbcore.jar anymore, put on the global classpath instead of in the webapp -->
+        <jar jarfile="${build.dir}/${name}-ext.war"
+             basedir="${webapp.dir}" />
+    </target>
+
+    <target name="war" depends="prepare,war-ext">
+        <copy file="${etc.dir}/cache.properties"
+              tofile="${waclasses.dir}/cache.properties" />
+        <copy file="${etc.dir}/debug.properties"
+              tofile="${waclasses.dir}/debug.properties" />
+        <copy file="${etc.dir}/servers.properties"
+              tofile="${waclasses.dir}/servers.properties" />
+        
         <copy file="${ofbcore.jar}"
               tofile="${walib.dir}/ofbcore.jar" />
+        
         <jar jarfile="${build.dir}/${name}.war"
              basedir="${webapp.dir}" />
+        
+        <delete dir="${walib.dir}" />
+        <delete dir="${waclasses.dir}" />
     </target>
 
 
@@ -179,13 +183,5 @@
     <!-- <target name="all" depends="jar,pkg-dist" /> -->
     <target name="all" depends="war,pkg-dist" />
 
-    <!-- ================================================================== -->
-    <!-- Deploy the app                                                     -->
-    <!-- ================================================================== -->
-	
-	<target name="deploy" depends="war">
-                <copy file="${build.dir}/${name}.war"
-                      tofile="${deploy.dir}/${name}.war" />
-	</target>
-
 </project>
+
