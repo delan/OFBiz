@@ -216,6 +216,7 @@
             location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="updateReturnStatusFromReceipt">      
         <description>Update return/item status when items have been received</description>
         <attribute name="returnId" type="String" mode="IN" optional="false"/>
+        <attribute name="returnHeaderStatus" type="String" mode="OUT" optional="false"/>
     </service>
     
     <!-- Tax Services -->

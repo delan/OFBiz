@@ -2,6 +2,7 @@
 <!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
 
 <service-eca>
+	<!-- Order ECAs -->
     <eca service="changeOrderItemStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="ITEM_CANCELLED"/>
         <action service="resetGrandTotal" mode="sync"/>
@@ -15,6 +16,16 @@
         <action service="resetGrandTotal" mode="sync"/>
     </eca>  
 
+    <!-- Return ECAs -->
+    <eca service="updateReturnStatusFromReceipt" event="commit">
+        <condition field-name="returnHeaderStatus" operator="equals" value="RETURN_RECEIVED"/>        
+        <action service="processCreditReturn" mode="sync"/>
+    </eca>
+    <eca service="updateReturnStatusFromReceipt" event="commit">
+        <condition field-name="returnHeaderStatus" operator="not-equals" value="RETURN_RECEIVED"/>        
+        <action service="testScv" mode="sync"/>
+    </eca>    
+    
     <!-- ShoppingList ECAs --> 
     <eca service="createShoppingListItem" event="in-validate">
         <condition field-name="shoppingListId" operator="is-empty"/>

@@ -145,7 +145,48 @@
             <string-to-field field-name="statusId" map-name="returnItem" string="RETURN_RECEIVED"/>
             <store-value value-name="returnItem"/>
             <!-- create status change history -->
+            <make-value entity-name="ReturnStatus" value-name="newValue"/>
+            <sequenced-id-to-env sequence-name="ReturnStatus" env-name="returnStatusId"/>
+            <env-to-field env-name="returnStatusId" map-name="newValue"/>
+            
+            <field-to-field field-name="returnItemSeqId" map-name="returnItem" to-map-name="newValue"/>
+            <field-to-field field-name="returnId" map-name="returnItem" to-map-name="newValue"/>
+            <field-to-field field-name="statusId" map-name="returnItem" to-map-name="newValue"/>
+            
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
+            
+            <create-value value-name="newValue"/>
           </if-compare-field>          
-        </iterate>                
+        </iterate>
+        
+        <!-- check to see if all items have been received -->
+        <string-to-field string="true" field-name="allReceived"/>
+        <find-by-and entity-name="ReturnItem" map-name="lookupPKMap" list-name="allReturnItems"/>
+        <iterate list-name="allReturnItems" entry-name="item">
+          <if-compare field-name="statusId" map-name="item" operator="not-equals" value="RETURN_RECEIVED">
+            <string-to-field string="false" field-name="allReceived"/>  
+          </if-compare>
+        </iterate>
+        <if-compare field-name="allReceived" operator="equals" value="true">
+          <!-- update the return header -->
+          <string-to-field field-name="statusId" map-name="returnHeader" string="RETURN_RECEIVED"/>
+          <store-value value-name="returnHeader"/>
+          <!-- create the status history -->
+          <make-value entity-name="ReturnStatus" value-name="newValue"/>
+          <sequenced-id-to-env sequence-name="ReturnStatus" env-name="returnStatusId"/>
+          <env-to-field env-name="returnStatusId" map-name="newValue"/>
+            
+          <field-to-field field-name="returnId" map-name="returnHeader" to-map-name="newValue"/>
+          <field-to-field field-name="statusId" map-name="returnHeader" to-map-name="newValue"/>
+            
+          <now-timestamp-to-env env-name="nowTimestamp"/>
+          <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
+            
+          <create-value value-name="newValue"/>          
+        </if-compare>
+        
+        <!-- return the current return header status -->
+        <field-to-result field-name="statusId" map-name="returnHeader" result-name="returnHeaderStatus"/>
     </simple-method>
 </simple-methods>
