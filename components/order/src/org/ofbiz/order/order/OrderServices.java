@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.20 2003/11/19 21:50:10 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.21 2003/11/26 07:25:07 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 
@@ -1166,30 +1166,10 @@ public class OrderServices {
         
         if (productStoreEmail == null) {
             return ServiceUtil.returnError("No valid email setting for store");
-        } 
-                    
-        // get the email addresses from the order contact mech(s)
-        List orderContactMechs = null;
-        try {
-            Map ocFields = UtilMisc.toMap("orderId", orderId, "contactMechPurposeTypeId", "ORDER_EMAIL");
-            orderContactMechs = delegator.findByAnd("OrderContactMech", ocFields);
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e, "Problems getting order contact mechs", module);
-        }        
+        }
 
-        StringBuffer emails = new StringBuffer();        
-        if (orderContactMechs != null) {
-            Iterator oci = orderContactMechs.iterator();
-            while (oci.hasNext()) {
-                try {
-                    GenericValue orderContactMech = (GenericValue) oci.next();
-                    GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
-                    emails.append(emails.length() > 0 ? "," : "").append(contactMech.getString("infoString"));
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e, "Problems getting contact mech from order contact mech", module);
-                }                        
-            }
-        }  
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        String emailString = orh.getOrderEmailString();
         
         // prepare the parsed subject
         Map orderEmailData = prepareOrderEmailData(ctx, UtilMisc.toMap("orderId", orderId));
@@ -1203,7 +1183,7 @@ public class OrderServices {
         result.put("sendFrom", productStoreEmail.get("fromAddress"));        
         result.put("sendCc", productStoreEmail.get("ccAddress"));
         result.put("sendBcc", productStoreEmail.get("bccAddress"));
-        result.put("sendTo", emails.toString());
+        result.put("sendTo", emailString);
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);            
                    
         return result;     

@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.12 2003/11/21 19:08:10 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.13 2003/11/26 07:25:07 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -615,6 +615,33 @@ public class OrderReadHelper {
             }
         }
         return shippableSizes;
+    }
+
+    public String getOrderEmailString() {
+        GenericDelegator delegator = orderHeader.getDelegator();
+        // get the email addresses from the order contact mech(s)
+        List orderContactMechs = null;
+        try {
+            Map ocFields = UtilMisc.toMap("orderId", orderHeader.get("orderId"), "contactMechPurposeTypeId", "ORDER_EMAIL");
+            orderContactMechs = delegator.findByAnd("OrderContactMech", ocFields);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, "Problems getting order contact mechs", module);
+        }
+
+        StringBuffer emails = new StringBuffer();
+        if (orderContactMechs != null) {
+            Iterator oci = orderContactMechs.iterator();
+            while (oci.hasNext()) {
+                try {
+                    GenericValue orderContactMech = (GenericValue) oci.next();
+                    GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
+                    emails.append(emails.length() > 0 ? "," : "").append(contactMech.getString("infoString"));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, "Problems getting contact mech from order contact mech", module);
+                }
+            }
+        }
+        return emails.toString();
     }
 
     public double getOrderGrandTotal() {
