@@ -43,6 +43,24 @@ import org.ofbiz.core.util.*;
  */
 public class CommonServices {
 
+    /** Generic Test Service
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map testService(DispatchContext dctx, Map context) {
+        Map response = new HashMap();
+        if (!context.containsKey("message")) {
+            response.put("resp", "no message found");
+        } else {
+            System.out.println("-----SERVICE TEST----- : " + (String) context.get("message"));
+            response.put("resp", "service done");
+        }
+
+        System.out.println("----- SVC: " + dctx.getName() + " -----");
+        return response;
+    }
+
     /** Basic JavaMail Service
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
@@ -113,7 +131,7 @@ public class CommonServices {
 
         // check for a party id
         if (partyId == null) {
-            if (userLogin != null&& userLogin.get("partyId") != null)
+            if (userLogin != null && userLogin.get("partyId") != null)
                 partyId = userLogin.getString("partyId");
         }
 

@@ -8,7 +8,7 @@
 
     <!-- Test services -->
     <service name="testScv" engine="java" export="true"
-            location="ServiceTest" invoke="testOne">
+            location="org.ofbiz.commonapp.common.CommonServices" invoke="testService">
         <description>Test service</description>
         <attribute name="message" type="String" mode="IN" optional="true"/>
         <attribute name="resp" type="String" mode="OUT"/>
@@ -23,7 +23,7 @@
     </service>
 
     <service name="testBsh" engine="bsh"
-            location="BshServiceTest.bsh" invoke="">
+            location="org/ofbiz/commonapp/common/BshServiceTest.bsh" invoke="">
         <description>Test BeanShell Script Service</description>
         <attribute name="message" type="String" mode="IN" optional="true"/>
         <attribute name="result" type="String" mode="OUT"/>
