@@ -115,6 +115,7 @@ public class ProductServices {
     public static Map prodMakeFeatureTree(DispatchContext dctx, Map context) {
         // * String productId      -- Parent (virtual) product ID
         // * List featureOrder     -- Order of features
+        GenericDelegator delegator = dctx.getDelegator();
         Map result = new HashMap();
         List featureOrder = new LinkedList((Collection) context.get("featureOrder"));
         if (featureOrder == null || featureOrder.size() == 0) {
@@ -134,9 +135,40 @@ public class ProductServices {
         while (i.hasNext())
             items.add(((GenericValue) i.next()).get("productIdTo"));
 
+        String productId = (String) context.get("productId");
+
+        // Make the selectable feature list
+        Collection selectableFeatures = null;
+        try {
+            Map fields = UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE");
+            List sort = UtilMisc.toList("sequenceNum");
+            selectableFeatures = delegator.findByAndCache("ProductFeatureAndAppl", fields, sort);
+            selectableFeatures = EntityUtil.filterByDate(selectableFeatures);
+        } catch (GenericEntityException e) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Empty list of selectable features found");
+            return result;
+        }
+        Map features = new HashMap();
+        Iterator sFIt = selectableFeatures.iterator();
+        while (sFIt.hasNext()) {
+            GenericValue v = (GenericValue) sFIt.next();
+            String featureType = v.getString("productFeatureTypeId");
+            String feature = v.getString("description");
+            if (features.containsKey(featureType)) {
+                List featureList = new LinkedList();
+                featureList.add(feature);
+                features.put(featureType, featureList);
+            } else {
+                List featureList = (LinkedList) features.get(featureType);
+                featureList.add(feature);
+                features.put(featureType, featureList);
+            }
+        }
+
         Map tree = null;
         try {
-            tree = makeGroup(dctx.getDelegator(), items, featureOrder, 0);
+            tree = makeGroup(delegator, features, items, featureOrder, 0);
         } catch (Exception e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, e.getMessage());
@@ -282,9 +314,10 @@ public class ProductServices {
     }
 
     // Builds a product feature tree
-    private static Map makeGroup(GenericDelegator delegator, List items, List order, int index)
+    private static Map makeGroup(GenericDelegator delegator, Map featureList, List items, List order, int index)
             throws IllegalArgumentException, IllegalStateException {
         List featureKey = new ArrayList();
+        Map tempGroup = new HashMap();
         Map group = new OrderedMap();
         String orderKey = (String) order.get(index);
 
@@ -318,15 +351,23 @@ public class ProductServices {
             while (featuresIterator.hasNext()) {
                 GenericValue item = (GenericValue) featuresIterator.next();
                 Object itemKey = item.get("description");
-                if (group.containsKey(itemKey)) {
-                    List itemList = (List) group.get(itemKey);
+                if (tempGroup.containsKey(itemKey)) {
+                    List itemList = (List) tempGroup.get(itemKey);
                     if (!itemList.contains(thisItem))
                         itemList.add(thisItem);
                 } else {
                     List itemList = UtilMisc.toList(thisItem);
-                    group.put(itemKey, itemList);
+                    tempGroup.put(itemKey, itemList);
                 }
             }
+        }
+
+        // Loop through the feature list and order the keys in the tempGroup
+        Iterator featureListIt = ((List)featureList.get(orderKey)).iterator();
+        while (featureListIt.hasNext()) {
+            String featureStr = (String) featureListIt.next();
+            if (tempGroup.containsKey(featureStr))
+                group.put(featureStr, tempGroup.get(featureStr));
         }
 
         Debug.logVerbose("Group: " + group);
@@ -345,7 +386,7 @@ public class ProductServices {
             List itemList = (List) group.get(key);
             if (itemList == null || itemList.size() == 0)
                 throw new IllegalStateException("Cannot create tree from an empty list; error on '" + key + "'");
-            Map subGroup = makeGroup(delegator, itemList, order, index + 1);
+            Map subGroup = makeGroup(delegator, featureList, itemList, order, index + 1);
             group.put(key, subGroup);
         }
         return group;
