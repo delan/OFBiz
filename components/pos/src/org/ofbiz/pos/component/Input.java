@@ -26,18 +26,17 @@ package org.ofbiz.pos.component;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.Stack;
 
 import net.xoetrope.swing.XEdit;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.adaptor.KeyboardAdaptor;
 import org.ofbiz.pos.adaptor.KeyboardReceiver;
+import org.ofbiz.pos.screen.PosScreen;
 
 /**
  * 
@@ -174,8 +173,7 @@ public class Input implements KeyboardReceiver, KeyListener {
     }
 
     // KeyboardReceiver
-    public synchronized void receiveData(int[] codes, char[] chars) {
-        Debug.log("Codes - " + codes.length + " / Chars - " + chars.length, module);
+    public synchronized void receiveData(int[] codes, char[] chars) {        
         if (chars.length > 0 && checkChars(chars))
             this.appendString(new String(chars));
     }

@@ -59,7 +59,7 @@ public class CashDrawer extends GenericDevice implements Runnable {
             //this.startWaiter();
         } catch (JposException e) {
             Debug.logError(e, module);
-            PosScreen.currentScreen.showDialog("main/dialog/error/drawererror");
+            PosScreen.currentScreen.showDialog("dialog/error/drawererror");
         }
     }
 
@@ -68,7 +68,7 @@ public class CashDrawer extends GenericDevice implements Runnable {
             return ((jpos.CashDrawer) control).getDrawerOpened();
         } catch (JposException e) {
             Debug.logError(e, module);
-            PosScreen.currentScreen.showDialog("main/dialog/error/drawererror");
+            PosScreen.currentScreen.showDialog("dialog/error/drawererror");
         }
         return false;
     }
@@ -95,7 +95,7 @@ public class CashDrawer extends GenericDevice implements Runnable {
             } catch (JposException e) {
                 Debug.logError(e, module);
                 this.waiting = false;
-                PosScreen.currentScreen.showDialog("main/dialog/error/drawererror");
+                PosScreen.currentScreen.showDialog("dialog/error/drawererror");
             }
             if (isOpen) {
                 long now = (System.currentTimeMillis() - startTime);
@@ -103,7 +103,7 @@ public class CashDrawer extends GenericDevice implements Runnable {
                     java.awt.Toolkit.getDefaultToolkit().beep();
                 }
                 if ((now > 4499) && (now % 5000 == 0)) {
-                    PosScreen.currentScreen.showDialog("main/dialog/error/draweropen");   
+                    PosScreen.currentScreen.showDialog("dialog/error/draweropen");   
                 }
             } else {
                 this.waiting = false;

@@ -145,7 +145,6 @@ public class KeyboardService extends BaseService implements jpos.services.POSKey
 
     // KeyboardReceiver
     public synchronized void receiveData(int[] codes, char[] chars) {
-        Debug.log("Receive Data Invoked - " + new String(chars), module);
         if (lastEvent != null) {
             KeyEvent thisEvent = lastEvent;
             PosKey thisKey = new PosKey(thisEvent);
@@ -157,8 +156,6 @@ public class KeyboardService extends BaseService implements jpos.services.POSKey
                 // fire off the event notification
                 DataEvent event = new DataEvent(this, 0);
                 this.fireEvent(event);
-            } else {
-                Debug.log("No Key Mapping [" + thisKey.getKeyCode() + " / " + thisKey.hashCode() + "] in jpos.xml", module);
             }
         } else {
             Debug.log("Last Event is null??", module);

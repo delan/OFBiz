@@ -56,7 +56,7 @@ public class SecurityEvents {
         XuiSession session = pos.getSession();
         trans.voidSale();
         session.logout();
-        pos.showPage("main/pospanel");
+        pos.showPage("pospanel");
         PosScreen.currentScreen.setLock(true);
     }
 
@@ -64,7 +64,7 @@ public class SecurityEvents {
         XuiSession session = pos.getSession();
         if (session.hasRole(session.getUserLogin(), "MANAGER")) {
             ManagerEvents.mgrLoggedIn = true;
-            pos.showPage("main/mgrpanel");
+            pos.showPage("mgrpanel");
             PosScreen.currentScreen.getInput().clear();
         } else {
             String[] func = pos.getInput().getFunction("MGRLOGIN");
@@ -125,7 +125,7 @@ public class SecurityEvents {
                             input.clear();
                         } else {
                             ManagerEvents.mgrLoggedIn = true;
-                            pos.showPage("main/mgrpanel");
+                            pos.showPage("mgrpanel");
                             PosScreen.currentScreen.getInput().clear();                            
                         }
                     }

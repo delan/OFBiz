@@ -86,7 +86,7 @@ public class Scanner extends GenericDevice {
         if (data != null) {
             // make sure we are on the main POS screen
             if (!"main/pospanel".equals(PosScreen.currentScreen.getName())) {
-                PosScreen.currentScreen.showPage("main/pospanel");
+                PosScreen.currentScreen.showPage("pospanel");
             }
             
             // we can add some type checking here if needed (i.e. type of barcode; type of SKU, etc)

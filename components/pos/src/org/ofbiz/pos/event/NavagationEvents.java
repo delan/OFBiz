@@ -37,7 +37,7 @@ public class NavagationEvents {
 
     public static void showPosScreen(PosScreen pos) {
         ManagerEvents.mgrLoggedIn = false;
-        pos.showPage("main/pospanel");
+        pos.showPage("pospanel");
         PosScreen.currentScreen.getInput().clear();
     }
 
@@ -45,9 +45,9 @@ public class NavagationEvents {
         ManagerEvents.mgrLoggedIn = false;
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         if (trans.isEmpty()) {
-            pos.showDialog("main/dialog/error/noitems");
+            pos.showDialog("dialog/error/noitems");
         } else {
-            PosScreen newPos = pos.showPage("main/paypanel");
+            PosScreen newPos = pos.showPage("paypanel");
             newPos.getInput().setFunction("TOTAL");
             newPos.refresh();
         }
@@ -55,7 +55,7 @@ public class NavagationEvents {
 
     public static void showPromoScreen(PosScreen pos) {
         ManagerEvents.mgrLoggedIn = false;
-        pos.showPage("main/promopanel");
+        pos.showPage("promopanel");
         PosScreen.currentScreen.getInput().clear();        
     }
 }

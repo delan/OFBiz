@@ -33,6 +33,7 @@ import net.xoetrope.xui.XResourceManager;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.content.xui.XuiContainer;
 import org.ofbiz.content.xui.XuiSession;
 import org.ofbiz.pos.component.Input;
@@ -69,6 +70,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     protected Journal journal = null;
     protected Operator operator = null;
     protected PosButton buttons = null;
+    protected String scrLocation = null;
     protected boolean isLocked = false;
 
     public void pageCreated() {
@@ -90,9 +92,9 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             firstInit = true;
             
             // pre-load a few screens
-            XProjectManager.getPageManager().loadPage("main/paypanel");
-            XProjectManager.getPageManager().loadPage("main/mgrpanel");
-            XProjectManager.getPageManager().loadPage("main/promopanel");
+            XProjectManager.getPageManager().loadPage(this.getScreenLocation() + "/paypanel");
+            XProjectManager.getPageManager().loadPage(this.getScreenLocation() + "/mgrpanel");
+            XProjectManager.getPageManager().loadPage(this.getScreenLocation() + "/promopanel");
 
             // start the shared monitor thread
             if (activityMonitor == null) {
@@ -237,7 +239,10 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     }
 
     public PosScreen showPage(String pageName, boolean refresh) {
-        XPage newPage = XProjectManager.getPageManager().showPage(pageName);
+        if (pageName.startsWith("/")) {
+            pageName = pageName.substring(1);
+        }
+        XPage newPage = XProjectManager.getPageManager().showPage(this.getScreenLocation() + "/" + pageName);
         if (newPage instanceof PosScreen) {
             if (refresh) ((PosScreen) newPage).refresh();
             return (PosScreen) newPage;
@@ -246,13 +251,13 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     }
 
     public void lockScreenButton(PosScreen pos) {
-        if ("main/pospanel".equals(pos.getName())) {
+        if ((this.getScreenLocation() + "/pospanel").equals(pos.getName())) {
             pos.getButtons().setLock("menuMain", true);
-        } else if ("main/mgrpanel".equals(pos.getName())) {
+        } else if ((this.getScreenLocation() + "/mgrpanel").equals(pos.getName())) {
             pos.getButtons().setLock("menuMgr", true);
-        } else if ("main/paypanel".equals(pos.getName())) {
+        } else if ((this.getScreenLocation() + "/paypanel").equals(pos.getName())) {
             pos.getButtons().setLock("menuPay", true);
-        } else if ("main/promopanel".equals(pos.getName())) {
+        } else if ((this.getScreenLocation() + "/promopanel").equals(pos.getName())) {
             pos.getButtons().setLock("menuPromo", true);
         }
     }
@@ -270,7 +275,10 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     }
 
     public PosDialog showDialog(String pageName, DialogCallback cb, String text) {
-        XPage dialogPage = XProjectManager.getPageManager().loadPage(pageName);        
+        if (pageName.startsWith("/")) {
+            pageName = pageName.substring(1);
+        }
+        XPage dialogPage = XProjectManager.getPageManager().loadPage(this.getScreenLocation() + "/" + pageName);        
         PosDialog dialog = PosDialog.getInstance(dialogPage, true, 0);
         dialog.showDialog(this, cb, text);
         return dialog;
@@ -286,7 +294,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         while (monitorRunning) {
             if (!isLocked && (System.currentTimeMillis() - lastActivity) > MAX_INACTIVITY) {
                 Debug.log("POS terminal auto-lock activated", module);
-                PosScreen.currentScreen.showPage("main/pospanel").setLock(true);
+                PosScreen.currentScreen.showPage("pospanel").setLock(true);
             }
             try {
                 Thread.sleep(5000);
@@ -294,5 +302,18 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
                 Debug.logError(e, module);
             }
         }
+    }
+
+    private String getScreenLocation() {
+        if (this.scrLocation == null) {
+            synchronized(this) {
+                if (this.scrLocation == null) {
+                    String xuiProps = this.getSession().getContainer().getXuiPropertiesName();
+                    String startClass = UtilProperties.getPropertyValue(xuiProps, "StartClass", "default/pospanel");
+                    this.scrLocation = startClass.substring(0, startClass.indexOf("/"));
+                }
+            }
+        }
+        return this.scrLocation;
     }
 }

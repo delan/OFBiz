@@ -57,7 +57,7 @@ public class MenuEvents {
         String[] paidFunc = pos.getInput().getFunction("PAID");
         if (paidFunc != null) {
             pos.getInput().clear();
-            pos.showPage("main/pospanel");
+            pos.showPage("pospanel");
         } else {
             if (UtilValidate.isEmpty(pos.getInput().value())) {
                 pos.getInput().clear();
@@ -97,6 +97,8 @@ public class MenuEvents {
                 ManagerEvents.openTerminal(pos);
             } else if ("CLOSE".equals(lastFunc[0])) {
                 ManagerEvents.closeTerminal(pos);
+            } else if ("VOID".equals(lastFunc[0])) {
+                ManagerEvents.voidOrder(pos);
             } else if ("REFNUM".equals(lastFunc[0])) {
                 PaymentEvents.setRefNum(pos);
             } else if ("CREDIT".equals(lastFunc[0])) {
@@ -139,7 +141,7 @@ public class MenuEvents {
         }
 
         if (!trans.isOpen()) {
-            pos.showDialog("main/dialog/error/terminalclosed");
+            pos.showDialog("dialog/error/terminalclosed");
         } else {
 
             // check for quantity
@@ -164,7 +166,7 @@ public class MenuEvents {
                 }
             } catch (GeneralException e) {
                 Debug.logError(e, module);
-                pos.showDialog("main/dialog/error/producterror");
+                pos.showDialog("dialog/error/producterror");
             }
 
             // add the item to the cart; report any errors to the user
@@ -173,12 +175,12 @@ public class MenuEvents {
                     trans.addItem(productId, quantity);
                 } catch (CartItemModifyException e) {
                     Debug.logError(e, module);
-                    pos.showDialog("main/dialog/error/producterror");
+                    pos.showDialog("dialog/error/producterror");
                 } catch (ItemNotFoundException e) {
-                    pos.showDialog("main/dialog/error/productnotfound");
+                    pos.showDialog("dialog/error/productnotfound");
                 }
             } else {
-                pos.showDialog("main/dialog/error/productnotfound");
+                pos.showDialog("dialog/error/productnotfound");
             }
         }
 
@@ -236,7 +238,7 @@ public class MenuEvents {
             trans.modifyQty(sku, quantity);
         } catch (CartItemModifyException e) {
             Debug.logError(e, module);
-            pos.showDialog("main/dialog/error/producterror");
+            pos.showDialog("dialog/error/producterror");
         }
 
         // clear the qty flag
@@ -252,7 +254,7 @@ public class MenuEvents {
     public static void saleDiscount(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         if (!trans.isOpen()) {
-            pos.showDialog("main/dialog/error/terminalclosed");
+            pos.showDialog("dialog/error/terminalclosed");
         } else {
             Input input = pos.getInput();
             String value = input.value();
@@ -279,7 +281,7 @@ public class MenuEvents {
     public static void itemDiscount(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         if (!trans.isOpen()) {
-            pos.showDialog("main/dialog/error/terminalclosed");
+            pos.showDialog("dialog/error/terminalclosed");
         } else {
             String sku = null;
             try {
