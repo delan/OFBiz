@@ -28,11 +28,11 @@
   <div class="ecom-column-right">
     ${pages.get("/includes/language.ftl")}
     ${pages.get("/cart/minicart.ftl")}    
-    ${pages.get("/cart/minipromotext.ftl")}
+  <#--  ${pages.get("/cart/minipromotext.ftl")}
     ${pages.get("/catalog/miniassocprods.ftl")}
-    ${pages.get("/catalog/minilastviewedcategories.ftl")}
+    ${pages.get("/catalog/minilastviewedcategories.ftl")} -->
     ${pages.get("/catalog/minilastviewedproducts.ftl")}
-    ${pages.get("/catalog/minilastproductsearches.ftl")}
+<#--    ${pages.get("/catalog/minilastproductsearches.ftl")}
     ${pages.get("/content/factoids.ftl")}
-    ${pages.get("/content/recentlyviewed.ftl")}
+    ${pages.get("/content/recentlyviewed.ftl")} -->
   </div>

@@ -8,21 +8,17 @@
 
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<#--    <title>${layoutSettings.companyName}: <#if (page.titleProperty)?has_content>${uiLabelMap[page.titleProperty]}<#else>${(page.title)?if_exists}</#if></title>
--->    <script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
-    <script language='javascript' src='<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>' type='text/javascript'></script>
-    <link rel='stylesheet' href='<@ofbizContentUrl>/hotelfrontend/images/maincss.css</@ofbizContentUrl>' type='text/css'>
-    <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
-    <link rel='stylesheet' href='<@ofbizContentUrl>/hotelfrontend/images/rydges.css</@ofbizContentUrl>' type='text/css'>    
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<#-- <title>${layoutSettings.companyName}: <#if (page.titleProperty)?has_content>${uiLabelMap[page.titleProperty]}<#else>${(page.title)?if_exists}</#if></title> -->
+	<script language='javascript' src='<@ofbizContentUrl>/images/calendar1.js</@ofbizContentUrl>' type='text/javascript'></script>
+	<script language='javascript' src='<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>' type='text/javascript'></script>
+	<link rel='stylesheet' href='<@ofbizContentUrl>/hotelfrontend/images/frontend.css</@ofbizContentUrl>' type='text/css'>
+	<link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>
+	<script language="JavaScript" type="text/JavaScript">
+		var ie=document.all;var gc=document.getElementById&&!document.all;var op=(window.navigator.userAgent.toLowerCase().indexOf('opera/7')!=-1)?1:0;var mac=(window.navigator.platform.toLowerCase().indexOf('mac')!=-1)?1:0;var sf=(window.navigator.userAgent.toLowerCase().indexOf('safari')!=-1)?1:0;var ns=document.layers;
+		if(document.compatMode=="CSS1Compat"){document.getElementsByTagName("HTML")[0].style.overflowX="visible";document.getElementsByTagName("HTML")[0].style.overflowY="auto";}
+		if(!gc){document.write('<style>body{overflow:auto}div.rydges-column-main{width:100%;}<\/style>');}if(op){document.write('<style>body{padding:0px}<\/style>');}if(!gc && !op){document.write('<style>div.barmiddle{float:left;}<\/style>');}
+		function MM_openBrWindow(theURL,winName,features){window.open(theURL,winName,features);}
+	</script>
 </head>
-<script language="JavaScript" type="text/JavaScript">
-<!--
-function MM_openBrWindow(theURL,winName,features) { //v2.0
-  window.open(theURL,winName,features);
-}
-//-->
-</script>
-</head>
-<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-
+<body>
