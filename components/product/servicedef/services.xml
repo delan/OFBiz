@@ -1498,7 +1498,7 @@
 
     <!-- Product content services -->
     <service name="createProductContent" default-entity-name="ProductContent" engine="simple"
-                location="org/ofbiz/product/content/ContentServices.xml" invoke="createProductContent" auth="true">
+                location="org/ofbiz/product/product/ProductContentServices.xml" invoke="createProductContent" auth="true">
         <description>Add Content To Product</description>
         <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
@@ -1507,20 +1507,20 @@
         <!--<override name="contentId" optional="true" mode="INOUT" />-->
     </service>
     <service name="updateProductContent" default-entity-name="ProductContent" engine="simple"
-                location="org/ofbiz/product/content/ContentServices.xml" invoke="updateProductContent" auth="true">
+                location="org/ofbiz/product/product/ProductContentServices.xml" invoke="updateProductContent" auth="true">
         <description>Update Content To Product</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="removeProductContent" default-entity-name="ProductContent" engine="simple"
-                location="org/ofbiz/product/content/ContentServices.xml" invoke="removeProductContent" auth="true">
+                location="org/ofbiz/product/product/ProductContentServices.xml" invoke="removeProductContent" auth="true">
         <description>Remove Content From Product</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="createEmailContentForProduct" default-entity-name="ProductContent" engine="simple"
-            location="org/ofbiz/product/content/ContentServices.xml" invoke="createEmailContentForProduct" auth="true">
+            location="org/ofbiz/product/product/ProductContentServices.xml" invoke="createEmailContentForProduct" auth="true">
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>
@@ -1530,7 +1530,7 @@
         <override name="contentId" optional="true" mode="INOUT"/>
     </service>
     <service name="updateEmailContentForProduct" default-entity-name="ProductContent" engine="simple"
-            location="org/ofbiz/product/content/ContentServices.xml" invoke="updateEmailContentForProduct" auth="true">
+            location="org/ofbiz/product/product/ProductContentServices.xml" invoke="updateEmailContentForProduct" auth="true">
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
@@ -1542,7 +1542,7 @@
         <attribute name="htmlBody" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createDownloadContentForProduct" default-entity-name="ProductContent" engine="simple"
-            location="org/ofbiz/product/content/ContentServices.xml" invoke="createDownloadContentForProduct" auth="true">
+            location="org/ofbiz/product/product/ProductContentServices.xml" invoke="createDownloadContentForProduct" auth="true">
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>
@@ -1550,7 +1550,7 @@
         <override name="contentId" optional="true"/>
     </service>
     <service name="updateDownloadContentForProduct" default-entity-name="ProductContent" engine="simple"
-            location="org/ofbiz/product/content/ContentServices.xml" invoke="updateDownloadContentForProduct" auth="true">
+            location="org/ofbiz/product/product/ProductContentServices.xml" invoke="updateDownloadContentForProduct" auth="true">
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>
@@ -1559,7 +1559,7 @@
     </service>
 
     <service name="createSimpleTextContentForProduct" default-entity-name="ProductContent" engine="simple"
-            location="org/ofbiz/product/content/ContentServices.xml" invoke="createSimpleTextContentForProduct" auth="true">
+            location="org/ofbiz/product/product/ProductContentServices.xml" invoke="createSimpleTextContentForProduct" auth="true">
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>
@@ -1567,7 +1567,7 @@
         <override name="contentId" optional="true"/>
     </service>
     <service name="updateSimpleTextContentForProduct" default-entity-name="ProductContent" engine="simple"
-            location="org/ofbiz/product/content/ContentServices.xml" invoke="updateSimpleTextContentForProduct" auth="true">
+            location="org/ofbiz/product/product/ProductContentServices.xml" invoke="updateSimpleTextContentForProduct" auth="true">
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>

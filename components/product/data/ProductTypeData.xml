@@ -51,7 +51,7 @@
   <Enumeration description="Other Change" enumCode="ODR_CHANGE" enumId="PRDS_ODR_CHANGE" enumTypeId="PRDS_EMAIL" sequenceId="05"/>
   <Enumeration description="Retrieve Password" enumCode="PWD_RETRIEVE" enumId="PRDS_PWD_RETRIEVE" enumTypeId="PRDS_EMAIL" sequenceId="06"/>
   <Enumeration description="Tell-A-Friend" enumCode="TELL_FRIEND" enumId="PRDS_TELL_FRIEND" enumTypeId="PRDS_EMAIL" sequenceId="07"/>
-  <Enumeration description="Gift-Card Fulfillment" enumCode="GIFT_CARD" enumId="PRDS_GIFT_CARD" enumTypeId="PRDS_EMAIL" sequenceId="08"/>
+  <Enumeration description="Gift-Card Purchase" enumCode="GC_PURCHASE" enumId="PRDS_GC_PURCHASE" enumTypeId="PRDS_EMAIL" sequenceId="08"/>
 
   <EnumerationType description="Facility Location Type" enumTypeId="FACLOC_TYPE" hasTable="N" parentTypeId=""/>
   <Enumeration description="Pick/Primary" enumCode="PICKLOC" enumId="FLT_PICKLOC" enumTypeId="FACLOC_TYPE" sequenceId="01"/>

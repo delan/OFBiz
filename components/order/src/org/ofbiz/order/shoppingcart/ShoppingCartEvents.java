@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.7 2003/11/21 21:55:33 ajzeneski Exp $
+ * $Id: ShoppingCartEvents.java,v 1.8 2003/11/25 18:15:25 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -173,11 +173,13 @@ public class ShoppingCartEvents {
 
         // parse the amount
         double amount = 0.00;
-        try {
-            amount = NumberFormat.getNumberInstance().parse(selectedAmountStr).doubleValue();
-        } catch (Exception e) {
-            Debug.logWarning(e, "Problem parsing amount string: " + selectedAmountStr, module);
-            amount = 0.00;
+        if (selectedAmountStr != null && selectedAmountStr.length() > 0) {
+            try {
+                amount = NumberFormat.getNumberInstance().parse(selectedAmountStr).doubleValue();
+            } catch (Exception e) {
+                Debug.logWarning(e, "Problem parsing amount string: " + selectedAmountStr, module);
+                amount = 0.00;
+            }
         }
 
         // check for an add-to cart survey
