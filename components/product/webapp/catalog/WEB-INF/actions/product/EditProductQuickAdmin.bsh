@@ -305,7 +305,12 @@ if (product != null) {
 
             prodFeaturesFiltered = EntityUtil.filterByAnd(assocProductFeatureAndAppls, UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId));
             if (prodFeaturesFiltered.size() > 0) {
-                selFeatureDesc.put(assocProduct.getString("productId"), ((GenericValue) prodFeaturesFiltered.get(0)).getString("description"));
+                // this is used for the selectable feature descriptions section; only include here iff the description is also associated with the virtual product as a selectable feature, ie if this is a distinguishing feature
+                String curSelDescription = ((GenericValue) prodFeaturesFiltered.get(0)).getString("description");
+                testProductFeatureAndAppls = EntityUtil.filterByAnd(productFeatureAndAppls, UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId, "description", curSelDescription, "productFeatureApplTypeId", "SELECTABLE_FEATURE"));
+                if (testProductFeatureAndAppls.size() > 0) {
+                    selFeatureDesc.put(assocProduct.getString("productId"), curSelDescription);
+                }
             }
         }
     }
