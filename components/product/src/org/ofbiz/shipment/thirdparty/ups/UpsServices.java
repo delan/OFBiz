@@ -1595,7 +1595,7 @@ public class UpsServices {
                             Map newPackage = new HashMap();
                             newPackage.put(productId, new Double(partialQty));
                             packages.add(newPackage);
-                        } else {
+                        } else if (totalWeight > 0) {
                             // create the first package
                             if (packages.size() == 0) {
                                 packages.add(new HashMap());
