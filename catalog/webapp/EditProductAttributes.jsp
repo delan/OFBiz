@@ -84,13 +84,13 @@
         <FORM method=POST action='<ofbiz:url>/UpdateProductAttribute?UPDATE_MODE=UPDATE</ofbiz:url>'>
             <input type=hidden name='PRODUCT_ID' value='<ofbiz:entityfield attribute="productAttribute" field="productId"/>'>
             <input type=hidden name='ATTRIBUTE_NAME' value='<ofbiz:entityfield attribute="productAttribute" field="attrName"/>'>
-            <input type=text size='60' name='ATTRIBUTE_VALUE' value='<ofbiz:inputvalue entityAttr="productAttribute" field="attrValue"/>'>
-            <input type=text size='20' name='ATTRIBUTE_TYPE' value='<ofbiz:inputvalue entityAttr="productAttribute" field="attrType"/>'>
+            <input type=text size='60' name='ATTRIBUTE_VALUE' value="<ofbiz:inputvalue entityAttr='productAttribute' field='attrValue'/>">
+            <input type=text size='20' name='ATTRIBUTE_TYPE' value="<ofbiz:inputvalue entityAttr='productAttribute' field='attrType'/>">
             <INPUT type=submit value='Update'>
         </FORM>
     </td>
     <td>
-      <a href='<ofbiz:url>/UpdateProductAttribute?UPDATE_MODE=DELETE&PRODUCT_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productId"/>&ATTRIBUTE_NAME=<ofbiz:entityfield attribute="productAttribute" field="attrName"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/UpdateProductAttribute?UPDATE_MODE=DELETE&PRODUCT_ID=<ofbiz:entityfield attribute="productAttribute" field="productId"/>&ATTRIBUTE_NAME=<ofbiz:entityfield attribute="productAttribute" field="attrName"/></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
