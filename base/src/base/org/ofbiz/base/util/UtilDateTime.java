@@ -184,19 +184,48 @@ public class UtilDateTime {
     }
 
     /**
+     * Return the date for the first day of the year
+     * @param stamp
+     * @return
+     */
+    public static java.sql.Timestamp getYearStart(java.sql.Timestamp stamp) {
+        return getYearStart(stamp, 0, 0);
+    }
+
+    public static java.sql.Timestamp getYearStart(java.sql.Timestamp stamp, int daysLater) {
+        return getYearStart(stamp, daysLater, 0);
+    }
+
+    public static java.sql.Timestamp getYearStart(java.sql.Timestamp stamp, int daysLater, int yearsLater) {
+        Calendar tempCal = Calendar.getInstance();
+        tempCal.setTime(new java.util.Date(stamp.getTime()));
+        tempCal.set(tempCal.get(Calendar.YEAR), Calendar.JANUARY, 1, 0, 0, 0);
+        tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
+        tempCal.add(Calendar.YEAR, yearsLater);
+        java.sql.Timestamp retStamp = new java.sql.Timestamp(tempCal.getTime().getTime());
+        retStamp.setNanos(0);
+        return retStamp;
+    }
+
+    /**
      * Return the date for the first day of the month
      * @param stamp
      * @return
      */
     public static java.sql.Timestamp getMonthStart(java.sql.Timestamp stamp) {
-        return getMonthStart(stamp, 0);
+        return getMonthStart(stamp, 0, 0);
     }
-        
+
     public static java.sql.Timestamp getMonthStart(java.sql.Timestamp stamp, int daysLater) {
+        return getMonthStart(stamp, daysLater, 0);
+    }
+
+    public static java.sql.Timestamp getMonthStart(java.sql.Timestamp stamp, int daysLater, int monthsLater) {
         Calendar tempCal = Calendar.getInstance();
         tempCal.setTime(new java.util.Date(stamp.getTime()));
         tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), 1, 0, 0, 0);
         tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
+        tempCal.add(Calendar.MONTH, monthsLater);
         java.sql.Timestamp retStamp = new java.sql.Timestamp(tempCal.getTime().getTime());
         retStamp.setNanos(0);
         return retStamp;
@@ -208,15 +237,20 @@ public class UtilDateTime {
      * @return
      */
     public static java.sql.Timestamp getWeekStart(java.sql.Timestamp stamp) {
-        return getWeekStart(stamp, 0);
+        return getWeekStart(stamp, 0, 0);
     }
-    
+
     public static java.sql.Timestamp getWeekStart(java.sql.Timestamp stamp, int daysLater) {
+        return getWeekStart(stamp, daysLater, 0);
+    }
+
+    public static java.sql.Timestamp getWeekStart(java.sql.Timestamp stamp, int daysLater, int weeksLater) {
         Calendar tempCal = Calendar.getInstance();
         tempCal.setTime(new java.util.Date(stamp.getTime()));
         tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
         tempCal.set(Calendar.DAY_OF_WEEK, tempCal.getFirstDayOfWeek());
+        tempCal.add(Calendar.WEEK_OF_MONTH, weeksLater);
         java.sql.Timestamp retStamp = new java.sql.Timestamp(tempCal.getTime().getTime());
         retStamp.setNanos(0);
         return retStamp;
