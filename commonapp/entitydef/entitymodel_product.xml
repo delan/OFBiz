@@ -914,6 +914,10 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="price" type="currency-amount"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="productId"/>
       <prim-key field="productPriceTypeId"/>
       <prim-key field="currencyUomId"/>
@@ -930,6 +934,12 @@
       </relation>
       <relation type="one" fk-name="PROD_PRICE_FACG" rel-entity-name="FacilityGroup">
         <key-map field-name="facilityGroupId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRICE_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRICE_LMBUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
     </entity>
     <entity entity-name="ProductPriceAction"

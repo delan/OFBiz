@@ -34,6 +34,12 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
+        <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>
+        
         <create-value value-name="newEntity"/>
 
         <!-- if setting the primaryProductCategoryId create a member entity too -->
@@ -67,6 +73,10 @@
         <!-- save this value before overwriting it so we can compare it later -->
         <field-to-field field-name="primaryProductCategoryId" map-name="lookedUpValue" to-map-name="saveIdMap"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="lookedUpValue"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
 
         <!-- if setting the primaryParentCategoryId, create a rollup entity too -->

@@ -95,6 +95,7 @@
     <td><div class="tabletext"><b>Facility Group</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Price</b></div></td>
+    <td><div class="tabletext"><b>Last Modified By</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <%int line = 0;%>
@@ -129,6 +130,7 @@
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
+    <td><div class='tabletext'>[<ofbiz:inputvalue entityAttr='productPrice' field='lastModifiedByUserLogin'/>] on <ofbiz:inputvalue entityAttr='productPrice' field='lastModifiedDate'/></div></td>
     <td align="center">
       <a href='<ofbiz:url>/deleteProductPrice?productId=<ofbiz:entityfield attribute="productPrice" field="productId"/>&productPriceTypeId=<ofbiz:entityfield attribute="productPrice" field="productPriceTypeId"/>&currencyUomId=<ofbiz:entityfield attribute="productPrice" field="currencyUomId"/>&facilityGroupId=<ofbiz:entityfield attribute="productPrice" field="facilityGroupId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(productPrice.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>

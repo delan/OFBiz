@@ -36,6 +36,12 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
 
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
+        <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>
+        
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductPrice" short-description="Update an ProductPrice">
@@ -46,6 +52,11 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPrice" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="lookedUpValue"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpValue"/>
+        
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteProductPrice" short-description="Delete an ProductPrice">

@@ -403,7 +403,22 @@ function insertImageName(size,ext) {
     <td><input type="submit" value="Update Product" style='font-size: x-small;'></td>
     <td colspan='3'>&nbsp;</td>
   </tr>
+
+  <tr>
+    <td width="20%" align=right><div class="tabletext"><b>Last Modified By:</b></div></td>
+    <td>&nbsp;</td>
+    <td width="30%">
+    	<div class='tabletext'>[<ofbiz:inputvalue entityAttr='product' field='lastModifiedByUserLogin'/>] on <ofbiz:inputvalue entityAttr='product' field='lastModifiedDate'/></div>
+    </td>
+
+    <td width="20%" align=right><div class="tabletext"><b>Created By:</b></div></td>
+    <td>&nbsp;</td>
+    <td width="30%">
+    	<div class='tabletext'>[<ofbiz:inputvalue entityAttr='product' field='createdByUserLogin'/>] on <ofbiz:inputvalue entityAttr='product' field='createdDate'/></div>
+    </td>
+  </tr>
 </table>
+
 </form>
     <%if (productId != null) {%>
         <hr class='sepbar'>
