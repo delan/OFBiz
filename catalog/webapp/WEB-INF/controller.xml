@@ -177,6 +177,26 @@
     	<response name="error" type="view" value="EditCategoryProdCatalogs"/>
     </request-map>
 
+    <!-- ================ Category Roles Requests ================= -->
+    <request-map uri="EditCategoryParties"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditCategoryParties"/>
+    </request-map>
+    <request-map uri="addPartyToCategory"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="addPartyToCategory"/>
+    	<response name="success" type="view" value="EditCategoryParties"/>
+    	<response name="error" type="view" value="EditCategoryParties"/>
+    </request-map>
+    <request-map uri="updatePartyToCategory"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyToCategory"/>
+    	<response name="success" type="view" value="EditCategoryParties"/>
+    	<response name="error" type="view" value="EditCategoryParties"/>
+    </request-map>
+    <request-map uri="removePartyFromCategory"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removePartyFromCategory"/>
+    	<response name="success" type="view" value="EditCategoryParties"/>
+    	<response name="error" type="view" value="EditCategoryParties"/>
+    </request-map>
+
     <!-- ================ Product Requests ================= -->
     <request-map uri="EditProduct"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProduct"/>
@@ -644,6 +664,7 @@
     <view-map name="EditCategoryRollup" type="region"/>
     <view-map name="EditCategoryProducts" type="region"/>
     <view-map name="EditCategoryProdCatalogs" type="region"/>
+    <view-map name="EditCategoryParties" type="region"/>
     <view-map name="UploadCategoryImage" type="region"/>
 
     <view-map name="EditProduct" type="region"/>
