@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/07/17 22:17:21  jonesde
+ * Updates for improved login: no extra redirect, and can login staying on same page
+ *
  * Revision 1.3  2001/07/17 08:51:37  jonesde
  * Updated for auth implementation & small fixes.
  *
@@ -53,8 +56,11 @@ public final class SiteDefs {
     public static final String LOGIN_REQUEST_URI = "login";
     public static final String LOGOUT_REQUEST_URI = "logout";
  
-    /** Required context init paramater to locate site specific configuration */
+    /** Required context init parameter to locate site specific configuration */
     public static final String SITE_CONFIG = "siteConfigurationFile";
+    
+    /** Required context init parameter to locate scheduler configuration */
+    public static final String SCHEDULER_CONFIG = "schedulerConfigurationFile";
     
     /** Used in session object to determine if a previous request is waiting */
     public static final String PREVIOUS_REQUEST = "_PREVIOUS_REQUEST_";
