@@ -77,8 +77,8 @@ public class WfFactory {
    * @throws WfException
    * @return An instance of the WfRequester Interface.
    */
-  public static WfRequester newWfRequester() throws WfException {
-      return null;
+  public static WfRequester newWfRequester(String name) throws WfException {
+      return new WfRequesterImpl(name);
   }
   
   /** Creates a new {@link WfResource} instance.
