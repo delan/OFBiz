@@ -406,11 +406,6 @@ public class GenericDAO {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
         
-        ModelViewEntity modelViewEntity = null;
-        if (modelEntity instanceof ModelViewEntity) {
-            modelViewEntity = (ModelViewEntity) modelEntity;
-        }
-        
         if (modelEntity.getPksSize() <= 0)
             throw new GenericEntityException("Entity has no primary keys, cannot select by primary key");
         
@@ -564,10 +559,6 @@ public class GenericDAO {
     public Collection selectByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         if (modelEntity == null)
             return null;
-        ModelViewEntity modelViewEntity = null;
-        if (modelEntity instanceof ModelViewEntity) {
-            modelViewEntity = (ModelViewEntity) modelEntity;
-        }
         
         Collection collection = new LinkedList();
         
@@ -669,10 +660,6 @@ public class GenericDAO {
     public Collection selectByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         if (modelEntity == null)
             return null;
-        ModelViewEntity modelViewEntity = null;
-        if (modelEntity instanceof ModelViewEntity) {
-            modelViewEntity = (ModelViewEntity) modelEntity;
-        }
         
         Collection collection = new LinkedList();
         
@@ -774,10 +761,6 @@ public class GenericDAO {
     public Collection selectByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
         if (modelEntity == null)
             return null;
-        ModelViewEntity modelViewEntity = null;
-        if (modelEntity instanceof ModelViewEntity) {
-            modelViewEntity = (ModelViewEntity) modelEntity;
-        }
         
         if (expressions == null)
             return null;
@@ -910,10 +893,6 @@ public class GenericDAO {
     public Collection selectByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
         if (modelEntity == null)
             return null;
-        ModelViewEntity modelViewEntity = null;
-        if (modelEntity instanceof ModelViewEntity) {
-            modelViewEntity = (ModelViewEntity) modelEntity;
-        }
         
         if (expressions == null)
             return null;
