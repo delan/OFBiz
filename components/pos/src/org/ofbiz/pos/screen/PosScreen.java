@@ -86,11 +86,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.journal = new Journal(this);
         this.operator = new Operator(this);
         this.lastActivity = System.currentTimeMillis();
-
-        // create the monitor thread
-        this.activityMonitor = new Thread(this);
-        this.activityMonitor.setDaemon(false);
-
+                
         if (!deviceInit) {
             deviceInit = true;
 
@@ -105,6 +101,10 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             XProjectManager.getPageManager().loadPage("main/paypanel");
             XProjectManager.getPageManager().loadPage("main/mgrpanel");
             XProjectManager.getPageManager().loadPage("main/promopanel");
+
+            // start the shared monitor thread
+            this.activityMonitor = new Thread(this);
+            this.activityMonitor.setDaemon(false);
         }
 
         // buttons are different per screen
@@ -248,7 +248,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     // run method for auto-locking POS on inactivity
     public void run() {
         while (monitorRunning) {
-            if (!isLocked && (System.currentTimeMillis() - lastActivity) > MAX_INACTIVITY) {                
+            if (!isLocked && (System.currentTimeMillis() - lastActivity) > MAX_INACTIVITY) {
                 this.showPage("main/pospanel").setLock(true);
             }
             try {
