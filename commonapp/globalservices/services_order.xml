@@ -47,6 +47,18 @@
         <attribute name="customerPoNumber" type="String" mode="OUT" optional="true"/>        
     </service>
     
+    <service name="prepareOrderConfirmation" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderConfirmation">
+        <description>Service to prepare (template, addresses, etc) the order confirmation</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>        
+        <attribute name="templateName" type="String" mode="OUT" optional="false"/>
+        <attribute name="subject" type="String" mode="OUT" optional="false"/>
+        <attribute name="sendTo" type="String" mode="OUT" optional="false"/>
+        <attribute name="sendFrom" type="String" mode="OUT" optional="false"/>
+        <attribute name="sendCc" type="String" mode="OUT" optional="true"/>
+        <attribute name="sendBcc" type="String" mode="OUT" optional="true"/>
+    </service>
+        
     <service name="prepareOrderNotification" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderNotification">
         <description>Service to prepare (template, addresses, etc) the order notification</description>
@@ -59,6 +71,13 @@
         <attribute name="sendBcc" type="String" mode="OUT" optional="true"/>
     </service>
             	
+    <service name="sendOrderConfirmation" engine="java"
+            location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
+        <description>Send a order confirmation</description>
+        <implements service="sendNotificationInterface"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>      
+    </service>
+                	
     <service name="sendOrderNotification" engine="java"
             location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
         <description>Send a order notification</description>
@@ -100,7 +119,7 @@
         <attribute name="orderItemContactMechs" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderItemPriceInfos" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="trackingCodeOrders" type="java.util.List" mode="IN" optional="true"/>
-        <attribute name="orderId" type="String" mode="OUT"/>
+        <attribute name="orderId" type="String" mode="OUT"/>    
     </service>
 
     <service name="createOrderItemBilling" engine="simple"

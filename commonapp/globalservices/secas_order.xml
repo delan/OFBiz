@@ -6,15 +6,25 @@
     <eca service="changeOrderItemStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="ITEM_CANCELLED"/>
         <action service="resetGrandTotal" mode="sync"/>
+        <action service="sendOrderNotification" mode="async"/>
     </eca>
+    <eca service="changeOrderItemStatus" event="commit">
+        <condition field-name="statusId" operator="equals" value="ITEM_BACKORDERED"/>
+        <action service="sendOrderNotification" mode="async"/>
+    </eca>    
     <eca service="changeOrderStatus" event="commit" run-on-error="false">
-        <condition field-name="statusId" operator="equals" value="ORDER_COMPLETED"/>
+        <condition field-name="statusId" operator="equals" value="ORDER_COMPLETED"/>        
         <action service="createInvoiceFromOrder" mode="sync" result-to-context="true"/>     
         <action service="captureOrderPayments" mode="sync"/>
+        <action service="sendOrderNotification" mode="async"/>
     </eca>
     <eca service="createOrderAdjustment" event="commit">        
         <action service="resetGrandTotal" mode="sync"/>
     </eca> 
+    <eca service="sendOrderConfirmation" event="in-validate">
+    	<action service="prepareOrderConfirmation" mode="sync" result-to-context="true"/>
+    	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>        
+    </eca>    
     <eca service="sendOrderNotification" event="in-validate">
     	<action service="prepareOrderNotification" mode="sync" result-to-context="true"/>
     	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>        
