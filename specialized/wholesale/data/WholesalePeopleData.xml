@@ -16,6 +16,13 @@
     <Party partyId="10025" partyTypeId="PERSON" lastUpdatedStamp="2004-01-23 13:54:01.898" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
     <Party partyId="10027" partyTypeId="PERSON" lastUpdatedStamp="2004-01-23 13:54:01.9" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
 
+    <Person partyId="10021" lastName="Rep" firstName="First" gender="M" birthDate="1940-01-01" maritalStatus="S" lastUpdatedStamp="2004-01-23 13:54:01.618" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <Person partyId="10022" lastName="Rep" firstName="Second" gender="M" birthDate="1940-01-01" maritalStatus="S" lastUpdatedStamp="2004-01-23 13:54:01.657" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <Person partyId="10023" lastName="Rep" firstName="Third" gender="M" birthDate="1940-01-01" maritalStatus="S" lastUpdatedStamp="2004-01-23 13:54:01.659" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <Person partyId="10024" lastName="Rep" firstName="Fourth" gender="M" birthDate="1940-01-01" maritalStatus="S" lastUpdatedStamp="2004-01-23 13:54:01.661" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <Person partyId="10025" lastName="Rep" firstName="Fifth" gender="M" birthDate="1940-01-01" maritalStatus="S" lastUpdatedStamp="2004-01-23 13:54:01.664" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <Person partyId="10027" lastName="Rep" firstName="Sixth" gender="M" birthDate="1940-01-01" maritalStatus="S" lastUpdatedStamp="2004-01-23 13:54:01.666" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+
     <PartyGroup partyId="10013" groupName="customer a" federalTaxId="1313131313" comments="test customer a" lastUpdatedStamp="2004-01-23 13:54:01.529" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
     <PartyGroup partyId="10014" groupName="customer b" federalTaxId="1414141414" comments="test customer b" lastUpdatedStamp="2004-01-23 13:54:01.603" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
     <PartyGroup partyId="10015" groupName="customer c" federalTaxId="1515151515" comments="test customer c" lastUpdatedStamp="2004-01-23 13:54:01.605" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
@@ -25,6 +32,23 @@
     <PartyGroup partyId="10019" groupName="customer g" federalTaxId="1919191919" comments="test customer g" lastUpdatedStamp="2004-01-23 13:54:01.613" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
     <PartyGroup partyId="10020" groupName="customer h" federalTaxId="2020202020" comments="test customer h" lastUpdatedStamp="2004-01-23 13:54:01.615" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
     <PartyGroup partyId="10026" groupName="customer i" federalTaxId="2626262626" comments="test customer i" lastUpdatedStamp="2004-01-23 13:54:01.616" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+
+    <PartyRole partyId="10013" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.333" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10014" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.373" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10015" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.375" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10016" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.377" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10017" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.379" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10018" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.38" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10019" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.382" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10020" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.384" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10026" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.385" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+
+    <PartyRole partyId="10021" roleTypeId="AGENT" lastUpdatedStamp="2004-01-23 13:54:01.399" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10022" roleTypeId="AGENT" lastUpdatedStamp="2004-01-23 13:54:01.402" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10023" roleTypeId="AGENT" lastUpdatedStamp="2004-01-23 13:54:01.406" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10024" roleTypeId="AGENT" lastUpdatedStamp="2004-01-23 13:54:01.409" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10025" roleTypeId="AGENT" lastUpdatedStamp="2004-01-23 13:54:01.412" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
+    <PartyRole partyId="10027" roleTypeId="AGENT" lastUpdatedStamp="2004-01-23 13:54:01.416" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
 
     <PartyRelationship partyIdFrom="10021" partyIdTo="10013" roleTypeIdFrom="AGENT" roleTypeIdTo="CUSTOMER" fromDate="2003-12-09 15:32:19.0" partyRelationshipTypeId="CUSTOMER_REL" lastUpdatedStamp="2004-01-23 13:54:01.46" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
     <PartyRelationship partyIdFrom="10022" partyIdTo="10013" roleTypeIdFrom="AGENT" roleTypeIdTo="CUSTOMER" fromDate="2003-12-09 15:32:19.0" partyRelationshipTypeId="CUSTOMER_REL" lastUpdatedStamp="2004-01-23 13:54:01.487" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
@@ -45,36 +69,6 @@
     <PartyRelationship partyIdFrom="10022" partyIdTo="10020" roleTypeIdFrom="AGENT" roleTypeIdTo="CUSTOMER" fromDate="2003-12-09 15:34:28.0" partyRelationshipTypeId="CUSTOMER_REL" lastUpdatedStamp="2004-01-23 13:54:01.523" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
     <PartyRelationship partyIdFrom="10024" partyIdTo="10020" roleTypeIdFrom="AGENT" roleTypeIdTo="CUSTOMER" fromDate="2003-12-09 15:34:28.0" partyRelationshipTypeId="CUSTOMER_REL" lastUpdatedStamp="2004-01-23 13:54:01.525" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
     <PartyRelationship partyIdFrom="10027" partyIdTo="10026" roleTypeIdFrom="AGENT" roleTypeIdTo="CUSTOMER" fromDate="2003-12-09 15:34:28.0" partyRelationshipTypeId="CUSTOMER_REL" lastUpdatedStamp="2004-01-23 13:54:01.527" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-
-    <PartyRole partyId="10013" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.333" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10014" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.373" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10015" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.375" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10016" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.377" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10017" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.379" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10018" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.38" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10019" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.382" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10020" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.384" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10026" roleTypeId="CUSTOMER" lastUpdatedStamp="2004-01-23 13:54:01.385" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-
-    <PartyRole partyId="10021" roleTypeId="AGENT" lastUpdatedStamp="2004-01-23 13:54:01.399" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10021" roleTypeId="SALES_REP" lastUpdatedStamp="2004-01-23 13:54:01.401" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10022" roleTypeId="AGENT" lastUpdatedStamp="2004-01-23 13:54:01.402" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10022" roleTypeId="SALES_REP" lastUpdatedStamp="2004-01-23 13:54:01.404" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10023" roleTypeId="AGENT" lastUpdatedStamp="2004-01-23 13:54:01.406" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10023" roleTypeId="SALES_REP" lastUpdatedStamp="2004-01-23 13:54:01.407" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10024" roleTypeId="AGENT" lastUpdatedStamp="2004-01-23 13:54:01.409" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10024" roleTypeId="SALES_REP" lastUpdatedStamp="2004-01-23 13:54:01.411" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10025" roleTypeId="AGENT" lastUpdatedStamp="2004-01-23 13:54:01.412" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10025" roleTypeId="SALES_REP" lastUpdatedStamp="2004-01-23 13:54:01.414" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10027" roleTypeId="AGENT" lastUpdatedStamp="2004-01-23 13:54:01.416" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <PartyRole partyId="10027" roleTypeId="SALES_REP" lastUpdatedStamp="2004-01-23 13:54:01.417" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-
-    <Person partyId="10021" lastName="Rep" firstName="First" gender="M" birthDate="1940-01-01" maritalStatus="S" lastUpdatedStamp="2004-01-23 13:54:01.618" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <Person partyId="10022" lastName="Rep" firstName="Second" gender="M" birthDate="1940-01-01" maritalStatus="S" lastUpdatedStamp="2004-01-23 13:54:01.657" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <Person partyId="10023" lastName="Rep" firstName="Third" gender="M" birthDate="1940-01-01" maritalStatus="S" lastUpdatedStamp="2004-01-23 13:54:01.659" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <Person partyId="10024" lastName="Rep" firstName="Fourth" gender="M" birthDate="1940-01-01" maritalStatus="S" lastUpdatedStamp="2004-01-23 13:54:01.661" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <Person partyId="10025" lastName="Rep" firstName="Fifth" gender="M" birthDate="1940-01-01" maritalStatus="S" lastUpdatedStamp="2004-01-23 13:54:01.664" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
-    <Person partyId="10027" lastName="Rep" firstName="Sixth" gender="M" birthDate="1940-01-01" maritalStatus="S" lastUpdatedStamp="2004-01-23 13:54:01.666" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
 
     <UserLogin userLoginId="rep1" partyId="10021" currentPassword="demo" lastUpdatedStamp="2004-01-23 13:54:01.668" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
     <UserLogin userLoginId="rep2" partyId="10022" currentPassword="demo" lastUpdatedStamp="2004-01-23 13:54:01.708" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
