@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServices.java,v 1.1 2003/08/17 10:51:03 jonesde Exp $
+ * $Id: LoginServices.java,v 1.2 2003/11/03 14:45:03 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,12 +55,12 @@ import org.ofbiz.service.ServiceUtil;
  * <b>Title:</b> Login Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.1 $
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class LoginServices {
-	
+
     public static final String module = LoginServices.class.getName();
 
     /** Login service to authenticate username and password
@@ -79,7 +79,7 @@ public class LoginServices {
         if (username == null) username = (String) context.get("username");
         String password = (String) context.get("login.password");
         if (password == null) password = (String) context.get("password");
-        
+
         // get the visitId for the history entity
         String visitId = (String) context.get("visitId");
 
@@ -132,6 +132,8 @@ public class LoginServices {
                     }
 
                     boolean doStore = true;
+                    // we might change & store this userLogin, so we should clone it here to get a mutable copy
+                    userLogin = new GenericValue(userLogin);
 
                     if (UtilValidate.isEmpty(userLogin.getString("enabled")) || "Y".equals(userLogin.getString("enabled")) ||
                         (reEnableTime != null && reEnableTime.before(UtilDateTime.nowTimestamp()))) {
@@ -155,7 +157,7 @@ public class LoginServices {
                             }
 
                             successfulLogin = "Y";
-                            
+
                             if (!isServiceAuth) {
                                 // get the UserLoginSession if this is not a service auth
                                 GenericValue userLoginSession = null;
@@ -168,12 +170,12 @@ public class LoginServices {
                                         userLoginSessionMap = (Map) deserObj;
                                 	}
                                 } catch (GenericEntityException ge) {
-                                	Debug.logWarning(ge, "Cannot get UserLoginSession for UserLogin ID: " + 
+                                	Debug.logWarning(ge, "Cannot get UserLoginSession for UserLogin ID: " +
                                 			userLogin.getString("userLoginId"), module);
                                 } catch (Exception e) {
-                                	Debug.logWarning(e, "Problems deserializing UserLoginSession", module);                            
+                                	Debug.logWarning(e, "Problems deserializing UserLoginSession", module);
                                 }
-                                
+
                                 // return the UserLoginSession Map
                                 if (userLoginSessionMap != null) {
                                     result.put("userLoginSession", userLoginSessionMap);
@@ -224,13 +226,13 @@ public class LoginServices {
                             successfulLogin = "N";
                         }
 
-                        // this section is being done in its own transaction rather than in the 
-                        //current/existing transaction because we may return error and we don't 
-                        //want that to stop this from getting stored 
+                        // this section is being done in its own transaction rather than in the
+                        //current/existing transaction because we may return error and we don't
+                        //want that to stop this from getting stored
                         TransactionManager txMgr = TransactionFactory.getTransactionManager();
                         Transaction parentTx = null;
                         boolean beganTransaction = false;
-                        
+
                         try {
                             if (txMgr != null) {
                                 try {
@@ -242,7 +244,7 @@ public class LoginServices {
                                     Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage(), module);
                                 }
                             }
-                        
+
                             if (doStore) {
                                 try {
                                     userLogin.store();
@@ -268,14 +270,14 @@ public class LoginServices {
                                     }
                                 }
                             }
-                            
+
                             try {
                                 TransactionUtil.commit(beganTransaction);
                             } catch (GenericTransactionException e) {
                                 Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage(), module);
                             }
                         } finally {
-                            // resume/restore parent transaction                        
+                            // resume/restore parent transaction
                             if (parentTx != null) {
                                 try {
                                     txMgr.resume(parentTx);
@@ -487,18 +489,17 @@ public class LoginServices {
     public static Map updateUserLoginId(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        Security security = ctx.getSecurity();
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
         List errorMessageList = new LinkedList();
 
-        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
+        //boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
         String userLoginId = (String) context.get("userLoginId");
 
         if ((userLoginId != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
             userLoginId = userLoginId.toLowerCase();
         }
-            
+
         String partyId = loggedInUserLogin.getString("partyId");
         String password = loggedInUserLogin.getString("currentPassword");
         String passwordHint = loggedInUserLogin.getString("passwordHint");
@@ -506,13 +507,12 @@ public class LoginServices {
         // security: don't create a user login if the specified partyId (if not empty) already exists
         // unless the logged in user has permission to do so (same partyId or PARTYMGR_CREATE)
         if (partyId != null || partyId.length() > 0) {
-            GenericValue party = null;
-
-            try {
-                party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e, "", module);
-            }
+            //GenericValue party = null;
+            //try {
+            //    party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+            //} catch (GenericEntityException e) {
+            //    Debug.logWarning(e, "", module);
+            //}
 
             if (loggedInUserLogin != null) {
                 // security check: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
@@ -615,7 +615,7 @@ public class LoginServices {
             return ServiceUtil.returnError("Could not change password, UserLogin with ID \"" + userLoginId + "\" does not exist");
         }
 
-        boolean wasEnabled = !"N".equals((String) userLoginToUpdate.get("enabled"));
+        boolean wasEnabled = !"N".equals(userLoginToUpdate.get("enabled"));
 
         if (context.containsKey("enabled")) {
             userLoginToUpdate.set("enabled", context.get("enabled"), true);
@@ -628,12 +628,12 @@ public class LoginServices {
         }
 
         // if was disabled and we are enabling it, clear disabledDateTime
-        if (!wasEnabled && "Y".equals((String) context.get("enabled"))) {
+        if (!wasEnabled && "Y".equals(context.get("enabled"))) {
             userLoginToUpdate.set("disabledDateTime", null);
         }
-     
+
         // if was enabled and we are disabling it, and no disabledDateTime was passed, set it to now
-        if (wasEnabled && "N".equals((String) context.get("enabled")) && context.get("disabledDateTime") == null) {
+        if (wasEnabled && "N".equals(context.get("enabled")) && context.get("disabledDateTime") == null) {
             userLoginToUpdate.set("disabledDateTime", UtilDateTime.nowTimestamp());
         }
 
