@@ -119,9 +119,6 @@
           </form>
         </tr>
       </table>
-          </td>
-        </tr>
-      </table>
     </TD>
   </TR>
 </TABLE>
