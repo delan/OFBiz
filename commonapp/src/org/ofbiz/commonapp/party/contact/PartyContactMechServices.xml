@@ -234,7 +234,7 @@
         <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/PartyContactMechMapProcs.xml"
                 processor-name="updatePartyContactMech" in-map-name="parameters" out-map-name="context2"/>  
         <field-to-field map-name="newPartyContactMech" field-name="contactMechId"  to-map-name="context2" to-field-name="newContactMechId"/> 	
-        <string-to-field map-name="context2" field-name="contactMechTypeId" string="POSTAL_ADDRESS"/>
+        <string-to-field map-name="context2" field-name="contactMechTypeId" string="TELECOM_NUMBER"/>
         <log level="info" message="Copied id to context2: ${context2.newContactMechId}"/>
         <call-service in-map-name="context2" service-name="updatePartyContactMech">
             <default-message>Party Contact Mechanism successfully updated</default-message>       
