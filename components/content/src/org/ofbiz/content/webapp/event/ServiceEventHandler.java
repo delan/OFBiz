@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEventHandler.java,v 1.6 2003/12/13 16:39:55 ajzeneski Exp $
+ * $Id: ServiceEventHandler.java,v 1.7 2004/02/19 18:52:35 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,13 +41,15 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.ServiceValidationException;
+import org.ofbiz.service.ServiceAuthException;
 
 /**
  * ServiceEventHandler - Service Event Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ServiceEventHandler implements EventHandler {
@@ -175,6 +177,15 @@ public class ServiceEventHandler implements EventHandler {
             } else {
                 result = dispatcher.runSync(serviceName, serviceContext);
             }
+        } catch (ServiceAuthException e) {
+            // not logging since the service engine already did
+            request.setAttribute("_ERROR_MESSAGE_", e.getNonNestedMessage());
+            return "error";
+        } catch (ServiceValidationException e) {
+            // not logging since the service engine already did
+            request.setAttribute("serviceValidationException", e);
+            request.setAttribute("_ERROR_MESSAGE_", e.getNonNestedMessage());
+            return "error";
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error", module);
             throw new EventHandlerException("Service invocation error", e.getNested());

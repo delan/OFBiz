@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.14 2004/02/16 13:06:51 jonesde Exp $
+ * $Id: ServiceDispatcher.java,v 1.15 2004/02/19 18:52:35 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.job.JobManager;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -164,9 +164,10 @@ public class ServiceDispatcher {
      * @param context Map of name, value pairs composing the context.
      * @return Map of name, value pairs composing the result.
      * @throws ServiceAuthException
+     * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public Map runSync(String localName, ModelService service, Map context) throws GenericServiceException {
+    public Map runSync(String localName, ModelService service, Map context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         return runSync(localName, service, context, true);
     }
 
@@ -176,23 +177,25 @@ public class ServiceDispatcher {
      * @param service Service model object.
      * @param context Map of name, value pairs composing the context.
      * @throws ServiceAuthException
+     * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public void runSyncIgnore(String localName, ModelService service, Map context) throws GenericServiceException {
+    public void runSyncIgnore(String localName, ModelService service, Map context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         runSync(localName, service, context, false);
     }
 
     /**
      * Run the service synchronously and return the result.
      * @param localName Name of the context to use.
-     * @param service Service model object.
+     * @param modelService Service model object.
      * @param context Map of name, value pairs composing the context.
      * @param validateOut Validate OUT parameters
      * @return Map of name, value pairs composing the result.
      * @throws ServiceAuthException
+     * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public Map runSync(String localName, ModelService modelService, Map context, boolean validateOut) throws GenericServiceException {
+    public Map runSync(String localName, ModelService modelService, Map context, boolean validateOut) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         boolean debugging = checkDebug(modelService, 1, true);
         if (Debug.verboseOn()) {
             Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service " + modelService.name + " [" + modelService.location +
@@ -265,7 +268,8 @@ public class ServiceDispatcher {
                 try {
                     modelService.validate(context, ModelService.IN_PARAM);
                 } catch (ServiceValidationException e) {
-                    throw new GenericServiceException("Incoming context (in runSync : " + modelService.name + ") does not match expected requirements" + modelService.debugInfo(), e);
+                    Debug.logError(e, "Incoming context (in runSync : " + modelService.name + ") does not match expected requirements", module);
+                    throw e;
                 }
             }
 
@@ -291,7 +295,8 @@ public class ServiceDispatcher {
                 try {
                     modelService.validate(result, ModelService.OUT_PARAM);
                 } catch (ServiceValidationException e) {
-                    throw new GenericServiceException("Outgoing result (in runSync : " + modelService.name + ") does not match expected requirements" + modelService.debugInfo(), e);
+                    Debug.logError(e, "Outgoing result (in runSync : " + modelService.name + ") does not match expected requirements", module);
+                    throw e;
                 }
             }
 
@@ -347,7 +352,15 @@ public class ServiceDispatcher {
                 Debug.logError(te, "Cannot rollback transaction", module);
             }
             checkDebug(modelService, 0, debugging);
-            throw new GenericServiceException("Service [" + modelService.name + "] Failed" + modelService.debugInfo() , t);
+            if (t instanceof ServiceAuthException) {
+                throw (ServiceAuthException) t;
+            } else if (t instanceof ServiceValidationException) {
+                throw (ServiceValidationException) t;
+            } else if (t instanceof GenericServiceException) {
+                throw (GenericServiceException) t;
+            } else {
+                throw new GenericServiceException("Service [" + modelService.name + "] Failed" + modelService.debugInfo() , t);
+            }
         }
     }
 
@@ -359,9 +372,10 @@ public class ServiceDispatcher {
      * @param requester Object implementing GenericRequester interface which will receive the result.
      * @param persist True for store/run; False for run.
      * @throws ServiceAuthException
+     * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public void runAsync(String localName, ModelService service, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {
+    public void runAsync(String localName, ModelService service, Map context, GenericRequester requester, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         boolean debugging = checkDebug(service, 1, true);
         if (Debug.verboseOn()) {
             Debug.logVerbose("[ServiceDispatcher.runAsync] : prepareing service " + service.name + " [" + service.location + "/" + service.invoke +
@@ -429,7 +443,8 @@ public class ServiceDispatcher {
                 try {
                     service.validate(context, ModelService.IN_PARAM);
                 } catch (ServiceValidationException e) {
-                    throw new GenericServiceException("Incoming service context (in runAsync: " + service.name + ") does not match expected requirements" + service.debugInfo(), e);
+                    Debug.logError(e, "Incoming service context (in runAsync: " + service.name + ") does not match expected requirements", module);
+                    throw e;
                 }
             }
 
@@ -472,7 +487,15 @@ public class ServiceDispatcher {
                 Debug.logError(te, "Cannot rollback transaction", module);
             }
             checkDebug(service, 0, debugging);
-            throw new GenericServiceException("Service [" + service.name + "] Failed" + service.debugInfo() , t);
+            if (t instanceof ServiceAuthException) {
+                throw (ServiceAuthException) t;
+            } else if (t instanceof ServiceValidationException) {
+                throw (ServiceValidationException) t;
+            } else if (t instanceof GenericServiceException) {
+                throw (GenericServiceException) t;
+            } else {
+                throw new GenericServiceException("Service [" + service.name + "] Failed" + service.debugInfo() , t);
+            }
         }
     }
 
@@ -483,9 +506,10 @@ public class ServiceDispatcher {
      * @param context Map of name, value pairs composing the context.
      * @param persist True for store/run; False for run.
      * @throws ServiceAuthException
+     * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public void runAsync(String localName, ModelService service, Map context, boolean persist) throws GenericServiceException {
+    public void runAsync(String localName, ModelService service, Map context, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         this.runAsync(localName, service, context, null, persist);
     }
 
@@ -565,7 +589,7 @@ public class ServiceDispatcher {
     }
 
     // checks if parameters were passed for authentication
-    private Map checkAuth(String localName, Map context, ModelService origService) throws GenericServiceException {
+    private Map checkAuth(String localName, Map context, ModelService origService) throws ServiceAuthException, GenericServiceException {
         String service = ServiceConfigUtil.getElementAttr("authorization", "service-name");
 
         if (service == null) {
@@ -608,15 +632,14 @@ public class ServiceDispatcher {
         DispatchContext dctx = this.getLocalContext(localName);
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (!origService.evalPermissions(dctx.getSecurity(), userLogin)) {
-            throw new GenericServiceException("You do not have permission to invoke this service");
+            throw new ServiceAuthException("You do not have permission to invoke this service");
         }
 
         return context;
     }
 
     // gets a value object from name/password pair
-    private GenericValue getLoginObject(String service, String localName, String username, String password)
-        throws GenericServiceException {
+    private GenericValue getLoginObject(String service, String localName, String username, String password) throws GenericServiceException {
         Map context = UtilMisc.toMap("login.username", username, "login.password", password, "isServiceAuth", new Boolean(true));
 
         if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispathcer.authenticate] : Invoking UserLogin Service", module);

@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDispatcher.java,v 1.4 2003/12/06 23:10:14 ajzeneski Exp $
+ * $Id: GenericDispatcher.java,v 1.5 2004/02/19 18:52:35 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.base.util.Debug;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class GenericDispatcher extends GenericAbstractDispatcher {
@@ -105,7 +105,7 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
     /**
      * @see org.ofbiz.service.LocalDispatcher#runSync(java.lang.String, java.util.Map)
      */
-    public Map runSync(String serviceName, Map context) throws GenericServiceException {
+    public Map runSync(String serviceName, Map context) throws ServiceValidationException, GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         return dispatcher.runSync(this.name, service, context);
     }
@@ -113,7 +113,7 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
     /**
      * @see org.ofbiz.service.LocalDispatcher#runSync(java.lang.String, java.util.Map, int, boolean)
      */
-    public Map runSync(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException {
+    public Map runSync(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         // clone the model service for updates
         ModelService cloned = new ModelService(service);
@@ -133,7 +133,7 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
     /**
      * @see org.ofbiz.service.LocalDispatcher#runSyncIgnore(java.lang.String, java.util.Map)
      */
-    public void runSyncIgnore(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException {
+    public void runSyncIgnore(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         // clone the model service for updates
         ModelService cloned = new ModelService(service);
@@ -145,7 +145,7 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
     /**
      * @see org.ofbiz.service.LocalDispatcher#runAsync(java.lang.String, java.util.Map, org.ofbiz.service.GenericRequester, boolean, int, boolean)
      */
-    public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException {
+    public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         // clone the model service for updates
         ModelService cloned = new ModelService(service);
@@ -157,7 +157,7 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
     /**
      * @see org.ofbiz.service.LocalDispatcher#runAsync(java.lang.String, java.util.Map, org.ofbiz.service.GenericRequester, boolean)
      */
-    public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {
+    public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         dispatcher.runAsync(this.name, service, context, requester, persist);
     }
@@ -165,14 +165,14 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
     /**
      * @see org.ofbiz.service.LocalDispatcher#runAsync(java.lang.String, java.util.Map, org.ofbiz.service.GenericRequester)
      */
-    public void runAsync(String serviceName, Map context, GenericRequester requester) throws GenericServiceException {
+    public void runAsync(String serviceName, Map context, GenericRequester requester) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         runAsync(serviceName, context, requester, true);
     }
     
     /**
      * @see org.ofbiz.service.LocalDispatcher#runAsync(java.lang.String, java.util.Map, boolean)
      */
-    public void runAsync(String serviceName, Map context, boolean persist) throws GenericServiceException {
+    public void runAsync(String serviceName, Map context, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         dispatcher.runAsync(this.name, service, context, persist);
     }
@@ -180,14 +180,14 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
     /**
      * @see org.ofbiz.service.LocalDispatcher#runAsync(java.lang.String, java.util.Map)
      */
-    public void runAsync(String serviceName, Map context) throws GenericServiceException {
+    public void runAsync(String serviceName, Map context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         runAsync(serviceName, context, true);
     }
   
     /**
      * @see org.ofbiz.service.LocalDispatcher#runAsyncWait(java.lang.String, java.util.Map, boolean)
      */
-    public GenericResultWaiter runAsyncWait(String serviceName, Map context, boolean persist) throws GenericServiceException {
+    public GenericResultWaiter runAsyncWait(String serviceName, Map context, boolean persist) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         GenericResultWaiter waiter = new GenericResultWaiter();
         this.runAsync(serviceName, context, waiter, persist);
         return waiter;
@@ -196,7 +196,7 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
     /**
      * @see org.ofbiz.service.LocalDispatcher#runAsyncWait(java.lang.String, java.util.Map)
      */
-    public GenericResultWaiter runAsyncWait(String serviceName, Map context) throws GenericServiceException {
+    public GenericResultWaiter runAsyncWait(String serviceName, Map context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         return runAsyncWait(serviceName, context, true);
     }  
 }
