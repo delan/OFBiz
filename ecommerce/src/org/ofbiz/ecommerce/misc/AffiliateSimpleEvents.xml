@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-events PUBLIC "-//OFBiz//DTD Simple Events//EN" "http://www.ofbiz.org/dtds/simple-events.dtd">
+
+<!--
+ * <p><b>Title:</b> PartySimpleEvents
+ * <p><b>Description:</b> Events to handle form input and other data changes
+ * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * <p>The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author    <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @version   1.0
+ * Created    January 27, 2002
+ -->
+ 
+<simple-events>
+
+    <simple-event event-name="createAffiliate" short-description="Create Affiliate">
+    
+       <!-- Create the UserLogin Record -->
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilParty" in-map-name="parameters" out-map-name="ul_context"/>
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilUser" in-map-name="parameters" out-map-name="ul_context"/>
+        <check-errors/>
+        <service service-name="createUserLogin" in-map-name="ul_context">
+            <default-message>User Login successfully created.</default-message>
+        </service>
+            
+        <!-- Create the Party/PartyGroup -->
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilParty" in-map-name="parameters" out-map-name="pg_context"/>
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilGroup" in-map-name="parameters" out-map-name="pg_context"/>
+        <check-errors/>
+        <service service-name="createPartyGroup" in-map-name="pg_context">
+            <default-message>Party Group successfully created.</default-message>
+        </service>
+        
+        <!-- Create the Postal Address -->
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilPostal" in-map-name="parameters" out-map-name="pa_context"/>
+        <check-errors/>
+        <service service-name="createPostalAddress" in-map-name="pa_context">
+            <default-message>Mailing Address successfully created.</default-message>
+            <result-to-field result-name="contactMechId" map-name="parameters"/>
+        </service>
+        
+        <!-- Create the Postal Address Purpose -->
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilPostalPurpose" in-map-name="parameters" out-map-name="pr_context"/>
+        <check-errors/>
+        <service service-name="createPartyContactMechPurpose" in-map-name="pr_context">
+            <default-message>Mailing Address successfully created.</default-message>
+        </service>    
+        
+        <!-- Create the Phone ContactMech -->
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilPhone" in-map-name="parameters" out-map-name="ph_context"/>
+        <check-errors/>
+        <service service-name="createTelecomNumber" in-map-name="ph_context">
+            <default-message>Phone contact successfully created.</default-message>
+            <result-to-field result-name="contactMechId" map-name="parameters"/>
+        </service> 
+        
+        <!-- Create the Phone ContactMech Purpose -->
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilPhonePurpose" in-map-name="parameters" out-map-name="phr_context"/>
+        <check-errors/>
+        <service service-name="createPartyContactMechPurpose" in-map-name="phr_context">
+            <default-message>Phone contact successfully created.</default-message>
+        </service>                   
+        
+        <!-- Create the Fax ContactMech -->
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilFax" in-map-name="parameters" out-map-name="fax_context"/>
+        <check-errors/>
+        <service service-name="createTelecomNumber" in-map-name="fax_context">
+            <default-message>Fax contact successfully created.</default-message>
+            <result-to-field result-name="contactMechId" map-name="parameters"/>
+        </service> 
+        
+        <!-- Create the Fax ContactMech Purpose -->
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilFaxPurpose" in-map-name="parameters" out-map-name="faxp_context"/>
+        <check-errors/>
+        <service service-name="createPartyContactMechPurpose" in-map-name="faxp_context">
+            <default-message>Fax contact successfully created.</default-message>
+        </service> 
+        
+        <!-- Create the Email ContactMech -->
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilEmail" in-map-name="parameters" out-map-name="em_context"/>
+        <check-errors/>
+        <service service-name="createEmailAddress" in-map-name="em_context">
+            <default-message>Email contact successfully created.</default-message>
+            <result-to-field result-name="contactMechId" map-name="parameters"/>
+        </service> 
+        
+        <!-- Create the Email ContactMech Purpose -->
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilPhonePurpose" in-map-name="parameters" out-map-name="emp_context"/>
+        <check-errors/>
+        <service service-name="createPartyContactMechPurpose" in-map-name="emp_context">
+            <default-message>Email contact successfully created.</default-message>
+        </service>  
+        
+        <!-- Create the URL ContactMech -->
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilURL" in-map-name="parameters" out-map-name="url_context"/>                                
+        <check-errors/>
+        <service service-name="createContactMech" in-map-name="url_context">
+            <default-message>URL contact successfully created.</default-message>
+        </service>  
+        
+        <!-- Create the Affiliate Record -->
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilParty" in-map-name="parameters" out-map-name="af_context"/>        
+        <simple-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffil" in-map-name="parameters" out-map-name="af_context"/>
+        <check-errors/>
+        <service service-name="createAffiliate" in-map-name="af_context">
+            <default-message>Affiliate record successfully created.</default-message>            
+        </service>  
+                                                                                           
+    </simple-event>   
+     
+</simple-events>
