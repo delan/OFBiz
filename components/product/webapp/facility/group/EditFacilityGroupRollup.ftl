@@ -21,27 +21,28 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
 ${pages.get("/group/FacilityGroupTabBar.ftl")}
 
-<div class="head1">Rollups <span class="head2">for&nbsp;"${(facilityGroup.facilityGroupName)?if_exists}" [ID:${facilityGroupId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[New Group]</a>
+<div class="head1">${uiLabelMap.ProductRollups} <span class="head2">${uiLabelMap.CommonFor}"${(facilityGroup.facilityGroupName)?if_exists}" [${uiLabelMap.CommonId}:${facilityGroupId?if_exists}]</span></div>
+<a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
 <br>
 <br>
 
 <#if facilityGroup?exists>
-<p class="head2">FacilityGroup Rollup: Parent Groups</p>
+<p class="head2">${uiLabelMap.ProductFacilityGroupRollupParentGroups}</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
-    <td><div class="tabletext"><b>Parent&nbsp;Group&nbsp;[ID]</b></div></td>
-    <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
-    <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductParentGroupId}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
+    <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <#if currentGroupRollups?has_content>
@@ -59,18 +60,18 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
             <input type=text size="25" name="thruDate" value="${(facilityGroupRollup.thruDate.toString())?if_exists}" class="inputBox" <#if facilityGroupRollup.thruDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(facilityGroupRollup.thruDate)>style="color: red;"</#if>>
             <a href="javascript:call_cal(document.lineParentForm${facilityGroupRollup_index}.thruDate, '${(facilityGroupRollup.thruDate.toString())?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <input type=text size="5" name="sequenceNum" value="${facilityGroupRollup.sequenceNum?if_exists}" class="inputBox">
-            <INPUT type=submit value="Update" style="font-size: x-small;">
+            <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
         </FORM>
       </td>
       <td>
         <a href="<@ofbizUrl>/removeFacilityGroupFromGroup?showFacilityGroupId=${facilityGroupId}&facilityGroupId=${facilityGroupRollup.facilityGroupId}&parentFacilityGroupId=${facilityGroupRollup.parentFacilityGroupId}&fromDate=${(facilityGroupRollup.fromDate.toString())?if_exists}</@ofbizUrl>" class="buttontext">
-        [Delete]</a>
+        [${uiLabelMap.CommonDelete}]</a>
       </td>
     </tr>
   </#list>
 <#else>
   <tr valign="middle">
-    <td colspan="5"><div class="tabletext">No Parent Groups found.</div></td>
+    <td colspan="5"><div class="tabletext">${uiLabelMap.ProductNoParentGroupsFound}.</div></td>
   </tr>
 </#if>
 </table>
@@ -78,7 +79,7 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
 <form method="POST" action="<@ofbizUrl>/addFacilityGroupToGroup</@ofbizUrl>" style="margin: 0;" name="addParentForm">
   <input type="hidden" name="facilityGroupId" value="${facilityGroupId}">
   <input type="hidden" name="showFacilityGroupId" value="${facilityGroupId}">
-  <div class="tabletext">Add <b>Parent</b> Group (select Category and enter From Date):</div>
+  <div class="tabletext">${uiLabelMap.CommonAdd} <b>${uiLabelMap.ProductParent}</b> ${uiLabelMap.ProductGroupSelectCategoryFromDate}:</div>
     <select name="parentFacilityGroupId" class="selectBox">
     <#list facilityGroups as curGroup>
       <#if !(facilityGroupId == curGroup.facilityGroupId) && !("_NA_" == curGroup.facilityGroupId)>
@@ -88,18 +89,18 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
     </select>
   <input type=text class="inputBox" size="25" name="fromDate">
   <a href="javascript:call_cal(document.addParentForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-  <input type="submit" value="Add">
+  <input type="submit" value="${uiLabelMap.CommonAdd}">
 </form>
 <br>
 <hr>
 <br>
-<p class="head2">Group Rollup: Child Groups</p>
+<p class="head2">${uiLabelMap.ProductGroupRollupChildGroups}</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
-    <td><div class="tabletext"><b>Child&nbsp;Group&nbsp;ID</b></div></td>
-    <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
-    <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductChildGroupId}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
+    <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <#if parentGroupRollups?has_content>
@@ -117,18 +118,18 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
             <input type=text size="25" name="thruDate" value="${(facilityGroupRollup.thruDate.toString())?if_exists}" class="inputBox" <#if facilityGroupRollup.thruDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(facilityGroupRollup.thruDate)>style="color: red;"</#if>>
             <a href="javascript:call_cal(document.lineChildForm${facilityGroupRollup_index}.thruDate, '${(facilityGroupRollup.thruDate.toString())?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <input type=text size="5" name="sequenceNum" value="${facilityGroupRollup.sequenceNum?if_exists}" class="inputBox">
-            <INPUT type=submit value="Update" style="font-size: x-small;">
+            <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
         </FORM>
       </td>
       <td>
         <a href="<@ofbizUrl>/removeFacilityGroupFromGroup?showFacilityGroupId=${facilityGroupId}&facilityGroupId=${facilityGroupRollup.facilityGroupId}&parentFacilityGroupId=${facilityGroupRollup.parentFacilityGroupId}&fromDate=${(facilityGroupRollup.fromDate.toString())?if_exists}</@ofbizUrl>" class="buttontext">
-        [Delete]</a>
+        [${uiLabelMap.CommonDelete}]</a>
       </td>
     </tr>
   </#list>
 <#else>
   <tr valign="middle">
-    <td colspan="5"><DIV class="tabletext">No Child Groups found.</DIV></td>
+    <td colspan="5"><DIV class="tabletext">${uiLabelMap.ProductNoChildGroupsFound}.</DIV></td>
   </tr>
 </#if>
 </table>
@@ -136,7 +137,7 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
 <form method="POST" action="<@ofbizUrl>/addFacilityGroupToGroup</@ofbizUrl>" style="margin: 0;" name="addChildForm">
   <input type="hidden" name="showFacilityGroupId" value="${facilityGroupId}">
   <input type="hidden" name="parentFacilityGroupId" value="${facilityGroupId}">
-  <div class="tabletext">Add <b>Child</b> Group (select Group and enter From Date):</div>
+  <div class="tabletext">${uiLabelMap.CommonAdd} <b>${uiLabelMap.ProductChild}</b> ${uiLabelMap.ProductGroupSelectGroupFromDate} :</div>
     <select name="facilityGroupId" class="selectBox">
     <#list facilityGroups as curGroup>
       <#if !(facilityGroupId == curGroup.facilityGroupId) && !("_NA_" == curGroup.facilityGroupId)>
@@ -146,10 +147,10 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
     </select>
   <input type=text class="inputBox" size="25" name="fromDate">
   <a href="javascript:call_cal(document.addChildForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-  <input type="submit" value="Add">
+  <input type="submit" value="${uiLabelMap.CommonAdd}">
 </form>
 </#if>
 
 <#else>
-  <h3>You do not have permission to view this page.  ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

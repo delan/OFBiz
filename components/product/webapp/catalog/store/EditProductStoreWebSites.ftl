@@ -20,22 +20,23 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
   ${pages.get("/store/ProductStoreTabBar.ftl")}
-  <div class="head1">Product Store WebSites <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New Product Store]</a>
+  <div class="head1">${uiLabelMap.ProductProductStoreWebSites} <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
+  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>
   <br>
   <br> 
   
   <table border="1" cellpadding="2" cellspacing="0" width="100%">
     <tr>
-      <td><span class="tableheadtext">WebSite [ID]</span></td>
-      <td><span class="tableheadtext">Host</span></td>
-      <td><span class="tableheadtext">Port</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.ProductWebSiteId}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.ProductHost}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.ProductPort}</span></td>
       <td>&nbsp;</td>
     </tr>
     <#if storeWebSites?has_content>
@@ -45,7 +46,7 @@
           <td><span class="tabletext">${webSite.httpHost?default('&nbsp;')}</span></td>
           <td><span class="tabletext">${webSite.httpPort?default('&nbsp;')}</span></td>
           <td align="center">
-            <a href="<@ofbizUrl>/storeUpdateWebSite?viewProductStoreId=${productStoreId}&productStoreId=&webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">[Delete]</a>
+            <a href="<@ofbizUrl>/storeUpdateWebSite?viewProductStoreId=${productStoreId}&productStoreId=&webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
           </td>
         </tr>
       </#list>
@@ -53,7 +54,7 @@
   </table>
   
   <br>
-  <div class="head2">Set store on WebSite:</div>
+  <div class="head2">${uiLabelMap.ProductSetStoreOnWebSite}:</div>
   <form name="addWebSite" action="<@ofbizUrl>/storeUpdateWebSite</@ofbizUrl>" method="post">
     <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
     <input type="hidden" name="productStoreId" value="${productStoreId}">
@@ -62,8 +63,8 @@
         <option value="${webSite.webSiteId}">${webSite.siteName} [${webSite.webSiteId}]</option>
       </#list>
     </select>
-    <input type="submit" class="smallSubmit" value="Set">
+    <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonUpdate}">
   </form>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

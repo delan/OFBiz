@@ -21,25 +21,26 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
 ${pages.get("/group/FacilityGroupTabBar.ftl")}
     
-    <div class="head1">Facilities <span class="head2">for&nbsp;<#if facilityGroup?exists>${(facilityGroup.facilityGroupName)?if_exists}</#if> [ID:${facilityGroupId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[New Group]</a>
+    <div class="head1">${uiLabelMap.ProductFacilities} <span class="head2">for&nbsp;<#if facilityGroup?exists>${(facilityGroup.facilityGroupName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityGroupId?if_exists}]</span></div>
+    <a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
     <#if (activeOnly) >
-        <a href="<@ofbizUrl>/EditFacilityGroupMembers?facilityGroupId=${facilityGroupId}&activeOnly=false</@ofbizUrl>" class="buttontext">[Active and Inactive]</a>
+        <a href="<@ofbizUrl>/EditFacilityGroupMembers?facilityGroupId=${facilityGroupId}&activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonActiveInactive}]</a>
     <#else>
-        <a href="<@ofbizUrl>/EditFacilityGroupMembers?facilityGroupId=${facilityGroupId}&activeOnly=true</@ofbizUrl>" class="buttontext">[Active Only]</a>
+        <a href="<@ofbizUrl>/EditFacilityGroupMembers?facilityGroupId=${facilityGroupId}&activeOnly=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonActiveOnly}]</a>
     </#if>
     <p>
     
     <#if facilityGroupId?exists && facilityGroup?exists>
-        <p class="head2">Facility-Group Member Maintenance</p>
+        <p class="head2">${uiLabelMap.ProductFacilityGroupMemberMaintenance}</p>
         
         <#if (facilityGroupMembers.size() > 0)>
             <table border="0" width="100%" cellpadding="2">
@@ -47,13 +48,13 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
                 <td align=right>
                     <b>
                     <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>/EditCategoryProducts?facilityGroupId=${facilityGroupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+                    <a href="<@ofbizUrl>/EditCategoryProducts?facilityGroupId=${facilityGroupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     <#if (listSize > 0)>
                         ${lowIndex+1} - ${highIndex} of ${listSize}
                     </#if>
                     <#if (listSize > highIndex)>
-                        | <a href="<@ofbizUrl>/EditCategoryProducts?facilityGroupId=${facilityGroupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Next]</a>
+                        | <a href="<@ofbizUrl>/EditCategoryProducts?facilityGroupId=${facilityGroupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                 </td>
@@ -63,9 +64,9 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
         
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>Facility Name [ID]</b></div></td>
-            <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-            <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time&nbsp;&amp;&nbsp;Sequence</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductFacilityNameId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
+            <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
         <#if (listSize > 0)>
@@ -93,12 +94,12 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
                         <input type=text size="25" name="thruDate" value="${(facilityGroupMember.thruDate)?if_exists}" class="inputBox" <#if hasExpired>style="color: red;"</#if>>
                         <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(facilityGroupMember.thruDate)?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
                         <input type=text size="5" name="sequenceNum" value="${(facilityGroupMember.sequenceNum)?if_exists}" class="inputBox">           
-                        <INPUT type=submit value="Update" style="font-size: x-small;">
+                        <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                     </FORM>
                 </td>
                 <td align="center">
                 <a href="<@ofbizUrl>/removeFacilityFromGroup?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&facilityId=${(facilityGroupMember)?if_exists}&facilityGroupId=${(facilityGroupMember.facilityGroupId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(facilityGroupMember.getTimestamp("fromDate").toString())}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
-                [Delete]</a>
+                [${uiLabelMap.CommonDelete}]</a>
                 </td>
             </tr>
             </#list>
@@ -111,13 +112,13 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
                 <td align=right>
                     <b>
                     <#if (viewIndex > 0)>
-                    <a href="<@ofbizUrl>/EditCategoryProducts?facilityGroupId=${facilityGroupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+                    <a href="<@ofbizUrl>/EditCategoryProducts?facilityGroupId=${facilityGroupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex-1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     <#if (listSize > 0) >
                         ${lowIndex+1} - ${highIndex} of ${listSize}
                     </#if>
                     <#if (listSize > highIndex)>
-                        | <a href="<@ofbizUrl>/EditCategoryProducts?facilityGroupId=${facilityGroupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[Next]</a>
+                        | <a href="<@ofbizUrl>/EditCategoryProducts?facilityGroupId=${facilityGroupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${(viewIndex+1)}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                 </td>
@@ -131,12 +132,12 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
         <input type="hidden" name="useValues" value="true">
         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
         
-        <div class="head2">Add FacilityGroupMember:</div>
+        <div class="head2">${uiLabelMap.ProductAddFacilityGroupMember}:</div>
         <div class="tabletext">
-            Facility ID: <input type=text size="20" class="inputBox" name="facilityId">
-            From Date: <input type=text size="25" class="inputBox" name="fromDate">
+            ${uiLabelMap.ProductFacilityId} : <input type=text size="20" class="inputBox" name="facilityId">
+            ${uiLabelMap.CommonFromDate} : <input type=text size="25" class="inputBox" name="fromDate">
             <a href="javascript:call_cal(document.addFacilityGroupMemberForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-            <input type="submit" value="Add">
+            <input type="submit" value="${uiLabelMap.CommonAdd}">
         </div>
         </form>
         
@@ -168,5 +169,5 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
         -->
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

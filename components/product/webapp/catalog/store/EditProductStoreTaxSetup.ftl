@@ -20,25 +20,26 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
   ${pages.get("/store/ProductStoreTabBar.ftl")}
-  <div class="head1">Product Store Tax Settings <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
-  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New Product Store]</a>
+  <div class="head1">${uiLabelMap.ProductProductStoreTaxSettings} <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [${uiLabelMap.CommonId}:${productStoreId?if_exists}]</span></div>
+  <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductStore}]</a>
   <br>
   <br>   
   
   <table border="1" cellpadding="2" cellspacing="0" width="100%">
     <tr>
-      <td nowrap><div class="tableheadtext">Country</td>
-      <td nowrap><div class="tableheadtext">State</div></td>
-      <td nowrap><div class="tableheadtext">Tax Category</div></td>
-      <td nowrap><div class="tableheadtext">Min Purchase</div></td>
-      <td nowrap><div class="tableheadtext">Tax Rate</div></td>
-      <td nowrap><div class="tableheadtext">From Date</div></td>             
+      <td nowrap><div class="tableheadtext">${uiLabelMap.ProductCountry}</td>
+      <td nowrap><div class="tableheadtext">${uiLabelMap.ProductState}</div></td>
+      <td nowrap><div class="tableheadtext">${uiLabelMap.ProductTaxCategory}</div></td>
+      <td nowrap><div class="tableheadtext">${uiLabelMap.ProductMinPurchase}</div></td>
+      <td nowrap><div class="tableheadtext">${uiLabelMap.ProductTaxRate}</div></td>
+      <td nowrap><div class="tableheadtext">${uiLabelMap.CommonFromDate}</div></td>             
       <td nowrap><div class="tabletext">&nbsp;</div></td>
     </tr>
     <#list taxItems as taxItem>      
@@ -50,7 +51,7 @@
         <td><div class="tabletext">${taxItem.salesTaxPercentage?if_exists}</div></td>
         <td><div class="tabletext">${taxItem.fromDate?string}</div></td>
         <#if security.hasEntityPermission("TAXRATE", "_DELETE", session)>
-          <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/storeRemoveTaxRate?productStoreId=${productStoreId}&countryGeoId=${taxItem.countryGeoId}&stateProvinceGeoId=${taxItem.stateProvinceGeoId}&taxCategory=${taxItem.taxCategory}&minPurchase=${taxItem.minPurchase?string.number}&fromDate=${taxItem.get("fromDate").toString()}</@ofbizUrl>" class="buttontext">[Delete]</a></div></td>
+          <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/storeRemoveTaxRate?productStoreId=${productStoreId}&countryGeoId=${taxItem.countryGeoId}&stateProvinceGeoId=${taxItem.stateProvinceGeoId}&taxCategory=${taxItem.taxCategory}&minPurchase=${taxItem.minPurchase?string.number}&fromDate=${taxItem.get("fromDate").toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></div></td>
         <#else>
           <td>&nbsp;</td>
         </#if>
@@ -64,10 +65,10 @@
       <form name="addrate" action="<@ofbizUrl>/storeCreateTaxRate</@ofbizUrl>">
         <input type="hidden" name="productStoreId" value="${productStoreId}">
         <tr>
-          <td><span class="tableheadtext">Country</span></td>
+          <td><span class="tableheadtext">${uiLabelMap.ProductCountry}</span></td>
           <td>
             <select name="countryGeoId" class="selectBox">
-              <option value="_NA_">All</option>
+              <option value="_NA_">${uiLabelMap.CommonAll}</option>
               ${pages.get("/includes/countries.ftl")}
             </select>
           </td>
@@ -76,51 +77,51 @@
           <td><span class="tableheadtext">State/Province</span></td>          	
           <td>
             <select name="stateProvinceGeoId" class="selectBox">
-              <option value="_NA_">All</option>
+              <option value="_NA_">${uiLabelMap.CommonAll}</option>
               ${pages.get("/includes/states.ftl")}
             </select>
           </td>
         </tr>
         <tr>
-          <td><span class="tableheadtext">Tax Category</span></td>      
+          <td><span class="tableheadtext">${uiLabelMap.ProductTaxCategory}</span></td>      
           <td><input type="text" size="20" name="taxCategory" class="inputBox"></td>      
         </tr>
         <tr>
-          <td><span class="tableheadtext">Minimum Purchase</span></td>
+          <td><span class="tableheadtext">${uiLabelMap.ProductMinimumPurchase}</span></td>
           <td><input type="text" size="10" name="minPurchase" class="inputBox" value="0.00"></td>      
         </tr>
         <tr>
-          <td><span class="tableheadtext">Tax Shipping?</span></td>
+          <td><span class="tableheadtext">${uiLabelMap.ProductTaxShipping}?</span></td>
           <td>
             <select name="taxShipping" class="selectBox">
-              <option value="N">No</option>
-              <option value="Y">Yes</option>
+              <option value="N">${uiLabelMap.CommonNo}</option>
+              <option value="Y">${uiLabelMap.CommonYes}</option>
             </select>
           </td>
         </tr>
         <tr>
-          <td><span class="tableheadtext">Description</span></td>
+          <td><span class="tableheadtext">${uiLabelMap.CommonDescription}</span></td>
           <td><input type="text" size="20" name="description" class="inputBox"></td>
         </tr>
         <tr>
-          <td><span class="tableheadtext">Tax Rate</span></td>
+          <td><span class="tableheadtext">${uiLabelMap.ProductTaxRate}</span></td>
           <td><input type="text" size="10" name="salesTaxPercentage" class="inputBox"></td>
         </tr>
         <tr>
-          <td><span class="tableheadtext">From Date</span></td>
+          <td><span class="tableheadtext">${uiLabelMap.CommonFromDate}</span></td>
           <td><input type="text" name="fromDate" class="inputBox"><a href="javascript:call_cal(document.addrate.fromDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
         </tr>
        <tr>
-          <td><span class="tableheadtext">Thru Date</span></td>
+          <td><span class="tableheadtext">${uiLabelMap.CommonThruDate}</span></td>
           <td><input type="text" name="thruDate" class="inputBox"><a href="javascript:call_cal(document.addrate.thruDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
         </tr>        
         <tr>
-          <td><input type="submit" class="smallSubmit" value="Add"></td>
+          <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}"></td>
         </tr>
       </form>
     </#if>
   </table>  
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>
 

@@ -21,23 +21,24 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
 ${pages.get("/group/FacilityGroupTabBar.ftl")}
 
-<div class="head1">Roles <span class="head2">for&nbsp;"${(facilityGroup.facilityGroupName)?if_exists}" [ID:${facilityGroupId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[New Group]</a>
+<div class="head1">${uiLabelMap.ProductRoles} <span class="head2">${uiLabelMap.CommonFor} "${(facilityGroup.facilityGroupName)?if_exists}" [${uiLabelMap.CommonId} :${facilityGroupId?if_exists}]</span></div>
+<a href="<@ofbizUrl>/EditFacilityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewGroup}]</a>
 <br>
 <br>
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
-    <td><div class="tabletext"><b>Party ID</b></div></td>
-    <td><div class="tabletext"><b>Role Type</b></div></td>  
+    <td><div class="tabletext"><b>${uiLabelMap.ProductPartyId}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductRoleType}</b></div></td>  
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 
@@ -48,7 +49,7 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
     <td><div class="tabletext">${roleType.description}</div></td>
     <td align="center">
       <a href="<@ofbizUrl>/removePartyFromFacilityGroup?facilityGroupId=${facilityGroupRole.facilityGroupId}&partyId=${facilityGroupRole.partyId}&roleTypeId=${facilityGroupRole.roleTypeId}</@ofbizUrl>" class="buttontext">
-      [Delete]</a>
+      [${uiLabelMap.CommonDelete}]</a>
     </td>
   </tr>
 </#list>
@@ -57,20 +58,20 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
 <br>
 <form method="POST" action="<@ofbizUrl>/addPartyToFacilityGroup</@ofbizUrl>" style="margin: 0;">
   <input type="hidden" name="facilityGroupId" value="${facilityGroupId}">  
-  <div class="head2">Add FacilityGroup Party Role:</div>
+  <div class="head2">${uiLabelMap.ProductAddFacilityGroupPartyRole} :</div>
   <div class="tabletext">
-    Party ID: <input type="text" class="inputBox" size="20" name="partyId">
-    Role Type:
+    ${uiLabelMap.ProductPartyId} : <input type="text" class="inputBox" size="20" name="partyId">
+    ${uiLabelMap.ProductRoleType} :
     <select name="roleTypeId" class="selectBox"><option></option>
       <#list roles as role>
         <option value="${role.roleTypeId}">${role.description}</option>
       </#list>
     </select>
-    <input type="submit" value="Add">
+    <input type="submit" value="${uiLabelMap.CommonAdd}">
   </div>
 </form>
 
 <br>
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

@@ -20,18 +20,19 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <#if facilityGroupId?has_content>
     <div class="tabContainer">
-        <a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroup?default(unselectedClassName)}">Facility Group</a>
-        <a href="<@ofbizUrl>/EditFacilityGroupRollup?showFacilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupRollup?default(unselectedClassName)}">Rollups</a>
-        <a href="<@ofbizUrl>/EditFacilityGroupMembers?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupMembers?default(unselectedClassName)}">Facilities</a>
-        <a href="<@ofbizUrl>/EditFacilityGroupRoles?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupRoles?default(unselectedClassName)}">Roles</a>
+        <a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroup?default(unselectedClassName)}">${uiLabelMap.ProductFacilityGroup}</a>
+        <a href="<@ofbizUrl>/EditFacilityGroupRollup?showFacilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupRollup?default(unselectedClassName)}">${uiLabelMap.ProductRollups}</a>
+        <a href="<@ofbizUrl>/EditFacilityGroupMembers?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupMembers?default(unselectedClassName)}">${uiLabelMap.ProductFacilities}</a>
+        <a href="<@ofbizUrl>/EditFacilityGroupRoles?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupRoles?default(unselectedClassName)}">${uiLabelMap.ProductRoles}</a>
     </div>
 </#if>

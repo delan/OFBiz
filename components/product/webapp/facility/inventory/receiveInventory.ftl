@@ -20,10 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("FACILITY", "_CREATE", session)>
 
 <#if invalidProductId?exists>
@@ -32,8 +33,8 @@
 
 ${pages.get("/facility/FacilityTabBar.ftl")}
 
-<div class="head1">Receive Inventory <span class='head2'>into&nbsp;<#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [ID:${facility.facilityId?if_exists}]</span></div>
-<a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
+<div class="head1">${uiLabelMap.ProductReceiveInventory} <span class='head2'>into&nbsp;<#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId} :${facility.facilityId?if_exists}]</span></div>
+<a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
 
 <script language='JavaScript'>
     function setNow(field) { eval('document.selectAllForm.' + field + '.value="${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}"'); }
@@ -44,16 +45,16 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 <#-- Receiving Results -->
 <#if receivedItems?has_content>
   <table width="100%" border='0' cellpadding='2' cellspacing='0'>
-    <tr><td colspan="7"><div class="head3">Receipt(s) For Purchase Order #${purchaseOrder.orderId}</div></td></tr>
+    <tr><td colspan="7"><div class="head3">${uiLabelMap.ProductReceiptPurchaseOrder} # ${purchaseOrder.orderId}</div></td></tr>
     <tr><td colspan="7"><hr class="sepbar"></td></tr>
     <tr>
-      <td><div class="tableheadtext">Receipt #</div></td>
-      <td><div class="tableheadtext">Date</div></td>
-      <td><div class="tableheadtext">PO #</div></td>
-      <td><div class="tableheadtext">Line #</div></td>
-      <td><div class="tableheadtext">Product ID</div></td>
-      <td><div class="tableheadtext">Rejected</div></td>
-      <td><div class="tableheadtext">Accepted</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.ProductReceipt}#</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonDate}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.ProductPo} #</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.ProductLine} #</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.ProductProductId}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonRejected}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonAccepted}</div></td>
     </tr>
     <tr><td colspan="7"><hr class="sepbar"></td></tr>
     <#list receivedItems as item>
@@ -88,21 +89,21 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       <input type="hidden" name="orderItemSeqId_o_0" value="${firstOrderItem.orderItemSeqId}">
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Purchase Order</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductPurchaseOrder}</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <b>${purchaseOrder.orderId}</b>&nbsp;/&nbsp;<b>${firstOrderItem.orderItemSeqId}</b>
           <#if 1 < purchaseOrderItemsSize>
-            <span class='tabletext'>(Multiple order items for this product - ${purchaseOrderItemsSize}:1 Item:Product)</span>
+            <span class='tabletext'>(${uiLabelMap.ProductMultipleOrderItemsProduct} - ${purchaseOrderItemsSize}:1 ${uiLabelMap.ProductItemProduct})</span>
           <#else>
-            <span class='tabletext'>(Single order item for this product - 1:1 Item:Product)<span>
+            <span class='tabletext'>(${uiLabelMap.ProductSingleOrderItemProduct} - 1:1 ${uiLabelMap.ProductItemProduct})<span>
           </#if>
         </td>                
       </tr>
       </#if>
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Product ID</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <b>${requestParameters.productId?if_exists}</b>
@@ -110,7 +111,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Product Name</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductProductName}</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <div class="tabletext"><a href="/catalog/control/EditProduct?productId=${product.productId}${requestAttributes.externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.productName?if_exists}</a></div>
@@ -118,7 +119,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Product Description</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductProductDescription}</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <div class="tabletext">${product.description?if_exists}</div>
@@ -126,7 +127,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>	
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Item Description</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductItemDescription}</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <input type='text' name='itemDescription_o_0' size='30' maxlength='60' class="inputBox">
@@ -134,7 +135,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>	
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Inventory Item <br>(optional will create new if empty)</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductInventoryItem} <br>(${uiLabelMap.ProductOptionalCreateNew})</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <input type='text' name='inventoryItemId_o_0' size='20' maxlength='20' class="inputBox">
@@ -142,7 +143,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>	
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Inventory Item Type</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductInventoryItemType} </div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <select name="inventoryItemTypeId_o_0" size=1 class="selectBox">  
@@ -157,7 +158,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Date Received</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductDateReceived}</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <input type='text' name='datetimeReceived_o_0' size='24' value="${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}" class="inputBox">
@@ -169,7 +170,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       <#assign facilityLocations = (product.getRelatedByAnd("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId)))?if_exists>
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Facility Location</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductFacilityLocation}</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <#if facilityLocations?has_content>            
@@ -180,7 +181,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
                 <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</option>                              
               </#list>
-              <option value="">No Location</option>
+              <option value="">${uiLabelMap.ProductNoLocation}</option>
             </select>
           <#else>
             <input type='text' name='locationSeqId_o_0' size='20' maxlength="20" class="inputBox">
@@ -189,7 +190,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>	
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Rejected Reason</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductRejectedReason}</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <select name="rejectionId_o_0" size='1' class='selectBox'>   
@@ -202,7 +203,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>	
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Quantity Rejected</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductQuantityRejected}</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <input type='text' name='quantityRejected_o_0' size='5' value='0' class="inputBox">
@@ -210,7 +211,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>	
       <tr>
         <td width='14%'>&nbsp;</td>
-        <td width='6%' align='right' nowrap><div class="tabletext">Quantity Accepted</div></td>
+        <td width='6%' align='right' nowrap><div class="tabletext">${uiLabelMap.ProductQuantityAccepted}</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
           <input type='text' name='quantityAccepted_o_0' size='5' value='${defaultQuantity?default(1)?string.number}' class="inputBox">
@@ -218,7 +219,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       </tr>	
       <tr>
         <td colspan='2'>&nbsp;</td>
-        <td colspan='2'><input type="submit" value="Receive"></td>
+        <td colspan='2'><input type="submit" value="${uiLabelMap.CommonReceive}"></td>
       </tr>        				
     </table>
     <script language='JavaScript'>
@@ -236,7 +237,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <table width="100%" border='0' cellpadding='2' cellspacing='0'>
       <tr>
         <td>
-          <div class="head3">Select Shipment To Receive</div>
+          <div class="head3">${uiLabelMap.ProductSelectShipmentReceive}</div>
         </td>
       </tr>
       <#list shipments as shipment>
@@ -272,14 +273,14 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
           <table width="100%" border='0' cellpadding='2' cellspacing='0'>
             <tr>
               <td width="5%" nowrap><input type="radio" name="shipmentId" value="_NA_"></td>
-              <td width="5%" nowrap><div class="tabletext">No specific shipment (Receive entire PO)</div></td>
+              <td width="5%" nowrap><div class="tabletext">${uiLabelMap.ProductNoSpecificShipment}</div></td>
               <td colspan="5"></td>
             </tr>
           </table>
         </td>
       </tr>
       <tr>
-        <td>&nbsp;<a href="javascript:document.selectAllForm.submit();" class="buttontext">Receive Selected Shipment</a></td>
+        <td>&nbsp;<a href="javascript:document.selectAllForm.submit();" class="buttontext">${uiLabelMap.ProductReceiveSelectedShipment}</a></td>
       </tr>
     </table>
   </form>
@@ -297,16 +298,16 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <table width="100%" border='0' cellpadding='2' cellspacing='0'>
       <#if !purchaseOrderItems?exists || purchaseOrderItemsSize == 0>
         <tr>
-          <td colspan="2"><div class="tableheadtext">There are no items in the PO to receive.</div></td>
+          <td colspan="2"><div class="tableheadtext">${uiLabelMap.ProductNoItemsPoReceive}.</div></td>
         </tr>
       <#else>
         <tr>
           <td>
-            <div class="head3">Receive Purchase Order #${purchaseOrder.orderId}</div>
+            <div class="head3">${uiLabelMap.ProductReceivePurchaseOrder} #${purchaseOrder.orderId}</div>
           </td>
           <td align="right">
-            <span class="tableheadtext">Select All</span>&nbsp;
-            <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
+            <span class="tableheadtext">${uiLabelMap.CommonSelectAll}</span>&nbsp;
+            <input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this);">
           </td>            
         </tr>               
         <#list purchaseOrderItems as orderItem>
@@ -337,12 +338,12 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                       <div class="tabletext">
                         <b>${orderItemType.description}</b> : ${orderItem.itemDescription?if_exists}&nbsp;&nbsp;
                         <input type="text" class="inputBox" size="12" name="productId_o_${rowCount}">
-                        <a href="/catalog/control/EditProduct?externalLoginKey=${requestAttributes.externalLoginKey}" target="catalog" class="buttontext">Create Product</a>
+                        <a href="/catalog/control/EditProduct?externalLoginKey=${requestAttributes.externalLoginKey}" target="catalog" class="buttontext">${uiLabelMap.ProductCreateProduct}</a>
                       </div>
                     </td>
                   </#if>
                   <td align="right">
-                    <div class="tableheadtext">Location:</div>
+                    <div class="tableheadtext">${uiLabelMap.ProductLocation}:</div>
                   </td>
                   <#-- location(s) -->
                   <td align="right">
@@ -355,14 +356,14 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                           <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
                           <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</option>
                         </#list>
-                        <option value="">No Location</option>
+                        <option value="">${uiLabelMap.ProductNoLocation}</option>
                       </select>
                     <#else>
                       <input type="text" class="inputBox" name="locationSeqId_o_${rowCount}" size="12">
                     </#if>
                   </td>
                   <td align="right">
-                    <div class="tableheadtext">Qty Received:</div>
+                    <div class="tableheadtext">${uiLabelMap.ProductQtyReceived} :</div>
                   </td>
                   <td align="right">                    
                     <input type="text" class="inputBox" name="quantityAccepted_o_${rowCount}" size="6" value="${defaultQuantity?string.number}">
@@ -370,7 +371,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 </tr>
                 <tr>
                   <td width="45%">
-                    <span class="tableheadtext">Inventory Item Type:</span>&nbsp;&nbsp;
+                    <span class="tableheadtext">${uiLabelMap.ProductInventoryItemType} :</span>&nbsp;&nbsp;
                     <select name="inventoryItemTypeId_o_${rowCount}" size='1' class="selectBox">  
                       <#list inventoryItemTypes as nextInventoryItemType>                      
                       <option value='${nextInventoryItemType.inventoryItemTypeId}'>${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
@@ -378,7 +379,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                     </select>                    
                   </td>                    
                   <td align="right">
-                    <div class="tableheadtext">Rejection Reason:</div>
+                    <div class="tableheadtext">${uiLabelMap.ProductRejectionReason} :</div>
                   </td>
                   <td align="right">
                     <select name="rejectionId_o_${rowCount}" size='1' class='selectBox'>   
@@ -389,7 +390,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                     </select>
                   </td>
                   <td align="right">
-                    <div class="tableheadtext">Qty Rejected:</div>
+                    <div class="tableheadtext">${uiLabelMap.ProductQtyRejected} :</div>
                   </td>
                   <td align="right">
                     <input type="text" class="inputBox" name="quantityRejected_o_${rowCount}" value="0" size="6">
@@ -398,7 +399,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
               </table>
             </td>
             <td align="right">              
-              <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+              <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="${uiLabelMap.CommonY}" onclick="javascript:checkToggle(this);">
             </td>
           </tr>          
           <#assign rowCount = rowCount + 1>
@@ -412,18 +413,18 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <#if rowCount == 0>
           <tr>
             <td colspan="2">
-              <div class="tabletext">No items in PO #${purchaseOrder.orderId} to receive.</div>
+              <div class="tabletext">${uiLabelMap.ProductNoItemsPo} #${purchaseOrder.orderId} ${uiLabelMap.ProductToReceive}.</div>
             </td>
           </tr>
           <tr>
             <td colspan="2" align="right">
-              <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="buttontext">Return To Receiving</a>
+              <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductReturnToReceiving}</a>
             </td>
           </tr>          
         <#else>        
           <tr>
             <td colspan="2" align="right">
-              <a href="javascript:document.selectAllForm.submit();" class="buttontext">Receive Selected Product(s)</a>
+              <a href="javascript:document.selectAllForm.submit();" class="buttontext">${uiLabelMap.ProductReceiveSelectedProduct}</a>
             </td>
           </tr>
         </#if>
@@ -439,27 +440,27 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">
     <input type="hidden" name="initialSelected" value="Y">
 	<table border='0' cellpadding='2' cellspacing='0'>
-	  <tr><td colspan="4"><div class="head3">Receive Item(s)</div></td></tr>
+	  <tr><td colspan="4"><div class="head3">${uiLabelMap.ProductReceiveItem}</div></td></tr>
       <tr>        
-        <td width="25%" align='right'><div class="tabletext">Purchase Order Number</div></td>
+        <td width="25%" align='right'><div class="tabletext">${uiLabelMap.ProductPurchaseOrderNumber}</div></td>
         <td>&nbsp;</td>
         <td width="25%">
           <input type="text" class="inputBox" name="purchaseOrderId" size="20" maxlength="20" value="${requestParameters.purchaseOrderId?if_exists}">          
         </td> 
-        <td><div class='tabletext'>&nbsp;(Leave empty for single product receiving)</div></td>
+        <td><div class='tabletext'>&nbsp;(${uiLabelMap.ProductLeaveSingleProductReceiving})</div></td>
       </tr>
       <tr>        
-        <td width="25%" align='right'><div class="tabletext">Product ID</div></td>
+        <td width="25%" align='right'><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
         <td>&nbsp;</td>
         <td width="25%">
           <input type="text" class="inputBox" name="productId" size="20" maxlength="20" value="${requestParameters.productId?if_exists}">         
         </td>       
-        <td><div class='tabletext'>&nbsp;(Leave empty for entire PO receiving)</div></td>        
+        <td><div class='tabletext'>&nbsp;(${uiLabelMap.ProductLeaveEntirePoReceiving})</div></td>        
       </tr>      
       <tr>
         <td colspan="2">&nbsp;</td>
         <td colspan="2">
-          <a href="javascript:document.selectAllForm.submit();" class="buttontext">Receive Product(s)</a>
+          <a href="javascript:document.selectAllForm.submit();" class="buttontext">${uiLabelMap.ProductReceiveProduct}</a>
         </td>
       </tr>        
     </table>
@@ -468,5 +469,5 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 
 <br>
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_CREATE" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

@@ -1,4 +1,4 @@
-
+keyw
 <!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
 
 <!--
@@ -22,7 +22,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-
+title="${uiLabelMap.Product}"
 <forms>
 	<form name="EditProductStore" type="single"
 		target="updateProductStore" title="" default-map-name="productStore"
@@ -33,13 +33,13 @@
 		<auto-fields-service service-name="updateProductStore" map-name=""/>
 
 		<field use-when="productStore!=null" name="productStoreId" tooltip="This cannot be changed without re-creating the Product Store"><display/></field>
-		<field name="productStoreId"><ignored/></field>
+		<field name="productStoreId" title="${uiLabelMap.ProductStoreNameId}"><ignored/></field>
 
-		<field name="storeName"><text size="30" maxlength="60"/></field>
-		<field name="title"><text size="30" maxlength="60"/></field>
-		<field name="subtitle" title="Sub-title"><text size="60" maxlength="250"/></field>
+		<field name="storeName" title="${uiLabelMap.ProductStoreName}" ><text size="30" maxlength="60"/></field>
+		<field name="title" title="${uiLabelMap.CommonTitle}"><text size="30" maxlength="60"/></field>
+		<field name="subtitle" title="${uiLabelMap.CommonSubTitle}"><text size="60" maxlength="250"/></field>
 
-		<field name="inventoryFacilityId" title="Inventory Facility" widget-style="selectBox">
+		<field name="inventoryFacilityId" title="${uiLabelMap.ProductInventoryFacility}" widget-style="selectBox">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
 					<entity-order-by field-name="facilityName"/>
@@ -51,16 +51,16 @@
 				description="[Edit Facility ${productStore.inventoryFacilityId}]" also-hidden="false"/>
 		</field>
 
-		<field name="checkInventory" widget-style="selectBox">
+		<field name="checkInventory" widget-style="selectBox" title="${uiLabelMap.ProductCheckInventory}">
 			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
 		</field>
-		<field name="requireInventory" title="Require Inventory for Purchase" widget-style="selectBox">
+		<field name="requireInventory" title="${uiLabelMap.ProductRequireInventoryForPurchase}" widget-style="selectBox">
 			<drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
 		</field>
-		<field name="reserveInventory" widget-style="selectBox">
+		<field name="reserveInventory" widget-style="selectBox" title="${uiLabelMap.ProductReserveInventory}">
 			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
 		</field>
-		<field name="reserveOrderEnumId" title="Reservation Order" widget-style="selectBox">
+		<field name="reserveOrderEnumId" title="${uiLabelMap.ProductReservationOrder}" widget-style="selectBox">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 					<entity-constraint name="enumTypeId" value="INV_RES_ORDER"/>
@@ -68,26 +68,26 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="oneInventoryFacility" widget-style="selectBox">
+		<field name="oneInventoryFacility" widget-style="selectBox" title="${uiLabelMap.ProductOneInventoryFacility}">
 			<drop-down allow-empty="true" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
 		</field>
 		<!--
-		<field name="useQuickAdd" widget-style="selectBox">
+		<field name="useQuickAdd" widget-style="selectBox" title="${uiLabelMap.ProductUseQuickAdd}">
 			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
 		</field>
         -->
 
-		<field name="styleSheet"><text size="60" maxlength="250"/></field>
-		<field name="headerLogo"><text size="60" maxlength="250"/></field>
+		<field name="styleSheet" title="${uiLabelMap.ProductStyleSheet}"><text size="60" maxlength="250"/></field>
+		<field name="headerLogo" title="${uiLabelMap.ProductHeaderLogo}"><text size="60" maxlength="250"/></field>
 		<!--
 		<field name="contentPathPrefix" tooltip="If specified will be prepended to image and other content paths. Should start with a slash but not end with one."><text size="60" maxlength="250"/></field>
 		<field name="templatePathPrefix" tooltip="If specified will be prepended to template paths. Should start with a slash but not end with one."><text size="60" maxlength="250"/></field>
 		-->
-		<field name="explodeOrderItems" widget-style="selectBox">
+		<field name="explodeOrderItems" widget-style="selectBox" title="${uiLabelMap.ProductExplodeOrderItems}">
 		    <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
 		</field>
 
-		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
 
 	<form name="CreateProductStoreCatalog" type="single"
@@ -95,30 +95,30 @@
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="createProductStoreCatalog"/>
 		<field name="productStoreId" map-name="productStore"><hidden/></field>
-		<field name="prodCatalogId" title="Catalog" widget-style="selectBox">
+		<field name="prodCatalogId" title="${uiLabelMap.ProductCatalog}" widget-style="selectBox">
 			<drop-down>
 				<entity-options entity-name="ProdCatalog" description="${catalogName}">
 					<entity-order-by field-name="catalogName"/>
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
 	<form name="UpdateProductStoreCatalog" type="list"
 		target="updateProductStoreCatalog" title="" list-name="productStoreCatalogDatas"
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="updateProductStoreCatalog" map-name="productStoreCatalog"/>
 		<field name="productStoreId"><hidden/></field>
-		<field name="prodCatalogId" title="Catalog [ID]" widget-style="buttontext">
+		<field name="prodCatalogId" title="${uiLabelMap.ProductCatalogId}" widget-style="buttontext">
 			<hyperlink target-type="intra-app" target="EditProdCatalog?prodCatalogId=${productStoreCatalog.prodCatalogId}"
 				description="${prodCatalog.catalogName} [${productStoreCatalog.prodCatalogId}]"/>
 		</field>
-		<field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
-		<field name="thruDate" title="Thru Date &amp;amp; Time"></field>
-		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
-		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+		<field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
+		<field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="deleteLink" title="&amp;" widget-style="buttontext">
 			<hyperlink target="deleteProductStoreCatalog?prodCatalogId=${productStoreCatalog.prodCatalogId}&amp;productStoreId=${productStoreCatalog.productStoreId}&amp;fromDate=${productStoreCatalog.fromDate}"
-				description="[Delete]" also-hidden="false"/>
+				description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
 		</field>
 	</form>
 
@@ -127,7 +127,7 @@
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="createProductStoreEmailSetting"/>
 		<field name="productStoreId" map-name="productStore"><hidden/></field>
-		<field name="emailType" title="Email Type" widget-style="selectBox">
+		<field name="emailType" title="${uiLabelMap.CommonEmailType}" widget-style="selectBox">
 			<drop-down>
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 					<entity-constraint name="enumTypeId" value="PRDS_EMAIL"/>
@@ -135,21 +135,21 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
 	<form name="updateProductStoreEmail" type="list"
 		target="updateProductStoreEmail" title="" list-name="productStoreEmailSettings"
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="updateProductStoreEmailSetting"/>
 		<field name="productStoreId"><hidden/></field>
-		<field name="emailType"><display description="${emailType}"/></field>
-		<field name="templatePath"></field>
-		<field name="subject"></field>
-		<field name="fromAddress"></field>
-		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
-		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+		<field name="emailType" title="${uiLabelMap.CommonEmailType}"><display description="${emailType}"/></field>
+		<field name="templatePath" title="${uiLabelMap.ProductTemplatePath}"></field>
+		<field name="subject" title="${uiLabelMap.ProductSubject}"></field>
+		<field name="fromAddress" title="${uiLabelMap.CommonFromAddress}"></field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="deleteLink" title="&amp;" widget-style="buttontext">
 			<hyperlink target="removeProductStoreEmail?productStoreId=${productStoreId}&amp;emailType=${emailType}"
-				description="[Delete]" also-hidden="false"/>
+				description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
 		</field>
 	</form>
 
@@ -158,7 +158,7 @@
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="createProductStoreKeywordOvrd"/>
 		<field name="productStoreId" map-name="productStore"><hidden/></field>
-		<field name="targetTypeEnumId" title="Target Type" widget-style="selectBox">
+		<field name="targetTypeEnumId" title="${uiLabelMap.ProductTargetTypeEnumId}" widget-style="selectBox">
 			<drop-down>
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 					<entity-constraint name="enumTypeId" value="KWOVRD_TRGT_TYPE"/>
@@ -166,16 +166,16 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
 	<form name="UpdateproductStorekeywordOvrdForm" type="list"
 		target="updateProductStoreKeywordOvrd" title="" list-name="productStorekeywordOvrdList"
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="updateProductStoreKeywordOvrd"/>
-		<field name="productStoreId"><hidden/></field>
-		<field name="keyword"><display description="${keyword}"/></field>
-		<field name="fromDate"><display description="${fromDate}"/></field>
-		<field name="targetTypeEnumId" title="Target Type" widget-style="selectBox">
+		<field name="productStoreId" ><hidden/></field>
+		<field name="keyword" title="${uiLabelMap.ProductKeyword}"><display description="${keyword}"/></field>
+		<field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display description="${fromDate}"/></field>
+		<field name="targetTypeEnumId" title="${uiLabelMap.ProductTargetType}" widget-style="selectBox">
 			<drop-down>
 				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
 					<entity-constraint name="enumTypeId" value="KWOVRD_TRGT_TYPE"/>
@@ -183,10 +183,10 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
 		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
 			<hyperlink target="deleteProductStoreKeywordOvrd?productStoreId=${productStoreId}&amp;keyword=${keyword}&amp;fromDate=${fromDate}"
-				description="[Delete]" also-hidden="false"/>
+				description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
 		</field>
 	</form>
 </forms>
