@@ -53,6 +53,7 @@
 	List partyTasks = delegator.findByAnd("OrderTaskList", UtilMisc.toMap("statusId", "CAL_ACCEPTED", "orderRoleTypeId", "PLACING_CUSTOMER", "wepaPartyId", userLogin.getString("partyId")), sortOrder);
 	if (partyTasks != null) partyTasks = EntityUtil.filterByDate(partyTasks);
 	if (partyTasks != null) pageContext.setAttribute("partyTasks", partyTasks);
+	Debug.logError("PartyTasks: " + partyTasks);
 
 	// get this user's roles
 	List partyRoles = delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId", userLogin.getString("partyId")));	
@@ -61,13 +62,11 @@
 	Iterator pri = partyRoles.iterator();
 	List pRolesList = new ArrayList();
 	while (pri.hasNext()) {
-		GenericValue partyRole = (GenericValue) pri.next();
+		GenericValue partyRole = (GenericValue) pri.next();	
 		if (!partyRole.getString("roleTypeId").equals("_NA_"))
 			pRolesList.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, partyRole.getString("roleTypeId")));
 	}
-	
-	pRolesList = UtilMisc.toList(new EntityExpr("roleTypeId", EntityOperator.EQUALS, "ORDER_CLERK"));
-	
+		
 	/* This does not work -- need to find out why
 	// constant values for getting single orders (by customer)
 	List customerRoles = UtilMisc.toList(new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"));
@@ -89,12 +88,7 @@
 	//List roleTasks = delegator.findByOr("OrderTaskList", pRolesList, sortOrder);
 	if (roleTasks != null) roleTasks = EntityUtil.filterByAnd(roleTasks, baseList);
 	if (roleTasks != null) roleTasks = EntityUtil.filterByDate(roleTasks);	
-	if (roleTasks != null) pageContext.setAttribute("roleTasks", roleTasks);	
-//	Iterator i = roleTasks.iterator();
-//	while (i.hasNext()) {
-//		Debug.logError("Entity ----> : " + i.next());
-//	}
-
+	if (roleTasks != null) pageContext.setAttribute("roleTasks", roleTasks);
 %>
 
 <script language="JavaScript">
@@ -256,7 +250,7 @@
                       <ofbiz:if name="statusId" value="CAL_SENT">
                         <td align="right"><input type="checkbox" name="delegate" value="true" checked></td>
                       </ofbiz:if>
-                      <ofbiz:unless name="currentStatusId" value="CAL_SENT">
+                      <ofbiz:unless name="statusId" value="CAL_SENT">
                         <td align="right"><input type="checkbox" name="delegate" value="true"></td>
                       </ofbiz:unless>
                     </tr>
@@ -270,8 +264,8 @@
     </TR>
   </ofbiz:if>
 
-  <ofbiz:unless name="partyTasks">
-    <ofbiz:unless name="roleTasks">
+  <ofbiz:unless name="partyTasks" size="0">
+    <ofbiz:unless name="roleTasks" size="0">
       <div class="tabletext"><b>&nbsp;No orders pending.</b></div>
     </ofbiz:unless>
   </ofbiz:unless>

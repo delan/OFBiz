@@ -35,6 +35,7 @@
             <div class="boxhead">&nbsp;Notes</div>
           </td>
           <td valign="middle" align="right">&nbsp;
+            <%if(security.hasEntityPermission("ORDERMGR", "_NOTE", session)) {%>
             <% 
                String qString = "";
                if (orderId != null)
@@ -47,8 +48,9 @@
                    qString = qString + "&roleTypeId=" + assignRoleTypeId;
                if (fromDate != null)
                    qString = qString + "&fromDate=" + fromDate;
-            %>
+            %>            
             <a href="<ofbiz:url>/createnewnote?<%=qString%></ofbiz:url>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
+            <%}%>
           </td>
         </tr>
       </table>
