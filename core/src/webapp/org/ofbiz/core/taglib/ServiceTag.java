@@ -29,6 +29,7 @@ import java.util.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
@@ -80,6 +81,8 @@ public class ServiceTag extends AbstractParameterTag {
         if (dispatcher == null)
             throw new JspTagException("Cannot get dispatcher from the request object.");
 
+        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute("userLogin");
+
         int scope = PageContext.PAGE_SCOPE;
         char scopeChar = resultScope.toUpperCase().charAt(0);
         switch (scopeChar) {
@@ -101,6 +104,8 @@ public class ServiceTag extends AbstractParameterTag {
 
         Map context = getParameters();
         Map result = null;
+        if (userLogin != null)
+            context.put("userLogin", userLogin);
         try {
             if (mode.equalsIgnoreCase("async"))
                 dispatcher.runAsync(serviceName, context);
