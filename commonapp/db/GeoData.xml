@@ -55,23 +55,16 @@
   <Geo abbreviation="WV" geoCode="" geoId="WV" geoName="West Virginia" geoTypeId="STATE"/>
   <Geo abbreviation="WY" geoCode="" geoId="WY" geoName="Wyoming" geoTypeId="STATE"/>
   <Geo abbreviation="" geoCode="" geoId="Alberta" geoName="Alberta" geoTypeId="STATE"/>
-  <Geo abbreviation="AZ" geoCode="" geoId="British Columbia"
-    geoName="British Columbia" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="British Columbia" geoName="British Columbia" geoTypeId="STATE"/>
   <Geo abbreviation="" geoCode="" geoId="Manitoba" geoName="Manitoba" geoTypeId="STATE"/>
-  <Geo abbreviation="" geoCode="" geoId="New Brunswick"
-    geoName="New Brunswick" geoTypeId="STATE"/>
-  <Geo abbreviation="" geoCode="" geoId="Newfoundland"
-    geoName="Newfoundland" geoTypeId="STATE"/>
-  <Geo abbreviation="" geoCode="" geoId="Nova Scotia"
-    geoName="Nova Scotia" geoTypeId="STATE"/>
-  <Geo abbreviation="" geoCode="" geoId="Northwest Territorie"
-    geoName="Northwest Territories" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="New Brunswick" geoName="New Brunswick" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Newfoundland" geoName="Newfoundland" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Nova Scotia" geoName="Nova Scotia" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Northwest Territorie" geoName="Northwest Territories" geoTypeId="STATE"/>
   <Geo abbreviation="" geoCode="" geoId="Ontario" geoName="Ontario" geoTypeId="STATE"/>
-  <Geo abbreviation="" geoCode="" geoId="Prince Edward Island"
-    geoName="Prince Edward Island" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Prince Edward Island" geoName="Prince Edward Island" geoTypeId="STATE"/>
   <Geo abbreviation="" geoCode="" geoId="Quebec" geoName="Quebec" geoTypeId="STATE"/>
-  <Geo abbreviation="" geoCode="" geoId="Sasakatchewan"
-    geoName="Sasakatchewan" geoTypeId="STATE"/>
+  <Geo abbreviation="" geoCode="" geoId="Sasakatchewan" geoName="Sasakatchewan" geoTypeId="STATE"/>
   <Geo abbreviation="" geoCode="" geoId="Yukon" geoName="Yukon" geoTypeId="STATE"/>
   <Geo abbreviation="USA" geoCode="" geoId="USA" geoName="United States" geoTypeId="COUNTRY"/>
   <Geo abbreviation="CAN" geoCode="" geoId="CAN" geoName="Canada" geoTypeId="COUNTRY"/>
