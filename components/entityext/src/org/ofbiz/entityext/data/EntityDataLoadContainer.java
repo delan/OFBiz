@@ -34,6 +34,7 @@ import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityDataLoader;
@@ -45,7 +46,7 @@ import org.ofbiz.service.ServiceDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class EntityDataLoadContainer implements Container {
@@ -53,6 +54,7 @@ public class EntityDataLoadContainer implements Container {
     public static final String module = EntityDataLoadContainer.class.getName();
 
     protected String configFile = null;
+    protected String readers = null;
     protected int txTimeout = -1;
 
     public EntityDataLoadContainer() {
@@ -69,8 +71,9 @@ public class EntityDataLoadContainer implements Container {
         ServiceDispatcher.enableJMS(false);
         ServiceDispatcher.enableSvcs(false);
         if (args != null && args.length > 0) {
+            this.readers = args[0];
             try {
-                txTimeout = Integer.parseInt(args[0]);
+                txTimeout = Integer.parseInt(args[1]);
             } catch (Exception e) {
             }
         }
@@ -98,11 +101,29 @@ public class EntityDataLoadContainer implements Container {
         } else {
             entityGroupName = entityGroupNameProp.value;
         }
-        
+
+        // parse the pass in list of readers to use
+        List readerNames = null;
+        if (this.readers != null) {
+            if (this.readers.indexOf(",") == -1) {
+                if (!"all".equalsIgnoreCase(readers)) {
+                    readerNames = new LinkedList();
+                    readerNames.add(this.readers);
+                }
+            } else {
+                readerNames = StringUtil.split(this.readers, ",");
+            }
+        }
+
         GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
         String helperName = delegator.getGroupHelperName(entityGroupName);
-        //String paths = EntityDataLoader.getPathsString(helperName);
-        List urlList = EntityDataLoader.getUrlList(helperName);
+        List urlList = null;
+
+        if (readerNames == null) {
+            urlList = EntityDataLoader.getUrlList(helperName);
+        } else {
+            urlList = EntityDataLoader.getUrlList(helperName, readerNames);
+        }
 
         NumberFormat changedFormat = NumberFormat.getIntegerInstance();
         changedFormat.setMinimumIntegerDigits(5);
@@ -111,7 +132,7 @@ public class EntityDataLoadContainer implements Container {
         List errorMessages = new LinkedList();
         List infoMessages = new LinkedList();
         int totalRowsChanged = 0;
-        if (urlList.size() > 0) {
+        if (urlList != null && urlList.size() > 0) {
             Debug.logImportant("=-=-=-=-=-=-= Doing a data load with the following files:", module);
             Iterator urlIter = urlList.iterator();
             while (urlIter.hasNext()) {
@@ -133,7 +154,7 @@ public class EntityDataLoadContainer implements Container {
                 }
             }
         } else {
-            Debug.logImportant("No XML Files found.", module);
+            Debug.logImportant("=-=-=-=-=-=-= No data load files found.", module);
         }
 
         if (infoMessages.size() > 0) {
