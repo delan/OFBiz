@@ -24,15 +24,24 @@
  */
 package org.ofbiz.commonapp.party.party;
 
-import javax.servlet.jsp.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.util.*;
+import javax.servlet.ServletRequest;
+import javax.servlet.jsp.PageContext;
+
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilMisc;
 
 /**
  * Worker methods for Party Information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */
@@ -40,14 +49,14 @@ public class PartyWorker {
     
     public static String module = PartyWorker.class.getName();
     
-    public static void getPartyOtherValues(PageContext pageContext, String partyId, String partyAttr, String personAttr, String partyGroupAttr) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-
+    public static Map getPartyOtherValues(ServletRequest request, String partyId, String partyAttr, String personAttr, String partyGroupAttr) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        Map result = new HashMap();
         try {
             GenericValue party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
 
             if (party != null)
-                pageContext.setAttribute(partyAttr, party);
+                result.put(partyAttr, party);
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Problems getting Party entity", module);
         }
@@ -56,7 +65,7 @@ public class PartyWorker {
             GenericValue person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
 
             if (person != null)
-                pageContext.setAttribute(personAttr, person);
+                result.put(personAttr, person);
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Problems getting Person entity", module);
         }
@@ -65,9 +74,20 @@ public class PartyWorker {
             GenericValue partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
 
             if (partyGroup != null)
-                pageContext.setAttribute(partyGroupAttr, partyGroup);
+                result.put(partyGroupAttr, partyGroup);
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Problems getting PartyGroup entity", module);
         }
+        return result;
+    }              
+    
+    public static void getPartyOtherValues(PageContext pageContext, String partyId, String partyAttr, String personAttr, String partyGroupAttr) {
+        Map partyMap = getPartyOtherValues(pageContext.getRequest(), partyId, partyAttr, personAttr, partyGroupAttr);
+        Iterator i = partyMap.entrySet().iterator();
+        while (i.hasNext()) {
+            Map.Entry e = (Map.Entry) i.next();
+            pageContext.setAttribute((String) e.getKey(), e.getValue());
+            
+        }      
     }
 }
