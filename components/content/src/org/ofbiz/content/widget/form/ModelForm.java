@@ -1,5 +1,5 @@
 /*
- * $Id: ModelForm.java,v 1.1 2003/08/17 08:40:13 ajzeneski Exp $
+ * $Id: ModelForm.java,v 1.2 2003/11/05 00:15:48 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ModelForm {
@@ -292,6 +292,7 @@ public class ModelForm {
             }
             return modelFormField;
         } else {
+
             // not a conditional field, see if a named field exists in Map
             ModelFormField existingField = (ModelFormField) this.fieldMap.get(modelFormField.getName());
             if (existingField != null) {
@@ -435,6 +436,8 @@ public class ModelForm {
             this.renderListFormString(buffer, context, formStringRenderer, positions);
         } else if ("multi".equals(this.type)) {
             this.renderMultiFormString(buffer, context, formStringRenderer, positions);
+        } else if ("upload".equals(this.type)) {
+            this.renderSingleFormString(buffer, context, formStringRenderer, positions);
         } else {
             throw new IllegalArgumentException("The type " + this.getType() + " is not supported for form with name " + this.getName());
         }
@@ -1194,4 +1197,5 @@ public class ModelForm {
             this.defaultFieldType = element.getAttribute("default-field-type");
         }
     }
+
 }

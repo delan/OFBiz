@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormRenderer.java,v 1.3 2003/08/19 20:54:08 jonesde Exp $
+ * $Id: HtmlFormRenderer.java,v 1.4 2003/11/05 00:15:48 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,6 +46,7 @@ import org.ofbiz.content.widget.form.ModelFormField.HiddenField;
 import org.ofbiz.content.widget.form.ModelFormField.HyperlinkField;
 import org.ofbiz.content.widget.form.ModelFormField.IgnoredField;
 import org.ofbiz.content.widget.form.ModelFormField.LookupField;
+import org.ofbiz.content.widget.form.ModelFormField.FileField;
 import org.ofbiz.content.widget.form.ModelFormField.RadioField;
 import org.ofbiz.content.widget.form.ModelFormField.RangeFindField;
 import org.ofbiz.content.widget.form.ModelFormField.ResetField;
@@ -59,7 +60,7 @@ import org.ofbiz.content.widget.form.ModelFormField.TextareaField;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
@@ -285,6 +286,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(textareaField.getRows());
         buffer.append('"');
 
+        String idName = modelFormField.getIdName();
+        if (UtilValidate.isNotEmpty(idName)) {
+            buffer.append(" id=\"");
+            buffer.append(idName);
+            buffer.append('"');
+        }
+
+
         buffer.append('>');
 
         String value = modelFormField.getEntry(context, textareaField.getDefaultValue(context));
@@ -504,8 +513,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         Iterator optionValueIter = allOptionValues.iterator();
         while (optionValueIter.hasNext()) {
             ModelFormField.OptionValue optionValue = (ModelFormField.OptionValue) optionValueIter.next();
-            buffer.append("<div");
             String className = modelFormField.getWidgetStyle();
+            buffer.append("<div");
             if (UtilValidate.isNotEmpty(className)) {
                 buffer.append(" class=\"");
                 buffer.append(className);
@@ -713,6 +722,12 @@ public class HtmlFormRenderer implements FormStringRenderer {
             this.appendOfbizUrl(buffer, "/" + targ);
             buffer.append("\" ");
         }
+
+        String formType = modelForm.getType();
+        if (formType.equals("upload") ) {
+            buffer.append(" enctype=\"multipart/form-data\"");
+        }
+
         buffer.append(" name=\"");
         buffer.append(modelForm.getCurrentFormName(context));
         buffer.append("\" style=\"margin: 0;\">");
@@ -1040,6 +1055,10 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(" Contains<input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_op\" value=\"contains\"/>");
+
+        buffer.append(" Is Empty<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+        buffer.append("_op\" value=\"empty\"/>");
         buffer.append("</span>");
 
         this.appendTooltip(buffer, context, modelFormField);
@@ -1168,6 +1187,10 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(" Less than equals<input type=\"radio\" name=\"");
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"lessThanEqualTo\"/>");
+
+        buffer.append(" Is Empty<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+        buffer.append("_op\" value=\"empty\"/>");
 
         buffer.append("</span>");
 
@@ -1327,6 +1350,10 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(modelFormField.getParameterName(context));
         buffer.append("_fld1_op\" value=\"upThruDay\"/>");
 
+        buffer.append(" Is Empty<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+        buffer.append("_op\" value=\"empty\"/>");
+
         buffer.append("</span>");
 
         this.appendTooltip(buffer, context, modelFormField);
@@ -1390,6 +1417,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         this.appendContentUrl(buffer, "/images/fieldlookup.gif");
         buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Lookup\"></a>");
 
+        this.makeHyperlinkString(buffer, lookupField.getSubHyperlink(), context);
         this.appendTooltip(buffer, context, modelFormField);
 
         this.appendWhitespace(buffer);
@@ -1472,4 +1500,56 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         this.appendWhitespace(buffer);
     }
+
+    /* (non-Javadoc)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFileField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.FileField)
+     */
+    public void renderFileField(StringBuffer buffer, Map context, FileField textField) {
+        ModelFormField modelFormField = textField.getModelFormField();
+
+        buffer.append("<input type=\"file\"");
+
+        String className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+
+        // add a style of red if this is a date/time field and redWhen is true
+        if (modelFormField.shouldBeRed(context)) {
+            buffer.append(" style=\"color: red;\"");
+        }
+
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+        buffer.append('"');
+
+        String value = modelFormField.getEntry(context, textField.getDefaultValue(context));
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(" value=\"");
+            buffer.append(value);
+            buffer.append('"');
+        }
+
+        buffer.append(" size=\"");
+        buffer.append(textField.getSize());
+        buffer.append('"');
+
+        Integer maxlength = textField.getMaxlength();
+        if (maxlength != null) {
+            buffer.append(" maxlength=\"");
+            buffer.append(maxlength.intValue());
+            buffer.append('"');
+        }
+
+        buffer.append("/>");
+
+        this.makeHyperlinkString(buffer, textField.getSubHyperlink(), context);
+
+        this.appendTooltip(buffer, context, modelFormField);
+
+        this.appendWhitespace(buffer);
+    }
+
 }
