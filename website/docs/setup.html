@@ -1,6 +1,6 @@
 <html>
 <head>
-<!--  $Id: setup.html,v 1.2 2004/01/22 13:31:47 jonesde Exp $ -->
+<!--  $Id: setup.html,v 1.3 2004/01/22 13:54:45 ajzeneski Exp $ -->
 <title>The Open For Business Project: General Setup</title>
 </head>
 
@@ -31,7 +31,7 @@
 <hr>
 <h3><a name="Introduction">Introduction</a></h3>
 <hr>
-<p>This document describes an initial setup process and configuration options 
+<p>This document describes an initial setup process and configuration options
 for the Open For Business Project.</p>
 <br>
 
@@ -59,7 +59,7 @@ options and explanations, see the rest of this document.</p>
 <hr>
 <h3><a name="Building">Building From CVS</a></h3>
 <hr>
-	
+
 <p>When building from CVS you will need to have Ant (see http://ant.apache.org) installed and setup properly in addition to a Java 1.4 or newer J2SDK as mentioned above.</p>
 <p>In the directory where you want OFBiz to be do a CVS checkout of the ofbiz module on the java.net servers. For example: </p>
 
@@ -79,12 +79,12 @@ If you are running into funny errors after updating from CVS in the future, give
 <h3><a name="External_Packages_Setup">External Packages Setup</a></h3>
 <hr>
 
-<p>You will also need the Java 2 version 1.3 or 1.4 JDK (NOT just the JRE) from 
+<p>You will also need the Java 2 1.4 JDK (NOT just the JRE) from
 <a href="http://java.sun.com" target="_blank">java.sun.com</a>,
 as is expected for a Java application.</p>
 
 <p>Open For Business can be run with either a simple servlet engine alone (like
-Tomcat) or with a full J2EE container (like Orion or JBoss &amp; Jetty together). 
+Tomcat) or with a full J2EE container (like Orion or JBoss &amp; Jetty together).
 A full J2EE application server is also useful for services other than the basic
 EJB container, such as JNDI, connection pooling, transaction management,
 various resource and configuration management conveniences and so forth. Many
@@ -92,7 +92,7 @@ other J2EE application servers are available for these sorts of features, and
 Open For Business should be easily adaptable to various ones.</p>
 
 <p>Jetty is the current default application server for Open For Business.
-JTA (distributed transaction) support is currently done with JOTM, 
+JTA (distributed transaction) support is currently done with JOTM,
 but could also be provided by JBoss or another J2EE application server.</p>
 
 <p>Jetty can be downloaded at <a href="http://jetty.mortbay.com">jetty.mortbay.com</a>,
@@ -139,7 +139,7 @@ are setup as follows:</p>
 <h3><a name="File_Locations">File Locations</a></h3>
 <hr>
 
-<p>If you have just checked out the OFBiz modules from CVS you will beed to copy the Ant 
+<p>If you have just checked out the OFBiz modules from CVS you will beed to copy the Ant
 build.xml file from OFBIZ_HOME/setup/ofbiz/build.xml to OFBIZ_HOME. All of the jar files needed
 to build OFBiz are included in the 'lib' module. Some of these need to be included on the classpath
 when running, but not all. Some are only included to make it easier to build the project and to
@@ -166,7 +166,7 @@ provide a consistent platform to work from.</p>
 
 <p>In addition to these certain less complete app servers will need some addition classes from
 the <code>ofbiz/lib/compile</code> directory. For instance, Jetty needs: <code>xerces.jar</code>,
-<code>activation.jar</code>, <code>mail.jar</code>, and <code>jdbc2_0-stdext.jar</code>. 
+<code>activation.jar</code>, <code>mail.jar</code>, and <code>jdbc2_0-stdext.jar</code>.
 
 <p>If this list looks worrysome to you don't worry too much about it. We have startup scripts and
 config files for various app servers to set up these paths and with the embedded Jetty startup
@@ -185,13 +185,13 @@ been provided which set some things up before calling catalina.sh or catalina.ba
 These ofbiz scripts should be put in <b>catalina/bin</b>, and you can
 use the run, start, stop, etc. parameters on the command line.</p>
 
-<p>The default data can be loaded by going to the following URL: 
+<p>The default data can be loaded by going to the following URL:
 <a href="http://localhost:8080/webtools/control/main">http://localhost:8080/webtools/control/main</a>,
-and then click on the link for data loading, or go to 
+and then click on the link for data loading, or go to
 <a href="http://localhost:8080/webtools/control/install">http://localhost:8080/webtools/control/install</a>
 directly. Since there can be multiple servers depending on the name of the
 entity group, you must enter the entity group name so the JSP knows which files
-to load to which server, as setup in the entityengine.xml file. This JSP loads all 
+to load to which server, as setup in the entityengine.xml file. This JSP loads all
 .sql and .xml files in the directories specified in the
 entityengine.xml file for the given group name. The default group name for all
 of the default entities in OFBiz is &quot;org.ofbiz.commonapp&quot;, which you
@@ -208,7 +208,7 @@ These statements are run through JDBC, and use the JDBC data mappings for
 genericity.</p>
 
 <p>Go to <a href="http://localhost:8080/webtools/control/main">http://localhost:8080/webtools/</a>
-for the Web Tools. 
+for the Web Tools.
 For secured areas of the site, the default admin
 account information is in an XML data loader file. The default is 'admin' for
 the username, and 'ofbiz' for the password. Be patient when you hit each page
@@ -262,16 +262,16 @@ going to a JSP, which is listed below in the Running section.</p>
 <hr>
 <h3><a name="DeployOptions">Alternative Deployment Options</a></h3>
 <hr>
-<p>Future releases of The Open For Business Project will support alternative deployment 
-options, for use with application servers other then Jetty/JOTM. 
-The <i>webapp</i> directory in each module is a fully self sufficient web application. 
-Each of these may be packaged into a WAR file and deployed normally. Please 
-keep in mind the OFBiz required libraries must be in the global classpath. An 
-alternative method of deploying with Catalina would be not to modify the server.xml 
-file, but instead place the required files in the /lib and /classes directory 
+<p>Future releases of The Open For Business Project will support alternative deployment
+options, for use with application servers other then Jetty/JOTM.
+The <i>webapp</i> directory in each module is a fully self sufficient web application.
+Each of these may be packaged into a WAR file and deployed normally. Please
+keep in mind the OFBiz required libraries must be in the global classpath. An
+alternative method of deploying with Catalina would be not to modify the server.xml
+file, but instead place the required files in the /lib and /classes directory
 as described above and deploy the WAR files in the /webapps directory.</p>
 
-<p>Sample configuration files and start scripts for various app servers are 
+<p>Sample configuration files and start scripts for various app servers are
 available in the setup module of OFBiz (see ofbiz/setup in the distro). Open For
 Business uses a few primary components of J2EE and needs a container for these
 components. The components needed for OFBiz include Servlet 2.3, JSP 1.2, and
@@ -290,7 +290,7 @@ a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
         <td>Default config; freely available; easy to configure/deploy</td>
     </tr>
     <tr>
-        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later (prefer 
+        <td><a href='http://jakarta.apache.org'>Tomcat 4.0 or later (prefer
         4.1.18 or later, much faster, more stable, etc) - Catalina</a></td>
         <td><a href='http://objectweb.org/jotm'>JOTM 1.4 (or most recent)</a></td>
         <td>Default config; freely available; requires copying many files to deploy</td>
@@ -298,7 +298,7 @@ a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
     <tr>
         <td><a href='http://jakarta.apache.org'>Jetty</a></td>
         <td><a href='http://www.jboss.org'>JBoss 2.4.4 or later, or many earlier too</a></td>
-        <td>Freely available; similar to Catalina/JOTM, but can interoperate 
+        <td>Freely available; similar to Catalina/JOTM, but can interoperate
             with other JBoss resources like EJBs, etc</td>
     </tr>
     <tr>
@@ -323,16 +323,16 @@ a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
     <tr>
         <td><a href='http://www.bea.com'>BEA Weblogic 6.1</a></td>
         <td><a href='http://www.bea.com'>BEA Weblogic 6.1</a></td>
-        <td>Weblogic ~$10,000/CPU (used to be, I don't know how much it is now), 
-            OFBiz can interoperate with other Weblogic resources, but is slower 
+        <td>Weblogic ~$10,000/CPU (used to be, I don't know how much it is now),
+            OFBiz can interoperate with other Weblogic resources, but is slower
             than Resin or Orion (this may not be true with the Weblogic 7 series
-            which has been optimized a lot, we plan to do a sample config for 
+            which has been optimized a lot, we plan to do a sample config for
             version 7 sometime, but it should work fine if you'd like to try it doing you own config)</td>
     </tr>
 </table>
 
 <p>Full testing and deployment instructions for WebSphere, iPlanet,
-ServletExec, and others are forthcoming in future releases. If you are interested 
+ServletExec, and others are forthcoming in future releases. If you are interested
 in helping with this please contact one of the project admins.</p>
 
 <p>&nbsp;</p>
