@@ -47,7 +47,7 @@ import org.ofbiz.entity.model.ModelFieldTypeReader;
  * Generic Entity Cursor List Iterator for Handling Cursored DB Results
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.0
  */
 public class EntityListIterator implements ListIterator {
@@ -457,7 +457,7 @@ public class EntityListIterator implements ListIterator {
         try {
             if (!closed) {
                 this.close();
-                Debug.logError("====================================================================\n ERROR: EntityListIterator Not Closed for Entity [" + modelEntity==null?"":modelEntity.getEntityName() + "], caught in Finalize\n ====================================================================\n", module);
+                Debug.logError("\n====================================================================\n EntityListIterator Not Closed for Entity [" + modelEntity==null?"":modelEntity.getEntityName() + "], caught in Finalize\n ====================================================================\n", module);
             }
         } catch (Exception e) {
             Debug.logError(e, "Error closing the SQLProcessor in finalize EntityListIterator", module);
