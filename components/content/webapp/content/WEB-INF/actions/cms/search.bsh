@@ -35,6 +35,7 @@ HtmlFormWrapper listWrapper = new HtmlFormWrapper(formDefFile, listFormName, req
 context.put("listWrapper", listWrapper);
 
         if (UtilValidate.isNotEmpty(queryLine)) {
+          try {
             indexPath = SearchWorker.getIndexPath(null);
             Searcher searcher = new IndexSearcher(indexPath);
             Analyzer analyzer = new StandardAnalyzer();
@@ -66,6 +67,9 @@ context.put("listWrapper", listWrapper);
             }
                  Debug.logInfo("in search, contentList:" + contentList, "");
             listWrapper.putInContext("queryResults", contentList); 
+          } catch(java.io.FileNotFoundException e) {
+            request.setAttribute("errorMsgReq", "No index file exists.");
+          }
 
         } else {
             request.setAttribute("errorMsgReq", "No content ids were specified.");
