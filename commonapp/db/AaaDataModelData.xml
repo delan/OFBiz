@@ -422,9 +422,10 @@
   <ProductPromoActionType description="Gift With Purchase" productPromoActionTypeId="PROMO_GWP"/>
   <ProductPromoActionType description="Free Shipping" productPromoActionTypeId="PROMO_FREE_SHIPPING"/>
   <ProductPromoActionType description="Item Percent Discount" productPromoActionTypeId="PROMO_ITEM_PERCENT"/>
-  <ProductPromoActionType description="Item Amoutn Discount" productPromoActionTypeId="PROMO_ITEM_AMOUNT"/>
+  <ProductPromoActionType description="Item Amount Discount (flat)" productPromoActionTypeId="PROMO_ITEM_AMOUNT"/>
+  <ProductPromoActionType description="Item Amount Discount (per quantity)" productPromoActionTypeId="PROMO_ITEM_AMNTPQ"/>
   <ProductPromoActionType description="Order Percent Discount" productPromoActionTypeId="PROMO_ORDER_PERCENT"/>
-  <ProductPromoActionType description="Order Amount Discount" productPromoActionTypeId="PROMO_ORDER_AMOUNT"/>
+  <ProductPromoActionType description="Order Amount Discount (flat)" productPromoActionTypeId="PROMO_ORDER_AMOUNT"/>
   
   <ProductType description="Service" hasTable="N" parentTypeId="" productTypeId="SERVICE"/>
   <ProductType description="Good" hasTable="N" parentTypeId="" productTypeId="GOOD"/>
