@@ -59,7 +59,7 @@ public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteD
         return dispatcher.runSync(serviceName, context);
     }
 
-    public Map runSync(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException {
+    public Map runSync(String serviceName, Map context, int transactionTimeout, boolean requireNewTransaction) throws GenericServiceException, RemoteException {
         this.checkExportFlag(serviceName);
         return dispatcher.runSync(serviceName, context, transactionTimeout, requireNewTransaction);
     }
