@@ -170,8 +170,9 @@ public class OrderServices {
         // create the order object
         String orderId = delegator.getNextSeqId("OrderHeader").toString();
         String billingAccountId = (String) context.get("billingAccountId");
+        String orderTypeId = (String) context.get("orderTypeId");
         GenericValue order = delegator.makeValue("OrderHeader",
-                UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER",
+                UtilMisc.toMap("orderId", orderId, "orderTypeId", orderTypeId,
                     "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
                     "statusId", "ORDER_ORDERED", "billingAccountId", billingAccountId));
 

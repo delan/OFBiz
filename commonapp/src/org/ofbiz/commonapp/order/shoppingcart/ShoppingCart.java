@@ -60,7 +60,7 @@ public class ShoppingCart implements java.io.Serializable {
     private Map paymentMethodAmounts = new HashMap();
     private List paymentMethodTypeIds = new LinkedList();   
     private Map paymentMethodTypeAmounts = new HashMap();
-    private String orderType = null;
+    private String orderType = "SALES_ORDER"; // default orderType
     private String poNumber = null;
     private String orderId = null;
     private String firstAttemptOrderId = null;
@@ -1090,6 +1090,7 @@ public class ShoppingCart implements java.io.Serializable {
     public Map makeCartMap(LocalDispatcher dispatcher, boolean explodeItems) {
         Map result = new HashMap();
 
+        result.put("orderTypeId", this.getOrderType());
         result.put("orderItems", this.makeOrderItems(explodeItems, dispatcher));
         result.put("orderAdjustments", this.makeAllAdjustments());
         result.put("orderItemPriceInfos", this.makeAllOrderItemPriceInfos());

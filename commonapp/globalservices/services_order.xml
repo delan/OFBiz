@@ -40,6 +40,7 @@
         <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="distributorId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItems" type="java.util.List" mode="IN"/>
         <attribute name="orderAdjustments" type="java.util.List" mode="IN"/>
         <attribute name="billingAccountId" type="String" mode="IN"/>
