@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE ofbiz-component PUBLIC "-//OFBiz//DTD Component Config//EN" "http://www.ofbiz.org/dtds/ofbiz-component.dtd">
-
 <!--
  *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -21,10 +19,12 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component-example.xml,v 1.5 2004/07/31 00:24:02 ajzeneski Exp $
+ *  $Id$
 -->
 
-<ofbiz-component name="example">
+<ofbiz-component name="example"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/ofbiz-component.xsd">
     <!-- define resource loaders; most common is to use the component resource loader -->
     <resource-loader name="main" type="component"/>
     
