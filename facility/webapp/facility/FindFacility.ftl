@@ -1,4 +1,4 @@
-<%--
+<#--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -22,25 +22,13 @@
  *@author     David E. Jones
  *@created    May 10, 2002
  *@version    1.0
---%>
+-->
 
-<%@ page import="java.util.*, java.io.*" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
-
-<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
-
-<%if (security.hasEntityPermission("FACILITY", "_VIEW", session)) {%>
-<%
-    //facilities
-    Collection facilities = delegator.findAll("Facility");
-    if (facilities != null) pageContext.setAttribute("facilities", facilities);
-%>
+<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
 <div class="head1">Facilities List</div>
 
-<div><a href='<ofbiz:url>/EditFacility</ofbiz:url>' class="buttontext">[Create New Facility]</a></div>
+<div><a href='<@ofbizUrl>/EditFacility</@ofbizUrl>' class="buttontext">[Create New Facility]</a></div>
 <br>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
@@ -50,23 +38,23 @@
     <td><div class="tabletext"><b>Description</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
-<ofbiz:iterator name="facility" property="facilities">
-  <%GenericValue facilityType = facility.getRelatedOne("FacilityType");%>
-  <%if (facilityType != null) pageContext.setAttribute("facilityType", facilityType);%>
+<#list facilities as facility>
+  <#assign facilityType = facility.getRelatedOne("FacilityType")?if_exists>
   <tr valign="middle">
-    <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditFacility?facilityId=<ofbiz:inputvalue entityAttr="facility" field="facilityId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="facility" field="facilityName"/> [<ofbiz:inputvalue entityAttr="facility" field="facilityId"/>]</a></div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facilityType" field="description"/></div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facility" field="squareFootage"/></div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facility" field="description"/></div></td>
+    <td><div class='tabletext'>&nbsp;<a href='<@ofbizUrl>/EditFacility?facilityId=${facility.facilityId?if_exists}</@ofbizUrl>' class="buttontext">${facility.facilityName?if_exists} [${facility.facilityId?if_exists}]</a></div></td>
+    <td><div class='tabletext'>&nbsp;${facilityType.description?if_exists}</div></td>
+    <td><div class='tabletext'>&nbsp;${facility.squareFootage?if_exists}</div></td>
+    <td><div class='tabletext'>&nbsp;${facility.description?if_exists}</div></td>
     <td>
-      <a href='<ofbiz:url>/EditFacility?facilityId=<ofbiz:inputvalue entityAttr="facility" field="facilityId"/></ofbiz:url>' class="buttontext">
+      <a href='<@ofbizUrl>/EditFacility?facilityId=${facility.facilityId?if_exists}</@ofbizUrl>' class="buttontext">
       [Edit]</a>
     </td>
   </tr>
-</ofbiz:iterator>
+</#list>
 </table>
 <br>
 
-<%}else{%>
+<#else>
   <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
-<%}%>
+</#if>
+

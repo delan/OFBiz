@@ -34,23 +34,11 @@
     </define>
 
     <!-- ====== Start View Specific Regions ====== -->
-    <define id='main' region='MAIN_REGION'>
-        <put section='title'>Main Page</put>
-        <put section='content' content='/facility/FindFacility.jsp'/>
-    </define>
     <define id='login' region='MAIN_REGION'>
         <put section='title'>Login Page</put>
         <put section='content' content='/login.jsp'/>
     </define>
     
-    <define id='FindFacility' region='MAIN_REGION'>
-        <put section='title'>Find Facility</put>
-        <put section='content' content='/facility/FindFacility.jsp'/>
-    </define>
-    <define id='EditFacility' region='MAIN_REGION'>
-        <put section='title'>Edit Facility</put>
-        <put section='content' content='/facility/EditFacility.jsp'/>
-    </define>
     <define id='EditFacilityInventoryItems' region='MAIN_REGION'>
         <put section='title'>Edit Facility InventoryItems</put>
         <put section='content' content='/facility/EditFacilityInventoryItems.jsp'/>
@@ -70,10 +58,6 @@
         <put section='content' content='/facility/FindFacilityTransfers.jsp'/>
     </define>    
     
-    <define id='FindFacilityGroup' region='MAIN_REGION'>
-        <put section='title'>Edit Facility Group</put>
-        <put section='content' content='/group/FindFacilityGroup.jsp'/>
-    </define>
     <define id='EditFacilityGroup' region='MAIN_REGION'>
         <put section='title'>Edit Facility Group</put>
         <put section='content' content='/group/EditFacilityGroup.jsp'/>
