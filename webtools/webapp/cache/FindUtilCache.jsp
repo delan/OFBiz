@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: UtilCache Maintenance Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 28 2001
  *@version    1.0
- */
-%> 
+--%> 
 
 <%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
@@ -54,6 +50,7 @@
     <TD>missCount</TD>
     <TD>maxSize</TD>
     <TD>expireTime</TD>
+    <TD>useSoftRef?</TD>
     <TD colspan="3">Administration</TD>
   </TR>
 
@@ -71,6 +68,7 @@
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getMissCount())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getMaxSize())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%></TD>
+        <TD><%=Boolean.toString(utilCache.getUseSoftReference())%></TD>
         <TD align=center valign=middle>
           <a href='<ofbiz:url>/FindUtilCacheElements?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Elements</a>
         </TD>

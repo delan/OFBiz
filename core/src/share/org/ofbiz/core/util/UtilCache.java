@@ -68,14 +68,19 @@ public class UtilCache {
      * If set to 0, elements will never expire.
      */
     protected long expireTime = 0;
+    
+    /** Specifies whether or not to use soft references for this cache, defaults to false */
+    protected boolean useSoftReference = false;
 
-    /** Constructor which specifies the cacheName as well as the maxSize and expireTime.
-     * The passed maxSize and expireTime will be overridden by values from cache.properties if found.
+    /** Constructor which specifies the cacheName as well as the maxSize, expireTime and useSoftReference.
+     * The passed maxSize, expireTime and useSoftReference will be overridden by values from cache.properties if found.
      * @param maxSize The maxSize member is set to this value
      * @param expireTime The expireTime member is set to this value
      * @param cacheName The name of the cache.
+     * @param useSoftReference Specifies whether or not to use soft references for this cache.
      */
-    public UtilCache(String cacheName, long maxSize, long expireTime) {
+    public UtilCache(String cacheName, long maxSize, long expireTime, boolean useSoftReference) {
+        this.useSoftReference = useSoftReference;
         this.maxSize = maxSize;
         this.expireTime = expireTime;
         setPropertiesParams(cacheName);
@@ -83,15 +88,27 @@ public class UtilCache {
         name = cacheName + this.getNextDefaultIndex(cacheName);
         utilCacheTable.put(name, this);
     }
+    
+    /** Constructor which specifies the cacheName as well as the maxSize and expireTime.
+     * The passed maxSize and expireTime will be overridden by values from cache.properties if found.
+     * @param maxSize The maxSize member is set to this value
+     * @param expireTime The expireTime member is set to this value
+     * @param cacheName The name of the cache.
+     */
+    public UtilCache(String cacheName, long maxSize, long expireTime) {
+        this(cacheName, maxSize, expireTime, false);
+    }
 
     /** Constructor which specifies the maxSize and expireTime.
      * @param maxSize The maxSize member is set to this value
      * @param expireTime The expireTime member is set to this value
      */
     public UtilCache(long maxSize, long expireTime) {
+        this.useSoftReference = false;
         this.maxSize = maxSize;
         this.expireTime = expireTime;
-        name = "specified" + this.getNextDefaultIndex("specified");
+        String name = "specified" + this.getNextDefaultIndex("specified");
+        setPropertiesParams(name);
         utilCacheTable.put(name, this);
     }
 
@@ -129,22 +146,30 @@ public class UtilCache {
     protected void setPropertiesParams(String cacheName) {
         ResourceBundle res = ResourceBundle.getBundle("cache");
         if (res != null) {
-            String value = null;
-            Long longValue = null;
             try {
-                value = res.getString(cacheName + ".maxSize");
-                longValue = new Long(value);
+                String value = res.getString(cacheName + ".maxSize");
+                Long longValue = new Long(value);
+                if (longValue != null) {
+                    maxSize = longValue.longValue();
+                }
             } catch (Exception e) {
             }
-            if (longValue != null)
-                maxSize = longValue.longValue();
             try {
-                value = res.getString(cacheName + ".expireTime");
-                longValue = new Long(value);
+                String value = res.getString(cacheName + ".expireTime");
+                Long longValue = new Long(value);
+                if (longValue != null) {
+                    expireTime = longValue.longValue();
+                }
             } catch (Exception e) {
             }
-            if (longValue != null)
-                expireTime = longValue.longValue();
+            
+            try {
+                String value = res.getString(cacheName + ".useSoftReference");
+                if (value != null) {
+                    useSoftReference = "true".equals(value);
+                }
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -168,9 +193,9 @@ public class UtilCache {
 
         
         if (expireTime > 0) {
-            cacheLineTable.put(key, new UtilCache.CacheLine(value, System.currentTimeMillis()));
+            cacheLineTable.put(key, new UtilCache.CacheLine(value, useSoftReference, System.currentTimeMillis()));
         } else {
-            cacheLineTable.put(key, new UtilCache.CacheLine(value));
+            cacheLineTable.put(key, new UtilCache.CacheLine(value, useSoftReference));
         }
         if (maxSize > 0 && cacheLineTable.size() > maxSize) {
             Object lastKey = keyLRUList.getLast();
@@ -326,6 +351,23 @@ public class UtilCache {
         return expireTime;
     }
 
+    /** Set whether or not the cache lines should use a soft reference to the data */
+    public void setUseSoftReference(boolean useSoftReference) {
+        if (this.useSoftReference != useSoftReference) {
+            this.useSoftReference = useSoftReference;
+            Iterator values = cacheLineTable.values().iterator();
+            while (values.hasNext()) {
+                UtilCache.CacheLine line = (UtilCache.CacheLine) values.next();
+                line.setUseSoftReference(useSoftReference);
+            }
+        }
+    }
+    
+    /** Return whether or not the cache lines should use a soft reference to the data */
+    public boolean getUseSoftReference() {
+        return this.useSoftReference;
+    }
+    
     /** Returns the number of elements currently in the cache
      * @return The number of elements currently in the cache
      */
@@ -491,6 +533,7 @@ public class UtilCache {
             return "error";
         String maxSizeStr = request.getParameter("UTIL_CACHE_MAX_SIZE");
         String expireTimeStr = request.getParameter("UTIL_CACHE_EXPIRE_TIME");
+        String useSoftReferenceStr = request.getParameter("UTIL_CACHE_USE_SOFT_REFERENCE");
 
         Long maxSize = null, expireTime = null;
         try {
@@ -501,33 +544,59 @@ public class UtilCache {
             expireTime = Long.valueOf(expireTimeStr);
         } catch (Exception e) {
         }
-
+        
         UtilCache utilCache = (UtilCache) utilCacheTable.get(name);
         if (utilCache != null) {
             if (maxSize != null)
                 utilCache.setMaxSize(maxSize.longValue());
             if (expireTime != null)
                 utilCache.setExpireTime(expireTime.longValue());
+            if (useSoftReferenceStr != null) {
+                utilCache.setUseSoftReference("true".equals(useSoftReferenceStr));
+            }
         }
         return "success";
     }
     
     public static class CacheLine {
-        public java.lang.ref.SoftReference valueSoftRef = null;
+        public Object valueRef = null;
         public long loadTime = 0;
+        public boolean useSoftReference = false;
         
-        public CacheLine(Object value) {
-            this.valueSoftRef = new java.lang.ref.SoftReference(value);
+        public CacheLine(Object value, boolean useSoftReference) {
+            if (useSoftReference) {
+                this.valueRef = new java.lang.ref.SoftReference(value);
+            } else {
+                this.valueRef = value;
+            }
+            this.useSoftReference = useSoftReference;
         }
         
-        public CacheLine(Object value, long loadTime) {
-            this.valueSoftRef = new java.lang.ref.SoftReference(value);
+        public CacheLine(Object value, boolean useSoftReference, long loadTime) {
+            this(value, useSoftReference);
             this.loadTime = loadTime;
         }
         
         public Object getValue() {
-            if (valueSoftRef == null) return null;
-            return valueSoftRef.get();
+            if (valueRef == null) return null;
+            if (useSoftReference) {
+                return ((java.lang.ref.SoftReference) valueRef).get();
+            } else {
+                return valueRef;
+            }
+        }
+        
+        public void setUseSoftReference(boolean useSoftReference) {
+            if (this.useSoftReference != useSoftReference) {
+                synchronized (this) {
+                    this.useSoftReference = useSoftReference;
+                    if (useSoftReference) {
+                        this.valueRef = new java.lang.ref.SoftReference(this.valueRef);
+                    } else {
+                        this.valueRef = ((java.lang.ref.SoftReference) this.valueRef).get();
+                    }
+                }
+            }
         }
     }
 }

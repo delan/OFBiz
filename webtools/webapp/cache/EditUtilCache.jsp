@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: UtilCache Maintenance Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 28 2001
  *@version    1.0
- */
-%> 
+--%> 
 
 <%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
@@ -85,6 +81,11 @@
         (<%=hrs+":"+mins+":"+secs%>)
       </TD>
       <TD><input type="text" size="15" maxlength="15" name="UTIL_CACHE_EXPIRE_TIME" value="<%=utilCache.getExpireTime()%>"></TD>
+    </TR>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <TD>useSoftReference?</TD>
+      <TD><%=Boolean.toString(utilCache.getUseSoftReference())%></TD>
+      <TD><input type="text" size="6" maxlength="5" name="UTIL_CACHE_USE_SOFT_REFERENCE" value="<%=Boolean.toString(utilCache.getUseSoftReference())%>"></TD>
     </TR>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
       <TD colspan="3"><INPUT type="submit" value="Update"></TD>
