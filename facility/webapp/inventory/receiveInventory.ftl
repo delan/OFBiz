@@ -50,43 +50,19 @@
 </script>
 
 <div>&nbsp;</div>
-<#if !product?has_content && !purchaseOrder?has_content>
-    <form name="receiveform" method="post" action="<@ofbizUrl>/ReceiveInventory</@ofbizUrl>" style='margin: 0;'>
-    <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">
-	<table border='0' cellpadding='2' cellspacing='0'>
-      <tr>        
-        <td width="25%" align='right'><div class="tabletext">Purchase Order Number</div></td>
-        <td>&nbsp;</td>
-        <td width="25%">
-          <input type="text" class="inputBox" name="purchaseOrderId" size="20" maxlength="20">          
-        </td> 
-        <td><div class='tabletext'>&nbsp;(Leave empty for single product receiving)</div></td>
-      </tr>
-      <tr>        
-        <td width="25%" align='right'><div class="tabletext">Product ID</div></td>
-        <td>&nbsp;</td>
-        <td width="25%">
-          <input type="text" class="inputBox" name="productId" size="20" maxlength="20">         
-        </td>       
-        <td><div class='tabletext'>&nbsp;(Leave empty for entire PO receiving)</div></td>        
-      </tr>      
-      <tr>
-        <td colspan="2">&nbsp;</td>
-        <td colspan="2">
-          <a href="javascript:document.receiveform.submit();" class="buttontext">Receive Product(s)</a>
-        </td>
-      </tr>        
-    </table>
-    </form>
-<#else>
-	<form method="post" action="<@ofbizUrl>/receiveInventoryProduct</@ofbizUrl>" name='receiveform' style='margin: 0;'>
+<#if requestParameters.initialSelected?exists && product?has_content>
+  <form method="post" action="<@ofbizUrl>/receiveInventoryProduct</@ofbizUrl>" name='receiveform' style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
-      <input type="hidden" name="productId" value="${requestParameters.productId?if_exists}">
-      <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">
-      <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId?if_exists}">
+      <#-- general request fields -->
+      <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">   
+      <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId?if_exists}">   
+      <#-- special service fields -->
+      <input type="hidden" name="productId|0" value="${requestParameters.productId?if_exists}">
+      <input type="hidden" name="facilityId|0" value="${requestParameters.facilityId?if_exists}">      
+      <input type="hidden" name="_rowCount" value="1">
       <#if purchaseOrder?has_content>
-      <input type="hidden" name="orderId" value="${purchaseOrder.orderId}">
-      <input type="hidden" name="orderItemSeqId" value="${firstOrderItem.orderItemSeqId}">
+      <input type="hidden" name="orderId|0" value="${purchaseOrder.orderId}">
+      <input type="hidden" name="orderItemSeqId|0" value="${firstOrderItem.orderItemSeqId}">
       <tr>
         <td width='14%'>&nbsp;</td>
         <td width='6%' align='right' nowrap><div class="tabletext">Purchase Order</div></td>
@@ -130,7 +106,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Item Description</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='itemDescription' size='30' maxlength='60' class="inputBox">
+          <input type='text' name='itemDescription|0' size='30' maxlength='60' class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -138,7 +114,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Inventory Item <br>(optional will create new if empty)</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='inventoryItemId' size='20' maxlength='20' class="inputBox">
+          <input type='text' name='inventoryItemId|0' size='20' maxlength='20' class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -146,7 +122,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Inventory Item Type</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <select name="inventoryItemTypeId" size=1 class="selectBox">  
+          <select name="inventoryItemTypeId|0" size=1 class="selectBox">  
             <#list inventoryItemTypes as nextInventoryItemType>                      
               <option value='${nextInventoryItemType.inventoryItemTypeId}'>${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
             </#list>
@@ -161,7 +137,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Date Received</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='datetimeReceived' size='24' value="${Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()}" class="inputBox">
+          <input type='text' name='datetimeReceived|0' size='24' value="${Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()}" class="inputBox">
           <!--<a href='#' onclick='setNow("datetimeReceived")' class='buttontext'>[Now]</a>-->
         </td>                
       </tr>	
@@ -170,7 +146,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Facility Location</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='locationSeqId' size='20' maxlength="20" class="inputBox">
+          <input type='text' name='locationSeqId|0' size='20' maxlength="20" class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -178,7 +154,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Rejected Reason</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <select name="rejectionId" size='1' class='selectBox'>   
+          <select name="rejectionId|0" size='1' class='selectBox'>   
             <option></option>    
             <#list rejectReasons as nextRejection>                 
               <option value='${nextRejection.rejectionId}'>${nextRejection.description?default(nextRejection.rejectionId)}</option>
@@ -191,7 +167,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Quantity Rejected</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='quantityRejected' size='5' value='0' class="inputBox">
+          <input type='text' name='quantityRejected|0' size='5' value='0' class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -199,7 +175,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Quantity Accepted</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='quantityAccepted' size='5' value='${defaultQuantity?default(1)?string.number}' class="inputBox">
+          <input type='text' name='quantityAccepted|0' size='5' value='${defaultQuantity?default(1)?string.number}' class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -210,7 +186,44 @@
     <script language='JavaScript'>
       document.receiveform.quantityAccepted.focus();
     </script>
-    </form>
+  </form>
+<#elseif requestParameters.initialSelected?exists && purchaseOrder?has_content>
+  <form method="post" action="<@ofbizUrl>/receiveInventoryProduct</@ofbizUrl>" name='receiveform' style='margin: 0;'>
+    <table border='0' cellpadding='2' cellspacing='0'>
+      <tr>
+        <td><div class="tabletext">Not implemented yet.</div></td>
+      </tr>
+    </table>
+  </form>
+<#else>
+  <form name="receiveform" method="post" action="<@ofbizUrl>/ReceiveInventory</@ofbizUrl>" style='margin: 0;'>
+    <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">
+    <input type="hidden" name="initialSelected" value="Y">
+	<table border='0' cellpadding='2' cellspacing='0'>
+      <tr>        
+        <td width="25%" align='right'><div class="tabletext">Purchase Order Number</div></td>
+        <td>&nbsp;</td>
+        <td width="25%">
+          <input type="text" class="inputBox" name="purchaseOrderId" size="20" maxlength="20" value="${requestParameters.purchaseOrderId?if_exists}">          
+        </td> 
+        <td><div class='tabletext'>&nbsp;(Leave empty for single product receiving)</div></td>
+      </tr>
+      <tr>        
+        <td width="25%" align='right'><div class="tabletext">Product ID</div></td>
+        <td>&nbsp;</td>
+        <td width="25%">
+          <input type="text" class="inputBox" name="productId" size="20" maxlength="20" value="${requestParameters.productId?if_exists}">         
+        </td>       
+        <td><div class='tabletext'>&nbsp;(Leave empty for entire PO receiving)</div></td>        
+      </tr>      
+      <tr>
+        <td colspan="2">&nbsp;</td>
+        <td colspan="2">
+          <a href="javascript:document.receiveform.submit();" class="buttontext">Receive Product(s)</a>
+        </td>
+      </tr>        
+    </table>
+  </form>
 </#if>
 
 <br>
