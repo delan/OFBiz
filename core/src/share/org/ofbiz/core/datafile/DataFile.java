@@ -49,6 +49,7 @@ public class DataFile {
    */  
   public static DataFile readFile(URL fileUrl, URL definitionUrl, String dataFileName) throws DataFileException {
     ModelDataFileReader reader = ModelDataFileReader.getModelDataFileReader(definitionUrl);
+    if(reader == null) throw new IllegalArgumentException("Could not load definition file located at \"" + definitionUrl + "\"");
     ModelDataFile modelDataFile = reader.getModelDataFile(dataFileName);
     if(modelDataFile == null) throw new IllegalArgumentException("Could not find file definition for data file named \"" + dataFileName + "\"");
     DataFile dataFile = new DataFile(modelDataFile);
@@ -266,6 +267,11 @@ public class DataFile {
       if((isFixedRecord || isFixedLength) && modelDataFile.recordLength > 0 && lineBuf.length() != modelDataFile.recordLength)
         throw new DataFileException("Got record length " + lineBuf.length() + " but expected record length is " + modelDataFile.recordLength + " for record \"" + modelRecord.name + "\" data line is: \"" + lineBuf + "\"");
       
+      //for convenience, insert the type-code in where it is looked for, if exists
+      if(modelRecord.tcPosition > 0 && modelRecord.typeCode.length() > 0) {
+        lineBuf.replace(modelRecord.tcPosition, modelRecord.tcPosition + modelRecord.tcLength, modelRecord.typeCode);
+      }
+      
       if(isFixedLength || isDelimited) lineBuf.append('\n');
       try { outStream.write(lineBuf.toString().getBytes()); }
       catch(IOException e) { throw new DataFileException("Could not write to stream;", e); }
@@ -276,7 +282,7 @@ public class DataFile {
     }
   }
   
-  /**
+  /** Searches through the record models to find one with a matching type-code, if no type-code exists that model will always be used if it gets to it
    * @param line
    * @param lineNum
    * @param modelDataFile
@@ -288,9 +294,15 @@ public class DataFile {
     ModelRecord modelRecord = null;
     for(int i=0; i<modelDataFile.records.size(); i++) {
       ModelRecord curModelRecord = (ModelRecord)modelDataFile.records.get(i);
+      if(curModelRecord.typeCode.length() == 0 || curModelRecord.tcPosition < 0) {
+        modelRecord = curModelRecord;
+        break;
+      }
+      
       String typeCode = line.substring(curModelRecord.tcPosition, curModelRecord.tcPosition + curModelRecord.tcLength);
       if(typeCode != null && typeCode.equals(curModelRecord.typeCode)) {
         modelRecord = curModelRecord;
+        break;
       }
     }
     if(modelRecord == null) throw new DataFileException("Could not find record definition for line " + lineNum + "; first bytes: " + line.substring(0, (line.length()>5)?5:line.length()));

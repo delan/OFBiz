@@ -60,6 +60,10 @@ public class ModelDataFileReader {
         }
       }
     }
+    if(reader != null && (reader.modelDataFiles == null || reader.modelDataFiles.size() == 0)) {
+      readers.remove(readerURL);
+      return null;
+    }
     Debug.logInfo("[ModelDataFileReader.getModelDataFileReader] : returning reader.");
     return reader;
   }
