@@ -1,5 +1,5 @@
 /*
- * $Id: ByConditionFinder.java,v 1.1 2004/07/10 13:54:12 jonesde Exp $
+ * $Id: ByConditionFinder.java,v 1.2 2004/07/10 14:25:58 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -28,11 +28,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.condition.EntityComparisonOperator;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
@@ -46,7 +48,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class ByConditionFinder {
@@ -277,11 +279,38 @@ public class ByConditionFinder {
         FlexibleStringExpander sizeExdr;
         
         public LimitRange(Element limitRangeElement) {
-            // TODO: implement this
+            this.startExdr = new FlexibleStringExpander(limitRangeElement.getAttribute("start"));
+            this.sizeExdr = new FlexibleStringExpander(limitRangeElement.getAttribute("size"));
         }
         
         public void handleOutput(EntityListIterator eli, Map context, FlexibleMapAccessor listAcsr) {
-            // TODO: implement this
+            String startStr = this.startExdr.expandString(context);
+            String sizeStr = this.sizeExdr.expandString(context);
+            
+            int start = 0;
+            int size = 0;
+            try {
+                start = Integer.parseInt(startStr);
+            } catch (NumberFormatException e) {
+                String errMsg = "The limit-range start number \"" + startStr + "\" was not valid: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+            try {
+                size = Integer.parseInt(sizeStr);
+            } catch (NumberFormatException e) {
+                String errMsg = "The limit-range size number \"" + sizeStr + "\" was not valid: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+            
+            try {
+                listAcsr.put(context, eli.getPartialList(start, size));
+            } catch (GenericEntityException e) {
+                String errMsg = "Error getting partial list in limit-range with start=" + start + " and size=" + size + ": " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
         }
     }
     public static class LimitView implements OutputHandler {
@@ -289,20 +318,47 @@ public class ByConditionFinder {
         FlexibleStringExpander viewSizeExdr;
         
         public LimitView(Element limitViewElement) {
-            // TODO: implement this
+            this.viewIndexExdr = new FlexibleStringExpander(limitViewElement.getAttribute("view-index"));
+            this.viewSizeExdr = new FlexibleStringExpander(limitViewElement.getAttribute("view-size"));
         }
         
         public void handleOutput(EntityListIterator eli, Map context, FlexibleMapAccessor listAcsr) {
-            // TODO: implement this
+            String viewIndexStr = this.viewIndexExdr.expandString(context);
+            String viewSizeStr = this.viewSizeExdr.expandString(context);
+            
+            int index = 0;
+            int size = 0;
+            try {
+                index = Integer.parseInt(viewIndexStr);
+            } catch (NumberFormatException e) {
+                String errMsg = "The limit-view view-index number \"" + viewIndexStr + "\" was not valid: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+            try {
+                size = Integer.parseInt(viewSizeStr);
+            } catch (NumberFormatException e) {
+                String errMsg = "The limit-view view-size number \"" + viewSizeStr + "\" was not valid: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+            
+            try {
+                listAcsr.put(context, eli.getPartialList(index * size, size));
+            } catch (GenericEntityException e) {
+                String errMsg = "Error getting partial list in limit-view with index=" + index + " and size=" + size + ": " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
         }
     }
     public static class UseIterator implements OutputHandler {
         public UseIterator(Element useIteratorElement) {
-            // TODO: implement this
+            // no parameters, nothing to do
         }
         
         public void handleOutput(EntityListIterator eli, Map context, FlexibleMapAccessor listAcsr) {
-            // TODO: implement this
+            listAcsr.put(context, eli);
         }
     }
 }
