@@ -51,6 +51,8 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -198,7 +200,7 @@ public class ContentManagementServices {
         GenericValue dataResource = delegator.makeValue("DataResource", null);
         dataResource.setPKFields(context);
         dataResource.setNonPKFields(context);
-        dataResource.setAllFields(context, false, "dr", new Boolean(false));
+        dataResource.setAllFields(context, false, "dr", null);
         context.putAll(dataResource);
         String dataResourceId = (String)dataResource.get("dataResourceId");
         String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId");
@@ -253,6 +255,9 @@ public class ContentManagementServices {
                     } else if (dataResourceTypeId.indexOf("_FILE") >=0) {
                         dataResource = (GenericValue)thisResult.get("dataResource");
                         context.put("dataResource", dataResource);
+                        ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
+                        if (byteWrapper != null) 
+                            context.put("binData", byteWrapper);
                         thisResult = DataServices.createFileMethod(dctx, context);
                     } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
                         ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
@@ -271,8 +276,17 @@ public class ContentManagementServices {
                         }
                     }
                 } else {
-                    Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
+                    Map newDrContext = new HashMap();
+                    newDrContext.putAll(dataResource);
+                    newDrContext.put("userLogin", userLogin);
+                    Map thisResult = dispatcher.runSync("updateDataResource", newDrContext);
+                    String errMsg = ServiceUtil.getErrorMessage(thisResult);
+        			if (UtilValidate.isNotEmpty(errMsg)) {
+            			return ServiceUtil.returnError(errMsg);
+        			}
+                    //Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
                     if (Debug.infoOn()) Debug.logInfo("in persist... thisResult.permissionStatus(0):" + thisResult.get("permissionStatus"), null);
+                        //thisResult = DataServices.updateElectronicTextMethod(dctx, context);
                     if (dataResourceTypeId.indexOf("_FILE_BIN") >=0) {
                         dataResource = (GenericValue)thisResult.get("dataResource");
                         context.put("dataResource", dataResource);
@@ -299,14 +313,22 @@ public class ContentManagementServices {
                         thisResult = DataServices.updateImageMethod(dctx, context);
                     } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
-                        thisResult = DataServices.updateElectronicTextMethod(dctx, context);
+                        Map newContext = new HashMap();
+                        newContext.put("dataResourceId", dataResourceId);
+                        newContext.put("textData", textData);
+                        newContext.put("userLogin", userLogin);
+                        thisResult = dispatcher.runSync("updateElectronicText", newContext);
                     }
+                    errMsg = ServiceUtil.getErrorMessage(thisResult);
+        			if (UtilValidate.isNotEmpty(errMsg)) {
+            			return ServiceUtil.returnError(errMsg);
+        			}
                 }
+
                 result.put("dataResourceId", dataResourceId);
                 context.put("dataResourceId", dataResourceId);
                 context.put("drDataResourceId", dataResourceId);
         }
-
         // Do update and create permission checks on Content if warranted.
 
         context.put("skipPermissionCheck", null);  // Force check here
@@ -413,6 +435,10 @@ public class ContentManagementServices {
             result.put("contentId", thisResult.get("contentIdFrom"));
             result.put("contentAssocTypeId", thisResult.get("contentAssocTypeId"));
             result.put("fromDate", thisResult.get("fromDate"));
+            
+            result.put("caContentIdTo", thisResult.get("contentIdTo"));
+            result.put("caContentAssocTypeId", thisResult.get("contentAssocTypeId"));
+            result.put("caFromDate", thisResult.get("fromDate"));
        }
        context.remove("skipPermissionCheck");
        context.put("contentId", origContentId);

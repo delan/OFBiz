@@ -101,7 +101,8 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
             String currentNodeTrailPiped = null;
             List currentNodeTrail = node.getModelTree().getCurrentNodeTrail();
     
-            if (targetContentId == null || !targetContentId.equals(contentId)) {
+            int openDepth = node.getModelTree().getOpenDepth();
+            if ((depth > openDepth) && (targetContentId == null || !targetContentId.equals(contentId))) {
                 context.put("processChildren", new Boolean(false));
                 //expandCollapseLink.setText("&nbsp;+&nbsp;");
                 currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
