@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
  */
 
@@ -31,6 +31,7 @@ import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
+import org.ofbiz.content.webapp.control.*;
 
 userLogin = session.getAttribute("userLogin");
 if (userLogin != null) request.setAttribute("userLogin", userLogin);
@@ -59,25 +60,12 @@ request.setAttribute("availableLocales",availableLocales);
 
 locale = UtilHttp.getLocale(request);
 request.setAttribute("locale",locale);
-uiLabelMap = UtilProperties.getResourceBundleMap("ProductUiLabels", locale);
-request.setAttribute("uiLabelMap", uiLabelMap);
 
-layoutSettings = new HashMap();
-request.setAttribute("layoutSettings", layoutSettings);
+request.setAttribute("checkLoginUrl", LoginWorker.makeLoginUrl(request, "checkLogin"));
 
-layoutSettings.put("companyName", uiLabelMap.get("CatalogCompanyName"));
-layoutSettings.put("companySubtitle", uiLabelMap.get("ProductCompanySubtitle"));
-
-layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
-layoutSettings.put("headerMiddleBackgroundUrl", null);
-layoutSettings.put("headerRightBackgroundUrl", null);
-
-request.setAttribute("checkLoginUrl", CommonWorkers.makeLoginUrl(request, "checkLogin"));
-
-externalLoginKey = LoginEvents.getExternalLoginKey(request);
+externalLoginKey = LoginWorker.getExternalLoginKey(request);
 externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
 request.setAttribute("externalKeyParam", externalKeyParam);
-request.setAttribute("activeApp", "catalogmgr");
 
 eventMessageList = new LinkedList();
 errorMessageList = new LinkedList();
@@ -103,3 +91,18 @@ if (request.getAttribute("_ERROR_MESSAGE_LIST_") != null) {
 }
 request.setAttribute("eventMessageList", eventMessageList);
 request.setAttribute("errorMessageList", errorMessageList);
+
+
+// unique per webapp
+uiLabelMap = UtilProperties.getResourceBundleMap("ProductUiLabels", locale);
+request.setAttribute("uiLabelMap", uiLabelMap);
+
+layoutSettings = new HashMap();
+request.setAttribute("layoutSettings", layoutSettings);
+layoutSettings.put("companyName", uiLabelMap.get("CatalogCompanyName"));
+layoutSettings.put("companySubtitle", uiLabelMap.get("ProductCompanySubtitle"));
+layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
+layoutSettings.put("headerMiddleBackgroundUrl", null);
+layoutSettings.put("headerRightBackgroundUrl", null);
+
+request.setAttribute("activeApp", "catalogmgr");

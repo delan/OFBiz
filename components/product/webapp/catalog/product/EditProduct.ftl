@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -41,40 +41,8 @@ ${pages.get("/product/ProductTabBar.ftl")}
 
     ${productFormWrapper.renderFormString()}
 
-    <#if productId?exists>
-        <hr class='sepbar'>
-        <div class="head2">${uiLabelMap.ProductDuplicateProduct}</div>
-        <#if product?exists>
-            <form action="<@ofbizUrl>/DuplicateProduct</@ofbizUrl>" method=POST style='margin: 0;'>
-                <INPUT type=hidden name='oldProductId' value='${productId}'>
-                <div>
-                    <SPAN class='tabletext'>${uiLabelMap.ProductDuplicateRemoveSelectedWithNewId}:</SPAN>
-                    <input type="text" class="inputBox" size='20' maxlength='20' name='productId' >&nbsp;<INPUT type=submit class='standardSubmit' value='Go!'>
-                </div>
-                <div class='tabletext'>
-                    <b>${uiLabelMap.CommonDuplicate}:</b>
-                    ${uiLabelMap.ProductPrices}&nbsp;<input type='checkbox' class='checkBox' name='duplicatePrices' value='Y' checked/>
-                    ${uiLabelMap.CommonId}&nbsp;<input type='checkbox' class='checkBox' name='duplicateIDs' value='Y' checked/>
-                    ${uiLabelMap.ProductCategoryMembers}&nbsp;<input type='checkbox' class='checkBox' name='duplicateCategoryMembers' value='Y' checked/>
-                    ${uiLabelMap.ProductAssocs}&nbsp;<input type='checkbox' class='checkBox' name='duplicateAssocs' value='Y' checked/>
-                    ${uiLabelMap.ProductAttributes}&nbsp;<input type='checkbox' class='checkBox' name='duplicateAttributes' value='Y' checked/>
-                    ${uiLabelMap.ProductFeatureAppls}&nbsp;<input type='checkbox' class='checkBox' name='duplicateFeatureAppls' value='Y' checked/>
-                    ${uiLabelMap.ProductInventoryItems}&nbsp;<input type='checkbox' class='checkBox' name='duplicateInventoryItems' value='Y' checked/>
-                </div>
-                <div class='tabletext'>
-                    <b>${uiLabelMap.CommonRemove}:</b>
-                    ${uiLabelMap.ProductPrices}&nbsp;<input type='checkbox' class='checkBox' name='removePrices' value='Y'/>
-                    ${uiLabelMap.CommonId}&nbsp;<input type='checkbox' class='checkBox' name='removeIDs' value='Y'/>
-                    ${uiLabelMap.ProductCategoryMembers}&nbsp;<input type='checkbox' class='checkBox' name='removeCategoryMembers' value='Y'/>
-                    ${uiLabelMap.ProductAssocs}&nbsp;<input type='checkbox' class='checkBox' name='removeAssocs' value='Y'/>
-                    ${uiLabelMap.ProductAttributes}&nbsp;<input type='checkbox' class='checkBox' name='removeAttributes' value='Y'/>
-                    ${uiLabelMap.ProductFeatureAppls}&nbsp;<input type='checkbox' class='checkBox' name='removeFeatureAppls' value='Y'/>
-                    ${uiLabelMap.ProductInventoryItems}&nbsp;<input type='checkbox' class='checkBox' name='removeInventoryItems' value='Y'/>
-                </div>
-            </form>
-            <br><br>
-        </#if>
-    </#if>
+    ${pages.get("/product/EditProductDupForm.ftl")}
+
 <#else>
   <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
 </#if>

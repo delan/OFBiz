@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.33 2004/07/13 17:22:48 ajzeneski Exp $
+ * $Id: FreeMarkerWorker.java,v 1.34 2004/07/18 10:09:33 jonesde Exp $
  *
  * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -25,9 +25,12 @@
 package org.ofbiz.content.webapp.ftl;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,9 +42,11 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -60,9 +65,9 @@ import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleScalar;
 import freemarker.template.Template;
-import freemarker.template.TemplateModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 //import com.clarkware.profiler.Profiler;
 
@@ -71,7 +76,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.33 $
+ * @version    $Revision: 1.34 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -103,7 +108,61 @@ public class FreeMarkerWorker {
     public static RenderSubContentAsText  renderSubContentAsText = new RenderSubContentAsText();
     public static RenderContentAsText  renderContentAsText = new RenderContentAsText();
 
-    public static Map cachedTemplates = new HashMap();
+    // use soft references for this so that things from Content records don't kill all of our memory
+    public static UtilCache cachedTemplates = new UtilCache("template.ftl.general", 0, 0, true);
+    // these are mode "code" oriented so don't use soft references
+    public static UtilCache cachedLocationTemplates = new UtilCache("template.ftl.location", 0, 0, false);
+
+    public static void renderTemplateAtLocation(String location, Map context, Writer outWriter) throws MalformedURLException, TemplateException, IOException {
+        URL locationUrl = FlexibleLocation.resolveLocation(location);
+        Reader locationReader = new InputStreamReader(locationUrl.openStream());
+        
+        if (context == null) {
+            context = new HashMap();
+        }
+        
+        Configuration config = makeDefaultOfbizConfig();
+        Template template = new Template(location, locationReader, config);            
+        // add the OFBiz transforms/methods
+        addAllOfbizTransforms(context);
+        
+        cachedTemplates.put(location, template);
+        // process the template with the given data and write
+        // the email body to the String buffer
+        template.process(context, outWriter);
+    }
+    
+    public static void renderTemplate(String templateIdString, String template, Map context, Writer outWriter) throws TemplateException, IOException {
+        //if (Debug.infoOn()) Debug.logInfo("template:" + template.toString(), "");        
+        Reader templateReader = new StringReader(template);
+        renderTemplate(templateIdString, templateReader, context, outWriter);
+    }
+    
+    public static void renderTemplate(String templateIdString, Reader templateReader, Map context, Writer outWriter) throws TemplateException, IOException {
+        if (context == null) {
+            context = new HashMap();
+        }
+        
+        Configuration config = makeDefaultOfbizConfig();            
+        Template template = new Template(templateIdString, templateReader, config);            
+        // add the OFBiz transforms/methods
+        addAllOfbizTransforms(context);
+        
+        cachedTemplates.put(templateIdString, template);
+        // process the template with the given data and write
+        // the email body to the String buffer
+        template.process(context, outWriter);
+    }
+ 
+    public static Template getTemplateCached(String dataResourceId) {
+
+        Template t = (Template)cachedTemplates.get("DataResource:" + dataResourceId);
+        return t;
+    }
+
+    public static void renderTemplateCached(Template template, Map context, Writer outWriter) throws TemplateException, IOException {
+        template.process(context, outWriter);
+    }
     
     public static void addAllOfbizTransforms(Map context) {
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
@@ -367,39 +426,6 @@ public class FreeMarkerWorker {
         return templateRoot;
     }
     
-    public static void renderTemplate(String templateIdString, String template, Map context, Writer outWriter) throws TemplateException, IOException {
-        //if (Debug.infoOn()) Debug.logInfo("template:" + template.toString(), "");        
-        Reader templateReader = new StringReader(template);
-        renderTemplate(templateIdString, templateReader, context, outWriter);
-    }
-    
-    public static void renderTemplate(String templateIdString, Reader templateReader, Map context, Writer outWriter) throws TemplateException, IOException {
-        if (context == null) {
-            context = new HashMap();
-        }
-        
-        Configuration config = makeDefaultOfbizConfig();            
-        Template template = new Template(templateIdString, templateReader, config);            
-        // add the OFBiz transforms/methods
-        addAllOfbizTransforms(context);
-        
-        cachedTemplates.put(templateIdString, template);
-        // process the template with the given data and write
-        // the email body to the String buffer
-        template.process(context, outWriter);
-    }
- 
-    public static Template getTemplateCached(String dataResourceId) {
-
-        Template t = (Template)cachedTemplates.get("DataResource:" + dataResourceId);
-        return t;
-    }
-
-    public static void renderTemplateCached( Template template, Map context, Writer outWriter) throws TemplateException, IOException {
-        template.process(context, outWriter);
-    }
-    
-
     public static void traceNodeTrail(String lbl, List nodeTrail) {
 
 /*
@@ -433,7 +459,6 @@ public class FreeMarkerWorker {
     }
 
     public static String logMap(String lbl, Map map, int indent) {
-   
         String sep = ":";
         String eol = "\n";
         String spc = "";
@@ -815,7 +840,6 @@ public class FreeMarkerWorker {
     }
 
     public static TemplateModel autoWrap(Object obj, Environment env) {
-
        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
        TemplateModel templateModelObj = null;
        try {

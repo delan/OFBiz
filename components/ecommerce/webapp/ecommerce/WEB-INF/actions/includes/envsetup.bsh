@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.1
  */
 
@@ -31,6 +31,7 @@ import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.common.CommonWorkers;
 import org.ofbiz.order.shoppingcart.*;
+import org.ofbiz.content.webapp.control.*;
 
 userLogin = session.getAttribute("userLogin");
 
@@ -45,7 +46,7 @@ if (prodCatalog != null) {
     if (catalogHeaderLogo != null) context.put("catalogHeaderLogo", catalogHeaderLogo);
 }
 
-context.put("checkLoginUrl", CommonWorkers.makeLoginUrl(request, "checkLogin"));
+context.put("checkLoginUrl", LoginWorker.makeLoginUrl(request, "checkLogin"));
 context.put("catalogQuickaddUse", CatalogWorker.getCatalogQuickaddUse(request));
 
 availableLocales = UtilMisc.availableLocales();

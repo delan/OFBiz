@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEventListener.java,v 1.3 2004/07/06 17:07:19 ajzeneski Exp $
+ * $Id: LoginEventListener.java,v 1.4 2004/07/18 10:09:43 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,11 +28,13 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+import org.ofbiz.content.webapp.control.LoginWorker;
+
 /**
  * HttpSessionListener that finalizes login information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class LoginEventListener implements HttpSessionListener {
@@ -48,6 +50,6 @@ public class LoginEventListener implements HttpSessionListener {
 
     public void sessionDestroyed(HttpSessionEvent event) {
         HttpSession session = event.getSession();
-        LoginEvents.cleanupExternalLoginKey(session);
+        LoginWorker.cleanupExternalLoginKey(session);
     }
 }

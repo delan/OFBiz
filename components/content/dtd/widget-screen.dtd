@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   To refer to this DTD in your XML file, use the following declaration:
-<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Screen Widget//EN" "http://www.ofbiz.org/dtds/widget-screen.dtd">
+<!DOCTYPE screens PUBLIC "-//OFBiz//DTD OFBiz Screen Widget//EN" "http://www.ofbiz.org/dtds/widget-screen.dtd">
 -->
 
 <!--
@@ -25,10 +25,10 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-screen.dtd,v 1.11 2004/07/15 22:25:00 jonesde Exp $
+ *  $Id: widget-screen.dtd,v 1.12 2004/07/18 10:09:33 jonesde Exp $
 -->
 
-<!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific">
+<!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific">
 
 <!ENTITY % AllActions "set | script | service | entity-one | entity-and | entity-condition">
 
@@ -47,6 +47,7 @@
         field CDATA #REQUIRED
         from-field CDATA #IMPLIED
         value CDATA #IMPLIED
+        global ( true | false ) "false"
     >
     
     <!ELEMENT service ( field-map* )>
@@ -59,7 +60,7 @@
     <!ELEMENT entity-one ( field-map*, select-field* )>
     <!ATTLIST entity-one
         entity-name CDATA #REQUIRED
-        value-name #REQUIRED
+        value-name CDATA #REQUIRED
         use-cache ( true | false ) "false"
         auto-field-map ( true | false ) "true"
     >
@@ -217,6 +218,8 @@
 >
 
 <!-- don't really want to encourage, should be done on the screen level -->
+<!-- to include the sections in the decorator template just use the "render(sectionName)" method "sections" object, FTL example: ${sections.render("main")} -->
+<!-- for more efficient use the sections.render(sectionName, writer) method should be used, in FTL this would be in a transform or something -->
 <!ELEMENT html-template-decorator ( html-template-decorator-section+ )>
 <!ATTLIST html-template-decorator
     location CDATA #REQUIRED

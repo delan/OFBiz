@@ -1,5 +1,5 @@
 /*
- * $Id: ScreenStringRenderer.java,v 1.5 2004/07/16 05:33:47 byersa Exp $
+ * $Id: ScreenStringRenderer.java,v 1.6 2004/07/18 10:09:35 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -23,25 +23,24 @@
  */
 package org.ofbiz.content.widget.screen;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
 
 /**
- * Widget Library - Form String Renderer interface
+ * Widget Library - Screen String Renderer interface
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.1
  */
 public interface ScreenStringRenderer {
-    public void renderSectionBegin(Writer writer, Map context, ModelScreenWidget.Section section);
-    public void renderSectionEnd(Writer writer, Map context, ModelScreenWidget.Section section);
-    public void renderContainerBegin(Writer writer, Map context, ModelScreenWidget.Container container);
-    public void renderContainerEnd(Writer writer, Map context, ModelScreenWidget.Container container);
+    public void renderSectionBegin(Writer writer, Map context, ModelScreenWidget.Section section) throws IOException;
+    public void renderSectionEnd(Writer writer, Map context, ModelScreenWidget.Section section) throws IOException;
+    public void renderContainerBegin(Writer writer, Map context, ModelScreenWidget.Container container) throws IOException;
+    public void renderContainerEnd(Writer writer, Map context, ModelScreenWidget.Container container) throws IOException;
 
-    public void renderLabel(Writer writer, Map context, ModelScreenWidget.Label label);
-    public void renderNodeOpen(Writer writer, Map context,  ModelTree.ModelNode node);
-    public void renderNodeClose(Writer writer, Map context,  ModelTree.ModelNode node);
+    public void renderLabel(Writer writer, Map context, ModelScreenWidget.Label label) throws IOException;
 }
 

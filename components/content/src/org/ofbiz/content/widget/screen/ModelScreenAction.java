@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenAction.java,v 1.4 2004/07/15 22:25:00 jonesde Exp $
+ * $Id: ModelScreenAction.java,v 1.5 2004/07/18 10:09:35 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public abstract class ModelScreenAction {
@@ -58,6 +58,7 @@ public abstract class ModelScreenAction {
 
     public ModelScreenAction(ModelScreen modelScreen, Element actionElement) {
         this.modelScreen = modelScreen;
+        if (Debug.verboseOn()) Debug.logVerbose("Reading Screen action with name: " + actionElement.getNodeName(), module);
     }
     
     public abstract void runAction(Map context);
@@ -93,6 +94,7 @@ public abstract class ModelScreenAction {
         Iterator actionIter = actions.iterator();
         while (actionIter.hasNext()) {
             ModelScreenAction action = (ModelScreenAction) actionIter.next();
+            if (Debug.verboseOn()) Debug.logVerbose("Running screen action " + action.getClass().getName(), module);
             action.runAction(context);
         }
     }
@@ -100,23 +102,44 @@ public abstract class ModelScreenAction {
     public static class SetField extends ModelScreenAction {
         protected FlexibleMapAccessor field;
         protected FlexibleMapAccessor fromField;
-        protected FlexibleStringExpander value;
+        protected FlexibleStringExpander valueExdr;
+        protected FlexibleStringExpander globalExdr;
         
         public SetField(ModelScreen modelScreen, Element setElement) {
             super (modelScreen, setElement);
             this.field = new FlexibleMapAccessor(setElement.getAttribute("field"));
             this.fromField = UtilValidate.isNotEmpty(setElement.getAttribute("from-field")) ? new FlexibleMapAccessor(setElement.getAttribute("from-field")) : null;
-            this.value = UtilValidate.isNotEmpty(setElement.getAttribute("value")) ? new FlexibleStringExpander(setElement.getAttribute("value")) : null;
-            if (this.fromField != null && this.value != null) {
+            this.valueExdr = UtilValidate.isNotEmpty(setElement.getAttribute("value")) ? new FlexibleStringExpander(setElement.getAttribute("value")) : null;
+            this.globalExdr = new FlexibleStringExpander(setElement.getAttribute("global"));
+            if (this.fromField != null && this.valueExdr != null) {
                 throw new IllegalArgumentException("Cannot specify a from-field [" + setElement.getAttribute("from-field") + "] and a value [" + setElement.getAttribute("value") + "] on the set action in a screen widget");
             }
         }
         
         public void runAction(Map context) {
+            String globalStr = this.globalExdr.expandString(context);
+            // default to false
+            boolean global = "true".equals(globalStr);
+            
+            Object newValue = null;
             if (this.fromField != null) {
-                this.field.put(context, this.fromField.get(context));
-            } else if (this.value != null) {
-                this.field.put(context, this.value.expandString(context));
+                newValue = this.fromField.get(context);
+            } else if (this.valueExdr != null) {
+                newValue = this.valueExdr.expandString(context);
+            }
+            this.field.put(context, newValue);
+            
+            if (global) {
+                Map globalCtx = (Map) context.get("global");
+                if (globalCtx != null) {
+                    this.field.put(globalCtx, newValue);
+                }
+            }
+            
+            // this is a hack for backward compatibility with the JPublish page object
+            Map page = (Map) context.get("page");
+            if (page != null) {
+                this.field.put(page, newValue);
             }
         }
     }
@@ -150,13 +173,13 @@ public abstract class ModelScreenAction {
         protected FlexibleStringExpander autoFieldMapExdr;
         protected Map fieldMap;
         
-        public Service(ModelScreen modelScreen, Element setElement) {
-            super (modelScreen, setElement);
-            this.serviceNameExdr = new FlexibleStringExpander(setElement.getAttribute("service-name"));
-            this.resultMapNameAcsr = UtilValidate.isNotEmpty(setElement.getAttribute("result-map-name")) ? new FlexibleMapAccessor(setElement.getAttribute("result-map-name")) : null;
-            this.autoFieldMapExdr = new FlexibleStringExpander(setElement.getAttribute("auto-field-map"));
+        public Service(ModelScreen modelScreen, Element serviceElement) {
+            super (modelScreen, serviceElement);
+            this.serviceNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("service-name"));
+            this.resultMapNameAcsr = UtilValidate.isNotEmpty(serviceElement.getAttribute("result-map-name")) ? new FlexibleMapAccessor(serviceElement.getAttribute("result-map-name")) : null;
+            this.autoFieldMapExdr = new FlexibleStringExpander(serviceElement.getAttribute("auto-field-map"));
             
-            List fieldMapElementList = UtilXml.childElementList(setElement, "field-map");
+            List fieldMapElementList = UtilXml.childElementList(serviceElement, "field-map");
             if (fieldMapElementList.size() > 0) {
                 this.fieldMap = new HashMap();
                 Iterator fieldMapElementIter = fieldMapElementList.iterator();
@@ -182,7 +205,7 @@ public abstract class ModelScreenAction {
             try {
                 Map serviceContext = null;
                 if (autoFieldMapBool) {
-                    serviceContext = this.modelScreen.getDispacher().getDispatchContext().makeValidContext(serviceNameExpanded, ModelService.IN_PARAM, context);
+                    serviceContext = this.modelScreen.getDispatcher(context).getDispatchContext().makeValidContext(serviceNameExpanded, ModelService.IN_PARAM, context);
                 } else {
                     serviceContext = new HashMap();
                 }
@@ -197,7 +220,7 @@ public abstract class ModelScreenAction {
                     }
                 }
                 
-                Map result = this.modelScreen.getDispacher().runSync(serviceNameExpanded, serviceContext);
+                Map result = this.modelScreen.getDispatcher(context).runSync(serviceNameExpanded, serviceContext);
                 
                 if (this.resultMapNameAcsr != null) {
                     this.resultMapNameAcsr.put(context, result);
@@ -222,7 +245,7 @@ public abstract class ModelScreenAction {
         
         public void runAction(Map context) {
             try {
-                finder.runFind(context, this.modelScreen.getDelegator());
+                finder.runFind(context, this.modelScreen.getDelegator(context));
             } catch (GeneralException e) {
                 String errMsg = "Error doing entity query by condition: " + e.toString();
                 Debug.logError(e, errMsg, module);
@@ -241,7 +264,7 @@ public abstract class ModelScreenAction {
         
         public void runAction(Map context) {
             try {
-                finder.runFind(context, this.modelScreen.getDelegator());
+                finder.runFind(context, this.modelScreen.getDelegator(context));
             } catch (GeneralException e) {
                 String errMsg = "Error doing entity query by condition: " + e.toString();
                 Debug.logError(e, errMsg, module);
@@ -260,7 +283,7 @@ public abstract class ModelScreenAction {
         
         public void runAction(Map context) {
             try {
-                finder.runFind(context, this.modelScreen.getDelegator());
+                finder.runFind(context, this.modelScreen.getDelegator(context));
             } catch (GeneralException e) {
                 String errMsg = "Error doing entity query by condition: " + e.toString();
                 Debug.logError(e, errMsg, module);

@@ -1,5 +1,5 @@
 <%@ page import="java.util.*, java.net.*" %>
-<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*, org.ofbiz.content.webapp.control.*" %>
 <%@ page import="org.ofbiz.securityext.login.*, org.ofbiz.common.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -30,9 +30,9 @@
     layoutSettings.put("headerMiddleBackgroundUrl", null);
     layoutSettings.put("headerRightBackgroundUrl", null);
     
-    request.setAttribute("checkLoginUrl", CommonWorkers.makeLoginUrl(request, "checkLogin"));
+    request.setAttribute("checkLoginUrl", LoginWorker.makeLoginUrl(request, "checkLogin"));
     
-    String externalLoginKey = LoginEvents.getExternalLoginKey(request);
+    String externalLoginKey = LoginWorker.getExternalLoginKey(request);
     String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
     request.setAttribute("externalKeyParam", externalKeyParam);
     request.setAttribute("externalLoginKey", externalLoginKey);

@@ -19,6 +19,7 @@
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
+    <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
 
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
@@ -1598,6 +1599,7 @@
     <view-map name="advancedsearch" type="jpublish" page="/find/advancedsearch.ftl"/>
     <view-map name="keywordsearch" type="jpublish" page="/find/keywordsearch.ftl"/>
 
+    <!-- <view-map name="EditCategory" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategory"/> -->
     <view-map name="EditCategory" type="jpublish" page="/category/EditCategory.ftl"/>
     <view-map name="EditCategoryContent" type="jpublish" page="/category/EditCategoryContent.ftl"/>
     <view-map name="EditCategoryContentContent" type="jpublish" page="/category/EditCategoryContentContent.ftl"/>
@@ -1611,6 +1613,7 @@
     <view-map name="createProductInCategoryStart" type="jpublish" page="/category/createProductInCategoryStart.ftl"/>
     <view-map name="createProductInCategoryCheckExisting" type="jpublish" page="/category/createProductInCategoryCheckExisting.ftl"/>
 
+    <!-- <view-map name="EditProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProduct"/> -->
     <view-map name="EditProduct" type="jpublish" page="/product/EditProduct.ftl"/>
     <view-map name="EditProductPrices" type="jpublish" page="/product/EditProductPrices.ftl"/>
     <view-map name="EditProductContent" type="jpublish" page="/product/EditProductContent.ftl"/>

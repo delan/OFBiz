@@ -1,5 +1,5 @@
 /*
- * $Id: FindByCondition.java,v 1.3 2004/07/15 22:25:01 jonesde Exp $
+ * $Id: EntityAnd.java,v 1.1 2004/07/18 10:09:38 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@ package org.ofbiz.minilang.method.entityops;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.finder.ByConditionFinder;
+import org.ofbiz.entity.finder.ByAndFinder;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.minilang.method.MethodOperation;
@@ -36,18 +36,18 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.1 $
  * @since      3.1
  */
-public class FindByCondition extends MethodOperation {
+public class EntityAnd extends MethodOperation {
     
-    public static final String module = FindByCondition.class.getName();
+    public static final String module = EntityAnd.class.getName();
     
-    protected ByConditionFinder finder;
+    protected ByAndFinder finder;
 
-    public FindByCondition(Element element, SimpleMethod simpleMethod) {
+    public EntityAnd(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.finder = new ByConditionFinder(element);
+        this.finder = new ByAndFinder(element);
     }
 
     public boolean exec(MethodContext methodContext) {

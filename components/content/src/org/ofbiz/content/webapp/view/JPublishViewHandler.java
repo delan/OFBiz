@@ -1,5 +1,5 @@
 /*
- * $Id: JPublishViewHandler.java,v 1.4 2004/04/11 08:28:17 jonesde Exp $
+ * $Id: JPublishViewHandler.java,v 1.5 2004/07/18 10:09:34 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.UtilJ2eeCompat;
  * Handles JPublish type view rendering
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.1
  */
 public class JPublishViewHandler implements ViewHandler {
@@ -64,13 +64,13 @@ public class JPublishViewHandler implements ViewHandler {
      * @see org.ofbiz.content.webapp.view.ViewHandler#render(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
+        Writer writer = null;
         try {
         	// use UtilJ2eeCompat to get this setup properly
         	boolean useOutputStreamNotWriter = false;
         	if (this.servletContext != null) {
         		useOutputStreamNotWriter = UtilJ2eeCompat.useOutputStreamNotWriter(this.servletContext);
         	}
-            Writer writer = null;
         	if (useOutputStreamNotWriter) {
         		ServletOutputStream ros = response.getOutputStream();
                 writer = new OutputStreamWriter(ros, "UTF-8");
@@ -78,13 +78,19 @@ public class JPublishViewHandler implements ViewHandler {
                 writer = response.getWriter();
         	}
             wrapper.render(page, request, response, writer, null, true);
-            writer.close();
         } catch (IOException e) {
             throw new ViewHandlerException("Problems with the response writer/output stream", e);
         } catch (GeneralException e) {
             throw new ViewHandlerException("Cannot render page", e);
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    throw new ViewHandlerException("Problems with closing the writer/output stream: " + e.toString(), e);
+                }
+            }
         }
-        
     }
 }
 
