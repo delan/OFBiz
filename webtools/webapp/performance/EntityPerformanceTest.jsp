@@ -95,27 +95,13 @@ server hardware, network connections).</div>
     <td><div class="tabletext"><%=callsPerSecond%></div></td>
   </tr>
   <%
-    calls = 100000; startTime = (double) System.currentTimeMillis();
-    for (int i=0; i < calls; i++) { Map ptyMap = new HashMap(); ptyMap.put("partyId", "_NA_"); GenericValue dummy = delegator.findByPrimaryKeyCache("Party", ptyMap); }
-    totalTime = (double) System.currentTimeMillis() - startTime;
-    callsPerSecond = (double) calls / (totalTime/1000);
-  %>
-  <tr>
-    <td><div class="tabletext">findByPrimaryKeyCache - new HashMap</div></td>
-    <td><div class="tabletext">Small:Party</div></td>
-    <td><div class="tabletext"><%=calls%></div></td>
-    <td><div class="tabletext"><%=totalTime/1000%></div></td>
-    <td><div class="tabletext"><%=1/callsPerSecond%></div></td>
-    <td><div class="tabletext"><%=callsPerSecond%></div></td>
-  </tr>
-  <%
-    calls = 100000; startTime = (double) System.currentTimeMillis();
+    calls = 10000; startTime = (double) System.currentTimeMillis();
     for (int i=0; i < calls; i++) { GenericValue dummy = delegator.findByPrimaryKeyCache("Party", UtilMisc.toMap("partyId", "_NA_")); }
     totalTime = (double) System.currentTimeMillis() - startTime;
     callsPerSecond = (double) calls / (totalTime/1000);
   %>
   <tr>
-    <td><div class="tabletext">findByPrimaryKeyCache - UtilMisc.toMap</div></td>
+    <td><div class="tabletext">findByPrimaryKeyCache</div></td>
     <td><div class="tabletext">Small:Party</div></td>
     <td><div class="tabletext"><%=calls%></div></td>
     <td><div class="tabletext"><%=totalTime/1000%></div></td>
@@ -124,14 +110,73 @@ server hardware, network connections).</div>
   </tr>
   <%
     calls = 100000; startTime = (double) System.currentTimeMillis();
-    Map ptyMap = UtilMisc.toMap("partyId", "_NA_");
-    for (int i=0; i < calls; i++) { GenericValue dummy = delegator.findByPrimaryKeyCache("Party", ptyMap); }
+    for (int i=0; i < calls; i++) { Map ptyMap = new HashMap(); ptyMap.put("partyId", "_NA_"); }
     totalTime = (double) System.currentTimeMillis() - startTime;
     callsPerSecond = (double) calls / (totalTime/1000);
   %>
   <tr>
-    <td><div class="tabletext">findByPrimaryKeyCache - no new Map</div></td>
-    <td><div class="tabletext">Small:Party</div></td>
+    <td><div class="tabletext">new HashMap</div></td>
+    <td><div class="tabletext">N/A</div></td>
+    <td><div class="tabletext"><%=calls%></div></td>
+    <td><div class="tabletext"><%=totalTime/1000%></div></td>
+    <td><div class="tabletext"><%=1/callsPerSecond%></div></td>
+    <td><div class="tabletext"><%=callsPerSecond%></div></td>
+  </tr>
+  <%
+    calls = 100000; startTime = (double) System.currentTimeMillis();
+    for (int i=0; i < calls; i++) { Map ptyMap = UtilMisc.toMap("partyId", "_NA_"); }
+    totalTime = (double) System.currentTimeMillis() - startTime;
+    callsPerSecond = (double) calls / (totalTime/1000);
+  %>
+  <tr>
+    <td><div class="tabletext">UtilMisc.toMap</div></td>
+    <td><div class="tabletext">N/A</div></td>
+    <td><div class="tabletext"><%=calls%></div></td>
+    <td><div class="tabletext"><%=totalTime/1000%></div></td>
+    <td><div class="tabletext"><%=1/callsPerSecond%></div></td>
+    <td><div class="tabletext"><%=callsPerSecond%></div></td>
+  </tr>
+  <%
+    UtilCache utilCache = new UtilCache("test-cache", 0,0, false);
+    utilCache.put("testName", "testValue");
+    calls = 1000000; startTime = (double) System.currentTimeMillis();
+    for (int i=0; i < calls; i++) { utilCache.get("testName"); }
+    totalTime = (double) System.currentTimeMillis() - startTime;
+    callsPerSecond = (double) calls / (totalTime/1000);
+  %>
+  <tr>
+    <td><div class="tabletext">UtilCache.get(String) - basic settings</div></td>
+    <td><div class="tabletext">N/A</div></td>
+    <td><div class="tabletext"><%=calls%></div></td>
+    <td><div class="tabletext"><%=totalTime/1000%></div></td>
+    <td><div class="tabletext"><%=1/callsPerSecond%></div></td>
+    <td><div class="tabletext"><%=callsPerSecond%></div></td>
+  </tr>
+  <%
+    GenericPK testPk = delegator.makePK("Party", UtilMisc.toMap("partyId", "_NA_"));
+    utilCache.put(testPk, "testValue");
+    calls = 1000000; startTime = (double) System.currentTimeMillis();
+    for (int i=0; i < calls; i++) { utilCache.get(testPk); }
+    totalTime = (double) System.currentTimeMillis() - startTime;
+    callsPerSecond = (double) calls / (totalTime/1000);
+  %>
+  <tr>
+    <td><div class="tabletext">UtilCache.get(GenericPK) - basic settings</div></td>
+    <td><div class="tabletext">N/A</div></td>
+    <td><div class="tabletext"><%=calls%></div></td>
+    <td><div class="tabletext"><%=totalTime/1000%></div></td>
+    <td><div class="tabletext"><%=1/callsPerSecond%></div></td>
+    <td><div class="tabletext"><%=callsPerSecond%></div></td>
+  </tr>
+  <%
+    calls = 1000000; startTime = (double) System.currentTimeMillis();
+    for (int i=0; i < calls; i++) { utilCache.put(testPk, "testValue"); }
+    totalTime = (double) System.currentTimeMillis() - startTime;
+    callsPerSecond = (double) calls / (totalTime/1000);
+  %>
+  <tr>
+    <td><div class="tabletext">UtilCache.put(GenericPK) - basic settings</div></td>
+    <td><div class="tabletext">N/A</div></td>
     <td><div class="tabletext"><%=calls%></div></td>
     <td><div class="tabletext"><%=totalTime/1000%></div></td>
     <td><div class="tabletext"><%=1/callsPerSecond%></div></td>
