@@ -65,6 +65,11 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
+    <request-map uri="fieldLookup">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="fieldLookup"/>
+    </request-map> 
+        
     <request-map uri="view">
         <security https="false" auth="false"/>
         <response name="success" type="view" value="main"/>
@@ -514,6 +519,8 @@
     <view-map name="main" type="jpublish" page="/main.ftl"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>
 
+    <view-map name="fieldLookup" type="jpublish" page="/includes/fieldlookup.ftl"/>
+    
     <view-map name="requestlist" type="jpublish" page="/request/requestlist.ftl"/>
     <view-map name="request" type="region"/>
     <view-map name="requestitems" type="jpublish" page="/request/requestitems.ftl"/>

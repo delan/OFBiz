@@ -95,14 +95,16 @@
                 </tr>
                 <tr>
                   <td>
-                    <form method="post" action="<@ofbizUrl>/createEventPartyAssign</@ofbizUrl>">
+                    <form method="post" action="<@ofbizUrl>/createEventPartyAssign</@ofbizUrl>" name="partyform">
                       <input type="hidden" name="workEffortId" value="${workEffortId}">
 					  <input type="hidden" name="statusId" value="CAL_ACCEPTED">
                       <table width="100%" cellpadding="2" cellspacing="0" border="0">
                         <tr>
                           <td colspan="2">&nbsp;&nbsp;&nbsp;</td>
                           <td align="right"><div class="tableheadtext">Party ID</div></td>
-                          <td><input type="text" name="partyId" class="inputBox" size="30"></td>
+                          <td><input type="text" name="partyId" class="inputBox" size="30">
+							<a href="javascript:call_fieldlookup(document.partyform.partyId,'<@ofbizUrl>/fieldLookup</@ofbizUrl>', 'lookupParty');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>                          
+                          </td>
                           <td align="right"><div class="tableheadtext">Role Type ID</div></td>
                           <td>
                             <select name="roleTypeId" class="selectBox">
