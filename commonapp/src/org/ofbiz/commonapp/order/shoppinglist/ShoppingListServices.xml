@@ -84,10 +84,10 @@
     
     <simple-method method-name="removeShoppingList" short-description="Remove a ShoppingList">
         <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ShoppingListItem" map-name="lookupPKMap" value-name="shoppingList"/>
+        <find-by-primary-key entity-name="ShoppingList" map-name="lookupPKMap" value-name="shoppingList"/>
 
-        <string-to-field field-name="parentMethodName" string="updateShoppingList"/>
-        <string-to-field field-name="permissionAction" string="UPDATE"/>
+        <string-to-field field-name="parentMethodName" string="removeShoppingList"/>
+        <string-to-field field-name="permissionAction" string="DELETE"/>
         <call-simple-method method-name="checkShoppingListSecurity"/>
         <check-errors/>    	     
 
