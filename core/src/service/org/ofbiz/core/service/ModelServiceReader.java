@@ -182,6 +182,7 @@ public class ModelServiceReader {
                                 if (service != null) {
                                     modelServices.put(serviceName, service);
                                     // utilTimer.timerString("  After modelServices.put -- " + i + " --");
+                                    /*
                                     int reqIn = service.getParameterNames(ModelService.IN_PARAM, false).size();
                                     int optIn = service.getParameterNames(ModelService.IN_PARAM, true).size() - reqIn;
                                     int reqOut = service.getParameterNames(ModelService.OUT_PARAM, false).size();
@@ -191,8 +192,9 @@ public class ModelServiceReader {
                                         String msg = "-- getModelService: # " + i + " Loaded service: " + serviceName +
                                             " (IN) " + reqIn + "/" + optIn + " (OUT) " + reqOut + "/" + optOut;
 
-                                        Debug.logVerbose(msg, module);
+                                        Debug.logVerbose(msg, module);                                        
                                     }
+                                    */
                                 } else {
                                     Debug.logWarning(
                                         "-- -- SERVICE ERROR:getModelService: Could not create service for serviceName: " +
