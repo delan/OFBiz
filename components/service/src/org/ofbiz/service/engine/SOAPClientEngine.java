@@ -49,6 +49,7 @@ import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 
 /**
  * Generic Service SOAP Interface
@@ -56,7 +57,7 @@ import org.ofbiz.base.util.Debug;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:">Andy Chen</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public final class SOAPClientEngine extends GenericAsyncEngine {
@@ -68,19 +69,17 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
     }
     
     /**
-     * @see org.ofbiz.service.engine.GenericEngine#runSyncIgnore(java.lang.
-     * String, org.ofbiz.service.ModelService, java.util.Map)
+     * @see org.ofbiz.service.engine.GenericEngine#runSyncIgnore(java.lang.String, org.ofbiz.service.ModelService, java.util.Map)
      */
     public void runSyncIgnore(String localName, ModelService modelService, Map context) throws GenericServiceException {
-        Map result = runSync(localName, modelService, context);
+        runSync(localName, modelService, context);
     }
     
     /**
-     * @see org.ofbiz.service.engine.GenericEngine#runSync(java.lang.String,
-     * org.ofbiz.service.ModelService, java.util.Map)
+     * @see org.ofbiz.service.engine.GenericEngine#runSync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map)
      */
     public Map runSync(String localName, ModelService modelService, Map context) throws GenericServiceException {
-        Object result = serviceInvoker(localName, modelService, context);
+        Object result = serviceInvoker(modelService, context);
         
         if (result == null)
             throw new GenericServiceException("Service did not return expected result");
@@ -94,7 +93,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
     }
     
     // Invoke the remote SOAP service
-    private Object serviceInvoker(String localName, ModelService modelService, Map context) throws GenericServiceException {
+    private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {
         if (modelService.location == null || modelService.invoke == null)
             throw new GenericServiceException("Cannot locate service to invoke");
         
@@ -125,7 +124,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         
         call.setTargetEndpointAddress(endPoint);
         
-        if (!"".equals(modelService.nameSpace)){
+        if (UtilValidate.isNotEmpty(modelService.nameSpace)){
             call.setOperationName(new QName(modelService.nameSpace, modelService.invoke));
         } else {
             call.setOperationName(modelService.invoke);
@@ -165,40 +164,41 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         } catch (java.rmi.RemoteException e) {
             throw new GenericServiceException("RPC error", e);
         }
-        
+        if (Debug.verboseOn()) {
+            Debug.log("SOAP Service Result - " + result, module);
+        }
+
         return getResponseParams(call.getMessageContext().getResponseMessage());
     }
         
-    private Map getResponseParams(Message respMessage){
-        Map mRet=new Hashtable();
-        try{
+    private Map getResponseParams(Message respMessage) {
+        Map mRet = new Hashtable();
+        try {
             SOAPEnvelope resEnv = (SOAPEnvelope) respMessage.getSOAPEnvelope();
             List bodies = resEnv.getBodyElements();
             Iterator i = bodies.iterator();
             while (i.hasNext()) {
                 Object o = i.next();
-                
+
                 if (o instanceof RPCElement) {
                     RPCElement body = (RPCElement) o;
-                    String serviceName = body.getMethodName();
                     List params = null;
-                    
                     params = body.getParams();
-                    
-                    Map serviceContext = new HashMap();
+
                     Iterator p = params.iterator();
-                    
                     while (p.hasNext()) {
                         RPCParam param = (RPCParam) p.next();
                         mRet.put(param.getName(), param.getValue());
-                        System.out.println(param.getName() + "=" + param.getValue());
+                        if (Debug.verboseOn()) {
+                            Debug.log("SOAP Client Param - " + param.getName() + "=" + param.getValue(), module);
+                        }
                     }
                 }
             }
         } catch (org.apache.axis.AxisFault e) {
-            System.out.println("AxisFault:" + e.toString());
+            Debug.logError(e, "AxisFault", module);
         } catch (org.xml.sax.SAXException e) {
-            System.out.println("SAXException:" + e.toString());
+            Debug.logError(e, "SAXException", module);
         }
         return mRet;
     }
