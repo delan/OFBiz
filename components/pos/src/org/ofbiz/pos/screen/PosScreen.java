@@ -92,7 +92,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
 
             // load the shared devices
             try {
-                DeviceLoader.load();
+                DeviceLoader.load(session);
             } catch (Exception e) {
                 Debug.logError(e, module);
             }
@@ -234,7 +234,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     }
 
     // PosDialog Callback method
-    public void receiveDialogCb(PosDialog dialog) {        
+    public void receiveDialogCb(PosDialog dialog) {
         this.refresh();
     }
 

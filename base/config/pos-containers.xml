@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz POS Containers
- *  $Id: pos-containers.xml,v 1.5 2004/07/27 18:38:24 ajzeneski Exp $
+ *  $Id$
 -->
 
 <ofbiz-containers>
@@ -44,6 +44,18 @@
         <property name="xui-session-id" value="pos-1"/>
         <property name="facility-id" value="MyRetailStore"/>
         <property name="look-and-feel" value="org.gtk.java.swing.plaf.gtk.GtkLookAndFeel"/>
+        <property name="devices">
+            <property name="CashDrawer.1" value="[DISABLED]"/>
+            <property name="Receipt" value="[DISABLED]"/>
+            <property name="Scanner" value="GenericScanner"/>
+            <property name="Msr" value="GenericMsr"/>
+            <property name="PinPad" value="[NOT IMPLEMENTED]"/>
+            <property name="Journal" value="[NOT IMPLEMENTED]"/>
+            <property name="Keyboard" value="[NOT IMPLEMENTED]"/>
+            <property name="LineDisplay" value="[NOT IMPLEMENTED]"/>
+            <property name="CheckScanner" value="[NOT IMPLEMENTED]"/>
+            <property name="SignatureCapture" value="[NOT IMPLEMENTED]"/>
+        </property>
     </container>
 
     <!-- load BeanShell remote telnet server -->
