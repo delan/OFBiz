@@ -89,6 +89,7 @@
     <RoleType description="Hosting Server" hasTable="N" parentTypeId="" roleTypeId="HOSTING_SERVER"/>
     <RoleType description="Not Applicable" hasTable="N" parentTypeId="" roleTypeId="_NA_"/>
     <RoleType description="Organization" hasTable="N" parentTypeId="" roleTypeId="ORGANIZATION_ROLE"/>
+    <RoleType description="Owner" hasTable="N"  parentTypeId="" roleTypeId="OWNER"/>
     <RoleType description="Prospect" hasTable="N" parentTypeId="" roleTypeId="PROSPECT"/>
     <RoleType description="Person" hasTable="N" parentTypeId="" roleTypeId="PERSON_ROLE"/>
     <RoleType description="Referrer" hasTable="N" parentTypeId="" roleTypeId="REFERRER"/>
