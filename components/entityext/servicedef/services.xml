@@ -164,7 +164,8 @@
 
     <!-- Entity Remote Synchronization services -->
     <service name="runEntitySync" engine="java"
-            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="runEntitySync" auth="true" require-new-transaction="true" transaction-timout="7200">
+            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="runEntitySync" 
+            auth="true" require-new-transaction="true" transaction-timout="7200">
         <description>Run Entity Sync</description>
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
     </service>
@@ -190,15 +191,56 @@
         <description>Clean EntitySyncRemove Info - Generally should be run asynchronously after each sync run</description>
     </service>
 
-    <!-- Services to call store remotely -->
+    <!-- Services for Entity Sync Data Pulling -->
+    <service name="runPullEntitySync" engine="java"
+            location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="runPullEntitySync" 
+            auth="true" require-new-transaction="true" transaction-timout="7200">
+        <description>Run Entity Sync Pulling Data From a Remote Server</description>
+        <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
+        <attribute name="remotePullAndReportEntitySyncDataName" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="pullAndReportEntitySyncData" engine="java" location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="pullAndReportEntitySyncData"
+    	    export="true" auth="true" require-new-transaction="true" transaction-timout="300">
+        <description>Pull And Report Entity Sync Data</description>
+        <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
+        <attribute name="delegatorName" type="String" mode="IN" optional="true"/>
+        <!-- fields for returned values to store on the calling machine, note that after storing these this service MUST be called with the results to finalize it! -->
+        <attribute name="valuesToCreate" type="List" mode="OUT" optional="true"/>
+        <attribute name="valuesToStore" type="List" mode="OUT" optional="true"/>
+        <attribute name="keysToRemove" type="List" mode="OUT" optional="true"/>
+        <!-- fields for results of storage on the calling machine -->
+        <attribute name="startDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="toCreateInserted" type="Long" mode="IN" optional="true"/>
+        <attribute name="toCreateUpdated" type="Long" mode="IN" optional="true"/>
+        <attribute name="toCreateNotUpdated" type="Long" mode="IN" optional="true"/>
+        <attribute name="toStoreInserted" type="Long" mode="IN" optional="true"/>
+        <attribute name="toStoreUpdated" type="Long" mode="IN" optional="true"/>
+        <attribute name="toStoreNotUpdated" type="Long" mode="IN" optional="true"/>
+        <attribute name="toRemoveDeleted" type="Long" mode="IN" optional="true"/>
+        <attribute name="toRemoveAlreadyDeleted" type="Long" mode="IN" optional="true"/>
+    </service>
+
+    <!-- Services to call store (Push) remotely -->
     <service name="remoteStoreEntitySyncDataHttp" engine="http"
-            location="main-http" invoke="storeEntitySyncData" auth="true" require-new-transaction="true" transaction-timout="300">
-        <description>Run Entity Sync</description>
+            location="entity-sync-http" invoke="storeEntitySyncData" auth="true" require-new-transaction="true" transaction-timout="300">
+        <description>Remotely Store Entity Sync Date</description>
         <implements service="storeEntitySyncData"/>
     </service>
     <service name="remoteStoreEntitySyncDataRmi" engine="rmi"
-            location="main-rmi" invoke="storeEntitySyncData" auth="true" require-new-transaction="true" transaction-timout="300">
-        <description>Run Entity Sync</description>
+            location="entity-sync-rmi" invoke="storeEntitySyncData" auth="true" require-new-transaction="true" transaction-timout="300">
+        <description>Remotely Store Entity Sync Data</description>
         <implements service="storeEntitySyncData"/>
+    </service>
+
+    <!-- Services to call Pull and Report remotely -->
+    <service name="remotePullAndReportEntitySyncDataHttp" engine="http"
+            location="entity-sync-http" invoke="pullAndReportEntitySyncData" auth="true" require-new-transaction="true" transaction-timout="300">
+        <description>Remotely Pull And Report Entity Sync Data</description>
+        <implements service="pullAndReportEntitySyncData"/>
+    </service>
+    <service name="remotePullAndReportEntitySyncDataRmi" engine="rmi"
+            location="entity-sync-rmi" invoke="pullAndReportEntitySyncData" auth="true" require-new-transaction="true" transaction-timout="300">
+        <description>Remotely Pull And Report Entity Sync Data</description>
+        <implements service="pullAndReportEntitySyncData"/>
     </service>
 </services>

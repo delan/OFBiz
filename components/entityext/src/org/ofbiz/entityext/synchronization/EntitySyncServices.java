@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -673,6 +673,51 @@ public class EntitySyncServices {
             Debug.logError(e, errorMsg, module);
             return ServiceUtil.returnError(errorMsg);
         }
+    }
+
+    /**
+     * Run Pull Entity Sync - Pull From Remote
+     *@param dctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map runPullEntitySync(DispatchContext dctx, Map context) {
+        Debug.logInfo("Running cleanSyncRemoveInfo", module);
+        GenericDelegator delegator = dctx.getDelegator();
+        
+        String entitySyncId = (String) context.get("entitySyncId");
+        String remotePullAndReportEntitySyncDataName = (String) context.get("remotePullAndReportEntitySyncDataName");
+        
+        // loop until no data is returned to store
+        
+        // call pullAndReportEntitySyncData with no results
+        
+        // store data returned, get results (just call storeEntitySyncData locally, get the numbers back and boom shakalaka)
+        
+        return ServiceUtil.returnSuccess();
+    }
+
+    /**
+     * Pull and Report Entity Sync Data - Called Remotely to Push Results from last pull, the Pull next set of results.
+     *@param dctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map pullAndReportEntitySyncData(DispatchContext dctx, Map context) {
+        Debug.logInfo("Running cleanSyncRemoveInfo", module);
+        GenericDelegator delegator = dctx.getDelegator();
+        
+        String entitySyncId = (String) context.get("entitySyncId");
+        String delegatorName = (String) context.get("delegatorName");
+
+        // report info from last pull
+        Timestamp startDate = (Timestamp) context.get("startDate");
+        
+        // Part 1: if any results are passed, store the results for the given startDate, update EntitySync, etc
+        
+        // Part 2: get the next set of data for the given entitySyncId, return if back for storage but leave the EntitySyncHistory without results, and don't update the EntitySync last time
+        
+        return ServiceUtil.returnSuccess();
     }
 
     /**
