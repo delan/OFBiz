@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.1
 -->
 
@@ -146,7 +146,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         
         <div class="head2">${uiLabelMap.ProductCopyProductCategoryMembersToAnotherCategory}:</div>
         <div class="tabletext">
-            ${uiLabelMap.ProductProductCategory}:
+            ${uiLabelMap.ProductTargetProductCategory}:
             <select name="productCategoryIdTo" class="selectBox">
             <option value=""></option>
             <#list productCategories as productCategoryTo>
