@@ -68,6 +68,7 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
   Group Name (required if .sql file): <INPUT type=text name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
   <INPUT type=submit value='Load Data File'>
 </form>
+<div>OR click <a href='<ofbiz:url>/install?groupfile=gensecurity</ofbiz:url>'>here</a> for entity granularity security settings only (auto generated, not in a file)</div>
 <hr>
 <%if("group".equals(groupfile)) {%>
   <%if(groupName != null && groupName.length() > 0) {%>
@@ -135,6 +136,17 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
       <%}%>
     </UL>
   <%}%>
+<%}else if("gensecurity".equals(groupfile)) {%>
+    <%int rowsChanged = generateData(delegator);%>
+    <DIV class='head2'>Finished loading file data; <%=rowsChanged%> total rows updated.</DIV>
+
+    <DIV class='head2'>Error Messages:</DIV>
+    <UL>
+      <%Iterator errIter = errorMessages.iterator();%>
+      <%while(errIter.hasNext()){%>
+        <LI><%=(String)errIter.next()%>
+      <%}%>
+    </UL>
 <%}%>
 
 <%!
@@ -239,27 +251,27 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
       }
 
       if(baseName != null) {
-          try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_ADMIN", "description", "Permission to Administer a " + entity.getEntityName() + " entity.")); rowsChanged++; }
-          catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + baseName + "\" creating ADMIN SecurityPermission"); }
+          try {
+            List toStore = new LinkedList();
+            toStore.add(delegator.makeValue("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_ADMIN", "description", "Permission to Administer a " + entity.getEntityName() + " entity.")));
+            toStore.add(delegator.makeValue("SecurityGroupPermission", UtilMisc.toMap("groupId", "FULLADMIN", "permissionId", baseName + "_ADMIN")));
+            delegator.storeAll(toStore);
+            rowsChanged += 2;
+          } catch (GenericEntityException e) {
+            errorMessages.add("[install.generateData] ERROR: Failed Security Generation for entity \"" + baseName + "\"");
+          }
 
-          //try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_VIEW", "description", "Permission to View a " + entity.getEntityName() + " entity.")); rowsChanged++; }
-          //catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + baseName + "\" creating VIEW SecurityPermission"); }
+          /*
+          toStore.add(delegator.makeValue("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_VIEW", "description", "Permission to View a " + entity.getEntityName() + " entity.")));
+          toStore.add(delegator.makeValue("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_CREATE", "description", "Permission to Create a " + entity.getEntityName() + " entity.")));
+          toStore.add(delegator.makeValue("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_UPDATE", "description", "Permission to Update a " + entity.getEntityName() + " entity.")));
+          toStore.add(delegator.makeValue("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_DELETE", "description", "Permission to Delete a " + entity.getEntityName() + " entity.")));
 
-          //try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_CREATE", "description", "Permission to Create a " + entity.getEntityName() + " entity.")); rowsChanged++; }
-          //catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + baseName + "\" creating CREATE SecurityPermission"); }
-
-          //try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_UPDATE", "description", "Permission to Update a " + entity.getEntityName() + " entity.")); rowsChanged++; }
-          //catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + baseName + "\" creating UPDATE SecurityPermission"); }
-
-          //try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_DELETE", "description", "Permission to Delete a " + entity.getEntityName() + " entity.")); rowsChanged++; }
-          //catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + baseName + "\" creating DELETE SecurityPermission"); }
-
-          try { delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FULLADMIN", "permissionId", baseName + "_ADMIN")); rowsChanged++; }
-          catch(GenericEntityException e) { errorMessages.add("Generated Data Load error for entity \"" + baseName + "\" creating FULLADMIN SecurityGroupPermission"); }
-          //if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", baseName + "_VIEW")) != null) rowsChanged++;
-          //if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", baseName + "_CREATE")) != null) rowsChanged++;
-          //if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", baseName + "_UPDATE")) != null) rowsChanged++;
-          //if(delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", baseName + "_DELETE")) != null) rowsChanged++;
+          toStore.add(delegator.makeValue("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", baseName + "_VIEW")));
+          toStore.add(delegator.makeValue("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", baseName + "_CREATE")));
+          toStore.add(delegator.makeValue("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", baseName + "_UPDATE")));
+          toStore.add(delegator.makeValue("SecurityGroupPermission", UtilMisc.toMap("groupId", "FLEXADMIN", "permissionId", baseName + "_DELETE")));
+          */
       }
     }
 
