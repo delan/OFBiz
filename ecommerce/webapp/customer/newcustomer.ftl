@@ -99,7 +99,7 @@
     <td width="26%"><div class="tabletext">State/Province</div></td>
     <td width="74%">
       <select name="CUSTOMER_STATE" class='selectBox'>
-          <#if requestParameters.CUSTOMER_STATE?exists><option>${requestParameters.CUSTOMER_STATE}</option></#if>
+          <#if requestParameters.CUSTOMER_STATE?exists><option value='${requestParameters.CUSTOMER_STATE}'>${selectedStateName?default(requestParameters.CUSTOMER_STATE)}</option></#if>
           <option value="">No State/Province</option>          
           <#include "../includes/states.ftl">
       </select>
@@ -115,7 +115,7 @@
       <td width="26%"><div class="tabletext">Country</div></td>
       <td width="74%">
           <select name="CUSTOMER_COUNTRY" class='selectBox'>
-            <#if requestParameters.CUSTOMER_COUNTRY?exists><option>${requestParameters.CUSTOMER_COUNTRY}</option></#if>
+            <#if requestParameters.CUSTOMER_COUNTRY?exists><option value='${requestParameters.CUSTOMER_COUNTRY}'>${selectedCountryName?default(requestParameters.CUSTOMER_COUNTRY)}</option></#if>
             <#include "../includes/countries.ftl">
           </select>
       * </td>

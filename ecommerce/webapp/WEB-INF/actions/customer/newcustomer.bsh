@@ -25,11 +25,27 @@
 
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.UtilProperties;
+import org.ofbiz.core.util.UtilMisc;
+
+delegator = request.getAttribute("delegator");
 
 if (UtilProperties.propertyValueEqualsIgnoreCase(application.getResource("/WEB-INF/ecommerce.properties"), "create.allow.password", "true")) {
     context.put("createAllowPassword", true);
 } else {
     context.put("createAllowPassword", false);
+}
+
+// load the geo names for selected countries and states/regions
+if ( request.getParameter( "CUSTOMER_COUNTRY" ) != null ) {
+	geoValue = delegator.findByPrimaryKeyCache( "Geo", UtilMisc.toMap("geoId", request.getParameter("CUSTOMER_COUNTRY")));
+	if ( geoValue != null )
+		context.put("selectedCountryName", geoValue.get("geoName") );
+}
+
+if ( request.getParameter( "CUSTOMER_STATE" ) != null ) {
+	geoValue = delegator.findByPrimaryKeyCache( "Geo", UtilMisc.toMap("geoId", request.getParameter("CUSTOMER_STATE")));
+	if ( geoValue != null )
+		context.put("selectedStateName", geoValue.get("geoName") );
 }
 
 previousParams = session.getAttribute(SiteDefs.PREVIOUS_PARAMS);

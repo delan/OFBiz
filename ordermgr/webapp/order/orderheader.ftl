@@ -235,8 +235,8 @@
                               ${pmBillingAddress.address1}<br>
                               <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br></#if>                            
                               ${pmBillingAddress.city}<#if pmBillingAddress.stateProvinceGeoId?has_content>, ${pmBillingAddress.stateProvinceGeoId} </#if>
-                              ${pmBillingAddress.postalCode}<br>
-                              ${pmBillingAddress.countryGeoId}
+                              ${pmBillingAddress.postalCode?if_exists}<br>
+                              ${pmBillingAddress.countryGeoId?if_exists}
                             </div>                                                     
                           </td>
                         </tr>
@@ -338,7 +338,7 @@
                                 ${postalAddress.address1}<br>
                                 <#if postalAddress.address2?has_content>${postalAddress.address2}<br></#if>                            
                                 ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>, ${postalAddress.stateProvinceGeoId} </#if>
-                                ${postalAddress.postalCode}<br>
+                                ${postalAddress.postalCode?if_exists}<br>
                                 ${postalAddress.countryGeoId?if_exists}<br>
                                 <#if !postalAddress.countryGeoId?exists || postalAddress.countryGeoId == "USA">  
                                   <#assign addr1 = postalAddress.address1?if_exists>

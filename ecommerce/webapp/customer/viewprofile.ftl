@@ -171,7 +171,7 @@
                     <#if postalAddress.attnName?has_content><b>Attn:</b> ${postalAddress.attnName}<br></#if>
                     ${postalAddress.address1}<br>
                     <#if postalAddress.address2?has_content>${postalAddress.address2}<br></#if>
-                    ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode}
+                    ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode?if_exists}
                     <#if postalAddress.countryGeoId?has_content><br>${postalAddress.countryGeoId}</#if>
                     <#if (!postalAddress.countryGeoId?has_content || postalAddress.countryGeoId?if_exists = "USA")>
                       <#assign addr1 = postalAddress.address1?if_exists>

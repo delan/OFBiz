@@ -95,4 +95,25 @@ if (!tryEntity.booleanValue()) telecomNumberData = requestParameters;
 if (telecomNumberData == null) telecomNumberData = new HashMap();
 if (telecomNumberData != null) context.put("telecomNumberData", telecomNumberData);
 
+// load the geo names for selected countries and states/regions
+if ( request.getParameter( "countryGeoId" ) != null ) {
+	geoValue = delegator.findByPrimaryKeyCache( "Geo", UtilMisc.toMap("geoId", request.getParameter("countryGeoId")));
+	if ( geoValue != null )
+		context.put("selectedCountryName", geoValue.get("geoName") );
+} else if ( postalAddressData != null && postalAddressData.get("countryGeoId") != null ) {
+	geoValue = delegator.findByPrimaryKeyCache( "Geo", UtilMisc.toMap("geoId", postalAddressData.get("countryGeoId")));
+	if ( geoValue != null )
+		context.put("selectedCountryName", geoValue.get("geoName") );
+}
+
+if ( request.getParameter( "stateProvinceGeoId" ) != null ) {
+	geoValue = delegator.findByPrimaryKeyCache( "Geo", UtilMisc.toMap("geoId", request.getParameter("stateProvinceGeoId")));
+	if ( geoValue != null )
+		context.put("selectedStateName", geoValue.get("geoName") );
+} else if ( postalAddressData != null && postalAddressData.get("stateProvinceGeoId") != null ) {
+	geoValue = delegator.findByPrimaryKeyCache( "Geo", UtilMisc.toMap("geoId", postalAddressData.get("stateProvinceGeoId")));
+	if ( geoValue != null )
+		context.put("selectedStateName", geoValue.get("geoName") );
+}
+
 

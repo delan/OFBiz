@@ -48,10 +48,10 @@
     </td>
     <td align="right">
 	  <div class="tabContainer">
-      <a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="tabButton">Profile</a>
-      <a href="<@ofbizUrl>/viewvendor</@ofbizUrl>" class="tabButtonSelected">Vendor</a>
-      <a href="<@ofbizUrl>/viewroles</@ofbizUrl>" class="tabButton">Roles</a>
-      <a href="<@ofbizUrl>/viewrelationships</@ofbizUrl>" class="tabButton">Relationships</a>
+      <a href="<@ofbizUrl>/viewprofile?party_id=${partyId}</@ofbizUrl>" class="tabButton">Profile</a>
+      <a href="<@ofbizUrl>/viewvendor?party_id=${partyId}</@ofbizUrl>" class="tabButtonSelected">Vendor</a>
+      <a href="<@ofbizUrl>/viewroles?party_id=${partyId}</@ofbizUrl>" class="tabButton">Roles</a>
+      <a href="<@ofbizUrl>/viewrelationships?party_id=${partyId}</@ofbizUrl>" class="tabButton">Relationships</a>
       </div>
     </td>
   </tr>

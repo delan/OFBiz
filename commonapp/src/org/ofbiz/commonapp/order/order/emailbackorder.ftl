@@ -159,7 +159,7 @@
                               <#if paymentAddress.attnName?has_content><div class="tabletext" align="center"><b>Attn:</b> ${paymentAddress.attnName}</div></#if>
                               <div class="tabletext" align="center">${paymentAddress.address1}</div>
                               <#if paymentAddress.address2?has_content><div class="tabletext" align="center">${paymentAddress.address2}</div></#if>                            
-                              <div class="tabletext" align="center">${paymentAddress.city}<#if paymentAddress.stateProvinceGeoId?has_content>, ${paymentAddress.stateProvinceGeoId}</#if> ${paymentAddress.postalCode}
+                              <div class="tabletext" align="center">${paymentAddress.city}<#if paymentAddress.stateProvinceGeoId?has_content>, ${paymentAddress.stateProvinceGeoId}</#if> ${paymentAddress.postalCode?if_exists}
                               <div class="tabletext" align="center">${paymentAddress.countryGeoId}</div>                                                                                                                
                               <div class="tabletext" align="center"><hr class="sepbar"></div>
                               <div class="tabletext" align="center"><b>Be sure to include your order #</b></div>
@@ -279,8 +279,8 @@
                             ${shippingAddress.address1}<br>
                             <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>                            
                             ${shippingAddress.city}<#if shippingAddress.stateProvinceGeoId?has_content>, ${shippingAddress.stateProvinceGeoId} </#if>
-                            ${shippingAddress.postalCode}<br>
-                            ${shippingAddress.countryGeoId}
+                            ${shippingAddress.postalCode?if_exists}<br>
+                            ${shippingAddress.countryGeoId?if_exists}
                           </div>
                         </td>
                       </tr>

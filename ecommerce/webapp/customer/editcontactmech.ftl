@@ -156,8 +156,8 @@
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="stateProvinceGeoId" class='selectBox'>
-          <option>${postalAddressData.stateProvinceGeoId?if_exists}</option>
-          <option></option>
+          <#if postalAddressData.stateProvinceGeoId?exists><option value='${postalAddressData.stateProvinceGeoId}'>${selectedStateName?default(postalAddressData.stateProvinceGeoId)}</option></#if>
+          <option value="">No State/Province</option>          
           <#include "../includes/states.ftl">          
         </select>
       *</td>
@@ -167,15 +167,14 @@
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="12" maxlength="10" name="postalCode" value="${postalAddressData.postalCode?if_exists}">
-      *</td>
+      </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Country</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="countryGeoId" class='selectBox'>
-          <option>${postalAddressData.countryGeoId?if_exists}</option>
-          <option></option>
+          <#if postalAddressData.countryGeoId?exists><option value='${postalAddressData.countryGeoId}'>${selectedCountryName?default(postalAddressData.countryGeoId)}</option></#if>
           <#include "../includes/countries.ftl">
         </select>
       *</td>
