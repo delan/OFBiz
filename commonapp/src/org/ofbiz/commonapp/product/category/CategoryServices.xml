@@ -26,6 +26,11 @@
  * Created on April 2, 2002
  -->
 <simple-methods>
+
+    <!-- ================================================================ -->
+    <!-- ProductCategory Services -->
+    <!-- ================================================================ -->
+    
     <simple-method method-name="createProductCategory" short-description="Create an ProductCategory">
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductCategory you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -77,7 +82,10 @@
         </if-not-empty>
     </simple-method>
 
+    <!-- ================================================================ -->
     <!-- ProductCategoryMember Services -->
+    <!-- ================================================================ -->
+    
     <simple-method method-name="addProductToCategory" short-description="Add Product to Category">
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run addProductToCategory you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -125,7 +133,10 @@
         <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
     </simple-method>
 
+    <!-- ================================================================ -->
     <!-- ProductCategoryRollup Services -->
+    <!-- ================================================================ -->
+    
     <simple-method method-name="addProductCategoryToCategory" short-description="Add ProductCategory to Category">
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run addProductCategoryToCategory you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -171,5 +182,98 @@
         <!-- this is for the ecommerce cache of category in a parent category, findByAnd -->
         <field-to-field field-name="parentProductCategoryId" map-name="lookedUpValue" to-map-name="cacheClearMap"/>
         <clear-cache-line entity-name="ProductCategoryRollup" map-name="cacheClearMap"/>
+    </simple-method>
+
+    <!-- ================================================================ -->
+    <!-- Special Category Function Services -->
+    <!-- ================================================================ -->
+    
+    <simple-method method-name="copyCategoryProductMembers" short-description="Remove ProductCategory From Category">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run copyCategoryProductMembers you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="lookupMap"/>
+        <find-by-and entity-name="ProductCategoryMember" map-name="lookupMap" list-name="productCategoryMembers"/>
+
+        <field-to-env field-name="validDate" map-name="parameters" env-name="validDate"/>
+        <if-not-empty field-name="validDate">
+            <filter-list-by-date list-name="productCategoryMembers" valid-date-name="validDate"/>
+        </if-not-empty>
+        
+        <iterate entry-name="productCategoryMember" list-name="productCategoryMembers">
+            <clone-value value-name="productCategoryMember" new-value-name="newProductCategoryMember"/>
+            <field-to-field field-name="productCategoryIdTo" map-name="parameters" to-field-name="productCategoryId" to-map-name="newProductCategoryMember"/>
+            <create-value value-name="newProductCategoryMember"/>
+        </iterate>
+
+        <if-compare field-name="recurse" map-name="parameters" operator="equals" value="Y">
+            <!-- call this service for each sub-category in the rollup with the same productCategoryIdTo -->
+            <field-to-field field-name="productCategoryId" map-name="parameters" to-field-name="parentProductCategoryId" to-map-name="lookupChildrenMap"/>
+            <find-by-and entity-name="ProductCategoryRollup" map-name="lookupChildrenMap" list-name="productCategoryRollups"/>
+
+            <if-not-empty field-name="validDate">
+                <filter-list-by-date list-name="productCategoryRollups" valid-date-name="validDate"/>
+            </if-not-empty>
+
+            <iterate entry-name="productCategoryRollup" list-name="productCategoryRollups">
+                <field-to-field field-name="productCategoryId" map-name="productCategoryRollup" to-map-name="callServiceMap"/>
+                <field-to-field field-name="productCategoryIdTo" map-name="parameters" to-map-name="callServiceMap"/>
+                <field-to-field field-name="validDate" map-name="parameters" to-map-name="callServiceMap"/>
+                <field-to-field field-name="recurse" map-name="parameters" to-map-name="callServiceMap"/>
+                <call-service service-name="copyCategoryProductMembers" in-map-name="callServiceMap"/>
+            </iterate>
+        </if-compare>
+                
+        <!-- this is for the ecommerce cache of products in a category, findByAnd -->
+        <field-to-field field-name="productCategoryIdTo" map-name="parameters" to-field-name="productCategoryId" to-map-name="cacheClearMap"/>
+        <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
+    </simple-method>
+
+    <simple-method method-name="expireAllCategoryProductMembers" short-description="Remove ProductCategory From Category">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run expireAllCategoryProductMembers you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <if-not-empty field-name="thruDate" map-name="parameters">
+            <field-to-env field-name="thruDate" map-name="parameters" env-name="expireTimestamp"/>
+            <else>
+                <now-timestamp-to-env env-name="expireTimestamp"/>
+            </else>
+        </if-not-empty>
+        
+        <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="lookupMap"/>
+        <find-by-and entity-name="ProductCategoryMember" map-name="lookupMap" list-name="productCategoryMembers"/>
+        
+        <iterate entry-name="productCategoryMember" list-name="productCategoryMembers">
+            <env-to-field env-name="expireTimestamp" field-name="thruDate" map-name="productCategoryMember"/>
+            <store-value value-name="productCategoryMember"/>
+        </iterate>
+        
+        <!-- this is for the ecommerce cache of products in a category, findByAnd -->
+        <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="cacheClearMap"/>
+        <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
+    </simple-method>
+    <simple-method method-name="removeExpiredCategoryProductMembers" short-description="Remove ProductCategory From Category">
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeExpiredCategoryProductMembers you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <if-not-empty field-name="validDate" map-name="parameters">
+            <field-to-env field-name="validDate" map-name="parameters" env-name="expireTimestamp"/>
+            <else>
+                <now-timestamp-to-env env-name="expireTimestamp"/>
+            </else>
+        </if-not-empty>
+        
+        <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="lookupMap"/>
+        <find-by-and entity-name="ProductCategoryMember" map-name="lookupMap" list-name="productCategoryMembers"/>
+        
+        <iterate entry-name="productCategoryMember" list-name="productCategoryMembers">
+            <if-compare-field field-name="thruDate" map-name="productCategoryMember" operator="less" to-field-name="expireTimestamp" type="Timestamp">
+                <remove-value value-name="productCategoryMember"/>
+            </if-compare-field>
+        </iterate>
+        
+        <!-- this is for the ecommerce cache of products in a category, findByAnd -->
+        <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="cacheClearMap"/>
+        <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
     </simple-method>
 </simple-methods>

@@ -148,6 +148,22 @@
         <response name="error" type="view" value="EditCategoryProducts"/>
     </request-map>
 
+    <request-map uri="copyCategoryProductMembers"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="copyCategoryProductMembers"/>
+        <response name="success" type="view" value="EditCategoryProducts"/>
+        <response name="error" type="view" value="EditCategoryProducts"/>
+    </request-map>
+    <request-map uri="expireAllCategoryProductMembers"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="expireAllCategoryProductMembers"/>
+        <response name="success" type="view" value="EditCategoryProducts"/>
+        <response name="error" type="view" value="EditCategoryProducts"/>
+    </request-map>
+    <request-map uri="removeExpiredCategoryProductMembers"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeExpiredCategoryProductMembers"/>
+        <response name="success" type="view" value="EditCategoryProducts"/>
+        <response name="error" type="view" value="EditCategoryProducts"/>
+    </request-map>
+
     <!-- ================ Category ProdCatalog Requests ================= -->
     <request-map uri="EditCategoryProdCatalogs"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditCategoryProdCatalogs"/>

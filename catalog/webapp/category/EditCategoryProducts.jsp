@@ -67,6 +67,9 @@
         pageContext.setAttribute("productCategoryMembers", productCategoryMembers);
     }
 
+    Collection productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
+    if (productCategories != null) pageContext.setAttribute("productCategories", productCategories);
+
     if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 
     int highIndex = 0;
@@ -106,6 +109,9 @@
 <%} else {%>
   <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%>&activeOnly=true</ofbiz:url>" class="buttontext">[Active Only]</a>
 <%}%>
+<a href="<ofbiz:url>/expireAllCategoryProductMembers?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Expire All Product Members]</a>
+<a href="<ofbiz:url>/removeExpiredCategoryProductMembers?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Remove All Expired Product Members]</a>
+
 <br>
 <%-- Edit 'ProductCategoryMember's --%>
 <%if(productCategoryId!=null && productCategory!=null){%>
@@ -182,19 +188,64 @@
       </td>
     </tr>
   </table>
-<br>
+</ofbiz:if>
 <br>
 <form method="POST" action="<ofbiz:url>/addCategoryProductMember</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="useValues" value="true">
 
   <div class='head2'>Add ProductCategoryMember:</div>
-  <br>
-  Product ID: <input type=text size='20' name='productId'>
-  Optional From Date: <input type=text size='20' name='fromDate'>
-  <input type="submit" value="Add">
+  <div class='tabletext'>
+    Product ID: <input type=text size='20' name='productId'>
+    Optional From Date: <input type=text size='20' name='fromDate'>
+    <input type="submit" value="Add">
+  </div>
 </form>
-</ofbiz:if>
+<form method="POST" action="<ofbiz:url>/copyCategoryProductMembers</ofbiz:url>" style='margin: 0;'>
+  <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
+  <input type="hidden" name="useValues" value="true">
+
+  <div class='head2'>Copy ProductCategoryMembers to Another Category:</div>
+  <div class='tabletext'>
+    Product Category:
+      <select name="productCategoryIdTo">
+      <ofbiz:iterator name="productCategoryTo" property="productCategories">
+        <option value='<ofbiz:entityfield attribute="productCategoryTo" field="productCategoryId"/>'><ofbiz:entityfield attribute="productCategoryTo" field="description"/> [<ofbiz:entityfield attribute="productCategoryTo" field="productCategoryId"/>]</option>
+      </ofbiz:iterator>
+      </select>
+    <br>
+    Optional Filter With Date: <input type=text size='20' name='validDate'>
+    <br>
+    Include Sub-Categories?
+    <select name='recurse'>
+        <option>N</option>
+        <option>Y</option>
+    </select>
+    <input type="submit" value="Copy">
+  </div>
+</form>
+
+
+<form method="POST" action="<ofbiz:url>/expireAllCategoryProductMembers</ofbiz:url>" style='margin: 0;'>
+  <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
+  <input type="hidden" name="useValues" value="true">
+
+  <div class='head2'>Expire All Product Members:</div>
+  <div class='tabletext'>
+    Optional Expiration Date: <input type=text size='20' name='thruDate'>
+    <input type="submit" value="Expire">
+  </div>
+</form>
+<form method="POST" action="<ofbiz:url>/removeExpiredCategoryProductMembers</ofbiz:url>" style='margin: 0;'>
+  <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
+  <input type="hidden" name="useValues" value="true">
+
+  <div class='head2'>Remove Expired Product Members:</div>
+  <div class='tabletext'>
+    Optional Expired Before Date: <input type=text size='20' name='validDate'>
+    <input type="submit" value="Remove">
+  </div>
+</form>
 <%}%>
 <br>
 <%}else{%>

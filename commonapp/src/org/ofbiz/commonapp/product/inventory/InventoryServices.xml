@@ -94,6 +94,10 @@
         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapThree"/>
     </simple-method>
 
+    <!-- ================================================================ -->
+    <!-- Check/Reserve Inventory Services -->
+    <!-- ================================================================ -->
+    
     <simple-method method-name="getProductInventoryAvailable" short-description="Get Inventory Available for a Product" login-required="false" use-transaction="false">
         <!-- 
             this method can be called with some optional parameters: 

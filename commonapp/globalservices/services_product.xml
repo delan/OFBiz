@@ -231,6 +231,27 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 
+    <service name="copyCategoryProductMembers" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="copyCategoryProductMembers" auth="true">
+        <description>Copy Product Members from one Category to Another, optionally filtering by the given valid date (otherwise no date filtering done), and optionally recursing (if recurse=Y) down the from category</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryIdTo" type="String" mode="IN" optional="false"/>
+        <attribute name="validDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="recurse" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="expireAllCategoryProductMembers" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="expireAllCategoryProductMembers" auth="true">
+        <description>Expire All Product Members in a Category optionally using the thruDate specified as the expire date (now timestamp used by default)</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="removeExpiredCategoryProductMembers" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="removeExpiredCategoryProductMembers" auth="true">
+        <description>Remove All Expired Product Members in a Category, optionally uses the valid date instead of now to determine if the member has expired</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="validDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+
     <service name="addProductCategoryToCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="addProductCategoryToCategory" auth="true">
         <description>Add ProductCatalog To Catalog</description>
