@@ -133,7 +133,8 @@ public class ProductPromoWorker {
                     }
                 }
             }
-            
+        } catch (NumberFormatException e) {
+            Debug.logError(e, "Number not formatted correctly in promotion rules, not completed...");
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error looking up promotion data while doing promotions");
         }
