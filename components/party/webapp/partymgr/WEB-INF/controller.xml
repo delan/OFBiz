@@ -34,6 +34,7 @@
 
     <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.content.webapp.view.RegionViewHandler"/>    
+    <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
 
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>    
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
@@ -666,13 +667,26 @@
         <response name="success" type="view" value="communicationEvent"/>
         <response name="success" type="view" value="communicationEvent"/>
     </request-map>
+    <!-- Lookup request mappings -->
+    <request-map uri="LookupPerson">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupPerson"/>
+    </request-map>
+    <request-map uri="LookupPartyAndUserLoginAndPerson">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupPartyAndUserLoginAndPerson"/>
+    </request-map>
+    <request-map uri="LookupPartyGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupPartyGroup"/>
+    </request-map>
 
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="jpublish" page="/party/findparty.ftl"/>
-    <view-map name="login" type="jpublish" page="/login.ftl"/>
+    <view-map name="login" type="screen" page="component://party/widget/partymgr/CommonScreens.xml#login"/>
     <view-map name="createNew" type="jpublish" page="/party/createnew.ftl"/>
 
     <view-map name="viewprofile" type="jpublish" page="/party/viewprofile.ftl"/>
@@ -708,5 +722,10 @@
     <view-map name="pendingCommunications" type="jpublish" page="/communication/pendingCommunications.ftl"/>
     <view-map name="listCommunications" type="jpublish" page="/communication/listCommunications.ftl"/>
     <view-map name="communicationEvent" type="jpublish" page="/communication/editCommunication.ftl"/>
+    
+    <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
+    <view-map name="LookupPartyAndUserLoginAndPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyAndUserLoginAndPerson" type="screen"/>
+    <view-map name="LookupPartyGroup" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup" type="screen"/>
+
     <!-- end of view mappings -->
 </site-conf>
