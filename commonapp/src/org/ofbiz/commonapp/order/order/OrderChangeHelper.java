@@ -175,7 +175,7 @@ public class OrderChangeHelper {
         return payment;
     }
 
-    public static boolean relaeaseOfflineOrderHold(LocalDispatcher dispatcher, String orderId) {
+    public static boolean releaseInitialOrderHold(LocalDispatcher dispatcher, String orderId) {
         // get the delegator from the dispatcher
         GenericDelegator delegator = dispatcher.getDelegator();
         

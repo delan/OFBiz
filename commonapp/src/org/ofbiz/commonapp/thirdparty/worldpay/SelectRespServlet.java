@@ -207,7 +207,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         }
         
         // attempt to release the offline hold on the order (workflow)
-        OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId); 
+        OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId); 
                         
         // call the email confirm service
         Map emailContext = UtilMisc.toMap("orderId", orderId);

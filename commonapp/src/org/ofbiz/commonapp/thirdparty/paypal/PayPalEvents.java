@@ -310,7 +310,7 @@ public class PayPalEvents {
                 
         if (okay) {
             // attempt to release the offline hold on the order (workflow)            
-            OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId);   
+            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);   
             
             // call the email confirm service
             Map emailContext = UtilMisc.toMap("orderId", orderId);
@@ -364,7 +364,7 @@ public class PayPalEvents {
         
         // attempt to release the offline hold on the order (workflow)
         if (okay) 
-            OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId);  
+            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);  
             
         request.setAttribute(SiteDefs.EVENT_MESSAGE, "<li>Previous PayPal order has been cancelled.");                                            
         return "success";        

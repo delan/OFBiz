@@ -237,7 +237,7 @@ public class OrderManagerEvents {
         OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
         
         // attempt to release the order workflow from 'Hold' status (resume workflow)
-        OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId);
+        OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
                     
         return "success";
     }    
