@@ -81,6 +81,8 @@ public class ModelForm {
     protected FlexibleMapAccessor defaultMapName;
     protected String defaultEntityName;
     protected String defaultServiceName;
+    protected String defaultTitleAreaStyle;
+    protected String defaultWidgetAreaStyle;
     protected String defaultTitleStyle;
     protected String defaultWidgetStyle;
     protected String defaultTooltipStyle;
@@ -206,6 +208,8 @@ public class ModelForm {
                 this.tooltip = parent.tooltip;
                 this.defaultEntityName = parent.defaultEntityName;
                 this.defaultServiceName = parent.defaultServiceName;
+                this.defaultTitleAreaStyle = parent.defaultTitleAreaStyle;
+                this.defaultWidgetAreaStyle = parent.defaultWidgetAreaStyle;
                 this.defaultTitleStyle = parent.defaultTitleStyle;
                 this.defaultWidgetStyle = parent.defaultWidgetStyle;
                 this.defaultTooltipStyle = parent.defaultTooltipStyle;
@@ -240,6 +244,11 @@ public class ModelForm {
             this.defaultServiceName = formElement.getAttribute("default-service-name");
         if (this.defaultEntityName == null || formElement.hasAttribute("default-entity-name"))
             this.defaultEntityName = formElement.getAttribute("default-entity-name");
+
+        if (this.defaultTitleAreaStyle == null || formElement.hasAttribute("default-title-area-style"))
+            this.defaultTitleAreaStyle = formElement.getAttribute("default-title-area-style");
+        if (this.defaultWidgetAreaStyle == null || formElement.hasAttribute("default-widget-area-style"))
+            this.defaultWidgetAreaStyle = formElement.getAttribute("default-widget-area-style");
         if (this.defaultTitleStyle == null || formElement.hasAttribute("default-title-style"))
             this.defaultTitleStyle = formElement.getAttribute("default-title-style");
         if (this.defaultWidgetStyle == null || formElement.hasAttribute("default-widget-style"))
@@ -1205,6 +1214,20 @@ public class ModelForm {
     /**
      * @return
      */
+    public String getDefaultTitleAreaStyle() {
+        return this.defaultTitleAreaStyle;
+    }
+
+    /**
+     * @return
+     */
+    public String getDefaultWidgetAreaStyle() {
+        return this.defaultWidgetAreaStyle;
+    }
+
+    /**
+     * @return
+     */
     public String getDefaultTitleStyle() {
         return this.defaultTitleStyle;
     }
@@ -1382,6 +1405,20 @@ public class ModelForm {
      */
     public void setDefaultServiceName(String string) {
         this.defaultServiceName = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setDefaultTitleAreaStyle(String string) {
+        this.defaultTitleAreaStyle = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setDefaultWidgetAreaStyle(String string) {
+        this.defaultWidgetAreaStyle = string;
     }
 
     /**
