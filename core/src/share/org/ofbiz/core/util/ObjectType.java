@@ -188,8 +188,15 @@ public class ObjectType {
             if (str.length() == 0) {
                 return null;
             }
-            
-            if ("Double".equals(type) || "java.lang.Double".equals(type)) {
+
+            if ("Boolean".equals(type) || "java.lang.Boolean".equals(type)) {
+                Boolean value = null;
+                if (str.equalsIgnoreCase("TRUE"))
+                    value = new Boolean(true);
+                else
+                    value = new Boolean(false);
+                return value;
+            } else if ("Double".equals(type) || "java.lang.Double".equals(type)) {
                 try {
                     NumberFormat nf = null;
                     if (locale == null)
