@@ -178,6 +178,9 @@ public class GenericDAO {
   }
   
   private void singleUpdate(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws SQLException, GenericEntityException {
+    //no non-primaryKey fields, update doesn't make sense, so don't do it
+    if(fieldsToSave.size() <= 0) return;
+    
     String sql = "UPDATE " + modelEntity.tableName + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " + makeWhereStringAnd(modelEntity.pks, entity);
     PreparedStatement ps = null;
     ps = connection.prepareStatement(sql);
@@ -218,6 +221,7 @@ public class GenericDAO {
       select(tempPK);
     }
     catch(GenericEntityNotFoundException e) {
+      //Debug.logInfo(e);
       //select failed, does not exist, insert
       singleInsert(entity, entity.getModelEntity(), entity.getModelEntity().fields, connection);
       storeAllOther(entity, connection);
@@ -258,7 +262,7 @@ public class GenericDAO {
       
       try { if(useTX) connection.rollback(); }
       catch(SQLException sqle2) {
-        Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:");
+        Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back store. Error was:");
         Debug.logWarning(sqle2);
       }
       throw new GenericDataSourceException("SQL Exception occured in storeAll", sqle);
@@ -282,6 +286,8 @@ public class GenericDAO {
       return false;
     }
  */
+    if(modelEntity.pks.size() <= 0) throw new GenericEntityException("Entity has no primary keys, cannot select by primary key");
+
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
