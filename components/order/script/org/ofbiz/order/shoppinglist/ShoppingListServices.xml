@@ -71,7 +71,7 @@
             </else>
             </if-compare>                        
         </if-empty>
-        
+
         <sequenced-id-to-env sequence-name="ShoppingList" env-name="shoppingListId"/>
         <to-string field-name="shoppingListId"/>
         <env-to-field env-name="shoppingListId" map-name="newEntity"/>
@@ -94,6 +94,15 @@
         <!-- don't let auto-reorders be active unless there is some recurrence info -->
         <if-compare field-name="shoppingListTypeId" map-name="shoppingList" operator="equals" value="SLT_AUTO_REODR">
             <if-empty field-name="recurrenceInfoId" map-name="shoppingList">
+                <string-to-field string="N" field-name="isActive" map-name="shoppingList"/>
+            </if-empty>
+            <if-empty field-name="paymentMethodId" map-name="shoppingList">
+                <string-to-field string="N" field-name="isActive" map-name="shoppingList"/>
+            </if-empty>
+            <if-empty field-name="contactMechId" map-name="shoppingList">
+                <string-to-field string="N" field-name="isActive" map-name="shoppingList"/>
+            </if-empty>
+            <if-empty field-name="shipmentMethodTypeId" map-name="shoppingList">
                 <string-to-field string="N" field-name="isActive" map-name="shoppingList"/>
             </if-empty>
         </if-compare>

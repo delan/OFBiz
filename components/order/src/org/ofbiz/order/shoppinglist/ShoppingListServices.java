@@ -33,18 +33,26 @@ import java.sql.Timestamp;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.calendar.RecurrenceInfo;
 import org.ofbiz.service.calendar.RecurrenceInfoException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
+import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.product.store.ProductStoreWorker;
 
 /**
@@ -71,7 +79,19 @@ public class ShoppingListServices {
         }
 
         if (startDate == null) {
-            startDate = UtilDateTime.nowTimestamp();
+            switch (frequency.intValue()) {
+                case 5:
+                    startDate = UtilDateTime.getWeekStart(UtilDateTime.nowTimestamp(), 0, interval.intValue());
+                    break;
+                case 6:
+                    startDate = UtilDateTime.getMonthStart(UtilDateTime.nowTimestamp(), 0, interval.intValue());
+                    break;
+                case 7:
+                    startDate = UtilDateTime.getYearStart(UtilDateTime.nowTimestamp(), 0, interval.intValue());
+                    break;
+                default:
+                    return ServiceUtil.returnError("Invalid frequency for shopping list recurrence");
+            }
         }
 
         long startTime = startDate.getTime();
@@ -88,6 +108,7 @@ public class ShoppingListServices {
             return ServiceUtil.returnError("Unable to create shopping list recurrence information");
         }
 
+        Debug.log("Next Recurrence - " + UtilDateTime.getTimestamp(recInfo.next()), module);
         Map result = ServiceUtil.returnSuccess();
         result.put("recurrenceInfoId", recInfo.getID());
 
@@ -95,7 +116,111 @@ public class ShoppingListServices {
     }
 
     public static Map createListReorders(DispatchContext dctx, Map context) {
-        return ServiceUtil.returnError("Service not yet implemented");
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+
+        List exprs = UtilMisc.toList(new EntityExpr("shoppingListTypeId", EntityOperator.EQUALS, "SLT_AUTO_REODR"),
+                new EntityExpr("isActive", EntityOperator.EQUALS, "Y"));
+        EntityCondition cond = new EntityConditionList(exprs, EntityOperator.AND);
+        List order = UtilMisc.toList("-lastOrderedDate");
+
+        EntityListIterator eli = null;
+        try {
+            eli = delegator.findListIteratorByCondition("ShoppingList", cond, null, order);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        if (eli != null) {
+            GenericValue shoppingList;
+            while (((shoppingList = (GenericValue) eli.next()) != null)) {
+                Timestamp lastOrder = shoppingList.getTimestamp("lastOrderedDate");
+                GenericValue recurrenceInfo = null;
+                try {
+                    recurrenceInfo = shoppingList.getRelatedOne("RecurrenceInfo");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+
+                Timestamp startDateTime = recurrenceInfo.getTimestamp("startDateTime");
+                RecurrenceInfo recurrence = null;
+                if (recurrenceInfo != null) {
+                    try {
+                        recurrence = new RecurrenceInfo(recurrenceInfo);
+                    } catch (RecurrenceInfoException e) {
+                        Debug.logError(e, module);
+                    }
+                }
+
+                // check the next recurrence
+                if (recurrence != null) {
+                    long next = lastOrder == null ? recurrence.next(startDateTime.getTime()) : recurrence.next(lastOrder.getTime());
+                    Timestamp now = UtilDateTime.nowTimestamp();
+                    Timestamp nextOrder = UtilDateTime.getDayStart(UtilDateTime.getTimestamp(next));
+
+                    if (nextOrder.after(now)) {
+                        continue;
+                    }
+                } else {
+                    continue;
+                }
+
+                ShoppingCart listCart = makeShoppingListCart(dispatcher, shoppingList, locale);
+                CheckOutHelper helper = new CheckOutHelper(dispatcher, delegator, listCart);
+
+                // store the order
+                Map createResp = helper.createOrder(userLogin);
+                if (createResp != null && ServiceUtil.isError(createResp)) {
+                    Debug.logError("Cannot create order for shopping list - " + shoppingList, module);
+                } else {
+                    String orderId = (String) createResp.get("orderId");
+
+                    // authorize the payments
+                    Map payRes = null;
+                    try {
+                        payRes = helper.processPayment(ProductStoreWorker.getProductStore(listCart.getProductStoreId(), delegator), userLogin);
+                    } catch (GeneralException e) {
+                        Debug.logError(e, module);
+                    }
+
+                    if (payRes != null && ServiceUtil.isError(payRes)) {
+                        Debug.logError("Payment processing problems with shopping list - " + shoppingList, module);
+                    }
+
+                    shoppingList.set("lastOrderedDate", UtilDateTime.nowTimestamp());
+                    try {
+                        shoppingList.store();
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                    }
+
+                    // send notification
+                    try {
+                        dispatcher.runAsync("sendOrderPayRetryNotification", UtilMisc.toMap("orderId", orderId));
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, module);
+                    }
+
+                    // increment the recurrence
+                    try {
+                        recurrence.incrementCurrentCount();
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                    }
+                }
+            }
+
+            try {
+                eli.close();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+        }
+
+        return ServiceUtil.returnSuccess();
     }
 
     public static Map splitShipmentMethodString(DispatchContext dctx, Map context) {
@@ -117,15 +242,8 @@ public class ShoppingListServices {
         return result;
     }
 
-    public static ShoppingCart makeShoppingListCart(LocalDispatcher dispatcher, String shoppingListId, Locale locale) {
+    public static ShoppingCart makeShoppingListCart(LocalDispatcher dispatcher, GenericValue shoppingList, Locale locale) {
         GenericDelegator delegator = dispatcher.getDelegator();
-        GenericValue shoppingList = null;
-        try {
-            shoppingList = delegator.findByPrimaryKey("ShoppingList", UtilMisc.toMap("shoppingListId", shoppingListId));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-        }
-
         ShoppingCart listCart = null;
         if (shoppingList != null && shoppingList.get("productStoreId") != null) {
             String productStoreId = shoppingList.getString("productStoreId");
@@ -158,8 +276,13 @@ public class ShoppingListServices {
                     String productId = shoppingListItem.getString("productId");
                     Double quantity = shoppingListItem.getDouble("quantity");
                     if (UtilValidate.isNotEmpty(productId) && quantity != null) {
+                        // list items are noted in the shopping cart
+                        String listId = shoppingListItem.getString("shoppingListId");
+                        String itemId = shoppingListItem.getString("shoppingListItemSeqId");
+                        Map attributes = UtilMisc.toMap("shoppingListId", listId, "shoppingListItemSeqId", itemId);
+
                         try {
-                            listCart.addOrIncreaseItem(productId, quantity.doubleValue(), dispatcher);
+                            listCart.addOrIncreaseItem(productId, quantity.doubleValue(), null, attributes, null, dispatcher);
                         } catch (CartItemModifyException e) {
                             Debug.logError(e, "Unable to add product to List Cart - " + productId, module);
                         } catch (ItemNotFoundException e) {
@@ -184,8 +307,18 @@ public class ShoppingListServices {
                 }
             }
         }
-
         return listCart;
+    }
+
+    public static ShoppingCart makeShoppingListCart(LocalDispatcher dispatcher, String shoppingListId, Locale locale) {
+        GenericDelegator delegator = dispatcher.getDelegator();
+        GenericValue shoppingList = null;
+        try {
+            shoppingList = delegator.findByPrimaryKey("ShoppingList", UtilMisc.toMap("shoppingListId", shoppingListId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return makeShoppingListCart(dispatcher, shoppingList, locale);
     }
 
 }
