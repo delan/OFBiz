@@ -113,6 +113,7 @@
         <description>Credit Card Processing</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="processAmount" type="Double" mode="INOUT" optional="false"/>
+        <attribute name="orderItems" type="List" mode="IN" optional="false"/>
         <attribute name="contactPerson" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="contactEmail" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="billingAddress" type="GenericValue" mode="IN" optional="false"/>
@@ -133,6 +134,7 @@
         <description>EFT Account Processing</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="processAmount" type="Double" mode="INOUT" optional="false"/>
+        <attribute name="orderItems" type="List" mode="IN" optional="false"/>
         <attribute name="contactPerson" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="contactEmail" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="billingAddress" type="GenericValue" mode="IN" optional="false"/>
