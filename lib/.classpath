@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
+    <classpathentry exported="true" kind="lib" path="common/castor-0.9.3.9.jar"/>
+    <classpathentry exported="true" kind="lib" path="compile/activation.jar"/>
+    <classpathentry exported="true" kind="lib" path="datavision/DataVision.jar"/>
+    <classpathentry exported="true" kind="lib" path="jasperreports/itext-0.92.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/axis.jar"/>
+    <classpathentry exported="true" kind="lib" path="weka/remoteExperimentServer.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/commons-beanutils.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/commons-collections.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/commons-dbcp.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/commons-digester.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/commons-pool.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/hsqldb.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/jms_1.0.2a.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/jta_1.0.1.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/log4j.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/mm.mysql-2.0.14-bin.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/ots-jts_1.0.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/postgresql.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/sapdbc.jar"/>
+    <classpathentry exported="true" kind="lib" path="common/tyrex-1.0.jar"/>
+    <classpathentry exported="true" kind="lib" path="compile/jboss-j2ee.jar"/>
+    <classpathentry exported="true" kind="lib" path="compile/jdbc2_0-stdext.jar"/>
+    <classpathentry exported="true" kind="lib" path="compile/mail.jar"/>
+    <classpathentry exported="true" kind="lib" path="compile/servlet.jar"/>
+    <classpathentry exported="true" kind="lib" path="compile/xerces.jar"/>
+    <classpathentry exported="true" kind="lib" path="datavision/MinML.jar"/>
+    <classpathentry exported="true" kind="lib" path="datavision/jcalendar.jar"/>
+    <classpathentry exported="true" kind="lib" path="jasperreports/jasperreports.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/bsh-1.2b6.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/clutil.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/jakarta-oro-2.0.4.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/velocity-1.2.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/velocity-dep-1.2.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/wsdl4j.jar"/>
+    <classpathentry exported="true" kind="lib" path="weka/weka.jar"/>
+    <classpathentry kind="output" path="bin"/>
+</classpath>

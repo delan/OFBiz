@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry kind="src" path="src/share"/>
+    <classpathentry kind="src" path="src/datafile"/>
+    <classpathentry kind="src" path="src/entity"/>
+    <classpathentry kind="src" path="src/extutil"/>
+    <classpathentry kind="src" path="src/service"/>
+    <classpathentry kind="src" path="src/workflow"/>
+    <classpathentry kind="src" path="src/extentity"/>
+    <classpathentry kind="src" path="src/minilang"/>
+    <classpathentry kind="src" path="src/rules"/>
+    <classpathentry kind="src" path="src/webapp"/>
+    <classpathentry kind="var" path="JRE_LIB" rootpath="JRE_SRCROOT" sourcepath="JRE_SRC"/>
+    <classpathentry kind="src" path="/lib"/>
+    <classpathentry kind="output" path="bin"/>
+</classpath>
