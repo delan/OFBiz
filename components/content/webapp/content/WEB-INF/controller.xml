@@ -892,7 +892,8 @@
         <response name="success" type="view" value="EditSurvey"/>
         <response name="error" type="view" value="EditSurvey"/>
     </request-map>
-    
+
+    <!-- SurveyQuestion Requests -->
     <request-map uri="EditSurveyQuestions">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditSurveyQuestions"/>
@@ -915,6 +916,28 @@
         <response name="success" type="view" value="EditSurveyQuestions"/>
         <response name="error" type="view" value="EditSurveyQuestions"/>
     </request-map>
+
+    <!-- SurveyQuestionOption Requests -->
+    <request-map uri="createSurveyQuestionOption">
+        <security auth="true" https="true"/>
+        <event invoke="createSurveyQuestionOption" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
+    <request-map uri="updateSurveyQuestionOption">
+        <security auth="true" https="true"/>
+        <event invoke="updateSurveyQuestionOption" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
+    <request-map uri="deleteSurveyQuestionOption">
+        <security auth="true" https="true"/>
+        <event invoke="deleteteSurveyQuestionOption" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
+
+    <!-- SurveyQuestionCategory Requests -->
     <request-map uri="createSurveyQuestionCategory">
         <security auth="true" https="true"/>
         <event invoke="createSurveyQuestionCategory" type="service"/>

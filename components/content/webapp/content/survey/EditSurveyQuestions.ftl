@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      3.0
 -->
 
@@ -38,6 +38,7 @@
       <td><div class="tableheadtext">Question</div></td>
       <td><div class="tableheadtext">Required</div></td>
       <td><div class="tableheadtext">Seq #</div></td>
+      <td><div class="tableheadtext">&nbsp;</div></td>
       <td><div class="tableheadtext">&nbsp;</div></td>
       <td><div class="tableheadtext">&nbsp;</div></td>
     </tr>
@@ -65,6 +66,7 @@
           </td>
           <td><input type="text" name="sequenceNum" size="5" class="textBox" value="${question.sequenceNum?if_exists}">
           <td><input type="submit" value="Update">
+          <td><a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${question.surveyQuestionId}</@ofbizUrl>" class="buttontext">[Edit]</a>
           <td><a href="<@ofbizUrl>/removeSurveyQuestionAppl?surveyId=${question.surveyId}&surveyQuestionId=${question.surveyQuestionId}&fromDate=${question.fromDate}</@ofbizUrl>" class="buttontext">[Remove]</a>
         </tr>
       </form>
@@ -78,12 +80,49 @@
     <br><br>
     ${createSurveyQuestionCategoryWrapper.renderFormString()}
   <#else>
-    <div class="head2">Create New Question:</div>
+    <#if surveyQuestionId?has_content>
+      <div class="head2">Edit Question:</div>
+      <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">[New Question]</a>
+    <#else>
+      <div class="head2">Create New Question:</div>
+    </#if>
     <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y</@ofbizUrl>" class="buttontext">[New Question Category]</a>
     <br><br>
     ${createSurveyQuestionWrapper.renderFormString()}
   </#if>
 
+  <#if (surveyQuestion?has_content && surveyQuestion.surveyQuestionTypeId?default("") == "OPTION")>
+    <br>
+    <hr class="sepbar">
+    <br>
+    <div class="head1">Survey Options - <span class="head2">ID: ${surveyQuestion.surveyQuestionId?if_exists}</div>
+    <br><br>
+    <table border="1" cellpadding='2' cellspacing='0'>
+      <tr>
+        <td><div class="tableheadtext">Description</div></td>
+        <td><div class="tableheadtext">Seq #</div></td>
+        <td><div class="tableheadtext">&nbsp;</div></td>
+        <td><div class="tableheadtext">&nbsp;</div></td>
+      </tr>
+
+      <#list questionOptions as option>
+        <tr valign="middle">
+          <td><div class="tabletext">${option.description?if_exists}</div></td>
+          <td><div class="tabletext">${option.sequenceNum?if_exists}</div></td>
+          <td><a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${option.surveyQuestionId}&surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="buttontext">[Edit]</a>
+          <td><a href="<@ofbizUrl>/removeSurveyQuestionAppl?surveyId=${requestParameters.surveyId}&surveyQuestionId=${option.surveyQuestionId}&surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="buttontext">[Remove]</a>
+        </tr>
+      </#list>
+    </table>
+    <br>
+    <#if !surveyQuestionOption?has_content>
+      <div class="head2">Create Question Option:</div>
+    <#else>
+      <div class="head2">Edit Question Option:</div>
+      <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&surveyQuestionId=${surveyQuestionOption.surveyQuestionId}</@ofbizUrl>" class="buttontext">[New Option]</a>
+    </#if>
+    ${createSurveyOptionWrapper.renderFormString()}
+  </#if>
 <#else>
   <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
 </#if>

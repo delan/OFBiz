@@ -59,11 +59,12 @@
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="CreateSurveyQuestion" type="single" 
-        target="createSurveyQuestion" title=""
+        target="createSurveyQuestion" title="" default-map-name="surveyQuestion"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        
+        <alt-target use-when="surveyQuestion!=null" target="updateSurveyQuestion"/>
         <auto-fields-service service-name="createSurveyQuestion"/>
-        
+
+        <field use-when="surveyQuestion!=null" name="surveyQuestionId"><hidden/></field>
         <field name="surveyId"><hidden value="${surveyId}"/></field>
         <field name="surveyQuestionSeqId"><ignored/></field>
         <field name="surveyQuestionCategoryId">
@@ -76,7 +77,8 @@
                <entity-options entity-name="SurveyQuestionType" description="${description}"/>
             </drop-down>
         </field>
-        
+
+        <field use-when="surveyQuestion!=null" name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="CreateSurveyQuestionCategory" type="single"
@@ -85,6 +87,19 @@
 
         <auto-fields-service service-name="createSurveyQuestionCategory"/>
         <field name="surveyId"><hidden value="${surveyId}"/></field>
+        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="CreateSurveyQuestionOption" type="single"
+        target="createSurveyQuestionOption" title="" default-map-name="surveyQuestionOption"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="surveyQuestionOption!=null" target="updateSurveyQuestionOption"/>
+        <auto-fields-service service-name="createSurveyQuestionOption"/>
+
+        <field name="surveyId"><hidden value="${surveyId}"/></field>
+        <field name="surveyQuestionId"><hidden value="${surveyQuestionId}"/></field>
+        <field use-when="surveyQuestionOption!=null" name="surveyOptionSeqId"><hidden/></field>
+
+        <field use-when="surveyQuestionOption!=null" name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>
