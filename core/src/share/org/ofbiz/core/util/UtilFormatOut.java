@@ -306,6 +306,15 @@ public class UtilFormatOut {
      * @return mainString with all occurances of oldString replaced by newString
      */
     public static String replaceString(String mainString, String oldString, String newString) {
+        if (mainString == null) {
+            return null;
+        }
+        if (oldString == null || oldString.length() == 0) {
+            return mainString;
+        }
+        if (newString == null) {
+            newString = "";
+        }
         String retString = new String(mainString);
         int loc = 0;
         int i = retString.indexOf(oldString, loc);

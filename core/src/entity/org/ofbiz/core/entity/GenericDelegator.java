@@ -841,7 +841,6 @@ public class GenericDelegator {
         ModelRelation relation = modelEntity.getRelation(relationName);
         if (relation == null)
             throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
-        ModelEntity relatedEntity = getModelReader().getModelEntity(relation.getRelEntityName());
 
         //put the byAndFields (if not null) into the hash map first,
         //they will be overridden by value's fields if over-specified this is important for security and cleanliness
@@ -851,7 +850,7 @@ public class GenericDelegator {
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        return this.findByAnd(relatedEntity.getEntityName(), fields, orderBy);
+        return this.findByAnd(relation.getRelEntityName(), fields, orderBy);
     }
 
     /** Get a dummy primary key for the named Related Entity for the GenericValue
@@ -894,7 +893,6 @@ public class GenericDelegator {
         ModelRelation relation = modelEntity.getRelation(relationName);
         if (relation == null)
             throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
-        ModelEntity relatedEntity = getModelReader().getModelEntity(relation.getRelEntityName());
 
         Map fields = new HashMap();
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
@@ -902,7 +900,7 @@ public class GenericDelegator {
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        return this.findByAndCache(relatedEntity.getEntityName(), fields, null);
+        return this.findByAndCache(relation.getRelEntityName(), fields, null);
     }
 
     /** Get related entity where relation is of type one, uses findByPrimaryKey
@@ -911,11 +909,12 @@ public class GenericDelegator {
     public GenericValue getRelatedOne(String relationName, GenericValue value) throws GenericEntityException {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = value.getModelEntity().getRelation(relationName);
-        if (relation == null)
-            throw new GenericModelException("[GenericDelegator.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
-        if (!"one".equals(relation.getType()) && !"one-nofk".equals(relation.getType()))
-            throw new IllegalArgumentException("Relation is not a 'one' relation: " + relationName + " of entity " + value.getEntityName());
-        ModelEntity relatedEntity = getModelReader().getModelEntity(relation.getRelEntityName());
+        if (relation == null) {
+            throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
+        }
+        if (!"one".equals(relation.getType()) && !"one-nofk".equals(relation.getType())) {
+            throw new IllegalArgumentException("Relation is not a 'one' or a 'one-nofk' relation: " + relationName + " of entity " + value.getEntityName());
+        }
 
         Map fields = new HashMap();
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
@@ -923,7 +922,7 @@ public class GenericDelegator {
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        return this.findByPrimaryKey(relatedEntity.getEntityName(), fields);
+        return this.findByPrimaryKey(relation.getRelEntityName(), fields);
     }
 
     /** Get related entity where relation is of type one, uses findByPrimaryKey, checking first in the cache to see if the desired value is there
@@ -932,11 +931,12 @@ public class GenericDelegator {
     public GenericValue getRelatedOneCache(String relationName, GenericValue value) throws GenericEntityException {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = modelEntity.getRelation(relationName);
-        if (relation == null)
-            throw new GenericModelException("[GenericDelegator.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
-        if (!"one".equals(relation.getType()) && !"one-nofk".equals(relation.getType()))
-            throw new IllegalArgumentException("Relation is not a 'one' relation: " + relationName + " of entity " + value.getEntityName());
-        ModelEntity relatedEntity = getModelReader().getModelEntity(relation.getRelEntityName());
+        if (relation == null) {
+            throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
+        }
+        if (!"one".equals(relation.getType()) && !"one-nofk".equals(relation.getType())) {
+            throw new IllegalArgumentException("Relation is not a 'one' or a 'one-nofk' relation: " + relationName + " of entity " + value.getEntityName());
+        }
 
         Map fields = new HashMap();
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
@@ -944,7 +944,7 @@ public class GenericDelegator {
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        return this.findByPrimaryKeyCache(relatedEntity.getEntityName(), fields);
+        return this.findByPrimaryKeyCache(relation.getRelEntityName(), fields);
     }
 
     /** Remove the named Related Entity for the GenericValue from the persistent store
@@ -956,7 +956,9 @@ public class GenericDelegator {
     public void removeRelated(String relationName, GenericValue value) throws GenericEntityException {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = modelEntity.getRelation(relationName);
-        ModelEntity relatedEntity = getModelReader().getModelEntity(relation.getRelEntityName());
+        if (relation == null) {
+            throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
+        }
 
         Map fields = new HashMap();
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
@@ -964,7 +966,7 @@ public class GenericDelegator {
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        this.removeByAnd(relatedEntity.getEntityName(), fields);
+        this.removeByAnd(relation.getRelEntityName(), fields);
     }
 
     /** Refresh the Entity for the GenericValue from the persistent store
