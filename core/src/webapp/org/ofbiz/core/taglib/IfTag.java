@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/01/21 23:40:26  jonesde
+ * Expanded if tag, no longer requires type (uses instanceof), supports Long, Float
+ *
  * Revision 1.3  2001/11/11 14:48:51  jonesde
  * Added inputvalue tag
  *
@@ -206,7 +209,7 @@ public class IfTag extends BodyTagSupport {
             } catch (RuntimeException e) {
                 return SKIP_BODY;
             }
-        } else {
+        } else if (value != null) {
             // Assume the object is an Object and compare to the Object named value.
             Object valueObject = null;
             try {
@@ -216,6 +219,11 @@ public class IfTag extends BodyTagSupport {
             } catch (RuntimeException e) {
                 return SKIP_BODY;
             }
+        } else {
+            // basicly if no other comparisons available, just check to see if
+            // the thing is null or not, and since we've already checked that,
+            // treat as true here
+            return EVAL_BODY_AGAIN;
         }
         
         return SKIP_BODY;
