@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenWidget.java,v 1.4 2004/07/18 10:09:35 jonesde Exp $
+ * $Id: ModelScreenWidget.java,v 1.5 2004/07/24 23:01:20 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -57,6 +57,10 @@ import org.ofbiz.content.widget.menu.MenuFactory;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
 import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
+import org.ofbiz.content.widget.tree.ModelTree;
+import org.ofbiz.content.widget.tree.TreeStringRenderer;
+import org.ofbiz.content.widget.tree.TreeFactory;
+import org.ofbiz.content.widget.html.HtmlTreeRenderer;
 import org.ofbiz.entity.GenericValue;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -65,7 +69,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public abstract class ModelScreenWidget {
@@ -103,13 +107,13 @@ public abstract class ModelScreenWidget {
             } else if ("form".equals(subElement.getNodeName())) {
                 subWidgets.add(new Form(modelScreen, subElement));
             } else if ("menu".equals(subElement.getNodeName())) {
-                subWidgets.add(new Menu(modelScreen, widgetElement));
+                subWidgets.add(new Menu(modelScreen, subElement));
             } else if ("tree".equals(subElement.getNodeName())) {
-                subWidgets.add(new ModelTree(modelScreen, widgetElement));
+                subWidgets.add(new Tree(modelScreen, subElement));
             } else if ("content".equals(subElement.getNodeName())) {
-                subWidgets.add(new Content(modelScreen, widgetElement));
+                subWidgets.add(new Content(modelScreen, subElement));
             } else if ("sub-content".equals(subElement.getNodeName())) {
-                subWidgets.add(new SubContent(modelScreen, widgetElement));
+                subWidgets.add(new SubContent(modelScreen, subElement));
             } else if ("platform-specific".equals(subElement.getNodeName())) {
                 subWidgets.add(new PlatformSpecific(modelScreen, subElement));
             } else {
@@ -496,6 +500,92 @@ public abstract class ModelScreenWidget {
                 writer.write(renderBuffer.toString());
             } catch (IOException e) {
                 String errMsg = "Error rendering included form named [" + name + "] at location [" + location + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            }
+        }
+        
+        public String getName(Map context) {
+            return this.nameExdr.expandString(context);
+        }
+        
+        public String getLocation(Map context) {
+            return this.locationExdr.expandString(context);
+        }
+    }
+
+
+    public static class Tree extends ModelScreenWidget {
+        protected FlexibleStringExpander nameExdr;
+        protected FlexibleStringExpander locationExdr;
+        
+        public Tree(ModelScreen modelScreen, Element treeElement) {
+            super(modelScreen, treeElement);
+
+            this.nameExdr = new FlexibleStringExpander(treeElement.getAttribute("name"));
+            this.locationExdr = new FlexibleStringExpander(treeElement.getAttribute("location"));
+        }
+
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+            String name = this.getName(context);
+            String location = this.getLocation(context);
+            ModelTree modelTree = null;
+            try {
+                modelTree = TreeFactory.getTreeFromLocation(this.getLocation(context), this.getName(context), this.modelScreen.getDelegator(context), this.modelScreen.getDispatcher(context));
+            } catch (IOException e) {
+                String errMsg = "Error rendering included tree named [" + name + "] at location [" + location + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            } catch (SAXException e) {
+                String errMsg = "Error rendering included tree named [" + name + "] at location [" + location + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            } catch (ParserConfigurationException e) {
+                String errMsg = "Error rendering included tree named [" + name + "] at location [" + location + "]: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new RuntimeException(errMsg);
+            }
+            
+            // try finding the treeStringRenderer by name in the context in case one was prepared and put there
+            TreeStringRenderer treeStringRenderer = (TreeStringRenderer) context.get("treeStringRenderer");
+            // if there was no treeStringRenderer put in place, now try finding the request/response in the context and creating a new one
+            if (treeStringRenderer == null) {
+                HttpServletRequest request = (HttpServletRequest) context.get("request");
+                HttpServletResponse response = (HttpServletResponse) context.get("response");
+                if (request != null && response != null) {
+                    String renderClassString = modelTree.getRenderClass();
+                    if (UtilValidate.isEmpty(renderClassString)) 
+                        renderClassString = "org.ofbiz.content.widget.html.HtmlTreeRenderer";
+                    try {
+                        Class renderClass = Class.forName(renderClassString);
+                        treeStringRenderer = (TreeStringRenderer)renderClass.newInstance();
+                    } catch (ClassNotFoundException e) {
+                        String errMsg = "Class not found for " + renderClassString + e.toString();
+                        Debug.logError(e, errMsg, module);
+                        throw new RuntimeException(errMsg);
+                    } catch (InstantiationException e2) {
+                        String errMsg = e2.toString();
+                        Debug.logError(e2, errMsg, module);
+                        throw new RuntimeException(errMsg);
+                    } catch (IllegalAccessException e3) {
+                        String errMsg = e3.toString();
+                        Debug.logError(e3, errMsg, module);
+                        throw new RuntimeException(errMsg);
+                    }
+        
+                }
+            }
+            // still null, throw an error
+            if (treeStringRenderer == null) {
+                throw new IllegalArgumentException("Could not find a treeStringRenderer in the context, and could not find HTTP request/response objects need to create one.");
+            }
+            
+            StringBuffer renderBuffer = new StringBuffer();
+            modelTree.renderTreeString(renderBuffer, context, treeStringRenderer);
+            try {
+                writer.write(renderBuffer.toString());
+            } catch (IOException e) {
+                String errMsg = "Error rendering included tree named [" + name + "] at location [" + location + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new RuntimeException(errMsg);
             }
