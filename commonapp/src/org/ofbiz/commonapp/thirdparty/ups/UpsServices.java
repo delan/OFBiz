@@ -133,7 +133,7 @@ public class UpsServices {
                 return ServiceUtil.returnError("CarrierShipmentMethod not found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId + "; partyId is " + shipmentRouteSegment.get("carrierPartyId") + " and shipmentMethodTypeId is " + shipmentRouteSegment.get("shipmentMethodTypeId"));
             }
 
-            List shipmentPackageRouteSegs = shipmentRouteSegment.getRelated("ShipmentPackageRouteSeg");
+            List shipmentPackageRouteSegs = shipmentRouteSegment.getRelated("ShipmentPackageRouteSeg", null, UtilMisc.toList("+shipmentPackageSeqId"));
             if (shipmentPackageRouteSegs == null || shipmentPackageRouteSegs.size() == 0) {
                 return ServiceUtil.returnError("No ShipmentPackageRouteSegs found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId);
             }
@@ -327,6 +327,9 @@ public class UpsServices {
             // send ShipmentConfirmRequest String
             // get ShipmentConfirmResponse String back
             StringBuffer xmlString = new StringBuffer();
+            // TODO: note that we may have to append <?xml version="1.0"?> before each string
+            xmlString.append(accessRequestString);
+            xmlString.append(shipmentConfirmRequestString);
             try {
                 shipmentConfirmResponseString = sendUpsRequest("ShipConfirm", xmlString.toString());
             } catch (UpsConnectException e) {
@@ -366,76 +369,78 @@ public class UpsServices {
             List errorList = new LinkedList();
             UpsServices.handleErrors(responseElement, errorList);
 
-            // handle ShipmentCharges element info
-            Element shipmentChargesElement = UtilXml.firstChildElement(shipmentConfirmResponseElement, "ShipmentCharges");
-
-            Element transportationChargesElement = UtilXml.firstChildElement(shipmentChargesElement, "TransportationCharges");
-            String transportationCurrencyCode = UtilXml.childElementValue(transportationChargesElement, "CurrencyCode");
-            String transportationMonetaryValue = UtilXml.childElementValue(transportationChargesElement, "MonetaryValue");
-            
-            Element serviceOptionsChargesElement = UtilXml.firstChildElement(shipmentChargesElement, "ServiceOptionsCharges");
-            String serviceOptionsCurrencyCode = UtilXml.childElementValue(serviceOptionsChargesElement, "CurrencyCode");
-            String serviceOptionsMonetaryValue = UtilXml.childElementValue(serviceOptionsChargesElement, "MonetaryValue");
-
-            Element totalChargesElement = UtilXml.firstChildElement(shipmentChargesElement, "TotalCharges");
-            String totalCurrencyCode = UtilXml.childElementValue(totalChargesElement, "CurrencyCode");
-            String totalMonetaryValue = UtilXml.childElementValue(totalChargesElement, "MonetaryValue");
-            
-            if (UtilValidate.isNotEmpty(totalCurrencyCode)) {
-                if (UtilValidate.isEmpty(shipmentRouteSegment.getString("currencyUomId"))) {
-                    shipmentRouteSegment.set("currencyUomId", totalCurrencyCode);
-                } else if(!totalCurrencyCode.equals(shipmentRouteSegment.getString("currencyUomId"))) {
-                    errorList.add("The Currency Unit of Measure returned [" + totalCurrencyCode + "] is not the same as the original [" + shipmentRouteSegment.getString("currencyUomId") + "], setting to the new one.");
-                    shipmentRouteSegment.set("currencyUomId", totalCurrencyCode);
-                }
-            }
-            
-            try {
-                shipmentRouteSegment.set("actualTransportCost", Double.valueOf(transportationMonetaryValue));
-            } catch (NumberFormatException e) {
-                String excErrMsg = "Error parsing the transportationMonetaryValue [" + transportationMonetaryValue + "]: " + e.toString();
-                Debug.logError(e, excErrMsg);
-                errorList.add(excErrMsg);
-            }
-            try {
-                shipmentRouteSegment.set("actualServiceCost", Double.valueOf(serviceOptionsMonetaryValue));
-            } catch (NumberFormatException e) {
-                String excErrMsg = "Error parsing the serviceOptionsMonetaryValue [" + serviceOptionsMonetaryValue + "]: " + e.toString();
-                Debug.logError(e, excErrMsg);
-                errorList.add(excErrMsg);
-            }
-            try {
-                shipmentRouteSegment.set("actualCost", Double.valueOf(totalMonetaryValue));
-            } catch (NumberFormatException e) {
-                String excErrMsg = "Error parsing the totalMonetaryValue [" + totalMonetaryValue + "]: " + e.toString();
-                Debug.logError(e, excErrMsg);
-                errorList.add(excErrMsg);
-            }
-            
-            // handle BillingWeight element info
-            Element billingWeightElement = UtilXml.firstChildElement(shipmentConfirmResponseElement, "BillingWeight");
-            Element billingWeightUnitOfMeasurementElement = UtilXml.firstChildElement(billingWeightElement, "UnitOfMeasurement");
-            String billingWeightUnitOfMeasurement = UtilXml.childElementValue(billingWeightUnitOfMeasurementElement, "Code");
-            String billingWeight = UtilXml.childElementValue(billingWeightElement, "Weight");
-            try {
-                shipmentRouteSegment.set("billingWeight", Double.valueOf(billingWeight));
-            } catch (NumberFormatException e) {
-                String excErrMsg = "Error parsing the billingWeight [" + billingWeight + "]: " + e.toString();
-                Debug.logError(e, excErrMsg);
-                errorList.add(excErrMsg);
-            }
-            shipmentRouteSegment.set("billingWeightUomId", unitsUpsToOfbiz.get(billingWeightUnitOfMeasurement));
-
-            // store the ShipmentIdentificationNumber and ShipmentDigest
-            String shipmentIdentificationNumber = UtilXml.childElementValue(shipmentConfirmResponseElement, "ShipmentIdentificationNumber");
-            String shipmentDigest = UtilXml.childElementValue(shipmentConfirmResponseElement, "ShipmentDigest");
-            shipmentRouteSegment.set("trackingIdNumber", shipmentIdentificationNumber);
-            shipmentRouteSegment.set("trackingDigest", shipmentDigest);
-            
-            // write/store all modified value objects
-            shipmentRouteSegment.store();
-            
             if ("1".equals(responseStatusCode)) {
+                // handle ShipmentCharges element info
+                Element shipmentChargesElement = UtilXml.firstChildElement(shipmentConfirmResponseElement, "ShipmentCharges");
+
+                Element transportationChargesElement = UtilXml.firstChildElement(shipmentChargesElement, "TransportationCharges");
+                String transportationCurrencyCode = UtilXml.childElementValue(transportationChargesElement, "CurrencyCode");
+                String transportationMonetaryValue = UtilXml.childElementValue(transportationChargesElement, "MonetaryValue");
+            
+                Element serviceOptionsChargesElement = UtilXml.firstChildElement(shipmentChargesElement, "ServiceOptionsCharges");
+                String serviceOptionsCurrencyCode = UtilXml.childElementValue(serviceOptionsChargesElement, "CurrencyCode");
+                String serviceOptionsMonetaryValue = UtilXml.childElementValue(serviceOptionsChargesElement, "MonetaryValue");
+
+                Element totalChargesElement = UtilXml.firstChildElement(shipmentChargesElement, "TotalCharges");
+                String totalCurrencyCode = UtilXml.childElementValue(totalChargesElement, "CurrencyCode");
+                String totalMonetaryValue = UtilXml.childElementValue(totalChargesElement, "MonetaryValue");
+            
+                if (UtilValidate.isNotEmpty(totalCurrencyCode)) {
+                    if (UtilValidate.isEmpty(shipmentRouteSegment.getString("currencyUomId"))) {
+                        shipmentRouteSegment.set("currencyUomId", totalCurrencyCode);
+                    } else if(!totalCurrencyCode.equals(shipmentRouteSegment.getString("currencyUomId"))) {
+                        errorList.add("The Currency Unit of Measure returned [" + totalCurrencyCode + "] is not the same as the original [" + shipmentRouteSegment.getString("currencyUomId") + "], setting to the new one.");
+                        shipmentRouteSegment.set("currencyUomId", totalCurrencyCode);
+                    }
+                }
+            
+                try {
+                    shipmentRouteSegment.set("actualTransportCost", Double.valueOf(transportationMonetaryValue));
+                } catch (NumberFormatException e) {
+                    String excErrMsg = "Error parsing the transportationMonetaryValue [" + transportationMonetaryValue + "]: " + e.toString();
+                    Debug.logError(e, excErrMsg);
+                    errorList.add(excErrMsg);
+                }
+                try {
+                    shipmentRouteSegment.set("actualServiceCost", Double.valueOf(serviceOptionsMonetaryValue));
+                } catch (NumberFormatException e) {
+                    String excErrMsg = "Error parsing the serviceOptionsMonetaryValue [" + serviceOptionsMonetaryValue + "]: " + e.toString();
+                    Debug.logError(e, excErrMsg);
+                    errorList.add(excErrMsg);
+                }
+                try {
+                    shipmentRouteSegment.set("actualCost", Double.valueOf(totalMonetaryValue));
+                } catch (NumberFormatException e) {
+                    String excErrMsg = "Error parsing the totalMonetaryValue [" + totalMonetaryValue + "]: " + e.toString();
+                    Debug.logError(e, excErrMsg);
+                    errorList.add(excErrMsg);
+                }
+            
+                // handle BillingWeight element info
+                Element billingWeightElement = UtilXml.firstChildElement(shipmentConfirmResponseElement, "BillingWeight");
+                Element billingWeightUnitOfMeasurementElement = UtilXml.firstChildElement(billingWeightElement, "UnitOfMeasurement");
+                String billingWeightUnitOfMeasurement = UtilXml.childElementValue(billingWeightUnitOfMeasurementElement, "Code");
+                String billingWeight = UtilXml.childElementValue(billingWeightElement, "Weight");
+                try {
+                    shipmentRouteSegment.set("billingWeight", Double.valueOf(billingWeight));
+                } catch (NumberFormatException e) {
+                    String excErrMsg = "Error parsing the billingWeight [" + billingWeight + "]: " + e.toString();
+                    Debug.logError(e, excErrMsg);
+                    errorList.add(excErrMsg);
+                }
+                shipmentRouteSegment.set("billingWeightUomId", unitsUpsToOfbiz.get(billingWeightUnitOfMeasurement));
+
+                // store the ShipmentIdentificationNumber and ShipmentDigest
+                String shipmentIdentificationNumber = UtilXml.childElementValue(shipmentConfirmResponseElement, "ShipmentIdentificationNumber");
+                String shipmentDigest = UtilXml.childElementValue(shipmentConfirmResponseElement, "ShipmentDigest");
+                shipmentRouteSegment.set("trackingIdNumber", shipmentIdentificationNumber);
+                shipmentRouteSegment.set("trackingDigest", shipmentDigest);
+            
+                // write/store all modified value objects
+                shipmentRouteSegment.store();
+                
+                // -=-=-=- Okay, now done with that, just return any extra info...
+            
                 StringBuffer successString = new StringBuffer("The UPS ShipmentConfirm succeeded");
                 if (errorList.size() > 0) {
                     // this shouldn't happen much, but handle it anyway
@@ -473,6 +478,8 @@ public class UpsServices {
         String shipmentId = (String) context.get("shipmentId");
         String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
 
+        String shipmentAccessResponseString = null;
+
         try {
             GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
             GenericValue shipmentRouteSegment = delegator.findByPrimaryKey("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId));
@@ -481,13 +488,249 @@ public class UpsServices {
                 return ServiceUtil.returnError("ERROR: The Carrier for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is not UPS.");
             }
             
+            if (UtilValidate.isEmpty(shipmentRouteSegment.getString("trackingDigest"))) {
+                return ServiceUtil.returnError("ERROR: The trackingDigest was not set for this Route Segment, meaning that a UPS shipment confirm has not been done.");
+            }
+
+            List shipmentPackageRouteSegs = shipmentRouteSegment.getRelated("ShipmentPackageRouteSeg", null, UtilMisc.toList("+shipmentPackageSeqId"));
+            if (shipmentPackageRouteSegs == null || shipmentPackageRouteSegs.size() == 0) {
+                return ServiceUtil.returnError("No ShipmentPackageRouteSegs found for ShipmentRouteSegment with shipmentId " + shipmentId + " and shipmentRouteSegmentId " + shipmentRouteSegmentId);
+            }
+            
+            Document shipmentAcceptRequestDoc = UtilXml.makeEmptyXmlDocument("ShipmentAcceptRequest");
+            Element shipmentAcceptRequestElement = shipmentAcceptRequestDoc.getDocumentElement();
+            shipmentAcceptRequestElement.setAttribute("xml:lang", "en-US");
+
+            // Top Level Element: Request
+            Element requestElement = UtilXml.addChildElement(shipmentAcceptRequestElement, "Request", shipmentAcceptRequestDoc);
+
+            Element transactionReferenceElement = UtilXml.addChildElement(requestElement, "TransactionReference", shipmentAcceptRequestDoc);
+            UtilXml.addChildElementValue(transactionReferenceElement, "CustomerContext", "ShipAccept / 01", shipmentAcceptRequestDoc);
+            UtilXml.addChildElementValue(transactionReferenceElement, "XpciVersion", "1.0001", shipmentAcceptRequestDoc);
+
+            UtilXml.addChildElementValue(requestElement, "RequestAction", "ShipAccept", shipmentAcceptRequestDoc);
+            UtilXml.addChildElementValue(requestElement, "RequestOption", "01", shipmentAcceptRequestDoc);
+
+            UtilXml.addChildElementValue(shipmentAcceptRequestElement, "ShipmentDigest", shipmentRouteSegment.getString("trackingDigest"), shipmentAcceptRequestDoc);
+            
+            
+            String shipmentAcceptRequestString = null;
+            try {
+                shipmentAcceptRequestString = UtilXml.writeXmlDocument(shipmentAcceptRequestDoc);
+            } catch (IOException e) {
+                String ioeErrMsg = "Error writing the ShipmentAcceptRequest XML Document to a String: " + e.toString();
+                Debug.logError(e, ioeErrMsg);
+                return ServiceUtil.returnError(ioeErrMsg);
+            }
+            
+            // create AccessRequest XML doc
+            Document accessRequestDocument = createAccessRequestDocument();
+            String accessRequestString = null;
+            try {
+                accessRequestString = UtilXml.writeXmlDocument(accessRequestDocument);
+            } catch (IOException e) {
+                String ioeErrMsg = "Error writing the AccessRequest XML Document to a String: " + e.toString();
+                Debug.logError(e, ioeErrMsg);
+                return ServiceUtil.returnError(ioeErrMsg);
+            }
+            
+            // connect to UPS server, send AccessRequest to auth
+            // send ShipmentConfirmRequest String
+            // get ShipmentConfirmResponse String back
+            StringBuffer xmlString = new StringBuffer();
+            // TODO: note that we may have to append <?xml version="1.0"?> before each string
+            xmlString.append(accessRequestString);
+            xmlString.append(shipmentAcceptRequestString);
+            try {
+                shipmentAccessResponseString = sendUpsRequest("ShipAccept", xmlString.toString());
+            } catch (UpsConnectException e) {
+                String uceErrMsg = "Error sending UPS request for UPS Service ShipAccept: " + e.toString();
+                Debug.logError(e, uceErrMsg);
+                return ServiceUtil.returnError(uceErrMsg);
+            }
+
+            Document shipmentAccessResponseDocument = null;
+            try {
+                shipmentAccessResponseDocument = UtilXml.readXmlDocument(shipmentAccessResponseString, false);
+            } catch (SAXException e2) {
+                String excErrMsg = "Error parsing the ShipmentAccessResponse: " + e2.toString();
+                Debug.logError(e2, excErrMsg);
+                return ServiceUtil.returnError(excErrMsg);
+            } catch (ParserConfigurationException e2) {
+                String excErrMsg = "Error parsing the ShipmentAccessResponse: " + e2.toString();
+                Debug.logError(e2, excErrMsg);
+                return ServiceUtil.returnError(excErrMsg);
+            } catch (IOException e2) {
+                String excErrMsg = "Error parsing the ShipmentAccessResponse: " + e2.toString();
+                Debug.logError(e2, excErrMsg);
+                return ServiceUtil.returnError(excErrMsg);
+            }
+
+            // process ShipmentAccessResponse, update data as needed
+            Element shipmentAccessResponseElement = shipmentAccessResponseDocument.getDocumentElement();
+            
+            // handle Response element info
+            Element responseElement = UtilXml.firstChildElement(shipmentAccessResponseElement, "Response");
+            Element responseTransactionReferenceElement = UtilXml.firstChildElement(responseElement, "TransactionReference");
+            String responseTransactionReferenceCustomerContext = UtilXml.childElementValue(responseTransactionReferenceElement, "CustomerContext");
+            String responseTransactionReferenceXpciVersion = UtilXml.childElementValue(responseTransactionReferenceElement, "XpciVersion");
+
+            String responseStatusCode = UtilXml.childElementValue(responseElement, "ResponseStatusCode");
+            String responseStatusDescription = UtilXml.childElementValue(responseElement, "ResponseStatusDescription");
+            List errorList = new LinkedList();
+            UpsServices.handleErrors(responseElement, errorList);
+
+            if ("1".equals(responseStatusCode)) {
+                Element shipmentResultsElement = UtilXml.firstChildElement(shipmentAccessResponseElement, "ShipmentResults");
+
+                // This information is returned in both the ShipmentConfirmResponse and 
+                //the ShipmentAcceptResponse. So, we'll go ahead and store it here again
+                //and warn of changes or something...
+                
+
+                // handle ShipmentCharges element info
+                Element shipmentChargesElement = UtilXml.firstChildElement(shipmentResultsElement, "ShipmentCharges");
+
+                Element transportationChargesElement = UtilXml.firstChildElement(shipmentChargesElement, "TransportationCharges");
+                String transportationCurrencyCode = UtilXml.childElementValue(transportationChargesElement, "CurrencyCode");
+                String transportationMonetaryValue = UtilXml.childElementValue(transportationChargesElement, "MonetaryValue");
+            
+                Element serviceOptionsChargesElement = UtilXml.firstChildElement(shipmentChargesElement, "ServiceOptionsCharges");
+                String serviceOptionsCurrencyCode = UtilXml.childElementValue(serviceOptionsChargesElement, "CurrencyCode");
+                String serviceOptionsMonetaryValue = UtilXml.childElementValue(serviceOptionsChargesElement, "MonetaryValue");
+
+                Element totalChargesElement = UtilXml.firstChildElement(shipmentChargesElement, "TotalCharges");
+                String totalCurrencyCode = UtilXml.childElementValue(totalChargesElement, "CurrencyCode");
+                String totalMonetaryValue = UtilXml.childElementValue(totalChargesElement, "MonetaryValue");
+            
+                if (UtilValidate.isNotEmpty(totalCurrencyCode)) {
+                    if (UtilValidate.isEmpty(shipmentRouteSegment.getString("currencyUomId"))) {
+                        shipmentRouteSegment.set("currencyUomId", totalCurrencyCode);
+                    } else if(!totalCurrencyCode.equals(shipmentRouteSegment.getString("currencyUomId"))) {
+                        errorList.add("The Currency Unit of Measure returned [" + totalCurrencyCode + "] is not the same as the original [" + shipmentRouteSegment.getString("currencyUomId") + "], setting to the new one.");
+                        shipmentRouteSegment.set("currencyUomId", totalCurrencyCode);
+                    }
+                }
+            
+                try {
+                    shipmentRouteSegment.set("actualTransportCost", Double.valueOf(transportationMonetaryValue));
+                } catch (NumberFormatException e) {
+                    String excErrMsg = "Error parsing the transportationMonetaryValue [" + transportationMonetaryValue + "]: " + e.toString();
+                    Debug.logError(e, excErrMsg);
+                    errorList.add(excErrMsg);
+                }
+                try {
+                    shipmentRouteSegment.set("actualServiceCost", Double.valueOf(serviceOptionsMonetaryValue));
+                } catch (NumberFormatException e) {
+                    String excErrMsg = "Error parsing the serviceOptionsMonetaryValue [" + serviceOptionsMonetaryValue + "]: " + e.toString();
+                    Debug.logError(e, excErrMsg);
+                    errorList.add(excErrMsg);
+                }
+                try {
+                    shipmentRouteSegment.set("actualCost", Double.valueOf(totalMonetaryValue));
+                } catch (NumberFormatException e) {
+                    String excErrMsg = "Error parsing the totalMonetaryValue [" + totalMonetaryValue + "]: " + e.toString();
+                    Debug.logError(e, excErrMsg);
+                    errorList.add(excErrMsg);
+                }
+            
+                // handle BillingWeight element info
+                Element billingWeightElement = UtilXml.firstChildElement(shipmentResultsElement, "BillingWeight");
+                Element billingWeightUnitOfMeasurementElement = UtilXml.firstChildElement(billingWeightElement, "UnitOfMeasurement");
+                String billingWeightUnitOfMeasurement = UtilXml.childElementValue(billingWeightUnitOfMeasurementElement, "Code");
+                String billingWeight = UtilXml.childElementValue(billingWeightElement, "Weight");
+                try {
+                    shipmentRouteSegment.set("billingWeight", Double.valueOf(billingWeight));
+                } catch (NumberFormatException e) {
+                    String excErrMsg = "Error parsing the billingWeight [" + billingWeight + "]: " + e.toString();
+                    Debug.logError(e, excErrMsg);
+                    errorList.add(excErrMsg);
+                }
+                shipmentRouteSegment.set("billingWeightUomId", unitsUpsToOfbiz.get(billingWeightUnitOfMeasurement));
+
+                // store the ShipmentIdentificationNumber and ShipmentDigest
+                String shipmentIdentificationNumber = UtilXml.childElementValue(shipmentResultsElement, "ShipmentIdentificationNumber");
+                // should compare to trackingIdNumber, should always be the same right?
+                shipmentRouteSegment.set("trackingIdNumber", shipmentIdentificationNumber);
+
+                // write/store modified value object
+                shipmentRouteSegment.store();
+                
+                // now process the PackageResults elements
+                List packageResultsElements = UtilXml.childElementList(shipmentResultsElement, "PackageResults");
+                Iterator packageResultsElementIter = packageResultsElements.iterator();
+                Iterator shipmentPackageRouteSegIter = shipmentPackageRouteSegs.iterator();
+                while (packageResultsElementIter.hasNext()) {
+                    Element packageResultsElement = (Element) packageResultsElementIter.next();
+                    
+                    String trackingNumber = UtilXml.childElementValue(packageResultsElement, "TrackingNumber");
+
+                    Element packageServiceOptionsChargesElement = UtilXml.firstChildElement(packageResultsElement, "ServiceOptionsCharges");
+                    String packageServiceOptionsCurrencyCode = UtilXml.childElementValue(packageServiceOptionsChargesElement, "CurrencyCode");
+                    String packageServiceOptionsMonetaryValue = UtilXml.childElementValue(packageServiceOptionsChargesElement, "MonetaryValue");
+
+                    Element packageLabelImageElement = UtilXml.firstChildElement(packageResultsElement, "LabelImage");
+                    Element packageLabelImageFormatElement = UtilXml.firstChildElement(packageResultsElement, "LabelImageFormat");
+                    // will be EPL or GIF, should always be GIF since that is what we requested
+                    String packageLabelImageFormatCode = UtilXml.childElementValue(packageLabelImageFormatElement, "Code");
+                    String packageLabelGraphicImageString = UtilXml.childElementValue(packageLabelImageElement, "GraphicImage");
+
+                    if (!shipmentPackageRouteSegIter.hasNext()) {
+                        errorList.add("Error: More PackageResults were returned than there are Packages on this Shipment; the TrackingNumber is [" + trackingNumber + "], the ServiceOptionsCharges were " + packageServiceOptionsMonetaryValue + packageServiceOptionsCurrencyCode);
+                        // NOTE: if this happens much we should just create a new package to store all of the info...
+                        continue;
+                    }
+                    
+                    //NOTE: I guess they come back in the same order we sent them, so we'll get the packages in order and off we go...
+                    GenericValue shipmentPackageRouteSeg = (GenericValue) shipmentPackageRouteSegIter.next();
+                    shipmentPackageRouteSeg.set("trackingCode", trackingNumber);
+                    shipmentPackageRouteSeg.set("boxNumber", "");
+                    shipmentPackageRouteSeg.set("currencyUomId", packageServiceOptionsCurrencyCode);
+                    try {
+                        shipmentRouteSegment.set("packageServiceCost", Double.valueOf(packageServiceOptionsMonetaryValue));
+                    } catch (NumberFormatException e) {
+                        String excErrMsg = "Error parsing the packageServiceOptionsMonetaryValue [" + packageServiceOptionsMonetaryValue + "] for Package [" + shipmentPackageRouteSeg.getString("shipmentPackageSeqId") + "]: " + e.toString();
+                        Debug.logError(e, excErrMsg);
+                        errorList.add(excErrMsg);
+                    }
+                    
+                    byte[] labelImageBytes = Base64.base64Decode(packageLabelGraphicImageString.getBytes());
+                    shipmentPackageRouteSeg.setBytes("labelImage", labelImageBytes);
+                    
+                    shipmentPackageRouteSeg.store();
+                }
+
+                if (shipmentPackageRouteSegIter.hasNext()) {
+                    errorList.add("Error: There are more Packages on this Shipment than there were PackageResults returned from UPS");
+                    while (shipmentPackageRouteSegIter.hasNext()) {
+                        GenericValue shipmentPackageRouteSeg = (GenericValue) shipmentPackageRouteSegIter.next();
+                        errorList.add("Error: No PackageResults were returned for the Package [" + shipmentPackageRouteSeg.getString("shipmentPackageSeqId") + "]");
+                    }
+                }
+                
+                // -=-=-=- Okay, now done with that, just return any extra info...
+                StringBuffer successString = new StringBuffer("The UPS ShipmentAccept succeeded");
+                if (errorList.size() > 0) {
+                    // this shouldn't happen much, but handle it anyway
+                    successString.append(", but the following occurred: ");
+                    Iterator errorListIter = errorList.iterator();
+                    while (errorListIter.hasNext()) {
+                        String errorMsg = (String) errorListIter.next();
+                        successString.append(errorMsg);
+                        if (errorListIter.hasNext()) {
+                            successString.append(", ");
+                        }
+                    }
+                }
+                return ServiceUtil.returnSuccess(successString.toString());
+            } else {
+                errorList.add(0, "The UPS ShipmentConfirm failed");
+                return ServiceUtil.returnError(errorList);
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e);
             return ServiceUtil.returnError("Error reading or writing Shipment data for UPS Shipment Accept: " + e.toString());
         }
-
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        return result;
     }
     
     public static Map upsVoidShipment(DispatchContext dctx, Map context) {
