@@ -28,6 +28,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.ContextAccessor;
 import org.ofbiz.minilang.method.MethodContext;
@@ -88,8 +91,21 @@ public class SetServiceFields extends MethodOperation {
         Iterator inModelParamIter = modelService.getInModelParamList().iterator();
         while (inModelParamIter.hasNext()) {
             ModelParam modelParam = (ModelParam) inModelParamIter.next();
+            
             if (fromMap.containsKey(modelParam.name)) {
-                toMap.put(modelParam.name, fromMap.get(modelParam.name));
+                Object value = fromMap.get(modelParam.name);
+
+                if (UtilValidate.isNotEmpty(modelParam.type)) {
+                    try {
+                        value = ObjectType.simpleTypeConvert(value, modelParam.type, null, null, false);
+                    } catch (GeneralException e) {
+                        String errMsg = "Could not convert field value for the parameter/attribute: [" + modelParam.name + "] on the [" + serviceName + "] service to the [" + modelParam.type + "] type for the value [" + value + "]: " + e.toString();
+                        Debug.logError(e, errMsg, module);
+                        throw new IllegalArgumentException(errMsg);
+                    }
+                }
+                
+                toMap.put(modelParam.name, value);
             }
         }
         
