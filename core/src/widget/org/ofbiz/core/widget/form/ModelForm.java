@@ -875,7 +875,7 @@ public class ModelForm {
         if (UtilValidate.isNotEmpty(this.itemIndexSeparator)) {
             return this.itemIndexSeparator;
         } else {
-            return "_ms_";
+            return "_o_";
         }
     }
 

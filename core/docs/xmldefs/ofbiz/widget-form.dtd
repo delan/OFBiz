@@ -57,7 +57,7 @@
     default-title-style CDATA #IMPLIED
     default-widget-style CDATA #IMPLIED
     default-tooltip-style CDATA #IMPLIED
-    item-index-separator CDATA "_ms_"
+    item-index-separator CDATA "_o_"
 >
 
 <!ELEMENT alt-target EMPTY>
