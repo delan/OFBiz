@@ -483,12 +483,12 @@
     <request-map uri="EditProdCatalog"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProdCatalog"/>
     </request-map>
-    <request-map uri="CreateProdCatalog"><security https="true" auth="true"/>
+    <request-map uri="createProdCatalog"><security https="true" auth="true"/>
         <event type="service" path="" invoke="createProdCatalog"/>
     	<response name="success" type="view" value="EditProdCatalog"/>
     	<response name="error" type="view" value="EditProdCatalog"/>
     </request-map>
-    <request-map uri="UpdateProdCatalog"><security https="true" auth="true"/>
+    <request-map uri="updateProdCatalog"><security https="true" auth="true"/>
         <event type="service" path="" invoke="updateProdCatalog"/>
     	<response name="success" type="view" value="EditProdCatalog"/>
     	<response name="error" type="view" value="EditProdCatalog"/>

@@ -66,7 +66,7 @@
 		<field name="brandName"><text size="30" maxlength="60"/></field>
 		<field name="description" widget-style="textAreaBox"><textarea cols="60" rows="2"/></field>
 		<field name="longDescription" widget-style="textAreaBox"><textarea cols="60" rows="7"/></field>
-		<field name="comments"><text size="60" maxlength="255"/></field>
+		<field name="comments"><text size="60" maxlength="250"/></field>
 		
 		<field position="1" name="introductionDate" title="Intro Date" red-when="after-now"><date-time/></field>
 		<field position="2" name="salesDiscontinuationDate" title="Sales Thru Date" red-when="before-now"><date-time/></field>

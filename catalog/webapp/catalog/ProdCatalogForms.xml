@@ -24,6 +24,63 @@
 -->
 
 <forms>
+	<form name="EditProdCatalog" type="single" 
+		target="updateProdCatalog" title="" default-map-name="prodCatalog"
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		
+		<alt-target use-when="prodCatalog==null" target="createProdCatalog"/>
+		
+		<field use-when="prodCatalog!=null" name="prodCatalogId" tooltip="This cannot be changed without re-creating the Product Catalog."><display/></field>
+		<field use-when="prodCatalog==null&amp;&amp;prodCatalogId==null" name="prodCatalogId"><text size="20" maxlength="20"/></field>
+		<field use-when="prodCatalog==null&amp;&amp;prodCatalogId!=null" name="prodCatalogId" tooltip="Could not find ProdCatalog with ID [${prodCatalogId}]"><text size="20" maxlength="20"/></field>
+
+		<field name="catalogName"><text size="30" maxlength="60"/></field>
+		<field name="title"><text size="30" maxlength="60"/></field>
+		<field name="subtitle" title="Sub-title"><text size="60" maxlength="250"/></field>
+		
+		<field name="inventoryFacilityId" title="Inventory Facility" widget-style="selectBox">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
+					<entity-order-by field-name="facilityName"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		<field use-when="prodCatalog!=null&amp;&amp;prodCatalog.getString(&quot;inventoryFacilityId&quot;)!=null" name="inventoryFacilityLink" title="&amp;nbsp;" widget-style="buttontext">
+			<hyperlink target="EditFacility?facilityId=${prodCatalog.inventoryFacilityId}"
+				description="[Edit Facility ${prodCatalog.inventoryFacilityId}]" also-hidden="false"/>
+		</field>
+
+		<field name="checkInventory" widget-style="selectBox">
+			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
+		</field>
+		<field name="requireInventory" title="Require Inventory for Purchase" widget-style="selectBox">
+			<drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
+		</field>
+		<field name="reserveInventory" widget-style="selectBox">
+			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
+		</field>
+		<field name="reserveOrderEnumId" title="Reservation Order" widget-style="selectBox">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="INV_RES_ORDER"/>
+					<entity-order-by field-name="description"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="oneInventoryFacility" widget-style="selectBox">
+			<drop-down allow-empty="true" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
+		</field>
+		<field name="useQuickAdd" widget-style="selectBox">
+			<drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
+		</field>
+
+		<field name="styleSheet"><text size="60" maxlength="250"/></field>
+		<field name="headerLogo"><text size="60" maxlength="250"/></field>
+		<field name="contentPathPrefix" tooltip="If specified will be prepended to image and other content paths. Should start with a slash but not end with one."><text size="60" maxlength="250"/></field>
+		<field name="templatePathPrefix" tooltip="If specified will be prepended to template paths. Should start with a slash but not end with one."><text size="60" maxlength="250"/></field>
+
+		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+	</form>
 	<form name="AddProdCatalogToParty" type="single" 
 		target="addProdCatalogToParty" title=""
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
