@@ -5,6 +5,7 @@
 package org.ofbiz.commonapp.security.login;
 
 import java.util.*;
+import java.sql.Timestamp;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
@@ -44,34 +45,120 @@ public class LoginServices {
      */
     public static Map userLogin(DispatchContext ctx, Map context) {
         Map result = new HashMap();
-        List errors = new ArrayList();
         GenericDelegator delegator = ctx.getDelegator();
 
         String username = (String) context.get("login.username");
+        if (username == null) username = (String) context.get("username");
         String password = (String) context.get("login.password");
-        GenericValue value = null;
+        if (password == null) password = (String) context.get("password");
 
-        try {
-            value = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", username));
-        } catch ( GenericEntityException e ) {
-            errors.add(e.getMessage());
-        }
-        if (value != null) {
-            if( password.compareTo(value.getString("currentPassword")) == 0 ) {
-                result.put("userLogin",value);
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-                Debug.logInfo("[LoginServices.userLogin] : Password Matched");
-            } else {
-                Debug.logInfo("[LoginServices.userLogin] : Password Incorrect");
-                errors.add("Password incorrect.");
-            }
+        String errMsg = "";
+        if(username == null || username.length() <= 0) {
+            errMsg = "Username missing.";
+        } else if(password == null || password.length() <= 0) {
+            errMsg = "Password missing";
         } else {
-            errors.add("User not found.");
-            Debug.logInfo("[LoginServices.userLogin] : Invalid User");
+            GenericValue userLogin = null;
+            try {
+                userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", username));
+            } catch(GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+            
+            if(userLogin != null) {
+                String ldmStr = UtilProperties.getPropertyValue("security", "login.disable.minutes");
+                long loginDisableMinutes = 30;
+                try {
+                    loginDisableMinutes = Long.parseLong(ldmStr);
+                } catch (Exception e) {
+                    loginDisableMinutes = 30;
+                    Debug.logWarning("Could not parse login.disable.minutes from security.properties, using default of 30");
+                }
+
+                Timestamp disabledDateTime = userLogin.getTimestamp("disabledDateTime");
+                Timestamp reEnableTime = null;
+                if (loginDisableMinutes > 0 && disabledDateTime != null) {
+                    reEnableTime = new Timestamp(disabledDateTime.getTime() + loginDisableMinutes*60000);
+                }
+                
+                if (UtilValidate.isEmpty(userLogin.getString("enabled")) || "Y".equals(userLogin.getString("enabled")) ||
+                        (reEnableTime != null && reEnableTime.before(UtilDateTime.nowTimestamp()))) {
+                
+                    String successfulLogin;
+                    userLogin.set("enabled", "Y");
+                    if (userLogin.get("currentPassword") != null && password.equals(userLogin.getString("currentPassword"))) {
+                        Debug.logInfo("[LoginServices.userLogin] : Password Matched");
+                        //reset failed login count
+                        userLogin.set("successiveFailedLogins", new Long(0));
+                        
+                        successfulLogin = "Y";
+
+                        result.put("userLogin", userLogin);
+                        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+                    } else {
+                        Debug.logInfo("[LoginServices.userLogin] : Password Incorrect");
+                        // password invalid, just go to badlogin page...
+                        errMsg = "Password incorrect.";
+
+                        //increment failed login count
+                        Long currentFailedLogins = userLogin.getLong("successiveFailedLogins");
+                        if (currentFailedLogins == null) {
+                            currentFailedLogins = new Long(1);
+                        } else {
+                            currentFailedLogins = new Long(currentFailedLogins.longValue() + 1);
+                        }
+                        userLogin.set("successiveFailedLogins", currentFailedLogins);
+
+                        //if failed logins over amount in properties file, disable account
+                        String mflStr = UtilProperties.getPropertyValue("security", "max.failed.logins");
+                        long maxFailedLogins = 3;
+                        try {
+                            maxFailedLogins = Long.parseLong(mflStr);
+                        } catch (Exception e) {
+                            maxFailedLogins = 3;
+                            Debug.logWarning("Could not parse max.failed.logins from security.properties, using default of 3");
+                        }
+
+                        if (currentFailedLogins.longValue() >= maxFailedLogins) {
+                            userLogin.set("enabled", "N");
+                            userLogin.set("disabledDateTime", UtilDateTime.nowTimestamp());
+                        }
+
+                        successfulLogin = "N";
+                    }
+                    
+                    try {
+                        userLogin.store();
+                    } catch(GenericEntityException e) {
+                        Debug.logWarning(e);
+                    }
+
+                    if ("true".equals(UtilProperties.getPropertyValue("security", "store.login.history"))) {
+                        try {
+                            delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username,
+                                "fromDate", UtilDateTime.nowTimestamp(), "passwordUsed", password,
+                                "partyId", userLogin.get("partyId"), "referrerUrl", "NotYetImplemented", "successfulLogin", successfulLogin));
+                        } catch(GenericEntityException e) {
+                            Debug.logWarning(e);
+                        }
+                    }
+                } else {
+                    errMsg = "The account for user login id \"" + username + "\" has been disabled since " + disabledDateTime + ".";
+
+                    if (loginDisableMinutes > 0 && reEnableTime != null) {
+                        errMsg += " It will be re-enabled " + reEnableTime + ".";
+                    }
+                }
+            } else {
+                //userLogin record not found, user does not exist
+                errMsg = "User not found.";
+                Debug.logInfo("[LoginServices.userLogin] : Invalid User");
+            }
         }
-        if (errors.size() > 0) {
+
+        if (errMsg.length() > 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE_LIST,errors);
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
         }
         return result;
     }

@@ -91,9 +91,7 @@ public class ModelService {
      * @return ModelParam object with the specified name
      */
     public ModelParam getParam(String name) {
-        if (contextInfo.containsKey(name))
-            return (ModelParam) contextInfo.get(name);
-        return null;
+        return (ModelParam) contextInfo.get(name);
     }
     
     /**
@@ -239,7 +237,7 @@ public class ModelService {
                     extraStr += ", ";
                 }
             }
-            throw new ServiceValidationException("Unknown paramters found: " + extraStr);
+            throw new ServiceValidationException("Unknown parameters found: " + extraStr);
         }
 
         // * Validate types next
@@ -256,19 +254,19 @@ public class ModelService {
             try {
                 infoClass = ObjectType.loadClass(infoType);
             } catch (SecurityException se1) {
-                throw new ServiceValidationException("Problems with classloader: sercurity exception (" +
+                throw new ServiceValidationException("Problems with classloader: security exception (" +
                         se1.getMessage() + ")");
             } catch (ClassNotFoundException e1) {
                 try {
                     infoClass = ObjectType.loadClass(LANG_PACKAGE + infoType);
                 } catch (SecurityException se2) {
-                    throw new ServiceValidationException("Problems with classloader: sercurity exception (" +
+                    throw new ServiceValidationException("Problems with classloader: security exception (" +
                             se2.getMessage() + ")");
                 } catch (ClassNotFoundException e2) {
                     try {
                         infoClass = ObjectType.loadClass(SQL_PACKAGE + infoType);
                     } catch (SecurityException se3) {
-                        throw new ServiceValidationException("Problems with classloader: sercurity exception (" +
+                        throw new ServiceValidationException("Problems with classloader: security exception (" +
                                 se3.getMessage() + ")");
                     } catch (ClassNotFoundException e3) {
                         throw new ServiceValidationException("Cannot find and load the class of type: " + infoType +

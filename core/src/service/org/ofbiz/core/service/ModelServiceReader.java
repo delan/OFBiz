@@ -325,7 +325,7 @@ public class ModelServiceReader {
         def = new ModelParam();
         def.name = "userLogin";
         def.type = "org.ofbiz.core.entity.GenericValue";
-        def.mode = "IN";
+        def.mode = "INOUT";
         def.optional = true;
         service.addParam(def);
     }

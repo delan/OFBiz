@@ -32,10 +32,17 @@
     <!-- Security services -->
     <service name="userLogin" engine="java"
             location="org.ofbiz.commonapp.security.login.LoginServices" invoke="userLogin">
-        <description>Authenticate a username/password; create a UserLogin object</description>
+        <description>Used to Automatically Authenticate a username/password; create a UserLogin object</description>
         <attribute name="login.username" type="String" mode="IN"/>
         <attribute name="login.password" type="String" mode="IN"/>
         <attribute name="userLogin" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
+    </service>
+    <service name="loginUser" engine="java"
+            location="org.ofbiz.commonapp.security.login.LoginServices" invoke="userLogin" auth="false">
+        <description>Used to MANUALLY Authenticate a username/password; create a UserLogin object</description>
+        <attribute name="username" type="String" mode="IN" optional="false"/>
+        <attribute name="password" type="String" mode="IN" optional="false"/>
+        <attribute name="userLogin" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="false"/>
     </service>
 
     <service name="createUserLogin" engine="java"

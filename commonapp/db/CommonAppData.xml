@@ -77,7 +77,7 @@
 
   <UserLogin currentPassword="ofbiz" partyId="admin" passwordHint="" userLoginId="admin"/>
   <UserLogin currentPassword="ofbiz" partyId="" passwordHint="" userLoginId="flexadmin"/>
-  <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin"/>
-  <UserLoginSecurityGroup groupId="FLEXADMIN" userLoginId="flexadmin"/>
+  <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
+  <UserLoginSecurityGroup groupId="FLEXADMIN" userLoginId="flexadmin" fromDate="2001-01-01 12:00:00.0"/>
 </entity-engine-xml>
 

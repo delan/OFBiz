@@ -1386,8 +1386,11 @@
       <description>Maps a UserLogin to a security group</description>
       <field name="userLoginId" type="id-vlong-ne"></field>
       <field name="groupId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <prim-key field="userLoginId"/>
       <prim-key field="groupId"/>
+      <prim-key field="fromDate"/>
       <relation type="one" rel-entity-name="UserLogin">
         <key-map field-name="userLoginId"/>
       </relation>

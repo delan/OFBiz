@@ -81,6 +81,8 @@ public class Security {
             if (collection == null) collection = new LinkedList();
             userLoginSecurityGroupByUserLoginId.put(userLoginId, collection);
         }
+        //filter each time after cache retreival, ie cache will contain entire list
+        collection = EntityUtil.filterByDate(collection);
         return collection.iterator();
     }
 

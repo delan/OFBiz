@@ -30,6 +30,7 @@ import java.util.*;
 import java.net.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.commonapp.party.contact.ContactHelper;
 
@@ -145,51 +146,34 @@ public class LoginEvents {
      */
     public static String login(HttpServletRequest request, HttpServletResponse response)
             throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
-        String errMsg = "";
         String username = request.getParameter("USERNAME");
         String password = request.getParameter("PASSWORD");
         
         if (username == null) username = (String)request.getSession().getAttribute("USERNAME");
         if (password == null) password = (String)request.getSession().getAttribute("PASSWORD");
 
-        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
-        
-        if(username == null || username.length() <= 0) {
-            errMsg = "Username missing.";
-        } else if(password == null || password.length() <= 0) {
-            errMsg = "Password missing";
-        } else {
-            GenericValue userLogin = null;
-            try {
-                userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", username));
-            } catch(GenericEntityException e) {
-                Debug.logWarning(e);
-            }
-            if(userLogin != null) {
-                if(userLogin.get("currentPassword") != null && password.equals(userLogin.getString("currentPassword"))) {
-                    request.getSession().setAttribute(SiteDefs.USER_LOGIN, userLogin);
-                    try {
-                        delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username,
-                            "fromDate", UtilDateTime.nowTimestamp(), "passwordUsed", password,
-                            "partyId", userLogin.get("partyId"), "referrerUrl", "NotYetImplemented"));
-                    } catch(GenericEntityException e) {
-                        Debug.logWarning(e);
-                    }
-                } else {
-                    // password invalid, just go to badlogin page...
-                    errMsg = "Password incorrect.";
-                }
-            } else {
-                //userLogin record not found, user does not exist
-                errMsg = "User not found.";
-            }
-        }
-        
-        if(errMsg.length() > 0) {
-            errMsg = "<b>The following error occured:</b><br>" + errMsg;
-            request.getSession().setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        Map result = null;
+        try {
+            result = dispatcher.runSync("loginUser", UtilMisc.toMap("username", username, "password", password));
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Error calling userLogin service");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<b>The following error occured during login:</b><br>" + e.getMessage());
             return "error";
         }
+        
+        if (ModelService.RESPOND_SUCCESS.equals(result.get(ModelService.RESPONSE_MESSAGE))) {
+            GenericValue userLogin = (GenericValue) result.get("userLogin");
+            if (userLogin != null) {
+                request.getSession().setAttribute(SiteDefs.USER_LOGIN, userLogin);
+            }
+        } else {
+            String errMsg = (String) result.get(ModelService.ERROR_MESSAGE);
+            errMsg = "<b>The following error occured during login:</b><br>" + errMsg;
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+            return "error";
+        }
+        
         request.setAttribute(SiteDefs.LOGIN_PASSED, "TRUE");
         return "success";
     }
