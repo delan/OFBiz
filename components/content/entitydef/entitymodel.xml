@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  */
 -->
 
@@ -1094,6 +1094,7 @@
       <field name="partyId" type="id-ne"></field>
       <field name="surveyId" type="id-ne"></field>
       <field name="responseDate" type="date-time"></field>
+      <field name="referenceId" type="id-vlong"></field>
       <field name="generalFeedback" type="very-long"></field>
       <prim-key field="partyId"/>
       <prim-key field="surveyId"/>
