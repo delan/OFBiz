@@ -35,26 +35,30 @@
 <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
 
 <%
-	String userLoginId = request.getParameter("userLoginId");
+	String partyId = request.getParameter("party_id");
 	List visitList = null;
-	if (userLoginId != null) {
-		visitList = delegator.findByAnd("Visit", UtilMisc.toMap("userLoginId", userLoginId), UtilMisc.toList("fromDate", "visitId"));	
+	if (partyId != null) {
+		visitList = delegator.findByAnd("Visit", UtilMisc.toMap("partyId", partyId), UtilMisc.toList("-fromDate"));	
 	} else {
 		// show active visits
 		List exprs = UtilMisc.toList(new EntityExpr("thruDate", EntityOperator.EQUALS, null));
-		visitList = delegator.findByAnd("Visit", exprs, UtilMisc.toList("fromDate", "visitId"));		
+		visitList = delegator.findByAnd("Visit", exprs, UtilMisc.toList("-fromDate"));		
 	}
 	if (visitList != null) pageContext.setAttribute("visitList", visitList);
 	String rowClass = "";
 %>
 		
 
-<div class="head1">Visit Listing</div>
+<div class="head1"><%= partyId == null ? "Active" : "Party"%>&nbsp;Visit&nbsp;Listing</div>
 <br>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
     <td><div class="tableheadtext">VisitId</div></td>
+    <% if (partyId == null) { %>
     <td><div class="tableheadtext">PartyId</div></td>
+    <% } else { %>
+    <td><div class="tableheadtext">UserLoginId</div></td>
+    <% } %>
     <td><div class="tableheadtext">New User</div></td>
     <td><div class="tableheadtext">WebApp</div></td>
     <td><div class="tableheadtext">Client IP</div></td>
@@ -68,7 +72,11 @@
   <ofbiz:iterator name="visit" property="visitList">
   <tr class="<%=rowClass = rowClass.equals("viewManyTR1") ? "viewManyTR2" : "viewManyTR1"%>">
     <td><a href="<ofbiz:url>/visitdetail?visitId=<%=UtilFormatOut.checkNull(visit.getString("visitId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visit.getString("visitId"))%></a></td>
+    <% if (partyId == null) { %>
     <td><a href="<ofbiz:url>/viewprofile?party_id=<%=UtilFormatOut.checkNull(visit.getString("partyId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visit.getString("partyId"))%></a></td>
+    <% } else { %>
+    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("userLoginId"))%></div></td>
+    <% } %>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("userCreated"))%></div></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("webappName"))%></div></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("clientIpAddress"))%></div></td>

@@ -41,7 +41,7 @@
 	if (visitId != null) {
 		visit = delegator.findByPrimaryKey("Visit", UtilMisc.toMap("visitId", visitId));
 		if (visit != null)
-			serverHits = delegator.findByAnd("ServerHit", UtilMisc.toMap("visitId", visitId), UtilMisc.toList("hitStartDateTime"));
+			serverHits = delegator.findByAnd("ServerHit", UtilMisc.toMap("visitId", visitId), UtilMisc.toList("-hitStartDateTime"));
 	}
 	if (visit != null) pageContext.setAttribute("visit", visit);
 	if (serverHits != null) pageContext.setAttribute("serverHits", serverHits);
@@ -62,7 +62,9 @@
     <td width="26%" align="right"><div class="tableheadtext">PartyID / UserLoginID</div></td>
     <td width="5">:&nbsp;</td>
     <td width="74%" align="left">
-      <div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("partyId"))%> / <%=UtilFormatOut.checkNull(visit.getString("userLoginId"))%></div>
+      <div class="tabletext">
+        <a href="<ofbiz:url>/viewprofile?party_id=<%=UtilFormatOut.checkNull(visit.getString("partyId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visit.getString("partyId"))%></a> / <a href="<ofbiz:url>/viewprofile?party_id=<%=UtilFormatOut.checkNull(visit.getString("partyId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visit.getString("userLoginId"))%></a>
+      </div>
     </td>
   </tr>
   <tr>
@@ -115,14 +117,14 @@
     <td width="26%" align="right"><div class="tableheadtext">Initial Request</div></td>
     <td width="5">:&nbsp;</td>
     <td width="74%" align="left">
-      <div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("initialRequest"))%></div>
+      <a href="<%=UtilFormatOut.checkNull(visit.getString("initialRequest"))%>" class="buttontext"><%=UtilFormatOut.checkNull(visit.getString("initialRequest"))%></a>
     </td>
   </tr>
   <tr>
     <td width="26%" align="right"><div class="tableheadtext">Initial Referer</div></td>
     <td width="5">:&nbsp;</td>
     <td width="74%" align="left">
-      <div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("initialReferrer"))%></div>
+      <a href="<%=UtilFormatOut.checkNull(visit.getString("initialReferrer"))%>" class="buttontext"><%=UtilFormatOut.checkNull(visit.getString("initialReferrer"))%></a>
     </td>
   </tr>
   <tr>
@@ -155,9 +157,9 @@
   <tr>
     <td><div class="tableheadtext">ContentID</div></td>
     <td><div class="tableheadtext">Type</div></td>
-    <td><div class="tableheadtext">Size</div></td>    
+    <td><div class="tableheadtext">&nbsp;&nbsp;Size</div></td>    
     <td><div class="tableheadtext">Start Time</div></td>
-    <td><div class="tableheadtext">Running Time (ms)</div></td>
+    <td><div class="tableheadtext">&nbsp;&nbsp;Time(ms)</div></td>
     <td><div class="tableheadtext">URI</div></td>
   </tr>
   <tr>
@@ -167,9 +169,9 @@
   <tr class="<%=rowClass = rowClass.equals("viewManyTR1") ? "viewManyTR2" : "viewManyTR1"%>">
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(hit.getString("contentId"))%></div></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(hit.getString("hitTypeId"))%></div></td>
-    <td><div class="tabletext">&nbsp;<%=UtilFormatOut.checkNull(hit.getString("numOfBytes"), "?")%></div></td>
+    <td><div class="tabletext">&nbsp;&nbsp;<%=UtilFormatOut.checkNull(hit.getString("numOfBytes"), "?")%></div></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(hit.getString("hitStartDateTime"))%></div></td>
-    <td><div class="tabletext">&nbsp;<%=UtilFormatOut.checkNull(hit.getString("runningTimeMillis"))%></div></td>
+    <td><div class="tabletext">&nbsp;&nbsp;<%=UtilFormatOut.checkNull(hit.getString("runningTimeMillis"))%></div></td>
     <td><a href="<%=UtilFormatOut.checkNull(hit.getString("requestUrl"))%>" class="buttontext" target="_blank"><%=UtilFormatOut.checkNull(hit.getString("requestUrl"))%></a></td>
   </tr>
   </ofbiz:iterator>

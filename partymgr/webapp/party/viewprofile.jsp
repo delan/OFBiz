@@ -62,6 +62,9 @@
 
     GenericValue avsOverride = delegator.findByPrimaryKey("PartyIcsAvsOverride", UtilMisc.toMap("partyId", partyId));
     if (avsOverride != null) pageContext.setAttribute("avsOverride", avsOverride);
+    
+    List visits = delegator.findByAnd("Visit", UtilMisc.toMap("partyId", partyId), UtilMisc.toList("-fromDate"));
+    if (visits != null) pageContext.setAttribute("visits", visits);
 
     PartyWorker.getPartyOtherValues(pageContext, partyId, "party", "lookupPerson", "lookupGroup");
     boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
@@ -432,6 +435,7 @@
   </TR>
 </TABLE>
 
+<%-- AVS Strings --%>
 <br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -473,6 +477,7 @@
   </TR>
 </TABLE>
 
+<%-- UserLogins --%>
 <br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -532,6 +537,65 @@
             </ofbiz:if>
             <ofbiz:unless name="userLogins">
               <div class="tabletext">No UserLogin(s) found for this party.</div>
+            </ofbiz:unless>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
+<%-- Visits --%>
+<br>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Last Visit(s)</div>
+          </td>   
+          <td valign="middle" align="right">&nbsp;
+            <a href="<ofbiz:url>/showvisits?party_id=<%=partyId%></ofbiz:url>" class="lightbuttontext">[List All]</a>&nbsp;&nbsp;
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+            <ofbiz:if name="visits">
+            <table width="100%" border="0" cellpadding="2" cellspacing="0">
+              <tr>
+                <td><div class="tableheadtext">VisitId</div></td>
+                <td><div class="tableheadtext">UserLoginId</div></td>
+                <td><div class="tableheadtext">New User</div></td>
+                <td><div class="tableheadtext">WebApp</div></td>
+                <td><div class="tableheadtext">Client IP</div></td>
+                <td><div class="tableheadtext">From Date</div></td>
+                <td><div class="tableheadtext">Thru Date</div></td>
+              </tr>
+              <tr>
+                <td colspan="7"><hr class="sepbar"></td>
+              </tr>            
+              <ofbiz:iterator name="visit" property="visits" limit="5">
+              <tr>
+                <td><a href="<ofbiz:url>/visitdetail?visitId=<%=UtilFormatOut.checkNull(visit.getString("visitId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visit.getString("visitId"))%></a></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("userLoginId"))%></div></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("userCreated"))%></div></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("webappName"))%></div></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("clientIpAddress"))%></div></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("fromDate"))%></div></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("thruDate"))%></div></td>                
+              </tr>
+              </ofbiz:iterator>                                         
+            </table>
+            </ofbiz:if>
+            <ofbiz:unless name="userLogins">
+              <div class="tabletext">No Visit(s) found for this party.</div>
             </ofbiz:unless>
           </td>
         </tr>
