@@ -32,7 +32,7 @@ import org.ofbiz.core.util.*;
 /**
  * MapComparator.java
  * 
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @created    Oct 14, 2002
  * @version    2.0
  */

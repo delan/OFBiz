@@ -27,7 +27,7 @@ package org.ofbiz.core.workflow;
 /**
  * WfCreateProcessEventAudit - Workflow Create Process Event Audit Interface
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

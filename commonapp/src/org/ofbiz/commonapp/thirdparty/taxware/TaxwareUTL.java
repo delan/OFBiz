@@ -42,7 +42,7 @@ import taxcommon;
  * TaxwareUTL - Taxware Universal Tax Link
  * Requires taxcommon.class found w/ UTL.
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@created    June 04, 2002
  *@version    1.0
  */

@@ -35,7 +35,7 @@ import org.ofbiz.commonapp.order.order.*;
  * <p><b>Title:</b> ShoppingCartItem.java
  * <p><b>Description:</b> Shopping cart item object.
  *
- * @author     <a href="mailto:jaz@jflow.net.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Revision$
  * @since      2.0

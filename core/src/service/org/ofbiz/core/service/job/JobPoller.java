@@ -32,7 +32,7 @@ import org.ofbiz.core.util.*;
 /**
  * JobPoller - Polls for persisted jobs to run.
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:">Magnus Rosenquist</a>
  * @version    $Revision$
  * @since      2.0

@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * If no customiz security name is given, the default implementation will be used (OFBizSecurity)
  *
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

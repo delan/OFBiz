@@ -36,7 +36,7 @@ import org.ofbiz.core.workflow.client.*;
 /**
  * WfProcessImpl - Workflow Process Object implementation
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
  * @version    $Revision$
  * @since      2.0

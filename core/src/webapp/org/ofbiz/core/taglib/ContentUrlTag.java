@@ -34,7 +34,7 @@ import org.ofbiz.core.util.*;
 /**
  * ContentUrlTag - Creates a URL string prepending the content prefix from url.properties
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

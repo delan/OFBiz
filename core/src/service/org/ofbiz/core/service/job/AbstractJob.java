@@ -27,7 +27,7 @@ package org.ofbiz.core.service.job;
 /**
  * Abstract Service Job - Invokes a service
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

@@ -28,7 +28,7 @@ import java.util.*;
 /**
  * OrderedSet - Set interface wrapper around a LinkedList
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

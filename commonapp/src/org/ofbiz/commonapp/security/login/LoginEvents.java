@@ -38,7 +38,7 @@ import org.ofbiz.commonapp.party.contact.*;
 /**
  * LoginEvents - Events for UserLogin and Security handling.
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>

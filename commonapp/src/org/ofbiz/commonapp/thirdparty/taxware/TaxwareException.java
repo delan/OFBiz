@@ -30,7 +30,7 @@ package org.ofbiz.commonapp.thirdparty.taxware;
 /**
  * TaxwareException
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@created    June 04, 2002
  *@version    1.0
  */

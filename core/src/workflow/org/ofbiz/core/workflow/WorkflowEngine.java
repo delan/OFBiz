@@ -36,7 +36,7 @@ import org.ofbiz.core.util.*;
 /**
  * WorkflowEngine - Workflow Service Engine
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

@@ -34,7 +34,7 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfActivityImpl - Workflow Activity Object implementation
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de)
  * @author     Oswin Ondarza and Manuel Soto 
  * @version    $Revision$

@@ -35,7 +35,7 @@ import org.ofbiz.core.service.*;
  * PriceServices - Workers and Services class for product price related functionality
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

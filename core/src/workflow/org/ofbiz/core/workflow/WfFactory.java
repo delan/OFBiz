@@ -35,7 +35,7 @@ import org.ofbiz.core.workflow.client.*;
 /**
  * WfFactory - Workflow Factory Class
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

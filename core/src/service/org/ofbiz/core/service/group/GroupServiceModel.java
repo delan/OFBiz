@@ -32,7 +32,7 @@ import org.ofbiz.core.util.*;
 /**
  * GroupServiceModel.java
  * 
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

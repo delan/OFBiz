@@ -43,7 +43,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
  * @version    $Revision$
  * @since      1.0
  */

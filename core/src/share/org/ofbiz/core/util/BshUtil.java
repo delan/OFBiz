@@ -30,7 +30,7 @@ import bsh.*;
 /**
  * BshUtil - BeanShell Utilities
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@author     Oswin Ondarza and Manuel Soto
  *@created    Oct 22, 2002
  *@version    $Revision$

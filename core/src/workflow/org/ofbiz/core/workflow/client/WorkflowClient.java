@@ -36,7 +36,7 @@ import org.ofbiz.core.workflow.*;
 /**
  * Workflow Client - Client API to the Workflow Engine.
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

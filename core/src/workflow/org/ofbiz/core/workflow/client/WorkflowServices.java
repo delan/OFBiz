@@ -36,7 +36,7 @@ import org.ofbiz.core.workflow.*;
 /**
  * Workflow Services - 'Services' and 'Workers' for interaction with Workflow API
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

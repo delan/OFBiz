@@ -32,7 +32,7 @@ import org.ofbiz.core.util.*;
 /**
  * JmsQueueListener - Queue (P2P) Message Listener.
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

@@ -34,7 +34,7 @@ import org.ofbiz.core.util.*;
 /**
  * CategoryServices - Category Services
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @created    Apr 17, 2002
  * @version    1.0
  */

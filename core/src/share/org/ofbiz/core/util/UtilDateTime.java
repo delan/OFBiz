@@ -30,7 +30,7 @@ import java.lang.*;
  * Utility class for handling java.util.Date, the java.sql data/time classes and related information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

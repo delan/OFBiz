@@ -2,7 +2,7 @@
 ###
 # create a SAPDB database
 #   written by Fabian Moerchen <fabian@mybytes.de>
-#   modified by Andy Zeneski <jaz@jflow.net>
+#   modified by Andy Zeneski <jaz@ofbiz.org>
 #   version 0.1.0
 #   based on create_demo_db.sh included in the SAPDB distribution
 ###
@@ -132,7 +132,7 @@ echo -n " " | tee -a $LOGFILE
 echo `date` | tee -a $LOGFILE
 echo | tee -a $LOGFILE
 
-# stop the database -- Andy Zeneski jaz@jflow.net
+# stop the database -- Andy Zeneski jaz@ofbiz.org
 _test=`echo $CMDLINE | grep stop`
 if [ "$_test" != "" ]; then
   echo "Stopping the database ($DBNAME)..."
@@ -378,7 +378,7 @@ if [ "$_test" = "" ]; then
   fi
 fi
 
-# show the state of the database -- Andy Zeneski jaz@jflow.net
+# show the state of the database -- Andy Zeneski jaz@ofbiz.org
 _test=`echo $CMDLINE | grep state`
 if [ "$_test" != "" ]; then
   echo "Database info state ($DBNAME)..."
@@ -386,7 +386,7 @@ if [ "$_test" != "" ]; then
   exit 0
 fi
 
-# start (warm start) the database -- Andy Zeneski jaz@jflow.net
+# start (warm start) the database -- Andy Zeneski jaz@ofbiz.org
 _test=`echo $CMDLINE | grep start`
 if [ "$_test" != "" ]; then
   echo -n "Warm starting the database ($DBNAME)..."
@@ -394,7 +394,7 @@ if [ "$_test" != "" ]; then
   exit 0
 fi
 
-# start (cold start) the database -- Andy Zeneski jaz@jflow.net
+# start (cold start) the database -- Andy Zeneski jaz@ofbiz.org
 _test=`echo $CMDLINE | grep cold`
 if [ "$_test" != "" ]; then
   echo -n "Cold starting the database ($DBNAME)..."

@@ -33,7 +33,7 @@ import org.ofbiz.core.util.*;
 /**
  * JavaEventHandler - Static Method Java Event Handler
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Revision$
  * @since      2.0

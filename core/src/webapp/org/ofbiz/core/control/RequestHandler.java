@@ -38,7 +38,7 @@ import org.ofbiz.core.view.*;
 /**
  * RequestHandler - Request Processor Object
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
  * @version    $Revision$

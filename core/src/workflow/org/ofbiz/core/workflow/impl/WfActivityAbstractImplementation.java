@@ -33,7 +33,7 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfActivityAbstractImplementation.java
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     Oswin Ondarza and Manuel Soto 
  * @version    $Revision$
  * @since      2.0

@@ -29,7 +29,7 @@ import java.util.*;
 /**
  * Utilities for analyzing and converting Object types in Java - takes advantage of a lot of reflection and other stuff
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a> 
  * @version    $Revision$

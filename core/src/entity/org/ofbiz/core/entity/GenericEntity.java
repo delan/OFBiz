@@ -44,7 +44,7 @@ import org.w3c.dom.Element;
  * <code>Observer</code>.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@created    Wed Aug 08 2001
  *@version    1.0
  */

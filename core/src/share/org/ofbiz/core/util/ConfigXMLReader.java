@@ -31,7 +31,7 @@ import org.w3c.dom.*;
 /**
  * ConfigXMLReader.java - Reads and parses the XML site config files.
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

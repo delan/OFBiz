@@ -36,7 +36,7 @@ import org.ofbiz.core.util.*;
  * A single operation, does the specified operation on the given field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @version    $Revision$
  * @since      2.0
  */

@@ -39,7 +39,7 @@ import org.ofbiz.core.util.*;
 /**
  * SOAPEventHandler - SOAP Event Handler implementation
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     <a href="mailto:">Andy Chen</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Revision$

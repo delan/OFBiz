@@ -34,7 +34,7 @@ import org.ofbiz.core.util.*;
 /**
  * ViewHandlerException - View Handler Exception
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

@@ -38,7 +38,7 @@ import org.ofbiz.core.entity.*;
  * XpdlReader - Reads Process Definition objects from XPDL
  *
  * @author     <a href='mailto:jonesde@ofbiz.org'>David E. Jones</a>
- * @author     <a href='mailto:jaz@jflow.net'>Andy Zeneski</a>
+ * @author     <a href='mailto:jaz@ofbiz.org'>Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */

@@ -34,7 +34,7 @@ import org.ofbiz.core.util.*;
 /**
  * Product Services
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    1.0
  * @created    April 1, 2002
