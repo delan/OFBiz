@@ -65,50 +65,53 @@
 
   <%if (path != null && path.length() > 0) {%>
   <%
+
     File baseDir = new File(path);
 
     if (baseDir.isDirectory() && baseDir.canRead()) {
-	File[] fileArray = baseDir.listFiles();
-    ArrayList files = new ArrayList(fileArray.length);
-	for (int a=0; a<fileArray.length; a++){
-            files.add(fileArray[a]);
+	    File[] fileArray = baseDir.listFiles();
+        ArrayList files = new ArrayList(fileArray.length);
+	    for (int a=0; a<fileArray.length; a++){
+            if (fileArray[a].getName().toUpperCase().endsWith("XML")) {
+                files.add(fileArray[a]);
+            }
         }
         boolean importedOne = false;
         int fileListMarkedSize = files.size();
         int passes = 0;
         for (int a=0; a<files.size(); a++){
-        // Infinite loop defense
-        if (a == fileListMarkedSize) {
-          passes++;
-          fileListMarkedSize = files.size();
-          %> <div>Pass <%=passes%> complete</div> <%
-          // This means we've done a pass
-          if ( false == importedOne ) {
-            // We've failed to make any imports
-            %> <div>Dropping out as we failed to make any imports on the last pass</div> <%
-            a = files.size();
-            continue;
-          }
-          importedOne = false;
-        }
-        File curFile = (File)files.get(a);
-	    try{
-		URL url = curFile.toURL();
-		EntitySaxReader reader = new EntitySaxReader(delegator);
-        if (mostlyInserts) {
-            reader.setUseTryInsertMethod(true);
-        }
-        if (txTimeout != null) {
-            reader.setTransactionTimeout(txTimeout.intValue());
-        }
-		long numberRead = reader.parse(url);
-		%><div>Got <%=numberRead%> entities from <%=curFile%></div><%
-            importedOne = true;
-            curFile.delete();
-	    }catch (Exception ex){ 
+            // Infinite loop defense
+            if (a == fileListMarkedSize) {
+                passes++;
+                fileListMarkedSize = files.size();
+                %> <div>Pass <%=passes%> complete</div> <%
+                // This means we've done a pass
+                if ( false == importedOne ) {
+                    // We've failed to make any imports
+                    %> <div>Dropping out as we failed to make any imports on the last pass</div> <%
+                    a = files.size();
+                    continue;
+                }
+                importedOne = false;
+            }
+            File curFile = (File)files.get(a);
+	        try{
+		        URL url = curFile.toURL();
+		        EntitySaxReader reader = new EntitySaxReader(delegator);
+                if (mostlyInserts) {
+                    reader.setUseTryInsertMethod(true);
+                }
+                if (txTimeout != null) {
+                    reader.setTransactionTimeout(txTimeout.intValue());
+                }
+		        long numberRead = reader.parse(url);
+		        %><div>Got <%=numberRead%> entities from <%=curFile%></div><%
+                importedOne = true;
+                curFile.delete();
+	        } catch (Exception ex){
                 %> <div>Error trying to read from <%=curFile%>: <%=ex%> <%
-                if (ex.toString().indexOf("referential integrity violation") > -1 || 
-                  ex.toString().indexOf("Integrity constraint violation") > -1){
+                if (ex.toString().indexOf("referential integrity violation") > -1 ||
+                        ex.toString().indexOf("Integrity constraint violation") > -1){
                     //It didn't work because object it depends on are still
                     //missing from the DB. Retry later.
                     //
@@ -118,8 +121,10 @@
                     files.add(curFile);
                 }
             }
-	}
-    }else{ %><div> path not found or can't be read </div> <% }
+	    }
+    } else {
+        %><div> path not found or can't be read </div> <%
+    }
   %>
   <%} else {%>
     <div>No path specified, doing nothing.</div>
