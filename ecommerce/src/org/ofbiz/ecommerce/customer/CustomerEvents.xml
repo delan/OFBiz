@@ -219,10 +219,6 @@
                 <process field="USERNAME"><copy to-field="partyId"/></process>
                 <process field="roleTypeId"><copy/></process>
                 <process field="CUSTOMER_EMAIL"><copy to-field="emailAddress"/></process>
-                    <not-empty><fail-message message="Email is missing"/></not-empty>
-                    <validate-method method="isEmail"><fail-message message="Email address not formatted correctly, must be like: name@domain"/></validate-method>
-                    <copy to-field="emailAddress"/>
-                </process>
                 <process field="CUSTOMER_EMAIL_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
         </call-map-processor>
