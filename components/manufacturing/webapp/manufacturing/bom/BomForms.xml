@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      3.0
 -->
 
@@ -41,6 +41,8 @@
         <field name="productFeature"><display/></field>
         <field name="quantity"><display/></field>
         <field name="ruleOperator"><display/></field>
+        <field name="fromDate"><display/></field>
+        <field name="thruDate"><display/></field>
         <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="EditProductManufacturingRules?ruleId=${ruleId}" description="[${uiLabelMap.CommonSelected}]" />
         </field> 
@@ -154,6 +156,8 @@
         <field name="productHeight"><ignored/></field>
         <field name="amountUomTypeId"><ignored/></field>
         <field name="requireAmount"><ignored/></field>
+        <field name="facilityId"><ignored/></field>
+        <field name="includeInPromotions"><ignored/></field>
         <field name="submitButton" title="Lookup" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
