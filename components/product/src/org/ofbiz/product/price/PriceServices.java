@@ -1,5 +1,5 @@
 /*
- * $Id: PriceServices.java,v 1.11 2004/06/04 20:27:10 jonesde Exp $
+ * $Id: PriceServices.java,v 1.12 2004/06/23 23:14:59 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class PriceServices {
@@ -612,7 +612,11 @@ public class PriceServices {
                             // yeah, finally here, perform the action, ie, modify the price
                             double modifyAmount = 0;
 
-                            if ("PRICE_POL".equals(productPriceAction.getString("productPriceActionTypeId"))) {
+                            if ("PRICE_POD".equals(productPriceAction.getString("productPriceActionTypeId"))) {
+                                if (productPriceAction.get("amount") != null) {
+                                    modifyAmount = defaultPrice * (productPriceAction.getDouble("amount").doubleValue() / 100.0);
+                                }
+                            } else if ("PRICE_POL".equals(productPriceAction.getString("productPriceActionTypeId"))) {
                                 if (productPriceAction.get("amount") != null) {
                                     modifyAmount = listPrice * (productPriceAction.getDouble("amount").doubleValue() / 100.0);
                                 }
@@ -634,8 +638,9 @@ public class PriceServices {
                                 if (productPriceAction.get("amount") != null) {
                                     price = productPriceAction.getDouble("amount").doubleValue();
                                 } else {
-                                    Debug.logError("ERROR: ProductPriceAction had null amount, using default price: " + defaultPrice + " for product with id " + productId, module);
+                                    Debug.logInfo("ProductPriceAction had null amount, using default price: " + defaultPrice + " for product with id " + productId, module);
                                     price = defaultPrice;
+                                    isSale = false;				// reverse isSale flag, as this sale rule was actually not applied
                                 }
                             } else if ("PRICE_PFLAT".equals(productPriceAction.getString("productPriceActionTypeId"))) {
                                 // this one is a bit different too, break out of the loop because we now have our final price
@@ -645,8 +650,19 @@ public class PriceServices {
                                     price += productPriceAction.getDouble("amount").doubleValue();
                                 }
                                 if (price == 0.00) {
-                                    Debug.logError("ERROR: PromoPrice and ProductPriceAction had null amount, using default price: " + defaultPrice + " for product with id " + productId, module);
-                                    price = defaultPrice;
+                                	if (defaultPrice != 0.00) {
+                                		Debug.logInfo("PromoPrice and ProductPriceAction had null amount, using default price: " + defaultPrice + " for product with id " + productId, module);
+                                        price = defaultPrice;
+                                	}
+                                	else if (listPrice != 0.00) {
+                                		Debug.logInfo("PromoPrice and ProductPriceAction had null amount and no default price was available, using list price: " + listPrice + " for product with id " + productId, module);
+                                        price = listPrice;
+                                	}
+                                	else {
+                                		Debug.logError("PromoPrice and ProductPriceAction had null amount and no default or list price was available, so price is set to zero for product with id " + productId, module);
+                                        price = 0.00;
+                                	}
+                                    isSale = false;				// reverse isSale flag, as this sale rule was actually not applied
                                 }
                             }
 
