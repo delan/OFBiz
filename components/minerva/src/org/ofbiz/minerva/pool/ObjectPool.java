@@ -626,9 +626,15 @@ public class ObjectPool implements PoolEventListener {
                 }//synch on objects
 
                 if (rec == null) {
-                    rec = createNewObject(parameters);
+                    try {
+                        rec = createNewObject(parameters);
+                    } catch (Exception e) {
+                        permits.release();
+                        throw e;
+                    }
                 } // end of if ()
                 if (rec == null) {
+                    permits.release();
                     throw new RuntimeException("Pool is broken, did not find or create an object");
                 } // end of if ()
                 Object ob = rec.getObject();
