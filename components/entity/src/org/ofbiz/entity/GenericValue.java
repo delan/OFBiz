@@ -1,5 +1,5 @@
 /*
- * $Id: GenericValue.java,v 1.2 2003/08/17 04:56:25 jonesde Exp $
+ * $Id: GenericValue.java,v 1.3 2003/11/03 13:13:14 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -40,8 +40,8 @@ import org.ofbiz.entity.util.EntityUtil;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Eric Pabst
- *@created    Wed Aug 08 2001
- *@version    1.0
+ *@version    $Revision: 1.3 $
+ *@since      1.0
  */
 public class GenericValue extends GenericEntity {
 
@@ -77,6 +77,11 @@ public class GenericValue extends GenericEntity {
         super(primaryKey);
     }
 
+    public void synchronizedWithDatasource() {
+        super.synchronizedWithDatasource();
+        this.copyOriginalDbValues();
+    }
+
     public GenericValue create() throws GenericEntityException {
         return this.getDelegator().create(this);
     }
@@ -104,8 +109,8 @@ public class GenericValue extends GenericEntity {
         return originalDbValues.get(name);
     }
 
-    /** This should only be called by the Entity Engine once a GenericValue has 
-     * been read from the database so that we have a copy of the original field 
+    /** This should only be called by the Entity Engine once a GenericValue has
+     * been read from the database so that we have a copy of the original field
      * values from the Db.
      */
     public void copyOriginalDbValues() {

@@ -46,8 +46,8 @@ import org.ofbiz.entity.model.ModelFieldTypeReader;
  * Generic Entity Cursor List Iterator for Handling Cursored DB Results
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    July 12, 2002
- *@version    1.0
+ *@version    $Revision: 1.3 $
+ *@since      2.0
  */
 public class EntityListIterator implements ListIterator {
 
@@ -127,9 +127,8 @@ public class EntityListIterator implements ListIterator {
             SqlJdbcUtil.getValue(resultSet, j + 1, curField, value, modelFieldTypeReader);
         }
 
-        value.modified = false;
-        value.copyOriginalDbValues();
         value.setDelegator(this.delegator);
+        value.synchronizedWithDatasource();
         this.haveMadeValue = true;
         return value;
     }
@@ -144,7 +143,7 @@ public class EntityListIterator implements ListIterator {
         }
     }
 
-    /** performs the same function as the ResultSet.absolute method; 
+    /** performs the same function as the ResultSet.absolute method;
      * if rowNum is positive, goes to that position relative to the beginning of the list;
      * if rowNum is negative, goes to that position relative to the end of the list;
      * a rowNum of 1 is the same as first(); a rowNum of -1 is the same as last()
@@ -159,7 +158,7 @@ public class EntityListIterator implements ListIterator {
         }
     }
 
-    /** performs the same function as the ResultSet.relative method; 
+    /** performs the same function as the ResultSet.relative method;
      * if rows is positive, goes forward relative to the current position;
      * if rows is negative, goes backward relative to the current position;
      */
@@ -288,8 +287,8 @@ public class EntityListIterator implements ListIterator {
         }
     }
 
-    /** Gets a partial list of results starting at start and containing at most number elements. 
-     * Start is a one based value, ie 1 is the first element. 
+    /** Gets a partial list of results starting at start and containing at most number elements.
+     * Start is a one based value, ie 1 is the first element.
      */
     public List getPartialList(int start, int number) throws GenericEntityException {
         try {
