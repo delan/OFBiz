@@ -188,38 +188,39 @@ public class ModelEntity {
 
     /** The entity-name of the Entity */
     public String getEntityName() { return this.entityName; }
+    public void setEntityName(String entityName) { this.entityName = entityName; }
     /** The table-name of the Entity */
     public String getTableName() { return this.tableName; }
+    public void setTableName(String tableName) { this.tableName = tableName; }
 
     /** The package-name of the Entity */
     public String getPackageName() { return this.packageName; }
+    public void setPackageName(String packageName) { this.packageName = packageName; }
 
     /** The entity-name of the Entity that this Entity is dependent on, if empty then no dependency */
     public String getDependentOn() { return this.dependentOn; }
+    public void setDependentOn(String dependentOn) { this.dependentOn = dependentOn; }
 
     //Strings to go in the comment header.
     /** The title for documentation purposes */
     public String getTitle() { return this.title; }
+    public void setTitle(String title) { this.title = title; }
     /** The description for documentation purposes */
     public String getDescription() { return this.description; }
+    public void setDescription(String description) { this.description = description; }
     /** The copyright for documentation purposes */
     public String getCopyright() { return this.copyright; }
+    public void setCopyright(String copyright) { this.copyright = copyright; }
     /** The author for documentation purposes */
     public String getAuthor() { return this.author; }
+    public void setAuthor(String author) { this.author = author; }
     /** The version for documentation purposes */
     public String getVersion() { return this.version; }
-
-    /** A Vector of the Field objects for the Entity */
-    public Vector getFields() { return this.fields; }
-    /** A Vector of the Field objects for the Entity, one for each Primary Key */
-    public Vector getPks() { return this.pks; }
-    /** A Vector of the Field objects for the Entity, one for each NON Primary Key */
-    public Vector getNopks() { return this.nopks; }
-    /** relations defining relationships between this entity and other entities */
-    public Vector getRelations() { return this.relations; }
+    public void setVersion(String version) { this.version = version; }
 
     /** An indicator to specify if this entity requires locking for updates */
     public boolean getDoLock() { return this.doLock; }
+    public void setDoLock(boolean doLock) { this.doLock = doLock; }
 
     public boolean lock() {
         if (doLock && isField(STAMP_FIELD)) {
@@ -262,6 +263,21 @@ public class ModelEntity {
         return true;
     }
 
+    public int getPksSize() { return this.pks.size(); }
+    public ModelField getPk(int index) { return (ModelField) this.pks.get(index); }
+    public Iterator getPksIterator() { return this.pks.iterator(); }
+    public Vector getPksCopy() { return new Vector(this.pks); }
+    
+    public int getNopksSize() { return this.nopks.size(); }
+    public ModelField getNopk(int index) { return (ModelField) this.nopks.get(index); }
+    public Iterator getNopksIterator() { return this.nopks.iterator(); }
+    public Vector getNopksCopy() { return new Vector(this.nopks); }
+    
+    public int getFieldsSize() { return this.fields.size(); }
+    public ModelField getField(int index) { return (ModelField) this.fields.get(index); }
+    public Iterator getFieldsIterator() { return this.fields.iterator(); }
+    public Vector getFieldsCopy() { return new Vector(this.fields); }
+    
     public ModelField getField(String fieldName) {
         if (fieldName == null) return null;
         for (int i = 0; i < fields.size(); i++) {
@@ -271,10 +287,33 @@ public class ModelEntity {
         return null;
     }
 
-    public void removeField(String fieldName) {
-        if (fieldName == null) return;
+    public void addField(ModelField field) {
+        if (field == null) return;
+        this.fields.add(field);
+        
+        if (field.isPk)
+            pks.add(field);
+        else
+            nopks.add(field);
+    }
+    
+    public ModelField removeField(int index) {
+        ModelField field = null;
+        field = (ModelField) fields.remove(index);
+        if (field == null) return null;
+        
+        if (field.isPk)
+            pks.remove(field);
+        else
+            nopks.remove(field);
+        return field;
+    }
+    
+    public ModelField removeField(String fieldName) {
+        if (fieldName == null) return null;
+        ModelField field = null;
         for (int i = 0; i < fields.size(); i++) {
-            ModelField field = (ModelField) fields.get(i);
+            field = (ModelField) fields.get(i);
             if (field.name.equals(fieldName)) {
                 fields.removeElementAt(i);
                 if (field.isPk)
@@ -282,8 +321,9 @@ public class ModelEntity {
                 else
                     nopks.remove(field);
             }
+            field = null;
         }
-        return;
+        return field;
     }
 
     public List getAllFieldNames() {
@@ -308,6 +348,10 @@ public class ModelEntity {
         return nameList;
     }
 
+    public int getRelationsSize() { return this.relations.size(); }
+    public ModelRelation getRelation(int index) { return (ModelRelation) this.relations.get(index); }
+    public Iterator getRelationsIterator() { return this.relations.iterator(); }
+
     public ModelRelation getRelation(String relationName) {
         if (relationName == null) return null;
         for (int i = 0; i < relations.size(); i++) {
@@ -316,6 +360,9 @@ public class ModelEntity {
         }
         return null;
     }
+    
+    public void addRelation(ModelRelation relation) { this.relations.add(relation); }
+    public ModelRelation removeRelation(int index) { return (ModelRelation) this.relations.remove(index); }
 
     public String nameString(Vector flds) {
         return nameString(flds, ", ", "");

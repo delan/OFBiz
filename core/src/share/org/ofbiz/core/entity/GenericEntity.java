@@ -161,11 +161,10 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
     /** Returns true if the entity contains all of the primary key fields, but NO others. */
     public boolean isPrimaryKey() {
-        Vector pks = getModelEntity().getPks();
         TreeSet fieldKeys = new TreeSet(fields.keySet());
-        for (int i = 0; i < pks.size(); i++) {
-            if (!fieldKeys.contains(((ModelField) pks.elementAt(i)).getName())) return false;
-            fieldKeys.remove(((ModelField) pks.elementAt(i)).getName());
+        for (int i = 0; i < getModelEntity().getPksSize(); i++) {
+            if (!fieldKeys.contains(getModelEntity().getPk(i).getName())) return false;
+            fieldKeys.remove(getModelEntity().getPk(i).getName());
         }
         if (!fieldKeys.isEmpty()) return false;
         return true;
@@ -173,10 +172,9 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
     /** Returns true if the entity contains all of the primary key fields. */
     public boolean containsPrimaryKey() {
-        Vector pks = getModelEntity().getPks();
         TreeSet fieldKeys = new TreeSet(fields.keySet());
-        for (int i = 0; i < pks.size(); i++) {
-            if (!fieldKeys.contains(((ModelField) pks.elementAt(i)).getName())) return false;
+        for (int i = 0; i < getModelEntity().getPksSize(); i++) {
+            if (!fieldKeys.contains(getModelEntity().getPk(i).getName())) return false;
         }
         return true;
     }
@@ -309,7 +307,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
     public GenericPK getPrimaryKey() {
         Collection pkNames = new LinkedList();
-        Iterator iter = this.getModelEntity().getPks().iterator();
+        Iterator iter = this.getModelEntity().getPksIterator();
         while (iter != null && iter.hasNext()) {
             ModelField curField = (ModelField) iter.next();
             pkNames.add(curField.getName());
@@ -320,7 +318,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
     public void setNonPKFields(Map fields) {
         //make a copy of the fields, remove the primary keys, set the rest
         Map keyValuePairs = new HashMap(fields);
-        Iterator iter = this.getModelEntity().getPks().iterator();
+        Iterator iter = this.getModelEntity().getPksIterator();
         while (iter != null && iter.hasNext()) {
             ModelField curField = (ModelField) iter.next();
             keyValuePairs.remove(curField.getName());
@@ -436,7 +434,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
         ModelEntity modelEntity = this.getModelEntity();
 
-        Iterator modelFields = modelEntity.getFields().iterator();
+        Iterator modelFields = modelEntity.getFieldsIterator();
         while (modelFields.hasNext()) {
             ModelField modelField = (ModelField) modelFields.next();
             String name = modelField.getName();
@@ -527,8 +525,8 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         if (tempResult != 0) return tempResult;
 
         //both have same entityName, should be the same so let's compare PKs
-        for (int i = 0; i < modelEntity.getPks().size(); i++) {
-            ModelField curField = (ModelField) modelEntity.getPks().get(i);
+        for (int i = 0; i < modelEntity.getPksSize(); i++) {
+            ModelField curField = modelEntity.getPk(i);
             Comparable thisVal = (Comparable) this.get(curField.getName());
             Comparable thatVal = (Comparable) that.get(curField.getName());
             if (thisVal == null) {
@@ -548,8 +546,8 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         }
 
         //okay, if we got here it means the primaryKeys are exactly the SAME, so compare the rest of the fields
-        for (int i = 0; i < modelEntity.getNopks().size(); i++) {
-            ModelField curField = (ModelField) modelEntity.getNopks().get(i);
+        for (int i = 0; i < modelEntity.getNopksSize(); i++) {
+            ModelField curField = modelEntity.getNopk(i);
             Comparable thisVal = (Comparable) this.get(curField.getName());
             Comparable thatVal = (Comparable) that.get(curField.getName());
             if (thisVal == null) {

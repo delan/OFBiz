@@ -96,7 +96,7 @@ public class GenericDAO {
         }
 
         try {
-            singleInsert(entity, modelEntity, modelEntity.getFields(), connection);
+            singleInsert(entity, modelEntity, modelEntity.getFieldsCopy(), connection);
             if (manualTX) {
                 try {
                     connection.commit();
@@ -170,7 +170,7 @@ public class GenericDAO {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
 
-        customUpdate(entity, modelEntity, modelEntity.getNopks());
+        customUpdate(entity, modelEntity, modelEntity.getNopksCopy());
     }
 
     public void update(GenericEntity entity) throws GenericEntityException {
@@ -181,8 +181,8 @@ public class GenericDAO {
         //we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
         Vector partialFields = new Vector();
         Collection keys = entity.getAllKeys();
-        for (int fi = 0; fi < modelEntity.getNopks().size(); fi++) {
-            ModelField curField = (ModelField) modelEntity.getNopks().elementAt(fi);
+        for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
+            ModelField curField = modelEntity.getNopk(fi);
             if (keys.contains(curField.getName()))
                 partialFields.add(curField);
         }
@@ -266,7 +266,7 @@ public class GenericDAO {
             entity.set(ModelEntity.STAMP_FIELD, UtilDateTime.nowTimestamp());
 
         String sql = "UPDATE " + modelEntity.getTableName() + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " +
-                makeWhereStringAnd(modelEntity.getPks(), entity);
+                makeWhereStringAnd(modelEntity.getPksCopy(), entity);
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(sql);
@@ -276,8 +276,8 @@ public class GenericDAO {
                 ModelField curField = (ModelField) fieldsToSave.elementAt(i);
                 setValue(ps, i + 1, curField, entity);
             }
-            for (int j = 0; j < modelEntity.getPks().size(); j++) {
-                ModelField curField = (ModelField) modelEntity.getPks().elementAt(j);
+            for (int j = 0; j < modelEntity.getPksSize(); j++) {
+                ModelField curField = modelEntity.getPk(j);
                 //for where clause variables only setValue if not null...
                 if (entity.get(curField.getName()) != null) {
                     setValue(ps, i + j + 1, curField, entity);
@@ -308,11 +308,11 @@ public class GenericDAO {
         } catch (GenericEntityNotFoundException e) {
             //Debug.logInfo(e);
             //select failed, does not exist, insert
-            singleInsert(entity, entity.getModelEntity(), entity.getModelEntity().getFields(), connection);
+            singleInsert(entity, entity.getModelEntity(), entity.getModelEntity().getFieldsCopy(), connection);
             return;
         }
         //select did not fail, so exists, update
-        singleUpdate(entity, entity.getModelEntity(), entity.getModelEntity().getNopks(), connection);
+        singleUpdate(entity, entity.getModelEntity(), entity.getModelEntity().getNopksCopy(), connection);
     }
 
     /* ====================================================================== */
@@ -411,27 +411,27 @@ public class GenericDAO {
             modelViewEntity = (ModelViewEntity) modelEntity;
         }
 
-        if (modelEntity.getPks().size() <= 0)
+        if (modelEntity.getPksSize() <= 0)
             throw new GenericEntityException("Entity has no primary keys, cannot select by primary key");
 
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         String sql = "SELECT ";
-        if (modelEntity.getNopks().size() > 0)
-            sql += modelEntity.colNameString(modelEntity.getNopks(), ", ", "");
+        if (modelEntity.getNopksSize() > 0)
+            sql += modelEntity.colNameString(modelEntity.getNopksCopy(), ", ", "");
         else
             sql += "*";
 
         sql += makeFromClause(modelEntity);
-        sql += makeWhereClauseAnd(modelEntity, modelEntity.getPks(), entity);
+        sql += makeWhereClauseAnd(modelEntity, modelEntity.getPksCopy(), entity);
 
         //Debug.logInfo(" select: sql=" + sql);
         try {
             ps = connection.prepareStatement(sql);
 
-            for (int i = 0; i < modelEntity.getPks().size(); i++) {
-                ModelField curField = (ModelField) modelEntity.getPks().elementAt(i);
+            for (int i = 0; i < modelEntity.getPksSize(); i++) {
+                ModelField curField = modelEntity.getPk(i);
                 //for where clause variables only setValue if not null...
                 if (entity.get(curField.getName()) != null) {
                     //Debug.logInfo(" setting field " + curField.getName() + " to " + (i+1) + " entity: " + entity.toString());
@@ -442,8 +442,8 @@ public class GenericDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                for (int j = 0; j < modelEntity.getNopks().size(); j++) {
-                    ModelField curField = (ModelField) modelEntity.getNopks().elementAt(j);
+                for (int j = 0; j < modelEntity.getNopksSize(); j++) {
+                    ModelField curField = modelEntity.getNopk(j);
                     getValue(rs, j + 1, curField, entity);
                 }
 
@@ -498,8 +498,8 @@ public class GenericDAO {
 
         //we don't want to select ALL fields, just the nonpk fields that are in the passed GenericEntity
         Vector partialFields = new Vector();
-        for (int fi = 0; fi < modelEntity.getNopks().size(); fi++) {
-            ModelField curField = (ModelField) modelEntity.getNopks().elementAt(fi);
+        for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
+            ModelField curField = modelEntity.getNopk(fi);
             if (keys.contains(curField.getName()))
                 partialFields.add(curField);
         }
@@ -510,13 +510,13 @@ public class GenericDAO {
         else
             sql += "*";
         sql += makeFromClause(modelEntity);
-        sql += makeWhereClauseAnd(modelEntity, modelEntity.getPks(), entity);
+        sql += makeWhereClauseAnd(modelEntity, modelEntity.getPksCopy(), entity);
 
         try {
             ps = connection.prepareStatement(sql);
 
-            for (int i = 0; i < modelEntity.getPks().size(); i++) {
-                ModelField curField = (ModelField) modelEntity.getPks().elementAt(i);
+            for (int i = 0; i < modelEntity.getPksSize(); i++) {
+                ModelField curField = modelEntity.getPk(i);
                 //for where clause variables only setValue if not null...
                 if (entity.get(curField.getName()) != null) {
                     setValue(ps, i + 1, curField, entity);
@@ -585,15 +585,15 @@ public class GenericDAO {
         Vector selectFields = new Vector();
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
-            for (int fi = 0; fi < modelEntity.getFields().size(); fi++) {
-                ModelField curField = (ModelField) modelEntity.getFields().elementAt(fi);
+            for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
+                ModelField curField = modelEntity.getField(fi);
                 if (keys.contains(curField.getName()))
                     whereFields.add(curField);
                 else
                     selectFields.add(curField);
             }
         } else {
-            selectFields = modelEntity.getFields();
+            selectFields = modelEntity.getFieldsCopy();
         }
 
         GenericValue dummyValue;
@@ -690,15 +690,15 @@ public class GenericDAO {
         Vector selectFields = new Vector();
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
-            for (int fi = 0; fi < modelEntity.getFields().size(); fi++) {
-                ModelField curField = (ModelField) modelEntity.getFields().elementAt(fi);
+            for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
+                ModelField curField = modelEntity.getField(fi);
                 if (keys.contains(curField.getName()))
                     whereFields.add(curField);
                 else
                     selectFields.add(curField);
             }
         } else {
-            selectFields = modelEntity.getFields();
+            selectFields = modelEntity.getFieldsCopy();
         }
 
         GenericValue dummyValue;
@@ -793,9 +793,9 @@ public class GenericDAO {
         }
 
         //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
-        Vector selectFields = modelEntity.getFields();
+        Vector selectFields = modelEntity.getFieldsCopy();
 
-        //Vector modelEntityFields = modelEntity.getFields();
+        //Vector modelEntityFields = modelEntity.getFieldsCopy();
         if (expressions != null && expressions.size() > 0) {
             for (int fi = 0; fi < expressions.size(); fi++) {
             }
@@ -915,9 +915,9 @@ public class GenericDAO {
         }
 
         //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
-        Vector selectFields = modelEntity.getFields();
+        Vector selectFields = modelEntity.getFieldsCopy();
 
-        //Vector modelEntityFields = modelEntity.getFields();
+        //Vector modelEntityFields = modelEntity.getFieldsCopy();
         if (expressions != null && expressions.size() > 0) {
             for (int fi = 0; fi < expressions.size(); fi++) {
             }
@@ -1038,8 +1038,8 @@ public class GenericDAO {
         Vector selectFields = new Vector();
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
-            for (int fi = 0; fi < modelEntity.getFields().size(); fi++) {
-                ModelField curField = (ModelField) modelEntity.getFields().elementAt(fi);
+            for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
+                ModelField curField = modelEntity.getField(fi);
                 if (keys.contains(curField.getName())) {
                     whereFields.add(curField);
                     selectFields.add(curField);
@@ -1047,7 +1047,7 @@ public class GenericDAO {
                     selectFields.add(curField);
             }
         } else {
-            selectFields = modelEntity.getFields();
+            selectFields = modelEntity.getFieldsCopy();
         }
 
         String sql = "SELECT ";
@@ -1181,8 +1181,8 @@ public class GenericDAO {
         Vector selectFields = new Vector();
         if (fields != null && fields.size() > 0) {
             Set keys = fields.keySet();
-            for (int fi = 0; fi < modelEntity.getFields().size(); fi++) {
-                ModelField curField = (ModelField) modelEntity.getFields().elementAt(fi);
+            for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
+                ModelField curField = modelEntity.getField(fi);
                 if (keys.contains(curField.getName())) {
                     whereFields.add(curField);
                     selectFields.add(curField);
@@ -1293,13 +1293,13 @@ public class GenericDAO {
         }
 
         PreparedStatement ps = null;
-        String sql = "DELETE FROM " + modelEntity.getTableName() + " WHERE " + makeWhereStringAnd(modelEntity.getPks(), entity);
+        String sql = "DELETE FROM " + modelEntity.getTableName() + " WHERE " + makeWhereStringAnd(modelEntity.getPksCopy(), entity);
         try {
             connection.setAutoCommit(true);
             ps = connection.prepareStatement(sql);
 
-            for (int i = 0; i < modelEntity.getPks().size(); i++) {
-                ModelField curField = (ModelField) modelEntity.getPks().elementAt(i);
+            for (int i = 0; i < modelEntity.getPksSize(); i++) {
+                ModelField curField = modelEntity.getPk(i);
                 //for where clause variables only setValue if not null...
                 if (entity.get(curField.getName()) != null) {
                     setValue(ps, i + 1, curField, entity);
@@ -1353,8 +1353,8 @@ public class GenericDAO {
         Vector whereFields = new Vector();
         if (fields != null || fields.size() > 0) {
             Set keys = fields.keySet();
-            for (int fi = 0; fi < modelEntity.getFields().size(); fi++) {
-                ModelField curField = (ModelField) modelEntity.getFields().elementAt(fi);
+            for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
+                ModelField curField = modelEntity.getField(fi);
                 if (keys.contains(curField.getName()))
                     whereFields.add(curField);
             }
@@ -1612,8 +1612,8 @@ public class GenericDAO {
                 if (spaceIdx > 0)
                     keyName = keyName.substring(0, spaceIdx);
 
-                for (int fi = 0; fi < modelEntity.getFields().size(); fi++) {
-                    ModelField curField = (ModelField) modelEntity.getFields().get(fi);
+                for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
+                    ModelField curField = modelEntity.getField(fi);
                     if (curField.getName().equals(keyName)) {
                         if (spaceIdx > 0)
                             orderByStrings.add(curField.getColName() + keyName.substring(spaceIdx));
@@ -1781,8 +1781,8 @@ public class GenericDAO {
         }
 
         String sql = "CREATE TABLE " + entity.getTableName() + " (";
-        for (int i = 0; i < entity.getFields().size(); i++) {
-            ModelField field = (ModelField) entity.getFields().get(i);
+        for (int i = 0; i < entity.getFieldsSize(); i++) {
+            ModelField field = entity.getField(i);
             ModelFieldType type = modelFieldTypeReader.getModelFieldType(field.getType());
             sql = sql + field.getColName() + " " + type.getSqlType();
             if (field.getIsPk())
@@ -1793,7 +1793,7 @@ public class GenericDAO {
         String pkName = "PK_" + entity.getTableName();
         if (pkName.length() > 30)
             pkName = pkName.substring(0, 30);
-        sql = sql + "CONSTRAINT " + pkName + " PRIMARY KEY (" + entity.colNameString(entity.getPks()) + "))";
+        sql = sql + "CONSTRAINT " + pkName + " PRIMARY KEY (" + entity.colNameString(entity.getPksCopy()) + "))";
 
         //Debug.logInfo(" create: sql=" + sql);
         try {
@@ -1942,8 +1942,8 @@ public class GenericDAO {
 
                 if (colInfo != null) {
                     Map fieldColNames = new HashMap();
-                    for (int fnum = 0; fnum < entity.getFields().size(); fnum++) {
-                        ModelField field = (ModelField) entity.getFields().get(fnum);
+                    for (int fnum = 0; fnum < entity.getFieldsSize(); fnum++) {
+                        ModelField field = entity.getField(fnum);
                         fieldColNames.put(field.getColName().toUpperCase(), field);
                     }
 
@@ -2036,8 +2036,8 @@ public class GenericDAO {
                     }
 
                     //-display message if number of table columns does not match number of entity fields
-                    if (numCols != entity.getFields().size()) {
-                        String message = "Entity \"" + entity.getEntityName() + "\" has " + entity.getFields().size() + " fields but table \"" + entity.getTableName() + "\" has " +
+                    if (numCols != entity.getFieldsSize()) {
+                        String message = "Entity \"" + entity.getEntityName() + "\" has " + entity.getFieldsSize() + " fields but table \"" + entity.getTableName() + "\" has " +
                                 numCols + " columns.";
                         Debug.logWarning("[GenericDAO.checkDb] " + message, module);
                         if (messages != null)

@@ -95,8 +95,8 @@ public class GenericWebEvent {
         GenericValue findByEntity = delegator.makeValue(entityName, null);
 
         //get the primary key parameters...
-        for (int fnum = 0; fnum < entity.getPks().size(); fnum++) {
-            ModelField field = (ModelField) entity.getPks().get(fnum);
+        for (int fnum = 0; fnum < entity.getPksSize(); fnum++) {
+            ModelField field = entity.getPk(fnum);
             ModelFieldType type = null;
             try {
                 type = delegator.getEntityFieldType(entity, field.getType());
@@ -144,8 +144,8 @@ public class GenericWebEvent {
         }
 
         //get the non-primary key parameters
-        for (int fnum = 0; fnum < entity.getNopks().size(); fnum++) {
-            ModelField field = (ModelField) entity.getNopks().get(fnum);
+        for (int fnum = 0; fnum < entity.getNopksSize(); fnum++) {
+            ModelField field = (ModelField) entity.getNopk(fnum);
             ModelFieldType type = null;
             try {
                 type = delegator.getEntityFieldType(entity, field.getType());
@@ -194,11 +194,11 @@ public class GenericWebEvent {
         }
 
         //Validate parameters...
-        for (int fnum = 0; fnum < entity.getFields().size(); fnum++) {
-            ModelField field = (ModelField) entity.getFields().get(fnum);
+        for (int fnum = 0; fnum < entity.getFieldsSize(); fnum++) {
+            ModelField field = entity.getField(fnum);
 
-            for (int j = 0; j < field.getValidators().size(); j++) {
-                String curValidate = (String) field.getValidators().elementAt(j);
+            for (int j = 0; j < field.getValidatorsSize(); j++) {
+                String curValidate = field.getValidator(j);
                 Class[] paramTypes = new Class[]{String.class};
                 Object[] params = new Object[]{findByEntity.get(field.getName()).toString()};
 

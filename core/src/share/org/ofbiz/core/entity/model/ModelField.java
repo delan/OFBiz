@@ -92,12 +92,20 @@ public class ModelField {
     
     /** The name of the Field */
     public String getName() { return this.name; }
+    public void setName(String name) { this.name = name; }
     /** The type of the Field */
     public String getType() { return this.type; }
+    public void setType(String type) { this.type = type; }
     /** The col-name of the Field */
     public String getColName() { return this.colName; }
+    public void setColName(String colName) { this.colName = colName; }
     /** boolean which specifies whether or not the Field is a Primary Key */
     public boolean getIsPk() { return this.isPk; }
+    public void setIsPk(boolean isPk) { this.isPk = isPk; }
+
     /** validators to be called when an update is done */
-    public Vector getValidators() { return this.validators; }
+    public String getValidator(int index) { return (String) this.validators.get(index); }
+    public int getValidatorsSize() { return this.validators.size(); }
+    public void addValidator(String validator) { this.validators.add(validator); }
+    public String removeValidator(int index) { return (String) this.validators.remove(index); }
 }

@@ -59,6 +59,8 @@ public class ModelKeyMap {
 
     /** name of the field in this entity */
     public String getFieldName() { return this.fieldName; }
+    public void setFieldName(String fieldName) { this.fieldName = fieldName; }
     /** name of the field in related entity */
     public String getRelFieldName() { return this.relFieldName; }
+    public void setRelFieldName(String relFieldName) { this.relFieldName = relFieldName; }
 }

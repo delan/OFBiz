@@ -45,23 +45,23 @@ import org.ofbiz.core.util.*;
 public class ModelRelation {
 
     /** the title, gives a name/description to the relation */
-    public String title = "";
+    protected String title = "";
     /** the type: either "one" or "many" */
-    public String type = "";
+    protected String type = "";
     /** the name of the related EJB/entity */
-    public String relEntityName = "";
+    protected String relEntityName = "";
     /** keyMaps defining how to lookup the relatedTable using columns from this table */
-    public Vector keyMaps = new Vector();
+    protected Vector keyMaps = new Vector();
     /** the main entity of this relation */
-    public ModelEntity mainEntity = null;
+    protected ModelEntity mainEntity = null;
 
     /** Default Constructor */
     public ModelRelation() {
     }
     
     /** XML Constructor */
-    public ModelRelation(ModelEntity entity, Element relationElement) {
-        this.mainEntity = entity;
+    public ModelRelation(ModelEntity mainEntity, Element relationElement) {
+        this.mainEntity = mainEntity;
 
         this.type = UtilXml.checkEmpty(relationElement.getAttribute("type"));
         this.title = UtilXml.checkEmpty(relationElement.getAttribute("title"));
@@ -79,6 +79,25 @@ public class ModelRelation {
         }
     }
 
+    /** the title, gives a name/description to the relation */
+    public String getTitle() { return this.title; }
+    public void setTitle(String title) { this.title = title; }
+    /** the type: either "one" or "many" */
+    public String getType() { return this.type; }
+    public void setType(String type) { this.type = type; }
+    /** the name of the related EJB/entity */
+    public String getRelEntityName() { return this.relEntityName; }
+    public void setRelEntityName(String relEntityName) { this.relEntityName = relEntityName; }
+    /** the main entity of this relation */
+    public ModelEntity getMainEntity() { return this.mainEntity; }
+    public void setMainEntity(ModelEntity mainEntity) { this.mainEntity = mainEntity; }
+
+    /** keyMaps defining how to lookup the relatedTable using columns from this table */
+    public int getKeyMapsSize() { return this.keyMaps.size(); }
+    public ModelKeyMap getKeyMap(int index) { return (ModelKeyMap) this.keyMaps.get(index); }
+    public void addKeyMaps(ModelKeyMap keyMap) { this.keyMaps.add(keyMap); }
+    public ModelKeyMap removeKeyMap(int index) { return (ModelKeyMap) this.keyMaps.remove(index); }
+    
     /** Find a KeyMap with the specified fieldName */
     public ModelKeyMap findKeyMap(String fieldName) {
         for (int i = 0; i < keyMaps.size(); i++) {
