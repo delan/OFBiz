@@ -26,7 +26,6 @@
  *@since      2.1
 -->
 
-${pages.get("/includes/envsetup.ftl")}
 <#assign layoutSettings = requestAttributes.layoutSettings>
 <html>
 <head>
@@ -49,9 +48,9 @@ ${pages.get("/includes/envsetup.ftl")}
           </#if>       
           <td align=right width='1' nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background='${layoutSettings.headerRightBackgroundUrl}'</#if>>
             <#if requestAttributes.person?has_content>
-              <div class="insideHeaderText">Welcome&nbsp;${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}!</div>
+              <div class="insideHeaderText">Welcome&nbsp;${requestAttributes.person.firstName?if_exists}&nbsp;${requestAttributes.person.lastName?if_exists}!</div>
             <#elseif requestAttributes.partyGroup?has_content>
-              <div class="insideHeaderText">Welcome&nbsp;${partyGroup.groupName?if_exists}!</div>
+              <div class="insideHeaderText">Welcome&nbsp;${requestAttributes.partyGroup.groupName?if_exists}!</div>
             <#else>
               <div class="insideHeaderText">Welcome!</div>
             </#if>
@@ -71,12 +70,12 @@ ${pages.get("/includes/appbar.ftl")}
     <div style='border: 0; margin: 0; padding: 0; width: 100%;'>
       <table style='border: 0; margin: 0; padding: 0; width: 100%;' cellpadding='0' cellspacing='0'>
         <tr>
-          <#--${pages.get("/includes/leftbar.ftl")}-->
+          <#if page.leftbar?exists>${pages.get(page.leftbar)}</#if>
           <td width='100%' valign='top' align='left'>
             ${pages.get("/includes/errormsg.ftl")}
             ${pages.get(page.path)}
           </td>
-          <#--${pages.get("/includes/leftbar.ftl")}-->
+          <#if page.rightbar?exists>${pages.get(page.rightbar)}</#if>
         </tr>
       </table>       
     </div>
