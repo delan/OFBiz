@@ -1,0 +1,950 @@
+<html>
+<head>
+<title>OFBiz for Dummies</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+
+<CENTER>
+<H1>OFBiz for Dummies</H1>
+	or
+<H2>How to Avoid a Huge Learing Curve</H2>
+<author><A HREF='mailto:richard@asg.us'>Richard Keene</A></author>
+<BR>
+Last Update: September 12, 2002
+
+</CENTER>
+<H1>Introduction</H1>
+OFBiz is a architecture and implementation intended to make developing web applications in Java easier.
+OFBiz is oriented toward intermediate to expert web developers that already know Java, JSPs, 
+HTML and such.
+<P>
+OFBiz is a large complex system that is configured and programmed using file editing.  There is no nifty 
+IDE for OFBiz (Not yet anyways).  To program the system you must understand fairly well how it works.
+As such the OFBiz system has a very steep learning curve, but once learned is a very powerfull system.
+With OFBiz you can develop web applications that are very robust.
+<P>
+Fortunately you can use OFBiz while only inderstanding some of the parts and gradualy exapnd your knowledge.
+<P>
+This guide is organized (I use that term loosely) in chronological order as to how I discovered and learned 
+about OFBiz.
+
+<P>
+I used OFBiz about 6 months ago and now have reasons to use it again.
+It is such a pain to learn OFBiz (thought well worth it) that I figure I can save you the same pain with
+this nifty guide.
+<H1>DAY 1</H1>
+The Software: (all on WindowsXP)
+First I had to get various software chunks installed.
+I got Java 1.3.1_4 from java.sun.com in the downloads section.
+I also had to get the java mail and activation framework.  
+These are also available at java.sun.com.  
+They ended up in the C:\jdk13, C:\jaf-1.0.2, and C:\javamail-1.3 respectively.
+<P>
+Next I had to get the environment set up.  This consists of setting the CLASSPATH
+and the PAT variables.  I took the approach of batch scripts for setup because
+I frequently switch between environments and projects. 
+My project is/was to be called MailRoute so I made a directory called C:\MailRoute.
+In that directory I put a script called s.bat for setup.
+s.bat looks like this...
+<pre>
+-------------------------------------------------------
+set PATH=C:\jdk13\bin;C:\cygwin\bin;%PATH%
+
+set CLASSPATH=C:\jaf-1.0.2\activation.jar;%CLASSPATH%
+set CLASSPATH=C:\javamail-1.3\mail.jar;%CLASSPATH%
+set CLASSPATH=C:\jdk13\lib\tools.jar;%CLASSPATH%
+set CLASSPATH=C:\javamail-1.3\lib\smtp.jar;%CLASSPATH%
+set CLASSPATH=C:\javamail-1.3\lib\pop3.jar;%CLASSPATH%
+-------------------------------------------------------
+</pre>
+Some of the lines were added later as I learned what was realy needed.
+Cygwin is also very usefull due to the grep and diff commands.
+<P>
+<H3>Ant:</H3>
+You also should get ant.  Ant is a build tool much like the old "make" program.
+It can be had from http://jakarta.apache.org/ant/index.html
+You should take a little time to read how ant works.  It is integral to
+working with OFBiz since that is how it gets built as you make changes.
+<P>
+Next I needed an editor.  I did a first helloworld.java with the DOS' EDIT command
+which is readly bad for java code, but it proved the compiler is working.
+<P>
+Then I got Forte for Java from java.sun.com and tried it.  One of my co-workers said that
+NetBeans is the open source project for Forte so I went to http://www.netbeans.org and got that.
+<P>
+The lack of a mouse wheel in NetBeans was realy annoying so I got the module from 
+http://nbmousewheel.sourceforge.net/
+and it worked right away. (Yay Radim Kubacki!)
+<P>
+NetBeans tip: Type ctrl-shift-f to auto format the whole edit buffer.
+<P>
+I also got JEdit for when I want a quick edit of a file and don't want to wait for NetBeans
+to come up. (NetBeans is very slow at startup.)
+<P>
+Now I have a good editor.  Check out the other modules from the Tools->Update Center menu.
+<P>
+I then spent a few hours developing a core java class called MailRoute that reads form a mailbox
+and writes to several addresses after parsing some contents out for database lookup.
+No database yet, just hard-coded values.
+
+
+<H1>DAY 2</H1>
+
+<H3>OFBiz Install:</H3>
+<P>
+Next I needed to get OFBiz to work.
+<P>
+I got the latest release and put it in a directory called C:\OFBiz
+<P>
+Then I had to get a database and server.
+
+<H3>Resin:</H3>
+We use Resin 2.1.4 which can be had from http://www.caucho.com/
+I put it in C:\resin-2.1.4
+It is very fast and easy to configure.  Fortunately you don't need to do much.
+In OFBiz there is a C:\OFBiz\setup\resin directory. In there is a file ofbiz.bat
+that you need to edit and change paths to where you installed stuff.
+There also is a file in resin\conf\resin.conf that you can copy over to the C:\resin-2.1.4\conf
+directory (make a backup of the original first) and edit to get the paths right.
+(I'm not sure you actualy have to change anything in that file.)
+You also might want to check that all the versions of java, etc. have the right revisions.
+
+<H3>MySQL:</H3>
+We use mysql so I got that from http://www.mysql.com/
+and installed it in c:\mysql
+This database is very easy to install.  You end up with a icon on the task bar that looks like a street light.
+(You can always go to C:\mysql\bin and click on winmysqladmin.exe to start it.)
+
+You need to create a database called ofbiz so click on the street light for the menu option "Show me".
+Click the Databases tab and then right click to pop the menu and select Create Database.
+Call it  ofbiz or you can call it something else if you are doing multiple projects.
+
+
+
+<H3>OFBiz intial Config:</H3>
+Now to get OFBiz to start up...
+<P>
+Goto the OFBiz directory and look around a bit.  The file system is overwhelming and it is very hard to find
+where all the pieces are.
+<P>
+We first have to get some configuration setup according to where you installed OFBiz.
+<P>
+We need to get the entity engine (The database engine) pointed at the database you installed.
+In <code>C:\OFBiz\commonapp\etc\entityengine.xml</code> is where this is defined.  There are many entries in the file for
+all the different databases supported.  You need to find the line like...
+<pre>
+&lt;delegator name="default" entity-model-reader="main" entity-group-reader="main"&gt;
+  &lt;group-map group-name="org.ofbiz.commonapp" datasource-name="localmysql" /&gt; 
+&lt;/delegator&gt;
+</pre>
+
+and it must be changed to read "localmysql" or whatever other database you might like to use.
+You can scan down the file to see the othere databases supported.
+<P>
+Your now ready to go.
+I put a reference to the ofbiz.bat file (from the setup/resin/ofbiz.bat) on my desktop and on the
+task bar since you will be starting this up rather frequently.
+Run the batch file.
+You should see a COMMAND window come up and a little GUI in the upper left corner of the screen for Resin.
+LOTS of stuff will scroll by.  Wait for it to calm down for a bit.
+<P>
+(To kill OFBiz just click on the Quit button in the GUI.)
+<P>
+Now that OFBiz is running you need to check it and populate the database.
+<P>
+Open a browser and goto http://localhost:8080 <BR>
+You should see the Resin default home page.<BR>
+Now goto http://localhost:8080/webtools<BR>
+This is the party manager, but you have to log in.<BR> 
+The defualt is login admin, password ofbiz (but its a secret so don't tell anyone)
+<P>
+<B>Don't do anything</B> until you click near the bottom of the screen where it says...<BR>
+<I>NOTE: If you have not already run the installation data loading script, <B>click here</B> to run it.</I>
+<P>
+You'll get a screen that lets you define which script to run.  The default is the correct one so click
+on the button labeled Load Data.
+<P>
+This will run the installation script and put about 460 tables into the ofbiz database.
+<pre>
+It takes a while...
+And a while longer...
+and longer...
+but only has to be done once...
+unless you change the schema...
+which is unlikely...
+</pre>
+<P>OK, now OFBiz is running.
+<P>
+<H3>Lets do some fun stuff:</H3>
+First, the entity engine defines zillions of database tables in a huge schema that convers everything you
+probably would ever do with an web server.
+For example, if you want to build a shopping cart, the schema is already there.  There is also alot of schema
+that you might not think you need for a shopping cart, but after you get deep into the implementation you will
+realize it is all needed.
+Not only is the schema already there, the business logic to handle it is there too!
+In fact lets go to the shopping cart and try it out...
+<P>http://localhost:8080/ecommerce
+<P>Wow, a whole shopping cart.
+<P>How is the catalog created?
+<P>http://localhost:8080/catalog
+This is the catalog maintanence screens.
+Poke around some.  There are a lot of screens here.
+<P><H3>Also try:</H3>http://localhost:8080/ordermgr, or workeffort
+
+<H3>About Party:</H3>
+A party in OFBiz is any entity that can take part in some action.  A party might be a person, company,
+employee, etc.  The http://localhost:8080/partymgr is the management screens for this.  Here you can
+create new people and give them logins and such.  You will be dealing with parties alot so get used to it.
+
+<H4>How Do I Deal With All These Entities!</H4>
+
+There are about ' different entity definition in the database.  For example Product, ProductType, Party, PartyType,
+Order, OrderItem, Person, ContactMeth....
+The databse is very normalized.  This means that there is no duplication of values to get out of sync.
+<H5>Schema</H5>
+If you run OFBiz and goto http://localhost:8080/webtools and click on Login (upper right side of the screen)
+you will see entity management links. If you click on Entity Reference & Editing Tools
+You get a very long screen with all 460 Entity schemas on it.  It is very intimidating at first but as you study it
+it becomes familiar and actualy makes sense.  There is a very good reason for every single entity and as
+you use them you will discover why.  
+<P>
+For example,<BR>
+A Product has fields for lots of auxiliary data, most of which can be blank.  Any code you write should be
+prepared for blanks in the data.  If the Product.detailImageURL is blank then the catalog will show a little
+"no picture available" image instead.  Thus you do not need to understand much of the schema to get along in OFBiz.
+<H5>Instances</H5>
+The second great tool is for editing instances of entities, the actual data.
+Goto http://localhost:8080/webtools and click on Entity Data Maintenance.
+Now you are dealing with the actual data.  Here you can search, edit, remove, and create entities by hand.
+The way I first created the catalog entries for the VOICE_SUBSCRIPTION type of products was by hand in this tool.
+<P>
+ALWAYS look at the instances and schema before dashing off and creating new types of entities or instances of entities.
+For example, I was about to create a new ProductType of VOICE_SUBSCRIPTION, but when I looked at the
+ProdcutType instances, there was SERVICE, GOOD, and a few others.  I realized that what I was doing was a SERVICE
+and the other partos of OFBiz know that you don't ship a SERVICE in a box!
+I then looked at ProductCategory and this is where you define VOICE_SUBSCRIPTION.
+<P>
+The moral of the story is - Study alot, code a little.
+<P>
+Why is the entity schema so good?  Because the OFBiz founders
+copied it all from a standard book of schemas for eCommerce!  This schema has probably 100 man years
+of thought and experience in it.
+
+
+<H1>DAY 3</H1>
+
+Now lets customize for our project.
+<P>
+Here you have to start thinking a bit.  Is what you want to do almost exactly like what is there?
+For example are you simply doing an online catelog and shopping cart?
+In that case you simply customize a little of what is there.
+<P>
+Is what your doing something not yet done? (In my case I'm writing a subscription manager for subscribing to
+voice messages.)
+Then you need to create a new project.  
+<P>
+First copy the nearest thing to what you are doing to a new directory.  I copied C:\OFBiz\partymgr to<BR>
+c:\OFBiz\subscriptionmgr.
+<P>
+Next you need to tell Resin (the web server) about the new project.
+The file C:\resin-2.1.4\conf\resin.config
+needs a new line near the bottom like
+    &lt;web-app id="/subscriptionmgr" app-dir="C:/ofbiz/subscriptionmgr/webapp"/&gt;
+where you see the other OFBiz lines.
+<P>
+Now If you go in the browser and goto http://localhost:8080/subscriptionmgr
+you should get a screen exactly like the partymgr screen.  (In fact a bit too exactly.)
+<P>
+To compile the new stuff you use ant.  Simply get into a COMMAND window, run your s.bat
+to get the CLASSPATH and PATH correct.
+Next goto the OFBiz top level directory and type <code>ant</code>.
+<P>
+Everything will build. If you want to just build your project directory then first
+goto the core directory and run ant.  
+Now you can goto your project directory (subscriptionmgr) and type <code>ant</code> to 
+do a quick build.  
+<P>
+<small>
+The bit with core is needed because the webapp-core.jar file
+is removed from the core area at the end of a top level build so it won't 
+be found before the same file in your webapps directory when the CLASSPATH is
+scanned, yet it is needed in the core area for project level builds.  This only
+realy matters if one of your projects needs a special webapps-core.jar file.
+If you don't do the build in the core directory then the project build will
+complain that some core classes can't be found.
+</small>
+
+Now lets change the basic verbage on the screens.
+<P>
+First lets look at how screens get made.
+When you ask for http://localhost:8080/subscriptionmgr the first thing that resin does is
+resolve it to C:/ofbiz/subscriptionmgr/webapp and then to index.jsp
+What index.jsp does is redirect to control/main
+Control is mapped to a servlet in OFBiz that is the gate keeper for all requests.
+Control is what is called a controller servlet architecture.  The controller takes actions (in this case "main")
+and mapps them to actual pages.  But it does much more...
+In the file C:\OFBiz\subscriptionmgr\webapp\WEB-INF\controller.xml is where the mapping is defined.
+The lines...
+<pre>
+    &lt;request-map uri="main"&gt;
+        &lt;security https="true" auth="true"/&gt;
+    	&lt;response name="success" type="view" value="main"/&gt;
+    &lt;/request-map&gt;
+</pre>
+Tell the controller that the action main should set up https and then if successfull go to the view called main.
+Further down the file is the view entry...
+<pre>
+    &lt;view-map name="main" page="findparty" type="region"/&gt;
+</pre>
+This could map directly to a .jsp file but it does not.  Instead it says the region called findparty
+is the place to go.
+So now in the C:\OFBiz\subscriptionmgr\webapp\WEB-INF\regions.xml tells how to realy bulild the web page, from templates.
+The entry...
+<pre>
+    &lt;define id='findparty' region='MAIN_REGION'&gt;
+        &lt;put section='title'&gt;Find Party&lt;/put&gt;
+        &lt;put section='content' content='/party/findparty.jsp'/&gt;
+    &lt;/define&gt;
+</pre>
+says that the findparty region uses the template (another region) MAIN_REGION and the .jsp is /party/findparty.jsp
+If you then look at MAIN_REGION near the top of the file you'll see that it is made up of several pieces...
+<pre>
+    &lt;define id='MAIN_REGION' template='/templates/main_template.jsp'&gt;
+        &lt;put section='title'&gt;Application Page&lt;/put&gt; &lt;!-- this is a default and is meant to overridden --&gt;
+        &lt;put section='header' content='/includes/header.jsp'/&gt;
+        &lt;put section='appbar' content='/includes/appbar.jsp'/&gt;
+        &lt;put section='error' content='/includes/errormsg.jsp'/&gt;
+        &lt;put section='content' content='/main.jsp'/&gt; &lt;!-- this is a default and is meant to overridden --&gt;
+        &lt;put section='footer' content='/includes/footer.jsp'/&gt;
+    &lt;/define&gt;
+</pre>
+Thus you can define an overall look for all of your web pages and concentrat on the central content of each page.
+This is very nifty and saves tons of work when the boss says, "Can we move that menu item down a bit and over here..."
+<P>
+Given this intro, lets customize or little app.
+First goto the file C:\OFBiz\subscriptionmgr\webapp\WEB-INF\web.xml and look for everywhere it says Party as in
+Party Manager, and change it to Subscription Manager.
+Now if you look at http://localhost:8080/subscriptionmgr the titles have changed.
+It would be nice to change the menus to what we need so edit the file C:\OFBiz\subscriptionmgr\webapp\includes\header.jsp
+(You better understand HTML and JSP's at this point. If not your in the wrong tutorial and way over your head!)
+Notice these points of interest...
+<P>
+The ofbiz imports at the top.
+<pre>
+&lt;%@ taglib uri="ofbizTags" prefix="ofbiz" %&gt;
+</pre>
+This provides some handy tags.
+<pre>
+&lt;jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" /&gt;
+</pre>
+This does the entire security validation and login stuff.
+<pre>
+EntityField.run("partyGroup", "groupName", "", "", pageContext);
+</pre>
+This takes the entity table, partyGroup, field groupName, but if not found use "" and puts it into the JSP stream.
+This encapsulates a lot of entity engine code.
+<P>
+I took this file and took out most of the menu items leaving just Main (Signup) and Edit Subscription.
+<P>
+Now we need a page that does something, which in my case is to hook the MailRoute code I wrote
+to OFBiz.  I put the MailRoute class in the directory called C:\OFBiz\subscriptionmgr\src\com\asg
+and made a new class called MailRouteWorker that will have methods for generating HTML about subscriptions.
+The MailRoute class needs to know things like email account name, password, server, and email type (pop3 or smtp). 
+<P>
+This is done via. a properties file I put in C:\OFBiz\subscriptionmgr\webapp\WEB-INF\subscriptionmgr.properties
+I used the NetBeans properties editor so it was easy to create.
+Then in the MailRoute I put some code...
+
+<pre>
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
+...
+    public String sourceServer;
+    public String sourceLogin;
+    public String sourcePassword;
+    public String sourceProtocol = "pop3";
+    
+    public String destinationServer;
+    public String destinationLogin;
+    public String destinationPassword;
+    public String destinationProtocol = "smtp";
+    
+    public String companyTitle = " ";
+    public int verbose = 0; // 0 none, 1 some, 2 lots.
+    java.net.URL subscriptionmgrPropertiesUrl = null;
+    int sourcePollingIntervalMs = 60000;
+...
+    private void setupEnv(ServletContext ctx) {
+        try {
+            subscriptionmgrPropertiesUrl = ctx.getResource("/WEB-INF/subscriptionmgr.properties");
+        }
+        catch ( java.net.MalformedURLException e ) {
+            Debug.logWarning(e);
+        }
+        
+        System.out.println("MailRoute Creation.");
+        try {
+            Integer.parseInt(UtilProperties.getPropertyValue(subscriptionmgrPropertiesUrl, "verbose", "0"));
+        }
+        catch (Exception ex) {
+        }
+        companyTitle = UtilProperties.getPropertyValue(subscriptionmgrPropertiesUrl, "colmpanytitle", "Subscription Router");
+        // TBD The real account and password.
+        sourceServer = UtilProperties.getPropertyValue(subscriptionmgrPropertiesUrl, "sourceMailHost", "notset");
+        sourceLogin = UtilProperties.getPropertyValue(subscriptionmgrPropertiesUrl, "sourceMailLogin", "notset");
+        sourcePassword = UtilProperties.getPropertyValue(subscriptionmgrPropertiesUrl, "sourceMailPassword", "notset");
+        sourceProtocol = UtilProperties.getPropertyValue(subscriptionmgrPropertiesUrl, "sourceMailProtocol", "pop3");
+        destinationServer = UtilProperties.getPropertyValue(subscriptionmgrPropertiesUrl, "destinationMailHost", "notset");
+        destinationLogin = UtilProperties.getPropertyValue(subscriptionmgrPropertiesUrl, "destinationMailLogin", "notset");
+        destinationPassword = UtilProperties.getPropertyValue(subscriptionmgrPropertiesUrl, "destinationMailPassword", "notset");
+        destinationProtocol = UtilProperties.getPropertyValue(subscriptionmgrPropertiesUrl, "destinationMailProtocol", "smtp");
+        try {
+            sourcePollingIntervalMs = Integer.parseInt(UtilProperties.getPropertyValue(subscriptionmgrPropertiesUrl, "sourceMailPollingInterval", "60000"));
+        } catch (Exception ex2) {
+        }
+    }
+<pre>
+
+The loggin could be done better but I haven't figured out that part yet.
+<P>
+Now the MailRoute code needs to be called once a minute.  Timers are done with the scheduler in the Service 
+Engine that is used by the Workflow Engine.
+I haven't done that part yet so stay tuned for more on this in the future.
+
+
+<H1>DAY 4</H1>
+[ you may notice the DAY # notes here.  That is how long it has taken to figure out what fits in
+  a few brief pages.  This knowledge was gained by either browsing code, asking David Jones (Mr. OFBiz)
+  or by asking another employee (Dustin Caldwell) that works with me lots of little questions, but mostly
+  by code browsing.]
+
+<H3>Getting the editSubscription page up:</H3>
+
+I took the main.jsp page and copied it to a page called editSubscription.jsp.
+Then I modified the webapp/WEB-INF/controller.xml by copying the entry for main
+and renaming main to editsubscription (in 2 places).  Then changed the regions.xml file too.
+I made the link in header.jsp (over in the includes directory) where the Edit Subscription button
+is defined in HTML to link to /editsubscription
+<P>
+This may seem strange, but what happens is that the controller gets the command editsubscription.
+Since the controller.xml entry calls for auth if the user is not logged in they are kicked to the login
+screen and once they login the jump back to the editSubscription screen.
+<P>
+Now I need to put some code in the MailRouteWorker.java file to get subscription state from the entity engine
+and into HTML and to the JSP.  Here is the MailRouteWorker.java in it's partialy programed state which is
+where I am now.
+<P>
+I have put in comments about interesting features.
+<P>
+Some notes are in order here about entity management.
+First you have to have a delegator to do anything with an entity.
+Second, you can get an object from the entity engine, called a GenericValue
+from the delegator.
+The delegator is gotten in the JSP with...
+<pre>
+&lt;jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" /&gt;
+</pre>
+With this bean included then the variable delegator is defined.
+The line in the JSP that calls this getHTMLSubscriptionList method is...
+<pre>
+&lt;DIV class='tabletext'&gt;&lt;%=MailRouteWorker.getHTMLSubscriptionList(delegator, request)%&gt;&lt;/DIV&gt;
+</pre>
+
+delegator.findByAnd is very uesfull and lets you find objects in a table by several criteria
+in an AND fashion.
+Though this code does not do it (yet) if you change a field of a GenericValue
+such as person.set("lastName", newLastName)
+You then call person.store() to flush the change(s) to the database.
+
+<pre>
+
+package com.asg;
+
+// Dustin, search for the lines with TBD on them.
+// R. Keene
+
+import java.util.*;
+
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.servlet.*;
+import javax.servlet.jsp.*;
+import javax.servlet.http.*;
+
+import com.sun.mail.pop3.*;
+import com.sun.mail.smtp.*;
+
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.security.*;
+
+public class MailRouteWorker {
+    public final static String checkBoxPrefix = "mailrouteProdCB";
+    
+    public static String getHTMLSubscriptionList(GenericDelegator delegator, HttpServletRequest request) {
+        try {
+            boolean hit = false;
+	    // Use StringBuffer for fast building of HTML constructs.
+            StringBuffer sb = new StringBuffer();
+            
+	    // SiteDefs is a class that defines the strings used in the session for common parts.
+	    // In this case PERSON is the Person entity that the security system validated at login.
+            GenericValue person = (GenericValue) request.getSession().getAttribute(SiteDefs.PERSON);
+            if(person == null) {
+                return "Can't identify you.";
+            }
+            
+	    // Now get the products of type SERVICE and category VOICE_SUBSCRIPTION
+            // This is a collection.  We show them in the form as a list with checkboxes next to them.
+ 	    // The delegator is the top level handle to the entity engine.  You have to have one of these to
+	    // do anything with the database.
+	    // UtilMisc.toMap is a nifty method that takes key:value pairs and makes a Map out of them.
+            Collection availableSubscriptions =
+            delegator.findByAnd("Product", UtilMisc.toMap("productTypeId", "SERVICE", "primaryProductCategoryId", "VOICE_SUBSCRIPTION"));
+            if(availableSubscriptions == null) {
+                return "Product search returned null.";
+            }
+            
+            sb.append("&lt;B&gt;Subscription List for ");
+     	    // Here we get the firstName field of the person object.
+            sb.append((String)person.get("firstName"));
+            sb.append(" ");
+            sb.append((String)person.get("lastName"));
+            sb.append("&lt;/B&gt;&lt;BR&gt;");
+            
+            Iterator i = availableSubscriptions.iterator();
+            while(i.hasNext()) {
+                GenericValue e = (GenericValue)i.next();
+                sb.append("&lt;INPUT type='checkbox' name='");
+                sb.append(checkBoxPrefix);
+                sb.append((String)e.get("productId") + "' ");
+                sb.append((isSubscribed(delegator, person, e) ? "checked" : "") + "&gt;");
+                sb.append((String)e.get("productName") + " - " + (String)e.get("description"));
+                sb.append("&lt;BR&gt;\n");
+            }
+            
+            return sb.toString();
+        } catch(Exception ex) {
+            return "Exception getting subscriptions list: " + ex.getMessage();
+        }
+    }
+    
+    public static boolean isSubscribed(GenericDelegator delegator, GenericValue person, GenericValue product) {
+        try {
+            Collection subscriptions = delegator.findByAnd("Subscription",
+            UtilMisc.toMap("partyId", person.get("partyId"), "productId", product.get("productId")));
+            if(subscriptions != null && subscriptions.size() &gt; 0) {
+                return true;
+            }
+        } catch (Exception ex) {
+        }
+        
+        return false;
+    }
+    
+}
+
+</pre>
+
+
+<H3>Entity creation and destruction.</H3>
+Ok, next we want ot save the subscriptions that are checked in the GUI on the browser.
+I added lines to the editSubscription.jsp like this...
+<pre>
+&lt;%
+    if(request.getParameter("saveSubscription") != null) {
+        MailRouteWorker.updateSubscriptions(delegator, request);
+    }
+ %&gt;
+<pre>
+
+And FORM tags to put the checkboxes I generate in a FORM.  The FORM line is like this...
+<pre>
+&lt;form method="post" action='&lt;ofbiz:url&gt;/editSubscription?saveSubscription=1&lt;/ofbiz:url&gt;' name="editeftaccountform" style='margin: 0;'&gt;
+</pre>
+Now when the jsp post back to it's self the getPArameter("saveSubscription") will call my code in the worker.
+<P>
+In the worker the updateSubscriptions method scans the available subscriptions and either creates or deletes the
+Subscription entities according to how the checkboxes are set.
+<P>
+To create a new instance of an entity you call 
+delegator.makeValue
+The problem is you need a unique ID for the new item (usualy) so there is a function in OFBiz
+called delegator.getNextSeqId that will do this.  ALWAYS pass the name of the entity type to
+getNextSeqId.  NEVER pass some other name.  The getNextSeqId keeps all the variou sequences in a DB table
+and updates it as needed.  For speed ID's are gotten in blocks of 10. (OK, you realy didn't need to know that
+but it's cool.)
+Once the entity is created you need to create it in the actual DB table.  That is what <code>delegator.create(...)</code>
+does.
+<P>
+Note: Why isn't all this more automatic? Because you might want to create entities in memory, with no intent of ever saving
+them and then destroy them.
+Note: Products have a productId that is not usualy numeric.  Instead it is the companies product id 
+which could be anything.
+<P>
+To destroy en entity it's easy. Simply call the remove method on the entity.
+<P>
+Here is the code for updateSubscription and setSubscribed...
+
+<code>
+    public static boolean setSubscribed(GenericDelegator delegator, GenericValue person, GenericValue product, boolean subscribed) {
+        try {
+            System.out.println("In setSubscribed: " + subscribed);
+            Collection subscriptions = delegator.findByAnd("Subscription",
+            UtilMisc.toMap("partyId", person.get("partyId"), "productId", product.get("productId")));
+            System.out.println("setSubscribed: There are " + subscriptions.size() + " subscriptions for " + person.get("partyId") + " and product " + product.get("productId"));
+            if(subscribed) {
+                if(subscriptions == null || subscriptions.size() == 0) {
+                    // Not subscribed, so add it.
+                    System.out.println("In setSubscribed: Create subscription entry.");
+                    GenericValue sub  = delegator.makeValue("Subscription",
+                        UtilMisc.toMap(
+                            "subscriptionId", delegator.getNextSeqId("Subscription").toString(),
+                            "partyId", person.get("partyId"),
+                            "productId", product.get("productId")));
+                    System.out.println("In setSubscribed: Create subscription entry. Saved. new id is " + sub.get("subscriptionId"));
+                    delegator.create(sub);
+                    System.out.println("In setSubscribed: stored");
+                }
+            } else {
+                if(subscriptions != null && subscriptions.size() &gt; 0) {
+                    // Subscribed, so remove it.
+                    Iterator i = subscriptions.iterator();
+                    while(i.hasNext()) {
+                        GenericValue sub = (GenericValue)i.next();
+                        System.out.println("In setSubscribed: Removing subscription entry.");
+                        sub.remove();
+                        System.out.println("In setSubscribed: Removing subscription entry.");
+                    }
+                }
+            }
+        } catch (Exception ex) {
+        }
+        return true;
+    }
+    
+    /** Returns true if it succeeds.
+     **/
+    public static boolean updateSubscriptions(GenericDelegator delegator, HttpServletRequest request)
+    throws GenericEntityException {
+        System.out.println("Saving subscription.");
+        GenericValue person = (GenericValue) request.getSession().getAttribute(SiteDefs.PERSON);
+        
+        Collection availableSubscriptions =
+        delegator.findByAnd("Product", UtilMisc.toMap("productTypeId", "SERVICE", "primaryProductCategoryId", "VOICE_SUBSCRIPTION"));
+        if(availableSubscriptions == null) {
+            System.out.println("No Product selected?");
+            return false;
+        }
+        
+        Iterator i = availableSubscriptions.iterator();
+        while(i.hasNext()) {
+            GenericValue e = (GenericValue)i.next();
+            
+	    // In our case checkBoxPrefix is "mailrouteProdCB" so the cbName might 
+	    // be like "mailrouteProdCBMESSAGE_OF_THE_DAY"
+            String cbName = checkBoxPrefix + (String)e.get("productId");
+            System.out.println("Looking for checkbox " + cbName);
+            if(request.getParameter(cbName) == null) { // Checkbox Off
+                setSubscribed(delegator, person, e, false);
+            } else { // Checkbox On
+                setSubscribed(delegator, person, e, true);
+            }
+        }
+        System.out.println("Done updateSubscriptions.");
+        return true;
+    }
+</code>
+
+<H1>Day 5 </H1>
+Todays task is to get the MailRouter to be called once a minute.  
+This is done via the workflow engine.
+
+The services engine allows you to have a chunk of Java code, SOAP, or bsh
+get called and return a response.  We need to create a service, that when called,
+checks all the mail boxes for mail and then forwards the mail with some changes, to
+all the subscribed people.
+
+First I wrote the class called MailRoute.java and tested it independent of the OFBiz
+environment.  Next it needs to be put in the environment so I put it in
+<code>C:\OFBiz\subscriptionmgr\src\com\asg\MailRoute.java</code>
+
+<H3>Properties in Services</H3>
+Next the service needs to get at some properties such as the mail server name, login,
+password and such.  I created a properties file with all of this and put it in
+the webapps directory.
+<P>
+There is a problem here.  Services do not run as servlets or in a servlet 
+context, so
+the propertiy file will not be findable in the webapps directory. Instead I need to
+use the standard Java call <BR>
+<code>ResourceBundle bund = ResourceBundle.getBundle("subscriptionmgr");</code><BR>
+to get to it.  This will look for subscriptionmgr.resource in the CLASSPATH.
+I modified the build.xml script for subscriptionmgr to include a copy of the
+resource file to the lib directory so it will get bundled into the .jar file
+along with the MailRoute.class and MailRouteWorker.class.
+<code>
+    &lt;target name="jar" depends="classes"&gt;
+    	<B>&lt;copy file="${webapp.dir}/WEB-INF/subscriptionmgr.properties" tofile="${build.dir}/jar/subscriptionmgr.properties" /&gt;</B>
+        &lt;jar jarfile="${lib.dir}/${name}.jar" basedir="${build.dir}/jar" /&gt;
+    &lt;/target&gt;
+
+</code>
+Note: This means that if you change the properties file you need to rebuild
+or re-put it in the jat file.  This is not as nifty as a properties file in the
+webapps directory, but then services aren't running in a Servlet Context.
+<P>
+Note: If you put it directly in the lib directory it will get deleted when the
+build process cleans up before building the code!
+<P>
+Now the properties can be loaded.<BR>
+<code>
+        <B>ResourceBundle bund = ResourceBundle.getBundle("subscriptionmgr");</B>
+        if(bund == null) {
+            throw new Exception("MailRoute.setupEnv could not find the resource file subscriptionmgr.properties. (Not in the classpath)");
+        }
+        
+        System.out.println("MailRoute Creation.");
+        try {
+            String v = bund.getString("verbose");
+            if(v == null)
+                v = "0";
+            Integer.parseInt(v);
+        }
+        catch (Exception ex) {
+        }
+        companyTitle = bund.getString("subjectPrepend");
+        if(companyTitle == null)
+            companyTitle = "Subscription Router";
+        // TBD The real account and password.
+        <B>sourceServer = bund.getString("mailroute.source.host");</B>
+        if(sourceServer == null)
+            sourceServer = "notset";
+	... etc ...
+</code>
+<P>
+<H3>The Service Function</H3>
+You now need to define the actual method that is called and tell the service engine
+how to find it.
+<P>
+In <code>webapp/WEB-INF/web.xml</code> there is an entry to start services.
+It looks like this.
+<code>
+  &lt;context-param&gt;
+    &lt;param-name&gt;serviceReaderUrls&lt;/param-name&gt;
+    &lt;param-value&gt;<B>/WEB-INF/services.xml</B>&lt;/param-value&gt;
+    &lt;description&gt;Configuration File(s) For The Service Dispatcher&lt;/description&gt;
+  &lt;/context-param&gt;&gt;
+
+</code>
+
+I copied the services.xml file from another directory (use find to find one), removed
+most of the entries and edited it so it looks like this.
+<code>
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;!DOCTYPE services 
+  PUBLIC "-//OFBiz//DTD Services Config//EN" 
+  "http://www.ofbiz.org/dtds/services.dtd"&gt;
+
+&lt;services&gt;
+  &lt;description&gt;Subscription Manager Services&lt;/description&gt;
+  &lt;vendor&gt;ASG&lt;/vendor&gt;
+  &lt;version&gt;1.0&lt;/version&gt;
+	
+  &lt;!-- Subscription Manager services --&gt;
+  &lt;service name="checkEmailService" engine="java" 
+    location="com.asg.MailRoute" invoke="checkEmailService"&gt;
+  &lt;/service&gt;  
+&lt;/services&gt;
+
+</code>
+
+Then in MailRoute.java I have a function that looks like this.
+<code>
+    /** Check for mail to route, and route it. */
+    public static Map checkEmailService(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        System.out.println("Checking server in checkEmailServer service.");
+        try {
+            (new MailRoute()).checkServer(ctx);
+        } catch (Exception ex) {
+            System.out.println("Exception in MaiRoute service: " + ex.getMessage());
+        }
+        System.out.println("Done checking in checkEmailServer service.");
+        return result;
+    }
+
+</code>
+
+The checkEmailService method is important.  It takes a Map which is key/value pairs
+for the parameters being passed in.  And returns a Map that is the return values, if any.
+In the services.xml file you can specify parameters. 
+<P>
+The DispatchContext lets you get at the EntityEngine and such.
+<P>
+Remember, the service may not be called from within a Servlet or JSP so there is
+no ServletContext, HttpServletRequest or anything like that.  The service 
+is pure business logic.
+
+
+
+<H3>Searching for Entities by Primary Key</H3>
+
+Next I need to fill in a method that I has stubbed-out to get a list of email
+address of the people subscribed to a given distribution list.  I have
+the From: email address of the message, and two variable called M and U that are
+parsed out of the contents of the incomming email.
+<P>
+I realize that I need to add a field to Product to contain the key in the email
+parsed parameters (M, U or the emai address). But, in OFBiz you don't need to
+add to the schema.  Instead there is a entitiy called ProductAttribute.
+How did I find that? I went into the schema viewer and found Product, then
+looked at the Relation section of Product and saw the ProductAttribute reference.
+ProductAttribute has a productId, productAttrName, value and type.
+These can be used pretty much hoever you want.
+I need to create a ProductAttribute with attrName of "VOICE_SUBSCR_SOURCE"
+(which I just made up) and set the value to the From: email of the incomming email
+parsed data.
+<P>
+In fact the realy fast way to do this is get all the ProductAttributes where
+attrName is VOICE_SUBSCR_SOURCE and the attrValue is whatever From: is.
+Hey, that sounds almost like an SQL statement.  Fortunately I don't have to
+deal with SQL.
+<P>
+<small> OK, If you must know, the incomming email has a URL in it that has parameters
+U and M in it.  I parse the embedded URL and then foward the exact URL in 
+a new email with a different Subject, From, and body, to all the subscribers.
+This way the boss can send a email with a reference to a voice server to all the
+employees, etc.
+</small>
+<P>
+Here is the code to get the source email From converted to a Product.
+<code>
+    public static GenericValue convertEmailSourceAddressToProduct(String m, DispatchContext ctx) {
+        try {
+        GenericDelegator delegator = ctx.getDelegator();
+        <B>Collection theProductAttrs = delegator.findByAnd("ProductAttribute", 
+            UtilMisc.toMap("attrName", "VOICE_SUBSCR_SOURCE", "attrValue", m));</B>
+        if(theProductAttrs.size() == 0) {
+            return null;
+        }
+        // We expect just one entry. Any more are ignored.
+        Iterator i = theProductAttrs.iterator();
+        GenericValue theFirstProductAttr = (GenericValue)i.next();
+        <B>GenericValue theProduct = delegator.findByPrimaryKey("Product", 
+            UtilMisc.toMap("productId", theFirstProductAttr.get("productId")));</B>
+        return theProduct;
+        } catch (Exception ex) {
+            System.out.println("convertEmailSourceAddressToProduct: Exception: " + ex.getMessage());
+            return null;
+        }
+    }
+</code>
+<H3>Primary Keys and Entities</H3>
+Entities have a Primary Key or PK that is usualy a single index column.  For example
+the Product table PK is the productId.  The delegator has a call findByPrimaryKey
+that can find a single Entity (GenericValue) very quickly.
+<P>
+You can also find records by several columns in a AND or OR fashion with
+delegator.findByAnd and such.  These methods take a Map of key/value pairs
+that define what to search for.
+<P>
+Next I need to go into the entity data editor and manualy add the
+ProductAttributes.  Later I may make a nifty GUI to make this easy.
+
+<H3>Another Search - By AND</H3>
+The people that have subscribed have a partiId and a entity called Person.
+There are ContactMech (contact mechanismattachements that can be related to
+a Party so what I'll do is get all Subscription entities for a given Product.
+The Product is the subscription list, and the Subscription is a person's subscription to
+that list.
+<P>
+Once I have the list of Subscriptions, I can get the ContactMeth of 
+ContactMechType EMAIL_ADDRESS for the party that owns the Subscription.
+If they don't have an email address then they get skipped.
+<P>
+This sounds complicated but actualy the code is fairly simple and nicely illustrates the use
+of the entity engine.
+<code>
+            Collection c = new ArrayList();
+            GenericValue prod = convertEmailSourceAddressToProduct(theFromAddress, ctx);
+            if(prod != null) {
+                GenericDelegator delegator = ctx.getDelegator();
+                // Find all the subscribers to this Product.
+                Collection subscriptions = delegator.findByAnd("Subscriber",
+                	UtilMisc.toMap("productId", prod.get("productId")));
+                Iterator i = subscriptions.iterator();
+                while(i.hasNext()) {
+                    GenericValue sub = (GenericValue)i.next();
+                    // Find the email address of the party
+                    GenericValue emailEntity = delegator.findByPrimaryKey("ContactMech",
+                    	UtilMisc.toMap("contactMechTypeId", "EMAIL_ADDRESS",
+                    		       "partyId", sub.get("partyId")));
+                    if(emailEntity != null) {
+                        String em = (String)emailEntity.get("infoString");
+                        if(em != null && em.length() > 0) {
+                            c.add(em);
+                        }
+                    }
+                }
+            }
+
+</code>
+
+<H1>Why The Entity Engine</H1>
+This is a good time to stop and think about why the entity engine is a Good Idea.
+<P>
+The normal way to access databases in Java is via JDBC.  There are several problems
+with the direct approach.  The biggest problem is maintaining 460 different SELECT, INSERT,
+UPDATE,DELETE statements.  Every time a table changes you have to fix your code.
+<P>
+Another approach (One that I have implemented and used) is the auto-code writer
+approach.  The one I did was called CodeCrank and took an XML table definition file,
+much like the entity definition file, and a code template file(s) and generated 
+java code to make class definitions that knew how to do all the database stuff.
+This approach is also how the earliest OFBiz entity engine worked!
+It turns out to be a bad approach (though very high performance) because whenever the
+schema changes the class definitions change.  Thus a field e.g. DateOfBirth, could
+suddenely vanish, and now your code won't compile and run.
+<P>
+The entity engine instead treats database columns as key/value pairs of an object.
+Since all fields are refered to by strings, if a column vanishes the worst you will get
+is null, which you need to be prepared to handle anyways.
+<P> 
+The .Net framework works almost exactly like the entity engine. (Was that blashpemy there?)
+<P>
+The entity engine is <B>not</B> good at loading zillions of objects quickly.  For example
+if you want to load a 5 million phone number to address mappings into a database so
+your web site can do reverse lookups, don't use the entity engine.
+<P>
+The correct approach would be to create a class called PhoneAddr and an inner class
+called PhoneAddrRec and write custom code to load it realy quickly from the database
+and put the 'Recs in two Hashtables, one by phone, and the other by address.
+Then have a function you can call to do searches.
+You also might want a custom JDBC-style method to store changes quickly.
+<P>
+The second great reason for using the entity engine is that the huge intimidating schema
+actual <B>is</B> usefull.  Issues that you may have never anticipated are already
+in the schema and resolved.  For the entire programming of the subscriptionmgr project
+I have not needed to change a single thing in the schema!
+<P>
+In a realy large project the single place where programmers collide the most is
+in the schema.  One programmer's change can break everyone else's code.
+Also you might end up with several tables that do the same thing but by different names!
+
+<HR color='blue'>
+<H1>Stuff at the End of this File</H1>
+If you see any typos, errors, or just plain stupid ideas, feel free to email
+me with your corrections, fixes, or own stupid ideas.<BR>
+Also if you liked this doccument or found it usefull, let me know too.  
+It encourages me to keep improving the doccument.
+<P>
+<A HREF='mailto:richard@asg.us'>Richard Keene, richard@asg.us</A>
+
+</body>
+</html>
+

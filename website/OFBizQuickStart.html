@@ -1,0 +1,510 @@
+<html>
+<head>
+<title>OFBiz Quick Start Guide</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+<DIV ALIGN="CENTER"><A target="_blank"  NAME="s1content"></A>The Open For Business Project</DIV>
+<DIV ALIGN="CENTER">Quick Start Guide</DIV>
+<DIV ALIGN="CENTER">Brett G. Palmer</DIV>
+<DIV ALIGN="CENTER"><a href="mailto:bgpalmer@computer.org">bgpalmer@computer.org</a></DIV>
+<DIV ALIGN="CENTER">October 2, 2002</DIV>
+<BR>
+
+<P><A target="_blank"  NAME="h1.1body"></A><FONT SIZE="2" FACE="Times New Roman"><u>Table of Contents</u></FONT>
+  
+  
+  
+</P>
+<P><A target="_blank"  NAME="h1.1content"></A><A target="_blank"  NAME="h1.2body"></A><FONT SIZE="2" FACE="Times New Roman"><u>Introduction</u></FONT>
+</P>
+<P><A target="_blank"  NAME="s1content"></A><FONT SIZE="3" FACE="Times New Roman">The 
+purpose of this document is to assist people interested in the Open 
+For Business (ofbiz) project to get started as quickly as possible.  
+I have been using the ofbiz framework for a few months now and have 
+found it to be very helpful in building Java based web applications.  
+There are a lot of components that can significantly reduce the cost 
+of your project.  Unfortunately, like many open source products the 
+documentation is fairly light.  This document does not cover everything 
+in detail but does provide some helpful tips to help you started..  
+This Quick Start document will cover the following topics:</FONT>
+</P>
+<UL TYPE="DISC">
+  <LI><FONT SIZE="3">Comparing ofbiz with other projects</FONT></LI>
+  <FONT SIZE="3"><LI>Using the Entity engine</LI></FONT>
+  <FONT SIZE="3"><LI>Creating web applications through the web controller </LI></FONT>
+</UL>
+<P><A target="_blank"  NAME="h1.3body"></A><FONT SIZE="3"><u>Comparing 
+  Ofbiz with Other Open Source Projects</u></FONT><u>&nbsp;</u><BR>
+</P>
+<P><A target="_blank"  NAME="h1.3content"></A><FONT SIZE="3">If 
+you found ofbiz chances are you have seen several other open source 
+projects.  What makes ofbiz different than most of these projects is 
+that ofbiz is an entire framework of components and tools to help develop 
+web applications in Java.  A good web application is broken down into 
+different logical layers.  There is a web or presentation layer, a business 
+logic layer, and a database or persistent layer.  Frameworks such as 
+Struts, Cocoon, and Velocity focus primarily on the web tier.  Struts 
+for example, follows a model-view-controller (MVC) architecture for 
+combining JSP pages with Java Beans or Action classes as they are called.  
+Struts is a very good framework for building web applications but it 
+does not provide components for accessing databases or controlling workflow.  
+These components you are expected to build yourself.  This is where 
+ofbiz differs from many other open source Java projects.  If you’re 
+already working with another Java framework such as Struts you could 
+easily include some of the ofbiz components into your project.  </FONT></P>
+<P><A target="_blank"  NAME="h1.4body"></A><FONT SIZE="3"><u>Getting 
+  Started</u></FONT><u>&nbsp;</u><BR>
+</P>
+<P><A target="_blank"  NAME="h1.4content"></A><FONT SIZE="3">The 
+easiest way to get started with ofbiz is to download the ofbiz-XX-XX-complete.zip 
+version of the source.  This is significantly bigger than the ofbiz-XX-XX-src.zip 
+version because it includes the entire download of Catalina (Tomcat 
+4.X), but if you can afford the download time it will be worth it.  
+The complete version comes with several scripts (e.g. ofbiz.bat ) that 
+will start Catalina with the ofbiz components installed and running 
+without any compiling.  And if you have Jakarata Ant you will be able 
+to build the source without modifying anything.  This will save you 
+a lot of time at first.  I wouldn’t recommend getting the source from 
+CVS or the even downloading the source version only until you are more 
+familiar with ofbiz and its components.  Otherwise you will spend a 
+considerable amount of time setting up classpaths and configuration 
+files.  </FONT></P>
+<P><FONT SIZE="3"><I>Requirements:</I></FONT>
+</P>
+<OL TYPE="1">
+  <LI><FONT SIZE="3">Apache's Ant 1.5 (I have also used 1.4.1 without any problem)</FONT></LI>
+  <LI><FONT SIZE="3">ofbiz-XXX-XXX-complete.zip or ofbiz-XXX-XXX-complete.tgz</FONT></LI>
+  <LI><FONT SIZE="3">JDK 1.3.x. I 
+    was able to run ofbiz with JDK 1.4 but compiling gave me several deprecation 
+    warnings. </FONT></LI>
+</OL>
+
+<P><FONT SIZE="3"><I>Recommendations:</I></FONT>
+</P>
+<OL TYPE="1">
+  <LI><FONT
+   SIZE="3">Learn the Entity Engine</FONT></LI>
+  <FONT SIZE="3"><LI>Create a small web application</LI></FONT>
+</OL>
+<P><FONT SIZE="3"> </FONT>
+</P>
+<P><A target="_blank"  NAME="h1.5body"></A><FONT SIZE="3"><U>Separating 
+the Entity Engine from Other Components</U></FONT></P>
+<P><A target="_blank"  NAME="h1.5content"></A><FONT SIZE="3">Although 
+the getting the complete download and running it is fairly straightforward 
+understanding how all the different components work can be a difficult 
+since everything is already integrated together.  If you’re like me 
+working with the components separately is much easier to learn the specifics 
+of a particular component.  Ofbiz’s entity engine is one of the most 
+mature components and I think one of its greatest assets.  Writing persistent 
+layer code in JDBC may not be that difficult but it can sure take a 
+lot of time and can cause lots of errors.  Ofbiz’s entity engine can 
+greatly simplify writing database components and let you focus on the 
+business logic of the application. </FONT></P>
+<P><FONT SIZE="3">A 
+good strategy for working with the ofbiz entity engine is to create 
+your own JUnit tests that verify that your entity definitions are setup 
+and working correctly.  I like the Extreme Programming (XP) philosophy 
+of code a little, test a little, etc.  This is also a good method for 
+maintaining and testing your code base.  This is not a tutorial on JUnit 
+for more information JUnit see the references section below.  I have 
+found this to be a good way to work with the ofbiz entity engine components. </FONT>
+</P>
+<P><FONT SIZE="3"><I><U>Key 
+Files:</U></I></FONT></P>
+<UL TYPE="DISC">
+  <FONT SIZE="3">
+  <LI>entityengine.xml - defines your database delegator and entity definitions 
+    to include in your project.</LI>
+  </FONT>
+  <FONT SIZE="3"><LI>entitygroup.xml 
+  - works alongside the entityengine.xml file to group entity definitions 
+  into specific group</LI></FONT>
+  <FONT SIZE="3"><LI>entity_&lt;your_entity_defs&gt;.xml 
+  - your own custom entity definition file</LI></FONT>
+</UL>
+
+<P><FONT SIZE="3"><I>JBuilder 
+Setup </I></FONT></P>
+<P><FONT SIZE="3"><I>I 
+use JBuilder 5.0 Professional for my development.  This section describes 
+how to setup an ofbiz entity project in JBuilder.  Your development 
+environment may be different but hopefully you can extract the necessary 
+information to get an ofbiz entity project setup in your Java IDE.  
+I like to use a combination of an IDE for source level debugging and 
+the ofbiz Ant scripts to build, setup, and deploy the entire web application.  
+For this reason I keep the configuration files in the same location 
+for both development environments.  Here are the steps for setting up 
+your own ofbiz entity project.</I></FONT>
+</P>
+<OL TYPE="1">
+  <LI><FONT SIZE="2" FACE="Times New Roman">Define your own entity definition 
+    and place it in the &lt;OFBIZ_HOME&gt;\commonapp\entitydefs directory. For 
+    example, if I was building a online bookstore I might have a entity definition 
+    file entity_bookstore.xml. For specific examples of entity definitions look 
+    at the entity_order.xml and entity_product.xml definitions that are part of 
+    the ofbiz E-commerce application.</FONT></LI>
+</OL>
+
+<OL TYPE="1" START="2">
+  <LI><FONT SIZE="2" FACE="Times New Roman">Modify the entity.xml file in the 
+    &lt;OFBIZ_HOME&gt;\commonapp\etc directory. You need to include your own entity 
+    definition in the entity.xml file. Here is an example of how this could be 
+    entered for step1 above. </FONT></LI>
+</OL>
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+
+    &lt;entity-model-reader name=&quot;main&quot;&gt;
+        &lt;resource loader=&quot;mainfile&quot; location=&quot;entitymodel.xml&quot;/&gt;
+        &lt;resource loader=&quot;mainfile&quot; location=&quot;entitymodel_bookstore.xml&quot;/&gt;
+    &lt;/entity-model-reader&gt;
+
+</pre>
+
+<OL TYPE="1" START="3">
+  <LI><FONT SIZE="2" FACE="Times New Roman">Define your datasource(s) in the entity.xml 
+    file. You access your entities through a GenericDelegator. The delegators 
+    are specified in the entity.xml file. You can have multiple delegators and 
+    multiple datasources defined in the entity.xml file. Here is an example of 
+    a delegator and datasource configuration.</FONT></LI>
+</OL>
+
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+
+    &lt;delegator name=&quot;default&quot; entity-model-reader=&quot;main&quot; entity-group-reader=&quot;main&quot;&gt;
+        &lt;group-map group-name=&quot;org.ofbiz.commonapp&quot; datasource-name=&quot;localhsql&quot;/&gt;
+        &lt;group-map group-name=&quot;com.mybookstore.bookstore&quot; datasource-name=&quot;other_datasource&quot;/&gt;
+    &lt;/delegator&gt;
+
+    &lt;datasource name=&quot;localhsql&quot;
+            helper-class=&quot;org.ofbiz.core.entity.GenericHelperDAO&quot;
+            field-type-name=&quot;hsql&quot;
+            check-on-start=&quot;true&quot;
+            add-missing-on-start=&quot;true&quot;&gt;
+        &lt;sql-load-path path=&quot;commonapp/db&quot; prepend-env=&quot;ofbiz.home&quot;/&gt;
+        &lt;sql-load-path path=&quot;ecommerce/etc&quot; prepend-env=&quot;ofbiz.home&quot;/&gt;
+        &lt;inline-jdbc
+                jdbc-driver=&quot;org.hsqldb.jdbcDriver&quot;
+                jdbc-uri=&quot;jdbc:hsqldb:c:/JavaTools/ofbiz/data/ofbiz&quot;
+                jdbc-username=&quot;sa&quot;
+                jdbc-password=&quot;&quot;
+                isolation-level=&quot;Serializable&quot;/&gt;
+        &lt;!-- &lt;jndi-jdbc jndi-server-name=&quot;localjndi&quot; jndi-name=&quot;java:/HsqlDataSource&quot;/&gt; --&gt;
+    &lt;/datasource&gt;
+
+</pre>
+
+<P><FONT SIZE="2" FACE="Times New Roman">This delegator example uses 
+the ofbiz 'default' delegator.  The example demonstrates how you can 
+use 'group-maps' to group components into different data sources.  In 
+this example all of the org.ofbiz.commonapp components use the localhsql 
+(hypersonic database) and the com.mybookstore.bookstore components use 
+the 'other_datasource' data source.  This feature let you use different 
+databases from a single delegator.</FONT></P>
+<P><FONT SIZE="2" FACE="Times New Roman"> </FONT></P>
+<OL TYPE="1" START="4">
+  <LI><FONT SIZE="2" FACE="Times New Roman">Modify the entitygroup.xml file in 
+    the &lt;OFBIZ_HOME&gt;\commonapp\entitydef directory. This is important point 
+    that I often forget when setting up new entity definitions. If you forget 
+    to include new entity definitions in the entitygroup.xml file you entities 
+    will not be dynamically created when you start the delegator. And any code 
+    that tries to access these entities will fail.</FONT></LI>
+</OL>
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+
+  &lt;!-- ========================================================= --&gt;
+  &lt;! - Bookstore Entities --&gt;
+  &lt;!-- ========================================================= --&gt;
+    &lt;entity-group group=&quot;com.mybookstore.bookstore&quot; entity=&quot;Store&quot; /&gt;
+    &lt;entity-group group=&quot;com.mybookstore.bookstore&quot; entity=&quot;Books&quot; /&gt;
+    &lt;entity-group group=&quot;com.mybookstore.bookstore &quot; entity=&quot;Authors&quot; /&gt;
+
+</pre>
+
+<P><FONT SIZE="2" FACE="Times New Roman">In the above example, I have 
+defined three entities that are included in the entity_bookstore.xml.  
+Note also that these entities belong to the group com.mybookstore.bookstore 
+which we defined in the entityengine.xml in step 3.  This means the 
+entity tables for Store, Books, and Authors will be found in the 'other_datasource' 
+configuration. </FONT></P>
+<OL TYPE="1" START="5">
+  <LI><FONT SIZE="2" FACE="Times New Roman">Setup you source paths in your JBuilder 
+    project. If your project just involves the entity engine then the minimal 
+    source paths you will need are the following:</FONT></LI>
+</OL>
+
+<UL TYPE="DISC">
+  <LI><FONT SIZE="2" FACE="Times New Roman">&lt;OFBIZ_HOME&gt;\core\src\entity</FONT></LI>
+  <FONT SIZE="2" FACE="Times New Roman"><LI>&lt;OFBIZ_HOME&gt;\core\src\share</LI></FONT>
+  <LI><FONT SIZE="2" FACE="Times New Roman">Any of you own source directories</FONT></LI>
+</UL>
+
+<P><FONT SIZE="2" FACE="Times New Roman">You can add other source directories 
+to your project as you need them.</FONT></P>
+<OL TYPE="1" START="6">
+  <LI><FONT SIZE="2" FACE="Times New Roman">Add the necessary libraries to compile 
+    your project. To avoid conflicts with the JBuilder build and the ofbiz Ant 
+    builds I only include the libraries necessary to build the source. You could 
+    build all the ofbiz libraries and include them in your project but then when 
+    you try to build using Ant you have to close JBuilder since it has the libraries 
+    open. The necessary Jar files can be found in the following directories:</FONT></LI>
+</OL>
+
+<UL>
+<UL TYPE="DISC">
+    <LI><FONT SIZE="2" FACE="Times New Roman">&lt;OFBIZ_HOME&gt;\lib\compile</FONT></LI>
+    <LI><FONT SIZE="2" FACE="Times New Roman">&lt;OFBIZ_HOME&gt;\lib\common</FONT></LI>
+    <LI><FONT SIZE="2" FACE="Times New Roman">&lt;OFBIZ_HOME&gt;\lib\share</FONT></LI>
+</UL>
+</UL>
+
+<OL TYPE="1" START="7">
+  <LI><FONT SIZE="2" FACE="Times New Roman">To run a test against your entity 
+    engine configuration you need to setup some environment variables within JBuilder. 
+    Many of the ofbiz components work from the relative path of the ofbiz.home 
+    environment variable. You can specify this environment variable in the Projects 
+    Run tab under the category VM parameters (e.g. '-Dofbiz.home=c:\ofbiz\ofbiz') 
+    </FONT></LI>
+</OL>
+
+<OL TYPE="1" START="8">
+  <LI><FONT SIZE="2" FACE="Times New Roman">There are some other files that need 
+    to be in your classpath for the entity engine to function properly. JBuilder 
+    seems to only allow directories or Jar files to be added to a classpath. To 
+    work around this limitation I created Jar files for the specific files that 
+    I needed. Then I added these Jar files to my project like the other libraries 
+    I added in step 6. Note: this is only a problem in running the entity engine 
+    from within JBuilder. The ofbiz Ant builds put all the files in their appropriate 
+    Jar files during deployment. The files that you need are the entityengine.xml 
+    and the DTD files that define XML schemas. These can be found in the following 
+    directories:</FONT></LI>
+</OL>
+
+<UL><UL TYPE="DISC">
+    <LI><FONT SIZE="2" FACE="Times New Roman">&lt;OFBIZ_HOME&gt;\commonapp\etc 
+      - contains the entityengine.xml file</FONT></LI>
+    <LI><FONT SIZE="2" FACE="Times New Roman">&lt;OFBIZ_HOME&gt;\core\docs\xmldefs\ofbiz 
+      - contains all the DTD files for the ofbiz components. </FONT></LI>
+</UL></UL>
+
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+
+For the etc directory I create the jar file as follows:
+
+jar cvf ofbiz_etc.jar *.xml
+
+And for the DTD files I include all of them with the command:
+
+jar cvf ofbiz_dtd.jar *
+
+</pre>
+
+<OL TYPE="1" START="9">
+  <LI><FONT SIZE="2" FACE="Times New Roman">It should be noted that 
+the ofbiz Ant build puts all the DTD files in the core/lib/ofbcore-share.jar 
+file which you could use except you will get conflicts when you try 
+to build with Ant while having JBuilder running.
+  </FONT></LI>
+</OL>
+
+<OL TYPE="1" START="9">
+  <LI><FONT SIZE="2" FACE="Times New Roman">Create your JUnit test to validate 
+    your entity definitions. Here is an example of a method that validates my 
+    entity code:
+  </FONT></LI>
+</OL>
+
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+
+    public void testFindByPrimaryKey() {
+        try {
+         Debug.logInfo(&quot;Entered testFindByPrimaryKey&quot;);
+         //Instantiate the delegator.
+         GenericDelegator delegator = GenericDelegator.getGenericDelegator(&quot;default&quot;);         
+         assertNotNull(&quot;Error creating delegator object&quot;, delegator);
+        
+        //Create an Book Entity
+        String bookId = delegator.getNextSeqId(&quot;Book&quot;).toString();
+        GenericValue bookValue = delegator.makeValue(&quot;Book&quot;,
+                UtilMisc.toMap(&quot;bookId&quot;, bookId,
+                &quot;author&quot;, &quot;Joe Smith',
+                &quot;name&quot;, &quot;My Favorite Book&quot;,
+                &quot;publisher&quot;, &quot;Some Publisher&quot;));
+        GenericValue book = delegator.create(bookValue);
+        assertNotNull(&quot;Couldn't create Book entity&quot;, book);
+
+        // Find book by primary key 
+        GenericValue foundBook = delegator.findByPrimaryKey(&quot;Book&quot;,
+                UtilMisc.toMap(&quot;bookId&quot;, bookId));
+        assertNotNull(&quot;Couldn't find Book: &quot; + bookId, foundBook);
+    }
+
+</pre>
+
+<P><A target="_blank"  NAME="h1.6body"></A><FONT SIZE="2" FACE="Times New Roman"><u>Creating 
+  Your First Web Application</u></FONT><u>
+  </u></P>
+<P><A target="_blank"  NAME="h1.6content"></A><FONT SIZE="3" FACE="Times New Roman">Again 
+the easiest way to learn ofbiz is to start using it and the easiest 
+way to learn the ofbiz web controller is to use one existing web application 
+that is already setup.  For example in the &lt;OFBIZ_HOME&gt; directory 
+there is a ecommerce, ordermgr, workeffort, and webtools application.  
+Each of the projects includes a webapps directory where all the JSP 
+and control files exists.  You need to become familiar with the following 
+files when dealing with the web controller.  .  </FONT>
+</P>
+<P><FONT SIZE="3" FACE="Times New Roman"><I>Key Files: </I></FONT>
+</P>
+<UL TYPE="DISC">
+  <LI><FONT SIZE="3">&lt;CATALINA_HOME&gt;\conf\server.xml 
+    - contains the context settings for your ofbiz web applications when Catalina 
+    is started. </FONT></LI>
+  <FONT SIZE="3"><LI>controller.xml 
+  - ofbiz's web controller configuration file that is contained in each 
+  applications WEB-INF directory.</LI></FONT>
+  <FONT SIZE="3"><LI>regions.xml 
+  - file to organize JSP pages into different sections of an HTML page.  
+  This allows you to create custom header, footer, sidebars, and menus 
+  and share them across several JSP pages.  This file is also located 
+  in the applications WEB-INF directory for each application.</LI></FONT>
+</UL>
+
+<P><FONT SIZE="3">Here are some steps you can take to quickly get a web application working 
+in ofbiz:</FONT></P>
+<OL TYPE="1">
+  <FONT SIZE="3"><LI>Copy 
+  a an existing ofbiz application to a start a new web application and 
+  change the name to your application.  For example, you could copy the 
+  existing ecommerce directory and create a new directory called 'bookstore'.  
+  Later you will have to remove some of the directories in the webapps 
+  directory that you won’t be using,.  Now you have a working skeleton 
+  of files and directories that adhere to the ofbiz development environment 
+  and you can start making changes to this new application without breaking 
+  the existing applications that come with ofbiz.</LI></FONT>
+  <FONT SIZE="3"><LI>Modify 
+  catalina's server.xml file to include the new application.  Since the 
+  ofbiz applications are not contained in catalina’s default webapps directory 
+  (i.e. &lt;CATALINA_HOME\webapps) you need to add a new 'context' entry 
+  in catalina’s server.xml file as follows:  </LI></FONT>
+</OL>
+
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+
+    &lt;Context path=&quot;/your_webapp&quot; docBase=&quot;../../ofbiz/your_webapp/webapp&quot; 
+            debug=&quot;0&quot; reloadable=&quot;true&quot;&gt;
+        &lt;Logger className=&quot;org.apache.catalina.logger.FileLogger&quot; 
+                prefix=&quot;your_webapp_log.&quot; suffix=&quot;.txt&quot; timestamp=&quot;true&quot;/&gt; 
+    &lt;/Context&gt;
+
+</pre>
+
+<OL TYPE="1" START="3">
+  <FONT SIZE="3"><LI>Create 
+  a link to a service that you can access from your browser.  This is 
+  done by making an entry in the controller.xml file in your applications 
+  WEB-INF directory.  Here is an example of an entry.  </LI></FONT>
+</OL>
+
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+
+    &lt;request-map uri=&quot;listbooks&quot;&gt;&lt;security https=&quot;true&quot; auth=&quot;false&quot;/&gt;
+        &lt;event type=&quot;java&quot; path=&quot;com.mybookstore.books.BookEvents&quot; invoke=&quot;listBooks&quot;/&gt;
+        &lt;response name=&quot;success&quot; type=&quot;view&quot; value=&quot;listbooks&quot;/&gt;
+        &lt;response name=&quot;error&quot; type=&quot;view&quot; value=&quot;error&quot;/&gt;
+    &lt;/request-map&gt;
+
+    &lt;view-map name=&quot;listbooks&quot; type=&quot;region&quot;/&gt;
+
+</pre>
+
+<UL><P><FONT SIZE="3">Assuming 
+the default context for my application is 'bookstore', you would access 
+the above URI by putting in </FONT><A target="_blank"  HREF="http://localhost:8080/bookstore/listbooks" ><FONT
+ SIZE="3">http://localhost:8080\bookstore\listbooks</FONT></A><FONT
+ SIZE="3"> in your 
+browser if you were running Catalina locally.  The ofbiz web controller 
+would then execute the method 'listBooks' in the BookEvents class.  
+If the listBooks method returned the string 'success' the controller 
+would pass the response to a 'view' called 'listbooks.'  If an error 
+occurred the controller would pass the response to the 'error' view.  
+Views in ofbiz are mapped to a region.  Regions are specified in the 
+regions.xml file explained in step 4.  The example shows a Java event 
+but there are other event types that you can use.  See the ofbiz documents 
+for more details on the other event services that are available.  </FONT>
+</P></UL>
+<OL TYPE="1" START="4">
+  <FONT SIZE="3"><LI>Create 
+  the appropriate responses and views for the new service.  Views let 
+  you combine JSP pages into a single HTML page.  This lets you create 
+  headers, footers, menus, etc.  The ecommerce application has lots of 
+  example such as a dynamic shopping cart that displays your current purchases 
+  while you are browsing other merchandise.  The view is the final format 
+  of the response of your request.  Here an example of a view definition 
+  for 'listbooks' that was shown in step 3.</LI></FONT>
+</OL>
+
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+
+    &lt;define id='listbooks' region='LEFT_ONLY_REGION'&gt;
+        &lt;put section='title'&gt;List of Books&lt;/put&gt;
+        &lt;put section='content' content='/books/listbooks.jsp'/&gt;
+    &lt;/define&gt;
+    &lt;define id='LEFT_ONLY_REGION' region='MAIN_REGION'&gt;
+        &lt;put section='leftbar' content='LEFTBAR_REGION'/&gt;
+    &lt;/define&gt;
+    &lt;define id='LEFTBAR_REGION' template='/templates/leftbar_template.jsp'&gt;
+        &lt;put section='first' content='/menus/adminmenu.jsp'/&gt;
+        &lt;put section='second' content='/menus/customermenu.jsp'/&gt;
+    &lt;/define&gt;
+
+</pre>
+
+<OL TYPE="1" START="5">
+  <FONT SIZE="3"><LI>Remove 
+  links that are not part of the new application.  Since you copied an 
+  existing application to get started once you get familiar with how the 
+  web controller works you will won’t to clean up the irrelevant links 
+  and files.</LI></FONT>
+  <FONT SIZE="3"><LI>Continue 
+  to learn and develop new services that are available from ofbiz.  This 
+  example only touched on a simple Java event.  There are other event 
+  types that can be used as well as a rules and workflow engine.  Once 
+  you get familiar with the basics of ofbiz you should start investigating 
+  many of the other features of ofbiz.   </LI></FONT>
+</OL>
+
+<P><A target="_blank"  NAME="h1.7body"></A><FONT SIZE="3"><u>Conclusion</u></FONT>
+</P>
+<P><A target="_blank"  NAME="h1.7content"></A><FONT SIZE="3">This 
+document provides some tips for starting with ofbiz.  There are many 
+other topics that are not covered in this document.  If you find errors 
+in this document please forward them to me and I will make the corrections.  
+Also, if there are other tips or helps you would like included in this 
+document please let me know.  The ofbiz project has many components 
+that you can include in your project.  Some of these components include 
+a rules engine, workflow engine, and simple languages.  Future 'Quick 
+Tips' documents on these topics will be forth coming.</FONT>
+</P>
+<P><A target="_blank"  NAME="References"></A><FONT SIZE="3"><u>References</u></FONT><u>&nbsp;</u><BR>
+</P>
+<UL TYPE="DISC">
+  <LI><FONT
+   SIZE="3">Open For Business 
+    Project: </FONT><A target="_blank"  HREF="http://www.ofbiz.org/" ><FONT SIZE="3">www.ofbiz.org</FONT></A></LI>
+  <LI><FONT SIZE="3">Ant: </font><A target="_blank"  HREF="http://jakarta.apache.org/ant/index.html" ><FONT
+   SIZE="3">http://jakarta.apache.org/ant/index.html</FONT></A></LI>
+  <LI><FONT SIZE="3">JUnit:  </font><A target="_blank"  HREF="http://www.junit.org/" ><FONT
+   SIZE="3">www.junit.org</FONT></A></LI>
+  <LI><FONT SIZE="3">Struts:  </font><A target="_blank"  HREF="http://jakarta.apache.org/struts/index.html" ><FONT
+   SIZE="3">http://jakarta.apache.org/struts/index.html</FONT></A></LI>
+  <LI><FONT SIZE="3">Cocoon: </font><A target="_blank"  HREF="http://xml.apache.org/cocoon/index.html" ><FONT
+   SIZE="3">http://xml.apache.org/cocoon/index.html</FONT></A></LI>
+  <LI><FONT SIZE="3">Velocity: </font><A target="_blank"  HREF="http://jakarta.apache.org/velocity/index.html" ><FONT
+   SIZE="3">http://jakarta.apache.org/velocity/index.html</FONT></A></LI>
+</UL>
+
+
+</body>
+</html>
