@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.11 2003/11/20 23:08:22 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.12 2003/11/21 02:35:39 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -200,18 +200,16 @@ public class ProductStoreWorker {
 
                 // check company address
                 String companyPartyId = method.getString("companyPartyId");
-                String allowCompanyAddr = method.getString("allowUspsAddr");
+                String allowCompanyAddr = method.getString("allowCompanyAddr");
                 String requireCompanyAddr = method.getString("requireCompanyAddr");
-                if (companyPartyId != null && companyPartyId.length() > 0) {
-                    boolean isCompanyAddress = ContactMechWorker.isCompanyAddress(shippingAddress, companyPartyId);
-                    if ("N".equals(allowCompanyAddr) && isCompanyAddress) {
-                        returnShippingMethods.remove(method);
-                        continue;
-                    }
-                    if ("Y".equals(requireCompanyAddr) && !isCompanyAddress) {
-                        returnShippingMethods.remove(method);
-                        continue;
-                    }
+                boolean isCompanyAddress = ContactMechWorker.isCompanyAddress(shippingAddress, companyPartyId);
+                if ("N".equals(allowCompanyAddr) && isCompanyAddress) {
+                    returnShippingMethods.remove(method);
+                    continue;
+                }
+                if ("Y".equals(requireCompanyAddr) && !isCompanyAddress) {
+                    returnShippingMethods.remove(method);
+                    continue;
                 }
 
                 // check the geos

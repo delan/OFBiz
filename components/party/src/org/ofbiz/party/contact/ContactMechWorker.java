@@ -1,5 +1,5 @@
 /*
- * $Id: ContactMechWorker.java,v 1.2 2003/11/20 22:37:54 ajzeneski Exp $
+ * $Id: ContactMechWorker.java,v 1.3 2003/11/21 02:35:39 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Worker methods for Contact Mechanisms
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ContactMechWorker {
@@ -950,6 +950,38 @@ public class ContactMechWorker {
             return false;
         }
 
+        // get and clean the address strings
+        String addr1 = postalAddress.getString("address1");
+        String addr2 = postalAddress.getString("address2");
+        if (addr1 != null) {
+            addr1 = addr1.replaceAll("\\W", "").toLowerCase();
+        }
+        if (addr2 != null) {
+            addr2 = addr2.replaceAll("\\W", "").toLowerCase();
+        }
+
+        // check for po box
+        if (addr1 != null && addr1.matches(".*pobox.*")) {
+            return true;
+        }
+        if (addr2 != null && addr2.matches(".*pobox.*")) {
+            return true;
+        }
+
+        // check for Rural Route
+        if (addr1 != null && addr1.startsWith("rr")) {
+            return true;
+        }
+        if (addr2 != null && addr2.startsWith("rr")) {
+            return true;
+        }
+        if (addr1 != null && addr1.matches(".*ruralroute.*")) {
+            return true;
+        }
+        if (addr2 != null && addr2.matches(".*ruralroute.*")) {
+            return true;
+        }
+
         return false;
     }
 
@@ -965,6 +997,73 @@ public class ContactMechWorker {
         if (companyPartyId == null) {
             // no partyId not an internal address
             return false;
+        }
+
+        String state = postalAddress.getString("stateProvinceGeoId");
+        String addr1 = postalAddress.getString("address1");
+        String addr2 = postalAddress.getString("address2");
+        if (state != null) {
+            state = state.replaceAll("\\W", "").toLowerCase();
+        } else {
+            state = "";
+        }
+        if (addr1 != null) {
+            addr1 = addr1.replaceAll("\\W", "").toLowerCase();
+        } else {
+            addr1 = "";
+        }
+        if (addr2 != null) {
+            addr2 = addr2.replaceAll("\\W", "").toLowerCase();
+        } else {
+            addr2 = "";
+        }
+
+        // get all company addresses
+        GenericDelegator delegator = postalAddress.getDelegator();
+        List postalAddresses = new LinkedList();
+        try {
+            List partyContactMechs = delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", companyPartyId));
+            partyContactMechs = EntityUtil.filterByDate(partyContactMechs);
+            if (partyContactMechs != null) {
+                Iterator pci = partyContactMechs.iterator();
+                while (pci.hasNext()) {
+                    GenericValue pcm = (GenericValue) pci.next();
+                    GenericValue addr = pcm.getRelatedOne("PostalAddress");
+                    if (addr != null) {
+                        postalAddresses.add(addr);
+                    }
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to get party postal addresses", module);
+        }
+
+        if (postalAddresses != null) {
+            Iterator pai = postalAddresses.iterator();
+            while (pai.hasNext()) {
+                GenericValue addr = (GenericValue) pai.next();
+                String thisAddr1 = addr.getString("address1");
+                String thisAddr2 = addr.getString("address2");
+                String thisState = addr.getString("stateProvinceGeoId");
+                if (thisState != null) {
+                    thisState = thisState.replaceAll("\\W", "").toLowerCase();
+                } else {
+                    thisState = "";
+                }
+                if (thisAddr1 != null) {
+                    thisAddr1 = thisAddr1.replaceAll("\\W", "").toLowerCase();
+                } else {
+                    thisAddr1 = "";
+                }
+                if (thisAddr2 != null) {
+                    thisAddr2 = thisAddr2.replaceAll("\\W", "").toLowerCase();
+                } else {
+                    thisAddr2 = "";
+                }
+                if (thisAddr1.equals(addr1) && thisAddr2.equals(addr2) && thisState.equals(state)) {
+                    return true;
+                }
+            }
         }
 
         return false;
