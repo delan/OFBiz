@@ -858,13 +858,37 @@ public class GenericDelegator {
             helperValues.add(value);
         }
 
-        Iterator helperIter = valuesPerHelper.entrySet().iterator();
-        while (helperIter.hasNext()) {
-            Map.Entry curEntry = (Map.Entry) helperIter.next();
-            String helperName = (String) curEntry.getKey();
-            GenericHelper helper = GenericHelperFactory.getHelper(helperName);
-            this.clearAllCacheLinesByValue((Collection) curEntry.getValue());
-            helper.storeAll((Collection) curEntry.getValue());
+        boolean beganTransaction = false;
+        try {
+            //if there are multiple helpers and no transaction is active, begin one
+            if (valuesPerHelper.size() > 1 && TransactionUtil.getStatus() != TransactionUtil.STATUS_ACTIVE) {
+                TransactionUtil.begin();
+                beganTransaction = true;
+            }
+
+            Iterator helperIter = valuesPerHelper.entrySet().iterator();
+            while (helperIter.hasNext()) {
+                Map.Entry curEntry = (Map.Entry) helperIter.next();
+                String helperName = (String) curEntry.getKey();
+                GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+                this.clearAllCacheLinesByValue((Collection) curEntry.getValue());
+                helper.storeAll((Collection) curEntry.getValue());
+            }
+
+            //only commit the transaction if we started one...
+            if (beganTransaction)
+                TransactionUtil.commit();
+        } catch (GenericEntityException e) {
+            try {
+                //only rollback the transaction if we started one...
+                if (beganTransaction)
+                    TransactionUtil.rollback();
+            } catch(GenericEntityException e2) {
+                Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ");
+                Debug.logError(e2);
+            }
+            //after rolling back, rethrow the exception
+            throw e;
         }
     }
 
@@ -897,17 +921,39 @@ public class GenericDelegator {
             helperValues.add(entity);
         }
 
-        Iterator helperIter = valuesPerHelper.entrySet().iterator();
-        while (helperIter.hasNext()) {
-            Map.Entry curEntry = (Map.Entry) helperIter.next();
-            String helperName = (String) curEntry.getKey();
-            GenericHelper helper = GenericHelperFactory.getHelper(helperName);
-            this.clearAllCacheLines((Collection) curEntry.getValue());
-            helper.removeAll((Collection) curEntry.getValue());
+        boolean beganTransaction = false;
+        try {
+            //if there are multiple helpers and no transaction is active, begin one
+            if (valuesPerHelper.size() > 1 && TransactionUtil.getStatus() != TransactionUtil.STATUS_ACTIVE) {
+                TransactionUtil.begin();
+                beganTransaction = true;
+            }
+
+            Iterator helperIter = valuesPerHelper.entrySet().iterator();
+            while (helperIter.hasNext()) {
+                Map.Entry curEntry = (Map.Entry) helperIter.next();
+                String helperName = (String) curEntry.getKey();
+                GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+                this.clearAllCacheLines((Collection) curEntry.getValue());
+                helper.removeAll((Collection) curEntry.getValue());
+            }
+
+            //only commit the transaction if we started one...
+            if (beganTransaction)
+                TransactionUtil.commit();
+        } catch (GenericEntityException e) {
+            try {
+                //only rollback the transaction if we started one...
+                if (beganTransaction)
+                    TransactionUtil.rollback();
+            } catch(GenericEntityException e2) {
+                Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ");
+                Debug.logError(e2);
+            }
+            //after rolling back, rethrow the exception
+            throw e;
         }
     }
-
-
 
     // ======================================
     // ======= Cache Related Methods ========
