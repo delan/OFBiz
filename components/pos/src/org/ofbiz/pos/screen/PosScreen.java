@@ -145,6 +145,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     }
 
     public void refresh() {
+        PosTransaction trans = PosTransaction.getCurrentTx(this.getSession());
         this.requestFocus();
         if (!isLocked) {
             this.setEnabled(true);
@@ -152,10 +153,15 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             input.clearInput();
             operator.refresh();
             if (input.isFunctionSet("PAID")) {
-                output.print(Output.CHANGE + UtilFormatOut.formatPrice((PosTransaction.getCurrentTx(this.getSession()).getTotalDue() * -1)));
+                output.print(Output.CHANGE + UtilFormatOut.formatPrice(trans.getTotalDue() * -1));
             } else if (input.isFunctionSet("TOTAL")) {
-                journal.refresh(this);
-                output.print(Output.TOTALD + UtilFormatOut.formatPrice(PosTransaction.getCurrentTx(this.getSession()).getTotalDue()));
+                if (trans.getTotalDue() > 0) {
+                    journal.refresh(this);
+                    output.print(Output.TOTALD + UtilFormatOut.formatPrice(trans.getTotalDue()));
+                } else {
+                    journal.refresh(this);
+                    output.print(Output.PAYFIN);
+                }
             } else {
                 journal.refresh(this);
                 output.print(Output.ISOPEN);

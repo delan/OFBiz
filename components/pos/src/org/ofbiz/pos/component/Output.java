@@ -37,6 +37,7 @@ import org.ofbiz.pos.screen.PosScreen;
 public class Output {
 
     public static final String module = Output.class.getName();
+    public static final String PAYFIN = "Press Finish To Complete Sale";
     public static final String TOTALD = "Total Due: ";
     public static final String CHANGE = "Change Due: ";
     public static final String ULOGIN = "Enter User ID:";
