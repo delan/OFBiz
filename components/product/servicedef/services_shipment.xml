@@ -40,7 +40,17 @@
         <attribute name="setPackedOnly" type="String" mode="IN" optional="true"/>
         <attribute name="shipmentId" type="String" mode="OUT" optional="false"/>
     </service>
-        
+
+    <service name="quickShipOrderByItem" engine="simple"
+            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="quickShipOrderByItem" auth="true">
+        <description>Quick Ships An Order By Item</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="itemShipList" type="List" mode="IN" optional="false"/>
+        <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="setPackedOnly" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="OUT" optional="false"/>
+    </service>
+
     <service name="createShipment" default-entity-name="Shipment" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="createShipment" auth="true">
         <description>Create Shipment</description>
