@@ -1,5 +1,5 @@
 /*
- * $Id: JPublishViewHandler.java,v 1.3 2004/03/15 21:43:44 jonesde Exp $
+ * $Id: JPublishViewHandler.java,v 1.4 2004/04/11 08:28:17 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -27,7 +27,6 @@ package org.ofbiz.content.webapp.view;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.charset.Charset;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
@@ -41,7 +40,7 @@ import org.ofbiz.base.util.UtilJ2eeCompat;
  * Handles JPublish type view rendering
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class JPublishViewHandler implements ViewHandler {

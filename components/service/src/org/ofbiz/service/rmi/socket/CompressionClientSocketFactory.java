@@ -1,5 +1,5 @@
 /*
- * $Id: CompressionClientSocketFactory.java,v 1.2 2004/01/23 15:16:50 ajzeneski Exp $
+ * $Id: CompressionClientSocketFactory.java,v 1.3 2004/04/11 08:28:24 jonesde Exp $
  *
  * Copyright (c) 1998, 1999 Sun Microsystems, Inc. All Rights Reserved.
  *
@@ -29,8 +29,6 @@
  */
 
 package org.ofbiz.service.rmi.socket;
-
-import org.ofbiz.base.util.Debug;
 
 import java.io.IOException;
 import java.io.Serializable;

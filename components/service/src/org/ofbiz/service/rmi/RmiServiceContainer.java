@@ -1,5 +1,5 @@
 /*
- * $Id: RmiServiceContainer.java,v 1.3 2004/04/08 13:28:27 ajzeneski Exp $
+ * $Id: RmiServiceContainer.java,v 1.4 2004/04/11 08:28:24 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -24,25 +24,26 @@
  */
 package org.ofbiz.service.rmi;
 
-import org.ofbiz.base.container.Container;
-import org.ofbiz.base.container.ContainerException;
-import org.ofbiz.base.container.ContainerConfig;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.service.*;
-import org.ofbiz.entity.GenericDelegator;
-
-import java.rmi.RemoteException;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
+import org.ofbiz.base.container.Container;
+import org.ofbiz.base.container.ContainerConfig;
+import org.ofbiz.base.container.ContainerException;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.service.GenericDispatcher;
+import org.ofbiz.service.LocalDispatcher;
 
 /**
  * RMI Service Engine Container / Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class RmiServiceContainer implements Container {

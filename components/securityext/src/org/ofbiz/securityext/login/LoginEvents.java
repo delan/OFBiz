@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.11 2004/04/07 07:07:37 jonesde Exp $
+ * $Id: LoginEvents.java,v 1.12 2004/04/11 08:28:23 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,12 +27,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletContext;
 
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FlexibleStringExpander;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -40,13 +41,10 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.order.shoppingcart.ShoppingCart;
-import org.ofbiz.order.shoppingcart.WebShoppingCart;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
@@ -61,7 +59,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class LoginEvents {

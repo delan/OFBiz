@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.17 2004/02/17 17:50:59 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.18 2004/04/11 08:28:22 jonesde Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -23,35 +23,39 @@
  */
 package org.ofbiz.order.thirdparty.zipsales;
 
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.util.EntityUtil;
+import java.net.URL;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.datafile.DataFile;
 import org.ofbiz.datafile.DataFileException;
 import org.ofbiz.datafile.Record;
 import org.ofbiz.datafile.RecordIterator;
-import org.ofbiz.base.util.*;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
-
-import java.util.*;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
-import java.text.DecimalFormat;
-import java.io.File;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      3.0
  */
 public class ZipSalesServices {

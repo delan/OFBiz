@@ -1,6 +1,6 @@
 // ========================================================================
 // Copyright (c) 2002 Mort Bay Consulting (Australia) Pty. Ltd.
-// $Id: Classpath.java,v 1.3 2004/03/30 23:38:28 ajzeneski Exp $
+// $Id: Classpath.java,v 1.4 2004/04/11 08:28:09 jonesde Exp $
 // ========================================================================
 
 //package org.mortbay.start;
@@ -11,10 +11,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.StringTokenizer;
-import java.util.Vector;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Class to handle CLASSPATH construction

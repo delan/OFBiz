@@ -1,54 +1,35 @@
 package org.ofbiz.content.content;
 
-import org.ofbiz.entity.*;
-import org.ofbiz.entity.condition.*;
-import org.ofbiz.entity.util.*;
-import org.ofbiz.base.container.*;
-import org.ofbiz.service.*;
-import org.ofbiz.security.*;
-import org.ofbiz.minilang.MiniLangException;
-import org.ofbiz.minilang.SimpleMapProcessor;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.content.email.NotificationServices;
-import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.transaction.GenericTransactionException;
-import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.ByteWrapper;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
-
-import freemarker.template.TemplateException;
-
-
-import bsh.EvalError;
-import java.util.*;
-import java.lang.*;
-import java.sql.Timestamp;
-
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import org.ofbiz.service.ModelService;
 
 
 /**
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.

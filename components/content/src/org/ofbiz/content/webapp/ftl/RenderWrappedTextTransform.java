@@ -1,5 +1,5 @@
 /*
- * $Id: RenderWrappedTextTransform.java,v 1.4 2004/01/17 03:57:46 byersa Exp $
+ * $Id: RenderWrappedTextTransform.java,v 1.5 2004/04/11 08:28:16 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,65 +26,19 @@ package org.ofbiz.content.webapp.ftl;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.io.StringReader;
-import java.util.*;
-import java.sql.*;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.ofbiz.content.webapp.control.RequestHandler;
-
-
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.servlet.HttpRequestHashModel;
-import freemarker.ext.servlet.HttpSessionHashModel;
-import freemarker.template.Configuration;
-import freemarker.template.SimpleHash;
-import freemarker.template.TemplateException;
-import freemarker.template.WrappingTemplateModel;
-import freemarker.template.Environment;
-
-import freemarker.ext.beans.BeanModel;
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateScalarModel;
-import freemarker.template.TemplateTransformModel;
-import freemarker.template.TemplateHashModel;
-
-import org.jpublish.SiteContext;
-import org.jpublish.Page;
-import org.jpublish.JPublishContext;
-import org.jpublish.Template;
-import org.jpublish.TemplateMergeException;
+import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityConditionList;
-import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.security.Security;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.content.data.DataServices;
-import org.ofbiz.content.webapp.view.JPublishWrapper;
+
+import freemarker.template.Environment;
+import freemarker.template.TemplateTransformModel;
 
 /**
  * RenderWrappedTextTransform - Freemarker Transform for URLs (links)
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class RenderWrappedTextTransform implements  TemplateTransformModel {

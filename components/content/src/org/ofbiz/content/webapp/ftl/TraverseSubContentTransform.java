@@ -1,5 +1,5 @@
 /*
- * $Id: TraverseSubContentTransform.java,v 1.2 2004/01/07 19:30:11 byersa Exp $
+ * $Id: TraverseSubContentTransform.java,v 1.3 2004/04/11 08:28:16 jonesde Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -19,36 +19,32 @@ package org.ofbiz.content.webapp.ftl;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.io.StringWriter;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.content.content.ContentServicesComplex;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
 import freemarker.template.Environment;
-import freemarker.template.SimpleHash;
-import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;
 import freemarker.template.TransformControl;
-import freemarker.template.TemplateModelException;
 
 /**
  * TraverseSubContentTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since 3.0
  */
 public class TraverseSubContentTransform implements TemplateTransformModel {

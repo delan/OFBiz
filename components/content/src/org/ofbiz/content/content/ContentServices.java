@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.20 2004/04/11 02:54:39 byersa Exp $
+ * $Id: ContentServices.java,v 1.21 2004/04/11 08:28:11 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,8 +38,6 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -50,13 +48,12 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.content.content.PermissionRecorder;
 
 /**
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  * @since 2.2
  * 
  *  

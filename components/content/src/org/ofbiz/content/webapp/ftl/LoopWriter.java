@@ -1,9 +1,10 @@
 package org.ofbiz.content.webapp.ftl;
 
-import java.io.*;
-import freemarker.template.TransformControl;
+import java.io.IOException;
+import java.io.Writer;
+
 import freemarker.template.TemplateModelException;
-import org.ofbiz.base.util.Debug;
+import freemarker.template.TransformControl;
 
 public class LoopWriter extends Writer implements TransformControl {
 
