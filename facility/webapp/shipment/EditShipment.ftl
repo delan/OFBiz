@@ -30,9 +30,12 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
 <#-- This is now done through ECAs (see secas_shipment.xml), but we may want to allow manual usage in the future too, so leaving commented just in case
 <#if (shipment.primaryOrderId)?has_content>
-    <a href="<@ofbizUrl>/setShipmentSettingsFromPrimaryOrder?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">Get Settings from Primary Order [${shipment.primaryOrderId}]</a>
+    <div><a href="<@ofbizUrl>/setShipmentSettingsFromPrimaryOrder?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">Get Settings from Primary Order [${shipment.primaryOrderId}]</a></div>
 </#if>
 -->
+<#if shipmentId?has_content>
+    <div><a href="<@ofbizUrl>/ShipmentManifestReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_blank">Generate Shipment Manifest Report</a></div>
+</#if>
 
 ${editShipmentWrapper.renderFormString()}
 

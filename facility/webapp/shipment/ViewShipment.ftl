@@ -28,6 +28,10 @@
 <#if hasPermission>
 ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
+<#if shipmentId?has_content>
+    <div><a href="<@ofbizUrl>/ShipmentManifestReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_blank">Generate Shipment Manifest Report</a></div>
+</#if>
+
 <#if shipment?exists>
 
 <table border="0" cellpadding="2" cellspacing="0">

@@ -630,6 +630,7 @@
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Manifest View Entity">
       <member-entity entity-alias="SITM" entity-name="ShipmentItem"/>
+      <member-entity entity-alias="PROD" entity-name="Product"/>
       <member-entity entity-alias="ITMI" entity-name="ItemIssuance"/>
       <member-entity entity-alias="SPCT" entity-name="ShipmentPackageContent"/>
       <member-entity entity-alias="SPKG" entity-name="ShipmentPackage"/>
@@ -648,6 +649,7 @@
       <alias entity-alias="SITM" name="productId"/>
       <alias entity-alias="SITM" name="quantity"/>
       <alias entity-alias="SITM" name="shipmentContentDescription"/>
+      <alias entity-alias="PROD" name="productName"/>
       <alias entity-alias="ITMI" name="itemIssuanceId"/>
       <alias entity-alias="ITMI" name="orderId"/>
       <alias entity-alias="ITMI" name="orderItemSeqId"/>
@@ -705,6 +707,9 @@
       <view-link entity-alias="SITM" rel-entity-alias="ITMI">
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentItemSeqId"/>
+      </view-link>
+      <view-link entity-alias="SITM" rel-entity-alias="PROD" rel-optional="true">
+        <key-map field-name="productId"/>
       </view-link>
       <view-link entity-alias="SITM" rel-entity-alias="SPCT">
         <key-map field-name="shipmentId"/>

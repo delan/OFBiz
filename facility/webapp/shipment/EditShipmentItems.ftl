@@ -60,7 +60,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 			<td><div class="tabletext">${itemIssuance.quantity?if_exists}</div></td>
 			<td><div class="tabletext">${itemIssuance.issuedDateTime?if_exists}</div></td>
 			<td><div class="tabletext">Future Party/Role List</div></td>
-			<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentItemIssuance?shipmentId=${shipmentId}&itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
+			<td><div class="tabletext">&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>/deleteShipmentItemIssuance?shipmentId=${shipmentId}&itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="buttontext">Delete</a> --></div></td>
 		</tr>
 	</#list>
 	<#list shipmentPackageContents as shipmentPackageContent>

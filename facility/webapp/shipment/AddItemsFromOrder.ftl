@@ -132,6 +132,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 <#if isSalesOrder>
                     <td><div class="tabletext">&nbsp;</div></td>
                     <td><div class="tabletext">&nbsp;</div></td>
+                    <td><div class="tabletext">&nbsp;</div></td>
                 <#else>
                     <#assign quantityNotIssued = orderItem.quantity - totalQuantityIssued>
                     <#if (quantityNotIssued > 0)>
@@ -192,7 +193,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             </#if>
         </#list>
         <tr>
-            <td colspan="6" align="right"><input type="submit" class="smallSubmit" value="Issue All"/></td>
+            <td colspan="7" align="right"><input type="submit" class="smallSubmit" value="Issue All"/></td>
         </tr>
     </table>
     <input type="hidden" name="_rowCount" value="${rowCount}">
