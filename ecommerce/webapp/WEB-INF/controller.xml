@@ -318,12 +318,14 @@
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="createCreditCard"/>
         <response name="success" type="view" value="editcreditcard"/>
+        <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcreditcard"/>
     </request-map>
     <request-map uri="updateCreditCard">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="updateCreditCard"/>
         <response name="success" type="view" value="editcreditcard"/>
+        <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcreditcard"/>
     </request-map>
 

@@ -106,13 +106,13 @@
         <input type="text" size="20" maxlength="30" <ofbiz:inputvalue field="cardNumber" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
-    <tr>
+    <%--<tr>
       <td width="26%" align=right valign=top><div class="tabletext">Card Security Code</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" size="5" maxlength="10" <ofbiz:inputvalue field="cardSecurityCode" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
-    </tr>
+    </tr>--%>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Expiration Date</div></td>        
       <td width="5">&nbsp;</td>
@@ -213,7 +213,7 @@
               <td align="right" valign="top" width="1%">
                 <INPUT type=radio name='contactMechId' value='<ofbiz:entityfield attribute="contactMech" field="contactMechId"/>'>
               </td>
-              <td align="left" valign="top" width="80%">
+              <td align="left" valign="middle" width="80%">
                 <ofbiz:iterator name="partyContactMechPurpose" property="partyContactMechPurposes">
                     <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType");%>
                     <div class="tabletext">
@@ -241,6 +241,14 @@
                   <tr><td colspan='2'><div class="tabletext">No contact information on file.</div></td></tr>
               </ofbiz:unless>
           </ofbiz:unless>
+          <tr>
+            <td align="right" valigh="top" width="1%">
+              <input type="radio" name="contactMechId" value="_NEW_">
+            </td>
+            <td align="left" valign="middle" width="80%">
+              <span class="tabletext">Create a new billing address for this credit card.</span>
+            </td>
+          </tr>
         </table>
       </td>
     </tr>
