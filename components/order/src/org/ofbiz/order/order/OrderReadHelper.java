@@ -90,6 +90,15 @@ public class OrderReadHelper {
                 this.orderHeader = orderHeader.getDelegator().findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId",
                         orderHeader.getString("orderId")));
             } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                this.orderHeader = null;
+            }
+        } else if (this.orderHeader == null && orderItems != null) {
+            GenericValue firstItem = EntityUtil.getFirst(orderItems);
+            try {
+                this.orderHeader = firstItem.getRelatedOne("OrderHeader");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
                 this.orderHeader = null;
             }
         }
@@ -102,6 +111,11 @@ public class OrderReadHelper {
         this(orderHeader, null, null);
     }
 
+    public OrderReadHelper(List adjustments, List orderItems) {
+        this.adjustments = adjustments;
+        this.orderItems = orderItems;
+    }
+    
     public OrderReadHelper(GenericDelegator delegator, String orderId) {
         try {
             this.orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
