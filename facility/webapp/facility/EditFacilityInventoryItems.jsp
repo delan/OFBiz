@@ -67,12 +67,7 @@
 %>
 
 <br>
-<%if(facilityId != null && facilityId.length() > 0){%>
-  <div class='tabContainer'>
-  <a href="<ofbiz:url>/EditFacility?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Facility</a>
-  <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="tabButtonSelected">InventoryItems</a>
-  </div>
-<%}%>
+<%@ include file="/includes/facilityMenu.jsp" %>
 
 <div class="head1">Inventory Items <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(facility==null?null:facility.getString("facilityName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityId)%>]</span></div>
 
