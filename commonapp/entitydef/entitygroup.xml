@@ -646,6 +646,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAssocAttr" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDefAttribute" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDeliverableProd" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortExpectation" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetAssign" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetStd" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortGoodStandard" />	

@@ -449,6 +449,13 @@
       <prim-key field="workEffortId" />	
       <prim-key field="deliverableId" />
     </entity>	
+    <entity entity-name="WorkEffortExpectation" 
+            package-name="org.ofbiz.commonapp.workeffort.workeffort"
+            title="Work Effort Expectation Entity">
+      <field name="expectationId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="expectationId" />	
+    </entity>	
     <entity entity-name="WorkEffortFixedAssetAssign" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Fixed Asset Assignment Entity">
@@ -510,7 +517,10 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="facilityId" type="id"></field>
+      <field name="statusId" type="id"></field>
       <field name="comments" type="comment"></field>	
+      <field name="mustRsvp" type="indicator"></field>
+      <field name="expectationId" type="id"></field>
       <prim-key field="workEffortId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />	
