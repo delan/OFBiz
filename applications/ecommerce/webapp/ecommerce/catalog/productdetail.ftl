@@ -82,7 +82,7 @@ ${virtualJavaScript?if_exists}
             alert("No detail image available to display.");
             return;
         }
-        popUp("<@ofbizUrl>/detailImage?detail=" + detailImageUrl + "</@ofbizUrl>", 'detailImage', '400', '550');
+        popUp("<@ofbizUrl>detailImage?detail=" + detailImageUrl + "</@ofbizUrl>", 'detailImage', '400', '550');
     }
 
     function toggleAmt(toggle) {
@@ -148,16 +148,15 @@ ${virtualJavaScript?if_exists}
         
         var y=x.split("-");
         if(y.length!=3){ alert(msg[0]);return false; }
-        if((y[2].length>2)||(parseInt(y[2])>31)) { alert(msg[0]);     return false;    }
+        if((y[2].length>2)||(parseInt(y[2])>31)) { alert(msg[0]); return false; }
         if(y[2].length==1){ y[2]="0"+y[2]; }
-        if((y[1].length>2)||(parseInt(y[1])>12)){    alert(msg[0]);    return false;    }
+        if((y[1].length>2)||(parseInt(y[1])>12)){ alert(msg[0]); return false; }
         if(y[1].length==1){ y[1]="0"+y[1]; }            
-        if(y[0].length>4){ alert(msg[0]);     return false;     }
+        if(y[0].length>4){ alert(msg[0]); return false; }
         if(y[0].length<4) {
             if(y[0].length==2) {
                 y[0]="20"+y[0];
-            }
-            else {
+            } else {
                 alert(msg[0]);
                 return false;
             }
