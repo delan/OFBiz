@@ -156,10 +156,10 @@
         <property file="build.properties"/>
 
         <property name="ofbiz.version" value=""/>
-        <property name="ofbcore-webapp.jar"   value="core/lib/ofbcore-webapp${ofbiz.version}.jar" />
+        <property name="ofbcore-webapp.jar" value="core/lib/ofbcore-webapp${ofbiz.version}.jar" />
 
         <property environment="env" />
-        <property name="home.dir"       value="${env.OFBIZ_HOME}" />
+        <property name="home.dir" value="${env.OFBIZ_HOME}" />
         
         <!-- This is for the distro: if the libs are not in the ofbiz/lib directory, copy from catalina -->
         <condition property="catalina.lib.needed">
@@ -180,12 +180,12 @@
         <property name="ofbiz.version" value=""/>
 
         <property environment="env" />
-        <property name="catalina.dir"    value="${env.CATALINA_HOME}" />
-        <property name="home.dir"        value="${env.OFBIZ_HOME}" />
+        <property name="catalina.dir" value="${env.CATALINA_HOME}" />
+        <property name="home.dir" value="${env.OFBIZ_HOME}" />
 
-        <property name="classes.dir"     value="${catalina.dir}/classes" />
-        <property name="lib.dir"         value="${catalina.dir}/lib" />
-        <property name="j2eedeploy.dir"  value="${catalina.dir}/webapps" />
+        <property name="classes.dir" value="${catalina.dir}/classes" />
+        <property name="lib.dir" value="${catalina.dir}/lib" />
+        <property name="j2eedeploy.dir" value="${catalina.dir}/webapps" />
     </target>
 
     <target name="catalina41-init">
@@ -197,12 +197,12 @@
         <property name="ofbiz.version" value=""/>
 
         <property environment="env" />
-        <property name="catalina.dir"    value="${env.CATALINA_HOME}" />
-        <property name="home.dir"        value="${env.OFBIZ_HOME}" />
+        <property name="catalina.dir" value="${env.CATALINA_HOME}" />
+        <property name="home.dir" value="${env.OFBIZ_HOME}" />
 
-        <property name="classes.dir"     value="${catalina.dir}/shared/classes" />
-        <property name="lib.dir"         value="${catalina.dir}/shared/lib" />
-        <property name="j2eedeploy.dir"  value="${catalina.dir}/webapps" />
+        <property name="classes.dir" value="${catalina.dir}/shared/classes" />
+        <property name="lib.dir" value="${catalina.dir}/shared/lib" />
+        <property name="j2eedeploy.dir" value="${catalina.dir}/webapps" />
     </target>
     
     <target name="catalina41-lib-copy" depends="" if="catalina.lib.needed">
@@ -648,23 +648,23 @@
         <mkdir dir="${ext.dir}/etc"/>
         <mkdir dir="${ext.dir}/webapps"/>
 
-        <copy file="lib/common/castor-0.9.3.9.jar"           toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/commons-beanutils.jar"        toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/commons-collections.jar"      toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/commons-digester.jar"         toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/commons-logging.jar"          toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/commons-httpclient.jar"       toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/hsqldb.jar"                   toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/postgresql.jar"               toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/log4j.jar"                    toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/mm.mysql-2.0.14-bin.jar"      toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/ots-jts_1.0.jar"              toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/tyrex-1.0.jar"                toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/castor-0.9.3.9.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-beanutils.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-collections.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-digester.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-logging.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-httpclient.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/hsqldb.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/postgresql.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/log4j.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/mm.mysql-2.0.14-bin.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/ots-jts_1.0.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/tyrex-1.0.jar" toDir="${ext.dir}/lib/ext"/>
 
-        <copy file="lib/compile/jdbc2_0-stdext.jar"          toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/compile/activation.jar"              toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/compile/mail.jar"                    toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/compile/xerces.jar"                  toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/compile/jdbc2_0-stdext.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/compile/activation.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/compile/mail.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/compile/xerces.jar" toDir="${ext.dir}/lib/ext"/>
 
         <copy toDir="${ext.dir}/lib/ext">
             <fileset dir="lib/share" includes="*.jar"/>
@@ -675,45 +675,45 @@
             <fileset dir="lib/jotm" includes="*.jar"/>
         </copy>
         
-        <copy file="core/lib/ofbcore-share${ofbiz.version}.jar"    toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-entity${ofbiz.version}.jar"   toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-service${ofbiz.version}.jar"  toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-extutil${ofbiz.version}.jar"  toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-share${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-entity${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-service${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-extutil${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-workflow${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-rules${ofbiz.version}.jar"    toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-rules${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-datafile${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-minilang${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-webapp${ofbiz.version}.jar"   toDir="${ext.dir}/lib"/>
-        <copy file="commonapp/lib/commonapp${ofbiz.version}.jar"   toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-webapp${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="commonapp/lib/commonapp${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
 
-        <copy file="webtools/lib/webtools.war"      toDir="${ext.dir}/webapps"/>
-        <copy file="commonapp/lib/commonapp.war"    toDir="${ext.dir}/webapps"/>
-        <copy file="ecommerce/lib/ecommerce.war"    toDir="${ext.dir}/webapps"/>
-        <copy file="ecommerce/lib/images.war"       toDir="${ext.dir}/webapps"/>
-        <copy file="catalog/lib/catalog.war"        toDir="${ext.dir}/webapps"/>
-        <copy file="partymgr/lib/partymgr.war"      toDir="${ext.dir}/webapps"/>
-        <copy file="ordermgr/lib/ordermgr.war"      toDir="${ext.dir}/webapps"/>
-        <copy file="workeffort/lib/workeffort.war"  toDir="${ext.dir}/webapps"/>
-        <copy file="accounting/lib/accounting.war"  toDir="${ext.dir}/webapps"/>
-        <copy file="facility/lib/facility.war"      toDir="${ext.dir}/webapps"/>
-        <copy file="marketing/lib/marketing.war"    toDir="${ext.dir}/webapps"/>
-        <copy file="content/lib/content.war"        toDir="${ext.dir}/webapps"/>
+        <copy file="webtools/lib/webtools.war" toDir="${ext.dir}/webapps"/>
+        <copy file="commonapp/lib/commonapp.war" toDir="${ext.dir}/webapps"/>
+        <copy file="ecommerce/lib/ecommerce.war" toDir="${ext.dir}/webapps"/>
+        <copy file="ecommerce/lib/images.war" toDir="${ext.dir}/webapps"/>
+        <copy file="catalog/lib/catalog.war" toDir="${ext.dir}/webapps"/>
+        <copy file="partymgr/lib/partymgr.war" toDir="${ext.dir}/webapps"/>
+        <copy file="ordermgr/lib/ordermgr.war" toDir="${ext.dir}/webapps"/>
+        <copy file="workeffort/lib/workeffort.war" toDir="${ext.dir}/webapps"/>
+        <copy file="accounting/lib/accounting.war" toDir="${ext.dir}/webapps"/>
+        <copy file="facility/lib/facility.war" toDir="${ext.dir}/webapps"/>
+        <copy file="marketing/lib/marketing.war" toDir="${ext.dir}/webapps"/>
+        <copy file="content/lib/content.war" toDir="${ext.dir}/webapps"/>
 
-        <copy file="commonapp/etc/serverstats.properties"    toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/serverstats.xml"           toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/entityengine.xml"          toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/security.properties"       toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/debug.properties"          toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/jsse.properties"           toDir="${ext.dir}/etc"/>        
-        <copy file="commonapp/etc/cache.properties"          toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/general.properties"        toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/prodsearch.properties"     toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/localdtds.properties"      toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/serviceengine.xml"         toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/tyrexdomain.xml"           toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/url.properties"            toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/payment.properties"        toDir="${ext.dir}/etc"/>
-        <copy file="commonapp/etc/taxware.properties"        toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/serverstats.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/serverstats.xml" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/entityengine.xml" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/security.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/debug.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/jsse.properties" toDir="${ext.dir}/etc"/>        
+        <copy file="commonapp/etc/cache.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/general.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/prodsearch.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/localdtds.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/serviceengine.xml" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/tyrexdomain.xml" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/url.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/payment.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/taxware.properties" toDir="${ext.dir}/etc"/>
 
         <copy toDir="${ext.dir}/commonapp/entitydef">
           <fileset dir="commonapp/entitydef"/>
@@ -802,8 +802,8 @@
         <copy toDir="${docsdest.dir}/dtds"><fileset dir="core/docs/xmldefs/wfmc"/></copy>
 
         <!-- make the archive -->
-        <delete file="../ofbiz-docs.tgz" />
-        <tar destfile="../ofbiz-docs.tgz" basedir="${docstemp.dir}" longfile="gnu" compression="gzip" />
+        <delete file="../ofbiz-docs.zip" />
+        <zip destfile="../ofbiz-docs.zip" basedir="${docstemp.dir}" />
         <delete dir="${docstemp.dir}" />
     </target>
 
@@ -811,7 +811,99 @@
         <delete><fileset dir="." includes="**/.nbattrs,**/*~,**/*.#*" /></delete>
     </target>
     
-    <target name="distro-apps" depends="">
+    <target name="distro-apps" depends="distro-apps-catalina"/>
+    
+    <target name="distro-apps-jetty" depends="">
+        <antcall target="clean" />
+        <antcall target="cleanextras" />
+        <antcall target="deploy" />
+
+        <property name="distro.temp.dir" value="../distrotemp" />
+        
+        <echo message="[distro] -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" />
+        <echo message="[distro] NOTE before running this: manually remove data directory contents, start the server &amp; load data, stop server" />
+        <echo message="[distro] -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" />
+
+        <delete dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}/ofbiz" />
+        <mkdir dir="${distro.temp.dir}/jetty" />
+        <mkdir dir="${distro.temp.dir}/data" />
+        
+        <copy toDir="${distro.temp.dir}/ofbiz"><fileset dir="."/></copy>
+        <copy toDir="${distro.temp.dir}/jetty"><fileset dir="../jetty"/></copy>
+        <copy toDir="${distro.temp.dir}/data"><fileset dir="../data"/></copy>
+
+        <copy toDir="${distro.temp.dir}/ofbiz"><fileset dir="${distro.temp.dir}/ofbiz/setup/ofbiz"/></copy>
+        
+        <!-- don't want the CVS directories in there -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/CVS" /></delete>
+
+        <!-- don't need the war file in there -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/*.war" /></delete>
+
+        <!-- the build directories aren't really needed to run and can save some space -->
+        <delete dir="${distro.temp.dir}/ofbiz/core/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/build" />
+        
+        <!-- jetty files not needed -->
+        <delete dir="${distro.temp.dir}/jetty/javadoc" />
+        <delete dir="${distro.temp.dir}/jetty/contrib" />
+        <delete dir="${distro.temp.dir}/jetty/demo" />
+        <delete dir="${distro.temp.dir}/jetty/src" />
+        <delete dir="${distro.temp.dir}/jetty/src1.4" />
+        <delete dir="${distro.temp.dir}/jetty/test" />
+        <delete dir="${distro.temp.dir}/jetty/testdocs" />
+        <delete dir="${distro.temp.dir}/jetty/win32" />
+        
+        <!-- temporary work & log files -->
+        <delete dir="${distro.temp.dir}/catalina/work/Standalone/localhost" />
+        <delete><fileset dir="${distro.temp.dir}/catalina/logs" includes="*" /></delete>
+
+        <!-- since there is a separate docs distro, remove all docs directories here -->
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/docs" />
+
+        <!-- can't delete core/docs, need some of the xmldefs for building -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz/core/docs" includes="*" /></delete>
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/examples" />
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/xmldefs/oagis" />
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/xmldefs/intuit" />
+                             
+        <!-- also since there is a separate docs distro, remove the website directory here -->
+        <delete dir="${distro.temp.dir}/ofbiz/website" />
+                                   
+        <!-- okay, build the archive -->
+        <delete file="../ofbiz-apps.zip" />
+        <zip destfile="../ofbiz-apps.zip" basedir="${distro.temp.dir}" />
+
+        <delete dir="${distro.temp.dir}" />
+
+        <!-- clean at the end again to leave everything in a "raw" state -->
+        <antcall target="clean" />
+    </target>
+
+    
+    <target name="distro-apps-catalina" depends="">
         <antcall target="clean" />
         <antcall target="cleanextras" />
         <antcall target="install" />
@@ -910,12 +1002,62 @@
         <delete file="${distro.temp.dir}/ofbiz/lib/tyrex/tyrex-1.0.jar" />
         
         <!-- okay, build the archive -->
-        <delete file="../ofbiz-apps.tgz" />
-        <tar destfile="../ofbiz-apps.tgz" basedir="${distro.temp.dir}" longfile="gnu" compression="gzip" />
+        <delete file="../ofbiz-apps.zip" />
+        <zip destfile="../ofbiz-apps.zip" basedir="${distro.temp.dir}" />
 
         <delete dir="${distro.temp.dir}" />
 
         <!-- clean at the end again to leave everything in a "raw" state -->
         <antcall target="clean" />
     </target>
+    
+    <target name="ofbiz-nightly-build" depends="">
+        <antcall target="clean" />
+        <antcall target="cleanextras" />
+        <antcall target="deploy" />
+
+        <tstamp/>
+        <property name="distro.temp.dir" value="../distrotemp" />
+        <property name="ofbiz.dir" value="${distro.temp.dir}/ofbiz.${DSTAMP}"/>
+               
+        <delete dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}" />
+        <mkdir dir="${ofbiz.dir}" />     
+        
+        <copy toDir="${ofbiz.dir}"><fileset dir="."/></copy>              
+        <copy toDir="${ofbiz.dir}"><fileset dir="${ofbiz.dir}/setup/ofbiz"/></copy>
+        
+        <!-- don't want the CVS directories in there -->
+        <delete><fileset dir="${ofbiz.dir}" includes="**/CVS" /></delete>
+
+        <!-- don't need the war file in there -->
+        <delete><fileset dir="${ofbiz.dir}" includes="**/*.war" /></delete>
+
+        <!-- the build directories aren't really needed to run and can save some space -->
+        <delete dir="${ofbiz.dir}/core/build" />
+        <delete dir="${ofbiz.dir}/commonapp/build" />
+        <delete dir="${ofbiz.dir}/webtools/build" />
+        <delete dir="${ofbiz.dir}/content/build" />
+        <delete dir="${ofbiz.dir}/catalog/build" />
+        <delete dir="${ofbiz.dir}/facility/build" />
+        <delete dir="${ofbiz.dir}/partymgr/build" />
+        <delete dir="${ofbiz.dir}/ordermgr/build" />
+        <delete dir="${ofbiz.dir}/workeffort/build" />
+        <delete dir="${ofbiz.dir}/accounting/build" />
+        <delete dir="${ofbiz.dir}/marketing/build" />
+        <delete dir="${ofbiz.dir}/ecommerce/build" />
+                                       
+        <!-- if we aren't including our own docs, no sense doing the tomcat ones -->
+        <delete dir="${distro.temp.dir}/catalina/webapps/examples" />
+        <delete dir="${distro.temp.dir}/catalina/webapps/tomcat-docs" />
+             
+        <!-- okay, build the archive -->
+        <delete file="../ofbiz-nightly.zip" />
+        <zip destfile="../ofbiz-nightly.zip" basedir="${distro.temp.dir}" />
+
+        <delete dir="${distro.temp.dir}" />
+
+        <!-- clean at the end again to leave everything in a "raw" state -->
+        <antcall target="clean" />
+    </target>    
 </project>
