@@ -104,6 +104,7 @@ public class FlexibleStringExpander {
         int start = original.indexOf("${");
         if (start == -1) {
             handler.handleConstant(original, 0);
+            return;
         }
         int currentInd = 0;
         int end = -1;
