@@ -97,6 +97,8 @@ public class CategoryServices {
             }
         }
 
+        result.put("category", values.get("category"));
+
         String previous = null;
         String next = null;
 
