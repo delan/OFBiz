@@ -24,22 +24,16 @@
 package org.ofbiz.ordermgr;
 
 import java.io.*;
-import java.net.*;
 import java.sql.*;
-import java.text.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
-import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.commonapp.order.order.*;
 
 import dori.jasper.engine.*;
-import dori.jasper.engine.util.*;
-import dori.jasper.engine.export.*;
 
 /**
  * Order Report Events
