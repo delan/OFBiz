@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.10 2003/08/20 18:42:30 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.11 2003/08/22 22:43:59 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.base.util.UtilURL;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.10 $
+  *@version    $Revision: 1.11 $
  * @since      3.0
  */
 public class JettyContainer implements Container {
@@ -81,7 +81,7 @@ public class JettyContainer implements Container {
         Iterator sci = jc.properties.values().iterator();
         while (sci.hasNext()) {
             ContainerConfig.Container.Property prop = (ContainerConfig.Container.Property) sci.next();
-            servers.put(prop.name, createServer(prop));                                   
+            servers.put(prop.name, createServer(prop.name, prop));                                   
         }
         
         // load the applications
@@ -114,7 +114,7 @@ public class JettyContainer implements Container {
         }                
     }
     
-    private Server createServer(ContainerConfig.Container.Property serverConfig) throws ContainerException {
+    private Server createServer(String serverName, ContainerConfig.Container.Property serverConfig) throws ContainerException {
         Server server = new Server();        
         
         // configure the listeners/loggers
@@ -127,7 +127,7 @@ public class JettyContainer implements Container {
             if ("listener".equals(props.value)) {                        
                 if ("default".equals(props.getProperty("type").value)) {
                     SocketListener listener = new SocketListener();
-                    setListenerOptions(listener, props);
+                    setListenerOptions(listener, props, serverName);
                     if (props.getProperty("low-resource-persist-time") != null) {
                         int value = 0;
                         try {
@@ -142,7 +142,7 @@ public class JettyContainer implements Container {
                     server.addListener(listener);                                               
                 } else if ("sun-jsse".equals(props.getProperty("type").value)) {
                     SunJsseListener listener = new SunJsseListener();
-                    setListenerOptions(listener, props);
+                    setListenerOptions(listener, props, serverName);
                     if (props.getProperty("keystore") != null) {
                         listener.setKeystore(props.getProperty("keystore").value);    
                     }
@@ -170,7 +170,7 @@ public class JettyContainer implements Container {
                     throw new ContainerException("Listener not supported yet [" + props.getProperty("type").value + "]");
                 } else if ("ajp13".equals(props.getProperty("type").value)) {
                     AJP13Listener listener = new AJP13Listener();
-                    setListenerOptions(listener, props);
+                    setListenerOptions(listener, props, serverName);
                     server.addListener(listener);                
                 }
             } else if ("request-log".equals(props.value)) {
@@ -215,22 +215,34 @@ public class JettyContainer implements Container {
         return server;
     }  
     
-    private void setListenerOptions(ThreadedServer listener, ContainerConfig.Container.Property listenerProps) throws ContainerException {
-        if (listenerProps.getProperty("host") != null) {
+    private void setListenerOptions(ThreadedServer listener, ContainerConfig.Container.Property listenerProps, String serverName) throws ContainerException {
+        String systemHost = null;
+        if ("default".equals(listenerProps.getProperty("type").value)) {
+            systemHost = System.getProperty(serverName + ".host");            
+        }
+        if (listenerProps.getProperty("host") != null && systemHost == null) {
             try {
                 listener.setHost(listenerProps.getProperty("host").value);
             } catch (UnknownHostException e) {
                 throw new ContainerException(e);                       
             }
         } else {
+            String host = "0.0.0.0";
+            if (systemHost != null) {
+                host = systemHost;
+            }
             try {
-                listener.setHost("0.0.0.0");
+                listener.setHost(host);
             } catch (UnknownHostException e) {
                 throw new ContainerException(e);
             }          
         }
         
-        if (listenerProps.getProperty("port") != null) {
+        String systemPort = null;
+        if ("default".equals(listenerProps.getProperty("type").value)) {
+            systemPort = System.getProperty(serverName + ".port");            
+        }
+        if (listenerProps.getProperty("port") != null && systemPort == null) {
             int value = 8080;
             try {
                 value = Integer.parseInt(listenerProps.getProperty("port").value);
@@ -241,7 +253,15 @@ public class JettyContainer implements Container {
             
             listener.setPort(value);
         } else {
-            listener.setPort(8080);
+            int port = 8080;
+            if (systemPort != null) {
+                try {
+                    port = Integer.parseInt(systemPort);
+                } catch (NumberFormatException e) {
+                    port = 8080;
+                }
+            }
+            listener.setPort(port);
         }
         
         if (listenerProps.getProperty("min-threads") != null) {
