@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,17 +23,25 @@
  */
 package org.ofbiz.order.shoppingcart.product;
 
-import java.util.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -46,11 +54,11 @@ import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
-import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductSearch;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -975,10 +983,20 @@ public class ProductPromoWorker {
                     } else {
                         // check inventory on this product, make sure it is available before going on
                         //NOTE: even though the store may not require inventory for purchase, we will always require inventory for gifts
-                        if (!ProductStoreWorker.isStoreInventoryAvailable(productStoreId, productId, quantity, delegator, dispatcher)) {
-                            productId = null;
-                            product = null;
-                            Debug.logWarning("Not applying GWP because productId [" + productId + "] is out of stock for productPromoAction: " + productPromoAction, module);
+                        try {
+                            Map invReqResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.toMap("productStoreId", productStoreId, "productId", productId, "product", product, "quantity", new Double(quantity)));
+                            if (ServiceUtil.isError(invReqResult)) {
+                                Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invReqResult, module);
+                                throw new CartItemModifyException((String) invReqResult.get(ModelService.ERROR_MESSAGE));
+                            } else if (!"Y".equals((String) invReqResult.get("available"))) {
+                                productId = null;
+                                product = null;
+                                Debug.logWarning("Not applying GWP because productId [" + productId + "] is out of stock for productPromoAction: " + productPromoAction, module);
+                            }
+                        } catch (GenericServiceException e) {
+                            String errMsg = "Fatal error calling inventory checking services: " + e.toString();
+                            Debug.logError(e, errMsg, module);
+                            throw new CartItemModifyException(errMsg);
                         }
                     }
                 }
@@ -993,9 +1011,20 @@ public class ProductPromoWorker {
                 Iterator optionProductIdIter = optionProductIds.iterator();
                 while (optionProductIdIter.hasNext()) {
                     String optionProductId = (String) optionProductIdIter.next();
-                    if (!ProductStoreWorker.isStoreInventoryAvailable(productStoreId, optionProductId, quantity, delegator, dispatcher)) {
-                        optionProductIdIter.remove();
-                    }                    
+
+                    try {
+                        Map invReqResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.toMap("productStoreId", productStoreId, "productId", optionProductId, "product", product, "quantity", new Double(quantity)));
+                        if (ServiceUtil.isError(invReqResult)) {
+                            Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invReqResult, module);
+                            throw new CartItemModifyException((String) invReqResult.get(ModelService.ERROR_MESSAGE));
+                        } else if (!"Y".equals((String) invReqResult.get("available"))) {
+                            optionProductIdIter.remove();
+                        }
+                    } catch (GenericServiceException e) {
+                        String errMsg = "Fatal error calling inventory checking services: " + e.toString();
+                        Debug.logError(e, errMsg, module);
+                        throw new CartItemModifyException(errMsg);
+                    }
                 }
                 
                 // check to see if any desired productIds have been selected for this promo action

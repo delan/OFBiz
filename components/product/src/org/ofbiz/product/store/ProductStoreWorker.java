@@ -49,6 +49,7 @@ import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * ProductStoreWorker - Worker class for store related functionality
@@ -515,150 +516,39 @@ public class ProductStoreWorker {
         }
     }
 
-    public static boolean isStoreInventoryRequired(String productStoreId, String productId, GenericDelegator delegator) {
-        GenericValue product = null;
-
-        if (productId != null) {
-            try {
-                product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Error looking up product with id " + productId + ", will check the ProdCatalog for inventory required", module);
-            }
-        }
-
-        return isStoreInventoryRequired(productStoreId, product, delegator);
-    }
-
-    public static boolean isStoreInventoryRequired(String productStoreId, GenericValue product, GenericDelegator delegator) {
-        // look at the product first since it over-rides the ProductStore setting; if empty or null use the ProductStore setting
-
-        if (product != null && UtilValidate.isNotEmpty(product.getString("requireInventory"))) {
-            if ("Y".equals(product.getString("requireInventory"))) {
-                return true;
-            } else if ("N".equals(product.getString("requireInventory"))) {
-                return false;
-            }
-        }
-        // otherwise, check the store...
-
-        GenericValue productStore = getProductStore(productStoreId, delegator);
-
-        if (productStore == null) {
-            Debug.logWarning("ProductStore not found with id " + productStoreId + ", returning false for inventory required check", module);
-            return false;
-        }
-
-        // default to false, so if anything but Y, return false
-        return "Y".equals(productStore.getString("requireInventory"));
-    }
-
-    public static boolean isStoreInventoryRequired(ServletRequest request, GenericValue product) {
+    /** This method is used in the showcart pages to determine whether or not to show the inventory message */
+    public static boolean isStoreInventoryNotRequiredAndNotAvailable(ServletRequest request, GenericValue product, double quantity) {
         GenericValue productStore = getProductStore(request);
-
-        if (productStore == null) {
-            Debug.logWarning("No ProductStore found, return false for inventory check", module);
-            return false;
-        }
-
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        return isStoreInventoryRequired(productStore.getString("productStoreId"), product, delegator);
-    }
-
-    /** check inventory availability for the given catalog, product, quantity, etc */
-    public static boolean isStoreInventoryAvailable(String productStoreId, String productId, double quantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
-        GenericValue productStore = getProductStore(productStoreId, delegator);
-
-        if (productStore == null) {
-            Debug.logWarning("No ProductStore found with id " + productStoreId + ", returning false for inventory available check", module);
-            return false;
-        }
-
-        // if prodCatalog is set to not check inventory break here
-        if ("N".equals(productStore.getString("checkInventory"))) {
-            // note: if not set, defaults to yes, check inventory
-            if (Debug.verboseOn()) Debug.logVerbose("ProductStore with id " + productStoreId + ", is set to NOT check inventory, returning true for inventory available check", module);
-            return true;
-        }
-        boolean isInventoryAvailable = false;
-
-        if ("Y".equals(productStore.getString("oneInventoryFacility"))) {
-            String inventoryFacilityId = productStore.getString("inventoryFacilityId");
-
-            if (UtilValidate.isEmpty(inventoryFacilityId)) {
-                Debug.logWarning("ProductStore with id " + productStoreId + " has Y for oneInventoryFacility but inventoryFacilityId is empty, returning false for inventory check", module);
-                return false;
-            }
-
-            try {
-                isInventoryAvailable = ProductWorker.isProductInventoryAvailableByFacility(productId, inventoryFacilityId, quantity, dispatcher);
-            } catch (GenericServiceException e) {
-                Debug.logWarning(e, "Error invoking isProductInventoryAvailableByFacility in isCatalogInventoryAvailable", module);
-                return false;
-            }
-            return isInventoryAvailable;
-            
-        } else {
-            GenericValue product = null;
-            List productFacilities = null;
-
-            try {
-                product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e, "Error invoking findByPrimaryKeyCache in isCatalogInventoryAvailable", module);
-                return false;
-            }
-            try {
-                productFacilities = delegator.getRelatedCache("ProductFacility", product);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e, "Error invoking getRelatedCache in isCatalogInventoryAvailable", module);
-                return false;
-            }
-
-            if (productFacilities != null && productFacilities.size() > 0) {
-                Iterator pfIter = productFacilities.iterator();
-
-                while (pfIter.hasNext()) {
-                    try {
-                        GenericValue pfValue = (GenericValue) pfIter.next();
-
-                        isInventoryAvailable = ProductWorker.isProductInventoryAvailableByFacility(productId, pfValue.getString("facilityId"), quantity, dispatcher);
-                        if (isInventoryAvailable == true) {
-                            return isInventoryAvailable;
-                        }
-                    } catch (GenericServiceException e) {
-                        Debug.logWarning(e, "Error invoking isProductInventoryAvailableByFacility in isCatalogInventoryAvailable", module);
-                        return false;
-                    }
-                }
-            }
-            return false;
-
-            /* TODO: must entire quantity be available in one location?
-             *  Right now the answer is yes, it only succeeds if one facility has sufficient inventory for the order.
-             *  When we get into splitting options it is much more complicated. There are various options like: 
-             *  - allow split between facilities
-             *  - in split order facilities by highest quantities
-             *  - in split order facilities by lowest quantities
-             *  - in split order facilities by order in database, ie sequence numbers on facility-store join table
-             *  - in split order facilities by nearest locations to customer (not an easy one there...)
-             */
-
-            // loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
-        }
-    }
-
-    public static boolean isStoreInventoryAvailable(ServletRequest request, String productId, double quantity) {
-        GenericValue productStore = getProductStore(request);
-
         if (productStore == null) {
             Debug.logWarning("No ProductStore found, return false for inventory check", module);
             return false;
         }
 
         String productStoreId = productStore.getString("productStoreId");
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        return isStoreInventoryAvailable(productStoreId, productId, quantity, delegator, dispatcher);
+        
+        try {
+            Map invReqResult = dispatcher.runSync("isStoreInventoryRequired", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "productStore", productStore));
+            if (ServiceUtil.isError(invReqResult)) {
+                Debug.logError("Error calling isStoreInventoryRequired service, result is: " + invReqResult, module);
+                return false;
+            }
+            Map invAvailResult = dispatcher.runSync("isStoreInventoryAvailable", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "productStore", productStore, "quantity", new Double(quantity)));
+            if (ServiceUtil.isError(invAvailResult)) {
+                Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invAvailResult, module);
+                return false;
+            }
+
+            if (!"Y".equals((String) invAvailResult.get("available")) && !"Y".equals((String) invReqResult.get("requireInventory"))) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (GenericServiceException e) {
+            String errMsg = "Fatal error calling inventory checking services: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            return false;
+        }
     }
 
     public static boolean isStoreInventoryAvailable(ServletRequest request, ProductConfigWrapper productConfig, double quantity) {
@@ -737,101 +627,6 @@ public class ProductStoreWorker {
                 }
             }
             return false;
-
-            // TODO: must entire quantity be available in one location?
-            //  Right now the answer is yes, it only succeeds if one facility has sufficient inventory for the order.
-            //  When we get into splitting options it is much more complicated. There are various options like: 
-            //  - allow split between facilities
-            //  - in split order facilities by highest quantities
-            //  - in split order facilities by lowest quantities
-            //  - in split order facilities by order in database, ie sequence numbers on facility-store join table
-            //  - in split order facilities by nearest locations to customer (not an easy one there...)
-           
-
-            // loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
-        }
-    }
-
-    /** tries to reserve the specified quantity, if fails returns quantity that it could not reserve or zero if there was an error, otherwise returns null */
-    public static Double reserveStoreInventory(String productStoreId, String productId, Double quantity,
-            String orderId, String orderItemSeqId, GenericValue userLogin, GenericDelegator delegator, LocalDispatcher dispatcher) {
-
-        GenericValue productStore = getProductStore(productStoreId, delegator);
-
-        if (productStore == null) {
-            Debug.logWarning("No ProductStore found with id " + productStoreId + ", not reserving inventory", module);
-            return new Double(0.0);
-        }
-
-        // if prodCatalog is set to not reserve inventory, break here
-        if ("N".equals(productStore.getString("reserveInventory"))) {
-            // note: if not set, defaults to yes, reserve inventory
-            if (Debug.verboseOn()) Debug.logVerbose("ProductStore with id " + productStoreId + ", is set to NOT reserve inventory, not reserving inventory", module);
-            return null;
-        }
-        String reserveOrderEnumId = productStore.getString("reserveOrderEnumId");
-        boolean requireInventory = isStoreInventoryRequired(productStoreId, productId, delegator);
-        Double quantityNotReserved = null;
-
-        if ("Y".equals(productStore.getString("oneInventoryFacility"))) {
-            String inventoryFacilityId = productStore.getString("inventoryFacilityId");
-
-            if (UtilValidate.isEmpty(inventoryFacilityId)) {
-                Debug.logWarning("ProductStore with id " + productStoreId + " has Y for oneInventoryFacility but inventoryFacilityId is empty, not reserving inventory", module);
-                return new Double(0.0);
-            }
-
-            try {
-                quantityNotReserved = ProductWorker.reserveProductInventoryByFacility(productId, quantity, inventoryFacilityId, orderId, reserveOrderEnumId, orderItemSeqId, requireInventory, userLogin, dispatcher);
-            } catch (GenericServiceException e) {
-                Debug.logWarning(e, "Error invoking reserveProductInventoryByFacility service", module);
-                return !requireInventory? null: new Double(0.0);
-            }
-            return quantityNotReserved;
-            
-        } else {
-            GenericValue product = null;
-            List productFacilities = null;
-
-            try {
-                product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e, "Error invoking findByPrimaryKeyCache in reserveCatalogInventory", module);
-                return new Double(0.0);
-            }
-            try {
-                productFacilities = delegator.getRelatedCache("ProductFacility", product);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e, "Error invoking getRelatedCache in reserveCatalogInventory", module);
-                return new Double(0.0);
-            }
-
-            if (productFacilities != null && productFacilities.size() > 0) {
-                Iterator pfIter = productFacilities.iterator();
-
-                while (pfIter.hasNext()) {
-                    GenericValue pfValue = (GenericValue) pfIter.next();
-                    String inventoryFacilityId = pfValue.getString("facilityId");
-
-                    try {
-                        // TODO: must entire quantity be available in one location?
-                        // Right now the answer is yes, it only succeeds if one facility has sufficient inventory for the order.
-                        boolean isAvailable = ProductWorker.isProductInventoryAvailableByFacility(productId, inventoryFacilityId, quantity.doubleValue(), dispatcher);
-                        if (!isAvailable) continue;
-
-                        quantityNotReserved = ProductWorker.reserveProductInventoryByFacility(productId, quantity, inventoryFacilityId, orderId, reserveOrderEnumId, orderItemSeqId, requireInventory, userLogin, dispatcher);
-                    } catch (GenericServiceException e) {
-                        Debug.logWarning(e, "Error invoking reserveProductInventoryByFacility in reserveCatalogInventory", module);
-                        return !requireInventory? null: new Double(0.0);
-                    }
-                    if (quantityNotReserved == null) {
-                        return null;
-                    }
-                }
-                return quantityNotReserved;
-
-            }
-            return !requireInventory? null: new Double(0.0);
         }
     }
 }

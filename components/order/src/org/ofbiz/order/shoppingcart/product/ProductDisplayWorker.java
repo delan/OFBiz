@@ -1,8 +1,25 @@
 /*
- * Created on Aug 18, 2003
+ * $Id$
  *
- * To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.ofbiz.order.shoppingcart.product;
 
@@ -29,28 +46,14 @@ import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
-import org.ofbiz.product.store.ProductStoreWorker;
-import org.ofbiz.service.LocalDispatcher;
 
 /**
  * @author ajzeneski
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class ProductDisplayWorker {
     
     public static final String module = ProductDisplayWorker.class.getName();
 
-
-    public static boolean isStoreInventoryRequired(ShoppingCartItem item) {
-        return ProductStoreWorker.isStoreInventoryRequired(item.getProdCatalogId(), item.getProduct(), item.getDelegator());
-    }
-    
-    public static boolean isStoreInventoryAvailable(ShoppingCartItem item, LocalDispatcher dispatcher) {
-        return ProductStoreWorker.isStoreInventoryAvailable(item.getProdCatalogId(), item.getProductId(), item.getQuantity(), item.getDelegator(), dispatcher);
-    }
-            
     /* ========================================================================================*/
     
     /* ============================= Special Data Retreival Methods ===========================*/

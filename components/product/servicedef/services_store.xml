@@ -21,6 +21,47 @@
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
+    <service name="reserveStoreInventory" engine="simple"
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="reserveStoreInventory">
+        <description>Reserve Inventory in a Product Store</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"></attribute>
+        <attribute name="productId" type="String" mode="IN" optional="false"></attribute>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"></attribute>
+        <attribute name="orderId" type="String" mode="IN" optional="true"></attribute>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"></attribute>
+        <attribute name="quantityNotReserved" type="Double" mode="OUT" optional="false"></attribute>
+    </service>
+
+    <service name="isStoreInventoryRequired" engine="simple"
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="isStoreInventoryRequired" auth="false">
+        <description>Checks if Store Inventory is Required</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"></attribute>
+        <attribute name="productStore" type="GenericValue" mode="IN" optional="true"></attribute>
+        <attribute name="productId" type="String" mode="IN" optional="false"></attribute>
+        <attribute name="product" type="GenericValue" mode="IN" optional="true"></attribute>
+        <attribute name="requireInventory" type="String" mode="OUT" optional="false"></attribute><!-- Y/N -->
+    </service>
+    <service name="isStoreInventoryAvailable" engine="simple"
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="isStoreInventoryAvailable" auth="false">
+        <description>Checks if Store Inventory is Required</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"></attribute>
+        <attribute name="productStore" type="GenericValue" mode="IN" optional="true"></attribute>
+        <attribute name="productId" type="String" mode="IN" optional="false"></attribute>
+        <attribute name="product" type="GenericValue" mode="IN" optional="true"></attribute>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"></attribute>
+        <attribute name="available" type="String" mode="OUT" optional="false"></attribute><!-- Y/N -->
+    </service>
+    <service name="isStoreInventoryAvailableOrNotRequired" engine="simple"
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="isStoreInventoryAvailableOrNotRequired" auth="false">
+        <description>Checks if Store Inventory is Required</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"></attribute>
+        <attribute name="productStore" type="GenericValue" mode="IN" optional="true"></attribute>
+        <attribute name="productId" type="String" mode="IN" optional="false"></attribute>
+        <attribute name="product" type="GenericValue" mode="IN" optional="true"></attribute>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"></attribute>
+        <attribute name="availableOrNotRequired" type="String" mode="OUT" optional="false"></attribute><!-- Y/N -->
+    </service>
+
     <!-- Product Store Role Services -->
     <service name="createProductStoreRole" default-entity-name="ProductStoreRole" engine="simple"
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreRole" auth="true">
@@ -142,7 +183,7 @@
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
-    <!-- Product Store Survey Appl Services -->
+    <!-- ProductStoreSurveyAppl Services -->
     <service name="createProductStoreSurveyAppl" default-entity-name="ProductStoreSurveyAppl" engine="simple"
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreSurveyAppl" auth="true">
         <description>Create a Product Store Survey Appl</description>
@@ -155,6 +196,7 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
+    <!-- ProductStorePromoAppl Services -->
     <service name="createProductStorePromoAppl" default-entity-name="ProductStorePromoAppl" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductStorePromoAppl" auth="true">
         <description>Create ProductStorePromoAppl</description>
