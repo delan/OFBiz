@@ -955,17 +955,17 @@
         <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
       </relation>
       <relation>
-        <type>one</type>
+        <type>one</type><title>OriginatedFrom</title>
         <rel-table-name>PARTY</rel-table-name>
         <key-map><col-name>ORIGINATED_FROM_PARTY_ID</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
       </relation>
       <relation>
-        <type>one</type>
+        <type>one</type><title>OriginatedFrom</title>
         <rel-table-name>ROLE_TYPE</rel-table-name>
         <key-map><col-name>ORIGINATED_FROM_ROLE_TYPE_ID</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
       </relation>
       <relation>
-        <type>one</type>
+        <type>one</type><title>OriginatedFrom</title>
         <rel-table-name>PARTY_ROLE</rel-table-name>
         <key-map><col-name>ORIGINATED_FROM_PARTY_ID</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
         <key-map><col-name>ORIGINATED_FROM_ROLE_TYPE_ID</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
@@ -1311,12 +1311,12 @@
         <key-map><col-name>PARTY_ID</col-name></key-map>
       </relation>
       <relation>
-        <type>one</type>
+        <type>one</type><title>IdByIp</title>
         <rel-table-name>CONTACT_MECH</rel-table-name>
         <key-map><col-name>ID_BY_IP_CONTACT_MECH_ID</col-name><rel-col-name>CONTACT_MECH_ID</rel-col-name></key-map>
       </relation>
       <relation>
-        <type>one</type>
+        <type>one</type><title>RefByWeb</title>
         <rel-table-name>CONTACT_MECH</rel-table-name>
         <key-map><col-name>REF_BY_WEB_CONTACT_MECH_ID</col-name><rel-col-name>CONTACT_MECH_ID</rel-col-name></key-map>
       </relation>
@@ -1780,7 +1780,7 @@
       </relation>
       <relation>
         <type>many</type><rel-table-name>PARTY_RELATIONSHIP</rel-table-name>
-        <key-map><col-name>PARTY_RELATIONSHIP_TYPE</col-name></key-map>
+        <key-map><col-name>PARTY_RELATIONSHIP_TYPE_ID</col-name></key-map>
       </relation>
       <relation>
         <type>one</type><title>ValidFrom</title><rel-table-name>ROLE_TYPE</rel-table-name>
@@ -1805,7 +1805,7 @@
         <key-map><col-name>PARTY_ID</col-name></key-map>
       </relation>
       <relation>
-        <type>one</type><rel-table-name>DATA_OBJECT_ID</rel-table-name>
+        <type>one</type><rel-table-name>DATA_OBJECT</rel-table-name>
         <key-map><col-name>DATA_OBJECT_ID</col-name></key-map>
       </relation>
     </entity>
@@ -2213,33 +2213,32 @@
         <key-map><col-name>PRODUCT_ID</col-name></key-map>
       </relation>
       <relation>
-        <type>one</type>
-        <rel-table-name>PARTY</rel-table-name>
+        <type>one</type><title>From</title><rel-table-name>PARTY</rel-table-name>
         <key-map><col-name>PARTY_ID_FROM</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
       </relation>
       <relation>
-        <type>one</type>
+        <type>one</type><title>From</title>
         <rel-table-name>ROLE_TYPE</rel-table-name>
         <key-map><col-name>ROLE_TYPE_ID_FROM</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
       </relation>
       <relation>
-        <type>one</type>
+        <type>one</type><title>From</title>
         <rel-table-name>PARTY_ROLE</rel-table-name>
         <key-map><col-name>PARTY_ID_FROM</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
         <key-map><col-name>ROLE_TYPE_ID_FROM</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
       </relation>
       <relation>
-        <type>one</type>
+        <type>one</type><title>To</title>
         <rel-table-name>PARTY</rel-table-name>
         <key-map><col-name>PARTY_ID_TO</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
       </relation>
       <relation>
-        <type>one</type>
+        <type>one</type><title>To</title>
         <rel-table-name>ROLE_TYPE</rel-table-name>
         <key-map><col-name>ROLE_TYPE_ID_TO</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
       </relation>
       <relation>
-        <type>one</type>
+        <type>one</type><title>To</title>
         <rel-table-name>PARTY_ROLE</rel-table-name>
         <key-map><col-name>PARTY_ID_TO</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
         <key-map><col-name>ROLE_TYPE_ID_TO</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
@@ -2251,7 +2250,6 @@
         <key-map><col-name>ROLE_TYPE_ID_TO</col-name></key-map>
         <key-map><col-name>PARTY_ID_FROM</col-name></key-map>
         <key-map><col-name>PARTY_ID_TO</col-name></key-map>
-        <key-map><col-name>FROM_DATE</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
@@ -2365,6 +2363,7 @@
       <table-name>AGREEMENT_ITEM</table-name>
       <field><col-name>AGREEMENT_ID</col-name><type>id-ne</type></field>
       <field><col-name>AGREEMENT_ITEM_SEQ_ID</col-name><type>id-ne</type></field>
+      <field><col-name>AGREEMENT_ITEM_TYPE_ID</col-name><type>id</type></field>
       <field><col-name>AGREEMENT_TEXT</col-name><type>long-varchar</type></field>
       <field><col-name>AGREEMENT_IMAGE</col-name><type>blob</type></field>
       <prim-key-col>AGREEMENT_ID</prim-key-col>
@@ -2483,7 +2482,7 @@
     <entity>
       <title>Agreement Geographical Applicability Entity</title>
       <package-name>org.ofbiz.commonapp.party.agreement</package-name>
-      <table-name>AGREEMENT_GEOGRAPHICAL_APPLICABILITY</table-name>
+      <table-name>AGREEMENT_GEOGRAPHICAL_APPLIC</table-name>
       <field><col-name>AGREEMENT_ID</col-name><type>id-ne</type></field>
       <field><col-name>AGREEMENT_ITEM_SEQ_ID</col-name><type>id-ne</type></field>
       <field><col-name>GEO_ID</col-name><type>id-ne</type></field>
@@ -2495,7 +2494,7 @@
     <entity>
       <title>Agreement Organizational Applicability Entity</title>
       <package-name>org.ofbiz.commonapp.party.agreement</package-name>
-      <table-name>AGREEMENT_ORGANIZATIONAL_APPLICABILITY</table-name>
+      <table-name>AGREEMENT_ORGANIZATION_APPLIC</table-name>
       <field><col-name>AGREEMENT_ID</col-name><type>id-ne</type></field>
       <field><col-name>AGREEMENT_ITEM_SEQ_ID</col-name><type>id-ne</type></field>
       <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
@@ -2507,7 +2506,7 @@
     <entity>
       <title>Agreement Product Applicability Entity</title>
       <package-name>org.ofbiz.commonapp.party.agreement</package-name>
-      <table-name>AGREEMENT_PRODUCT_APPLICABILITY</table-name>
+      <table-name>AGREEMENT_PRODUCT_APPLIC</table-name>
       <field><col-name>AGREEMENT_ID</col-name><type>id-ne</type></field>
       <field><col-name>AGREEMENT_ITEM_SEQ_ID</col-name><type>id-ne</type></field>
       <field><col-name>PRODUCT_ID</col-name><type>id-ne</type></field>
@@ -2779,12 +2778,12 @@
       <field><col-name>DESCRIPTION</col-name><type>description</type></field>
       <prim-key-col>COMMUNICATION_EVENT_PRP_TYP_ID</prim-key-col>
       <relation>
-        <type>one</type>
+        <type>one</type><title>Parent</title>
         <rel-table-name>COMMUNICATION_EVENT_PRP_TYP</rel-table-name>
         <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>COMMUNICATION_EVENT_PRP_TYP_ID</rel-col-name></key-map>
       </relation>
       <relation>
-        <type>many</type>
+        <type>many</type><title>Child</title>
         <rel-table-name>COMMUNICATION_EVENT_PRP_TYP</rel-table-name>
         <key-map><col-name>COMMUNICATION_EVENT_PRP_TYP_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
       </relation>
@@ -4906,7 +4905,7 @@
       <relation>
         <type>many</type>
         <rel-table-name>ORDER_ITEM_ATTRIBUTE</rel-table-name>
-        <key-map><col-name>ORDER_ITEM_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
         <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
       </relation>
     </entity>
@@ -6339,10 +6338,12 @@
       <title>Work Effort Association Attribute Entity</title>
       <package-name>org.ofbiz.commonapp.workeffort.workeffort</package-name>
       <table-name>WORK_EFFORT_ASSOC_ATTRIBUTE</table-name>
-      <field><col-name>WORK_EFFORT_ASSOC_ID</col-name><type>id-ne</type></field>
+      <field><col-name>WORK_EFFORT_ID_FROM</col-name><type>id-ne</type></field>
+      <field><col-name>WORK_EFFORT_ID_TO</col-name><type>id-ne</type></field>
       <field><col-name>NAME</col-name><type>id-long-ne</type></field>
       <field><col-name>VALUE</col-name><type>value</type></field>
-      <prim-key-col>WORK_EFFORT_ASSOC_ID</prim-key-col>
+      <prim-key-col>WORK_EFFORT_ID_FROM</prim-key-col>
+      <prim-key-col>WORK_EFFORT_ID_TO</prim-key-col>
       <prim-key-col>NAME</prim-key-col>
       <relation>
         <type>one</type>
@@ -6377,7 +6378,7 @@
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>WORK_EFFORT_DEF_ASSOC_ATTRIBUTE</rel-table-name>
+        <rel-table-name>WORK_EFFORT_DEF_ASSOC_ATTR</rel-table-name>
         <key-map><col-name>NAME</col-name></key-map>
       </relation>
       <relation>
@@ -6463,15 +6464,16 @@
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>WORK_EFFORT_DEF_ASSOC_ATTRIBUTE</rel-table-name>
-        <key-map><col-name>WORK_EFFORT_DEF_ASSOC_ID</col-name></key-map>
+        <rel-table-name>WORK_EFFORT_DEF_ASSOC_ATTR</rel-table-name>
+        <key-map><col-name>WORK_EFFORT_DEF_ID_FROM</col-name></key-map>
+        <key-map><col-name>WORK_EFFORT_DEF_ID_TO</col-name></key-map>
       </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
       <title>Work Effort Definition Association Attribute Entity</title>
       <package-name>org.ofbiz.commonapp.workeffort.workeffort</package-name>
-      <table-name>WORK_EFFORT_DEF_ASSOC_ATTRIBUTE</table-name>
+      <table-name>WORK_EFFORT_DEF_ASSOC_ATTR</table-name>
       <field><col-name>WORK_EFFORT_DEF_ID_FROM</col-name><type>id-ne</type></field>
       <field><col-name>WORK_EFFORT_DEF_ID_TO</col-name><type>id-ne</type></field>
       <field><col-name>NAME</col-name><type>id-long-ne</type></field>
@@ -6508,7 +6510,7 @@
     <entity>
       <title>Work Effort Deliverable Produced Entity</title>
       <package-name>org.ofbiz.commonapp.workeffort.workeffort</package-name>
-      <table-name>WORK_EFFORT_DELIVERABLE_PRODUCED</table-name>
+      <table-name>WORK_EFFORT_DELIVERABLE_PROD</table-name>
       <field><col-name>WORK_EFFORT_ID</col-name><type>id-ne</type></field>
       <field><col-name>DELIVERABLE_ID</col-name><type>id-ne</type></field>
       <prim-key-col>WORK_EFFORT_ID</prim-key-col>
@@ -6518,7 +6520,7 @@
     <entity>
       <title>Work Effort Fixed Asset Assignment Entity</title>
       <package-name>org.ofbiz.commonapp.workeffort.workeffort</package-name>
-      <table-name>WORK_EFFORT_FIXED_ASSET_ASSIGNMENT</table-name>
+      <table-name>WORK_EFFORT_FIXED_ASSET_ASSIGN</table-name>
       <field><col-name>WORK_EFFORT_ID</col-name><type>id-ne</type></field>
       <field><col-name>FIXED_ASSET_ID</col-name><type>id-ne</type></field>
       <field><col-name>STATUS_ID</col-name><type>id-ne</type></field>
@@ -6533,7 +6535,7 @@
     <entity>
       <title>Work Effort Fixed Asset Standard Entity</title>
       <package-name>org.ofbiz.commonapp.workeffort.workeffort</package-name>
-      <table-name>WORK_EFFORT_FIXED_ASSET_STANDARD</table-name>
+      <table-name>WORK_EFFORT_FIXED_ASSET_STD</table-name>
       <field><col-name>WORK_EFFORT_DEF_ID</col-name><type>id-ne</type></field>
       <field><col-name>FIXED_ASSET_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>ESTIMATED_QUANTITY</col-name><type>floating-point</type></field>
@@ -6558,7 +6560,7 @@
     <entity>
       <title>Work Effort Inventory Assignment Entity</title>
       <package-name>org.ofbiz.commonapp.workeffort.workeffort</package-name>
-      <table-name>WORK_EFFORT_INVENTORY_ASSIGNMENT</table-name>
+      <table-name>WORK_EFFORT_INVENTORY_ASSIGN</table-name>
       <field><col-name>WORK_EFFORT_ID</col-name><type>id-ne</type></field>
       <field><col-name>INVENTORY_ITEM_ID</col-name><type>id-ne</type></field>
       <field><col-name>QUANTITY</col-name><type>floating-point</type></field>
@@ -6619,7 +6621,7 @@
     <entity>
       <title>Communication Event Work Effort Entity</title>
       <package-name>org.ofbiz.commonapp.workeffort.workeffort</package-name>
-      <table-name>COMMUNICATION_EVENT_WORK_EFFORT</table-name>
+      <table-name>COMMUNICATION_EVENT_WORK_EFF</table-name>
       <field><col-name>WORK_EFFORT_ID</col-name><type>id-ne</type></field>
       <field><col-name>COMMUNICATION_EVENT_ID</col-name><type>id-ne</type></field>
       <field><col-name>DESCRIPTION</col-name><type>description</type></field>
@@ -7095,7 +7097,7 @@
     <entity>
       <title>Fixed Asset Depreciation Method Entity</title>
       <package-name>org.ofbiz.commonapp.accounting.fixedasset</package-name>
-      <table-name>FIXED_ASSET_DEPRECIATION_METHOD</table-name>
+      <table-name>FIXED_ASSET_DEP_METHOD</table-name>
       <field><col-name>DEPRECIATION_METHOD_ID</col-name><type>id-ne</type></field>
       <field><col-name>FIXED_ASSET_ID</col-name><type>id-ne</type></field>
       <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
@@ -7183,7 +7185,7 @@
       </relation>
       <relation>
         <type>one</type>
-        <rel-table-name>INERNAL_ACCTG_TRANS</rel-table-name>
+        <rel-table-name>INTERNAL_ACCTG_TRANS</rel-table-name>
         <key-map><col-name>ACCTG_TRANS_ID</col-name></key-map>
       </relation>
       <relation>
@@ -7733,78 +7735,78 @@
     <entity>
       <title>Financial Account Entity</title>
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
-      <table-name>FINANCIAL_ACCOUNT</table-name>
-      <field><col-name>FINANCIAL_ACCOUNT_ID</col-name><type>id-ne</type></field>
-      <field><col-name>FINANCIAL_ACCOUNT_TYPE_ID</col-name><type>id</type></field>
-      <field><col-name>FINANCIAL_ACCOUNT_NAME</col-name><type>name</type></field>
-      <prim-key-col>FINANCIAL_ACCOUNT_ID</prim-key-col>
+      <table-name>FIN_ACCOUNT</table-name>
+      <field><col-name>FIN_ACCOUNT_ID</col-name><type>id-ne</type></field>
+      <field><col-name>FIN_ACCOUNT_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>FIN_ACCOUNT_NAME</col-name><type>name</type></field>
+      <prim-key-col>FIN_ACCOUNT_ID</prim-key-col>
       <relation>
         <type>one</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TYPE</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TYPE_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TYPE</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TYPE_ID</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TYPE_ATTR</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TYPE_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TYPE_ATTR</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TYPE_ID</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_ATTRIBUTE</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_ATTRIBUTE</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_ID</col-name></key-map>
       </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
       <title>Financial Account Type Entity</title>
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
-      <table-name>FINANCIAL_ACCOUNT_TYPE</table-name>
-      <field><col-name>FINANCIAL_ACCOUNT_TYPE_ID</col-name><type>id-ne</type></field>
+      <table-name>FIN_ACCOUNT_TYPE</table-name>
+      <field><col-name>FIN_ACCOUNT_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>PARENT_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>HAS_TABLE</col-name><type>indicator</type></field>
       <field><col-name>DESCRIPTION</col-name><type>description</type></field>
-      <prim-key-col>FINANCIAL_ACCOUNT_TYPE_ID</prim-key-col>
+      <prim-key-col>FIN_ACCOUNT_TYPE_ID</prim-key-col>
       <relation>
         <title>Parent</title>
         <type>one</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TYPE</rel-table-name>
-        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>FINANCIAL_ACCOUNT_TYPE_ID</rel-col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TYPE</rel-table-name>
+        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>FIN_ACCOUNT_TYPE_ID</rel-col-name></key-map>
       </relation>
       <relation>
         <title>Child</title>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TYPE</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TYPE</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TYPE_ATTR</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TYPE_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TYPE_ATTR</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TYPE_ID</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TYPE_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TYPE_ID</col-name></key-map>
       </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
       <title>Financial Account Attribute Entity</title>
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
-      <table-name>FINANCIAL_ACCOUNT_ATTRIBUTE</table-name>
-      <field><col-name>FINANCIAL_ACCOUNT_ID</col-name><type>id-ne</type></field>
+      <table-name>FIN_ACCOUNT_ATTRIBUTE</table-name>
+      <field><col-name>FIN_ACCOUNT_ID</col-name><type>id-ne</type></field>
       <field><col-name>NAME</col-name><type>id-long-ne</type></field>
       <field><col-name>VALUE</col-name><type>value</type></field>
-      <prim-key-col>FINANCIAL_ACCOUNT_ID</prim-key-col>
+      <prim-key-col>FIN_ACCOUNT_ID</prim-key-col>
       <prim-key-col>NAME</prim-key-col>
       <relation>
         <type>one</type>
-        <rel-table-name>FINANCIAL_ACCOUNT</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_ID</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TYPE_ATTR</rel-table-name>
+        <rel-table-name>FIN_ACCOUNT_TYPE_ATTR</rel-table-name>
         <key-map><col-name>NAME</col-name></key-map>
       </relation>
     </entity>
@@ -7812,46 +7814,46 @@
     <entity>
       <title>Financial Account Type Attribute Entity</title>
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
-      <table-name>FINANCIAL_ACCOUNT_TYPE_ATTR</table-name>
-      <field><col-name>FINANCIAL_ACCOUNT_TYPE_ID</col-name><type>id-ne</type></field>
+      <table-name>FIN_ACCOUNT_TYPE_ATTR</table-name>
+      <field><col-name>FIN_ACCOUNT_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>NAME</col-name><type>id-long-ne</type></field>
-      <prim-key-col>FINANCIAL_ACCOUNT_TYPE_ID</prim-key-col>
+      <prim-key-col>FIN_ACCOUNT_TYPE_ID</prim-key-col>
       <prim-key-col>NAME</prim-key-col>
       <relation>
         <type>one</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TYPE</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TYPE_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TYPE</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TYPE_ID</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_ATTRIBUTE</rel-table-name>
+        <rel-table-name>FIN_ACCOUNT_ATTRIBUTE</rel-table-name>
         <key-map><col-name>NAME</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TYPE_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TYPE_ID</col-name></key-map>
       </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
       <title>Financial Account Adjustment Entity</title>
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
-      <table-name>FINANCIAL_ACCOUNT_ADJUSTMENT</table-name>
-      <field><col-name>FINANCIAL_ACCOUNT_TRANS_ID</col-name><type>id-ne</type></field>
-      <prim-key-col>FINANCIAL_ACCOUNT_TRANS_ID</prim-key-col>
+      <table-name>FIN_ACCOUNT_ADJUSTMENT</table-name>
+      <field><col-name>FIN_ACCOUNT_TRANS_ID</col-name><type>id-ne</type></field>
+      <prim-key-col>FIN_ACCOUNT_TRANS_ID</prim-key-col>
     </entity>
     <!-- ========================================================= -->    
     <entity>
       <title>Financial Account Role Entity</title>
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
-      <table-name>FINANCIAL_ACCOUNT_ROLE</table-name>
-      <field><col-name>FINANCIAL_ACCOUNT_ID</col-name><type>id-ne</type></field>
+      <table-name>FIN_ACCOUNT_ROLE</table-name>
+      <field><col-name>FIN_ACCOUNT_ID</col-name><type>id-ne</type></field>
       <field><col-name>PARTY_ID</col-name><type>id-ne</type></field>
       <field><col-name>ROLE_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
       <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
-      <prim-key-col>FINANCIAL_ACCOUNT_ID</prim-key-col>
+      <prim-key-col>FIN_ACCOUNT_ID</prim-key-col>
       <prim-key-col>PARTY_ID</prim-key-col>
       <prim-key-col>ROLE_TYPE_ID</prim-key-col>
     </entity>
@@ -7859,81 +7861,81 @@
     <entity>
       <title>Financial Account Transaction Entity</title>
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
-      <table-name>FINANCIAL_ACCOUNT_TRANS</table-name>
-      <field><col-name>FINANCIAL_ACCOUNT_TRANS_ID</col-name><type>id-ne</type></field>
-      <field><col-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</col-name><type>id-ne</type></field>
-      <field><col-name>FINANCIAL_ACCOUNT_ID</col-name><type>id</type></field>
+      <table-name>FIN_ACCOUNT_TRANS</table-name>
+      <field><col-name>FIN_ACCOUNT_TRANS_ID</col-name><type>id-ne</type></field>
+      <field><col-name>FIN_ACCOUNT_TRANS_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>FIN_ACCOUNT_ID</col-name><type>id</type></field>
       <field><col-name>PARTY_ID</col-name><type>id</type></field>
       <field><col-name>TRANSACTION_DATE</col-name><type>date-time</type></field>
       <field><col-name>ENTRY_DATE</col-name><type>date-time</type></field>
-      <prim-key-col>FINANCIAL_ACCOUNT_TRANS_ID</prim-key-col>
+      <prim-key-col>FIN_ACCOUNT_TRANS_ID</prim-key-col>
       <relation>
         <type>one</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TRANS_TYPE</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TRANS_TYPE</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TRANS_TYPE_ID</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ATTR</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TRANS_TYPE_ATTR</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TRANS_TYPE_ID</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TRANS_ATTRIBUTE</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TRANS_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TRANS_ATTRIBUTE</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TRANS_ID</col-name></key-map>
       </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
       <title>Financial Account Transaction Type Entity</title>
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
-      <table-name>FINANCIAL_ACCOUNT_TRANS_TYPE</table-name>
-      <field><col-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</col-name><type>id-ne</type></field>
+      <table-name>FIN_ACCOUNT_TRANS_TYPE</table-name>
+      <field><col-name>FIN_ACCOUNT_TRANS_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>PARENT_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>HAS_TABLE</col-name><type>indicator</type></field>
       <field><col-name>DESCRIPTION</col-name><type>description</type></field>
-      <prim-key-col>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</prim-key-col>
+      <prim-key-col>FIN_ACCOUNT_TRANS_TYPE_ID</prim-key-col>
       <relation>
         <title>Parent</title>
         <type>one</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TRANS_TYPE</rel-table-name>
-        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</rel-col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TRANS_TYPE</rel-table-name>
+        <key-map><col-name>PARENT_TYPE_ID</col-name><rel-col-name>FIN_ACCOUNT_TRANS_TYPE_ID</rel-col-name></key-map>
       </relation>
       <relation>
         <title>Child</title>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TRANS_TYPE</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TRANS_TYPE</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TRANS_TYPE_ID</col-name><rel-col-name>PARENT_TYPE_ID</rel-col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ATTR</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TRANS_TYPE_ATTR</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TRANS_TYPE_ID</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TRANS</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TRANS</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TRANS_TYPE_ID</col-name></key-map>
       </relation>
     </entity>
     <!-- ========================================================= -->    
     <entity>
       <title>Financial Account Transaction Attribute Entity</title>
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
-      <table-name>FINANCIAL_ACCOUNT_TRANS_ATTRIBUTE</table-name>
-      <field><col-name>FINANCIAL_ACCOUNT_TRANS_ID</col-name><type>id-ne</type></field>
+      <table-name>FIN_ACCOUNT_TRANS_ATTRIBUTE</table-name>
+      <field><col-name>FIN_ACCOUNT_TRANS_ID</col-name><type>id-ne</type></field>
       <field><col-name>NAME</col-name><type>id-long-ne</type></field>
       <field><col-name>VALUE</col-name><type>value</type></field>
-      <prim-key-col>FINANCIAL_ACCOUNT_TRANS_ID</prim-key-col>
+      <prim-key-col>FIN_ACCOUNT_TRANS_ID</prim-key-col>
       <prim-key-col>NAME</prim-key-col>
       <relation>
         <type>one</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TRANS</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TRANS_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TRANS</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TRANS_ID</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ATTR</rel-table-name>
+        <rel-table-name>FIN_ACCOUNT_TRANS_TYPE_ATTR</rel-table-name>
         <key-map><col-name>NAME</col-name></key-map>
       </relation>
     </entity>
@@ -7941,25 +7943,25 @@
     <entity>
       <title>Financial Account Transaction Type Attribute Entity</title>
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
-      <table-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ATTR</table-name>
-      <field><col-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</col-name><type>id-ne</type></field>
+      <table-name>FIN_ACCOUNT_TRANS_TYPE_ATTR</table-name>
+      <field><col-name>FIN_ACCOUNT_TRANS_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>NAME</col-name><type>id-long-ne</type></field>
-      <prim-key-col>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</prim-key-col>
+      <prim-key-col>FIN_ACCOUNT_TRANS_TYPE_ID</prim-key-col>
       <prim-key-col>NAME</prim-key-col>
       <relation>
         <type>one</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TRANS_TYPE</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TRANS_TYPE</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TRANS_TYPE_ID</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TRANS_ATTRIBUTE</rel-table-name>
+        <rel-table-name>FIN_ACCOUNT_TRANS_ATTRIBUTE</rel-table-name>
         <key-map><col-name>NAME</col-name></key-map>
       </relation>
       <relation>
         <type>many</type>
-        <rel-table-name>FINANCIAL_ACCOUNT_TRANS</rel-table-name>
-        <key-map><col-name>FINANCIAL_ACCOUNT_TRANS_TYPE_ID</col-name></key-map>
+        <rel-table-name>FIN_ACCOUNT_TRANS</rel-table-name>
+        <key-map><col-name>FIN_ACCOUNT_TRANS_TYPE_ID</col-name></key-map>
       </relation>
     </entity>
     <!-- ========================================================= -->    
@@ -7967,9 +7969,9 @@
       <title>Withdrawal Entity</title>
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
       <table-name>WITHDRAWAL</table-name>
-      <field><col-name>FINANCIAL_ACCOUNT_TRANS_ID</col-name><type>id-ne</type></field>
+      <field><col-name>FIN_ACCOUNT_TRANS_ID</col-name><type>id-ne</type></field>
       <field><col-name>PAYMENT_ID</col-name><type>id-ne</type></field>
-      <prim-key-col>FINANCIAL_ACCOUNT_TRANS_ID</prim-key-col>
+      <prim-key-col>FIN_ACCOUNT_TRANS_ID</prim-key-col>
     </entity>
     <!-- ========================================================= -->    
     <entity>
@@ -8137,7 +8139,7 @@
       <package-name>org.ofbiz.commonapp.accounting.payment</package-name>
       <table-name>RECEIPT</table-name>
       <field><col-name>PAYMENT_ID</col-name><type>id-ne</type></field>
-      <field><col-name>FINANCIAL_ACCOUNT_TRANS_ID</col-name><type>id</type></field>
+      <field><col-name>FIN_ACCOUNT_TRANS_ID</col-name><type>id</type></field>
       <prim-key-col>PAYMENT_ID</prim-key-col>
     </entity>
   
@@ -8500,11 +8502,11 @@
     <entity>
       <title>Employment Application Entity</title>
       <package-name>org.ofbiz.commonapp.humanres.employment</package-name>
-      <table-name>EMPLOYMENT_APPLICATION</table-name>
+      <table-name>EMPLOYMENT_APP</table-name>
       <field><col-name>APPLICATION_ID</col-name><type>id-ne</type></field>
       <field><col-name>POSITION_ID</col-name><type>id</type></field>
       <field><col-name>STATUS_ID</col-name><type>id</type></field>
-      <field><col-name>EMPLOYMENT_APPLICATION_SOURCE_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>EMPLOYMENT_APP_SOURCE_TYPE_ID</col-name><type>id</type></field>
       <field><col-name>APPLYING_PARTY_ID</col-name><type>id</type></field>
       <field><col-name>REFERRED_BY_PARTY_ID</col-name><type>id</type></field>
       <field><col-name>APPLICATION_DATE</col-name><type>date-time</type></field>
@@ -8514,10 +8516,10 @@
     <entity>
       <title>Employment Application Source Type Entity</title>
       <package-name>org.ofbiz.commonapp.humanres.employment</package-name>
-      <table-name>EMPLOYMENT_APPLICATION_SOURCE_TYPE</table-name>
-      <field><col-name>EMPLOYMENT_APPLICATION_SOURCE_TYPE_ID</col-name><type>id-ne</type></field>
+      <table-name>EMPLOYMENT_APP_SOURCE_TYPE</table-name>
+      <field><col-name>EMPLOYMENT_APP_SOURCE_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>DESCRIPTION</col-name><type>description</type></field>
-      <prim-key-col>EMPLOYMENT_APPLICATION_SOURCE_TYPE_ID</prim-key-col>
+      <prim-key-col>EMPLOYMENT_APP_SOURCE_TYPE_ID</prim-key-col>
     </entity>
     <!-- ========================================================= -->    
     <entity>
