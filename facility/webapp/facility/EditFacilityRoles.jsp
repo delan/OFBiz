@@ -53,6 +53,7 @@
     <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Items</a>
     <a href="<ofbiz:url>/ReceiveInventory?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Receive</a>
     <a href="<ofbiz:url>/FindFacilityTransfers?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Xfers</a>
+    <a href="<ofbiz:url>/ReceiveReturn?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Receive Return</a>
   </div>
 <%}%>
 
