@@ -20,12 +20,21 @@
   <Enumeration description="List Price" enumCode="LIST_PRICE" enumId="PRIP_LIST_PRICE" sequenceId="10" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="Currency UomId" enumCode="CURRENCY_UOMID" enumId="PRIP_CURRENCY_UOMID" sequenceId="11" enumTypeId="PROD_PRICE_IN_PARAM"/>
 
+  <!-- old style; very technical ...
   <Enumeration description="==" enumCode="EQ" enumId="PRC_EQ" sequenceId="01" enumTypeId="PROD_PRICE_COND"/>
   <Enumeration description="!=" enumCode="NEQ" enumId="PRC_NEQ" sequenceId="02" enumTypeId="PROD_PRICE_COND"/>
   <Enumeration description="&lt;" enumCode="LT" enumId="PRC_LT" sequenceId="03" enumTypeId="PROD_PRICE_COND"/>
   <Enumeration description="&lt;=" enumCode="LTE" enumId="PRC_LTE" sequenceId="04" enumTypeId="PROD_PRICE_COND"/>
   <Enumeration description="&gt;" enumCode="GT" enumId="PRC_GT" sequenceId="05" enumTypeId="PROD_PRICE_COND"/>
   <Enumeration description="&gt;=" enumCode="GTE" enumId="PRC_GTE" sequenceId="06" enumTypeId="PROD_PRICE_COND"/>
+  ... new style below less technical -->
+
+  <Enumeration description="Is" enumCode="EQ" enumId="PRC_EQ" sequenceId="01" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="Is Not" enumCode="NEQ" enumId="PRC_NEQ" sequenceId="02" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="Is Less Than" enumCode="LT" enumId="PRC_LT" sequenceId="03" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="Is Less Than or Equal To" enumCode="LTE" enumId="PRC_LTE" sequenceId="04" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="Is Greater Than" enumCode="GT" enumId="PRC_GT" sequenceId="05" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="Is Greater Than or Equal To" enumCode="GTE" enumId="PRC_GTE" sequenceId="06" enumTypeId="PROD_PRICE_COND"/>
 
   <EnumerationType description="Inventory Reservation Order" enumTypeId="INV_RES_ORDER" hasTable="N" parentTypeId=""/>
   <Enumeration description="FIFO Received" enumCode="FIFO_REC" enumId="INVRO_FIFO_REC" sequenceId="01" enumTypeId="INV_RES_ORDER"/> <!-- this is the default -->
@@ -200,12 +209,20 @@
   <Enumeration description="Role Type" enumCode="ROLE_TYPE" enumId="PPIP_ROLE_TYPE" sequenceId="09" enumTypeId="PROD_PROMO_IN_PARAM"/>
 
   <EnumerationType description="Product Promotion Condition" enumTypeId="PROD_PROMO_COND" hasTable="N" parentTypeId="PROD_PROMO"/>
+  <!-- old style very technical ...
   <Enumeration description="==" enumCode="EQ" enumId="PPC_EQ" sequenceId="01" enumTypeId="PROD_PROMO_COND"/>
   <Enumeration description="!=" enumCode="NEQ" enumId="PPC_NEQ" sequenceId="02" enumTypeId="PROD_PROMO_COND"/>
   <Enumeration description="&lt;" enumCode="LT" enumId="PPC_LT" sequenceId="03" enumTypeId="PROD_PROMO_COND"/>
   <Enumeration description="&lt;=" enumCode="LTE" enumId="PPC_LTE" sequenceId="04" enumTypeId="PROD_PROMO_COND"/>
   <Enumeration description="&gt;" enumCode="GT" enumId="PPC_GT" sequenceId="05" enumTypeId="PROD_PROMO_COND"/>
   <Enumeration description="&gt;=" enumCode="GTE" enumId="PPC_GTE" sequenceId="06" enumTypeId="PROD_PROMO_COND"/>
+  ... new style below; less technical -->
+  <Enumeration description="Is" enumCode="EQ" enumId="PPC_EQ" sequenceId="01" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="Is Not" enumCode="NEQ" enumId="PPC_NEQ" sequenceId="02" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="Is Less Than" enumCode="LT" enumId="PPC_LT" sequenceId="03" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="Is Less Than or Equal To" enumCode="LTE" enumId="PPC_LTE" sequenceId="04" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="Is Greater Than" enumCode="GT" enumId="PPC_GT" sequenceId="05" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="Is Greater Than or Equal To" enumCode="GTE" enumId="PPC_GTE" sequenceId="06" enumTypeId="PROD_PROMO_COND"/>
 
   <EnumerationType description="Product Promotion Product/Category Application Type" enumTypeId="PROD_PROMO_PCAPPL" hasTable="N" parentTypeId="PROD_PROMO"/>
   <Enumeration description="Include" enumCode="INCLUDE" enumId="PPPA_INCLUDE" sequenceId="01" enumTypeId="PROD_PROMO_PCAPPL"/>
@@ -220,6 +237,11 @@
   <Enumeration description="X Product for Y Price" enumCode="PROD_PRICE" enumId="PROMO_PROD_PRICE" sequenceId="05" enumTypeId="PROD_PROMO_ACTION"/>
   <Enumeration description="Order Percent Discount" enumCode="ORDER_PERCENT" enumId="PROMO_ORDER_PERCENT" sequenceId="06" enumTypeId="PROD_PROMO_ACTION"/>
   <Enumeration description="Order Amount Flat" enumCode="ORDER_AMOUNT" enumId="PROMO_ORDER_AMOUNT" sequenceId="07" enumTypeId="PROD_PROMO_ACTION"/>
+
+  <EnumerationType description="Product Rating Field Type" enumTypeId="PROD_RATING_TYPE" hasTable="N" parentTypeId=""/>
+  <Enumeration description="Min Rating" enumCode="MIN" enumId="PRDR_MIN" sequenceId="01" enumTypeId="PROD_RATING_TYPE"/>
+  <Enumeration description="Max Rating" enumCode="MAX" enumId="PRDR_MAX" sequenceId="02" enumTypeId="PROD_RATING_TYPE"/>
+  <Enumeration description="Rating Override" enumCode="FLAT" enumId="PRDR_FLAT" sequenceId="03" enumTypeId="PROD_RATING_TYPE"/>
 
   <ProductPriceType description="List Price" productPriceTypeId="LIST_PRICE"/>
   <ProductPriceType description="Default Price" productPriceTypeId="DEFAULT_PRICE"/>
