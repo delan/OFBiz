@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewRenderer.java,v 1.8 2004/06/23 15:17:46 jonesde Exp $
+ * $Id: FreeMarkerViewRenderer.java,v 1.9 2004/06/23 15:20:07 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import freemarker.template.WrappingTemplateModel;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.1
  */
 public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMarkerViewRenderer {
@@ -103,8 +103,8 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
             Template template = fmConfig.getTemplate(path, page.getLocale());
             template.setObjectWrapper(BeansWrapper.getDefaultInstance());
 
-            boolean showTemplateId = UtilProperties.propertyValueEquals("content.properties", "freemarker.showTemplateId", "Y");
-            String templateIdPrefix = UtilProperties.getPropertyValue("content.properties", "freemarker.templateIdPrefix", "[system]");
+            boolean showTemplateId = UtilProperties.propertyValueEquals("content", "freemarker.showTemplateId", "Y");
+            String templateIdPrefix = UtilProperties.getPropertyValue("content", "freemarker.templateIdPrefix", "[system]");
             if (showTemplateId) {
                 out.write("\n<!-- " + templateIdPrefix + " begin: " + template.getName() + " -->\n");
             }
