@@ -20,9 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev: 3227 $
  *@since      2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
@@ -30,12 +33,12 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Order Items</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.OrderOrderItems}</div>
           </td>
           <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
             <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
               <td valign="middle" align="right">
-                <div class="tabletext"><a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutextright">Cancel All Items</a></div>
+                <div class="tabletext"><a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCancelAllItems}</a></div>
               </td>
             </#if>
           </#if>
@@ -50,16 +53,16 @@
           <td>
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
               <tr align=left valign=bottom>
-                <td width="30%" align="left"><div class="tableheadtext">Product</div></td>
-                <td width="30%" align="left"><div class="tableheadtext">Status</div></td>
-                <td width="5%" align="right"><div class="tableheadtext">Quantity</div></td>
-                <td width="10%" align="right"><div class="tableheadtext">Unit / List</div></td>
-                <td width="10%" align="right"><div class="tableheadtext">Adjustments</div></td>
-                <td width="10%" align="right"><div class="tableheadtext">Subtotal</div></td>
+                <td width="30%" align="left"><div class="tableheadtext">${uiLabelMap.ProductProduct}</div></td>
+                <td width="30%" align="left"><div class="tableheadtext">${uiLabelMap.CommonStatus}</div></td>
+                <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderQuantity}</div></td>
+                <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderUnitList}</div></td>
+                <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderAdjustments}</div></td>
+                <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderSubTotal}</div></td>
                 <td width="5%">&nbsp;</td>
               </tr>
               <#if !orderItemList?has_content>
-                <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
+                <tr><td><font color="red">${uiLabelMap.checkhelper.sales_order_lines_lookup_failed}</font></td></tr>
               <#else>
                 <#list orderItemList as orderItem>
                   <tr><td colspan="8"><hr class="sepbar"></td></tr>
@@ -83,8 +86,8 @@
                         </div>
                         <#if productId?exists>
                           <div class="tabletext">
-                            <a href="/catalog/control/EditProduct?productId=${productId}" class="buttontext" target="_blank">[catalog]</a>
-                            <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[ecommerce]</a>
+                            <a href="/catalog/control/EditProduct?productId=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductCatalog}]</a>
+                            <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.EcommerceEcommerce}]</a>
                           </div>
                         </#if>
                       </td>
@@ -92,7 +95,7 @@
                       <#-- now show status details per line item -->
                       <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem")>
                       <td align="left" colspan="1">
-                        <div class="tabletext">Current: ${currentItemStatus.description?default(currentItemStatus.statusId)}</div>
+                        <div class="tabletext">${uiLabelMap.CommonCurrent}: ${currentItemStatus.description?default(currentItemStatus.statusId)}</div>
                         <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
                         <#list orderItemStatuses as orderItemStatus>
                           <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem")>
@@ -104,7 +107,7 @@
                         <#if returns?has_content>
                           <#list returns as return>
                             <div class="tabletext">
-                              <font color="red"><b>Returned</b></font> #<a href="<@ofbizUrl>/returnMain?returnId=${return.returnId}</@ofbizUrl>" class="buttontext">${return.returnId}</a>
+                              <font color="red"><b>${uiLabelMap.OrderReturned}</b></font> #<a href="<@ofbizUrl>/returnMain?returnId=${return.returnId}</@ofbizUrl>" class="buttontext">${return.returnId}</a>
                             </div>
                           </#list>
                         </#if>
@@ -146,7 +149,7 @@
                       <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType")>
                       <tr>
                         <td align="right" colspan="2">
-                          <div class="tabletext" style="font-size: xx-small;"><b><i>Adjustment</i>:</b> <b>${adjustmentType.description}</b> : ${orderItemAdjustment.description?if_exists} (${orderItemAdjustment.comments?default("")})</div>
+                          <div class="tabletext" style="font-size: xx-small;"><b><i>${uiLabelMap.OrderAdjustment}</i>:</b> <b>${adjustmentType.description}</b> : ${orderItemAdjustment.description?if_exists} (${orderItemAdjustment.comments?default("")})</div>
                         </td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
@@ -237,7 +240,7 @@
                       <tr>
                         <td align="right" colspan="2">
                           <div class="tabletext" style="font-size: xx-small;">
-                            <b><i>Inventory</i>:</b>
+                            <b><i>${uiLabelMap.FacilityInventory}</i>:</b>
                               <a href="/facility/control/EditInventoryItem?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderItemShipGrpInvRes.inventoryItemId}</a>
                             <b><i>Ship Group</i>:</b> ${orderItemShipGrpInvRes.shipGroupSeqId}
                           </div>
@@ -260,7 +263,7 @@
                         <td align="right" colspan="2">
                           <div class="tabletext" style="font-size: xx-small;">
                             <#if itemIssuance.shipmentId?has_content>
-                              <b><i>Issued to Shipment Item</i>:</b>
+                              <b><i>${uiLabelMap.OrderIssuedToShipmentItem}</i>:</b>
                               <a target="facility" href="/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${itemIssuance.shipmentId}</a>:${itemIssuance.shipmentItemSeqId?if_exists}
                             <#else>
                               <b><i>Issued Without a Shipment (Immediate, Physical Store)</i></b>
@@ -321,31 +324,31 @@
               <#-- subtotal -->
               <tr><td colspan=1></td><td colspan="8"><hr class="sepbar"></td></tr>
               <tr>
-                <td align="right" colspan="5"><div class="tabletext"><b>Items Subtotal</b></div></td>
+                <td align="right" colspan="5"><div class="tabletext"><b>${uiLabelMap.OrderItemsSubTotal}</b></div></td>
                 <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></div></td>
               </tr>
 
               <#-- other adjustments -->
               <tr>
-                <td align="right" colspan="5"><div class="tabletext"><b>Total Other Order Adjustments</b></div></td>
+                <td align="right" colspan="5"><div class="tabletext"><b>${uiLabelMap.OrderTotalOtherOrderAdjustments}</b></div></td>
                 <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=otherAdjAmount isoCode=currencyUomId/></div></td>
               </tr>
 
               <#-- shipping adjustments -->
               <tr>
-                <td align="right" colspan="5"><div class="tabletext"><b>Total Shipping and Handling</b></div></td>
+                <td align="right" colspan="5"><div class="tabletext"><b>${uiLabelMap.OrderTotalShippingAndHandling}</b></div></td>
                 <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=shippingAmount isoCode=currencyUomId/></div></td>
               </tr>
-
+ 
               <#-- tax adjustments -->
               <tr>
-                <td align="right" colspan="5"><div class="tabletext"><b>Total Sales Tax</b></div></td>
+                <td align="right" colspan="5"><div class="tabletext"><b>${uiLabelMap.OrderTotalSalesTax}</b></div></td>
                 <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=taxAmount isoCode=currencyUomId/></div></td>
               </tr>
 
               <#-- grand total -->
               <tr>
-                <td align="right" colspan="5"><div class="tabletext"><b>Total Due</b></div></td>
+                <td align="right" colspan="5"><div class="tabletext"><b>${uiLabelMap.OrderTotalDue}</b></div></td>
                 <td align="right" nowrap>
                   <div class="tabletext"><@ofbizCurrency amount=grandTotal isoCode=currencyUomId/></div>
                 </td>

@@ -20,9 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Peter Goron (peter.goron@nereide.biz)
- *@version    $Rev:$
- *@since      3.1
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev: 3227 $
+ *@since      2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#-- ==================== Party Selection dialog box ========================= -->
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
@@ -31,16 +34,16 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Additional Party Entry</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.PartyAdditionalPartyEntry}</div>
 	  </td>
           <td nowrap align="right">
             <div class="tabletext">
-              <#--<a href="/ordermgr/control/setAdditionalParty" class="submenutext">Refresh</a>-->
-              <a href="/ordermgr/control/orderentry" class="submenutext">Items</a>
-              <a href="/ordermgr/control/setShipping" class="submenutext">Shipping</a>
-              <a href="/ordermgr/control/setOptions" class="submenutext">Options</a>
-              <a href="/ordermgr/control/setBilling" class="submenutext">Payment</a>
-              <a href="<@ofbizUrl>/finalizeOrder?finalizeReqAdditionalParty=false</@ofbizUrl>" class="submenutextright">Continue</a>
+              <#--<a href="/ordermgr/control/setAdditionalParty" class="submenutext">${uiLabelMapRefresh</a>-->
+              <a href="/ordermgr/control/orderentry" class="submenutext">${uiLabelMap.OrderOrderItems}</a>
+              <a href="/ordermgr/control/setShipping" class="submenutext">${uiLabelMap.FacilityShipping}</a>
+              <a href="/ordermgr/control/setOptions" class="submenutext">${uiLabelMap.CommonOptions}</a>
+              <a href="/ordermgr/control/setBilling" class="submenutext">${uiLabelMap.AccountingPayment}</a>
+              <a href="<@ofbizUrl>/finalizeOrder?finalizeReqAdditionalParty=false</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonContinue}</a>
             </div>
           </td>
         </tr>
@@ -51,7 +54,7 @@
   <form method="post" action="<@ofbizUrl>/setAdditionalParty</@ofbizUrl>" name="quickAddPartyForm">
 
   <tr>
-    <td><div class="tableheadtext">1) Select type of party to associate to order :</div></td>
+    <td><div class="tableheadtext">1) ${uiLabelMap.OrderSelectPartyToOrder} :</div></td>
   </tr>
   <tr>
     <td width="100%">
@@ -61,7 +64,7 @@
             <input type="radio" name="additionalPartyType" value="Person" onclick="<#if additionalPartyType?exists>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if (additionalPartyType?exists && additionalPartyType == "Person")> checked</#if>>
 	  </td>
           <td>
-            <div class="tabletext">Person</div>
+            <div class="tabletext">${uiLabelMap.CommonPerson}</div>
           </td>
         </tr>
         <tr>
@@ -69,7 +72,7 @@
             <input type="radio" name="additionalPartyType" value="Group" onclick="<#if additionalPartyType?exists>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if additionalPartyType?exists && additionalPartyType == "Group"> checked</#if>>
           </td>
           <td>
-            <div class="tabletext">Group</div>
+            <div class="tabletext">${uiLabelMap.CommonGroup}</div>
           </td>
         </tr>
       </table>
@@ -87,7 +90,7 @@
       <#assign lookupPartyView="lookupPartyGroup">
     </#if>
   <tr>
-    <td><div class="tableheadtext">2) Find a party :</div></td>
+    <td><div class="tableheadtext">2) ${uiLabelMap.PartyFindParty} :</div></td>
   </tr>
 
   <tr>
@@ -95,7 +98,7 @@
       <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>
-            <div class="tableheadtext">Identifier :</div>
+            <div class="tableheadtext">${uiLabelMap.CommonIdentifier} :</div>
           </td>
           <td>
             <input type="text" class="inputBox" name="additionalPartyId" value="${additionalPartyId?if_exists}" onchange="javascript:document.quickAddPartyForm.submit()">
@@ -104,7 +107,7 @@
             <a href="javascript:document.quickAddPartyForm.additionalPartyId.focus();call_fieldlookup2(document.quickAddPartyForm.additionalPartyId, '${lookupPartyView}');"><img src="/content/images/fieldlookup.gif" width="16" height="16" border="0" alt="Lookup"></a>
           </td>
           <td>
-            &nbsp;<a href="javascript:document.quickAddPartyForm.submit()" class="buttontext">[Apply]</a>
+            &nbsp;<a href="javascript:document.quickAddPartyForm.submit()" class="buttontext">[${uiLabelMap.CommonApply}]</a>
           </td>
         </tr>
       </table>
@@ -119,9 +122,9 @@
 
   <#if roles?has_content>
   <tr>
-    <td><div class="tableheadtext">3) Select role(s) for this party :</div></td>
+    <td><div class="tableheadtext">3) ${uiLabelMap.PartySelectRoleForParty} :</div></td>
   </tr>
-
+ 
   <tr>
     <td width="100%">
       <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">

@@ -20,9 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev: 3227 $
  *@since      2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -31,11 +34,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align='left'>
-            <div class='boxhead'>&nbsp;Order Entry Ship-To Settings</div>
+            <div class='boxhead'>&nbsp;${uiLabelMap.OrderOrderEntryShipToSettings}</div>
           </td> 
           <td nowrap align="right">
             <div class="tabletext">
-              <a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">Refresh</a><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">Items</a><a href="javascript:document.shipsetupform.submit();" class="submenutextright">Continue</a>
+              <a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonRefresh}</a><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderOrderItems}</a><a href="javascript:document.shipsetupform.submit();" class="submenutextright">${uiLabelMap.CommonContinue}</a>
             </div>
           </td>         
         </tr>
@@ -51,7 +54,7 @@
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>
                 <td colspan="3">
-                  <a href="<@ofbizUrl>/setShipping?createNew=Y</@ofbizUrl>" class="buttontext">[Create New]</a>
+                  <a href="<@ofbizUrl>/setShipping?createNew=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCreateNew}]</a>
                 </td>
               </tr>
               <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="shipsetupform"> 
@@ -66,8 +69,8 @@
                     </td>
                     <td align="left" valign="top" width="99%" nowrap>
                       <div class="tabletext">
-                        <#if shippingAddress.toName?has_content><b>To:</b>&nbsp;${shippingAddress.toName}<br></#if>
-                        <#if shippingAddress.attnName?has_content><b>Attn:</b>&nbsp;${shippingAddress.attnName}<br></#if>
+                        <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br></#if>
+                        <#if shippingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b>&nbsp;${shippingAddress.attnName}<br></#if>
                         <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
                         <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
                         <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
@@ -77,7 +80,7 @@
                       </div>
                     </td>
                     <td>
-                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?party_id=<%=partyId%>&contactMechId=<%=shippingContactMechId%>" target="_blank" class="buttontext">[Update]</a></div>
+                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?party_id=<%=partyId%>&contactMechId=<%=shippingContactMechId%>" target="_blank" class="buttontext">[${uiLabelMap.CommonUpdate}]</a></div>
                     </td>                      
                   </tr>
                   <#if shippingContactMech_has_next>
@@ -109,42 +112,42 @@
                 </#if>
                 <table width="100%" border="0" cellpadding="1" cellspacing="0">
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">To Name</div></td>
+                    <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CommonToName}</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="60" name="toName" value="${toName}">
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Attention Name</div></td>
+                    <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CommonAttentionName}</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="60" name="attnName" value="">
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Address Line 1</div></td>
+                    <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CommonAddressLine} 1</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="30" name="address1" value="">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Address Line 2</div></td>
+                    <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CommonAddressLine} 2</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="30" name="address2" value="">
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">City</div></td>
+                    <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CommonCity}</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="30" name="city" value="">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">State/Province</div></td>
+                    <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CommonStateProvince}</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <select name="stateProvinceGeoId" class="selectBox">
@@ -154,14 +157,14 @@
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Zip/Postal Code</div></td>
+                    <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CommonZipPostalCode}</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="12" maxlength="10" name="postalCode" value="">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Country</div></td>
+                    <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CommonCountry}</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <select name="countryGeoId" class="selectBox">                        
@@ -170,7 +173,7 @@
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Allow Solicitation?</div></td>
+                    <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CommonAllowSolicitation}</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <select name="allowSolicitation" class='selectBox'>                       
@@ -191,5 +194,5 @@
 
 <br>
 <#else>
-  <h3>You do not have permission to view this page. ("ORDERMGR_CREATE" or "ORDERMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>
