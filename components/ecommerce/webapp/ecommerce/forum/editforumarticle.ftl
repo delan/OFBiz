@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.1 $
+ *@version    $Rev:$
  *@since      2.1
 -->
 <#import "bloglib.ftl" as blog/>

@@ -23,7 +23,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.3 $
+ *@version    $Rev:$
  *@since      3.1
 -->
     <#assign contextPath=request.getContextPath()/>
