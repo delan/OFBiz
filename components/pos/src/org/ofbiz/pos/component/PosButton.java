@@ -95,11 +95,17 @@ public class PosButton {
         Iterator i = loadedXButtons.keySet().iterator();
         while (i.hasNext()) {
             String buttonName = (String) i.next();
-            if (this.isLockable(buttonName)) {
-                PosButtonWrapper button = (PosButtonWrapper) loadedXButtons.get(buttonName);
-                button.setEnabled(!lock);
+            if (this.isLockable(buttonName) && lock) {
+                this.setLock(buttonName, lock);
+            } else {
+                this.setLock(buttonName, false);
             }
         }
+    }
+
+    public void setLock(String buttonName, boolean lock) {
+        PosButtonWrapper button = (PosButtonWrapper) loadedXButtons.get(buttonName);
+        button.setEnabled(!lock);
     }
 
     public void buttonPressed(final PosScreen pos, final AWTEvent event) {

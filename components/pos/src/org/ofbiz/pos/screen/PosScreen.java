@@ -85,7 +85,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.journal = new Journal(this);
         this.operator = new Operator(this);
         this.setLastActivity(System.currentTimeMillis());
-                
+
         if (!deviceInit) {
             deviceInit = true;
 
@@ -119,8 +119,8 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
 
     public void pageActivated() {
         super.pageActivated();
-
         this.setLastActivity(System.currentTimeMillis());
+
         if (session.getUserLogin() == null) {
             this.setLock(true);
         } else {
@@ -179,6 +179,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             output.print(Output.ULOGIN);
         }
 
+        this.lockScreenButton(this);       
         journal.focus();
         this.repaint();
     }
@@ -241,6 +242,18 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             return (PosScreen) newPage;
         }
         return null;
+    }
+
+    public void lockScreenButton(PosScreen pos) {
+        if ("main/pospanel".equals(pos.getName())) {
+            pos.getButtons().setLock("menuMain", true);
+        } else if ("main/mgrpanel".equals(pos.getName())) {
+            pos.getButtons().setLock("menuMgr", true);
+        } else if ("main/paypanel".equals(pos.getName())) {
+            pos.getButtons().setLock("menuPay", true);
+        } else if ("main/promopanel".equals(pos.getName())) {
+            pos.getButtons().setLock("menuPromo", true);
+        }
     }
 
     public PosDialog showDialog(String pageName) {

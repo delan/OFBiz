@@ -56,7 +56,7 @@ public class NavagationEvents {
     public static void showPromoScreen(PosScreen pos) {
         ManagerEvents.mgrLoggedIn = false;
         pos.showPage("main/promopanel");
-        PosScreen.currentScreen.getInput().clear();
+        PosScreen.currentScreen.getInput().clear();        
     }
 }
 

@@ -65,6 +65,7 @@ public class SecurityEvents {
         if (session.hasRole(session.getUserLogin(), "MANAGER")) {
             ManagerEvents.mgrLoggedIn = true;
             pos.showPage("main/mgrpanel");
+            PosScreen.currentScreen.getInput().clear();
         } else {
             String[] func = pos.getInput().getFunction("MGRLOGIN");
             if (func == null) {
@@ -125,6 +126,7 @@ public class SecurityEvents {
                         } else {
                             ManagerEvents.mgrLoggedIn = true;
                             pos.showPage("main/mgrpanel");
+                            PosScreen.currentScreen.getInput().clear();                            
                         }
                     }
                 }

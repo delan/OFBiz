@@ -3,11 +3,11 @@
     <Components>
         <!-- col 1 -->
         <Button name="menuSku" x="0" y="0" w="100" h="60" style="posButton" content="SKU" alignment="Center"/>
-        <Button name="" x="102" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="menuMain" x="204" y="0" w="100" h="60" style="posButton" content="MAIN" alignment="Center"/>
+        <Button name="menuMain" x="102" y="0" w="100" h="60" style="posButton" content="MAIN" alignment="Center"/>
+        <Button name="menuMgr" x="204" y="0" w="100" h="60" style="posButton" content="MGR" alignment="Center"/>
         <Button name="menuPromo" x="306" y="0" w="100" h="60" style="posButton" content="PROMO" alignment="Center"/>
-        <Button name="ALT.menuLogout" x="408" y="0" w="100" h="60" style="posButton" content="LOGOFF" alignment="Center"/>
-        <Button name="menuLock" x="510" y="0" w="100" h="60" style="posButton" content="LOCK" alignment="Center"/>        
+        <Button name="" x="408" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
+        <Button name="menuPay" x="510" y="0" w="100" h="60" style="posButton" content="PAY" alignment="Center"/>
 
         <Button name="" x="0" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="102" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
@@ -49,11 +49,11 @@
         <Button name="" x="510" y="248" w="100" h="60" style="posButton" content="" alignment="Center"/>
 
         <!-- col 6 -->
-        <Button name="mgrShutDown" x="0" y="310" w="100" h="60" style="posButton" content="EXIT" alignment="Center"/>
+        <Button name="mgrPopDrwr" x="0" y="310" w="100" h="60" style="posButton" content="OPEN DRAWER" alignment="Center"/>
         <Button name="" x="102" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="mgrPopDrwr" x="204" y="310" w="100" h="60" style="posButton" content="OPEN DRAWER" alignment="Center"/>
+        <Button name="" x="204" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="306" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="408" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="menuPay" x="510" y="310" w="100" h="60" style="posButton" content="PAY" alignment="Center"/>
+        <Button name="mgrShutDown" x="510" y="310" w="100" h="60" style="posButton" content="EXIT" alignment="Center"/>
     </Components>    
 </XPage>
