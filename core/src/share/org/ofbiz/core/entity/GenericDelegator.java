@@ -525,10 +525,21 @@ public class GenericDelegator {
     return col;
   }
   
+  /** Finds Generic Entity records by all of the specified expressions (ie: combined using AND)
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param expressions The expressions to use for the lookup, each consisting of at least a field name, an EntityOperator, and a value to compare to
+   *@return Collection of GenericValue instances that match the query
+   */
   public Collection findByAnd(String entityName, List expressions) throws GenericEntityException {
     return findByAnd(entityName, expressions, null);
   }
   
+  /** Finds Generic Entity records by all of the specified expressions (ie: combined using AND)
+   *@param entityName The Name of the Entity as defined in the entity XML file
+   *@param expressions The expressions to use for the lookup, each consisting of at least a field name, an EntityOperator, and a value to compare to
+   *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
+   *@return Collection of GenericValue instances that match the query
+   */
   public Collection findByAnd(String entityName, List expressions, List orderBy) throws GenericEntityException {
     ModelEntity modelEntity = modelReader.getModelEntity(entityName);
     GenericHelper helper = getEntityHelper(modelEntity);
