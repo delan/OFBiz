@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -37,8 +37,6 @@
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
 
 <script language="JavaScript">
-
-
 var re_id = new RegExp('id=(\\d+)');
 var num_id = (re_id.exec(String(window.location))
         ? new Number(RegExp.$1) : 0);
