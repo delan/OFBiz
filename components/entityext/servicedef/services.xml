@@ -160,14 +160,18 @@
     	    export="true" auth="true" require-new-transaction="true" transaction-timout="300">
         <description>Run Entity Sync</description>
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
+        <attribute name="valuesToCreate" type="List" mode="IN" optional="false"/>
         <attribute name="valuesToStore" type="List" mode="IN" optional="false"/>
         <attribute name="keysToRemove" type="List" mode="IN" optional="false"/>
         <attribute name="delegatorName" type="String" mode="IN" optional="true"/>
-        <attribute name="numInserted" type="Long" mode="OUT" optional="false"/>
-        <attribute name="numUpdated" type="Long" mode="OUT" optional="false"/>
-        <attribute name="numNotUpdated" type="Long" mode="OUT" optional="false"/>
-        <attribute name="numRemoved" type="Long" mode="OUT" optional="false"/>
-        <attribute name="numAlreadyRemoved" type="Long" mode="OUT" optional="false"/>
+        <attribute name="toCreateInserted" type="Long" mode="OUT" optional="false"/>
+        <attribute name="toCreateUpdated" type="Long" mode="OUT" optional="false"/>
+        <attribute name="toCreateNotUpdated" type="Long" mode="OUT" optional="false"/>
+        <attribute name="toStoreInserted" type="Long" mode="OUT" optional="false"/>
+        <attribute name="toStoreUpdated" type="Long" mode="OUT" optional="false"/>
+        <attribute name="toStoreNotUpdated" type="Long" mode="OUT" optional="false"/>
+        <attribute name="toRemoveDeleted" type="Long" mode="OUT" optional="false"/>
+        <attribute name="toRemoveAlreadyDeleted" type="Long" mode="OUT" optional="false"/>
     </service>
     <service name="cleanSyncRemoveInfo" engine="java"
             location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="cleanSyncRemoveInfo" auth="true">

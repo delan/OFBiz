@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.22 2003/12/19 18:45:11 ajzeneski Exp $
+ * $Id: EntitySyncServices.java,v 1.23 2003/12/24 10:10:44 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -164,11 +164,16 @@ public class EntitySyncServices {
             }
             startDate = (Timestamp) initialHistoryRes.get("startDate");
 
-            long numInserted = 0;
-            long numUpdated = 0;
-            long numNotUpdated = 0;
-            long numRemoved = 0;
-            long numAlreadyRemoved = 0;
+            long toCreateInserted = 0;
+            long toCreateUpdated = 0;
+            long toCreateNotUpdated = 0;
+            long toStoreInserted = 0;
+            long toStoreUpdated = 0;
+            long toStoreNotUpdated = 0;
+            long toRemoveDeleted = 0;
+            long toRemoveAlreadyDeleted = 0;
+            
+            long totalRowsToCreate = 0;
             long totalRowsToStore = 0;
             long totalRowsToRemove = 0;
 
@@ -199,18 +204,63 @@ public class EntitySyncServices {
                 // keep track of how long these sync runs take and store that info on the history table
                 // saves info about removed, all entities that don't have no-auto-stamp set, this will be done in the GenericDAO like the stamp sets
                 
+                // ===== INSERTS =====
+                
+                // first grab all values inserted in the date range, then get the updates (leaving out all values inserted in the data range)
+                ArrayList valuesToCreate = new ArrayList(); // make it an ArrayList to easily merge in sorted lists
+
+                // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
+                Iterator entityModelToUseCreateIter = entityModelToUseList.iterator();
+                while (entityModelToUseCreateIter.hasNext()) {
+                    int insertBefore = 0;
+                    ModelEntity modelEntity = (ModelEntity) entityModelToUseCreateIter.next();
+                    // get the values created within the current time range
+                    EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
+                            new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunStartTime), 
+                            new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), EntityOperator.AND);
+                    EntityListIterator eli = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findValCondition, null, UtilMisc.toList(ModelEntity.CREATE_STAMP_TX_FIELD, ModelEntity.CREATE_STAMP_FIELD));
+                    GenericValue nextValue = null;
+                    //long valuesPerEntity = 0;
+                    while ((nextValue = (GenericValue) eli.next()) != null) {
+                        // sort by the tx stamp and then the record stamp 
+                        // find first value in valuesToStore list, starting with the current insertBefore value, that has a CREATE_STAMP_TX_FIELD after the nextValue.CREATE_STAMP_TX_FIELD, then do the same with CREATE_STAMP_FIELD
+                        while (insertBefore < valuesToCreate.size() && ((GenericValue) valuesToCreate.get(insertBefore)).getTimestamp(ModelEntity.CREATE_STAMP_TX_FIELD).before(nextValue.getTimestamp(ModelEntity.CREATE_STAMP_TX_FIELD))) {
+                            insertBefore++;
+                        }
+                        while (insertBefore < valuesToCreate.size() && ((GenericValue) valuesToCreate.get(insertBefore)).getTimestamp(ModelEntity.CREATE_STAMP_FIELD).before(nextValue.getTimestamp(ModelEntity.CREATE_STAMP_FIELD))) {
+                            insertBefore++;
+                        }
+                        valuesToCreate.add(insertBefore, nextValue);
+                        //valuesPerEntity++;
+                    }
+                    eli.close();
+                    
+                    // definately remove this message and related data gathering
+                    //long preCount = delegator.findCountByCondition(modelEntity.getEntityName(), findValCondition, null);
+                    //long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
+                    //if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
+                }
+                
+                // ===== UPDATES =====
+                
                 // simulate two ordered lists and merge them on-the-fly for faster combined sorting
                 ArrayList valuesToStore = new ArrayList(); // make it an ArrayList to easily merge in sorted lists
 
                 // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
-                Iterator entityModelToUseIter = entityModelToUseList.iterator();
-                while (entityModelToUseIter.hasNext()) {
+                Iterator entityModelToUseUpdateIter = entityModelToUseList.iterator();
+                while (entityModelToUseUpdateIter.hasNext()) {
                     int insertBefore = 0;
-                    ModelEntity modelEntity = (ModelEntity) entityModelToUseIter.next();
-                    // find all instances of this entity with the STAMP_TX_FIELD != null, sort ascending to get lowest/oldest value first, then grab first and consider as candidate currentRunStartTime
+                    ModelEntity modelEntity = (ModelEntity) entityModelToUseUpdateIter.next();
+                    // get all values that were updated, but NOT created in the current time range; if no info on created stamp, that's okay we'll include it here because it won't have been included in the valuesToCreate list
+                    EntityCondition createdBeforeStartCond = new EntityExpr(
+                            new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.EQUALS, null), 
+                            EntityOperator.OR, 
+                            new EntityExpr(ModelEntity.CREATE_STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunStartTime));
                     EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
                             new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunStartTime), 
-                            new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), EntityOperator.AND);
+                            new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime), 
+                            createdBeforeStartCond), 
+                            EntityOperator.AND);
                     EntityListIterator eli = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findValCondition, null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD, ModelEntity.STAMP_FIELD));
                     GenericValue nextValue = null;
                     //long valuesPerEntity = 0;
@@ -234,6 +284,8 @@ public class EntitySyncServices {
                     //if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
                 }
                 
+                // ===== DELETES =====
+                
                 // get all removed items from the given time range, add to list for those
                 List keysToRemove = new LinkedList();
                 // find all instances of this entity with the STAMP_TX_FIELD != null, sort ascending to get lowest/oldest value first, then grab first and consider as candidate currentRunStartTime
@@ -248,10 +300,11 @@ public class EntitySyncServices {
                 removeEli.close();
                 
                 // grab some totals before calling...
+                long totalRowsToCreateCur = valuesToCreate.size();
                 long totalRowsToStoreCur = valuesToStore.size();
                 long totalRowsToRemoveCur = keysToRemove.size();
 
-                long totalRowsPerSplit = totalRowsToStoreCur + totalRowsToRemoveCur;
+                long totalRowsPerSplit = totalRowsToCreateCur + totalRowsToStoreCur + totalRowsToRemoveCur;
                 
                 if (totalRowsPerSplit < perSplitMinItems) {
                     perSplitMinItems = totalRowsPerSplit;
@@ -259,13 +312,14 @@ public class EntitySyncServices {
                 if (totalRowsPerSplit > perSplitMaxItems) {
                     perSplitMaxItems = totalRowsPerSplit;
                 }
-                
+
+                totalRowsToCreate += totalRowsToCreateCur;
                 totalRowsToStore += totalRowsToStoreCur;
                 totalRowsToRemove += totalRowsToRemoveCur;
                 
                 // call service named on EntitySync, IFF there is actually data to send over
                 if (totalRowsPerSplit > 0) {
-                    Map targetServiceMap = UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove, "userLogin", userLogin);
+                    Map targetServiceMap = UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToCreate", valuesToCreate, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove, "userLogin", userLogin);
                     if (UtilValidate.isNotEmpty(targetDelegatorName)) {
                         targetServiceMap.put("delegatorName", targetDelegatorName);
                     }
@@ -279,17 +333,23 @@ public class EntitySyncServices {
                     
                     totalStoreCalls++;
                     
-                    long numInsertedCur = remoteStoreResult.get("numInserted") == null ? 0 : ((Long) remoteStoreResult.get("numInserted")).longValue();
-                    long numUpdatedCur = remoteStoreResult.get("numUpdated") == null ? 0 : ((Long) remoteStoreResult.get("numUpdated")).longValue();
-                    long numNotUpdatedCur = remoteStoreResult.get("numNotUpdated") == null ? 0 : ((Long) remoteStoreResult.get("numNotUpdated")).longValue();
-                    long numRemovedCur = remoteStoreResult.get("numRemoved") == null ? 0 : ((Long) remoteStoreResult.get("numRemoved")).longValue();
-                    long numAlreadyRemovedCur = remoteStoreResult.get("numAlreadyRemoved") == null ? 0 : ((Long) remoteStoreResult.get("numAlreadyRemoved")).longValue();
+                    long toCreateInsertedCur = remoteStoreResult.get("toCreateInserted") == null ? 0 : ((Long) remoteStoreResult.get("toCreateInserted")).longValue();
+                    long toCreateUpdatedCur = remoteStoreResult.get("toCreateUpdated") == null ? 0 : ((Long) remoteStoreResult.get("toCreateUpdated")).longValue();
+                    long toCreateNotUpdatedCur = remoteStoreResult.get("toCreateNotUpdated") == null ? 0 : ((Long) remoteStoreResult.get("toCreateNotUpdated")).longValue();
+                    long toStoreInsertedCur = remoteStoreResult.get("toStoreInserted") == null ? 0 : ((Long) remoteStoreResult.get("toStoreInserted")).longValue();
+                    long toStoreUpdatedCur = remoteStoreResult.get("toStoreUpdated") == null ? 0 : ((Long) remoteStoreResult.get("toStoreUpdated")).longValue();
+                    long toStoreNotUpdatedCur = remoteStoreResult.get("toStoreNotUpdated") == null ? 0 : ((Long) remoteStoreResult.get("toStoreNotUpdated")).longValue();
+                    long toRemoveDeletedCur = remoteStoreResult.get("toRemoveDeleted") == null ? 0 : ((Long) remoteStoreResult.get("toRemoveDeleted")).longValue();
+                    long toRemoveAlreadyDeletedCur = remoteStoreResult.get("toRemoveAlreadyDeleted") == null ? 0 : ((Long) remoteStoreResult.get("toRemoveAlreadyDeleted")).longValue();
                     
-                    numInserted += numInsertedCur;
-                    numUpdated += numUpdatedCur;
-                    numNotUpdated += numNotUpdatedCur;
-                    numRemoved += numRemovedCur;
-                    numAlreadyRemoved += numAlreadyRemovedCur;
+                    toCreateInserted += toCreateInsertedCur;
+                    toCreateUpdated += toCreateUpdatedCur;
+                    toCreateNotUpdated += toCreateNotUpdatedCur;
+                    toStoreInserted += toStoreInsertedCur;
+                    toStoreUpdated += toStoreUpdatedCur;
+                    toStoreNotUpdated += toStoreNotUpdatedCur;
+                    toRemoveDeleted += toRemoveDeletedCur;
+                    toRemoveAlreadyDeleted += toRemoveAlreadyDeletedCur;
                 }
 
                 long splitTotalTime = System.currentTimeMillis() - splitStartTime;
@@ -307,14 +367,18 @@ public class EntitySyncServices {
 
                 // store result of service call on history with results so far, should run in own tx
                 Map updateHistoryMap = UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "lastSuccessfulSynchTime", currentRunEndTime);
-                updateHistoryMap.put("numInserted", new Long(numInserted));
-                updateHistoryMap.put("numUpdated", new Long(numUpdated));
-                updateHistoryMap.put("numNotUpdated", new Long(numNotUpdated));
-                updateHistoryMap.put("numRemoved", new Long(numRemoved));
-                updateHistoryMap.put("numAlreadyRemoved", new Long(numAlreadyRemoved));
+                updateHistoryMap.put("toCreateInserted", new Long(toCreateInserted));
+                updateHistoryMap.put("toCreateUpdated", new Long(toCreateUpdated));
+                updateHistoryMap.put("toCreateNotUpdated", new Long(toCreateNotUpdated));
+                updateHistoryMap.put("toStoreInserted", new Long(toStoreInserted));
+                updateHistoryMap.put("toStoreUpdated", new Long(toStoreUpdated));
+                updateHistoryMap.put("toStoreNotUpdated", new Long(toStoreNotUpdated));
+                updateHistoryMap.put("toRemoveDeleted", new Long(toRemoveDeleted));
+                updateHistoryMap.put("toRemoveAlreadyDeleted", new Long(toRemoveAlreadyDeleted));
                 updateHistoryMap.put("runningTimeMillis", new Long(runningTimeMillis));
                 updateHistoryMap.put("totalStoreCalls", new Long(totalStoreCalls));
                 updateHistoryMap.put("totalSplits", new Long(totalSplits));
+                updateHistoryMap.put("totalRowsToCreate", new Long(totalRowsToCreate));
                 updateHistoryMap.put("totalRowsToStore", new Long(totalRowsToStore));
                 updateHistoryMap.put("totalRowsToRemove", new Long(totalRowsToRemove));
                 updateHistoryMap.put("perSplitMinMillis", new Long(perSplitMinMillis));
@@ -488,23 +552,51 @@ public class EntitySyncServices {
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         
         String entitySyncId = (String) context.get("entitySyncId");
-        // incoming lists will already be sorted by lastUpdatedStamp
+        // incoming lists will already be sorted by lastUpdatedStamp (or lastCreatedStamp)
+        List valuesToCreate = (List) context.get("valuesToCreate");
         List valuesToStore = (List) context.get("valuesToStore");
         List keysToRemove = (List) context.get("keysToRemove");
         
         try {
-            long numInserted = 0;
-            long numUpdated = 0;
-            long numNotUpdated = 0;
-            long numRemoved = 0;
-            long numAlreadyRemoved = 0;
+            long toCreateInserted = 0;
+            long toCreateUpdated = 0;
+            long toCreateNotUpdated = 0;
+            long toStoreInserted = 0;
+            long toStoreUpdated = 0;
+            long toStoreNotUpdated = 0;
+            long toRemoveDeleted = 0;
+            long toRemoveAlreadyDeleted = 0;
+            
+            // create all values in the valuesToCreate List; if the value already exists update it, or if exists and was updated more recently than this one dont update it
+            Iterator valueToCreateIter = valuesToCreate.iterator();
+            while (valueToCreateIter.hasNext()) {
+                GenericValue valueToCreate = (GenericValue) valueToCreateIter.next();
+                // to Create check if exists (find by pk), if not insert; if exists check lastUpdatedStamp: if null or before the candidate value insert, otherwise don't insert
+                // NOTE: use the delegator from this DispatchContext rather than the one named in the GenericValue
+                
+                // maintain the original timestamps when doing storage of synced data, by default with will update the timestamps to now
+                valueToCreate.setIsFromEntitySync(true);
+                
+                GenericValue existingValue = delegator.findByPrimaryKey(valueToCreate.getPrimaryKey());
+                if (existingValue == null) {
+                    delegator.create(valueToCreate);
+                    toCreateInserted++;
+                } else {
+                    // if the existing value has a stamp field that is AFTER the stamp on the valueToCreate, don't update it
+                    if (existingValue.get(ModelEntity.STAMP_FIELD) != null && existingValue.getTimestamp(ModelEntity.STAMP_FIELD).after(valueToCreate.getTimestamp(ModelEntity.STAMP_FIELD))) {
+                        toCreateNotUpdated++;
+                    } else {
+                        delegator.store(valueToCreate);
+                        toCreateUpdated++;
+                    }
+                }
+            }
             
             // iterate through to store list and store each
             Iterator valueToStoreIter = valuesToStore.iterator();
             while (valueToStoreIter.hasNext()) {
                 GenericValue valueToStore = (GenericValue) valueToStoreIter.next();
                 // to store check if exists (find by pk), if not insert; if exists check lastUpdatedStamp: if null or before the candidate value insert, otherwise don't insert
-                // NOTE: use the delegator from this DispatchContext rather than the one named in the GenericValue
                 
                 // maintain the original timestamps when doing storage of synced data, by default with will update the timestamps to now
                 valueToStore.setIsFromEntitySync(true);
@@ -512,14 +604,14 @@ public class EntitySyncServices {
                 GenericValue existingValue = delegator.findByPrimaryKey(valueToStore.getPrimaryKey());
                 if (existingValue == null) {
                     delegator.create(valueToStore);
-                    numInserted++;
+                    toStoreInserted++;
                 } else {
                     // if the existing value has a stamp field that is AFTER the stamp on the valueToStore, don't update it
                     if (existingValue.get(ModelEntity.STAMP_FIELD) != null && existingValue.getTimestamp(ModelEntity.STAMP_FIELD).after(valueToStore.getTimestamp(ModelEntity.STAMP_FIELD))) {
-                        numNotUpdated++;
+                        toStoreNotUpdated++;
                     } else {
                         delegator.store(valueToStore);
-                        numUpdated++;
+                        toStoreUpdated++;
                     }
                 }
             }
@@ -555,18 +647,21 @@ public class EntitySyncServices {
                 pkToRemove.setIsFromEntitySync(true);
                 int numRemByAnd = delegator.removeByAnd(pkToRemove.getEntityName(), pkToRemove);
                 if (numRemByAnd == 0) {
-                    numAlreadyRemoved++;
+                    toRemoveAlreadyDeleted++;
                 } else {
-                    numRemoved++;
+                    toRemoveDeleted++;
                 }
             }
             
             Map result = ServiceUtil.returnSuccess();
-            result.put("numInserted", new Long(numInserted));
-            result.put("numUpdated", new Long(numUpdated));
-            result.put("numNotUpdated", new Long(numNotUpdated));
-            result.put("numRemoved", new Long(numRemoved));
-            result.put("numAlreadyRemoved", new Long(numAlreadyRemoved));
+            result.put("toCreateInserted", new Long(toCreateInserted));
+            result.put("toCreateUpdated", new Long(toCreateUpdated));
+            result.put("toCreateNotUpdated", new Long(toCreateNotUpdated));
+            result.put("toStoreInserted", new Long(toStoreInserted));
+            result.put("toStoreUpdated", new Long(toStoreUpdated));
+            result.put("toStoreNotUpdated", new Long(toStoreNotUpdated));
+            result.put("toRemoveDeleted", new Long(toRemoveDeleted));
+            result.put("toRemoveAlreadyDeleted", new Long(toRemoveAlreadyDeleted));
             return result;
         } catch (GenericEntityException e) {
             String errorMsg = "Error saving Entity Sync Data for entitySyncId [" + entitySyncId + "]: " + e.toString();
