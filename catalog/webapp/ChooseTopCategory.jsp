@@ -27,21 +27,23 @@
  *@version    1.0
  */
 %>
+<%@ page import="org.ofbiz.commonapp.product.category.*" %>
 
-<% pageContext.setAttribute("PageName", "Main Page"); %> 
+<% pageContext.setAttribute("PageName", "Choose Top Category"); %> 
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %>
+<%CategoryWorker.getCategoriesWithNoParent(pageContext, "noParentCategories");%>
+
 <BR>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
-          <TD align=left width='90%' >
-            <div class='boxhead'>&nbsp;Catalog Administration Main Page</div>
-          </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
+          <td valign=middle align=center>
+      <div class="boxhead">Categories With No Parent Categories</div>
+          </td>
         </tr>
       </table>
     </TD>
@@ -51,30 +53,13 @@
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
-<%if(userLogin == null) {%>
-  <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
-<%}%>
-<BR>
-<%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
-  <DIV class='tabletext'>Edit Category with Category ID:</DIV>
-  <FORM method=POST action='<ofbiz:url>/EditCategory</ofbiz:url>' style='margin: 0;'>
-    <INPUT type=text size='20' maxlength='20' name='PRODUCT_CATEGORY_ID' value=''>
-    <INPUT type=submit value='Edit Category'>
-  </FORM>
-  <DIV class='tabletext'>OR: <A href='<ofbiz:url>/EditCategory</ofbiz:url>' class='buttontext'>Create New Category</A></DIV>
-<BR>
-  <DIV class='tabletext'>Edit Product with Product ID:</DIV>
-  <FORM method=POST action='<ofbiz:url>/EditProduct</ofbiz:url>' style='margin: 0;'>
-    <INPUT type=text size='20' maxlength='20' name='PRODUCT_ID' value=''>
-    <INPUT type=submit value='Edit Product'>
-  </FORM>
-  <DIV class='tabletext'>OR: <A href='<ofbiz:url>/EditProduct</ofbiz:url>' class='buttontext'>Create New Product</A></DIV>
-<BR>
-<BR>
-  <A href='<ofbiz:url>/UpdateAllKeywords</ofbiz:url>' class='buttontext'>Auto-Create Keywords for All Products</A>
-<BR><BR>
-<%}%>
-<DIV class='tabletext'>This application is primarily intended for those repsonsible for the maintenance of product catalog related information.</DIV>
+      <ofbiz:iterator name="category" property="noParentCategories">
+        <div>
+          <a href='<ofbiz:url>/ChooseTopCategory?CATALOG_TOP_CATEGORY=<ofbiz:entityfield attribute="category" field="productCategoryId"/></ofbiz:url>' class='buttontext'>
+            <ofbiz:entityfield attribute="category" field="description"/> (<ofbiz:entityfield attribute="category" field="productCategoryId"/>)
+          </a>
+        </div>
+      </ofbiz:iterator>
           </td>
         </tr>
       </table>

@@ -1,8 +1,6 @@
 
 <%@taglib uri="ofbizTags" prefix="ofbiz" %>
-
-<%@page import="org.ofbiz.core.entity.*" %>
-<%@page import="org.ofbiz.commonapp.product.category.*" %>
+<%@page import="org.ofbiz.core.entity.*, org.ofbiz.commonapp.product.category.*" %>
 
 <%GenericValue category = (GenericValue)request.getAttribute("subcat");%>
 <%GenericValue pcategory = (GenericValue)request.getAttribute("category");%>

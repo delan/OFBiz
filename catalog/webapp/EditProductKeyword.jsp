@@ -30,6 +30,7 @@
 
 <% pageContext.setAttribute("PageName", "Edit Product Keywords"); %>
 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %>
 
@@ -38,7 +39,7 @@
   String productId = request.getParameter("PRODUCT_ID");
   GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 %>
-
+<br>
 <div class="head1">Edit Keywords for Product with ID "<%=productId%>"</div>
 
 <%if(productId != null && productId.length() > 0){%>

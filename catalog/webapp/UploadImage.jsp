@@ -32,6 +32,7 @@
 
 <%pageContext.setAttribute("PageName", "Upload Image");%>
 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 

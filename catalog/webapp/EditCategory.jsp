@@ -30,6 +30,7 @@
 
 <% pageContext.setAttribute("PageName", "Edit Category"); %>
 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %>
 
@@ -51,20 +52,21 @@
   else if(primParentCatIdParam != null && primParentCatIdParam.length() > 0)
     primaryParentCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primParentCatIdParam));
 %>
-
+<br>
 <div class="head1">Edit Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>"</div>
 <a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[Create New Category]</a>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
-  <a href="/ecommerce/control/category?PRODUCT_CATEGORY_ID=<%=productCategoryId%>" class="buttontext">[View Category Page]</a>
+  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[View Category Page]</a>
 <%}%>
 <form action="<ofbiz:url>/UpdateCategory</ofbiz:url>" method=POST style='margin: 0;'>
-<table border="1">
+<table border='0' cellpadding='2' cellspacing='0'>
 <%if(category == null){%>
   <%if(productCategoryId != null){%>
     <h3>Could not find Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>".</h3>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
     <tr>
-      <td>Product Category ID</td>
+      <td align=right><div class="tabletext">Product Category ID</div></td>
+      <td>&nbsp;</td>
       <td>
         <input type="text" name="PRODUCT_CATEGORY_ID" size="20" maxlength="40" value="<%=productCategoryId%>">
       </td>
@@ -72,7 +74,8 @@
   <%}else{%>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
     <tr>
-      <td>Product Category ID</td>
+      <td align=right><div class="tabletext">Product Category ID</div></td>
+      <td>&nbsp;</td>
       <td>
         <input type="text" name="PRODUCT_CATEGORY_ID" size="20" maxlength="40" value="">
       </td>
@@ -82,7 +85,8 @@
   <input type=hidden name="UPDATE_MODE" value="UPDATE">
   <input type=hidden name="PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
   <tr>
-    <td>Product Category ID</td>
+    <td align=right><div class="tabletext">Product Category ID</div></td>
+    <td>&nbsp;</td>
     <td>
       <b><%=productCategoryId%></b> (This cannot be changed without re-creating the cateogry.)
     </td>
@@ -92,22 +96,26 @@
   <%String fieldName; String paramName;%>
   <tr>
     <%fieldName = "description";%><%paramName = "DESCRIPTION";%>    
-    <td width="26%"><div class="tabletext">Description</div></td>
+    <td width="26%" align=right><div class="tabletext">Description</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
   </tr>
   <tr>
     <%fieldName = "longDescription";%><%paramName = "LONG_DESCRIPTION";%>    
-    <td width="26%"><div class="tabletext">Long Description</div></td>
+    <td width="26%" align=right valign=top><div class="tabletext">Long Description</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><textarea cols="60" rows="3" name="<%=paramName%>" maxlength="2000"><%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%></textarea></td>
   </tr>
   <tr>
     <%fieldName = "categoryImageUrl";%><%paramName = "CATEGORY_IMAGE_URL";%>    
-    <td width="26%"><div class="tabletext">Category Image URL</div></td>
+    <td width="26%" align=right><div class="tabletext">Category Image URL</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
   </tr>
 
   <tr>
-    <td>Primary Parent Category ID</td>
+    <td align=right><div class="tabletext">Primary Parent Category ID</div></td>
+    <td>&nbsp;</td>
     <td>
       <select name="PRIMARY_PARENT_CATEGORY_ID" size=1>
         <%if(primaryParentCategory != null) {%>
@@ -123,7 +131,7 @@
     </td>
   </tr>
   <tr>
-    <td colspan='2'>
+    <td colspan='3'>
       <input type="submit" name="Update" value="Update">
     </td>
   </tr>
@@ -131,7 +139,7 @@
 </form>
 <a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[Create New Category]</a>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
-  <a href="/ecommerce/control/category?PRODUCT_CATEGORY_ID=<%=productCategoryId%>" class="buttontext">[View Category Page]</a>
+  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext">[View Category Page]</a>
 <%}%>
 <br>
 
@@ -140,11 +148,11 @@
 <hr>
 <p class="head2">Category Rollup: Parent Categories</p>
 
-<table border="1" cellpadding='0' cellspacing='0'>
+<table border="1" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><b>Parent Category ID</b></td>
-    <td><b>Description</b></td>
-    <td><b>&nbsp;</b></td>
+    <td><div class="tabletext"><b>Parent Category ID</b></div></td>
+    <td><div class="tabletext"><b>Description</b></div></td>
+    <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <%Iterator ppcIterator = UtilMisc.toIterator(category.getRelated("CurrentProductCategoryRollup"));%>
 <%if(ppcIterator != null && ppcIterator.hasNext()) {%>
@@ -167,7 +175,7 @@
 <%}%>
 </table>
 
-<form method="POST" action="<ofbiz:url>/UpdateProductCategoryRollup</ofbiz:url>">
+<form method="POST" action="<ofbiz:url>/UpdateProductCategoryRollup</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="UPDATE_PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
   <input type="hidden" name="PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
   <input type="hidden" name="UPDATE_MODE" value="CREATE">
@@ -185,11 +193,11 @@
 <hr>
 <p class="head2">Category Rollup: Child Categories</p>
 
-<table border="1" cellpadding='0' cellspacing='0'>
+<table border="1" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><b>Child Category ID</b></td>
-    <td><b>Description</b></td>
-    <td><b>&nbsp;</b></td>
+    <td><div class="tabletext"><b>Child Category ID</b></div></td>
+    <td><div class="tabletext"><b>Description</b></div></td>
+    <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <%Iterator cpcIterator = UtilMisc.toIterator(category.getRelated("ParentProductCategoryRollup"));%>
 <%if(cpcIterator != null && cpcIterator.hasNext()) {%>
@@ -212,7 +220,7 @@
 <%}%>
 </table>
 
-<form method="POST" action="<ofbiz:url>/UpdateProductCategoryRollup</ofbiz:url>">
+<form method="POST" action="<ofbiz:url>/UpdateProductCategoryRollup</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="UPDATE_PARENT_PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
   <input type="hidden" name="PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
   <input type="hidden" name="UPDATE_MODE" value="CREATE">

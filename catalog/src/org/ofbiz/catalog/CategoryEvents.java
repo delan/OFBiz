@@ -269,6 +269,7 @@ public class CategoryEvents {
       }
     }
     else if(updateMode.equals("DELETE")) {
+      //Remove the ProductCategoryRollup record
       GenericValue productCategoryRollup = null;
       try { productCategoryRollup = delegator.findByPrimaryKey("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", parentProductCategoryId)); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategoryRollup = null; }
@@ -282,6 +283,20 @@ public class CategoryEvents {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (write error)");
         Debug.logWarning("[ProductEvents.updateProductCategoryRollup] Could not remove product-category (write error); message: " + e.getMessage());
         return "error";
+      }
+      
+      //If the parent category was the primary parent category of the category, set that to null
+      GenericValue productCategory = null;
+      try { productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId)); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productCategory = null; }
+      if(productCategory != null && parentProductCategoryId.equals(productCategory.getString("primaryParentCategoryId"))) {
+        productCategory.set("primaryParentCategoryId", null);
+        try { productCategory.store(); }
+        catch(GenericEntityException e) {
+          request.setAttribute("ERROR_MESSAGE", "Removed product-category but could not set primary parent category to null (write error)");
+          Debug.logWarning("[ProductEvents.updateProductCategoryRollup] Removed product-category but could not set primary parent category to null  (write error); message: " + e.getMessage());
+          return "error";
+        }
       }
     }
     else {

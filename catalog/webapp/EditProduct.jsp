@@ -30,6 +30,7 @@
 
 <%pageContext.setAttribute("PageName", "Edit Product");%>
 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %>
 
@@ -53,25 +54,26 @@
 
   if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 %>
-
+<br>
 <div class="head1">Edit Product with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
 
 <a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[Create New Product]</a>
 <%-- <%if(product != null){%><a href="<ofbiz:url>UpdateProduct?UPDATE_MODE=DELETE&PRODUCT_ID=<%=product.getSku()%></ofbiz:url>" class="buttontext">[Delete this Product]</a><%}%> --%>
 <%if(productId != null && productId.length() > 0){%>
-  <a href="/ecommerce/control/product?PRODUCT_ID=<%=productId%>" class="buttontext">[View Product Page]</a>
+  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[View Product Page]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Keywords]</a>
 <%}%>
 
 <form action="<ofbiz:url>/UpdateProduct</ofbiz:url>" method=POST style='margin: 0;'>
-<table border="1">
+<table border='0' cellpadding='2' cellspacing='0'>
 
 <%if(product == null){%>
   <%if(productId != null){%>
     <h3>Could not find product with ID "<%=productId%>".</h3>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
     <tr>
-      <td>Product ID</td>
+      <td align=right><div class="tabletext">Product ID</div></td>
+      <td>&nbsp;</td>
       <td>
         <input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="<%=productId%>">
       </td>
@@ -79,7 +81,8 @@
   <%}else{%>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
     <tr>
-      <td>Product ID</td>
+      <td align=right><div class="tabletext">Product ID></div></td>
+      <td>&nbsp;</td>
       <td>
         <input type="text" name="PRODUCT_ID" size="20" maxlength="40" value="">
       </td>
@@ -89,7 +92,8 @@
   <input type=hidden name="UPDATE_MODE" value="UPDATE">
   <input type=hidden name="PRODUCT_ID" value="<%=productId%>">
   <tr>
-    <td>Product ID</td>
+    <td align=right><div class="tabletext">Product ID</div></td>
+    <td>&nbsp;</td>
     <td>
       <b><%=productId%></b> (This cannot be changed without re-creating the product.)
     </td>
@@ -99,7 +103,8 @@
   <%String fieldName; String paramName;%>
   <tr>
     <%fieldName = "primaryProductCategoryId";%><%paramName = "PRIMARY_PRODUCT_CATEGORY_ID";%>
-    <td width="26%"><div class="tabletext">Primary Category Id</div></td>
+    <td width="26%" align=right><div class="tabletext">Primary Category Id</div></td>
+    <td>&nbsp;</td>
     <td width="74%">
       <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
       <select name="<%=paramName%>" size=1>
@@ -117,50 +122,59 @@
   </tr>
   <tr>
     <%fieldName = "manufacturerPartyId";%><%paramName = "MANUFACTURER_PARTY_ID";%>    
-    <td width="26%"><div class="tabletext">Manufacturer Party Id</div></td>
+    <td width="26%" align=right><div class="tabletext">Manufacturer Party Id</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
   </tr>
 
   <tr>
     <%fieldName = "introductionDate";%><%paramName = "INTRODUCTION_DATE";%>    
-    <td width="26%"><div class="tabletext">Introduction Date</div></td>
+    <td width="26%" align=right><div class="tabletext">Introduction Date</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(product.getDate(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="20">(MM/DD/YYYY)</td>
   </tr>
   <tr>
     <%fieldName = "salesDiscontinuationDate";%><%paramName = "SALES_DISCONTINUATION_DATE";%>    
-    <td width="26%"><div class="tabletext">Sales Discontinuation Date</div></td>
+    <td width="26%" align=right><div class="tabletext">Sales Discontinuation Date</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(product.getDate(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="20">(MM/DD/YYYY)</td>
   </tr>
   <tr>
     <%fieldName = "supportDiscontinuationDate";%><%paramName = "SUPPORT_DISCONTINUATION_DATE";%>    
-    <td width="26%"><div class="tabletext">Support Discontinuation Date</div></td>
+    <td width="26%" align=right><div class="tabletext">Support Discontinuation Date</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(product.getDate(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="20">(MM/DD/YYYY)</td>
   </tr>
 
   <tr>
     <%fieldName = "productName";%><%paramName = "NAME";%>    
-    <td width="26%"><div class="tabletext">Name</div></td>
+    <td width="26%" align=right><div class="tabletext">Name</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="30" maxlength="60"></td>
   </tr>
   <tr>
     <%fieldName = "comments";%><%paramName = "COMMENT";%>    
-    <td width="26%"><div class="tabletext">Comment</div></td>
+    <td width="26%" align=right><div class="tabletext">Comment</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
   </tr>
   <tr>
     <%fieldName = "description";%><%paramName = "DESCRIPTION";%>    
-    <td width="26%"><div class="tabletext">Description</div></td>
+    <td width="26%" align=right><div class="tabletext">Description</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
   </tr>
   <tr>
     <%fieldName = "longDescription";%><%paramName = "LONG_DESCRIPTION";%>    
-    <td width="26%"><div class="tabletext">Long Description</div></td>
+    <td width="26%" align=right valign=top><div class="tabletext">Long Description</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><textarea cols="60" rows="3" name="<%=paramName%>" maxlength="2000"><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%></textarea></td>
   </tr>
 
   <tr>
     <%fieldName = "smallImageUrl";%><%paramName = "SMALL_IMAGE_URL";%>    
-    <td width="26%"><div class="tabletext">Small Image URL</div></td>
+    <td width="26%" align=right valign=top><div class="tabletext">Small Image URL</div></td>
+    <td>&nbsp;</td>
     <td width="74%">
       <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255">
       <%if(productId != null && productId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=small&PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Upload Small Image]</a><%}%>
@@ -168,7 +182,8 @@
   </tr>
   <tr>
     <%fieldName = "largeImageUrl";%><%paramName = "LARGE_IMAGE_URL";%>    
-    <td width="26%"><div class="tabletext">Large Image URL</div></td>
+    <td width="26%" align=right valign=top><div class="tabletext">Large Image URL</div></td>
+    <td>&nbsp;</td>
     <td width="74%">
       <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255">
       <%if(productId != null && productId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=large&PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Upload Large Image]</a><%}%>
@@ -177,35 +192,41 @@
 
   <tr>
     <%fieldName = "defaultPrice";%><%paramName = "DEFAULT_PRICE";%>    
-    <td width="26%"><div class="tabletext">Default Price</div></td>
+    <td width="26%" align=right><div class="tabletext">Default Price</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(product.getDouble(fieldName)):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
   </tr>
 
   <tr>
     <%fieldName = "quantityUomId";%><%paramName = "QUANTITY_UOM_ID";%>    
-    <td width="26%"><div class="tabletext">Quantity Uom Id</div></td>
+    <td width="26%" align=right><div class="tabletext">Quantity Uom Id</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
   </tr>
   <tr>
     <%fieldName = "quantityIncluded";%><%paramName = "QUANTITY_INCLUDED";%>    
-    <td width="26%"><div class="tabletext">Quantity Included</div></td>
+    <td width="26%" align=right><div class="tabletext">Quantity Included</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(product.getDouble(fieldName)):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
   </tr>
 
   <tr>
     <%fieldName = "weightUomId";%><%paramName = "WEIGHT_UOM_ID";%>    
-    <td width="26%"><div class="tabletext">Weight Uom Id</div></td>
+    <td width="26%" align=right><div class="tabletext">Weight Uom Id</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
   </tr>
   <tr>
     <%fieldName = "weight";%><%paramName = "WEIGHT";%>    
-    <td width="26%"><div class="tabletext">Weight</div></td>
+    <td width="26%" align=right><div class="tabletext">Weight</div></td>
+    <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(product.getDouble(fieldName)):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
   </tr>
 
   <tr>
     <%fieldName = "taxable";%><%paramName = "TAXABLE";%>    
-    <td width="26%"><div class="tabletext">Taxable?</div></td>
+    <td width="26%" align=right><div class="tabletext">Taxable?</div></td>
+    <td>&nbsp;</td>
     <td width="74%">
       <SELECT name='<%=paramName%>'>
         <OPTION><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>
@@ -217,7 +238,8 @@
   </tr>
   <tr>
     <%fieldName = "autoCreateKeywords";%><%paramName = "AUTO_CREATE_KEYWORDS";%>
-    <td width="26%"><div class="tabletext">Allow Auto Create Keywords?</div></td>
+    <td width="26%" align=right><div class="tabletext">Allow Auto Create Keywords?</div></td>
+    <td>&nbsp;</td>
     <td width="74%">
       <SELECT name='<%=paramName%>'>
         <OPTION><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>
@@ -229,7 +251,7 @@
   </tr>
 
   <tr>
-    <td colspan='2'><input type="submit" name="Update" value="Update"></td>
+    <td colspan='3'><input type="submit" name="Update" value="Update"></td>
   </tr>
 </table>
 </form>
@@ -237,7 +259,7 @@
 <a href="<ofbiz:url>EditProduct</ofbiz:url>" class="buttontext">[Create New Product]</a>
 <%-- <%if(product != null){%><a href="<ofbiz:url>UpdateProduct?UPDATE_MODE=DELETE&PRODUCT_ID=<%=product.getSku()%></ofbiz:url>" class="buttontext">[Delete this Product]</a><%}%> --%>
 <%if(productId != null && productId.length() > 0){%>
-  <a href="/ecommerce/control/product?PRODUCT_ID=<%=productId%>" class="buttontext">[View Product Details Page]</a>
+  <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[View Product Page]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Keywords]</a>
 <%}%>
 <br>
@@ -247,12 +269,12 @@
 <hr>
 <p class="head2">Product-Category Member Maintenance</p>
 
-<table border="1" cellpadding='0' cellspacing='0'>
+<table border="1" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><b>Category ID</b></td>
-    <td><b>Description</b></td>
-    <td><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></td>
-    <td><b></b></td>
+    <td><div class="tabletext"><b>Category ID</b></div></td>
+    <td><div class="tabletext"><b>Description</b></div></td>
+    <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
+    <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <%Iterator pcIterator = UtilMisc.toIterator(product.getRelated("ProductCategoryMember"));%>
 <%while(pcIterator.hasNext()) {%>
@@ -270,7 +292,7 @@
 <%}%>
 </table>
 
-<form method="POST" action="<ofbiz:url>/UpdateProductCategoryMember</ofbiz:url>">
+<form method="POST" action="<ofbiz:url>/UpdateProductCategoryMember</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
   <input type="hidden" name="UPDATE_MODE" value="CREATE">
   <input type="hidden" name="useValues" value="true">
