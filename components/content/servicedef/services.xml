@@ -806,6 +806,7 @@
         <description>Create a SurveyQuestion</description>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute name="surveyId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updateSurveyQuestion" default-entity-name="SurveyQuestion" auth="true" engine="simple"
         location="org/ofbiz/content/survey/SurveyServices.xml" invoke="updateSurveyQuestion">
@@ -825,6 +826,7 @@
         <description>Create a SurveyQuestionAppl</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
     </service>
     <service name="updateSurveyQuestionAppl" default-entity-name="SurveyQuestionAppl" auth="true" engine="simple"
         location="org/ofbiz/content/survey/SurveyServices.xml" invoke="updateSurveyQuestionAppl">

@@ -899,19 +899,37 @@
     </request-map>
     <request-map uri="createSurveyQuestion">
         <security auth="true" https="true"/>
-        <event invoke="createSurveyQuestion" path="" type="service"/>
+        <event invoke="createSurveyQuestion" type="service"/>
         <response name="success" type="view" value="EditSurveyQuestions"/>
         <response name="error" type="view" value="EditSurveyQuestions"/>
     </request-map>
     <request-map uri="updateSurveyQuestion">
         <security auth="true" https="true"/>
-        <event invoke="updateSurveyQuestion" path="" type="service"/>
+        <event invoke="updateSurveyQuestion" type="service"/>
         <response name="success" type="view" value="EditSurveyQuestions"/>
         <response name="error" type="view" value="EditSurveyQuestions"/>
     </request-map>
     <request-map uri="deleteSurveyQuestion">
         <security auth="true" https="true"/>
-        <event invoke="deleteteSurveyQuestion" path="" type="service"/>
+        <event invoke="deleteteSurveyQuestion" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
+    <request-map uri="createSurveyQuestionCategory">
+        <security auth="true" https="true"/>
+        <event invoke="createSurveyQuestionCategory" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
+    <request-map uri="updateSurveyQuestionAppl">
+        <security auth="true" https="true"/>
+        <event invoke="updateSurveyQuestionAppl" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
+    <request-map uri="removeSurveyQuestionAppl">
+        <security auth="true" https="true"/>
+        <event invoke="deleteSurveyQuestionAppl" type="service"/>
         <response name="success" type="view" value="EditSurveyQuestions"/>
         <response name="error" type="view" value="EditSurveyQuestions"/>
     </request-map>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Patrick Lykins (patrick.lykins@gabes.net)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
  */
 
@@ -39,19 +39,17 @@ if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {
     context.put("hasPermission", Boolean.FALSE);
 }
 
-
 surveyId = request.getParameter("surveyId");
-surveyQuestionList = delegator.findByAnd("SurveyQuestion", UtilMisc.toMap("surveyId", surveyId), UtilMisc.toList("surveyQuestionSeqId"));
-
-HtmlFormWrapper editSurveyQuestionWrapper = new HtmlFormWrapper("/survey/SurveyForms.xml", "EditSurveyQuestions", request, response);
-editSurveyQuestionWrapper.putInContext("surveyId", surveyId);
-editSurveyQuestionWrapper.putInContext("surveyQuestionList", surveyQuestionList);
+surveyQuestionList = delegator.findByAnd("SurveyQuestionAndAppl", UtilMisc.toMap("surveyId", surveyId), UtilMisc.toList("sequenceNum"));
 
 HtmlFormWrapper createSurveyQuestionWrapper = new HtmlFormWrapper("/survey/SurveyForms.xml", "CreateSurveyQuestion", request, response);
 createSurveyQuestionWrapper.putInContext("surveyId", surveyId);
 
+HtmlFormWrapper createSurveyQuestionCategoryWrapper = new HtmlFormWrapper("/survey/SurveyForms.xml", "CreateSurveyQuestionCategory", request, response);
+createSurveyQuestionCategoryWrapper.putInContext("surveyId", surveyId);
+
 context.put("surveyId", surveyId);
 context.put("surveyQuestionList", surveyQuestionList);
-context.put("editSurveyQuestionWrapper", editSurveyQuestionWrapper);
 context.put("createSurveyQuestionWrapper", createSurveyQuestionWrapper);
+context.put("createSurveyQuestionCategoryWrapper", createSurveyQuestionCategoryWrapper);
 

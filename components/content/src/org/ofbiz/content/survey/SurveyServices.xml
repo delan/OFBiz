@@ -137,6 +137,12 @@
         <make-value entity-name="SurveyQuestionAppl" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateSurveyQuestionAppl" short-description="Update Survey Question Application">

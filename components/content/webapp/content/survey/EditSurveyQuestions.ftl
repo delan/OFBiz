@@ -20,17 +20,60 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
 <#if security.hasEntityPermission("CONTENTMGR", "_VIEW", session)>
 
-${pages.get("/survey/SurveyTabBar.ftl")}
+  ${pages.get("/survey/SurveyTabBar.ftl")}
+  <div class="head1">Survey Questions</div>
+  <br><br>
+  <table border="1" cellpadding='2' cellspacing='0'>
+    <tr>
+      <td><div class="tableheadtext">ID</div></td>
+      <td><div class="tableheadtext">Type</div></td>
+      <td><div class="tableheadtext">Category</div></td>
+      <td><div class="tableheadtext">Description</div></td>
+      <td><div class="tableheadtext">Question</div></td>
+      <td><div class="tableheadtext">Seq #</div></td>
+      <td><div class="tableheadtext">&nbsp;</div></td>
+      <td><div class="tableheadtext">&nbsp;</div></td>
+    </tr>
 
-${editSurveyQuestionWrapper.renderFormString()}
-<br/>
-${createSurveyQuestionWrapper.renderFormString()}
+    <#list surveyQuestionList as question>
+      <#assign questionType = question.getRelatedOne("SurveyQuestionType")>
+      <#assign questionCat = question.getRelatedOne("SurveyQuestionCategory")>
+      <form method="post" action="<@ofbizUrl>/updateSurveyQuestionAppl</@ofbizUrl>">
+        <input type="hidden" name="surveyId" value="${question.surveyId}">
+        <input type="hidden" name="surveyQuestionId" value="${question.surveyQuestionId}">
+        <input type="hidden" name="fromDate" value="${question.fromDate}">
+        <tr valign="middle">
+          <td><div class="tabletext">${question.surveyQuestionId}</div></td>
+          <td><div class="tabletext">${questionType.description}</div></td>
+          <td><div class="tabletext">${questionCat.description}</div></td>
+          <td><div class="tabletext">${question.description?if_exists}</div></td>
+          <td><div class="tabletext">${question.question?if_exists}</div></td>
+          <td><input type="text" name="sequenceNum" size="5" class="textBox" value="${question.sequenceNum?if_exists}">
+          <td><input type="submit" value="Update">
+          <td><a href="<@ofbizUrl>/removeSurveyQuestionAppl?surveyId=${question.surveyId}&surveyQuestionId=${question.surveyQuestionId}&fromDate=${question.fromDate}</@ofbizUrl>" class="buttontext">[Remove]</a>
+        </tr>
+      </form>
+    </#list>
+  </table>
+  <br>
+
+  <#if requestParameters.newCategory?default("N") == "Y">
+    <div class="head2">Create Question Category:</div>
+    <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}</@ofbizUrl>" class="buttontext">[New Question]</a>
+    <br><br>
+    ${createSurveyQuestionCategoryWrapper.renderFormString()}
+  <#else>
+    <div class="head2">Create New Question:</div>
+    <a href="<@ofbizUrl>/EditSurveyQuestions?surveyId=${requestParameters.surveyId}&newCategory=Y</@ofbizUrl>" class="buttontext">[New Question Category]</a>
+    <br><br>
+    ${createSurveyQuestionWrapper.renderFormString()}
+  </#if>
 
 <#else>
   <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
