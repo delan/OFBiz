@@ -76,7 +76,7 @@
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderItem">
+      <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
@@ -361,7 +361,7 @@
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderShipmentPreference">
+      <relation type="one-nofk" rel-entity-name="OrderShipmentPreference">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
@@ -380,14 +380,14 @@
       <relation type="one" title="Sales" rel-entity-name="OrderHeader">
         <key-map field-name="salesOrderId" rel-field-name="orderId"/>
       </relation>
-      <relation type="one" title="Sales" rel-entity-name="OrderItem">
+      <relation type="one-nofk" title="Sales" rel-entity-name="OrderItem">
         <key-map field-name="salesOrderId" rel-field-name="orderId"/>
         <key-map field-name="soItemSeqId" rel-field-name="orderItemSeqId"/>
       </relation>
       <relation type="one" title="Purchase" rel-entity-name="OrderHeader">
         <key-map field-name="purchaseOrderId" rel-field-name="orderId"/>
       </relation>
-      <relation type="one" title="Purchase" rel-entity-name="OrderItem">
+      <relation type="one-nofk" title="Purchase" rel-entity-name="OrderItem">
         <key-map field-name="purchaseOrderId" rel-field-name="orderId"/>
         <key-map field-name="poItemSeqId" rel-field-name="orderItemSeqId"/>
       </relation>
@@ -548,10 +548,10 @@
       <relation type="one" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
       </relation>
-      <relation type="one" rel-entity-name="CreditCard">
+      <relation type="one-nofk" rel-entity-name="CreditCard">
         <key-map field-name="paymentMethodId"/>
       </relation>
-      <relation type="one" rel-entity-name="EftAccount">
+      <relation type="one-nofk" rel-entity-name="EftAccount">
         <key-map field-name="paymentMethodId"/>
       </relation>
     </entity>
@@ -596,14 +596,14 @@
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderItem">
+      <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
       <relation type="one" rel-entity-name="Shipment">
         <key-map field-name="shipmentId"/>
       </relation>
-      <relation type="one" rel-entity-name="ShipmentItem">
+      <relation type="one-nofk" rel-entity-name="ShipmentItem">
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentItemSeqId"/>
       </relation>
@@ -628,7 +628,7 @@
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderItem">
+      <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
@@ -658,7 +658,7 @@
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderItem">
+      <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
@@ -675,7 +675,7 @@
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" rel-entity-name="OrderItem">
+      <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
