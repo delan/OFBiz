@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,18 +20,17 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
 <#if security.hasEntityPermission("CONTENTMGR", "_VIEW", session)>
+  ${pages.get("/survey/SurveyTabBar.ftl")}
+  <div class="head1">Edit Survey - <span class="head2">ID: ${requestParameters.surveyId?if_exists}</span></div>
+  <br>
 
-${pages.get("/survey/SurveyTabBar.ftl")}
-<div class="head1">Edit Survey - <span class="head2">ID: ${requestParameters.surveyId?if_exists}</span></div>
-<br>
-
-${editSurveyWrapper.renderFormString()}
-
+  ${editSurveyWrapper.renderFormString()}
 <#else>
   <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
 </#if>
