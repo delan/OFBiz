@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  To refer to this DTD in your XML file, use the following declaration:
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+-->
+
 <!--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *

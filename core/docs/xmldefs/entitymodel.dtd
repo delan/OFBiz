@@ -1,3 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  To refer to this DTD in your XML file, use the following declaration:
+<!DOCTYPE entitymodel PUBLIC "-//OFBiz//DTD Entity Model//EN" "http://www.ofbiz.org/dtds/entitymodel.dtd">
+-->
+
 <!--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
