@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2001/09/18 22:31:48  jonesde
+ * Cleaned up messages, fixed a few small bugs.
+ *
  * Revision 1.13  2001/09/14 21:34:32  epabst
  * added security code to confirmorder page
  * cleaned up
@@ -235,10 +238,21 @@ public class CheckOutEvents {
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
         final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.securityCode");
     
-        String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
-        if(controlPath == null) controlPath = "";
+        String controlPath = (String)request.getAttribute(SiteDefs.CONTROL_PATH);
+        if(controlPath == null) {
+          Debug.logError("[CheckOutEvents.renderConfirmOrder] CONTROL_PATH is null.");
+          request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error generating order confirmation, but it was recorded and will be processed.");
+          return "error";
+        }
+        String serverRoot = (String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);
+        if(serverRoot == null) {
+          Debug.logError("[CheckOutEvents.renderConfirmOrder] SERVER_ROOT_URL is null.");
+          request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error generating order confirmation, but it was recorded and will be processed.");
+          return "error";
+        }
+
         try {
-            java.net.URL url = new java.net.URL(request.getSession().getAttribute(SiteDefs.SERVER_ROOT_URL) + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
+            java.net.URL url = new java.net.URL(serverRoot + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
             HttpClient httpClient = new HttpClient(url);
             String content = httpClient.get();
             request.setAttribute("confirmorder", content);

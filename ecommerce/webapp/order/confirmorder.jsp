@@ -120,6 +120,9 @@
   <body bgcolor="white">
   <a name="top"></a>
 
+<%String controlPath = (String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
+<%String serverRoot = (String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);%>
+
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
 <jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
 <% 
@@ -172,7 +175,7 @@
 <br>
 <%@ include file="orderitems.jsp" %>
   
-  <a href="<ofbiz:url>/orderstatus?order_id=<%=orderId%></ofbiz:url>" class="buttonlinkbig">[View Order]</a>&nbsp;&nbsp;
+  <a href="<%=response.encodeUrl(serverRoot + controlPath + "/orderstatus?order_id=" + orderId)%>" class="buttonlinkbig">[View Order]</a>&nbsp;&nbsp;
 
 </ofbiz:if> <%-- Order Header --%>
 <ofbiz:unless name="orderHeader">
@@ -182,6 +185,6 @@
 <ofbiz:unless name="validated">
 <font color="red">Security Error!  You do not have permission to view this page.</font><br>
 </ofbiz:unless>
-  <a href="<ofbiz:url>/main</ofbiz:url>" class="buttonlinkbig">[Continue Shopping]</a>
+  <a href="<%=response.encodeUrl(serverRoot + controlPath + "/main")%>" class="buttonlinkbig">[Continue Shopping]</a>
   </body>
 </html>
