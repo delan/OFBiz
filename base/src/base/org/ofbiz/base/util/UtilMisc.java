@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -26,13 +26,14 @@ package org.ofbiz.base.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.collections.MapComparator;
 
@@ -67,7 +68,7 @@ public class UtilMisc {
     public static Map toMap(String name1, Object value1) {
         return new UtilMisc.SimpleMap(name1, value1);
 
-        /* Map fields = new HashMap();
+        /* Map fields = FastMap.newInstance();
          fields.put(name1, value1);
          return fields;*/
     }
@@ -79,7 +80,7 @@ public class UtilMisc {
     public static Map toMap(String name1, Object value1, String name2, Object value2) {
         return new UtilMisc.SimpleMap(name1, value1, name2, value2);
 
-        /* Map fields = new HashMap();
+        /* Map fields = FastMap.newInstance();
          fields.put(name1, value1);
          fields.put(name2, value2);
          return fields;*/
@@ -92,7 +93,7 @@ public class UtilMisc {
     public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3) {
         return new UtilMisc.SimpleMap(name1, value1, name2, value2, name3, value3);
 
-        /* Map fields = new HashMap();
+        /* Map fields = FastMap.newInstance();
          fields.put(name1, value1);
          fields.put(name2, value2);
          fields.put(name3, value3);
@@ -107,7 +108,7 @@ public class UtilMisc {
         Object value3, String name4, Object value4) {
         return new UtilMisc.SimpleMap(name1, value1, name2, value2, name3, value3, name4, value4);
 
-        /* Map fields = new HashMap();
+        /* Map fields = FastMap.newInstance();
          fields.put(name1, value1);
          fields.put(name2, value2);
          fields.put(name3, value3);
@@ -121,7 +122,7 @@ public class UtilMisc {
      */
     public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3,
         String name4, Object value4, String name5, Object value5) {
-        Map fields = new HashMap();
+        Map fields = FastMap.newInstance();
 
         fields.put(name1, value1);
         fields.put(name2, value2);
@@ -137,7 +138,7 @@ public class UtilMisc {
      */
     public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3,
         String name4, Object value4, String name5, Object value5, String name6, Object value6) {
-        Map fields = new HashMap();
+        Map fields = FastMap.newInstance();
 
         fields.put(name1, value1);
         fields.put(name2, value2);
@@ -159,7 +160,7 @@ public class UtilMisc {
         if (data.length % 2 == 1) {
             throw new IllegalArgumentException("You must pass an even sized array to the toMap method");
         }
-        Map map = new HashMap();
+        Map map = FastMap.newInstance();
         for (int i = 0; i < data.length; ) {
             map.put(data[i++], data[i++]);
         }
@@ -426,7 +427,7 @@ public class UtilMisc {
         }
 
         protected void makeRealMap() {
-            realMapIfNeeded = new HashMap();
+            realMapIfNeeded = FastMap.newInstance();
             for (int i = 0; i < names.length; i++) {
                 realMapIfNeeded.put(names[i], values[i]);
             }
@@ -438,7 +439,7 @@ public class UtilMisc {
             if (realMapIfNeeded != null) {
                 realMapIfNeeded.clear();
             } else {
-                realMapIfNeeded = new HashMap();
+                realMapIfNeeded = FastMap.newInstance();
                 names = null;
                 values = null;
             }

@@ -157,5 +157,6 @@
 	<classpathentry kind="lib" path="framework/catalina/lib/catalina.jar"/>
 	<classpathentry kind="lib" path="framework/catalina/lib/jmx.jar"/>
 	<classpathentry kind="lib" path="framework/catalina/lib/catalina-cluster.jar"/>
+	<classpathentry kind="lib" path="base/lib/javolution.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

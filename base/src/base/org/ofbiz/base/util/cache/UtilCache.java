@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,19 @@
 package org.ofbiz.base.util.cache;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.WeakHashMap;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import javolution.util.FastSet;
 
 /**
  * Generalized caching utility. Provides a number of caching features:
@@ -49,7 +61,7 @@ public class UtilCache implements Serializable {
     public static Map utilCacheTable = new WeakHashMap();
 
     /** An index number appended to utilCacheTable names when there are conflicts. */
-    protected static Map defaultIndices = new HashMap();
+    protected static Map defaultIndices = FastMap.newInstance();
 
     /** The name of the UtilCache instance, is also the key for the instance in utilCacheTable. */
     protected String name = null;
@@ -91,7 +103,7 @@ public class UtilCache implements Serializable {
     private String fileStore = "data/utilcache";
 
     /** The set of listeners to receive notifcations when items are modidfied(either delibrately or because they were expired). */
-    protected HashSet listeners = new HashSet();
+    protected Set listeners = FastSet.newInstance();
     
     /** Constructor which specifies the cacheName as well as the maxSize, expireTime and useSoftReference.
      * The passed maxSize, expireTime and useSoftReference will be overridden by values from cache.properties if found.
@@ -318,7 +330,7 @@ public class UtilCache implements Serializable {
             return null;
         }
         
-        List valuesList = new LinkedList();
+        List valuesList = FastList.newInstance();
         Iterator i = cacheLineTable.keySet().iterator();
         while (i.hasNext()) {
             Object key = i.next();
