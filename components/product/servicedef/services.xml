@@ -166,6 +166,26 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
+	<!-- Product Association Services -->
+
+    <service name="createProductAssoc" default-entity-name="ProductAssoc" engine="simple"
+            location="org/ofbiz/product/product/ProductServices.xml" 
+            invoke="createProductAssoc" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductAssoc" default-entity-name="ProductAssoc" engine="simple"
+            location="org/ofbiz/product/product/ProductServices.xml" 
+            invoke="updateProductAssoc" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductAssoc" default-entity-name="ProductAssoc" engine="simple"
+            location="org/ofbiz/product/product/ProductServices.xml" 
+            invoke="deleteProductAssoc" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
     <!-- Product Price Services -->
     <service name="createProductPrice" default-entity-name="ProductPrice" engine="simple"
                 location="org/ofbiz/product/price/PriceServices.xml" invoke="createProductPrice" auth="true">

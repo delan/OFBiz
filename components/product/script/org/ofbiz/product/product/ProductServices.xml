@@ -662,4 +662,46 @@
             </if-not-empty>
         </iterate>
     </simple-method>
+
+	<!-- for managing product to product associations -->
+	    <simple-method method-name="createProductAssoc" 
+    	short-description="Create an association between two products"> 
+        <check-permission permission="CATALOG" action="_CREATE">
+        	<fail-message message="Security Error: to create a product association requires the CATALOG_CREATE or CATALOG_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductAssoc"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateProductAssoc" 
+		short-description="Update an association between two products">
+        <check-permission permission="CATALOG" action="_UPDATE">
+        	<fail-message message="Security Error: to update a product association requires the CATALOG_UPDATE or CATALOG_ADMIN permission"/>
+      	</check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductAssoc"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductAssoc" map-name="lookupPKMap" value-name="productAssocInstance"/>
+        <set-nonpk-fields map-name="parameters" value-name="productAssocInstance"/>
+        <store-value value-name="productAssocInstance"/>
+    </simple-method>
+    <simple-method method-name="deleteProductAssoc" 
+    	short-description="Delete an association between two products">
+        <check-permission permission="CATALOG" action="_DELETE">
+        	<fail-message message="Security Error: to delete a product association requires the CATALOG_DELETE or CATALOG_ADMIN permission"/>
+       	</check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductAssoc"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductAssoc" map-name="lookupPKMap" value-name="productAssocInstance"/>
+        <remove-value value-name="productAssocInstance"/>
+    </simple-method>
+    
+	
 </simple-methods>
