@@ -55,7 +55,6 @@
         "partyId", userLogin.getString("partyId"),
         "roleTypeId", "BILL_TO_CUSTOMER"), null)); %>  
 
-<BR>
 <form method="post" name="checkoutInfoForm" action="<ofbiz:url>/checkout</ofbiz:url>" style='margin:0;'>
 <table width="100%" border="0" cellpadding='0' cellspacing='0'>
   <tr valign="top" align="left">
@@ -135,7 +134,7 @@
     </tr>
     <tr>
       <td colspan="2">
-        <textarea cols="30" rows="3" name="shipping_instructions"><ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getShippingInstructions())%></ofbiz:if></textarea>
+        <textarea class='textAreaBox' cols="30" rows="3" name="shipping_instructions"><ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getShippingInstructions())%></ofbiz:if></textarea>
       </td>
     </tr>
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -156,7 +155,7 @@
     </tr>
     <tr>
       <td colspan="2">
-        <textarea cols="30" rows="3" name="gift_message"><ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getGiftMessage())%></ofbiz:if></textarea>
+        <textarea class='textAreaBox' cols="30" rows="3" name="gift_message"><ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getGiftMessage())%></ofbiz:if></textarea>
       </td>
     </tr>
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -178,7 +177,7 @@
         <div class="tabletext">Your may update these in your <a href="<ofbiz:url>/viewprofile?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">profile</a>.</div>
         <br>
         <div class="tabletext">You may add other comma separated email addresses here that will be used only for the current order:</div>
-        <input type="text" size="30" name="order_additional_emails" value='<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getOrderAdditionalEmails())%></ofbiz:if>'>
+        <input type="text" class='inputBox' size="30" name="order_additional_emails" value='<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getOrderAdditionalEmails())%></ofbiz:if>'>
       </td>
     </tr>
   </table>
@@ -361,7 +360,7 @@
 
  <ofbiz:if name="billingAccountRoleList" size="0">
     <div class="tabletext">To pay with store credit, enter your Purchase Order (PO) number here and select the billing account:</div>
-    <input type="text" name="corresponding_po_id" size="20" value='<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getPoNumber())%></ofbiz:if>'>
+    <input type="text" class='inputBox' name="corresponding_po_id" size="20" value='<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getPoNumber())%></ofbiz:if>'>
     <br>
 
   <table width="90%" border="0" cellpadding="0" cellspacing="0">

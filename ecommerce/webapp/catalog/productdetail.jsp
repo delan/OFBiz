@@ -251,7 +251,6 @@
   <%-- Begin Basic Product Info --%>
   <%-- ======================== --%>
 
-  <br>
   <table border="0" width="100%" cellpadding="2" cellspacing='0'>
     <ofbiz:if name="category">
       <tr>

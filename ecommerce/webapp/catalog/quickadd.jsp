@@ -21,8 +21,6 @@
 </ofbiz:service>
 <ofbiz:object name='productCategory' type='org.ofbiz.core.entity.GenericValue'/>
 
-<br>
-
 <ofbiz:if name="productCategory">
 <table border='0' width="100%" cellpadding='3' cellspacing='0'>
   <tr>

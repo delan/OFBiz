@@ -5,7 +5,7 @@
 <%Collection catalogCol = CatalogWorker.getCatalogIdsAvailable(pageContext);%>
 <%pageContext.setAttribute("catalogCol", catalogCol);%>
 <%if(catalogCol.size() > 0) {%>
-  <BR>
+
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
       <TD width='100%'>

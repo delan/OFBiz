@@ -41,7 +41,6 @@
 <%ContactMechWorker.getContactMechAndRelated(pageContext, userLogin.getString("partyId"), "contactMech", "contactMechId", "partyContactMech", "partyContactMechPurposes",
     "contactMechTypeId", "contactMechType", "purposeTypes", "postalAddress", "telecomNumber", "requestName", "donePage", "tryEntity", "contactMechTypes");%>
 
-<br>
 <%if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && pageContext.getAttribute("partyContactMech") == null && pageContext.getAttribute("contactMech") != null){%>
   <p><h3>The contact information specified does not belong to you, you may not view or edit it.</h3></p>
   &nbsp;<a href="<ofbiz:url>/authview/"<ofbiz:print attribute="donePage"/></ofbiz:url>" class="buttontext">[Back]</a>
@@ -56,7 +55,7 @@
         <tr>
           <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
           <td width="74%">
-            <select name="preContactMechTypeId">
+            <select name="preContactMechTypeId" class='selectBox'>
               <ofbiz:iterator name="contactMechType" property="contactMechTypes">
                 <option value='<ofbiz:entityfield attribute="contactMechType" field="contactMechTypeId"/>'><ofbiz:entityfield attribute="contactMechType" field="description"/></option>
               </ofbiz:iterator>
@@ -124,7 +123,7 @@
               <tr>
                 <form method=POST action='<ofbiz:url>/createPartyContactMechPurpose?contactMechId=<ofbiz:print attribute="contactMechId"/>&DONE_PAGE=<ofbiz:print attribute="donePage"/>&useValues=true</ofbiz:url>' name='newpurposeform'>
                   <td bgcolor='white'>
-                    <SELECT name='contactMechPurposeTypeId'>
+                    <SELECT name='contactMechPurposeTypeId' class='selectBox'>
                       <OPTION></OPTION>
                       <ofbiz:iterator name="contactMechPurposeType" property="purposeTypes">
                         <OPTION value='<ofbiz:entityfield attribute="contactMechPurposeType" field="contactMechPurposeTypeId"/>'><ofbiz:entityfield attribute="contactMechPurposeType" field="description"/></OPTION>
@@ -148,42 +147,42 @@
       <td width="26%" align=right valign=top><div class="tabletext">To Name</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="toName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class='inputBox' size="30" maxlength="60" <ofbiz:inputvalue field="toName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Attention Name</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="attnName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class='inputBox' size="30" maxlength="60" <ofbiz:inputvalue field="attnName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Address Line 1</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="address1" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class='inputBox' size="30" maxlength="30" <ofbiz:inputvalue field="address1" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Address Line 2</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-          <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="address2" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+          <input type="text" class='inputBox' size="30" maxlength="30" <ofbiz:inputvalue field="address2" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">City</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-          <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="city" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+          <input type="text" class='inputBox' size="30" maxlength="30" <ofbiz:inputvalue field="city" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">State/Province</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <select name="stateProvinceGeoId">
+        <select name="stateProvinceGeoId" class='selectBox'>
           <option><ofbiz:inputvalue field="stateProvinceGeoId" entityAttr="postalAddress" tryEntityAttr="tryEntity"/></option>
           <option></option>
           <%@ include file="/includes/states.jsp" %>
@@ -194,14 +193,14 @@
       <td width="26%" align=right valign=top><div class="tabletext">Zip/Postal Code</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="12" maxlength="10" <ofbiz:inputvalue field="postalCode" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class='inputBox' size="12" maxlength="10" <ofbiz:inputvalue field="postalCode" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Country</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <select name="countryGeoId" >
+        <select name="countryGeoId" class='selectBox'>
           <option><ofbiz:inputvalue field="countryGeoId" entityAttr="postalAddress" tryEntityAttr="tryEntity"/></option>
           <option></option>
           <%@ include file="/includes/countries.jsp" %>
@@ -213,10 +212,10 @@
       <td width="26%" align=right valign=top><div class="tabletext">Phone Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="4" maxlength="10" <ofbiz:inputvalue field="countryCode" entityAttr="telecomNumber" tryEntityAttr="tryEntity" fullattrs="true"/>">
-        -&nbsp;<input type="text" size="4" maxlength="10" <ofbiz:inputvalue field="areaCode" entityAttr="telecomNumber" tryEntityAttr="tryEntity" fullattrs="true"/>>
-        -&nbsp;<input type="text" size="15" maxlength="15" <ofbiz:inputvalue field="contactNumber" entityAttr="telecomNumber" tryEntityAttr="tryEntity" fullattrs="true"/>>
-        &nbsp;ext&nbsp;<input type="text" size="6" maxlength="10" <ofbiz:inputvalue field="extension" entityAttr="partyContactMech" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class='inputBox' size="4" maxlength="10" <ofbiz:inputvalue field="countryCode" entityAttr="telecomNumber" tryEntityAttr="tryEntity" fullattrs="true"/>">
+        -&nbsp;<input type="text" class='inputBox' size="4" maxlength="10" <ofbiz:inputvalue field="areaCode" entityAttr="telecomNumber" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        -&nbsp;<input type="text" class='inputBox' size="15" maxlength="15" <ofbiz:inputvalue field="contactNumber" entityAttr="telecomNumber" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        &nbsp;ext&nbsp;<input type="text" class='inputBox' size="6" maxlength="10" <ofbiz:inputvalue field="extension" entityAttr="partyContactMech" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
@@ -229,7 +228,7 @@
       <td width="26%" align=right valign=top><div class="tabletext">Email address</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-          <input type="text" size="60" maxlength="255" <ofbiz:inputvalue field="infoString" param="emailAddress" entityAttr="contactMech" tryEntityAttr="tryEntity" fullattrs="true"/>>
+          <input type="text" class='inputBox' size="60" maxlength="255" <ofbiz:inputvalue field="infoString" param="emailAddress" entityAttr="contactMech" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
   <%} else {%>
@@ -237,7 +236,7 @@
       <td width="26%" align=right valign=top><div class="tabletext"><ofbiz:entityfield attribute="contactMechType" field="description"/></div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-          <input type="text" size="60" maxlength="255" <ofbiz:inputvalue field="infoString" entityAttr="contactMech" tryEntityAttr="tryEntity" fullattrs="true"/>>
+          <input type="text" class='inputBox' size="60" maxlength="255" <ofbiz:inputvalue field="infoString" entityAttr="contactMech" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
   <%}%>
@@ -245,7 +244,7 @@
       <td width="26%" align=right valign=top><div class="tabletext">Allow Solicitation?</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <select name="allowSolicitation">
+        <select name="allowSolicitation" class='selectBox'>
           <option><ofbiz:inputvalue field="allowSolicitation" entityAttr="partyContactMech" tryEntityAttr="tryEntity"/></option>
           <option></option><option>Y</option><option>N</option>
         </select>

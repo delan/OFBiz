@@ -42,7 +42,7 @@
     String donePage = request.getParameter("DONE_PAGE");
     if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 %>
-  <br>
+  
   <p class="head1">Change Password</p>
 
     &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
@@ -53,25 +53,25 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">Current (Old) Password</div></td>
       <td width="74%">
-        <input type="password" name="currentPassword" size="20" maxlength="20">
+        <input type="password" class='inputBox' name="currentPassword" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">New Password</div></td>
       <td width="74%">
-        <input type="password" name="newPassword" size="20" maxlength="20">
+        <input type="password" class='inputBox' name="newPassword" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">New Password Verify</div></td>
       <td width="74%">
-        <input type="password" name="newPasswordVerify" size="20" maxlength="20">
+        <input type="password" class='inputBox' name="newPasswordVerify" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Password Hint</div></td>
       <td width="74%">
-        <input type="text" size="40" maxlength="100" <ofbiz:inputvalue field="passwordHint" entityAttr="userLogin" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class='inputBox' size="40" maxlength="100" <ofbiz:inputvalue field="passwordHint" entityAttr="userLogin" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
   </table>

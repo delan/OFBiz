@@ -15,8 +15,7 @@
 </ofbiz:iterator>
 <%pageContext.setAttribute("showPromoText", new Boolean(showPromoText));%>
 
-<ofbiz:if name="showPromoText" type="Boolean">
-  <BR>
+<ofbiz:if name="showPromoText" type="Boolean">  
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
       <TD width='100%'>

@@ -45,7 +45,6 @@
   Collection orderHeaderList = EntityUtil.orderBy(EntityUtil.filterByAnd(EntityUtil.getRelated("OrderHeader", orderRoleCollection), UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"))), UtilMisc.toList("orderDate DESC"));
   pageContext.setAttribute("orderHeaderList", orderHeaderList);
 %>
-<br>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>

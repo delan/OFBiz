@@ -57,7 +57,6 @@
 <ofbiz:object name='productCategoryMembers' type='java.util.Collection'/>
 <%String contentPathPrefix = CatalogWorker.getContentPathPrefix(pageContext);%>
 
-<br>
 <ofbiz:if name="productCategory">
     <table border="0" width="100%" cellpadding="3">
         <tr>

@@ -53,16 +53,14 @@
                 rd.include(request, response);
             } catch (java.io.FileNotFoundException e) {
                 Debug.logError(e, "Error dispatching request");
-%>
-    <br>
+%>    
     <center><div class='head2'>ERROR: The template for this category was not found at <%=detailTemplate%>.</div></center>
     <center><div class='head2'>Please try back later.</div></center>
 <%
             }
         } else {
             Debug.logError("ERROR: The template for this category was not found at " + detailTemplate);
-%>
-    <br>
+%>    
     <center><div class='head2'>ERROR: The template for this category was not found at <%=detailTemplate%>.</div></center>
     <center><div class='head2'>Please try back later.</div></center>
 <%

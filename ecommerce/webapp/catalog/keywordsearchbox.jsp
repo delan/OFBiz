@@ -31,7 +31,7 @@
 
 <%Collection otherSearchProdCatalogCategories = CatalogWorker.getProdCatalogCategories(pageContext, CatalogWorker.getCurrentCatalogId(pageContext), "PCCT_OTHER_SEARCH");%>
 <%if (otherSearchProdCatalogCategories != null) pageContext.setAttribute("otherSearchProdCatalogCategories", otherSearchProdCatalogCategories);%>
-<BR>
+
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

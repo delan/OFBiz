@@ -42,7 +42,6 @@
 %>
 <%EntityField entityField = new EntityField(pageContext);%>
 
-<br>
 <ofbiz:if name="party">
 <%-- Main Heading --%>
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>

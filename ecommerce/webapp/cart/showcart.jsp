@@ -14,7 +14,7 @@
 <%-- get these for the promoText --%>
 <%pageContext.setAttribute("productPromos", ProductPromoWorker.getCatalogProductPromos(delegator, request));%>
 <%String contentPathPrefix = CatalogWorker.getContentPathPrefix(pageContext);%>
-<BR>
+
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -43,8 +43,8 @@
         <tr>
           <td>
             <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="quickaddform" style='margin: 0;'>
-              <input type='text' name="add_product_id" value="<%=UtilFormatOut.checkNull(request.getParameter("add_product_id"))%>">
-              <input type='text' size="5" name="quantity" value="<%=UtilFormatOut.checkNull(request.getParameter("quantity"), "1")%>">
+              <input type='text' class='inputBox' name="add_product_id" value="<%=UtilFormatOut.checkNull(request.getParameter("add_product_id"))%>">
+              <input type='text' class='inputBox' size="5" name="quantity" value="<%=UtilFormatOut.checkNull(request.getParameter("quantity"), "1")%>">
               <input type='submit' value="Add To Cart">
               <%-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a> --%>
             </form>
@@ -124,7 +124,7 @@
                 <%if (item.getIsPromo()) {%>
                     <ofbiz:format><%=item.getQuantity()%></ofbiz:format>
                 <%} else {%>
-                    <input size="6" type="text" name="update_<%=cart.getItemIndex(item)%>" value="<ofbiz:format><%=item.getQuantity()%></ofbiz:format>">
+                    <input size="6" class='inputBox' type="text" name="update_<%=cart.getItemIndex(item)%>" value="<ofbiz:format><%=item.getQuantity()%></ofbiz:format>">
                 <%}%>
               </div>
             </td>

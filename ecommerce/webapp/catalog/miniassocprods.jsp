@@ -3,7 +3,7 @@
 
 <%org.ofbiz.commonapp.product.catalog.CatalogWorker.getRandomCartProductAssoc(pageContext, "miniAssociatedProducts");%>
 <ofbiz:if name="miniAssociatedProducts" size="0">
-  <BR>
+  
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
       <TD width='100%'>

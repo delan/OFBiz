@@ -52,7 +52,6 @@
 
 <%ContactMechWorker.getPartyPostalAddresses(pageContext, userLogin.getString("partyId"), (String) pageContext.getAttribute("curContactMechId"), "postalAddressInfos");%>
 
-<br>
 <%if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && pageContext.getAttribute("eftAccount") != null && pageContext.getAttribute("paymentMethod") != null &&
       !userLogin.getString("partyId").equals(((GenericValue) pageContext.getAttribute("paymentMethod")).getString("partyId"))) {%>
   <p><h3>The EFT Account specified does not belong to you, you may not view or edit it.</h3></p>
@@ -85,28 +84,28 @@
       <td width="26%" align=right valign=top><div class="tabletext">Company Name on Account</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="companyNameOnAccount" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class='inputBox' size="30" maxlength="60" <ofbiz:inputvalue field="companyNameOnAccount" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Bank Name</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="bankName" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class='inputBox' size="30" maxlength="60" <ofbiz:inputvalue field="bankName" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Routing Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="10" maxlength="30" <ofbiz:inputvalue field="routingNumber" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class='inputBox' size="10" maxlength="30" <ofbiz:inputvalue field="routingNumber" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Account Type</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <select name="accountType">
+        <select name="accountType" class='selectBox'>
           <option><ofbiz:inputvalue field="accountType" entityAttr="eftAccount" tryEntityAttr="tryEntity"/></option>
           <option></option>
           <option>Checking</option>
@@ -118,7 +117,7 @@
       <td width="26%" align=right valign=top><div class="tabletext">Account Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" size="20" maxlength="40" <ofbiz:inputvalue field="accountNumber" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" class='inputBox' size="20" maxlength="40" <ofbiz:inputvalue field="accountNumber" entityAttr="eftAccount" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
 
