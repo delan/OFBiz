@@ -23,6 +23,7 @@
  */
 package org.ofbiz.core.util;
 
+import java.text.*;
 import java.util.*;
 
 /**
@@ -43,6 +44,15 @@ public class UtilDateTime {
         return new java.sql.Timestamp(System.currentTimeMillis());
     }
 
+    /** 
+     * Return a string formatted as yyyymmddHHMMss      
+     * @return String formatted for right now
+     */
+    public static String nowDateString() {
+        SimpleDateFormat df = new SimpleDateFormat("yyyymmddHHMMss");
+        return df.format(new Date());
+    }                    
+    
     /** Return a Date for right now
      * @return Date for right now
      */
