@@ -318,35 +318,23 @@ public class JmsServiceEngine implements GenericEngine {
     }
 
     /**
-     * Run the service synchronously and return the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @return Map of name, value pairs composing the result.
-     * @throws GenericServiceException
+     * @see org.ofbiz.core.service.engine.GenericEngine#runSync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
      */
-    public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
+    public Map runSync(String localName, ModelService modelService, Map context) throws GenericServiceException {
         return run(modelService, context);
     }
 
     /**
-     * Run the service synchronously and IGNORE the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @throws GenericServiceException
+     * @see org.ofbiz.core.service.engine.GenericEngine#runSyncIgnore(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
      */
-    public void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException {
+    public void runSyncIgnore(String localName, ModelService modelService, Map context) throws GenericServiceException {
         run(modelService, context);
     }
 
     /**
-     * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @param requester Object implementing GenericRequester interface which will receive the result.
-     * @param persist True for store/run; False for run - Ignored.
-     * @throws GenericServiceException
+     * @see org.ofbiz.core.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map, org.ofbiz.core.service.GenericRequester, boolean)
      */
-    public void runAsync(ModelService modelService, Map context, GenericRequester requester, boolean persist)
+    public void runAsync(String localName, ModelService modelService, Map context, GenericRequester requester, boolean persist)
         throws GenericServiceException {
         Map result = run(modelService, context);
 
@@ -354,21 +342,10 @@ public class JmsServiceEngine implements GenericEngine {
     }
 
     /**
-     * Run the service asynchronously and IGNORE the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @param persist True for store/run; False for run - Ignored.
-     * @throws GenericServiceException
+     * @see org.ofbiz.core.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map, boolean)
      */
-    public void runAsync(ModelService modelService, Map context, boolean persist) throws GenericServiceException {
+    public void runAsync(String localName, ModelService modelService, Map context, boolean persist) throws GenericServiceException {
         run(modelService, context);
     }
 
-    /**
-     * Set the name of the local dispatcher - Ignored.
-     * @param loader name of the local dispatcher.
-     */
-    public void setLoader(String loader) {
-        return;
-    }
 }

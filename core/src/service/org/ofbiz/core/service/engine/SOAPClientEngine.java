@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.engine;
-
 
 import java.net.*;
 import java.util.*;
@@ -34,36 +32,33 @@ import org.apache.axis.encoding.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 
-
 /**
  * Generic Service SOAP Interface
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    December 7, 2001
- *@version    1.0
+ *@version    1.1
  */
 public final class SOAPClientEngine extends GenericAsyncEngine {
 
     public static final String module = SOAPClientEngine.class.getName();
-
-    /** Creates new SOAPClientEngine */
+   
     public SOAPClientEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
     }
-
-    /** Run the service synchronously and IGNORE the result
-     * @param context Map of name, value pairs composing the context
+    
+    /**
+     * @see org.ofbiz.core.service.engine.GenericEngine#runSyncIgnore(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
      */
-    public void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException {
-        Map result = runSync(modelService, context);
+    public void runSyncIgnore(String localName, ModelService modelService, Map context) throws GenericServiceException {
+        Map result = runSync(localName, modelService, context);
     }
-
-    /** Run the service synchronously and return the result
-     * @param context Map of name, value pairs composing the context
-     * @return Map of name, value pairs composing the result
+   
+    /**
+     * @see org.ofbiz.core.service.engine.GenericEngine#runSync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
      */
-    public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
-        Object result = serviceInvoker(modelService, context);
+    public Map runSync(String localName, ModelService modelService, Map context) throws GenericServiceException {
+        Object result = serviceInvoker(localName, modelService, context);
 
         if (result == null)
             throw new GenericServiceException("Service did not return expected result");
@@ -77,7 +72,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
     }
 
     // Invoke the remote SOAP service
-    private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {
+    private Object serviceInvoker(String localName, ModelService modelService, Map context) throws GenericServiceException {
         if (modelService.location == null || modelService.invoke == null)
             throw new GenericServiceException("Cannot locate service to invoke");
 

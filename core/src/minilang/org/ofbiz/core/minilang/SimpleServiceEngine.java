@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,10 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
-
 package org.ofbiz.core.minilang;
-
 
 import java.util.*;
 import java.lang.reflect.*;
@@ -33,7 +30,6 @@ import java.lang.reflect.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.engine.*;
-
 
 /**
  * Standard Java Static Method Service Engine
@@ -52,29 +48,25 @@ public final class SimpleServiceEngine extends GenericAsyncEngine {
     /** Run the service synchronously and IGNORE the result
      * @param context Map of name, value pairs composing the context
      */
-    public void runSyncIgnore(ModelService modelService,
-        Map context) throws GenericServiceException {
-        Map result = runSync(modelService, context);
+    public void runSyncIgnore(String localName, ModelService modelService, Map context) throws GenericServiceException {        
+        Map result = runSync(localName, modelService, context);
     }
 
     /** Run the service synchronously and return the result
      * @param context Map of name, value pairs composing the context
      * @return Map of name, value pairs composing the result
      */
-    public Map runSync(ModelService modelService,
-        Map context) throws GenericServiceException {
-        Object result = serviceInvoker(modelService, context);
-
+    public Map runSync(String localName, ModelService modelService, Map context) throws GenericServiceException {        
+        Object result = serviceInvoker(localName, modelService, context);
         if (result == null || !(result instanceof Map))
             throw new GenericServiceException("Service did not return expected result");
         return (Map) result;
     }
 
     // Invoke the simple method from a service context
-    private Object serviceInvoker(ModelService modelService,
-        Map context) throws GenericServiceException {
+    private Object serviceInvoker(String localName, ModelService modelService, Map context) throws GenericServiceException {        
         // static java service methods should be: public Map methodName(DispatchContext dctx, Map context)
-        DispatchContext dctx = dispatcher.getLocalContext(loader);
+        DispatchContext dctx = dispatcher.getLocalContext(localName);
 
         // check the package and method names
         if (modelService.location == null || modelService.invoke == null)
@@ -83,8 +75,8 @@ public final class SimpleServiceEngine extends GenericAsyncEngine {
         // get the classloader to use
         ClassLoader classLoader = null;
 
-        if (loader != null)
-            classLoader = dispatcher.getLocalContext(loader).getClassLoader();
+        if (dctx != null)
+            classLoader = dctx.getClassLoader();
 
         // if the classLoader is null, no big deal, SimpleMethod will use the 
         // current thread's ClassLoader by default if null passed in

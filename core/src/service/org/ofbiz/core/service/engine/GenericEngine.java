@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,70 +22,68 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.engine;
 
 
 import java.util.*;
 
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.service.ModelService;
-import org.ofbiz.core.service.GenericServiceException;
-import org.ofbiz.core.service.GenericRequester;
-
+import org.ofbiz.core.service.*;
 
 /**
  * Generic Engine Interface
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    October 20, 2001
- *@version    1.0
+ *@version    1.1
  */
 public interface GenericEngine {
 
     /**
      * Run the service synchronously and return the result.
+     * 
+     * @param localName Name of the LocalDispatcher.
      * @param modelService Service model object.
      * @param context Map of name, value pairs composing the context.
      * @return Map of name, value pairs composing the result.
      * @throws GenericServiceException
      */
-    public Map runSync(ModelService modelService, Map context) throws GenericServiceException;
+    public Map runSync(String localName, ModelService modelService, Map context) throws GenericServiceException;
 
     /**
      * Run the service synchronously and IGNORE the result.
+     * 
+     * @param localName Name of the LocalDispatcher.
      * @param modelService Service model object.
      * @param context Map of name, value pairs composing the context.
      * @throws GenericServiceException
      */
-    public void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException;
+    public void runSyncIgnore(String localName, ModelService modelService, Map context) throws GenericServiceException;
 
     /**
      * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
+     * 
+     * @param localName Name of the LocalDispatcher.
      * @param modelService Service model object.
      * @param context Map of name, value pairs composing the context.
      * @param requester Object implementing GenericRequester interface which will receive the result.
      * @param persist True for store/run; False for run.
      * @throws GenericServiceException
      */
-    public void runAsync(ModelService modelService, Map context, GenericRequester requester, boolean persist)
+    public void runAsync(String localName, ModelService modelService, Map context, GenericRequester requester, boolean persist)
         throws GenericServiceException;
 
     /**
      * Run the service asynchronously and IGNORE the result.
+     * 
+     * @param localName Name of the LocalDispatcher.
      * @param modelService Service model object.
      * @param context Map of name, value pairs composing the context.
      * @param persist True for store/run; False for run.
      * @throws GenericServiceException
      */
-    public void runAsync(ModelService modelService, Map context, boolean persist) throws GenericServiceException;
-
-    /**
-     * Set the name of the local dispatcher.
-     * @param loader name of the local dispatcher.
-     */
-    public void setLoader(String loader);
+    public void runAsync(String localName, ModelService modelService, Map context, boolean persist) throws GenericServiceException;
 
 }
 

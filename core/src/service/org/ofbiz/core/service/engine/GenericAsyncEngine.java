@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,6 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.engine;
 
 
@@ -38,72 +37,45 @@ import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * Generic Asynchronous Engine
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    November 2, 2001
- *@version    1.0
+ *@version    1.1
  */
 public abstract class GenericAsyncEngine implements GenericEngine {
 
     protected ServiceDispatcher dispatcher;
-    protected String loader;
-
-    public GenericAsyncEngine(ServiceDispatcher dispatcher) {
-        this.dispatcher = dispatcher;
-        this.loader = null;
+    
+    protected GenericAsyncEngine(ServiceDispatcher dispatcher) {
+        this.dispatcher = dispatcher;       
     }
 
     /**
-     * Set the name of the local dispatcher.
-     * @param loader name of the local dispatcher.
+     * @see org.ofbiz.core.service.engine.GenericEngine#runSync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
      */
-    public void setLoader(String loader) {
-        this.loader = loader;
+    public abstract Map runSync(String localName, ModelService modelService, Map context) throws GenericServiceException;
+    
+    /**
+     * @see org.ofbiz.core.service.engine.GenericEngine#runSyncIgnore(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
+     */
+    public abstract void runSyncIgnore(String localName, ModelService modelService, Map context) throws GenericServiceException;
+
+    /**
+     * @see org.ofbiz.core.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map, boolean)
+     */
+    public void runAsync(String localName, ModelService modelService, Map context, boolean persist) throws GenericServiceException {
+        runAsync(localName, modelService, context, null, persist);
     }
-
+    
     /**
-     * Run the service synchronously and return the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @return Map of name, value pairs composing the result.
-     * @throws GenericServiceException
+     * @see org.ofbiz.core.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map, org.ofbiz.core.service.GenericRequester, boolean)
      */
-    public abstract Map runSync(ModelService modelService, Map context) throws GenericServiceException;
-
-    /**
-     * Run the service synchronously and IGNORE the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @throws GenericServiceException
-     */
-    public abstract void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException;
-
-    /**
-     * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @param requester Object implementing GenericRequester interface which will receive the result.
-     * @param persist True for store/run; False for run.
-     * @throws GenericServiceException
-     */
-    public void runAsync(ModelService modelService, Map context, boolean persist) throws GenericServiceException {
-        runAsync(modelService, context, null, persist);
-    }
-
-    /**
-     * Run the service asynchronously and IGNORE the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @param persist True for store/run; False for run.
-     * @throws GenericServiceException
-     */
-    public void runAsync(ModelService modelService, Map context, GenericRequester requester, boolean persist)
+    public void runAsync(String localName, ModelService modelService, Map context, GenericRequester requester, boolean persist)
         throws GenericServiceException {
 
-        DispatchContext dctx = dispatcher.getLocalContext(loader);
+        DispatchContext dctx = dispatcher.getLocalContext(localName);
         Job job = null;
 
         if (persist) {
@@ -140,7 +112,7 @@ public abstract class GenericAsyncEngine implements GenericEngine {
                 // Create the job info
                 String jobName = new String(new Long((new Date().getTime())).toString());
                 Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", UtilDateTime.nowTimestamp(),
-                        "serviceName", modelService.name, "loaderName", loader,
+                        "serviceName", modelService.name, "loaderName", localName,
                         "runtimeDataId", dataId);
 
                 jobV = dispatcher.getDelegator().makeValue("JobSandbox", jFields);

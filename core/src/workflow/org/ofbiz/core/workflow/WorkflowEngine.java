@@ -50,66 +50,38 @@ public class WorkflowEngine implements GenericEngine {
     public static final String module = WorkflowEngine.class.getName();
 
     protected ServiceDispatcher dispatcher;
-    protected String loader;
-
-    /** Creates new WorkflowEngine */
+     
     public WorkflowEngine(ServiceDispatcher dispatcher) {
-        this.dispatcher = dispatcher;
-        this.loader = null;
+        this.dispatcher = dispatcher;      
     }
-
-    /** Set the name of the local dispatcher
-     * @param loader name of the local dispatcher
-     */
-    public void setLoader(String loader) {
-        this.loader = loader;
-    }
-
+       
     /**
-     * Run the service synchronously and return the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @return Map of name, value pairs composing the result.
-     * @throws GenericServiceException
+     * @see org.ofbiz.core.service.engine.GenericEngine#runSync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
      */
-    public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
+    public Map runSync(String localName, ModelService modelService, Map context) throws GenericServiceException {
         GenericResultWaiter waiter = new GenericResultWaiter();
-
-        runAsync(modelService, context, waiter, false);
+        runAsync(localName, modelService, context, waiter, false);
         return waiter.waitForResult();
     }
-
+   
     /**
-     * Run the service synchronously and IGNORE the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @throws GenericServiceException
+     * @see org.ofbiz.core.service.engine.GenericEngine#runSyncIgnore(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
      */
-    public void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException {
-        runAsync(modelService, context, null, false);
+    public void runSyncIgnore(String localName, ModelService modelService, Map context) throws GenericServiceException {
+        runAsync(localName, modelService, context, null, false);
     }
-
+   
     /**
-     * Run the service asynchronously and IGNORE the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @param persist True for store/run; False for run. (Ignored)
-     * @throws GenericServiceException
+     * @see org.ofbiz.core.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map, boolean)
      */
-    public void runAsync(ModelService modelService, Map context, boolean persist) throws GenericServiceException {
-        runAsync(modelService, context, null, persist);
+    public void runAsync(String localName, ModelService modelService, Map context, boolean persist) throws GenericServiceException {
+        runAsync(localName, modelService, context, null, persist);
     }
-
+   
     /**
-     * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @param requester Object implementing GenericRequester interface which will receive the result.
-     * @param persist True for store/run; False for run. (Ignored)
-     * @throws GenericServiceException
+     * @see org.ofbiz.core.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map, org.ofbiz.core.service.GenericRequester, boolean)
      */
-    public void runAsync(ModelService modelService, Map context, GenericRequester requester, boolean persist)
-        throws GenericServiceException {
+    public void runAsync(String localName, ModelService modelService, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {       
         // Suspend the current transaction
         TransactionManager tm = TransactionFactory.getTransactionManager();
 
@@ -165,7 +137,7 @@ public class WorkflowEngine implements GenericEngine {
 
         // Set the service dispatcher for the workflow
         try {
-            process.setServiceLoader(loader);
+            process.setServiceLoader(localName);
         } catch (WfException e) {
             throw new GenericServiceException(e.getMessage(), e);
         }
@@ -240,7 +212,7 @@ public class WorkflowEngine implements GenericEngine {
     }
 }
 
-
+/** Workflow Runner class runs inside its own thread using the Scheduler API */
 class WorkflowRunner extends AbstractJob {
 
     GenericRequester requester;

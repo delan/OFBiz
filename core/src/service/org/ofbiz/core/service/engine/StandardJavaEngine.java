@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.engine;
-
 
 import java.util.*;
 import java.lang.reflect.*;
@@ -32,42 +30,33 @@ import java.lang.reflect.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 
-
 /**
  * Standard Java Static Method Service Engine
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    November 2, 2001
- *@version    1.0
+ *@version    1.1
  */
 public final class StandardJavaEngine extends GenericAsyncEngine {
 
     public static final String module = StandardJavaEngine.class.getName();
 
-    /** Creates new StandardJavaEngine */
     public StandardJavaEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
     }
-
+ 
     /**
-     * Run the service synchronously and IGNORE the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @throws GenericServiceException
+     * @see org.ofbiz.core.service.engine.GenericEngine#runSyncIgnore(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
      */
-    public void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException {
-        Map result = runSync(modelService, context);
+    public void runSyncIgnore(String localName, ModelService modelService, Map context) throws GenericServiceException {
+        Map result = runSync(localName, modelService, context);
     }
 
     /**
-     * Run the service synchronously and return the result.
-     * @param modelService Service model object.
-     * @param context Map of name, value pairs composing the context.
-     * @return Map of name, value pairs composing the result.
-     * @throws GenericServiceException
+     * @see org.ofbiz.core.service.engine.GenericEngine#runSync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
      */
-    public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
-        Object result = serviceInvoker(modelService, context);
+    public Map runSync(String localName, ModelService modelService, Map context) throws GenericServiceException {
+        Object result = serviceInvoker(localName, modelService, context);
 
         if (result == null || !(result instanceof Map))
             throw new GenericServiceException("Service did not return expected result");
@@ -75,9 +64,9 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
     }
 
     // Invoke the static java method service.
-    private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {
+    private Object serviceInvoker(String localName, ModelService modelService, Map context) throws GenericServiceException {
         // static java service methods should be: public Map methodName(DispatchContext dctx, Map context)
-        DispatchContext dctx = dispatcher.getLocalContext(loader);
+        DispatchContext dctx = dispatcher.getLocalContext(localName);
 
         if (modelService == null)
             Debug.logError("ERROR: Null Model Service.", module);
@@ -97,10 +86,10 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
         // get the classloader to use
         ClassLoader cl = null;
 
-        if (loader == null)
+        if (dctx == null)
             cl = this.getClass().getClassLoader();
         else
-            cl = dispatcher.getLocalContext(loader).getClassLoader();
+            cl = dctx.getClassLoader();
 
         try {
             Class c = cl.loadClass(modelService.location);

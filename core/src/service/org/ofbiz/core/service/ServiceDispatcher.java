@@ -161,9 +161,7 @@ public class ServiceDispatcher {
 
             // setup the engine
             GenericEngine engine = getGenericEngine(service.engineName);
-
-            engine.setLoader(localName);
-
+            
             // pre-validate ECA
             if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context, null, false);
 
@@ -185,7 +183,7 @@ public class ServiceDispatcher {
             }
 
             // ===== invoke the service =====
-            Map result = engine.runSync(service, context);
+            Map result = engine.runSync(localName, service, context);
 
             // if anything but the error response, is not an error
             boolean isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
@@ -266,9 +264,7 @@ public class ServiceDispatcher {
 
             // setup the engine
             GenericEngine engine = getGenericEngine(service.engineName);
-
-            engine.setLoader(localName);
-
+            
             // pre-validate ECA
             if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context, null, false);
 
@@ -289,7 +285,7 @@ public class ServiceDispatcher {
                     "] (" + service.engineName + ")", module);
             }
 
-            engine.runSyncIgnore(service, context);
+            engine.runSyncIgnore(localName, service, context);
 
             // pre-commit ECA
             if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context, null, false);
@@ -339,9 +335,7 @@ public class ServiceDispatcher {
 
         // setup the engine
         GenericEngine engine = getGenericEngine(service.engineName);
-
-        engine.setLoader(localName);
-
+        
         // pre-validate ECA
         if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context, null, false);
 
@@ -359,7 +353,7 @@ public class ServiceDispatcher {
                 "] (" + service.engineName + ")", module);
         }
 
-        engine.runAsync(service, context, requester, persist);
+        engine.runAsync(localName, service, context, requester, persist);
     }
 
     /**
@@ -387,8 +381,6 @@ public class ServiceDispatcher {
         // setup the engine
         GenericEngine engine = getGenericEngine(service.engineName);
 
-        engine.setLoader(localName);
-
         // pre-validate ECA
         if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context, null, false);
 
@@ -406,7 +398,7 @@ public class ServiceDispatcher {
                 "] (" + service.engineName + ")", module);
         }
 
-        engine.runAsync(service, context, persist);
+        engine.runAsync(localName, service, context, persist);
     }
 
     /**
@@ -518,16 +510,17 @@ public class ServiceDispatcher {
 
         if (Debug.verboseOn()) Debug.logVerbose("[ServiceDispathcer.authenticate] : Invoking UserLogin Service", module);
 
-        // Manually invoke the service
+        // get the dispatch context and service model
         DispatchContext dctx = getLocalContext(localName);
         ModelService model = dctx.getModelService(service);
+        
+        // get the service engine
         GenericEngine engine = getGenericEngine(model.engineName);
-
-        engine.setLoader(localName);
-        Map result = engine.runSync(model, context);
-
+       
+        // invoke the service and get the UserLogin value object
+        Map result = engine.runSync(localName, model, context);
         GenericValue value = (GenericValue) result.get("userLogin");
-
+        
         return value;
     }
 }

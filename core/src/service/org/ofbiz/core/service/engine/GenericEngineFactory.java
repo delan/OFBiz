@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.engine;
-
 
 import java.util.*;
 import java.lang.reflect.*;
@@ -35,7 +33,6 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.service.*;
-
 
 /**
  * Generic Engine Factory
@@ -49,7 +46,8 @@ public class GenericEngineFactory {
 
     protected static Map engines = new HashMap();
 
-    /** Gets the GenericEngine instance that corresponds to given the name
+    /** 
+     * Gets the GenericEngine instance that corresponds to given the name
      *@param engineName Name of the engine
      *@return GenericEngine that corresponds to the engineName
      */
