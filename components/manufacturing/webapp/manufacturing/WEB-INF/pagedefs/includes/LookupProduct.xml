@@ -5,14 +5,10 @@
     <property name="formDefFile">/includes/FieldLookupForms.xml</property>    
     <property name="singleFormName">lookupProduct</property>    
     <property name="listFormName">listLookupProduct</property>    
-    <property name="lruFormName">lruLookupProduct</property>    
-<!--    <property name="subMenu">/data/data_menu.ftl</property>    
-    <property name="headerItem">bom</property>   -->
     <property name="entityName">Product</property>    
     <property name="listName">entityList</property>    
     <property name="permission">MANUFACTURING</property>    
     <property name="permissionType">simple</property>
     <content-action name="/includes/findprep.bsh"/>
-    <content-action name="/includes/lruprep.bsh"/>
     <content-action name="/includes/pagelistprep.bsh"/>
 </page>
