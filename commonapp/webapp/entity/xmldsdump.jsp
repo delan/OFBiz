@@ -23,8 +23,7 @@
  * @version 1.0
 --%>
 
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ include file="/includes/envsetup.jsp" %>
 
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 <%@ page import="org.w3c.dom.*" %>
@@ -33,81 +32,96 @@
   String filename = request.getParameter("filename");
   String[] entityName = request.getParameterValues("entityName");
   boolean checkAll = "true".equals(request.getParameter("checkAll"));
+  boolean tobrowser = request.getParameter("tobrowser")!=null?true:false;
 
   ModelReader reader = delegator.getModelReader();
   Collection ec = reader.getEntityNames();
   TreeSet entityNames = new TreeSet(ec);
+
+  int numberOfEntities = 0;
+  long numberWritten = 0;
+  Document document = null;
+  if(entityName != null && entityName.length > 0) {
+    TreeSet passedEntityNames = new TreeSet();
+    for(int inc=0; inc<entityName.length; inc++) {
+      passedEntityNames.add(entityName[inc]);
+    }
+    
+    numberOfEntities = passedEntityNames.size();
+    
+    document = GenericEntity.makeXmlDocument(null);
+    Iterator i = passedEntityNames.iterator();
+    while(i.hasNext()) { 
+      String curEntityName = (String)i.next();
+      Collection values = delegator.findAll(curEntityName, null);
+      numberWritten += values.size();
+      GenericEntity.addToXmlDocument(values, document);
+    }
+  }
 %>
-<br>
-<h2>XML Export from DataSource(s)</h2>
-<div>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</div>
-<hr>
-<%if(security.hasPermission("ENTITY_MAINT", session)) {%>
-  <h3>Results:</h3>
 
-
-  <%if(filename != null && filename.length() > 0 && entityName != null && entityName.length > 0) {%>
-    <% 
-      TreeSet passedEntityNames = new TreeSet();
-      for(int inc=0; inc<entityName.length; inc++) {
-        passedEntityNames.add(entityName[inc]);
-      }
-
-      int numberOfEntities = passedEntityNames.size();
-      long numberWritten = 0;
-    %>
-
-    <%
-      Document document = GenericEntity.makeXmlDocument(null);
-      Iterator i = passedEntityNames.iterator();
-      while(i.hasNext()) { 
-        String curEntityName = (String)i.next();
-        %><%--<div>ENTITY: <%=curEntityName%></div>--%><%
-        Collection values = delegator.findAll(curEntityName, null);
-        numberWritten += values.size();
-        GenericEntity.addToXmlDocument(values, document);
-      }
-    %>
-    <div>Trying to Write XML for all data in <%=numberOfEntities%> entities.</div>
-    <div>Trying to Write <%=numberWritten%> records to XML file <%=filename%></div>
-    <%
-      try { UtilXml.writeXmlDocument(filename, document); }
-      catch(Exception e) {
-        %><div>ERROR writing XML document: <%=e.toString()%></div><%
-      }
-    %>
-  <%}else{%>
-    <div>No filename specified or no entity names specified, doing nothing.</div>
-  <%}%>
-
-  <hr>
-
-  <h3>Export:</h3>
-  <FORM method=POST action='<%=response.encodeURL(controlPath + "/xmldsdump")%>'>
-    <div>Filename: <INPUT type=text size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'></div>
+<%if (tobrowser && document != null) {%>
+    <%response.setContentType("text/plain");%>
+    <%UtilXml.writeXmlDocument(response.getOutputStream(), document);%>
+<%} else {%>
+    <%@ include file="/includes/header.jsp" %>
+    <%@ include file="/includes/onecolumn.jsp" %> 
+    
     <br>
-    <div>Entity Names:</div>
-    <INPUT type=submit value='Export'>
-    <A href='<%=response.encodeURL(controlPath + "/xmldsdump?checkAll=true")%>'>Check All</A>
-    <A href='<%=response.encodeURL(controlPath + "/xmldsdump")%>'>Un-Check All</A>
-    <TABLE>
-      <TR>
-        <%Iterator iter = entityNames.iterator();%>
-        <%int entCount = 0;%>
-        <%while(iter.hasNext()) {%>
-          <%String curEntityName = (String)iter.next();%>
-          <%if(entCount % 3 == 0) {%></TR><TR><%}%>
-          <%entCount++;%>
-          <TD><INPUT type=checkbox name='entityName' value='<%=curEntityName%>'<%=checkAll?"checked":""%>><%=curEntityName%></TD>
-        <%}%>
-      </TR>
-    </TABLE>
-
-    <INPUT type=submit value='Export'>
-  </FORM>
-<%}else{%>
-  <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
+    <h2>XML Export from DataSource(s)</h2>
+    <div>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</div>
+    <hr>
+    <%if(security.hasPermission("ENTITY_MAINT", session)) {%>
+      <h3>Results:</h3>
+    
+    
+      <%if(filename != null && filename.length() > 0 && document != null) {%>
+        <div>Trying to Write XML for all data in <%=numberOfEntities%> entities.</div>
+        <div>Trying to Write <%=numberWritten%> records to XML file <%=filename%></div>
+        <%
+          try { UtilXml.writeXmlDocument(filename, document); }
+          catch(Exception e) {
+            %><div>ERROR writing XML document: <%=e.toString()%></div><%
+          }
+        %>
+      <%} else {%>
+        <div>No filename specified or no entity names specified, doing nothing.</div>
+      <%}%>
+    
+      <hr>
+    
+      <h3>Export:</h3>
+      <FORM method=POST action='<%=response.encodeURL(controlPath + "/xmldsdump")%>'>
+        <div>Filename: <INPUT type=text size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'></div>
+        <div>OR Out to Browser: <INPUT type=checkbox name='tobrowser' <%=tobrowser?"checked":""%>></div>
+        <br>
+        <div>Entity Names:</div>
+        <INPUT type=submit value='Export'>
+        <A href='<%=response.encodeURL(controlPath + "/xmldsdump?checkAll=true")%>'>Check All</A>
+        <A href='<%=response.encodeURL(controlPath + "/xmldsdump")%>'>Un-Check All</A>
+        <TABLE>
+          <TR>
+            <%Iterator iter = entityNames.iterator();%>
+            <%int entCount = 0;%>
+            <%while(iter.hasNext()) {%>
+              <%String curEntityName = (String)iter.next();%>
+              <%if(entCount % 3 == 0) {%></TR><TR><%}%>
+              <%entCount++;%>
+              <TD><INPUT type=checkbox name='entityName' value='<%=curEntityName%>'<%=checkAll?"checked":""%>><%=curEntityName%></TD>
+            <%}%>
+          </TR>
+        </TABLE>
+    
+        <INPUT type=submit value='Export'>
+        <A href='<%=response.encodeURL(controlPath + "/xmldsdump?checkAll=true")%>'>Check All</A>
+        <A href='<%=response.encodeURL(controlPath + "/xmldsdump")%>'>Un-Check All</A>
+      </FORM>
+    <%} else {%>
+      <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
+    <%}%>
+    
+    <%@ include file="/includes/onecolumnclose.jsp" %> 
+    <%@ include file="/includes/footer.jsp" %>
 <%}%>
+    
 
-<%@ include file="/includes/onecolumnclose.jsp" %> 
-<%@ include file="/includes/footer.jsp" %>
