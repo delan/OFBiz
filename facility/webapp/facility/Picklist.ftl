@@ -220,7 +220,7 @@
                 <#assign rowClass = "viewManyTR2">
               </#if>        
           </#list>          
-          <#list wrongQuantityReservedList as wrongQuantityReserved>
+          <#list wrongQuantityReservedList?if_exists as wrongQuantityReserved>
             <#assign orderItem = wrongQuantityReserved.orderItem>
             <#assign reservedQuantity = wrongQuantityReserved.reservedQuantity>
             <#assign issuedQuantity = wrongQuantityReserved.issuedQuantity>
