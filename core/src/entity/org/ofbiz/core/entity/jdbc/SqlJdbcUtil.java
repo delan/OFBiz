@@ -612,13 +612,13 @@ public class SqlJdbcUtil {
         String fieldType = mft.getJavaType();
 
         if (fieldValue != null) {
-            Class fieldClass = fieldValue.getClass();
-            String fieldClassName = fieldClass.getName();
-
-            if (!fieldClassName.equals(mft.getJavaType()) && fieldClassName.indexOf(mft.getJavaType()) < 0) {
+            if (!ObjectType.instanceOf(fieldValue, fieldType)) {
                 // this is only an info level message because under normal operation for most JDBC 
                 // drivers this will be okay, but if not then the JDBC driver will throw an exception
                 // and when lower debug levels are on this should help give more info on what happened
+                Class fieldClass = fieldValue.getClass();
+                String fieldClassName = fieldClass.getName();
+
                 if (Debug.verboseOn()) Debug.logVerbose("type of field " + entityName + "." + modelField.getName() +
                         " is " + fieldClassName + ", was expecting " + mft.getJavaType() + "; this may " +
                         "indicate an error in the configuration or in the class, and may result " +
