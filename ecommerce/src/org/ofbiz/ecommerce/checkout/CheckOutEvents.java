@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.18  2001/09/26 17:13:27  epabst
+ * store the distributorId for an order
+ *
  * Revision 1.17  2001/09/20 22:47:36  jonesde
  * Fixed illegal use of getRelatedOne
  *
@@ -308,7 +311,7 @@ public class CheckOutEvents {
       try { party = userLogin.getRelatedOne("Party"); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); party = null; }
       if(party != null) {
-        Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "EMAIL_ADDRESS", false));
+        Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
         while(emailIter != null && emailIter.hasNext()) {
           GenericValue email = (GenericValue) emailIter.next();
           emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));

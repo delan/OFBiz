@@ -156,7 +156,7 @@
         <div class="tabletext">Your order will be sent to the following email addresses:</div>
         <div class="tabletext">
           <b>
-          <% pageContext.setAttribute("emailList",  ContactHelper.getContactMech(userLogin.getRelatedOne("Party"), "EMAIL_ADDRESS", false));%>
+          <% pageContext.setAttribute("emailList",  ContactHelper.getContactMechByType(userLogin.getRelatedOne("Party"), "EMAIL_ADDRESS", false));%>
           <ofbiz:iterator name="email" property="emailList">
             <%=UtilFormatOut.checkNull(email.getString("infoString"))%>,
           </ofbiz:iterator>

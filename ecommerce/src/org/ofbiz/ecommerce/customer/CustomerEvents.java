@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.28  2001/09/26 17:13:57  epabst
+ * fixed bug where using wrong overload to find PRIMARY_EMAIL
+ *
  * Revision 1.27  2001/09/26 03:10:50  jonesde
  * Password checker now displays all errors possible.
  *
@@ -396,7 +399,7 @@ public class CustomerEvents {
         String cmPurposeTypeId;
         try {
           GenericValue party = userLogin.getRelatedOne("Party");
-          if (UtilValidate.isEmpty(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", null, false))) {
+          if (UtilValidate.isEmpty(ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false))) {
             cmPurposeTypeId = "PRIMARY_EMAIL";
           } else {
             cmPurposeTypeId = "OTHER_EMAIL";
@@ -1130,7 +1133,7 @@ public class CustomerEvents {
     catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); party = null; }
     if(party != null) {
       //Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
-      Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", null, false));
+      Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false));
       while(emailIter != null && emailIter.hasNext()) {
         GenericValue email = (GenericValue) emailIter.next();
         emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
