@@ -4,7 +4,7 @@
     <classpathentry exported="true" kind="lib" path="datavision/DataVision.jar"/>
     <classpathentry exported="true" kind="lib" path="datavision/MinML2.jar"/>
     <classpathentry exported="true" kind="lib" path="datavision/jcalendar.jar"/>    
-    <classpathentry exported="true" kind="lib" path="jasperreports/itext-0.92.jar"/>
+    <classpathentry exported="true" kind="lib" path="jasperreports/itext-0.96.jar"/>
     <classpathentry exported="true" kind="lib" path="jasperreports/jasperreports.jar"/>  
     <classpathentry exported="true" kind="lib" path="jasperreports/jasperreports-applet.jar"/>      
     <classpathentry exported="true" kind="lib" path="common/commons-beanutils.jar"/>
