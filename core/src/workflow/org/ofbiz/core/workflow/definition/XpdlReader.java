@@ -2,6 +2,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/11/27 15:44:09  jonesde
+ * Not much done, mostly small changes as looked for needed entities
+ *
  * Revision 1.1  2001/11/26 14:18:41  jonesde
  * Moved XpdlParser code to XpdlReader in order to restore previous XpdlParser, will be developed in parallel
  *
@@ -362,7 +365,7 @@ public class XpdlReader {
         //Activities
         Element activitiesElement = UtilXml.firstChildElement(workflowProcessElement, "Activities");
         List activities = UtilXml.childElementList(activitiesElement, "Activity");
-        readActivities(activities, packageId, processId);
+        readActivities(activities, packageId, processId, workflowProcessValue);
 
         //Transitions
         Element transitionsElement = UtilXml.firstChildElement(workflowProcessElement, "Transitions");
@@ -370,10 +373,19 @@ public class XpdlReader {
         readTransitions(transitions, packageId, processId);
     }
 
-    protected void readActivities(List activities, String packageId, String processId) throws DefinitionParserException {
+    protected void readActivities(List activities, String packageId, String processId, GenericValue workflowProcessValue) throws DefinitionParserException {
         if (activities == null || activities.size() == 0)
             return;
         Iterator activitiesIter = activities.iterator();
+        
+        //do the first one differently because it will be the defaultStart activity
+        if (activitiesIter.hasNext()) {
+            Element activityElement = (Element) activitiesIter.next();
+            String activityId = activityElement.getAttribute("Id");
+            workflowProcessValue.set("defaultStartActivityId", activityId);
+            readActivity(activityElement, packageId, processId);
+        }
+        
         while (activitiesIter.hasNext()) {
             Element activityElement = (Element) activitiesIter.next();
             readActivity(activityElement, packageId, processId);
@@ -465,6 +477,9 @@ public class XpdlReader {
         Element transitionRestrictionsElement = UtilXml.firstChildElement(activityElement, "TransitionRestrictions");
         List transitionRestrictions = UtilXml.childElementList(transitionRestrictionsElement, "TransitionRestriction");
         readTransitionRestrictions(transitionRestrictions, packageId, processId, activityId);
+        
+        //for not set the canStart to always be true
+        activityValue.set("canStart", "Y");
     }
 
     protected void readTransitions(List transitions, String packageId, String processId) throws DefinitionParserException {
@@ -537,8 +552,44 @@ public class XpdlReader {
         transRestrictionValue.set("processId", processId);
         transRestrictionValue.set("activityId", activityId);
         transRestrictionValue.set("restrictionSeqId", restrictionSeqId);
+        
+        //InlineBlock?
+        Element inlineBlockElement = UtilXml.firstChildElement(transitionRestrictionElement, "InlineBlock");
+        if (inlineBlockElement != null) {
+        }
+        
+        //Join?
+        Element joinElement = UtilXml.firstChildElement(transitionRestrictionElement, "Join");
+        if (joinElement != null) {
+        }
+        
+        //Split?
+        Element splitElement = UtilXml.firstChildElement(transitionRestrictionElement, "Split");
+        if (splitElement != null) {
+            //TransitionRefs
+            Element transitionRefsElement = UtilXml.firstChildElement(transitionRestrictionElement, "TransitionRefs");
+            List transitionRefs = UtilXml.childElementList(transitionRefsElement, "TransitionRef");
+            readTransitionRefs(transitionRefs, packageId, processId, activityId, restrictionSeqId);
+        }
     }
     
+    protected void readTransitionRefs(List transitionRefs, String packageId, String processId, String activityId, String restrictionSeqId) throws DefinitionParserException {
+        if (transitionRefs == null || transitionRefs.size() == 0)
+            return;
+        Iterator transitionRefsIter = transitionRefs.iterator();
+        while (transitionRefsIter.hasNext()) {
+            Element transitionRefElement = (Element) transitionRefsIter.next();
+            GenericValue transitionRefValue = delegator.makeValue("WorkflowTransitionRef", null);
+            values.add(transitionRefValue);
+    
+            transitionRefValue.set("packageId", packageId);
+            transitionRefValue.set("processId", processId);
+            transitionRefValue.set("activityId", activityId);
+            transitionRefValue.set("restrictionSeqId", restrictionSeqId);
+            transitionRefValue.set("transitionId", transitionRefElement.getAttribute("Id"));
+        }
+    }
+
     // ---------------------------------------------------------
     // RUNTIME, TEST, AND SAMPLE METHODS
     // ---------------------------------------------------------
