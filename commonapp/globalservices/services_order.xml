@@ -508,15 +508,15 @@
         <description>The interface for the Purchase Order Delivery Schedule</description>
         <auto-attributes entity-name="OrderDeliverySchedule" mode="IN" optional="false"/>
     </service>
-    <service name="createSchedule" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderDeliveryServices" invoke="createSchedule">
+    <service name="createSchedule" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="createSchedule">
         <description>Creates a delivery schedule for the specified purchase order</description>
         <attribute name="deliveryWorkEffortId" type="String" mode="IN" optional="true"/>
         <attribute name="pickupWorkEffortId" type="String" mode="IN" optional="true"/>
         <implements service="scheduleInterface"/>
     </service>
-    <service name="updateSchedule" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderDeliveryServices" invoke="updateSchedule">
+    <service name="updateSchedule" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="updateSchedule">
         <description>Update an existing delivery schedule for a specified purchase order</description>
         <implements service="scheduleInterface"/>
     </service>
