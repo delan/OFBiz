@@ -1,9 +1,8 @@
 @echo off
 
 rem uncomment the following and set them properly. if you want...
-rem set OFBIZ_HOME=c:\work\ofbiz
-rem set RESIN_HOME=c:\resin
-
+set OFBIZ_HOME=c:\work\ofbiz
+set RESIN_HOME=c:\resin
 
 if "%OFBIZ_HOME%" == "" goto setofbizhome
 goto doneofbizhome
@@ -28,6 +27,9 @@ set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\velocity-1.2.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\velocity-dep-1.2.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\wsdl4j.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\castor-0.9.3.9.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-beanutils.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-collections.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-digester.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\hsqldb.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\jms_1.0.2a.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\jta_1.0.1.jar
@@ -39,6 +41,12 @@ set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\sapdbc.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\tyrex-1.0.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\compile\xerces.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\compile\mail.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\datavision\DataVision.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\datavision\MinML.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\datavision\jcalendar.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\jasperreports\jasperreports.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\jasperreports\itext-0.81.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\weka\weka.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-share.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-entity.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-service.jar
