@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.35 $
+ *@version    $Revision: 1.36 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -311,7 +311,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
               <nobr><b>Amount:</b></nobr>&nbsp;
               <input type="text" class="inputBox" size="5" name="add_amount" value="">
             </div>
-            <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddtoCart}]</nobr></a>&nbsp;
+            <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a>&nbsp;
             <input type="text" class="inputBox" size="5" name="quantity" value="1">
           </#if>
           <#if requestParameters.category_id?exists>
@@ -336,7 +336,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
           </select>
           &nbsp;&nbsp;
           <input type="text" size="5" class="inputBox" name="quantity" value="1">
-          <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[${uiLabelMap.EcommerceAddtoShoppingList}]</a>
+          <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[${uiLabelMap.EcommerceAddToShoppingList}]</a>
         </form>
       <#else> <br>
         ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>/checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.33 $
+ *@version    $Revision: 1.34 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -129,8 +129,8 @@ function gwAll(e) {
             <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform" style="margin: 0;">
               <input type="text" class="inputBox" name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
               <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}">
-              <input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceAddtoCart}">
-              <#-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddtoCart}]</nobr></a> -->
+              <input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceAddToCart}">
+              <#-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a> -->
             </form>
           </td>
         </tr>

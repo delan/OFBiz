@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -49,12 +49,10 @@
             <#if shoppingLists?has_content>
               <form name="selectShoppingList" method="post" action="<@ofbizUrl>/editShoppingList</@ofbizUrl>">
                 <select name="shoppingListId" class="selectBox">
-                  <#-- it is actually somewhat confusing to show the current list here, without that it is much cleaner, especially with heirarchical lists
-                    <#if shoppingList?has_content>
-                      <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
-                      <option value="${shoppingList.shoppingListId}">--</option>
-                    </#if>
-                  -->
+                  <#if shoppingList?has_content>
+                    <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
+                    <option value="${shoppingList.shoppingListId}">--</option>
+                  </#if>
                   <#list shoppingLists as list>
                     <option value="${list.shoppingListId}">${list.listName}</option>
                   </#list>
@@ -398,6 +396,37 @@
     </TD>
   </TR>
 </TABLE>
+
+<br>
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <tr>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;${uiLabelMap.CommonQuickAddList}</div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+        <tr>
+          <td>
+            <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+              <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}">
+              <input type="text" class="inputBox" name="productId" value="${requestParameters.add_product_id?if_exists}">
+              <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}">
+              <input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceAddToShoppingList}">
+            </form>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
 
 	<#else>
 		<#-- shoppingList was found, but belongs to a different party -->
