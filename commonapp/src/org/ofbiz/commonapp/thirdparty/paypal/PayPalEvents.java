@@ -291,8 +291,7 @@ public class PayPalEvents {
             
             // call the existing confirm order events (calling direct)
             request.setAttribute("order_id", orderId);
-            String confirm = CheckOutEvents.renderConfirmOrder(request, response);
-            String email = CheckOutEvents.emailOrder(request, response);
+            String email = CheckOutEvents.emailOrderConfirm(request, response);            
         }                 
                                 
         return "success";

@@ -428,17 +428,27 @@ public class CheckOutEvents {
                 
             // send off the confirmation email
             try {
-                URL templateUrl = application.getResource(CONFIRM_TEMPLATE);
-                Map context = new HashMap();
-                context.put("orderId", orderId);
-                context.put("templateUrl", templateUrl.toExternalForm());
-                context.put("subject", CONFIRM_SUBJECT);
-                context.put("sendFrom", CONFIRM_FROM);
-                context.put("sendTo", emails.toString());
-                context.put("sendCc", CONFIRM_CC);
-                context.put("sendBcc", CONFIRM_BCC);
-                context.put("sendVia", SMTP_SERVER);
-                dispatcher.runAsync("sendEmailConfirmation", context);
+                URL templateUrl = null;
+                if (application != null) {
+                    application.getResource(CONFIRM_TEMPLATE);
+                } else {
+                    // if no application is passed check for a string in the request
+                    String templateStr = (String) request.getAttribute("confirmEmail");
+                    if (templateStr != null)
+                        templateUrl = new URL(templateStr);
+                }  
+                if (templateUrl != null) {     
+                    Map context = new HashMap();
+                    context.put("orderId", orderId);
+                    context.put("templateUrl", templateUrl.toExternalForm());
+                    context.put("subject", CONFIRM_SUBJECT);
+                    context.put("sendFrom", CONFIRM_FROM);
+                    context.put("sendTo", emails.toString());
+                    context.put("sendCc", CONFIRM_CC);
+                    context.put("sendBcc", CONFIRM_BCC);
+                    context.put("sendVia", SMTP_SERVER);
+                    dispatcher.runAsync("sendEmailConfirmation", context);
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Trouble calling emailOrderConfirm service", module);
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error e-mailing order confirmation, but it was created and will be processed.");
@@ -449,17 +459,27 @@ public class CheckOutEvents {
                         
             // send off the notification email  
             try {
-                URL templateUrl = application.getResource(NOTIFY_TEMPLATE);
-                Map context = new HashMap();
-                context.put("orderId", orderId);
-                context.put("templateUrl", templateUrl.toExternalForm());
-                context.put("subject", NOTIFY_SUBJECT);
-                context.put("sendFrom", NOTIFY_FROM);
-                context.put("sendTo", NOTIFY_TO);
-                context.put("sendCc", NOTIFY_CC);
-                context.put("sendBcc", NOTIFY_BCC);
-                context.put("sendVia", SMTP_SERVER);
-                dispatcher.runAsync("sendEmailConfirmation", context);
+                URL templateUrl = null;
+                if (application != null) {
+                    templateUrl = application.getResource(NOTIFY_TEMPLATE);                
+                } else {
+                    // if no application is passed check for a string in the request
+                    String templateStr = (String) request.getAttribute("notifyEmail");
+                    if (templateStr != null)
+                        templateUrl = new URL(templateStr);
+                }   
+                if (templateUrl != null) {  
+                    Map context = new HashMap();
+                    context.put("orderId", orderId);
+                    context.put("templateUrl", templateUrl.toExternalForm());
+                    context.put("subject", NOTIFY_SUBJECT);
+                    context.put("sendFrom", NOTIFY_FROM);
+                    context.put("sendTo", NOTIFY_TO);
+                    context.put("sendCc", NOTIFY_CC);
+                    context.put("sendBcc", NOTIFY_BCC);
+                    context.put("sendVia", SMTP_SERVER);
+                    dispatcher.runAsync("sendEmailConfirmation", context);
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Trouble calling emailOrderConfirm service for merchant notification", module);               
             } catch (MalformedURLException e) {
