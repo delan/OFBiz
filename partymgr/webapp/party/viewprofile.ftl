@@ -88,8 +88,8 @@
             </td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editperson?partyId=${party.partyId}</@ofbizUrl>" class="lightbuttontext">
-              [<#if lookupPerson?has_content>Update</#if>]</a>&nbsp;&nbsp;
+              <a href="<@ofbizUrl>/editperson?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
+              <#if lookupPerson?has_content>Update</#if></a>
             </td>
             </#if>            
           </#if>
@@ -100,8 +100,8 @@
             </td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editpartygroup?partyId=${party.partyId}</@ofbizUrl>" class="lightbuttontext">
-              [<#if lookupGroup?has_content>Update</#if>]</a>&nbsp;&nbsp;
+              <a href="<@ofbizUrl>/editpartygroup?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
+              <#if lookupGroup?has_content>Update</#if></a>
             </td>
             </#if>
           </#if>
@@ -189,8 +189,7 @@
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editcontactmech?partyId=${party.partyId}</@ofbizUrl>" class="lightbuttontext">
-              [Create New]</a>&nbsp;&nbsp;
+              <a href="<@ofbizUrl>/editcontactmech?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">Create New</a>
           </td>
           </#if>
         </tr>
@@ -321,12 +320,9 @@
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Payment Method Information</div>
           </td>
-          <td valign="middle" align="right">&nbsp;
+          <td valign="middle" align="right">
               <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session)>
-                <a href="<@ofbizUrl>/editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="lightbuttontext">
-                [Create New Credit Card]</a>&nbsp;
-                <a href="<@ofbizUrl>/editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="lightbuttontext">
-                [Create New EFT Account]</a>&nbsp;&nbsp;
+                <a href="<@ofbizUrl>/editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">Create New Credit Card</a><a href="<@ofbizUrl>/editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">Create New EFT Account</a>
               </#if>
           </td>
         </tr>
@@ -461,8 +457,8 @@
             <div class="boxhead">&nbsp;User Name(s)</div>
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-          <td valign="middle" align="right">&nbsp;
-            <a href="<@ofbizUrl>/createnewlogin?partyId=${party.partyId}</@ofbizUrl>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
+          <td valign="middle" align="right">
+            <a href="<@ofbizUrl>/createnewlogin?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">Create New</a>
           </td>
           </#if>
         </tr>
@@ -526,8 +522,8 @@
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Last Visit(s)</div>
           </td>   
-          <td valign="middle" align="right">&nbsp;
-            <a href="<@ofbizUrl>/showvisits?party_id=${partyId}</@ofbizUrl>" class="lightbuttontext">[List All]</a>&nbsp;&nbsp;
+          <td valign="middle" align="right">
+            <a href="<@ofbizUrl>/showvisits?party_id=${partyId}</@ofbizUrl>" class="submenutextright">List All</a>
           </td>
         </tr>
       </table>
@@ -586,8 +582,8 @@
             <div class="boxhead">&nbsp;Notes</div>
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_NOTE", session)>
-          <td valign="middle" align="right">&nbsp;
-            <a href="<@ofbizUrl>/createnewnote?partyId=${partyId}</@ofbizUrl>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
+          <td valign="middle" align="right">
+            <a href="<@ofbizUrl>/createnewnote?partyId=${partyId}</@ofbizUrl>" class="submenutextright">Create New</a>
           </td>
           </#if>
         </tr>
