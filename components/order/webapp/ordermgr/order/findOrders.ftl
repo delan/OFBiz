@@ -283,7 +283,7 @@ document.lookuporder.order_id.focus();
           <td width="10%">&nbsp;</td>
         </tr>
         <tr>
-          <td colspan='11'><hr class='sepbar'></td>
+          <td colspan='12'><hr class='sepbar'></td>
         </tr>
         <#if orderHeaderList?has_content>
           <#assign rowClass = "viewManyTR2">
