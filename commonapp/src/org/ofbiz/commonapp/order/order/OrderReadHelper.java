@@ -356,10 +356,10 @@ public class OrderReadHelper {
     }
     /** The passed adjustments can be all adjustments for the order, ie for all line items */
     public static double getOrderItemAdjustments(GenericValue orderItem, Collection adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
-        List contraints = new LinkedList();
-        contraints.add(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, orderItem.get("orderItemSeqId")));
-        Collection adj = EntityUtil.filterByAnd(adjustments, contraints);
-        return calcItemAdjustments(orderItem, adj, includeOther, includeTax, includeShipping);
+        return calcItemAdjustments(orderItem, getOrderItemAdjustmentList(orderItem, adjustments), includeOther, includeTax, includeShipping);
+    }
+    public static Collection getOrderItemAdjustmentList(GenericValue orderItem, Collection adjustments) {
+        return EntityUtil.filterByAnd(adjustments, UtilMisc.toMap("orderItemSeqId", orderItem.get("orderItemSeqId")));
     }
 
     //Order Item Adjs Utility Methods
