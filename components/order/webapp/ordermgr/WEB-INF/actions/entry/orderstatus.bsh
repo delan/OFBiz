@@ -74,7 +74,7 @@ if (orderHeader != null) {
     placingCustomerPerson = placingCustomerOrderRole == null ? null : delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId", placingCustomerOrderRole.getString("partyId")));
     context.put("placingCustomerPerson", placingCustomerPerson);
 
-    shippingAddress = orderReadHelper.getShippingAddress();
+    shippingAddress = orderReadHelper.getShippingAddress("0001");
     context.put("shippingAddress", shippingAddress);
     billingAccount = orderHeader.getRelatedOne("BillingAccount");
     if (billingAccount != null)
@@ -110,18 +110,18 @@ if (orderHeader != null) {
         if (paymentAddress != null) context.put("paymentAddress", paymentAddress);
     }    
        
-    orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
-    if (orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
-        shipmentPreference = orderShipmentPreferences.next();
-        context.put("carrierPartyId", shipmentPreference.getString("carrierPartyId"));
-        context.put("shipmentMethodTypeId", shipmentPreference.getString("shipmentMethodTypeId"));       
-        shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentPreference.getString("shipmentMethodTypeId")));
-        context.put("shipMethDescription", shipmentMethodType.getString("description"));       
-        context.put("shippingInstructions", shipmentPreference.getString("shippingInstructions"));
-        context.put("maySplit", shipmentPreference.getBoolean("maySplit"));
-        context.put("giftMessage", shipmentPreference.getString("giftMessage"));
-        context.put("isGift", shipmentPreference.getBoolean("isGift"));
-        context.put("trackingNumber", shipmentPreference.getString("trackingNumber"));
+    orderItemShipGroups = UtilMisc.toIterator(orderHeader.getRelated("OrderItemShipGroup"));
+    if (orderItemShipGroups != null && orderItemShipGroups.hasNext()) {
+        shipGroup = orderItemShipGroups.next();
+        context.put("carrierPartyId", shipGroup.getString("carrierPartyId"));
+        context.put("shipmentMethodTypeId", shipGroup.getString("shipmentMethodTypeId"));
+        shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipGroup.getString("shipmentMethodTypeId")));
+        context.put("shipMethDescription", shipmentMethodType.getString("description"));
+        context.put("shippingInstructions", shipGroup.getString("shippingInstructions"));
+        context.put("maySplit", shipGroup.getString("maySplit"));
+        context.put("giftMessage", shipGroup.getString("giftMessage"));
+        context.put("isGift", shipGroup.getString("isGift"));
+        context.put("trackingNumber", shipGroup.getString("trackingNumber"));
     }
 
     customerPoNumber = null;

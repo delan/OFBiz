@@ -49,7 +49,7 @@ context.put("orderAdjustments", orderAdjustments);
 orderItems = cart.makeOrderItems();
 context.put("orderItems", orderItems);
 
-orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments);
+orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments, null);
 context.put("orderHeaderAdjustments", orderHeaderAdjustments);
 context.put("headerAdjustmentsToShow", OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false, false, false));
 
