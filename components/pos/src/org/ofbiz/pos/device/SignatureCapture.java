@@ -24,48 +24,25 @@
  */
 package org.ofbiz.pos.device;
 
-import jpos.BaseControl;
 import jpos.JposException;
-
-import org.ofbiz.base.util.Debug;
+import jpos.JposConst;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev$
+ * @version    $Rev:$
  * @since      3.2
  */
-public abstract class GenericDevice implements JposDevice {
+public class SignatureCapture extends GenericDevice {
 
-    public static final String module = GenericDevice.class.getName();
+    public static final String module = SignatureCapture.class.getName();
 
-    protected BaseControl control = null;
-    protected String deviceName = null;
-    protected int timeout = -1;
-
-    public GenericDevice(String deviceName, int timeout) {
-        this.deviceName = deviceName;
-        this.timeout = timeout;
+    public SignatureCapture(String deviceName, int timeout) {
+        super(deviceName, timeout);
+        this.control = new jpos.SignatureCapture();
     }
 
-    public void open() throws JposException {
-        if (deviceName != null && control != null) {
-            if (!"[NOT IMPLEMENTED]".equals(deviceName) && !"[DISABLED]".equals(deviceName)) {
-                control.open(deviceName);
-                control.claim(timeout);
-                control.setDeviceEnabled(true);
-                this.initialize();
-            }
-        } else {
-            Debug.logWarning("No device named [" + deviceName + "] available", module);
-        }
+    protected void initialize() throws JposException {
+        throw new JposException(JposConst.JPOS_E_NOEXIST, "Device not yet implemented");
     }
-
-    public void close() throws JposException {
-        control.release();
-        control.close();
-        control = null;
-    }
-
-    protected abstract void initialize() throws JposException;
 }
