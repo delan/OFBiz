@@ -53,6 +53,8 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
 
     public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast) throws IOException {
 
+    	String pathString = buildPathString(node.getModelTree(), depth);
+        context.put("nodePathString", pathString);
         context.put("depth", Integer.toString(depth));
         /*
         StringBuffer sb = new StringBuffer();
