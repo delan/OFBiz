@@ -29,7 +29,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <#-- this needs to be fully qualified to appear in email; the server must also be available -->
-    <link rel='stylesheet' href='http://www.angleparktech.com:8080/images/maincss.css' type='text/css'>      
+    <link rel='stylesheet' href='http://localhost:8080/images/maincss.css' type='text/css'>      
 </head>
 
 <body> 
@@ -40,14 +40,13 @@
 <p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
 
 <#assign urlPrefix="http://localhost:8080/ecommerce/control">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td width='100%' valign='top' align='left'>
-      <#-- display the standard order status page header and items -->
-      <#include "/order/orderheader.ftl">
-      <br>
-      <#include "/order/orderitems.ftl">
-    </td>      
-  </tr>
-</table>  
+<#-- display the standard order status page header and items -->
+<#include "/order/orderheader.ftl">
+<br>
+<#include "/order/orderitems.ftl">
+<div align='right'>  
+  <#-- change this to not display when no account was created -->
+  <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="buttontextbig">[View&nbsp;Order]&nbsp;</a>
+  <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontextbig">[Continue&nbsp;Shopping]</a>
+</div>
 </body>   
