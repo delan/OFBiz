@@ -55,7 +55,7 @@
         <if-compare-field map-name="parameters" field-name="infoString" to-map-name="oldValue" operator="not-equals">
         	<log level="info" message="Contact mech need updating"/> 
             <clone-value value-name="oldValue" new-value-name="newValue"/>
-            <set-nonpk-fields map-name="parameters" value-name="newValue"/>        	  
+            <set-nonpk-fields map-name="parameters" value-name="newValue" set-if-null="false"/>        	  
             <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="contactMech" in-map-name="newValue" out-map-name="context"/>
             <call-service service-name="createContactMech" in-map-name="context">

@@ -35,7 +35,7 @@
   </simple-map-processor>
   <simple-map-processor name="updateContactMech">
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mechanism ID is missing"/></not-empty></process>
-	<process field="contactMechTypeId"><copy/><not-empty><fail-message message="Contact Mech Type ID is missing"/></not-empty></process>
+	<process field="contactMechTypeId"><copy/></process>
     <process field="infoString"><copy/></process> 
   </simple-map-processor>
 

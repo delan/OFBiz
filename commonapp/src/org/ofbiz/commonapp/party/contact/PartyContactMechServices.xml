@@ -100,7 +100,7 @@
         	</else>	
         </if-empty> 
                	
-		<set-nonpk-fields value-name="newPartyContactMech" map-name="parameters"/>
+		<set-nonpk-fields value-name="newPartyContactMech" map-name="parameters" set-if-null="false"/>
         <now-timestamp-to-env env-name="now"/>
         <env-to-field env-name="now" field-name="fromDate" map-name="newPartyContactMech"/>
         <env-to-field env-name="now" field-name="thruDate" map-name="partyContactMech"/>
@@ -115,6 +115,7 @@
         </if-compare-field>
         
         <store-list list-name="storeList"/>
+        <log level="info" message="Setting id to result: ${newPartyContactMech.contactMechId}"/>
         <field-to-result field-name="contactMechId" map-name="newPartyContactMech"/>
         <field-to-request field-name="contactMechId" map-name="newPartyContactMech"/>  	
     </simple-method>	
