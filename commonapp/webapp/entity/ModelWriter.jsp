@@ -5,6 +5,7 @@ String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz
 String author = "David E. Jones";
 String version = "1.0";
 %>
+<?xml version="1.0"?>
 <!--
 /**
  *  $Id$
@@ -57,7 +58,6 @@ String version = "1.0";
     }
     entities.add(eName);
   }%>
-<?xml version="1.0"?>
 
 <entitymodel>
   <!-- ========================================================= -->
