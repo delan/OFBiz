@@ -71,6 +71,24 @@
   <SecurityPermission description="Delete operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_DELETE"/>
   <SecurityPermission description="ALL operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_ADMIN"/>
 
+  <SecurityPermission description="View operations in the Accounting Manager." permissionId="ACCOUNTING_VIEW"/>
+  <SecurityPermission description="Create operations in the Accounting Manager." permissionId="ACCOUNTING_CREATE"/>
+  <SecurityPermission description="Update operations in the Accounting Manager." permissionId="ACCOUNTING_UPDATE"/>
+  <SecurityPermission description="Delete operations in the Accounting Manager." permissionId="ACCOUNTING_DELETE"/>
+  <SecurityPermission description="ALL operations in the Accounting Manager." permissionId="ACCOUNTING_ADMIN"/>
+
+  <SecurityPermission description="View operations in the Facility Manager." permissionId="FACILITY_VIEW"/>
+  <SecurityPermission description="Create operations in the Facility Manager." permissionId="FACILITY_CREATE"/>
+  <SecurityPermission description="Update operations in the Facility Manager." permissionId="FACILITY_UPDATE"/>
+  <SecurityPermission description="Delete operations in the Facility Manager." permissionId="FACILITY_DELETE"/>
+  <SecurityPermission description="ALL operations in the Facility Manager." permissionId="FACILITY_ADMIN"/>
+
+  <SecurityPermission description="View operations in the Marketing Manager." permissionId="MARKETING_VIEW"/>
+  <SecurityPermission description="Create operations in the Marketing Manager." permissionId="MARKETING_CREATE"/>
+  <SecurityPermission description="Update operations in the Marketing Manager." permissionId="MARKETING_UPDATE"/>
+  <SecurityPermission description="Delete operations in the Marketing Manager." permissionId="MARKETING_DELETE"/>
+  <SecurityPermission description="ALL operations in the Marketing Manager." permissionId="MARKETING_ADMIN"/>
+
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVER_STATS_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_MAINT"/>
@@ -144,6 +162,24 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKEFFORTMGR_ADMIN"/>
+
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_CREATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_DELETE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_UPDATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTING_ADMIN"/>
+
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="FACILITY_CREATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="FACILITY_DELETE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="FACILITY_UPDATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="FACILITY_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="FACILITY_ADMIN"/>
+
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MARKETING_CREATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MARKETING_DELETE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MARKETING_UPDATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MARKETING_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="MARKETING_ADMIN"/>
 
   <UserLogin currentPassword="ofbiz" partyId="admin" passwordHint="" userLoginId="admin"/>
   <UserLogin currentPassword="ofbiz" partyId="" passwordHint="" userLoginId="flexadmin"/>
