@@ -124,7 +124,8 @@
 
   <ProductContentType description="Digital Download" hasTable="N" parentTypeId="" productContentTypeId="DIGITAL_DOWNLOAD"/>
   <ProductContentType description="Fulfillment Email" hasTable="N" parentTypeId="" productContentTypeId="FULFILLMENT_EMAIL"/>
-  <ProductContentType description="Fulfillment External" hasTable="N" parentTypeId="" productContentTypeId="FULFILLMENT_EXTERNAL"/>
+  <ProductContentType description="Fulfillment External (Async)" hasTable="N" parentTypeId="" productContentTypeId="FULFILLMENT_EXTASYNC"/>
+  <ProductContentType description="Fulfillment External (Sync)" hasTable="N" parentTypeId="" productContentTypeId="FULFILLMENT_EXTSYNC"/>
   <ProductContentType description="Product Name" hasTable="N" parentTypeId="" productContentTypeId="PRODUCT_NAME"/>
   <ProductContentType description="Description" hasTable="N" parentTypeId="" productContentTypeId="DESCRIPTION"/>
   <ProductContentType description="Long Description" hasTable="N" parentTypeId="" productContentTypeId="LONG_DESCRIPTION"/>
