@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/08/30 20:58:15  jonesde
+ * Cleaned up some CSS stuff and some finishing touches on the newcustomer and viewprofile pieces, and added initial editcontactmech stuff.
+ *
  * Revision 1.3  2001/08/30 16:20:55  jonesde
  * Greatly expanded new customer, also now uses the UtilValidate routines
  *
@@ -219,7 +222,7 @@ public class CustomerEvents
     return "success";
   }
   
-  public static String updateContactMech(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, javax.ejb.RemoveException, java.io.IOException, javax.servlet.ServletException
+  public static String updateContactMech(HttpServletRequest request, HttpServletResponse response)
   {
     return "success";
   }
