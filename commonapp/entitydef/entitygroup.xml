@@ -736,8 +736,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortBilling" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortCategory" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortCategoryMember" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDeliverableProd" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetAssign" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetStd" />
@@ -748,6 +746,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignByGroup" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignByRole" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignment" />
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPurposeType" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortSkillStandard" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortStatus" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortTransBox" />

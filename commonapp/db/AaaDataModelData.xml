@@ -692,16 +692,21 @@
   <WorkflowParticipantType description="Human interacting with the system through an application" hasTable="N" parentTypeId="" participantTypeId="HUMAN" typeCode="HUMAN"/>
   <WorkflowParticipantType description="An automatic agent" hasTable="N" parentTypeId="" participantTypeId="SYSTEM" typeCode="SYSTEM"/>
 
-  <WorkEffortType description="Program" hasTable="N" parentTypeId="" workEffortTypeId="PROGRAM"/>
-  <WorkEffortType description="Phase" hasTable="N" parentTypeId="" workEffortTypeId="PHASE"/>
-  <WorkEffortType description="Project" hasTable="N" parentTypeId="" workEffortTypeId="PROJECT"/>
-  <WorkEffortType description="Production Run" hasTable="N" parentTypeId="" workEffortTypeId="PRODUCTION_RUN"/>
-  <WorkEffortType description="Maintenance" hasTable="N" parentTypeId="" workEffortTypeId="MAINTENANCE"/>
-  <WorkEffortType description="Research" hasTable="N" parentTypeId="" workEffortTypeId="RESEARCH"/>
+  <WorkEffortPurposeType description="Project" workEffortPurposeTypeId="WEPT_PROJECT"/>
+  <WorkEffortPurposeType description="Phase" workEffortPurposeTypeId="WEPT_PHASE"/>
+  <WorkEffortPurposeType description="Production Run" workEffortPurposeTypeId="WEPT_PRODUCTION_RUN"/>
+  <WorkEffortPurposeType description="Maintenance" workEffortPurposeTypeId="WEPT_MAINTENANCE"/>
+  <WorkEffortPurposeType description="Research" workEffortPurposeTypeId="WEPT_RESEARCH"/>
+  <WorkEffortPurposeType description="Meeting" workEffortPurposeTypeId="WEPT_MEETING"/>
+  <WorkEffortPurposeType description="Development" workEffortPurposeTypeId="WEPT_DEVELOPMENT"/>
+  <WorkEffortPurposeType description="Support" workEffortPurposeTypeId="WEPT_SUPPORT"/>
+  <WorkEffortPurposeType description="Deployment" workEffortPurposeTypeId="WEPT_DEPLOYMENT"/>
+
   <WorkEffortType description="Workflow" hasTable="N" parentTypeId="" workEffortTypeId="WORK_FLOW"/>
   <WorkEffortType description="Activity" hasTable="N" parentTypeId="" workEffortTypeId="ACTIVITY"/>
   <WorkEffortType description="Task" hasTable="N" parentTypeId="" workEffortTypeId="TASK"/>
   <WorkEffortType description="Event" hasTable="N" parentTypeId="" workEffortTypeId="EVENT"/>
+  <WorkEffortType description="Program" hasTable="N" parentTypeId="" workEffortTypeId="PROGRAM"/>
 
   <WorkEffortTypeAttr attrName="QUANTITY_PRODUCED" workEffortTypeId="PRODUCTION_RUN"/>
   <WorkEffortTypeAttr attrName="QUANTITY_REJECTED" workEffortTypeId="PRODUCTION_RUN"/>

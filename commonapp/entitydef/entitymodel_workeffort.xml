@@ -372,6 +372,7 @@
             title="Work Effort Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="workEffortTypeId" type="id"></field>
+      <field name="workEffortPurposeTypeId" type="id"></field>
       <field name="workEffortParentId" type="id"></field>
       <field name="workflowPackageId" type="id-long"></field>
       <field name="workflowPackageVersion" type="very-short"></field>
@@ -414,6 +415,9 @@
       <relation type="one" fk-name="WK_EFFRT_TYPE" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId"/>
       </relation>
+      <relation type="one" fk-name="WK_EFFRT_PRPTYP" rel-entity-name="WorkEffortPurposeType">
+        <key-map field-name="workEffortPurposeTypeId"/>
+      </relation>
       <relation type="one" fk-name="WK_EFFRT_PARENT" title="Parent" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortParentId" rel-field-name="workEffortId"/>
       </relation>
@@ -455,9 +459,6 @@
       </relation>
       <relation type="many" title="To" rel-entity-name="WorkEffortAssoc">
         <key-map field-name="workEffortId" rel-field-name="workEffortIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortCategoryMember">
-        <key-map field-name="workEffortId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="workEffortId"/>
@@ -629,9 +630,6 @@
       </relation>
       <relation type="many" title="To" rel-entity-name="WorkEffortAssoc">
         <key-map field-name="workEffortId" rel-field-name="workEffortIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortCategoryMember">
-        <key-map field-name="workEffortId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="workEffortId"/>
@@ -886,37 +884,6 @@
       <relation type="one" fk-name="WK_EFFBLNG_INVITM" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceId"/>
         <key-map field-name="invoiceItemSeqId"/>
-      </relation>
-    </entity>
-    <entity entity-name="WorkEffortCategory"
-            package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Category Entity">
-      <field name="workEffortCategoryId" type="id-ne"></field>
-      <field name="parentCategoryId" type="id"></field>
-      <field name="categoryName" type="name"></field>
-      <prim-key field="workEffortCategoryId"/>
-      <relation type="one" fk-name="WK_EFFRT_CAT_PAR" title="Parent" rel-entity-name="WorkEffortCategory">
-        <key-map field-name="parentCategoryId" rel-field-name="workEffortCategoryId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="WorkEffortCategory">
-        <key-map field-name="workEffortCategoryId" rel-field-name="parentCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortCategoryMember">
-        <key-map field-name="workEffortCategoryId"/>
-      </relation>
-    </entity>
-    <entity entity-name="WorkEffortCategoryMember"
-            package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Category Member Entity">
-      <field name="workEffortId" type="id-ne"></field>
-      <field name="workEffortCategoryId" type="id-ne"></field>
-      <prim-key field="workEffortId"/>
-      <prim-key field="workEffortCategoryId"/>
-      <relation type="one" fk-name="WK_EFFRT_CATM_CAT" rel-entity-name="WorkEffortCategory">
-        <key-map field-name="workEffortCategoryId"/>
-      </relation>
-      <relation type="one" fk-name="WK_EFFRT_CATM_WEF" rel-entity-name="WorkEffort">
-        <key-map field-name="workEffortId"/>
       </relation>
     </entity>
     <entity entity-name="WorkEffortDeliverableProd"
@@ -1234,6 +1201,16 @@
       </relation>
       <relation type="one" fk-name="WKEFF_PA_EXP_ENUM" title="Expectation" rel-entity-name="Enumeration">
         <key-map field-name="expectationEnumId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
+    <entity entity-name="WorkEffortPurposeType"
+            package-name="org.ofbiz.commonapp.workeffort.workeffort"
+            title="Work Effort Purpose Type Entity">
+      <field name="workEffortPurposeTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="workEffortPurposeTypeId"/>
+      <relation type="many" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortPurposeTypeId"/>
       </relation>
     </entity>
     <entity entity-name="WorkEffortSkillStandard"
