@@ -142,8 +142,8 @@ public class InputValue {
             inputValue = defaultStr;
 
         if (fullattrs) {
-            pageContext.getOut().print("name='" + paramName + "' value='" +
-                    inputValue + "'");
+            pageContext.getOut().print("name=\"" + paramName + "\" value=\"" +
+                    inputValue + "\"");
         } else {
             pageContext.getOut().print(inputValue);
         }
