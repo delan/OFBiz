@@ -21,7 +21,7 @@
  *
  * @author David E. Jones (jonesde@ofbiz.org)
  * @version 1.0
---%><%@ page import="java.util.*, java.net.*" %><%@ page import="org.w3c.dom.*" %><%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %><%@ page import="org.ofbiz.core.entity.model.*" %><%@ taglib uri="ofbizTags" prefix="ofbiz" %><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" /><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" /><%
+--%><%@ page import="java.io.*, java.util.*, java.net.*" %><%@ page import="org.w3c.dom.*, org.apache.xml.serialize.*" %><%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %><%@ page import="org.ofbiz.core.entity.model.*" %><%@ taglib uri="ofbizTags" prefix="ofbiz" %><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" /><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" /><%
   if(security.hasPermission("ENTITY_MAINT", session)) {
       String[] entityName = (String[]) session.getAttribute("xmlrawdump_entitylist");
       session.removeAttribute("xmlrawdump_entitylist");
@@ -33,7 +33,10 @@
 
           int numberOfEntities = 0;
           long numberWritten = 0;
-          Document document = null;
+
+          response.setContentType("text/xml; charset=UTF-8");
+          //UtilXml.writeXmlDocument(, document);
+
           if(entityName != null && entityName.length > 0) {
             TreeSet passedEntityNames = new TreeSet();
             for(int inc=0; inc<entityName.length; inc++) {
@@ -41,18 +44,26 @@
             }
 
             numberOfEntities = passedEntityNames.size();
+            
+            PrintWriter writer = response.getWriter();
+            writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            writer.println("<entity-engine-xml>");
 
-            document = GenericEntity.makeXmlDocument(null);
             Iterator i = passedEntityNames.iterator();
             while(i.hasNext()) { 
-              String curEntityName = (String)i.next();
-              Collection values = delegator.findAll(curEntityName, null);
-              numberWritten += values.size();
-              GenericEntity.addToXmlDocument(values, document);
+                String curEntityName = (String)i.next();
+                EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, null, null, null);
+
+                GenericValue value = null;
+                while ((value = (GenericValue) values.next()) != null) {
+                    value.writeXmlText(writer, "");
+                    numberWritten++;
+                }
+                values.close();
             }
+            writer.println("</entity-engine-xml>");
           }
-          response.setContentType("text/plain");
-          UtilXml.writeXmlDocument(response.getOutputStream(), document);
+          
       } else {%>
 ERROR: No entityName list was found in the session, go back to the export page and try again.
     <%}%>

@@ -549,7 +549,7 @@ public class GenericDAO {
 
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, modelEntity.getAllFieldNames(), orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -570,7 +570,7 @@ public class GenericDAO {
 
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, modelEntity.getAllFieldNames(), orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -590,7 +590,7 @@ public class GenericDAO {
         EntityCondition entityCondition = new EntityExprList(expressions, EntityOperator.AND);
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, modelEntity.getAllFieldNames(), orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -610,7 +610,7 @@ public class GenericDAO {
         EntityCondition entityCondition = new EntityExprList(expressions, EntityOperator.OR);
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, modelEntity.getAllFieldNames(), orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, false);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {

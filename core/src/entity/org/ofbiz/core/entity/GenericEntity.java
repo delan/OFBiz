@@ -481,18 +481,21 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         return document;
     }
 
-    public static void addToXmlDocument(Collection values, Document document) {
-        if (values == null) return;
-        if (document == null) return;
+    public static int addToXmlDocument(Collection values, Document document) {
+        if (values == null) return 0;
+        if (document == null) return 0;
 
         Element rootElement = document.getDocumentElement();
 
         Iterator iter = values.iterator();
+        int numberAdded = 0;
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
             Element valueElement = value.makeXmlElement(document);
             rootElement.appendChild(valueElement);
+            numberAdded++;
         }
+        return numberAdded;
     }
 
     /** Makes an XML Element object with an attribute for each field of the entity
@@ -534,6 +537,64 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         }
 
         return element;
+    }
+
+    /** Writes XML text with an attribute or CDATA element for each field of the entity
+     *@param writer A PrintWriter to write to
+     *@param prefix A prefix to put in front of the entity name in the tag name
+     */
+    public void writeXmlText(PrintWriter writer, String prefix) {
+        final int indent = 4;
+        if (prefix == null) prefix = "";
+        ModelEntity modelEntity = this.getModelEntity();
+        
+        for (int i=0; i<indent; i++) writer.print(' ');
+        writer.print('<');
+        writer.print(prefix);
+        writer.print(this.getEntityName());
+        
+        //write attributes immediately and if a CDATA element is needed, put those in a Map for now
+        Map cdataMap = new HashMap();
+        
+        Iterator modelFields = modelEntity.getFieldsIterator();
+        while (modelFields.hasNext()) {
+            ModelField modelField = (ModelField) modelFields.next();
+            String name = modelField.getName();
+            String value = this.getString(name);
+            if (value != null) {
+                if (value.indexOf('\n') >= 0 || value.indexOf('\r') >= 0) {
+                    cdataMap.put(name, value);
+                } else {
+                    writer.print(' ');
+                    writer.print(name);
+                    writer.print("=\"");
+                    //encode the value...
+                    writer.print(UtilFormatOut.encodeXmlValue(value));
+                    writer.print("\"");
+                }
+            } else {
+                //do nothing will null values
+            }
+        }
+
+        if (cdataMap.size() == 0) {
+            writer.println("/>");
+        } else {
+            writer.println('>');
+
+            Iterator cdataIter = cdataMap.entrySet().iterator();
+            while (cdataIter.hasNext()) {
+                Map.Entry entry = (Map.Entry) cdataIter.next();
+                for (int i=0; i<(indent<<1); i++) writer.print(' ');
+                writer.print('<');
+                writer.print((String) entry.getKey());
+                writer.print("><![CDATA[");
+                writer.print((String) entry.getValue());
+                writer.print("]]></");
+                writer.print((String) entry.getKey());
+                writer.println('>');
+            }
+        }
     }
 
     /** Determines the equality of two GenericEntity objects, overrides the default equals

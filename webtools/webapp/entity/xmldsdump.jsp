@@ -23,7 +23,7 @@
  * @version 1.0
 --%>
 
-<%@ page import="java.util.*, java.net.*" %>
+<%@ page import="java.util.*, java.io.*, java.net.*" %>
 <%@ page import="org.w3c.dom.*" %>
 <%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
@@ -60,7 +60,7 @@
   int numberOfEntities = 0;
   long numberWritten = 0;
   Document document = null;
-  if(entityName != null && entityName.length > 0) {
+  if(filename != null && filename.length() > 0 && entityName != null && entityName.length > 0) {
     TreeSet passedEntityNames = new TreeSet();
     for(int inc=0; inc<entityName.length; inc++) {
       passedEntityNames.add(entityName[inc]);
@@ -68,6 +68,25 @@
     
     numberOfEntities = passedEntityNames.size();
     
+    PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
+    writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    writer.println("<entity-engine-xml>");
+
+    Iterator i = passedEntityNames.iterator();
+    while(i.hasNext()) { 
+        String curEntityName = (String)i.next();
+        EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, null, null, null);
+
+        GenericValue value = null;
+        while ((value = (GenericValue) values.next()) != null) {
+            value.writeXmlText(writer, "");
+            numberWritten++;
+        }
+        values.close();
+    }
+    writer.println("</entity-engine-xml>");
+
+/* the OLD way:
     document = GenericEntity.makeXmlDocument(null);
     Iterator i = passedEntityNames.iterator();
     while(i.hasNext()) { 
@@ -76,6 +95,8 @@
       numberWritten += values.size();
       GenericEntity.addToXmlDocument(values, document);
     }
+    UtilXml.writeXmlDocument(filename, document);
+*/
   }
 %>
     <br>
@@ -86,15 +107,9 @@
       <h3>Results:</h3>
     
     
-      <%if(filename != null && filename.length() > 0 && document != null) {%>
-        <div>Trying to Write XML for all data in <%=numberOfEntities%> entities.</div>
-        <div>Trying to Write <%=numberWritten%> records to XML file <%=filename%></div>
-        <%
-          try { UtilXml.writeXmlDocument(filename, document); }
-          catch(Exception e) {
-            %><div>ERROR writing XML document: <%=e.toString()%></div><%
-          }
-        %>
+      <%if(filename != null && filename.length() > 0 && entityName != null && entityName.length > 0) {%>
+        <div>Wrote XML for all data in <%=numberOfEntities%> entities.</div>
+        <div>Wrote <%=numberWritten%> records to XML file <%=filename%></div>
       <%} else {%>
         <div>No filename specified or no entity names specified, doing nothing.</div>
       <%}%>
