@@ -326,7 +326,7 @@ public class CheckOutEvents {
             }
         }
         
-        return "success";
+        return cart.getOrderType().toLowerCase();
     }
     
     // TODO: remove me after the FTL integration
@@ -1234,10 +1234,13 @@ public class CheckOutEvents {
         } 
         
         String requireShipping = request.getParameter("finalizeReqShipInfo");
+        String requireOptions = request.getParameter("finalizeReqOptions");
         String requirePayment = request.getParameter("finalizeReqPayInfo");                         
                                 
         if (requireShipping == null)
             requireShipping = "true";
+        if (requireOptions == null)
+            requireOptions = "true";
         if (requirePayment == null)
             requirePayment = "true";
 
@@ -1249,7 +1252,7 @@ public class CheckOutEvents {
         if (requireShipping.equalsIgnoreCase("true") && shipContactMechId == null)
             return "shipping";
          
-        if (shipmentMethodTypeId == null)   
+        if (requireOptions.equalsIgnoreCase("true") && shipmentMethodTypeId == null)   
             return "options";
         
         if (requirePayment.equalsIgnoreCase("true")) {

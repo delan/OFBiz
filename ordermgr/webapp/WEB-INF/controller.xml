@@ -272,8 +272,10 @@
     </request-map>        
     <request-map uri="processorder">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>
-        <response name="success" type="request" value="checkBlacklist"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>      
+        <response name="sales_order" type="request" value="checkBlackList"/>
+        <response name="work_order" type="request" value="checkBlackList"/>
+        <response name="purchase_order" type="request" value="clearcart"/>
         <response name="error" type="view" value="confirm"/>
     </request-map>
     <request-map uri="checkBlacklist">
