@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/14 21:15:13  epabst
+ * cleaned up
+ *
  */
 
 package org.ofbiz.commonapp.order.order;
@@ -45,9 +48,18 @@ public class OrderReadHelper {
     }
 
     public String getShippingMethod() {
-        GenericValue shipmentPreference = orderHeader.getRelatedOne("OrderShipmentPreference");
-        return shipmentPreference.getString("carrierPartyId") + " " 
-                + shipmentPreference.getRelatedOne("CarrierShipmentMethod").getRelatedOne("ShipmentMethodType").getString("description");
+      GenericValue shipmentPreference = orderHeader.getRelatedOne("OrderShipmentPreference");
+      if(shipmentPreference != null) {
+        GenericValue carrierShipmentMethod = shipmentPreference.getRelatedOne("CarrierShipmentMethod");
+        if(carrierShipmentMethod != null) {
+          GenericValue shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType");
+          if(shipmentMethodType != null) {
+            return UtilFormatOut.checkNull(shipmentPreference.getString("carrierPartyId")) + " " + UtilFormatOut.checkNull(shipmentMethodType.getString("description"));
+          }
+        }
+        return UtilFormatOut.checkNull(shipmentPreference.getString("carrierPartyId"));
+      }
+      return "";
     }
     
     private static GenericValue getFirst(Collection values) {
