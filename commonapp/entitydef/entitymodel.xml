@@ -1303,7 +1303,7 @@
       <field name="passwordHint" type="description"></field>
       <field name="enabled" type="indicator"></field>
       <field name="disabledDateTime" type="date-time"></field>
-      <field name="successiveFailedLogins" type="indicator"></field>
+      <field name="successiveFailedLogins" type="numeric"></field>
       <prim-key field="userLoginId"/>
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId"/>
