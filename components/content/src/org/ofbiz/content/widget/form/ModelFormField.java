@@ -81,6 +81,8 @@ public class ModelFormField {
     protected String attributeName;
     protected FlexibleStringExpander title;
     protected FlexibleStringExpander tooltip;
+    protected String titleAreaStyle;
+    protected String widgetAreaStyle;
     protected String titleStyle;
     protected String widgetStyle;
     protected String tooltipStyle;
@@ -878,6 +880,17 @@ public class ModelFormField {
     /**
      * @return
      */
+    public String getTitleAreaStyle() {
+        if (UtilValidate.isNotEmpty(this.titleAreaStyle)) {
+            return this.titleAreaStyle;
+        } else {
+            return this.modelForm.getDefaultTitleAreaStyle();
+        }
+    }
+
+    /**
+     * @return
+     */
     public String getTitleStyle() {
         if (UtilValidate.isNotEmpty(this.titleStyle)) {
             return this.titleStyle;
@@ -967,6 +980,17 @@ public class ModelFormField {
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
+        }
+    }
+
+    /**
+     * @return
+     */
+    public String getWidgetAreaStyle() {
+        if (UtilValidate.isNotEmpty(this.widgetAreaStyle)) {
+            return this.widgetAreaStyle;
+        } else {
+            return this.modelForm.getDefaultWidgetAreaStyle();
         }
     }
 
@@ -1072,6 +1096,13 @@ public class ModelFormField {
     /**
      * @param string
      */
+    public void setTitleAreaStyle(String string) {
+        this.titleAreaStyle = string;
+    }
+
+    /**
+     * @param string
+     */
     public void setTitleStyle(String string) {
         this.titleStyle = string;
     }
@@ -1088,6 +1119,13 @@ public class ModelFormField {
      */
     public void setUseWhen(String string) {
         this.useWhen = new FlexibleStringExpander(string);
+    }
+
+    /**
+     * @param string
+     */
+    public void setWidgetAreaStyle(String string) {
+        this.widgetAreaStyle = string;
     }
 
     /**
