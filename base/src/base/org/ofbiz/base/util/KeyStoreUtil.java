@@ -1,5 +1,5 @@
 /*
- * $Id: KeyStoreUtil.java,v 1.1 2003/10/29 21:21:58 ajzeneski Exp $
+ * $Id: KeyStoreUtil.java,v 1.2 2003/10/31 19:45:46 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import javax.crypto.SecretKey;
  * KeyStoreUtil - Utilities for getting KeyManagers and TrustManagers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class KeyStoreUtil {
@@ -58,19 +58,19 @@ public class KeyStoreUtil {
     public static String getKeyStoreFileName() {
         return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.keyStore", null);
     }
-    
+
     public static String getKeyStorePassword() {
         return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.keyStore.password", null);
     }
-    
+
     public static String getTrustStoreFileName() {
         return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.trustStore", null);
     }
-    
+
     public static String getTrustStorePassword() {
         return UtilProperties.getPropertyValue("jsse.properties", "ofbiz.trustStore.password", null);
     }
-          
+
     public static KeyStore getKeyStore() throws IOException, GeneralSecurityException {
         if (getKeyStoreFileName() != null && !keyStoreExists(getKeyStoreFileName())) {
             return null;
@@ -96,7 +96,7 @@ public class KeyStoreUtil {
         fis.close();
         return ks;
     }
-    
+
     public static boolean keyStoreExists(String fileName) {
         File keyFile = new File(fileName);
         return keyFile.exists();
@@ -134,24 +134,6 @@ public class KeyStoreUtil {
         }
 
         ks.setKeyEntry(alias, pk, keyPass.toCharArray(), certs);
-    }
-
-    public static void importCaCertsToTrustStore() throws GeneralSecurityException, NoSuchAlgorithmException, CertificateException, IOException {
-        String trustStoreFile = getTrustStoreFileName();
-        String trustStorePass = getTrustStorePassword();
-        KeyStore trustStore = null;
-        if (!keyStoreExists(trustStoreFile))  {
-            trustStore = createKeyStore(trustStoreFile, trustStorePass);
-        } else {
-            trustStore = getTrustStore();
-        }
-
-        if (trustStore != null) {
-            // load cacerts and import into trustStore
-
-        } else {
-            throw new IOException("No trustStore available");
-        }
     }
 
     // key pair generation methods
