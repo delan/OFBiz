@@ -208,9 +208,10 @@
      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <!-- this is needed only if other generators are called for -->
-    <generator classname="com.wspublisher.generators.VelocityGenerator"/>
-    <generator classname="com.wspublisher.generators.FreeMarkerGenerator"/>
-
+    <generator name="ofbiz-freemarker" classname="org.ofbiz.core.ftl.FreeMarkerGenerator"/>
+    
+    <generator name="velocity" classname="com.wspublisher.generators.VelocityGenerator"/>
+    <generator name="freemarker" classname="com.wspublisher.generators.FreeMarkerGenerator"/>
     <generator classname="com.wspublisher.generators.FileGenerator"/>
 
     <generator classname="com.wspublisher.generators.XMLGenerator">
