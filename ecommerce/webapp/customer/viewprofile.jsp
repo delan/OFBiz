@@ -57,7 +57,7 @@
       <p class="head2"><font color="white">&nbsp;Personal Information</font>
     </td>
     <td valign="middle" align="right">
-        <a href="editprofile.jsp" class="lightbuttontext">
+        <a href="<%=response.encodeURL(controlPath + "/editperson")%>" class="lightbuttontext">
         [Update]</a>&nbsp;&nbsp;
     </td>
   </tr>
@@ -235,11 +235,11 @@
                         </div>
                       <td>
                       <td align="center">
-                        <a href="editcc.jsp?CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%>" class="buttontext">
+                        <a href="<%=response.encodeURL(controlPath + "/editcreditcard?CREDIT_CARD_ID=" + creditCardInfo.getString("creditCardId"))%>" class="buttontext">
                         [Update Card]</a>
                       </td>
                       <td align="right">
-                        <a href="/delete_credit_card_info/viewprofile?CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%>" class="buttontext">
+                        <a href="<%=response.encodeURL(controlPath + "/updatecreditcard/viewprofile?UPDATE_MODE=DELETE&CREDIT_CARD_ID=" + creditCardInfo.getString("creditCardId"))%>" class="buttontext">
                         [Delete]</a>
                       </td>
                     </tr>

@@ -136,12 +136,12 @@
         <select name="CC_EXPIRE_DATE_YEAR">
           <option><%=UtilFormatOut.checkNull(useValues?expYear:request.getParameter("CC_EXPIRE_DATE_YEAR"))%></option>
           <option></option>
-          <option>01</option>
-          <option>02</option>
-          <option>03</option>
-          <option>04</option>
-          <option>05</option>
-          <option>06</option>
+          <option>2001</option>
+          <option>2002</option>
+          <option>2003</option>
+          <option>2004</option>
+          <option>2005</option>
+          <option>2006</option>
         </select>
       *</td>
     </tr>

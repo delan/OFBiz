@@ -149,6 +149,13 @@
       <success>view:editcreditcard</success><error>view:editcreditcard</error>
     </request-map>
 
+    <request-map><uri>editperson</uri><secure>true</secure><auth>true</auth><success>view:editperson</success></request-map>
+    <request-map>
+      <uri>updateperson</uri><secure>true</secure><auth>true</auth>
+      <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>updatePerson</event-invoke>
+      <success>view:editperson</success><error>view:editperson</error>
+    </request-map>
+
     <request-map><uri>changepassword</uri><secure>true</secure><auth>true</auth><success>view:changepassword</success></request-map>
     <request-map>
       <uri>updatepassword</uri><secure>true</secure><auth>true</auth>
@@ -177,5 +184,6 @@
     <view-map><view>editcontactmech</view><mapped-page>/customer/editcontactmech.jsp</mapped-page></view-map>
     <view-map><view>editcreditcard</view><mapped-page>/customer/editcreditcard.jsp</mapped-page></view-map>
     <view-map><view>changepassword</view><mapped-page>/customer/changepassword.jsp</mapped-page></view-map>
+    <view-map><view>editperson</view><mapped-page>/customer/editperson.jsp</mapped-page></view-map>
     <!-- end of view mappings -->
 </site-conf>

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2001/09/02 05:20:22  jonesde
+ * Initial pass on create/edit credit card functionality.
+ *
  * Revision 1.11  2001/09/02 01:04:44  jonesde
  * Changed flow so contact mech updates stay on same page; added event message to confirm changes, displayed by errormsg.jsp, even though it's not an error message.
  *
@@ -526,7 +529,7 @@ public class CustomerEvents {
       String cardNumber = request.getParameter("CC_CARD_NUMBER");
       String cardSecurityCode = request.getParameter("CC_CARD_SECURITY_CODE");
       String expMonth = request.getParameter("CC_EXPIRE_DATE_MONTH");
-      String expYear = request.getParameter("CC_EXPIRE_DATE_MONTH");
+      String expYear = request.getParameter("CC_EXPIRE_DATE_YEAR");
       String expireDate = expMonth + "/" + expYear;
       String contactMechId = request.getParameter("CC_CONTACT_MECH_ID");
       
@@ -535,6 +538,9 @@ public class CustomerEvents {
       if(!UtilValidate.isNotEmpty(cardNumber)) errMsg += "<li>Card Number missing.";
       if(!UtilValidate.isNotEmpty(expMonth)) errMsg += "<li>Expiration Month missing.";
       if(!UtilValidate.isNotEmpty(expYear)) errMsg += "<li>Expiration Year missing.";
+      if(!UtilValidate.isAnyCard(cardNumber)) errMsg += "<li>" + UtilValidate.isAnyCardMsg;
+      if(!UtilValidate.isCardMatch(cardType, cardNumber)) errMsg += "<li>" + cardNumber + UtilValidate.isCreditCardPrefixMsg + cardType + UtilValidate.isCreditCardSuffixMsg + " (It appears to be a " + UtilValidate.getCardType(cardNumber) + " credit card number)";
+      if(!UtilValidate.isDateAfterToday(expireDate)) errMsg += "<li>The expiration date " + expireDate + " is before today.";
       if(errMsg.length() > 0) {
         errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
         request.setAttribute("ERROR_MESSAGE", errMsg);
@@ -587,6 +593,134 @@ public class CustomerEvents {
     return "success";
   }
   
+  /** Updates a Person entity according to the parameters passed in the
+   *  request object; will do a CREATE, UPDATE, or DELETE depending on the
+   *  value of the UPDATE_MODE parameter.
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
+  public static String updatePerson(HttpServletRequest request, HttpServletResponse response) {
+    String errMsg = "";
+    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+    if(userLogin == null) { errMsg = "<li>ERROR: User not logged in, cannot update credit card info. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+    
+    String updateMode = request.getParameter("UPDATE_MODE");
+    
+    if("CREATE".equals(updateMode) || "UPDATE".equals(updateMode)) {
+      String firstName = request.getParameter("PERSON_FIRST_NAME");
+      String middleName = request.getParameter("PERSON_MIDDLE_NAME");
+      String lastName = request.getParameter("PERSON_LAST_NAME");
+      String personalTitle = request.getParameter("PERSON_TITLE");
+      String suffix = request.getParameter("PERSON_SUFFIX");
+
+      String nickname = request.getParameter("PERSON_NICKNAME");
+      String gender = request.getParameter("PERSON_GENDER");
+      String birthDateStr = request.getParameter("PERSON_BIRTH_DATE");
+      String heightStr = request.getParameter("PERSON_HEIGHT");
+      String weightStr = request.getParameter("PERSON_WEIGHT");
+      String mothersMaidenName = request.getParameter("PERSON_MOTHERS_MAIDEN_NAME");
+      String maritalStatus = request.getParameter("PERSON_MARITAL_STATUS");
+      String socialSecurityNumber = request.getParameter("PERSON_SOCIAL_SECURITY_NUMBER");
+      String passportNumber = request.getParameter("PERSON_PASSPORT_NUMBER");
+      String passportExpireDateStr = request.getParameter("PERSON_PASSPORT_EXPIRE_DATE");
+      String totalYearsWorkExperienceStr = request.getParameter("PERSON_TOTAL_YEARS_WORK_EXPERIENCE");
+      String comment = request.getParameter("PERSON_COMMENT");
+      
+      java.sql.Date birthDate = null;
+      java.sql.Date passportExpireDate = null;
+      Double height = null;
+      Double weight = null;
+      Double totalYearsWorkExperience = null;
+      
+      if(UtilValidate.isNotEmpty(heightStr))
+      {
+        try { height = Double.valueOf(heightStr); }
+        catch(Exception e) { errMsg += "<li>Height is not a valid number."; }
+      }
+      if(UtilValidate.isNotEmpty(weightStr))
+      {
+        try { weight = Double.valueOf(weightStr); }
+        catch(Exception e) { errMsg += "<li>Weight is not a valid number."; }
+      }
+      if(UtilValidate.isNotEmpty(totalYearsWorkExperienceStr))
+      {
+        try { totalYearsWorkExperience = Double.valueOf(totalYearsWorkExperienceStr); }
+        catch(Exception e) { errMsg += "<li>Total Years Work Experience is not a valid number."; }
+      }
+      
+      if(!UtilValidate.isNotEmpty(firstName)) errMsg += "<li>First Name missing.";
+      if(!UtilValidate.isNotEmpty(lastName)) errMsg += "<li>Last Name missing.";
+      if(errMsg.length() > 0) {
+        errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+        request.setAttribute("ERROR_MESSAGE", errMsg);
+        return "error";
+      }
+      
+      GenericValue person = helper.findByPrimaryKey("Person", UtilMisc.toMap("partyId", userLogin.get("partyId")));
+      boolean doCreate = false;
+      if(person == null)
+      {
+        person = helper.makeValue("Person", UtilMisc.toMap("partyId", userLogin.get("partyId")));
+        doCreate = true;
+      }
+      
+      person.set("firstName", firstName);
+      person.set("middleName", middleName);
+      person.set("lastName", lastName);
+      person.set("personalTitle", personalTitle);
+      person.set("suffix", suffix);
+
+      person.set("nickname", nickname);
+      person.set("gender", gender);
+      person.set("birthDate", birthDate);
+      person.set("height", height);
+      person.set("weight", weight);
+      person.set("mothersMaidenName", mothersMaidenName);
+      person.set("maritalStatus", maritalStatus);
+      person.set("socialSecurityNumber", socialSecurityNumber);
+      person.set("passportNumber", passportNumber);
+      person.set("passportExpireDate", passportExpireDate);
+      person.set("totalYearsWorkExperience", totalYearsWorkExperience);
+      person.set("comment", comment);
+
+      if(doCreate)
+      {
+        if(helper.create(person) == null) {
+          errMsg = "<li>ERROR: Could not add person info (write failure). Please contact customer service.";
+          request.setAttribute("ERROR_MESSAGE", errMsg);
+          return "error";
+        }
+      }
+      else
+      {
+        try { person.store(); }
+        catch(Exception e) { errMsg = "<li>ERROR: Could update personal information (write failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+      }
+    }
+    else if("DELETE".equals(updateMode)) {
+      /* Leave delete disabled for now...
+      GenericValue person = helper.findByPrimaryKey("Person", UtilMisc.toMap("partyId", userLogin.get("partyId")));
+      if(person != null)
+      {
+        try { person.remove(); }
+        catch(Exception e) { errMsg = "<li>ERROR: Could not delete personal information (write failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+      }
+      */
+      request.setAttribute("ERROR_MESSAGE", "ERROR: Deletion of person object not allowed.");
+      return "error";
+    }
+    else {
+      errMsg = "<li>ERROR: Specified Update Mode (" + updateMode + ") is not valid. Please contact customer service.";
+      request.setAttribute("ERROR_MESSAGE", errMsg);
+      return "error";
+    }
+    
+    request.setAttribute("EVENT_MESSAGE", "Personal Information Updated.");
+    return "success";
+  }
+
   /** Change the password for the current UserLogin in the session to the
    *  password specified in the request object.
    *@param request The HTTPRequest object for the current request
