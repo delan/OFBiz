@@ -105,16 +105,12 @@ public class FreeMarkerGenerator extends AbstractGenerator {
         }
         
         try {
-            //should cache this I guess
-            /*String template = inConfig.getChildValue("template");
-             */
             Template parsedTemplate = null;
             try {
                 parsedTemplate = config.getTemplate(page.getContentPath(), request.getLocale());
             } catch (IOException e) {
                 throw new WSPException(e);
             }
-            //Template parsedTemplate = new Template(page.getContentFile().getAbsolutePath(), new FileReader(page.getContentFile()));
             Writer writer = new OutputStreamWriter(inOutput ,"UTF-8");
             
             try {
