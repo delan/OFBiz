@@ -25,8 +25,11 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign security = requestAttributes.security>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
+<#if (requestAttributes.security)?exists><#assign security = requestAttributes.security></#if>
+<#if (requestAttributes.userLogin)?exists><#assign userLogin = requestAttributes.userLogin></#if>
+<#if (requestAttributes.checkLoginUrl)?exists><#assign checkLoginUrl = requestAttributes.checkLoginUrl></#if>
+
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
 <#assign selectedLeftClassMap = {(page.headerItem)?default("void") : "headerButtonLeftSelected"}>
