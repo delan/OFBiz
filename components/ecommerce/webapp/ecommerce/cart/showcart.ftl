@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -344,7 +344,7 @@ function addToList() {
                 <table width='100%' cellspacing="0" cellpadding="1" border="0">
                   <#-- show promotions text -->
                   <#list productPromos as productPromo>
-                    <#if productPromo.promoText?has_content>
+                    <#if productPromo.promoText?has_content && productPromo.showToCustomer?if_exists != "N">
                         <tr>
                           <td>
                             <div class='tabletext'>${productPromo.promoText}</div>

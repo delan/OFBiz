@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 
@@ -28,10 +28,10 @@
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign productPromos = Static["org.ofbiz.order.shoppingcart.product.ProductPromoWorker"].getStoreProductPromos(delegator, request)>
 
-<#-- Make sure that at least one promo has non-empty promoText -->
+<#-- Make sure that at least one promo has non-empty promoText && showToCustomer == "Y" -->
 <#assign showPromoText = false>
 <#list productPromos as productPromo>
-    <#if productPromo.promoText?has_content><#assign showPromoText = true></#if>
+    <#if productPromo.promoText?has_content && productPromo.showToCustomer?if_exists != "N"><#assign showPromoText = true></#if>
 </#list>
 
 <#if showPromoText>
@@ -55,7 +55,7 @@
                 <table width='100%' cellspacing="0" cellpadding="1" border="0">
                   <#-- show promotions text -->
                   <#list productPromos as productPromo>
-                    <#if productPromo.promoText?has_content>
+                    <#if productPromo.promoText?has_content && productPromo.showToCustomer?if_exists != "N">
                         <tr>
                           <td>
                             <div class='tabletext'>${productPromo.promoText}</div>
