@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  To refer to this DTD in your XML file, use the following declaration:
+<!DOCTYPE simple-services PUBLIC "-//OFBiz//DTD Simple Services//EN" "http://www.ofbiz.org/dtds/simple-services.dtd">
+-->
+
+<!--
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+*This is the DTD for the Open For Business Simple Service definition XML file.
+-->
+
+<!ELEMENT simple-services ( simple-service* )>
+<!ELEMENT simple-service ( ( make-now-timestamp | get-sequenced-id | simple-map-processor | check-errors | service | 
+                             make-value | find-value | clone-value | fill-value | value-to-list | store-list | remove-list |
+                             create-value | update-value | remove-value )* )>
+<!ATTLIST simple-service
+    service-name CDATA #REQUIRED
+    short-description CDATA #REQUIRED
+    login-required ( true | false ) "true"
+    context-map-name CDATA "context"
+    request-name CDATA "_request_"
+    response-code-name CDATA "_response_code_"
+    error-message-name CDATA "_error_message_"
+    success-message-name CDATA "_success_message_"
+>
+
+<!ELEMENT make-now-timestamp EMPTY>
+<!ATTLIST make-now-timestamp
+    map-name CDATA #REQUIRED
+    map-field CDATA #REQUIRED
+>
+<!ELEMENT get-sequenced-id EMPTY>
+<!ATTLIST get-sequenced-id
+    sequence-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
+    map-field CDATA #REQUIRED
+>
+
+<!ELEMENT simple-map-processor EMPTY>
+<!ATTLIST simple-map-processor
+    xml-resource CDATA #REQUIRED
+    processor-name CDATA #REQUIRED
+    in-map-name CDATA #REQUIRED
+    out-map-name CDATA #REQUIRED
+    error-list-name CDATA "_error_list_"
+>
+
+<!ELEMENT check-errors EMPTY>
+<!ATTLIST check-errors
+    error-code CDATA "error"
+    error-list-name CDATA "_error_list_"
+>
+
+<!ELEMENT service ( results-to-map*, result-to-field* )>
+<!ATTLIST service
+    service-name CDATA #REQUIRED
+    in-map-name CDATA #REQUIRED
+    include-user-login ( true | false ) "true"
+    error-code CDATA "error"
+    success-code CDATA "success"
+>
+    <!ELEMENT results-to-map EMPTY>
+    <!ATTLIST results-to-map
+        map-name CDATA #REQUIRED
+    >
+    <!ELEMENT result-to-field EMPTY>
+    <!ATTLIST result-to-field
+        result-name CDATA #REQUIRED
+        map-name CDATA #REQUIRED
+        field-name CDATA #IMPLIED
+    >
+
+<!ELEMENT make-value EMPTY>
+<!ATTLIST make-value
+    value-name CDATA #REQUIRED
+    entity-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
+>
+<!ELEMENT find-value EMPTY>
+<!ATTLIST find-value
+    value-name CDATA #REQUIRED
+    entity-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
+>
+<!ELEMENT clone-value EMPTY>
+<!ATTLIST clone-value
+    value-name CDATA #REQUIRED
+    new-value-name CDATA #REQUIRED
+>
+<!ELEMENT fill-value EMPTY>
+<!ATTLIST fill-value
+    value-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
+>
+
+<!ELEMENT value-to-list EMPTY>
+<!ATTLIST value-to-list
+    value-name CDATA #REQUIRED
+    list-name CDATA #REQUIRED
+>
+<!ELEMENT store-list EMPTY>
+<!ATTLIST store-list
+    list-name CDATA #REQUIRED
+>
+<!ELEMENT remove-list EMPTY>
+<!ATTLIST remove-list
+    list-name CDATA #REQUIRED
+>
+
+<!ELEMENT create-value EMPTY>
+<!ATTLIST create-value
+    value-name CDATA #REQUIRED
+>
+<!ELEMENT update-value EMPTY>
+<!ATTLIST update-value
+    value-name CDATA #REQUIRED
+>
+<!ELEMENT remove-value EMPTY>
+<!ATTLIST remove-value
+    value-name CDATA #REQUIRED
+>
