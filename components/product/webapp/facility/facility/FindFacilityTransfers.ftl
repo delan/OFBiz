@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -48,7 +48,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <table border="1" cellpadding="2" cellspacing="0" width="100%">
             <tr>
             <td><div class="tabletext"><b>${uiLabelMap.ProductTransferId}</b></div></td>
-            <td><div class="tabletext"><b>${uiLabelMap.EcommerceItem}</b></div></td>      
+            <td><div class="tabletext"><b>${uiLabelMap.ProductItem}</b></div></td>      
             <td><div class="tabletext"><b>${uiLabelMap.CommonFrom}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonSendDate}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonStatus}</b></div></td>
@@ -57,15 +57,15 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         
             <#list toTransfers as transfer>
             <tr>
-            <td><div class="tabletext"><a href="<@ofbizUrl>/EditInventoryTransfer?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">&nbsp;${(transfer.inventoryTransferId)?if_exists}</a></div></td>
+            <td><div class="tabletext"><a href="<@ofbizUrl>/TransferInventoryItem?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">&nbsp;${(transfer.inventoryTransferId)?if_exists}</a></div></td>
             <td><div class="tabletext"><a href="<@ofbizUrl>/EditInventoryItem?inventoryItemId=${(transfer.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">&nbsp;${(transfer.inventoryItemId)?if_exists}</a></div></td>      
             <td>
-                <#assign fac = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", transfer.getString("facilityId")))>
+                <#assign fac = delegator.findByPrimaryKey("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", transfer.getString("facilityId")))>
                 <div class="tabletext"><a href="<@ofbizUrl>/EditFacility?facilityId=${(transfer.facilityId)?if_exists}</@ofbizUrl>" class="buttontext">&nbsp;<#if fac?exists>${(fac.facilityName)?if_exists}</#if>&nbsp;[${(transfer.facilityId)?if_exists}]</a></div>
             </td>
             <td><div class="tabletext">&nbsp;${(transfer.sendDate)?if_exists}</div></td>
             <td>
-                <#assign transferStatus = delegator.findByPrimaryKey("StatusItem", UtilMisc.toMap("statusId", transfer.statusId))>
+                <#assign transferStatus = delegator.findByPrimaryKey("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", transfer.statusId))>
                 <div class="tabletext">&nbsp;${(transferStatus.description)?if_exists}</div>
             </td>
             <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/TransferInventoryItem?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div></td>
@@ -80,7 +80,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <table border="1" cellpadding="2" cellspacing="0" width="100%">
             <tr>
             <td><div class="tabletext"><b>${uiLabelMap.ProductTransferId}</b></div></td>
-            <td><div class="tabletext"><b>${uiLabelMap.EcommerceItem}</b></div></td>      
+            <td><div class="tabletext"><b>${uiLabelMap.ProductItem}</b></div></td>      
             <td><div class="tabletext"><b>${uiLabelMap.CommonTo}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonSendDate}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonStatus}</b></div></td>
@@ -92,12 +92,12 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td><div class="tabletext"><a href="<@ofbizUrl>/TransferInventoryItem?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">&nbsp;${(transfer.inventoryTransferId)?if_exists}</a></div></td>
             <td><div class="tabletext"><a href="<@ofbizUrl>/EditInventoryItem?inventoryItemId=${(transfer.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">&nbsp;${(transfer.inventoryItemId)?if_exists}</a></div></td>      
             <td>
-                <#assign fac = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", transfer.getString("facilityIdTo")))>
+                <#assign fac = delegator.findByPrimaryKey("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", transfer.getString("facilityIdTo")))>
                 <div class="tabletext"><a href="<@ofbizUrl>/EditFacility?facilityId=${(transfer.facilityIdTo)?if_exists}</@ofbizUrl>" class="buttontext">&nbsp;<#if fac?exists>${(fac.facilityName)?if_exists}</#if>&nbsp;[${(transfer.facilityIdTo)?if_exists}]</a></div>
             </td>
             <td><div class="tabletext">&nbsp;${(transfer.sendDate)?if_exists}</div></td>
             <td>
-                <#assign transferStatus = delegator.findByPrimaryKey("StatusItem", UtilMisc.toMap("statusId", transfer.statusId))>
+                <#assign transferStatus = delegator.findByPrimaryKey("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", transfer.statusId))>
                 <div class="tabletext">&nbsp;${(transferStatus.description)?if_exists}</div>
             </td>
             <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/TransferInventoryItem?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div></td>

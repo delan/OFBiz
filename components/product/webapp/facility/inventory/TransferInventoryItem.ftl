@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -49,7 +49,7 @@
             <input type="hidden" name="facilityId" value="${facilityId}">
             </td>
             <td width="50%">
-            <input type="submit" value="Get Item">
+            <input type="submit" value="${uiLabelMap.ProductGetItem}">
             </td>
         </tr>
         </table>
@@ -153,7 +153,7 @@
             <#if (inventoryTransfer.getRelatedOneCache("StatusItem"))?exists>
                 <#assign curStatusItem = inventoryTransfer.getRelatedOneCache("StatusItem")>
             </#if>
-            <option value="${(inventoryTransfer.statusId)?if_exists}"></option>
+            <option value="${(inventoryTransfer.statusId)?if_exists}">${(curStatusItem.description)?if_exists}</option>
             <#list statusItems as statusItem>
             <option value="${(statusItem.statusId)?if_exists}">${(statusItem.description)?if_exists}</option>
             </#list>
