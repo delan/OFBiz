@@ -1,5 +1,5 @@
 /*
- * $Id: GenericRequester.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: GenericRequester.java,v 1.2 2003/11/25 23:56:07 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import java.util.Map;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> *
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public interface GenericRequester {
@@ -43,7 +43,9 @@ public interface GenericRequester {
     public void receiveResult(Map result);
     
     /**
-     * Receive an exception from an asynchronous service cell     * @param exception The exception which was received     */
-    public void receiveException(Exception exception);
+     * Receive an exception (Throwable) from an asynchronous service cell
+     * @param t The Throwable which was received
+     */
+    public void receiveThrowable(Throwable t);
 }
 

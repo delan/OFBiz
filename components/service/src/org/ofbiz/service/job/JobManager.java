@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.6 2003/09/19 04:53:29 ajzeneski Exp $
+ * $Id: JobManager.java,v 1.7 2003/11/25 23:56:08 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class JobManager {
@@ -100,14 +100,15 @@ public class JobManager {
     public synchronized Iterator poll() {
         List poll = new ArrayList();
         Collection jobEnt = null;
-        
+
         // sort the results by time
         List order = UtilMisc.toList("runTime");
-        
+
         // basic query
-        List expressions = UtilMisc.toList(new EntityExpr("runTime", EntityOperator.LESS_THAN_EQUAL_TO, 
-            UtilDateTime.nowTimestamp()), new EntityExpr("startDateTime", EntityOperator.EQUALS, null));
-        
+        List expressions = UtilMisc.toList(new EntityExpr("runTime", EntityOperator.LESS_THAN_EQUAL_TO,
+                UtilDateTime.nowTimestamp()), new EntityExpr("startDateTime", EntityOperator.EQUALS, null),
+                new EntityExpr("cancelDateTime", EntityOperator.EQUALS, null));
+
         // limit to just defined pools
         List pools = ServiceConfigUtil.getRunPools();
         List poolsExpr = UtilMisc.toList(new EntityExpr("poolId", EntityOperator.EQUALS, null));
@@ -118,20 +119,20 @@ public class JobManager {
                 poolsExpr.add(new EntityExpr("poolId", EntityOperator.EQUALS, poolName));
             }
         }
-        
-        // make the conditions               
-        EntityCondition baseCondition = new EntityConditionList(expressions, EntityOperator.AND);        
+
+        // make the conditions
+        EntityCondition baseCondition = new EntityConditionList(expressions, EntityOperator.AND);
         EntityCondition poolCondition = new EntityConditionList(poolsExpr, EntityOperator.OR);
-        EntityCondition mainCondition = new EntityConditionList(UtilMisc.toList(baseCondition, poolCondition), EntityOperator.AND);        
-                
-        // we will loop until we have no more to do        
+        EntityCondition mainCondition = new EntityConditionList(UtilMisc.toList(baseCondition, poolCondition), EntityOperator.AND);
+
+        // we will loop until we have no more to do
         boolean pollDone = false;
-        
-        while (!pollDone) {            
+
+        while (!pollDone) {
             boolean beganTransaction;
             try {
                 beganTransaction = TransactionUtil.begin();
-            } catch (GenericTransactionException e) {                
+            } catch (GenericTransactionException e) {
                 Debug.logError(e, "Unable to start transaction; not polling for jobs", module);
                 return null;
             }
@@ -139,24 +140,24 @@ public class JobManager {
                 Debug.logError("Unable to poll for jobs; transaction was not started by this process", module);
                 return null;
             }
-        
+
             try {
-                jobEnt = delegator.findByCondition("JobSandbox", mainCondition, null, order);                
+                jobEnt = delegator.findByCondition("JobSandbox", mainCondition, null, order);
             } catch (GenericEntityException ee) {
                 Debug.logError(ee, "Cannot load jobs from datasource.", module);
             } catch (Exception e) {
-                Debug.logError(e, "Unknown error.", module);            
+                Debug.logError(e, "Unknown error.", module);
             }
-            
+
             if (jobEnt != null && jobEnt.size() > 0) {
                 Iterator i = jobEnt.iterator();
 
                 while (i.hasNext()) {
-                    GenericValue v = (GenericValue) i.next();                    
+                    GenericValue v = (GenericValue) i.next();
                     DispatchContext dctx = getDispatcher().getDispatchContext();
 
                     if (dctx == null) {
-                        Debug.logError("Unable to locate DispatchContext object; not running job!", module);                        
+                        Debug.logError("Unable to locate DispatchContext object; not running job!", module);
                         continue;
                     }
                     Job job = new PersistedServiceJob(dctx, v, null); // todo fix the requester
@@ -165,14 +166,14 @@ public class JobManager {
             } else {
                 pollDone = true;
             }
-            
+
             // finished this run; commit the transaction
             try {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericTransactionException e) {
-                Debug.logError(e, module);                
+                Debug.logError(e, module);
             }
-            
+
         }
         return poll.iterator();
     }

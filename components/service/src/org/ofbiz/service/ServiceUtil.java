@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.5 2003/09/27 21:32:53 ajzeneski Exp $
+ * $Id: ServiceUtil.java,v 1.6 2003/11/25 23:56:07 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ServiceUtil {
@@ -264,5 +264,39 @@ public class ServiceUtil {
         }
         
         return ServiceUtil.returnSuccess();
+    }
+
+    public static Map cancelJob(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        Security security = dctx.getSecurity();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (!security.hasPermission("SERVICE_INVOKE_ANY", userLogin)) {
+            return ServiceUtil.returnError("You do not have permission to run this service");
+        }
+
+        String jobName = (String) context.get("jobName");
+        Timestamp runTime = (Timestamp) context.get("runTime");
+        Map fields = UtilMisc.toMap("jobName", jobName, "runTime", runTime);
+
+        GenericValue job = null;
+        try {
+            job = delegator.findByPrimaryKey("JobSandbox", fields);
+            if (job != null) {
+                job.set("cancelDateTime", UtilDateTime.nowTimestamp());
+                job.store();
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Unable to cancel job : " + fields);
+        }
+
+        Timestamp cancelDate = job.getTimestamp("cancelDateTime");
+        if (cancelDate != null) {
+            Map result = ServiceUtil.returnSuccess();
+            result.put("cancelDateTime", cancelDate);
+            return result;
+        } else {
+            return ServiceUtil.returnError("Unable to cancel job : " + job);
+        }
     }
 }
