@@ -186,6 +186,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.operator.setLock(lock);
         this.isLocked = lock;
         this.input.setFunction("LOGIN");
+        DeviceLoader.enable(!lock);
     }
 
     public XuiSession getSession() {

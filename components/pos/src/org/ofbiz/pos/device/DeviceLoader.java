@@ -168,4 +168,34 @@ public class DeviceLoader {
             }
         }
     }
+
+    public static void enable(boolean enable) {
+        if (keyboard != null) {
+            keyboard.enable(enable);
+        }
+        if (scanner != null) {
+            scanner.enable(enable);
+        }
+        if (msr != null) {
+            msr.enable(enable);
+        }
+        if (check != null) {
+            check.enable(enable);
+        }
+        if (ldisplay != null) {
+            ldisplay.enable(enable);
+        }
+        if (pinpad != null) {
+            pinpad.enable(enable);
+        }
+        if (receipt != null) {
+            receipt.enable(enable);
+        }
+        
+        // cash drawers and journal printer are
+        // never able to be disabled so we can
+        // notify when the drawer is open and
+        // print any information needed to the
+        // journal
+    }
 }
