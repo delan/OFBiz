@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizCurrencyTransform.java,v 1.2 2003/11/27 15:29:31 jonesde Exp $
+ * $Id: OfbizCurrencyTransform.java,v 1.3 2004/02/10 15:06:19 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import freemarker.template.*;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:ray.barlow@makeyour-point.com">Ray Barlow</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class OfbizCurrencyTransform implements TemplateTransformModel {
@@ -74,6 +74,12 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
         if (args.containsKey(key)) {
             Object o = args.get(key);
             if (Debug.verboseOn()) Debug.logVerbose("Amount Object : " + o.getClass().getName(), module);
+
+            // handle nulls better
+            if (o == null) {
+                o = new Double(0.00);
+            }
+
             if (o instanceof NumberModel) {
                 NumberModel s = (NumberModel) o;
                 return new Double( s.getAsNumber().doubleValue() );
