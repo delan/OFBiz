@@ -99,9 +99,15 @@ public class ShoppingCartEvents {
         String productCategoryId = null;
         String priceStr = null;
         double price = 0.00;
-
         String quantityStr = null;
         double quantity = 0;
+        String reservStartStr = null;
+        java.sql.Timestamp reservStart = null;
+        String reservLengthStr = null;
+        double reservLength = 0;
+        String reservPersonsStr = null;
+        double reservPersons = 0;
+        
         // not used right now: Map attributes = null;
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
         Locale locale = UtilHttp.getLocale(request);
@@ -173,6 +179,57 @@ public class ShoppingCartEvents {
             priceStr = "0.00";  // default price is 0.00
         }
 
+        // get the renting data
+        if (paramMap.containsKey("reservStart")) {
+            reservStartStr = (String) paramMap.remove("reservStart");
+            if (reservStartStr.length() == 10) // only date provided, no time string?
+                    reservStartStr += " 00:00:00.000000000"; // should have format: yyyy-mm-dd hh:mm:ss.fffffffff
+            if (reservStartStr.length() >0) {
+                try {
+                    reservStart = java.sql.Timestamp.valueOf((String) reservStartStr);
+                } catch (Exception e) {
+                    Debug.logWarning(e,"Problems parsing Reservation start string: "
+                                + reservStartStr, module);
+                    reservStart = null;
+                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties
+                        .getMessage(resource,"cart.addToCart.rental.startDate", locale));
+                    return "error";
+                }
+            }
+            else reservStart = null;
+
+            if (reservStart != null && paramMap.containsKey("reservLength")) {
+                reservLengthStr = (String) paramMap.remove("reservLength");
+                // parse the reservation Length
+                try {
+                    reservLength = NumberFormat.getNumberInstance().parse(
+                            reservLengthStr).doubleValue();
+                } catch (Exception e) {
+                    Debug.logWarning(e,"Problems parsing reservation length string: "
+                                    + reservLengthStr, module);
+                    reservLength = 1;
+                    request.setAttribute("_ERROR_MESSAGE_", "Reservation length should be a positive number");
+                    return "error";
+                }
+            }
+
+            if (reservStart != null && paramMap.containsKey("reservPersons")) {
+                reservPersonsStr = (String) paramMap.remove("reservPersons");
+                // parse the number of persons
+                try {
+                    reservPersons = NumberFormat.getNumberInstance().parse(
+                            reservPersonsStr).doubleValue();
+                } catch (Exception e) {
+                    Debug.logWarning(e,
+                            "Problems parsing reservation number of persons string: "
+                                    + reservPersonsStr, module);
+                    reservPersons = 1;
+                    request.setAttribute("_ERROR_MESSAGE_", "Number of persons should be 'one' or larger");
+                    return "error";
+                }
+            }
+        }
+        
         // get the quantity
         if (paramMap.containsKey("QUANTITY")) {
             quantityStr = (String) paramMap.remove("QUANTITY");
@@ -254,8 +311,8 @@ public class ShoppingCartEvents {
 
         // Translate the parameters and add to the cart
         result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId,
-            itemType, itemDescription, price, amount, quantity, configWrapper, paramMap);
-        controlDirective = processResult(result, request);
+                itemType, itemDescription, price, amount, quantity, reservStart, reservLength, reservPersons, configWrapper, paramMap);
+            controlDirective = processResult(result, request);
 
         // Determine where to send the browser
         if (controlDirective.equals(ERROR)) {

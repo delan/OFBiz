@@ -108,6 +108,7 @@ function setAlternateGwp(field) {
 };
 //-->
 </script>
+<#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems()/> <#-- change display format when rental items exist in the shoppingcart -->
 
 <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
@@ -133,10 +134,11 @@ function setAlternateGwp(field) {
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
-          <td>
+          <td class="tabletext" align="right">
             <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform" style="margin: 0;">
-              <input type="text" class="inputBox" name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
-              <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}">
+              Product&nbsp;Number:</td><td class="tabletext"><input type="text" class="inputBox" name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
+              <#-- check if rental data present  insert extra fields in Quick Add-->
+              <#if product?exists && product.getString("productTypeId") == "ASSET_USAGE"></td><td class="tabletext">${uiLabelMap.StartDate}:</td><td><input type="text" class="inputBox" size="10" name="reservStart" value=${requestParameters.reservStart?default("")}></td><td class="tabletext">${uiLabelMap.EcommerceLength}:</td><td><input type="text" class="inputBox" size="2" name="reservLength" value=${requestParameters.reservLength?default("")}></td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td class="tabletext">${uiLabelMap.EcommerceNbrPersons}:</td><td><input type="text" class="inputBox" size="3" name="reservPersons" value=${requestParameters.reservPersons?default("1")}></td><td class="tabletext" nowrap></#if> ${uiLabelMap.CommonQuantity} :</td><td><input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}"></td><td>
               <input type="submit" class="smallSubmit" value="${uiLabelMap.EcommerceAddToCart}">
               <#-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a> -->
             </form>
@@ -199,7 +201,8 @@ function setAlternateGwp(field) {
           <#else>
             <td NOWRAP>&nbsp;</td>
           </#if>
-          <td NOWRAP align="center"><div class="tabletext"><b>${uiLabelMap.CommonQuantity}</b></div></td>
+          <#if fixedAssetExist == true><td NOWRAP align="center"><table><tr><td class="tabletext" nowrap align="center"><b>- Startdate -</b></td><td class="tabletext" nowrap><b>- Nbr of days -</b></td></tr><tr><td class="tabletext" nowrap><b>- Nbr of persons -</b></td><td class="tabletext" nowrap align="center"><b>- ${uiLabelMap.CommonQuantity} -</b></td></tr></table></td>
+          <#else><td NOWRAP align="center"><div class="tabletext"><b>${uiLabelMap.CommonQuantity}</b></div></td></#if>
           <td NOWRAP align="right"><div class="tabletext"><b>${uiLabelMap.EcommerceUnitPrice}</b></div></td>
           <td NOWRAP align="right"><div class="tabletext"><b>${uiLabelMap.EcommerceAdjustments}</b></div></td>
           <td NOWRAP align="right"><div class="tabletext"><b>${uiLabelMap.EcommerceItemTotal}</b></div></td>
@@ -209,6 +212,7 @@ function setAlternateGwp(field) {
         <#assign itemsFromList = false>
         <#assign promoItems = false>
         <#list shoppingCart.items() as cartLine>
+        
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
           <#assign lineOptionalFeatures = cartLine.getOptionalProductFeatures()>
           <#-- show adjustment info -->
@@ -314,9 +318,19 @@ function setAlternateGwp(field) {
             <td nowrap align="center">
               <div class="tabletext">
                 <#if cartLine.getIsPromo() || cartLine.getShoppingListId()?exists>
-                    ${cartLine.getQuantity()?string.number}
-                <#else>
-                    <input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}">
+                       <#if fixedAssetExist == true><#if cartLine.getReservStart()?exists><table border="0" width="100%"><tr><td width="1%">&nbsp;</td><td width="50%" class="tabletext">${cartLine.getReservStart()?string("yyyy-mm-dd")}</td><td align="center" class="tabletext">${cartLine.getReservLength()?string.number}</td></tr><tr><td align="center">&nbsp;</td><td align="center" class="tabletext">${cartLine.getReservPersons()?string.number}</td><td class="tabletext" align="center"><#else>
+                           <table border="0" width="100%"><tr><td width="52%" align="center">--</td><td align="center">--</td></tr><tr><td align="center">--</td><td align="center" class="tabletext">    </#if>
+                        ${cartLine.getQuantity()?string.number}</td></tr></table>
+                    <#else><#-- fixedAssetExist -->
+                        ${cartLine.getQuantity()?string.number}
+                    </#if>
+                <#else><#-- Is Promo or Shoppinglist -->
+                       <#if fixedAssetExist == true><#if cartLine.getReservStart()?exists><table border="0" width="100%"><tr><td width="1%">&nbsp;</td><td><input type="text" class="inputBox" size="10" name="reservStart_${cartLineIndex}" value=${cartLine.getReservStart()?string}></td><td><input type="text" class="inputBox" size="2" name="reservLength_${cartLineIndex}" value=${cartLine.getReservLength()?string.number}></td></tr><tr><td>&nbsp;</td><td><input type="text" class="inputBox" size="3" name="reservPersons_${cartLineIndex}" value=${cartLine.getReservPersons()?string.number}></td><td class="tabletext"><#else>
+                           <table border="0" width="100%"><tr><td width="52%" align="center">--</td><td align="center">--</td></tr><tr><td align="center">--</td><td align="center" class="tabletext"></#if>
+                        <input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}"></td></tr></table>
+                    <#else><#-- fixedAssetExist -->
+                        <input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}">
+                    </#if>
                 </#if>
               </div>
             </td>
@@ -352,13 +366,20 @@ function setAlternateGwp(field) {
 
         <tr>
           <td colspan="5" align="right" valign=bottom>
+            <div class="tabletext">${uiLabelMap.OrderSalesTax}:</div>
+          </td>
+          <td colspan="2" align="right" valign=bottom>
+            <div class="tabletext"><@ofbizCurrency amount=shoppingCart.getTotalSalesTax() isoCode=shoppingCart.getCurrency()/></div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="5" align="right" valign=bottom>
             <div class="tabletext"><b>${uiLabelMap.EcommerceCartTotal}:</b></div>
           </td>
-          <td align="right" valign=bottom>
+          <td colspan="2" align="right" valign=bottom>
             <hr size=1 class="sepbar">
             <div class="tabletext"><b><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=shoppingCart.getCurrency()/></b></div>
           </td>
-          <td>&nbsp;</td>
         </tr>
         <#if itemsFromList>
         <tr>
@@ -437,18 +458,18 @@ function setAlternateGwp(field) {
           <tr>
             <td>
               <div class="tabletext">
-	            <form method="POST" action="<@ofbizUrl>/addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
-	              <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="">
-	              <input type="submit" class="smallSubmit" value="Add Code">
-	              <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())?if_exists>
-	              <#if productPromoCodeIds?has_content>
-	                Entered Codes:
-	                <#list productPromoCodeIds as productPromoCodeId>
-	                  ${productPromoCodeId}
-	                </#list>
-	              </#if>
-	            </form>
-	          </div>
+                <form method="POST" action="<@ofbizUrl>/addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
+                  <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="">
+                  <input type="submit" class="smallSubmit" value="Add Code">
+                  <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())?if_exists>
+                  <#if productPromoCodeIds?has_content>
+                    Entered Codes:
+                    <#list productPromoCodeIds as productPromoCodeId>
+                      ${productPromoCodeId}
+                    </#list>
+                  </#if>
+                </form>
+              </div>
             </td>
           </tr>
         </table>
@@ -523,21 +544,21 @@ function setAlternateGwp(field) {
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
             <td>
-			    <table width="100%" cellspacing="0" cellpadding="1" border="0">
-			      <#-- random complementary products -->
-			      <#list associatedProducts as assocProduct>
-			        <tr>
-			          <td>
-			            ${setRequestAttribute("optProduct", assocProduct)}
-			            ${setRequestAttribute("listIndex", assocProduct_index)}
-			            ${pages.get("/catalog/productsummary.ftl")}
-			          </td>
-			        </tr>
-			        <#if assocProduct_has_next>
-			          <tr><td><hr class="sepbar"></td></tr>
-			        </#if>
-			      </#list>
-			    </table>
+                <table width="100%" cellspacing="0" cellpadding="1" border="0">
+                  <#-- random complementary products -->
+                  <#list associatedProducts as assocProduct>
+                    <tr>
+                      <td>
+                        ${setRequestAttribute("optProduct", assocProduct)}
+                        ${setRequestAttribute("listIndex", assocProduct_index)}
+                        ${pages.get("/catalog/productsummary.ftl")}
+                      </td>
+                    </tr>
+                    <#if assocProduct_has_next>
+                      <tr><td><hr class="sepbar"></td></tr>
+                    </#if>
+                  </#list>
+                </table>
             </td>
           </tr>
         </table>

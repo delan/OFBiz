@@ -143,10 +143,59 @@ ${requestAttributes.virtualJavaScript?if_exists}
             toggleAmt(checkAmtReq(sku));
         }
     }
+
+    function validate(x){
+        var msg=new Array();
+        msg[0]="Please use correct date format [yyyy-mm-dd]";
+        
+        var y=x.split("-");
+        if(y.length!=3){ alert(msg[0]);return false; }
+        if((y[2].length>2)||(parseInt(y[2])>31)) { alert(msg[0]);     return false;    }
+        if(y[2].length==1){ y[2]="0"+y[2]; }
+        if((y[1].length>2)||(parseInt(y[1])>12)){    alert(msg[0]);    return false;    }
+        if(y[1].length==1){ y[1]="0"+y[1]; }            
+        if(y[0].length>4){ alert(msg[0]);     return false;     }
+        if(y[0].length<4) {
+            if(y[0].length==2) {
+                y[0]="20"+y[0];
+            }
+            else {
+                alert(msg[0]);
+                return false;
+            }
+        }
+        return (y[0]+"-"+y[1]+"-"+y[2]);
+    }    
+
+    function additemSubmit(){
+           newdatevalue = validate(document.addform.reservStart.value);
+           if (newdatevalue == false)
+               document.addform.reservStart.focus();
+        else {
+               document.addform.reservStart.value = newdatevalue;
+               document.addform.submit();
+        }
+     }
+
+    function addShoplistSubmit(){
+           if (document.addToShoppingList.reservStartStr.value == "")
+               document.addToShoppingList.submit();
+           else {
+               newdatevalue = validate(document.addToShoppingList.reservStartStr.value);
+               if (newdatevalue == false) 
+                   document.addToShoppingList.reservStartStr.focus();
+               else    {
+                   document.addToShoppingList.reservStartStr.value = newdatevalue;
+                   document.addToShoppingList.reservStart.value = 
+                           document.addToShoppingList.reservStartStr.value.slice(0,9)+" 00:00:00.000000000";
+                      document.addToShoppingList.submit();
+               }
+           }
+     }
  //-->
  </script>
 
-<table border="0" cellpadding="2" cellspacing='0'>
+<table width="100%" border="0" cellpadding="2" cellspacing='0'>
   <#-- Category next/previous -->
   <#if requestAttributes.category?exists>
     <tr>
@@ -218,7 +267,12 @@ ${requestAttributes.virtualJavaScript?if_exists}
             <#assign priceStyle = "regularPrice">
           </#if>
             ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class='${priceStyle}'><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
-        </b>
+             <#if product.productTypeId == "ASSET_USAGE">
+            <#if product.reserv2ndPPPerc?exists && product.reserv2ndPPPerc != 0><br/><span class='${priceStyle}'>Price for the 2nd <#if !product.reservNthPPPerc?exists || product.reservNthPPPerc == 0>until the ${product.reservMaxPersons}</#if>  person, each: <@ofbizCurrency amount=product.reserv2ndPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
+            <#if product.reservNthPPPerc?exists &&product.reservNthPPPerc != 0><br/><span class='${priceStyle}'>Price for the <#if !product.reserv2ndPPPerc?exists || product.reserv2ndPPPerc == 0>second <#else> 3rd </#if> until the ${product.reservMaxPersons}th person, each: <@ofbizCurrency amount=product.reservNthPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
+            <#if (!product.reserv2ndPPPerc?exists || product.reserv2ndPPPerc == 0) && (!product.reservNthPPPerc?exists || product.reservNthPPPerc == 0)><br/>Maximum ${product.reservMaxPersons} persons.</#if>
+             </#if>
+         </b>
       </div>
       <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
         <#assign priceSaved = price.listPrice?double - price.price?double>
@@ -258,7 +312,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
             <div class="tabletext">&nbsp;</div>
       </#if>
 
-      <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
+      <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name='addform'  style='margin: 0;'>
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
@@ -294,7 +348,6 @@ ${requestAttributes.virtualJavaScript?if_exists}
         </#if>
 
         <p>&nbsp;</p>
-
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
           <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
@@ -308,26 +361,27 @@ ${requestAttributes.virtualJavaScript?if_exists}
               <#assign hiddenStyle = "tabletext">
             <#else>
               <#assign hiddenStyle = "tabletexthidden">
-            </#if>
+            </#if>           
             <div id="add_amount" class="${hiddenStyle}">
               <nobr><b>Amount:</b></nobr>&nbsp;
               <input type="text" class="inputBox" size="5" name="add_amount" value="">
             </div>
-            <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a>&nbsp;
-            <input type="text" class="inputBox" size="5" name="quantity" value="1">
+            <#if product.productTypeId == "ASSET_USAGE"><table width="100%"><tr><td  width="80%">&nbsp;</td><td class="tabletext" nowrap align="right">Start Date<br/>(yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStart"></td><td class="tabletext" nowrap align="right">Number<br/>of days</td><td><input type="text" class="inputBox" size="4" name="reservLength"></td></tr><tr><td>&nbsp;</td><td class="tabletext" align="right" nowrap>Number of<br/>persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="1"></td><td class="tabletext" align="right">Qty&nbsp;</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"></td></tr></table><#else><input type="text" class="inputBox" size="5" name="quantity" value="1"></#if>
+            <a href='javascript:additemSubmit()' class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a>&nbsp;
           </#if>
           <#if requestParameters.category_id?exists>
             <input type='hidden' name='category_id' value='${requestParameters.category_id}'>
           </#if>
         </#if>
       </form>
-	<div class="tabletext">
+    <div class="tabletext">
       <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
         <hr class="sepbar">
         <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
           <input type="hidden" name="productId" value="${requestParameters.product_id}">
           <input type="hidden" name="product_id" value="${requestParameters.product_id}">
           <input type="hidden" name="productStoreId" value="${productStoreId}">
+          <input type="hidden" name="reservStart" value= "">
           <select name="shoppingListId" class="selectBox">
             <#if shoppingLists?has_content>
               <#list shoppingLists as shoppingList>
@@ -338,14 +392,14 @@ ${requestAttributes.virtualJavaScript?if_exists}
             <option value="">${uiLabelMap.EcommerceNewShoppingList}</option>
           </select>
           &nbsp;&nbsp;
-          <input type="text" size="5" class="inputBox" name="quantity" value="1">
-          <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[${uiLabelMap.EcommerceAddToShoppingList}]</a>
+          <#if product.productTypeId == "ASSET_USAGE"><table><tr><td>&nbsp;</td><td class="tabletext" nowrap align="right">Start Date (yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStartStr" ></td><td class="tabletext" nowrap>Number of days</td><td><input type="text" class="inputBox" size="4" name="reservLength"></td><td>&nbsp;</td><td class="tabletext" align="right" nowrap>Number of persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="1"></td><td class="tabletext" align="right">Qty&nbsp;</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"></td></tr></table><#else><input type="text" class="inputBox" size="5" name="quantity" value="1"><input type="hidden" name="reservStartStr" value= ""></#if>
+          <a href='javascript:addShoplistSubmit();' class="buttontext">[${uiLabelMap.EcommerceAddToShoppingList}]</a>
         </form>
       <#else> <br>
         ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>/checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
         ${uiLabelMap.EcommerceToAddSelectedItemsToShoppingList}.&nbsp;
       </#if>
-	  </div>
+      </div>
       <#-- Prefill first select box (virtual products only) -->
       <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree.size()>
         <script language="JavaScript">eval("list" + "${requestAttributes.featureOrderFirst}" + "()");</script>

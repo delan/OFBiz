@@ -1571,12 +1571,12 @@
       <field name="totalTimesViewed" type="numeric"></field>
       <field name="averageCustomerRating" type="floating-point"></field>
       <field name="billOfMaterialLevel" type="numeric"></field>
-	  <!-- maximum number of persons who can rent this asset at the same time -->
-	  <field name="reservMaxPersons" type="numeric"/>
-	  <!-- reservationSecondPersonPricePercentage:		percentage of the end price for the 2nd person renting this asset-->
-	  <field name="reserv2ndPPPerc" type="numeric"/>
-	  <!-- reservationNthPersonPricePercentage:		percentage of the end price for the 2nd person renting this asset-->
-	  <field name="reservNthPPPerc" type="numeric"/>
+      <!-- maximum number of persons who can rent this asset at the same time -->
+      <field name="reservMaxPersons" type="floating-point"/>
+      <!-- reservationSecondPersonPricePercentage:        percentage of the end price for the 2nd person renting this asset connected to this product-->
+      <field name="reserv2ndPPPerc" type="floating-point"/>
+      <!-- reservationNthPersonPricePercentage:        percentage of the end price for the Nth person renting this asset connected to this product-->
+      <field name="reservNthPPPerc" type="floating-point"/>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
@@ -2139,10 +2139,10 @@
       <alias entity-alias="PCM" name="fromDate"/>
       <alias entity-alias="PCM" name="thruDate"/>
       <view-link entity-alias="PPCE" rel-entity-alias="CM">
-      	<key-map field-name="emailAddress" rel-field-name="infoString"/>
+          <key-map field-name="emailAddress" rel-field-name="infoString"/>
       </view-link>
       <view-link entity-alias="CM" rel-entity-alias="PCM">
-      	<key-map field-name="contactMechId"/>
+          <key-map field-name="contactMechId"/>
       </view-link>
     </view-entity>
     <entity entity-name="ProductPromoCodeParty"
@@ -2257,12 +2257,12 @@
         <key-map field-name="partyId"/>
       </relation>
       <index name="PRODPRUSE_PRMPTY" unique="false">
-      	<index-field name="productPromoId"/>
-      	<index-field name="partyId"/>
+          <index-field name="productPromoId"/>
+          <index-field name="partyId"/>
       </index>
       <index name="PRODPRUSE_PCDPTY" unique="false">
-      	<index-field name="productPromoCodeId"/>
-      	<index-field name="partyId"/>
+          <index-field name="productPromoCodeId"/>
+          <index-field name="partyId"/>
       </index>
     </entity>
     <view-entity entity-name="ProductPromoUseCheck"
@@ -2273,7 +2273,7 @@
       <alias-all entity-alias="PPU"/>
       <alias entity-alias="OH" name="statusId"/>
       <view-link entity-alias="PPU" rel-entity-alias="OH">
-      	<key-map field-name="orderId"/>
+          <key-map field-name="orderId"/>
       </view-link>
     </view-entity>
 
@@ -2890,7 +2890,7 @@
       <alias entity-alias="PP" name="promoName"/>
       <alias entity-alias="PP" name="userEntered"/>
       <view-link entity-alias="PSPA" rel-entity-alias="PP">
-      	<key-map field-name="productPromoId"/>
+          <key-map field-name="productPromoId"/>
       </view-link>
     </view-entity>
     <entity entity-name="ProductStorePromoAppl"

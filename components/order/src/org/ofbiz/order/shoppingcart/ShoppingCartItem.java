@@ -24,6 +24,7 @@
 package org.ofbiz.order.shoppingcart;
 
 import java.sql.Timestamp;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -84,11 +85,16 @@ public class ShoppingCartItem implements java.io.Serializable {
     private String delegatorName = null;
     private String prodCatalogId = null;
     private String productId = null;
-    private String itemType = null;
+    private String itemType = null;            // ends up in orderItemTypeId
     private String productCategoryId = null;
     private String itemDescription = null;  // special field for non-product items
+    private Timestamp reservStart = null;      // for reservations: date start
+    private double reservLength = 0;           // for reservations: length    
+    private double reservPersons = 0;       // for reservations: number of persons using
     private double quantity = 0.0;
     private double basePrice = 0.0;
+    private double reserv2ndPPPerc = 0.0;    // for reservations: extra % 2nd person
+    private double reservNthPPPerc = 0.0;    // for reservations: extra % Nth person    
     private double listPrice = 0.0;
     private double selectedAmount = 0.0;
     private Map attributes = null;
@@ -132,6 +138,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      *
      * @param cartLocation The location to place this item; null will place at the end
      * @param productId The primary key of the product being added
+     * @param selected amount ?
      * @param quantity The quantity to add
      * @param additionalProductFeatureAndAppls Product feature/appls map
      * @param attributes All unique attributes for this item (NOT features)
@@ -143,6 +150,29 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @throws CartItemModifyException
      */
     public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException, ItemNotFoundException {
+        return ShoppingCartItem.makeItem(cartLocation, productId, selectedAmount, quantity, null, 0.00, 0.00, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart);
+    }
+        /**
+         * Makes a ShoppingCartItem and adds it to the cart.
+         * NOTE: This method will get the product entity and check to make sure it can be purchased.
+         *
+         * @param cartLocation The location to place this item; null will place at the end
+         * @param productId The primary key of the product being added
+         * @param selected amount ?
+         * @param quantity The quantity to add
+         * @param reservStart start of the reservation
+         * @param reservLength length of the reservation
+         * @param reservPersons nbr of persons taking advantage of the reservation
+         * @param additionalProductFeatureAndAppls Product feature/appls map
+         * @param attributes All unique attributes for this item (NOT features)
+         * @param prodCatalogId The catalog this item was added from
+         * @param configWrapper The product configuration wrapper (null if the product is not configurable)
+         * @param dispatcher LocalDispatcher object for doing promotions, etc
+         * @param cart The parent shopping cart object this item will belong to
+         * @return a new ShoppingCartItem object
+         * @throws CartItemModifyException
+         */
+        public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException, ItemNotFoundException {
         GenericDelegator delegator = cart.getDelegator();
         GenericValue product = null;
 
@@ -172,7 +202,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             throw new ItemNotFoundException(excMsg);
         }
 
-        return makeItem(cartLocation, product, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, true);
+        return makeItem(cartLocation, product, selectedAmount, quantity, reservStart, reservLength, reservPersons, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, true);
     }
     
     /**
@@ -213,7 +243,32 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @throws CartItemModifyException
      */
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
-        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale());
+        return ShoppingCartItem.makeItem(cartLocation, product, selectedAmount, quantity, null, 0.00, 0.00, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, doPromotions);
+    }
+    
+    /**
+     * Makes a ShoppingCartItem and adds it to the cart.
+     * WARNING: This method does not check if the product is in a purchase category.
+     * rental fields were added.
+     *
+     * @param cartLocation The location to place this item; null will place at the end
+     * @param product The product entity relating to the product being added
+     * @param quantity The quantity to add
+     * @param reservStart the start of the reservation
+     * @param reservLength the reservation length
+     * @param reservPersons the number of persons using the reservation
+     * @param additionalProductFeatureAndAppls Product feature/appls map
+     * @param attributes All unique attributes for this item (NOT features)
+     * @param prodCatalogId The catalog this item was added from
+     * @param configWrapper The product configuration wrapper (null if the product is not configurable)
+     * @param dispatcher LocalDispatcher object for doing promotions, etc
+     * @param cart The parent shopping cart object this item will belong to
+     * @param doPromotions Indicates if we should run promotions
+     * @return a new ShoppingCartItem object
+     * @throws CartItemModifyException
+     */
+    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
+            ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale());
 
         // check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
@@ -243,6 +298,51 @@ public class ShoppingCartItem implements java.io.Serializable {
             Debug.logWarning(excMsg, module);
             throw new CartItemModifyException(excMsg);
         }
+
+
+        // check to see if the product is a rental item
+        if ("ASSET_USAGE".equals(product.getString("productTypeId"))) {
+            if (reservStart == null)    {
+                String excMsg = "The starting date of the reservation is missing....";
+                throw new CartItemModifyException(excMsg);
+            }
+            
+            if (reservStart.before(UtilDateTime.nowTimestamp()))    {
+                String excMsg = "You can only make reservation starting tomorrow....";
+                throw new CartItemModifyException(excMsg);
+            }
+            newItem.setReservStart(reservStart);
+
+            if (reservLength < 1)    {
+                String excMsg = "Please enter a number of days, 1, or more....";
+                throw new CartItemModifyException(excMsg);
+            }
+            newItem.setReservLength(reservLength);
+
+            if (product.get("reservMaxPersons") != null) {
+                 double reservMaxPersons = product.getDouble("reservMaxPersons").doubleValue();
+                 if (reservMaxPersons < reservPersons)    {
+                     String excMsg = "The maximum number of persons renting this object is " + product.getString("reservMaxPersons") + " however you have requested: " + reservPersons + " !"; 
+                     Debug.logInfo(excMsg,module);
+                     throw new CartItemModifyException(excMsg);
+                 }
+             }    
+             newItem.setReservPersons(reservPersons);
+
+             if (product.get("reserv2ndPPPerc") != null)
+                 newItem.setReserv2ndPPPerc(product.getDouble("reserv2ndPPPerc").doubleValue());
+
+             if (product.get("reservNthPPPerc") != null)    
+                 newItem.setReservNthPPPerc(product.getDouble("reservNthPPPerc").doubleValue());
+
+            // check to see if the related fixed asset is available for rent
+            String isAvailable = checkAvailability(product.getString("productId"), quantity, reservStart, reservLength, cart);
+            if(isAvailable.compareTo("OK") != 0) {
+                String excMsg = "Product not available, ProductId:" + product.getString("productId") + " message:" + isAvailable.toString(); 
+                Debug.logInfo(excMsg, module);
+                throw new CartItemModifyException(isAvailable);
+            }
+        }        
         
         // check to see if the product is fully configured
         if ("AGGREGATED".equals(product.getString("productTypeId"))) {
@@ -290,6 +390,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @param itemDescription The optional description of the item
      * @param productCategoryId The optional category the product *will* go in
      * @param basePrice The price for this item
+     * @param selected amount
      * @param quantity The quantity to add
      * @param attributes All unique attributes for this item (NOT features)
      * @param prodCatalogId The catalog this item was added from
@@ -337,9 +438,14 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.itemType = item.getItemType();
         this.productCategoryId = item.getProductCategoryId();
         this.quantity = item.getQuantity();
+        this.reservStart = item.getReservStart();
+        this.reservLength = item.getReservLength();
+        this.reservPersons = item.getReservPersons();
         this.selectedAmount = item.getSelectedAmount();
         this.basePrice = item.getBasePrice();
         this.listPrice = item.getListPrice();
+        this.reserv2ndPPPerc = item.getReserv2ndPPPerc();
+        this.reservNthPPPerc = item.getReservNthPPPerc();
         this.isPromo = item.getIsPromo();
         this.promoQuantityUsed = item.promoQuantityUsed;
         this.locale = item.locale;
@@ -371,7 +477,10 @@ public class ShoppingCartItem implements java.io.Serializable {
     protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, Locale locale) {
         this._product = product;
         this.productId = _product.getString("productId");
-        this.itemType = "PRODUCT_ORDER_ITEM";
+        if (_product.getString("productTypeId").equals("ASSET_USAGE"))
+            this.itemType = "RENTAL_ORDER_ITEM";  // will create additional workeffort/asset usage records
+        else
+            this.itemType = "PRODUCT_ORDER_ITEM";
         this.prodCatalogId = prodCatalogId;
         this.attributes = attributes;
         this.delegator = _product.getDelegator();
@@ -414,6 +523,27 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.basePrice = basePrice;
     }
 
+    /** Sets the extra % for second person */
+    public void setReserv2ndPPPerc(double reserv2ndPPPerc) {
+        this.reserv2ndPPPerc = reserv2ndPPPerc;
+    }
+    /** Sets the extra % for third and following person */
+    public void setReservNthPPPerc(double reservNthPPPerc) {
+        this.reservNthPPPerc = reservNthPPPerc;
+    }
+    /** Sets the reservation start date */
+    public void setReservStart(Timestamp reservStart)    {
+        this.reservStart = reservStart;
+    }
+    /** Sets the reservation length */    
+    public void setReservLength(double reservLength)    {
+        this.reservLength = reservLength;
+    }
+    /** Sets number of persons using the reservation */    
+    public void setReservPersons(double reservPersons)    {
+        this.reservPersons = reservPersons;
+    }
+    
     /** Sets the quantity for the item and validates the change in quantity, etc */
     public void setQuantity(double quantity, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
         this.setQuantity(quantity, dispatcher, cart, true);
@@ -424,6 +554,93 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.setQuantity((int) quantity, dispatcher, cart, doPromotions);
     }
 
+    /** returns "OK" when the product can be booked or returns a string with the dates the related fixed Asset is not available */
+    public static String checkAvailability(String productId, double quantity, Timestamp reservStart, double reservLength, ShoppingCart cart )    {
+        GenericDelegator delegator = cart.getDelegator();
+        // find related fixedAsset
+        List selFixedAssetProduct = null;
+        GenericValue fixedAssetProduct = null;
+        try {
+            List allFixedAssetProduct = delegator.findByAnd("FixedAssetProduct",UtilMisc.toMap("productId",productId,"fixedAssetProductTypeId", "FAPT_USE "));
+            selFixedAssetProduct = EntityUtil.filterByDate(allFixedAssetProduct, UtilDateTime.nowTimestamp(), "fromDate", "thruDate", true);
+        } catch (GenericEntityException e) {
+            return "Could not find a related Fixed Asset for the product: " + productId;
+        }
+        if (selFixedAssetProduct != null && selFixedAssetProduct.size() > 0) {
+            Iterator firstOne = selFixedAssetProduct.iterator();
+            fixedAssetProduct = (GenericValue) firstOne.next();
+        }
+        else
+            return "Could not find a related Fixed Asset for the product: " + productId;
+        // find the fixed asset itself
+        GenericValue fixedAsset = null;
+        try { fixedAsset = fixedAssetProduct.getRelatedOne("FixedAsset"); 
+        } 
+        catch (GenericEntityException e) {
+            return "fixed_Asset_not_found. Fixed AssetId: " + fixedAssetProduct.getString("fixedAssetId");
+        }
+        if (fixedAsset == null) {
+            return "fixed_Asset_not_found. Fixed AssetId: " + fixedAssetProduct.getString("fixedAssetId");
+        }
+//        Debug.logInfo("Checking availability for product: " + productId.toString() + " and related FixedAsset: " + fixedAssetProduct.getString("fixedAssetId"),module);
+
+        // see if this fixed asset has a calendar, when no create one and attach to fixed asset
+        GenericValue techDataCalendar = null;
+        try { techDataCalendar = fixedAsset.getRelatedOne("TechDataCalendar"); 
+        } 
+        catch (GenericEntityException e) {
+            // no calendar ok, when not more that total capacity
+            if (fixedAsset.getDouble("productionCapacity").doubleValue() >= quantity)
+                return "OK";
+            else
+                return "Quantity requested: " + quantity + " Quantity available: " + fixedAsset.getString("productionCapacity"); 
+        }
+        // now find all the dates and check the availabilty for each date
+        // please note that calendarId is the same for (TechData)Calendar, CalendarExcDay and CalendarExWeek
+        long dayCount = 0;
+        String resultMessage =  "";
+        while (dayCount < (long) reservLength)    {
+            GenericValue techDataCalendarExcDay = null;
+            // find an existing Day exception record
+            Timestamp exceptionDateStartTime = new Timestamp((long)(reservStart.getTime() + (dayCount++ * 86400000)));
+            try {     techDataCalendarExcDay = delegator.findByPrimaryKey("TechDataCalendarExcDay",
+                    UtilMisc.toMap("calendarId", fixedAsset.get("calendarId"), "exceptionDateStartTime", exceptionDateStartTime)); 
+            }
+            catch (GenericEntityException e) {
+                if (fixedAsset.get("productionCapacity") != null)    {
+//                    Debug.logInfo(" No exception day record found, available: " + fixedAsset.getString("productionCapacity") + " Requested now: " + quantity, module);
+                    if (fixedAsset.getDouble("productionCapacity").doubleValue() < quantity)
+                        resultMessage = resultMessage.concat(exceptionDateStartTime.toString().substring(0,10) + ", ");
+                }
+            }
+            if (techDataCalendarExcDay != null) {
+                // see if we can get the number of assets available
+                // first try techDataCalendarExcDay(exceptionCapacity) and then FixedAsset(productionCapacity)
+                // if still zero, do not check availability
+                double exceptionCapacity = 0.00;  
+                if (techDataCalendarExcDay.get("exceptionCapacity") != null)
+                    exceptionCapacity = techDataCalendarExcDay.getDouble("exceptionCapacity").doubleValue();
+                if (exceptionCapacity == 0.00 && fixedAsset.get("productionCapacity") != null)
+                    exceptionCapacity = fixedAsset.getDouble("productionCapacity").doubleValue();
+                if (exceptionCapacity != 0.00)     {
+                    double usedCapacity = 0.00;
+                    if (techDataCalendarExcDay.get("usedCapacity") != null)
+                        usedCapacity = techDataCalendarExcDay.getDouble("usedCapacity").doubleValue();
+                    if (exceptionCapacity < (quantity + usedCapacity))    {
+                        resultMessage = resultMessage.concat(exceptionDateStartTime.toString().substring(0,10) + ", ");
+                        Debug.logInfo("No rental fixed Asset available: " + exceptionCapacity + 
+                                " already used: " + usedCapacity + 
+                                " Requested now: " + quantity, module);
+                    }
+                }
+            }
+        }
+        if (resultMessage.compareTo("") == 0)
+            return "OK";
+        else 
+            return "I am sorry, not available at these dates: " + resultMessage + "item not added to the shopping cart.....";
+    }
+    
     protected void setQuantity(int quantity, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
         if (this.quantity == quantity) {
             return;
@@ -532,6 +749,30 @@ public class ShoppingCartItem implements java.io.Serializable {
         return this.quantity;
     }
 
+    /** Returns the reservation start date. */
+    public Timestamp getReservStart() {
+        return this.getReservStart(0);
+    }
+    /** Returns the reservation start date with a number of days added. */
+    public Timestamp getReservStart(double addDays) {
+        if (addDays == 0)
+                return this.reservStart;
+        else    {
+            if(this.reservStart != null)
+                return new Timestamp((long)(this.reservStart.getTime() + (addDays * 86400000.0)));
+            else
+                return null;
+        }
+    }
+    /** Returns the reservation length. */
+    public double getReservLength() {
+        return this.reservLength;
+    }
+    /** Returns the reservation number of persons. */
+    public double getReservPersons() {
+        return this.reservPersons;
+    }
+    
     public double getPromoQuantityUsed() {
         if (this.getIsPromo()) {
             return this.quantity;
@@ -675,7 +916,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Sets the item comment. */
     public void setItemComment(String itemComment) {
-		this.setAttribute("itemComment", itemComment);
+        this.setAttribute("itemComment", itemComment);
     }
 
     /** Returns the item's comment. */
@@ -711,7 +952,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns the item type. */
     public String getItemType() {
-        return itemType;
+        return this.itemType;
     }
 
     /** Returns the item type description. */
@@ -974,15 +1215,51 @@ public class ShoppingCartItem implements java.io.Serializable {
     public double getListPrice() {
         return listPrice;
     }
+    
+    /** get the percentage for the second person */
+    public double getReserv2ndPPPerc() {
+        return reserv2ndPPPerc;
+    }
+
+    /** get the percentage for the third and following person */
+    public double getReservNthPPPerc() {
+        return reservNthPPPerc;
+    }
+    
 
     /** Returns the "other" adjustments. */
     public double getOtherAdjustments() {
         return OrderReadHelper.calcItemAdjustments(new Double(quantity), new Double(getBasePrice()), this.getAdjustments(), true, false, false, false, false);
     }
 
+    /** calculates for a reservation the percentage/100 extra for more than 1 person. */
+    // similar code at editShoppingList.bsh
+    public double getRentalAdjustment() {
+        if (!this.itemType.equals("RENTAL_ORDER_ITEM") ) // not a rental item?
+            return 1;
+        double persons = this.getReservPersons();
+        double rentalValue = 0;
+        if (persons > 1)    {
+            if (persons > 2 ) {
+                persons -= 2; 
+                if(getReservNthPPPerc() > 0) 
+                    rentalValue = persons * getReservNthPPPerc();
+                else
+                    rentalValue = persons * getReserv2ndPPPerc();
+                persons = 2;
+            }
+            if (persons == 2)
+                rentalValue += getReserv2ndPPPerc();
+        }
+        rentalValue += 100;    // add final 100 percent for first person
+        //     Debug.log("rental parameters....Nbr of persons:" + getReservPersons() + " extra% 2nd person:" + getReserv2ndPPPerc()+ " extra% Nth person:" + getReservNthPPPerc() + "  total rental adjustment:" + rentalValue/100 * getReservLength() );
+        return rentalValue/100 * getReservLength(); // return total rental adjustment
+    }
+    
     /** Returns the total line price. */
     public double getItemSubTotal(double quantity) {
-        return (getBasePrice() * quantity) + getOtherAdjustments();
+//        Debug.logInfo("Price" + getBasePrice() + " quantity" +  quantity + " Rental adj:" + getRentalAdjustment() + " other adj:" + getOtherAdjustments(), module);
+          return (getBasePrice() * quantity * getRentalAdjustment()) + getOtherAdjustments();
     }
 
     public double getItemSubTotal() {
@@ -1191,16 +1468,21 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Compares the specified object with this cart item. Defaults isPromo to false. */
     public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, double selectedAmount) {
-        return equals(productId, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, configWrapper, false);
+        return equals(productId, null, 0.00, 0.00, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, configWrapper, false);
+    }
+
+    /** Compares the specified object with this cart item including rental data. Defaults isPromo to false. */
+    public boolean equals(String productId, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, double selectedAmount) {
+        return equals(productId, reservStart, reservLength, reservPersons, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, configWrapper, false);
     }
 
     /** Compares the specified object with this cart item. Defaults isPromo to false. */
     public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, double selectedAmount, boolean isPromo) {
-        return equals(productId, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, null, isPromo);
+        return equals(productId, null, 0.00, 0.00, additionalProductFeatureAndAppls, attributes, prodCatalogId, selectedAmount, null, isPromo);
     }
     
     /** Compares the specified object with this cart item. */
-    public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, double selectedAmount, ProductConfigWrapper configWrapper, boolean isPromo) {
+    public boolean equals(String productId, Timestamp reservStart, double reservLength, double reservPersons, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, double selectedAmount, ProductConfigWrapper configWrapper, boolean isPromo) {
         if (this.productId == null || productId == null) {
             // all non-product items are unique
             return false;
@@ -1220,6 +1502,18 @@ public class ShoppingCartItem implements java.io.Serializable {
             return false;
         }
 
+        if (!this.getReservStart().equals(reservStart)) {
+            return false;
+        }
+        
+        if (this.getReservLength() != reservLength) {
+            return false;
+        }
+               
+        if (this.getReservPersons() != reservPersons) {
+            return false;
+        }
+               
         if (this.isPromo != isPromo) {
             return false;
         }

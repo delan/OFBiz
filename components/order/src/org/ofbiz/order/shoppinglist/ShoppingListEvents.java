@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.sql.Timestamp;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -148,6 +149,9 @@ public class ShoppingListEvents {
                     Map serviceResult = null;
                     try {
                         Map ctx = UtilMisc.toMap("userLogin", userLogin, "shoppingListId", shoppingListId, "productId", item.getProductId(), "quantity", new Double(item.getQuantity()));
+                        ctx.put("reservStart", item.getReservStart());
+                        ctx.put("reservLength", new Double(item.getReservLength()));
+                        ctx.put("reservPersons", new Double(item.getReservPersons()));
                         serviceResult = dispatcher.runSync("createShoppingListItem", ctx);
                     } catch (GenericServiceException e) {
                         Debug.logError(e, "Problems creating ShoppingList item entity", module);
@@ -253,6 +257,9 @@ public class ShoppingListEvents {
             GenericValue shoppingListItem = (GenericValue) i.next();
             String productId = shoppingListItem.getString("productId");
             Double quantity = shoppingListItem.getDouble("quantity");
+            Timestamp reservStart = shoppingListItem.getTimestamp("reservStart");
+            Double reservLength = shoppingListItem.getDouble("reservLength");
+            Double reservPersons = shoppingListItem.getDouble("reservPersons");
             try {
                 String listId = shoppingListItem.getString("shoppingListId");
                 String itemId = shoppingListItem.getString("shoppingListItemSeqId");
@@ -270,8 +277,12 @@ public class ShoppingListEvents {
                 }
 
                 // TODO: add code to check for survey response requirement
-
-                cart.addOrIncreaseItem(productId, quantity.doubleValue(), null, attributes, prodCatalogId, dispatcher);
+                
+                // i cannot get the addOrDecrease function to accept a null reservStart field: i get a null pointer exception a null constant works....
+                if (reservStart == null)
+                    cart.addOrIncreaseItem(productId, quantity.doubleValue(), null,0,0, null, attributes, prodCatalogId, dispatcher);
+                else
+                    cart.addOrIncreaseItem(productId, quantity.doubleValue(), reservStart, reservLength.doubleValue(), reservPersons.doubleValue(), null, attributes, prodCatalogId, dispatcher);
                 Map messageMap = UtilMisc.toMap("productId", productId);
                 errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.added_product_to_cart", messageMap, cart.getLocale());
                 eventMessage.append(errMsg + "\n");
@@ -381,6 +392,7 @@ public class ShoppingListEvents {
     public static void fillAutoSaveList(ShoppingCart cart, LocalDispatcher dispatcher) throws GeneralException {
         if (cart != null && dispatcher != null) {
             GenericValue userLogin = ShoppingListEvents.getCartUserLogin(cart);
+            if (userLogin == null) return; //only save carts when a user is logged in....
             GenericDelegator delegator = cart.getDelegator();
             String autoSaveListId = getAutoSaveListId(delegator, dispatcher, userLogin);
 

@@ -582,14 +582,14 @@ public class ShoppingCart implements Serializable {
      * @return the new/increased item index
      * @throws CartItemModifyException
      */
-    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         // public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
 
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
 
-            if (sci.equals(productId, features, attributes, prodCatalogId, configWrapper, selectedAmount)) {
+            if (sci.equals(productId, reservStart, reservLength, reservPersons, features, attributes, prodCatalogId, configWrapper, selectedAmount)) {
                 double newQuantity = sci.getQuantity() + quantity;
 
                 if (Debug.verboseOn()) Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity, module);
@@ -598,13 +598,16 @@ public class ShoppingCart implements Serializable {
             }
         }
         // Add the new item to the shopping cart if it wasn't found.
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, dispatcher, this));
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, reservStart, reservLength, reservPersons, features, attributes, prodCatalogId, configWrapper, dispatcher, this));
     }
     public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, 0.00, quantity, features, attributes, prodCatalogId, null, dispatcher);
+        return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, features, attributes, prodCatalogId, null, dispatcher);
     }
     public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, 0.00, quantity, features, attributes, prodCatalogId, null, dispatcher);
+        return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, features, attributes, prodCatalogId, null, dispatcher);
+    }
+    public int addOrIncreaseItem(String productId, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+        return addOrIncreaseItem(productId, 0.00, quantity, reservStart, reservLength, reservPersons,  features, attributes, prodCatalogId, null, dispatcher);
     }
     public int addOrIncreaseItem(String productId, double quantity, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         return addOrIncreaseItem(productId, quantity, null, null, null, dispatcher);
@@ -629,7 +632,7 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Add an item to the shopping cart. */
-    public int addItemToEnd(String productId, double amount, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+    public int addItemToEnd(String productId, double amount, double quantity,  HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
 
@@ -685,6 +688,32 @@ public class ShoppingCart implements Serializable {
                 i++;
             }
         }
+    }
+
+    public boolean containAnyWorkEffortCartItems() {
+        // Check for existing cart item.
+        for (int i = 0; i < this.cartLines.size();) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
+            if (cartItem.getItemType().equals("RENTAL_ORDER_ITEM")) {  // create workeffort items?
+                return true;
+            } else {
+                i++;
+            }
+        }
+        return false;
+    }
+
+    public boolean containAllWorkEffortCartItems() {
+        // Check for existing cart item.
+        for (int i = 0; i < this.cartLines.size();) {
+            ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
+            if (!cartItem.getItemType().equals("RENTAL_ORDER_ITEM")) { // not a item to create workefforts?
+                return false;
+            } else {
+                i++;
+            }
+        }
+        return true;
     }
 
     /** Returns this item's index. */
@@ -1289,19 +1318,19 @@ public class ShoppingCart implements Serializable {
 
     /* determines if the id supplied is a payment method or not by searching in the entity engine */
     public boolean isPaymentMethodType(String id){
-    	GenericValue paymentMethodType = null;
-    	try{
-    		paymentMethodType = delegator.findByPrimaryKeyCache("PaymentMethodType",UtilMisc.toMap("paymentMethodTypeId", id));
-    	}
-    	catch(GenericEntityException e) {
-    		Debug.logInfo(e,"Problems getting PaymentMethodType", module);
-    	}
-   	 	if (paymentMethodType == null){
-   	 		return false;
-   	 	}
-   	 	else{
-   	 		return true;
-   	 	}
+        GenericValue paymentMethodType = null;
+        try{
+            paymentMethodType = delegator.findByPrimaryKeyCache("PaymentMethodType",UtilMisc.toMap("paymentMethodTypeId", id));
+        }
+        catch(GenericEntityException e) {
+            Debug.logInfo(e,"Problems getting PaymentMethodType", module);
+        }
+            if (paymentMethodType == null){
+                return false;
+            }
+            else{
+                return true;
+            }
     }
 
     // =======================================================================
@@ -1741,6 +1770,7 @@ public class ShoppingCart implements Serializable {
     /** Returns the total from the cart, including tax/shipping. */
     public double getGrandTotal() {
         // sales tax and shipping are not stored as adjustments but rather as part of the ship group
+//    	Debug.logInfo("Subtotal:" + this.getSubTotal() + " Shipping:" + this.getTotalShipping() + "SalesTax: "+ this.getTotalSalesTax() + " others: " + this.getOrderOtherAdjustmentTotal(),module);
         return this.getSubTotal() + this.getTotalShipping() + this.getTotalSalesTax() + this.getOrderOtherAdjustmentTotal();
     }
 
@@ -2310,6 +2340,7 @@ public class ShoppingCart implements Serializable {
         // now build the lines
         synchronized (cartLines) {
             List result = new LinkedList();
+            
             Iterator itemIter = cartLines.iterator();
             long seqId = 1;
 
@@ -2341,12 +2372,36 @@ public class ShoppingCart implements Serializable {
                 orderItem.set("estimatedDeliveryDate", item.getDesiredDeliveryDate());
                 orderItem.set("correspondingPoId", this.getPoNumber());
                 orderItem.set("statusId", initialStatus);
+
                 result.add(orderItem);
                 // don't do anything with adjustments here, those will be added below in makeAllAdjustments
             }
             return result;
         }
     }
+
+    /** create WorkEfforts from the shoppingcart items when itemType = RENTAL_ORDER_ITEM */
+    public List makeWorkEfforts() {
+        List allWorkEfforts = new LinkedList();
+        Iterator itemIter = cartLines.iterator();
+        
+        while (itemIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
+            if ("RENTAL_ORDER_ITEM".equals(item.getItemType())) {         // prepare workeffort when the order item is a rental item
+                GenericValue workEffort = getDelegator().makeValue("WorkEffort", null);
+                workEffort.set("workEffortId",item.getOrderItemSeqId());  // fill temporary with sequence number
+                workEffort.set("estimatedStartDate",item.getReservStart());
+                workEffort.set("estimatedCompletionDate",item.getReservStart(item.getReservLength()));
+                workEffort.set("reservPersons",new Double(item.getReservPersons()));
+                workEffort.set("reserv2ndPPPerc", new Double(item.getReserv2ndPPPerc()));
+                workEffort.set("reservNthPPPerc", new Double(item.getReservNthPPPerc()));
+
+                allWorkEfforts.add(workEffort);
+            }
+        } 
+        return allWorkEfforts;
+    }
+
 
     /** make a list of all adjustments including order adjustments, order line adjustments, and special adjustments (shipping and tax if applicable) */
     public List makeAllAdjustments() {
@@ -2596,6 +2651,7 @@ public class ShoppingCart implements Serializable {
         result.put("orderTypeId", this.getOrderType());
         result.put("salesChannelEnumId", this.getChannelType());
         result.put("orderItems", this.makeOrderItems(explodeItems, dispatcher));
+        result.put("workEfforts", this.makeWorkEfforts());
         result.put("orderAdjustments", this.makeAllAdjustments());
         result.put("orderItemPriceInfos", this.makeAllOrderItemPriceInfos());
         result.put("orderProductPromoUses", this.makeProductPromoUses());

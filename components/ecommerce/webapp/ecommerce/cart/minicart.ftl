@@ -74,6 +74,9 @@
                     </td>
                     <td align="right" valign="top"><div class="tabletext" nowrap><@ofbizCurrency amount=cartLine.getItemSubTotal() isoCode=shoppingCart.getCurrency()/></div></td>
                   </tr>
+                  <#if cartLine.getReservStart()?exists>
+                  <tr><td>&nbsp;</td><td colspan="2"><div class="tabletext">(${cartLine.getReservStart()?string("yyyy-MM-dd")}, ${cartLine.getReservLength()} days)</div></td></tr>
+                      </#if>
                 </#list>
                 <tr>
                   <td colspan="3" align="right">

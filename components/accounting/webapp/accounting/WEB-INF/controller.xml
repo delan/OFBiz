@@ -353,6 +353,17 @@
         <response name="error" type="view" value="ListFixedAssetProducts"/>
     </request-map>
 
+   <!-- ================ Fixed Asset Calendar Requests ================= -->
+    <request-map uri="ListFixedAssetCalendar"><!-- show a tabular list of products connected -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssetCalendar"/>
+    </request-map>
+    <request-map uri="updateFixedAssetCalendar">
+        <security https="true" auth="true"/>
+        <event type="service" path="org.ofbiz.accounting.fixedasset.FixedAssetServices.xml" invoke="updateFixedAssetCalendar"/>
+        <response name="success" type="view" value="ListFixedAssetCalendar"/>
+        <response name="error" type="view" value="ListFixedAssetCalendar"/>
+    </request-map>
    <!-- ================ FixedAsset Roles Requests ================= -->
     <request-map uri="ListFixedAssetParties"><!-- show a tabular list of products connected -->
         <security https="true" auth="true"/>
@@ -407,11 +418,6 @@
         <event type="service" path="" invoke="removeFixedAssetFromFixedAsset"/>
         <response name="success" type="view" value="EditFixedAssetRollup"/>
         <response name="error" type="view" value="EditFixedAssetRollup"/>
-    </request-map>
-    <!-- ================ FixedAsset Calendar Requests ================= -->
-    <request-map uri="ListFixedAssetCalendar"><!-- show a tabular list of products connected -->
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListFixedAssetCalendar"/>
     </request-map>
     <!-- ================ Entity Lookup Requests ================= -->
     <request-map uri="GenericLookup">
@@ -476,9 +482,10 @@
     <view-map name="addFixedAssetProduct" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#addFixedAssetProduct"/> 
     <view-map name="updateFixedAssetProduct" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#updateFixedAssetProduct"/> 
     <view-map name="removeFixedAssetProduct" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#removeFixedAssetProduct"/> 
+    <view-map name="ListFixedAssetCalendar" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetCalendar"/> 
+    <view-map name="updateFixedAssetCalendar" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#updateFixedAssetCalendar"/> 
     <view-map name="ListFixedAssetParties" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetParties"/> 
     <view-map name="ListFixedAssetsRollUp" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetRollUp"/> 
-    <view-map name="ListFixedAssetsCalendar" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetCalendar"/> 
 
     <!-- Lookup request mappings -->
     <view-map name="GenericLookup" page="/lookup/GenericLookup.ftl" type="jpublish"/>

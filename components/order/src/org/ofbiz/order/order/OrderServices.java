@@ -104,6 +104,8 @@ public class OrderServices {
             return resultSecurity;
         }
 
+        String test = new String(UtilDateTime.nowTimestamp().toString());
+        
         boolean isImmediatelyFulfilled = false;
         String productStoreId = (String) context.get("productStoreId");
         GenericValue productStore = null;
@@ -149,6 +151,7 @@ public class OrderServices {
         Iterator itemIter = orderItems.iterator();
         java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
+        //  
         // need to run through the items combining any cases where multiple lines refer to the
         // same product so the inventory check will work correctly
         // also count quantities ordered while going through the loop
@@ -208,22 +211,22 @@ public class OrderServices {
                 continue;
             }
 
-            if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {
+            if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId) || "RENTAL_ORDER_ITEM".equals(orderTypeId)) {
                 // check to see if introductionDate hasn't passed yet
                 if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
                     String excMsg = UtilProperties.getMessage(resource, "product.not_yet_for_sale",
-                    		new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
+                            new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
                     Debug.logWarning(excMsg, module);
                     errorMessages.add(excMsg);
                     continue;
                 }
             }
 
-            if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {
+            if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId) || "RENTAL_ORDER_ITEM".equals(orderTypeId)) {
                 // check to see if salesDiscontinuationDate has passed
                 if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
                     String excMsg = UtilProperties.getMessage(resource, "product.no_longer_for_sale",
-                    		new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
+                            new Object[] { getProductName(product, itemName), product.getString("productId") }, locale);
                     Debug.logWarning(excMsg, module);
                     errorMessages.add(excMsg);
                     continue;
@@ -248,6 +251,49 @@ public class OrderServices {
                     String errMsg = "Fatal error calling inventory checking services: " + e.toString();
                     Debug.logError(e, errMsg, module);
                     errorMessages.add(errMsg);
+                }
+            }
+        }
+
+        // add the fixedAsset id to the workefforts map by obtaining the fixed Asset number from the FixedAssetProduct table
+        List workEfforts = (List) context.get("workEfforts"); // is an optional parameter from this service but mandatory for rental items
+        Iterator orderItemIter = orderItems.iterator();
+        while (orderItemIter.hasNext()) {
+            GenericValue orderItem = (GenericValue) orderItemIter.next();
+            if ("RENTAL_ORDER_ITEM".equals(orderItem.getString("orderItemTypeId"))) {
+                // check to see if workefforts are available for this order type.
+                if (workEfforts == null || workEfforts.size() == 0)    {
+                    String errMsg = "Work Efforts missing for ordertype RENTAL_ORDER_ITEM " + "Product: "  + orderItem.getString("productId");
+                    Debug.logError(errMsg, module);
+                    errorMessages.add(errMsg);
+                    return ServiceUtil.returnError("Rental order items in the order, however no workEfforts with start/end date and number of persons");
+                }
+                Iterator we = workEfforts.iterator();  // find the related workEffortItem (workEffortId = orderSeqId)
+                while (we.hasNext()) {    
+                    // create the entity maps required.
+                    GenericValue workEffort = (GenericValue) we.next();
+                    if (workEffort.getString("workEffortId").equals(orderItem.getString("orderItemSeqId")))    {
+                        List selFixedAssetProduct = null;
+                        try {
+                            List allFixedAssetProduct = delegator.findByAnd("FixedAssetProduct",UtilMisc.toMap("productId",orderItem.getString("productId"),"fixedAssetProductTypeId", "FAPT_USE "));
+                            selFixedAssetProduct = EntityUtil.filterByDate(allFixedAssetProduct, nowTimestamp, "fromDate", "thruDate", true);
+                        } catch (GenericEntityException e) {
+                            String excMsg = "Could not find related Fixed Asset for the product: " + orderItem.getString("productId");
+                            Debug.logError(excMsg, module);
+                            errorMessages.add(excMsg);
+                            return ServiceUtil.returnError("Could not find related Fixed Asset for the product: " + orderItem.getString("productId"));
+                        }
+                        if (selFixedAssetProduct != null && selFixedAssetProduct.size() > 0) {
+                            Iterator firstOne = selFixedAssetProduct.iterator();
+                            if(firstOne.hasNext())        {
+                                GenericValue fixedAssetProduct = delegator.makeValue("FixedAssetProduct", null);
+                                fixedAssetProduct = (GenericValue) firstOne.next();
+                                workEffort.set("fixedAssetId",fixedAssetProduct.get("fixedAssetId"));
+                                workEffort.set("quantityToProduce",orderItem.get("quantity")); // have quantity easy available later...
+                            }
+                        }
+                        break;  // item found, so go to next orderitem.
+                    }
                 }
             }
         }
@@ -341,7 +387,7 @@ public class OrderServices {
             GenericValue orderItem = (GenericValue) oi.next();
             orderItem.set("orderId", orderId);
             toBeStored.add(orderItem);
-
+            
             // create the item status record
             String itemStatusId = delegator.getNextSeqId("OrderStatus").toString();
             GenericValue itemStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", itemStatusId));
@@ -352,7 +398,111 @@ public class OrderServices {
             toBeStored.add(itemStatus);
         }
 
-        // set the orderId on all adjustments; this list will include order and item adjustments...
+        // create the workeffort records 
+        // and connect them with the orderitem over the WorkOrderItemFulfillment
+        // create also the techData calendars to keep track of availability of the fixed asset.
+        if (workEfforts != null && workEfforts.size() > 0) {
+            Iterator we = workEfforts.iterator();
+            while (we.hasNext()) {
+                // create the entity maps required.
+                GenericValue workEffort = (GenericValue) we.next();
+                GenericValue workOrderItemFulfillment = delegator.makeValue("WorkOrderItemFulfillment", null);
+                // find fixed asset supplied on the workeffort map
+                GenericValue fixedAsset = null;
+                Debug.logInfo("find the fixedAsset",module);
+                try { fixedAsset = delegator.findByPrimaryKey("FixedAsset", 
+                        UtilMisc.toMap("fixedAssetId", workEffort.get("fixedAssetId")));     
+                } 
+                catch (GenericEntityException e) {
+                    return ServiceUtil.returnError("fixed_Asset_not_found. Fixed AssetId: " + workEffort.get("fixedAssetId"));
+                }
+                if (fixedAsset == null) {
+                    return ServiceUtil.returnError("fixed_Asset_not_found. Fixed AssetId: " + workEffort.get("fixedAssetId"));
+                }
+                // see if this fixed asset has a calendar, when no create one and attach to fixed asset
+                Debug.logInfo("find the techdatacalendar",module);
+                GenericValue techDataCalendar = null;
+                try { techDataCalendar = fixedAsset.getRelatedOne("TechDataCalendar"); 
+                } 
+                catch (GenericEntityException e) {
+                    Debug.logInfo("TechData calendar does not exist yet so create for fixedAsset: " + fixedAsset.get("fixedAssetId") ,module);
+                }
+                if(techDataCalendar == null ) {
+                    techDataCalendar = delegator.makeValue("TechDataCalendar", null);
+                    Debug.logInfo("create techdata calendar because it does not exist",module);
+                    String calendarId = delegator.getNextSeqId("techDataCalendar").toString();
+                    techDataCalendar.set("calendarId", calendarId);
+                    toBeStored.add(techDataCalendar); 
+                    Debug.logInfo("update fixed Asset",module);
+                    fixedAsset.set("calendarId",calendarId);
+                    toBeStored.add(fixedAsset);
+                }
+                // then create the workEffort and the workOrderItemFulfillment to connect to the order and orderItem
+                workOrderItemFulfillment.set("orderItemSeqId", workEffort.get("workEffortId").toString()); // orderItemSeqNo is stored here so save first
+                // workeffort
+                String workEffortId = delegator.getNextSeqId("WorkEffort").toString(); // find next available workEffortId
+                workEffort.set("workEffortId", workEffortId); 
+                workEffort.set("workEffortTypeId", "ASSET_USAGE");
+                toBeStored.add(workEffort);  // store workeffort before workOrderItemFulfillment because of workEffortId key constraint
+                // workOrderItemFulfillment
+                workOrderItemFulfillment.set("workEffortId", workEffortId);
+                workOrderItemFulfillment.set("orderId", orderId);
+                toBeStored.add(workOrderItemFulfillment);
+//                Debug.logInfo("Workeffort "+ workEffortId + " created for asset " + workEffort.get("fixedAssetId") + " and order "+ workOrderItemFulfillment.get("orderId") + "/" + workOrderItemFulfillment.get("orderItemSeqId") + " created", module);
+//
+                // now create the TechDataExcDay, when they do not exist, create otherwise update the capacity values
+                // please note that calendarId is the same for (TechData)Calendar, CalendarExcDay and CalendarExWeek
+                Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
+                Timestamp estimatedCompletionDate = workEffort.getTimestamp("estimatedCompletionDate");
+                long dayCount = (estimatedCompletionDate.getTime() - estimatedStartDate.getTime())/86400000;
+                while (--dayCount >= 0)    { 
+                    GenericValue techDataCalendarExcDay = null;
+                    // find an existing Day exception record
+                    Timestamp exceptionDateStartTime = new Timestamp((long)(estimatedStartDate.getTime() + (dayCount * 86400000)));
+                    try {     techDataCalendarExcDay = delegator.findByPrimaryKey("TechDataCalendarExcDay",
+                            UtilMisc.toMap("calendarId", fixedAsset.get("calendarId"), "exceptionDateStartTime", exceptionDateStartTime)); 
+                    }
+                    catch (GenericEntityException e) {
+                        Debug.logInfo(" techData excday record not found so creating........", module);
+                    }
+                    if (techDataCalendarExcDay == null)    {
+                        techDataCalendarExcDay = delegator.makeValue("TechDataCalendarExcDay", null);
+                        techDataCalendarExcDay.set("calendarId", fixedAsset.get("calendarId"));
+                        techDataCalendarExcDay.set("exceptionDateStartTime", exceptionDateStartTime);
+                        techDataCalendarExcDay.set("usedCapacity",new Double(00.00));  // initialise to zero
+                        techDataCalendarExcDay.set("exceptionCapacity", fixedAsset.getDouble("productionCapacity"));
+//                       Debug.logInfo(" techData excday record not found creating for calendarId: " + techDataCalendarExcDay.getString("calendarId") + 
+//                               " and date: " + exceptionDateStartTime.toString(), module);
+                    }
+                    // add the quantity to the quantity on the date record
+                    Double newUsedCapacity = new Double(techDataCalendarExcDay.getDouble("usedCapacity").doubleValue() + 
+                            workEffort.getDouble("quantityToProduce").doubleValue());
+                    // check to see if the requested quantity is available on the requested day but only when the maximum capacity is set on the fixed asset
+                    if (fixedAsset.get("productionCapacity") != null)    {
+//                       Debug.logInfo("see if maximum not reached, available:  " + techDataCalendarExcDay.getString("exceptionCapacity") +
+//                               " already allocated: " + techDataCalendarExcDay.getString("usedCapacity") +
+//                                " Requested: " + workEffort.getString("quantityToProduce"), module);
+                       if (newUsedCapacity.compareTo(techDataCalendarExcDay.getDouble("exceptionCapacity")) > 0)    {
+                            String errMsg = "ERROR: fixed_Asset_sold_out AssetId: " + workEffort.get("fixedAssetId") + " on date: " + techDataCalendarExcDay.getString("exceptionDateStartTime");
+                            Debug.logError(errMsg, module);
+                            errorMessages.add(errMsg);
+                            continue;
+                        }
+                    }
+                    techDataCalendarExcDay.set("usedCapacity", newUsedCapacity);
+                    toBeStored.add(techDataCalendarExcDay);
+//                  Debug.logInfo("Update success CalendarID: " + techDataCalendarExcDay.get("calendarId").toString() + 
+//                            " and for date: " + techDataCalendarExcDay.get("exceptionDateStartTime").toString() + 
+//                            " and for quantity: " + techDataCalendarExcDay.getDouble("usedCapacity").toString(), module);
+                }
+            }
+        }
+        if (errorMessages.size() > 0) {
+            return ServiceUtil.returnError(errorMessages);
+        }
+ 
+        // set the orderId on all adjustments; this list will include order and
+        // item adjustments...
         List orderAdjustments = (List) context.get("orderAdjustments");
         if (orderAdjustments != null && orderAdjustments.size() > 0) {
             Iterator iter = orderAdjustments.iterator();
@@ -488,6 +638,8 @@ public class OrderServices {
             userOrderRoleTypes = UtilMisc.toList("END_USER_CUSTOMER", "SHIP_TO_CUSTOMER", "BILL_TO_CUSTOMER", "PLACING_CUSTOMER");
         } else if ("PURCHASE_ORDER".equals(orderTypeId)) {
             userOrderRoleTypes = UtilMisc.toList("SHIP_FROM_VENDOR", "BILL_FROM_VENDOR", "SUPPLIER_AGENT");
+        } else if ("RENTAL_ORDER_ITEM".equals(orderTypeId)) {
+                userOrderRoleTypes = UtilMisc.toList("END_USER_CUSTOMER", "BILL_TO_CUSTOMER");
         } else if ("WORK_ORDER".equals(orderTypeId)) {
             // TODO: set the work order roles
         } else {
@@ -513,14 +665,14 @@ public class OrderServices {
         String affiliateId = (String) context.get("affiliateId");
         if (UtilValidate.isNotEmpty(affiliateId)) {
             toBeStored.add(delegator.makeValue("OrderRole",
-            		UtilMisc.toMap("orderId", orderId, "partyId", affiliateId, "roleTypeId", "AFFILIATE")));
+                    UtilMisc.toMap("orderId", orderId, "partyId", affiliateId, "roleTypeId", "AFFILIATE")));
         }
 
         // set the distributor
         String distributorId = (String) context.get("distributorId");
         if (UtilValidate.isNotEmpty(distributorId)) {
             toBeStored.add(delegator.makeValue("OrderRole",
-            		UtilMisc.toMap("orderId", orderId, "partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
+                    UtilMisc.toMap("orderId", orderId, "partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
         }
 
         // find all parties in role VENDOR associated with WebSite OR ProductStore (where WebSite overrides, if specified), associated first valid with the Order
@@ -604,7 +756,7 @@ public class OrderServices {
                         if ("OrderItemShipGroupAssoc".equals(orderItemShipGroupAssoc.getEntityName())) {
                             GenericValue orderItem = (GenericValue) itemValuesBySeqId.get(orderItemShipGroupAssoc.get("orderItemSeqId"));
                                 
-                            if (UtilValidate.isNotEmpty(orderItem.getString("productId"))) {
+                            if (UtilValidate.isNotEmpty(orderItem.getString("productId")) && !"RENTAL_ORDER_ITEM".equals(orderItem.getString("orderItemTypeId"))) { // ignore for rental
                                 // only reserve product items; ignore non-product items
                                 try {
                                     Map reserveInput = new HashMap();
@@ -667,11 +819,11 @@ public class OrderServices {
     }
 
     public static String getProductName(GenericValue product, String orderItemName) {
-    	if (UtilValidate.isNotEmpty(product.getString("productName"))) {
-    		return product.getString("productName");
-    	} else {
-    		return orderItemName;
-    	}
+        if (UtilValidate.isNotEmpty(product.getString("productName"))) {
+            return product.getString("productName");
+        } else {
+            return orderItemName;
+        }
     }
 
     /** Service for resetting the OrderHeader grandTotal */
@@ -2858,7 +3010,7 @@ public class OrderServices {
                                 itemTotal = (quantity.doubleValue() * unitPrice.doubleValue());
                                 GenericValue newItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", new Integer(itemCount).toString()));
 
-                                newItem.set("orderItemTypeId", "PRODUCT_ORDER_ITEM");
+                                newItem.set("orderItemTypeId", orderItem.get("orderItemTypeId"));
                                 newItem.set("productId", orderItem.get("productId"));
                                 newItem.set("productFeatureId", orderItem.get("productFeatureId"));
                                 newItem.set("prodCatalogId", orderItem.get("prodCatalogId"));
@@ -3329,7 +3481,7 @@ public class OrderServices {
         ShoppingCart cart = new ShoppingCart(dctx.getDelegator(), "9000", "webStore", locale, "USD");
         try {
             cart.addOrIncreaseItem("GZ-1005", 1, null, null, "DemoCatalog", dctx.getDispatcher());
-        } catch (CartItemModifyException e) {
+            } catch (CartItemModifyException e) {
             Debug.logError(e, module);
         } catch (ItemNotFoundException e) {
             Debug.logError(e, module);

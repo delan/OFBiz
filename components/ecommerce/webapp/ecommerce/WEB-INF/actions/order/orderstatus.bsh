@@ -65,7 +65,7 @@ if (orderHeader != null) {
 	context.put("orderId", orderId);
     context.put("orderHeader", orderHeader);
     context.put("localOrderReadHelper", orderReadHelper);
-    context.put("orderItems", orderReadHelper.getOrderItems());
+    context.put("orderItems", orderItems);
     context.put("orderAdjustments", orderAdjustments);
     context.put("orderHeaderAdjustments", orderHeaderAdjustments);
     context.put("orderSubTotal", orderSubTotal);

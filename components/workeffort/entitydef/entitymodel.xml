@@ -320,6 +320,11 @@
       <field name="quantityProduced" type="floating-point"></field>
       <field name="quantityRejected" type="floating-point"></field>
       <field name="sourceReferenceId" type="id-long"></field>
+      <field name="reservPersons" type="floating-point"></field>   <!-- the number of persons renting the attached asset -->
+      <!-- reservationSecondPersonPricePercentage:        percentage of the end price for the 2nd person renting this asset connected to the workEfforty-->
+      <field name="reserv2ndPPPerc" type="floating-point"/>
+      <!-- reservationNthPersonPricePercentage:        percentage of the end price for the Nth (2+) person renting this asset connected to the workEfforty-->
+      <field name="reservNthPPPerc" type="floating-point"/>      
       <prim-key field="workEffortId"/>
       <relation type="one" fk-name="WK_EFFRT_TYPE" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId"/>

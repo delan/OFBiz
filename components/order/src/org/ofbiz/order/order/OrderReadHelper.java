@@ -1151,6 +1151,24 @@ public class OrderReadHelper {
         return getOrderItemAdjustmentList(orderItem, getAdjustments());
     }
 
+    public String getCurrentOrderItemWorkEffort(GenericValue orderItem)    {
+        GenericValue workOrderItemFulFillment;
+        try {
+            workOrderItemFulFillment = orderItem.getRelatedOne("WorkOrderItemFulFillment");
+        }
+        catch (GenericEntityException e) {
+            return null;
+        }
+        GenericValue workEffort = null;
+        try {
+        workEffort = workOrderItemFulFillment.getRelatedOne("WorkEffort");
+        }
+        catch (GenericEntityException e) {
+            return null;
+        }
+        return workEffort.getString("workEffortId");
+    }
+    
     public String getCurrentItemStatus(GenericValue orderItem) {
         GenericValue statusItem = null;
         try {
@@ -1679,16 +1697,32 @@ public class OrderReadHelper {
     }
 
     // ================= Order Item Adjustments =================
-
     public static double getOrderItemsSubTotal(List orderItems, List adjustments) {
+        return getOrderItemsSubTotal(orderItems, adjustments, null); 
+        }
+    
+    public static double getOrderItemsSubTotal(List orderItems, List adjustments, List workEfforts) {
         double result = 0.0;
         Iterator itemIter = UtilMisc.toIterator(orderItems);
 
         while (itemIter != null && itemIter.hasNext()) {
             GenericValue orderItem = (GenericValue) itemIter.next();
             double itemTotal = getOrderItemSubTotal(orderItem, adjustments);
-            //Debug.log("Item : " + orderItem.getString("orderId") + " / " + orderItem.getString("orderItemSeqId") + " = " + itemTotal, module);
+//          Debug.log("Item : " + orderItem.getString("orderId") + " / " + orderItem.getString("orderItemSeqId") + " = " + itemTotal, module);
+            
+            if (workEfforts != null && orderItem.getString("orderItemTypeId").compareTo("RENTAL_ORDER_ITEM") == 0) {
+                Iterator weIter = UtilMisc.toIterator(workEfforts);
+                while (weIter != null && weIter.hasNext()) {
+                    GenericValue workEffort = (GenericValue) weIter.next();
+                    if (workEffort.getString("workEffortId").compareTo(orderItem.getString("orderItemSeqId")) == 0)    {
+                        itemTotal *= getWorkEffortRentalQuantity(workEffort);
+                        break;
+                    }
+//                    Debug.log("Item : " + orderItem.getString("orderId") + " / " + orderItem.getString("orderItemSeqId") + " = " + itemTotal, module);
+                }
+            }
             result += itemTotal;
+            
         }
         return UtilFormatOut.formatPriceNumber(result).doubleValue();
     }
@@ -1708,9 +1742,25 @@ public class OrderReadHelper {
             Debug.logWarning("[getOrderItemTotal] unitPrice or quantity are null, using 0 for the item base price", module);
         } else {
             if (Debug.verboseOn()) Debug.logVerbose("Unit Price : " + unitPrice.doubleValue() + " / " + "Quantity : " + quantity.doubleValue(), module);
-            result = unitPrice.doubleValue() * quantity.doubleValue();
-        }
+            result = unitPrice.doubleValue() * quantity.doubleValue() ;
 
+            if (orderItem.getString("orderItemTypeId").compareTo("RENTAL_ORDER_ITEM") == 0)    { // retrieve related work effort when required.
+                List WorkOrderItemFulfillments = null;
+                try {
+                    WorkOrderItemFulfillments = orderItem.getRelatedCache("WorkOrderItemFulfillment");
+                } catch (GenericEntityException e) {}
+                Iterator iter = WorkOrderItemFulfillments.iterator();
+                if (iter.hasNext())    {
+                    GenericValue WorkOrderItemFulfillment = (GenericValue) iter.next();
+                    GenericValue workEffort = null;
+                    try {
+                        workEffort = WorkOrderItemFulfillment.getRelatedOneCache("WorkEffort");
+                    } catch (GenericEntityException e) {}
+                    result *= getWorkEffortRentalQuantity(workEffort);
+                }
+            }
+        }     
+    
         // subtotal also includes non tax and shipping adjustments; tax and shipping will be calculated using this adjusted value
         result += getOrderItemAdjustmentsTotal(orderItem, adjustments, true, false, false, forTax, forShipping);
 
@@ -1732,6 +1782,39 @@ public class OrderReadHelper {
         return UtilFormatOut.formatPriceNumber(getOrderItemSubTotal(orderItem, adjustments) + getOrderItemAdjustmentsTotal(orderItem, adjustments, false, true, true)).doubleValue();
     }
 
+    public static double getWorkEffortRentalQuantity(GenericValue workEffort){
+        double persons = 1;
+        if (workEffort.get("reservPersons") != null)
+            persons = workEffort.getDouble("reservPersons").doubleValue();
+        double secondPersonPerc = 0.00;
+        if (workEffort.get("reserv2ndPPPerc") != null)
+            secondPersonPerc = workEffort.getDouble("reserv2ndPPPerc").doubleValue();
+        double nthPersonPerc = 0.00;
+        if (workEffort.get("reservNthPPPerc") != null)
+            nthPersonPerc = workEffort.getDouble("reservNthPPPerc").doubleValue();
+        long length = 1;
+        if (workEffort.get("estimatedStartDate") != null && workEffort.get("estimatedCompletionDate") != null) 
+            length = (workEffort.getTimestamp("estimatedCompletionDate").getTime() - workEffort.getTimestamp("estimatedStartDate").getTime()) / 86400000; 
+        
+        double rentalAdjustment = 0;
+        if (persons > 1)    {
+            if (persons > 2 ) {
+                persons -= 2; 
+                if(nthPersonPerc > 0) 
+                    rentalAdjustment = persons * nthPersonPerc;
+                else
+                    rentalAdjustment = persons * secondPersonPerc;
+                persons = 2;
+            }
+            if (persons == 2)
+                rentalAdjustment += secondPersonPerc;
+        }
+        rentalAdjustment += 100;  // add final 100 percent for first person
+        rentalAdjustment = rentalAdjustment/100 * length; 
+//        Debug.logInfo("rental parameters....Nbr of persons:" + persons + " extra% 2nd person:" + secondPersonPerc + " extra% Nth person:" + nthPersonPerc + " Length: " + length + "  total rental adjustment:" + rentalAdjustment ,module);
+        return rentalAdjustment; // return total rental adjustment
+        }
+    
     public static double getAllOrderItemsAdjustmentsTotal(List orderItems, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
         double result = 0.0;
         Iterator itemIter = UtilMisc.toIterator(orderItems);

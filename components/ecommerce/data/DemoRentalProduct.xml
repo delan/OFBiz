@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
 	<ProductStore productStoreId="RentalStore" storeName="Open Travel system Demo Site" companyName="Ant Websystems Ltd" title="Ready for your reservation"
-        subtitle="Part of the Open For Business Family of Open Source Software" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y"
+        subtitle="Part of the Open For Business Family of Open Source Software" payToPartyId="Company" daysToCancelNonPay="30" prorateShipping="Y" isImmediatelyFulfilled="Y"
         inventoryFacilityId="WebStoreWarehouse" oneInventoryFacility="N" checkInventory="N" reserveInventory="N" reserveOrderEnumId="INVRO_FIFO_REC" requireInventory="N"
         defaultLocaleString="en_US" defaultCurrencyUomId="EUR" allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y"
         headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
@@ -9,7 +9,7 @@
         authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
         authFraudMessage="Your order has been rejected and your account has been disabled due to fraud."
         authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
-        styleSheet="/images/maincss.css" headerLogo="/images/opentravelsystem_logo.jpg"/>
+        styleSheet="/images/maincss.css" headerLogo="/images/opentravelsystem_logo.jpg" />
     <ProductStorePaymentSetting productStoreId="RentalStore" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveCCProcessor"/>
     <ProductStorePaymentSetting productStoreId="RentalStore" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testCCRelease"/>
     <ProductStorePaymentSetting productStoreId="RentalStore" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="testCCCapture"/>
@@ -88,29 +88,22 @@
     <ProdCatalogCategory prodCatalogId="RentalCatalog" productCategoryId="RentalPromo" fromDate="2001-05-13 12:00:00.0"
         sequenceNum="1" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
 
-	<!-- products and relation to fixed asset and calendar -->
+	<!-- products and relation to fixed asset -->
     <Product productId="RoomStd" productTypeId="ASSET_USAGE" primaryProductCategoryId="Rooms" productName="Standard Room" internalName="StdRoom" description="The standard business room" longDescription="This is the standard room mostly for business" reservMaxPersons="3" reserv2ndPPPerc="20" reservNthPPPerc="5" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
-	<FixedAsset fixedAssetId="RoomStd" fixedAssetTypeId="PROPERTY"/>
+	<FixedAsset fixedAssetId="RoomStd" fixedAssetTypeId="PROPERTY" productionCapacity="10"/>
 	<FixedAssetProduct productId="RoomStd" fixedAssetId="RoomStd" fixedAssetProductTypeId="FAPT_USE" fromDate="2001-05-13 12:00:00.0"/>
 
-	<TechDataCalendarWeek calendarWeekId="room001"/>
-	<TechDataCalendar calendarId="room001" description="Calendar for room 1" calendarWeekId="room001"/>
-	<FixedAsset fixedAssetId="room001" parentFixedAssetId="RoomStd" fixedAssetTypeId="PROPERTY" calendarId="room001"/>
-
-	<TechDataCalendarWeek calendarWeekId="room002"/>
-	<TechDataCalendar calendarId="room002" description="Calendar for room 2" calendarWeekId="room002"/>
-	<FixedAsset fixedAssetId="room002" parentFixedAssetId="RoomStd" fixedAssetTypeId="PROPERTY" calendarId="room002"/>
-
-	<TechDataCalendarWeek calendarWeekId="room003"/>
-	<TechDataCalendar calendarId="room003" description="Calendar for room 3" calendarWeekId="room003"/>
-	<FixedAsset fixedAssetId="room003" parentFixedAssetId="RoomStd" fixedAssetTypeId="PROPERTY" calendarId="room003"/>
-
     <Product productId="RoomLux" productTypeId="ASSET_USAGE" primaryProductCategoryId="Rooms" productName="Luxury Room" internalName="LuxRoom" description="The luxery business room" longDescription="This is the luxery room mostly for business"  reservMaxPersons="4" reserv2ndPPPerc="20" reservNthPPPerc="" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
+	<FixedAsset fixedAssetId="RoomLux" fixedAssetTypeId="PROPERTY" productionCapacity="10"/>
+	<FixedAssetProduct productId="RoomLux" fixedAssetId="RoomLux" fixedAssetProductTypeId="FAPT_USE" fromDate="2001-05-13 12:00:00.0"/>
 
     <Product productId="RoomLarge" productTypeId="ASSET_USAGE" primaryProductCategoryId="Rooms" productName="Large Room" internalName="LargeRoom" description="The large room for families" longDescription="This is the large room mostly for large families"  reservMaxPersons="8" reserv2ndPPPerc="20" reservNthPPPerc="3" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
 
     <Product productId="BoatRowSimple" productTypeId="ASSET_USAGE" primaryProductCategoryId="RowBoats" productName="Simple row boat" internalName="SmpRwBoat" description="A simple row boat to rent short time" longDescription="This is the most simplest row boat we have for short term rental only"  reservMaxPersons="12" reserv2ndPPPerc="" reservNthPPPerc="" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
 
+    <Product productId="BoatRowSimple" productTypeId="ASSET_USAGE" primaryProductCategoryId="RowBoats" productName="Simple row boat" internalName="SmpRwBoat" description="A simple row boat to rent short time" longDescription="This is the most simplest row boat we have for short term rental only"  reservMaxPersons="12" reserv2ndPPPerc="" reservNthPPPerc="" taxable="Y" chargeShipping="N" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
+
+    <Product productId="Cap" productTypeId="FINISHED_GOOD" productName="Cap with hotel Logo" internalName="Cap" description="A cap with the hotel logo" longDescription="This is the nicest cap you have ever seen with the hotel logo in gold!"  taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
 	<!-- product prices -->
     <ProductPrice productId="RoomStd" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:49:03.163" price="15.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="RoomStd" productPriceTypeId="LIST_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:48:49.113" price="15.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -121,9 +114,11 @@
     <ProductPrice productId="BoatRowSimple" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="549.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="BoatRowSimple" productPriceTypeId="LIST_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="550.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="BoatRowSimple" productPriceTypeId="COMPETITIVE_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="922.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-
+    <ProductPrice productId="Cap" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:50:45.25" price="5.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    
 	<!-- allocate products to categories -->
     <ProductCategoryMember productCategoryId="RentalPromo" productId="RoomLux" fromDate="2004-10-18 20:39:58.563" lastUpdatedStamp="2004-10-18 20:40:12.411" lastUpdatedTxStamp="2004-10-18 20:40:12.411" createdStamp="2004-10-18 20:40:12.411" createdTxStamp="2004-10-18 20:40:12.411"/>
     <ProductCategoryMember productCategoryId="RentalPromo" productId="RoomStd" fromDate="2004-10-18 20:40:12.749" lastUpdatedStamp="2004-10-18 20:40:30.044" lastUpdatedTxStamp="2004-10-18 20:40:30.044" createdStamp="2004-10-18 20:40:30.044" createdTxStamp="2004-10-18 20:40:30.044"/>
+    <ProductCategoryMember productCategoryId="RentalPromo" productId="Cap" fromDate="2004-10-18 20:40:12.749" lastUpdatedStamp="2004-10-18 20:40:30.044" lastUpdatedTxStamp="2004-10-18 20:40:30.044" createdStamp="2004-10-18 20:40:30.044" createdTxStamp="2004-10-18 20:40:30.044"/>
 
 </entity-engine-xml>

@@ -96,6 +96,17 @@
                     </#if>
                   </#if>
                 </tr>
+                <#-- show info from workeffort if it was a rental item -->
+                <#if orderItem.orderItemTypeId == "RENTAL_ORDER_ITEM">
+                    <#assign WorkOrderItemFulfillments = orderItem.getRelatedCache("WorkOrderItemFulfillment")?if_exists>
+                    <#if WorkOrderItemFulfillments?has_content>
+                        <#list WorkOrderItemFulfillments as WorkOrderItemFulfillment>
+                            <#assign workEffort = WorkOrderItemFulfillment.getRelatedOneCache("WorkEffort")?if_exists>
+                              <tr><td>&nbsp;</td><td>&nbsp;</td><td colspan="8"><div class="tabletext">From: ${workEffort.estimatedStartDate?string("yyyy-MM-dd")} to: ${workEffort.estimatedCompletionDate?string("yyyy-MM-dd")} Number of persons: ${workEffort.reservPersons}</div></td></tr>
+                            <#break><#-- need only the first one -->
+                        </#list>
+                    </#if>
+                </#if>
 
                 <#-- now show adjustment details per line item -->
                 <#assign itemAdjustments = localOrderReadHelper.getOrderItemAdjustments(orderItem)>

@@ -42,10 +42,15 @@ import java.util.Map;
  * @since      2.0
  */
 public class UtilDateTime {
-    protected static String[] months = {
+    protected static String[] months = { // // to be translated over CommonMonthName, see example in accounting
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November",
         "December"
+    };
+
+    protected static String[] days = { // to be translated over CommonDayName, see example in accounting
+            "Monday","Tuesday", "Wendesday", 
+            "Thursday", "Friday","Saturday", "Sunday"
     };
 
     protected static String[][] timevals = {
@@ -605,4 +610,27 @@ public class UtilDateTime {
         mth.set(Calendar.AM_PM, Calendar.AM);
         return new java.sql.Timestamp(mth.getTime().getTime());
     }
+
+    /** returns a week number in a year for a Timestamp input
+     * @param A Timestamp date
+     * @return A int containing the week number
+     */
+    public static int weekNumber(Timestamp input)    {
+        Timestamp yearStart = UtilDateTime.getYearStart(input);
+        Timestamp weekStart = UtilDateTime.getWeekStart(yearStart);
+        
+        int days = 0;
+        for (days =0 ; UtilDateTime.getDayStart(weekStart,days).compareTo(yearStart) == 0; days++) ;
+        
+        // the splitted week belongs to the year where there are the most days (ISO)
+        Timestamp week1Start = weekStart;
+        if (days < 4)
+            week1Start = UtilDateTime.getWeekStart(weekStart,7);
+        
+        int weeks = 0;
+        for (weeks =0 ; UtilDateTime.getDayStart(week1Start,weeks*7).compareTo(input) < 0; weeks++);
+        
+        return ++weeks; // start at 1
+    }
 }
+

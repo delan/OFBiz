@@ -1871,6 +1871,9 @@
       <field name="productId" type="id-ne"></field>
       <field name="prodCatalogId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
+      <field name="reservStart" type="date-time"></field>       
+      <field name="reservLength" type="floating-point"></field>
+      <field name="reservPersons" type="floating-point"></field>     
       <field name="unitPrice" type="currency-amount"></field>
       <field name="totalWithAdjustments" type="currency-amount"></field>
       <field name="wasReserved" type="indicator"></field>
@@ -1956,6 +1959,9 @@
       <field name="shoppingListItemSeqId" type="id-ne"></field>
       <field name="productId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
+      <field name="reservStart" type="date-time"></field>
+      <field name="reservLength" type="floating-point"></field>
+      <field name="reservPersons" type="floating-point"></field>      
       <field name="quantityPurchased" type="floating-point"></field>
       <prim-key field="shoppingListId"/>
       <prim-key field="shoppingListItemSeqId"/>
