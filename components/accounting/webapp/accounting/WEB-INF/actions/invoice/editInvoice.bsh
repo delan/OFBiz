@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
  */
  
@@ -48,6 +48,9 @@
     
     billingParty = InvoiceWorker.getBillToParty(invoice);
     context.put("billingParty", billingParty);
+
+    terms = invoice.getRelated("InvoiceTerm");
+    context.put("terms", terms);
     
     paymentAppls = delegator.findByAnd("PaymentApplication", UtilMisc.toMap("invoiceId", invoiceId));
     context.put("payments", paymentAppls);
