@@ -229,6 +229,7 @@
       <field name="syncStatusId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
       <field name="originFacilityId" type="id"></field>
+      <field name="grandTotal" type="currency-amount"></field>
       <prim-key field="orderId"/>
       <relation type="one" fk-name="ORDER_HDR_TYPE" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId"/>
@@ -389,8 +390,9 @@
       <field name="subscriptionId" type="id"></field>
       <field name="deploymentId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
-      <field name="unitListPrice" type="currency-amount"></field>
       <field name="unitPrice" type="currency-amount"></field>
+      <field name="unitListPrice" type="currency-amount"></field>
+      <field name="unitAverageCost" type="currency-amount"></field>
       <field name="estimatedDeliveryDate" type="date-time"></field>
       <field name="itemDescription" type="description"></field>
       <field name="comments" type="comment"></field>
@@ -848,6 +850,25 @@
       <relation type="one-nofk" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
+      </relation>
+    </entity>
+    <entity entity-name="OrderSummaryEntry"
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Order Summary Entry Entity">
+      <field name="entryDate" type="date"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="facilityId" type="id-ne"></field>
+      <field name="totalQuantity" type="floating-point"></field>
+      <field name="grossSales" type="currency-amount"></field>
+      <field name="productCost" type="currency-amount"></field>
+      <prim-key field="entryDate"/>
+      <prim-key field="productId"/>
+      <prim-key field="facilityId"/>
+      <relation type="one" fk-name="ORDER_SMENT_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_SMENT_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
       </relation>
     </entity>
     <entity entity-name="OrderTerm"

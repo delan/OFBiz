@@ -1112,8 +1112,8 @@
       <relation type="many" rel-entity-name="InvoiceRole">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="many" rel-entity-name="AccoutingPeriod">
-        <key-map field-name="partyId"/>
+      <relation type="many" rel-entity-name="CustomTimePeriod">
+        <key-map field-name="partyId" rel-field-name="organizationPartyId"/>
       </relation>
       <relation type="many" rel-entity-name="FinAccountRole">
         <key-map field-name="partyId"/>

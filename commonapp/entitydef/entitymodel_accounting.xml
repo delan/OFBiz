@@ -60,11 +60,14 @@
             title="Budget Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="budgetTypeId" type="id"></field>
-      <field name="standardTimePeriodId" type="id"></field>
+      <field name="customTimePeriodId" type="id"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="budgetId"/>
       <relation type="one" fk-name="BUDGET_BGTTYP" rel-entity-name="BudgetType">
         <key-map field-name="budgetTypeId"/>
+      </relation>
+      <relation type="one" fk-name="BUDGET_CTP" rel-entity-name="CustomTimePeriod">
+        <key-map field-name="customTimePeriodId"/>
       </relation>
       <relation type="many" rel-entity-name="BudgetTypeAttr">
         <key-map field-name="budgetTypeId"/>
@@ -918,24 +921,6 @@
   <!-- org.ofbiz.commonapp.accounting.ledger -->
   <!-- ========================================================= -->
 
-    <entity entity-name="AccoutingPeriod"
-            package-name="org.ofbiz.commonapp.accounting.ledger"
-            title="Accounting Period Entity">
-      <field name="accountingPeriodId" type="id-ne"></field>
-      <field name="partyId" type="id"></field>
-      <field name="periodTypeId" type="id"></field>
-      <field name="acctgPeriodNum" type="numeric"></field>
-      <field name="yearNum" type="numeric"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <prim-key field="accountingPeriodId"/>
-      <relation type="one" fk-name="ACCT_PRD_PARTY" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one" fk-name="ACCT_PRD_PERTYP" rel-entity-name="PeriodType">
-        <key-map field-name="periodTypeId"/>
-      </relation>
-    </entity>
     <entity entity-name="AcctgTrans"
             package-name="org.ofbiz.commonapp.accounting.ledger"
             title="Accounting Transaction Entity">
@@ -1154,6 +1139,7 @@
       <field name="accountName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="productId" type="id"></field>
+      <field name="postedBalance" type="currency-amount"></field>
       <prim-key field="glAccountId"/>
       <relation type="one" fk-name="GLACCT_TYPE" rel-entity-name="GlAccountType">
         <key-map field-name="glAccountTypeId"/>
@@ -1201,6 +1187,28 @@
         <key-map field-name="glAccountClassId"/>
       </relation>
     </entity>
+    <entity entity-name="GlAccountHistory"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="GL Account History Entity">
+      <field name="glAccountId" type="id-ne"></field>
+      <field name="customTimePeriodId" type="id-ne"></field>
+      <field name="organizationPartyId" type="id-ne"></field>
+      <field name="postedDebits" type="currency-amount"></field>
+      <field name="postedCredits" type="currency-amount"></field>
+      <field name="endingBalance" type="currency-amount"></field>
+      <prim-key field="glAccountId"/>
+      <prim-key field="customTimePeriodId"/>
+      <prim-key field="organizationPartyId"/>
+      <relation type="one" fk-name="GLACCT_HST_GLA" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="GLACCT_HST_PARTY" rel-entity-name="Party">
+        <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="GLACCT_HST_CTP" rel-entity-name="CustomTimePeriod">
+        <key-map field-name="customTimePeriodId"/>
+      </relation>
+    </entity>
     <entity entity-name="GlAccountOrganization"
             package-name="org.ofbiz.commonapp.accounting.ledger"
             title="GL Account Organization Entity">
@@ -1209,6 +1217,7 @@
       <field name="roleTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
+      <field name="postedBalance" type="currency-amount"></field>
       <prim-key field="glAccountId"/>
       <prim-key field="organizationPartyId"/>
       <relation type="one" fk-name="GLACCT_ORG_GLA" rel-entity-name="GlAccount">

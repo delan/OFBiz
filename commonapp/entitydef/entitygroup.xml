@@ -87,7 +87,6 @@
   <!-- org.ofbiz.commonapp.accounting.ledger -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="AccoutingPeriod" />
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTrans" />
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTransAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTransEntry" />
@@ -96,6 +95,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTransTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="GlAccount" />
     <entity-group group="org.ofbiz.commonapp" entity="GlAccountClass" />
+    <entity-group group="org.ofbiz.commonapp" entity="GlAccountHistory" />
     <entity-group group="org.ofbiz.commonapp" entity="GlAccountOrganization" />
     <entity-group group="org.ofbiz.commonapp" entity="GlAccountRole" />
     <entity-group group="org.ofbiz.commonapp" entity="GlAccountType" />
@@ -162,6 +162,13 @@
     <entity-group group="org.ofbiz.commonapp" entity="GeoAssocType" />
     <entity-group group="org.ofbiz.commonapp" entity="GeoType" />
 
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.language -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="StandardLanguage" />
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.note -->
   <!-- ========================================================= -->
@@ -172,6 +179,7 @@
   <!-- org.ofbiz.commonapp.common.period -->
   <!-- ========================================================= -->
 
+    <entity-group group="org.ofbiz.commonapp" entity="CustomTimePeriod" />
     <entity-group group="org.ofbiz.commonapp" entity="PeriodType" />
     <entity-group group="org.ofbiz.commonapp" entity="StandardTimePeriod" />
 
@@ -388,6 +396,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="OrderShipment" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderShipmentPreference" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderStatus" />
+    <entity-group group="org.ofbiz.commonapp" entity="OrderSummaryEntry" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderTerm" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderTermAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderType" />
