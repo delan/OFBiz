@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.3 2003/08/20 16:50:13 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.4 2003/08/25 17:52:41 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -70,7 +70,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 
@@ -415,7 +415,21 @@ public class OrderServices {
             		UtilMisc.toMap("orderId", orderId, "partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));                        
         }
         
-        // find all parties in role VENDOR associated with WebSite, associated first valid with the Order
+        // find all parties in role VENDOR associated with WebSite OR ProductStore (where WebSite overrides, if specified), associated first valid with the Order
+        if (UtilValidate.isNotEmpty((String) context.get("productStoreId"))) {
+            try {
+                List productStoreRoles = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("roleTypeId", "VENDOR", "productStoreId", context.get("productStoreId")), UtilMisc.toList("-fromDate"));
+                productStoreRoles = EntityUtil.filterByDate(productStoreRoles, true);
+                GenericValue productStoreRole = EntityUtil.getFirst(productStoreRoles);
+                if (productStoreRole != null) {
+                    toBeStored.add(delegator.makeValue("OrderRole", 
+                            UtilMisc.toMap("orderId", orderId, "partyId", productStoreRole.get("partyId"), "roleTypeId", "VENDOR")));                        
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error looking up Vendor for the current Product Store", module);
+            }
+            
+        }
         if (UtilValidate.isNotEmpty((String) context.get("webSiteId"))) {
             try {
                 List webSiteRoles = delegator.findByAnd("WebSiteRole", UtilMisc.toMap("roleTypeId", "VENDOR", "webSiteId", context.get("webSiteId")), UtilMisc.toList("-fromDate"));
