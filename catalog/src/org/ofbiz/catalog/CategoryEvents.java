@@ -87,6 +87,7 @@ public class CategoryEvents {
         */
 
         String primaryParentCategoryId = request.getParameter("PRIMARY_PARENT_CATEGORY_ID");
+        if (primaryParentCategoryId != null && primaryParentCategoryId.length() == 0) primaryParentCategoryId = null;
         String description = request.getParameter("DESCRIPTION");
         String longDescription = request.getParameter("LONG_DESCRIPTION");
         String categoryImageUrl = request.getParameter("CATEGORY_IMAGE_URL");

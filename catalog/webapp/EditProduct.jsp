@@ -46,14 +46,24 @@
   GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
   if(product == null) useValues = false;
 
-  Collection categoryCol = delegator.findAll("ProductCategory", null);
+  Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
+  Collection productTypeCol = delegator.findAll("ProductType", UtilMisc.toList("description"));
 
   GenericValue primaryProductCategory = null;
   String primProdCatIdParam = request.getParameter("PRIMARY_PRODUCT_CATEGORY_ID");
-  if(product != null && useValues)
+  if(product != null && useValues) {
     primaryProductCategory = product.getRelatedOne("PrimaryProductCategory");
-  else if(primProdCatIdParam != null && primProdCatIdParam.length() > 0)
+  } else if(primProdCatIdParam != null && primProdCatIdParam.length() > 0) {
     primaryProductCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primProdCatIdParam));
+  }
+
+  GenericValue productType = null;
+  String productTypeIdParam = request.getParameter("productTypeId");
+  if(product != null && useValues) {
+    productType = product.getRelatedOne("ProductType");
+  } else if(productTypeIdParam != null && productTypeIdParam.length() > 0) {
+    productType = delegator.findByPrimaryKey("ProductType", UtilMisc.toMap("productTypeId", productTypeIdParam));
+  }
 
   if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 %>
@@ -107,6 +117,25 @@
 <%}%>
 
   <%String fieldName; String paramName;%>
+  <tr>
+    <%fieldName = "productTypeId";%><%paramName = "productTypeId";%>
+    <td width="26%" align=right><div class="tabletext">Product Type Id</div></td>
+    <td>&nbsp;</td>
+    <td width="74%">
+      <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
+      <select name="<%=paramName%>" size=1>
+        <%if(productType != null) {%>
+          <option selected value='<%=productType.getString("productTypeId")%>'><%=productType.getString("description")%> [<%=productType.getString("productTypeId")%>]</option>
+        <%}%>
+        <option value=''>&nbsp;</option>
+        <%Iterator productTypeIter = UtilMisc.toIterator(productTypeCol);%>
+        <%while(productTypeIter != null && productTypeIter.hasNext()) {%>
+          <%GenericValue nextProductType = (GenericValue) productTypeIter.next();%>
+          <option value='<%=nextProductType.getString("productTypeId")%>'><%=nextProductType.getString("description")%> [<%=nextProductType.getString("productTypeId")%>]</option>
+        <%}%>
+      </select>
+    </td>
+  </tr>
   <tr>
     <%fieldName = "primaryProductCategoryId";%><%paramName = "PRIMARY_PRODUCT_CATEGORY_ID";%>
     <td width="26%" align=right><div class="tabletext">Primary Category Id</div></td>

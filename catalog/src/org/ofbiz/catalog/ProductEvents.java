@@ -87,8 +87,12 @@ public class ProductEvents {
          }
          */
 
+        String productTypeId = request.getParameter("productTypeId");
+        if (productTypeId != null && productTypeId.length() == 0) productTypeId = null;
         String primaryProductCategoryId = request.getParameter("PRIMARY_PRODUCT_CATEGORY_ID");
+        if (primaryProductCategoryId != null && primaryProductCategoryId.length() == 0) primaryProductCategoryId = null;
         String manufacturerPartyId = request.getParameter("MANUFACTURER_PARTY_ID");
+        if (manufacturerPartyId != null && manufacturerPartyId.length() == 0) manufacturerPartyId = null;
 
         String introductionDateStr = request.getParameter("INTRODUCTION_DATE");
         java.sql.Date introductionDate = null;
@@ -111,10 +115,12 @@ public class ProductEvents {
         Double defaultPrice = null;
 
         String quantityUomId = request.getParameter("QUANTITY_UOM_ID");
+        if (quantityUomId != null && quantityUomId.length() == 0) quantityUomId = null;
         String quantityIncludedStr = request.getParameter("QUANTITY_INCLUDED");
         Double quantityIncluded = null;
 
         String weightUomId = request.getParameter("WEIGHT_UOM_ID");
+        if (weightUomId != null && weightUomId.length() == 0) weightUomId = null;
         String weightStr = request.getParameter("WEIGHT");
         Double weight = null;
 
@@ -174,6 +180,8 @@ public class ProductEvents {
 
         if (!UtilValidate.isNotEmpty(name))
             errMsg += "<li>Name is missing.";
+        if (!UtilValidate.isNotEmpty(productTypeId))
+            errMsg += "<li>Product Type ID is missing.";
         if (errMsg.length() > 0) {
             errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
@@ -184,6 +192,7 @@ public class ProductEvents {
         GenericValue product = delegator.makeValue("Product", null);
         toBeStored.add(product);
         product.set("productId", productId);
+        product.set("productTypeId", productTypeId);
         product.set("primaryProductCategoryId", primaryProductCategoryId);
         product.set("manufacturerPartyId", manufacturerPartyId);
         product.set("introductionDate", introductionDate);
