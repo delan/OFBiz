@@ -65,10 +65,10 @@
           <%if(iter!=null && iter.hasNext()){%>
             <%while(iter.hasNext()){%>
               <%Object key = iter.next();%>
+              <%UtilCache.CacheLine line = (UtilCache.CacheLine) utilCache.cacheLineTable.get(key);%>
               <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
               <tr bgcolor="<%=rowColor%>">
                 <TD><%=key.toString()%></TD>
-                <%Long createTime = (Long)utilCache.expireTable.get(key);%>
                 <%--
                 <TD>
                   <%if(createTime!=null){%>
@@ -79,8 +79,8 @@
                 --%>
                 <TD>
                   <%long expireTime = utilCache.getExpireTime();%>
-                  <%if(createTime!=null){%>
-                    <%=(new Date(createTime.longValue()+expireTime)).toString()%>
+                  <%if (line != null && line.loadTime > 0){%>
+                    <%=(new Date(line.loadTime + expireTime)).toString()%>
                   <%}%>
                   &nbsp;
                 </TD>
@@ -97,20 +97,20 @@
               </TR>
           <%}%>
       <%} else {%>
-          <%Iterator iter = utilCache.valueTable.entrySet().iterator();%>
+          <%Iterator iter = utilCache.cacheLineTable.entrySet().iterator();%>
           <%if(iter!=null && iter.hasNext()){%>
             <%int keyNum = 0;%>
             <%while(iter.hasNext()){%>
               <%Map.Entry entry = (Map.Entry)iter.next();%>
               <%Object key = entry.getKey();%>
+              <%UtilCache.CacheLine line = (UtilCache.CacheLine) entry.getValue();%>
               <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
               <tr bgcolor="<%=rowColor%>">
                 <TD><%=key.toString()%></TD>
-                <%Long createTime = (Long)utilCache.expireTable.get(key);%>
                 <TD>
                   <%long expireTime = utilCache.getExpireTime();%>
-                  <%if(createTime!=null){%>
-                    <%=(new Date(createTime.longValue()+expireTime)).toString()%>
+                  <%if(line != null && line.loadTime > 0){%>
+                    <%=(new Date(line.loadTime + expireTime)).toString()%>
                   <%}%>
                   &nbsp;
                 </TD>
