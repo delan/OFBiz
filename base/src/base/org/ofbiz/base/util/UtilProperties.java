@@ -470,6 +470,9 @@ public class UtilProperties implements java.io.Serializable {
                 bundleMap = (ResourceBundleMapWrapper.InternalRbmWrapper) bundleLocaleCache.get(resourceCacheKey);
                 if (bundleMap == null) {
                     ResourceBundle bundle = getBaseResourceBundle(resource, locale);
+                    if (bundle == null) {
+                        throw new IllegalArgumentException("Could not find resource bundle [" + resource + "] in the locale [" + locale + "]");
+                    }
                     bundleMap = new ResourceBundleMapWrapper.InternalRbmWrapper(bundle);
                     if (bundleMap != null) {
                         bundleLocaleCache.put(resourceCacheKey, bundleMap);
