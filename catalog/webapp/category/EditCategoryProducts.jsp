@@ -81,16 +81,16 @@
 %>
 <br>
 
+<a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[New Category]</a>
+<%if(productCategoryId != null && productCategoryId.length() > 0) {%>
+  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[View Category Page]</a>
+  <a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Category]</a>
+  <a href="<ofbiz:url>/EditCategoryProducts?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontextdisabled">[Category Products]</a>
+<%}%>
+
 <div class="head1">Edit Category Members for Category
   <%=UtilFormatOut.ifNotEmpty(productCategory==null?null:productCategory.getString("description"),"\"","\"")%>
   with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>"</div>
-
-<a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[Create New Category]</a>
-<%if(productCategoryId != null && productCategoryId.length() > 0) {%>
-  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[View Category Page]</a>
-  <a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Edit Category]</a>
-  <a href="<ofbiz:url>/EditCategoryProducts?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Edit Category Members]</a>
-<%}%>
 
 <br>
 <br>
@@ -172,16 +172,6 @@
 </ofbiz:if>
 <%}%>
 <br>
-
-<a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[Create New Category]</a>
-<%if(productCategoryId != null && productCategoryId.length() > 0) {%>
-  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[View Category Page]</a>
-  <a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Edit Category]</a>
-  <a href="<ofbiz:url>/EditCategoryProducts?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Edit Category Members]</a>
-<%}%>
-
-<br>
-
 <%}else{%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>

@@ -55,13 +55,13 @@
     primaryParentCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primParentCatIdParam));
 %>
 <br>
-<div class="head1">Edit Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>"</div>
-<a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[Create New Category]</a>
+<a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[New Category]</a>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
   <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[View Category Page]</a>
-  <a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Edit Category]</a>
-  <a href="<ofbiz:url>/EditCategoryProducts?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Edit Category Members]</a>
+  <a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontextdisabled">[Category]</a>
+  <a href="<ofbiz:url>/EditCategoryProducts?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Category Products]</a>
 <%}%>
+<div class="head1">Edit Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>"</div>
 <form action="<ofbiz:url>/UpdateCategory</ofbiz:url>" method=POST style='margin: 0;'>
 <table border='0' cellpadding='2' cellspacing='0'>
 <%if(category == null){%>
@@ -148,12 +148,6 @@
   </tr>
 </table>
 </form>
-<a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[Create New Category]</a>
-<%if(productCategoryId != null && productCategoryId.length() > 0) {%>
-  <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[View Category Page]</a>
-  <a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Edit Category]</a>
-  <a href="<ofbiz:url>/EditCategoryProducts?PRODUCT_CATEGORY_ID=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Edit Category Members]</a>
-<%}%>
 <br>
 
 <%-- Edit 'ProductCategoryRollup's --%>
