@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>/templates/main_lr.ftl</template>
-    <generator name="ofbiz-freemarker"/>
-    <property name="title">Product Page</property>
-    <page-action>/catalog/product.js</page-action>
-    <pageEditor>OfbizOrderEditor</pageEditor>
-</page>

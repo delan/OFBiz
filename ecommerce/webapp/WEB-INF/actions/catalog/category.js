@@ -1,5 +1,4 @@
-<!-- Copyright (c) 2003 The Open For Business Project - www.ofbiz.org -->
-<#--
+/*
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -20,21 +19,27 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones (jonesde@ofbiz.org)
- *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     Andy Zeneski
  *@version    $Revision$
  *@since      2.1
--->
+*/
 
-${pages.get("/includes/header.ftl")}
+importPackage(Packages.java.lang);
+importPackage(Packages.org.ofbiz.core.util);
+importPackage(Packages.org.ofbiz.core.entity);
+importPackage(Packages.org.ofbiz.commonapp.product.catalog);
 
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
- <tr>
-  <td width='100%' valign='top' align='left'>
-    ${pages.get("/includes/errormsg.ftl")}
-    ${pages.get(page.path)}
-  </td>
- </tr>
-</table>
+var delegator = request.getAttribute("delegator");
+var requestParameters = UtilHttp.getParameterMap(request);
+var productCategoryId = requestParameters.get("category_id");
+var category = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+var catalogName = CatalogWorker.getCatalogName(request);
+var content = context.get("page");
+content.setTitle(category.getString("description"));
+context.put("metaDescription", category.getString("description"));
+context.put("metaKeywords", category.getString("description") + ", " + catalogName);
 
-${pages.get("/includes/footer.ftl")}
+request.setAttribute("productCategoryId", productCategoryId);
+request.setAttribute("defaultViewSize", new Integer(10));
+request.setAttribute("limitView", new Boolean(true));
+

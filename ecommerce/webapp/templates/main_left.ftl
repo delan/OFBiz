@@ -26,16 +26,16 @@
  *@since      2.1
 -->
 
-${pages.get("/templates/header.ftl")}
+${pages.get("/includes/header.ftl")}
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
   ${pages.get("/templates/leftbar.ftl")}
   <td width='100%' valign='top' align='left'>
-    ${pages.get("/templates/errormsg.ftl")}
-    ${pages.get(content.path)}
+    ${pages.get("/includes/errormsg.ftl")}
+    ${pages.get(page.path)}
   </td>
  </tr>
 </table>
 
-${pages.get("/templates/footer.ftl")}
+${pages.get("/includes/footer.ftl")}
