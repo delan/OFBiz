@@ -31,8 +31,10 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.commonapp.party.contact.*, org.ofbiz.commonapp.party.party.*" %>
+<%@ page import="org.ofbiz.commonapp.party.contact.*" %>
+<%@ page import="org.ofbiz.commonapp.party.party.*" %>
 <%@ page import="org.ofbiz.commonapp.accounting.payment.*" %>
+<%@ page import="org.ofbiz.commonapp.security.login.*" %>
 
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
@@ -71,8 +73,12 @@
     pageContext.setAttribute("showOld", new Boolean(showOld));
     ContactMechWorker.getPartyContactMechValueMaps(pageContext, partyId, showOld, "partyContactMechValueMaps");
     PaymentWorker.getPartyPaymentMethodValueMaps(pageContext, partyId, showOld, "paymentMethodValueMaps");
+    
+    EntityField entityField = new EntityField(pageContext);
+    
+    String externalLoginKey = LoginEvents.getExternalLoginKey(request);
+    String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
 %>
-<%EntityField entityField = new EntityField(pageContext);%>
 
 <script language='JavaScript'>
     function setNowFromDate(formName) { eval('document.' + formName + '.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
@@ -100,24 +106,26 @@
       </div>
     </td>
     <td align='right'>
-	  <div class='tabContainer'>
-      <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="tabButtonSelected">Profile</a>
-      <a href="<ofbiz:url>/viewroles</ofbiz:url>" class="tabButton">Roles</a>
-      <a href="<ofbiz:url>/viewrelationships</ofbiz:url>" class="tabButton">Relationships</a>
+      <div class='tabContainer'>
+        <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="tabButtonSelected">Profile</a>
+        <a href="<ofbiz:url>/viewroles</ofbiz:url>" class="tabButton">Roles</a>
+        <a href="<ofbiz:url>/viewrelationships</ofbiz:url>" class="tabButton">Relationships</a>
       </div>
-
-      <ofbiz:if name="showOld">
-        <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">[Hide Old]</a>&nbsp;&nbsp;
-      </ofbiz:if>
-      <ofbiz:unless name="showOld">
-        <a href="<ofbiz:url>/viewprofile?SHOW_OLD=true</ofbiz:url>" class="buttontext">[Show Old]</a>&nbsp;&nbsp;
-      </ofbiz:unless>
-      <% if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) { %>
-        <a href="/ordermgr/control/orderlist?partyId=<%=partyId%>" target="ordermgr" class="buttontext">[Orders]</a>&nbsp;&nbsp;
-      <% } %>
-      <% if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) { %>
-        <a href="/ordermgr/control/salesentry?partyId=<%=partyId%>" target="ordermgr" class="buttontext">[New Order]</a>&nbsp;&nbsp;
-      <% } %>      
+      <nobr>
+        <ofbiz:if name="showOld">
+          <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">[Hide Old]</a>&nbsp;&nbsp;
+        </ofbiz:if>      
+        <ofbiz:unless name="showOld">
+          <a href="<ofbiz:url>/viewprofile?SHOW_OLD=true</ofbiz:url>" class="buttontext">[Show Old]</a>&nbsp;&nbsp;
+        </ofbiz:unless>
+        <a href="/accounting/control/findBillingAccount?partyId=<%=partyId%><%=externalKeyParam%>" class="buttontext">[Billing Accounts]</a>&nbsp;&nbsp;
+        <% if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) { %>
+          <a href="/ordermgr/control/orderlist?partyId=<%=partyId%><%=externalKeyParam%>" class="buttontext">[Orders]</a>&nbsp;&nbsp;
+        <% } %>
+        <% if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) { %>
+          <a href="/ordermgr/control/salesentry?partyId=<%=partyId%><%=externalKeyParam%>" class="buttontext">[New Order]</a>&nbsp;&nbsp;
+        <% } %>      
+      </nobr>
     </td>
   </tr>
 </table>
