@@ -32,15 +32,8 @@ security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
 dispatcher = request.getAttribute("dispatcher");
 
-if(security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
-    context.put("hasPermission", Boolean.TRUE);
-} else {
-    context.put("hasPermission", Boolean.FALSE);
-}
-
 String action = request.getParameter("ACTION");
 if (action != null && action.equals("INIT") && security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
     Map result = dispatcher.runSync("initLowLevelCode", new HashMap());
     context.put("products", result.get("productLLCs"));
 }
-

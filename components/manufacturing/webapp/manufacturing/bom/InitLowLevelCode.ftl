@@ -20,14 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-${pages.get("/bom/BomTabBar.ftl")}
-
-<#if hasPermission>
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
     <div class="head1">${uiLabelMap.ManufacturingLLCInit}</div>
     <br>
@@ -42,6 +40,3 @@ ${pages.get("/bom/BomTabBar.ftl")}
         <input type=submit value="${uiLabelMap.CommonRun}">
     </form>
     
-<#else>
-  <h3>${uiLabelMap.ManufacturingViewPermissionError}</h3>
-</#if>
