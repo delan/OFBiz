@@ -223,8 +223,8 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
           java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();
           if(timeStamp  != null)
           {
-            dateString = UtilTimestamp.toDateString(timeStamp);
-            timeString = UtilTimestamp.toTimeString(timeStamp);
+            dateString = UtilDateTime.toDateString(timeStamp);
+            timeString = UtilDateTime.toTimeString(timeStamp);
           }
         }
       %>

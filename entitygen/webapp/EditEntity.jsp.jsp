@@ -54,7 +54,7 @@
   String rowColor2 = "CCFFFF";
   String rowColor = "";
 <%for(i=0;i<entity.pks.size();i++){%>
-  <%if(((Field)entity.pks.elementAt(i)).javaType.compareTo("java.lang.String") == 0 || ((Field)entity.pks.elementAt(i)).javaType.compareTo("String") == 0){%>  String <%=((Field)entity.pks.elementAt(i)).fieldName%> = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>");<%}else{%>  String <%=((Field)entity.pks.elementAt(i)).fieldName%>String = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>");<%}%><%}%>
+  <%if(((Field)entity.pks.elementAt(i)).javaType.compareTo("java.lang.String") == 0 || ((Field)entity.pks.elementAt(i)).javaType.compareTo("String") == 0){%>String <%=((Field)entity.pks.elementAt(i)).fieldName%> = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>");<%}else{%>String <%=((Field)entity.pks.elementAt(i)).fieldName%>String = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>");<%}%><%}%>
 <%for(i=0;i<entity.pks.size();i++){%>
   <%if(((Field)entity.pks.elementAt(i)).javaType.compareTo("java.lang.String") != 0 && ((Field)entity.pks.elementAt(i)).javaType.compareTo("String") != 0){%>
     <%=((Field)entity.pks.elementAt(i)).javaType%> <%=((Field)entity.pks.elementAt(i)).fieldName%> = null;
@@ -72,6 +72,16 @@
   <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%> = <%=entity.ejbName%>Helper.findByPrimaryKey(<%=entity.pkNameString()%>);
 %>
 
+[ltp]
+  String lastUpdateMode = request.getParameter("UPDATE_MODE");
+  if((session.getAttribute("ERROR_MESSAGE") != null || request.getAttribute("ERROR_MESSAGE") != null) && 
+      lastUpdateMode != null && !lastUpdateMode.equals("DELETE"))
+  {
+    //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
+    <%=GenUtil.lowerFirstChar(entity.ejbName)%> = null;
+  }
+%>
+
 <a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" class="buttontext">[Find <%=entity.ejbName%>]</a>
 [ltp]if(hasCreatePermission){%>
   <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create <%=entity.ejbName%>]</a>
@@ -86,62 +96,39 @@
 [ltp]}%>
 <br>
 
+[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> == null && (<%=entity.pkNameString(" != null || ", " != null")%>)){%>
+    <%=entity.ejbName%> with (<%=entity.colNameString(entity.pks)%>: [ltp]=<%=entity.pkNameString("%" + ">, [ltp]=", "%" + ">")%>) not found.<br>
+[ltp]}%>
 <form action="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp")%>" method="POST" name="updateForm">
+  <input type="hidden" name="WEBEVENT" value="UPDATE_<%=entity.tableName%>">
+  <input type="hidden" name="ON_ERROR_PAGE" value="[ltp]=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> == null){%>
-  [ltp]if(<%=entity.pkNameString(" != null || ", " != null")%>){%>
-    <%=entity.ejbName%> with (<%=entity.colNameString(entity.pks)%>: [ltp]=<%=entity.pkNameString("%" + ">, [ltp]=", "%" + ">")%>) not found. 
-    [ltp]if(hasCreatePermission){%>
-      You may create a <%=entity.ejbName%> by entering the values you want, and clicking Update.
-      <input type="hidden" name="WEBEVENT" value="UPDATE_<%=entity.tableName%>">
-      <input type="hidden" name="UPDATE_MODE" value="CREATE">
+  [ltp]if(hasCreatePermission){%>
+    You may create a <%=entity.ejbName%> by entering the values you want, and clicking Update.
+    <input type="hidden" name="UPDATE_MODE" value="CREATE">
   <%for(i=0;i<entity.pks.size();i++){%>
-      [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">
-        <td><%=((Field)entity.pks.elementAt(i)).columnName%></td>
-        <td>
-        <%if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-          <input type="text" size="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.formatQuantity(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>">
-        <%} else if(((Field)entity.fields.elementAt(i)).stringLength() <= 80){%>
-          <input type="text" size="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>">
-        <%} else if(((Field)entity.fields.elementAt(i)).stringLength() <= 255){%>
-          <input type="text" size="80" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>">
-        <%} else {%>
-          <textarea cols="70" rows="3" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>">[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%></textarea>
-        <%}%>
-        </td>
-      </tr><%}%>
-    [ltp]}else{%>
-      [ltp]showFields=false;%>
-      You do not have permission to create a <%=entity.ejbName%> (<%=entity.tableName%>_ADMIN, or <%=entity.tableName%>_CREATE needed).
-    [ltp]}%>
+    [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">
+      <td><%=((Field)entity.pks.elementAt(i)).columnName%></td>
+      <td>
+      <%if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
+        <input type="text" size="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.formatQuantity(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>">
+      <%} else if(((Field)entity.fields.elementAt(i)).stringLength() <= 80){%>
+        <input type="text" size="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>">
+      <%} else if(((Field)entity.fields.elementAt(i)).stringLength() <= 255){%>
+        <input type="text" size="80" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>">
+      <%} else {%>
+        <textarea cols="70" rows="3" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>">[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%></textarea>
+      <%}%>
+      </td>
+    </tr><%}%>
   [ltp]}else{%>
-    [ltp]if(hasCreatePermission){%>
-      <input type="hidden" name="WEBEVENT" value="UPDATE_<%=entity.tableName%>">
-      <input type="hidden" name="UPDATE_MODE" value="CREATE">
-  <%for(i=0;i<entity.pks.size();i++){%>
-      [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">
-        <td><%=((Field)entity.pks.elementAt(i)).columnName%></td>
-        <td>
-        <%if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-          <input type="text" size="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>" value="">
-        <%} else if(((Field)entity.fields.elementAt(i)).stringLength() <= 80){%>
-          <input type="text" size="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="">
-        <%} else if(((Field)entity.fields.elementAt(i)).stringLength() <= 255){%>
-          <input type="text" size="80" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="">
-        <%} else {%>
-          <textarea cols="70" rows="3" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>"></textarea>
-        <%}%>
-        </td>
-      </tr><%}%>
-    [ltp]}else{%>
-      [ltp]showFields=false;%>
-      You do not have permission to create a <%=entity.ejbName%> (<%=entity.tableName%>_ADMIN, or <%=entity.tableName%>_CREATE needed).
-    [ltp]}%>
-  [ltp]} //end if sku == null%>
+    [ltp]showFields=false;%>
+    You do not have permission to create a <%=entity.ejbName%> (<%=entity.tableName%>_ADMIN, or <%=entity.tableName%>_CREATE needed).
+  [ltp]}%>
 [ltp]}else{%>
   [ltp]if(hasUpdatePermission){%>
-    <input type="hidden" name="WEBEVENT" value="UPDATE_<%=entity.tableName%>">
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
   <%for(i=0;i<entity.pks.size();i++){%>
     <input type="hidden" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>%>">
@@ -158,14 +145,6 @@
 [ltp]} //end if <%=GenUtil.lowerFirstChar(entity.ejbName)%> == null %>
 
 [ltp]if(showFields){%>
-[ltp]
-  String lastUpdateMode = request.getParameter("UPDATE_MODE");
-  if(session.getAttribute("ERROR_MESSAGE") != null && lastUpdateMode != null && lastUpdateMode.compareTo("UPDATE") == 0)
-  {
-    //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
-    <%=GenUtil.lowerFirstChar(entity.ejbName)%> = null;
-  }
-%>  
 <%for(i=0;i<entity.fields.size();i++){%>
   <%if(!((Field)entity.fields.elementAt(i)).isPk){%>
   [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">
@@ -180,8 +159,8 @@
           java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();
           if(timeStamp  != null)
           {
-            dateString = UtilTimestamp.toDateString(timeStamp);
-            timeString = UtilTimestamp.toTimeString(timeStamp);
+            dateString = UtilDateTime.toDateString(timeStamp);
+            timeString = UtilDateTime.toTimeString(timeStamp);
           }
         }
         else
@@ -208,7 +187,7 @@
   <%}%>
 <%}%>
   [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">
-    <td><input type="submit" name="Update" value="Update"></td>
+    <td colspan="2"><input type="submit" name="Update" value="Update"></td>
   </tr>
 [ltp]}%>
 </table>

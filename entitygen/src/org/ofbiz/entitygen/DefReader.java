@@ -48,11 +48,11 @@ import org.w3c.dom.NodeList;
 
 public class DefReader
 {
-    /** Creates an Entity object based on a definition from the specified XML Entity descriptor file.
-     * @param defFileName The full path and file name of the XML Entity descriptor file.
-     * @param ejbName The ejbName of the Entity definition to use.
-     * @return An Entity object describing the specified entity of the specified descriptor file.
-     */    
+  /** Creates an Entity object based on a definition from the specified XML Entity descriptor file.
+   * @param defFileName The full path and file name of the XML Entity descriptor file.
+   * @param ejbName The ejbName of the Entity definition to use.
+   * @return An Entity object describing the specified entity of the specified descriptor file.
+   */    
   public static Entity getEntity(String defFileName, String ejbName)
   {
     Document document = getDocument(defFileName);
@@ -126,7 +126,7 @@ public class DefReader
     NodeList fieldList = entityElement.getElementsByTagName("cmp-field");
     for(int i=0; i<fieldList.getLength(); i++)
     {
-      org.ofbiz.entitygen.Field field = createField((Element)fieldList.item(i));
+      org.ofbiz.entitygen.Field field = createField((Element)fieldList.item(i), docElement);
       if(field != null) entity.fields.add(field);
     }
     
@@ -167,10 +167,55 @@ public class DefReader
       Finder finder = createFinder(entity, (Element)finderList.item(i));
       if(finder != null) entity.finders.add(finder);
     }
-    
+
+    NodeList relationList = entityElement.getElementsByTagName("relation");
+    for(int i=0; i<relationList.getLength(); i++)
+    {
+      Relation relation = createRelation((Element)relationList.item(i));
+      if(relation != null) entity.relations.add(relation);
+    }
+
     return entity;
   }
   
+  static Relation createRelation(Element relationElement)
+  {
+    Relation relation = new Relation();
+
+    relation.relationType = checkNull(childElementValue(relationElement, "relation-type"));
+    relation.relatedTableName = checkNull(childElementValue(relationElement, "related-table-name"));
+    relation.relatedEjbName = checkNull(childElementValue(relationElement, "related-ejb-name"),GenUtil.dbNameToClassName(checkNull(relation.relatedTableName)));
+
+    NodeList keyMapList = relationElement.getElementsByTagName("key-map");
+    for(int i=0; i<keyMapList.getLength(); i++)
+    {
+      KeyMap keyMap = createKeyMap((Element)keyMapList.item(i));
+      if(keyMap != null) relation.keyMaps.add(keyMap);
+    }
+
+    //recursively add relations...
+    NodeList relationList = relationElement.getElementsByTagName("relation");
+    for(int i=0; i<relationList.getLength(); i++)
+    {
+      Relation relationNested = createRelation((Element)relationList.item(i));
+      if(relationNested != null) relation.relations.add(relationNested);
+    }
+    return relation;
+  }
+
+  static KeyMap createKeyMap(Element keyMapElement)
+  {
+    KeyMap keyMap = new KeyMap();
+
+    keyMap.columnName = checkNull(childElementValue(keyMapElement, "column-name"));
+    keyMap.fieldName = checkNull(childElementValue(keyMapElement, "field-name"),GenUtil.dbNameToVarName(checkNull(keyMap.columnName)));
+    //if no relatedColumnName is specified, use the columnName; this is convenient for when they are named the same, which is often the case
+    keyMap.relatedColumnName = checkNull(childElementValue(keyMapElement, "related-column-name"),keyMap.columnName);
+    keyMap.relatedFieldName = checkNull(childElementValue(keyMapElement, "related-field-name"),GenUtil.dbNameToVarName(checkNull(keyMap.relatedColumnName)));
+
+    return keyMap;
+  }
+
   static Finder createFinder(org.ofbiz.entitygen.Entity entity, Element finderElement)
   {
     Finder finder = new Finder();
@@ -193,20 +238,61 @@ public class DefReader
     return null;
   }
   
-  static org.ofbiz.entitygen.Field createField(Element fieldElement)
+  static org.ofbiz.entitygen.Field createField(Element fieldElement, Element docElement)
   {
     if(fieldElement == null) return null;
     
     org.ofbiz.entitygen.Field field = new org.ofbiz.entitygen.Field();
     
+    // first check to see if a field-type was specified, and if so load
+    //  the sql-type, java-type, and validator elements from the field-type-def
+    String fieldType = childElementValue(fieldElement, "field-type");
+    if(fieldType != null && fieldType.length() > 0)
+    {
+      Element fieldTypeDef = findFieldTypeDef(fieldType, docElement);
+      if(fieldTypeDef != null)
+      {
+        field.javaType = checkNull(childElementValue(fieldTypeDef, "java-type"));
+        field.sqlType = checkNull(childElementValue(fieldTypeDef, "sql-type"));
+
+        NodeList validateList = fieldTypeDef.getElementsByTagName("validate");
+        for(int i=0; i<validateList.getLength(); i++)
+        {
+          Element element = (Element)validateList.item(i);
+          field.validators.add(checkNull(elementValue(element)));
+        }        
+      }
+    }
+
+    //load the cmp-field data last so it can override the field-type data
     field.fieldName = childElementValue(fieldElement, "field-name");
     if(field.fieldName == null) field.fieldName = GenUtil.dbNameToVarName(checkNull(childElementValue(fieldElement, "column-name")));
-    field.javaType = checkNull(childElementValue(fieldElement, "java-type"));
+    field.javaType = checkNull(childElementValue(fieldElement, "java-type"), field.javaType);
     field.columnName = checkNull(childElementValue(fieldElement, "column-name"));
-    field.sqlType = checkNull(childElementValue(fieldElement, "sql-type"));
+    field.sqlType = checkNull(childElementValue(fieldElement, "sql-type"), field.sqlType);
     field.isPk = false;    
     
+    NodeList validateList = fieldElement.getElementsByTagName("validate");
+    for(int i=0; i<validateList.getLength(); i++)
+    {
+      Element element = (Element)validateList.item(i);
+      field.validators.add(checkNull(elementValue(element)));
+    }
+    
     return field;
+  }
+  
+  static Element findFieldTypeDef(String fieldType, Element docElement)
+  {
+    if(fieldType == null) return null;
+    NodeList nodeList = docElement.getElementsByTagName("field-type-def");
+    for(int i=0; i<nodeList.getLength(); i++)
+    {
+      Element element = (Element)nodeList.item(i);
+      if(fieldType.equals(checkNull(childElementValue(element, "field-type"))))
+        return element;
+    }
+    return null;
   }
   
   static Document getDocument(String filename)

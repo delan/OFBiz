@@ -31,6 +31,12 @@ Example:
   <copyright>Default Copyright</copyright>
   <author>Default Author</author>
   <version>Default Version Number</version>
+  <field-type-def>
+    <field-type>ID</field-type>
+    <sql-type>VARCHAR(20)</sql-type>
+    <java-type>String</java-type>
+    <validate>isNotEmpty</validate>
+  </field-type-def>
   <entity>
     <title>Entity Title</title>                     <!-- optional, file default used -->
     <description>Entity Description</description>   <!-- optional, file default used -->
@@ -46,6 +52,11 @@ Example:
       <sql-type>VARCHAR(20)</sql-type>
       <field-name>keyField</field-name>             <!-- optional, can be derived from the column-name -->
       <java-type>String</java-type>
+      <validate>isNotEmpty</validate>
+    </cmp-field>
+    <cmp-field>
+      <column-name>KEY_FIELD2</column-name>
+      <field-type>ID</field-type>                   <!-- field-type can be used in place of java-type, sql-type, and validate elements, using those defined in the corresponding field-type-def element -->
     </cmp-field>
     <cmp-field><column-name>FIRST_FIELD</column-name><sql-type>VARCHAR(80)</sql-type><java-type>String</java-type></cmp-field>
     <cmp-field><column-name>SECOND_FIELD</column-name><sql-type>NUMERIC</sql-type><java-type>Double</java-type></cmp-field>
@@ -58,17 +69,18 @@ Example:
 -->
 
 <!-- ====================== Root Element ======================= -->
-<!ELEMENT entitygen (entity*, title?, description?, copyright?, author?, version?)>
+<!ELEMENT entitygen (entity*, title?, description?, copyright?, author?, version?, field-type-def*)>
 
 <!-- ================= Children of entitygen =================== -->
 <!ELEMENT entity (title?, description?, copyright?, author?, version?, 
                   package-name?, ejb-name?, table-name?, use-cache?, cmp-field*,
-                  prim-key-class?, prim-key-column*, finder*)>
+                  prim-key-class?, prim-key-column*, finder*, relation*)>
 <!ELEMENT title (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
 <!ELEMENT copyright (#PCDATA)>
 <!ELEMENT author (#PCDATA)>
 <!ELEMENT version (#PCDATA)>
+<!ELEMENT field-type-def (field-type?, sql-type?, java-type?, validate*)>
 
 <!-- ================== Children of entity ===================== -->
 <!-- see the children of entitygen section for title, etc. -->
@@ -76,18 +88,36 @@ Example:
 <!ELEMENT ejb-name (#PCDATA)>
 <!ELEMENT table-name (#PCDATA)>
 <!ELEMENT use-cache (#PCDATA)>
-<!ELEMENT cmp-field (column-name?, sql-type?, field-name?, java-type?)>
+<!ELEMENT cmp-field (column-name?, sql-type?, field-name?, java-type?, validate*)>
 <!ELEMENT prim-key-class (#PCDATA)>
 <!ELEMENT prim-key-column (#PCDATA)>
 <!ELEMENT finder (column-name*)>
+<!ELEMENT relation (relation-type?,related-table-name?,related-ejb-name?,key-map*, relation*)>
 
-<!-- ================= Children of cmp-field =================== -->
+<!-- ==================== Children of cmp-field ===================== -->
 <!ELEMENT column-name (#PCDATA)>
 <!ELEMENT sql-type (#PCDATA)>
 <!ELEMENT field-name (#PCDATA)>
 <!ELEMENT java-type (#PCDATA)>
+<!ELEMENT validate (#PCDATA)>
+<!-- see definition of field-type in field-type-def section below -->
 
-<!-- ================== Children of finder ===================== -->
+<!-- ===================== Children of finder ======================= -->
 <!-- the only child of finder is column-name, defined the same as in cmp-field -->
 
+<!-- ================= Children of field-type-def =================== -->
+<!-- see definitions of sql-type, java-type, and validate in cmp-field section above -->
+<!ELEMENT field-type (#PCDATA)>
+
+<!-- ==================== Children of relation ====================== -->
+<!ELEMENT relation-type (#PCDATA)>  <!-- this can be one or many depending on the cardinality of the related table compared to this table -->
+<!ELEMENT related-table-name (#PCDATA)>
+<!ELEMENT related-ejb-name (#PCDATA)>
+<!ELEMENT key-map (column-name?,field-name?,related-column-name?,related-field-name?)>
+<!-- see definition of relation in entity section above -->
+
+<!-- ===================== Children of key-map ====================== -->
+<!-- see definition of column-name and field-name in cmp-field section above -->
+<!ELEMENT related-column-name (#PCDATA)> <!-- this is only required if the column-name in the related table is different from the column-name in this table -->
+<!ELEMENT related-field-name (#PCDATA)> <!-- this is only required if the field-name in the related table is different from the field-name in this table -->
 

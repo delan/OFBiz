@@ -1,5 +1,7 @@
 package org.ofbiz.entitygen;
 
+import java.util.*;
+
 /**
  * <p><b>Title:</b> Entity Generator - Field model class
  * <p><b>Description:</b> None
@@ -30,24 +32,20 @@ package org.ofbiz.entitygen;
 
 public class Field
 {
-    /** The field-name of the Field
-     */    
+  /** The field-name of the Field */    
   public String fieldName = null;
-  /** The java-type of the Field
-   */  
+  /** The java-type of the Field */  
   public String javaType = null;
-  /** The column-name of the Field
-   */  
+  /** The column-name of the Field */  
   public String columnName = null;
-  /** The sql-type of the Field
-   */  
+  /** The sql-type of the Field */  
   public String sqlType = null;
-  /** boolean which specifies whether or not the Field is a Primary Key
-   */  
+  /** boolean which specifies whether or not the Field is a Primary Key */  
   public boolean isPk = false;
+  /** validators to be called when an update is done */  
+  public Vector validators = new Vector();
 
-  /** Default Constructor
-   */  
+  /** Default Constructor */  
   public Field()
   {
   }

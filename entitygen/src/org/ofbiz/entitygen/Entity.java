@@ -32,52 +32,39 @@ import java.util.*;
 
 public class Entity
 {
-    /** The ejb-name of the Entity
-     */    
+  /** The ejb-name of the Entity */    
   public String ejbName = "";
-  /** The table-name of the Entity
-   */  
+  /** The table-name of the Entity */  
   public String tableName = "";
-  /** The package-name of the Entity
-   */  
+  /** The package-name of the Entity */  
   public String packageName = "";
-  /** The prim-key-class of the Entity
-   */  
+  /** The prim-key-class of the Entity */  
   public String primKeyClass = "";
-  /**
-   *  Use the Value object cache in the Helper?
-   */
+  /** Use the Value object cache in the Helper? */
   public boolean useCache = false;
 
   //Strings to go in the comment header.
-  /** The title for the class JavaDoc comment
-   */  
+  /** The title for the class JavaDoc comment */  
   public String title = "";
-  /** The description for the class JavaDoc comment
-   */  
+  /** The description for the class JavaDoc comment */  
   public String description = "";
-  /** The copyright for the class JavaDoc comment
-   */  
+  /** The copyright for the class JavaDoc comment */  
   public String copyright = "";
-  /** The author for the class JavaDoc comment
-   */  
+  /** The author for the class JavaDoc comment */  
   public String author = "";
-  /** The version for the class JavaDoc comment
-   */  
+  /** The version for the class JavaDoc comment */  
   public String version = "";
 
-  /** A Vector of the Field objects for the Entity
-   */  
+  /** A Vector of the Field objects for the Entity */  
   public Vector fields = new Vector();
-  /** A Vector of the Field objects for the Entity, one for each Primary Key
-   */  
+  /** A Vector of the Field objects for the Entity, one for each Primary Key */  
   public Vector pks = new Vector();
-  /** A Vector of the Finder objects for the Entity
-   */  
+  /** A Vector of the Finder objects for the Entity */  
   public Vector finders = new Vector();
+  /** relations defining relationships between this entity and other entities */  
+  public Vector relations = new Vector();
 
-  /** Default Constructor
-   */  
+  /** Default Constructor */  
   public Entity()
   {
   }

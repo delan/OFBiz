@@ -61,13 +61,23 @@ algorithm, and can expire entries after a given amount of time.</p>
 <p>The fields for the entity are specified in the cmp-field tags of the
 document. Each one of these has a table-name, an sql-type, a field-name, and a
 java-type. The field-name is optional because it can be derived from the
-column-name according to the naming conventions. Next the primary key is
+column-name according to the naming conventions. Zero or more optional validate
+elements may be used to specify validators for the corresponding cmp-field. The
+specified validators will be called in the entity update web event and on
+failure an error message will be returned to the user, and the user will be
+returned to the calling page (see the web update events for details).</p>
+<p>In place of a sql-type, a java-type, and validate elements for each cmp-field,
+a field-type element can be used. This will cause the sql-type, java-type, and
+validate elements from the corresponding field-type-def to be used. This is a
+technique for standardizing data types in the application and also provides an
+easy way to simplify the XML descriptor file.</p>
+<p> Next the primary key is
 defined. The prim-key-class tag allows you to specify the primary key class, but
 it is optional because it can be obtained from the java-type for a single key
 entity or the primary key class (&lt;&lt;package-name&gt;&gt;.&lt;&lt;ejb-name&gt;&gt;PK)
 for multiple key entities. The prim-key-column entries specify which columns
 will be used as the primary key.</p>
-<p>The last section of an entity descriptor is the finder section. Each finder
+<p>The next section of an entity descriptor is the finder section. Each finder
 tag specifies a finder which searches by the columns specified in the
 column-name tags that are the children of the finder tag.&nbsp; When a single
 column-name is specified, a findByColumnName finder is created in the Home
@@ -78,6 +88,26 @@ generate the same code except that all of the column-name entries, converted to
 their default field name, or the field-name explicitly specified, will be in the
 name like this: findByColumnOneAndColumnTwo for two columns with field-names
 ColumnOne and ColumnTwo.</p>
+<p>The relation section can be used to define relationships between this entity
+and other entities. Each relation defines a type of relation which is either one
+or many depending on the cardinality of the related entity to this entity. The
+related-table-name is the name of the related table, and the related-ejb-name is
+the ejb-name of the related entity. One or many key-map elements may be used to
+defined the fields from the current entity that can be used to look up one or
+many of the related entity. If the relation type is one the full primary key of
+the related entity should be included, and the key-map elements should be in the
+order of the prim-key-column elements in the related entity's descriptor. If the relation type is many only part of
+the primary key or a non-primary key field should of the related entity should
+be referenced. A finder for every combination of these used must be declared in
+the related entity's descriptor. In order to increase the usefulness of entity relations they can
+be nested. Using nested relations many-to-many relations through join tables can
+easily be mapped in addition to many other data layouts.</p>
+<p>Entity relation definitions will be used in two main places: the JSP
+ViewEntity.jsp file to show information related to the current entity and
+provide for easy access to viewing and editing related entities; and in the
+Entity.java file to provide convenient methods of looking up related entities.
+NOTE: These have NOT been implemented yet. The relation data model is in place
+in the current release of ofbiz, but it is not used in any of the templates.</p>
 <h3><a name="Using Entity Code Generator">Using Entity Code Generator</a></h3>
 <p>The user interface for the Entity Code Generator is all HTML based, and can
 be run in any browser. This is the simplest interface because all of the code
