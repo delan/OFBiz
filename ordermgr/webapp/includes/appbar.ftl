@@ -25,123 +25,262 @@
 -->
 
 <#assign security = requestAttributes.security>
+<#assign externalKeyParam = requestAttributes.externalKeyParam>
+
 <#if session.userLogin?has_content>
 <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#FFFFFF">
     <td height="15">
 	  <table width="100%" border="0" cellspacing="0" cellpadding="0">                      
         <tr>	       
-          <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>                          		   	      
-          <td height="15" class="tabdownblock">
+          <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)> 
+          <#if requestAttributes.isPartyMgrActive?default(false)> 
+            <#assign colClass = "mainblock">
+            <#assign leftClass = "tabupleft">
+            <#assign centerClass = "tabupcenter">
+            <#assign rightClass = "tabupright">
+            <#assign linkClass = "tablinkselected">
+          <#else>
+            <#assign colClass = "tabdownblock">
+            <#assign leftClass = "tabdownleft">
+            <#assign centerClass = "tabdowncenter">
+            <#assign rightClass = "tabdownright">
+            <#assign linkClass = "tablink">
+          </#if>          
+          <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="javascript:document.partyform.submit()" title="Party Manager" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
-                <td nowrap="nowrap" class="tabdowncenter"><a href="javascript:document.partyform.submit()" title="Party Manager" class="tablink">Party</a></td>
-                <td class="tabdownright"><a href="javascript:document.partyform.submit()" title="Party Manager" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownleft"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td nowrap="nowrap" class="tabdowncenter"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="tablink">Party</a></td>
+                <td class="tabdownright"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
               </tr> 
+              <#if !requestAttributes.isPartyMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
               <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>                                          
+              </#if>
             </table>
           </td>	 
           </#if>
-          <#if security.hasEntityPermission("MARKETING", "_VIEW", session)>      
-          <td height="15" class="tabdownblock">
+          <#if security.hasEntityPermission("MARKETING", "_VIEW", session)>   
+          <#if requestAttributes.isMarketingMgrActive?default(false)> 
+            <#assign colClass = "mainblock">
+            <#assign leftClass = "tabupleft">
+            <#assign centerClass = "tabupcenter">
+            <#assign rightClass = "tabupright">
+            <#assign linkClass = "tablinkselected">
+          <#else>
+            <#assign colClass = "tabdownblock">
+            <#assign leftClass = "tabdownleft">
+            <#assign centerClass = "tabdowncenter">
+            <#assign rightClass = "tabdownright">
+            <#assign linkClass = "tablink">
+          </#if>                       
+          <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="javascript:document.marketingform.submit()" title="Marketing Manager" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
-                <td nowrap="nowrap" class="tabdowncenter"><a href="javascript:document.marketingform.submit()" title="Marketing Manager" class="tablink">Marketing</a></td>
-                <td class="tabdownright"><a href="javascript:document.marketingform.submit()" title="Marketing Manager" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/marketing/control/main" + externalKeyParam)}" title="Marketing Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/marketing/control/main" + externalKeyParam)}" title="Marketing Manager" class="${linkClass}">Marketing</a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/marketing/control/main" + externalKeyParam)}" title="Marketing Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
               </tr>
+              <#if !requestAttributes.isMarketingMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
               <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>               
+              </#if>
             </table>
           </td>
           </#if>
-          <#if security.hasEntityPermission("CATALOG", "_VIEW", session)>                                          
-          <td class="tabdownblock">
+          <#if security.hasEntityPermission("CATALOG", "_VIEW", session)>    
+          <#if requestAttributes.isCatalogMgrActive?default(false)> 
+            <#assign colClass = "mainblock">
+            <#assign leftClass = "tabupleft">
+            <#assign centerClass = "tabupcenter">
+            <#assign rightClass = "tabupright">
+            <#assign linkClass = "tablinkselected">
+          <#else>
+            <#assign colClass = "tabdownblock">
+            <#assign leftClass = "tabdownleft">
+            <#assign centerClass = "tabdowncenter">
+            <#assign rightClass = "tabdownright">
+            <#assign linkClass = "tablink">
+          </#if>                                                          
+          <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="javascript:document.catalogform.submit()" title="Catalog Manager" class="tablinkselected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
-                <td nowrap="nowrap" class="tabdowncenter"><a href="javascript:document.catalogform.submit()" title="Catalog Manager" class="tablink">Catalog</a></td>
-                <td class="tabdownright"><a href="javascript:document.catalogform.submit()" title="Catalog Manager" class="tablinkselected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/catalog/control/main" + externalKeyParam)}" title="Catalog Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/catalog/control/main" + externalKeyParam)}" title="Catalog Manager" class="${linkClass}">Catalog</a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/catalog/control/main" + externalKeyParam)}" title="Catalog Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
               </tr>  
+              <#if !requestAttributes.isCatalogMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
               <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>                                           
+              </#if>
             </table>
           </td>	     
           </#if>
           <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
-          <td height="15" class="tabdownblock">
+          <#if requestAttributes.isFacilityMgrActive?default(false)> 
+            <#assign colClass = "mainblock">
+            <#assign leftClass = "tabupleft">
+            <#assign centerClass = "tabupcenter">
+            <#assign rightClass = "tabupright">
+            <#assign linkClass = "tablinkselected">
+          <#else>
+            <#assign colClass = "tabdownblock">
+            <#assign leftClass = "tabdownleft">
+            <#assign centerClass = "tabdowncenter">
+            <#assign rightClass = "tabdownright">
+            <#assign linkClass = "tablink">
+          </#if>                    
+          <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="javascript:document.facilityform.submit()" title="Facility Manager" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
-                <td nowrap="nowrap" class="tabdowncenter"><a href="javascript:document.facilityform.submit()" title="Facility Manager" class="tablink">Facility</a></td>
-                <td class="tabdownright"><a href="javascript:document.facilityform.submit()" title="Facility Manager" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/facility/control/main" + externalKeyParam)}" title="Facility Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/facility/control/main" + externalKeyParam)}" title="Facility Manager" class="${linkClass}">Facility</a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/facility/control/main" + externalKeyParam)}" title="Facility Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
               </tr>
+              <#if !requestAttributes.isFacilityMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
               <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>               
+              </#if>
             </table>
           </td>                
           </#if>
-          <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>       	        
-          <td height="15" class="mainblock">
+          <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>  
+          <#if requestAttributes.isOrderMgrActive?default(false)> 
+            <#assign colClass = "mainblock">
+            <#assign leftClass = "tabupleft">
+            <#assign centerClass = "tabupcenter">
+            <#assign rightClass = "tabupright">
+            <#assign linkClass = "tablinkselected">
+          <#else>
+            <#assign colClass = "tabdownblock">
+            <#assign leftClass = "tabdownleft">
+            <#assign centerClass = "tabdowncenter">
+            <#assign rightClass = "tabdownright">
+            <#assign linkClass = "tablink">
+          </#if>                         	        
+          <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabupleft"><a href="javascript:document.orderform.submit()" title="Order Manager" class="tablinkselected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
-                <td nowrap="nowrap" class="tabupcenter"><a href="javascript:document.orderform.submit()" title="Order Manager" class="tablinkselected">Order</a></td>
-                <td class="tabupright"><a href="javascript:document.orderform.submit()" title="Order Manager" class="tablinkselected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
-              </tr>                          
+                <td class="${leftClass}"><a href="${response.encodeURL("/ordermgr/control/main" + externalKeyParam)}" title="Order Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/ordermgr/control/main" + externalKeyParam)}" title="Order Manager" class="${linkClass}selected">Order</a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/ordermgr/control/main" + externalKeyParam)}" title="Order Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+              </tr> 
+              <#if !requestAttributes.isOrderMgrActive?default(false)>
+              <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
+              <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>               
+              </#if>                                       
             </table>
           </td>
           </#if>
           <#if security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-          <td height="15" class="tabdownblock">
+          <#if requestAttributes.isAccountingMgrActive?default(false)> 
+            <#assign colClass = "mainblock">
+            <#assign leftClass = "tabupleft">
+            <#assign centerClass = "tabupcenter">
+            <#assign rightClass = "tabupright">
+            <#assign linkClass = "tablinkselected">
+          <#else>
+            <#assign colClass = "tabdownblock">
+            <#assign leftClass = "tabdownleft">
+            <#assign centerClass = "tabdowncenter">
+            <#assign rightClass = "tabdownright">
+            <#assign linkClass = "tablink">
+          </#if>                    
+          <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="javascript:document.accountingform.submit()" title="Accounting" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
-                <td nowrap="nowrap" class="tabdowncenter"><a href="javascript:document.accountingform.submit()" title="Accounting" class="tablink">Accounting</a></td>
-                <td class="tabdownright"><a href="javascript:document.accountingform.submit()" title="Accounting" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/accouting/control/main" + externalKeyParam)}" title="Accounting" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/accounting/control/main" + externalKeyParam)}" title="Accounting" class="${linkClass}">Accounting</a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/accounting/control/main" + externalKeyParam)}" title="Accounting" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
               </tr>
+              <#if !requestAttributes.isAccountingMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
               <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>               
+              </#if>
             </table>
           </td>     
           </#if>               
           <#if security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", session)>
-          <td height="15" class="tabdownblock">
+          <#if requestAttributes.isWorkEffortMgrActive?default(false)> 
+            <#assign colClass = "mainblock">
+            <#assign leftClass = "tabupleft">
+            <#assign centerClass = "tabupcenter">
+            <#assign rightClass = "tabupright">
+            <#assign linkClass = "tablinkselected">
+          <#else>
+            <#assign colClass = "tabdownblock">
+            <#assign leftClass = "tabdownleft">
+            <#assign centerClass = "tabdowncenter">
+            <#assign rightClass = "tabdownright">
+            <#assign linkClass = "tablink">
+          </#if>                    
+          <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="javascript:document.workeffortform.submit()" title="WorkEffort" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
-                <td nowrap="nowrap" class="tabdowncenter"><a href="javascript:document.workeffortform.submit()" title="WorkEffort" class="tablink">WorkEffort</a></td>
-                <td class="tabdownright"><a href="javascript:document.workeffortform.submit()" title="WorkEffort" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="j${response.encodeURL("/workeffort/control/main" + externalKeyParam)}" title="WorkEffort" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/workeffort/control/main" + externalKeyParam)}" title="WorkEffort" class="${linkClass}">WorkEffort</a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/workeffort/control/main" + externalKeyParam)}" title="WorkEffort" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
               </tr>
+              <#if !requestAttributes.isWorkEffortMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
               <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>               
+              </#if>
             </table>
           </td>                        
           </#if>
           <#if security.hasEntityPermission("CONTENTMGR", "_VIEW", session)>
-          <td height="15" class="tabdownblock">
+          <#if requestAttributes.isContentMgrActive?default(false)> 
+            <#assign colClass = "mainblock">
+            <#assign leftClass = "tabupleft">
+            <#assign centerClass = "tabupcenter">
+            <#assign rightClass = "tabupright">
+            <#assign linkClass = "tablinkselected">
+          <#else>
+            <#assign colClass = "tabdownblock">
+            <#assign leftClass = "tabdownleft">
+            <#assign centerClass = "tabdowncenter">
+            <#assign rightClass = "tabdownright">
+            <#assign linkClass = "tablink">
+          </#if>                    
+          <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="javascript:document.contentform.submit()" title="Content Manager" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
-                <td nowrap="nowrap" class="tabdowncenter"><a href="javascript:document.contentform.submit()" title="Content Manager" class="tablink">Content</a></td>
-                <td class="tabdownright"><a href="javascript:document.contentform.submit()" title="Content Manager" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/content/control/main" + externalKeyParam)}" title="Content Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/content/control/main" + externalKeyParam)}" title="Content Manager" class="${linkClass}">Content</a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/content/control/main" + externalKeyParam)}" title="Content Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
               </tr>
+              <#if !requestAttributes.isContentMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
               <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>               
+              </#if>
             </table>
           </td>  
           </#if>          
-          <td height="15" class="tabdownblock">
+          <#if requestAttributes.isWebToolsActive?default(false)> 
+            <#assign colClass = "mainblock">
+            <#assign leftClass = "tabupleft">
+            <#assign centerClass = "tabupcenter">
+            <#assign rightClass = "tabupright">
+            <#assign linkClass = "tablinkselected">
+          <#else>
+            <#assign colClass = "tabdownblock">
+            <#assign leftClass = "tabdownleft">
+            <#assign centerClass = "tabdowncenter">
+            <#assign rightClass = "tabdownright">
+            <#assign linkClass = "tablink">
+          </#if>          
+          <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="javascript:document.webtoolsform.submit()" title="WebTools" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
-                <td nowrap="nowrap" class="tabdowncenter"><a href="javascript:document.webtoolsform.submit()" title="WebTools" class="tablink">WebTools</a></td>
-                <td class="tabdownright"><a href="javascript:document.webtoolsform.submit()" title="WebTools" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/webtools/control/main" + externalKeyParam)}" title="WebTools" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/webtools/control/main" + externalKeyParam)}" title="WebTools" class="${linkClass}">WebTools</a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/webtools/control/main" + externalKeyParam)}" title="WebTools" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
               </tr>
+              <#if !requestAttributes.isWebToolsActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
               <tr><td colspan="3" class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>               
+              </#if>
             </table>
           </td>            
           <td width="100%" style="vertical-align: bottom;">
@@ -156,42 +295,4 @@
     </td>
   </tr>
 </table>
-
-<form method="POST" target="_self" action="<%=response.encodeURL("/webtools/control/login/main")%>" name="webtoolsform" style='margin: 0;'>
-  <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
-  <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
-</form>
-<form method="POST" target="_self" action="<%=response.encodeURL("/workeffort/control/login/main")%>" name="workeffortform" style='margin: 0;'>
-  <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
-  <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
-</form>
-<form method="POST" target="_self" action="<%=response.encodeURL("/catalog/control/login/main")%>" name="catalogform" style='margin: 0;'>
-  <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
-  <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
-</form>
-<form method="POST" target="_self" action="<%=response.encodeURL("/partymgr/control/login/main")%>" name="partyform" style='margin: 0;'>
-  <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
-  <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
-</form>
-<form method="POST" target="_self" action="<%=response.encodeURL("/ordermgr/control/login/main")%>" name="orderform" style='margin: 0;'>
-  <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
-  <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
-</form>
-<form method="POST" target="_self" action="<%=response.encodeURL("/accounting/control/login/main")%>" name="accountingform" style='margin: 0;'>
-  <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
-  <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
-</form>
-<form method="POST" target="_self" action="<%=response.encodeURL("/facility/control/login/main")%>" name="facilityform" style='margin: 0;'>
-  <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
-  <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
-</form>
-<form method="POST" target="_self" action="<%=response.encodeURL("/marketing/control/login/main")%>" name="marketingform" style='margin: 0;'>
-  <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
-  <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
-</form>
-<form method="POST" target="_self" action="<%=response.encodeURL("/content/control/login/main")%>" name="contentform" style='margin: 0;'>
-  <input type="hidden" name="USERNAME" value="<%EntityField.run("userLogin", "userLoginId", pageContext);%>">
-  <input type="hidden" name="PASSWORD" value="<%EntityField.run("userLogin", "currentPassword", pageContext);%>">
-</form>
-  
 </#if>
