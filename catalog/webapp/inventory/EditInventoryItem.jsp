@@ -27,7 +27,7 @@
  *@version    1.0
  */
 %>
-
+<%try {%>
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
@@ -39,57 +39,67 @@
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
-  boolean useValues = true;
-  if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+    boolean tryEntity = true;
+    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
-  String inventoryItemId = request.getParameter("inventoryItemId");
-  GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("inventoryItemId", inventoryItemId));
-  if(product == null) useValues = false;
+    String inventoryItemId = request.getParameter("inventoryItemId");
+    GenericValue inventoryItem = delegator.findByPrimaryKey("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId));
+    GenericValue inventoryItemType = null;
+    if(inventoryItem == null) {
+        tryEntity = false;
+    } else {
+        inventoryItemType = inventoryItem.getRelatedOne("InventoryItemType");
 
-  Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
-  Collection productTypeCol = delegator.findAll("ProductType", UtilMisc.toList("description"));
+        //statuses
+        if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {
+            //do nothing for non-serialized inventory
+        } else if ("SERIALIZED_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {
+            if (UtilValidate.isNotEmpty(inventoryItem.getString("statusId"))) {
+                Collection statusChange = delegator.findByAnd("StatusValidChange",UtilMisc.toMap("statusId",inventoryItem.getString("statusId")));
+                if (statusChange != null) {
+                    Collection statusItems = null;
+                    Iterator statusChangeIter = statusChange.iterator();
+                    while (statusChangeIter.hasNext()) {
+                        GenericValue curStatusChange = (GenericValue) statusChangeIter.next();
+                        GenericValue curStatusItem = delegator.findByPrimaryKey("StatusItem", UtilMisc.toMap("statusId", curStatusChange.get("statusIdTo")));
+                        if (curStatusItem != null) statusItems.add(curStatusItem);
+                    }
+                    pageContext.setAttribute("statusItems", statusItems);
+                }
+            } else {
+                //no status id, just get all statusItems
+                Collection statusItems = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "INV_SERIALIZED_STTS"));
+                if (statusItems != null) pageContext.setAttribute("statusItems", statusItems);
+            }
+        }
+    }
 
-  GenericValue primaryProductCategory = null;
-  String primProdCatIdParam = request.getParameter("PRIMARY_PRODUCT_CATEGORY_ID");
-  if(product != null && useValues) {
-    primaryProductCategory = product.getRelatedOne("PrimaryProductCategory");
-  } else if(primProdCatIdParam != null && primProdCatIdParam.length() > 0) {
-    primaryProductCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primProdCatIdParam));
-  }
+    //inv item types
+    Collection inventoryItemTypes = delegator.findAll("InventoryItemType");
+    if (inventoryItemTypes != null) pageContext.setAttribute("inventoryItemTypes", inventoryItemTypes);
 
-  GenericValue productType = null;
-  String productTypeIdParam = request.getParameter("productTypeId");
-  if(product != null && useValues) {
-    productType = product.getRelatedOne("ProductType");
-  } else if(productTypeIdParam != null && productTypeIdParam.length() > 0) {
-    productType = delegator.findByPrimaryKey("ProductType", UtilMisc.toMap("productTypeId", productTypeIdParam));
-  }
-
-  if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
+    //facilities
+    Collection facilities = delegator.findAll("Facility");
+    if (facilities != null) pageContext.setAttribute("facilities", facilities);
 %>
 
 <br>
 <a href="<ofbiz:url>/EditInventoryItem</ofbiz:url>" class="buttontext">[New InventoryItem]</a>
 <%if(inventoryItemId != null && inventoryItemId.length() > 0){%>
-  <a href="<ofbiz:url>/EditInventoryItem?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontextdisabled">[Product]</a>
-  <a href="<ofbiz:url>/EditInventoryItemCategories?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Category Members]</a>
-  <a href="<ofbiz:url>/EditInventoryItemKeyword?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Keywords]</a>
-  <a href="<ofbiz:url>/EditInventoryItemAssoc?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Associations]</a>
-  <a href="<ofbiz:url>/EditInventoryItemAttributes?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Attributes]</a>
-  <a href="<ofbiz:url>/EditInventoryItemFeatures?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Features]</a>
+  <a href="<ofbiz:url>/EditInventoryItem?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontextdisabled">[InventoryItem]</a>
 <%}%>
 
-<div class="head1">Edit Product with ID "<%=UtilFormatOut.checkNull(inventoryItemId)%>"</div>
+<div class="head1">Edit InventoryItem with ID "<%=UtilFormatOut.checkNull(inventoryItemId)%>"</div>
 
-<form action="<ofbiz:url>/UpdateProduct</ofbiz:url>" method=POST style='margin: 0;'>
+<form action="<ofbiz:url>/UpdateInventoryItem</ofbiz:url>" method=POST style='margin: 0;'>
 <table border='0' cellpadding='2' cellspacing='0'>
 
-<%if(product == null){%>
+<%if(inventoryItem == null){%>
   <%if(inventoryItemId != null){%>
-    <h3>Could not find product with ID "<%=inventoryItemId%>".</h3>
+    <h3>Could not find inventoryItem with ID "<%=inventoryItemId%>".</h3>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
     <tr>
-      <td align=right><div class="tabletext">Product ID</div></td>
+      <td align=right><div class="tabletext">InventoryItem ID</div></td>
       <td>&nbsp;</td>
       <td>
         <input type="text" name="inventoryItemId" size="20" maxlength="20" value="<%=inventoryItemId%>">
@@ -98,7 +108,7 @@
   <%}else{%>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
     <tr>
-      <td align=right><div class="tabletext">Product ID</div></td>
+      <td align=right><div class="tabletext">InventoryItem ID</div></td>
       <td>&nbsp;</td>
       <td>
         <input type="text" name="inventoryItemId" size="20" maxlength="20" value="">
@@ -109,188 +119,115 @@
   <input type=hidden name="UPDATE_MODE" value="UPDATE">
   <input type=hidden name="inventoryItemId" value="<%=inventoryItemId%>">
   <tr>
-    <td align=right><div class="tabletext">Product ID</div></td>
+    <td align=right><div class="tabletext">InventoryItem ID</div></td>
     <td>&nbsp;</td>
     <td>
-      <b><%=inventoryItemId%></b> (This cannot be changed without re-creating the product.)
+      <b><%=inventoryItemId%></b> (This cannot be changed without re-creating the inventoryItem.)
     </td>
   </tr>
 <%}%>
-
-  <%String fieldName; String paramName;%>
-  <tr>
-    <%fieldName = "productTypeId";%><%paramName = "productTypeId";%>
-    <td width="26%" align=right><div class="tabletext">Product Type Id</div></td>
-    <td>&nbsp;</td>
-    <td width="74%">
-      <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
-      <select name="<%=paramName%>" size=1>
-        <%if(productType != null) {%>
-          <option selected value='<%=productType.getString("productTypeId")%>'><%=productType.getString("description")%> [<%=productType.getString("productTypeId")%>]</option>
-        <%}%>
-        <option value=''>&nbsp;</option>
-        <%Iterator productTypeIter = UtilMisc.toIterator(productTypeCol);%>
-        <%while(productTypeIter != null && productTypeIter.hasNext()) {%>
-          <%GenericValue nextProductType = (GenericValue) productTypeIter.next();%>
-          <option value='<%=nextProductType.getString("productTypeId")%>'><%=nextProductType.getString("description")%> [<%=nextProductType.getString("productTypeId")%>]</option>
-        <%}%>
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <%fieldName = "primaryProductCategoryId";%><%paramName = "PRIMARY_PRODUCT_CATEGORY_ID";%>
-    <td width="26%" align=right><div class="tabletext">Primary Category Id</div></td>
-    <td>&nbsp;</td>
-    <td width="74%">
-      <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
-      <select name="<%=paramName%>" size=1>
-        <%if(primaryProductCategory != null) {%>
-          <option selected value='<%=primaryProductCategory.getString("productCategoryId")%>'><%=primaryProductCategory.getString("description")%> [<%=primaryProductCategory.getString("productCategoryId")%>]</option>
-        <%}%>
-        <option value=''>&nbsp;</option>
-        <%Iterator categoryIter = UtilMisc.toIterator(categoryCol);%>
-        <%while(categoryIter != null && categoryIter.hasNext()) {%>
-          <%GenericValue nextCategory=(GenericValue)categoryIter.next();%>
-          <option value='<%=nextCategory.getString("productCategoryId")%>'><%=nextCategory.getString("description")%> [<%=nextCategory.getString("productCategoryId")%>]</option>
-        <%}%>
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <%fieldName = "manufacturerPartyId";%><%paramName = "MANUFACTURER_PARTY_ID";%>    
-    <td width="26%" align=right><div class="tabletext">Manufacturer Party Id</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
-  </tr>
-
-  <tr>
-    <%fieldName = "introductionDate";%><%paramName = "INTRODUCTION_DATE";%>    
-    <td width="26%" align=right><div class="tabletext">Introduction Date</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(product.getDate(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="20">(MM/DD/YYYY)</td>
-  </tr>
-  <tr>
-    <%fieldName = "salesDiscontinuationDate";%><%paramName = "SALES_DISCONTINUATION_DATE";%>    
-    <td width="26%" align=right><div class="tabletext">Sales Discontinuation Date</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(product.getDate(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="20">(MM/DD/YYYY)</td>
-  </tr>
-  <tr>
-    <%fieldName = "supportDiscontinuationDate";%><%paramName = "SUPPORT_DISCONTINUATION_DATE";%>    
-    <td width="26%" align=right><div class="tabletext">Support Discontinuation Date</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(product.getDate(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="20">(MM/DD/YYYY)</td>
-  </tr>
-  <tr>
-    <%fieldName = "comments";%><%paramName = "COMMENT";%>    
-    <td width="26%" align=right><div class="tabletext">Comment</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
-  </tr>
-
-  <tr>
-    <%fieldName = "productName";%><%paramName = "NAME";%>    
-    <td width="26%" align=right><div class="tabletext">Name</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="30" maxlength="60"></td>
-  </tr>
-  <tr>
-    <%fieldName = "description";%><%paramName = "DESCRIPTION";%>    
-    <td width="26%" align=right><div class="tabletext">Description</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><textarea cols="60" rows="4" name="<%=paramName%>" maxlength="255"><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%></textarea></td>
-  </tr>
-  <tr>
-    <%fieldName = "longDescription";%><%paramName = "LONG_DESCRIPTION";%>    
-    <td width="26%" align=right valign=top><div class="tabletext">Long Description</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><textarea cols="60" rows="6" name="<%=paramName%>" maxlength="2000"><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%></textarea></td>
-  </tr>
-
-  <tr>
-    <%fieldName = "smallImageUrl";%><%paramName = "SMALL_IMAGE_URL";%>    
-    <td width="26%" align=right valign=top><div class="tabletext">Small Image URL</div></td>
-    <td>&nbsp;</td>
-    <td width="74%">
-      <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255">
-      <%if(inventoryItemId != null && inventoryItemId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=small&inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Upload Small Image]</a><%}%>
-    </td>
-  </tr>
-  <tr>
-    <%fieldName = "largeImageUrl";%><%paramName = "LARGE_IMAGE_URL";%>    
-    <td width="26%" align=right valign=top><div class="tabletext">Large Image URL</div></td>
-    <td>&nbsp;</td>
-    <td width="74%">
-      <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255">
-      <%if(inventoryItemId != null && inventoryItemId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=large&inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontext">[Upload Large Image]</a><%}%>
-    </td>
-  </tr>
-
-  <tr>
-    <%fieldName = "listPrice";%><%paramName = "LIST_PRICE";%>
-    <td width="26%" align=right><div class="tabletext">List Price</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(product.getDouble(fieldName)):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
-  </tr>
-  <tr>
-    <%fieldName = "defaultPrice";%><%paramName = "DEFAULT_PRICE";%>
-    <td width="26%" align=right><div class="tabletext">Default Price</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(product.getDouble(fieldName)):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
-  </tr>
-
-  <tr>
-    <%fieldName = "quantityUomId";%><%paramName = "QUANTITY_UOM_ID";%>    
-    <td width="26%" align=right><div class="tabletext">Quantity Uom Id</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
-  </tr>
-  <tr>
-    <%fieldName = "quantityIncluded";%><%paramName = "QUANTITY_INCLUDED";%>    
-    <td width="26%" align=right><div class="tabletext">Quantity Included</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(product.getDouble(fieldName)):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
-  </tr>
-
-  <tr>
-    <%fieldName = "weightUomId";%><%paramName = "WEIGHT_UOM_ID";%>    
-    <td width="26%" align=right><div class="tabletext">Weight Uom Id</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
-  </tr>
-  <tr>
-    <%fieldName = "weight";%><%paramName = "WEIGHT";%>    
-    <td width="26%" align=right><div class="tabletext">Weight</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(product.getDouble(fieldName)):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
-  </tr>
-
-  <tr>
-    <%fieldName = "taxable";%><%paramName = "TAXABLE";%>    
-    <td width="26%" align=right><div class="tabletext">Taxable?</div></td>
-    <td>&nbsp;</td>
-    <td width="74%">
-      <SELECT name='<%=paramName%>'>
-        <OPTION><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>
-        <OPTION>&nbsp;</OPTION>
-        <OPTION>Y</OPTION>
-        <OPTION>N</OPTION>
-      </SELECT>
-    </td>
-  </tr>
-  <tr>
-    <%fieldName = "autoCreateKeywords";%><%paramName = "AUTO_CREATE_KEYWORDS";%>
-    <td width="26%" align=right><div class="tabletext">Allow Auto Create Keywords?</div></td>
-    <td>&nbsp;</td>
-    <td width="74%">
-      <SELECT name='<%=paramName%>'>
-        <OPTION><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>
-        <OPTION>&nbsp;</OPTION>
-        <OPTION>Y</OPTION>
-        <OPTION>N</OPTION>
-      </SELECT>
-    </td>
-  </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">InventoryItem Type Id</div></td>
+        <td>&nbsp;</td>
+        <td width="74%">
+          <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(tryEntity?inventoryItem.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
+          <select name="inventoryItemTypeId" size=1>
+            <%if(inventoryItemType != null) {%>
+              <option selected value='<%=inventoryItemType.getString("inventoryItemTypeId")%>'><%=inventoryItemType.getString("description")%> [<%=inventoryItemType.getString("inventoryItemTypeId")%>]</option>
+              <option value='<%=inventoryItemType.getString("inventoryItemTypeId")%>'>&nbsp;</option>
+            <%} else {%>
+              <option value=''>----</option>
+            <%}%>
+            <ofbiz:iterator name="nextInventoryItemType" property="inventoryItemTypes">
+              <option value='<%=nextInventoryItemType.getString("inventoryItemTypeId")%>'><%=nextInventoryItemType.getString("description")%> [<%=nextInventoryItemType.getString("inventoryItemTypeId")%>]</option>
+            </ofbiz:iterator>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Product Id</div></td>
+        <td>&nbsp;</td>
+        <td width="74%">
+            <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="productId" fullattrs="true"/> size="20" maxlength="20">
+            <%if (inventoryItem != null && UtilValidate.isNotEmpty(inventoryItem.getString("productId"))) {%>
+                <a href='/catalog/control/EditProduct?PRODUCT_ID=<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/>' class='buttontext'>[Edit&nbsp;Product&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/>]</a>
+            <%}%>
+        </td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Party Id</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="partyId" fullattrs="true"/> size="20" maxlength="20"></td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Status</div></td>
+        <td>&nbsp;</td>
+        <td width="74%">
+           <select name="statusId">
+            <%if(inventoryItem != null) {%>
+               <option value="<%=inventoryItem.getString("statusId")%>"><%=inventoryItem.getString("statusId")%></option>
+               <option value="<%=inventoryItem.getString("statusId")%>">----</option>
+            <%} else {%>
+              <option value=''>----</option>
+            <%}%>
+             <ofbiz:iterator name="statusItem" property="statusItems">
+               <option value="<%=statusItem.getString("statusId")%>"><%=statusItem.getString("description")%></option>               
+             </ofbiz:iterator>
+           </select>
+         </td>
+       </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Facility/Container</div></td>
+        <td>&nbsp;</td>
+        <td width="74%">
+           Select a Facility:
+           <select name="facilityId">
+            <%if(inventoryItem != null) {%>
+                 <option value="<%=inventoryItem.getString("facilityId")%>"><%=inventoryItem.getString("facilityId")%></option>
+                 <option value="<%=inventoryItem.getString("facilityId")%>">----</option>
+            <%} else {%>
+              <option value=''>----</option>
+            <%}%>
+             <ofbiz:iterator name="facility" property="facilities">
+               <option value="<%=facility.getString("facilityId")%>"><%=facility.getString("description")%></option>
+             </ofbiz:iterator>
+           </select>
+           OR enter a Container ID:
+           <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="containerId" fullattrs="true"/> size="20" maxlength="20">
+         </td>
+       </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Lot Id</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="lotId" fullattrs="true"/> size="20" maxlength="20"></td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Uom Id</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="uomId" fullattrs="true"/> size="20" maxlength="20"></td>
+      </tr>
+    <%if (inventoryItem != null && "NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Available To Promise / Quantity On Hand</div></td>
+        <td>&nbsp;</td>
+        <td width="74%">
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise" fullattrs="true"/>>
+            / <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="quantityOnHand" fullattrs="true"/>>
+        </td>
+      </tr>
+    <%} else if (inventoryItem != null && "SERIALIZED_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Serial Number</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="serialNumber" fullattrs="true"/> size="30" maxlength="60"></td>
+      </tr>
+    <%} else if (inventoryItem != null) {%>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Serial#/ATP/QOH</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><div class='tabletext' style='color: red;'>Error: type <ofbiz:entityfield attribute="inventoryItem" field="inventoryItemTypeId"/> unknown; specify a type.</div></td>
+      </tr>
+    <%}%>
 
   <tr>
     <td colspan='1' align=right><input type="submit" name="Update" value="Update"></td>
@@ -303,3 +240,4 @@
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
 </td><td>&nbsp;&nbsp;</td></tr></table>
+<%} catch (Exception e) { Debug.logError(e); } %>

@@ -78,18 +78,6 @@
   <%if (curInventoryItemType != null) pageContext.setAttribute("curInventoryItemType", curInventoryItemType);%>
   <%boolean isQuantity = inventoryItem.get("quantityOnHand") != null && (inventoryItem.get("serialNumber") == null || inventoryItem.getString("serialNumber").length() == 0);%>
   <tr valign="middle">
-    <%if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
-    <FORM method=POST action='<ofbiz:url>/UpdateFeatureToProductApplication</ofbiz:url>'>
-        <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId" fullattrs="true"/>>
-        <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemTypeId" fullattrs="true"/>>
-        <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="productId" fullattrs="true"/>>
-        <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="partyId" fullattrs="true"/>>
-        <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="statusId" fullattrs="true"/>>
-        <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId" fullattrs="true"/>>
-        <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="containerId" fullattrs="true"/>>
-        <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="lotId" fullattrs="true"/>>
-        <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="uomId" fullattrs="true"/>>
-    <%}%>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId"/></div></td>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="curInventoryItemType" field="description"/></div></td>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/></div></td>
@@ -107,12 +95,25 @@
     <%}%>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="inventoryItem" field="lotId"/></div></td>
     <%if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
+        <%-- Don't want to allow this here, manual inventory level adjustments should be logged, etc --%>
+        <%-- <FORM method=POST action='<ofbiz:url>/UpdateInventoryItem</ofbiz:url>'>
+            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemTypeId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="productId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="partyId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="statusId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="containerId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="lotId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="uomId" fullattrs="true"/>>
         <td>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise" fullattrs="true"/>>
             / <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="quantityOnHand" fullattrs="true"/>>
             <INPUT type=submit value='Set ATP/QOH'>
         </td>
-        </FORM>
+        </FORM> --%>
+            <div class='tabletext'><ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise" fullattrs="false"/>
+            / <ofbiz:inputvalue entityAttr="inventoryItem" field="quantityOnHand" fullattrs="false"/></div>
     <%} else if ("SERIALIZED_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
             <td><div class='tabletext'><ofbiz:inputvalue entityAttr="inventoryItem" field="serialNumber"/></div></td>
     <%} else {%>
