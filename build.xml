@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.5 2003/08/17 08:36:24 ajzeneski Exp $
+ *  $Id: build.xml,v 1.6 2003/08/17 09:29:47 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -85,6 +85,12 @@
         <ant dir="components/minilang" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning workflow component =========="/>
+        <echo message="[clean] ==========-======================================"/>                
+        <ant dir="components/workflow" target="clean" inheritAll="false"/>        
+        
+        <echo message="[clean]"/>
         <echo message="[clean] ================================================"/>
         <echo message="[clean] ========== Cleaning content component =========="/>
         <echo message="[clean] ==========-====================================="/>                
@@ -143,7 +149,13 @@
         <echo message="[build] ================================================="/>
         <echo message="[build] ========== Building minilang component =========="/>
         <echo message="[build] ================================================="/>
-        <ant dir="components/minilang" inheritAll="false" /> 
+        <ant dir="components/minilang" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] ================================================="/>
+        <echo message="[build] ========== Building workflow component =========="/>
+        <echo message="[build] ================================================="/>
+        <ant dir="components/workflow" inheritAll="false" />        
         
         <echo message="[build]" />
         <echo message="[build] ================================================"/>
@@ -190,6 +202,12 @@
         <echo message="[docs] ========== Building minilang component =========="/>
         <echo message="[docs] ================================================="/>
         <ant dir="components/minilang" target="docs" inheritAll="false"/>
+        
+        <echo message="[docs]"/>
+        <echo message="[docs] ================================================="/>
+        <echo message="[docs] ========== Building workflow component =========="/>
+        <echo message="[docs] ================================================="/>
+        <ant dir="components/workflow" target="docs" inheritAll="false"/>        
         
         <echo message="[docs]"/>
         <echo message="[docs] ================================================="/>
