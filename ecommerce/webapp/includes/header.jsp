@@ -5,7 +5,7 @@
 <title><%=companyName%>: <%=pageName%></title>
 
 <%-- <link rel="stylesheet" href="<%=controlPath + "/view/includes/maincss.css"%>" type="text/css"> --%>
-<link rel="stylesheet" href="/ecommerce/includes/maincss.css" type="text/css">
+<link rel="stylesheet" href="<%=request.getContextPath()%>/includes/maincss.css" type="text/css">
 <%-- <%@ include file="/includes/maincss.jsp"%> --%>
 
 <script language="javascript">
