@@ -38,7 +38,7 @@ import java.util.StringTokenizer;
  * Misc String Utility Functions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class StringUtil {
@@ -300,12 +300,12 @@ public class StringUtil {
         str = cleanHexString(str);
         int stringLength = str.length();
         if ((stringLength & 0x1) != 0) {
-            throw new IllegalArgumentException("fromHexString�requires�an�even�number�of�hex�characters");
+            throw new IllegalArgumentException("fromHexString requires an even number of hex characters");
         }
         byte[] b = new byte[stringLength / 2];
 
         for (int i = 0, j = 0; i < stringLength; i+= 2, j++) {
-            int high= convertChar(str.charAt(i));
+            int high = convertChar(str.charAt(i));
             int low = convertChar(str.charAt(i+1));
             b[j] = (byte) ((high << 4) | low);
         }
@@ -321,7 +321,7 @@ public class StringUtil {
         } else if ( 'A' <= c && c <= 'F' ) {
             return c - 'A' + 0xa ;
         } else {
-            throw new IllegalArgumentException("Invalid�hex�character:�" + c);
+            throw new IllegalArgumentException("Invalid hex character: [" + c + "]");
         }
     }
 }

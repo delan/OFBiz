@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version $Rev:$
+ * @version $Rev$
  * @since 2.1
  */
 public class Start implements Runnable {
@@ -191,6 +191,11 @@ public class Start implements Runnable {
         // load tools.jar
         if (config.toolsJar != null) {
             classPath.addComponent(config.toolsJar);
+        }
+
+        // load comm.jar
+        if (config.commJar != null) {
+            classPath.addComponent(config.commJar);
         }
 
         // add OFBIZ_HOME to CP & load libs
@@ -431,6 +436,7 @@ public class Start implements Runnable {
         public String ofbizHome;
         public String baseJar;
         public String toolsJar;
+        public String commJar;
         public String baseLib;
         public String baseConfig;
         public String logDir;
@@ -439,6 +445,7 @@ public class Start implements Runnable {
         public boolean shutdownAfterLoad = false;
         public boolean useShutdownHook = true;
         public boolean requireToolsJar = false;
+        public boolean requireCommJar = false;
 
         private Properties getPropertiesFile(String config) throws IOException {
             InputStream propsStream = null;
@@ -535,7 +542,15 @@ public class Start implements Runnable {
                 reqTJ = props.getProperty("java.tools.jar.required", "false");
             }
             requireToolsJar = "true".equalsIgnoreCase(reqTJ);
-            toolsJar = this.findToolsJar(props, javaVendor, javaVersion, requireToolsJar);
+            toolsJar = this.findSystemJar(props, javaVendor, javaVersion, "tools.jar", requireToolsJar);
+
+            // comm jar
+            String reqCJ = System.getProperty("java.comm.jar.required");
+            if (reqTJ == null) {
+                reqTJ = props.getProperty("java.comm.jar.required", "false");
+            }
+            requireCommJar = "true".equalsIgnoreCase(reqCJ);
+            commJar = this.findSystemJar(props, javaVendor, javaVersion, "comm.jar", requireCommJar);
 
             // log directory
             logDir = System.getProperty("ofbiz.log.dir");
@@ -630,47 +645,47 @@ public class Start implements Runnable {
             }
         }
 
-        private String findToolsJar(Properties props, String javaVendor, String javaVersion, boolean required) {
+        private String findSystemJar(Properties props, String javaVendor, String javaVersion, String jarName, boolean required) {
             String fileSep = System.getProperty("file.separator");
             String javaHome = System.getProperty("java.home");
-            String errorMsg = "Unable to locate tools.jar - ";
-            String foundMsg = "Found tools.jar - ";
-            String toolLoc = "lib" + fileSep + "tools.jar";
+            String errorMsg = "Unable to locate " + jarName + " - ";
+            String foundMsg = "Found " + jarName + " - ";
+            String jarLoc = "lib" + fileSep + jarName;
             File tj = null;
 
-            if (javaVendor.startsWith("Apple")) {
+            if ("tools.jar".equals(jarName) && javaVendor.startsWith("Apple")) {
                 // tools.jar is always available in Apple's JDK implementation
                 return null;
             }
 
             // check to see if it is in the OFBIZ_HOME directory
-            tj = new File(ofbizHome + fileSep + "tools.jar");
+            tj = new File(ofbizHome + fileSep + jarName);
             if (tj.exists()) {
                 return null;
             }
 
             // check to see if it is in the base/lib directory
-            tj = new File(baseLib + fileSep + "tool.jar");
+            tj = new File(baseLib + fileSep + jarName);
             if (tj.exists()) {
                 return null;
             }
 
             // try to locate tools.jar from the properties file
-            String toolsProp = props.getProperty("java.tools.jar", null);
-            if (toolsProp != null) {
-                tj = new File(toolsProp);
+            String jarProps = props.getProperty("java." + jarName, null);
+            if (jarProps != null) {
+                tj = new File(jarProps);
                 if (!tj.exists()) {
                     if (required) {
                         System.err.println(errorMsg + tj.getAbsolutePath());
                     }
                 } else {
                     System.out.println(foundMsg + tj.getAbsolutePath());
-                    return toolsProp;
+                    return jarProps;
                 }
             }
 
             // next check the JAVA_HOME lib dir
-            tj = new File(javaHome + fileSep + toolLoc);
+            tj = new File(javaHome + fileSep + jarLoc);
             if (!tj.exists()) {
                 if (required) {
                     System.err.println(errorMsg + tj.getAbsolutePath());
@@ -684,7 +699,7 @@ public class Start implements Runnable {
             String jreExt = fileSep + "jre";
             if (javaHome.toLowerCase().endsWith(jreExt)) {
                 javaHome = javaHome.substring(0, javaHome.lastIndexOf(fileSep));
-                tj = new File(javaHome + fileSep + toolLoc);
+                tj = new File(javaHome + fileSep + jarLoc);
                 if (!tj.exists()) {
                     if (required) {
                         System.err.println(errorMsg + tj.getAbsolutePath());
@@ -699,7 +714,7 @@ public class Start implements Runnable {
             if (javaHome.toLowerCase().charAt(1) == ':') {
                 String driveLetter = javaHome.substring(0, 2);
                 String windowsPath = driveLetter + fileSep + "j2sdk" + javaVersion;
-                tj = new File(windowsPath + fileSep + toolLoc);
+                tj = new File(windowsPath + fileSep + jarLoc);
                 if (!tj.exists()) {
                     if (required) {
                         System.err.println(errorMsg + tj.getAbsolutePath());
@@ -712,9 +727,9 @@ public class Start implements Runnable {
 
             if (required) {
                 System.err.println("");
-                System.err.println("Required library tools.jar could not be located.");
+                System.err.println("Required library " + jarName + " could not be located.");
                 System.err.println("Make sure you using Java2 SDK " + REQUIRED_JDK + "+ and NOT the JRE.");
-                System.err.println("You may need to copy tools.jar into a loadable lib directory");
+                System.err.println("You may need to copy " + jarName + " into a loadable lib directory");
                 System.err.println("(i.e. OFBIZ_HOME or OFBIZ_HOME/base/lib)");
                 System.err.println("");
                 System.exit(-1);
