@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author      Olivier.Heintz@nereide.biz
- *@version    $Rev$
+ *@version    $Rev: 3103 $
  *@since      3.0
  */
 
@@ -38,7 +38,8 @@ import org.ofbiz.manufacturing.jobshopmgt.ProductionRun;
 
 delegator = request.getAttribute("delegator");
 
-// requestParams = UtilHttp.getParameterMap(request);
+userLogin = request.getAttribute("userLogin");
+
 HashMap productionRunData= new HashMap();
 
 productionRunId = request.getParameter("productionRunId");
@@ -47,7 +48,6 @@ if (!UtilValidate.isEmpty(productionRunId)) {
     if (productionRun.exist()){
         context.put("productionRunId", productionRunId);
         context.put("productionRun", productionRun.getGenericValue());
-
         // Find all the work efforts that must be completed before this one.
         List mandatoryWorkEfforts = EntityUtil.filterByDate(delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdTo", productionRunId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY")));
         if (mandatoryWorkEfforts.size() > 0) {
@@ -59,8 +59,34 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             context.put("dependentWorkEfforts", dependentWorkEfforts);
         }
 
+        Double quantityToProduce = productionRun.getGenericValue().getDouble("quantityToProduce");
+        if (quantityToProduce == null) {
+            quantityToProduce = new Double(0);
+        }
+
+        // Find the inventory items produced
+        List inventoryItems = delegator.findByAnd("WorkEffortInventoryProduced", UtilMisc.toMap("workEffortId", productionRunId));
+        context.put("inventoryItems", inventoryItems);
+
+        // Find if the production run can produce inventory.
+        Double quantityProduced = productionRun.getGenericValue().getDouble("quantityProduced");
+        if (quantityProduced == null) {
+            quantityProduced = new Double(0);
+        }
+        Double quantityRejected = productionRun.getGenericValue().getDouble("quantityRejected");
+        if (quantityRejected == null) {
+            quantityRejected = new Double(0);
+        }
+
+        GenericValue lastTask = productionRun.getLastProductionRunRoutingTask();
+        Double quantityDeclared = lastTask.getDouble("quantityProduced");
+        if (quantityDeclared == null) {
+            quantityDeclared = new Double(0);
+        }
+        double maxQuantity = quantityDeclared.doubleValue() - quantityProduced.doubleValue();
+
         // productionRun update sub-screen
-        HtmlFormWrapper updateProductionRunWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "UpdateProductionRun", request, response);
+        HtmlFormWrapper updateProductionRunWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "ShowProductionRun", request, response);
         updateProductionRunWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
         updateProductionRunWrapper.putInContext("productionRunData", productionRunData);
         updateProductionRunWrapper.putInContext("actionForm", "updateProductionRun");
@@ -68,14 +94,32 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         context.put("updateProductionRunWrapper",updateProductionRunWrapper);
 	
         productionRunData.put("productionRunId",productionRunId);
-        productionRunData.put("productId",productionRun.getProductProduced().getString("productId"));
+        productionRunData.put("productId", productionRun.getProductProduced().getString("productId"));
         productionRunData.put("productName",productionRun.getProductProduced().getString("internalName"));
-        Debug.logInfo("OHE7 productionRunId ="+productionRunId,"");
+
+        if (maxQuantity > 0 && !"PHANTOM".equals(productionRun.getProductProduced().getString("productTypeId"))) {
+            productionRunData.put("quantity", new Double(maxQuantity));
+            updateProductionRunWrapper.putInContext("showQuantity", "Y");
+        } else {
+            productionRunData.put("quantity", "null");
+            updateProductionRunWrapper.putInContext("showQuantity", "null");
+        }
+
+        productionRunData.put("quantityToProduce", quantityToProduce);
+        productionRunData.put("quantityProduced", quantityProduced);
+        productionRunData.put("quantityRejected", quantityRejected);
+        productionRunData.put("estimatedCompletionDate", productionRun.getEstimatedCompletionDate());
+        productionRunData.put("productionRunName", productionRun.getProductionRunName());
+        productionRunData.put("description", productionRun.getDescription());
+        productionRunData.put("estimatedStartDate", productionRun.getEstimatedStartDate());
+        productionRunData.put("actualStartDate", productionRun.getGenericValue().getTimestamp("actualStartDate"));
+        productionRunData.put("actualCompletionDate", productionRun.getGenericValue().getTimestamp("actualCompletionDate"));
         actionForm = request.getParameter("actionForm");
         if (UtilValidate.isEmpty(actionForm)) {
             actionForm = "beforeActionProductionRun";
         }
         context.put("actionForm",actionForm);
+/*
         String quantity, estimatedStartDate, estimatedCompletionDate, productionRunName, description;
         if (actionForm.equals("updateProductionRun")){
             quantity = request.getParameter("quantity");
@@ -107,21 +151,10 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         } else {
             productionRunData.put("description",productionRun.getDescription());
         }
-
+*/
         //---------------
         // Routing tasks
         //---------------
-        // routingTask add sub-screen
-        if (actionForm.equals("AddRoutingTask")){
-            Map routingTaskData =UtilMisc.toMap("workEffortParentId",productionRunId);
-            HtmlFormWrapper editPrRoutingTaskWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "EditProductionRunRoutingTask", request, response);
-            editPrRoutingTaskWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-            editPrRoutingTaskWrapper.putInContext("routingTaskData", routingTaskData);
-            editPrRoutingTaskWrapper.putInContext("actionForm", "addRoutingTask");
-            editPrRoutingTaskWrapper.putInContext("actionIsAdd", "Y");
-            editPrRoutingTaskWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonUpdate"));
-            context.put("editPrRoutingTaskWrapper",editPrRoutingTaskWrapper);
-        }
         // routingTask update sub-screen
         routingTaskId = request.getParameter("routingTaskId");
         if (routingTaskId != null  && (actionForm.equals("UpdateRoutingTask") || actionForm.equals("EditRoutingTask"))){
@@ -129,42 +162,56 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             Map routingTaskData = routingTask.getAllFields();
             routingTaskData.put("estimatedSetupMillis",routingTask.getDouble("estimatedSetupMillis").toString());
             routingTaskData.put("estimatedMilliSeconds",routingTask.getDouble("estimatedMilliSeconds").toString());
-            HtmlFormWrapper editPrRoutingTaskWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "EditProductionRunRoutingTask", request, response);
+            HtmlFormWrapper editPrRoutingTaskWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "EditProductionRunDeclRoutingTask", request, response);
             editPrRoutingTaskWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
             editPrRoutingTaskWrapper.putInContext("routingTaskData", routingTaskData);
             editPrRoutingTaskWrapper.putInContext("actionForm", "UpdateRoutingTask");
-            editPrRoutingTaskWrapper.putInContext("actionIsAdd", "null");
+            routingTaskData.put("partyId", userLogin.getString("partyId"));
+            //editPrRoutingTaskWrapper.putInContext("partyId", userLogin.getString("partyId"));
             editPrRoutingTaskWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonUpdate"));
             context.put("editPrRoutingTaskWrapper",editPrRoutingTaskWrapper);
             context.put("routingTaskId",routingTaskId);
         }
         //  RoutingTasks list
         List productionRunRoutingTasks = productionRun.getProductionRunRoutingTasks();
-        HtmlFormWrapper ListProductionRunRoutingTasksWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "ListProductionRunRoutingTasks", request, response);
+        Iterator tasksIt = productionRunRoutingTasks.iterator();
+        String startTaskId = null;
+        String issueTaskId = null;
+        String completeTaskId = null;
+        while (tasksIt.hasNext()) {
+            GenericValue task = (GenericValue)tasksIt.next();
+            if (task.getString("currentStatusId").equals("PRUN_RUNNING")) {
+                List components = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortId", task.getString("workEffortId")));
+                List issuances = delegator.findByAnd("WorkEffortInventoryAssign", UtilMisc.toMap("workEffortId", task.getString("workEffortId")));
+                if (components.size() > 0 && issuances.size() == 0) {
+                    issueTaskId = task.getString("workEffortId");
+                }
+                if (issueTaskId == null) {
+                    completeTaskId = task.getString("workEffortId");
+                }
+            }
+
+            if (startTaskId == null &&
+                  issueTaskId == null &&
+                  completeTaskId == null &&
+                  task.getString("currentStatusId").equals("PRUN_CREATED")) {
+                startTaskId = task.getString("workEffortId");
+            }
+        }
+        HtmlFormWrapper ListProductionRunRoutingTasksWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "ListProductionRunDeclRoutingTasks", request, response);
         ListProductionRunRoutingTasksWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
         ListProductionRunRoutingTasksWrapper.putInContext("productionRunRoutingTasks", productionRunRoutingTasks);
+        ListProductionRunRoutingTasksWrapper.putInContext("startTaskId", (startTaskId != null? startTaskId: "null"));
+        ListProductionRunRoutingTasksWrapper.putInContext("issueTaskId", (issueTaskId != null? issueTaskId: "null"));
+        ListProductionRunRoutingTasksWrapper.putInContext("completeTaskId", (completeTaskId != null? completeTaskId: "null"));
         context.put("ListProductionRunRoutingTasksWrapper",ListProductionRunRoutingTasksWrapper);
 
         //---------------
         // Components
         //---------------
-        // Product component add sub-screen
-        if (actionForm.equals("AddProductComponent")){
-            Map productComponentData = UtilMisc.toMap("productionRunId", productionRunId);
-            HtmlFormWrapper editPrProductComponentWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "EditProductionRunComponent", request, response);
-            editPrProductComponentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-            editPrProductComponentWrapper.putInContext("productComponentData", productComponentData);
-            editPrProductComponentWrapper.putInContext("actionForm", "addProductComponent");
-            //editPrProductComponentWrapper.putInContext("productionRunId", productionRunId);
-            editPrProductComponentWrapper.putInContext("actionIsAdd","Y");
-            editPrProductComponentWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonAdd"));
-            context.put("editPrProductComponentWrapper",editPrProductComponentWrapper);
-            //context.put("addProductComponent",addProductComponent);
-        }
         // Product component update sub-screen
         productId = request.getParameter("productId");
         if (productId != null && (actionForm.equals("updateProductComponent") || actionForm.equals("EditProductComponent"))){
-            Debug.logInfo("OHE8 productionRunId ="+productionRunId,"");
             workEffortId = request.getParameter("workEffortId");
             List productComponents = delegator.findByAnd("WorkEffortGoodStandard", UtilMisc.toMap("workEffortId", workEffortId,"productId",productId));
             GenericValue productComponent = EntityUtil.getFirst(productComponents);
@@ -176,7 +223,6 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             editPrProductComponentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
             editPrProductComponentWrapper.putInContext("productComponentData", productComponentData);
             editPrProductComponentWrapper.putInContext("actionForm", "updateProductComponent");
-            editPrProductComponentWrapper.putInContext("actionIsAdd", "null");
             editPrProductComponentWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonUpdate"));
             context.put("editPrProductComponentWrapper",editPrProductComponentWrapper);
             context.put("productId",productId);
@@ -188,15 +234,26 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             GenericValue component;
             for (Iterator iter=productionRunComponents.iterator(); iter.hasNext();){
                 component = (GenericValue) iter.next();
-                String componentName = component.getRelatedOne("Product").getString("productName");
+                GenericValue product = component.getRelatedOne("Product");
+                String componentName = product.getString("productName");
                 String workEffortName = component.getRelatedOne("WorkEffort").getString("workEffortName");
                 Map componentData = component.getAllFields();
                 componentData.put("internalName", componentName);
                 componentData.put("workEffortName", workEffortName);
+                Iterator issuances = (delegator.findByAnd("WorkEffortInventoryAssign", UtilMisc.toMap("workEffortId", component.getString("workEffortId"), "productId", product.getString("productId")))).iterator();
+                double totalIssued = 0.0;
+                while (issuances.hasNext()) {
+                    GenericValue issuance = (GenericValue)issuances.next();
+                    Double issued = issuance.getDouble("quantity");
+                    if (issued != null) {
+                        totalIssued += issued.doubleValue();
+                    }
+                }
+                componentData.put("issuedQuantity", totalIssued);
                 productionRunComponentsData.add(componentData);
             }
         }
-        HtmlFormWrapper ListProductionRunComponentsWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "ListProductionRunComponents", request, response);
+        HtmlFormWrapper ListProductionRunComponentsWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "ListProductionRunDeclComponents", request, response);
         ListProductionRunComponentsWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
         ListProductionRunComponentsWrapper.putInContext("productionRunId", productionRunId);
         ListProductionRunComponentsWrapper.putInContext("productionRunComponentsData", productionRunComponentsData);
@@ -214,6 +271,3 @@ errorMessage = request.getAttribute("_ERROR_MESSAGE_");
 if (errorMessage != null && errorMessage.length() > 0) {
     tryEntity = false;    
 }
-
-
-
