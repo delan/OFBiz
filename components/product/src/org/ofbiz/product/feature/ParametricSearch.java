@@ -1,5 +1,5 @@
 /*
- * $Id: ParametricSearch.java,v 1.11 2004/01/22 01:25:16 jonesde Exp $
+ * $Id: ParametricSearch.java,v 1.12 2004/01/22 04:33:30 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -57,14 +57,14 @@ import org.ofbiz.service.ServiceUtil;
  *  Utilities for parametric search based on features.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.1
  */
 public class ParametricSearch {
     
     public static final String module = ParametricSearch.class.getName();
     
-    public static final int DEFAULT_PER_TYPE_MAX_SIZE = 500;
+    public static final int DEFAULT_PER_TYPE_MAX_SIZE = 1000;
     
     // caches expire after 10 minutes, a reasonable value hopefully...
     //public static UtilCache featureAllCache = new UtilCache("custom.FeaturePerTypeAll", 0, 600000, true);
