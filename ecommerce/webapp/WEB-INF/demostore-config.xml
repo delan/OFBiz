@@ -59,6 +59,14 @@
       <error>view:error</error>
     </request-map>
     <request-map>
+      <uri>addordertocart</uri>
+      <event-type>java</event-type>
+      <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
+      <event-invoke>addToCartFromOrder</event-invoke>
+      <success>view:showcart</success>
+      <error>view:error</error>
+    </request-map>
+    <request-map>
       <uri>modifycart</uri>
       <event-type>java</event-type>
       <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>

@@ -32,16 +32,19 @@
 
     if(orderHeader != null)
     {
-      orderItemIter = orderHeader.getRelated("OrderItem").iterator();
-      Collection shippingLocationList = helper.findByAnd("OrderItemContactMech", UtilMisc.toMap(
+      //XXX should we look in the OrderItemContactMech's here, too?
+      Collection shippingLocationList = helper.findByAnd("OrderContactMech", UtilMisc.toMap(
               "orderId", orderId, "contactMechPurposeTypeId", "SHIPPING_LOCATION"), null);
       if (shippingLocationList.size() > 0)
           shippingAddress = ((GenericValue) shippingLocationList.iterator().next()).getRelatedOne("ContactMech").getRelatedOne("PostalAddress");
 
-      Collection billingLocationList = helper.findByAnd("OrderItemContactMech", UtilMisc.toMap(
+      //XXX should we look in the OrderItemContactMech's here, too?
+      Collection billingLocationList = helper.findByAnd("OrderContactMech", UtilMisc.toMap(
               "orderId", orderId, "contactMechPurposeTypeId", "BILLING_LOCATION"), null);
       if (billingLocationList.size() > 0) 
           billingAddress = ((GenericValue) billingLocationList.iterator().next()).getRelatedOne("ContactMech").getRelatedOne("PostalAddress");
+
+      orderItemIter = orderHeader.getRelated("OrderItem").iterator();
     } 
   }
 
@@ -137,10 +140,12 @@
         <div class="tabletext">
         <% if(shippingAddress != null) { %>
           <%=UtilFormatOut.checkNull(shippingAddress.getString("address1"))%><br>
-          <% if(shippingAddress.getString("address2") != null && shippingAddress.getString("address2").length() != 0) { %> <%=shippingAddress.getString("address2")%><br> <% } %>
+          <% if(UtilValidate.isNotEmpty(shippingAddress.getString("address2"))) { %> <%=shippingAddress.getString("address2")%><br> <% } %>
           <%=UtilFormatOut.checkNull(shippingAddress.getString("city"))%><br>
-          <% if(shippingAddress.getRelatedOne("CountryGeo").getString("name") != null && shippingAddress.getRelatedOne("CountryGeo").getString("name").length() != 0) { %> <%=shippingAddress.getRelatedOne("CountryGeo").getString("name")%> <% } %>
-          <%=UtilFormatOut.checkNull(shippingAddress.getRelatedOne("StateProvinceGeo").getString("name"))%> &nbsp; <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
+          <% GenericValue countryGeo = shippingAddress.getRelatedOne("CountryGeo");
+             if(countryGeo != null && UtilValidate.isNotEmpty(countryGeo.getString("name"))) { %> <%=countryGeo.getString("name")%> <% } %>
+          <% GenericValue stateProvinceGeo = shippingAddress.getRelatedOne("StateProvinceGeo"); %>
+          <%=stateProvinceGeo != null ? UtilFormatOut.checkNull(stateProvinceGeo.getString("name")) : ""%> &nbsp; <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
         <% } else { %>
           <font color="red">ERROR: Shipping Address record lookup failed.</font>
         <% } %>
@@ -162,8 +167,10 @@
             <%=UtilFormatOut.checkNull(billingAddress.getString("address1"))%><br>
             <% if(billingAddress.getString("address2") != null && billingAddress.getString("address2").length() != 0) { %> <%=billingAddress.getString("address2")%><br> <% } %>
             <%=UtilFormatOut.checkNull(billingAddress.getString("city"))%><br>
-            <% if(billingAddress.getRelatedOne("CountryGeo").getString("name") != null && billingAddress.getRelatedOne("CountryGeo").getString("name").length() != 0) { %> <%=billingAddress.getRelatedOne("CountryGeo").getString("name")%> <% } %>
-            <%=UtilFormatOut.checkNull(billingAddress.getRelatedOne("StateProvinceGeo").getString("name"))%> &nbsp; <%=UtilFormatOut.checkNull(billingAddress.getString("postalCode"))%><br>
+            <% GenericValue countryGeo = billingAddress.getRelatedOne("CountryGeo");
+               if(countryGeo != null && UtilValidate.isNotEmpty(countryGeo.getString("name"))) { %> <%=countryGeo.getString("name")%> <% } %>
+            <% GenericValue stateProvinceGeo = billingAddress.getRelatedOne("StateProvinceGeo"); %>
+            <%=stateProvinceGeo != null ? UtilFormatOut.checkNull(stateProvinceGeo.getString("name")) : ""%> &nbsp; <%=UtilFormatOut.checkNull(billingAddress.getString("postalCode"))%><br>
           <% } else { %>
             No billing address<br>
           <% } %>
@@ -198,13 +205,16 @@
 <%-- } else { %>
   <font color="red">ERROR: Sales Order lookup failed.</font> 
 <% } --%>
+  <form name="addOrderToCartForm" action="<%=response.encodeURL(controlPath + "/addordertocart/orderstatus?order_id=" + orderId)%>" method="GET">
+  <input type="HIDDEN" name="add_all" value="false">
+  <input type="HIDDEN" name="order_id" value="<%=orderId%>">
   <table border="0" cellpadding="1" width="100%"><tr><td>
     <table border="0" cellspacing="0" cellpadding="2" width="100%"><tr>
       <td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderhistory")%>" class="buttontext">Back to Order History</a></div></td>
       <td align="right">
         <table border="0" cellspacing="0" cellpadding="0"><tr>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderstatus?event=add_order_to_cart&order_identifier=" + orderId + "&order_add_mode=order")%>" class="buttontext">Add All to Cart</a></div></td>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href="javascript:cartSubmitLines()" class="buttontext">Add Checked to Cart</a></div></td>
+          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="buttonlink">Add All to Cart</a></div></td>
+          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="buttonlink">Add Checked to Cart</a></div></td>
         </tr></table>
       </td>
     </tr></table>
@@ -248,7 +258,7 @@
         <table border="0" cellspacing="0" cellpadding="0">
         <tr>
         <td>
-        <form method="POST" action="orderstatus.jsp" vspace="0" hspace="0" name="the<%=orderItem.getTransLineId().intValue()%>form" style=margin:0;>
+        <form method="POST" action="<%=response.encodeURL(controlPath + "/additemsfromorder/orderstatus")%>" vspace="0" hspace="0" name="the<%=orderItem.getTransLineId().intValue()%>form" style=margin:0;>
           <input type="hidden" name="<%="event"%>" value="<%="add_to_cart"%>">
           <input type="hidden" name="<%="order_identifier"%>" value="<%=orderId%>">
           <input type="hidden" name="<%=HttpRequestConstants.PRODUCT_ID%>" value="<%=orderItem.getString("productId")%>">
@@ -279,61 +289,10 @@
       </td>
 --%>
       <td>
-        <form style=margin:0;>
-          <input type="checkbox" onchange="changeTransCheckbox(<%=orderItem.getString("orderItemSeqId")%>)">
-        </form>
+      <input name="itemId" value="<%=orderItem.getString("orderItemSeqId")%>" type="checkbox">
       </td>
     </tr>
   <%}//end while%>
-
-  <script language="javascript">
-  <!--
-    var transLines = new Array;
-    for(i=0;i<<%=numberLines%>;i++)
-    {
-      transLines[i] = false;
-    }
-    function changeTransCheckbox(lineNum)
-    {
-      transLines[lineNum] = !transLines[lineNum];
-    }
-    function eventSubmitLines()
-    {
-      var urlString = "orderstatus.jsp?<%="event"%>=<%="update_event" + "&order_identifier"%>=<%=orderId%>&order_add_move=line&event_type=Delivery";
-      urlString = urlString + "&<%="event_id"%>=" + addToEventForm.<%="event_id"%>.value;
-      var dosubmit=false;
-      for(i=0;i<<%=numberLines%>;i++)
-      {
-        if(transLines[i])
-        {
-          dosubmit=true;
-          urlString = urlString + "&<%="order_line_id"%>_" + i + "=true";
-        }
-      }
-      if(dosubmit)
-      {
-        document.location=urlString;
-      }
-    }
-    function cartSubmitLines()
-    {
-      var urlString = "orderstatus.jsp?<%="event"%>=<%="add_order_to_cart&order_identifier"%>=<%=orderId + "&order_add_move"%>=line";
-      var dosubmit=false;
-      for(i=0;i<<%=numberLines%>;i++)
-      {
-        if(transLines[i])
-        {
-          dosubmit=true;
-          urlString = urlString + "&<%="order_line_id"%>_" + i + "=true";
-        }
-      }
-      if(dosubmit)
-      {
-        document.location=urlString;
-      }
-    }
-  //-->
-  </script>
 
 <%}else{%>
   <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
@@ -371,8 +330,8 @@
       <td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderhistory")%>" class="buttontext">Back to Order History</a></div></td>
       <td align="right">
         <table border="0" cellspacing="0" cellpadding="0"><tr>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href="<%=response.encodeURL(controlPath + "/orderstatus?event=add_order_to_cart&order_identifier=" + orderId + "&order_add_move=order")%>" class="buttontext">Add All to Cart</a></div></td>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href="javascript:cartSubmitLines()" class="buttontext">Add Checked to Cart</a></div></td>
+          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="buttonlink">Add All to Cart</a></div></td>
+          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="buttonlink">Add Checked to Cart</a></div></td>
         </tr></table>
       </td>
     </tr></table>

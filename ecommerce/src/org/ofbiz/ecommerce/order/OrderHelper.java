@@ -28,11 +28,13 @@ public class OrderHelper {
     public static double getOrderShippingTotal(GenericValue orderHeader) {
         GenericHelper helper = orderHeader.helper;
         Iterator shippingChargeIter = helper.findByAnd("OrderAdjustment", UtilMisc.toMap(
-                "orderId", orderHeader.getString("orderId"), 
-                "orderAdjustmentTypeId", "SHIPPING_AND_HANDLING_CHARGES"), null).iterator();
+              "orderId", orderHeader.getString("orderId"), 
+                "orderAdjustmentTypeId", "SHIPPING_AND_HANDLIN"), null).iterator();
+                //XXX "orderAdjustmentTypeId", "SHIPPING_AND_HANDLING_CHARGES"), null).iterator();
         double result = 0.0;
         while (shippingChargeIter.hasNext()) {
             GenericValue shippingCharge = (GenericValue) shippingChargeIter.next();
+            //FIXME should check percentage and watch for null amount
             result += shippingCharge.getDouble("amount").doubleValue();
         }
         return result;

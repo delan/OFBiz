@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/28 02:24:34  azeneski
+ * Updated shopping cart to use store a reference to the product entity, rather then individual attributes.
+ * Worked on the equals() method in ShoppingCartItem.java. Might be fixed now.
+ *
  * Revision 1.2  2001/08/27 17:29:31  epabst
  * simplified
  *
@@ -138,6 +142,76 @@ public class ShoppingCartEvents {
         if ( !foundMatch )     
             cart.addItem(0,newItem);
 
+        if ( cart.viewCartOnAdd() )
+            return "success";
+        else
+            return null;
+    }
+    
+    public static String addToCartFromOrder(HttpServletRequest request, HttpServletResponse response) {
+        String orderId = request.getParameter("order_id");
+        String[] itemIds = request.getParameterValues("item_id");
+        
+        if (orderId == null) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "No order found.");
+            return "error";
+        }
+        
+        ShoppingCart cart = getCartObject(request);
+        GenericHelper helper = (GenericHelper) request.getAttribute("helper");
+        
+        boolean noItems = false;
+        if ("true".equals(request.getParameter("add_all"))) {
+            Iterator itemIter = helper.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId), null).iterator();
+            if (itemIter.hasNext()) {
+                do {
+                    GenericValue orderItem = (GenericValue) itemIter.next();
+                    cart.addItem(orderItem.getRelatedOne("Product"), orderItem.getDouble("quantity").doubleValue(), null);
+                } while (itemIter.hasNext());
+            } else {
+                noItems = true;
+            }
+        } else {
+            for (int i = 0; i < itemIds.length; i++) {
+                String orderItemSeqId = itemIds[i];
+                //FIXME: lookup order items and add them to cart
+            }
+        }
+
+/*        
+        // Get the product 
+        GenericValue product = helper.findByPrimaryKey("Product", 
+                UtilMisc.toMap("productId", productId));
+        
+        if ( product == null ) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"No product found.");
+            return "error";
+        }
+                    
+        // create a new shopping cart item.
+        ShoppingCartItem newItem = new ShoppingCartItem(product,quantity,attributes);
+        Debug.log("New item created: " + newItem.getProductId());
+        
+        // Check for existing cart item.
+        boolean foundMatch = false;
+        Debug.log("Cart size: " + cart.size());
+        if ( cart.size() > 0 ) {
+            Iterator i = cart.iterator();
+            while ( i.hasNext() ) {
+                ShoppingCartItem sci = (ShoppingCartItem) i.next();
+                Debug.log("Comparing to item: " + sci.getProductId());
+                if ( sci.equals(newItem) ) {
+                    foundMatch = true;
+                    Debug.log("Found a match, updating quantity.");
+                    sci.setQuantity(sci.getQuantity() + quantity);
+                }
+            }
+        }
+                        
+        // Add the item to the shopping cart if it wasn't found.
+        if ( !foundMatch )     
+            cart.addItem(0,newItem);
+*/
         if ( cart.viewCartOnAdd() )
             return "success";
         else
