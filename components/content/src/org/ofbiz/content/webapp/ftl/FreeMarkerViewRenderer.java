@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewRenderer.java,v 1.3 2003/12/15 11:52:07 byersa Exp $
+ * $Id: FreeMarkerViewRenderer.java,v 1.4 2003/12/23 12:34:17 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.jpublish.SiteContext;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMarkerViewRenderer {
@@ -90,8 +90,10 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
                  //Debug.logInfo("Key: " + key + " Value: " + value + ":" + (value == null ? "null" : value.getClass().getName()), module);
              }
              root.put("context", wrapper.wrap(contextMap));                          
-             //root.put("jpublishContext", wrapper.wrap(context));                          
-             FreeMarkerViewHandler.prepOfbizRoot(root, request, response);                     
+             //root.put("jpublishContext", wrapper.wrap(context));
+             Map rootPrep = new HashMap();
+             FreeMarkerViewHandler.prepOfbizRoot(rootPrep, request, response);
+             root.putAll(rootPrep);
          } catch (Exception e) {
              throw new ViewRenderException(e);            
          }          

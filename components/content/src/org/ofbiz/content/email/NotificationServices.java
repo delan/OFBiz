@@ -1,5 +1,5 @@
 /*
- * $Id: NotificationServices.java,v 1.4 2003/12/03 14:29:48 byersa Exp $
+ * $Id: NotificationServices.java,v 1.5 2003/12/23 12:34:17 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,6 +46,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.content.webapp.ftl.OfbizCurrencyTransform;
 
 import freemarker.ext.beans.BeansWrapper;
@@ -107,14 +108,12 @@ import freemarker.template.TemplateHashModel;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  */
 public class NotificationServices {
 
     public static final String module = NotificationServices.class.getName();
-
-    public static OfbizCurrencyTransform ofbizCurrency = new OfbizCurrencyTransform();
 
     /** 
      * This will use the {@link #prepareNotification(DispatchContext, Map) prepareNotification(DispatchContext, Map)}
@@ -221,23 +220,12 @@ public class NotificationServices {
                 return ServiceUtil.returnError("Problem finding template; see logs");
             }
                                     
-            Configuration config = Configuration.getDefaultConfiguration();            
-            config.setObjectWrapper(BeansWrapper.getDefaultInstance());
-            config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
-            
-            BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
-            TemplateHashModel staticModels = wrapper.getStaticModels();
-            templateData.put("Static", staticModels);
-            templateData.put("ofbizCurrency", ofbizCurrency);
-                        
-            
             InputStreamReader templateReader = new InputStreamReader(templateUrl.openStream());
-            Template template = new Template(templateUrl.toExternalForm(), templateReader, config);            
                         
             // process the template with the given data and write
             // the email body to the String buffer
             Writer writer = new StringWriter();
-            template.process(templateData, writer);
+            FreeMarkerWorker.renderTemplate(templateName, templateReader, templateData, writer);
 
             // extract the newly created body for the notification email
             String notificationBody = writer.toString();            

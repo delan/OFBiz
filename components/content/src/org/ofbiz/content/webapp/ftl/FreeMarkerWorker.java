@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.3 2003/12/23 07:24:05 jonesde Exp $
+ * $Id: FreeMarkerWorker.java,v 1.4 2003/12/23 12:34:17 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,10 @@
 package org.ofbiz.content.webapp.ftl;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,9 +44,14 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
 import freemarker.ext.beans.BeanModel;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.Configuration;
 import freemarker.template.Environment;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleScalar;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModelException;
 
 
@@ -50,14 +59,44 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
     
     public static final String module = FreeMarkerWorker.class.getName();
     
+    public static OfbizUrlTransform ofbizUrl = new OfbizUrlTransform();
+    public static OfbizContentTransform ofbizContentUrl = new OfbizContentTransform();
+    public static OfbizCurrencyTransform ofbizCurrency = new OfbizCurrencyTransform();
+    public static SetRequestAttributeMethod setRequestAttribute = new SetRequestAttributeMethod();
+    public static EditRenderSubContentTransform  editRenderSubContent = new EditRenderSubContentTransform();
+    public static RenderSubContentTransform  renderSubContent = new RenderSubContentTransform();
+    public static RenderWrappedTextTransform  renderWrappedText = new RenderWrappedTextTransform();
+    public static LoopSubContentTransform  loopSubContent = new LoopSubContentTransform();
+    
+    public static void addAllOfbizTransforms(Map context) {
+        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+        TemplateHashModel staticModels = wrapper.getStaticModels();
+        context.put("Static", staticModels);
 
+        context.put("ofbizUrl", ofbizUrl);
+        context.put("ofbizContentUrl", ofbizContentUrl);
+        context.put("ofbizCurrency", ofbizCurrency);
+        context.put("setRequestAttribute", setRequestAttribute);
+        context.put("editRenderSubContent", editRenderSubContent);
+        context.put("renderSubContent", renderSubContent);
+        context.put("loopSubContent", loopSubContent);
+        context.put("renderWrappedText", renderWrappedText);
+    }
+    
+    public static Configuration makeDefaultOfbizConfig() throws TemplateException {
+        Configuration config = Configuration.getDefaultConfiguration();            
+        config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+        config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
+        return config;
+    }
+    
     public static String getArg(Map args, String key, Environment env) {
         Map templateContext = (Map) FreeMarkerWorker.getWrappedObject("context", env);
         return getArg(args, key, templateContext);
@@ -269,5 +308,26 @@ public class FreeMarkerWorker {
             }
         }
         return templateRoot;
+    }
+    
+    public static void renderTemplate(String templateIdString, String template, Map context, Writer outWriter) throws TemplateException, IOException {
+        Reader templateReader = new StringReader(template);
+        renderTemplate(templateIdString, templateReader, context, outWriter);
+    }
+    
+    public static void renderTemplate(String templateIdString, Reader templateReader, Map context, Writer outWriter) throws TemplateException, IOException {
+        if (context == null) {
+            context = new HashMap();
+        }
+        
+        Configuration config = makeDefaultOfbizConfig();            
+        Template template = new Template(templateIdString, templateReader, config);            
+        
+        // add the OFBiz transforms/methods
+        addAllOfbizTransforms(context);
+        
+        // process the template with the given data and write
+        // the email body to the String buffer
+        template.process(context, outWriter);
     }
 }
