@@ -49,7 +49,7 @@
               featureOrder = new LinkedList((Collection) pageContext.getAttribute("featureSet"));
               Map variantTree = (Map) pageContext.getAttribute("variantTree");
               Map imageMap = (Map) pageContext.getAttribute("variantSample");
-              Debug.logInfo("Setup variables: " + featureOrder + " / " + variantTree + " / " + imageMap);
+              Debug.logVerbose("Setup variables: " + featureOrder + " / " + variantTree + " / " + imageMap);
             %>
 
 
@@ -65,7 +65,7 @@
                     while (i.hasNext()) {
                         Object key = i.next();
                         Object value = map.get(key);
-                        Debug.logInfo("" + key + " value: " + value);
+                        Debug.logVerbose("" + key + " value: " + value);
                         String optValue = null;
                         if (order.indexOf(current) == (order.size()-1)) {
                             optValue = ((String) ((List)value).iterator().next());
@@ -256,7 +256,7 @@
           <%-- ================= --%>
           <ofbiz:if name="variantTree" size="0">            
             <ofbiz:iterator name="currentType" property="featureSet" type="java.lang.String">
-              <%Debug.logInfo("CurrentType: " + currentType);%>
+              <%Debug.logVerbose("CurrentType: " + currentType);%>
               <div class="tabletext">
                 <select name="<%=currentType%>" onChange="getList(this.name, this.options[this.selectedIndex].value)">
                   <option><%=currentType%></option>
