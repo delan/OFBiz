@@ -159,7 +159,9 @@ public class LoginServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
-        
+
+        boolean adminUser = false;
+
         String userLoginId = (String) context.get("userLoginId");
         if (userLoginId == null || userLoginId.length() == 0) {
             userLoginId = loggedInUserLogin.getString("userLoginId");
@@ -169,6 +171,8 @@ public class LoginServices {
         if (!userLoginId.equals(loggedInUserLogin.getString("userLoginId"))) {
             if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", loggedInUserLogin)) {
                 return ServiceUtil.returnError("You do not have permission to update the password for this party");
+            } else {
+                adminUser = true;
             }
         }
         
@@ -189,7 +193,7 @@ public class LoginServices {
         String passwordHint = (String) context.get("passwordHint");
         
         List errorMessageList = new LinkedList();
-        checkNewPassword(userLoginToUpdate, currentPassword, newPassword, newPasswordVerify, passwordHint, errorMessageList);
+        checkNewPassword(userLoginToUpdate, currentPassword, newPassword, newPasswordVerify, passwordHint, errorMessageList, adminUser);
         if (errorMessageList.size() > 0) {
             return ServiceUtil.returnError(errorMessageList);
         }
@@ -207,11 +211,11 @@ public class LoginServices {
         return result;
     }
     
-    public static void checkNewPassword(GenericValue userLogin, String currentPassword, String newPassword, String newPasswordVerify, String passwordHint, List errorMessageList) {
-        if (userLogin != null && currentPassword != null && !currentPassword.equals(userLogin.getString("currentPassword"))) {
-            //password was NOT correct, send back to changepassword page with an error
+    public static void checkNewPassword(GenericValue userLogin, String currentPassword, String newPassword, String newPasswordVerify, String passwordHint, List errorMessageList, boolean adminUser) {
+        if (userLogin == null)
+            errorMessageList.add("Invalid UserLogin Object.");
+        else if ((currentPassword == null && !adminUser) || (currentPassword != null && !currentPassword.equals(userLogin.getString("currentPassword"))))
             errorMessageList.add("Old Password was not correct, please re-enter.");
-        }
 
         if (!UtilValidate.isNotEmpty(newPassword) || !UtilValidate.isNotEmpty(newPasswordVerify)) {
             errorMessageList.add("Password or verify password missing.");
