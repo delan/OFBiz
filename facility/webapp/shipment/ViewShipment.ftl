@@ -220,10 +220,19 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <div class="tableheadtext">Origin-Destination Phone ID</div>
         </td>
         <td>
+            <div class="tableheadtext">Carrier Status</div>
+            <div class="tableheadtext">Tracking Number</div>
             <div class="tableheadtext">Estimated (Start-Arrive)</div>
             <div class="tableheadtext">Actual (Start-Arrive)</div>
         </td>
-        <td><div class="tableheadtext">Actual Cost</div></td>
+        <td>
+        	<div class="tableheadtext">Billing Weight &amp; UOM</div>
+        	<div class="tableheadtext">Currency UOM</div>
+        	<div class="tableheadtext">Actual Transport</div>
+        	<div class="tableheadtext">Actual Services</div>
+        	<div class="tableheadtext">Actual Other</div>
+        	<div class="tableheadtext">Actual Total</div>
+        </td>
     </tr>
 <#list shipmentRouteSegmentDatas as shipmentRouteSegmentData>
     <#assign shipmentRouteSegment = shipmentRouteSegmentData.shipmentRouteSegment>
@@ -237,6 +246,10 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <#assign destPostalAddress = shipmentRouteSegmentData.destPostalAddress?if_exists>
     <#assign originTelecomNumber = shipmentRouteSegmentData.originTelecomNumber?if_exists>
     <#assign destTelecomNumber = shipmentRouteSegmentData.destTelecomNumber?if_exists>
+    <#assign carrierServiceStatusItem = shipmentRouteSegmentData.carrierServiceStatusItem?if_exists>
+    <#assign currencyUom = shipmentRouteSegmentData.currencyUom?if_exists>
+    <#assign billingWeightUom = shipmentRouteSegmentData.billingWeightUom?if_exists>
+    <#assign carrierServiceStatusValidChangeToDetails = shipmentRouteSegmentData.carrierServiceStatusValidChangeToDetails?if_exists>
     <tr>
         <td><div class="tabletext">${shipmentRouteSegment.shipmentRouteSegmentId}</div></td>
         <td>
@@ -264,10 +277,20 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             </div>
         </td>
         <td>
+            
+            <div class="tabletext">${(carrierServiceStatus.description)?default("&nbsp;")}</div>
+            <div class="tabletext">${shipmentRouteSegment.trackingIdNumber?default("&nbsp;")}</div>
             <div class="tabletext">[${(shipmentRouteSegment.estimatedStartDate.toString())?if_exists} - ${(shipmentRouteSegment.estimatedArrivalDate.toString())?if_exists}]</span>
             <div class="tabletext">[${(shipmentRouteSegment.actualStartDate.toString())?if_exists} - ${(shipmentRouteSegment.actualArrivalDate.toString())?if_exists}]</span>
         </td>
-        <td><div class="tabletext">${(shipmentRouteSegment.actualCost?string.currency)?default("&nbsp;")}</div></td>
+        <td>
+        	<div class="tabletext">${shipmentRouteSegment.billingWeight?if_exists} ${(billingWeightUom.description)?if_exists} [${(billingWeightUom.abbreviation)?if_exists}]</div>
+        	<div class="tabletext">${(currencyUom.description)?default("&nbsp;")}</div>
+        	<div class="tabletext">${(shipmentRouteSegment.actualTransportCost?string.currency)?default("&nbsp;")}</div>
+        	<div class="tabletext">${(shipmentRouteSegment.actualServiceCost?string.currency)?default("&nbsp;")}</div>
+        	<div class="tabletext">${(shipmentRouteSegment.actualOtherCost?string.currency)?default("&nbsp;")}</div>
+        	<div class="tabletext">${(shipmentRouteSegment.actualCost?string.currency)?default("&nbsp;")}</div>
+        </td>
     </tr>
     <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
         <tr>

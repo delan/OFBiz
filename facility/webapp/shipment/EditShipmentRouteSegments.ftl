@@ -150,12 +150,12 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         		<#elseif "SHRSCS_ACCEPTED" == shipmentRouteSegment.carrierServiceStatusId?if_exists>
         			<a href="<@ofbizUrl>/upsTrackShipment?shipmentId=${shipmentRouteSegment.shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">[Track UPS Shipment]</a>
         		</#if>
+                <br/>
         	</#if>
-        	<br/>
             <select name="carrierServiceStatusId" class="selectBox">
                 <#if carrierServiceStatus?has_content>
-                    <option value="${carrierServiceStatusId.statusId}">${carrierServiceStatusId.description}</option>
-                    <option value="${carrierServiceStatusId.statusId}">---</option>
+                    <option value="${carrierServiceStatus.statusId}">${carrierServiceStatus.description}</option>
+                    <option value="${carrierServiceStatus.statusId}">---</option>
                 <#else>
                     <option value="">&nbsp;</option>
                 </#if>
@@ -198,13 +198,13 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 </#list>
             </select>
             <br/>
-        	<input type="text" size="5" name="actualTransportCost" value="${shipmentRouteSegment.actualTransportCost?if_exists}" class="inputBox"/>
+        	<input type="text" size="8" name="actualTransportCost" value="${shipmentRouteSegment.actualTransportCost?if_exists}" class="inputBox"/>
             <br/>
-        	<input type="text" size="5" name="actualServiceCost" value="${shipmentRouteSegment.actualServiceCost?if_exists}" class="inputBox"/>
+        	<input type="text" size="8" name="actualServiceCost" value="${shipmentRouteSegment.actualServiceCost?if_exists}" class="inputBox"/>
             <br/>
-        	<input type="text" size="5" name="actualOtherCost" value="${shipmentRouteSegment.actualOtherCost?if_exists}" class="inputBox"/>
+        	<input type="text" size="8" name="actualOtherCost" value="${shipmentRouteSegment.actualOtherCost?if_exists}" class="inputBox"/>
             <br/>
-        	<input type="text" size="5" name="actualCost" value="${shipmentRouteSegment.actualCost?if_exists}" class="inputBox"/>
+        	<input type="text" size="8" name="actualCost" value="${shipmentRouteSegment.actualCost?if_exists}" class="inputBox"/>
         </td>
         <td><a href="javascript:document.updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}.submit();" class="buttontext">Update</a></td>
         <td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentRouteSegment?shipmentId=${shipmentId}&shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
@@ -290,13 +290,45 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <input type="text" size="15" name="destTelecomNumberId" value="" class="inputBox"/>
         </td>
         <td>
+            <select name="carrierServiceStatusId" class="selectBox">
+                <option value="">&nbsp;</option>
+                <#list carrierServiceStatusValidChangeToDetails as carrierServiceStatusValidChangeToDetail>
+                    <option value="${carrierServiceStatusValidChangeToDetail.statusIdTo}">${carrierServiceStatusValidChangeToDetail.transitionName} [${carrierServiceStatusValidChangeToDetail.description}]</option>
+                </#list>
+            </select>
+            <br/>
+            <input type="text" size="24" name="trackingIdNumber" value="" class="inputBox"/>
+            <br/>
             <input type="text" size="25" name="estimatedStartDate" value="" class="inputBox"/><a href="javascript:call_cal(document.createShipmentRouteSegmentForm.estimatedStartDate, '${nowTimestampString}');"><img src='<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>' width='16' height='16' border='0' alt='Calendar'></a>
             <input type="text" size="25" name="estimatedArrivalDate" value="" class="inputBox"/><a href="javascript:call_cal(document.createShipmentRouteSegmentForm.estimatedArrivalDate, '${nowTimestampString}');"><img src='<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>' width='16' height='16' border='0' alt='Calendar'></a>
             <br/>
             <input type="text" size="25" name="actualStartDate" value="" class="inputBox"/><a href="javascript:call_cal(document.createShipmentRouteSegmentForm.actualStartDate, '${nowTimestampString}');"><img src='<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>' width='16' height='16' border='0' alt='Calendar'></a>
             <input type="text" size="25" name="actualArrivalDate" value="" class="inputBox"/><a href="javascript:call_cal(document.createShipmentRouteSegmentForm.actualArrivalDate, '${nowTimestampString}');"><img src='<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>' width='16' height='16' border='0' alt='Calendar'></a>
         </td>
-        <td><input type="text" size="8" name="actualCost" class="inputBox"/></td>
+        <td>
+        	<input type="text" size="5" name="billingWeight" value="${shipmentRouteSegment.billingWeight?if_exists}" class="inputBox"/>
+            <select name="billingWeightUomId" class="selectBox">
+                <option value="">&nbsp;</option>
+                <#list weightUoms as weightUom>
+                    <option value="${weightUom.uomId}">${weightUom.description} [${weightUom.abbreviation}]</option>
+                </#list>
+            </select>
+            <br/>
+            <select name="currencyUomId" class="selectBox">
+                <option value="">&nbsp;</option>
+                <#list currencyUoms as altCurrencyUom>
+                    <option value="${altCurrencyUom.uomId}">${altCurrencyUom.description} [${altCurrencyUom.uomId}]</option>
+                </#list>
+            </select>
+            <br/>
+        	<input type="text" size="8" name="actualTransportCost" class="inputBox"/>
+            <br/>
+        	<input type="text" size="8" name="actualServiceCost" class="inputBox"/>
+            <br/>
+        	<input type="text" size="8" name="actualOtherCost" class="inputBox"/>
+            <br/>
+        	<input type="text" size="8" name="actualCost" class="inputBox"/>
+        </td>
         <td><a href="javascript:document.createShipmentRouteSegmentForm.submit();" class="buttontext">Create</a></td>
         <td>&nbsp;</td>
     </tr>
