@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Date;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -55,6 +56,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.GenericServiceException;
 
 import org.ofbiz.manufacturing.techdata.TechDataServices;
+import org.ofbiz.manufacturing.bom.BOMTree;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.config.ProductConfigWrapper.ConfigOption;
 /**
@@ -1480,6 +1482,49 @@ public class ProductionRunServices {
         }
         
         result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "ManufacturingProductionRunCreated",UtilMisc.toMap("productionRunId", productionRunId), locale));
+        return result;
+    }
+
+    public static Map createProductionRunsForOrder(DispatchContext dctx, Map context) {
+
+        Map result = new HashMap();
+        Security security = dctx.getSecurity();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String productId = (String) context.get("productId");
+        Double quantity = (Double) context.get("quantity");
+        String fromDateStr = (String) context.get("fromDate");
+        String orderId = (String) context.get("orderId");
+        String orderItemSeqId = (String) context.get("orderItemSeqId");
+        String shipmentId = (String) context.get("shipmentId");
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        
+        if (quantity == null) {
+            quantity = new Double(1);
+        }
+        Date fromDate = null;
+        if (UtilValidate.isNotEmpty(fromDateStr)) {
+            try {
+                fromDate = Timestamp.valueOf(fromDateStr);
+            } catch (Exception e) {
+            }
+        }
+        if (fromDate == null) {
+            fromDate = new Date();
+        }
+        
+        BOMTree tree = null;
+        ArrayList components = new ArrayList();
+        ArrayList productionRuns = new ArrayList();
+        try {
+            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher);
+            tree.setRootQuantity(quantity.doubleValue());
+            tree.print(components);
+            tree.createManufacturingOrders(orderId, orderItemSeqId, shipmentId, fromDate, delegator, dispatcher, userLogin);
+        } catch(GenericEntityException gee) {
+            return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
+        }
+        result.put("productionRuns" , productionRuns);
         return result;
     }
 
