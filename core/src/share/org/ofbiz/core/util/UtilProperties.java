@@ -25,6 +25,7 @@
 package org.ofbiz.core.util;
 
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.net.*;
 
@@ -33,20 +34,25 @@ import java.net.*;
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @created    May 22, 2001
  * @version    1.0
  */
 public class UtilProperties {
 
-    /** An instance of the generic cache for storing the ResourceBundle 
+    /** An instance of the generic cache for storing the FlexibleProperties 
      *  corresponding to each properties file keyed by a String for the resource location
      */
-    static public UtilCache resCache = new UtilCache("properties.UtilPropertiesResourceCache");
+    public static UtilCache resourceCache = new UtilCache("properties.UtilPropertiesResourceCache");
 
-    /** An instance of the generic cache for storing the ResourceBundle 
+    /** An instance of the generic cache for storing the FlexibleProperties 
      *  corresponding to each properties file keyed by a URL object
      */
-    static public UtilCache urlCache = new UtilCache("properties.UtilPropertiesUrlCache");
+    public static UtilCache urlCache = new UtilCache("properties.UtilPropertiesUrlCache");
+
+    /** An instance of the generic cache for storing the ResourceBundle 
+     *  corresponding to each properties file keyed by a String for the resource location and the locale
+     */
+    public static UtilCache resourceLocaleCache = new UtilCache("properties.UtilPropertiesResourceLocaleCache");
+
 
     /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
      * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
@@ -108,7 +114,7 @@ public class UtilProperties {
     public static String getPropertyValue(String resource, String name) {
         if (resource == null || resource.length() <= 0) return "";
         if (name == null || name.length() <= 0) return "";
-        FlexibleProperties properties = (FlexibleProperties) resCache.get(resource);
+        FlexibleProperties properties = (FlexibleProperties) resourceCache.get(resource);
 
         if (properties == null) {
             try {
@@ -116,7 +122,7 @@ public class UtilProperties {
 
                 if (url == null) return "";
                 properties = FlexibleProperties.makeFlexibleProperties(url);
-                resCache.put(resource, properties);
+                resourceCache.put(resource, properties);
             } catch (MissingResourceException e) {
                 Debug.log(e.getMessage());
             }
@@ -143,7 +149,7 @@ public class UtilProperties {
     public static Properties getProperties(String resource) {
         if (resource == null || resource.length() <= 0)
             return null;
-        Properties properties = (FlexibleProperties) resCache.get(resource);
+        Properties properties = (FlexibleProperties) resourceCache.get(resource);
 
         if (properties == null) {
             try {
@@ -152,7 +158,7 @@ public class UtilProperties {
                 if (url == null)
                     return null;
                 properties = FlexibleProperties.makeFlexibleProperties(url);
-                resCache.put(resource, properties);
+                resourceCache.put(resource, properties);
             } catch (MissingResourceException e) {
                 Debug.log(e.getMessage());
             }
@@ -295,5 +301,88 @@ public class UtilProperties {
             Debug.log(e.getMessage());
         }
         return value == null ? "" : value.trim();
+    }
+    
+    
+    // ========= Locale & Resource Based Methods ==========
+
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding to the given locale
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param locale The locale that the given resource will correspond to
+     * @return The value of the property in the properties file
+     */
+    public static String getPropertyValue(String resource, String name, Locale locale) {
+        if (resource == null || resource.length() <= 0) return "";
+        if (name == null || name.length() <= 0) return "";
+        if (locale == null) locale = Locale.getDefault();
+
+        String resourceCacheKey = resource + "_" + locale.toString();        
+        ResourceBundle bundle = (ResourceBundle) resourceLocaleCache.get(resourceCacheKey);
+
+        if (bundle == null) {
+            try {
+                bundle = ResourceBundle.getBundle(resource, locale);
+                resourceLocaleCache.put(resourceCacheKey, bundle);
+            } catch (MissingResourceException e) {
+                Debug.log(e, "[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString());
+                return "";
+            }
+        }
+        if (bundle == null) {
+            Debug.log("[UtilProperties.getPropertyValue] could not find resource: " + resource + " for locale " + locale.toString());
+            return "";
+        }
+
+
+        String value = null;
+        try {
+            value = bundle.getString(name);
+        } catch (Exception e) {
+            Debug.log(e.getMessage());
+        }
+        return value == null ? "" : value.trim();
+    }
+
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding 
+     * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param locale The locale that the given resource will correspond to
+     * @param arguments An array of Objects to insert into the message argument place holders
+     * @return The value of the property in the properties file
+     */
+    public static String getPropertyValue(String resource, String name, Locale locale, Object[] arguments) {
+        String value = getPropertyValue(resource, name, locale);
+        
+        if (value == null || value.length() == 0) {
+            return "";
+        } else {
+            if (arguments != null && arguments.length > 0) {
+                value = MessageFormat.format(value, arguments);
+            }   
+            return value;
+        }
+    }
+
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding 
+     * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param locale The locale that the given resource will correspond to
+     * @param arguments A list of Objects to insert into the message argument place holders
+     * @return The value of the property in the properties file
+     */
+    public static String getPropertyValue(String resource, String name, Locale locale, List arguments) {
+        String value = getPropertyValue(resource, name, locale);
+        
+        if (value == null || value.length() == 0) {
+            return "";
+        } else {
+            if (arguments != null && arguments.size() > 0) {
+                value = MessageFormat.format(value, arguments.toArray());
+            }   
+            return value;
+        }
     }
 }

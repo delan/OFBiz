@@ -39,30 +39,47 @@ import org.ofbiz.core.minilang.method.*;
  * Copies an properties file property value to a field
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 19, 2002
  *@version    1.0
  */
 public class PropertyToField extends MethodOperation {
     String resource;
     String property;
-    String defaultVal;
     String mapName;
     String fieldName;
+    String defaultVal;
+    boolean noLocale;
+    String argListName;
 
     public PropertyToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         resource = element.getAttribute("resource");
         property = element.getAttribute("property");
-        defaultVal = element.getAttribute("default");
         mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
+        defaultVal = element.getAttribute("default");
+        // defaults to false, ie anything but true is false
+        noLocale = "true".equals(element.getAttribute("no-locale"));
+        argListName = element.getAttribute("arg-list-name");
     }
 
     public boolean exec(MethodContext methodContext) {
-        String value = UtilProperties.getPropertyValue(resource, property);
+        String value = null;
+        
+        if (noLocale) {
+            value = UtilProperties.getPropertyValue(resource, property);
+        } else {
+            value = UtilProperties.getPropertyValue(resource, property, methodContext.getLocale());
+        }
 
         if (value == null || value.length() == 0) {
             value = defaultVal;
+        }
+
+        if (UtilValidate.isNotEmpty(argListName)) {
+            List argList = (List) methodContext.getEnv(argListName);
+            if (argList != null && argList.size() > 0) {
+                value = MessageFormat.format(value, argList.toArray());
+            }
         }
 
         if (mapName != null && mapName.length() > 0) {

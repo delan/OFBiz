@@ -354,6 +354,7 @@ Error messages go on the error list and are handled with the check-errors tag.
     string CDATA #REQUIRED
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
+    arg-list-name CDATA #IMPLIED
 >
 <!ELEMENT to-string EMPTY>
 <!ATTLIST to-string
@@ -591,9 +592,11 @@ simple-map-processor process operations that validate incoming data
 <!ATTLIST property-to-field
     resource CDATA #REQUIRED
     property CDATA #REQUIRED
-    default CDATA #IMPLIED
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
+    default CDATA #IMPLIED
+    no-locale ( true | false ) "false"
+    arg-list-name CDATA #IMPLIED
 >
 
 <!ELEMENT log ( ( field | string )* )>

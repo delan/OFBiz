@@ -46,15 +46,26 @@ public class StringToField extends MethodOperation {
     String string;
     String mapName;
     String fieldName;
+    String argListName;
 
     public StringToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         string = element.getAttribute("string");
         mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
+        argListName = element.getAttribute("arg-list-name");
     }
 
     public boolean exec(MethodContext methodContext) {
+        String value = string;
+        
+        if (UtilValidate.isNotEmpty(argListName)) {
+            List argList = (List) methodContext.getEnv(argListName);
+            if (argList != null && argList.size() > 0) {
+                value = MessageFormat.format(value, argList.toArray());
+            }
+        }
+
         if (mapName != null && mapName.length() > 0) {
             Map toMap = (Map) methodContext.getEnv(mapName);
 
@@ -63,9 +74,9 @@ public class StringToField extends MethodOperation {
                 toMap = new HashMap();
                 methodContext.putEnv(mapName, toMap);
             }
-            toMap.put(fieldName, string);
+            toMap.put(fieldName, value);
         } else {
-            methodContext.putEnv(fieldName, string);
+            methodContext.putEnv(fieldName, value);
         }
 
         return true;

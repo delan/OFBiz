@@ -34,7 +34,6 @@ import java.io.*;
  * Simple Class for flexibly working with properties files
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    Sep 22, 2001
  *@version    1.0
  */
 public class FlexibleProperties extends Properties {
