@@ -24,9 +24,9 @@
 
 package org.ofbiz.content.report;
 
-import dori.jasper.engine.JRDataSource;
-import dori.jasper.engine.JRException;
-import dori.jasper.engine.JRField;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRField;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntity;
