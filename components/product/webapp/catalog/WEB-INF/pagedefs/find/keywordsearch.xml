@@ -2,7 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Search Results</property>
-    <property name="title.property">PageTitleSearchResults</property>
+    <property name="title-property">PageTitleSearchResults</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <content-action name="/find/keywordsearch.bsh"/>
 </page>
