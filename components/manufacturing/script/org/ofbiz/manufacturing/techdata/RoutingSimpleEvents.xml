@@ -3,45 +3,42 @@
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
- * <p><b>Title:</b> PartySimpleEvents
- * <p><b>Description:</b> Events to handle form input and other data changes
- * <p>Copyright (c) 2003 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
+ * Copyright (c) 2003 The Open For Business Project and repected authors.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
  -->
 <simple-methods>
-    <!-- Person events -->
     <simple-method method-name="addRoutingTaskAssoc" 
-    		short-description="If copyTask field = Y create a copy of the routingTask,  in all the case add a RoutingTaskAssociation">
+            short-description="If copyTask field = Y create a copy of the routingTask,  in all the case add a RoutingTaskAssociation">
         <if-compare map-name="parameters" field-name="copyTask" operator="equals" value="Y">
-	        <make-value value-name="lookupPKMap" entity-name="WorkEffort"/>
-	        <field-to-field map-name="parameters" field-name="workEffortIdTo" to-map-name="lookupPKMap" to-field-name="workEffortId" />        
-	        <find-by-primary-key entity-name="WorkEffort" map-name="lookupPKMap" value-name="lookedUpValue"/>
-	        <call-map-processor xml-resource="org/ofbiz/manufacturing/techdata/RoutingMapProcs.xml"
-	                processor-name="copyRoutingTask" in-map-name="lookedUpValue" out-map-name="context"/>
-	        <call-service service-name="createWorkEffort" in-map-name="context">
-	            <default-message resource="ManufacturingUiLabels" property="ManufacturingRoutingTaskCopiedSuccessfully"/>
-	            <result-to-field result-name="workEffortId" map-name="parameters" field-name="workEffortIdTo"/>
-	        </call-service>
+            <make-value value-name="lookupPKMap" entity-name="WorkEffort"/>
+            <field-to-field map-name="parameters" field-name="workEffortIdTo" to-map-name="lookupPKMap" to-field-name="workEffortId" />        
+            <find-by-primary-key entity-name="WorkEffort" map-name="lookupPKMap" value-name="lookedUpValue"/>
+            <call-map-processor xml-resource="org/ofbiz/manufacturing/techdata/RoutingMapProcs.xml"
+                processor-name="copyRoutingTask" in-map-name="lookedUpValue" out-map-name="context"/>
+            <call-service service-name="createWorkEffort" in-map-name="context">
+                <default-message resource="ManufacturingUiLabels" property="ManufacturingRoutingTaskCopiedSuccessfully"/>
+                <result-to-field result-name="workEffortId" map-name="parameters" field-name="workEffortIdTo"/>
+            </call-service>
         </if-compare>
         <if-empty field-name="fromDate" map-name="parameters">
             <now-timestamp-to-env env-name="nowTimestamp"/>
@@ -50,16 +47,16 @@
         </if-empty>        
         <call-map-processor xml-resource="org/ofbiz/manufacturing/techdata/RoutingMapProcs.xml"
                 processor-name="routingTaskAssoc" in-map-name="parameters" out-map-name="context1"/>
-         <check-errors/>
-         <string-to-field string="Y" field-name="create" map-name="context1"/>
+        <check-errors/>
+        <string-to-field string="Y" field-name="create" map-name="context1"/>
         <call-service service-name="checkRoutingTaskAssoc" in-map-name="context1">
-	            <result-to-field result-name="sequenceNumNotOk"  field-name="sequenceNumNotOk"/>
+            <result-to-field result-name="sequenceNumNotOk"  field-name="sequenceNumNotOk"/>
         </call-service>
         <if-compare field-name="sequenceNumNotOk" operator="equals" value="Y">
-			<add-error>
-				<fail-property resource="ManufacturingUiLabels" property="ManufacturingTwoRoutingTaskWithSameSeqId"/>
-			</add-error>
-    		<check-errors/>
+            <add-error>
+                <fail-property resource="ManufacturingUiLabels" property="ManufacturingTwoRoutingTaskWithSameSeqId"/>
+            </add-error>
+            <check-errors/>
         </if-compare>  
         <call-map-processor xml-resource="org/ofbiz/manufacturing/techdata/RoutingMapProcs.xml"
                 processor-name="routingTaskAssoc" in-map-name="parameters" out-map-name="context2"/>
@@ -68,6 +65,7 @@
             <default-message resource="ManufacturingUiLabels" property="ManufacturingRoutingTaskAssocCreateSuccessfully"/>
         </call-service>
     </simple-method>
+    
     <simple-method method-name="updateRoutingTaskAssoc" 
     		short-description="check if there is no pb with date and SeqId and call service updateWorkEffortAssoc">
         <call-map-processor xml-resource="org/ofbiz/manufacturing/techdata/RoutingMapProcs.xml"
