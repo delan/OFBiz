@@ -349,4 +349,38 @@
         <attribute name="parties" type="java.util.Collection" mode="OUT" optional="true"/>
     </service>
 
+    <service name="createPostalAddressBoundary" engine="simple"
+            location="org/ofbiz/commonapp/party/party/PartyServices.xml" invoke="createPostalAddressBoundary">
+        <description>Create a Postal Address Boundary</description>
+        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="geoId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="deletePostalAddressBoundary" engine="simple"
+            location="org/ofbiz/commonapp/party/party/PartyServices.xml" invoke="deletePostalAddressBoundary">
+        <description>Delete a Postal Address Boundary</description>
+        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="geoId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="getPostalAddressBoundary" engine="simple"
+            location="org/ofbiz/commonapp/party/party/PartyServices.xml" invoke="getPostalAddressBoundary">
+        <description>Get all Postal Address Boundaries</description>
+        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="geos" type="java.util.List" mode="OUT" optional="true"/>
+    </service>
+    
+ 
+    <service name="createPartyClassification" engine="simple"
+            location="org/ofbiz/commonapp/party/party/PartyServices.xml" invoke="createPartyClassification">
+        <description>delete party classifications</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyClassificationGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyClassificationTypeId" type="String" mode="IN" optional="false"/>
+    </service>    
+    <service name="deletePartyClassification" engine="simple"
+            location="org/ofbiz/commonapp/party/party/PartyServices.xml" invoke="deletePartyClassification">
+        <description>delete party classifications</description>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyClassificationGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
 </services>
