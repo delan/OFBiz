@@ -21,10 +21,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.8 2004/01/26 06:13:45 ajzeneski Exp $
+ *  $Id: build.xml,v 1.9 2004/02/19 18:52:35 ajzeneski Exp $
 -->
 
-<project name="OFBiz - Service Component" default="jar" basedir=".">
+<project name="OFBiz - Service" default="jar" basedir=".">
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
