@@ -51,6 +51,7 @@ import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.order.order.OrderChangeHelper;
 
 /**
  * 
@@ -251,6 +252,51 @@ public class ManagerEvents {
             output.print(Output.ENTCAS);
         }
 
+    }
+
+    public static void voidOrder(PosScreen pos) {
+        if (!mgrLoggedIn) {
+            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            return;
+        }
+
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        if (!trans.isOpen()) {
+            pos.showDialog("main/dialog/error/terminalclosed");
+            return;
+        }
+
+        Output output = pos.getOutput();
+        Input input = pos.getInput();
+        if (input.isFunctionSet("VOID")) {
+            GenericValue state = trans.getTerminalState();
+            Timestamp openDate = state.getTimestamp("openedDate");
+
+            String orderId = input.value();
+            GenericValue orderHeader = null;
+            try {
+                orderHeader = pos.getSession().getDelegator().findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (orderHeader == null) {
+                input.clear();
+                pos.showDialog("main/dialog/error/ordernotfound");
+                return;
+            } else {
+                Timestamp orderDate = orderHeader.getTimestamp("");
+                if (orderDate.after(openDate)) {
+                    OrderChangeHelper.cancelOrder(pos.getSession().getDispatcher(), pos.getSession().getUserLogin(), orderId);
+                    // todo print void receipt
+                } else {
+                    input.clear();
+                    pos.showDialog("main/dialog/error/ordernotfound");
+                    return;    
+                }
+            }
+        } else {
+            output.print("Enter Order Number To Void:");
+        }
     }
 
     public static void reprintLastTx(PosScreen pos) {
