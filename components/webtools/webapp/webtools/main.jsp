@@ -96,6 +96,7 @@
               <%if(security.hasPermission("SERVICE_MAINT", session)) {%>
                 <li><div class='tabletext'>Service Engine Tools</div>
                 <ul>
+                  <li><a href="<ofbiz:url>/threadList</ofbiz:url>" class="buttontext">Thread List</a>
                   <li><a href="<ofbiz:url>/jobList</ofbiz:url>" class="buttontext">Job List</a>
                   <li><a href="<ofbiz:url>/scheduleJob</ofbiz:url>" class="buttontext">Schedule Job</a>
                 </ul>

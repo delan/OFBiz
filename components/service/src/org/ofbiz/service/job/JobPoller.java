@@ -1,5 +1,5 @@
 /*
- * $Id: JobPoller.java,v 1.3 2004/01/24 18:44:25 ajzeneski Exp $
+ * $Id: JobPoller.java,v 1.4 2004/01/24 19:37:53 ajzeneski Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,8 +24,7 @@
  */
 package org.ofbiz.service.job;
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.base.util.Debug;
@@ -35,7 +34,7 @@ import org.ofbiz.base.util.Debug;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:">Magnus Rosenquist</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class JobPoller implements Runnable {
@@ -48,8 +47,8 @@ public class JobPoller implements Runnable {
     public static final int POLL_WAIT = 20000;
     //public static final long MAX_TTL = 18000000;
 
-    protected boolean isRunning = false;      
-    
+    protected boolean isRunning = false;
+
     protected Thread thread = null;
     protected LinkedList pool = null;
     protected LinkedList run = null;
@@ -61,8 +60,8 @@ public class JobPoller implements Runnable {
      */
     public JobPoller(JobManager jm) {
         this.jm = jm;
-        this.run = new LinkedList();       
-        
+        this.run = new LinkedList();
+
         // create the thread pool
         this.pool = createThreadPool();
 
@@ -71,17 +70,17 @@ public class JobPoller implements Runnable {
 
         // start the thread only if polling is enabled
         if (pollEnabled()) {
-                        
+
             // create the poller thread
             thread = new Thread(this, this.toString());
             thread.setDaemon(false);
-            
+
             // start the poller
             this.isRunning = true;
             thread.start();
         }
     }
-    
+
     protected JobPoller() {}
 
     public synchronized void run() {
@@ -102,7 +101,7 @@ public class JobPoller implements Runnable {
                 Debug.logError(e, module);
                 stop();
             }
-        }        
+        }
         if (Debug.infoOn()) Debug.logInfo("JobPoller: (" + thread.getName() + ") Thread ending...", module);
     }
 
@@ -117,8 +116,24 @@ public class JobPoller implements Runnable {
      * Stops the JobPoller
      */
     public void stop() {
-        isRunning = false;           
+        isRunning = false;
         destroyThreadPool();
+    }
+
+    public List getPoolState() {
+        List stateList = new ArrayList();
+        Iterator i = this.pool.iterator();
+        while (i.hasNext()) {
+            JobInvoker invoker = (JobInvoker) i.next();
+            Map stateMap = new HashMap();
+            stateMap.put("threadName", invoker.getName());
+            stateMap.put("jobName", invoker.getJobName());
+            stateMap.put("serviceName", invoker.getServiceName());
+            stateMap.put("runTime", new Long(invoker.getCurrentRuntime()));
+            stateMap.put("status", new Integer(invoker.getCurrentStatus()));
+            stateList.add(stateMap);
+        }
+        return stateList;
     }
 
     /**
@@ -267,13 +282,13 @@ public class JobPoller implements Runnable {
 
         if (enabled.equalsIgnoreCase("false"))
             return false;
-            
+
         // also make sure we have a delegator to use for polling
         if (jm.getDelegator() == null) {
             Debug.logWarning("No delegator referenced; not starting job poller.", module);
             return false;
         }
-            
+
         return true;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: JobInvoker.java,v 1.3 2004/01/24 18:44:25 ajzeneski Exp $ 
+ * $Id: JobInvoker.java,v 1.4 2004/01/24 19:37:53 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.base.util.UtilDateTime;
  * JobInvoker
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class JobInvoker implements Runnable {
@@ -74,14 +74,14 @@ public class JobInvoker implements Runnable {
         if (Debug.verboseOn()) Debug.logVerbose("JobInoker: Starting Invoker Thread -- " + thread.getName(), module);
         this.thread.start();
     }
-    
+
     protected JobInvoker() {}
 
     /**
      * Tells the thread to stop after the next job.
      */
     public void stop() {
-        run = false;        
+        run = false;
     }
 
     /**
@@ -145,11 +145,28 @@ public class JobInvoker implements Runnable {
             if (this.currentJob != null) {
                 return this.currentJob.getJobName();
             } else {
-                return "Invalid Job!";
+                return "WARNING: Invalid Job!";
             }
         } else {
-            return "<Sleeping>";
+            return null;
         }
+    }
+
+    /**
+     * Returns the name of the service being run.
+     * @return The name of the service being run.
+     */
+    public String getServiceName() {
+        String serviceName = null;
+        if (this.statusCode == 1) {
+            if (this.currentJob != null) {
+                if (this.currentJob instanceof GenericServiceJob) {
+                    GenericServiceJob gsj = (GenericServiceJob) this.currentJob;
+                    serviceName = gsj.getServiceName();
+                }
+            }
+        }
+        return serviceName;
     }
 
     /**
@@ -157,6 +174,7 @@ public class JobInvoker implements Runnable {
      */
     public void kill() {
         this.stop();
+        this.statusCode = -1;
         this.thread.interrupt();
         this.thread = null;
     }

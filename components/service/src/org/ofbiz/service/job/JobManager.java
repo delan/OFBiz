@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.11 2004/01/24 18:44:25 ajzeneski Exp $
+ * $Id: JobManager.java,v 1.12 2004/01/24 19:37:53 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class JobManager {
@@ -68,12 +68,12 @@ public class JobManager {
     public static final String module = JobManager.class.getName();
     public static final String dispatcherName = "JobDispatcher";
 
-    protected GenericDelegator delegator;    
+    protected GenericDelegator delegator;
     protected JobPoller jp;
 
     /** Creates a new JobManager object. */
-    public JobManager(GenericDelegator delegator) {                
-        this.delegator = delegator;        
+    public JobManager(GenericDelegator delegator) {
+        this.delegator = delegator;
         jp = new JobPoller(this);
     }
 
@@ -89,8 +89,8 @@ public class JobManager {
         try {
             thisDispatcher = GenericDispatcher.getLocalDispatcher(dispatcherName, delegator);
         } catch (GenericServiceException e) {
-            Debug.logError(e, module);                     
-        }        
+            Debug.logError(e, module);
+        }
         return thisDispatcher;
     }
 
@@ -245,8 +245,8 @@ public class JobManager {
     public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count) throws JobManagerException {
         schedule(serviceName, context, startTime, frequency, interval, count, 0);
     }
-    
-    /** 
+
+    /**
      * Schedule a job to start at a specific time with specific recurrence info
      *@param serviceName The name of the service to invoke
      *@param context The context for the service
@@ -288,7 +288,7 @@ public class JobManager {
         String dataId = null;
         String infoId = null;
         String jobName = new String(new Long((new Date().getTime())).toString());
-        
+
         if (delegator == null) {
             Debug.logWarning("No delegator referenced; cannot schedule job.", module);
             return;
@@ -340,6 +340,14 @@ public class JobManager {
      */
     public void killThread(String threadName) {
         jp.killThread(threadName);
+    }
+
+    /**
+     * Get a List of each threads current state.
+     * @return List containing a Map of each thread's state.
+     */
+    public List processList() {
+        return jp.getPoolState();
     }
 
     /** Close out the scheduler thread. */
