@@ -1,7 +1,8 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project and repected authors.
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -20,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.shipment.shipment;
-
 
 import java.util.*;
 
@@ -30,13 +29,12 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * ShipmentServices
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    Jun 24, 2002
- * @version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ShipmentServices {
 
@@ -64,74 +62,16 @@ public class ShipmentServices {
         estimate.set("orderItemFlatPrice", context.get("flatItemPrice"));
         storeAll.add(estimate);
 
-        if (context.containsKey("wmin") || context.containsKey("wmax")) {
-            if (context.containsKey("wmax") && context.containsKey("wmin")) {
-                // Lets process weight.
-                try {
-                    Long sequence = delegator.getNextSeqId("QuantityBreak");
-                    GenericValue weightBreak = delegator.makeValue("QuantityBreak", null);
-
-                    weightBreak.set("quantityBreakId", sequence.toString());
-                    weightBreak.set("quantityBreakTypeId", "SHIP_WEIGHT");
-                    weightBreak.set("fromQuantity", Double.valueOf((String) context.get("wmin")));
-                    weightBreak.set("thruQuantity", Double.valueOf((String) context.get("wmax")));
-                    estimate.set("weightBreakId", sequence.toString());
-                    estimate.set("weightUnitPrice", Double.valueOf((String) context.get("wprice")));
-                    if (context.containsKey("wuom"))
-                        estimate.set("weightUomId", (String) context.get("wuom"));
-                    storeAll.add(weightBreak);
-                } catch (Exception e) {}
-            } else {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, "Weight Span Requires BOTH Fields.");
-                return result;
-            }
+        if (!applyQuantityBreak(context, result, storeAll, delegator, estimate, "w", "weight", "Weight")) {
+            return result;
         }
 
-        if (context.containsKey("qmin") || context.containsKey("qmax")) {
-            if (context.containsKey("qmax") && context.containsKey("qmin")) {
-                // Lets process quantity.
-                try {
-                    Long sequence = delegator.getNextSeqId("QuantityBreak");
-                    GenericValue quantityBreak = delegator.makeValue("QuantityBreak", null);
-
-                    quantityBreak.set("quantityBreakId", sequence.toString());
-                    quantityBreak.set("quantityBreakTypeId", "SHIP_QUANTITY");
-                    quantityBreak.set("fromQuantity", Double.valueOf((String) context.get("qmin")));
-                    quantityBreak.set("thruQuantity", Double.valueOf((String) context.get("qmax")));
-                    estimate.set("quantityBreakId", sequence.toString());
-                    estimate.set("quantityUnitPrice", Double.valueOf((String) context.get("qprice")));
-                    if (context.containsKey("quom"))
-                        estimate.set("quantityUomId", context.get("quom"));
-                    storeAll.add(quantityBreak);
-                } catch (Exception e) {}
-            } else {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, "Quantity Span Requires BOTH Fields.");
-                return result;
-            }
+        if (!applyQuantityBreak(context, result, storeAll, delegator, estimate, "q", "quantity", "Quantity")) {
+            return result;
         }
 
-        if (context.containsKey("pmin") || context.containsKey("pmax")) {
-            if (context.containsKey("pmax") && context.containsKey("pmin")) {
-                // Lets process price.
-                try {
-                    Long sequence = delegator.getNextSeqId("QuantityBreak");
-                    GenericValue priceBreak = delegator.makeValue("QuantityBreak", null);
-
-                    priceBreak.set("quantityBreakId", sequence.toString());
-                    priceBreak.set("quantityBreakTypeId", "SHIP_PRICE");
-                    priceBreak.set("fromQuantity", Double.valueOf((String) context.get("pmin")));
-                    priceBreak.set("thruQuantity", Double.valueOf((String) context.get("pmax")));
-                    estimate.set("priceBreakId", sequence.toString());
-                    estimate.set("priceUnitPrice", Double.valueOf((String) context.get("pprice")));
-                    storeAll.add(priceBreak);
-                } catch (Exception e) {}
-            } else {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, "Price Span Requires BOTH Fields.");
-                return result;
-            }
+        if (!applyQuantityBreak(context, result, storeAll, delegator, estimate, "p", "price", "Price")) {
+            return result;
         }
 
         try {
@@ -155,17 +95,59 @@ public class ShipmentServices {
 
         try {
             estimate = delegator.findByPrimaryKey("ShipmentCostEstimate", UtilMisc.toMap("shipmentCostEstimateId", shipmentCostEstimateId));
+            estimate.remove();
             if (estimate.get("weightBreakId") != null)
                 delegator.removeRelated("WeightQuantityBreak", estimate);
             if (estimate.get("quantityBreakId") != null)
                 delegator.removeRelated("QuantityQuantityBreak", estimate);
             if (estimate.get("priceBreakId") != null)
                 delegator.removeRelated("PriceQuantityBreak", estimate);
-            estimate.remove();
         } catch (GenericEntityException e) {
             Debug.logError(e);
             return ServiceUtil.returnError("Problem removing entity or related entities (" + e.toString() + ")");
         }
         return ServiceUtil.returnSuccess();
     }
+
+    private static boolean applyQuantityBreak(Map context, Map result, List storeAll, GenericDelegator delegator, 
+    		GenericValue estimate, String prefix, String breakType, String breakTypeString) {                                                                                            
+        Double min = (Double) context.get(prefix + "min");
+        Double max = (Double) context.get(prefix + "max");
+        if (min != null || max != null) {
+            if (min != null && max != null) {
+                if (min.doubleValue() <= max.doubleValue() || max.doubleValue() == 0) {
+                    try {
+                        Long sequence = delegator.getNextSeqId("QuantityBreak");
+                        GenericValue weightBreak = delegator.makeValue("QuantityBreak", null);
+                        weightBreak.set("quantityBreakId", sequence.toString());
+                        weightBreak.set("quantityBreakTypeId", "SHIP_" + breakType.toUpperCase());
+                        weightBreak.set("fromQuantity", min);
+                        weightBreak.set("thruQuantity", max);
+                        estimate.set(breakType + "BreakId", sequence.toString());
+                        estimate.set(breakType + "UnitPrice", (Double) context.get(prefix + "price"));
+                        if (context.containsKey(prefix + "uom")) {
+                            estimate.set(breakType + "UomId", (String) context.get(prefix + "uom"));
+                        }
+                        storeAll.add(0, weightBreak);
+                    }
+                    catch ( Exception e ) {
+                        Debug.logError(e);
+                    }
+                }
+                else {
+                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                    result.put(ModelService.ERROR_MESSAGE, "Max " + breakTypeString +
+                            " must not be less than Min " + breakTypeString + ".");
+                    return false;
+                }
+            }
+            else {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, breakTypeString+" Span Requires BOTH Fields.");
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
