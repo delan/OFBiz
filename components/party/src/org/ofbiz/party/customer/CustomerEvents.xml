@@ -25,6 +25,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author    <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     Olivier.Heintz@nereide.biz (migration to UiLabel) 
  * @version   1.0
  * Created    February 23, 2002
  -->
@@ -60,11 +61,11 @@
         <!-- Create the UserLogin Record -->
         <call-map-processor in-map-name="parameters" out-map-name="userLoginContext">
             <simple-map-processor name="newUserLogin">
-                <process field="USERNAME"><copy to-field="userLoginId"/><not-empty><fail-message message="Username is missing"/></not-empty></process>
-                <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-message message="Password is missing"/></not-empty></process>
+                <process field="USERNAME"><copy to-field="userLoginId"/><not-empty><fail-property resource="PartyUiLabels" property="PartyUserNameMissing"/></not-empty></process>
+                <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-property resource="PartyUiLabels" property="PartyPasswordMissing"/></not-empty></process>
                 <process field="CONFIRM_PASSWORD">
-                    <compare-field operator="equals" field="PASSWORD"><fail-message message="Your passwords do not match"/></compare-field>
-                    <!-- This is checked below in the checkNewPassword method in the bsh block: <not-empty><fail-message message="You must enter your password twice"/></not-empty> -->
+                    <compare-field operator="equals" field="PASSWORD"><fail-property resource="PartyUiLabels" property="PartyPasswordMatchError"/></compare-field>
+                    <!-- This is checked below in the checkNewPassword method in the bsh block: <not-empty><fail-property resource="PartyUiLabels" property="PartyEnterPasswordTwice"/></not-empty> -->
                     <copy to-field="currentPasswordVerify"/>
                 </process>
                 <process field="PASSWORD_HINT"><copy to-field="passwordHint"/></process>
@@ -95,12 +96,12 @@
         <!-- Create the Person -->
         <call-map-processor in-map-name="parameters" out-map-name="personContext">
             <simple-map-processor name="newPerson">
-                <process field="USER_FIRST_NAME"><copy to-field="firstName"/><not-empty><fail-message message="First Name is missing"/></not-empty></process>
+                <process field="USER_FIRST_NAME"><copy to-field="firstName"/><not-empty><fail-property resource="PartyUiLabels" property="PartyFirstNameMissing"/></not-empty></process>
                 <process field="USER_MIDDLE_NAME"><copy to-field="middleName"/></process>
-                <process field="USER_LAST_NAME"><copy to-field="lastName"/><not-empty><fail-message message="Last Name is missing"/></not-empty></process>
+                <process field="USER_LAST_NAME"><copy to-field="lastName"/><not-empty><fail-property resource="PartyUiLabels" property="PartyLastNameMissingError"/></not-empty></process>
                 <process field="USER_TITLE"><copy to-field="personalTitle"/></process>
                 <process field="USER_SUFFIX"><copy to-field="suffix"/></process>
-                <process field="USER_BIRTHDATE"><convert type="Date" to-field="birthDate"><fail-message message="Birthdate is not formatted correctly: must be yyyy-mm-dd, like 1982-07-21"/></convert></process>
+                <process field="USER_BIRTHDATE"><convert type="Date" to-field="birthDate"><fail-property resource="PartyUiLabels" property="PartyBirthDateMissingError"/></convert></process>
                 <process field="USER_GENDER"><copy to-field="gender"/></process>
             </simple-map-processor>
         </call-map-processor>
@@ -121,12 +122,12 @@
                         </make-in-string>
                         <process field="roleTypeId"><copy/></process>
                         <process field="fullName"><copy to-field="toName"/></process>
-                        <process field="CUSTOMER_ADDRESS1"><copy to-field="address1"/><not-empty><fail-message message="Address Line 1 is missing"/></not-empty></process>
+                        <process field="CUSTOMER_ADDRESS1"><copy to-field="address1"/><not-empty><fail-property resource="PartyUiLabels" property="PartyAddressLine1Missing"/></not-empty></process>
                         <process field="CUSTOMER_ADDRESS2"><copy to-field="address2"/></process>
-                        <process field="CUSTOMER_CITY"><copy to-field="city"/><not-empty><fail-message message="City is missing"/></not-empty></process>
+                        <process field="CUSTOMER_CITY"><copy to-field="city"/><not-empty><fail-property resource="PartyUiLabels" property="PartyCityMissing"/></not-empty></process>
                         <process field="CUSTOMER_STATE"><copy to-field="stateProvinceGeoId"/></process>
-                        <process field="CUSTOMER_POSTAL_CODE"><copy to-field="postalCode"/><not-empty><fail-message message="Postal Code is missing"/></not-empty></process>
-                        <process field="CUSTOMER_COUNTRY"><copy to-field="countryGeoId"/><not-empty><fail-message message="Country is missing"/></not-empty></process>
+                        <process field="CUSTOMER_POSTAL_CODE"><copy to-field="postalCode"/><not-empty><fail-property resource="PartyUiLabels" property="PartyPostalCodeMissing"/></not-empty></process>
+                        <process field="CUSTOMER_COUNTRY"><copy to-field="countryGeoId"/><not-empty><fail-property resource="PartyUiLabels" property="PartyCountryMissing"/></not-empty></process>
                         <process field="CUSTOMER_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
                     </simple-map-processor>
                 </call-map-processor>
@@ -209,7 +210,7 @@
                         <call-map-processor in-map-name="parameters" out-map-name="dummymap">
                             <simple-map-processor name="checkRequiredPhone">
                                 <process field="REQUIRED_PHONE">
-                                    <not-empty><fail-message message="Contact telephone is missing"/></not-empty>
+                                    <not-empty><fail-property resource="PartyUiLabels" property="PartyContactTelephoneMissing"/></not-empty>
                                 </process>
                             </simple-map-processor>
                         </call-map-processor>
@@ -233,7 +234,7 @@
                 <call-map-processor in-map-name="emailContext" out-map-name="dummymap">
                     <simple-map-processor name="checkRequiredEmail">
                         <process field="emailAddress">
-                            <not-empty><fail-message message="E-mail address is missing"/></not-empty>
+                            <not-empty><fail-property resource="PartyUiLabels" property="PartyEmailAddressMissing"/></not-empty>
                         </process>
                     </simple-map-processor>
                </call-map-processor>
@@ -243,7 +244,7 @@
                     <simple-map-processor name="checkRequiredEmailFormat">
                         <process field="emailAddress">
                             <validate-method method="isEmail">
-                                <fail-message message="E-mail address not formatted correctly, must be like: name@domain"/>
+                                <fail-property resource="PartyUiLabels" property="PartyEmailAddressNotFormattedCorrectly" />
                             </validate-method>
                         </process>
                     </simple-map-processor>

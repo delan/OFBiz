@@ -23,7 +23,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -50,11 +50,11 @@
           </#if>       
           <td align='right' width='1%' nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background='${layoutSettings.headerRightBackgroundUrl}'</#if>>
             <#if requestAttributes.person?has_content>
-              <div class="insideHeaderText">${uiLabelMap.CommonWelcom}&nbsp;${requestAttributes.person.firstName?if_exists}&nbsp;${requestAttributes.person.lastName?if_exists}!</div>
+              <div class="insideHeaderText">${uiLabelMap.CommonWelcome}&nbsp;${requestAttributes.person.firstName?if_exists}&nbsp;${requestAttributes.person.lastName?if_exists}!</div>
             <#elseif requestAttributes.partyGroup?has_content>
-              <div class="insideHeaderText">${uiLabelMap.CommonWelcom}&nbsp;${requestAttributes.partyGroup.groupName?if_exists}!</div>
+              <div class="insideHeaderText">${uiLabelMap.CommonWelcome}&nbsp;${requestAttributes.partyGroup.groupName?if_exists}!</div>
             <#else>
-              <div class="insideHeaderText">${uiLabelMap.CommonWelcom}!</div>
+              <div class="insideHeaderText">${uiLabelMap.CommonWelcome}!</div>
             </#if>
             <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}</div>
             <div class="insideHeaderText">
