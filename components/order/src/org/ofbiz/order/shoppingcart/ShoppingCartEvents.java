@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.9 2003/11/26 10:47:38 jonesde Exp $
+ * $Id: ShoppingCartEvents.java,v 1.10 2003/11/28 12:25:59 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -64,7 +64,7 @@ public class ShoppingCartEvents {
 
     public static String addProductPromoCode(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
-        String productPromoCodeId = (String) request.getAttribute("productPromoCodeId");
+        String productPromoCodeId = (String) request.getParameter("productPromoCodeId");
         if (UtilValidate.isNotEmpty(productPromoCodeId)) {
             String checkResult = cart.addProductPromoCode(productPromoCodeId);
             if (UtilValidate.isNotEmpty(checkResult)) {

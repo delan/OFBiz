@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.23 2003/11/28 11:42:43 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.24 2003/11/28 12:25:59 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -202,7 +202,7 @@ public class ProductPromoWorker {
                                 // check the use limit before each pass so if the promo use limit has been hit we don't keep on trying for the promo code use limit, if there is one of course
                                 while ((useLimit > cart.getProductPromoUseCount(productPromoId)) && productPromoCodeIter.hasNext()) {
                                     GenericValue productPromoCode = (GenericValue) productPromoCodeIter.next();
-                                    String productPromoCodeId = productPromoCode.getString("productPromoCode");
+                                    String productPromoCodeId = productPromoCode.getString("productPromoCodeId");
                                     Long codeUseLimit = getProductPromoCodeUseLimit(productPromoCode, partyId, delegator);
                                     cartChanged = runProductPromoRules(cart, cartChanged, useLimit, true, productPromoCodeId, codeUseLimit, productPromo, productPromoRules, dispatcher, delegator, nowTimestamp);
                                 }

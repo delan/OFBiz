@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.20 $
+ *@version    $Revision: 1.21 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -302,6 +302,45 @@ function addToList() {
 <#-- Copy link bar to bottom to include a link bar at the bottom too -->
 </table>
 
+  <br/>
+  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+    <tr>
+      <td width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+          <tr>
+            <td valign="middle" align="left">
+              <div class="boxhead">&nbsp;Promotion/Coupon Codes</div>
+            </td>
+            <#--<td valign="middle" align="right">&nbsp;</td>-->
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+          <tr>
+            <td>
+              <div class="tabletext">
+	            <form method="POST" action="<@ofbizUrl>/addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
+	              <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="">
+	              <input type="submit" class="smallSubmit" value="Add Code">
+	              <#assign productPromoCodeIds = shoppingCart.getProductPromoCodesEntered()>
+	              <#if productPromoCodeIds?has_content>
+	                Entered Codes:
+	                <#list productPromoCodeIds as productPromoCodeId>
+	                  ${productPromoCodeId}
+	                </#list>
+	              </#if>
+	            </form>
+	          </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  
 <#if showPromoText>
   <br/>
   <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
@@ -369,21 +408,21 @@ function addToList() {
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
             <td>
-    <table width="100%" cellspacing="0" cellpadding="1" border="0">
-      <#-- random complementary products -->
-      <#list associatedProducts as assocProduct>
-        <tr>
-          <td>
-            ${setRequestAttribute("optProduct", assocProduct)}
-            ${setRequestAttribute("listIndex", assocProduct_index)}
-            ${pages.get("/catalog/productsummary.ftl")}
-          </td>
-        </tr>
-        <#if assocProduct_has_next>
-          <tr><td><hr class="sepbar"></td></tr>
-        </#if>
-      </#list>
-    </table>
+			    <table width="100%" cellspacing="0" cellpadding="1" border="0">
+			      <#-- random complementary products -->
+			      <#list associatedProducts as assocProduct>
+			        <tr>
+			          <td>
+			            ${setRequestAttribute("optProduct", assocProduct)}
+			            ${setRequestAttribute("listIndex", assocProduct_index)}
+			            ${pages.get("/catalog/productsummary.ftl")}
+			          </td>
+			        </tr>
+			        <#if assocProduct_has_next>
+			          <tr><td><hr class="sepbar"></td></tr>
+			        </#if>
+			      </#list>
+			    </table>
             </td>
           </tr>
         </table>
