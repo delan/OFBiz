@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.19 2004/02/23 21:16:10 jonesde Exp $
+ * $Id: CheckOutHelper.java,v 1.20 2004/02/28 19:49:47 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -333,7 +333,7 @@ public class CheckOutHelper {
                 errorMessages.add(errMsg);
                 gcFieldsOkay = false;
             }
-            if (selectedPaymentMethods != null || selectedPaymentMethods.size() > 0) {
+            if (selectedPaymentMethods != null && selectedPaymentMethods.size() > 0) {
                 if (gcAmt == null || gcAmt.length() == 0) {
                     errMsg = UtilProperties.getMessage(resource,"checkhelper.enter_amount_to_place_on_gift_card", (cart != null ? cart.getLocale() : Locale.getDefault()));
                     errorMessages.add(errMsg);

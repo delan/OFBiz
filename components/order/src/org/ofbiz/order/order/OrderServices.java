@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.30 2004/02/18 07:33:10 jonesde Exp $
+ * $Id: OrderServices.java,v 1.31 2004/02/28 19:49:47 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  * @since      2.0
  */
 
@@ -1216,23 +1216,23 @@ public class OrderServices {
             result.put("billingAccount", billingAccount);
 
             Iterator orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
-            if (orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
-                GenericValue orderPaymentPreference = (GenericValue) orderPaymentPreferences.next();
-                GenericValue paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");
-                GenericValue paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType");
-                result.put("paymentMethod", paymentMethod);
-                result.put("paymentMethodType", paymentMethodType);
-
-                if (paymentMethod != null && "CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-                    GenericValue creditCard = paymentMethod.getRelatedOneCache("CreditCard");
-                    result.put("creditCard", creditCard);
-                    result.put("formattedCardNumber", ContactHelper.formatCreditCard(creditCard));
-                } else if (paymentMethod != null && "EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-                    GenericValue eftAccount = paymentMethod.getRelatedOneCache("EftAccount");
-                    result.put("eftAccount", eftAccount);
+            if (orderPaymentPreferences != null) {
+                List paymentMethods = new ArrayList();
+                while (orderPaymentPreferences.hasNext()) {
+                    GenericValue opp = (GenericValue) orderPaymentPreferences.next();
+                    GenericValue paymentMethod = opp.getRelatedOne("PaymentMethod");
+                    if (paymentMethod != null) {
+                        paymentMethods.add(paymentMethod);
+                    } else {
+                        GenericValue paymentMethodType = opp.getRelatedOne("PaymentMethodType");
+                        if (paymentMethodType != null) {
+                            result.put("paymentMethodType", paymentMethodType);
+                        }
+                    }
                 }
+                result.put("paymentMethods", paymentMethods);
             }
-
+           
             Iterator orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
             if (orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
                 GenericValue shipmentPreference = (GenericValue) orderShipmentPreferences.next();
