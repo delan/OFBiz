@@ -414,6 +414,8 @@
     <view-map name="confirm" type="jpublish" page="/entry/confirmorder.ftl"/>
     <view-map name="ordercomplete" type="jpublish" page="/entry/ordercomplete.ftl"/>
     
+    <view-map name="editreturn" type="jpublish" page="/return/ReturnHeader.ftl"/>
+    
     <view-map name="shipsetup" type="region"/>
     <view-map name="taxsetup" type="region"/>
     <view-map name="paysetup" type="region"/>
