@@ -4,6 +4,9 @@ cvs update
 cd ../commonapp
 echo "--- commonapp ---"
 cvs update
+cd ../webtools
+echo "--- webtools ---"
+cvs update
 cd ../ecommerce
 echo "--- ecommerce ---"
 cvs update

@@ -142,6 +142,8 @@
         <ant dir="core" target="clean" inheritAll="false" />
         <echo message="[clean] ===== Cleaning commonapp =====" />
         <ant dir="commonapp" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning webtools =====" />
+        <ant dir="webtools" target="clean" inheritAll="false" />
         
         <echo message="[clean] ===== Cleaning ecommerce =====" />
         <ant dir="ecommerce" target="clean" inheritAll="false" />
@@ -178,6 +180,8 @@
         <ant dir="core" inheritAll="false" />
         <echo message="[build] ===== Building commonapp =====" />
         <ant dir="commonapp" inheritAll="false" />
+        <echo message="[build] ===== Building webtools =====" />
+        <ant dir="webtools" inheritAll="false" />
 
         <echo message="[build] ===== Building ecommerce =====" />
         <ant dir="ecommerce" inheritAll="false" />
