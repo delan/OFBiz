@@ -41,6 +41,9 @@ function addRoutingTask() {
 
 
 ${pages.get("/routing/RoutingDetailTabBar.ftl")}
+<div class="head1">${uiLabelMap.ManufacturingEditRoutingTaskAssoc}&nbsp;
+</div>
+<div class="tableheadtext">${routing.workEffortId}[${routing.workEffortName}]</div>
 <#if security.hasEntityPermission("MANUFACTURING", "_CREATE", session)>
 <form method="post" action="<@ofbizUrl>/AddRoutingTaskAssoc</@ofbizUrl>" name="addtaskassocform">
     <input type="hidden" name="workEffortIdFrom" value="${requestParameters.workEffortIdFrom}">

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
  */
 
@@ -36,6 +36,8 @@ delegator = request.getAttribute("delegator");
 
 String workEffortIdFrom = request.getParameter("workEffortIdFrom");
 context.put("routingId",workEffortIdFrom);
+routing = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortIdFrom));
+context.put("routing", routing);
 String sequenceNum = request.getParameter("sequenceNum");
 String workEffortIdTo = request.getParameter("workEffortIdTo");
 String fromDateSt = request.getParameter("fromDate");
