@@ -106,7 +106,7 @@ public class WebEventSecurity {
           request.getSession().setAttribute(SiteDefs.USER_LOGIN, userLogin);
           try { delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username,
           "fromDate", UtilDateTime.nowTimestamp(),
-          "password", password,
+          "passwordUsed", password,
           "partyId", userLogin.get("partyId"),
           "referrerUrl", "NotYetImplemented"));
           }
