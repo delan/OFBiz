@@ -41,6 +41,7 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_MAINT"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKFLOW_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_UPDATE"/>
@@ -55,6 +56,7 @@
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_ADMIN"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENTITY_MAINT"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKFLOW_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ORDERMGR_ADMIN"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_EDIT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_VIEW"/>
