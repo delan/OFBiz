@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/23 18:05:00  azeneski
+ * Fixed runaway thread in the job scheduler.
+ *
  * Revision 1.1  2001/07/16 14:45:48  azeneski
  * Added the missing 'core' directory into the module.
  *
@@ -16,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
 
 import org.ofbiz.core.scheduler.JobManager;
+import org.ofbiz.core.util.HttpClient;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
 
@@ -53,5 +57,19 @@ public class TestEvent {
         Debug.log("Test Event Ran Fine.");
         return "success";
     }
-
+        
+    public static String httpClientTest(HttpServletRequest request, HttpServletResponse response ) {
+        try {
+            
+            HttpClient http = new HttpClient("http://www.ofbiz.org/cgi-bin/http_test.pl");
+            http.setHeader("Cookie","name=value,value=name");
+            http.setHeader("User-Agent", "Mozilla/4.0");
+            http.setParameter("testId","testing");
+            Debug.log(http.get());
+        } 
+        catch ( Exception e ) {
+            Debug.log(e,"HttpClientException Caught.");
+        }
+        return "success";
+    }
 }
