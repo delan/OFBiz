@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/22 00:58:56  azeneski
+ * Added utility to get a Map of the request object's parameters. (like 2.3 api)
+ *
  * Revision 1.2  2001/08/16 05:18:10  jonesde
  * Made ModelReader non static, changed the way the Map convenience stuff works, now using UtilMisc.
  *
@@ -71,8 +74,7 @@ public class UtilMisc
   public static Map toMap(String name1, Object value1, String name2, Object value2)
   {
     Map fields = new HashMap();
-    fields.put(name1, value1);
-    fields.put(name2, value2);
+    fields.put(name1, value1); fields.put(name2, value2);
     return fields;
   }
 
@@ -82,9 +84,7 @@ public class UtilMisc
   public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3)
   {
     Map fields = new HashMap();
-    fields.put(name1, value1);
-    fields.put(name2, value2);
-    fields.put(name3, value3);
+    fields.put(name1, value1); fields.put(name2, value2); fields.put(name3, value3);
     return fields;
   }
 
@@ -94,9 +94,7 @@ public class UtilMisc
   public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3, String name4, Object value4)
   {
     Map fields = new HashMap();
-    fields.put(name1, value1);
-    fields.put(name2, value2);
-    fields.put(name3, value3);
+    fields.put(name1, value1); fields.put(name2, value2); fields.put(name3, value3);
     fields.put(name4, value4);
     return fields;
   }
@@ -107,11 +105,8 @@ public class UtilMisc
   public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3, String name4, Object value4, String name5, Object value5)
   {
     Map fields = new HashMap();
-    fields.put(name1, value1);
-    fields.put(name2, value2);
-    fields.put(name3, value3);
-    fields.put(name4, value4);
-    fields.put(name5, value5);
+    fields.put(name1, value1); fields.put(name2, value2); fields.put(name3, value3);
+    fields.put(name4, value4); fields.put(name5, value5);
     return fields;
   }
 
@@ -121,13 +116,71 @@ public class UtilMisc
   public static Map toMap(String name1, Object value1, String name2, Object value2, String name3, Object value3, String name4, Object value4, String name5, Object value5, String name6, Object value6)
   {
     Map fields = new HashMap();
-    fields.put(name1, value1);
-    fields.put(name2, value2);
-    fields.put(name3, value3);
-    fields.put(name4, value4);
-    fields.put(name5, value5);
-    fields.put(name6, value6);
+    fields.put(name1, value1); fields.put(name2, value2); fields.put(name3, value3);
+    fields.put(name4, value4); fields.put(name5, value5); fields.put(name6, value6);
     return fields;
+  }
+
+  /** Create a list from passed objX parameters
+   * @return The resulting List
+   */  
+  public static List toList(Object obj1)
+  {
+    List list = new ArrayList();
+    list.add(obj1);
+    return list;
+  }
+  
+  /** Create a list from passed objX parameters
+   * @return The resulting List
+   */  
+  public static List toList(Object obj1, Object obj2)
+  {
+    List list = new ArrayList();
+    list.add(obj1); list.add(obj2);
+    return list;
+  }
+  
+  /** Create a list from passed objX parameters
+   * @return The resulting List
+   */  
+  public static List toList(Object obj1, Object obj2, Object obj3)
+  {
+    List list = new ArrayList();
+    list.add(obj1); list.add(obj2); list.add(obj3);
+    return list;
+  }
+  
+  /** Create a list from passed objX parameters
+   * @return The resulting List
+   */  
+  public static List toList(Object obj1, Object obj2, Object obj3, Object obj4)
+  {
+    List list = new ArrayList();
+    list.add(obj1); list.add(obj2); list.add(obj3); list.add(obj4);
+    return list;
+  }
+  
+  /** Create a list from passed objX parameters
+   * @return The resulting List
+   */  
+  public static List toList(Object obj1, Object obj2, Object obj3, Object obj4, Object obj5)
+  {
+    List list = new ArrayList();
+    list.add(obj1); list.add(obj2); list.add(obj3); list.add(obj4);
+    list.add(obj5);
+    return list;
+  }
+  
+  /** Create a list from passed objX parameters
+   * @return The resulting List
+   */  
+  public static List toList(Object obj1, Object obj2, Object obj3, Object obj4, Object obj5, Object obj6)
+  {
+    List list = new ArrayList();
+    list.add(obj1); list.add(obj2); list.add(obj3); list.add(obj4);
+    list.add(obj5); list.add(obj6);
+    return list;
   }
   
   /** Create a map from an HttpServletRequest object
