@@ -160,7 +160,7 @@
          </td >
          <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
          <td >
-            <a class="buttontext" href="<@ofbizUrl>/addCMSSite?rootForumId=${rootForumId}&parentSiteId=${context.content.contentId}</@ofbizUrl>">Add Child Forum</a>
+            <a class="buttontext" href="javascript:call_fieldlookup4('${rootForumId}', '${context.content.contentId}')">Add Child Forum</a>
          </td >
        </tr>
        <#assign rowCount = rowCount + 1 />

@@ -3,8 +3,8 @@
     <template>main</template>
     <property name="title">Edit Content Purpose Operation</property>
     <property name="headerItem">Admin</property>
-    <property name="subMenu">/admin/admin_menu.ftl</property>
-    <property name="formDefFile">/admin/AdminForms.xml</property>
+    <property name="subMenu">/cms/cms_menu.ftl</property>    
+    <property name="formDefFile">/cms/CMSForms.xml</property>
     <property name="entityName">ContentPurposeOperation</property>
     <property name="permission">CONTENTMGR</property>
     <property name="permissionType">simple</property>
@@ -13,8 +13,8 @@
     <property name="menuItemName">permissions</property>
 
     <page-action name="/includes/permprep.bsh" />
-    <page-action name="/includes/setcurrentmenuitem.bsh"/>
-    <page-action name="/includes/menuinit.bsh"/>
+    <page-action name="/menu/setcurrentmenuitem.bsh"/>
+    <page-action name="/menu/menuinit.bsh"/>
     <content-action name="/includes/crudprep.bsh" />
 </page>
 

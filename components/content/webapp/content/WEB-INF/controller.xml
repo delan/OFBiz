@@ -1230,6 +1230,16 @@
         <response name="success" type="view" value="CMSSites"/>
         <response name="error" type="view" value="CMSSites"/>
     </request-map>
+    <request-map uri="addSubSite">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="addSubSite"/>
+    </request-map>
+   <request-map uri="postNewSubSite">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="persistContentAndAssoc"/>
+        <response name="success" type="view" value="CMSSites"/>
+        <response name="error" type="view" value="CMSSites"/>
+    </request-map>
 
 
     <!-- View Mappings -->
@@ -1320,5 +1330,6 @@
     <view-map name="CMSSites" page="/cms/CMSSites.ftl" type="jpublish"/>
     <view-map name="CMSEditContentPurposeOperation" page="/cms/CMSEditContentPurposeOperation.ftl" type="jpublish"/>
     <view-map name="CMSMenu" page="/cms/CMSMenu.ftl" type="jpublish"/>
+    <view-map name="addSubSite" page="/cms/addSubSite.ftl" type="jpublish"/>
     <!-- end of view mappings -->
 </site-conf>

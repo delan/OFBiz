@@ -1,4 +1,12 @@
 
+<SCRIPT language="javascript">
+function call_fieldlookup4(rootForumId, parentForumId ) {
+	var obj_lookupwindow = window.open("addSubSite?rootForumId=" + rootForumId + "&parentForumId=" + parentForumId, 'FieldLookup', 'width=500,height=250,scrollbars=yes,status=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
+	obj_lookupwindow.opener = window;
+	obj_lookupwindow.focus();
+}
+</SCRIPT>
+
 
 <#include "publishlib.ftl" />
 <#assign rootForumId=rootForumId?if_exists/>

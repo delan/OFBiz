@@ -1,5 +1,5 @@
 /*
- * $Id: userpermprep.bsh,v 1.1 2004/06/06 07:29:02 byersa Exp $
+ * $Id: userpermprep.bsh,v 1.2 2004/06/07 18:00:55 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,13 +53,12 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
 
  */
 
 
-Debug.logInfo("in mostrecentprep(1):","");
 delegator = request.getAttribute("delegator");
 paramMap = UtilHttp.getParameterMap(request);
 forumId = ContentManagementWorker.getFromSomewhere("permRoleSiteId", paramMap, request, context);
@@ -72,16 +71,15 @@ if (UtilValidate.isNotEmpty(forumId)) {
             roleTypeId = roleType.getString("roleTypeId");
             contentRoleList = delegator.findByAnd("ContentRole", UtilMisc.toMap("contentId", forumId, "roleTypeId", roleTypeId));
             filteredRoleList = EntityUtil.filterByDate(contentRoleList);
-            Debug.logInfo("in siteprep(1), filteredRoleList:" + filteredRoleList,"");
             cappedBlogRoleName = ModelUtil.dbNameToVarName(roleTypeId);
-            Debug.logInfo("in siteprep(1), cappedBlogRoleName:" + cappedBlogRoleName,"");
 
-            if (filteredRoleList.size() > 0) {
-                contentRole = contentRoleList.get(0);
+            iter = filteredRoleList.iterator();
+            while (iter.hasNext()) {
+                contentRole = iter.next();
                 partyId = contentRole.getString("partyId");
                 fromDate = contentRole.get("fromDate");
                 map = siteRoleMap.get(partyId);
-                if (siteRoleMap.get(partyId) == null) {
+                if (map == null) {
                     map = new HashMap();
                     map.put("partyId", partyId);
                     siteRoleMap.put(partyId, map);
@@ -91,7 +89,6 @@ if (UtilValidate.isNotEmpty(forumId)) {
             }
         }
         siteList = new ArrayList(siteRoleMap.values());
-        Debug.logInfo("in siteprep(1), siteList:" + siteList,"");
         context.put("siteList", siteList);
         context.put("rowCount", siteList.size());
         blogRoleIter = blogRoles.iterator();
