@@ -144,9 +144,9 @@ public class FreeMarkerViewHandler implements ViewHandler {
         BeanModel applicationBModel = new BeanModel(servletContext, BeansWrapper.getDefaultInstance());
         root.put("application", applicationBModel);
         
-        // add the servlet context    
-        ServletContextHashModel servletContextModel = new ServletContextHashModel(servletContext, BeansWrapper.getDefaultInstance());
-        root.put("applicationAttributes", servletContextModel);
+        // add the servlet context -- this has been deprecated, and now requires servlet, do we really need it?
+        //ServletContextHashModel servletContextModel = new ServletContextHashModel(servletContext, BeansWrapper.getDefaultInstance());
+        //root.put("applicationAttributes", servletContextModel);
         
         // add the response object (for transforms) to the context as a BeanModel
         BeanModel responseBModel = new BeanModel(response, BeansWrapper.getDefaultInstance());

@@ -46,6 +46,8 @@ import org.jpublish.util.JPublishContextMap;
 import com.anthonyeden.lib.config.*;
 import com.wspublisher.WSPException;
 import com.wspublisher.generators.AbstractGenerator;
+
+import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.*;
 
@@ -53,10 +55,10 @@ import org.ofbiz.core.util.Debug;
 
 
 /**
- * This generator uses FreeMarker to process a template file, which (hopefully)
- * uses the content on the given page.
+ * This generator uses FreeMarker to process a template file.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.1
  */
@@ -68,7 +70,7 @@ public class FreeMarkerGenerator extends AbstractGenerator {
     
     public FreeMarkerGenerator() {
         super(NAME);
-        //System.out.println("=========== Initializing OFBiz FreeMarkerGenerator ===========");
+        Debug.logVerbose("=========== Initializing OFBiz FreeMarkerGenerator ===========", module);
     }
     
     /*
@@ -82,7 +84,7 @@ public class FreeMarkerGenerator extends AbstractGenerator {
         Page page = (Page) inContext.get("page");
         SiteContext site = (SiteContext) inContext.get("site");
 
-        //System.out.println("=========== Running generate ===========");
+        Debug.logVerbose("=========== Running generate ===========", module);
 
         if (config == null) {
             synchronized(this) {
@@ -122,16 +124,15 @@ public class FreeMarkerGenerator extends AbstractGenerator {
             Writer writer = new OutputStreamWriter(inOutput ,"UTF-8");
             
             try {
-                SimpleHash root = new SimpleHash(BeansWrapper.getDefaultInstance());
-
-                //TODO: should make the config file tell us what TemplateModel to create
+                SimpleHash root = new SimpleHash(BeansWrapper.getDefaultInstance());                
                 Map map = new JPublishContextMap(inContext);
+                root.put("context", new BeanModel(map, BeansWrapper.getDefaultInstance()));
                 for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
                     Map.Entry entry = (Map.Entry) iter.next();
                     String key = (String) entry.getKey();
                     Object value = entry.getValue();
                     root.put(key, BeansWrapper.getDefaultInstance().wrap(value));
-                    //System.out.println("==== Adding to the freemarker root " + key + ":" + value);
+                    //if (Debug.verboseOn()) Debug.logVerbose("==== Adding to the freemarker root " + key + ":" + value, module);
                 }
                 
                 FreeMarkerViewHandler.prepOfbizRoot(root, request, response);
