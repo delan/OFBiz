@@ -38,6 +38,7 @@
         <make-value value-name="newEntity" entity-name="WorkEffortAssoc"/>
         <field-to-field field-name="workEffortId" map-name="newWorkEffort" to-field-name="workEffortIdTo" to-map-name="newEntity"/>
         <field-to-field field-name="projectWorkEffortId" map-name="parameters" to-field-name="workEffortIdFrom" to-map-name="newEntity"/>
+        <now-timestamp-to-env env-name="newEntity.fromDate"/>
         <string-to-field string="WORK_EFF_BREAKDOWN" field-name="workEffortAssocTypeId" map-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
@@ -52,8 +53,8 @@
         <make-value value-name="newEntity" entity-name="WorkEffortAssoc"/>
         <field-to-field field-name="workEffortId" map-name="newWorkEffort" to-field-name="workEffortIdTo" to-map-name="newEntity"/>
         <field-to-field field-name="phaseWorkEffortId" map-name="parameters" to-field-name="workEffortIdFrom" to-map-name="newEntity"/>
+        <now-timestamp-to-env env-name="newEntity.fromDate"/>
         <string-to-field string="WORK_EFF_BREAKDOWN" field-name="workEffortAssocTypeId" map-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
-    
 </simple-methods>
