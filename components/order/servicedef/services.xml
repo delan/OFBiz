@@ -742,8 +742,8 @@
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="monthsToInclude" type="Integer" mode="IN" optional="true"/> <!-- if monthsToInclude specified along with fromDate/thruDate, will override fromDate/thruDate -->
         <attribute name="totalOrders" type="Long" mode="OUT" optional="false"/>
-        <attribute name="totalGrandAmount" type="Long" mode="OUT" optional="false"/>
-        <attribute name="totalSubRemainingAmount" type="Long" mode="OUT" optional="false"/>
+        <attribute name="totalGrandAmount" type="Double" mode="OUT" optional="false"/>
+        <attribute name="totalSubRemainingAmount" type="Double" mode="OUT" optional="false"/>
     </service>
     
     <service name="getOrderInformation" engine="java"
