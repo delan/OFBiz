@@ -1,5 +1,48 @@
-olli: 2001-07-27
+owieland: 2001-07-27
 - Removed all references from com.objectspace
 - Created needed classes and signaturs in package org.ofbiz.wrappers
 - Added org.ofbiz.designer to package path (example package "newdesigner" changed to "org.ofbiz.designer.newdesigner")
 - Resolved some dirty classes (Some classes was put together in on file %&$§#!)
+
+owieland: 2001-08-11
+- Checked in the changes of DavidOO (great work, David!)
+
+------------------------------------------------------------------------------------------------
+0) You will need jdom package. If you do not have some, try jdom.org Version
+jdom-b7 is the latest one.
+1) I did build.bat and run.bat. Please check it. You have to define some
+Envirnoment variables, like
+JAVA_HOME, ANT_HOME and JDOM_HOME. Please use commando
+build.bat dist
+
+2) Another script run.bat run the designer. The only (hopefully) setting,
+that you will need to change is
+   to fit the C´Variable DESIGNER_ROOT_DIR
+
+3) I assume, that you will copy my stuff in some directories, and check it.
+It is important not to move the XML files around; just try ist exactly so,
+like i did.
+
+4) The Main Class and the Parameter, that I used are:
+org.ofbiz.designer.newdesigner.TaskEditor DEMO2level.xml TargetAnalysis
+  You can give also another Task names, that defined in DEMO2level.xml
+files.
+
+5) The Stuff that I tested and that hopefully will function also on your
+computer:
+
+o  In Menu Tools->Data editor. In Data editor i could select all the files,
+but not the file Demo2level itself (exception). When you select other files,
+then the methods, fields and exception are changed.
+
+o No other Editors from Menu functions
+
+o In Advanced Tab of Task Editor->Click Button Edit Realisation, Then you
+will see (hopefully) the Realization.
+  Hint: Try to play with the task type around (on the general tab): you will
+see different realization (Transctional/Not Transactional and so on)
+
+o Tab Network: in Output Arcs List select some arc, then click on
+  Output Task Editor, Output Operator Editor, Output Arc Editor: everything
+have to function.
+------------------------------------------------------------------------------------------------
