@@ -51,7 +51,7 @@ public class GenericWebEvent {
     
     String entityName = request.getParameter("entityName");
     if(entityName == null || entityName.length() <= 0) {
-      request.setAttribute("ERROR_MESSAGE", "The entityName was not specified, but is required.");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "The entityName was not specified, but is required.");
       Debug.logWarning("[GenericWebEvent.updateGeneric] The entityName was not specified, but is required.");
       return "error";
     }
@@ -59,12 +59,12 @@ public class GenericWebEvent {
     Security security = (Security)request.getAttribute("security");
     GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     if(security == null) {
-      request.setAttribute("ERROR_MESSAGE", "The security object was not found in the request, please check the control servlet init.");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "The security object was not found in the request, please check the control servlet init.");
       Debug.logWarning("[updateGeneric] The security object was not found in the request, please check the control servlet init.");
       return "error";
     }
     if(delegator == null) {
-      request.setAttribute("ERROR_MESSAGE", "The delegator object was not found in the request, please check the control servlet init.");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "The delegator object was not found in the request, please check the control servlet init.");
       Debug.logWarning("[updateGeneric] The delegator object was not found in the request, please check the control servlet init.");
       return "error";
     }
@@ -74,14 +74,14 @@ public class GenericWebEvent {
     
     String updateMode = request.getParameter("UPDATE_MODE");
     if(updateMode == null || updateMode.length() <= 0) {
-      request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
       Debug.logWarning("[updateGeneric] Update Mode was not specified, but is required; entityName: " + entityName);
       return "error";
     }
     
     //check permissions before moving on...
     if(!security.hasEntityPermission(entity.tableName, "_" + updateMode, request.getSession())) {
-      request.setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " " + entity.entityName + " (" + entity.tableName + "_" + updateMode + " or " + entity.tableName + "_ADMIN needed).");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "You do not have sufficient permissions to "+ updateMode + " " + entity.entityName + " (" + entity.tableName + "_" + updateMode + " or " + entity.tableName + "_ADMIN needed).");
       //not really successful, but error return through ERROR_MESSAGE, so quietly fail
       return "error";
     }
@@ -124,7 +124,7 @@ public class GenericWebEvent {
       try { delegator.removeByPrimaryKey(findByEntity.getPrimaryKey()); }
       catch(GenericEntityException e) { 
         Debug.logWarning(e); 
-        request.setAttribute("ERROR_MESSAGE", "Delete failed (write error)");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Delete failed (write error)");
         return "error";
       }
 
@@ -166,7 +166,7 @@ public class GenericWebEvent {
       try { tempEntity = delegator.findByPrimaryKey(findByEntity.getPrimaryKey()); }
       catch(GenericEntityException e) { 
         Debug.logWarning(e); 
-        request.setAttribute("ERROR_MESSAGE", "Create failed while checking if exists (read error)");
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Create failed while checking if exists (read error)");
         return "error";
       }
       if(tempEntity != null) {
@@ -223,7 +223,7 @@ public class GenericWebEvent {
     
     if(errMsg.length() > 0) {
       errMsg = "<br><b>The following error(s) occured:</b><ul>" + errMsg + "</ul>";
-      request.setAttribute("ERROR_MESSAGE", errMsg);
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
       return "error";
     }
     
@@ -232,7 +232,7 @@ public class GenericWebEvent {
       try { value = delegator.create(findByEntity.entityName, findByEntity.fields); }
       catch(GenericEntityException e) { Debug.logWarning(e); value = null; }
       if(value == null) {
-        request.setAttribute("ERROR_MESSAGE", "Creation of " + entity.entityName + " failed for entity: " + findByEntity.toString());
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Creation of " + entity.entityName + " failed for entity: " + findByEntity.toString());
         return "error";
       }
     }
@@ -241,12 +241,12 @@ public class GenericWebEvent {
       try { value.store(); }
       catch(GenericEntityException e) {
         Debug.logWarning(e);
-        request.setAttribute("ERROR_MESSAGE", "Update of " + entity.entityName + " failed for value: " + value.toString());
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update of " + entity.entityName + " failed for value: " + value.toString());
         return "error";
       }
     }
     else {
-      request.setAttribute("ERROR_MESSAGE", "Update Mode specified (" + updateMode + ") was not valid.");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode specified (" + updateMode + ") was not valid.");
       Debug.logWarning("updateGeneric: Update Mode specified (" + updateMode + ") was not valid for entity: " + findByEntity.toString());
       return "error";
     }

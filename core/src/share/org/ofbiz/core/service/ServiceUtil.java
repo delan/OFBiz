@@ -36,14 +36,17 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class ServiceUtil {
-    public static void getHtmlMessages(HttpServletRequest request, Map result) {
+    public static void getHtmlMessages(HttpServletRequest request, Map result, String defaultMessage) {
         String errorMessage = ServiceUtil.makeHtmlErrorMessage(result);
-        if (errorMessage != null && errorMessage.length() > 0)
+        if (UtilValidate.isNotEmpty(errorMessage))
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
             
         String successMessage = ServiceUtil.makeHtmlSuccessMessage(result);
-        if (successMessage != null && successMessage.length() > 0)
+        if (UtilValidate.isNotEmpty(successMessage))
             request.setAttribute(SiteDefs.EVENT_MESSAGE, successMessage);
+
+        if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage))
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, defaultMessage);
     }
     
     public static String makeHtmlErrorMessage(Map result) {

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/12/03 23:58:48  jonesde
+ * Element remove without LRU list now works
+ *
  * Revision 1.2  2001/12/03 18:09:55  jonesde
  * Some changes to make caches faster, LRU and expiration stuff only done when enabled; added some error messages
  *
@@ -447,13 +450,13 @@ public class UtilCache {
             
             if (key != null) {
                 utilCache.remove(key);
-                request.setAttribute("EVENT_MESSAGE", "Removed element from cache with key: " + key.toString());
+                request.setAttribute(SiteDefs.EVENT_MESSAGE, "Removed element from cache with key: " + key.toString());
             } else {
-                request.setAttribute("ERROR_MESSAGE", "Could not remove cache element, element not found with cache name: " + name + ", element number: " + numString);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove cache element, element not found with cache name: " + name + ", element number: " + numString);
                 return "error";
             }
         } else {
-            request.setAttribute("ERROR_MESSAGE", "Could not remove cache element, cache not found with name: " + name);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not remove cache element, cache not found with name: " + name);
             return "error";
         }
         return "success";
@@ -467,15 +470,15 @@ public class UtilCache {
     public static String clearEvent(HttpServletRequest request, HttpServletResponse response) {
         String name = request.getParameter("UTIL_CACHE_NAME");
         if (name == null) {
-            request.setAttribute("ERROR_MESSAGE", "Could not clear cache, no name specified.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not clear cache, no name specified.");
             return "error";
         }
         UtilCache utilCache = (UtilCache) utilCacheTable.get(name);
         if (utilCache != null) {
             utilCache.clear();
-            request.setAttribute("EVENT_MESSAGE", "Cleared cache with name: " + name);
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Cleared cache with name: " + name);
         } else {
-            request.setAttribute("ERROR_MESSAGE", "Could not clear cache, cache not found with name: " + name);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not clear cache, cache not found with name: " + name);
             return "error";
         }
         return "success";
