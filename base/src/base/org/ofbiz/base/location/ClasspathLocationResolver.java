@@ -1,5 +1,5 @@
 /*
- * $Id: ClasspathLocationResolver.java,v 1.1 2004/06/30 21:25:56 jonesde Exp $
+ * $Id: ClasspathLocationResolver.java,v 1.2 2004/07/08 05:59:55 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -33,17 +33,21 @@ import org.ofbiz.base.util.UtilURL;
  * A special location resolver that uses Strings like URLs, but with more options 
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
  */
 
 public class ClasspathLocationResolver implements LocationResolver {
     public URL resolveLocation(String location) throws MalformedURLException {
+        return resolveLocation(location, null);
+    }
+    
+    public URL resolveLocation(String location, ClassLoader loader) throws MalformedURLException {
         String baseLocation = FlexibleLocation.stripLocationType(location);
         // if there is a leading forward slash, remove it
         if (baseLocation.charAt(0) == '/') {
             baseLocation = baseLocation.substring(1);
         }
-        return UtilURL.fromResource(baseLocation);
+        return UtilURL.fromResource(baseLocation, loader);
     }
 }

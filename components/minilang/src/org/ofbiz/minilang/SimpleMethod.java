@@ -1,7 +1,7 @@
 /*
- * $Id: SimpleMethod.java,v 1.7 2004/05/14 23:37:40 jonesde Exp $
+ * $Id: SimpleMethod.java,v 1.8 2004/07/08 05:59:56 jonesde Exp $
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,6 +23,7 @@
  */
 package org.ofbiz.minilang;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,9 +34,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCache;
-import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.GenericTransactionException;
@@ -52,7 +53,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class SimpleMethod {
@@ -81,21 +82,18 @@ public class SimpleMethod {
 
     public static Map runSimpleService(String xmlResource, String methodName, DispatchContext ctx, Map context) throws MiniLangException {
         MethodContext methodContext = new MethodContext(ctx, context, null);
-
         runSimpleMethod(xmlResource, methodName, methodContext);
         return methodContext.getResults();
     }
 
     public static Map runSimpleService(String xmlResource, String methodName, DispatchContext ctx, Map context, ClassLoader loader) throws MiniLangException {
         MethodContext methodContext = new MethodContext(ctx, context, loader);
-
         runSimpleMethod(xmlResource, methodName, methodContext);
         return methodContext.getResults();
     }
 
     public static Map runSimpleService(URL xmlURL, String methodName, DispatchContext ctx, Map context, ClassLoader loader) throws MiniLangException {
         MethodContext methodContext = new MethodContext(ctx, context, loader);
-
         runSimpleMethod(xmlURL, methodName, methodContext);
         return methodContext.getResults();
     }
@@ -105,7 +103,6 @@ public class SimpleMethod {
     public static String runSimpleMethod(String xmlResource, String methodName, MethodContext methodContext) throws MiniLangException {
         Map simpleMethods = getSimpleMethods(xmlResource, methodName, methodContext.getLoader());
         SimpleMethod simpleMethod = (SimpleMethod) simpleMethods.get(methodName);
-
         if (simpleMethod == null) {
             throw new MiniLangException("Could not find SimpleMethod " + methodName + " in XML document in resource: " + xmlResource);
         }
@@ -115,7 +112,6 @@ public class SimpleMethod {
     public static String runSimpleMethod(URL xmlURL, String methodName, MethodContext methodContext) throws MiniLangException {
         Map simpleMethods = getSimpleMethods(xmlURL, methodName);
         SimpleMethod simpleMethod = (SimpleMethod) simpleMethods.get(methodName);
-
         if (simpleMethod == null) {
             throw new MiniLangException("Could not find SimpleMethod " + methodName + " in XML document from URL: " + xmlURL.toString());
         }
@@ -124,12 +120,17 @@ public class SimpleMethod {
 
     public static Map getSimpleMethods(String xmlResource, String methodName, ClassLoader loader) throws MiniLangException {
         Map simpleMethods = (Map) simpleMethodsResourceCache.get(xmlResource);
-
         if (simpleMethods == null) {
             synchronized (SimpleMethod.class) {
                 simpleMethods = (Map) simpleMethodsResourceCache.get(xmlResource);
                 if (simpleMethods == null) {
-                    URL xmlURL = UtilURL.fromResource(xmlResource, loader);
+                    //URL xmlURL = UtilURL.fromResource(xmlResource, loader);
+                    URL xmlURL = null;
+                    try {
+                        xmlURL = FlexibleLocation.resolveLocation(xmlResource, loader);
+                    } catch (MalformedURLException e) {
+                        throw new MiniLangException("Could not find SimpleMethod XML document in resource: " + xmlResource + "; error was: " + e.toString(), e);
+                    }
 
                     if (xmlURL == null) {
                         throw new MiniLangException("Could not find SimpleMethod XML document in resource: " + xmlResource);
