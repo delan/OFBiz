@@ -123,10 +123,10 @@
                         <tr>
                           <td colspan="2">&nbsp;&nbsp;&nbsp;</td>
                           <td align="right"><div class="tableheadtext">Party ID</div></td>
-                          <td><input type="text" name="partyId" style="font-size: small;" size="30"></td>
+                          <td><input type="text" name="partyId" class="inputBox" size="30"></td>
                           <td align="right"><div class="tableheadtext">Role Type ID</div></td>
                           <td>
-                            <select name="roleTypeId" style="font-size: small;">
+                            <select name="roleTypeId" class="selectBox">
                               <option value="REQ_TAKER">Request Taker</option>
                               <option value="REQ_REQUESTER">Requesting Party</option>
                               <option value="REQ_MANAGER">Request Manager</option>

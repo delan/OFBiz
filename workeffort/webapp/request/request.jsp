@@ -1,5 +1,4 @@
 <%--
-<%--
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -115,21 +114,21 @@
                       <tr>
                         <td align="right"><div class="tableheadtext">Request Date</div></td>
                         <td>
-                          <input type="text" style="font-size: small;" size="23" <ofbiz:inputvalue entityAttr="custRequest" field="custRequestDate" fullattrs="true"/>>
+                          <input type="text" class="inputBox" size="23" <ofbiz:inputvalue entityAttr="custRequest" field="custRequestDate" fullattrs="true"/>>
                           <a href="javascript:call_cal(document.custRequestForm.custRequestDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
                         </td>
                       </tr>
                       <tr>
                         <td align="right"><div class="tableheadtext">Response Required Date</div></td>
                         <td>
-                          <input type="text" style="font-size: small;" size="23" <ofbiz:inputvalue entityAttr="custRequest" field="responseRequiredDate" fullattrs="true"/>>
+                          <input type="text" class="inputBox" size="23" <ofbiz:inputvalue entityAttr="custRequest" field="responseRequiredDate" fullattrs="true"/>>
                           <a href="javascript:call_cal(document.custRequestForm.responseRequiredDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
                         </td>
                       </tr>
                       <tr>
                         <td align="right"><div class="tableheadtext">RequestType</div></td>
                         <td>
-                          <select name="custRequestTypeId" style="font-size: small;">
+                          <select name="custRequestTypeId" class="selectBox">
                             <ofbiz:iterator name="custRequestType" property="custRequestTypes">
                               <%if (custRequest != null && custRequest.getString("custRequestTypeId").equals(custRequestType.getString("custRequestTypeId"))) {%>
                                 <option SELECTED value="<%=custRequestType.getString("custRequestTypeId")%>"><%=custRequestType.getString("description")%></option>
@@ -143,7 +142,7 @@
                       <tr>
                         <td align="right"><div class="tableheadtext">Status</div></td>
                         <td>
-					      <select name="statusId" style='font-size: small;'>
+					      <select name="statusId" class="selectBox">
 					        <ofbiz:if name="custRequest">					        
 					        <option value='<%=custRequest.getString("statusId")%>'><%if (currentStatusItem != null) {%><%=currentStatusItem.getString("description")%><%} else {%><%=UtilFormatOut.ifNotEmpty(custRequest.getString("statusId"), "[", "]")%><%}%></option>
 					        <option value='<%=custRequest.getString("statusId")%>'>----</option>
@@ -157,7 +156,7 @@
                       <tr>
                         <td align="right"><div class="tableheadtext">Priority</div></td>
                         <td>
-                          <select name="priority" style="font-size: small;">
+                          <select name="priority" class="selectBox">
                             <option>9</option>
                             <option>8</option>
                             <option>7</option>
@@ -172,23 +171,23 @@
                       </tr>                                          
                       <tr>
                         <td align="right"><div class="tableheadtext">Name</div<</td>
-                        <td><input type="text" style="font-size: small;" size="50" <ofbiz:inputvalue entityAttr="custRequest" field="custRequestName" fullattrs="true"/>></td>
+                        <td><input type="text" class="inputBox" size="50" <ofbiz:inputvalue entityAttr="custRequest" field="custRequestName" fullattrs="true"/>></td>
                       </tr>
                       <tr>
                         <td align="right"><div class="tableheadtext">Description</div></td>
-                        <td><input type="text" style="font-size: small;" size="50"  <ofbiz:inputvalue entityAttr="custRequest" field="description" fullattrs="true"/>></td>
+                        <td><input type="text" class="inputBox" size="50"  <ofbiz:inputvalue entityAttr="custRequest" field="description" fullattrs="true"/>></td>
                       </tr>
 
                       <ofbiz:unless name="custRequest">
                       <tr>
                         <td align="right"><div class="tableheadtext">Requesting Party</div></td>
-                        <td><input type="text" name="requestPartyId" style="font-size: small;" size="50"></td>
+                        <td><input type="text" name="requestPartyId" class="inputBox" size="50"></td>
                       </tr>
                       </ofbiz:unless>
 
                       <tr>
                         <ofbiz:unless name="custRequest">
-                          <td align="right"><input type="submit" style="font-size: small;" value="Create"></td>
+                          <td align="right"><input type="submit" class="inputBox" value="Create"></td>
                         </ofbiz:unless>
                         <ofbiz:if name="custRequest">
                           <td align="right"><input type="submit" style="font-size: small;" value="Update"></td>

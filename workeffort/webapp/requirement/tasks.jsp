@@ -105,7 +105,7 @@
           <form method="post" action="<ofbiz:url>/assoctask</ofbiz:url>">
             <input type="hidden" name="requirementId" value="<%=requirementId%>">
             <span class="tabletext">Add an existing task:&nbsp;(WorkEffortId)&nbsp;</span>
-            <input type="text" name="workEffortId" size="10" style="font-size: small;">
+            <input type="text" name="workEffortId" class="inputBox" size="10" style="font-size: small;">
             <input type="submit" style="font-size: small;" value="Add Task">
           </form>
         </td></tr>

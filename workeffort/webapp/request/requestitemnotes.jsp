@@ -120,7 +120,7 @@
                 <tr>
                   <td width="26%" align='right'><div class="tableheadtext">New Note</div></td>
                   <td width="74%">
-                    <textarea name="note" rows="5" cols="70"></textarea>
+                    <textarea class="textAreaBox" name="note" rows="5" cols="70"></textarea>
                   </td>
                   <td>&nbsp;</td>
                 </tr>

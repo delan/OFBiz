@@ -86,13 +86,13 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Project Name</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='workEffortName' value='<ofbiz:inputvalue field="workEffortName" param="workEffortName" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
+                  <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name='workEffortName' value='<ofbiz:inputvalue field="workEffortName" param="workEffortName" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
 <%--                <tr>
                   <td width='26%' align=right><div class='tabletext'>Priority</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <SELECT name='priority'>
+                    <SELECT name='priority' class='selectBox'>
                       <OPTION><ofbiz:inputvalue field="priority" param="priority" entityAttr="workEffort" tryEntityAttr="tryEntity"/></OPTION>
                       <OPTION value=''></OPTION>
                       <OPTION>1</OPTION> <OPTION>2</OPTION> <OPTION>3</OPTION>
@@ -105,7 +105,7 @@
                   <td width='26%' align=right><div class='tabletext'>Project Status</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <SELECT name='currentStatusId'>
+                    <SELECT name='currentStatusId' class='selectBox'>
                       <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem" default="CAL_NEEDS_ACTION"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
                       <OPTION value=''></OPTION>
                       <ofbiz:iterator name="statusItem" property="taskStatusItems">
@@ -126,27 +126,24 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Description</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><TEXTAREA name='description' cols='50' rows='4'><ofbiz:inputvalue field="description" param="description" entityAttr="workEffort" tryEntityAttr="tryEntity"/></TEXTAREA>
+                  <td width='74%'><textarea name='description' class='textAreaBox' cols='50' rows='4'><ofbiz:inputvalue field="description" param="description" entityAttr="workEffort" tryEntityAttr="tryEntity"/></TEXTAREA>
                 </tr>
-
-<SCRIPT language='JavaScript'>
-function insertNowTimestampStart() {
-  eval('document.projectForm.estimatedStartDate.value="<%=UtilDateTime.nowTimestamp().toString()%>";');
-};
-</SCRIPT>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Start Date/Time</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='estimatedStartDate' value='<ofbiz:inputvalue field="estimatedStartDate" param="estimatedStartDate" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'>
-                    <span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span>
-                    <a href="#" onclick='javascript:insertNowTimestampStart()' class='buttontext'>[Now]</a>
+                  <td width='74%'>
+                    <input type='text' class='inputBox' size='30' maxlength='30' name='estimatedStartDate' value='<ofbiz:inputvalue field="estimatedStartDate" param="estimatedStartDate" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'>
+                    <a href="javascript:call_cal(document.projectForm.estimatedStartDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>               
                   </td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>End Date/Time</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='estimatedCompletionDate' value='<ofbiz:inputvalue field="estimatedCompletionDate" param="estimatedCompletionDate" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
+                  <td width='74%'>
+                    <input type='text' class='inputBox' size='30' maxlength='30' name='estimatedCompletionDate' value='<ofbiz:inputvalue field="estimatedCompletionDate" param="estimatedCompletionDate" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'>
+                    <a href="javascript:call_cal(document.projectForm.estimatedCompletionDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>               
+                  </td>
                 </tr>
 
                 <ofbiz:if name="workEffort">
@@ -216,7 +213,7 @@ function insertNowTimestampStart() {
           while(assigns.hasNext()) {%>
             <% GenericValue WEPA = (GenericValue)assigns.next();%>
             <% GenericValue person = WEPA.getRelatedOne("Person");%>
-            <tr><td><%=person.getString("firstName") + " " + person.getString("lastName")%></td></tr>
+            <tr><td><div class='tabletext'><%=person.getString("firstName") + " " + person.getString("lastName")%></div></td></tr>
           <%}%>
         <% if(isOwner) {%>
         <tr><td><hr></td></tr>
@@ -226,7 +223,7 @@ function insertNowTimestampStart() {
             <form name='assignform' action='<ofbiz:url>/addprojectassignment</ofbiz:url>' method=POST>
             <input type=hidden name='roleTypeId' value='CAL_DELEGATE'>
             <input type=hidden name='workEffortId' value='<%=workEffortId%>'>
-            <select name='quickAssignPartyId' onchange='javascript:window.assignform.submit();'>
+            <select name='quickAssignPartyId' class='selectBox' onchange='javascript:window.assignform.submit();'>
               <option value=''>(Choose User to Assign)
             <%while(people.hasNext()) {%>
               <% GenericValue person = (GenericValue)people.next();%>

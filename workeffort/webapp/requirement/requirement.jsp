@@ -119,7 +119,7 @@
                   <td width='26%' align=right><div class='tabletext'>Type</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <select name="requirementTypeId">
+                    <select name="requirementTypeId" class="selectBox">
                       <ofbiz:iterator name="requirementType" property="requirementTypes">
                         <option value="<%=requirementType.getString("requirementTypeId")%>"><%=requirementType.getString("description")%></option>
                       </ofbiz:iterator>
@@ -130,38 +130,38 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Description</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='40' maxlength='255' name='description' value='<ofbiz:inputvalue field="description" entityAttr="requirement"/>'></td>
+                  <td width='74%'><input type='text' class='inputBox' size='40' maxlength='255' name='description' value='<ofbiz:inputvalue field="description" entityAttr="requirement"/>'></td>
                 </tr>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Facility ID</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='20' maxlength='20' name='facilityId' value='<ofbiz:inputvalue field="facilityId" entityAttr="requirement"/>'></td>
+                  <td width='74%'><input type='text' class='inputBox' size='20' maxlength='20' name='facilityId' value='<ofbiz:inputvalue field="facilityId" entityAttr="requirement"/>'></td>
                 </tr>
                 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Product ID</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='20' maxlength='20' name='productId' value='<ofbiz:inputvalue field="productId" entityAttr="requirement" tryEntityAttr="tryEntity"/>'></td>
+                  <td width='74%'><input type='text' class='inputBox' size='20' maxlength='20' name='productId' value='<ofbiz:inputvalue field="productId" entityAttr="requirement" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
                 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Use Case</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><TEXTAREA name='story' cols='50' rows='10'><ofbiz:inputvalue field="useCase" entityAttr="requirement"/></TEXTAREA>
+                  <td width='74%'><textarea name='story' class='textAreaBox' cols='50' rows='10'><ofbiz:inputvalue field="useCase" entityAttr="requirement"/></TEXTAREA>
                 </tr>
 
                  <tr>
                   <td width='26%' align=right><div class='tabletext'>Reason</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='50' maxlength='255' name='reason' value='<ofbiz:inputvalue field="reason" entityAttr="requirement"/>'></td>
+                  <td width='74%'><input type='text' class='inputBox' size='50' maxlength='255' name='reason' value='<ofbiz:inputvalue field="reason" entityAttr="requirement"/>'></td>
                 </tr>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Required By Date/Time</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <input type='text' size='30' maxlength='30' name='requiredByDate' value='<ofbiz:inputvalue field="requiredByDate" entityAttr="requirement"/>'>
+                    <input type='text' class='inputBox' size='30' maxlength='30' name='requiredByDate' value='<ofbiz:inputvalue field="requiredByDate" entityAttr="requirement"/>'>
                     <a href="javascript:call_cal(document.requirementForm.requiredByDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
                   </td>
                 </tr>
@@ -177,13 +177,13 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Estimated Budget</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='10' maxlength='30' name='estimatedBudget' value='<ofbiz:inputvalue field="estimatedBudget" entityAttr="requirement"/>'></td>
+                  <td width='74%'><input type='text' class='inputBox' size='10' maxlength='30' name='estimatedBudget' value='<ofbiz:inputvalue field="estimatedBudget" entityAttr="requirement"/>'></td>
                 </tr>
 
                <tr>
                   <td width='26%' align=right><div class='tabletext'>Quantity</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='5' maxlength='30' name='quantity' value='<ofbiz:inputvalue field="quantity" entityAttr="requirement" tryEntityAttr="tryEntity"/>'></td>
+                  <td width='74%'><input type='text' class='inputBox' size='5' maxlength='30' name='quantity' value='<ofbiz:inputvalue field="quantity" entityAttr="requirement" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
 
                 <tr>

@@ -125,21 +125,21 @@
                         <tr>
                           <td align="right"><div class="tableheadtext">Response Required Date</div></td>
                           <td>
-                            <input type="text" name="requiredByDate" style="font-size: small;" size="30" value='<ofbiz:inputvalue field="requiredByDate" entityAttr="custRequestItem"/>'>
+                            <input type="text" name="requiredByDate" class="inputBox" size="30" value='<ofbiz:inputvalue field="requiredByDate" entityAttr="custRequestItem"/>'>
                             <a href="javascript:call_cal(document.requestItemForm.requiredByDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
                           </td>
                         </tr>
                         <tr>
                           <td align="right"><div class="tableheadtext">Product</div></td>
-                          <td><input type="text" name="productId" style="font-size: small;" size="20" value='<ofbiz:inputvalue field="productId" entityAttr="custRequestItem"/>'></td>
+                          <td><input type="text" name="productId" class="inputBox" size="20" value='<ofbiz:inputvalue field="productId" entityAttr="custRequestItem"/>'></td>
                         </tr>
                         <tr>
                           <td align="right"><div class="tableheadtext">Max Amount</div></td>
-                          <td><input type="text" name="maximumAmount" style="font-size: small;" size="10" value='<ofbiz:inputvalue field="maximumAmount" entityAttr="custRequestItem"/>'></td>
+                          <td><input type="text" name="maximumAmount" class="inputBox" size="10" value='<ofbiz:inputvalue field="maximumAmount" entityAttr="custRequestItem"/>'></td>
                         </tr>                                                
                         <tr>
                           <td align="right"><div class="tableheadtext">Quantity</div></td>
-                          <td><input type="text" name="quantity" style="font-size: small;" size="6" value='<ofbiz:inputvalue field="quantity" entityAttr="custRequestItem"/>'></td>
+                          <td><input type="text" name="quantity" class="inputBox" size="6" value='<ofbiz:inputvalue field="quantity" entityAttr="custRequestItem"/>'></td>
                         </tr>
                         <tr>
                           <td align="right"><div class="tableheadtext">Status</div></td>
@@ -158,7 +158,7 @@
                         <tr>
                           <td align="right"><div class="tableheadtext">Priority</div></td>
                           <td>
-                            <select name="priority" style="font-size: small;">
+                            <select name="priority" class="selectBox">
                               <option>9</option>
                               <option>8</option>
                               <option>7</option>
@@ -173,11 +173,11 @@
                         </tr>
                         <tr>
                           <td align="right"><div class="tableheadtext">Description</div></td>
-                          <td><input type="text" name="description" style="font-size: small;" size="50" value='<ofbiz:inputvalue field="description" entityAttr="custRequestItem"/>'></td>
+                          <td><input type="text" name="description" class="inputBox" size="50" value='<ofbiz:inputvalue field="description" entityAttr="custRequestItem"/>'></td>
                         </tr>
                         <tr>
                           <td align="right"><div class="tableheadtext">Story</div></td>
-                          <td><textarea name="story" cols="60" rows="20"><%=custRequestItem != null ? UtilFormatOut.checkNull(custRequestItem.getString("story")) : ""%></textarea></td>
+                          <td><textarea name="story" class="textAreaBox" cols="60" rows="20"><%=custRequestItem != null ? UtilFormatOut.checkNull(custRequestItem.getString("story")) : ""%></textarea></td>
                         </tr>
                         <tr>
                           <td align="right">
