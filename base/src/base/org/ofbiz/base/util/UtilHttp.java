@@ -53,7 +53,7 @@ import org.ofbiz.base.util.collections.OrderedMap;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
  */
 public class UtilHttp {
@@ -96,6 +96,10 @@ public class UtilHttp {
     }
 
     public static Map makeParamMapWithPrefix(HttpServletRequest request, String prefix, String suffix) {
+        return makeParamMapWithPrefix(request, null, prefix, suffix);
+    }
+
+    public static Map makeParamMapWithPrefix(HttpServletRequest request, Map additionalFields, String prefix, String suffix) {
         Map paramMap = new HashMap();
         Enumeration parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
@@ -114,10 +118,33 @@ public class UtilHttp {
                 }
             }
         }
+        if (additionalFields != null) {
+            Iterator i = additionalFields.keySet().iterator();
+            while (i.hasNext()) {
+                String fieldName = (String) i.next();
+                if (fieldName.startsWith(prefix)) {
+                    if (suffix != null && suffix.length() > 0) {
+                        if (fieldName.endsWith(suffix)) {
+                            String key = fieldName.substring(prefix.length(), fieldName.length() - (suffix.length() - 1));
+                            Object value = additionalFields.get(fieldName);
+                            paramMap.put(key, value);
+                        }
+                    } else {
+                        String key = fieldName.substring(prefix.length());
+                        Object value = additionalFields.get(fieldName);
+                        paramMap.put(key, value);
+                    }
+                }
+            }
+        }
         return paramMap;
     }
 
     public static List makeParamListWithSuffix(HttpServletRequest request, String suffix, String prefix) {
+        return makeParamListWithSuffix(request, null, suffix, prefix);
+    }
+
+    public static List makeParamListWithSuffix(HttpServletRequest request, Map additionalFields, String suffix, String prefix) {
         List paramList = new ArrayList();
         Enumeration parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
@@ -131,6 +158,23 @@ public class UtilHttp {
                 } else {
                     String value = request.getParameter(parameterName);
                     paramList.add(value);
+                }
+            }
+        }
+        if (additionalFields != null) {
+            Iterator i = additionalFields.keySet().iterator();
+            while (i.hasNext()) {
+                String fieldName = (String) i.next();
+                if (fieldName.endsWith(suffix)) {
+                    if (prefix != null && prefix.length() > 0) {
+                        if (fieldName.startsWith(prefix)) {
+                            Object value = additionalFields.get(fieldName);
+                            paramList.add(value);
+                        }
+                    } else {
+                        Object value = additionalFields.get(fieldName);
+                        paramList.add(value);
+                    }
                 }
             }
         }
