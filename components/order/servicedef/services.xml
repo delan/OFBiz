@@ -502,31 +502,19 @@
         <attribute name="attrName" type="String" mode="IN" optional="false"/>
         <attribute name="attrValue" type="String" mode="IN" optional="false"/>
     </service>
-
-    <service name="interfaceCustRequestItem" engine="interface" location="" invoke="">
-        <description>CustRequestItem Interface</description>
-        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
-        <attribute name="custRequestResolutionId" type="String" mode="IN" optional="true"/>
-        <attribute name="story" type="String" mode="IN" optional="true"/>
-        <attribute name="statusId" type="String" mode="IN" optional="true"/>
-        <attribute name="priority" type="Long" mode="IN" optional="true"/>
-        <attribute name="requiredByDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
-        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
-        <attribute name="maximumAmount" type="Double" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-    </service>
-    <service name="createCustRequestItem" engine="simple"
+    
+    <service name="createCustRequestItem" engine="simple" default-entity-name="CustRequestItem"
             location="org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestItem" auth="true">
         <description>Create a CustRequestItem record</description>
-        <implements service="interfaceCustRequestItem"/>
-        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="custRequestItemSeqId" optional="true"/>
     </service>
-    <service name="updateCustRequestItem" engine="simple"
+    <service name="updateCustRequestItem" engine="simple" default-entity-name="CustRequestItem"
             location="org/ofbiz/order/request/CustRequestServices.xml" invoke="updateCustRequestItem" auth="true">
         <description>Update a CustRequestItem record</description>
-        <implements service="interfaceCustRequestItem"/>
-        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
     <service name="createCustRequestRole" engine="simple"
@@ -536,7 +524,6 @@
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
     </service>
-
     <service name="removeCustRequestRole" engine="simple"
             location="org/ofbiz/order/request/CustRequestServices.xml" invoke="removeCustRequestRole" auth="true">
         <description>Remove a CustRequestRole record</description>
