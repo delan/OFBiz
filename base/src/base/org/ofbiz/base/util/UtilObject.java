@@ -1,5 +1,5 @@
 /*
- * $Id: UtilObject.java,v 1.1 2004/05/01 13:21:48 jonesde Exp $
+ * $Id: UtilObject.java,v 1.2 2004/06/17 06:09:25 ajzeneski Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -23,36 +23,109 @@
  */
 package org.ofbiz.base.util;
 
-public class UtilObject
-{
-    public static boolean equalsHelper( Object o1, Object o2 ) {
-        if ( o1 == o2 ) {
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+import java.io.ByteArrayInputStream;
+
+/**
+ * UtilObject
+ *
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision: 1.2 $
+ * @since      3.1
+ */
+public class UtilObject {
+
+    public static final String module = UtilObject.class.getName();
+
+    /** Serialize an object to a byte array */
+    public static byte[] getBytes(Object obj) {
+        ByteArrayOutputStream bos = null;
+        ObjectOutputStream oos = null;
+        byte[] data = null;
+        try {
+            bos = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(obj);
+            data = bos.toByteArray();
+        } catch (IOException e) {
+            Debug.logError(e, module);
+        } finally {
+            try {
+                if (oos != null) {
+                    oos.flush();
+                    oos.close();
+                }
+                if (bos != null) {
+                    bos.close();
+                }
+            } catch (IOException e) {
+                Debug.logError(e, module);
+            }
+        }
+
+        return data;
+    }
+
+    /** Deserialize a byte array back to an object */
+    public static Object getObject(byte[] bytes) {
+        ByteArrayInputStream bis = null;
+        ObjectInputStream ois = null;
+        Object obj = null;
+
+        try {
+            bis = new ByteArrayInputStream(bytes);
+            ois = new ObjectInputStream(bis, Thread.currentThread().getContextClassLoader());
+            obj = ois.readObject();
+        } catch (ClassNotFoundException e) {
+            Debug.logError(e, module);
+        } catch (IOException e) {
+            Debug.logError(e, module);
+        } finally {
+            try {
+                if (ois != null) {
+                    ois.close();
+                }
+                if (bis != null) {
+                    bis.close();
+                }
+            } catch (IOException e) {
+                Debug.logError(e, module);
+            }
+        }
+
+        return obj;
+    }
+
+    public static boolean equalsHelper(Object o1, Object o2) {
+        if (o1 == o2) {
             // handles same-reference, or null
             return true;
-        } else if ( o1 == null || o2 == null ) {
+        } else if (o1 == null || o2 == null) {
             // either o1 or o2 is null, but not both
             return false;
         } else {
-            return o1.equals( o2 );
+            return o1.equals(o2);
         }
     }
 
-    public static int compareToHelper( Comparable o1, Object o2 ) {
-        if ( o1 == o2 ) {
+    public static int compareToHelper(Comparable o1, Object o2) {
+        if (o1 == o2) {
             // handles same-reference, or null
             return 0;
-        } else if ( o1 == null ) {
+        } else if (o1 == null) {
             return -1;
-        } else if ( o2 == null ) {
+        } else if (o2 == null) {
             // either o1 or o2 is null, but not both
             return 1;
         } else {
-            return o1.compareTo( o2 );
+            return o1.compareTo(o2);
         }
     }
 
-    public static int doHashCode( Object o1 ) {
-        if ( o1 == null ) return 0;
+    public static int doHashCode(Object o1) {
+        if (o1 == null) return 0;
         return o1.hashCode();
     }
 }
