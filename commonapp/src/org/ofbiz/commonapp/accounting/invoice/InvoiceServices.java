@@ -217,7 +217,7 @@ public class InvoiceServices {
             String paymentMethodTypeId = (String) partyIdIter.next();    
         
             // create the bill-from role BILL_FROM_VENDOR as the partyId for the payment method
-            String paymentPartyId = PaymentWorker.getPaymentPartyId(delegator, orderHeader.getString("webSiteId"), paymentMethodTypeId);
+            String paymentPartyId = PaymentWorker.getPaymentPartyId(delegator, orderHeader.getString("productStoreId"), paymentMethodTypeId);
             if (paymentPartyId != null) {
                 GenericValue payToRole = delegator.makeValue("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId));
                 payToRole.set("partyId", paymentPartyId);
@@ -226,7 +226,7 @@ public class InvoiceServices {
             }
         
             // create the bill-from (or pay-to) contact mech as the primary PAYMENT_LOCATION of the party from payment.properties
-            GenericValue payToAddress = PaymentWorker.getPaymentAddress(delegator, orderHeader.getString("webSiteId"), paymentMethodTypeId);
+            GenericValue payToAddress = PaymentWorker.getPaymentAddress(delegator, orderHeader.getString("productStoreId"), paymentMethodTypeId);
             if (payToAddress != null) {
                 GenericValue payToCm = delegator.makeValue("InvoiceContactMech", 
                     UtilMisc.toMap("invoiceId", invoiceId, "contactMechId", payToAddress.getString("contactMechId"), 

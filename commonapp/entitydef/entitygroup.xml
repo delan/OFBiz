@@ -298,8 +298,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="WebPage" />
     <entity-group group="org.ofbiz.commonapp" entity="WebSite" />
     <entity-group group="org.ofbiz.commonapp" entity="WebSiteEmailSetting" />
-    <entity-group group="org.ofbiz.commonapp" entity="WebSitePaymentSetting" />
-    <entity-group group="org.ofbiz.commonapp" entity="WebSitePaymentSettingView" />
     <entity-group group="org.ofbiz.commonapp" entity="WebSiteRole" />
 
   <!-- ========================================================= -->
@@ -722,7 +720,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="ProductStore" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductStoreFacility" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductStorePaymentSetting" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStorePaymentSettingView" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductStorePromoAppl" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductStoreRole" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductStoreCatalog" />

@@ -156,35 +156,45 @@ public class PaymentWorker {
         return results;
     }
     
-    public static GenericValue getPaymentSetting(GenericDelegator delegator, String webSiteId, String paymentMethodTypeId) {
-        GenericValue webSitePayment = null;
+    public static GenericValue getPaymentSetting(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId, String paymentServiceTypeEnumId) {
+        GenericValue storePayment = null;
         try {
-            webSitePayment = delegator.findByPrimaryKeyCache("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", paymentMethodTypeId));    
+            storePayment = delegator.findByPrimaryKeyCache("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId, "paymentServiceTypeEnumId", paymentServiceTypeEnumId));    
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Problems looking up payment method type by website.", module);
+            Debug.logError(e, "Problems looking up store payment settings", module);
         }
         
-        if (webSitePayment == null) {
+        if  (storePayment == null) {
             try {
-                webSitePayment = delegator.findByPrimaryKeyCache("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", "_NA_"));
+                List storePayments = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId));
+                storePayment = EntityUtil.getFirst(storePayments);
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Problems looking up payment method type by website.", module);
+                Debug.logError(e, "Problems looking up store payment settings", module);
             }
         }
-                
-        return webSitePayment;                          
+        
+        if  (storePayment == null) {
+            try {
+                List storePayments = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId));
+                storePayment = EntityUtil.getFirst(storePayments);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problems looking up store payment settings", module);
+            }
+        } 
+           
+        return storePayment;                          
     }  
     
-    public static String getPaymentPartyId(GenericDelegator delegator, String webSiteId, String paymentMethodTypeId) {
-        GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethodTypeId);
-        String paymentConfig = paymentSettings != null && paymentSettings.get("paymentConfiguration") != null ? paymentSettings.getString("paymentConfiguration") : null;
+    public static String getPaymentPartyId(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId) {
+        GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, productStoreId, paymentMethodTypeId, null);
+        String paymentConfig = paymentSettings != null && paymentSettings.get("paymentPropertiesPath") != null ? paymentSettings.getString("paymentConfiguration") : null;
         if (paymentConfig == null) paymentConfig = "payment.properties";    
         return UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
     }
     
-    public static GenericValue getPaymentAddress(GenericDelegator delegator, String webSiteId, String paymentMethodTypeId) {
-        GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethodTypeId);
-        String paymentConfig = paymentSettings != null && paymentSettings.get("paymentConfiguration") != null ? paymentSettings.getString("paymentConfiguration") : null;
+    public static GenericValue getPaymentAddress(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId) {
+        GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, productStoreId, paymentMethodTypeId, null);
+        String paymentConfig = paymentSettings != null && paymentSettings.get("paymentPropertiesPath") != null ? paymentSettings.getString("paymentConfiguration") : null;
         if (paymentConfig == null) paymentConfig = "payment.properties";
         String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");      
         

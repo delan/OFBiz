@@ -59,12 +59,17 @@ import org.ofbiz.core.util.UtilProperties;
  * @version    $Revision$
  * @since      2.0
  */
-public class PaymentGatewayServices {
+public class PaymentGatewayServices {    
 
     public static final String module = PaymentGatewayServices.class.getName();
+    public static final String AUTH_SERVICE_TYPE = "PRDS_PAY_AUTH";
+    public static final String REAUTH_SERVICE_TYPE = "PRDS_PAY_REAUTH";
+    public static final String RELEASE_SERVICE_TYPE = "PRDS_PAY_RELEASE";
+    public static final String CAPTURE_SERVICE_TYPE = "PRDS_PAY_CAPTURE";
+    public static final String REFUND_SERVICE_TYPE = "PRDS_PAY_REFUND";
 
     /**
-     * Processes payments through service calls to the defined processing service for the website/paymentMethodType
+     * Processes payments through service calls to the defined processing service for the ProductStore/PaymentMethodType
      * @returns APPROVED|FAILED|ERROR for complete processing of ALL payment methods.
      */
     public static Map authOrderPayments(DispatchContext dctx, Map context) {
@@ -156,14 +161,15 @@ public class PaymentGatewayServices {
         String serviceName = null;        
             
         // get the payment settings i.e. serviceName and config properties file name
-        GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref);            
-        if (paymentSettings != null) {
-            if (!reauth) {            
-                serviceName = paymentSettings.getString("paymentAuthService");
-            } else {             
-                serviceName = paymentSettings.getString("paymentReAuthService");
-            }
-            paymentConfig = paymentSettings.getString("paymentConfiguration");                                
+        String serviceType = AUTH_SERVICE_TYPE;
+        if (reauth) {
+            serviceType = REAUTH_SERVICE_TYPE;   
+        }      
+        
+        GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref, serviceType);            
+        if (paymentSettings != null) {                        
+            serviceName = paymentSettings.getString("paymentService");            
+            paymentConfig = paymentSettings.getString("paymentPropertiesPath");                                
         } else {
             Debug.logError("Invalid payment settings entity, no payment settings found", module);
             return null;                
@@ -209,7 +215,7 @@ public class PaymentGatewayServices {
         return processorResult;              
     }
     
-    private static GenericValue getPaymentSettings(GenericValue orderHeader, GenericValue paymentPreference) {
+    private static GenericValue getPaymentSettings(GenericValue orderHeader, GenericValue paymentPreference, String paymentServiceType) {
         GenericDelegator delegator = orderHeader.getDelegator();
         GenericValue paymentSettings = null;
         GenericValue paymentMethod = null;
@@ -219,10 +225,10 @@ public class PaymentGatewayServices {
             Debug.logError(e, "Problem getting PaymentMethod from OrderPaymentPreference", module);
         }
         if (paymentMethod != null) {
-            String webSiteId = orderHeader.getString("webSiteId");
+            String productStoreId = orderHeader.getString("productStoreId");
             String paymentMethodTypeId = paymentMethod.getString("paymentMethodTypeId");
-            if (webSiteId != null && paymentMethodTypeId != null) {
-                paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethodTypeId);
+            if (productStoreId != null && paymentMethodTypeId != null) {
+                paymentSettings = PaymentWorker.getPaymentSetting(delegator, productStoreId, paymentMethodTypeId, paymentServiceType);
             }            
         }
         return paymentSettings;        
@@ -310,7 +316,7 @@ public class PaymentGatewayServices {
     }
            
     /**
-     * Captures payments through service calls to the defined processing service for the website/paymentMethodType
+     * Captures payments through service calls to the defined processing service for the ProductStore/PaymentMethodType
      * @returns COMPLETE|FAILED|ERROR for complete processing of ALL payment methods.
      */
     public static Map capturePaymentsByInvoice(DispatchContext dctx, Map context) {
@@ -381,7 +387,7 @@ public class PaymentGatewayServices {
     }
     
     /**
-     * Captures payments through service calls to the defined processing service for the website/paymentMethodType
+     * Captures payments through service calls to the defined processing service for the ProductStore/PaymentMethodType
      * @returns COMPLETE|FAILED|ERROR for complete processing of ALL payment methods.
      */    
     public static Map captureOrderPayments(DispatchContext dctx, Map context) {
@@ -541,10 +547,10 @@ public class PaymentGatewayServices {
         String paymentConfig = null;
             
         // get the payment settings i.e. serviceName and config properties file name
-        GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref);            
+        GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref, CAPTURE_SERVICE_TYPE);            
         if (paymentSettings != null) {
-            paymentConfig = paymentSettings.getString("paymentConfiguration");
-            serviceName = paymentSettings.getString("paymentCaptureService");
+            paymentConfig = paymentSettings.getString("paymentPropertiesPath");
+            serviceName = paymentSettings.getString("paymentService");
             if (serviceName == null) {
                 Debug.logError("Service name is null for payment setting; cannot process", module);
                 return null;
@@ -740,7 +746,8 @@ public class PaymentGatewayServices {
     public static Map refundPayment(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher(); 
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin"); 
         
         GenericValue paymentPref = (GenericValue) context.get("orderPaymentPreference");
         Double refundAmount = (Double) context.get("refundAmount");
@@ -757,12 +764,12 @@ public class PaymentGatewayServices {
         
         GenericValue paymentSettings = null;
         if (orderHeader != null) {
-            paymentSettings = getPaymentSettings(orderHeader, paymentPref);             
+            paymentSettings = getPaymentSettings(orderHeader, paymentPref, REFUND_SERVICE_TYPE);             
         }
         
         if (paymentSettings != null) {
-            String paymentConfig = paymentSettings.getString("paymentConfiguration");
-            String serviceName = paymentSettings.getString("paymentRefundService");
+            String paymentConfig = paymentSettings.getString("paymentPropertiesPath");
+            String serviceName = paymentSettings.getString("paymentService");
             if (serviceName != null) {
                 Map serviceContext = new HashMap();
                 serviceContext.put("paymentConfig", paymentConfig);
@@ -814,7 +821,8 @@ public class PaymentGatewayServices {
                     payment.put("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
                     payment.put("paymentMethodId", paymentPref.get("paymentMethodId"));
                     payment.put("partyIdFrom", payFromPartyId);
-                    payment.put("partyIdTo", payToPartyId);                    
+                    payment.put("partyIdTo", payToPartyId);   
+                    payment.put("userLogin", userLogin);                 
                     payment.put("paymentRefNum", refundResponse.get("refundRefNum"));
                     payment.put("amount", refundResponse.get("refundAmount"));
                     payment.put("comments", "Refund : " + refundResponse.get("refundMessage"));

@@ -148,18 +148,18 @@ public class OrderChangeHelper {
             Debug.logError(e, "Cannot get OrderHeader from payment preference", module);
         }
         
-        // get the website payment settings for the order
-        GenericValue webSitePaymentSettings = null;
+        // get the store payment settings for the order
+        GenericValue storePaymentSetting = null;
         String paymentConfig = null;
         if (orderHeader != null) {
             try {
-                webSitePaymentSettings = delegator.findByPrimaryKey("WebSitePaymentSetting", 
-                    UtilMisc.toMap("webSiteId", orderHeader.getString("webSiteId"), 
-                        "paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId")));
-                if (webSitePaymentSettings != null)
-                    paymentConfig = webSitePaymentSettings.getString("paymentConfiguration");
+                List storePaymentSettings = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", orderHeader.getString("productStoreId"), "paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId")));
+                storePaymentSetting = EntityUtil.getFirst(storePaymentSettings);
+                                    
+                if (storePaymentSetting != null)
+                    paymentConfig = storePaymentSetting.getString("paymentPropertiesPath");
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Cannot get the WebSitePaymentSetting for the order header", module);
+                Debug.logError(e, "Cannot get the ProductStorePaymentSetting for the order header", module);
             }
         } else {
             Debug.logWarning("No order header, cannot create payment", module);

@@ -65,36 +65,6 @@
         <auto-attributes entity-name="WebSiteEmailSetting" include="pk" mode="IN" optional="false"/>
     </service>        
         
-    <!-- WebSite Payment Setting Services -->
-    <service name="createWebSitePaymentSetting" engine="simple"
-            location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="createWebSitePaymentSetting" auth="true">
-        <description>Create a WebSite Payment Setting</description>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
-        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="paymentAuthService" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentReAuthService" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentCaptureService" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentRefundService" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentConfiguration" type="String" mode="IN" optional="true"/>
-    </service>
-    <service name="updateWebSitePaymentSetting" engine="simple"
-            location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="updateWebSitePaymentSetting" auth="true">
-        <description>Update an WebSite</description>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
-        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="paymentAuthService" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentReAuthService" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentCaptureService" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentRefundService" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentConfiguration" type="String" mode="IN" optional="true"/>
-    </service>    
-    <service name="removeWebSitePaymentSetting" engine="simple"
-            location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="removeWebSitePaymentSetting" auth="true">
-        <description>Update an WebSite</description>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
-        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
-    </service>
-       
     <!--Contentservices.-->
     <service name="createContent" default-entity-name="Content" engine="simple"
             location="org/ofbiz/commonapp/content/content/ContentServices.xml" invoke="createContent" auth="true">
