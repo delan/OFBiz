@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 */
 
@@ -40,17 +40,21 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
     buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options[0] = new Option(\"" + featureTypes.get(current) + "\",\"\",true,true);");
     while (i.hasNext()) {
         key = i.next();
-        value = map.get(key);        
+        value = map.get(key);
         optValue = null;
+
         if (order.indexOf(current) == (order.size()-1)) {
             optValue = value.iterator().next();
         } else {
             optValue = prefix + "_" + ct;
         }
+
         buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options[" + (ct + 1) + "] = new Option(\"" + key + "\",\"" + optValue + "\");");
         ct++;
     }
+    amt.append(" }");
     buf.append(" }");
+    buf.append(amt.toString());
     if (order.indexOf(current) < (order.size()-1)) {
         i2 = keySet.iterator();
         ct = 0;
@@ -205,7 +209,7 @@ if (product != null) {
 	                    else
 	                        opt = "" + counter;                 
 	                    jsBuf.append("document.forms[\"addform\"].elements[\"" + topLevelName + "\"].options[" + (counter+1) + "] = new Option(\"" + key + "\",\"" + opt + "\");");
-	                    jsBuf.append("IMG[" + counter + "] = \"" + imageMap.get(key).getString("largeImageUrl") +"\";");                
+	                    jsBuf.append("IMG[" + counter + "] = \"" + imageMap.get(key).getString("largeImageUrl") +"\";");
 	                    counter++;
 	                }
 	            }                    
@@ -225,6 +229,23 @@ if (product != null) {
 	                    topLevelKeysCt++;
 	                }
 	            }
+
+	            // make a list of variant sku with requireAmount
+                variantsRes = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_VARIANT", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
+                variants = variantsRes.get("assocProducts");
+                if (variants != null) {
+                    amt = new StringBuffer();
+                    amt.append("function checkAmtReq(sku) { ");
+                    vari = variants.iterator();
+                    while (vari.hasNext()) {
+                        variantAssoc = vari.next();
+                        variant = variantAssoc.getRelatedOne("AssocProduct");
+                        amt.append(" if (sku == \"" + variant.get("productId") + "\") return \"" + (variant.get("requireAmount") != null ? variant.getString("requireAmount") : "N") + "\"; ");
+                    }
+                    amt.append(" } ");
+                }
+                jsBuf.append(amt.toString());
+	            jsBuf.append("function toggleAmt(toggle) { if (toggle == 'Y') changeObjectVisibility(\"add_amount\", \"visible\"); if (toggle == 'N') changeObjectVisibility(\"add_amount\", \"hidden\"); }");
 	            jsBuf.append("function findIndex(name) { for (i=0; i<OPT.length; i++) { if (OPT[i] == name) return i; } return -1; }");    
 	            jsBuf.append("function getList(name, value, src) { var value2 = 'NULL'; currentOrderIndex = findIndex(name);");                    
 	            jsBuf.append("if (src == 1 && OPT.length == 1) { value2 = document.forms[\"addform\"].elements[name].options[(value*1)+1].value;");                        
@@ -234,12 +255,14 @@ if (product != null) {
 	            jsBuf.append("} if (OPT.length != 1) { eval(\"list\" + OPT[currentOrderIndex+1] + value + \"()\");");                        
 	            jsBuf.append("document.addform.add_product_id.value = 'NULL'; } else { if (value2 == 'NULL')");
 	            jsBuf.append("value2 = value; document.addform.add_product_id.value = value2;");
-	            jsBuf.append("} } else { document.addform.add_product_id.value = value; } }");
+	            jsBuf.append("} } else { document.addform.add_product_id.value = value; toggleAmt(checkAmtReq(value)); } }");
 	            jsBuf.append("</script>");  
 	            
 	            request.setAttribute("virtualJavaScript", jsBuf.toString());
 	        }
         }
+
+
     } 
 
     // get product associations
