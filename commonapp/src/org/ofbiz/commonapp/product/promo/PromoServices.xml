@@ -140,12 +140,12 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
-    <!-- ProductPromo to ProdCatalog methods -->
-    <simple-method method-name="addProductPromoToProdCatalog" short-description="Add ProductPromo To ProdCatalog">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run addProductPromoToProdCatalog you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+    <!-- ProductPromo to ProductStore methods -->
+    <simple-method method-name="createProductStorePromoAppl" short-description="Create ProductStorePromoAppl">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductStorePromoAppl you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value value-name="newEntity" entity-name="ProdCatalogPromoAppl"/>
+        <make-value value-name="newEntity" entity-name="ProductStorePromoAppl"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
@@ -156,23 +156,23 @@
         
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateProductPromoToProdCatalog" short-description="Update ProductPromo to ProdCatalog">
-        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPromoToProdCatalog you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+    <simple-method method-name="updateProductStorePromoAppl" short-description="Update ProductStorePromoAppl">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductStorePromoAppl you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value entity-name="ProdCatalogPromoAppl" value-name="lookupPKMap"/>
+        <make-value entity-name="ProductStorePromoAppl" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProdCatalogPromoAppl" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-    <simple-method method-name="removeProductPromoFromProdCatalog" short-description="Remove ProductPromo From ProdCatalog">
-        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductPromoFromProdCatalog you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+    <simple-method method-name="deleteProductStorePromoAppl" short-description="Delete ProductStorePromoAppl">
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductStorePromoAppl you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value entity-name="ProdCatalogPromoAppl" value-name="lookupPKMap"/>
+        <make-value entity-name="ProductStorePromoAppl" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProdCatalogPromoAppl" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 </simple-methods>

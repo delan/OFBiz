@@ -40,7 +40,15 @@
 		<field name="siteName"><text size="30" maxlength="60"/></field>
 		<field name="enableHttps" widget-style="selectBox">
 		    <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
-		</field>		
+		</field>
+		
+		<field name="productStoreId" widget-style="selectBox">
+		    <drop-down allow-empty="true">
+		        <entity-options entity-name="ProductStore" description="${storeName}">
+		        	<entity-order-by field-name="storeName"/>
+		        </entity-options>
+		    </drop-down>
+		</field>
 
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
@@ -76,37 +84,6 @@
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
 			<hyperlink target="removeWebSiteRole?webSiteId=${webSiteRole.webSiteId}&amp;partyId=${webSiteRole.partyId}&amp;roleTypeId=${webSiteRole.roleTypeId}&amp;fromDate=${webSiteRole.fromDate}"
-				description="[Delete]" also-hidden="false"/>
-		</field>
-	</form>
-	<form name="AddProdCatalogToWebSite" type="single" 
-		target="addProdCatalogToWebSite" title=""
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="addProdCatalogToWebSite"/>
-		<field name="webSiteId" map-name="webSite"><hidden/></field>
-		<field name="prodCatalogId" title="Catalog" widget-style="selectBox">
-			<drop-down>
-				<entity-options entity-name="ProdCatalog" description="${catalogName}">
-					<entity-order-by field-name="catalogName"/>
-				</entity-options>
-			</drop-down>
-		</field>
-		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
-	</form>
-	<form name="UpdateProdCatalogToWebSite" type="list"
-		target="updateProdCatalogToWebSite" title="" list-name="webSiteCatalogDatas"
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="updateProdCatalogToWebSite" map-name="webSiteCatalog"/>
-		<field name="webSiteId"><hidden/></field>
-		<field name="prodCatalogId" title="WebSite [ID]" widget-style="buttontext">
-			<hyperlink target-type="inter-app" target="/catalog/control/EditProdCatalog?prodCatalogId=${webSiteCatalog.prodCatalogId}"
-				description="${prodCatalog.catalogName} [${webSiteCatalog.prodCatalogId}]"/>
-		</field>
-		<field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
-		<field name="thruDate" title="Thru Date &amp;amp; Time"></field>
-		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
-		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-			<hyperlink target="removeProdCatalogFromWebSite?prodCatalogId=${webSiteCatalog.prodCatalogId}&amp;webSiteId=${webSiteCatalog.webSiteId}&amp;fromDate=${webSiteCatalog.fromDate}"
 				description="[Delete]" also-hidden="false"/>
 		</field>
 	</form>

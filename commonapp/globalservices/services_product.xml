@@ -175,25 +175,6 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="addProdCatalogToWebSite" default-entity-name="WebSiteCatalog" engine="simple"
-                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="addProdCatalogToWebSite" auth="true">
-        <description>Add ProdCatalog To WebSite</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="fromDate" optional="true"/>
-    </service>
-    <service name="updateProdCatalogToWebSite" default-entity-name="WebSiteCatalog" engine="simple"
-                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalogToWebSite" auth="true">
-        <description>Add ProdCatalog To WebSite</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-    <service name="removeProdCatalogFromWebSite" default-entity-name="WebSiteCatalog" engine="simple"
-                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="removeProdCatalogFromWebSite" auth="true">
-        <description>Remove ProdCatalog From WebSite</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service>
-
     <service name="addProdCatalogToParty" default-entity-name="ProdCatalogRole" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="addProdCatalogToParty" auth="true">
         <description>Add ProdCatalog To Party</description>
@@ -521,22 +502,22 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="addProductPromoToProdCatalog" default-entity-name="ProdCatalogPromoAppl" engine="simple"
-                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="addProductPromoToProdCatalog" auth="true">
-        <description>Add ProductPromo To ProdCatalog</description>
+    <service name="createProductStorePromoAppl" default-entity-name="ProductStorePromoAppl" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="createProductStorePromoAppl" auth="true">
+        <description>Create ProductStorePromoAppl</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
 		<override name="fromDate" optional="true"/>
     </service>
-    <service name="updateProductPromoToProdCatalog" default-entity-name="ProdCatalogPromoAppl" engine="simple"
-                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="updateProductPromoToProdCatalog" auth="true">
-        <description>Add ProductPromo To ProdCatalog</description>
+    <service name="updateProductStorePromoAppl" default-entity-name="ProductStorePromoAppl" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="updateProductStorePromoAppl" auth="true">
+        <description>Update ProductStorePromoAppl</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeProductPromoFromProdCatalog" default-entity-name="ProdCatalogPromoAppl" engine="simple"
-                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="removeProductPromoFromProdCatalog" auth="true">
-        <description>Remove ProductPromo From ProdCatalog</description>
+    <service name="deleteProductStorePromoAppl" default-entity-name="ProductStorePromoAppl" engine="simple"
+                location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="deleteProductStorePromoAppl" auth="true">
+        <description>Delete ProductStorePromoAppl</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
@@ -1121,6 +1102,26 @@
         <auto-attributes entity-name="ProductStore" include="nonpk" mode="IN" optional="true"/>
         <override name="storeName" optional="false"/>
     </service>          
+
+    <service name="createProductStoreCatalog" default-entity-name="ProductStoreCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="createProductStoreCatalog" auth="true">
+        <description>Create ProductStoreCatalog</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updateProductStoreCatalog" default-entity-name="ProductStoreCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="updateProductStoreCatalog" auth="true">
+        <description>Update ProductStoreCatalog</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductStoreCatalog" default-entity-name="ProductStoreCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="deleteProductStoreCatalog" auth="true">
+        <description>Delete ProductStoreCatalog</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
 
     <!-- Product View Services -->
     <service name="getProduct" engine="java"

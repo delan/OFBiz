@@ -154,30 +154,6 @@
     	<response name="error" type="view" value="EditWebSiteParties"/>
     </request-map>
 
-    <!-- ================ WebSite ProdCatalogs Requests ================= -->
-    <request-map uri="EditWebSiteProdCatalogs">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
-    </request-map>
-    <request-map uri="addProdCatalogToWebSite">
-    	<security https="true" auth="true"/>
-        <event type="service" path="" invoke="addProdCatalogToWebSite"/>
-    	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
-    	<response name="error" type="view" value="EditWebSiteProdCatalogs"/>
-    </request-map>
-    <request-map uri="updateProdCatalogToWebSite">
-    	<security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateProdCatalogToWebSite"/>
-    	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
-    	<response name="error" type="view" value="EditWebSiteProdCatalogs"/>
-    </request-map>
-    <request-map uri="removeProdCatalogFromWebSite">
-    	<security https="true" auth="true"/>
-        <event type="service" path="" invoke="removeProdCatalogFromWebSite"/>
-    	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
-    	<response name="error" type="view" value="EditWebSiteProdCatalogs"/>
-    </request-map>
-
     <!-- ================ ContentType Requests ================= -->
     <request-map uri="EditContentType">
         <security auth="true" https="true"/>
@@ -851,7 +827,6 @@
     <view-map name="EditWebSite" page="/website/EditWebSite.ftl" type="jpublish"/>
     <view-map name="EditWebSiteEmail" page="/website/EditWebSiteEmail.ftl" type="jpublish"/>
     <view-map name="EditWebSiteParties" page="/website/EditWebSiteParties.ftl" type="jpublish"/>
-    <view-map name="EditWebSiteProdCatalogs" page="/website/EditWebSiteProdCatalogs.ftl" type="jpublish"/>
     
     <view-map name="EditContentPurpose" page="/content/EditContentPurpose.ftl" type="jpublish"/>
     <view-map name="EditContentRole" page="/content/EditContentRole.ftl" type="jpublish"/>
