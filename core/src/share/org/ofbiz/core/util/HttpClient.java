@@ -267,7 +267,9 @@ public class HttpClient {
             BufferedReader post = new BufferedReader(charset == null ? new InputStreamReader(in) : new InputStreamReader(in, charset));
             String line = new String();
 
+            if (Debug.verboseOn()) Debug.logVerbose("---- HttpClient Response Content ----", module);
             while ((line = post.readLine()) != null) {
+                if (Debug.verboseOn()) Debug.logVerbose("[HttpClient] : " + line, module);
                 buf.append(line);
                 if (lineFeed)
                     buf.append("\n");
