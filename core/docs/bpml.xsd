@@ -1,0 +1,648 @@
+<?xml version="1.0" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2000/10/XMLSchema"
+         xmlns:bpml="http://www.bpmi.org/BPML"
+         targetNamespace="http://www.bpmi.org/BPML">
+
+<!-- The package element is the root element of all BPML documents -->
+<xsd:element name="package">
+        <xsd:annotation>
+                <xsd:documentation xml:lang="en">The package element is the root element of all BPML documents</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+                <xsd:group ref="metaData" />
+                <!-- !ow!
+                <xsd:choice minOccurs="1" maxOccurs="unbounded">
+                	<xsd:element ref="abstract" />
+                	<xsd:element ref="process" />
+                </xsd:choice>
+                -->
+                <xsd:attribute name="namespace" type="uri" use="required" />
+        </xsd:complexType>
+</xsd:element>
+
+
+<!-- Process definition elements -->
+
+<!-- Process abstract definition -->
+<xsd:element name="abstract">
+        <xsd:annotation>
+                <xsd:documentation xml:lang="en">Process abstract definition</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+                <xsd:complexContent>
+                        <xsd:extension base="processDefinition">
+                        </xsd:extension>
+                </xsd:complexContent>
+        </xsd:complexType>
+</xsd:element>
+
+<!-- Message definition -->
+<xsd:element name="message">
+        <xsd:annotation>
+                <xsd:documentation xml:lang="en">Message definition</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+                <xsd:sequence>
+                        <xsd:group ref="metaData" />
+                        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                                <xsd:element ref="xsd:element" />
+                                <xsd:element ref="xsd:complexType" />
+                        </xsd:choice>
+                </xsd:sequence>
+                <xsd:attribute name="name" type="name" use="required" />
+                <xsd:attribute name="type" type="messageType" use="optional" value="data" />
+        </xsd:complexType>
+</xsd:element>
+
+<!-- Participant definition -->
+<xsd:complexType name="participantDef">
+        <xsd:annotation> <xsd:documentation xml:lang="en">Participant definition</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+                <xsd:group ref="metaData" />
+                <xsd:group ref="extension" />
+        </xsd:sequence>
+        <xsd:attribute name="name" type="name" use="required" />
+</xsd:complexType>
+
+<!-- Process definition -->
+<xsd:element name="process">
+        <xsd:annotation>
+                <xsd:documentation xml:lang="en">Process definition</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+                <xsd:complexContent>
+                        <xsd:extension base="processDefinition">
+                                <xsd:sequence>
+                                        <xsd:group ref="extension" />
+                                </xsd:sequence>
+                        </xsd:extension>
+                </xsd:complexContent>
+        </xsd:complexType>
+</xsd:element>
+
+<!-- Base type for process and abstract definitions -->
+<xsd:complexType name="processDefinition">
+        <xsd:sequence>
+                <xsd:element name="supports" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:complexType>  <xsd:attribute name="abstract" type="name"     use="required" />
+                        </xsd:complexType>
+                </xsd:element>
+                <xsd:group ref="metaData" />
+                <xsd:element name="import" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:complexType>
+                                <xsd:attribute name="href" type="uri"     use="required" />
+                        </xsd:complexType>
+                </xsd:element>
+                <xsd:element ref="xsd:schema" minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="message" minOccurs="0" maxOccurs="unbounded" />
+                <!-- !ow! <xsd:element name="participant" ref="participantDef" minOccurs="0" maxOccurs="unbounded" />-->
+                <xsd:element ref="ruleSet" minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element name="activity" minOccurs="0" maxOccurs="unbounded" />
+                <!-- !ow!
+                <xsd:complexType>
+                        <xsd:complexContent>
+                                <xsd:choice>
+                                        <xsd:group ref="anyComplexActivity" />
+                                        <xsd:group ref="anySimpleActivity" />
+                                </xsd:choice>
+                        </xsd:complexContent>
+                        <xsd:attribute name="name" type="name"     use="required" />
+                </xsd:complexType>
+                -->
+                <xsd:choice>
+                        <xsd:group ref="anyComplexActivity"/>
+                        <xsd:group ref="anySimpleActivity"/>
+                </xsd:choice>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="name" use="required" />
+</xsd:complexType>
+
+<!-- Rule set definition -->
+<xsd:element name="ruleSet">
+        <xsd:annotation> <xsd:documentation xml:lang="en">Rule set definition</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+                <xsd:sequence>
+                        <xsd:group ref="metaData" />
+                                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                                        <xsd:element ref="rule"/>
+                                        <xsd:element name="variable" type="variableAssignment" />
+                                </xsd:choice>
+                        <xsd:group ref="extension" />
+                </xsd:sequence>
+                <xsd:attribute name="name" type="name" use="required" />
+        </xsd:complexType>
+</xsd:element>
+
+
+<!-- Meta data and annotation elements and metaData group -->
+
+<!-- Element for an annotation -->
+<xsd:element name="annotation" type="xsd:anyType">
+        <xsd:annotation>
+                <xsd:documentation xml:lang="en">Annotation</xsd:documentation>
+        </xsd:annotation>
+</xsd:element>
+
+<!-- Element for meta-data -->
+<xsd:element name="meta">
+        <xsd:annotation> <xsd:documentation xml:lang="en">Meta data</xsd:documentation>   </xsd:annotation>
+        <xsd:complexType>
+                <xsd:sequence><xsd:any processContents="skip" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+        </xsd:complexType>
+</xsd:element>   <!-- Meta data group includes zero or more annotation elements and zero or one meta element in that order -->
+<xsd:group name="metaData">
+        <xsd:sequence>
+                <xsd:element ref="annotation" minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element ref="meta" minOccurs="0" maxOccurs="1" />
+        </xsd:sequence>
+</xsd:group>
+
+
+<!-- Base types for simple and complex activities -->
+
+<!-- Base type for all complex activities -->
+<xsd:complexType name="complexActivity">
+        <xsd:sequence>
+                <xsd:group ref="metaData" />
+                <xsd:element ref="completeBy" minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="schedule" minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="transaction" minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="compensate" minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="onException" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+        <xsd:attribute name="name" type="name" use="optional" />
+</xsd:complexType>
+
+<!-- Group for nested process available in a complex activity -->
+<xsd:group name="nestedProcess">
+	<!-- !ow!
+        <xsd:element ref="abstract" />
+        <xsd:element ref="process" />
+        <xsd:element name="processRef">
+                <xsd:complexType>
+                        <xsd:attribute name="ref" type="name"   use="required" />
+                </xsd:complexType>
+        </xsd:element>
+        -->
+</xsd:group>
+
+<!-- Group for selecting any one complex activity -->
+<xsd:group name="anyComplexActivity">
+        <xsd:choice>
+                <xsd:element name="all" type="allActivity" />
+                <xsd:element name="choice" type="choiceActivity" />
+                <xsd:element name="foreach" type="foreachActivity" />
+                <xsd:element name="sqeuence" type="sequenceActivity" />
+                <xsd:element name="switch" type="switchActivity" />
+        </xsd:choice>
+</xsd:group>
+
+<!-- Base type for all process activities -->
+<xsd:complexType name="processActivity">
+        <xsd:sequence>
+                <xsd:element ref="annotation" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+        <xsd:attribute name="name" type="name" use="optional" />
+</xsd:complexType>
+
+<!-- Group for selecting any one process activity -->
+<xsd:group name="anyProcessActivity">
+        <xsd:choice>
+                <xsd:element name="assign" type="assignActivity" />
+                <xsd:element name="complete" type="completeActivity" />
+                <xsd:element name="join" type="joinActivity" />
+                <xsd:element name="release" type="releaseActivity" />
+                <xsd:element name="repeat" type="repeatActivity" />
+                <xsd:element name="spawn" type="spawnActivity" />
+        </xsd:choice>
+</xsd:group>
+
+<!-- Base type for all simple activities -->
+<xsd:complexType name="simpleActivity">
+        <xsd:sequence>
+                <xsd:group ref="metaData" />
+                <xsd:element ref="completeBy" minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="schedule" minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="compensate" minOccurs="0" maxOccurs="1" />
+        </xsd:sequence>
+        <xsd:attribute name="name" type="name" use="optional" />
+        <xsd:attribute name="idempotent" type="xsd:boolean" use="optional" value="false" />
+</xsd:complexType>
+
+<!-- Group for selecting any one simple activity -->
+<xsd:group name="anySimpleActivity">
+        <xsd:choice>
+                <xsd:element name="consume" type="consumeActivity" />
+                <xsd:element name="empty" type="emptyActivity" />
+                <xsd:element name="exception" type="exceptionActivity" />
+                <xsd:element name="operation" type="operationActivity" />
+                <xsd:element name="produce" type="produceActivity" />
+        </xsd:choice>
+</xsd:group>
+
+<!-- Group for selecting any one activity -->
+<xsd:group name="anyActivity">
+        <xsd:choice>
+                <xsd:group ref="anyComplexActivity" />
+                <xsd:group ref="anyProcessActivity" />
+                <xsd:group ref="anySimpleActivity" />
+                <xsd:element name="activity" type="activityRef" />
+        </xsd:choice>
+</xsd:group>
+
+<!-- Complex activities -->
+<xsd:complexType name="allActivity">
+        <xsd:annotation> <xsd:documentation xml:lang="en">All complex activity</xsd:documentation>   </xsd:annotation>
+        <xsd:complexContent>
+                <xsd:extension base="complexActivity">
+                        <xsd:sequence>
+                                <xsd:group ref="anyActivity" minOccurs="2" maxOccurs="unbounded" />
+                                <xsd:group ref="nestedProcess" minOccurs="0" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                </xsd:extension>
+        </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="choiceActivity">
+        <xsd:annotation> <xsd:documentation xml:lang="en">Choice complex activity</xsd:documentation>   </xsd:annotation>
+        <xsd:complexContent>
+                <xsd:extension base="complexActivity">
+                        <xsd:sequence>
+                                <xsd:group ref="anyActivity" minOccurs="2" maxOccurs="unbounded" />
+                        </xsd:sequence>
+                </xsd:extension>
+        </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="switchActivity">
+        <xsd:annotation> <xsd:documentation xml:lang="en">Switch complex activity</xsd:documentation>   </xsd:annotation>
+        <xsd:complexContent>
+                <xsd:extension base="complexActivity">
+                        <xsd:sequence>
+                                <xsd:element name="case"   minOccurs="1" maxOccurs="unbounded">
+                                <xsd:complexType>
+                                        <xsd:sequence>
+                                                <xsd:group ref="anyActivity" />
+                                        </xsd:sequence>
+                                        <xsd:attribute name="condition" type="xsd:string"   use="optional" />
+                                        <xsd:attribute name="ruleSet" type="name"   use="optional" />
+                                        <xsd:attribute name="negative" type="xsd:boolean"   use="optional" value="false" />      <xsd:attribute name="probability" type="probability"   use="optional" />    </xsd:complexType>  </xsd:element>   <xsd:element name="otherwise">    <xsd:complexType>      <xsd:sequence><xsd:group ref="anyActivity" />      </xsd:sequence>    </xsd:complexType>  </xsd:element> </xsd:sequence> </xsd:extension>   </xsd:complexContent>   <xsd:attribute name="exclusive" type="xsd:boolean" use="optional" value="true" />
+                                </xsd:complexType>
+                                <xsd:complexType name="foreachActivity">
+                                        <xsd:annotation> <xsd:documentation xml:lang="en">Foreach complex activity</xsd:documentation>   </xsd:annotation>
+                                        <xsd:complexContent>
+                                                <xsd:extension base="complexActivity">
+                                                        <xsd:sequence>
+                                                                <xsd:group ref="anyActivity" minOccurs="1" maxOccurs="unbounded" />
+                                                                <xsd:group ref="nestedProcess" minOccurs="0" maxOccurs="unbounded" />
+                                                        </xsd:sequence>
+                                                </xsd:extension>
+                                        </xsd:complexContent>
+                                        <xsd:attribute name="select" type="xsd:string" use="required" />
+                                </xsd:complexType>
+                                <xsd:complexType name="sequenceActivity">   <xsd:annotation> <xsd:documentation xml:lang="en">Sequence complex activity</xsd:documentation>   </xsd:annotation>
+                                        <xsd:complexContent>
+                                                <xsd:extension base="complexActivity">
+                                                        <xsd:sequence>
+                                                                <xsd:group ref="anyActivity" minOccurs="1" maxOccurs="unbounded" />
+                                                                <xsd:group ref="nestedProcess" minOccurs="0" maxOccurs="unbounded" />
+                                                        </xsd:sequence>
+                                                </xsd:extension>
+                                        </xsd:complexContent>
+                                </xsd:complexType>
+                                <!-- Process activities -->
+                                <xsd:complexType name="assignActivity">
+                                        <xsd:annotation> <xsd:documentation xml:lang="en">Assign process activity</xsd:documentation>   </xsd:annotation>
+                                        <xsd:complexContent>
+                                                <xsd:extension base="processActivity">
+                                                        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                                                                <xsd:group ref="assignment" />
+                                                        </xsd:sequence>
+                                                        <xsd:attribute name="target" type="name"   use="required" />
+                                                        <xsd:attribute name="select" type="xsd:string"   use="optional" />
+                                                        <xsd:attribute name="append" type="xsd:boolean"   use="optional" value="false" />
+                                                </xsd:extension>
+                                        </xsd:complexContent>
+                                </xsd:complexType>
+                                <xsd:complexType name="completeActivity">
+                                        <xsd:annotation>
+                                                <xsd:documentation xml:lang="en">Complete process activity</xsd:documentation>
+                                        </xsd:annotation>
+                                        <xsd:complexContent>
+                                                <xsd:extension base="processActivity" />
+                                        </xsd:complexContent>
+                                </xsd:complexType>
+
+                                <xsd:complexType name="joinActivity">
+                                        <xsd:annotation> <xsd:documentation xml:lang="en">Join process activity</xsd:documentation>   </xsd:annotation>
+                                        <xsd:complexContent>
+                                                <xsd:extension base="processActivity">
+                                                        <xsd:attribute name="select" type="xsd:string"   use="required" />
+                                                </xsd:extension>
+                                        </xsd:complexContent>
+                                </xsd:complexType>
+                                <xsd:complexType name="releaseActivity">
+                                        <xsd:annotation> <xsd:documentation xml:lang="en">Release process activity</xsd:documentation>   </xsd:annotation>
+                                        <xsd:complexContent>
+                                                <xsd:extension base="processActivity">
+                                                        <xsd:attribute name="target" type="name"   use="required" />
+                                                </xsd:extension>
+                                        </xsd:complexContent>
+                                </xsd:complexType>
+                                <xsd:complexType name="repeatActivity">
+                                        <xsd:annotation> <xsd:documentation xml:lang="en">Repeat process activity</xsd:documentation>   </xsd:annotation>
+                                        <xsd:complexContent>
+                                                <xsd:extension base="processActivity">
+                                                        <xsd:attribute name="ref" type="name"   use="required" />
+                                                </xsd:extension>
+                                        </xsd:complexContent>
+                                </xsd:complexType>
+                                <xsd:complexType name="spawnActivity">
+                                        <xsd:annotation> <xsd:documentation xml:lang="en">Spawn process activity</xsd:documentation>   </xsd:annotation>
+                                        <xsd:complexContent>
+                                                <xsd:extension base="processActivity">
+                                                        <xsd:attribute name="ref" type="name"   use="required" />
+                                                </xsd:extension>
+                                        </xsd:complexContent>
+                                </xsd:complexType>
+<!-- Simple activities -->
+<xsd:complexType name="consumeActivity">
+        <xsd:annotation> <xsd:documentation xml:lang="en">Consume simple activity</xsd:documentation>   </xsd:annotation>
+        <xsd:complexContent>
+                <xsd:extension base="simpleActivity">
+                        <xsd:sequence>
+                                <xsd:element ref="participant"   minOccurs="0" maxOccurs="1" />
+                                <xsd:element ref="input"   minOccurs="1" maxOccurs="1" />
+                                <xsd:group ref="extension" />
+                        </xsd:sequence>
+                </xsd:extension>
+        </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="emptyActivity">
+        <xsd:annotation> <xsd:documentation xml:lang="en">Empty simple activity</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+                <xsd:extension base="simpleActivity">
+                        <xsd:sequence>
+                                <xsd:group ref="extension" />
+                        </xsd:sequence>
+                </xsd:extension>
+        </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="exceptionActivity">
+        <xsd:annotation> <xsd:documentation xml:lang="en">Exception simple activity</xsd:documentation>   </xsd:annotation>
+        <xsd:complexContent>
+                <xsd:extension base="simpleActivity">
+                        <xsd:sequence>
+                                <xsd:element ref="participant"   minOccurs="0" maxOccurs="1" />
+                                <xsd:element name="reason"   minOccurs="0" maxOccurs="1" >
+                                        <xsd:complexType>
+                                                <xsd:complexContent>
+                                                        <xsd:extension base="xsd:anyType">
+                                                                <xsd:attribute name="select" type="xsd:string" use="optional" />
+                                                        </xsd:extension>
+                                                </xsd:complexContent>
+                                        </xsd:complexType>
+                                </xsd:element>
+                                <xsd:group ref="extension" />
+                        </xsd:sequence>
+                        <xsd:attribute name="code" type="uri"   use="optional" />
+                </xsd:extension>
+        </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="operationActivity">
+        <xsd:annotation> <xsd:documentation xml:lang="en">Operation simple activity</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+                <xsd:extension base="simpleActivity">
+                        <xsd:sequence>
+                                <xsd:choice>
+                                        <xsd:sequence>
+                                                <xsd:element ref="participant" minOccurs="1" maxOccurs="1" />
+                                                <xsd:element ref="output" minOccurs="1" maxOccurs="1" />
+                                                <xsd:element ref="input" minOccurs="1" maxOccurs="1" />
+                                        </xsd:sequence>
+                                        <xsd:sequence>
+                                                <xsd:element ref="participant" minOccurs="0" maxOccurs="1" />
+                                                <xsd:element ref="input" minOccurs="1" maxOccurs="1" />
+                                                <xsd:element ref="output" minOccurs="1" maxOccurs="1" />
+                                                <xsd:element name="exception" minOccurs="0" maxOccurs="unbounded">
+                                                        <xsd:complexType>
+                                                                <xsd:attribute name="code" type="uri" use="required" />
+                                                        </xsd:complexType>
+                                                </xsd:element>
+                                        </xsd:sequence>
+                                </xsd:choice>
+                                <xsd:group ref="extension" />
+                        </xsd:sequence>
+                </xsd:extension>
+        </xsd:complexContent>
+</xsd:complexType>
+
+<xsd:complexType name="produceActivity">
+        <xsd:annotation> <xsd:documentation xml:lang="en">Produce simple activity</xsd:documentation>   </xsd:annotation>
+        <xsd:complexContent>
+                <xsd:extension base="simpleActivity">
+                        <xsd:sequence>
+                                <xsd:element ref="participant"   minOccurs="1" maxOccurs="1" />
+                                <xsd:element ref="output"   minOccurs="1" maxOccurs="1" />
+                                <xsd:group ref="extension" />
+                        </xsd:sequence>
+                </xsd:extension>
+        </xsd:complexContent>
+</xsd:complexType>
+
+
+<!-- Core elements -->
+
+<!-- Activity element used to reference an activity -->
+<xsd:complexType name="activityRef">
+        <xsd:attribute name="ref" type="name" use="required" />
+</xsd:complexType>
+
+<!-- Assign element used as part of assignment -->
+<xsd:complexType name="assignAssignment">
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                <xsd:group ref="assignment" />
+        </xsd:sequence>
+        <xsd:attribute name="target" type="name" use="optional" />
+        <xsd:attribute name="select" type="xsd:string" use="optional" />
+</xsd:complexType>
+
+<!-- Variable element used as part of assignment -->
+<xsd:complexType name="variableAssignment">
+        <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                <xsd:group ref="assignment" />
+        </xsd:sequence>
+        <xsd:attribute name="name" type="name" use="required" />
+        <xsd:attribute name="select" type="xsd:string" use="optional" />
+</xsd:complexType>
+
+<!-- Foreach element used as part of assignment -->
+<xsd:complexType name="foreachAssignment">
+        <xsd:sequence minOccurs="1" maxOccurs="unbounded">
+                <xsd:group ref="assignment" />
+        </xsd:sequence>
+        <xsd:attribute name="name" type="name" use="required" />
+        <xsd:attribute name="select" type="xsd:string" use="required" />
+</xsd:complexType>
+
+<!-- Group for selecting any assignment element -->
+<xsd:group name="assignment">
+        <xsd:choice>
+                <xsd:element name="assign" type="assignAssignment" />
+                <xsd:element name="foreach" type="foreachAssignment" />
+                <xsd:element name="variable" type="variableAssignment" />
+        </xsd:choice>
+</xsd:group>
+
+<!-- Compensate element used to define compensating activity -->
+<xsd:element name="compensate">
+        <xsd:complexType>
+                <xsd:sequence>
+                        <xsd:group ref="anyActivity"  minOccurs="1" maxOccurs="unbounded" />
+                </xsd:sequence>
+        </xsd:complexType>
+</xsd:element>
+
+<!-- CompleteBy element used to define time constraint -->
+<xsd:element name="completeBy">
+        <xsd:complexType>
+                <xsd:sequence>
+                        <xsd:element name="relativeTo" minOccurs="0" maxOccurs="1">
+                                <xsd:complexType>
+                                        <xsd:attribute name="ref" type="name" use="required" />
+                                        <xsd:attribute name="end" type="xsd:boolean" use="optional" value="false" />
+                                </xsd:complexType>
+                        </xsd:element>
+                </xsd:sequence>
+                <xsd:attribute name="duration" type="xsd:string" use="required" />
+        </xsd:complexType>
+</xsd:element>
+
+<!-- Input element used to consume a message -->
+<xsd:element name="input">
+        <xsd:complexType>
+                <xsd:sequence>
+                        <xsd:element ref="rule" minOccurs="0" maxOccurs="unbounded" />
+                        <xsd:group ref="assignment" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+                <xsd:attribute name="message" type="name" use="required" />
+        </xsd:complexType>
+</xsd:element>
+
+<!-- OnException element used to define exception handling activity -->
+<xsd:element name="onException">
+        <xsd:complexType>
+                <xsd:sequence>
+                        <xsd:group ref="anyActivity"  minOccurs="1" maxOccurs="unbounded" />
+                </xsd:sequence>
+                <xsd:attribute name="code" type="uri" use="optional" />
+        </xsd:complexType>
+</xsd:element>
+
+<!-- Output element used to produce a message -->
+<xsd:element name="output">
+        <xsd:complexType>
+                <xsd:sequence>
+                        <xsd:group ref="assignment" minOccurs="0" maxOccurs="unbounded" />
+                </xsd:sequence>
+                <xsd:attribute name="message" type="name" use="required" />
+        </xsd:complexType>
+</xsd:element>
+
+<!-- Participant element used in simple activities -->
+<xsd:element name="participant">
+        <xsd:complexType>
+                <xsd:sequence>
+                        <xsd:group ref="extension" />
+                </xsd:sequence>
+                <xsd:attribute name="select" type="xsd:string" use="required" />
+        </xsd:complexType>
+</xsd:element>
+
+<!-- Rule element used in input and ruleSet elements -->
+<xsd:element name="rule">
+        <xsd:complexType>
+                <xsd:attribute name="condition" type="xsd:string" use="optional" />
+                <xsd:attribute name="ruleSet" type="name" use="optional" />
+                <!-- !ow! <xsd:attribute name="negative" type="xsd:boolean" use="optional" default="false" />-->
+        </xsd:complexType>
+</xsd:element>
+
+<!-- CompleteBy element used to schedule activity -->
+<xsd:element name="schedule">
+        <xsd:complexType>
+                <xsd:sequence>
+                        <xsd:element name="relativeTo" minOccurs="0" maxOccurs="1">
+                                <xsd:complexType>
+                                        <xsd:attribute name="ref" type="name" use="required" />
+                                        <xsd:attribute name="end" type="xsd:boolean" use="optional" value="false" />
+                                </xsd:complexType>
+                        </xsd:element>
+                </xsd:sequence>
+                <xsd:attribute name="duration" type="xsd:string" use="optional" />
+                <xsd:attribute name="instant" type="xsd:string" use="optional" />
+        </xsd:complexType>
+</xsd:element>
+
+<!-- Transaction element used to define transactional behavior -->
+<xsd:element name="transaction">
+        <xsd:complexType>
+                <xsd:attribute name="type" type="transactionType" use="required" />
+                <xsd:attribute name="model" type="transactionModel" use="optional" value="unreliable" />
+                <xsd:attribute name="repeat" type="xsd:string" use="optional" value="'1'" />
+        </xsd:complexType>
+</xsd:element>
+
+
+<!-- Simple types -->
+<xsd:simpleType name="uri">
+        <xsd:restriction base="xsd:uriReference"/>
+</xsd:simpleType>
+<xsd:simpleType name="name">
+        <xsd:restriction base="xsd:NCName"/>
+</xsd:simpleType>
+<xsd:simpleType name="xsd:string">
+        <xsd:restriction base="xsd:string"/>
+</xsd:simpleType>
+<xsd:simpleType name="probability">
+        <xsd:restriction base="xsd:float">
+                <xsd:minExclusive value="0.0" />
+                <xsd:maxExclusive value="1.0" />
+        </xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="messageType">
+        <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="data"/>
+                <xsd:enumeration value="request"/>
+                <xsd:enumeration value="response"/>
+        </xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="transactionType">
+        <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="supported"/>
+                <xsd:enumeration value="required"/>
+                <xsd:enumeration value="nested"/>
+                <xsd:enumeration value="new"/>
+                <xsd:enumeration value="none"/>
+        </xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="transactionModel">
+        <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="coordinated"/>
+                <xsd:enumeration value="extended"/>
+        </xsd:restriction>
+</xsd:simpleType>
+<xsd:group name="extension">
+        <xsd:sequence>
+                <xsd:any processContents="strict" namespace="##any"    minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+</xsd:group>
+</xsd:schema>
