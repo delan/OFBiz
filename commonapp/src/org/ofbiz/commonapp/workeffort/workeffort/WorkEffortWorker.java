@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2002/01/02 04:23:24  jonesde
+ * Changed parameter names from SQL style to Java field style
+ *
  * Revision 1.14  2001/12/30 04:26:18  jonesde
  * Fixed naming bug in query to get workeffort party assignments
  *
@@ -291,10 +294,66 @@ public class WorkEffortWorker {
                 Debug.logWarning(e);
             }
         }
-        if (validWorkEfforts == null || validWorkEfforts.size() <= 0)
-            return;
 
-        pageContext.setAttribute(activitiesAttrName, validWorkEfforts);
+        if (validWorkEfforts != null) {
+            pageContext.setAttribute(activitiesAttrName, validWorkEfforts);
+        }
+    }
+
+    public static void getWorkEffortAssignedActivitiesByRole(PageContext pageContext, String roleActivitiesAttrName) {
+        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
+
+        Collection roleWorkEfforts = null;
+        if (userLogin != null && userLogin.get("partyId") != null) {
+            try {
+                List constraints = new LinkedList();
+                constraints.add(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
+                constraints.add(new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "ACTIVITY"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
+                constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_COMPLETED"));
+                constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_TERMINATED"));
+                constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"));
+                roleWorkEfforts = delegator.findByAnd("WorkEffortPartyAssignByRole", constraints, UtilMisc.toList("priority"));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+        }
+
+        if (roleWorkEfforts != null) {
+            pageContext.setAttribute(roleActivitiesAttrName, roleWorkEfforts);
+        }
+    }
+
+    public static void getWorkEffortAssignedActivitiesByGroup(PageContext pageContext, String groupActivitiesAttrName) {
+        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
+
+        Collection groupWorkEfforts = null;
+        if (userLogin != null && userLogin.get("partyId") != null) {
+            try {
+                List constraints = new LinkedList();
+                constraints.add(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
+                constraints.add(new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "ACTIVITY"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
+                constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_COMPLETED"));
+                constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_TERMINATED"));
+                constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"));
+                groupWorkEfforts = delegator.findByAnd("WorkEffortPartyAssignByGroup", constraints, UtilMisc.toList("priority"));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+        }
+
+        if (groupWorkEfforts != null) {
+            pageContext.setAttribute(groupActivitiesAttrName, groupWorkEfforts);
+        }
     }
 
     public static void getWorkEffortAssignedTasks(PageContext pageContext, String tasksAttrName) {
