@@ -58,7 +58,9 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
 
     public void init() throws Exception{
         super.init();
-        fmConfig.setCacheStorage(new OfbizCacheStorage());
+        //TODO: find some way of getting the site identifier... hmmm...
+        String id = "unknown";
+        fmConfig.setCacheStorage(new OfbizCacheStorage(id));
     }
     
     protected Object createViewContext(JPublishContext context, String path) throws ViewRenderException {

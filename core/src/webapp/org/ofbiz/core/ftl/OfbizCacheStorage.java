@@ -37,8 +37,12 @@ import org.ofbiz.core.util.*;
  * @since      2.1
  */
 public class OfbizCacheStorage implements CacheStorage {
-    //global/static cache possible because keys are quite verbose in FreeMarker
-    public static final UtilCache localCache = new UtilCache("webapp.FreeMarkerCache", 0, 0, false);
+    //can't have global cache because names/keys are relative to the webapp
+    protected final UtilCache localCache;
+    
+    public OfbizCacheStorage(String id) {
+        this.localCache = new UtilCache("webapp.FreeMarkerCache." + id, 0, 0, false);
+    }
     
     public Object get(Object key) {
         return localCache.get(key);
