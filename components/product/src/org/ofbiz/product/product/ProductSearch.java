@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.12 2003/10/23 09:51:41 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.13 2003/10/24 10:45:39 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -43,6 +43,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -65,7 +66,7 @@ import org.ofbiz.product.product.KeywordSearch;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -75,35 +76,87 @@ public class ProductSearch {
     /** This cache contains a Set with the IDs of the entire sub-category tree, including the current productCategoryId */
     public static UtilCache subCategoryCache = new UtilCache("product.SubCategory", 0, 0, true);
 
+    public static final String PRODUCT_SEARCH_CONSTRAINT_LIST = "_PRODUCT_SEARCH_CONSTRAINT_LIST_";
+    public static final String PRODUCT_SEARCH_SORT_ORDER = "_PRODUCT_SEARCH_SORT_ORDER_";
+    
     public static ArrayList searchDo(HttpSession session, GenericDelegator delegator) {
-        // TODO: implement this
-        return null;
+        String visitId = VisitHandler.getVisitId(session);
+        List productSearchConstraintList = (List) session.getAttribute(ProductSearch.PRODUCT_SEARCH_CONSTRAINT_LIST);
+        if (productSearchConstraintList == null || productSearchConstraintList.size() == 0) {
+            return new ArrayList();
+        }
+        ResultSortOrder resultSortOrder = (ResultSortOrder) session.getAttribute(ProductSearch.PRODUCT_SEARCH_SORT_ORDER);
+        if (resultSortOrder == null) {
+            resultSortOrder = new ProductSearch.SortKeywordRelevancy();
+            ProductSearch.searchSetSortOrder(resultSortOrder, session);
+        }
+        return ProductSearch.searchProducts(productSearchConstraintList, resultSortOrder, delegator, visitId);
     }
     
     public static void searchClear(HttpSession session) {
-        // TODO: implement this
+        session.removeAttribute(ProductSearch.PRODUCT_SEARCH_CONSTRAINT_LIST);
+        session.removeAttribute(ProductSearch.PRODUCT_SEARCH_SORT_ORDER);
     }
     
-    public static List searchGetContraintStrings(HttpSession session) {
-        // TODO: implement this
-        return null;
+    public static List searchGetConstraintStrings(boolean detailed, HttpSession session, GenericDelegator delegator) {
+        List productSearchConstraintList = (List) session.getAttribute(ProductSearch.PRODUCT_SEARCH_CONSTRAINT_LIST);
+        List constraintStrings = new ArrayList();
+        if (productSearchConstraintList == null) {
+            return constraintStrings;
+        }
+        Iterator productSearchConstraintIter = productSearchConstraintList.iterator();
+        while (productSearchConstraintIter.hasNext()) {
+            ProductSearchConstraint productSearchConstraint = (ProductSearchConstraint) productSearchConstraintIter.next();
+            if (productSearchConstraint == null) continue;
+            String constraintString = productSearchConstraint.prettyPrintConstraint(delegator, detailed);
+            if (UtilValidate.isNotEmpty(constraintString)) {
+                constraintStrings.add(constraintString);
+            }
+        }
+        return constraintStrings;
     }
     
-    public static String searchGetSortOrderString(HttpSession session) {
-        // TODO: implement this
-        return null;
+    public static String searchGetSortOrderString(boolean detailed, HttpSession session) {
+        ResultSortOrder resultSortOrder = (ResultSortOrder) session.getAttribute(ProductSearch.PRODUCT_SEARCH_SORT_ORDER);
+        if (resultSortOrder == null) return "";
+        return resultSortOrder.prettyPrintSortOrder(detailed);
     }
     
-    public static void searchSetSortOrder(ResultSortOrder sortOrder, HttpSession session) {
-        // TODO: implement this
+    public static void searchSetSortOrder(ResultSortOrder resultSortOrder, HttpSession session) {
+        session.setAttribute(ProductSearch.PRODUCT_SEARCH_SORT_ORDER, resultSortOrder);
     }
     
-    public static void searchAddConstraint(ProductSearchConstraint constraint, HttpSession session) {
-        // TODO: implement this
+    public static void searchAddFeatureIdConstraints(Collection featureIds, HttpSession session) {
+        if (featureIds == null || featureIds.size() == 0) {
+            return;
+        }
+        Iterator featureIdIter = featureIds.iterator();
+        while (featureIdIter.hasNext()) {
+            String productFeatureId = (String) featureIdIter.next();
+            ProductSearch.searchAddConstraint(new ProductSearch.FeatureConstraint(productFeatureId), session);
+        }
+    }
+    
+    public static void searchAddConstraint(ProductSearchConstraint productSearchConstraint, HttpSession session) {
+        List productSearchConstraintList = (List) session.getAttribute(ProductSearch.PRODUCT_SEARCH_CONSTRAINT_LIST);
+        if (productSearchConstraintList == null) {
+            productSearchConstraintList = new LinkedList();
+            session.setAttribute(ProductSearch.PRODUCT_SEARCH_CONSTRAINT_LIST, productSearchConstraintList);
+        }
+        if (!productSearchConstraintList.contains(productSearchConstraint)) {
+            productSearchConstraintList.add(productSearchConstraint);
+        }
     }
     
     public static void searchRemoveConstraint(int index, HttpSession session) {
-        // TODO: implement this
+        List productSearchConstraintList = (List) session.getAttribute(ProductSearch.PRODUCT_SEARCH_CONSTRAINT_LIST);
+        if (productSearchConstraintList == null) {
+            return;
+        } else if (index >= productSearchConstraintList.size()) {
+            return;
+        } else {
+            productSearchConstraintList.remove(index);
+        }
     }
     
     public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String productCategoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
@@ -398,11 +451,11 @@ public class ProductSearch {
     // ======================================================================
     
     public static abstract class ProductSearchConstraint {
-        public ProductSearchConstraint() {
-        }
+        public ProductSearchConstraint() { }
         
         public abstract void addConstraint(ProductSearchContext productSearchContext);
-        public abstract String prettyPrintConstraint(GenericDelegator delegator);
+        /** pretty print for log messages and even UI stuff */
+        public abstract String prettyPrintConstraint(GenericDelegator delegator, boolean detailed);
     }
     
     public static class CategoryConstraint extends ProductSearchConstraint {
@@ -444,9 +497,50 @@ public class ProductSearch {
             productSearchContext.productSearchConstraintList.add(productSearchContext.getDelegator().makeValue("ProductSearchConstraint", UtilMisc.toMap("constraintName", constraintName, "infoString", this.productCategoryId, "includeSubCategories", this.includeSubCategories ? "Y" : "N")));
         }
 
-        public String prettyPrintConstraint(GenericDelegator delegator) {
-            // TODO: implement the pretty print for log messages and even UI stuff
-            return null;
+        /** pretty print for log messages and even UI stuff */
+        public String prettyPrintConstraint(GenericDelegator delegator, boolean detailed) {
+            GenericValue productCategory = null;
+            try {
+                productCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error finding ProductCategory information for constraint pretty print", module);
+            }
+            StringBuffer ppBuf = new StringBuffer();
+            ppBuf.append("Category: ");
+            if (productCategory != null) {
+                ppBuf.append(productCategory.getString("description"));
+            }
+            if (productCategory == null || detailed) {
+                ppBuf.append(" [");
+                ppBuf.append(productCategoryId);
+                ppBuf.append("]");
+            }
+            if (includeSubCategories) {
+                ppBuf.append(" (and all sub-categories)");
+            }
+            return ppBuf.toString();
+        }
+        
+        public boolean equals(Object obj) {
+            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
+            if (psc instanceof CategoryConstraint) {
+                CategoryConstraint that = (CategoryConstraint) psc;
+                if (this.includeSubCategories != that.includeSubCategories) {
+                    return false;
+                }
+                if (this.productCategoryId == null) {
+                    if (that.productCategoryId != null) {
+                        return false;
+                    }
+                } else {
+                    if (!this.productCategoryId.equals(that.productCategoryId)) {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     
@@ -477,9 +571,35 @@ public class ProductSearch {
             productSearchContext.productSearchConstraintList.add(productSearchContext.getDelegator().makeValue("ProductSearchConstraint", UtilMisc.toMap("constraintName", constraintName, "infoString", this.productFeatureId)));
         }
 
-        public String prettyPrintConstraint(GenericDelegator delegator) {
-            // TODO: implement the pretty print for log messages and even UI stuff
-            return null;
+        public String prettyPrintConstraint(GenericDelegator delegator, boolean detailed) {
+            GenericValue productFeature = null;
+            GenericValue productFeatureType = null;
+            try {
+                productFeature = delegator.findByPrimaryKeyCache("ProductFeature", UtilMisc.toMap("productFeatureId", productFeatureId));
+                productFeatureType = productFeature == null ? null : productFeature.getRelatedOne("ProductFeatureType");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error finding ProductFeature and Type information for constraint pretty print", module);
+            }
+            return (productFeatureType == null ? "Feature: " : productFeatureType.getString("description") + ": ") + (productFeature == null ? "[" + this.productFeatureId + "]" : productFeature.getString("description"));
+        }
+        
+        public boolean equals(Object obj) {
+            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
+            if (psc instanceof FeatureConstraint) {
+                FeatureConstraint that = (FeatureConstraint) psc;
+                if (this.productFeatureId == null) {
+                    if (that.productFeatureId != null) {
+                        return false;
+                    }
+                } else {
+                    if (!this.productFeatureId.equals(that.productFeatureId)) {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     
@@ -522,9 +642,40 @@ public class ProductSearch {
             productSearchContext.productSearchConstraintList.add(productSearchContext.getDelegator().makeValue("ProductSearchConstraint", valueMap));
         }
 
-        public String prettyPrintConstraint(GenericDelegator delegator) {
-            // TODO: implement the pretty print for log messages and even UI stuff
-            return null;
+        /** pretty print for log messages and even UI stuff */
+        public String prettyPrintConstraint(GenericDelegator delegator, boolean detailed) {
+            return "Keyword(s): \"" + this.keywordsString + "\", where " + (isAnd ? "all words match" : "any word matches");
+        }
+        
+        public boolean equals(Object obj) {
+            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
+            if (psc instanceof KeywordConstraint) {
+                KeywordConstraint that = (KeywordConstraint) psc;
+                if (this.anyPrefix != that.anyPrefix) {
+                    return false;
+                }
+                if (this.anySuffix != that.anySuffix) {
+                    return false;
+                }
+                if (this.isAnd != that.isAnd) {
+                    return false;
+                }
+                if (this.removeStems != that.removeStems) {
+                    return false;
+                }
+                if (this.keywordsString == null) {
+                    if (that.keywordsString != null) {
+                        return false;
+                    }
+                } else {
+                    if (!this.keywordsString.equals(that.keywordsString)) {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     
@@ -542,9 +693,38 @@ public class ProductSearch {
             // TODO: implement LastUpdatedRangeConstraint makeEntityCondition
         }
 
-        public String prettyPrintConstraint(GenericDelegator delegator) {
+        /** pretty print for log messages and even UI stuff */
+        public String prettyPrintConstraint(GenericDelegator delegator, boolean detailed) {
             // TODO: implement the pretty print for log messages and even UI stuff
             return null;
+        }
+        
+        public boolean equals(Object obj) {
+            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
+            if (psc instanceof LastUpdatedRangeConstraint) {
+                LastUpdatedRangeConstraint that = (LastUpdatedRangeConstraint) psc;
+                if (this.fromDate == null) {
+                    if (that.fromDate != null) {
+                        return false;
+                    }
+                } else {
+                    if (!this.fromDate.equals(that.fromDate)) {
+                        return false;
+                    }
+                }
+                if (this.thruDate == null) {
+                    if (that.thruDate != null) {
+                        return false;
+                    }
+                } else {
+                    if (!this.thruDate.equals(that.thruDate)) {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -562,9 +742,38 @@ public class ProductSearch {
             // TODO: implement ListPriceRangeConstraint makeEntityCondition
         }
 
-        public String prettyPrintConstraint(GenericDelegator delegator) {
+        /** pretty print for log messages and even UI stuff */
+        public String prettyPrintConstraint(GenericDelegator delegator, boolean detailed) {
             // TODO: implement the pretty print for log messages and even UI stuff
             return null;
+        }
+        
+        public boolean equals(Object obj) {
+            ProductSearchConstraint psc = (ProductSearchConstraint) obj;
+            if (psc instanceof ListPriceRangeConstraint) {
+                ListPriceRangeConstraint that = (ListPriceRangeConstraint) psc;
+                if (this.lowPrice == null) {
+                    if (that.lowPrice != null) {
+                        return false;
+                    }
+                } else {
+                    if (!this.lowPrice.equals(that.lowPrice)) {
+                        return false;
+                    }
+                }
+                if (this.highPrice == null) {
+                    if (that.highPrice != null) {
+                        return false;
+                    }
+                } else {
+                    if (!this.highPrice.equals(that.highPrice)) {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -578,6 +787,7 @@ public class ProductSearch {
 
         public abstract void setSortOrder(ProductSearchContext productSearchContext);
         public abstract String getOrderName();
+        public abstract String prettyPrintSortOrder(boolean detailed);
         public abstract boolean isAscending();
     }
     
@@ -596,6 +806,11 @@ public class ProductSearch {
         public String getOrderName() {
             return "KeywordRelevancy";
         }
+        
+        public String prettyPrintSortOrder(boolean detailed) {
+            return "Keyword Relevancy";
+        }
+        
         public boolean isAscending() {
             return false;
         }
@@ -630,6 +845,11 @@ public class ProductSearch {
         public String getOrderName() {
             return "ProductField:" + this.fieldName;
         }
+        
+        public String prettyPrintSortOrder(boolean detailed) {
+            return this.fieldName;
+        }
+        
         public boolean isAscending() {
             return this.ascending;
         }
@@ -648,6 +868,11 @@ public class ProductSearch {
         public String getOrderName() {
             return "ListPrice";
         }
+        
+        public String prettyPrintSortOrder(boolean detailed) {
+            return "List Price (" + (this.ascending ? "Low to High)" : "High to Low)");
+        }
+        
         public boolean isAscending() {
             return this.ascending;
         }
