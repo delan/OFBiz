@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @version    $Revision: 1.1 $
+ * @since      2.2
+ -->
+<simple-methods>
+    <simple-method method-name="getPicklistData" short-description="Get Picklist Data">
+    	<!-- 
+    		Parameters:
+    			orderHeaderList: List of OrderHeaders to create a picklist for
+    		Returns:
+    			inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, statusItem, quantity
+    			orderHeaderInfoList: List of Maps with orderHeader and orderItemInfoList which is List of Maps with orderItem, product and orderItemInventoryResList
+    			wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem
+    			insufficientQohList: List of Maps with inventoryItem and quantityNeeded
+    	-->
+    	
+        <check-permission permission="FACILITY" action="_VIEW">
+            <fail-message message="Security Error: to run getPicklistData you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        
+		<env-to-field env-name="parameters.orderHeaderList" field-name="orderHeaderList"/>
+        <if-empty field-name="orderHeaderList">
+        	<string-to-field string="SALES_ORDER" field-name="orderTypeId" map-name="orderHeaderLkpMp"/>
+        	<string-to-field string="ORDER_APPROVED" field-name="statusId" map-name="orderHeaderLkpMp"/>
+        	<string-to-list string="+fromDate" list-name="orderHeaderOrdLst"/>
+        	<find-by-and list-name="orderHeaderList" entity-name="OrderHeader" map-name="orderHeaderLkpMp" order-by-list-name="orderHeaderOrdLst"/>
+        <else>
+            <!-- make sure that the prepared list only includes sales orders -->
+        	<string-to-field string="SALES_ORDER" field-name="orderTypeId" map-name="orderHeaderFltrMp"/>
+            <filter-list-by-and list-name="orderHeaderList" map-name="orderHeaderFltrMp"/>
+        </else>
+        </if-empty>
+
+		<iterate entry-name="orderHeader" list-name="orderHeaderList">
+            <!-- get the order items and the order item inventory res entries -->
+            <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="orderShipmentPreferenceLkupMap"/>
+            <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="orderShipmentPreferenceLkupMap"/>
+            <find-by-primary-key entity-name="OrderShipmentPreference" map-name="orderShipmentPreferenceLkupMap" value-name="orderShipmentPreference"/>
+            
+			<get-related value-name="orderHeader" relation-name="OrderItemInventoryRes" list-name="orderItemInventoryResList"/>
+			<string-to-list string="+orderItemSeqId" list-name="orderItemOrdLst"/>
+			<get-related value-name="orderHeader" relation-name="OrderItem" list-name="orderItemList" order-by-list-name="orderItemOrdLst"/>
+
+			<!-- only add to picklist if inventory is not available (quantityNotAvailable on OIIR greater than 0) when maySplit is N (wait until all available to ship) -->
+            <string-to-field string="Y" field-name="pickThisOrder"/>
+            <if-compare field-name="maySplit"  map-name="orderShipmentPreference" operator="equals" value="N">
+                <!-- check all OIIRs and if quantityNotAvailable is not empty and > 0 for any, continue -->
+                <iterate entry-name="orderItemInventoryResList" list-name="orderItemInventoryRes">
+                    <if-not-empty field-name="quantityNotAvailable" map-name="orderItemInventoryRes">
+                        <if-compare field-name="quantityNotAvailable" map-name="orderItemInventoryRes" operator="greater" value="0" type="Double">
+                            <string-to-field string="N" field-name="pickThisOrder"/>
+                        </if-compare>
+                    </if-not-empty>
+                </iterate>
+            </if-compare>
+			
+            <if-compare field-name="pickThisOrder" operator="equals" value="Y">
+                <iterate entry-name="orderItem" list-name="orderItemList">
+                    <if-compare value="ITEM_APPROVED" operator="equals" field-name="orderItem.statusId">
+                        <calculate field-name="reservedQuantity" type="Double"><number value="0"/></calculate>
+                        
+                        <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="itemFilterMap"/>
+                        <filter-list-by-and to-list-name="perItemResList" map-name="itemFilterMap" list-name="orderItemInventoryResList"/>
+                        <iterate entry-name="orderItemInventoryRes" list-name="perItemResList">
+                            <field-to-env field-name="inventoryItemId" map-name="orderItemInventoryRes" env-name="inventoryItemId"/>
+                            <!-- update reserved quantity per inventoryItem, keep track of orderItems this came from -->
+                            <field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
+                            <if-empty field-name="inventoryItem">
+                                <env-to-field env-name="inventoryItemId" map-name="invItmLookupMap"/>
+                                <find-by-primary-key value-name="inventoryItem" entity-name="InventoryItem" map-name="invItmLookupMap"/>
+                                <env-to-field env-name="inventoryItem" field-name="${inventoryItemId}" map-name="inventoryItems"/>
+                            </if-empty>
+                            
+                            <if-compare-field field-name="inventoryItem.facilityId" operator="equals" to-field-name="parameters.facilityId">
+                                <field-to-list field-name="orderItemInventoryRes" list-name="perItemResListValid"/>
+                                
+                                <field-to-env field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" env-name="inventoryItemOrderItemList"/>
+                                <field-to-list field-name="orderItem" list-name="inventoryItemOrderItemList"/>
+                                <env-to-field env-name="inventoryItemOrderItemList" field-name="${orderItemInventoryRes.inventoryItemId}" map-name="inventoryItemOrderItems"/>
+                                <clear-field field-name="inventoryItemOrderItemList"/>
+                                <if-not-empty field-name="inventoryItemQuantities.${inventoryItemId}">
+                                    <calculate field-name="inventoryItemQuantities.${inventoryItemId}" type="Double">
+                                        <calcop field-name="inventoryItemQuantities.${inventoryItemId}" operator="add">
+                                            <calcop field-name="orderItemInventoryRes.quantity" operator="get"/>
+                                        </calcop>
+                                    </calculate>
+                                <else>
+                                    <env-to-field env-name="orderItemInventoryRes.quantity" field-name="inventoryItemQuantities.${inventoryItemId}"/>
+                                </else>
+                                </if-not-empty>
+                            </if-compare-field>
+                            <clear-field field-name="inventoryItem"/>
+                            <!-- update total quantity reserved, picked, etc per line item to check to see if all and not more is reserved -->
+                            <calculate field-name="reservedQuantity" type="Double">
+                                <calcop field-name="reservedQuantity" operator="add">
+                                    <calcop field-name="orderItemInventoryRes.quantity" operator="get"/>
+                                </calcop>
+                            </calculate>
+                        </iterate>
+                        
+                        <if-not-empty field-name="perItemResListValid">
+                            <env-to-field env-name="orderItem" map-name="orderItemInfo"/>
+                            <env-to-field env-name="perItemResListValid" field-name="orderItemInventoryResList" map-name="orderItemInfo"/>
+                            <get-related-one value-name="orderItem" relation-name="Product" to-value-name="orderItemInfo.product"/>
+                            <field-to-list field-name="orderItemInfo" list-name="orderItemInfoList"/>
+                            <clear-field field-name="orderItemInfo"/>
+                        </if-not-empty>
+                        <clear-field field-name="perItemResListValid"/>
+                        
+                        <!-- warn if wrong inventory has been reserved+issued -->
+                        <!-- change to include issued items as well, otherwise can't really do an effective check... -->
+                        <get-related value-name="orderItem" relation-name="ItemIssuance" list-name="itemIssuances"/>
+                        <calculate field-name="issuedQuantity" type="Double"><number value="0"/></calculate>
+                        <iterate entry-name="itemIssuance" list-name="itemIssuances">
+                            <calculate field-name="issuedQuantity" type="Double">
+                                <calcop field-name="issuedQuantity" operator="add">
+                                    <calcop field-name="itemIssuance.quantity" operator="get"/>
+                                </calcop>
+                            </calculate>
+                        </iterate>
+                        <calculate field-name="reservedIssuedQuantity">
+                            <calcop operator="add">
+                                <calcop operator="get" field-name="reservedQuantity"/>
+                                <calcop operator="get" field-name="issuedQuantity"/>
+                            </calcop>
+                        </calculate>
+                        <if-compare-field field-name="reservedIssuedQuantity" operator="not-equals" to-field-name="orderItem.quantity" type="Double">
+                            <env-to-field env-name="orderItem" map-name="wrongQuantityReserved"/>
+                            <env-to-field env-name="reservedQuantity" map-name="wrongQuantityReserved"/>
+                            <env-to-field env-name="issuedQuantity" map-name="wrongQuantityReserved"/>
+                            <env-to-field env-name="reservedIssuedQuantity" map-name="wrongQuantityReserved"/>
+                            <field-to-list field-name="wrongQuantityReserved" list-name="wrongQuantityReservedList"/>
+                            <clear-field field-name="wrongQuantityReserved"/>
+                        </if-compare-field>
+                    </if-compare>
+                </iterate>
+                
+                <!-- keep the order info for easy handling of order pack info -->
+                <if-not-empty field-name="orderItemInfoList">
+                    <env-to-field env-name="orderHeader" map-name="orderHeaderInfo"/>
+                    <env-to-field env-name="orderItemInfoList" map-name="orderHeaderInfo"/>
+                    <field-to-list field-name="orderHeaderInfo" list-name="orderHeaderInfoList"/>
+                </if-not-empty>
+            </if-compare>
+            <clear-field field-name="orderHeaderInfo"/>
+            <clear-field field-name="orderItemInfoList"/>
+            <clear-field field-name="orderShipmentPreference"/>
+            <clear-field field-name="orderShipmentPreferenceLkupMap"/>
+            <clear-field field-name="orderShipmentPreferenceLkupMap"/>
+		</iterate>
+
+	    <!-- go through all quantities and get inventoryItem and facilityLocation -->
+    	<!-- warn if insufficient QOH for reserved amount -->
+    	<iterate-map key-name="inventoryItemId" value-name="quantityNeeded" map-name="inventoryItemQuantities">
+    		<field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
+    		
+    		<if>
+    			<condition>
+    				<or>
+    					<and>
+	    					<if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItem.inventoryItemTypeId"/>
+	    					<if-compare value="1" operator="less" field-name="quantityNeeded" type="Double"/>
+    					</and>
+    					<if-compare-field field-name="quantityNeeded" operator="greater" to-field-name="inventoryItem.quantityOnHand" type="Double"/>
+    				</or>
+    			</condition>
+    			<then>
+		            <!-- TODO: if insufficient QOH, set item status to back order for all items after the QOH runs out -->
+		            <!-- <field-to-env field-name="inventoryItemOrderItems.${inventoryItemId}" env-name="inventoryItemOrderItemList"/> -->
+		            
+		            <env-to-field env-name="inventoryItem" map-name="insufficientQoh"/>
+		            <env-to-field env-name="quantityNeeded" map-name="insufficientQoh"/>
+		            <field-to-list field-name="insufficientQoh" list-name="insufficientQohList"/>
+		            <clear-field field-name="insufficientQoh"/>
+    			</then>
+    		</if>
+    		
+    		<!-- create a list of locations, then sort it, will have to create a reverse Map to go from location to inventory item -->
+    		<get-related-one value-name="inventoryItem" relation-name="FacilityLocation" to-value-name="facilityLocation"/>
+    		<if-not-empty field-name="facilityLocation">
+	    		<field-to-list field-name="facilityLocation" list-name="facilityLocations"/>
+	    		<!-- support multiple invnetoryItemIds per facilityLocation.locationSeqId -->
+	    		<field-to-env field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation" env-name="inventoryItemIdList"/>
+	    		<field-to-list field-name="inventoryItemId" list-name="inventoryItemIdList"/>
+	    		<env-to-field env-name="inventoryItemIdList" field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation"/>
+	    		<clear-field field-name="inventoryItemIdList"/>
+    		<else>
+    			<field-to-list field-name="inventoryItemId" list-name="noLocationInventoryItemIds"/>
+    		</else>
+    		</if-not-empty>
+    		<clear-field field-name="facilityLocation"/>
+    	</iterate-map>
+    	
+		<!-- order the facilityLocations -->
+		<string-to-list string="+areaId" list-name="facilityLocsOrdLst"/>
+		<string-to-list string="+aisleId" list-name="facilityLocsOrdLst"/>
+		<string-to-list string="+sectionId" list-name="facilityLocsOrdLst"/>
+		<string-to-list string="+levelId" list-name="facilityLocsOrdLst"/>
+		<string-to-list string="+positionId" list-name="facilityLocsOrdLst"/>
+		<order-value-list list-name="facilityLocations" order-by-list-name="facilityLocsOrdLst"/>
+		
+		<!-- for each facility location add an entry to the inventoryItemInfoList -->
+		<iterate entry-name="facilityLocation" list-name="facilityLocations">
+			<!-- inventoryItemInfoList: facilityLocation, inventoryItem, orderItems, quantity -->
+    		<field-to-env field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation" env-name="inventoryItemIdList"/>
+    		<iterate entry-name="inventoryItemId" list-name="inventoryItemIdList">
+				<env-to-field env-name="facilityLocation" map-name="inventoryItemInfo"/>
+				<field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
+				<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
+				<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
+				<get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="Product" to-value-name="inventoryItemInfo.product"/>
+				<get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
+
+				<field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
+				<clear-field field-name="inventoryItemInfo"/>
+    		</iterate>
+		</iterate>
+		
+    	<!-- add all noLocationInventoryItemIds to inventoryItemInfoList with all entries except facilityLocation -->
+    	<iterate entry-name="inventoryItemId" list-name="noLocationInventoryItemIds">
+	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
+	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
+	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
+			<get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="Product" to-value-name="inventoryItemInfo.product"/>
+			<get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
+
+			<field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
+	    	<clear-field field-name="inventoryItemInfo"/>
+    	</iterate>
+		
+		<field-to-result field-name="inventoryItemInfoList"/>
+		<field-to-result field-name="orderHeaderInfoList"/>
+		<field-to-result field-name="wrongQuantityReservedList"/>
+		<field-to-result field-name="insufficientQohList"/>
+    </simple-method>    
+</simple-methods>
+     
