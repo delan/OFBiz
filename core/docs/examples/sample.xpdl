@@ -1,0 +1,365 @@
+<?xml version="1.0"?>
+<!DOCTYPE Package SYSTEM "xpdl.dtd">
+<Package Id="POTATO">
+  <PackageHeader><!-- Required -->
+    <XPDLVersion><!-- Required -->#PCDATA</XPDLVersion>
+    <Vendor><!-- Required -->#PCDATA</Vendor>
+    <Created><!-- Required -->#PCDATA</Created>
+    <Description><!-- ? -->#PCDATA</Description>
+    <Documentation><!-- ? -->#PCDATA</Documentation>
+    <PriorityUnit><!-- ? -->#PCDATA</PriorityUnit>
+    <CostUnit><!-- ? -->#PCDATA</CostUnit>
+  </PackageHeader>
+  <RedefinableHeader
+        PublicationStatus="UNDER_REVISION"
+        ><!-- ? -->
+        <!-- (UNDER_REVISION | RELEASED | UNDER_TEST) #IMPLIED -->
+    <Author><!-- ? -->#PCDATA</Author>
+    <Version><!-- ? -->#PCDATA</Version>
+    <Codepage><!-- ? -->#PCDATA</Codepage>
+    <Countrykey><!-- ? -->#PCDATA</Countrykey>
+    <Responsibles><!-- ? -->
+      <Responsible><!-- * -->#PCDATA</Responsible>
+    </Responsibles>
+  </RedefinableHeader>
+  <ConformanceClass
+        GraphConformance="FULL_BLOCKED"
+        /><!-- ? -->
+        <!-- (FULL_BLOCKED | LOOP_BLOCKED | NON_BLOCKED) #IMPLIED -->
+  <ExternalPackages><!-- ? -->
+    <ExternalPackage href="http://href.com/"><!-- * -->
+      <ExtendedAttributes><!-- ? -->
+        <ExtendedAttribute
+                Name="NMTOKEN"
+                Value="CDATA #IMPLIED"
+                ><!-- Name  #REQUIRED --><!-- * -->
+          <!-- ANY -->
+        </ExtendedAttribute>
+      </ExtendedAttributes>
+    </ExternalPackage>
+  </ExternalPackages>
+  <TypeDeclarations><!-- ? -->
+    <TypeDeclaration
+        Id="NMTOKEN"
+        Name="CDATA #IMPLIED"
+        ><!-- * --><!-- Id  #REQUIRED -->
+      <!-- <(%Type;)/> Required -->
+      <BasicType Type="STRING"/>
+      <Description><!-- ? -->#PCDATA</Description>
+      <ExtendedAttributes><!-- ? -->
+        <ExtendedAttribute
+                Name="NMTOKEN"
+                Value="CDATA #IMPLIED"
+                ><!-- * -->
+          <!-- ANY --><!-- Name  #REQUIRED -->
+        </ExtendedAttribute>
+      </ExtendedAttributes>
+    </TypeDeclaration>
+  </TypeDeclarations>
+  <Participants><!-- ? -->
+    <Participant
+        Id="NMTOKEN"
+        Name="CDATA #IMPLIED"
+        ><!-- * --><!-- Id  #REQUIRED -->
+      <ParticipantType
+                Type="RESOURCE_SET"
+                /><!-- Required -->
+                <!-- Type (RESOURCE_SET | RESOURCE | ROLE | ORGANIZATIONAL_UNIT | HUMAN | SYSTEM) #REQUIRED -->
+      <Description><!-- ? --></Description>
+      <ExtendedAttributes><!-- ? -->
+        <ExtendedAttribute
+                Name="NMTOKEN"
+                Value="CDATA #IMPLIED"
+                ><!-- * --><!-- Name  #REQUIRED -->
+          <!-- ANY -->
+        </ExtendedAttribute>
+      </ExtendedAttributes>
+    </Participant>
+  </Participants>
+  <Applications><!-- ? -->
+    <Application
+        Id="NMTOKEN"
+        Name="CDATA #IMPLIED"
+        ><!-- * --><!-- Name  #REQUIRED -->
+      <Description><!-- ? -->#PCDATA</Description>
+      <FormalParameters><!-- ? -->
+        <FormalParameter
+                Id="NMTOKEN"
+                Index="NMTOKEN"
+                Mode="IN"
+                ><!-- * --><!-- Id  #REQUIRED --><!-- Index  #IMPLIED -->
+                <!-- Mode="(IN | OUT | INOUT)" "IN" -->
+          <DataType><!-- Required -->
+          <!-- (%Type;) -->
+            <BasicType Type="STRING"/>
+          </DataType>
+          <Description><!-- ? -->#PCDATA</Description>
+        </FormalParameter>
+      </FormalParameters>
+      <ExtendedAttributes><!-- ? -->
+        <ExtendedAttribute
+                Name="NMTOKEN"
+                Value="CDATA #IMPLIED"
+                ><!-- * --><!-- Name  #REQUIRED -->
+          <!-- ANY -->
+        </ExtendedAttribute>
+      </ExtendedAttributes>
+    </Application>
+  </Applications>
+  <DataFields><!-- ? -->
+    <DataField
+        Id="NMTOKEN"
+        Name="CDATA #IMPLIED"
+        IsArray="FALSE"
+        ><!-- * --><!-- Id  #REQUIRED -->
+        <!-- IsArray="(TRUE | FALSE)" "FALSE" -->
+      <DataType><!-- Required -->
+        <!-- (%Type;)/ --><!-- Required -->
+        <BasicType Type="STRING"/>
+      </DataType>
+      <InitialValue><!-- ? -->#PCDATA</InitialValue>
+      <Description><!-- ? -->#PCDATA</Description>
+      <ExtendedAttributes><!-- ? -->
+        <ExtendedAttribute
+                Name="NMTOKEN"
+                Value="CDATA #IMPLIED"
+                ><!-- * --><!-- Name  #REQUIRED -->
+          <!-- ANY -->
+        </ExtendedAttribute>
+      </ExtendedAttributes>
+    </DataField>
+  </DataFields>
+  <WorkflowProcesses><!-- ? -->
+    <WorkflowProcess
+        Id="NMTOKEN"
+        Name="CDATA #IMPLIED"
+        ><!-- * --><!-- Name  #REQUIRED -->
+      <ProcessHeader
+          DurationUnit="Y"
+          ><!-- Required (Y | M | D | h | m | s) #IMPLIED -->
+        <Created><!-- ? -->#PCDATA</Created>
+        <Description><!-- ? -->#PCDATA</Description>
+        <Priority><!-- ? -->#PCDATA</Priority>
+        <Limit><!-- ? -->#PCDATA</Limit>
+        <ValidFrom><!-- ? -->#PCDATA</ValidFrom>
+        <ValidTo><!-- ? -->#PCDATA</ValidTo>
+        <TimeEstimation><!-- ? -->
+          <WaitingTime><!-- ? -->#PCDATA</WaitingTime>
+          <WorkingTime><!-- ? -->#PCDATA</WorkingTime>
+          <Duration><!-- ? -->#PCDATA</Duration>
+        </TimeEstimation>
+      </ProcessHeader>
+      <RedefinableHeader
+          PublicationStatus="UNDER_REVISION"
+          ><!-- ? (UNDER_REVISION | RELEASED | UNDER_TEST) #IMPLIED -->
+        <Author><!-- ? -->#PCDATA</Author>
+        <Version><!-- ? -->#PCDATA</Version>
+        <Codepage><!-- ? -->#PCDATA</Codepage>
+        <Countrykey><!-- ? -->#PCDATA</Countrykey>
+        <Responsibles><!-- ? -->
+          <Responsible><!-- * -->#PCDATA</Responsible>
+        </Responsibles>
+      </RedefinableHeader>
+      <FormalParameters><!-- ? -->
+        <FormalParameter
+                Id="NMTOKEN"
+                Index="NMTOKEN"
+                Mode="IN"
+                ><!-- * --><!-- Id  #REQUIRED --><!-- Index  #Implied -->
+                <!-- Mode="(IN | OUT | INOUT)" "IN" -->
+          <DataType><!-- Required -->
+            <!-- <(%Type;)/> -->
+            <BasicType Type="STRING"/>
+          </DataType>
+          <Description><!-- ? -->#PCDATA</Description>
+        </FormalParameter>
+      </FormalParameters>
+      <!-- <(%Type;)/> --><!-- * -->
+      <BasicType Type="STRING"/>
+      <DataFields><!-- ? -->
+        <DataField
+                Id="NMTOKEN"
+                Name="CDATA #IMPLIED"
+                IsArray="FALSE"
+                ><!-- * --><!-- Id  #REQUIRED -->
+                <!-- IsArray="(TRUE | FALSE)" "FALSE" -->
+          <DataType><!-- Required -->
+            <!-- <(%Type;)/> --><!-- Required -->
+            <BasicType Type="STRING"/>
+          </DataType>
+          <InitialValue><!-- ? -->#PCDATA</InitialValue>
+          <Description><!-- ? -->#PCDATA</Description>
+          <ExtendedAttributes><!-- ? -->
+            <ExtendedAttribute
+                    Name="NMTOKEN"
+                    Value="CDATA #IMPLIED"
+                    ><!-- * --><!-- Name  #REQUIRED -->
+              <!-- ANY -->
+            </ExtendedAttribute>
+          </ExtendedAttributes>
+        </DataField>
+      </DataFields>
+      <Participants><!-- ? -->
+        <Participant
+            Id="NMTOKEN"
+            Name="CDATA #IMPLIED"
+            ><!-- * --><!-- Id #REQUIRED -->
+          <ParticipantType
+                    Type="RESOURCE_SET"
+                    /><!-- Required -->
+                    <!-- Type (RESOURCE_SET | RESOURCE | ROLE | ORGANIZATIONAL_UNIT | HUMAN | SYSTEM) #REQUIRED -->
+          <Description><!-- ? -->#PCDATA</Description>
+          <ExtendedAttributes><!-- ? -->
+            <ExtendedAttribute
+                    Name="NMTOKEN"
+                    Value="CDATA #IMPLIED"
+                    ><!-- * --><!-- Name  #REQUIRED -->
+              <!-- ANY -->
+            </ExtendedAttribute>
+          </ExtendedAttributes>
+        </Participant>
+      </Participants>
+      <Applications><!-- ? -->
+        <Application
+            Id="NMTOKEN"
+            Name="CDATA #IMPLIED"
+            ><!-- * --><!-- Id  #REQUIRED -->
+          <Description><!-- ? -->#PCDATA</Description>
+          <FormalParameters><!-- ? -->
+            <FormalParameter
+                    Id="NMTOKEN"
+                    Index="NMTOKEN"
+                    Mode="IN"
+                    ><!-- * --><!-- Id #REQUIRED --><!-- Index #Implied -->
+                    <!-- Mode="(IN | OUT | INOUT)" "IN" -->
+              <DataType><!-- Required -->
+                <!-- <(%Type;)/> --><!-- Required -->
+                <BasicType Type="STRING"/>
+              </DataType>
+              <Description><!-- ? -->#PCDATA</Description>
+            </FormalParameter>
+          </FormalParameters>
+          <ExtendedAttributes><!-- ? -->
+            <ExtendedAttribute
+                    Name="NMTOKEN"
+                    Value="CDATA #IMPLIED"
+                    ><!-- * --><!-- Name  #REQUIRED -->
+              <!-- ANY -->
+            </ExtendedAttribute>
+          </ExtendedAttributes>
+        </Application>
+      </Applications>
+      <Activities><!-- ? -->
+        <Activity
+                Id="NMTOKEN"
+                Name="CDATA #IMPLIED"
+                ><!-- * --><!-- Id #REQUIRED -->
+          <Description><!-- ? -->#PCDATA</Description>
+          <Limit><!-- ? -->#PCDATA</Limit>
+          <Route/>
+          <!-- <(Route | Implementation)/> --><!-- Required -->
+          <Performer><!-- ? -->#PCDATA</Performer>
+          <StartMode><!-- ? --><Automatic/><!-- (%Mode;) --></StartMode>
+          <FinishMode><!-- ? --><Automatic/><!-- (%Mode;) --></FinishMode>
+          <Priority><!-- ? -->#PCDATA</Priority>
+          <SimulationInformation
+                Instantiation="ONCE"
+                ><!-- ? (ONCE | MULTIPLE) #IMPLIED -->
+            <Cost><!-- Required -->#PCDATA</Cost>
+            <TimeEstimation><!-- ? -->
+              <WaitingTime><!-- ? -->#PCDATA</WaitingTime>
+              <WorkingTime><!-- ? -->#PCDATA</WorkingTime>
+              <Duration><!-- ? -->#PCDATA</Duration>
+            </TimeEstimation>
+          </SimulationInformation>
+          <Icon><!-- ? -->#PCDATA</Icon>
+          <Documentation><!-- ? -->#PCDATA</Documentation>
+          <TransitionRestrictions><!-- ? -->
+            <TransitionRestriction><!-- * -->
+              <InlineBlock
+                        Begin="NMTOKEN"
+                        End="NMTOKEN"
+                        ><!-- ? --><!-- Begin  #REQUIRED --><!-- End  #REQUIRED -->
+                <BlockName><!-- ? -->#PCDATA</BlockName>
+                <Description><!-- ? -->#PCDATA</Description>
+                <Icon><!-- ? -->#PCDATA</Icon>
+                <Documentation><!-- ? -->#PCDATA</Documentation>
+                <ExtendedAttributes><!-- ? -->
+                  <ExtendedAttribute
+                          Name="NMTOKEN"
+                          Value="CDATA #IMPLIED"
+                          ><!-- * --><!-- Name  #REQUIRED -->
+                    <!-- ANY -->
+                  </ExtendedAttribute>
+                </ExtendedAttributes>
+              </InlineBlock>
+              <Join Type="AND"/><!-- (AND | XOR) #IMPLIED ? -->
+              <Split Type="AND"><!-- (AND | XOR) #IMPLIED ? -->
+                <TransitionRefs><!-- ? -->
+                  <TransitionRef Id="NMTOKEN"/><!-- * -->
+                            <!-- Id  #REQUIRED -->
+                </TransitionRefs>
+              </Split>
+            </TransitionRestriction>
+          </TransitionRestrictions>
+          <ExtendedAttributes><!-- ? -->
+            <ExtendedAttribute
+                    Name="NMTOKEN"
+                    Value="CDATA #IMPLIED"
+                    ><!-- * --><!-- Name  #REQUIRED -->
+              <!-- ANY -->
+            </ExtendedAttribute>
+          </ExtendedAttributes>
+        </Activity>
+      </Activities>
+      <Transitions><!-- ? -->
+        <Transition
+                Id="NMTOKEN"
+                From="NMOKEN"
+                To="NMTOKEN"
+                Loop="NOLOOP"
+                Name="CDATA #IMPLIED"
+                ><!-- * Loop=(NOLOOP | FROMLOOP | TOLOOP) #IMPLIED -->
+                <!-- Id  #REQUIRED -->
+                <!-- From  #REQUIRED -->
+                <!-- To #REQUIRED -->
+          <Condition
+                Type="CONDITION"
+                ><!-- ? (CONDITION | OTHERWISE) #IMPLIED -->
+            <!--
+              (#PCDATA | Xpression)*
+            -->
+            <Xpression>
+              <!-- ANY -->
+            </Xpression>
+          </Condition>
+          <Description><!-- ? -->#PCDATA</Description>
+          <ExtendedAttributes><!-- ? -->
+            <ExtendedAttribute
+                    Name="NMTOKEN"
+                    Value="CDATA #IMPLIED"
+                    ><!-- * --><!-- Name  #REQUIRED -->
+              <!-- ANY -->
+            </ExtendedAttribute>
+          </ExtendedAttributes>
+        </Transition>
+      </Transitions>
+      <ExtendedAttributes><!-- ? -->
+        <ExtendedAttribute
+            Name="NMTOKEN"
+            Value="CDATA #IMPLIED"
+            ><!-- * --><!-- Name  #REQUIRED -->
+          <!-- ANY -->
+        </ExtendedAttribute>
+      </ExtendedAttributes>
+    </WorkflowProcess>
+  </WorkflowProcesses>
+  <ExtendedAttributes><!-- ? -->
+    <ExtendedAttribute
+        Name="NMTOKEN"
+        Value="CDATA #IMPLIED"
+        ><!-- * --><!-- Name  #REQUIRED -->
+      <!-- ANY -->
+    </ExtendedAttribute>
+  </ExtendedAttributes>
+</Package>
