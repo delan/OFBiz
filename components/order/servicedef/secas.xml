@@ -46,35 +46,35 @@
 
     <!-- order confirmation/notification email ECAs -->
     <eca service="sendOrderConfirmation" event="in-validate">
-    	<action service="prepareOrderConfirmation" mode="sync" result-to-context="true"/>
+    	<action service="prepareOrderConfirmation" mode="sync" ignore-error="false" ignore-failure="false" result-to-context="true"/>
     	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>
     </eca>
     <eca service="sendOrderConfirmation" event="commit">
     	<action service="createOrderNotificationLog" mode="sync"/>
     </eca>
     <eca service="sendOrderChangeNotification" event="in-validate">
-    	<action service="prepareOrderChange" mode="sync" result-to-context="true"/>
+    	<action service="prepareOrderChange" mode="sync" ignore-error="false" ignore-failure="false" result-to-context="true"/>
     	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>
     </eca>
     <eca service="sendOrderChangeNotification" event="commit">
     	<action service="createOrderNotificationLog" mode="sync"/>
     </eca>
     <eca service="sendOrderCompleteNotification" event="in-validate">
-    	<action service="prepareOrderComplete" mode="sync" result-to-context="true"/>
+    	<action service="prepareOrderComplete" mode="sync" ignore-error="false" ignore-failure="false" result-to-context="true"/>
     	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>
     </eca>
     <eca service="sendOrderCompleteNotification" event="commit">
     	<action service="createOrderNotificationLog" mode="sync"/>
     </eca>
     <eca service="sendOrderBackorderNotification" event="in-validate">
-    	<action service="prepareOrderBackorder" mode="sync" result-to-context="true"/>
+    	<action service="prepareOrderBackorder" mode="sync" ignore-error="false" ignore-failure="false" result-to-context="true"/>
     	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>
     </eca>
     <eca service="sendOrderBackorderNotification" event="commit">
     	<action service="createOrderNotificationLog" mode="sync"/>
     </eca>
     <eca service="sendOrderPayRetryNotification" event="in-validate">
-    	<action service="prepareOrderPayRetry" mode="sync" result-to-context="true"/>
+    	<action service="prepareOrderPayRetry" mode="sync" ignore-error="false" ignore-failure="false" result-to-context="true"/>
     	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>
     </eca>
     <eca service="sendOrderPayRetryNotification" event="commit">
