@@ -1,5 +1,5 @@
 /*
- * $Id: OrderManagerEvents.java,v 1.2 2003/11/01 18:01:49 ajzeneski Exp $
+ * $Id: OrderManagerEvents.java,v 1.3 2004/07/31 04:10:39 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,27 +50,27 @@ import org.ofbiz.service.LocalDispatcher;
 /**
  * Order Manager Events
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
- * @since      2.0
+ * @author <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version $Revision: 1.3 $
+ * @since 2.0
  */
 public class OrderManagerEvents {
-    
+
     public static final String module = OrderManagerEvents.class.getName();
-        
+
     public static String processOfflinePayments(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");       
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-              
+
         if (session.getAttribute("OFFLINE_PAYMENTS") != null) {
-            String orderId = (String) request.getAttribute("order_id");                                            
-            List toBeStored = new LinkedList();                     
+            String orderId = (String) request.getAttribute("order_id");
+            List toBeStored = new LinkedList();
             List paymentPrefs = null;
             GenericValue placingCustomer = null;
-            try {                
+            try {
                 paymentPrefs = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toMap("orderId", orderId));
                 List pRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
                 if (pRoles != null && pRoles.size() > 0)
@@ -78,10 +78,10 @@ public class OrderManagerEvents {
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Problems looking up order payment preferences", module);
                 request.setAttribute("_ERROR_MESSAGE_", "<li>Error processing offline payments.");
-                return "error";            
+                return "error";
             }
             if (paymentPrefs != null) {
-                Iterator i = paymentPrefs.iterator();                
+                Iterator i = paymentPrefs.iterator();
                 while (i.hasNext()) {
                     // update the preference to received
                     GenericValue ppref = (GenericValue) i.next();
@@ -90,7 +90,7 @@ public class OrderManagerEvents {
                     toBeStored.add(ppref);
                     
                     // create a payment record
-                    toBeStored.add(OrderChangeHelper.createPaymentFromPreference(ppref, null, placingCustomer.getString("partyId"), "Payment received offline and manually entered."));                                  
+                    toBeStored.add(OrderChangeHelper.createPaymentFromPreference(ppref, null, placingCustomer.getString("partyId"), "Payment received offline and manually entered."));
                 }
                 
                 // store the updated preferences and newly created payments
@@ -103,18 +103,18 @@ public class OrderManagerEvents {
                 }
                 
                 // set the status of the order to approved
-                OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);             
+                OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
             }
         }
         return "success";
     }
-    
+
     public static String receiveOfflinePayment(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");       
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-                   
+
         String orderId = request.getParameter("orderId");
         
         // get the order header & payment preferences       
@@ -126,40 +126,41 @@ public class OrderManagerEvents {
             request.setAttribute("_ERROR_MESSAGE_", "<li>Problems reading order header information.");
             return "error";
         }
-        
+
         Double grandTotal = new Double(0.00);
-        if (orderHeader != null)          
-         grandTotal = orderHeader.getDouble("grandTotal");
-            
+        if (orderHeader != null) {
+            grandTotal = orderHeader.getDouble("grandTotal");
+        }
+
         // get the payment types to receive
         List paymentMethodTypes = null;
-        
+
         try {
             List pmtFields = UtilMisc.toList(new EntityExpr("paymentMethodTypeId", EntityOperator.NOT_EQUAL, "EXT_OFFLINE"));
-            paymentMethodTypes = delegator.findByAnd("PaymentMethodType", pmtFields);                 
+            paymentMethodTypes = delegator.findByAnd("PaymentMethodType", pmtFields);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems getting payment types", module);
             request.setAttribute("_ERROR_MESSAGE_", "<li>Problems with PaymentType lookup.");
             return "error";
         }
-        
+
         if (paymentMethodTypes == null) {
             request.setAttribute("_ERROR_MESSAGE_", "<li>Problems with PaymentType lookup.");
             return "error";
         }
-                
+
         List toBeStored = new LinkedList();
         GenericValue placingCustomer = null;
-        try {                            
+        try {
             List pRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
             if (pRoles != null && pRoles.size() > 0)
                 placingCustomer = EntityUtil.getFirst(pRoles);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems looking up order payment preferences", module);
             request.setAttribute("_ERROR_MESSAGE_", "<li>Error processing offline payments.");
-            return "error";            
-        }        
-        
+            return "error";
+        }
+
         Iterator pmti = paymentMethodTypes.iterator();
         double paymentTally = 0.00;
         while (pmti.hasNext()) {
@@ -169,8 +170,8 @@ public class OrderManagerEvents {
             String paymentReference = request.getParameter(paymentMethodTypeId + "_reference");
             if (!UtilValidate.isEmpty(amountStr)) {
                 double paymentTypeAmount = 0.00;
-                try {                                                                                
-                    paymentTypeAmount = NumberFormat.getNumberInstance().parse(amountStr).doubleValue();                                                           
+                try {
+                    paymentTypeAmount = NumberFormat.getNumberInstance().parse(amountStr).doubleValue();
                 } catch (java.text.ParseException pe) {
                     request.setAttribute("_ERROR_MESSAGE_", "<li>Problems payment parsing amount.");
                     return "error";
@@ -182,7 +183,7 @@ public class OrderManagerEvents {
                     Map prefFields = UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString());
                     GenericValue paymentPreference = delegator.makeValue("OrderPaymentPreference", prefFields);
                     paymentPreference.set("paymentMethodTypeId", paymentMethodType.getString("paymentMethodTypeId"));
-                    paymentPreference.set("maxAmount", new Double(paymentTypeAmount));                    
+                    paymentPreference.set("maxAmount", new Double(paymentTypeAmount));
                     paymentPreference.set("statusId", "PAYMENT_RECEIVED");
                     paymentPreference.set("orderId", orderId);
                     toBeStored.add(paymentPreference);
@@ -245,6 +246,6 @@ public class OrderManagerEvents {
         }
 
         return "success";
-    }    
+    }
 
 }
