@@ -1,7 +1,7 @@
 /*
- * $Id: VariantEvents.java,v 1.2 2004/02/26 09:10:51 jonesde Exp $
+ * $Id: VariantEvents.java,v 1.3 2004/05/19 21:36:52 jonesde Exp $
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -45,7 +45,7 @@ import java.util.Map;
  * Product Variant Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class VariantEvents {
@@ -96,7 +96,6 @@ public class VariantEvents {
             try {
                 // read the product, duplicate it with the given id
                 GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-
                 if (product == null) {
                     TransactionUtil.rollback(beganTransacton);
                     Map messageMap = UtilMisc.toMap("productId", productId);
@@ -105,25 +104,35 @@ public class VariantEvents {
                     return "error";
                 }
 
-                GenericValue variantProduct = new GenericValue(product);
-
-                variantProduct.set("productId", variantProductId);
-                variantProduct.set("isVirtual", "N");
-                variantProduct.set("isVariant", "Y");
-                variantProduct.set("primaryProductCategoryId", null);
-                variantProduct.create();
+                // check if product exists
+                GenericValue variantProduct = delegator.findByPrimaryKey("Product",UtilMisc.toMap("productId", variantProductId));
+                if (variantProduct == null) {
+                    //if product does not exist
+                    variantProduct = new GenericValue(product);
+                    variantProduct.set("productId", variantProductId);
+                    variantProduct.set("isVirtual", "N");
+                    variantProduct.set("isVariant", "Y");
+                    variantProduct.set("primaryProductCategoryId", null);
+                    //create new
+                    variantProduct.create();
+                } else {
+                    //if product does exist
+                    variantProduct.set("isVirtual", "N");
+                    variantProduct.set("isVariant", "Y");
+                    variantProduct.set("primaryProductCategoryId", null);
+                    //update entry
+                    variantProduct.store();
+                }
 
                 // add an association from productId to variantProductId of the PRODUCT_VARIANT
                 GenericValue productAssoc = delegator.makeValue("ProductAssoc",
                         UtilMisc.toMap("productId", productId, "productIdTo", variantProductId,
                             "productAssocTypeId", "PRODUCT_VARIANT", "fromDate", UtilDateTime.nowTimestamp()));
-
                 productAssoc.create();
 
                 // add the selected standard features to the new product given the productFeatureIds
                 for (int i = 0; i < featureTypeSize; i++) {
                     String productFeatureId = request.getParameter("feature_" + i);
-
                     if (productFeatureId == null) {
                         TransactionUtil.rollback(beganTransacton);
                         Map messageMap = UtilMisc.toMap("i", Integer.toString(i));
