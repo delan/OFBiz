@@ -158,9 +158,8 @@ public class EntityFieldTag extends TagSupport {
                     javaType = "java.lang.String";
                 }
             }
-        }
-        // We should be either a 'currency' or a java type.
-        else {
+        } else {
+            // We should be either a 'currency' or a java type.
             fieldObject = pageContext.findAttribute(attribute);
             javaType = type;
             // Set a default for NULL objects.
@@ -206,10 +205,24 @@ public class EntityFieldTag extends TagSupport {
                 nf = NumberFormat.getNumberInstance(userLocale);
             }
             fieldString = nf.format(doubleValue);
+        } else if (javaType.equals("java.lang.Float") || javaType.equals("Float")) {
+            Float floatValue = (Float) fieldObject;
+            NumberFormat nf = null;
+            if (fieldObjectType.equals("currency-amount")) {
+                //TODO: convert currency to current Locale
+                nf = NumberFormat.getCurrencyInstance(userLocale);
+            } else {
+                nf = NumberFormat.getNumberInstance(userLocale);
+            }
+            fieldString = nf.format(floatValue);
         } else if (javaType.equals("java.lang.Long") || javaType.equals("Long")) {
             Long longValue = (Long) fieldObject;
             NumberFormat nf = NumberFormat.getNumberInstance(userLocale);
             fieldString = nf.format(longValue);
+        } else if (javaType.equals("java.lang.Integer") || javaType.equals("Integer")) {
+            Integer intValue = (Integer) fieldObject;
+            NumberFormat nf = NumberFormat.getNumberInstance(userLocale);
+            fieldString = nf.format(intValue);
         } else if (javaType.equals("java.lang.Boolean") || javaType.equals("Boolean")) {
             Boolean booleanValue = (Boolean) fieldObject;
             if (booleanValue.booleanValue())
