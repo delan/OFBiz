@@ -104,11 +104,13 @@ public class SQLProcessor {
         if (_connection == null) {
             return;
         }
+        
+        Debug.logVerbose("SQLProcessor:commit() _manualTX=" + _manualTX, module);
 
         if (_manualTX) {
             try {
                 _connection.commit();
-                Debug.logVerbose("SQLProcessor:commit()", module);
+                Debug.logVerbose("SQLProcessor:commit() : called commit on connection", module);
             } catch (SQLException sqle) {
                 rollback();
                 throw new GenericDataSourceException("SQL Exception occurred on commit", sqle);
@@ -123,6 +125,8 @@ public class SQLProcessor {
         if (_connection == null) {
             return;
         }
+        
+        Debug.logVerbose("SQLProcessor:rollback() _manualTX=" + _manualTX, module);
 
         try {
             if (_manualTX) {
