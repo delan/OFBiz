@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.59 $
+ * @version    $Revision: 1.60 $
  */
 -->
 
@@ -214,6 +214,9 @@
         <key-map field-name="productCategoryId" rel-field-name="parentProductCategoryId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductFeatureCategoryAppl">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFeatureCatGrpAppl">
         <key-map field-name="productCategoryId"/>
       </relation>
       <relation type="many" rel-entity-name="ProdCatalogCategory">
@@ -706,7 +709,7 @@
     </entity>
     <entity entity-name="ProductFeatureCategoryAppl"
             package-name="org.ofbiz.product.feature"
-            title="Product Feature Category Applicability Entity">
+            title="Product Feature Category Application Entity">
       <field name="productCategoryId" type="id-ne"></field>
       <field name="productFeatureCategoryId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
@@ -719,6 +722,23 @@
       </relation>
       <relation type="one" fk-name="PROD_FCAPPL_FCAT" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="productFeatureCategoryId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFeatureCatGrpAppl"
+            package-name="org.ofbiz.product.feature"
+            title="Product Category Feature Group Application Entity">
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="productFeatureGroupId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="productCategoryId"/>
+      <prim-key field="productFeatureGroupId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PROD_FCGAPL_CAT" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FCGAPL_FGRP" rel-entity-name="ProductFeatureGroup">
+        <key-map field-name="productFeatureGroupId"/>
       </relation>
     </entity>
     <entity entity-name="ProductFeatureContent"

@@ -263,6 +263,24 @@
         <response name="success" type="view" value="EditCategoryFeatureCats"/>
         <response name="error" type="view" value="EditCategoryFeatureCats"/>
     </request-map>
+    <request-map uri="createProductFeatureCatGrpAppl">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductFeatureCatGrpAppl"/>
+        <response name="success" type="view" value="EditCategoryFeatureCats"/>
+        <response name="error" type="view" value="EditCategoryFeatureCats"/>
+    </request-map>
+    <request-map uri="updateProductFeatureCatGrpAppl">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductFeatureCatGrpAppl"/>
+        <response name="success" type="view" value="EditCategoryFeatureCats"/>
+        <response name="error" type="view" value="EditCategoryFeatureCats"/>
+    </request-map>
+    <request-map uri="removeProductFeatureCatGrpAppl">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductFeatureCatGrpAppl"/>
+        <response name="success" type="view" value="EditCategoryFeatureCats"/>
+        <response name="error" type="view" value="EditCategoryFeatureCats"/>
+    </request-map>
 
     <!-- ================ Category Roles Requests ================= -->
     <request-map uri="EditCategoryParties">

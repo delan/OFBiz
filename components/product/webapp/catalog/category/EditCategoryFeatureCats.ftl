@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 
@@ -29,17 +29,68 @@
 <#if hasPermission>
 ${pages.get("/category/CategoryTabBar.ftl")}
     
-    <div class="head1">${uiLabelMap.ProductCatalogs} <span class="head2">${uiLabelMap.CommonFor} <#if productCategory?exists>${(productCategory.description)?if_exists}</#if> [${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</span></div>
+    <div class="head1">Feature Categories and Groups <span class="head2">${uiLabelMap.CommonFor} <#if productCategory?exists>${(productCategory.description)?if_exists}</#if> [${uiLabelMap.CommonId}:${productCategoryId?if_exists}]</span></div>
     
     <a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewCategory}]</a>
     <#if productCategoryId?has_content>
         <a href="/ecommerce/control/category?category_id=${productCategoryId?if_exists}" class="buttontext" target="_blank">[${uiLabelMap.ProductCategoryPage}]</a>
     </#if>
-    <p>
     <#if productCategoryId?exists && productCategory?exists>    
+        <#-- Feature Groups -->
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>${uiLabelMap.ProductCatalogNameId}</b></div></td>
+            <td><div class="tabletext"><b>Feature Group</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
+            <td align="center"><div class="tabletext"><b>${uiLabelMap.CommonThruDateTime}</b></div></td>
+            <td><div class="tabletext"><b>&nbsp;</b></div></td>
+        </tr>
+        <#assign line = 0>
+        <#list productFeatureCatGrpAppls as productFeatureCatGrpAppl>
+        <#assign line = line + 1>
+        <#assign productFeatureGroup = (productFeatureCatGrpAppl.getRelatedOne("ProductFeatureGroup"))?default(null)>
+        <tr valign="middle">
+            <td><a href="<@ofbizUrl>/EditFeatureGroupAppls?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)?if_exists}</@ofbizUrl>" class="buttontext"><#if productFeatureGroup?exists>${(productFeatureGroup.description)?if_exists}</#if> [${(productFeatureCatGrpAppl.productFeatureGroupId)?if_exists}]</a></td>
+            <#assign hasntStarted = false>
+            <#if (productFeatureCatGrpAppl.getTimestamp("fromDate"))?exists && nowTimestamp.before(productFeatureCatGrpAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
+            <td><div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>${(productFeatureCatGrpAppl.fromDate)?if_exists}</div></td>
+            <td align="center">
+                <FORM method=POST action="<@ofbizUrl>/updateProductFeatureCatGrpAppl</@ofbizUrl>" name="lineFormGrp${line}">
+                    <#assign hasExpired = false>
+                    <#if (productFeatureCatGrpAppl.getTimestamp("thruDate"))?exists && nowTimestamp.after(productFeatureCatGrpAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
+                    <input type=hidden name="productCategoryId" value="${(productFeatureCatGrpAppl.productCategoryId)?if_exists}">
+                    <input type=hidden name="productFeatureGroupId" value="${(productFeatureCatGrpAppl.productFeatureGroupId)?if_exists}">
+                    <input type=hidden name="fromDate" value="${(productFeatureCatGrpAppl.fromDate)?if_exists}">
+                    <input type=text size="25" name="thruDate" value="${(productFeatureCatGrpAppl.thruDate)?if_exists}" class="inputBox" <#if hasExpired>style="color: red;"</#if>>
+                    <a href="javascript:call_cal(document.lineFormGrp${line}.thruDate, '${(productFeatureCatGrpAppl.thruDate)?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+                    <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
+                </FORM>
+            </td>
+            <td align="center">
+            <a href="<@ofbizUrl>/removeProductFeatureCatGrpAppl?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)?if_exists}&productCategoryId=${(productFeatureCatGrpAppl.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productFeatureCatGrpAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
+            [${uiLabelMap.CommonDelete}]</a>
+            </td>
+        </tr>
+        </#list>
+        </table>
+        <br>
+        <form method="POST" action="<@ofbizUrl>/createProductFeatureCatGrpAppl</@ofbizUrl>" style="margin: 0;" name="addNewForm">
+        <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
+        
+        <div class="head2">Apply Feature Category to Product Category:</div>
+        <select name="productFeatureGroupId" class="selectBox">
+        <#list productFeatureGroups as productFeatureGroup>
+            <option value="${(productFeatureGroup.productFeatureGroupId)?if_exists}">${(productFeatureGroup.description)?if_exists} [${(productFeatureGroup.productFeatureGroupId)?if_exists}]</option>
+        </#list>
+        </select>
+        <input type=text size="25" name="fromDate" class="inputBox">
+        <a href="javascript:call_cal(document.addNewForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
+        <input type="submit" value="${uiLabelMap.CommonAdd}">
+        </form>
+
+        <#-- Feature Categories -->
+        <table border="1" width="100%" cellpadding="2" cellspacing="0">
+        <tr>
+            <td><div class="tabletext"><b>Feature Category</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
             <td align="center"><div class="tabletext"><b>${uiLabelMap.CommonThruDateTime}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -76,8 +127,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <form method="POST" action="<@ofbizUrl>/createProductFeatureCategoryAppl</@ofbizUrl>" style="margin: 0;" name="addNewForm">
         <input type="hidden" name="productCategoryId" value="${productCategoryId?if_exists}">
         
-        <div class="head2">${uiLabelMap.ProductAddCatalogProductCategory}:</div>
-        <br>
+        <div class="head2">Apply Feature Category to Product Category:</div>
         <select name="productFeatureCategoryId" class="selectBox">
         <#list productFeatureCategories as productFeatureCategory>
             <option value="${(productFeatureCategory.productFeatureCategoryId)?if_exists}">${(productFeatureCategory.description)?if_exists} [${(productFeatureCategory.productFeatureCategoryId)?if_exists}]</option>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -46,12 +46,20 @@ nowTimestampString = nowTimestamp.toString();
 
 productCategoryId = request.getParameter("productCategoryId");
 productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
-productFeatureCategoryAppls = productCategory.getRelated("ProductFeatureCategoryAppl", null, UtilMisc.toList("productFeatureCategoryId"));
+productFeatureCategoryAppls = null;
+productFeatureCatGrpAppls = null;
+if (productCategory != null) {
+    productFeatureCategoryAppls = productCategory.getRelated("ProductFeatureCategoryAppl", null, UtilMisc.toList("productFeatureCategoryId"));
+    productFeatureCatGrpAppls = productCategory.getRelated("ProductFeatureCatGrpAppl", null, UtilMisc.toList("productFeatureGroupId"));
+}
 productFeatureCategories = delegator.findAll("ProductFeatureCategory", UtilMisc.toList("description"));
+productFeatureGroups = delegator.findAll("ProductFeatureGroup", UtilMisc.toList("description"));
 
 context.put("nowTimestamp", nowTimestamp);
 context.put("nowTimestampString", nowTimestampString);
 context.put("productCategoryId", productCategoryId);
 context.put("productCategory", productCategory);
 context.put("productFeatureCategoryAppls", productFeatureCategoryAppls);
+context.put("productFeatureCatGrpAppls", productFeatureCatGrpAppls);
 context.put("productFeatureCategories", productFeatureCategories);
+context.put("productFeatureGroups", productFeatureGroups);
