@@ -28,7 +28,7 @@
 <#if hasPermission>
 ${pages.get("/routing/RoutingDetailTabBar.ftl")}
 
-	<div class="head1">${uiLabelMap.ManufacturingEditRoutingProductLink}&nbsp; 
+	<div class="head1">${uiLabelMap.ManufacturingEditRoutingProductLink}&nbsp;
 	</div>
         <#if byProduct?has_content>
             <div class='tabletext'>
