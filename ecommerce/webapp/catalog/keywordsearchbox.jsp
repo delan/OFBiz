@@ -51,8 +51,8 @@
           <td align=center>
             <form name="keywordsearchform" method="POST" action="<ofbiz:url>/keywordsearch</ofbiz:url>" style='margin: 0;'>
               <input type='hidden' name="VIEW_SIZE" value="10">
-              <div class='tabletext'><input type='text' name="SEARCH_STRING" size="14" maxlength="50"></div>
-              <ofbiz:if name="otherSearchProdCatalogCategories" size="0">
+              <div class='tabletext'><input type='text' name="SEARCH_STRING" size="14" maxlength="50" value="<%=UtilFormatOut.checkNull(request.getParameter("SEARCH_STRING"))%>"></div>
+             <ofbiz:if name="otherSearchProdCatalogCategories" size="0">
                 <div class='tabletext'><select name='SEARCH_CATEGORY_ID' size='1'>
                   <option value="<%=UtilFormatOut.checkNull(CatalogWorker.getCatalogSearchCategoryId(pageContext, CatalogWorker.getCurrentCatalogId(pageContext)))%>">Entire Catalog</option>
                   <ofbiz:iterator name="otherSearchProdCatalogCategory" property="otherSearchProdCatalogCategories">
@@ -68,8 +68,10 @@
                   <input type='hidden' name="SEARCH_CATEGORY_ID" value="<%=UtilFormatOut.checkNull(CatalogWorker.getCatalogSearchCategoryId(pageContext, CatalogWorker.getCurrentCatalogId(pageContext)))%>">
               </ofbiz:unless>
               <div class='tabletext'>
-                Any<input type=RADIO name='SEARCH_OPERATOR' value='OR' checked>
-                All<input type=RADIO name='SEARCH_OPERATOR' value='AND'>
+				<%String searchOperator = request.getParameter("SEARCH_OPERATOR");
+				if (!"AND".equalsIgnoreCase(searchOperator) && !"OR".equalsIgnoreCase(searchOperator)) { searchOperator = "OR"; }%>
+                Any<input type=RADIO name='SEARCH_OPERATOR' value='OR' <%if("OR".equalsIgnoreCase(searchOperator)){%>checked<%}%>>
+                All<input type=RADIO name='SEARCH_OPERATOR' value='AND' <%if("AND".equalsIgnoreCase(searchOperator)){%>checked<%}%>>
                 <a href="javascript:document.keywordsearchform.submit()" class="buttontext">&nbsp;Find</a>
               </div>
             </form>
