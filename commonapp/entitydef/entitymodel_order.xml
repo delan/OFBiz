@@ -1079,6 +1079,70 @@
         <key-map field-name="paymentMethodId"/>
       </relation>
     </entity>
+    <view-entity entity-name="OrderReportView"
+            package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
+            title="Order Report View Entity">
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OPP" entity-name="OrderPaymentPreference"/>
+      <member-entity entity-alias="PMT" entity-name="PaymentMethodType"/>
+      <member-entity entity-alias="OSP" entity-name="OrderShipmentPreference"/>
+      <member-entity entity-alias="SMT" entity-name="ShipmentMethodType"/>
+      <member-entity entity-alias="OS" entity-name="StatusItem"/>
+      <member-entity entity-alias="OI" entity-name="OrderItem"/>
+      <member-entity entity-alias="OIS" entity-name="StatusItem"/>
+      <member-entity entity-alias="OA" entity-name="OrderAdjustment"/>
+      <member-entity entity-alias="OAT" entity-name="OrderAdjustmentType"/>
+      <alias entity-alias="OS" name="groupName" field="description"/>
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OH" name="orderDate"/>
+      <alias entity-alias="OS" name="orderStatus" field="description"/>
+      <alias entity-alias="PMT" name="paymentMethod" field="description"/>
+      <alias entity-alias="OSP" name="shipCarrier" field="carrierPartyId"/>
+      <alias entity-alias="SMT" name="shipMethod" field="description"/>
+      <alias entity-alias="OH" name="visitId"/>
+      <alias entity-alias="OH" name="currencyUom"/>
+      <alias entity-alias="OH" name="originFacilityId"/>
+      <alias entity-alias="OH" name="webSiteId"/>
+      <alias entity-alias="OH" name="grandTotal"/>
+      <alias entity-alias="OI" name="productId"/>
+      <alias entity-alias="OI" name="itemDescription"/>
+      <alias entity-alias="OIS" name="itemStatus" field="description"/>
+      <alias entity-alias="OI" name="quantity"/>
+      <alias entity-alias="OI" name="unitPrice"/>
+      <alias entity-alias="OI" name="purchaseAmount" field="unitPrice"/>
+      <alias entity-alias="OA" name="adjustmentAmount" field="amount"/>
+      <alias entity-alias="OAT" name="adjustment" field="description"/>
+      <view-link entity-alias="OH" rel-entity-alias="OI">
+      	<key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="OPP">
+      	<key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OPP" rel-entity-alias="PMT">
+      	<key-map field-name="paymentMethodTypeId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="OSP">
+      	<key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OSP" rel-entity-alias="SMT">
+      	<key-map field-name="shipmentMethodTypeId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="OS">
+      	<key-map field-name="statusId"/>
+      </view-link>
+      <view-link entity-alias="OI" rel-entity-alias="OIS">
+      	<key-map field-name="statusId"/>
+      </view-link>
+      <view-link entity-alias="OI" rel-entity-alias="OA" rel-optional="false">
+      	<key-map field-name="orderId"/>
+      	<key-map field-name="orderItemSeqId"/>
+      </view-link>
+      <view-link entity-alias="OA" rel-entity-alias="OAT">
+      	<key-map field-name="orderAdjustmentTypeId"/>
+      </view-link>
+    </view-entity>          
     <entity entity-name="OrderRole"
             package-name="org.ofbiz.commonapp.order.order"
             never-cache="true"
