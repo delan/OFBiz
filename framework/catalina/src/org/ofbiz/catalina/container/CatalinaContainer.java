@@ -60,6 +60,10 @@ import org.apache.catalina.session.StandardManager;
 import org.apache.catalina.startup.Embedded;
 import org.apache.catalina.valves.AccessLogValve;
 import org.apache.catalina.valves.RequestDumperValve;
+import org.apache.coyote.ProtocolHandler;
+import org.apache.coyote.http11.Http11Protocol;
+import org.apache.jk.server.JkCoyoteHandler;
+
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.container.ClassLoaderContainer;
 import org.ofbiz.base.container.Container;
@@ -225,6 +229,18 @@ public class CatalinaContainer implements Container {
             throw new ContainerException(e);
         }
 
+        Connector[] cons = embedded.findConnectors();
+        for (int i = 0; i < cons.length; i++) {
+            ProtocolHandler ph = cons[i].getProtocolHandler();
+            if (ph instanceof Http11Protocol) {
+                Http11Protocol hph = (Http11Protocol) ph;
+                Debug.logInfo("Connector " + hph.getProtocol() + " @ " + hph.getPort() + " - " +
+                    (hph.getSecure() ? "secure" : "not-secure") + " [" + cons[i].getProtocolHandlerClassName() + "] started.", module);
+            } else {
+                Debug.logInfo("Connector " + cons[i].getProtocol() + " @ " + cons[i].getPort() + " - " +
+                    (cons[i].getSecure() ? "secure" : "not-secure") + " [" + cons[i].getProtocolHandlerClassName() + "] started.", module);
+            }
+        }
         Debug.logInfo("Started " + ServerInfo.getServerInfo(), module);
         return true;
     }
@@ -419,19 +435,35 @@ public class CatalinaContainer implements Container {
             throw new ContainerException("Cannot create Connector without Embedded instance!");
         }
 
-        Connector connector = null;
+        // need some standard properties
+        String protocol = ContainerConfig.getPropertyValue(connectorProp, "protocol", "HTTP/1.1");
+        String address = ContainerConfig.getPropertyValue(connectorProp, "address", "0.0.0.0");
+        int port = ContainerConfig.getPropertyValue(connectorProp, "port", 0);
+        boolean secure = ContainerConfig.getPropertyValue(connectorProp, "secure", false);
+        if (protocol.toLowerCase().startsWith("ajp")) {
+            protocol = "ajp";
+        } else if ("memory".equals(protocol.toLowerCase())) {
+            protocol = "memory";
+        } else if (secure) {
+            protocol = "https";
+        } else {
+            protocol = "http";
+        }
+
+        Connector connector = embedded.createConnector(address, port, protocol);
         if (connectorProp.properties != null && connectorProp.properties.size() > 0) {
-            try {
-                connector = new Connector();
+            try {                
                 Iterator i = connectorProp.properties.values().iterator();
                 while (i.hasNext()) {
                     ContainerConfig.Container.Property prop = (ContainerConfig.Container.Property) i.next();
-                    connector.setAttribute(prop.name, prop.value);
+                    connector.setProperty(prop.name, prop.value);
+                    //connector.setAttribute(prop.name, prop.value);
                 }
+                connector.initialize();
+                embedded.addConnector(connector);
             } catch (Exception e) {
                 throw new ContainerException(e);
             }
-            embedded.addConnector(connector);
         }
         return connector;
     }
