@@ -7,7 +7,8 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %> 
 
-<%ProductWorker.getKeywordSearchProducts(pageContext, "");%>
+<%String searchCategoryId = request.getParameter("SEARCH_CATEGORY_ID");%>
+<%ProductWorker.getKeywordSearchProducts(pageContext, "", searchCategoryId);%>
 <ofbiz:object name="viewIndex" property="viewIndex" type='java.lang.Integer' />
 <ofbiz:object name="viewSize" property="viewSize" type='java.lang.Integer' />
 <ofbiz:object name="lowIndex" property="lowIndex" type='java.lang.Integer' />
@@ -16,7 +17,7 @@
 <ofbiz:object name="keywordString" property="keywordString" type='java.lang.String' />
 
 <br>
-<div class='head1'>Search Results for "<%=UtilFormatOut.checkNull((String)pageContext.getAttribute("keywordString"))%>"</div>
+<div class='head1'>Search Results for "<%=UtilFormatOut.checkNull((String)pageContext.getAttribute("keywordString"))%>" in Category with id "<%=UtilFormatOut.checkNull(searchCategoryId)%>"</div>
 
 <ofbiz:unless name="searchProductList">
   <br><div class='head2'>&nbsp;No results found.</div>

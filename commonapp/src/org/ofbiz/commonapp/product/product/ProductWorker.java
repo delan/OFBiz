@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/10/05 02:32:39  jonesde
+ * Refactored CatalogHelper: split into CatalogWorker and in commonapp CategoryWorker and ProductWorker
+ *
  *
  */
 
@@ -72,7 +75,7 @@ public class ProductWorker {
    *@param attributePrefix A prefix to put on each attribute name in the pageContext
    */
   public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix) {
-    getKeywordSearchProducts(pageContext, attributePrefix, "default");
+    getKeywordSearchProducts(pageContext, attributePrefix, null);
   }
 
   /**
@@ -82,9 +85,9 @@ public class ProductWorker {
    *  CACHE_SEARCH_RESULTS, CACHE_SEARCH_RESULTS_NAME
    *@param pageContext The pageContext of the calling JSP
    *@param attributePrefix A prefix to put on each attribute name in the pageContext
-   *@param groupName The keyword search group name for this search
+   *@param categoryId The keyword search group name for this search
    */
-  public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String groupName) {
+  public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId) {
     GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
     
     int viewIndex = 0;
@@ -105,7 +108,7 @@ public class ProductWorker {
       Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
       
       //sort by productId (only available sort for now...)
-      Collection unsortedIds = KeywordSearch.productsByKeywords(keywordString, delegator, groupName);
+      Collection unsortedIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId);
       if(unsortedIds != null && unsortedIds.size() > 0) {
         TreeSet productIdTree = new TreeSet(unsortedIds);
         productIds = new ArrayList(productIdTree);

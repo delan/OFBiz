@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/10/19 00:29:43  jonesde
+ * Added keyword search to catalog manager; changed product keywords to not have group any more, will use categories to limit searches
+ *
  * Revision 1.7  2001/10/14 09:32:24  jonesde
  * Finished pass of renaming entities and fields to eliminate reserved word collisions
  *
@@ -85,14 +88,16 @@ public class KeywordSearch {
     if(delegator == null) return null;
     String helperName = null;
     helperName = delegator.getEntityHelperName("ProductKeyword");
+    boolean useCategory = (categoryId != null && categoryId.length() > 0)?true:false;
     
     Collection pbkCollection = new LinkedList();
     
     String keywords[] = makeKeywordList(keywordsString);
     List keywordList = fixKeywords(keywords);
     List params = new LinkedList();
-    String sql = getSearchSQL(keywordList, params);
+    String sql = getSearchSQL(keywordList, params, useCategory);
     if(sql == null) return null;
+    if(useCategory) params.add(categoryId);
     
     Connection connection = null;
     PreparedStatement statement = null;
@@ -158,7 +163,7 @@ public class KeywordSearch {
     return list;
   }
   
-  protected static String getSearchSQL(List keywords, List params) {
+  protected static String getSearchSQL(List keywords, List params, boolean useCategory) {
     if(keywords == null || keywords.size() <= 0) return null;
     String sql = "";
     Iterator keywordIter = keywords.iterator();
@@ -166,6 +171,9 @@ public class KeywordSearch {
     //EXAMPLE:
     //  SELECT DISTINCT P1.PRODUCT_ID FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3
     //  WHERE (P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%')
+    //EXAMPLE WITH CATEGORY CONSTRAINT:
+    //  SELECT DISTINCT P1.PRODUCT_ID FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3, PRODUCT_CATEGORY_MEMBER PCM
+    //  WHERE (P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%' AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID='foo')
     
     String select = "SELECT DISTINCT P1.PRODUCT_ID FROM ";
     String join = " WHERE (";
@@ -186,6 +194,10 @@ public class KeywordSearch {
         where += ("AND P" + i + ".KEYWORD" + comparator + "? ");
       }
       i++;
+    }
+    if(useCategory) {
+      select += ", PRODUCT_CATEGORY_MEMBER PCM";
+      where += " AND P1.PRODUCT_ID=PCM.PRODUCT_ID AND PCM.PRODUCT_CATEGORY_ID=?";
     }
     sql = select + join + where + ")";
     
