@@ -242,6 +242,24 @@
             <result-to-field result-name="pickMoveByShipmentMethodInfoList"/>
         </call-service>
 
+        <!-- This creates orderHeaderInfoList, wrongQuantityReservedList, insufficientQohList and inventoryItems, inventoryItemOrderItems, inventoryItemQuantities -->
+        <call-simple-method method-name="assembleOrderHeaderInfoInline"/>
+
+        <!-- This creates facilityLocationInfoList and inventoryItemInfoList -->
+        <call-simple-method method-name="assembleFacilityLocationInfoInline"/>
+
+        <field-to-result field-name="orderHeaderInfoList"/>
+        <field-to-result field-name="wrongQuantityReservedList"/>
+        <field-to-result field-name="insufficientQohList"/>
+
+        <field-to-result field-name="facilityLocationInfoList"/>
+        <field-to-result field-name="inventoryItemInfoList"/>
+    </simple-method>
+
+    <simple-method method-name="assembleOrderHeaderInfoInline" short-description="assembleOrderHeaderInfoInline">
+        <!-- This uses pickMoveByShipmentMethodInfoList from the findOrdersToPickMove -->
+        <!-- This creates orderHeaderInfoList, wrongQuantityReservedList, insufficientQohList and inventoryItems, inventoryItemOrderItems, inventoryItemQuantities -->
+
         <!-- if maxNumberOfOrders is passed, get at most that many orders and go over them -->
         <calculate field-name="numberSoFar" type="Long"><number value="0"/></calculate>
         <iterate entry-name="pickMoveByShipmentMethodInfo" list-name="pickMoveByShipmentMethodInfoList">
@@ -314,11 +332,11 @@
                         </iterate>
 
                         <if-not-empty field-name="perItemResListValid">
-                            <env-to-field env-name="orderItemAndShipGroupAssoc" map-name="orderItemInfo"/>
-                            <env-to-field env-name="perItemResListValid" field-name="orderItemShipGrpInvResList" map-name="orderItemInfo"/>
+                            <clear-field field-name="orderItemInfo"/>
+                            <env-to-env env-name="orderItemAndShipGroupAssoc" to-env-name="orderItemInfo.orderItemAndShipGroupAssoc"/>
+                            <env-to-env env-name="perItemResListValid" to-env-name="orderItemInfo.orderItemShipGrpInvResList"/>
                             <get-related-one value-name="orderItemAndShipGroupAssoc" relation-name="Product" to-value-name="orderItemInfo.product"/>
                             <field-to-list field-name="orderItemInfo" list-name="orderItemInfoList"/>
-                            <clear-field field-name="orderItemInfo"/>
                         </if-not-empty>
                         <clear-field field-name="perItemResListValid"/>
 
@@ -363,11 +381,9 @@
         </iterate>
 
 
-        <!-- go through all quantities and get inventoryItem and facilityLocation -->
         <!-- warn if insufficient QOH for reserved amount -->
-        <iterate-map key-name="inventoryItemId" value-name="quantityNeeded" map-name="inventoryItemQuantities">
-            <field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
-
+        <iterate-map map-name="inventoryItemQuantities" key-name="inventoryItemId" value-name="quantityNeeded">
+            <env-to-env env-name="inventoryItems.${inventoryItemId}" to-env-name="inventoryItem"/>
             <if>
                 <condition>
                     <and>
@@ -388,31 +404,41 @@
                     </and>
                 </condition>
                 <then>
+                    <clear-field field-name="insufficientQoh"/>
                     <env-to-field env-name="inventoryItem" map-name="insufficientQoh"/>
                     <env-to-field env-name="quantityNeeded" map-name="insufficientQoh"/>
                     <field-to-list field-name="insufficientQoh" list-name="insufficientQohList"/>
-                    <clear-field field-name="insufficientQoh"/>
                 </then>
             </if>
+        </iterate-map>
+    </simple-method>
+    
+    <simple-method method-name="assembleFacilityLocationInfoInline" short-description="assembleFacilityLocationInfoInline">
+        <!-- This uses inventoryItems, inventoryItemOrderItems, inventoryItemQuantities -->
+        <!-- This creates facilityLocationInfoList and inventoryItemInfoList (and for internal use facilityLocationMap) -->
+
+        <!-- go through all quantities and get inventoryItem and facilityLocation -->
+        <iterate-map key-name="inventoryItemId" value-name="quantityNeeded" map-name="inventoryItemQuantities">
+            <env-to-env env-name="inventoryItems.${inventoryItemId}" to-env-name="inventoryItem"/>
 
             <!-- create a list of locations, then sort it, will have to create a reverse Map to go from location to inventory item -->
+            <clear-field field-name="facilityLocation"/>
             <get-related-one value-name="inventoryItem" relation-name="FacilityLocation" to-value-name="facilityLocation"/>
             <if-not-empty field-name="facilityLocation">
                 <env-to-env env-name="facilityLocation" to-env-name="facilityLocationMap.${facilityLocation.locationSeqId}"/>
                 <!-- support multiple invnetoryItemIds per facilityLocation.locationSeqId -->
-                <field-to-env field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation" env-name="inventoryItemIdList"/>
-                <field-to-list field-name="inventoryItemId" list-name="inventoryItemIdList"/>
-                <env-to-field env-name="inventoryItemIdList" field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation"/>
                 <clear-field field-name="inventoryItemIdList"/>
+                <env-to-env env-name="inventoryItemsByLocation.${facilityLocation.locationSeqId}" to-env-name="inventoryItemIdList"/>
+                <field-to-list field-name="inventoryItemId" list-name="inventoryItemIdList"/>
+                <env-to-field env-name="inventoryItemIdList" to-env-name="inventoryItemsByLocation.${facilityLocation.locationSeqId}"/>
             <else>
                 <field-to-list field-name="inventoryItemId" list-name="noLocationInventoryItemIds"/>
             </else>
             </if-not-empty>
-            <clear-field field-name="facilityLocation"/>
         </iterate-map>
 
         <!-- make a facilityLocations List from the facilityLocationMap, which was used to guarantee uniqueness -->
-        <iterate-map key-name="locationSeqId" value-name="facilityLocation" map-name="facilityLocationMap">
+        <iterate-map map-name="facilityLocationMap" key-name="locationSeqId" value-name="facilityLocation">
             <field-to-list field-name="facilityLocation" list-name="facilityLocations"/>
         </iterate-map>
 
@@ -427,15 +453,17 @@
         <!-- for each facility location add an entry to the inventoryItemInfoList -->
         <iterate entry-name="facilityLocation" list-name="facilityLocations">
             <!-- facilityLocationInfoList: facilityLocation, productInfoList (product, quantity, inventoryItemList, orderItemList) -->
+            <clear-field field-name="facilityLocationInfo"/>
             <env-to-field env-name="facilityLocation" map-name="facilityLocationInfo"/>
 
             <!-- inventoryItemInfoList: facilityLocation, inventoryItem, orderItems, quantity, product, statusItems -->
             <env-to-env env-name="inventoryItemsByLocation.${facilityLocation.locationSeqId}" to-env-name="inventoryItemIdList"/>
             <iterate entry-name="inventoryItemId" list-name="inventoryItemIdList">
+                <clear-field field-name="inventoryItemInfo"/>
                 <env-to-field env-name="facilityLocation" map-name="inventoryItemInfo"/>
-                <field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
-                <field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
-                <field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
+                <field-to-field field-name="inventoryItems.${inventoryItemId}" to-field-name="inventoryItemInfo.inventoryItem"/>
+                <field-to-field field-name="inventoryItemOrderItems.${inventoryItemId}" to-field-name="inventoryItemInfo.orderItems"/>
+                <field-to-field field-name="inventoryItemQuantities.${inventoryItemId}" to-field-name="inventoryItemInfo.quantity"/>
                 <get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="Product" to-value-name="inventoryItemInfo.product"/>
                 <get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
 
@@ -452,8 +480,6 @@
                 <iterate entry-name="orderItem" list-name="inventoryItemInfo.orderItems">
                     <env-to-env env-name="orderItem" to-env-name="orderItemMap.${orderItem.orderId}:${orderItem.orderItemSeqId}"/>
                 </iterate>
-
-                <clear-field field-name="inventoryItemInfo"/>
             </iterate>
 
             <iterate-map key-name="orderItemCompositeId" value-name="orderItem" map-name="orderItemMap">
@@ -468,7 +494,6 @@
             <field-to-list field-name="facilityLocationInfo" list-name="facilityLocationInfoList"/>
             <clear-field field-name="orderItemMap"/>
             <clear-field field-name="productInfoMap"/>
-            <clear-field field-name="facilityLocationInfo"/>
         </iterate>
 
         <!-- add all noLocationInventoryItemIds to inventoryItemInfoList with all entries except facilityLocation -->
@@ -482,12 +507,6 @@
             <field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
             <clear-field field-name="inventoryItemInfo"/>
         </iterate>
-
-        <field-to-result field-name="facilityLocationInfoList"/>
-        <field-to-result field-name="inventoryItemInfoList"/>
-        <field-to-result field-name="orderHeaderInfoList"/>
-        <field-to-result field-name="wrongQuantityReservedList"/>
-        <field-to-result field-name="insufficientQohList"/>
     </simple-method>
 
     <simple-method method-name="clearPickStarted" short-description="Clear PickStarted Dates according to specified parameters">
@@ -516,6 +535,16 @@
             <attribute name="picklistId" type="String" mode="OUT" optional="false"/>
         -->
 
+        <set-service-fields service-name="getPicklistData" map-name="parameters" to-map-name="getPicklistDataInMap"/>
+        <call-service service-name="getPicklistData" in-map-name="getPicklistDataInMap">
+            <result-to-field result-name="facilityLocationInfoList"/>
+            <result-to-field result-name="inventoryItemInfoList"/>
+            <result-to-field result-name="orderHeaderInfoList"/>
+            <result-to-field result-name="wrongQuantityReservedList"/>
+            <result-to-field result-name="insufficientQohList"/>
+        </call-service>
+
         <!-- TODO: implement this -->
+        <iterate entry-name="" list-name=""></iterate>
     </simple-method>
 </simple-methods>
