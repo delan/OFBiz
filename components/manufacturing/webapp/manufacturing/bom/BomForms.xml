@@ -52,6 +52,7 @@
     <form name="UpdateProductManufacturingRule" type="single" 
             target="UpdateProductManufacturingRule" title=""
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <alt-target use-when="ruleId==null" target="AddProductManufacturingRule"/>
         <auto-fields-service service-name="updateProductManufacturingRule" map-name="manufacturingRule"/>
         <field name="ruleId"><display/></field>
         <field name="productId">
@@ -76,37 +77,6 @@
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
-            <submit button-type="button"/>
-        </field>
-    </form>
-    
-    <form name="AddProductManufacturingRule" type="single" 
-            target="AddProductManufacturingRule" title=""
-            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
-        <auto-fields-service service-name="addProductManufacturingRule" map-name="manufacturingRule"/>
-        <field name="ruleId"><display/></field>
-        <field name="ruleOperator">
-            <drop-down>
-                <option key="OR"/>
-                <option key="AND"/>
-            </drop-down>
-        </field>
-        <field name="productId">
-            <lookup target-form-name="LookupProduct"/>
-        </field>
-        <field name="productIdFor">
-            <lookup target-form-name="LookupProduct"/>
-        </field>
-        <field name="productIdIn">
-            <lookup target-form-name="LookupVirtualProduct"/>
-        </field>
-        <field name="productIdInSubst">
-            <lookup target-form-name="LookupProduct"/>
-        </field>
-        <field name="productFeature">
-            <lookup target-form-name="LookupProductFeature"/>
-        </field>
-        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" >
             <submit button-type="button"/>
         </field>
     </form>
