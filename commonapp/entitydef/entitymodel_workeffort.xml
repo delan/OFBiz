@@ -472,12 +472,19 @@
       <field name="startDateTime" type="date-time"></field>
       <field name="endDateTime" type="date-time"></field>
       <field name="exceptionDateTimes" type="very-long"></field>
-      <field name="exceptionRule" type="long-varchar"></field>
       <field name="recurrenceDateTimes" type="very-long"></field>
-      <field name="recurrenceRule" type="long-varchar"></field>	
+      <field name="exceptionRuleId" type="id-ne"></field>
+      <field name="recurrenceRuleId" type="id-ne"></field>
+      <field name="recurrenceCount" type="numeric"></field>	
       <prim-key field="recurrenceInfoId" />
       <relation type="many" rel-entity-name="WorkEffort">
         <key-map field-name="recurrenceInfoId" />
+      </relation>
+      <relation type="many" rel-entity-name="RecurrenceRule">
+        <key-map field-name="recurrenceRuleId" />
+      </relation>
+      <relation type="many" title="Exception" rel-entity-name="RecurrenceRule">
+        <key-map field-name="exceptionRuleId" rel-field-name="recurrenceRuleId" />
       </relation>
     </entity>	
     <entity entity-name="RecurrenceRule" 
@@ -500,6 +507,12 @@
       <field name="weekStart" type="short-varchar"></field>
       <field name="xName" type="very-long"></field>	
       <prim-key field="recurrenceRuleId" />
+      <relation type="one" title="Exception" rel-entity-name="RecurrenceInfo">
+        <key-map field-name="recurrenceRuleId" rel-field-name="exceptionRuleId" />
+      </relation>
+      <relation type="one" rel-entity-name="RecurrenceInfo">
+        <key-map field-name="recurrenceRuleId" />
+      </relation>
     </entity>	
     <entity entity-name="RuntimeData" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
