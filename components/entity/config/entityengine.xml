@@ -158,10 +158,11 @@ access. For a detailed description see the core/docs/entityconfig.html file.
 
     <datasource name="localoracle"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
+            schema-name="OFBIZ" 
             field-type-name="oracle"
             check-on-start="true"
             add-missing-on-start="true"
-            join-style="theta-oracle">
+            join-style="ansi">
         <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="oracle.jdbc.driver.OracleDriver"
