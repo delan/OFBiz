@@ -35,6 +35,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -901,6 +902,33 @@ public class ContactMechServices {
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
+    }
+    
+    /**
+     * Just wraps the ContactMechWorker method of the same name.
+     * 
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map getPartyContactMechValueMaps(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String partyId = (String)context.get("partyId");
+        if (UtilValidate.isEmpty(partyId) ) {
+            if (userLogin != null) {
+                partyId = userLogin.getString("partyId");   
+            } else {
+                return ServiceUtil.returnError("Both 'partyId' and 'userLogin' are empty.");
+            }
+        }
+        Boolean bShowOld = (Boolean)context.get("showOld");
+        boolean showOld = (bShowOld != null && bShowOld.booleanValue()) ? true : false;
+        String contactMechTypeId = (String)context.get("contactMechTypeId");
+        List valueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, partyId, showOld, contactMechTypeId);
+        result.put("valueMaps", valueMaps );
         return result;
     }
 }
