@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 
@@ -43,119 +43,12 @@ ${menuWrapper.renderMenuString()}
 </table>
 <br>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Content Information</div>
-          </td>
-          <#if contentIdTo?has_content>
-          <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/disableContent?contentId=${contentId?if_exists}?contentIdTo=${contentIdTo}&contentAssocTypeId=SUB_CONTENT</@ofbizUrl>" class="submenutextright">Disable</a>
-          </td>
-          </#if>
-          <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/EditContentInfo?contentId=${contentId?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-  <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align=right nowrap><div class='tabletext'><b>Content Name</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${contentName?if_exists}</div></td></tr>
-    <tr><td align=right nowrap><div class='tabletext'><b>Description</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${description?if_exists}<div></td></tr>
-  </table>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
 
-<!--
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Summary Information</div>
-          </td>
-          <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/EditAddContent?contentIdTo=${contentId?if_exists}&mapKey=SUMMARY</@ofbizUrl>" class="submenutextright">Update</a>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-  <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align=right nowrap><div class='tabletext'><b>Summary</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>
-${summaryData?if_exists}
-<div></td></tr>
-  </table>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
-
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Article Information</div>
-          </td>
-          <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/EditAddContent?contentIdTo=${contentId?if_exists}&mapKey=ARTICLE</@ofbizUrl>" class="submenutextright">Update</a>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-  <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr>
-      <td align=right nowrap><div class='tabletext'><b>Article</b></div></td>
-      <td>&nbsp;</td><td align=left>
-contentId:${contentId}
-        <div class='tabletext'>
-           <@renderSubContentCache subContentId=contentId?if_exists />
-        <div>
-
-      </td>
-    </tr>
-  </table>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
--->
 <#if currentValue?has_content>
-    <@renderTextData contentId=currentValue.contentId textData=textData contentIdTo="" mapKey="" />
+    <@renderTextData content=currentValue textData=textData />
 </#if>
 <#list textList as map>
-    <@renderTextData contentId=map.entity.contentId textData=map.text contentIdTo=map.entity.contentIdTo mapKey=map.entity.caMapKey?if_exists />
+    <@renderTextData content=map.entity textData=map.text />
 </#list>
 <#-- ============================================================= -->
 
@@ -327,31 +220,24 @@ contentId:${contentId}
         <#assign dataResourceId2 = contentAssocDataResourceView.dataResourceId/>
         <#assign currentTextData=Static["org.ofbiz.content.data.DataResourceWorker"].renderDataResourceAsTextCache(delegator, dataResourceId2, null, null, null, null) />
         <#if currentTextData?has_content>
-            <@renderTextData contentId=contentId2 contentIdTo=contentId mapKey=mapKey textData=currentTextData />
+            <@renderTextData contentId=contentId2 mapKey=mapKey textData=currentTextData />
         </#if>
     </#list>
 </#macro>
 -->
 
-<#macro renderTextData contentId textData contentIdTo="" mapKey="" >
+<#macro renderTextData content textData >
+    <#assign contentId=content.contentId?if_exists/>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Content Text</div>
+            <div class="boxhead">&nbsp;</div>
           </td>
           <td valign="middle" align="right">
-            <#assign paramClause=""/>
-            <#if contentIdTo?has_content>
-                <#assign paramClause="&contentIdTo=" + contentIdTo/>
-            </#if>
-            <#assign paramClause2=""/>
-            <#if mapKey?has_content>
-                <#assign paramClause2="&mapKey=" + mapKey/>
-            </#if>
-            <a href="<@ofbizUrl>/EditAddContent?subContentId=${contentId?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
+            <a href="<@ofbizUrl>/EditAddContent?contentId=${content.contentId?if_exists}&contentIdTo=${content.caContentIdTo?if_exists}&contentAssocTypeId=${content.caContentAssocTypeId?if_exists}&fromDate=${content.caFromDate?if_exists}&mapKey=${content.caMapKey?if_exists}</@ofbizUrl>" class="submenutextright">Update</a>
           </td>
         </tr>
       </table>
@@ -363,7 +249,21 @@ contentId:${contentId}
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
-    <tr><td align=right nowrap><div class='tabletext'><b>Data</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>
+    <tr><td align=right nowrap><div class='tabletext'><b>Content Name</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${content.contentName?if_exists}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>Description</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${content.description?if_exists}<div></td></tr>
+  </table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+  <table width="100%" border="0" cellpadding="0" cellspacing='0'>
+    <tr><td align=right nowrap><div class='tabletext'><b></b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>
 ${textData?if_exists}
 <div></td></tr>
   </table>

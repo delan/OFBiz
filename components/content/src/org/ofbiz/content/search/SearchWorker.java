@@ -1,5 +1,5 @@
 /*
- * $Id: SearchWorker.java,v 1.5 2004/06/17 22:12:16 byersa Exp $
+ * $Id: SearchWorker.java,v 1.6 2004/07/02 15:48:26 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,7 @@
 package org.ofbiz.content.search;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,6 +32,7 @@ import java.io.FileNotFoundException;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilDateTime;
 
 import org.apache.lucene.document.*;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -40,6 +42,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.content.content.ContentWorker;
 
 
 
@@ -47,13 +50,37 @@ import org.ofbiz.base.util.Debug;
  * SearchWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @since 3.1
  * 
  *  
  */
 public class SearchWorker {
+
 	public static final String module = SearchWorker.class.getName();
+
+        public static Map indexTree(GenericDelegator delegator, String siteId, Map context, String path) throws Exception {
+
+            Map results = new HashMap();
+            GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", siteId));
+            List siteList = ContentWorker.getAssociatedContent(content, "TO", UtilMisc.toList("SUBSITE"), null, UtilDateTime.nowTimestamp().toString(), null);
+            Iterator iter = siteList.iterator();
+            while (iter.hasNext()) {
+                GenericValue siteContent = (GenericValue)iter.next();
+                List subContentList = ContentWorker.getAssociatedContent(siteContent, "TO", UtilMisc.toList("PUBLISH_LINK"), null, UtilDateTime.nowTimestamp().toString(), null);
+                List contentIdList = new ArrayList();
+                Iterator iter2 = contentIdList.iterator();
+                while (iter2.hasNext()) {
+                    GenericValue subContent = (GenericValue)iter.next();
+                    contentIdList.add(subContent.getString("contentId")); 
+                }
+                indexContentList(contentIdList, delegator, context);
+
+                String subSiteId = siteContent.getString("contentId");
+                indexTree(delegator, subSiteId, context, path);
+            }
+            return results;
+        }
 	
 	public static void indexContentList(List idList, GenericDelegator delegator, Map context) throws Exception {
 		String path = null;

@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.32 2004/07/01 08:37:49 jonesde Exp $
+ * $Id: ContentWorker.java,v 1.33 2004/07/02 15:48:25 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  * @since 2.2
  * 
  *  
@@ -1018,6 +1018,12 @@ public class ContentWorker {
         return results;
     }
 
+    public static String renderContentAsTextCache(GenericDelegator delegator, String contentId,  Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
+        Writer outWriter = new StringWriter();
+        renderContentAsTextCache(delegator, contentId, outWriter, templateContext, view, locale, mimeTypeId);
+        return outWriter.toString();
+    }
+
     public static Map renderContentAsTextCache(GenericDelegator delegator, String contentId, Writer out, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
 
         Map results = new HashMap();
@@ -1274,7 +1280,7 @@ public class ContentWorker {
         return errorMessage;
     }
 
-    public static GenericValue getContentAssocViewFrom(GenericDelegator delegator, String contentIdTo, String contentId, String contentAssocTypeId, String statusId, String privilegeEnumId) throws GenericEntityException {
+    public static List getContentAssocViewList(GenericDelegator delegator, String contentIdTo, String contentId, String contentAssocTypeId, String statusId, String privilegeEnumId) throws GenericEntityException {
 
         List exprListAnd = new ArrayList();
 
@@ -1304,8 +1310,15 @@ public class ContentWorker {
         }
 
         EntityConditionList contentCondList = new EntityConditionList(exprListAnd, EntityOperator.AND);
-        List contentList = delegator.findByCondition("ContentAssocViewFrom", contentCondList, null, null);
+        List contentList = delegator.findByCondition("ContentAssocDataResourceViewFrom", contentCondList, null, null);
         List filteredList = EntityUtil.filterByDate(contentList, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
+        return filteredList;
+    }
+
+    public static GenericValue getContentAssocViewFrom(GenericDelegator delegator, String contentIdTo, String contentId, String contentAssocTypeId, String statusId, String privilegeEnumId) throws GenericEntityException {
+
+        List filteredList = getContentAssocViewList(delegator, contentIdTo, contentId, contentAssocTypeId, statusId, privilegeEnumId);
+
         GenericValue val = null;
         if (filteredList.size() > 0 ) {
             val = (GenericValue)filteredList.get(0);

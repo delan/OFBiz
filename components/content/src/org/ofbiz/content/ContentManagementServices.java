@@ -34,7 +34,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      3.0
  *
  * 
@@ -145,6 +145,8 @@ public class ContentManagementServices {
         GenericValue dataResource = delegator.makeValue("DataResource", null);
         dataResource.setPKFields(context);
         dataResource.setNonPKFields(context);
+        dataResource.setAllFields(context, false, "dr", new Boolean(false));
+        context.putAll(dataResource);
         String dataResourceId = (String)dataResource.get("dataResourceId");
         String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId");
         if (Debug.infoOn()) Debug.logInfo("in persist... dataResourceId(0):" + dataResourceId, null);
@@ -305,13 +307,27 @@ public class ContentManagementServices {
 
         // If parentContentIdTo or parentContentIdFrom exists, create association with newly created content
         String contentAssocTypeId = (String)context.get("contentAssocTypeId");
-            if (Debug.infoOn()) Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
+        if (UtilValidate.isEmpty(contentAssocTypeId)) 
+            contentAssocTypeId = (String)context.get("caContentAssocTypeId");
+
+        if (Debug.infoOn()) Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
         if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 ) {
             if (Debug.infoOn()) Debug.logInfo("in persistContentAndAssoc, deactivateExistin:" +  deactivateExisting, null);
             context.put("deactivateExisting", deactivateExisting);
             Map thisResult = null;
             try {
-                thisResult = ContentServices.createContentAssocMethod(dctx, context);
+                GenericValue contentAssoc = delegator.makeValue("ContentAssoc", null);
+                GenericValue contentAssocPK = delegator.makeValue("ContentAssoc", null);
+                contentAssoc.setAllFields(context, false, "ca", null);
+                contentAssocPK.setAllFields(context, false, "ca", new Boolean(true));
+                context.putAll(contentAssoc);
+                GenericValue contentAssocExisting = null;
+                if (contentAssocPK.isPrimaryKey())
+                    contentAssocExisting = delegator.findByPrimaryKeyCache("ContentAssoc", contentAssocPK);
+                if (contentAssocExisting == null)
+                    thisResult = ContentServices.createContentAssocMethod(dctx, context);
+                else
+                    thisResult = ContentServices.updateContentAssocMethod(dctx, context);
             } catch (GenericEntityException e) {
                 throw new GenericServiceException(e.getMessage());
             } catch (Exception e2) {
@@ -532,6 +548,12 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         for (int i=0; i<fieldCount; i++) {
             String fieldName = (String)context.get("fieldName" + i);
             String fieldValue = (String)context.get("fieldValue" + i);
+            if (UtilValidate.isEmpty(fieldValue)) {
+                // It may be the case that the last row in a form is "empty" waiting for
+                // someone to enter a value, in which case we do not want to throw an
+                // error, we just want to ignore it.
+                return results;
+            }
             pkFields.put(fieldName, fieldValue);
         }
         boolean doLink = (action != null && action.equalsIgnoreCase("Y")) ? true : false;
