@@ -120,13 +120,13 @@
         </select>
         <select name="expYear" class='selectBox'>
           <option><#if tryEntity>${expYear?if_exists}<#else>${requestParameters.expYear?if_exists}</#if></option>
-          <option></option>
-          <option>2001</option>
-          <option>2002</option>
+          <option></option>          
           <option>2003</option>
           <option>2004</option>
           <option>2005</option>
           <option>2006</option>
+          <option>2007</option>
+          <option>2008</option>
         </select>
       *</td>
     </tr>
