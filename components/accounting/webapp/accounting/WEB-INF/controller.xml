@@ -25,13 +25,13 @@
     <handler name="jasperreportsxml" type="view" class="org.ofbiz.content.webapp.view.JasperReportsXmlViewHandler"/>
         
     <preprocessor>
-    	<!-- Events to run on every request before security (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
-    	<event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
+        <!-- Events to run on every request before security (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
     </preprocessor>
     <postprocessor>
-    	<!-- Events to run on every request after all other processing (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
+        <!-- Events to run on every request after all other processing (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
     </postprocessor>
 
     <!-- Security Mappings -->
@@ -84,7 +84,7 @@
     
     <request-map uri="main">
         <security https="true" auth="true"/>
-    	<response name="success" type="view" value="main"/>
+        <response name="success" type="view" value="main"/>
     </request-map>
     
     <!-- Billing Account requests -->
@@ -279,6 +279,134 @@
         <response name="success" type="view" value="EditGlobalGlAccountRoles"/>
         <response name="error" type="view" value="EditGlobalGlAccountRoles"/>
     </request-map>
+    
+    <!-- =============== Fixed Asset mapping =================-->
+    <request-map uri="ListFixedAssets"><!-- show a tabular list -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssets"/>
+    </request-map>
+    <request-map uri="EditFixedAsset"> <!-- add/create command -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFixedAsset"/>
+    </request-map>
+   <request-map uri="createFixedAsset"> <!-- create new -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAsset"/>
+        <response name="error" type="view" value="EditFixedAsset"/>
+    </request-map>
+    <request-map uri="updateFixedAsset"><!-- update existing -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAsset"/>
+        <response name="error" type="view" value="EditFixedAsset"/>
+    </request-map>
+
+   <!-- ================ Fixed Asset to Product Requests ================= -->
+    <request-map uri="ListFixedAssetProducts"><!-- show a tabular list of products connected -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssetProducts"/>
+    </request-map>
+    <request-map uri="addFixedAssetProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="addFixedAssetProduct"/>
+        <response name="success" type="view" value="ListFixedAssetProducts"/>
+        <response name="error" type="view" value="ListFixedAssetProducts"/>
+    </request-map>
+    <request-map uri="updateFixedAssetProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFixedAssetProduct"/>
+        <response name="success" type="view" value="ListFixedAssetProducts"/>
+        <response name="error" type="view" value="ListFixedAssetProducts"/>
+    </request-map>
+    <request-map uri="removeFixedAssetProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeFixedAssetProduct"/>
+        <response name="success" type="view" value="ListFixedAssetProducts"/>
+        <response name="error" type="view" value="ListFixedAssetProducts"/>
+    </request-map>
+
+   <!-- ================ FixedAsset Roles Requests ================= -->
+    <request-map uri="ListFixedAssetParties"><!-- show a tabular list of products connected -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssetParties"/>
+    </request-map>
+    <request-map uri="EditFixedAssetParties">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFixedAssetParties"/>
+    </request-map>
+    <request-map uri="addPartyToFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="addPartyToFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAssetParties"/>
+        <response name="error" type="view" value="EditFixedAssetParties"/>
+    </request-map>
+    <request-map uri="updatePartyToFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyToFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAssetParties"/>
+        <response name="error" type="view" value="EditFixedAssetParties"/>
+    </request-map>
+    <request-map uri="removePartyFromFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removePartyFromFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAssetParties"/>
+        <response name="error" type="view" value="EditFixedAssetParties"/>
+    </request-map>    
+
+    <!-- ================ FixedAsset Rollup Requests ================= -->
+    <request-map uri="ListFixedAssetRollUp"><!-- show a tabular list of products connected -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssetRollUp"/>
+    </request-map>
+    <request-map uri="EditFixedAssetRollup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFixedAssetRollup"/>
+    </request-map>
+    <request-map uri="addFixedAssetToFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="safeAddFixedAssetToFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAssetRollup"/>
+        <response name="error" type="view" value="EditFixedAssetRollup"/>
+    </request-map>
+    <request-map uri="updateFixedAssetToFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateFixedAssetToFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAssetRollup"/>
+        <response name="error" type="view" value="EditFixedAssetRollup"/>
+    </request-map>
+    <request-map uri="removeFixedAssetFromFixedAsset">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeFixedAssetFromFixedAsset"/>
+        <response name="success" type="view" value="EditFixedAssetRollup"/>
+        <response name="error" type="view" value="EditFixedAssetRollup"/>
+    </request-map>
+    <!-- ================ FixedAsset Calendar Requests ================= -->
+    <request-map uri="ListFixedAssetCalendar"><!-- show a tabular list of products connected -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListFixedAssetCalendar"/>
+    </request-map>
+    <!-- ================ Entity Lookup Requests ================= -->
+    <request-map uri="GenericLookup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GenericLookup"/>
+    </request-map> 
+    <request-map uri="LookupProduct">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.manufacturing.ManufacLookupParams" invoke="lookupProduct"/>
+        <response name="success" type="view" value="GenericLookup"/>
+    </request-map>
+    <request-map uri="LookupParty">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.manufacturing.ManufacLookupParams" invoke="lookupParty"/>
+        <response name="success" type="view" value="GenericLookup"/>
+    </request-map>
+    <request-map uri="LookupFixedAsset">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.accounting.AccLookupParams" invoke="lookupFixedAsset"/>
+        <response name="success" type="view" value="GenericLookup"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -302,7 +430,7 @@
     <view-map name="manualTx" type="jpublish" page="/payment/manualTx.ftl"/>
 
     <!-- view-map name="FindGlobalGlAccount" type="jpublish" page="/chartofaccounts/FindGlobalGlAccount.ftl"/ -->
-	<!-- New Screen Widget for EditGlobalGlAccount -->
+    <!-- New Screen Widget for EditGlobalGlAccount -->
     <view-map name="SimpleScreen" type="screen" page="component://accounting/widget/SimpleScreens.xml#SimpleScreen"/>
     <view-map name="AddGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AddGlAccount"/>
     <view-map name="FindGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccounts"/>
@@ -314,5 +442,19 @@
     <!-- view-map name="EditGlobalGlAccount" type="jpublish" page="/chartofaccounts/EditGlobalGlAccount.ftl"/ -->
     <view-map name="EditGlobalGlAccountOrganizations" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountOrganizations.ftl"/>
     <view-map name="EditGlobalGlAccountRoles" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountRoles.ftl"/>
+    
+    <view-map name="ListFixedAssets" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssets"/> 
+    <view-map name="EditFixedAsset" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAsset"/> 
+    <view-map name="ListFixedAssetProducts" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetProducts"/> 
+    <view-map name="addFixedAssetProduct" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#addFixedAssetProduct"/> 
+    <view-map name="updateFixedAssetProduct" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#updateFixedAssetProduct"/> 
+    <view-map name="removeFixedAssetProduct" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#removeFixedAssetProduct"/> 
+    <view-map name="ListFixedAssetParties" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetParties"/> 
+    <view-map name="ListFixedAssetsRollUp" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetRollUp"/> 
+    <view-map name="ListFixedAssetsCalendar" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetCalendar"/> 
+
+    <!-- Lookup request mappings -->
+    <view-map name="GenericLookup" page="/lookup/GenericLookup.ftl" type="jpublish"/>
+        
     <!-- end of view mappings -->
 </site-conf>

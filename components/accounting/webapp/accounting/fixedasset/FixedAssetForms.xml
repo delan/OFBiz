@@ -1,0 +1,132 @@
+<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
+
+<!--
+ *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<forms>
+
+    <!-- list all assets in a tabular format -->
+    <form name="ListFixedAssets" type="list"  list-name="fixedAssets" 
+         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+
+        <field name="fixedAssetID" title="Fixed Asset ID" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${fixedAssetId}" target="EditFixedAsset?fixedAssetId=${fixedAssetId}"/>
+        </field>
+        <field name="fixedAssetName" title="The name of the Fixed Asset">
+            <display/>   
+        </field>
+        <field name="fixedAssetTypeId" title="The type of the Fixed Asset">
+            <display-entity entity-name="FixedAssetType"/>
+        </field>
+        <field name="parentFixedAssetId" title="The parent of the Fixed Asset">
+            <display-entity entity-name="FixedAsset" key-field-name="fixedAssetId" description="${fixedAssetName}"/>
+        </field>
+    </form>
+    
+    <!-- create and update a fixed asset -->
+    <form name="EditFixedAsset" type="single" 
+            target="updateFixedAsset" title="" default-map-name="fixedAsset"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <alt-target use-when="fixedAsset==null" target="createFixedAsset"/>
+
+         <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset"/>
+ 
+        <field use-when="fixedAsset!=null" name="fixedAssetId" title="Fixed Asset ID:"  tooltip="This cannot be changed without re-creating the Fixed Asset"><display/></field>
+        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId" title="Fixed Asset ID:"><text size="20" maxlength="20"/></field>
+        <field use-when="fixedAsset==null&amp;&amp;fixedAssetId!=null" name="fixedAssetId" title="Fixed Asset ID:" tooltip="Could not find fixedAsset with ID [${fixedAssetId}]"><text size="20" maxlength="20"/></field>
+
+        <field name="fixedAssetTypeId" title="Fixed Asset Type" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="FixedAssetType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+
+<!--        <field name="partyId" title="Party Id" ><lookup target-form-name="LookupParty"/></field> -->
+        
+        <field name="roleTypeId" title="Party Role Type" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="RoleType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        
+        <field name="uomId" title="Unit of Measure" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" description="[${uomId}] ${description}">
+                    <entity-order-by field-name="uomTypeId"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        
+<!--        <field name="parentFixedAssetId" title="Parent Asset Id" ><lookup target-form-name="LookupFixedAsset"/></field> -->
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="ListFixedAssetProducts" type="list"  list-name="fixedAssetProducts"  target="updateFixedAssetProduct"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+
+        <field name="productId" title="${uiLabelMap.AccountingProduct}" widget-style="tabletext"><display-entity entity-name="Product" description="${description}[${productId}]"/></field>
+           <field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductType}" widget-style="tabletext"><display-entity entity-name="FixedAssetProductType"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" widget-style="inputBox"> <date-time/></field>
+        <field name="fixedAssetId"> <hidden/> </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="removeFixedAssetProduct?fixedAssetId=${fixedAssetId}&amp;productId=${productId}&amp;fixedAssetProductTypeId=${fixedAssetProductTypeId}&amp;fromDate=${fromDate}"
+                description="[${uiLabelMap.CommonRemove}]" also-hidden="false"/>
+        </field>
+    </form>
+
+    <!-- create and update a product on a fixed asset -->
+    <form name="AddFixedAssetProduct" type="single" 
+            target="addFixedAssetProduct" title="" default-map-name="fixedAssetProduct"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+         <auto-fields-service service-name="addFixedAssetProduct" map-name="fixedAssetProduct"/>
+
+         <field name="fixedAssetId"><hidden/></field>
+        <field name="productId"><lookup target-form-name="LookupProduct"/></field>
+        <field name="fixedAssetProductTypeId" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="FixedAssetProductType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        
+        <field name="quantityUomId" title="Quantity Unit of Measure" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="[${uomId}] ${description}">
+                    <entity-order-by field-name="uomTypeId"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    
+</forms>

@@ -42,6 +42,7 @@
     <entity-resource type="data" reader-name="main" loader="main" location="data/DemoFactoids.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/DemoRelatedData.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/DemoConfigurator.xml"/>
+    <entity-resource type="data" reader-name="main" loader="main" location="data/DemoRentalProduct.xml"/>
     <webapp name="ecommerce"
         title="ECommerce"
         server="default-server"

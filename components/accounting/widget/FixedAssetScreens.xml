@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE screens PUBLIC "-//OFBiz//DTD OFBiz Screen Widget//EN" "http://www.ofbiz.org/dtds/widget-screen.dtd">
+
+<!--
+ *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  $Id: FixedAssetScreens.xml 3536 2004-10-21 05:42:51Z HansBak $
+-->
+
+<screens>
+    <screen name="CommonFixedAssetDecorator">
+        <section>
+            <widgets>
+                <decorator-screen name="main" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for ACCOUNTING, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="ACCOUNTING" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
+                                </platform-specific>
+             
+                                <decorator-section-include name="body"/>
+
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.AcccountingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+	<!-- list all assets in a tabular format -->
+    <screen name="ListFixedAssets">
+        <section>
+            <actions>
+                <set field="title" value="List Fixed Assets"/>
+                <set field="page.headerItem" value="ListFixedAssets"/>
+                <set field="page.tabButtonItem" value="ListFixedAssets"/>
+				<entity-condition entity-name="FixedAsset" list-name="fixedAssets" >
+					<condition-expr field-name="fixedAssetId" operator="greater" value=" " />
+				</entity-condition>
+			</actions>
+            <widgets>
+                <decorator-screen name="CommonFixedAssetDecorator">
+                    <decorator-section name="body">
+						<container>
+                        	<label style="head1">${uiLabelMap.AccountingFixedAssets}</label>
+                         	</container>
+                                <container>
+                                    <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
+                                </container>
+                        <include-form name="ListFixedAssets" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                                <container>
+                                    <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
+                                </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	<!-- create and/or update a fixed asset -->
+    <screen name="EditFixedAsset">
+        <section>
+            <actions>
+                <set field="title" value="Edit Fixed Asset"/>
+                <set field="page.headerItem" value="ListFixedAssets"/>
+                <set field="page.tabButtonItem" value="EditFixedAsset"/>
+                <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
+				<entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFixedAssetDecorator">
+                    <decorator-section name="body">
+						<container>
+                        	<label style="head1">${uiLabelMap.AccountingFixedAssetEdit}</label>
+                         	</container>
+                                <container>
+                                    <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
+                                </container>
+                        <include-form name="EditFixedAsset" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+	<!-- provide a list and allow additions -->
+	<screen name="ListFixedAssetProducts">
+        <section>
+            <actions>
+                <set field="title" value="Edit Fixed Asset related Products"/>
+                <set field="titleProperty" value="PageTitleListFixedAssetProducts"/>
+                <set field="page.headerItem" value="ListFixedAssets"/>
+                <set field="page.tabButtonItem" value="ListFixedAssetProducts"/>
+                <set field="labelTitleProperty" value="Products"/>
+
+                <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
+                <entity-one entity-name="FixedAsset" value-name="fixedAsset">
+					<select-field field-name="fixedAssetName"/>
+					</entity-one>
+				<entity-condition entity-name="FixedAssetProduct" list-name="fixedAssetProducts" >
+					<condition-expr field-name="fixedAssetId" operator="equals" value="${fixedAssetId}" />
+                    <order-by field-name="productId"/>
+                    <order-by field-name="fixedAssetProductTypeId"/>
+                    <order-by field-name="fromDate"/>
+				</entity-condition>
+				
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFixedAssetDecorator">
+                    <decorator-section name="body">
+              	    	<container>
+                        	<label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
+                         	</container>
+                        <include-form name="ListFixedAssetProducts" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+						<container>
+                        	<label style="head1">${uiLabelMap.AccountingFixedAssetProductNew}</label>
+                         	</container>
+                        <include-form name="AddFixedAssetProduct" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+ 
+
+</screens>
+
