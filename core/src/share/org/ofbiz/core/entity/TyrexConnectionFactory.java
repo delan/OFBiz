@@ -6,7 +6,7 @@ import javax.sql.*;
 import javax.naming.*;
 
 import org.ofbiz.core.util.*;
-import tyrex.jdbc.xa.*;
+import tyrex.resource.jdbc.xa.*;
 
 /**
  * <p><b>Title:</b> TyrexConnectionFactory.java
@@ -37,7 +37,7 @@ import tyrex.jdbc.xa.*;
 public class TyrexConnectionFactory {
     static UtilCache dsCache = new UtilCache("TyrexDataSources", 0, 0);
 
-    public static Connection getConnection(String helperName) throws SQLException {
+    public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
         boolean usingTyrex = true;
         try {
             Class.forName("tyrex.jdbc.xa.EnabledDataSource").newInstance();
@@ -51,14 +51,16 @@ public class TyrexConnectionFactory {
 
             //try once
             ds = (EnabledDataSource) dsCache.get(helperName);
-            if (ds != null)
-                return ds.getConnection();
+            if (ds != null) {
+                return TransactionUtil.enlistConnection(ds.getXAConnection());
+            }
 
             synchronized (TyrexConnectionFactory.class) {
                 //try again inside the synch just in case someone when through while we were waiting
                 ds = (EnabledDataSource) dsCache.get(helperName);
-                if (ds != null)
-                    return ds.getConnection();
+                if (ds != null) {
+                    return TransactionUtil.enlistConnection(ds.getXAConnection());
+                }
 
                 ds = new EnabledDataSource();
                 ds.setDriverClassName(UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.driver"));
@@ -74,7 +76,7 @@ public class TyrexConnectionFactory {
                 ds.setLogWriter(Debug.getPrintWriter());
 
                 dsCache.put(helperName, ds);
-                return ds.getConnection();
+                return TransactionUtil.enlistConnection(ds.getXAConnection());
             }
         }
 

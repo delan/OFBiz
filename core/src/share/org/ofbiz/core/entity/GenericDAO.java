@@ -61,7 +61,6 @@ public class GenericDAO {
     
     public Connection getConnection() throws SQLException, GenericEntityException {
         Connection connection = ConnectionFactory.getConnection(helperName);
-        TransactionUtil.enlistConnection(connection);
         return connection;
     }
     

@@ -6,9 +6,7 @@ import javax.naming.*;
 import javax.transaction.*;
 
 import org.ofbiz.core.util.*;
-import tyrex.tm.Tyrex;
-import tyrex.tm.TyrexPermission;
-import tyrex.server.Configure;
+import tyrex.tm.TransactionDomain;
 
 /**
  * <p><b>Title:</b> TyrexTransactionFactory.java
@@ -37,36 +35,28 @@ import tyrex.server.Configure;
  * Created on July 1, 2001, 5:03 PM
  */
 public class TyrexTransactionFactory {
-    static {
-        /* Any way to do this? doesn't look like it, must go in the java.policy file - pain in the rear
-        TyrexPermission perm = new TyrexPermission("server.start");
-        PermissionCollection permCol = perm.newPermissionCollection();
-        if (permCol == null) permCol = new Permissions();
-        permCol.add(perm);
-
-        perm = new TyrexPermission("server.shutdown");
-        permCol.add(perm);
-        perm = new TyrexPermission("server.meter");
-        permCol.add(perm);
-        perm = new TyrexPermission("transaction.terminate");
-        permCol.add(perm);
-        perm = new TyrexPermission("transaction.list");
-        permCol.add(perm);
-        perm = new TyrexPermission("transaction.manager");
-        permCol.add(perm);
-        */
-        Configure conf = new Configure();
-        
-        conf.setLogWriter(Debug.getPrintWriter());
-        conf.startServer();
-    }
+    protected static TransactionDomain td = null;
     
+    static {
+        try {
+            td = TransactionDomain.createDomain("");
+        } catch (tyrex.tm.DomainConfigurationException e) {
+            Debug.logError("Could not create Tyrex Transaction Domain:");
+            Debug.logError(e);
+        }
+    }
+
     public static TransactionManager getTransactionManager() {
-        return Tyrex.getTransactionManager();
+        if (td != null)
+            return td.getTransactionManager();
+        else
+            return null;
     }
     
     public static UserTransaction getUserTransaction() {
-        return Tyrex.getUserTransaction();
+        if (td != null)
+            return td.getUserTransaction();
+        else
+            return null;
     }
 }
-

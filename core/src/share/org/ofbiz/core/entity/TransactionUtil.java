@@ -52,9 +52,6 @@ public class TransactionUtil implements javax.transaction.Status {
     /** Gets the status of the transaction in the current thread IF
      * transactions are available, otherwise returns STATUS_NO_TRANSACTION */
     public static int getStatus() throws GenericTransactionException {
-        if (true)
-            return STATUS_NO_TRANSACTION; //disabling for now...
-
         UserTransaction ut = TransactionFactory.getUserTransaction();
         if (ut != null) {
             try {
@@ -121,33 +118,27 @@ public class TransactionUtil implements javax.transaction.Status {
         }
     }
     
-    /** Enlists the given Connection if it is an XAConnection and if a transaction is active in the current thread */
-    public static void enlistConnection(Connection connection) throws GenericTransactionException {
-        if (true)
-            return; //disabling for now...
+    /** Enlists the given XAConnection and if a transaction is active in the current thread, returns a plain JDBC Connection */
+    public static Connection enlistConnection(XAConnection xacon) throws GenericTransactionException {
+        if (xacon == null)
+            return null;
         
-        if (connection == null)
-            return;
-        
-        if (connection instanceof XAConnection) {
-            XAConnection xAConnection = (XAConnection) connection;
-            
-            try {
-                TransactionManager tm = TransactionFactory.getTransactionManager();
-                if (tm != null && tm.getStatus() == STATUS_ACTIVE) {
-                    Transaction tx = tm.getTransaction();
-                    if (tx != null) {
-                        XAResource resource = xAConnection.getXAResource();
-                        tx.enlistResource(resource);
-                    }
+        try {
+            TransactionManager tm = TransactionFactory.getTransactionManager();
+            if (tm != null && tm.getStatus() == STATUS_ACTIVE) {
+                Transaction tx = tm.getTransaction();
+                if (tx != null) {
+                    XAResource resource = xacon.getXAResource();
+                    tx.enlistResource(resource);
                 }
-            } catch (SQLException e) {
-                throw new GenericTransactionException("SQL error, could not enlist connection in transaction even though transactions are available", e);
-            } catch (RollbackException e) {
-                throw new GenericTransactionException("Roll Back error, could not enlist connection in transaction even though transactions are available, current transaction rolled back", e);
-            } catch (SystemException e) {
-                throw new GenericTransactionException("System error, could not enlist connection in transaction even though transactions are available", e);
             }
+            return xacon.getConnection();
+        } catch (SQLException e) {
+            throw new GenericTransactionException("SQL error, could not enlist connection in transaction even though transactions are available", e);
+        } catch (RollbackException e) {
+            throw new GenericTransactionException("Roll Back error, could not enlist connection in transaction even though transactions are available, current transaction rolled back", e);
+        } catch (SystemException e) {
+            throw new GenericTransactionException("System error, could not enlist connection in transaction even though transactions are available", e);
         }
     }
 }

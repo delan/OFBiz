@@ -36,7 +36,7 @@ import org.ofbiz.core.util.*;
 public class ConnectionFactory {
     static UtilCache dsCache = new UtilCache("JNDIDataSources", 0, 0);
 
-    public static Connection getConnection(String helperName) throws SQLException {
+    public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
 
         String jndiName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.jndi.name");
         if (jndiName != null && jndiName.length() > 0) {
@@ -49,8 +49,14 @@ public class ConnectionFactory {
             synchronized (ConnectionFactory.class) {
                 //try again inside the synch just in case someone when through while we were waiting
                 ds = (DataSource) dsCache.get(jndiName);
-                if (ds != null)
-                    return ds.getConnection();
+                if (ds != null) {
+                    if (ds instanceof XADataSource) {
+                        XADataSource xads = (XADataSource) ds;
+                        return TransactionUtil.enlistConnection(xads.getXAConnection());
+                    } else {
+                        return ds.getConnection();
+                    }
+                }
 
                 try {
                     InitialContext ic = JNDIContextFactory.getInitialContext(helperName);
@@ -58,8 +64,14 @@ public class ConnectionFactory {
                         ds = (DataSource) ic.lookup(jndiName);
                     if (ds != null) {
                         dsCache.put(jndiName, ds);
-                        Connection con = ds.getConnection();
-                        //Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
+                        Connection con = null;
+                        if (ds instanceof XADataSource) {
+                            XADataSource xads = (XADataSource) ds;
+                            con = TransactionUtil.enlistConnection(xads.getXAConnection());
+                        } else {
+                            con = ds.getConnection();
+                        }
+                        //if (con != null) Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
                         return con;
                     }
                 } catch (NamingException ne) {
