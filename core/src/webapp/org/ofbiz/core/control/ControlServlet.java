@@ -44,7 +44,6 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class ControlServlet extends HttpServlet {
-    
     /** Creates new ControlServlet  */
     public ControlServlet() {
         super();
@@ -54,25 +53,14 @@ public class ControlServlet extends HttpServlet {
         super.init(config);
         Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " + config.getServletContext().getRealPath("/"));
                         
-        // if exists, start PoolMan
-        try {
-            Class poolManClass = Class.forName("com.codestudio.sql.PoolMan");
-            Method startMethod = poolManClass.getMethod("start", null);
-            startMethod.invoke(null, null);
-            //Debug.logInfo("Found PoolMan Driver...");
-        }
-        catch(Exception ex) {
-            //Debug.logWarning("[ControlServlet.init] WARNING: PoolMan not found");
-        }
-        
-        // initialize the request handler
-        getRequestHandler();
         // initialize the delegator
         getDelegator();
         // initialize security
         getSecurity();
         // initialize the services dispatcher
         getDispatcher();  
+        // initialize the request handler
+        getRequestHandler();
         
         // this will speed up the initial sessionId generation
         new java.security.SecureRandom().nextLong();
@@ -96,14 +84,14 @@ public class ControlServlet extends HttpServlet {
         StringBuffer request_url = new StringBuffer();
         request_url.append(request.getScheme());
         request_url.append("://" + request.getServerName());
-        if ( request.getServerPort() != 80 && request.getServerPort() != 443 )
+        if (request.getServerPort() != 80 && request.getServerPort() != 443)
             request_url.append(":" + request.getServerPort());
         request.setAttribute(SiteDefs.SERVER_ROOT_URL,request_url.toString());
         
         // Store some first hit client info for later.
-        if ( session.isNew() ) {
+        if (session.isNew()) {
             request_url.append(request.getRequestURI());
-            if ( request.getQueryString() != null )
+            if (request.getQueryString() != null)
                 request_url.append("?" + request.getQueryString());
             session.setAttribute(SiteDefs.CLIENT_LOCALE,request.getLocale());
             session.setAttribute(SiteDefs.CLIENT_REQUEST,request_url.toString());
@@ -113,11 +101,11 @@ public class ControlServlet extends HttpServlet {
         
         // for convenience, and necessity with event handlers, make security and delegator available in the request:
         GenericDelegator delegator = (GenericDelegator)getServletContext().getAttribute("delegator");
-        if(delegator == null) Debug.logError("[ControlServlet] ERROR: delegator not found in ServletContext");
+        if (delegator == null) Debug.logError("[ControlServlet] ERROR: delegator not found in ServletContext");
         request.setAttribute("delegator", delegator);
         
         Security security = (Security)getServletContext().getAttribute("security");
-        if(security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext");
+        if (security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext");
         request.setAttribute("security", security);
         
         // for use in Events the filesystem path of context root.
@@ -125,14 +113,14 @@ public class ControlServlet extends HttpServlet {
         
         try {
             nextPage = getRequestHandler().doRequest(request,response, null);
-        } catch( Exception e ) {
+        } catch ( Exception e ) {
             e.printStackTrace();
             request.setAttribute(SiteDefs.ERROR_MESSAGE,e.getMessage());
             nextPage = getRequestHandler().getDefaultErrorPage(request);
         }
         
         // Forward to the JSP
-        Debug.logInfo("Dispatching to: " + nextPage);
+        Debug.logInfo("Dispatching to next page: " + nextPage);
         if(nextPage != null) {
             RequestDispatcher rd = request.getRequestDispatcher(nextPage);
             if(rd != null) rd.forward(request,response);

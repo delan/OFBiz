@@ -1,5 +1,6 @@
 package org.ofbiz.core.entity;
 
+import java.lang.reflect.*;
 import java.util.*;
 import java.sql.*;
 import javax.sql.*;
@@ -86,10 +87,15 @@ public class ConnectionFactory {
         boolean usingPoolMan = false;
         if (poolManName != null && poolManName.length() > 0) {
             usingPoolMan = true;
+
+            // if exists, start PoolMan
             try {
-                Class.forName("com.codestudio.sql.PoolMan").newInstance();
+                Class poolManClass = Class.forName("com.codestudio.sql.PoolMan");
+                Method startMethod = poolManClass.getMethod("start", null);
+                startMethod.invoke(null, null);
                 //Debug.logInfo("Found PoolMan Driver...");
             } catch (Exception ex) {
+                //Debug.logWarning("[ControlServlet.init] WARNING: PoolMan not found");
                 usingPoolMan = false;
             }
 
