@@ -201,10 +201,16 @@ function call_fieldlookup(target, viewName, formName) {
     fieldLookup.popup(viewName, formName);
 }
 
+function call_fieldlookup2(target, viewName) {   
+    var fieldLookup = new fieldLookup1(target);  
+    fieldLookup.popup2(viewName);
+}
+
 function fieldLookup1(obj_target) {
 
 	// assing methods
 	this.popup    = lookup_popup1;
+	this.popup2    = lookup_popup2;
 
 	// validate input parameters
 	if (!obj_target)
@@ -220,6 +226,11 @@ function fieldLookup1(obj_target) {
 
 function lookup_popup1 (view_name, form_name) {
 	var obj_lookupwindow = window.open(view_name + '?formName=' + form_name + '&id=' + this.id,'FieldLookup', 'width=250,height=200,scrollbars=auto,status=no,resizable=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
+	obj_lookupwindow.opener = window;
+	obj_lookupwindow.focus();
+}
+function lookup_popup2 (view_name) {
+	var obj_lookupwindow = window.open(view_name + '?id=' + this.id,'FieldLookup', 'width=700,height=550,scrollbars=yes,status=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
 	obj_lookupwindow.opener = window;
 	obj_lookupwindow.focus();
 }
