@@ -1721,7 +1721,7 @@
       <relation type="one" fk-name="PROD_CNT_URT" title="Use" rel-entity-name="RoleType">
         <key-map field-name="useRoleTypeId" rel-field-name="roleTypeId"/>
       </relation>
-      <relation type="one" fk-name="PROD_CNT_URT" title="UseTime" rel-entity-name="Uom">
+      <relation type="one" fk-name="PROD_CNT_UTU" title="UseTime" rel-entity-name="Uom">
         <key-map field-name="useTimeUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
