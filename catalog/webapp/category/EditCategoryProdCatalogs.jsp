@@ -111,7 +111,7 @@
         </FORM>
     </td>
     <td align="center">
-      <a href='<ofbiz:url>/category_removeProductCategoryFromProdCatalog?productCategoryId=<ofbiz:entityfield attribute="prodCatalogCategory" field="productCategoryId"/>&productCategoryId=<ofbiz:entityfield attribute="prodCatalogCategory" field="productCategoryId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(prodCatalogCategory.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/category_removeProductCategoryFromProdCatalog?prodCatalogId=<ofbiz:entityfield attribute="prodCatalogCategory" field="prodCatalogId"/>&productCategoryId=<ofbiz:entityfield attribute="prodCatalogCategory" field="productCategoryId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(prodCatalogCategory.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
