@@ -8,7 +8,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 CREATE TABLE <%=entity.tableName%> (<%for(int i=0;i<entity.fields.size();i++){ModelField field=(ModelField)entity.fields.get(i); ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%><%if(field.isPk){%>
   <%=field.colName%> <%=type.sqlType%> NOT NULL,<%}else{%>
   <%=field.colName%> <%=type.sqlType%>,<%}%><%}%>
-  PRIMARY KEY (<%=entity.colNameString(entity.pks)%>));
+  CONSTRAINT PK_<%=entity.tableName%> PRIMARY KEY (<%=entity.colNameString(entity.pks)%>));
 <%}%> 
 <%
 } 
