@@ -429,6 +429,7 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallService(curOperElem, simpleMethod));
                 } else if ("call-bsh".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallBsh(curOperElem, simpleMethod));
+
                 } else if ("field-to-request".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.eventops.FieldToRequest(curOperElem, simpleMethod));
                 } else if ("field-to-session".equals(nodeName)) {
@@ -437,10 +438,30 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.eventops.RequestToField(curOperElem, simpleMethod));
                 } else if ("session-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.eventops.SessionToField(curOperElem, simpleMethod));
+
+                } else if ("env-to-request".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.EnvToRequest(curOperElem, simpleMethod));
+                } else if ("env-to-session".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.EnvToSession(curOperElem, simpleMethod));
+                } else if ("request-to-env".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.RequestToEnv(curOperElem, simpleMethod));
+                } else if ("session-to-env".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.eventops.SessionToEnv(curOperElem, simpleMethod));
+
                 } else if ("field-to-result".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.serviceops.FieldToResult(curOperElem, simpleMethod));
+                } else if ("env-to-result".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.serviceops.EnvToResult(curOperElem, simpleMethod));
+
                 } else if ("field-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.FieldToField(curOperElem, simpleMethod));
+                } else if ("env-to-list".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.EnvToList(curOperElem, simpleMethod));
+                } else if ("env-to-field".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.EnvToField(curOperElem, simpleMethod));
+                } else if ("field-to-env".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.FieldToEnv(curOperElem, simpleMethod));
+
                 } else if ("if-validate-method".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.IfValidateMethod(curOperElem, simpleMethod));
                 } else if ("if-compare".equals(nodeName)) {
