@@ -1,5 +1,5 @@
 /*
- * $Id: UtilMisc.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: UtilMisc.java,v 1.2 2003/09/20 18:14:36 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.Map;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class UtilMisc {
@@ -143,6 +143,24 @@ public class UtilMisc {
         fields.put(name5, value5);
         fields.put(name6, value6);
         return fields;
+    }
+    
+    /** 
+     * Create a map from passed nameX, valueX parameters
+     * @return The resulting Map
+     */
+    public static Map toMap(Object[] data) {
+        if (data == null) {
+            return null;
+        }
+        if (data.length % 2 == 1) {
+            throw new IllegalArgumentException("You must pass an even sized array to the toMap method");
+        }
+        Map map = new HashMap();
+        for (int i = 0; i < data.length; ) {
+            map.put(data[i++], data[i++]);
+        }
+        return map;
     }
     
     /**
@@ -253,6 +271,17 @@ public class UtilMisc {
         } else {
             return new ArrayList(collection);
         }
+    }
+
+    public static List toListArray(Object[] data) {
+        if (data == null) {
+            return null;
+        }
+        List list = new ArrayList(data.length);
+        for (int i = 0; i < data.length; i++) {
+            list.add(data[i]);
+        }
+        return list;
     }
 
     /**
