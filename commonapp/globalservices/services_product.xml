@@ -286,6 +286,7 @@
         <attribute name="productFeatureSelectableByType" type="java.util.Map" mode="IN" optional="false" string-map-prefix="pftsel_"/>
         <attribute name="defaultPrice" type="Double" mode="IN" optional="true"/>
         <attribute name="averageCost" type="Double" mode="IN" optional="true"/>
+        <attribute name="currencyUomId" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="addPartyToCategory" engine="simple"

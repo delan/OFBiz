@@ -358,8 +358,60 @@
     	<call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
         
-        <!-- TODO: implement this... -->
+        <if-empty field-name="currencyUomId" map-name="parameters">
+            <!-- default to USD for lack of a better alternative, for now anyway... -->
+            <string-to-field string="USD" field-name="currencyUomId" map-name="parameters"/>
+        </if-empty>
         
+        <!-- create Product -->
+        <set-service-fields service-name="createProduct" map-name="parameters" to-map-name="callCreateProductMap"/>
+        <call-service service-name="createProduct" in-map-name="callCreateProductMap">
+            <result-to-field result-name="productId"/>
+        </call-service>
+        
+        <!-- create ProductCategoryMember -->
+        <env-to-field env-name="productId" map-name="callCreateProductCategoryMemberMap"/>
+        <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="callCreateProductCategoryMemberMap"/>
+        <call-service service-name="addProductToCategory" in-map-name="callCreateProductCategoryMemberMap"/>
+        
+        <!-- create defaultPrice and averageCost ProductPrice -->
+        <env-to-field env-name="productId" map-name="createDefaultPriceMap"/>
+        <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="createDefaultPriceMap"/>
+        <env-to-env env-name="parameters.defaultPrice" to-env-name="createDefaultPriceMap.price"/>
+        <string-to-field string="_NA_" field-name="createDefaultPriceMap.facilityGroupId"/>
+        <string-to-field string="DEFAULT_PRICE" field-name="createDefaultPriceMap.productPriceTypeId"/>
+        <call-service service-name="createProductPrice" in-map-name="createDefaultPriceMap"/>
+        
+        <env-to-field env-name="productId" map-name="createAverageCostMap"/>
+        <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="createAverageCostMap"/>
+        <env-to-env env-name="parameters.averageCost" to-env-name="createAverageCostMap.price"/>
+        <string-to-field string="_NA_" field-name="createAverageCostMap.facilityGroupId"/>
+        <string-to-field string="AVERAGE_COST" field-name="createAverageCostMap.productPriceTypeId"/>
+        <call-service service-name="createProductPrice" in-map-name="createAverageCostMap"/>
+
+        <!-- create ProductFeatureAppl(s) -->
+        <string-to-field string="N" field-name="hasSelectableFeatures"/>
+        <iterate-map map-name="productFeatureIdByType" key-name="productFeatureTypeId" value-name="productFeatureId">
+            <env-to-field env-name="productId" map-name="createPfaMap"/>
+            <env-to-field env-name="productFeatureId" map-name="createPfaMap"/>
+            <if-compare field-name="${productFeatureTypeId}" map-name="productFeatureSelectableByType" operator="equals" value="Y">
+                <string-to-field string="SELECTABLE_FEATURE" field-name="productFeatureApplTypeId" map-name="createPfaMap"/>
+                <string-to-field string="Y" field-name="hasSelectableFeatures"/>
+            <else>
+                <string-to-field string="STANDARD_FEATURE" field-name="productFeatureApplTypeId" map-name="createPfaMap"/>
+            </else>
+            </if-compare>
+            <call-service service-name="applyFeatureToProduct" in-map-name="createPfaMap"/>
+            <clear-field field-name="createPfaMap"/>
+        </iterate-map>
+        
+        <!-- set isVirtual based on hasSelectableFeatures -->
+        <if-compare field-name="hasSelectableFeatures" operator="equals" value="Y">
+            <env-to-field env-name="productId" map-name="findProductMap"/>
+            <find-by-primary-key entity-name="Product" map-name="findProductMap" value-name="newProduct"/>
+            <string-to-field string="Y" field-name="isVirtual" map-name="newProduct"/>
+            <store-value value-name="newProduct"/>
+        </if-compare>
     </simple-method>    
     
 	<!-- a methods to centralize product security code, meant to be called in-line with 
