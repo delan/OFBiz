@@ -2,7 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Edit Contact Mech</property>
-    <property name="title.property">PageTitleEditcontactmech</property>
+    <property name="title-property">PageTitleEditcontactmech</property>
     <property name="headerItem">find</property>
     <content-action name="/party/editcontactmech.bsh"/>
 </page>

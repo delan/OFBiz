@@ -2,7 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Find Party(s)</property>
-    <property name="title.property">PageTitleFindParty</property>
+    <property name="title-property">PageTitleFindParty</property>
     <property name="headerItem">find</property>
     <content-action name="/party/findparty.bsh"/>
 </page>

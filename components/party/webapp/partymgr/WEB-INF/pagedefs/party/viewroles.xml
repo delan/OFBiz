@@ -2,7 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">View Party Roles</property>
-    <property name="title.property">PageTitleViewPartyRole</property>
+    <property name="title-property">PageTitleViewPartyRole</property>
     <property name="headerItem">view</property>
     <content-action name="/party/viewroles.bsh"/>
 </page>

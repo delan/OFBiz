@@ -2,7 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">View Party Profile</property>
-    <property name="title.property">PageTitleViewPartyProfile</property>
+    <property name="title-property">PageTitleViewPartyProfile</property>
     <property name="headerItem">view</property>
     <content-action name="/party/viewprofile.bsh"/>
 </page>

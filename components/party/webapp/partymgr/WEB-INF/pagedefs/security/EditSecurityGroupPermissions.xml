@@ -2,7 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Edit Security Group Permissions</property>
-    <property name="title.property">PageTitleEditSecurityGroupPermissions</property>
+    <property name="title-property">PageTitleEditSecurityGroupPermissions</property>
     <property name="headerItem">security</property>
     <property name="tabButtonItem">EditSecurityGroupPermissions</property>
     <content-action name="/security/EditSecurityGroupPermissions.bsh"/>

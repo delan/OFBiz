@@ -2,7 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Edit Communication</property>
-    <property name="title.property">PageTitleEditCommunication</property>
+    <property name="title-property">PageTitleEditCommunication</property>
     <property name="headerItem">view</property>
     <content-action name="/communication/editCommunication.bsh"/>
 </page>
