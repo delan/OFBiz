@@ -82,7 +82,8 @@ public class WorldPayEvents {
             List addresses = delegator.findByAnd("OrderContactMech", UtilMisc.toMap("orderId", orderId, "contactMechPurposeTypeId", "BILLING_LOCATION"));
             if (addresses == null || addresses.size() == 0)
                 addresses = delegator.findByAnd("OrderContactMech", UtilMisc.toMap("orderId", orderId, "contactMechPurposeTypeId", "SHIPPING_LOCATION"));
-            contactAddress = EntityUtil.getFirst(addresses);            
+            GenericValue contactMech = EntityUtil.getFirst(addresses);   
+            contactAddress = contactMech.getRelatedOne("PostalAddress");         
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Problems getting order contact information", module);
         }
