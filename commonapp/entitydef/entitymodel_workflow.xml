@@ -746,6 +746,7 @@
       <field name="fromActivityId" type="id-long"></field>
       <field name="toActivityId" type="id-long"></field>
       <field name="loopTypeEnumId" type="id"></field>
+      <field name="extendedAttributes" type="very-long"></field>
       <prim-key field="packageId"/>
       <prim-key field="packageVersion"/>
       <prim-key field="processId"/>
