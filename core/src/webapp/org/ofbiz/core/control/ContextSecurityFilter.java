@@ -45,6 +45,14 @@ public class ContextSecurityFilter implements Filter {
         this.config = config;
     }
 
+    public void setFilterConfig(FilterConfig config) {
+        this.config = config;
+    }
+
+    public FilterConfig getFilterConfig() {
+        return config;
+    }
+    
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
@@ -121,5 +129,4 @@ public class ContextSecurityFilter implements Filter {
     public void destroy() {
         config = null;
     }
-
 }
