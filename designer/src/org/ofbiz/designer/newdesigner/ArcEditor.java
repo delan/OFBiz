@@ -139,8 +139,8 @@ public class ArcEditor extends ArcEditorView {
             String sourceSec = ((ITaskWrapper)xml.getIdRef(arc.getSourceTaskAttribute())).getSecuritydomainurlAttribute();
             String destinationSec = ((ITaskWrapper)xml.getIdRef(arc.getDestinationAttribute())).getSecuritydomainurlAttribute();
 
-            sourceSec = xmlDir + "domainenv\\" + sourceSec;
-            destinationSec = xmlDir + "domainenv\\" + destinationSec;
+            sourceSec = xmlDir + "\\org.ofbiz.designer.domainenv\\" + sourceSec;
+            destinationSec = xmlDir + "\\org.ofbiz.designer.domainenv\\" + destinationSec;
 
             String prefix, sourceSuffix, destinationSuffix;
             int poundIndex = sourceSec.indexOf("#");

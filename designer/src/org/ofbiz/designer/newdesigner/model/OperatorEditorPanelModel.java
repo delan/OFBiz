@@ -127,7 +127,7 @@ public class OperatorEditorPanelModel extends BaseModel implements IOperatorEdit
     };
     protected static final Object[][] dataElements = { 
         {"taskName", "java.lang.String"},
-        {"otherTask", "java.util.Vector"},
+        {"otherTask", "java.org.ofbiz.designer.util.Vector"},
         {"type", "java.lang.String"},
     };
 

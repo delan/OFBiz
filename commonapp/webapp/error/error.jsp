@@ -1,7 +1,8 @@
-<% pageContext.setAttribute("PageName", "main"); %> 
-
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<html>
+<head>
+<title>ERROR!</title>
+</head>
+<body>
 <h3>A General Error Happened.</h3>
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>
+</body>
+</html>

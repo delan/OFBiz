@@ -1,0 +1,511 @@
+<?xml version="1.0"?>
+<!DOCTYPE ejb-jar PUBLIC "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN" "http://java.sun.com/j2ee/dtds/ejb-jar_1_1.dtd">
+
+<!-- 
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+
+<ejb-jar>
+  <description>The Common Application Components of the Open For Business Project</description>
+  <enterprise-beans>
+    <entity>
+      <ejb-name>Person</ejb-name>
+      <home>org.ofbiz.commonapp.person.PersonHome</home>
+      <remote>org.ofbiz.commonapp.person.Person</remote>
+      <ejb-class>org.ofbiz.commonapp.person.PersonBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.String</prim-key-class>
+      <reentrant>False</reentrant>
+
+      <cmp-field>
+        <field-name>username</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>password</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>firstName</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>middleName</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>lastName</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>title</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>suffix</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homePhone</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>workPhone</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fax</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>email</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homeStreet1</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homeStreet2</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homeCity</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homeCounty</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homeState</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homeCountry</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homePostalCode</field-name>
+      </cmp-field>
+
+      <primkey-field>username</primkey-field>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PersonAttribute</ejb-name>
+      <home>org.ofbiz.commonapp.person.PersonAttributeHome</home>
+      <remote>org.ofbiz.commonapp.person.PersonAttribute</remote>
+      <ejb-class>org.ofbiz.commonapp.person.PersonAttributeBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>org.ofbiz.commonapp.person.PersonAttributePK</prim-key-class>
+      <reentrant>False</reentrant>
+
+      <cmp-field>
+        <field-name>username</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>value</field-name>
+      </cmp-field>
+
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PersonType</ejb-name>
+      <home>org.ofbiz.commonapp.person.PersonTypeHome</home>
+      <remote>org.ofbiz.commonapp.person.PersonType</remote>
+      <ejb-class>org.ofbiz.commonapp.person.PersonTypeBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.String</prim-key-class>
+      <reentrant>False</reentrant>
+
+      <cmp-field>
+        <field-name>typeId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+      </cmp-field>
+
+      <primkey-field>typeId</primkey-field>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PersonTypeAttribute</ejb-name>
+      <home>org.ofbiz.commonapp.person.PersonTypeAttributeHome</home>
+      <remote>org.ofbiz.commonapp.person.PersonTypeAttribute</remote>
+      <ejb-class>org.ofbiz.commonapp.person.PersonTypeAttributeBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>org.ofbiz.commonapp.person.PersonTypeAttributePK</prim-key-class>
+      <reentrant>False</reentrant>
+
+      <cmp-field>
+        <field-name>typeId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+      </cmp-field>
+
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PersonPersonType</ejb-name>
+      <home>org.ofbiz.commonapp.person.PersonPersonTypeHome</home>
+      <remote>org.ofbiz.commonapp.person.PersonPersonType</remote>
+      <ejb-class>org.ofbiz.commonapp.person.PersonPersonTypeBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>org.ofbiz.commonapp.person.PersonPersonTypePK</prim-key-class>
+      <reentrant>False</reentrant>
+
+      <cmp-field>
+        <field-name>username</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>typeId</field-name>
+      </cmp-field>
+
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+      </resource-ref>
+    </entity>
+
+    <entity>
+      <ejb-name>SecurityGroup</ejb-name>
+      <home>org.ofbiz.commonapp.security.securitygroup.SecurityGroupHome</home>
+      <remote>org.ofbiz.commonapp.security.securitygroup.SecurityGroup</remote>
+      <ejb-class>org.ofbiz.commonapp.security.securitygroup.SecurityGroupBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.String</prim-key-class>
+      <reentrant>False</reentrant>
+
+      <cmp-field>
+        <field-name>groupId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+      </cmp-field>
+
+      <primkey-field>groupId</primkey-field>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>SecurityPermission</ejb-name>
+      <home>org.ofbiz.commonapp.security.securitygroup.SecurityPermissionHome</home>
+      <remote>org.ofbiz.commonapp.security.securitygroup.SecurityPermission</remote>
+      <ejb-class>org.ofbiz.commonapp.security.securitygroup.SecurityPermissionBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.String</prim-key-class>
+      <reentrant>False</reentrant>
+
+      <cmp-field>
+        <field-name>permissionId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+      </cmp-field>
+
+      <primkey-field>permissionId</primkey-field>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>SecurityGroupPermission</ejb-name>
+      <home>org.ofbiz.commonapp.security.securitygroup.SecurityGroupPermissionHome</home>
+      <remote>org.ofbiz.commonapp.security.securitygroup.SecurityGroupPermission</remote>
+      <ejb-class>org.ofbiz.commonapp.security.securitygroup.SecurityGroupPermissionBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>org.ofbiz.commonapp.security.securitygroup.SecurityGroupPermissionPK</prim-key-class>
+      <reentrant>False</reentrant>
+
+      <cmp-field>
+        <field-name>groupId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>permissionId</field-name>
+      </cmp-field>
+
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PersonSecurityGroup</ejb-name>
+      <home>org.ofbiz.commonapp.security.person.PersonSecurityGroupHome</home>
+      <remote>org.ofbiz.commonapp.security.person.PersonSecurityGroup</remote>
+      <ejb-class>org.ofbiz.commonapp.security.person.PersonSecurityGroupBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>org.ofbiz.commonapp.security.person.PersonSecurityGroupPK</prim-key-class>
+      <reentrant>False</reentrant>
+
+      <cmp-field>
+        <field-name>username</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>groupId</field-name>
+      </cmp-field>
+
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+      </resource-ref>
+    </entity>
+<!--
+    <entity>
+      <ejb-name>Product</ejb-name>
+      <home>org.ofbiz.commonapp.catalog.product.ProductHome</home>
+      <remote>org.ofbiz.commonapp.catalog.product.Product</remote>
+      <ejb-class>org.ofbiz.commonapp.catalog.product.ProductBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.String</prim-key-class>
+      <reentrant>False</reentrant>
+
+      <cmp-field>
+        <field-name>sku</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>shortDesc</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>longDesc</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>smallImageUrl</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>largeImageUrl</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>promoImageUrl</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>moreInfoUrl</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>typeId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>unitOfMeasure</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productType</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>weight</field-name>
+      </cmp-field>
+
+      <primkey-field>sku</primkey-field>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>FixedAsset</ejb-name>
+      <home>org.ofbiz.commonapp.fixedasset.fixedasset.FixedAssetHome</home>
+      <remote>org.ofbiz.commonapp.fixedasset.fixedasset.FixedAsset</remote>
+      <ejb-class>org.ofbiz.commonapp.fixedasset.fixedasset.FixedAssetBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>java.lang.String</prim-key-class>
+      <reentrant>False</reentrant>
+
+      <cmp-field>
+        <field-name>fixedAssetId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>companyUnitId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>ownerUsername</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>saleTransId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>saleTransLineId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>purchaseTransId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>purchaseTransLineId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>typeId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>serialNumber</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>make</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>model</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>year</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>status</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>notes</field-name>
+      </cmp-field>
+
+      <primkey-field>fixedAssetId</primkey-field>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>FixedAssetAttribute</ejb-name>
+      <home>org.ofbiz.commonapp.fixedasset.fixedasset.FixedAssetAttributeHome</home>
+      <remote>org.ofbiz.commonapp.fixedasset.fixedasset.FixedAssetAttribute</remote>
+      <ejb-class>org.ofbiz.commonapp.fixedasset.fixedasset.FixedAssetAttributeBean</ejb-class>
+      <persistence-type>Container</persistence-type>
+      <prim-key-class>org.ofbiz.commonapp.fixedasset.fixedasset.FixedAssetAttributePK</prim-key-class>
+      <reentrant>False</reentrant>
+
+      <cmp-field>
+        <field-name>fixedAssetId</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>value</field-name>
+      </cmp-field>
+
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+      </resource-ref>
+    </entity>
+-->
+  </enterprise-beans>
+  <assembly-descriptor>
+    <container-transaction>
+      <method>
+        <ejb-name>Person</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+<!--
+    <container-transaction>
+      <method>
+        <ejb-name>PersonAttribute</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>PersonType</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>PersonTypeAttribute</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>PersonPersonType</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>SecurityGroup</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>SecurityPermission</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>SecurityGroupPermission</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>PersonSecurityGroup</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>Product</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>FixedAsset</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+    <container-transaction>
+      <method>
+        <ejb-name>FixedAssetAttribute</ejb-name>
+        <method-name>*</method-name>
+      </method>
+      <trans-attribute>Required</trans-attribute>
+    </container-transaction>
+-->
+  </assembly-descriptor>
+</ejb-jar>

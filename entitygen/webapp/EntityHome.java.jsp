@@ -42,9 +42,12 @@ public interface <%=entity.ejbName%>Home extends EJBHome
   public <%=entity.ejbName%> findByPrimaryKey(<%=entity.primKeyClass%> primaryKey) throws RemoteException, FinderException;
   public Collection findAll() throws RemoteException, FinderException;
 
-<%for(i=0;i<entity.finders.size();i++){%><%EgFinder finderDesc = (EgFinder)entity.finders.elementAt(i);%>
-  /** Finds <%=entity.ejbName%>s by the following fields:<%for(int j=0;j<finderDesc.fields.size();j++){%>
-   *@param  <%=((EgField)finderDesc.fields.elementAt(j)).fieldName%>                  EgField for the <%=((EgField)finderDesc.fields.elementAt(j)).columnName%> column.<%}%>
+<%for(i=0;i<entity.finders.size();i++){%><%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
+  /**
+   *  Finds <%=entity.ejbName%>s by the following fields:
+   *
+<%for(int j=0;j<finderDesc.fields.size();j++){%>
+   *@param  <%=((Field)finderDesc.fields.elementAt(j)).fieldName%>                  Field for the <%=((Field)finderDesc.fields.elementAt(j)).columnName%> column.<%}%>
    *@return      Collection containing the found <%=entity.ejbName%>s
    */
   public Collection findBy<%=entity.classNameString(finderDesc.fields,"And","")%>(<%=entity.typeNameString(finderDesc.fields)%>) throws RemoteException, FinderException;

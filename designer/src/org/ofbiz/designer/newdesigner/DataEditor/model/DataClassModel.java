@@ -22,8 +22,7 @@ public class DataClassModel extends AbstractModel implements IDataClassModel {
         IDataClassModel newModel = new DataClassModel();
         IDataClassModelWrapper proxy = null;
         try {
-            proxy = (IDataClassModelWrapper)GuiModelProxy.newProxyInstance(newModel,
-            "org.ofbiz.designer.newdesigner.DataEditor.model.IDataClassModelWrapper");
+            proxy = (IDataClassModelWrapper)GuiModelProxy.newProxyInstance(newModel,"dataeditor.model.IDataClassModelWrapper");
         } catch(Exception e) {
             e.printStackTrace();
         }

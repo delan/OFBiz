@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<!-- 
+     Demo
+     Revision: 1
+     Mon Apr 10 13:31:09 PDT 2000
+-->
+
+<!DOCTYPE NetworkDesign SYSTEM "file:///c:/workflow/newdesigner/dtd/RoleDomain.dtd">
+
+<RoleDomain id="RoleDomain_Demo">
+  <Name>Demo</Name>
+  <Description></Description>
+  <Role id="TargetAnalyzer">
+    <Name>TargetAnalyzer</Name>
+    <Description></Description>
+    <Privileges></Privileges>
+    <Color><Number>0</Number><Number>0</Number><Number>0</Number></Color>
+    <Position><Number>0</Number><Number>0</Number></Position>
+  </Role>
+  <Role id="Logistician">
+    <Name>Logistician</Name>
+    <Description></Description>
+    <Privileges></Privileges>
+    <Color><Number>0</Number><Number>0</Number><Number>0</Number></Color>
+    <Position><Number>0</Number><Number>0</Number></Position>
+  </Role>
+  <Role id="Planner">
+    <Name>Planner</Name>
+    <Description></Description>
+    <Privileges></Privileges>
+    <Color><Number>0</Number><Number>0</Number><Number>0</Number></Color>
+    <Position><Number>0</Number><Number>0</Number></Position>
+  </Role>
+  <RoleRelationship id="RoleRelationship0001" highRole="Planner" lowRole="Logistician">
+  </RoleRelationship>
+</RoleDomain>

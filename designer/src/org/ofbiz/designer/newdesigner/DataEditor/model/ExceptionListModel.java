@@ -20,8 +20,7 @@ public class ExceptionListModel extends SmartAddRowTableModel implements IExcept
         IExceptionListModel newModel = new ExceptionListModel();
         IExceptionListModelWrapper proxy = null;
         try {
-            proxy = (IExceptionListModelWrapper)GuiModelProxy.newProxyInstance(newModel,
-            "org.ofbiz.designer.newdesigner.DataEditor.model.IExceptionListModelWrapper");
+            proxy = (IExceptionListModelWrapper)GuiModelProxy.newProxyInstance(newModel,"dataeditor.model.IExceptionListModelWrapper");
         } catch(Exception e) {
             e.printStackTrace();
         }

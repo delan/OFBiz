@@ -12,8 +12,7 @@
 	<property name="version" value="$Version$"/>
 
 	<!-- If you got no jikes, replace it with "modern" or "classic" -->
-	<!-- 	<property name="build.compiler" value="jikes"/>-->
-	<property name="build.compiler" value="modern"/>
+	<property name="build.compiler" value="jikes"/>
 	<property name="build.compiler.emacs" value="true"/>
 	
 	<property name="build.dir" value="${basedir}/build"/>

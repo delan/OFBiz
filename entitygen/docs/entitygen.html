@@ -28,14 +28,7 @@ in the Foundation Technology Components document.</p>
 used to describe the data and attributes of the code generated to handle that
 data.</p>
 <h3><a name="XML Descriptor Files">XML Descriptor Files</a></h3>
-<p>The DTD for the entity generator descriptor files can be found <a href="entitygen.dtd">here</a>.
-Some good examples of the entity descriptor XML files are included in the
-commonapp module, in the ofbiz/commonapp/entitydef folder. The two main files
-there are commonapp.xml and datamodel.xml. commonapp.xml contains the entity
-definitions from datamodel.xml that are currently being used in the commonapp
-module. datamodel.xml is the complete data model for the Open For Business
-Project. This data model will evolve as the project continues and as the various
-applications that use it are implemented.</p>
+<p>The DTD for the entity generator descriptor files can be found <a href="entitygen.dtd">here</a>.</p>
 <p>The descriptor file defines an entity which has an Entity EJB, supporting
 Java code, and a corresponding relational database table. It uses Container
 Managed Persistence (CMP), and is meant to be used with one Entity Bean for one
@@ -68,23 +61,13 @@ algorithm, and can expire entries after a given amount of time.</p>
 <p>The fields for the entity are specified in the cmp-field tags of the
 document. Each one of these has a table-name, an sql-type, a field-name, and a
 java-type. The field-name is optional because it can be derived from the
-column-name according to the naming conventions. Zero or more optional validate
-elements may be used to specify validators for the corresponding cmp-field. The
-specified validators will be called in the entity update web event and on
-failure an error message will be returned to the user, and the user will be
-returned to the calling page (see the web update events for details).</p>
-<p>In place of a sql-type, a java-type, and validate elements for each cmp-field,
-a field-type element can be used. This will cause the sql-type, java-type, and
-validate elements from the corresponding field-type-def to be used. This is a
-technique for standardizing data types in the application and also provides an
-easy way to simplify the XML descriptor file.</p>
-<p> Next the primary key is
+column-name according to the naming conventions. Next the primary key is
 defined. The prim-key-class tag allows you to specify the primary key class, but
 it is optional because it can be obtained from the java-type for a single key
 entity or the primary key class (&lt;&lt;package-name&gt;&gt;.&lt;&lt;ejb-name&gt;&gt;PK)
 for multiple key entities. The prim-key-column entries specify which columns
 will be used as the primary key.</p>
-<p>The next section of an entity descriptor is the finder section. Each finder
+<p>The last section of an entity descriptor is the finder section. Each finder
 tag specifies a finder which searches by the columns specified in the
 column-name tags that are the children of the finder tag.&nbsp; When a single
 column-name is specified, a findByColumnName finder is created in the Home
@@ -94,29 +77,7 @@ Iterator instead of a Collection. Finders with multiple column-name tags
 generate the same code except that all of the column-name entries, converted to
 their default field name, or the field-name explicitly specified, will be in the
 name like this: findByColumnOneAndColumnTwo for two columns with field-names
-ColumnOne and ColumnTwo. If an ordering of the find results is desired, the SQL
-order definition string can be put in the order-by tag under the finder tag.</p>
-<p>The relation section can be used to define relationships between this entity
-and other entities. Each relation defines a type of relation which is either one
-or many depending on the cardinality of the related entity to this entity. The
-related-table-name is the name of the related table, and the related-ejb-name is
-the ejb-name of the related entity. One or many key-map elements may be used to
-defined the fields from the current entity that can be used to look up one or
-many of the related entity. If the relation type is one the full primary key of
-the related entity should be included, and the key-map elements should be in the
-order of the prim-key-column elements in the related entity's descriptor. If the relation type is many only part of
-the primary key or a non-primary key field should of the related entity should
-be referenced. A finder for every combination of these used must be declared in
-the related entity's descriptor. In order to increase the usefulness of entity relations they can
-be nested. Using nested relations many-to-many relations through join tables can
-easily be mapped in addition to many other data layouts.</p>
-<p>Entity relation definitions will be used in two main places: the JSP
-ViewEntity.jsp file to show information related to the current entity and
-provide for easy access to viewing and editing related entities; and in the
-Entity.java file to provide convenient methods of looking up related entities.
-The ViewEntity.jsp relation code is pretty much in place now, although it does
-not support recusive relations yet. The Entity.java relation code is not yet in
-place.</p>
+ColumnOne and ColumnTwo.</p>
 <h3><a name="Using Entity Code Generator">Using Entity Code Generator</a></h3>
 <p>The user interface for the Entity Code Generator is all HTML based, and can
 be run in any browser. This is the simplest interface because all of the code
@@ -127,43 +88,31 @@ running. If you are running it locally, you can use the &quot;Browse&quot;
 button to find the file you want to use.</p>
 <p>Once the file is found, a list of entity names (from the ejb-name tag, or
 derived) will be displated in a drop-down selector. Also, certain links will be
-available for generating files or snippets, for the entire collection of
+available for generating files, or snippets, for the entire collection of
 entities in the specified descriptor file.</p>
-<p>Collections of snippets can be generated by clicking on a link in that
-section. Generally these are inserted into specific files in the project.
-Examples of these files can be found in the commonapp module.</p>
-<p>Individual files can be generated and saved all at once by specifying a
-directory to be the base directory, and then clicking go. Files (Java or JSP)
-will be generated under the specified directory in a directory corresponding to
-the package name. For Java files the directory specified is the source root, and
-if classes are compiled in the same directory tree the specified directory can
-be used on the classpath. JSP files are done slightly differently. The first two
-package names are removed (usually org and ofbiz) and the remaining ones are
-used to decide on the directory to use. The code in the JSPs is sometimes
-dependent on the URL path, so the next package name is assumed to be the name of
-the root webapp mount folder. For instance commonapp has the package name
-org.ofbiz.commonapp, and JSP files will be put under the commonapp folder, and
-the contents of that folder should be moved to the webapp folder that will be
-mounted at <a href="http://servername/commonapp">http://servername/commonapp</a>.</p>
 <p>If you select one of the entities and click on &quot;Use&quot;, a list of
-files and snippets for that entity will appear. The files and snippets listed can be used in a number of ways. These files
+files and snippets for that entity will appear.</p>
+<p>The files and snippets listed can be used in a number of ways. These files
 contain no extra markup, so they can be saved as a Java, JSP, XML, or SQL file
 directly from the main page of the entity generator. You can also click on the
-links normally and then view the source of the page to see the properly formatted
+links normally and then view the source of the page to se the properly formatted
 code that was generated.</p>
 <p>Note that with JSP file generation, it is not possible to use the
 &quot;&lt;%&quot; characters for the Java elements, because they would be
 interpreted by the JSP engine at generation time. So, the characters &quot;[ltp]&quot; are inserted
 everywhere there should be a &quot;&lt;%&quot; in the generated JSP. Simply do a
 search and replace on the generated JSP and change &quot;[ltp]&quot; to
-&quot;&lt;%&quot;. This is not necessary when generating JSPs and having the
-code generator save them automatically to a directory. In that case the
-generator does the search and replace for you.</p>
+&quot;&lt;%&quot;.</p>
+<p>Everything should compile clean if the descriptor has correct Java types, et
+cetera in it. There are a couple of exceptions. The main one is the
+FindEntity.jsp output file. If there are multiple primary keys, more &quot;searchParamX&quot;
+parameters will have to be added. The same is true for finders with multiple
+fields.</p>
 <h3><a name="Modifying Generated Code">Modifying Generated Code</a></h3>
 
 <p>With any code generator the question always comes up about what to do when
 the generated code is modified, and then the definition for the entity is
-changed or a template is changed, and you want to regenerate the code. There are a number of ways to
+changed, and you want to regenerate the code. There are a number of ways to
 approach this, but in a template driven code generator there are only two good
 ways I can think of.</p>
 <p>The first one is the save the Java files with a suffix like &quot;Gen&quot;
@@ -176,14 +125,7 @@ synchronized.</p>
 file, but save it under a different name so that the original is maintained.
 When that is done you can use a diff/merge utility to get the changes you want
 from each of the two files. This works well for all types of files, and not just
-the Java files, including the SQL, JSP, and XML files. To do this most
-effectively an original of each file should be saved before modifying it. This
-original file can be used along with the modified copy of the original and the
-newly regenerated file. These three files can be used with a 3 way diff utility
-like the Unix command diff3 to create a merged file with the custom changes and
-the changes in regenerated code both in place. Collisions will be marked and
-must be handled manually, but other than that the process is very automatic (as
-evidenced by its success in CVS).</p>
+the Java files, including the SQL, JSP, and XML files.</p>
 <p>The thing to remember is that the real intention of the code generator is to
 get new things off the ground quickly, it is not an exhaustive all including
 code generator that completely models the code to be generated in the descriptor

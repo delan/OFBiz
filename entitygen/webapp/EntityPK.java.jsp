@@ -31,45 +31,60 @@ import java.io.*;
  *@version    <%=entity.version%>
  */
 public class <%=entity.ejbName%>PK implements Serializable
-{<%for(i=0;i<entity.pks.size();i++){%>
-  /** The variable of the <%=((EgField)entity.pks.elementAt(i)).columnName%> column of the <%=entity.tableName%> table. */
-  public <%=((EgField)entity.pks.elementAt(i)).javaType%> <%=((EgField)entity.pks.elementAt(i)).fieldName%>;<%}%>
+{
 
-  /** Constructor for the <%=entity.ejbName%>PK object */
-  public <%=entity.ejbName%>PK() { }
-
-  /** Constructor for the <%=entity.ejbName%>PK object
 <%for(i=0;i<entity.pks.size();i++){%>
-   *@param  <%=((EgField)entity.pks.elementAt(i)).fieldName%>                  EgField of the <%=((EgField)entity.pks.elementAt(i)).columnName%> column.<%}%>
+  /**
+   *  The variable of the <%=((Field)entity.pks.elementAt(i)).columnName%> column of the <%=entity.tableName%> table.
    */
-  public <%=entity.ejbName%>PK(<%=entity.primKeyClassNameString()%>)
-  {<%for(i=0;i<entity.pks.size();i++){%>
-    this.<%=((EgField)entity.pks.elementAt(i)).fieldName%> = <%=((EgField)entity.pks.elementAt(i)).fieldName%>;<%}%>
+  public <%=((Field)entity.pks.elementAt(i)).javaType%> <%=((Field)entity.pks.elementAt(i)).fieldName%>;
+<%}%>
+
+  /**
+   *  Constructor for the <%=entity.ejbName%>PK object
+   */
+  public <%=entity.ejbName%>PK()
+  {
   }
 
-  /** Determines the equality of two <%=entity.ejbName%>PK objects, overrides the default equals
-   *@param  obj  The object (<%=entity.ejbName%>PK) to compare this two
-   *@return      boolean stating if the two objects are equal
+  /**
+   *  Constructor for the <%=entity.ejbName%>PK object
+   *
+<%for(i=0;i<entity.pks.size();i++){%>
+   *@param  <%=((Field)entity.pks.elementAt(i)).fieldName%>                  Field of the <%=((Field)entity.pks.elementAt(i)).columnName%> column.<%}%>
+   */
+  public <%=entity.ejbName%>PK(<%=entity.primKeyClassNameString()%>)
+  {
+<%for(i=0;i<entity.pks.size();i++){%>
+    this.<%=((Field)entity.pks.elementAt(i)).fieldName%> = <%=((Field)entity.pks.elementAt(i)).fieldName%>;<%}%>
+  }
+
+  /**
+   *  Description of the Method
+   *
+   *@param  obj  Description of Field
+   *@return      Description of the Returned Value
    */
   public boolean equals(Object obj)
   {
     if(this.getClass().equals(obj.getClass()))
     {
       <%=entity.ejbName%>PK that = (<%=entity.ejbName%>PK)obj;
-      return<%for(i=0;i<entity.pks.size();i++){%>
-            this.<%=((EgField)entity.pks.elementAt(i)).fieldName%>.equals(that.<%=((EgField)entity.pks.elementAt(i)).fieldName%>) &&<%}%>
+      return
+<%for(i=0;i<entity.pks.size();i++){%>
+            this.<%=((Field)entity.pks.elementAt(i)).fieldName%>.equals(that.<%=((Field)entity.pks.elementAt(i)).fieldName%>) &&<%}%>
             true; //This "true" is a dummy thing to take care of the last &&, just for laziness sake.
     }
     return false;
   }
 
-  /** Creates a hashCode for the combined primary keys, using the default String hashCode, overrides the default hashCode
-   *@return    Hashcode corresponding to this primary key
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Returned Value
    */
-  public int hashCode() { return (<%=entity.pkNameString(" + \"::\" + ","")%>).hashCode(); }
-
-  /** Creates a String for the combined primary keys, overrides the default toString
-   *@return    String corresponding to this primary key
-   */
-  public String toString() { return <%=entity.pkNameString(" + \"::\" + ","")%>; }
+  public int hashCode()
+  {
+    return (<%=entity.pkNameString(" + ","")%>).hashCode();
+  }
 }

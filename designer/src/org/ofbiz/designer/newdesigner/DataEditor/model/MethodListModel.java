@@ -28,8 +28,7 @@ public class MethodListModel extends SmartAddRowTableModel implements IMethodLis
         IMethodListModel newModel = new MethodListModel();
         IMethodListModelWrapper proxy = null;
         try {
-            proxy = (IMethodListModelWrapper)GuiModelProxy.newProxyInstance(newModel,
-            "org.ofbiz.designer.newdesigner.DataEditor.model.IMethodListModelWrapper");
+            proxy = (IMethodListModelWrapper)GuiModelProxy.newProxyInstance(newModel,"dataeditor.model.IMethodListModelWrapper");
         } catch(Exception e) {
             e.printStackTrace();
         }

@@ -248,12 +248,9 @@ public class NetworkEditor extends ContainerView {
 
         if(!fileName.endsWith(".xml")) fileName += ".xml";
         if(!domainEnvFile.endsWith(".xml")) domainEnvFile += ".xml";
-        
-        String taskFilePath = XmlWrapper.XMLDIR + "\\task\\" + fileName;
-        String domainEnvFilePath = XmlWrapper.XMLDIR + "\\domainenv\\" + domainEnvFile;
-        
-        XmlWrapper taskXml = XmlWrapper.openDocument(new File(taskFilePath));
-        XmlWrapper domainXml = XmlWrapper.openDocument(new File(domainEnvFilePath));
+
+        XmlWrapper taskXml = XmlWrapper.openDocument(new File(fileName));
+        XmlWrapper domainXml = XmlWrapper.openDocument(new File(domainEnvFile));
 
         rootTask =  (ITaskWrapper)taskXml.getIdRef(rootTaskName);
         domainEnv = (IDomainEnvWrapper)domainXml.getRoot();
@@ -550,7 +547,7 @@ public class NetworkEditor extends ContainerView {
                                   }
                               });
         String xmlDirectory = System.getProperty("WF_XMLDIR");
-        dlg.setDirectory(xmlDirectory + "\\task");
+        dlg.setDirectory(xmlDirectory + "\\org.ofbiz.designer.task");
         dlg.setVisible(true);
         String dir = dlg.getDirectory();
         String file = dlg.getFile();

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE site-conf 
+  PUBLIC "-//OFBiz//DTD Request Config//EN" 
+  "http://www.ofbiz.org/dtds/site-conf.dtd">
+
+<site-conf>
+    <description>CommonApp Site Configuration File</description>
+    <owner>The Open For Business Project (c) 2001 </owner>
+    <errorpage>/error/error.jsp</errorpage>
+    
+    <handler name="java" class="org.ofbiz.core.event.JavaEventHandler"/>
+    <handler name="soap" class="org.ofbiz.core.event.SOAPEventHandler"/>
+    <handler name="service" class="org.ofbiz.core.event.ServiceEventHandler"/>
+    
+    <!-- Security Mappings -->
+    <request-map uri="checkLogin" edit="false">
+      <description>Verify a user is logged in.</description>
+      <security https="false" auth="false"/>
+      <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkLogin" />
+      <response name="success" type="view" value="name" />
+      <response name="error" type="view" value="login" />
+    </request-map>
+
+    <request-map uri="login">
+      <security https="true" auth="false"/>
+      <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="login"/>
+      <response name="success" type="view" value="main"/>
+      <response name="error" type="view" value="login"/>
+    </request-map>
+
+    <request-map uri="logout">
+      <security https="true" auth="true"/>
+      <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="logout"/>
+      <response name="success" type="view" value="main"/>
+      <response name="error" type="view" value="main"/>
+    </request-map>
+    <!-- End of Security Mappings -->
+
+    <!-- Request Mappings -->
+	<request-map uri="SOAPService">
+	    <event type="soap"/>
+	    <response name="error" type="none"/>
+	    <response name="success" type="none"/>
+	</request-map>
+	
+	<request-map uri="TestService">
+	    <event type="service" invoke="testScv" />
+	    <response name="error" type="view" value="error"/>
+	    <response name="success" type="view" value="error"/>
+	</request-map>
+	
+	<request-map uri="yahoo">
+	    <response name="success" type="url" value="http://www.yahoo.com"/>
+	</request-map>
+	
+    <request-map uri="view">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+    
+    <request-map uri="chain">
+        <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
+        <response name="success" type="request" value="/view"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+
+    <request-map uri="main">
+    	<security https="false" auth="false"/>
+    	<response name="success" type="view" value="main"/>
+    </request-map>
+    
+    <request-map uri="sitemap">
+    	<security https="false" auth="false"/>
+    	<response name="success" type="view" value="sitemap"/>
+    </request-map>
+    
+    <request-map uri="install">
+    	<security https="false" auth="false"/>
+    	<response name="success" type="view" value="install"/>
+    </request-map>
+    
+    <request-map uri="entitymaint">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="entitymaint"/>
+    </request-map>
+
+    <request-map uri="entityref">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="entityref"/>
+    </request-map>
+
+    <request-map uri="xmldsdump">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="xmldsdump"/>
+    </request-map>
+
+    <request-map uri="xmldsimport">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="xmldsimport"/>
+    </request-map>
+
+    <request-map uri="FindGeneric">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindGeneric"/>
+    </request-map>
+    
+    <request-map uri="ViewGeneric">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="ViewGeneric"/>
+    </request-map>
+    
+    <request-map uri="UpdateGeneric">
+    	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.entity.GenericWebEvent" invoke="updateGeneric"/>
+        <response name="success" type="view" value="ViewGeneric"/>
+        <response name="error" type="view" value="ViewGeneric"/>
+    </request-map>
+
+    <request-map uri="FindUtilCache">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindUtilCache"/>
+    </request-map>
+    
+    <request-map uri="FindUtilCacheClear">
+    	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="clearEvent"/>
+        <response name="success" type="view" value="FindUtilCache"/>
+        <response name="error" type="view" value="FindUtilCache"/>
+    </request-map>
+
+    <request-map uri="EditUtilCache">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditUtilCache"/>
+    </request-map>
+    
+    <request-map uri="EditUtilCacheUpdate">
+    	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="updateEvent"/>
+        <response name="success" type="view" value="EditUtilCache"/>
+        <response name="error" type="view" value="EditUtilCache"/>
+    </request-map>
+    
+    <request-map uri="EditUtilCacheClear">
+    	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="clearEvent"/>
+        <response name="success" type="view" value="EditUtilCache"/>
+        <response name="error" type="view" value="EditUtilCache"/>
+    </request-map>
+
+    <request-map uri="FindUtilCacheElements">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindUtilCacheElements"/>
+    	<response name="error" type="view" value="FindUtilCacheElements"/>
+    </request-map>
+    
+    <request-map uri="FindUtilCacheElementsRemoveElement">
+    	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.util.UtilCache" invoke="removeElementEvent"/>
+        <response name="success" type="view" value="FindUtilCacheElements"/>
+        <response name="error" type="view" value="FindUtilCacheElements"/>
+    </request-map>
+
+    <request-map uri="viewdatafile">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="viewdatafile"/>
+    </request-map>
+
+    <request-map uri="logikus">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="logikus"/>
+    </request-map>
+
+    <request-map uri="readxpdl">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="readxpdl"/>
+    </request-map>
+    
+
+    <!-- end of request mappings -->
+
+    <!-- View Mappings -->
+    <view-map name="login" page="/login.jsp"/>
+    <view-map name="error" page="/error/error.jsp"/>
+    <view-map name="main" page="/main.jsp"/>
+    <view-map name="sitemap" page="/sitemap.jsp"/>
+    <view-map name="install" page="/install.jsp"/>
+
+    <view-map name="entitymaint" page="/entity/entitymaint.jsp"/>
+    <view-map name="entityref" page="/entity/entityref.jsp"/>
+    <view-map name="entityref_list" page="/entity/entityref_list.jsp"/>
+    <view-map name="entityref_main" page="/entity/entityref_main.jsp"/>
+    <view-map name="FindGeneric" page="/entity/FindGeneric.jsp"/>
+    <view-map name="ViewGeneric" page="/entity/ViewGeneric.jsp"/>
+
+    <view-map name="tablesMySql" page="/entity/tablesMySql.jsp"/>
+    <view-map name="droptablesMySql" page="/entity/droptablesMySql.jsp"/>
+    <view-map name="droptablesplain" page="/entity/droptablesplain.jsp"/>
+    <view-map name="dataMySql" page="/entity/dataMySql.jsp"/>
+    <view-map name="ModelWriter" page="/entity/ModelWriter.jsp"/>
+    <view-map name="ModelGroupWriter" page="/entity/ModelGroupWriter.jsp"/>
+    <view-map name="ModelInduceFromDb" page="/entity/ModelInduceFromDb.jsp"/>
+    <view-map name="EditEntity" page="/entity/EditEntity.jsp"/>
+    <view-map name="checkdb" page="/entity/checkdb.jsp"/>
+    <view-map name="xmldsdump" page="/entity/xmldsdump.jsp"/>
+    <view-map name="xmldsimport" page="/entity/xmldsimport.jsp"/>
+
+    <view-map name="EditUtilCache" page="/cache/EditUtilCache.jsp"/>
+    <view-map name="FindUtilCache" page="/cache/FindUtilCache.jsp"/>
+    <view-map name="FindUtilCacheElements" page="/cache/FindUtilCacheElements.jsp"/>
+
+    <view-map name="viewdatafile" page="/datafile/viewdatafile.jsp"/>
+    <view-map name="logikus" page="/rules/logikus.jsp"/>
+    <view-map name="readxpdl" page="/workflow/readxpdl.jsp"/>
+    <!-- end of view mappings -->
+    
+</site-conf>
+

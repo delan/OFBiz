@@ -21,7 +21,7 @@ public class RoleDomainView extends LatticeView {
 
 
     static {
-        DATA_DIR = DATA_DIR = XML_DIR + "/roledomain/";
+        DATA_DIR = DATA_DIR = XML_DIR + "/org.ofbiz.designer.roledomain/";
         ADD_BUTTON_NAME = "New Role";
         TITLE = "Role Editor";
         ROOT_XML_TAG = "RoleDomain";

@@ -33,7 +33,7 @@ class NRLRTGenerator extends BaseRTGenerator {
 		xtargetDir = _xtargetDir;
 		rootTaskName = _rootTaskName;
 		xmlDir = System.getProperty("WF_XMLDIR");
-		xmlFile = xmlDir + "\\task\\" + workflowName + ".xml";
+		xmlFile = xmlDir + "\\org.ofbiz.designer.task\\" + workflowName + ".xml";
 
 
 		NRLRTGenerator or = new NRLRTGenerator();

@@ -714,9 +714,7 @@ public class TaskSupportClass extends AbstractDataSupportClass implements ITaskS
         String cd = root.getAbsolutePath();
         int index = cd.lastIndexOf("\\");
         cd = cd.substring(0, index);
-        // david
-        //dataURL = "file:///" + cd + "\\..\\data\\" + dataURL + ".xml";
-        dataURL = "file:///" + cd + "\\data\\" + dataURL + ".xml";
+        dataURL = "file:///" + cd + "\\..\\data\\" + dataURL + ".xml";
         return dataURL;
     }
 

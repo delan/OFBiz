@@ -20,7 +20,7 @@ public class DomainEnvView extends LatticeView {
     }
 
     static {
-        DATA_DIR = DATA_DIR = XML_DIR + "/domainenv/";
+        DATA_DIR = DATA_DIR = XML_DIR + "/org.ofbiz.designer.domainenv/";
         ADD_BUTTON_NAME = "New Domain";
         TITLE = "Domain Editor";
         ROOT_XML_TAG = "DomainEnv";

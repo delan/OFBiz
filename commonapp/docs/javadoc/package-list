@@ -1,0 +1,6 @@
+org.ofbiz.commonapp.common
+org.ofbiz.commonapp.person
+org.ofbiz.commonapp.security
+org.ofbiz.commonapp.security.person
+org.ofbiz.commonapp.security.securitygroup
+org.ofbiz.commonapp.webevent

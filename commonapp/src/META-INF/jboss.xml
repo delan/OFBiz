@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="Cp1252"?>
+
+<!-- 
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+
+<jboss>
+  <resource-managers>
+    <resource-manager res-class="org.jboss.ejb.deployment.JDBCResource">
+      <res-name>jdbc/MainDataSource</res-name>
+      <res-jndi-name>MainDataSource</res-jndi-name>
+    </resource-manager>
+  </resource-managers>
+
+  <enterprise-beans>
+    <entity>
+      <ejb-name>Person</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.person.PersonHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PersonAttribute</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.person.PersonAttributeHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PersonType</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.person.PersonTypeHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PersonTypeAttribute</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.person.PersonTypeAttributeHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PersonPersonType</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.person.PersonPersonTypeHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+
+    <entity>
+      <ejb-name>SecurityGroup</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.security.securitygroup.SecurityGroupHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>SecurityPermission</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.security.securitygroup.SecurityPermissionHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>SecurityGroupPermission</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.security.securitygroup.SecurityGroupPermissionHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>PersonSecurityGroup</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.security.person.PersonSecurityGroupHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+<!--
+    <entity>
+      <ejb-name>Product</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.catalog.product.ProductHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>FixedAsset</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.fixedasset.fixedasset.FixedAssetHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+    <entity>
+      <ejb-name>FixedAssetAttribute</ejb-name>
+      <jndi-name>org.ofbiz.commonapp.fixedasset.fixedasset.FixedAssetAttributeHome</jndi-name>
+      <configuration-name>Standard CMP EntityBean</configuration-name>
+      <resource-ref>
+        <res-ref-name>jdbc/MainDataSource</res-ref-name>
+        <resource-name>jdbc/MainDataSource</resource-name>
+      </resource-ref>
+    </entity>
+-->
+  </enterprise-beans>
+</jboss>
+
+
+
+

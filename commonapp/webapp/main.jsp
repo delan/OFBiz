@@ -26,81 +26,21 @@
  *@created    May 22 2001
  *@version    1.0
  */
-%>
+%> 
 
-<%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="org.ofbiz.core.security.*" %>
+<%@ page import="org.ofbiz.commonapp.common.*" %>
 
-<% pageContext.setAttribute("PageName", "Main Page"); %> 
+<%@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %> 
+<webevent:dispatch loginRequired="false" />
+
+<% pageContext.setAttribute("PageName", "main"); %> 
 
 <%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
-<BR>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
-        <tr>
-          <TD align=left width='90%' >
-            <div class='boxhead'>&nbsp;Commonapp Main Page</div>
-          </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
-        <tr>
-          <td>
-<%if(userLogin == null) {%>
-<DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
-<BR>
-<%}%>
-<DIV class='tabletext'>The purpose of this Common Application Components administration package is to contain all of the 
-administration tools that directly relate to the Common Application Components. The Common Application Component layer is
-defined in the architecture documents as the container of all entity definitions shared by the vertical applications that
-are built on top of these entity definitions and the tools surrounding them such as the entity, workflow, and rule engines,
-content and knowledge management, data analysis, and so forth.</DIV>
-<BR>
-<DIV class='tabletext'>This application is primarily intended for developers and system administrators. It contains tools for viewing and changing entity 
-definitions, checking them with the current database, and generating text based on those definitions. </DIV>
-<ul>
-  <%if(security.hasPermission("ENTITY_MAINT", session)){%>
-    <li><DIV class='tabletext'>Entity Maintenance Utilities</div>
-    <ul>
-      <li><a href="<%=response.encodeURL(controlPath + "/entitymaint")%>" class='buttontext'>Entity Data Maintenance</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/entityref")%>" class='buttontext' target='_blank'>Entity Reference & Editing Tools</A>
-      <ul>
-        <li><a href="<%=response.encodeURL(controlPath + "/view/checkdb")%>" class='buttontext'>Check/Update Database</A>
-        <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" class='buttontext' target='_blank'>Generate Entity Model XML (all in one)</A>
-        <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter?savetofile=true")%>" target='_blank' class='buttontext'>Save Entity Model XML to Files</A><BR>
-        <li><a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter")%>" target='_blank' class='buttontext'>Generate Entity Group XML</A><BR>
-        <li><a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter?savetofile=true")%>" target='_blank' class='buttontext'>Save Entity Group XML to File</A><BR>
-        <li><a href="<%=response.encodeURL(controlPath + "/view/EditEntity")%>" class='buttontext' target='_blank'>Edit Entity Definitions</A>
-      </ul>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/xmldsdump")%>" class='buttontext'>XML Data Export</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/xmldsimport")%>" class='buttontext'>XML Data Import</A>
-<%--
-      <li><a href="<%=response.encodeURL(controlPath + "/view/tablesMySql")%>" class='buttontext'>MySQL Table Creation SQL</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/dataMySql")%>" class='buttontext'>MySQL Auto Data SQL</A>
---%>
-    </ul>
-  <%}%>
-  <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
-    <li><a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Cache Maintenance</A>
-  <%}%>
-</ul>
-
-<DIV class='tabletext'>NOTE: If you have not already run the installation data loading script, <a href="<%=response.encodeURL(controlPath + "/install")%>" class='buttontext'>click here</a> to run it.</DIV>
-<DIV class='tabletext'>DOUBLE NOTE: If you are deploying this version of commonapp on a public server, remove the install.jsp page and these two paragraphs about it.</DIV>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
+<%@ include file="/includes/onecolumn.jsp" %> 
+<br>
+<h2 style='margin:0;'>Very boring main page!</h2>
+<p>For something interesting, see the site map.</p>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
+ 

@@ -29,13 +29,16 @@
  */
 %>
 
+[ltp]@ page import="<%=entity.packageName%>.*" %>
 [ltp]@ page import="java.text.*" %>
 [ltp]@ page import="java.util.*" %>
-[ltp]@ page import="org.ofbiz.core.util.*" %>
+[ltp]@ page import="org.ofbiz.commonapp.common.*" %>
+[ltp]@ page import="org.ofbiz.commonapp.webevent.*" %>
 [ltp]@ page import="org.ofbiz.commonapp.security.*" %>
-[ltp]@ page import="<%=entity.packageName%>.*" %>
 
-[ltp]String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
+[ltp]@ taglib uri="/WEB-INF/webevent.tld" prefix="webevent" %>
+<webevent:dispatch loginRequired="true" />
+
 [ltp]pageContext.setAttribute("PageName", "Find<%=entity.ejbName%>"); %>
 
 [ltp]@ include file="/includes/header.jsp" %>
@@ -47,14 +50,14 @@
 [ltp]boolean hasDeletePermission=Security.hasEntityPermission("<%=entity.tableName%>", "_DELETE", session);%>
 [ltp]if(hasViewPermission){%>
 [ltp]
-  String rowClassTop1 = "viewOneTR1";
-  String rowClassTop2 = "viewOneTR2";
-  String rowClassTop = "";
-  String rowClassResultIndex = "viewOneTR2";
-  String rowClassResultHeader = "viewOneTR1";
-  String rowClassResult1 = "viewManyTR1";
-  String rowClassResult2 = "viewManyTR2";
-  String rowClassResult = "";
+  String rowColorTop1 = "99CCFF";
+  String rowColorTop2 = "CCFFFF";
+  String rowColorTop = "";
+  String rowColorResultIndex = "CCFFFF";
+  String rowColorResultHeader = "99CCFF";
+  String rowColorResult1 = "99FFCC";
+  String rowColorResult2 = "CCFFCC";
+  String rowColorResult = "";
 
   String searchType = request.getParameter("SEARCH_TYPE");
   String searchParam1 = UtilFormatOut.checkNull(request.getParameter("SEARCH_PARAMETER1"));
@@ -85,17 +88,17 @@
   String <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName = (String)session.getAttribute("CACHE_SEARCH_RESULTS_NAME");
   if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>Array == null || <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName == null || curFindString.compareTo(<%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName) != 0 || viewIndex == 0)
   {
-    Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
-    Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName:" + <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName);
+    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("-=-=-=-=- Current Array not found in session, getting new one...");
+    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("-=-=-=-=- curFindString:" + curFindString + " <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName:" + <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName);
 
     if(searchType.compareTo("all") == 0) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection = <%=entity.ejbName%>Helper.findAll();
-<%for(i=0;i<entity.finders.size();i++){%><%EgFinder finderDesc = (EgFinder)entity.finders.elementAt(i);%>
-    else if(searchType.compareTo("<%=entity.classNameString(finderDesc.fields,"And","")%>") == 0) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection = <%=entity.ejbName%>Helper.findBy<%=entity.classNameString(finderDesc.fields,"And","")%>(<%=entity.fieldsStringList(finderDesc.fields,"searchParam",", ",true)%>);
+<%for(i=0;i<entity.finders.size();i++){%><%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
+    else if(searchType.compareTo("<%=entity.classNameString(finderDesc.fields,"And","")%>") == 0) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection = <%=entity.ejbName%>Helper.findBy<%=entity.classNameString(finderDesc.fields,"And","")%>(searchParam1);
 <%}%>
     else if(searchType.compareTo("primaryKey") == 0)
     {
       <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection = new LinkedList();
-      <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%>Temp = <%=entity.ejbName%>Helper.findByPrimaryKey(<%=entity.fieldsStringList(entity.pks,"searchParam",", ",true)%>);
+      <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%>Temp = <%=entity.ejbName%>Helper.findByPrimaryKey(searchParam1);
       if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>Temp != null) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection.add(<%=GenUtil.lowerFirstChar(entity.ejbName)%>Temp);
     }
     if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection != null) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Array = <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection.toArray();
@@ -112,17 +115,17 @@
   int arraySize = 0;
   if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>Array!=null) arraySize = <%=GenUtil.lowerFirstChar(entity.ejbName)%>Array.length;
   if(arraySize<highIndex) highIndex=arraySize;
-  //Debug.logInfo("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
+  if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
 %>
 <h3 style=margin:0;>Find <%=entity.ejbName%>s</h3>
 Note: you may use the '%' character as a wildcard, to replace any other letters.
 <table cellpadding="2" cellspacing="2" border="0">
-  [ltp]rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="[ltp]=rowClassTop%>">
-    <form method="post" action="[ltp]=response.encodeURL(controlPath + "/Find<%=entity.ejbName%>")%>" style=margin:0;>
+  [ltp]rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="[ltp]=rowColorTop%>">
+    <form method="post" action="Find<%=entity.ejbName%>.jsp" style=margin:0;>
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
-        <%for(int j=0;j<entity.pks.size();j++){%>
+<%for(int j=0;j<entity.pks.size();j++){%>
           <input type="text" name="SEARCH_PARAMETER<%=j+1%>" value="" size="20"><%}%>
           (Must be exact)
       </td>
@@ -131,13 +134,14 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       </td>
     </form>
   </tr>
-<%for(i=0;i<entity.finders.size();i++){%><%EgFinder finderDesc = (EgFinder)entity.finders.elementAt(i);%>
-  [ltp]rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="[ltp]=rowClassTop%>">
+<%for(i=0;i<entity.finders.size();i++){%>
+  <%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
+  [ltp]rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="[ltp]=rowColorTop%>">
     <td valign="top"><%=entity.classNameString(finderDesc.fields," and ","")%>: </td>
-    <form method="post" action="[ltp]=response.encodeURL(controlPath + "/Find<%=entity.ejbName%>")%>" style=margin:0;>
+    <form method="post" action="Find<%=entity.ejbName%>.jsp" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="<%=entity.classNameString(finderDesc.fields,"And","")%>">
-      <%for(int j=0;j<finderDesc.fields.size();j++){%>
+<%for(int j=0;j<finderDesc.fields.size();j++){%>
         <input type="text" name="SEARCH_PARAMETER<%=j+1%>" value="" size="20"><%}%>
       </td>
       <td valign="top">
@@ -146,9 +150,9 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 <%}%>
-  [ltp]rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="[ltp]=rowClassTop%>">
+  [ltp]rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="[ltp]=rowColorTop%>">
     <td valign="top">Display All: </td>
-    <form method="post" action="[ltp]=response.encodeURL(controlPath + "/Find<%=entity.ejbName%>")%>" style=margin:0;>
+    <form method="post" action="Find<%=entity.ejbName%>.jsp" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="all">
       </td>
@@ -161,21 +165,21 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b><%=entity.ejbName%>s found by:&nbsp; [ltp]=searchType%> : [ltp]=UtilFormatOut.checkNull(searchParam1)%> : [ltp]=UtilFormatOut.checkNull(searchParam2)%> : [ltp]=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 [ltp]if(hasCreatePermission){%>
-  <a href="[ltp]=response.encodeURL("View<%=entity.ejbName%>")%>" class="buttontext">[Create New <%=entity.ejbName%>]</a>
+  <a href="Edit<%=entity.ejbName%>.jsp" class="buttontext">[Create <%=entity.ejbName%>]</a>
 [ltp]}%>
 <table border="0" width="100%" cellpadding="2">
 [ltp] if(arraySize > 0) { %>
-    <tr class="[ltp]=rowClassResultIndex%>">
+    <tr bgcolor="[ltp]=rowColorResultIndex%>">
       <td align="left">
         <b>
         [ltp] if(viewIndex > 0) { %>
-          <a href="[ltp]=response.encodeURL(controlPath + "/Find<%=entity.ejbName%>?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+          <a href="Find<%=entity.ejbName%>.jsp?[ltp]=curFindString%>&VIEW_SIZE=[ltp]=viewSize%>&VIEW_INDEX=[ltp]=viewIndex-1%>" class="buttontext">[Previous]</a> |
         [ltp] } %>
         [ltp] if(arraySize > 0) { %>
           [ltp]=lowIndex%> - [ltp]=highIndex%> of [ltp]=arraySize%>
         [ltp] } %>
         [ltp] if(arraySize>highIndex) { %>
-          | <a href="[ltp]=response.encodeURL(controlPath + "/Find<%=entity.ejbName%>?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+          | <a href="Find<%=entity.ejbName%>.jsp?[ltp]=curFindString%>&VIEW_SIZE=[ltp]=viewSize%>&VIEW_INDEX=[ltp]=viewIndex+1%>" class="buttontext">[Next]</a>
         [ltp] } %>
         </b>
       </td>
@@ -184,10 +188,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 </table>
 
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
-    <tr class="[ltp]=rowClassResultHeader%>">
+    <tr bgcolor="[ltp]=rowColorResultHeader%>">
   <%for(i=0;i<entity.fields.size();i++){%>
-      <td><div class="tabletext"><b><nobr><%=((EgField)entity.fields.elementAt(i)).columnName%></nobr></b></div></td><%}%>
+      <td><div class="tabletext"><b><nobr><%=((Field)entity.fields.elementAt(i)).columnName%></nobr></b></div></td><%}%>
       <td>&nbsp;</td>
+      [ltp]if(hasUpdatePermission){%>
+        <td>&nbsp;</td>
+      [ltp]}%>
       [ltp]if(hasDeletePermission){%>
         <td>&nbsp;</td>
       [ltp]}%>
@@ -203,50 +210,45 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
     {
 %>
-    [ltp]rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="[ltp]=rowClassResult%>">
+    [ltp]rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="[ltp]=rowColorResult%>">
   <%for(i=0;i<entity.fields.size();i++){%>
       <td>
-        <div class="tabletext"><%if(((EgField)entity.fields.elementAt(i)).javaType.equals("Timestamp") || ((EgField)entity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
+        <div class="tabletext">
+    <%if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Timestamp") >= 0){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
         if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
         {
-          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();
+          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();
           if(timeStamp  != null)
           {
-            dateString = UtilDateTime.toDateString(timeStamp);
-            timeString = UtilDateTime.toTimeString(timeStamp);
+            dateString = UtilTimestamp.toDateString(timeStamp);
+            timeString = UtilTimestamp.toTimeString(timeStamp);
           }
         }
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
-      [ltp]}%><%} else if(((EgField)entity.fields.elementAt(i)).javaType.equals("Date") || ((EgField)entity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
-      [ltp]{
-        String dateString = null;
-        String timeString = null;
-        if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
-        {
-          java.util.Date date = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>();
-          if(date  != null)
-          {
-            dateString = UtilDateTime.toDateString(date);
-            timeString = UtilDateTime.toTimeString(date);
-          }
-        }
-      %>
-      [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
-      [ltp]}%><%}else if(((EgField)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((EgField)entity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((EgField)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((EgField)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>())%><%}else{%>
-      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((EgField)entity.fields.elementAt(i)).fieldName)%>())%><%}%>
+      [ltp]}%>
+    <%}else if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
+      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%>
+    <%}else{%>
+      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%>
+    <%}%>
         &nbsp;</div>
-      </td><%}%>
-      <td>
-        <a href="[ltp]=response.encodeURL(controlPath + "/View<%=entity.ejbName%>?" + <%=entity.httpArgListFromClass(entity.pks)%>)%>" class="buttontext">[View]</a>
       </td>
+  <%}%>
+      <td>
+        <a href="View<%=entity.ejbName%>.jsp?<%=entity.httpArgListFromClass(entity.pks)%>" class="buttontext">[View]</a>
+      </td>
+      [ltp]if(hasUpdatePermission){%>
+        <td>
+          <a href="Edit<%=entity.ejbName%>.jsp?<%=entity.httpArgListFromClass(entity.pks)%>" class="buttontext">[Edit]</a>
+        </td>
+      [ltp]}%>
       [ltp]if(hasDeletePermission){%>
         <td>
-          <a href="[ltp]=response.encodeURL(controlPath + "/Update<%=entity.ejbName%>?UPDATE_MODE=DELETE&" + <%=entity.httpArgListFromClass(entity.pks)%> + "&" + curFindString)%>" class="buttontext">[Delete]</a>
+          <a href="Find<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&<%=entity.httpArgListFromClass(entity.pks)%>&[ltp]=curFindString%>" class="buttontext">[Delete]</a>
         </td>
       [ltp]}%>
     </tr>
@@ -257,8 +259,8 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
  else
  {
 %>
-[ltp]rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="[ltp]=rowClassResult%>">
-<td colspan="<%=entity.fields.size() + 2%>">
+[ltp]rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="[ltp]=rowColorResult%>">
+<td colspan="8">
 <h3>No <%=entity.ejbName%>s Found.</h3>
 </td>
 </tr>
@@ -266,26 +268,26 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 </table>
 
 <table border="0" width="100%" cellpadding="2">
-[ltp] if(arraySize > 0) { %>
-    <tr class="[ltp]=rowClassResultIndex%>">
-      <td align="left">
-        <b>
-        [ltp] if(viewIndex > 0) { %>
-          <a href="[ltp]=response.encodeURL(controlPath + "/Find<%=entity.ejbName%>?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
-        [ltp] } %>
-        [ltp] if(arraySize > 0) { %>
-          [ltp]=lowIndex%> - [ltp]=highIndex%> of [ltp]=arraySize%>
-        [ltp] } %>
-        [ltp] if(arraySize>highIndex) { %>
-          | <a href="[ltp]=response.encodeURL(controlPath + "/Find<%=entity.ejbName%>?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
-        [ltp] } %>
-        </b>
-      </td>
-    </tr>
-[ltp] } %>
+[ltp]if(arraySize > 0){%>
+  <tr bgcolor="[ltp]=rowColorResultIndex%>">
+    <td align="left">
+      <b>
+      [ltp] if(viewIndex > 0) { %>
+      <a href="Find<%=entity.ejbName%>.jsp?[ltp]=curFindString%>&VIEW_SIZE=[ltp]=viewSize%>&VIEW_INDEX=[ltp]=viewIndex-1%>" class="buttontext">[Previous]</a> |
+      [ltp] } %>
+      [ltp] if(arraySize > 0) { %>
+      [ltp]=lowIndex%> - [ltp]=highIndex%> of [ltp]=arraySize%>
+      [ltp] } %>
+      [ltp] if(arraySize>highIndex) { %>
+      | <a href="Find<%=entity.ejbName%>.jsp?[ltp]=curFindString%>&VIEW_SIZE=[ltp]=viewSize%>&VIEW_INDEX=[ltp]=viewIndex+1%>" class="buttontext">[Next]</a>
+      [ltp] } %>
+      </b>
+    </td>
+  </tr>
+[ltp]}%>
 </table>
 [ltp]if(hasCreatePermission){%>
-  <a href="[ltp]=response.encodeURL(controlPath + "/View<%=entity.ejbName%>")%>" class="buttontext">[Create <%=entity.ejbName%>]</a>
+  <a href="Edit<%=entity.ejbName%>.jsp" class="buttontext">[Create <%=entity.ejbName%>]</a>
 [ltp]}%>
 [ltp]}else{%>
   <h3>You do not have permission to view this page (<%=entity.tableName%>_ADMIN, or <%=entity.tableName%>_VIEW needed).</h3>
