@@ -1,5 +1,5 @@
 /*
- * $Id: OrderByItem.java,v 1.1 2004/07/07 06:33:23 doogie Exp $
+ * $Id: OrderByItem.java,v 1.2 2004/07/20 15:05:45 doogie Exp $
  *
  * <p>Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ public class OrderByItem {
 
     public boolean descending;
     public int caseSensitivity;
-    public static String field;
+    public String field;
 
     public OrderByItem() {
     }
