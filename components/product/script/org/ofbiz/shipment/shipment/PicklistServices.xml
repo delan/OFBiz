@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  -->
 <simple-methods>
@@ -686,8 +686,8 @@
                         </condition>
                         <then>
                             <if-compare-field map-name="productFacilityLocationQuantityTest" field-name="productId" operator="not-equals" to-map-name="productSave">
-                            	<get-related-one value-name="productFacilityLocationQuantityTest" relation-name="Product" to-value-name="productSave"/>
- 								<clear-field field-name="fromLocationTotalAvailableToPromise"/>
+                                <get-related-one value-name="productFacilityLocationQuantityTest" relation-name="Product" to-value-name="productSave"/>
+                                 <clear-field field-name="fromLocationTotalAvailableToPromise"/>
                             </if-compare-field>
                             <get-related-one value-name="productFacilityLocationQuantityTest" relation-name="FacilityLocation" to-value-name="targetFacilityLocationSave"/>
 
@@ -701,28 +701,28 @@
                                 <string-to-list string="Error in stock move, could not find a bulk location for facility [${productFacilityLocationQuantityTest.facilityId}] and product [${productFacilityLocationQuantityTest.productId}]" list-name="warningMessageList"/>
                             <else>
                                  <field-to-env field-name="moveQuantity" map-name="productFacilityLocationQuantityTest" env-name="targetLocationMoveQuantity"/>
-						        <!-- start by making a Map where the locationSeqId is the key and the value is a List of InventoryItemAndLocation -->
-						        <iterate entry-name="InventoryItemAndLocation" list-name="InventoryItemAndLocationList">
-						            <field-to-list field-name="InventoryItemAndLocation" list-name="InventoryItemAndLocationByLocMap.${InventoryItemAndLocation.locationSeqId}"/>
-						        </iterate>
+                                <!-- start by making a Map where the locationSeqId is the key and the value is a List of InventoryItemAndLocation -->
+                                <iterate entry-name="InventoryItemAndLocation" list-name="InventoryItemAndLocationList">
+                                    <field-to-list field-name="InventoryItemAndLocation" list-name="InventoryItemAndLocationByLocMap.${InventoryItemAndLocation.locationSeqId}"/>
+                                </iterate>
                                 <iterate-map key-name="locationSeqId" value-name="perLocationInventoryItemAndLocList" map-name="InventoryItemAndLocationByLocMap">
                                     <if-empty field-name="fromLocationTotalAvailableToPromise.${locationSeqId}">
                                         <calculate field-name="totalAvailableToPromise" type="Double"><number value="0"/></calculate>
-	                                    <iterate entry-name="inventoryItem" list-name="perLocationInventoryItemAndLocList">
-	                                        <calculate field-name="totalAvailableToPromise" type="Double">
-	                                            <calcop field-name="totalAvailableToPromise" operator="add"><calcop field-name="inventoryItem.availableToPromise" operator="get"/></calcop>
-	                                        </calculate>
+                                        <iterate entry-name="inventoryItem" list-name="perLocationInventoryItemAndLocList">
+                                            <calculate field-name="totalAvailableToPromise" type="Double">
+                                                <calcop field-name="totalAvailableToPromise" operator="add"><calcop field-name="inventoryItem.availableToPromise" operator="get"/></calcop>
+                                            </calculate>
                                         </iterate>
                                     <else>
-                                    	<env-to-env env-name="fromLocationTotalAvailableToPromise.${locationSeqId}" to-env-name="totalAvailableToPromise"  />
+                                        <env-to-env env-name="fromLocationTotalAvailableToPromise.${locationSeqId}" to-env-name="totalAvailableToPromise"  />
                                     </else>
                                     </if-empty>
 
                                     <if>
                                        <condition>
                                           <and>
-		                                        <if-compare field-name="totalAvailableToPromise" operator="greater" value="0" type="Double"/>
-		                                        <if-compare field-name="targetLocationMoveQuantity" operator="greater" value="0" type="Double"/>
+                                                <if-compare field-name="totalAvailableToPromise" operator="greater" value="0" type="Double"/>
+                                                <if-compare field-name="targetLocationMoveQuantity" operator="greater" value="0" type="Double"/>
                                           </and>
                                         </condition>
                                     <then>   
