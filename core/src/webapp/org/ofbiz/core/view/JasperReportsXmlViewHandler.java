@@ -60,7 +60,7 @@ public class JasperReportsXmlViewHandler implements ViewHandler {
             throw new ViewHandlerException("View page was null or empty, but must be specified");
         }
         if (info == null || info.length() == 0) {
-            throw new ViewHandlerException("View fnfo string was null or empty, but must be used to specify an Entity that is mapped to the Entity Engine datasource that the report will use.");
+            Debug.logWarning("View info string was null or empty, but must be used to specify an Entity that is mapped to the Entity Engine datasource that the report will use.");
         }
 
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
@@ -83,7 +83,11 @@ public class JasperReportsXmlViewHandler implements ViewHandler {
             PipedOutputStream fillToPrintOutputStream = new PipedOutputStream();
             PipedInputStream fillToPrintInputStream = new PipedInputStream(fillToPrintOutputStream);
 
-            JasperFillManager.fillReportToStream(report, fillToPrintOutputStream, parameters, ConnectionFactory.getConnection(datasourceName));
+            if (datasourceName != null && datasourceName.length() > 0) {
+                JasperFillManager.fillReportToStream(report, fillToPrintOutputStream, parameters, ConnectionFactory.getConnection(datasourceName));
+            } else {
+                JasperFillManager.fillReportToStream(report, fillToPrintOutputStream, parameters, new JREmptyDataSource());
+            }
             JasperPrintManager.printReportToXmlStream(fillToPrintInputStream, response.getOutputStream());
         } catch (IOException ie) {
             throw new ViewHandlerException("IO Error in region", ie);

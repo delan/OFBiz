@@ -60,7 +60,7 @@ public class JasperReportsPdfViewHandler implements ViewHandler {
             throw new ViewHandlerException("View page was null or empty, but must be specified");
         }
         if (info == null || info.length() == 0) {
-            throw new ViewHandlerException("View fnfo string was null or empty, but must be used to specify an Entity that is mapped to the Entity Engine datasource that the report will use.");
+            Debug.logWarning("View info string was null or empty, but must be used to specify an Entity that is mapped to the Entity Engine datasource that the report will use.");
         }
 
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
@@ -85,7 +85,12 @@ public class JasperReportsPdfViewHandler implements ViewHandler {
             // JasperFillManager.fillReportToStream(report, fillToPrintOutputStream, parameters, ConnectionFactory.getConnection(datasourceName));
             // JasperPrintManager.printReportToPdfStream(fillToPrintInputStream, response.getOutputStream());
 
-            JasperPrint jp = JasperManager.fillReport(report, parameters, ConnectionFactory.getConnection(datasourceName));
+            JasperPrint jp = null;
+            if (datasourceName != null && datasourceName.length() > 0) {
+                jp = JasperManager.fillReport(report, parameters, ConnectionFactory.getConnection(datasourceName));
+            } else {
+                jp = JasperManager.fillReport(report, parameters, new JREmptyDataSource());
+            }
 
             if (jp.getPages().size() < 1) {
                 throw new ViewHandlerException("Report is Empty (no results?)");
