@@ -661,6 +661,7 @@
 	
     <entity-group group="org.ofbiz.commonapp" entity="JobSandbox" />	
     <entity-group group="org.ofbiz.commonapp" entity="RecurrenceInfo" />	
+    <entity-group group="org.ofbiz.commonapp" entity="RecurrenceRule" />	
     <entity-group group="org.ofbiz.commonapp" entity="RuntimeData" />
 
   <!-- ========================================================= -->
