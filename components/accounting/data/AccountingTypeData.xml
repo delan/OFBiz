@@ -102,7 +102,7 @@
   <InvoiceItemType description="Invoice Time-Entry Item" hasTable="N" invoiceItemTypeId="INV_TE_ITEM" parentTypeId=""/>    
  
   <InvoiceItemTypeMap invoiceItemMapKey="PROMOTION_ADJUSTMENT" invoiceItemTypeId="ITM_PROMOTION_ADJ"/>
-  <InvoiceItemTypeMap invoiceItemMapKey="REPLACEMENT_ADJUSTMENT" invoiceItemTypeId="ITM_REPLACEMENT_ADJ"/>
+  <InvoiceItemTypeMap invoiceItemMapKey="REPLACE_ADJUSTMENT" invoiceItemTypeId="ITM_REPLACE_ADJ"/>
   <InvoiceItemTypeMap invoiceItemMapKey="DISCOUNT_ADJUSTMENT" invoiceItemTypeId="ITM_DISCOUNT_ADJ"/>
   <InvoiceItemTypeMap invoiceItemMapKey="FEE" invoiceItemTypeId="ITM_FEE"/>
   <InvoiceItemTypeMap invoiceItemMapKey="MISCELLANEOUS_CHARGE" invoiceItemTypeId="ITM_MISC_CHARGE"/>

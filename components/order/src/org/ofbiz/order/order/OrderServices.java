@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.13 2003/09/04 23:24:14 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.14 2003/09/07 15:16:53 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 
@@ -2049,7 +2049,7 @@ public class OrderServices {
                 
                 // create the replacement adjustment
                 GenericValue adj = delegator.makeValue("OrderAdjustment", new HashMap());
-                adj.set("orderAdjustmentTypeId", "REPLACEMENT_ADJUSTMENT");
+                adj.set("orderAdjustmentTypeId", "REPLACE_ADJUSTMENT");
                 adj.set("amount", new Double(itemTotal * -1));
                 adj.set("comments", "Replacement Item Return #" + returnId);
                 orderMap.put("orderAdjustments", UtilMisc.toList(adj));
