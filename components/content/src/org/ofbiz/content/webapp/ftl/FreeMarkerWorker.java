@@ -75,7 +75,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -631,15 +631,15 @@ public class FreeMarkerWorker {
         String https = (String)ctx.get("https");
         if (UtilValidate.isEmpty(rootDir)) {
             rootDir = servletContext.getRealPath("/");
-            ctx.put("webSiteId", webSiteId);
+            ctx.put("rootDir", rootDir);
         }
         if (UtilValidate.isEmpty(webSiteId)) {
             webSiteId = (String) servletContext.getAttribute("webSiteId");
-            ctx.put("https", https);
+            ctx.put("webSiteId", webSiteId);
         }
         if (UtilValidate.isEmpty(https)) {
             https = (String) servletContext.getAttribute("https");
-            ctx.put("rootDir", rootDir);
+            ctx.put("https", https);
         }
         return;
     }
