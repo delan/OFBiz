@@ -142,7 +142,6 @@
         </field>
         <field name="cloneLayout" title="&amp;nbsp;" widget-style="buttontext" position="2" >
             <hyperlink also-hidden="false" description="Clone Layout"  
-                use-when="&quot;${currentValue.contentId}&quot;.length()>0"
                 target="cloneLayout?contentId=${currentValue.contentId}"/>
         </field>
     </form>
@@ -185,7 +184,7 @@
         <field name="drObjectInfo" title="File Path">
             <text />
         </field>
-        <field name="textData" title="Text"  id-name="textData"> 
+        <field name="textData" title="Text (Use '&lt;&gt;' to enter plain text)"  id-name="textData"> 
 		<textarea rows="24" cols="55" />
         </field>
         <field name="submitButton" title="Create" widget-style="standardSubmit">
@@ -301,7 +300,7 @@
         <field name="drMimeTypeId" >
             <display description="text/plain"/>
         </field>
-        <field name="textData" title="Text"  id-name="textData"> 
+        <field name="textData" title="Text (Use '&lt;&gt;' to enter plain text)"  id-name="textData"> 
 		<textarea rows="24" cols="55" />
         </field>
         <field name="createdByUserLogin" position="1">
@@ -340,7 +339,7 @@
         <field name="drMimeTypeId" >
             <hidden value="text/html"/>
         </field>
-        <field name="textData" title="Text"  id-name="textData"> 
+        <field name="textData" title="Text (Use '&lt;&gt;' to enter plain text)"  id-name="textData"> 
 		<textarea rows="24" cols="55" />
         </field>
         <field name="submitButton" title="Create" widget-style="standardSubmit">
@@ -558,10 +557,16 @@
         extends="LayoutSubContentMaster"
         target="updateLayoutSubContent"
         title="" type="single">
-        <field name="drDataResourceTypeId" >
+        <field name="drDataResourceTypeId" title="Data Resource Type">
             <display/>
         </field>
-        <field name="drMimeTypeId" >
+        <field name="drDataTemplateTypeId" title="Data Template Type">
+            <drop-down >
+                <entity-options description="${description}"
+                    entity-name="DataTemplateType" key-field-name="dataTemplateTypeId"/>
+            </drop-down>
+        </field>
+        <field name="drMimeTypeId" title="MIME Type">
             <drop-down no-current-selected-key="text/html">
                 <option key="text/html" description="Html Text" />
                 <option key="text/plain" description="Plain Text" />
@@ -570,7 +575,7 @@
         <field name="drObjectInfo" title="File Path">
             <text />
         </field>
-        <field name="textData" title="Text"  id-name="textData"> 
+        <field name="textData" title="Text (Use '&lt;&gt;' to enter plain text)"  id-name="textData"> 
 		<textarea rows="24" cols="55" />
         </field>
         <field name="createdByUserLogin" position="1">
@@ -619,6 +624,12 @@
                 <option key="ELECTRONIC_TEXT" description="DB TEXT"/>
             </drop-down>
         </field>
+        <field name="drDataTemplateTypeId" >
+            <drop-down >
+                <entity-options description="${description}"
+                    entity-name="DataTemplateType" key-field-name="dataTemplateTypeId"/>
+            </drop-down>
+        </field>
         <field name="drMimeTypeId" >
             <drop-down no-current-selected-key="text/html">
                 <option key="text/html" description="Html Text" />
@@ -633,6 +644,11 @@
         </field>
         <field name="submitButton" title="Create" widget-style="standardSubmit">
             <submit button-type="button"/>
+        </field>
+        <field name="paste" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink link-style="buttontext" target-type="plain" 
+              target="javascript:call_fieldlookup2(document.EditContent.dataResourceId, 'LookupDataResource');"
+              description="Paste"/>
         </field>
     </form>
 
