@@ -1,5 +1,5 @@
 /*
- * $Id: EntityCacheServices.java,v 1.2 2004/07/07 09:31:03 jonesde Exp $
+ * $Id: EntityCacheServices.java,v 1.3 2004/07/07 21:42:50 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.service.ServiceUtil;
  * Entity Engine Cache Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class EntityCacheServices implements DistributedCacheClear {
@@ -115,7 +115,23 @@ public class EntityCacheServices implements DistributedCacheClear {
     }
 
     public void distributedClearCacheLineByCondition(String entityName, EntityCondition condition) {
-        // TODO: implement distributedClearCacheLineByCondition
+        // Debug.logInfo("running distributedClearCacheLineByCondition for (name, condition): " + entityName + ", " + condition + ")", module);
+        if (this.dispatcher == null) {
+            Debug.logWarning("No dispatcher is available, somehow the setDelegator (which also creates a dispatcher) was not called, not running distributed cache clear", module);
+            return;
+        }
+
+        GenericValue userLogin = getAuthUserLogin();
+        if (userLogin == null) {
+            Debug.logWarning("The userLogin for distributed cache clear was not found with userLoginId [" + userLoginId + "], not clearing remote caches.", module);
+            return;
+        }
+        
+        try {
+            this.dispatcher.runAsync("distributedClearCacheLineByCondition", UtilMisc.toMap("entityName", entityName, "condition", condition), false);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Error running the distributedClearCacheLineByCondition service", module);
+        }
     }
     
     public void distributedClearCacheLine(GenericPK primaryKey) {
@@ -201,6 +217,12 @@ public class EntityCacheServices implements DistributedCacheClear {
             if (Debug.infoOn()) Debug.logInfo("Got a clear cache line by primaryKey service call; entityName: " + primaryKey.getEntityName(), module);
             if (Debug.verboseOn()) Debug.logVerbose("Got a clear cache line by primaryKey service call; primaryKey: " + primaryKey, module);
             delegator.clearCacheLine(primaryKey, distribute);
+        } else if (context.containsKey("condition")) {
+            String entityName = (String) context.get("entityName");
+            EntityCondition condition = (EntityCondition) context.get("condition");
+            if (Debug.infoOn()) Debug.logInfo("Got a clear cache line by condition service call; entityName: " + entityName, module);
+            if (Debug.verboseOn()) Debug.logVerbose("Got a clear cache line by condition service call; condition: " + condition, module);
+            delegator.clearCacheLineByCondition(entityName, condition, distribute);
         }
         return ServiceUtil.returnSuccess();
     }
