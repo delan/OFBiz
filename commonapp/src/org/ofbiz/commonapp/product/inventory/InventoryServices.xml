@@ -344,7 +344,7 @@
             corresponding serialized inventoryItem to available.
         -->
         <field-to-field field-name="orderId" map-name="parameters" to-map-name="oiirListLookupMap"/>
-        <find-by-and entity-name="OrderItemInventoryRes" map-name="orderListLookupMap" list-name="oiirList" use-cache="false"/>
+        <find-by-and entity-name="OrderItemInventoryRes" map-name="oiirListLookupMap" list-name="oiirList" use-cache="false"/>
         <iterate entry-name="orderItemInventoryRes" list-name="oiirList">
             <if-compare value="OIIR_RESERVED" operator="equals" field-name="statusId" map-name="orderItemInventoryRes">
             	<log level="verbose" message="Found a inventory item to reverse."/>
