@@ -34,7 +34,7 @@
           </td>
           <#if maySelectItems?default(false)>
             <td valign="middle" align="right" nowrap>
-              <a href='javascript:document.addCommonToCartForm.add_all.value="true";document.addCommonToCartForm.submit()' class="submenutext">${requestAttributes.uiLabelMap.EcommerceAddAlltoCart}</a><a href='javascript:document.addCommonToCartForm.add_all.value="false";document.addCommonToCartForm.submit()' class="submenutextright">${requestAttributes.uiLabelMap.EcommerceAddCheckedToCart}</a>
+              <a href='javascript:document.addCommonToCartForm.add_all.value="true";document.addCommonToCartForm.submit()' class="submenutext">${requestAttributes.uiLabelMap.EcommerceAddAlltoCart}</a><a href='javascript:document.addCommonToCartForm.add_all.value="false";document.addCommonToCartForm.submit()' class="submenutext">${requestAttributes.uiLabelMap.EcommerceAddCheckedToCart}</a><a href='<@ofbizUrl>/createShoppingListFromOrder?order_id=${orderHeader.orderId}&orderId=${orderHeader.orderId}&frequency=6&intervalNumber=1&shoppingListTypeId=SLT_AUTO_REODR</@ofbizUrl>' class="submenutextright">Send Me This Every Month</a>
             </td>
           </#if>
         </tr>

@@ -104,7 +104,7 @@ public class ShoppingListEvents {
             // create a new shopping list
             Map newListResult = null;
             try {
-                newListResult = dispatcher.runSync("createShoppingList", UtilMisc.toMap("userLogin", userLogin));    
+                newListResult = dispatcher.runSync("createShoppingList", UtilMisc.toMap("userLogin", userLogin, "productStoreId", cart.getProductStoreId()));    
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problems creating new ShoppingList", module);
                 errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.cannot_create_new_shopping_list", cart.getLocale());
