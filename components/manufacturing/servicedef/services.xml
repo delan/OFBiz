@@ -447,6 +447,7 @@
         <description>Updates the low level code of the product in the Product entity</description>
         <attribute mode="IN" name="productId" optional="false" type="String"/>
         <attribute mode="IN" name="alsoComponents" optional="true" type="Boolean"/>
+        <attribute mode="IN" name="alsoVariants" optional="true" type="Boolean"/>
         <attribute mode="OUT" name="lowLevelCode" optional="false" type="Integer"/>
     </service>
 
