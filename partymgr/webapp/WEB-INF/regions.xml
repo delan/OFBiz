@@ -43,6 +43,16 @@
         <put section='content' content='/party/viewprofile.jsp'/>
     </define>
 
+    <define id='viewroles' region='MAIN_REGION'>
+        <put section='title'>View Roles</put>
+        <put section='content' content='/party/viewroles.jsp'/>
+    </define>
+
+    <define id='viewrelationships' region='MAIN_REGION'>
+        <put section='title'>View Relationships</put>
+        <put section='content' content='/party/viewrelationships.jsp'/>
+    </define>
+
     <define id='newcustomer' region='MAIN_REGION'>
         <put section='title'>New Customer</put>
         <put section='content' content='/party/newcustomer.jsp'/>

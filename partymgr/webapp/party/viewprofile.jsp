@@ -48,13 +48,16 @@
     else request.getSession().setAttribute("partyId", partyId);
 
     Collection userLogins = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", partyId));
-    if (userLogins != null) pageContext.setAttribute("userLogins", userLogins);
+    if (userLogins != null && userLogins.size() > 0) pageContext.setAttribute("userLogins", userLogins);
 
     Collection partyRoles = delegator.findByAnd("RoleTypeAndParty", UtilMisc.toMap("partyId", partyId));
-    if (partyRoles != null) pageContext.setAttribute("partyRoles", partyRoles);
+    if (partyRoles != null && partyRoles.size() > 0) pageContext.setAttribute("partyRoles", partyRoles);
 
     Collection roles = delegator.findAll("RoleType", UtilMisc.toList("description", "roleTypeId"));
     if (roles != null) pageContext.setAttribute("roles", roles);
+
+    Collection relateTypes = delegator.findAll("PartyRelationshipType", UtilMisc.toList("description", "partyRelationshipTypeId"));
+    if (relateTypes != null) pageContext.setAttribute("relateTypes", relateTypes);
 
     Collection notes = delegator.findByAnd("PartyNoteView", UtilMisc.toMap("targetPartyId", partyId), UtilMisc.toList("-noteDateTime"));
     if (notes != null && notes.size() > 0) pageContext.setAttribute("notes", notes);
@@ -67,12 +70,16 @@
 %>
 <%EntityField entityField = new EntityField(pageContext);%>
 
+<script language='JavaScript'>
+    function setNowFromDate(formName) { eval('document.' + formName + '.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
+</script>
+
 <br>
 <ofbiz:if name="party">
 <%-- Main Heading --%>
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
-    <td align=left>
+    <td align='left'>
       <div class="head1">The Profile of
         <ofbiz:if name="person">
           <%entityField.run("person", "personalTitle");%>
@@ -89,14 +96,16 @@
        </ofbiz:unless>
       </div>
     </td>
-    <td align=right>
+    <td align='right'>
       <ofbiz:if name="showOld">
         <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">[Hide Old]</a>&nbsp;&nbsp;
       </ofbiz:if>
       <ofbiz:unless name="showOld">
         <a href="<ofbiz:url>/viewprofile?SHOW_OLD=true</ofbiz:url>" class="buttontext">[Show Old]</a>&nbsp;&nbsp;
       </ofbiz:unless>
-      <a href="/ordermgr/control/orderlist?partyId=<%=partyId%>" class="buttontext">[Lookup Orders]</a>&nbsp;&nbsp;
+      <a href="/ordermgr/control/orderlist?partyId=<%=partyId%>" class="buttontext">[Orders]</a>&nbsp;&nbsp;
+      <a href="<ofbiz:url>/viewroles</ofbiz:url>" class="buttontext">[Roles]</a>&nbsp;&nbsp;
+      <a href="<ofbiz:url>/viewrelationships</ofbiz:url>" class="buttontext">[Relationships]</a>&nbsp;&nbsp;
     </td>
   </tr>
 </table>
@@ -165,7 +174,7 @@
 </ofbiz:if>
 <ofbiz:unless name="person">
   <ofbiz:if name="partyGroup">
-    <%entityField.run("partyGroup", "groupName");%>
+    <div class="tabletext"><%entityField.run("partyGroup", "groupName");%></div>
   </ofbiz:if>
   <ofbiz:unless name="partyGroup">
     <div class="tabletext">Information Not Found</div>
@@ -425,6 +434,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
+            <ofbiz:if name="userLogins">
             <table width="100%" border="0" cellpadding="1">
               <ofbiz:iterator name="userUserLogin" property="userLogins">
               <tr>
@@ -455,58 +465,10 @@
               </tr>
               </ofbiz:iterator>
             </table>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
-</ofbiz:if>
-
-<ofbiz:if name="partyRoles">
-<br>
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <form name="addPartyRole" method="post" action="<ofbiz:url>/addrole</ofbiz:url>">
-    <input type="hidden" name="partyId" value="<%=partyId%>">
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Member Roles</div>
-          </td>
-          <td valign="middle" align="right">&nbsp;
-            <select name="roleTypeId" style="font-size: x-small;">
-              <ofbiz:iterator name="role" property="roles">
-                 <option value='<ofbiz:entityfield attribute="role" field="roleTypeId"/>'><ofbiz:entityfield attribute="role" field="description"/> [<ofbiz:entityfield attribute="role" field="roleTypeId"/>]</option>
-              </ofbiz:iterator>
-            </select>
-            &nbsp;&nbsp;
-            <a href="javascript:document.addPartyRole.submit()" class="lightbuttontext">[Add]</a>&nbsp;&nbsp;
-            <a href="<ofbiz:url>/createnewrole</ofbiz:url>" class="lightbuttontext">[New]</a>&nbsp;&nbsp;
-          </td>
-        </tr>
-      </table>
-    </TD>
-    </form>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-            <table width="100%" border="0" cellpadding="1">
-              <ofbiz:iterator name="userRole" property="partyRoles">
-              <tr>
-                <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>Role</b></div></td>
-                <td width="5">&nbsp;</td>
-                <td align="left" valign="top" width="70%"><div class="tabletext"><ofbiz:entityfield attribute="userRole" field="description"/> [<ofbiz:entityfield attribute="userRole" field="roleTypeId"/>]</div></td>
-                <td align="right" valign="top" width="20%">
-                  <a href='<ofbiz:url>/deleterole?partyId=<%=partyId%>&roleTypeId=<ofbiz:entityfield attribute="userRole" field="roleTypeId"/></ofbiz:url>' class="buttontext">[Remove]</a>&nbsp;
-                </td>
-              </tr>
-              </ofbiz:iterator>
-            </table>
+            </ofbiz:if>
+            <ofbiz:unless name="userLogins">
+              <div class="tabletext">No UserLogin(s) found for this party.</div>
+            </ofbiz:unless>
           </td>
         </tr>
       </table>
