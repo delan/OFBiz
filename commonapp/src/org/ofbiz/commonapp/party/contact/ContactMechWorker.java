@@ -123,7 +123,13 @@ public class ContactMechWorker {
 
     public static void getOrderContactMechValueMaps(PageContext pageContext, String orderId, String orderContactMechValueMapsAttr) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        Collection orderContactMechValueMaps = new LinkedList();
+        List maps = getOrderContactMechValueMaps(delegator, orderId);
+        if (maps != null && maps.size() > 0) {
+            pageContext.setAttribute(orderContactMechValueMapsAttr, maps);
+        }
+    }
+    public static List getOrderContactMechValueMaps(GenericDelegator delegator, String orderId) {        
+        List orderContactMechValueMaps = new LinkedList();
 
         Iterator allOrderContactMechs = null;
 
@@ -177,9 +183,7 @@ public class ContactMechWorker {
             }
         }
 
-        if (orderContactMechValueMaps.size() > 0) {
-            pageContext.setAttribute(orderContactMechValueMapsAttr, orderContactMechValueMaps);
-        }
+        return orderContactMechValueMaps;
     }
 
     public static Collection getWorkEffortContactMechValueMaps(GenericDelegator delegator, String workEffortId) {
@@ -682,5 +686,5 @@ public class ContactMechWorker {
             results.put("curPostalAddress", curPostalAddress);
         }
         return results;
-    }
+    }    
 }
