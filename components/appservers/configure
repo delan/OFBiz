@@ -1,0 +1,37 @@
+####
+# OFBiz Startup Application Settings
+# $Id: configure,v 1.1 2004/03/31 02:29:55 ajzeneski Exp $
+####
+
+# --- By default we will use the current directory
+#ofbiz.home=
+
+# --- Set these for shutting down when running as background process
+ofbiz.admin.host=127.0.0.1
+ofbiz.admin.port=10525
+ofbiz.admin.key=so3du5kasd5dn
+
+# --- External Base configuration files (relative to ofbiz.home)
+ofbiz.base.config=base/config
+
+# --- External Base libraries (relative to ofbiz.home)
+ofbiz.base.lib=base/lib
+
+# --- Base Jar [ofbiz-base.jar] (relative to ofbiz.home)
+ofbiz.base.jar=base/build/lib/ofbiz-base.jar
+
+# --- Default logs directory (relative to ofbiz.home)
+ofbiz.log.dir=logs
+
+# --- Location (relative to ofbiz.home) for container configuration
+ofbiz.container.config=components/appservers/config/ofbiz-containers.xml
+
+# --- StartupLoader implementations to load (in order)
+ofbiz.start.loader1=org.ofbiz.base.util.StartInfoLoader
+ofbiz.start.loader2=org.ofbiz.base.container.ContainerLoader
+
+# --- By default we will find base/config/debug.properties and point to there
+#log4j.configuration=file:/c:/work/ofbiz/config/debug.properties
+
+# --- Tells AWT (i.e. JasperReports/FOP/etc) to not require a head (X11)
+java.awt.headless=true
