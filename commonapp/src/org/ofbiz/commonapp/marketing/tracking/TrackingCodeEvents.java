@@ -88,7 +88,7 @@ public class TrackingCodeEvents {
             } else {
                 GenericValue trackingCodeVisit = delegator.makeValue("TrackingCodeVisit", 
                         UtilMisc.toMap("trackingCodeId", trackingCodeId, "visitId", visit.get("visitId"), 
-                        "fromDate", UtilDateTime.nowTimestamp(), "trackingCodeSourceId", "URL_PARAM"));
+                        "fromDate", UtilDateTime.nowTimestamp(), "sourceEnumId", "TKCDSRC_URL_PARAM"));
                 try {
                     trackingCodeVisit.create();
                 } catch (GenericEntityException e) {
@@ -125,7 +125,7 @@ public class TrackingCodeEvents {
     public static String checkTrackingCodeCookies(HttpServletRequest request, HttpServletResponse response) {
         //TODO: loop through cookies and look for ones with a name that starts with TKCDT_ for trackable cookies
         
-        //TODO: for each trackingCodeId found in this way attach to the visit with the COOKIE trackingCodeSourceId
+        //TODO: for each trackingCodeId found in this way attach to the visit with the TKCDSRC_COOKIE sourceEnumId
         
         return "success";
     }
