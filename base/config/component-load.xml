@@ -23,10 +23,33 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Components
- *  $Id: component-load.xml,v 1.3 2003/08/17 01:43:06 ajzeneski Exp $
+ *  $Id: component-load.xml,v 1.4 2003/08/27 17:11:21 jonesde Exp $
 -->
 
 <component-loader>
 	<load-components parent-directory="${ofbiz.home}/components"/>
+	<!--
+	<load-component component-name="entity" component-location="${ofbiz.home}/components/entity"/>
+	<load-component component-location="${ofbiz.home}/components/security"/>
+	<load-component component-location="${ofbiz.home}/components/service"/>
+	<load-component component-location="${ofbiz.home}/components/entityext"/>
+	<load-component component-location="${ofbiz.home}/components/datafile"/>
+	<load-component component-location="${ofbiz.home}/components/rules"/>
+	<load-component component-location="${ofbiz.home}/components/minilang"/>
+	<load-component component-location="${ofbiz.home}/components/common"/>
+	<load-component component-location="${ofbiz.home}/components/content"/>
+	<load-component component-location="${ofbiz.home}/components/party"/>
+	<load-component component-location="${ofbiz.home}/components/workeffort"/>
+	<load-component component-location="${ofbiz.home}/components/workflow"/>
+	<load-component component-location="${ofbiz.home}/components/humanres"/>
+	<load-component component-location="${ofbiz.home}/components/product"/>
+	<load-component component-location="${ofbiz.home}/components/accounting"/>
+	<load-component component-location="${ofbiz.home}/components/order"/>
+	<load-component component-location="${ofbiz.home}/components/marketing"/>
+	<load-component component-location="${ofbiz.home}/components/securityext"/>
+	<load-component component-location="${ofbiz.home}/components/webtools"/>
+	<load-component component-location="${ofbiz.home}/components/ecommerce"/>
+	<load-component component-location="${ofbiz.home}/components/images"/>
+	-->
 	<load-components parent-directory="${ofbiz.home}/hot-deploy"/>
 </component-loader>
