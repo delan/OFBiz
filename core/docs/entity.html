@@ -31,8 +31,9 @@
 <hr>
 <ul>
   <li><a href="api/index.html">Core JavaDoc (including Entity Engine)</a></li>
-  <li><a href="entitymodel.dtd">Entity Engine Entity Model DTD</a></li>
-  <li><a href="fieldtypemodel.dtd">Entity Engine Field Type Model DTD</a></li>
+  <li><a href="entitymodel.dtd">Entity Model DTD</a></li>
+  <li><a href="entitygroup.dtd">Entity Group DTD</a></li>
+  <li><a href="fieldtypemodel.dtd">Field Type Model DTD</a></li>
 </ul>
 
 <hr>
@@ -50,15 +51,23 @@ patterns that will be recognized by most enterprise software programmers. Many
 Presentation Tier patterns are also used in the Open For Busienss project, but
 only in the servlet controller, not in the entity engine. The patterns used in
 the Entity Engine include: Business Delegate, Value Object, Composite Entity
-(variation), Service Locator, and Data Access Object. Descriptions of these
+(variation), Value Object Assembler, Service Locator, and Data Access Object.
+Implementations of other patterns and more complete implementations of these
+Patterns are planned.</p>
+<p> Descriptions of these
 patterns are all available in the book &quot;Core J2EE Patterns&quot; by Alur,
-Crupi, and Malks, published by Sun. In addition there are a number of patterns
+Crupi, and Malks, published by Sun. You can also find information on these
+patterns at the site that contains the early work of the authors before the
+published book was finished. See <a href="http://developer.java.sun.com/developer/restricted/patterns/J2EEPatternsAtAGlance.html">http://developer.java.sun.com/developer/restricted/patterns/J2EEPatternsAtAGlance.html</a>.
+Note that you need a Java Developers Connection account to view this
+information.</p>
+<p>&nbsp;In addition there are a number of patterns
 used from the upcoming book &quot;EJB
 Design Patterns&quot; by <a class="undecorated" href="mailto:floyd@middleware-company.com">Floyd
 Marinescu</a> of TheServerSide.com. These include Data Transfer HashMap and
 Generic Attribute Access. For unique primary key generation we use an original
 pattern we like to call the &quot;Ethernet Key Generation&quot; pattern because
-is uses collision mechanism to insure that multiple servers can use a single
+it uses a collision detection mechanism to insure that multiple servers can use a single
 database to get banks of unique keys in a database independent way.</p>
 <p>The primary goal of the entity engine is to eliminate the need for entity
 specific persistence code in as many areas of a transactional application as
