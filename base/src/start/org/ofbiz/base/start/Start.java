@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.21 2004/07/12 17:44:11 ajzeneski Exp $
+ * $Id: Start.java,v 1.22 2004/07/12 17:50:31 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.21 $
+  *@version    $Revision: 1.22 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -547,6 +547,7 @@ public class Start implements Runnable {
             String fileSep = System.getProperty("file.separator");
             String javaHome = System.getProperty("java.home");
             String errorMsg = "Unable to locate tools.jar - ";
+            String foundMsg = "Found tools.jar - ";
             String toolLoc = "lib" + fileSep + "tools.jar";
             File tj = null;
 
@@ -562,6 +563,7 @@ public class Start implements Runnable {
                 if (!tj.exists()) {
                     System.out.println(errorMsg + tj.getAbsolutePath());
                 } else {
+                    System.out.println(foundMsg + tj.getAbsolutePath());
                     return toolsProp;
                 }
             }
@@ -571,6 +573,7 @@ public class Start implements Runnable {
             if (!tj.exists()) {
                 System.out.println(errorMsg + tj.getAbsolutePath());
             } else {
+                System.out.println(foundMsg + tj.getAbsolutePath());
                 return tj.getAbsolutePath();
             }
 
@@ -582,6 +585,7 @@ public class Start implements Runnable {
                 if (!tj.exists()) {
                     System.out.println(errorMsg + tj.getAbsolutePath());
                 } else {
+                    System.out.println(foundMsg + tj.getAbsolutePath());
                     return tj.getAbsolutePath();
                 }
             }
@@ -594,6 +598,7 @@ public class Start implements Runnable {
                 if (!tj.exists()) {
                     System.out.println(errorMsg + tj.getAbsolutePath());
                 } else {
+                    System.out.println(foundMsg + tj.getAbsolutePath());
                     return tj.getAbsolutePath();
                 }
             }
