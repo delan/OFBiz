@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.6 2003/08/27 22:11:16 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.7 2003/10/11 05:57:41 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -72,7 +72,7 @@ public class OrderReadHelper {
     protected Double totalPrice = null;
 
     protected OrderReadHelper() {}
-    
+
     public OrderReadHelper(GenericValue orderHeader, List adjustments, List orderItems) {
         this.orderHeader = orderHeader;
         this.adjustments = adjustments;
@@ -94,11 +94,11 @@ public class OrderReadHelper {
     public String getWebSiteId() {
         return orderHeader.getString("webSiteId");
     }
-    
+
     public String getProductStoreId() {
         return orderHeader.getString("productStoreId");
     }
-    
+
     public String getOrderTypeId() {
         return orderHeader.getString("orderTypeId");
     }
@@ -130,7 +130,7 @@ public class OrderReadHelper {
         }
         return paymentPrefs;
     }
-    
+
     public List getOrderPayments() {
         List orderPayments = new ArrayList();
         List prefs = getPaymentPreferences();
@@ -139,12 +139,12 @@ public class OrderReadHelper {
             while (i.hasNext()) {
                 GenericValue payPref = (GenericValue) i.next();
                 try {
-                    orderPayments.addAll(payPref.getRelated("Payment"));   
+                    orderPayments.addAll(payPref.getRelated("Payment"));
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
                     return null;
                 }
-            }             
+            }
         }
         return orderPayments;
     }
@@ -186,7 +186,7 @@ public class OrderReadHelper {
         }
         return "";
     }
-    
+
     public String getShippingMethodCode() {
         try {
             GenericValue shipmentPreference = null;
@@ -212,7 +212,7 @@ public class OrderReadHelper {
             Debug.logWarning(e, module);
         }
         return "";
-    }    
+    }
 
     public GenericValue getShippingAddress() {
         GenericDelegator delegator = orderHeader.getDelegator();
@@ -234,7 +234,7 @@ public class OrderReadHelper {
         return null;
     }
 
-    public GenericValue getBillingAddress() {        
+    public GenericValue getBillingAddress() {
         GenericDelegator delegator = orderHeader.getDelegator();
         GenericValue billingAddress = null;
         try {
@@ -250,7 +250,7 @@ public class OrderReadHelper {
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
         }
-        
+
         if (billingAddress == null) {
             // get the address from the billing account
             GenericValue billingAccount = getBillingAccount();
@@ -276,7 +276,7 @@ public class OrderReadHelper {
                                     billingAddress = eftAccount.getRelatedOne("PostalAddress");
                                 }
                             }
-                        }                     
+                        }
                     } catch (GenericEntityException e) {
                         Debug.logWarning(e, module);
                     }
@@ -345,7 +345,7 @@ public class OrderReadHelper {
         }
         return billingAccount;
     }
-    
+
     public GenericValue getBillToPerson() {
         GenericDelegator delegator = orderHeader.getDelegator();
 
@@ -412,9 +412,9 @@ public class OrderReadHelper {
     }
 
     public double getShippingTotal() {
-        return OrderReadHelper.calcOrderAdjustments(getOrderHeaderAdjustments(), getOrderItemsSubTotal(), false, false, true);    
+        return OrderReadHelper.calcOrderAdjustments(getOrderHeaderAdjustments(), getOrderItemsSubTotal(), false, false, true);
     }
-    
+
     public double getShippableTotal() {
         double shippableTotal = 0.00;
         List validItems = getValidOrderItems();
@@ -422,47 +422,47 @@ public class OrderReadHelper {
             Iterator i = validItems.iterator();
             while (i.hasNext()) {
                 GenericValue item = (GenericValue) i.next();
-                GenericValue product = null;            
+                GenericValue product = null;
                 try {
                     product = item.getRelatedOne("Product");
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problem getting Product from OrderItem; returning 0", module);
-                    return 0.00;                                
+                    return 0.00;
                 }
                 if (product != null) {
                     if (ProductWorker.shippingApplies(product)) {
                         shippableTotal += OrderReadHelper.getOrderItemSubTotal(item, getAdjustments(), false, true);
                     }
                 }
-            }            
+            }
         }
-        return shippableTotal;        
+        return shippableTotal;
     }
-    
+
     public double getShippableQuantity() {
-        double shippableQuantity = 0.00;        
+        double shippableQuantity = 0.00;
         List validItems = getValidOrderItems();
         if (validItems != null) {
             Iterator i = validItems.iterator();
             while (i.hasNext()) {
                 GenericValue item = (GenericValue) i.next();
-                GenericValue product = null;            
+                GenericValue product = null;
                 try {
                     product = item.getRelatedOne("Product");
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problem getting Product from OrderItem; returning 0", module);
-                    return 0.00;                                
+                    return 0.00;
                 }
                 if (product != null) {
                     if (ProductWorker.shippingApplies(product)) {
-                        shippableQuantity += item.getDouble("quantity").doubleValue();                    
+                        shippableQuantity += item.getDouble("quantity").doubleValue();
                     }
                 }
-            }            
+            }
         }
-        return shippableQuantity;        
+        return shippableQuantity;
     }
-    
+
     public double getShippableWeight() {
         GenericDelegator delegator = orderHeader.getDelegator();
         double shippableWeight = 0.00;
@@ -471,12 +471,12 @@ public class OrderReadHelper {
             Iterator i = validItems.iterator();
             while (i.hasNext()) {
                 GenericValue item = (GenericValue) i.next();
-                GenericValue product = null;            
+                GenericValue product = null;
                 try {
                     product = item.getRelatedOne("Product");
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problem getting Product from OrderItem; returning 0", module);
-                    return 0.00;                                
+                    return 0.00;
                 }
                 if (product != null) {
                     if (ProductWorker.shippingApplies(product)) {
@@ -496,19 +496,19 @@ public class OrderReadHelper {
                             }
                             if (virtual != null) {
                                 weight = virtual.getDouble("weight");
-                            }                        
+                            }
                         }
-                    
+
                         if (weight != null) {
                             shippableWeight += weight.doubleValue();
-                        }                    
+                        }
                     }
-                }                      
+                }
             }
         }
-        return shippableWeight;                
+        return shippableWeight;
     }
-    
+
     public double getOrderGrandTotal() {
         if (totalPrice == null) {
             totalPrice = new Double(getOrderGrandTotal(getValidOrderItems(), getAdjustments()));
@@ -557,7 +557,7 @@ public class OrderReadHelper {
                 new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"));
         return EntityUtil.filterByAnd(getOrderItems(), exprs);
     }
-    
+
     public List getOrderItemAdjustments(GenericValue orderItem) {
         return getOrderItemAdjustmentList(orderItem, getAdjustments());
     }
@@ -602,8 +602,8 @@ public class OrderReadHelper {
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "Trouble getting OrderItemInventoryRes(s)", module);
             }
-        } 
-        return EntityUtil.filterByAnd(orderItemInventoryReses, UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId")));       
+        }
+        return EntityUtil.filterByAnd(orderItemInventoryReses, UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId")));
     }
 
     public List getOrderItemIssuances(GenericValue orderItem) {
@@ -615,24 +615,47 @@ public class OrderReadHelper {
                 orderItemIssuances = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("orderId", orderItem.get("orderId")));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, "Trouble getting ItemIssuance(s)", module);
-            }            
-        }        
+            }
+        }
         return EntityUtil.filterByAnd(orderItemIssuances, UtilMisc.toMap("orderItemSeqId", orderItem.getString("orderItemSeqId")));
+    }
+
+    public double getOrderReturnedQuantity() {
+        GenericDelegator delegator = orderHeader.getDelegator();
+        List returnedItems = null;
+        try {
+            returnedItems = delegator.findByAnd("ReturnItem", UtilMisc.toMap("orderId", orderHeader.getString("orderId")));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting ReturnItem from order", module);
+            return -1;
+        }
+
+        double returnedQuantity = 0.00;
+        if (returnedItems != null) {
+            Iterator i = returnedItems.iterator();
+            while (i.hasNext()) {
+                GenericValue returnedItem = (GenericValue) i.next();
+                if (returnedItem.get("returnQuantity") != null) {
+                    returnedQuantity += returnedItem.getDouble("returnQuantity").doubleValue();
+                }
+            }
+        }
+        return returnedQuantity;
     }
 
     public double getItemShippedQuantity(GenericValue orderItem) {
         double quantityShipped = 0.00;
-        List issuance = getOrderItemIssuances(orderItem);        
+        List issuance = getOrderItemIssuances(orderItem);
         if (issuance != null) {
             Iterator i = issuance.iterator();
             while (i.hasNext()) {
                 GenericValue issue = (GenericValue) i.next();
-                Double issueQty = issue.getDouble("quantity");               
+                Double issueQty = issue.getDouble("quantity");
                 if (issueQty != null) {
                     quantityShipped += issueQty.doubleValue();
                 }
             }
-        }        
+        }
         return quantityShipped;
     }
 
@@ -757,7 +780,7 @@ public class OrderReadHelper {
     public List getOrderItemStatuses(GenericValue orderItem) {
         return getOrderItemStatuses(orderItem, getOrderStatuses());
     }
-    
+
     public String getCurrentItemStatusString(GenericValue orderItem) {
         GenericValue statusItem = null;
         try {
@@ -770,7 +793,7 @@ public class OrderReadHelper {
         } else {
             return orderHeader.getString("statusId");
         }
-    }    
+    }
 
     /**
      * Checks to see if this user has read permission on this order
@@ -804,11 +827,11 @@ public class OrderReadHelper {
         }
         return orderHeader;
     }
-    
+
     public static GenericValue getProductStoreFromOrder(GenericDelegator delegator, String orderId) {
-        return getProductStoreFromOrder(getOrderHeader(delegator, orderId));        
+        return getProductStoreFromOrder(getOrderHeader(delegator, orderId));
     }
-    
+
     public static GenericValue getProductStoreFromOrder(GenericValue orderHeader) {
         GenericDelegator delegator = orderHeader.getDelegator();
         GenericValue productStore = null;
@@ -923,7 +946,7 @@ public class OrderReadHelper {
 
         return result;
     }
-   
+
     public static double getOrderItemsTotal(List orderItems, List adjustments) {
         double result = 0.0;
         Iterator itemIter = UtilMisc.toIterator(orderItems);

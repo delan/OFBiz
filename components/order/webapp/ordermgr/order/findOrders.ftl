@@ -1,26 +1,26 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -80,23 +80,23 @@ function lookupOrders() {
                 <td width='25%' align='right'><div class='tableheadtext'>Product ID:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='productId' value='${requestParameters.productId?if_exists}'></td>
-              </tr>             
+              </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Role Type:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
-                  <select name='roleTypeId' class='selectBox'> 
+                  <select name='roleTypeId' class='selectBox'>
                     <#if currentRole?has_content>
                     <option value="${currentRole.roleTypeId}">${currentRole.description}</option>
                     <option value="${currentRole.roleTypeId}">---</option>
-                    </#if>                                     
-                    <option value="ANY">Any Role Type</option>                   
+                    </#if>
+                    <option value="ANY">Any Role Type</option>
                     <#list roleTypes as roleType>
                       <option value="${roleType.roleTypeId}">${roleType.description}</option>
                     </#list>
                   </select>
                 </td>
-              </tr>                                      
+              </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Party ID:</div></td>
                 <td width='5%'>&nbsp;</td>
@@ -106,7 +106,7 @@ function lookupOrders() {
                 <td width='25%' align='right'><div class='tableheadtext'>UserLogin ID:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'></td>
-              </tr> 
+              </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Order Type:</div></td>
                 <td width='5%'>&nbsp;</td>
@@ -116,18 +116,18 @@ function lookupOrders() {
                     <option value="${currentType.orderTypeId}">${currentType.description}</option>
                     <option value="${currentType.orderTypeId}">---</option>
                     </#if>
-                    <option value="ANY">Any Order Type</option>                
+                    <option value="ANY">Any Order Type</option>
                     <#list orderTypes as orderType>
                       <option value="${orderType.orderTypeId}">${orderType.description}</option>
                     </#list>
                   </select>
                 </td>
-              </tr>                                           
+              </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Billing Acct:</div>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='billingAccountId' value='${requestParameters.billingAccountId?if_exists}'></td>
-              </tr>              
+              </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Created By:</div>
                 <td width='5%'>&nbsp;</td>
@@ -142,7 +142,7 @@ function lookupOrders() {
                     <option value="${currentProductStore.productStoreId}">${currentProductStore.storeName}</option>
                     <option value="${currentProductStore.productStoreId}">---</option>
                     </#if>
-                    <option value="ANY">Any Store</option>                
+                    <option value="ANY">Any Store</option>
                     <#list productStores as store>
                       <option value="${store.productStoreId}">${store.storeName}</option>
                     </#list>
@@ -158,29 +158,29 @@ function lookupOrders() {
                     <option value="${currentWebSite.webSiteId}">${currentWebSite.siteName}</option>
                     <option value="${currentWebSite.webSiteId}">---</option>
                     </#if>
-                    <option value="ANY">Any Web Site</option>                
+                    <option value="ANY">Any Web Site</option>
                     <#list webSites as webSite>
                       <option value="${webSite.webSiteId}">${webSite.siteName}</option>
                     </#list>
                   </select>
                 </td>
-              </tr>                              
+              </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Status:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
-                  <select name='orderStatusId' class='selectBox'> 
+                  <select name='orderStatusId' class='selectBox'>
                     <#if currentStatus?has_content>
                     <option value="${currentStatus.statusId}">${currentStatus.description}</option>
                     <option value="${currentStatus.statusId}">---</option>
-                    </#if>                                     
-                    <option value="ANY">Any Order Status</option>                   
+                    </#if>
+                    <option value="ANY">Any Order Status</option>
                     <#list orderStatuses as orderStatus>
                       <option value="${orderStatus.statusId}">${orderStatus.description}</option>
                     </#list>
                   </select>
                 </td>
-              </tr>                            
+              </tr>
               <tr>
                 <td width='25%' align='right'>
                   <div class='tableheadtext'>Date Filter:</div>
@@ -188,17 +188,17 @@ function lookupOrders() {
                 <td width='5%'>&nbsp;</td>
                 <td>
                   <table border='0' cellspacing='0' cellpadding='0'>
-                    <tr>                      
-                      <td>                        
+                    <tr>
+                      <td>
                         <input type='text' size='25' class='inputBox' name='minDate' value='${requestParameters.minDate?if_exists}'>
                         <a href="javascript:call_cal(document.lookuporder.minDate, '${fromDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                         <span class='tabletext'>From</span>
                       </td>
                     </tr>
-                    <tr>                  
-                      <td>                       
+                    <tr>
+                      <td>
                         <input type='text' size='25' class='inputBox' name='maxDate' value='${requestParameters.maxDate?if_exists}'>
-                        <a href="javascript:call_cal(document.lookuporder.maxDate, '${thruDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>                   
+                        <a href="javascript:call_cal(document.lookuporder.maxDate, '${thruDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                         <span class='tabletext'>Thru</span>
                       </td>
                     </tr>
@@ -232,7 +232,7 @@ document.lookuporder.order_id.focus();
           <td width="50%"><div class="boxhead">Orders Found</div></td>
           <td width="50%">
             <div class="boxhead" align=right>
-              <#if 0 < orderHeaderList?size>             
+              <#if 0 < orderHeaderList?size>
                 <#if 0 < viewIndex>
                   <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
                 <#else>
@@ -257,7 +257,8 @@ document.lookuporder.order_id.focus();
           <td width="5%" align="left"><div class="tableheadtext">Type</div></td>
           <td width="5%" align="left"><div class="tableheadtext">OrderID</div></td>
           <td width="20%" align="left"><div class="tableheadtext">Name</div></td>
-          <td width="5%" align="right"><div class="tableheadtext">Total Items</div></td>
+          <td width="5%" align="right"><div class="tableheadtext">Items Ordered</div></td>
+          <td width="5%" align="right"><div class="tableheadtext">Items Returned</div></td>
           <td width="10%" align="right"><div class="tableheadtext">Order Total</div></td>
           <td width="5%" align="left"><div class="tableheadtext">&nbsp;</div></td>
           <td width="20%" align="left"><div class="tableheadtext">Status</div></td>
@@ -266,7 +267,7 @@ document.lookuporder.order_id.focus();
           <td width="10%">&nbsp;</td>
         </tr>
         <tr>
-          <td colspan='10'><hr class='sepbar'></td>
+          <td colspan='11'><hr class='sepbar'></td>
         </tr>
         <#if orderHeaderList?has_content>
           <#assign rowClass = "viewManyTR2">
@@ -302,10 +303,11 @@ document.lookuporder.order_id.focus();
                 </div>
               </td>
               <td align="right"><div class="tabletext">${orh.getTotalOrderItemsQuantity()?string.number}</div></td>
+              <td align="right"><div class="tabletext">${orh.getOrderReturnedQuantity()?string.number}</div></td>
               <td align="right"><div class="tabletext">${orh.getOrderGrandTotal()?string.currency}</div></td>
               <td>&nbsp;</td>
               <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
-              <td><div class="tabletext"><nobr>${orderHeader.getString("orderDate")}</nobr></div></td>              
+              <td><div class="tabletext"><nobr>${orderHeader.getString("orderDate")}</nobr></div></td>
               <td>
                 <#if partyId != "_NA_">
                   <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" class="buttontext">${partyId}</a>
@@ -323,11 +325,11 @@ document.lookuporder.order_id.focus();
             <#else>
               <#assign rowClass = "viewManyTR2">
             </#if>
-          </#list>          
+          </#list>
         <#else>
           <tr>
             <td colspan='4'><div class='head3'>No orders found.</div></td>
-          </tr>        
+          </tr>
         </#if>
         <#if lookupErrorMessage?exists>
           <tr>
@@ -338,8 +340,8 @@ document.lookuporder.order_id.focus();
     </td>
   </tr>
 </table>
-        
-</#if> 
+
+</#if>
 <#else>
   <h3>You do not have permission to view this page. ("ORDERMGR_VIEW" or "ORDERMGR_ADMIN" needed)</h3>
 </#if>
