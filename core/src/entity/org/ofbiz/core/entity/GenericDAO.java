@@ -87,7 +87,7 @@ public class GenericDAO {
             singleInsert(entity, modelEntity, modelEntity.getFieldsCopy(), sql.getConnection());
         } catch (GenericDataSourceException e) {
             sql.rollback();
-            throw new GenericDataSourceException("Exception occured in insert", e);
+            throw new GenericDataSourceException("Exception while inserting the following entity: " + entity.toString(), e);
         } finally {
             sql.close();
         }
@@ -157,7 +157,7 @@ public class GenericDAO {
             singleUpdate(entity, modelEntity, fieldsToSave, sqlP.getConnection());
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
-            throw new GenericDataSourceException("Exception occured in update", e);
+            throw new GenericDataSourceException("Exception while updating the following entity: " + entity.toString(), e);
         } finally {
             sqlP.close();
         }
@@ -952,7 +952,7 @@ public class GenericDAO {
             delete(entity, sqlP.getConnection());
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
-            throw new GenericDataSourceException("Generic Entity Exception occured in delete", e);
+            throw new GenericDataSourceException("Exception while deleting the following entity: " + entity.toString(), e);
         } finally {
             sqlP.close();
         }
