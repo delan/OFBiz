@@ -25,20 +25,20 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/service-eca.xsd">
     <!-- Inventory Transfer ECAs -->
     <eca service="createInventoryTransfer" event="invoke">  
-    	<condition field-name="statusId" operator="not-equals" value="IXF_CANCELLED"/>  	
+        <condition field-name="statusId" operator="not-equals" value="IXF_CANCELLED"/>      
         <action service="prepareInventoryTransfer" mode="sync"/>
     </eca>
     <eca service="createInventoryTransfer" event="commit">
-    	<condition field-name="statusId" operator="equals" value="IXF_COMPLETE"/>
-    	<action service="completeInventoryTransfer" mode="sync"/>
+        <condition field-name="statusId" operator="equals" value="IXF_COMPLETE"/>
+        <action service="completeInventoryTransfer" mode="sync"/>
     </eca>
     
     <eca service="updateInventoryTransfer" event="invoke">
-    	<condition field-name="statusId" operator="equals" value="IXF_CANCELLED"/>
-    	<action service="cancelInventoryTransfer" mode="sync"/>
+        <condition field-name="statusId" operator="equals" value="IXF_CANCELLED"/>
+        <action service="cancelInventoryTransfer" mode="sync"/>
     </eca>
     <eca service="updateInventoryTransfer" event="commit">
-    	<condition field-name="statusId" operator="equals" value="IXF_COMPLETE"/>
+        <condition field-name="statusId" operator="equals" value="IXF_COMPLETE"/>
         <action service="completeInventoryTransfer" mode="sync"/>
     </eca>
 
@@ -47,7 +47,7 @@
         <action service="saveProductPriceChange" mode="sync"/>
     </eca>
     <eca service="updateProductPrice" event="commit">
-    	<condition-field field-name="price" operator="not-equals" to-field-name="oldPrice" type="Double"/>
+        <condition-field field-name="price" operator="not-equals" to-field-name="oldPrice" type="Double"/>
         <action service="saveProductPriceChange" mode="sync"/>
     </eca>
     <eca service="deleteProductPrice" event="commit">
@@ -56,25 +56,25 @@
 
     <!-- Product Party ECAs -->
     <eca service="addPartyToCategory" event="invoke">
-    	<condition field-name="roleTypeId" operator="equals" value="_NA_"/>
+        <condition field-name="roleTypeId" operator="equals" value="_NA_"/>
         <action service="ensureNaPartyRole" mode="sync"/>
     </eca>
     <eca service="addPartyToFacility" event="invoke">
-    	<condition field-name="roleTypeId" operator="equals" value="_NA_"/>
+        <condition field-name="roleTypeId" operator="equals" value="_NA_"/>
         <action service="ensureNaPartyRole" mode="sync"/>
     </eca>
     <eca service="addPartyToFacilityGroup" event="invoke">
-    	<condition field-name="roleTypeId" operator="equals" value="_NA_"/>
+        <condition field-name="roleTypeId" operator="equals" value="_NA_"/>
         <action service="ensureNaPartyRole" mode="sync"/>
     </eca>
     <eca service="addProdCatalogToParty" event="invoke">
-    	<condition field-name="roleTypeId" operator="equals" value="_NA_"/>
+        <condition field-name="roleTypeId" operator="equals" value="_NA_"/>
         <action service="ensureNaPartyRole" mode="sync"/>
     </eca>
 
     <!-- Product Content ECAs -->
     <eca service="createProductContent" event="in-validate">
-    	<condition field-name="contentId" operator="is-empty"/>
+        <condition field-name="contentId" operator="is-empty"/>
         <action service="createContent" mode="sync"/>
     </eca>
 </service-eca>
