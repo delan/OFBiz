@@ -44,6 +44,7 @@ import dori.jasper.engine.*;
 public class JasperReportsPdfViewHandler implements ViewHandler {
 
     protected ServletContext context;
+    public static UtilCache jasperReportsCompiledCache = new UtilCache("webapp.JasperReportsCompiled");
 
     public void init(ServletContext context) throws ViewHandlerException {
         this.context = context;
@@ -70,8 +71,18 @@ public class JasperReportsPdfViewHandler implements ViewHandler {
         }
 
         try {
-            InputStream is = context.getResourceAsStream(page);
-            JasperReport report = JasperCompileManager.compileReport(is);
+            JasperReport report = (JasperReport) jasperReportsCompiledCache.get(page);
+            if (report == null) {
+                synchronized (this) {
+                    report = (JasperReport) jasperReportsCompiledCache.get(page);
+                    if (report == null) {
+                        InputStream is = context.getResourceAsStream(page);
+                        report = JasperCompileManager.compileReport(is);
+                        jasperReportsCompiledCache.put(page, report);
+                    }
+                }
+            }
+            
             response.setContentType("application/pdf");
 
             Map parameters = (Map) request.getAttribute("jrParameters");
