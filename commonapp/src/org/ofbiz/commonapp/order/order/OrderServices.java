@@ -48,7 +48,7 @@ import org.ofbiz.commonapp.product.catalog.*;
 public class OrderServices {
 
     public static final String module = OrderServices.class.getName();
-    public static final String resource = OrderServices.class.getPackage().getName() + ".PackageMessages";
+    public static final String resource = "org.ofbiz.commonapp.order.order.PackageMessages";
 
     /** Service for creating a new order */
     public static Map createOrder(DispatchContext ctx, Map context) {
