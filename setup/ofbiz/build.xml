@@ -70,13 +70,11 @@
         <property environment="env" />
         <property name="catalina.dir"      value="${env.CATALINA_HOME}" />
     
-        <!-- do this first because it will fail if we've already installed... -->
-        <move file="${catalina.dir}/common/lib/tyrex-0.9.7.0.jar" toFile="${catalina.dir}/common/tyrex-0.9.7.0.jar"/> 
-        
-        <move file="${catalina.dir}/conf/server.xml"
-            toFile="${catalina.dir}/conf/server.orig.xml" />
-        <copy file="setup/catalina/conf/server.xml"
-             toDir="${catalina.dir}/conf" />
+        <move file="${catalina.dir}/conf/server.xml" toFile="${catalina.dir}/conf/server.orig.xml" />
+        <copy file="setup/catalina/conf/server.xml" toDir="${catalina.dir}/conf" />
+
+        <copy file="setup/catalina/bin/ofbiz.sh" toDir="${catalina.dir}/bin" />
+        <copy file="setup/catalina/bin/ofbiz.bat" toDir="${catalina.dir}/bin" />
 
         <copy file="lib/common/castor-0.9.3.9.jar" toDir="${catalina.dir}/common/lib"/> 
         <copy file="lib/common/hsqldb.jar" toDir="${catalina.dir}/common/lib"/> 
@@ -92,6 +90,8 @@
         <copy file="lib/share/clutil.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/share/wsdl4j.jar" toDir="${catalina.dir}/lib"/>
 
+        <delete file="${catalina.dir}/common/lib/tyrex-0.9.7.0.jar"/> 
+        
     </target>
 
     <!-- ================================================================== -->
@@ -100,18 +100,18 @@
 
     <target name="ofbiz-init">
         <property environment="env" />
-        <property name="home.dir"        value="${env.OFBIZ_HOME}" />
-        <property name="etc.dir"        value="${home.dir}/etc" />
+        <property name="home.dir"       value="${env.OFBIZ_HOME}" />
+        <property name="classes.dir"    value="${home.dir}/classes" />
         <property name="lib.dir"        value="${home.dir}/lib" />
-        <property name="j2eedeploy.dir"  value="${home.dir}/j2eedeploy" />
+        <property name="j2eedeploy.dir" value="${home.dir}/j2eedeploy" />
     </target>
 
     <target name="catalina-init">
         <property environment="env" />
-        <property name="catalina.dir"      value="${env.CATALINA_HOME}" />
+        <property name="catalina.dir"    value="${env.CATALINA_HOME}" />
         <property name="home.dir"        value="${env.OFBIZ_HOME}" />
 
-        <property name="etc.dir"         value="${catalina.dir}/classes" />
+        <property name="classes.dir"     value="${catalina.dir}/classes" />
         <property name="lib.dir"         value="${catalina.dir}/lib" />
         <property name="j2eedeploy.dir"  value="${catalina.dir}/webapps" />
     </target>
@@ -125,14 +125,16 @@
     </target>
 
     <target name="catalina-clean" depends="catalina-init,sub-clean">
-        <delete file="${etc.dir}/entityengine.properties" />
-        <delete file="${etc.dir}/security.properties" />
-        <delete file="${etc.dir}/debug.properties" />
-        <delete file="${etc.dir}/cache.properties" />
-        <delete file="${etc.dir}/poolman.xml" />
-        <delete file="${etc.dir}/jndi.properties" />
-        <delete file="${etc.dir}/servicesengine.properties" />
-        <delete file="${etc.dir}/tyrexdomain.xml" />
+        <delete file="${classes.dir}/entityengine.properties" />
+        <delete file="${classes.dir}/security.properties" />
+        <delete file="${classes.dir}/debug.properties" />
+        <delete file="${classes.dir}/cache.properties" />
+        <delete file="${classes.dir}/poolman.xml" />
+        <delete file="${classes.dir}/jndi.properties" />
+        <delete file="${classes.dir}/servicesengine.properties" />
+        <delete file="${classes.dir}/tyrexdomain.xml" />
+        
+        <delete dir="${classes.dir}/org/ofbiz/commonapp" />
         
         <delete file="${lib.dir}/ofbcore-share.jar" />
         <delete file="${lib.dir}/ofbcore-rules.jar" />
@@ -149,7 +151,7 @@
     </target>
 
     <target name="ofbiz-clean" depends="ofbiz-init,sub-clean">
-        <delete dir="${etc.dir}" />        
+        <delete dir="${classes.dir}" />        
         <delete dir="${lib.dir}" />
         <delete dir="${j2eedeploy.dir}" />
     </target>
@@ -183,7 +185,7 @@
     <!-- ================================================================== -->
 
     <target name="ofbiz-prepare" depends="ofbiz-init">
-        <mkdir dir="${etc.dir}" />
+        <mkdir dir="${classes.dir}" />
         <mkdir dir="${lib.dir}" />
         <mkdir dir="${j2eedeploy.dir}" />
     </target>
@@ -293,21 +295,20 @@
 
     <!-- Copy all files necessary for running IN PLACE (ie: OFBIZ_HOME == .) -->
     <target name="int-deploy" depends="build">
-        <copy file="commonapp/etc/entityengine.properties" toFile="${etc.dir}/entityengine.properties" />
-        <copy file="commonapp/etc/security.properties" toFile="${etc.dir}/security.properties" />
-        <copy file="commonapp/etc/debug.properties" toFile="${etc.dir}/debug.properties" />
-        <copy file="commonapp/etc/cache.properties" toFile="${etc.dir}/cache.properties" />
-        <copy file="commonapp/etc/poolman.xml" toFile="${etc.dir}/poolman.xml" />
-        <copy file="commonapp/etc/jndi.properties" toFile="${etc.dir}/jndi.properties" />
-        <copy file="commonapp/etc/servicesengine.properties" toFile="${etc.dir}/servicesengine.properties" />
-        <copy file="commonapp/etc/tyrexdomain.xml" toFile="${etc.dir}/tyrexdomain.xml" />
+        <copy file="commonapp/etc/entityengine.properties" toFile="${classes.dir}/entityengine.properties" />
+        <copy file="commonapp/etc/security.properties" toFile="${classes.dir}/security.properties" />
+        <copy file="commonapp/etc/debug.properties" toFile="${classes.dir}/debug.properties" />
+        <copy file="commonapp/etc/cache.properties" toFile="${classes.dir}/cache.properties" />
+        <copy file="commonapp/etc/poolman.xml" toFile="${classes.dir}/poolman.xml" />
+        <copy file="commonapp/etc/jndi.properties" toFile="${classes.dir}/jndi.properties" />
+        <copy file="commonapp/etc/servicesengine.properties" toFile="${classes.dir}/servicesengine.properties" />
+        <copy file="commonapp/etc/tyrexdomain.xml" toFile="${classes.dir}/tyrexdomain.xml" />
 
-        <copy file="commonapp/lib/ofbcommonapp.jar"
-            toFile="${lib.dir}/ofbcommonapp.jar" />
-        
         <copy file="core/lib/ofbcore-share.jar" toFile="${lib.dir}/ofbcore-share.jar" />
         <copy file="core/lib/ofbcore-rules.jar" toFile="${lib.dir}/ofbcore-rules.jar" />
         <copy file="core/lib/ofbcore-workflow.jar" toFile="${lib.dir}/ofbcore-workflow.jar" />
+    
+        <copy file="commonapp/lib/ofbcommonapp.jar" toFile="${lib.dir}/ofbcommonapp.jar" />
     </target>
 
     <target name="ejbdeploy" depends="deploy">
