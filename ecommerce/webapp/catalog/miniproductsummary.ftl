@@ -37,7 +37,7 @@
         <#-- check to see if salesDiscontinuationDate has passed -->
         <div class='tabletext' style='color: red;'>No Longer Available</div>
     
-    <#elseif miniProduct.isVirtual?exists && miniProduct.isVirtual?exists = "Y">
+    <#elseif miniProduct.isVirtual?default("N") == "Y">
         <a href='<@ofbizUrl>/product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>' class="buttontext"><nobr>[Choose Variation...]</nobr></a>
     
     <#else>
