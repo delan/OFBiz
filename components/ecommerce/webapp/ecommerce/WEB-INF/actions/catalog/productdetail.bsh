@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.36 $
+ *@version    $Revision: 1.37 $
  *@since      2.1
  */
 
@@ -97,8 +97,11 @@ requestParams = UtilHttp.getParameterMap(request);
 
 // get the shopping lists for the user (if logged in)
 if (userLogin != null) {
-    shoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId")), UtilMisc.toList("listName"));
-    context.put("shoppingLists", shoppingLists);
+    exprList = UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.getString("partyId")),
+        new EntityExpr("listName", EntityOperator.NOT_EQUAL, "auto-save"));
+    condition = new EntityConditionList(exprList, EntityOperator.AND);
+    allShoppingLists = delegator.findByCondition("ShoppingList", condition, null, UtilMisc.toList("listName"));        
+    context.put("shoppingLists", allShoppingLists);
 }
 
 // set the content path prefix

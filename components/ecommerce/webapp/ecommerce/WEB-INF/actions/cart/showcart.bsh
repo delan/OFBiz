@@ -26,6 +26,7 @@
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.order.shoppingcart.product.ProductDisplayWorker;
+import org.ofbiz.entity.condition.*;
 
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
@@ -45,8 +46,11 @@ context.put("allgiftWraps", allgiftWraps);
 
 // get the shopping lists for the logged in user
 if (userLogin != null) {
-    shoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId")), UtilMisc.toList("listName"));
-    context.put("shoppingLists", shoppingLists);
+    exprList = UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.getString("partyId")),
+        new EntityExpr("listName", EntityOperator.NOT_EQUAL, "auto-save"));
+    condition = new EntityConditionList(exprList, EntityOperator.AND);
+    allShoppingLists = delegator.findByCondition("ShoppingList", condition, null, UtilMisc.toList("listName"));
+    context.put("shoppingLists", allShoppingLists);
 }
 
 // Get Cart Associated Products Data

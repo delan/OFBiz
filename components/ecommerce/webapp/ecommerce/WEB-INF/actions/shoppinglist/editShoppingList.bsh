@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1.1
  */
  
@@ -41,7 +41,10 @@ currencyUomId = UtilHttp.getCurrencyUom(request);
 context.put("currencyUomId", currencyUomId);
 
 // get the top level shopping lists for the logged in user
-allShoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId")), UtilMisc.toList("listName"));
+exprList = UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.getString("partyId")),
+        new EntityExpr("listName", EntityOperator.NOT_EQUAL, "auto-save"));
+condition = new EntityConditionList(exprList, EntityOperator.AND);
+allShoppingLists = delegator.findByCondition("ShoppingList", condition, null, UtilMisc.toList("listName"));
 shoppingLists = EntityUtil.filterByAnd(allShoppingLists, UtilMisc.toMap("parentShoppingListId", null));
 context.put("allShoppingLists", allShoppingLists);
 context.put("shoppingLists", shoppingLists);
