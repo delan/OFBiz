@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/30 16:21:22  jonesde
+ * Minor clean ups.
+ *
  * Revision 1.2  2001/07/30 23:03:06  azeneski
  * Fixed problem which only allowed a 0 or < 0 double.
  *
@@ -13,6 +16,8 @@
  */
 
 package org.ofbiz.core.util;
+
+import java.util.Collection;
 
 /**
  * <p><b>Title:</b> General input/data validation methods
@@ -163,6 +168,12 @@ public class UtilValidate
   public static boolean isNotEmpty(String s)
   {   
     return ((s != null) && (s.length() > 0));
+  }
+  
+  /** Check whether collection c is NOT empty. */
+  public static boolean isNotEmpty(Collection c)
+  {   
+    return ((c != null) && (c.size() > 0));
   }
   
   /** Returns true if string s is empty or whitespace characters only. */

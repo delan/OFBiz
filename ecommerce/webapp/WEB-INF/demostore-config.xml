@@ -67,11 +67,36 @@
       <error>view:error</error>
     </request-map>
     <request-map>
+      <uri>addseparator</uri>
+      <event-type>java</event-type>
+      <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
+      <event-invoke>addSeparator</event-invoke>
+      <success>view:showcart</success>
+      <error>view:error</error>
+    </request-map>
+    <request-map>
       <uri>modifycart</uri>
       <event-type>java</event-type>
       <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
       <event-invoke>modifyCart</event-invoke>
       <success>view:showcart</success>
+      <error>view:error</error>
+    </request-map>		
+    <request-map>
+      <uri>emptycart</uri>
+      <event-type>java</event-type>
+      <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
+      <event-invoke>emptyCart</event-invoke>
+      <success>view:showcart</success>
+      <error>view:error</error>
+    </request-map>		
+    <request-map><uri>checkoutoptions</uri><success>view:checkoutoptions</success></request-map>
+    <request-map>
+      <uri>checkout</uri>
+      <event-type>java</event-type>
+      <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
+      <event-invoke>updateCheckOutOptions</event-invoke>
+      <success>view:checkout</success>
       <error>view:error</error>
     </request-map>		
     <request-map><uri>catalog</uri><success>view:catalog</success></request-map>
@@ -121,6 +146,8 @@
 
     <view-map><view>shippingAddress</view><mapped-page>/shipping/shipping.jsp</mapped-page></view-map>
 
+    <view-map><view>checkoutoptions</view><mapped-page>/order/checkoutoptions.jsp</mapped-page></view-map>
+    <view-map><view>checkout</view><mapped-page>/order/checkout.jsp</mapped-page></view-map>
     <view-map><view>orderhistory</view><mapped-page>/order/orderhistory.jsp</mapped-page></view-map>
     <view-map><view>orderstatus</view><mapped-page>/order/orderstatus.jsp</mapped-page></view-map>
 

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/30 20:55:40  jonesde
+ * Added a simple function to only return pre and post text if the base string is not empty.
+ *
  * Revision 1.1  2001/07/16 14:45:48  azeneski
  * Added the missing 'core' directory into the module.
  *

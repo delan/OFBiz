@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/08/30 22:16:10  epabst
+ * added new event for adding items from order to cart
+ * improved/fixed orderstatus
+ *
  * Revision 1.3  2001/08/28 02:24:34  azeneski
  * Updated shopping cart to use store a reference to the product entity, rather then individual attributes.
  * Worked on the equals() method in ShoppingCartItem.java. Might be fixed now.
@@ -118,29 +122,7 @@ public class ShoppingCartEvents {
             return "error";
         }
                     
-        // create a new shopping cart item.
-        ShoppingCartItem newItem = new ShoppingCartItem(product,quantity,attributes);
-        Debug.log("New item created: " + newItem.getProductId());
-        
-        // Check for existing cart item.
-        boolean foundMatch = false;
-        Debug.log("Cart size: " + cart.size());
-        if ( cart.size() > 0 ) {
-            Iterator i = cart.iterator();
-            while ( i.hasNext() ) {
-                ShoppingCartItem sci = (ShoppingCartItem) i.next();
-                Debug.log("Comparing to item: " + sci.getProductId());
-                if ( sci.equals(newItem) ) {
-                    foundMatch = true;
-                    Debug.log("Found a match, updating quantity.");
-                    sci.setQuantity(sci.getQuantity() + quantity);
-                }
-            }
-        }
-                        
-        // Add the item to the shopping cart if it wasn't found.
-        if ( !foundMatch )     
-            cart.addItem(0,newItem);
+        cart.addOrIncreaseItem(product, quantity, attributes);
 
         if ( cart.viewCartOnAdd() )
             return "success";
@@ -160,58 +142,33 @@ public class ShoppingCartEvents {
         ShoppingCart cart = getCartObject(request);
         GenericHelper helper = (GenericHelper) request.getAttribute("helper");
         
-        boolean noItems = false;
+        boolean noItems;
         if ("true".equals(request.getParameter("add_all"))) {
             Iterator itemIter = helper.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId), null).iterator();
             if (itemIter.hasNext()) {
+                noItems = false;
                 do {
                     GenericValue orderItem = (GenericValue) itemIter.next();
-                    cart.addItem(orderItem.getRelatedOne("Product"), orderItem.getDouble("quantity").doubleValue(), null);
+                    cart.addOrIncreaseItem(orderItem.getRelatedOne("Product"), orderItem.getDouble("quantity").doubleValue(), null);
                 } while (itemIter.hasNext());
             } else {
                 noItems = true;
             }
         } else {
+            noItems = true;
             for (int i = 0; i < itemIds.length; i++) {
                 String orderItemSeqId = itemIds[i];
-                //FIXME: lookup order items and add them to cart
+                GenericValue orderItem = helper.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
+                cart.addOrIncreaseItem(orderItem.getRelatedOne("Product"), orderItem.getDouble("quantity").doubleValue(), null);
+                noItems = false;
             }
         }
-
-/*        
-        // Get the product 
-        GenericValue product = helper.findByPrimaryKey("Product", 
-                UtilMisc.toMap("productId", productId));
         
-        if ( product == null ) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"No product found.");
+        if (noItems) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "No items found to add.");
             return "error";
         }
-                    
-        // create a new shopping cart item.
-        ShoppingCartItem newItem = new ShoppingCartItem(product,quantity,attributes);
-        Debug.log("New item created: " + newItem.getProductId());
-        
-        // Check for existing cart item.
-        boolean foundMatch = false;
-        Debug.log("Cart size: " + cart.size());
-        if ( cart.size() > 0 ) {
-            Iterator i = cart.iterator();
-            while ( i.hasNext() ) {
-                ShoppingCartItem sci = (ShoppingCartItem) i.next();
-                Debug.log("Comparing to item: " + sci.getProductId());
-                if ( sci.equals(newItem) ) {
-                    foundMatch = true;
-                    Debug.log("Found a match, updating quantity.");
-                    sci.setQuantity(sci.getQuantity() + quantity);
-                }
-            }
-        }
-                        
-        // Add the item to the shopping cart if it wasn't found.
-        if ( !foundMatch )     
-            cart.addItem(0,newItem);
-*/
+            
         if ( cart.viewCartOnAdd() )
             return "success";
         else
@@ -296,7 +253,7 @@ public class ShoppingCartEvents {
                 
     
     // Gets the shopping cart from the session. Used by all events.
-    private static ShoppingCart getCartObject(HttpServletRequest request) {
+    public static ShoppingCart getCartObject(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
         ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);
         if ( cart == null )
