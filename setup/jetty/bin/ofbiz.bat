@@ -20,19 +20,31 @@ rem ----- Set the CLASSPATH ----------------------------------------------------
 
 set _CLASSPATH=%CLASSPATH%
 set CLASSPATH=%CLASSPATH%;%JAVA_HOME%\lib\tools.jar
-set CLASSPATH=%CLASSPATH%;%JETTY_HOME%\ext\org.mortbay.jetty.jar
+set CLASSPATH=%CLASSPATH%;%JETTY_HOME%\lib\org.mortbay.jetty.jar
+set CLASSPATH=%CLASSPATH%;%JETTY_HOME%\lib\javax.servlet.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\axis.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\batik.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\cactus.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\clutil.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\cvslib.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\dom4j.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\fop.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\jakarta-oro-2.0.6.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\jakarta-poi-1.5.1-final.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\jaxrpc.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\junit.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\lucene-1.2.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\saaj.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\xalan.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\freemarker.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\velocity-1.3.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\velocity-dep-1.3.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\wsdl4j.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\scripting\bsh-1.2b7.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\scripting\bsf.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\scripting\js.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\scripting\jacl.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\scripting\jython.jar
-set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\clutil.jar
-set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\jakarta-oro-2.0.6.jar
-set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\freemarker.jar
-set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\velocity-1.2.jar
-set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\velocity-dep-1.2.jar
-set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\share\wsdl4j.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\jotm\carol.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\jotm\commons-cli.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\jotm\enhydra-jdbc.jar
@@ -47,7 +59,13 @@ set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\jotm\ow_util_wrp_log4j.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\castor-0.9.3.9.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-beanutils.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-collections.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-dbcp.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-digester.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-discovery.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-fileupload-1.0-dev.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-httpclient.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-logging.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\commons-pool.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\hsqldb.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\jms_1.0.2a.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\jta_1.0.1.jar
@@ -59,6 +77,7 @@ set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\sapdbc.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\common\tyrex-1.0.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\compile\xerces.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\compile\mail.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\compile\activation.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\datavision\DataVision.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\datavision\MinML.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\lib\datavision\jcalendar.jar
@@ -97,7 +116,7 @@ echo JAVA_OPTS=%RESIN_OPTS%
 echo JETTY_HOME=%JETTY_HOME%
 echo.
 
-%JAVA_HOME%\bin\java %JAVA_OPTS% -cp $CLASSPATH org.mortbay.jetty.Server %OFBIZ_HOME%\setup\jetty\etc\ofbiz.xml
+%JAVA_HOME%\bin\java %JAVA_OPTS% -cp %CLASSPATH% org.mortbay.jetty.Server %OFBIZ_HOME%\setup\jetty\etc\ofbiz.xml
 
 set CLASSPATH=%_CLASSPATH%
 set JETTY_OPTS=%_JETTY_OPTS%
