@@ -708,8 +708,8 @@ public class SqlJdbcUtil {
         fieldTypeMap.put("Object", new Integer(10));
         fieldTypeMap.put("java.sql.Blob", new Integer(11));
         fieldTypeMap.put("Blob", new Integer(11));
-        fieldTypeMap.put("java.sql.Clob", new Integer(11));
-        fieldTypeMap.put("Clob", new Integer(11));
+        fieldTypeMap.put("java.sql.Clob", new Integer(12));
+        fieldTypeMap.put("Clob", new Integer(12));
     }
 
     public static int getType(String fieldType) throws GenericNotImplementedException {
