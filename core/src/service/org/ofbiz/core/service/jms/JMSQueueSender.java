@@ -57,7 +57,7 @@ public class JMSQueueSender extends AbstractJMSEngine {
         // get the config
         Element serviceElement = getServiceElement(modelService);
         String broker = serviceElement.getAttribute("broker");
-        String userName = serviceElement.getAttribute("userName");
+        String userName = serviceElement.getAttribute("username");
         String password = serviceElement.getAttribute("password");
         String queueName = serviceElement.getAttribute("topic-queue");
         String jndiName = serviceElement.getAttribute("jndi-name");
