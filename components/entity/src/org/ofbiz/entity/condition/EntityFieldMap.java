@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldMap.java,v 1.8 2004/07/07 05:48:23 doogie Exp $
+ * $Id: EntityFieldMap.java,v 1.9 2004/07/07 06:01:43 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class EntityFieldMap extends EntityCondition {
@@ -106,6 +106,7 @@ public class EntityFieldMap extends EntityCondition {
             Map.Entry entry = (Map.Entry) iter.next();
             String fieldName = (String) entry.getKey();
             Object value = map.get( fieldName );
+            if (value == EntityOperator.WILDCARD) return true;
             if ( value == null ) {
                 if ( entry.getValue() != null ) {
                     return false;
