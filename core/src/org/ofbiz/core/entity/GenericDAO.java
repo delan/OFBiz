@@ -333,7 +333,11 @@ public class GenericDAO
       if(keys.contains(curField.name)) partialFields.add(curField);
     }
     
-    String sql = "SELECT " + modelEntity.colNameString(partialFields, ", ", "") + " FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?");
+    String sql = "SELECT ";
+    if(partialFields.size() > 0) sql = sql + modelEntity.colNameString(partialFields, ", ", "");
+    else sql = sql + "*";
+    sql = sql + " FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
+    
     try {
       ps = connection.prepareStatement(sql);
       
@@ -402,7 +406,10 @@ public class GenericDAO
     }
     else { selectFields = modelEntity.fields; }
     
-    String sql = "SELECT " + modelEntity.colNameString(selectFields, ", ", "") + " FROM " + modelEntity.tableName;
+    String sql = "SELECT ";
+    if(selectFields.size() > 0) sql = sql + modelEntity.colNameString(selectFields, ", ", "");
+    else sql = sql + "*";
+    sql += " FROM " + modelEntity.tableName;
     if(fields != null && fields.size() > 0) sql = sql + " WHERE " + modelEntity.colNameString(whereFields, "=? AND ", "=?");
 
     if(orderBy != null && orderBy.size() > 0)
