@@ -42,29 +42,30 @@ import org.ofbiz.core.util.*;
  * Created on October 8, 2001, 1:17 PM
  */
 public class ShippingEvents {
-        
+    
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);        
+        ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
-        try { 
-            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); 
-        }
-        catch( java.net.MalformedURLException e ) { 
-            Debug.logWarning(e); 
+        try {
+            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
+        } catch (java.net.MalformedURLException e) {
+            Debug.logWarning(e);
         }
         
-        String shippingMethod = request.getParameter("shipping_method");
-        String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
-        String shipmentMethodTypeId = null;
         StringBuffer errorMessage = new StringBuffer();
-        if ( shippingMethod != null ) {
-            int atSign = shippingMethod.indexOf('@');
-            shipmentMethodTypeId = shippingMethod.substring(0,atSign);
-        }
-        if ( shipmentMethodTypeId == null ) {
+        
+        //String shippingMethod = request.getParameter("shipping_method");
+        //String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
+        //if ( shippingMethod != null ) {
+        //    int atSign = shippingMethod.indexOf('@');
+        //    shipmentMethodTypeId = shippingMethod.substring(0,atSign);
+        //}
+        String shippingContactMechId = cart.getShippingContactMechId();
+        String shipmentMethodTypeId = cart.getShipmentMethodTypeId();
+        if (shipmentMethodTypeId == null) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>Please Select a Shipping Method");
             return "error";
         }
@@ -91,8 +92,7 @@ public class ShippingEvents {
         GenericValue shipAddress = null;
         try {
             shipAddress = delegator.findByPrimaryKey("PostalAddress",UtilMisc.toMap("contactMechId",shippingContactMechId));
-        }
-        catch ( GenericEntityException e ) {
+        } catch (GenericEntityException e) {
             Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping address entity.");
             request.setAttribute(SiteDefs.ERROR_MESSAGE,"A problem occured calculating shipping. Fees will be calculated offline.");
             return "success";
@@ -106,11 +106,11 @@ public class ShippingEvents {
         // Get the possible estimates.
         ArrayList estimateList = new ArrayList();
         Iterator i = estimates.iterator();
-        while ( i.hasNext() ) {
+        while (i.hasNext()) {
             GenericValue thisEstimate = (GenericValue) i.next();
             String toGeo = thisEstimate.getString("geoIdTo");
             // Make sure we have a valid GEOID.
-            if ( toGeo == null || toGeo.equals("") || toGeo.equals(shipAddress.getString("countryGeoId")) || toGeo.equals(shipAddress.getString("stateProvinceGeoId")) || toGeo.equals(shipAddress.getString("postalCodeGeoId")) ) {
+            if (toGeo == null || toGeo.equals("") || toGeo.equals(shipAddress.getString("countryGeoId")) || toGeo.equals(shipAddress.getString("stateProvinceGeoId")) || toGeo.equals(shipAddress.getString("postalCodeGeoId"))) {
                 GenericValue wv = null;
                 GenericValue qv = null;
                 GenericValue pv = null;
@@ -120,9 +120,9 @@ public class ShippingEvents {
                 catch ( GenericEntityException e ) { }
                 try { pv = thisEstimate.getRelatedOne("PriceQuantityBreak"); }
                 catch ( GenericEntityException e ) { }
-                if ( wv == null && qv == null && pv == null )
+                if (wv == null && qv == null && pv == null) {
                     estimateList.add(thisEstimate);
-                else {
+                } else {
                     // Do some testing.
                     boolean useWeight = false;
                     boolean weightValid = false;
@@ -256,7 +256,7 @@ public class ShippingEvents {
         HashMap arguments = new HashMap();
         double totalWeight = 0.00000;
         double upsRate = 0.00;
-        
+     
         HashMap services = new HashMap();
         services.put("1DA","Next Day Air");
         services.put("1DM","Next Day Air Early");
@@ -270,10 +270,10 @@ public class ShippingEvents {
         services.put("XPR","Worldwide Express");
         services.put("XDM","Worldwide Express Plus");
         services.put("XPD","Worldwide Expedited");
-        
+     
         if ( !services.containsKey(upsMethod) )
             return 0.00;
-        
+     
         // Get the total weight from the cart.
         Iterator cartItemIterator = cart.iterator();
         while ( cartItemIterator.hasNext() ) {
@@ -282,24 +282,24 @@ public class ShippingEvents {
         }
         String weightString = new Double(totalWeight).toString();
         Debug.logInfo("[ShippingEvents.getUPSRate] Total Weight: " + weightString);
-        
+     
         // Set up the UPS arguments.
         arguments.put("AppVersion","1.2");
         arguments.put("ResponseType","application/x-ups-rss");
         arguments.put("AcceptUPSLicenseAgreement","yes");
-        
+     
         arguments.put("RateChart","Regular Daily Pickup");              // ?
         arguments.put("PackagingType","00");                                  // Using own container
         arguments.put("ResidentialInd","1");                                     // Assume residential
-        
+     
         arguments.put("ShipperPostalCode",fromZip);                      // Ship From ZipCode
         arguments.put("ConsigneeCountry","US");                            // 2 char country ISO
         arguments.put("ConsigneePostalCode","27703");                 // Ship TO ZipCode
         arguments.put("PackageActualWeight",weightString);          // Total shipment weight
-        
+     
         arguments.put("ActionCode","3");                                         // Specify the shipping type. (4) to get all
         arguments.put("ServiceLevelCode",upsMethod);                   // User's shipping choice (or 1DA for ActionCode 4)
-        
+     
         String upsResponse = null;
         try {
             req.setUrl(UPS_RATES_URL);
@@ -311,7 +311,7 @@ public class ShippingEvents {
             Debug.logError("[ShippingEvents.getUPSRate] Problems getting UPS Rate Infomation.");
             return -1;
         }
-        
+     
         if ( upsResponse.indexOf("application/x-ups-error") != -1 ) {
             // get the error message
         }
@@ -326,14 +326,14 @@ public class ShippingEvents {
                 if ( upsResponse.indexOf("%") == -1 )
                     respList.add(upsResponse);
             }
-            
+     
             // Debug:
             Iterator i = respList.iterator();
             while ( i.hasNext() ) {
                 String value = (String) i.next();
                 Debug.logInfo("[ShippingEvents.getUPSRate] Resp List: " + value);
             }
-            
+     
             // Shipping method is index 5
             // Shipping rate is index 12
             if ( !respList.get(5).equals(upsMethod) )
@@ -345,10 +345,10 @@ public class ShippingEvents {
                 Debug.logError("[ShippingEvents.getUPSRate] Problems parsing rate value.");
             }
         }
-        
+     
         return upsRate;
     }
-    */
+     */
     
 }
 
