@@ -24,7 +24,7 @@
  *@since      2.1
 -->
 
-<#assign previousParams = session._PREVIOUS_PARAMS_?if_exists>
+<#assign previousParams = sessionAttributes._PREVIOUS_PARAMS_?if_exists>
 <#if previousParams?has_content>
   <#assign previousParams = "?" + previousParams>
 </#if>
