@@ -26,14 +26,14 @@
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
         <attribute name="invoiceItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="invoiceItemTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="productFeatureId" type="String" mode="IN" optional="true"/>
         <attribute name="uomId" type="String" mode="IN" optional="true"/>
         <attribute name="taxableFlag" type="Boolean" mode="IN" optional="false"/>
         <attribute name="quantity" type="Double" mode="IN" optional="false"/>
         <attribute name="amount" type="Double" mode="IN" optional="false"/>
-        <attribute name="description" type="String" mode="IN" optional="false"/>        
+        <attribute name="description" type="String" mode="IN" optional="true"/>        
     </service>
     <service name="createInvoiceRole" engine="simple" 
             location="org/ofbiz/commonapp/accounting/invoice/InvoiceServices.xml" invoke="createInvoiceRole">
