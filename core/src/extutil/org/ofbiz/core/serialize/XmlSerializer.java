@@ -258,15 +258,17 @@ public class XmlSerializer {
         } else if (tagName.startsWith("map-")) {
             // - Maps -
             Map value = null;
-            if ("map-HashMap".equals(tagName))
+            if ("map-HashMap".equals(tagName)) {
                 value = new HashMap();
-            else if ("map-Properties".equals(tagName))
+            } else if ("map-Properties".equals(tagName)) {
                 value = new Properties();
-            else if ("map-Hashtable".equals(tagName))
+            } else if ("map-Hashtable".equals(tagName)) {
                 value = new Hashtable();
-            else if ("map-WeakHashMap".equals(tagName))
+            } else if ("map-WeakHashMap".equals(tagName)) {
                 value = new WeakHashMap();
-            else if ("map-TreeMap".equals(tagName)) value = new TreeMap();
+            } else if ("map-TreeMap".equals(tagName)) {
+                value = new TreeMap();
+            }
 
             if (value == null) {
                 return deserializeCustom(element);
@@ -276,10 +278,7 @@ public class XmlSerializer {
                     if (curChild.getNodeType() == Node.ELEMENT_NODE) {
                         Element curElement = (Element) curChild;
                         if ("map-Entry".equals(curElement.getTagName())) {
-                            NodeList tempList = curElement.getElementsByTagName("map-Key");
-                            if (tempList.getLength() != 1)
-                                throw new SerializeException("There were " + tempList.getLength() + " map-Key elements, expected 1");
-                            Element mapKeyElement = (Element) tempList.item(0);
+                            Element mapKeyElement = UtilXml.firstChildElement(curElement, "map-Key");
                             Element keyElement = null;
                             Node tempNode = mapKeyElement.getFirstChild();
                             while (tempNode != null) {
@@ -291,10 +290,7 @@ public class XmlSerializer {
                             }
                             if (keyElement == null) throw new SerializeException("Could not find an element under the map-Key");
 
-                            tempList = curElement.getElementsByTagName("map-Value");
-                            if (tempList.getLength() != 1)
-                                throw new SerializeException("There were " + tempList.getLength() + " map-Value elements, expected 1");
-                            Element mapValueElement = (Element) tempList.item(0);
+                            Element mapValueElement = UtilXml.firstChildElement(curElement, "map-Value");
                             Element valueElement = null;
                             tempNode = mapValueElement.getFirstChild();
                             while (tempNode != null) {
