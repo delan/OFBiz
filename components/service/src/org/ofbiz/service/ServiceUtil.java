@@ -204,10 +204,14 @@ public class ServiceUtil {
         if (result.get(ModelService.ERROR_MESSAGE_LIST) != null) {
             List errors = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
             for (int i = 0; i < errors.size(); i++) {
-                if (errorMessage != null) {
-                    errorMessage = errorMessage + ", ";
+                if (errors.get(i) != null) {
+                    if (errorMessage != null) {
+                        errorMessage = errorMessage + ", ";
+                    } else {
+                        errorMessage = "";
+                    }
+                    errorMessage = errorMessage + ((String) errors.get(i));
                 }
-                errorMessage = errorMessage + ((String) errors.get(i));
             }
         }
         return errorMessage;
