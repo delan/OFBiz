@@ -71,6 +71,7 @@
   <div class='tabContainer'>
     <a href="<ofbiz:url>/EditFacility?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Facility</a>
     <a href="<ofbiz:url>/EditFacilityGroups?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Groups</a>
+    <a href="<ofbiz:url>/FindFacilityLocations?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Locations</a>
     <a href="<ofbiz:url>/EditFacilityRoles?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Roles</a>
     <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="tabButtonSelected">InventoryItems</a>
   </div>
@@ -110,6 +111,7 @@
     <td><div class="tabletext"><b>Received</b></div></td>
     <td><div class="tabletext"><b>Expire</b></div></td>
     <td><div class="tabletext"><b>Product ID</b></div></td>
+    <td><div class="tabletext"><b>Location</b></div></td>
     <td><div class="tabletext"><b>Lot&nbsp;ID</b></div></td>
     <td><div class="tabletext"><b>BinNum</b></div></td>
     <td><div class="tabletext"><b>ATP/QOH or Serial#</b></div></td>
@@ -128,25 +130,11 @@
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="expireDate"/></div></td>
     <td><a href='/catalog/control/EditProduct?productId=<ofbiz:entityfield attribute="inventoryItem" field="productId"/>' class='buttontext'>
         <ofbiz:entityfield attribute="inventoryItem" field="productId"/></a></td>
+    <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditFacilityLocation?facilityId=<%=facilityId%>&locationSeqId=<ofbiz:inputvalue entityAttr="inventoryItem" field="locationSeqId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="inventoryItem" field="locationSeqId"/></a></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="lotId"/></div></td>
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="binNumber"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="binNumber"/></div></td>   
     <%if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
-        <td>
-        <%-- Don't want to allow this here, manual inventory level adjustments should be logged, etc --%>
-        <%-- <FORM method=POST action='<ofbiz:url>/UpdateInventoryItem</ofbiz:url>'>
-            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="inventoryItemTypeId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="productId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="partyId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="statusId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="containerId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="lotId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="inventoryItem" field="uomId" fullattrs="true"/>>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise" fullattrs="true"/>>
-            / <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="quantityOnHand" fullattrs="true"/>>
-            <INPUT type=submit value='Set ATP/QOH'>
-        </FORM> --%>
+        <td>       
             <div class='tabletext'><ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise" fullattrs="false"/>
             / <ofbiz:inputvalue entityAttr="inventoryItem" field="quantityOnHand" fullattrs="false"/></div>
         </td>

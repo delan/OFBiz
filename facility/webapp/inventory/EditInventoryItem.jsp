@@ -33,6 +33,7 @@
 <%if(security.hasEntityPermission("FACILITY", "_VIEW", session)) {%>
 <%
 	String facilityId = request.getParameter("facilityId");
+	String locationSeqId = request.getParameter("locationSeqId");
 
     boolean tryEntity = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
@@ -43,6 +44,7 @@
     }
     GenericValue inventoryItem = delegator.findByPrimaryKey("InventoryItem", UtilMisc.toMap("inventoryItemId", inventoryItemId));
     GenericValue inventoryItemType = null;
+    GenericValue facilityLocation = null;
     GenericValue facility = null;
     if(inventoryItem == null) {
         tryEntity = false;
@@ -51,6 +53,9 @@
 
         inventoryItemType = inventoryItem.getRelatedOne("InventoryItemType");
         if (inventoryItemType != null) pageContext.setAttribute("inventoryItemType", inventoryItemType);
+
+		facilityLocation = inventoryItem.getRelatedOne("FacilityLocation");
+		if (facilityLocation != null) pageContext.setAttribute("facilityLocation", facilityLocation);
 
         facility = inventoryItem.getRelatedOne("Facility");
         if (facility != null) pageContext.setAttribute("facility", facility);
@@ -95,6 +100,7 @@
   <div class='tabContainer'>
     <a href="<ofbiz:url>/EditFacility?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Facility</a>
     <a href="<ofbiz:url>/EditFacilityGroups?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Groups</a>
+    <a href="<ofbiz:url>/FindFacilityLocations?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Locations</a>
     <a href="<ofbiz:url>/EditFacilityRoles?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Roles</a>
     <a href="<ofbiz:url>/EditFacilityInventoryItems?facilityId=<%=facilityId%></ofbiz:url>" class="tabButtonSelected">InventoryItems</a>
   </div>
@@ -202,6 +208,26 @@
             <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="containerId" fullattrs="true"/> size="20" maxlength="20" style='font-size: x-small;'>
          </td>
        </tr>
+      <tr>
+        <td align='right'><div class='tabletext'>Facility Location</div></td>
+        <td>&nbsp;</td>
+        <td>
+          <ofbiz:if name="facilityLocation">
+            <div class="tabletext">
+              <b>Area:</b>&nbsp;<ofbiz:inputvalue entityAttr="facilityLocation" field="areaId"/>
+              <b>Aisle:</b>&nbsp;<ofbiz:inputvalue entityAttr="facilityLocation" field="aisleId"/>
+              <b>Section:</b>&nbsp;<ofbiz:inputvalue entityAttr="facilityLocation" field="sectionId"/>
+              <b>Level:</b>&nbsp;<ofbiz:inputvalue entityAttr="facilityLocation" field="levelId"/>
+              <b>Position:</b>&nbsp;<ofbiz:inputvalue entityAttr="facilityLocation" field="positionId"/>
+            </div>
+          </ofbiz:if>
+          <ofbiz:if name="inventoryItem">          
+            <input type="text" size="20" maxsize="20" <ofbiz:inputvalue entityAttr="inventoryItem" field="locationSeqId" fullattrs="true"/> style='font-size: x-small;'>
+          </ofbiz:if>
+          <ofbiz:unless name="inventoryItem">
+            <input type="text" size="20" maxsize="20" name="locationSeqId" value="<%=locationSeqId%>" style='font-size: x-small;'>
+          </ofbiz:unless>          
+        </td>
       <tr>
         <td align=right><div class="tabletext">Lot Id</div></td>
         <td>&nbsp;</td>
