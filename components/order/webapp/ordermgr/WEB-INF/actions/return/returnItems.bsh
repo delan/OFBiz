@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
  
@@ -29,6 +29,10 @@ import org.ofbiz.entity.*;
 
 delegator = request.getAttribute("delegator");
 returnId = request.getParameter("returnId");
+
+returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
+context.put("returnHeader", returnHeader);
+
 returnItems = delegator.findByAnd("ReturnItem", UtilMisc.toMap("returnId", returnId));
 context.put("returnItems", returnItems);
 
@@ -44,3 +48,7 @@ if (orderId != null) {
     orderItems = delegator.findByAnd("OrderItem", fields);
     context.put("orderItems", orderItems);
 }
+
+partyOrders = delegator.findByAnd("OrderHeaderAndRoles", UtilMisc.toMap("roleTypeId", "PLACING_CUSTOMER", "partyId", returnHeader.getString("fromPartyId")), UtilMisc.toList("orderId"));
+context.put("partyOrders", partyOrders);
+

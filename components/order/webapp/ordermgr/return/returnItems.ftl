@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -123,14 +123,32 @@ function removeSelected() {
   <input type="hidden" name="returnId" value="${requestParameters.returnId}">
   <table border='0' cellpadding='2' cellspacing='0'>
     <tr><td colspan="4"><div class="head3">Return Item(s)</div></td></tr>
-    <tr>
-      <td width='25%' align='right' nowrap><div class='tableheadtext'>Order ID:</div></td>
-      <td>&nbsp;</td>
-      <td width='25%'>
-        <input type='text' name='orderId' size='20' maxlength='20' class="inputBox">
-      </td>
-      <td><div class='tabletext'>&nbsp;(Load order items for return)</div></td> 
-    </tr>
+    <#if partyOrders?has_content>
+      <tr>      
+        <td width='25%' align='right' nowrap><div class='tableheadtext'>Order ID:</div></td>
+        <td>&nbsp;</td>
+        <td width='25%'>        
+          <select name="orderId" class="selectBox">
+            <#list partyOrders as order>
+              <option>${order.orderId}</option>
+            </#list>
+          </select>
+        </td>
+        <td><div class='tabletext'>&nbsp;(Load order items for return)</div></td> 
+      </tr>
+    <#else>
+      <tr>
+        <td colspan="4" nowrap><div class='tableheadtext'>No orders found for partyId: <a href="/partymgr/control/viewprofile?party_id=${returnHeader.fromPartyId?default('_NA_')}${requestAttributes.externalKeyParam}" class="buttontext">${returnHeader.fromPartyId?default('[null]')}</a></div></td>
+      </tr>
+      <tr>
+        <td width='25%' align='right' nowrap><div class='tableheadtext'>Order ID:</div></td>
+        <td>&nbsp;</td>
+        <td width='25%'>               
+          <input type='text' name='orderId' size='20' maxlength='20' class="inputBox">
+        </td>
+        <td><div class='tabletext'>&nbsp;(Load order items for return)</div></td> 
+      </tr>
+    </#if>      
     <tr>
       <td colspan="2">&nbsp;</td>
       <td colspan="2">
