@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.commonapp.common;
-
 
 import java.net.*;
 import java.util.*;
@@ -36,13 +34,12 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * Common Services
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    January 06, 2002
- *@version    1.0
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class CommonServices {
 
@@ -130,17 +127,22 @@ public class CommonServices {
         String sendType = (String) context.get("sendType");
         String sendVia = (String) context.get("sendVia");
         String contentType = (String) context.get("contentType");
-
+          
+        // define some default       
         if (sendType == null) {
             sendType = "mail.smtp.host";
+            if (sendVia == null)
+                sendVia = UtilProperties.getPropertyValue("general.properties", "mail.smtp.relay.host", "localhost");
+        } else if (sendVia == null) {
+            return ServiceUtil.returnError("Parameter sendVia is required when sendType is not mail.smtp.host");
         }
+        
         if (contentType == null) {
             contentType = "text/html";
         }
-
+                     
         try {
             Properties props = new Properties();
-
             props.put(sendType, sendVia);
             Session session = Session.getDefaultInstance(props);
 

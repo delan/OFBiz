@@ -13,7 +13,7 @@
         <attribute name="sendBcc" type="String" mode="IN" optional="true"/>
         <attribute name="sendFrom" type="String" mode="IN" optional="false"/>
         <attribute name="subject" type="String" mode="IN" optional="false"/>        
-        <attribute name="sendVia" type="String" mode="IN" optional="false"/>
+        <attribute name="sendVia" type="String" mode="IN" optional="true"/>
         <attribute name="sendType" type="String" mode="IN" optional="true"/>
         <attribute name="contentType" type="String" mode="IN" optional="true"/>    	
     </service>
