@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.14 2003/12/14 06:33:43 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.15 2003/12/14 09:09:32 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -163,15 +163,26 @@ public class EntitySyncServices {
             long numAlreadyRemoved = 0;
             long totalRowsToStore = 0;
             long totalRowsToRemove = 0;
-            
+
+            long totalStoreCalls = 0;
+            long totalSplits = 0;
+            long perSplitMinMillis = Long.MAX_VALUE;
+            long perSplitMaxMillis = 0;
+            long perSplitMinItems = Long.MAX_VALUE;
+            long perSplitMaxItems = 0;
+
             long startingTimeMillis = System.currentTimeMillis();
             
             // increment starting time to run until now
             while (currentRunStartTime.before(nowTimestamp)) {
+                long splitStartTime = System.currentTimeMillis();
+                
                 Timestamp currentRunEndTime = new Timestamp(currentRunStartTime.getTime() + splitMillis);
                 if (currentRunEndTime.after(nowTimestamp)) {
                     currentRunEndTime = nowTimestamp;
                 }
+                
+                totalSplits++;
                 
                 // make sure tx times are indexed somehow
                 // keep track of how long these sync runs take and store that info on the history table
@@ -218,11 +229,20 @@ public class EntitySyncServices {
                 long totalRowsToStoreCur = valuesToStore.size();
                 long totalRowsToRemoveCur = keysToRemove.size();
 
+                long totalRowsPerSplit = totalRowsToStoreCur + totalRowsToStoreCur;
+                
+                if (totalRowsPerSplit < perSplitMinItems) {
+                    perSplitMinItems = totalRowsPerSplit;
+                }
+                if (totalRowsPerSplit > perSplitMaxItems) {
+                    perSplitMaxItems = totalRowsPerSplit;
+                }
+                
                 totalRowsToStore += totalRowsToStoreCur;
                 totalRowsToRemove += totalRowsToRemoveCur;
                 
                 // call service named on EntitySync, IFF there is actually data to send over
-                if (totalRowsToStoreCur > 0 && totalRowsToStoreCur > 0) {
+                if (totalRowsPerSplit > 0) {
                     Map remoteStoreResult = dispatcher.runSync(targetServiceName, UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove, "userLogin", userLogin));
                     if (ServiceUtil.isError(remoteStoreResult)) {
                         String errorMsg = "Error running EntitySync [" + entitySyncId + "], call to store service [" + targetServiceName + "] failed.";
@@ -230,6 +250,8 @@ public class EntitySyncServices {
                         saveSyncErrorInfo(entitySyncId, startDate, "ESR_OTHER_ERROR", errorList, dispatcher, userLogin);
                         return ServiceUtil.returnError(errorMsg, errorList, null, remoteStoreResult);
                     }
+                    
+                    totalStoreCalls++;
                     
                     long numInsertedCur = remoteStoreResult.get("numInserted") == null ? 0 : ((Long) remoteStoreResult.get("numInserted")).longValue();
                     long numUpdatedCur = remoteStoreResult.get("numUpdated") == null ? 0 : ((Long) remoteStoreResult.get("numUpdated")).longValue();
@@ -243,6 +265,16 @@ public class EntitySyncServices {
                     numRemoved += numRemovedCur;
                     numAlreadyRemoved += numAlreadyRemovedCur;
                 }
+
+                long splitTotalTime = System.currentTimeMillis() - splitStartTime;
+                if (splitTotalTime < perSplitMinMillis) {
+                    perSplitMinMillis = splitTotalTime;
+                }
+                if (splitTotalTime > perSplitMaxMillis) {
+                    perSplitMaxMillis = splitTotalTime;
+                }
+                
+                long runningTimeMillis = System.currentTimeMillis() - startingTimeMillis;
                 
                 // store latest result on EntitySync, ie update lastSuccessfulSynchTime, should run in own tx
                 Map updateEsRunResult = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "lastSuccessfulSynchTime", currentRunEndTime, "userLogin", userLogin));
@@ -254,7 +286,13 @@ public class EntitySyncServices {
                 updateHistoryMap.put("numNotUpdated", new Long(numNotUpdated));
                 updateHistoryMap.put("numRemoved", new Long(numRemoved));
                 updateHistoryMap.put("numAlreadyRemoved", new Long(numAlreadyRemoved));
-                updateHistoryMap.put("runningTimeMillis", new Long(System.currentTimeMillis() - startingTimeMillis));
+                updateHistoryMap.put("runningTimeMillis", new Long(runningTimeMillis));
+                updateHistoryMap.put("totalStoreCalls", new Long(totalStoreCalls));
+                updateHistoryMap.put("totalSplits", new Long(totalSplits));
+                updateHistoryMap.put("perSplitMinMillis", new Long(perSplitMinMillis));
+                updateHistoryMap.put("perSplitMaxMillis", new Long(perSplitMaxMillis));
+                updateHistoryMap.put("perSplitMinItems", new Long(perSplitMinItems));
+                updateHistoryMap.put("perSplitMaxItems", new Long(perSplitMaxItems));
                 updateHistoryMap.put("userLogin", userLogin);
                 Map updateEsHistRunResult = dispatcher.runSync("updateEntitySyncHistory", updateHistoryMap);
                 
