@@ -67,11 +67,16 @@ public class FindByPrimaryKey extends MethodOperation {
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
         }
 
+        Map inMap = (Map) mapAcsr.get(methodContext);
+        if (UtilValidate.isEmpty(entityName) && inMap instanceof GenericEntity) {
+            GenericEntity inEntity = (GenericEntity) inMap;
+            entityName = inEntity.getEntityName();
+        }
         try {
             if (useCache) {
-                valueAcsr.put(methodContext, delegator.findByPrimaryKeyCache(entityName, (Map) mapAcsr.get(methodContext)));
+                valueAcsr.put(methodContext, delegator.findByPrimaryKeyCache(entityName, inMap));
             } else {
-                valueAcsr.put(methodContext, delegator.findByPrimaryKey(entityName, (Map) mapAcsr.get(methodContext)));
+                valueAcsr.put(methodContext, delegator.findByPrimaryKey(entityName, inMap));
             }
         } catch (GenericEntityException e) {
             Debug.logError(e);

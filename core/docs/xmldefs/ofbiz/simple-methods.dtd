@@ -456,9 +456,9 @@ engine and facilitate related operations.
 
 <!ELEMENT find-by-primary-key EMPTY>
 <!ATTLIST find-by-primary-key
-    value-name CDATA #REQUIRED
-    entity-name CDATA #REQUIRED
+    entity-name CDATA #IMPLIED
     map-name CDATA #REQUIRED
+    value-name CDATA #REQUIRED
     use-cache ( true | false ) "false"
     delegator-name CDATA #IMPLIED
 >
