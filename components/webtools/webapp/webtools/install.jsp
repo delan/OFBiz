@@ -1,7 +1,7 @@
 
 <%@ page import="java.util.*, java.io.*, java.net.*, java.sql.*, org.w3c.dom.*"%>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.config.*"%>
+<%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.config.*, org.ofbiz.entity.jdbc.*, org.ofbiz.entity.util.*"%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
