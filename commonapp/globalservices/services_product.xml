@@ -140,6 +140,7 @@
         <description>Gets the previous and next product Ids.</description>
         <attribute name="categoryId" type="String" mode="IN"/>
         <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="category" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
         <attribute name="previousProductId" type="String" mode="OUT" optional="true"/>
         <attribute name="nextProductId" type="String" mode="OUT" optional="true"/>
     </service>
