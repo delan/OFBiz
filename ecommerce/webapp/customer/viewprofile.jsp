@@ -253,11 +253,11 @@
             <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(<%=UtilFormatOut.checkNull(partyContactMech.getString("allowSolicitation"))%>)</b></div></td>
             <td width="5">&nbsp;</td>
             <td align="right" valign="top" nowrap width="1%">
-              <div><a href="<ofbiz:url><%="/editcontactmech?CONTACT_MECH_ID=" + contactMech.getString("contactMechId")%></ofbiz:url>" class="buttontext">
+              <div><a href="<ofbiz:url><%="/editcontactmech?contactMechId=" + contactMech.getString("contactMechId")%></ofbiz:url>" class="buttontext">
               [Update]</a></div>&nbsp;
             </td>
             <td align="right" valign="top" width="1%">
-              <div><a href="<ofbiz:url><%="/updatecontactmech/viewprofile?UPDATE_MODE=DELETE&CONTACT_MECH_ID=" + contactMech.getString("contactMechId")%></ofbiz:url>" class="buttontext">
+              <div><a href="<ofbiz:url><%="/updatecontactmech/viewprofile?UPDATE_MODE=DELETE&contactMechId=" + contactMech.getString("contactMechId")%></ofbiz:url>" class="buttontext">
               [Delete]</a></div>
             </td>
           </tr>
@@ -314,11 +314,11 @@
                   </td>
                   <td width="5">&nbsp;</td>
                   <td align="right" valign="top" width='1%' nowrap>
-                    <div><a href="<ofbiz:url><%="/editcreditcard?CREDIT_CARD_ID=" + creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="buttontext">
+                    <div><a href="<ofbiz:url><%="/editcreditcard?creditCardId=" + creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="buttontext">
                     [Update]</a></div>
                   </td>
                   <td align="right" valign="top" width='1%'>
-                    <div><a href="<ofbiz:url><%="/updatecreditcard/viewprofile?UPDATE_MODE=DELETE&CREDIT_CARD_ID=" + creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="buttontext">
+                    <div><a href="<ofbiz:url><%="/deletecreditcard/viewprofile?creditCardId=" + creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="buttontext">
                     [Delete]</a></div>
                   </td>
                 </tr>

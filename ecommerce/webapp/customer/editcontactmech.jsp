@@ -43,8 +43,8 @@
   String donePage = request.getParameter("DONE_PAGE");
   if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 
-  String contactMechId = request.getParameter("CONTACT_MECH_ID");
-  if(contactMechId == null || request.getParameter("UPDATE_MODE") != null) contactMechId = (String)request.getAttribute("CONTACT_MECH_ID");
+  String contactMechId = request.getParameter("contactMechId");
+  if(contactMechId == null || request.getParameter("UPDATE_MODE") != null) contactMechId = (String)request.getAttribute("contactMechId");
 
   //try to find a PartyContactMech with a valid date range
   Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId), null));
@@ -63,7 +63,7 @@
   <%if(contactMech == null){%>
     <%if(request.getParameter("CONTACT_MECH_TYPE_ID") == null){%>
     <p class="head1">Create New Contact Information</p>
-    <form method="post" action="<ofbiz:url><%="/editcontactmech?DONE_PAGE=" + donePage%></ofbiz:url>" name="createcontactmechform">
+    <form method="post" action="<ofbiz:url>/editcontactmech?DONE_PAGE=<%=donePage%></ofbiz:url>" name="createcontactmechform">
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <tr>
           <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
@@ -89,7 +89,7 @@
   <%if(contactMechTypeId != null){%>
     <%if(contactMech == null){%>
       <p class="head1">Create New Contact Information</p>
-    &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
       <%String cmNewPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");%>
       <%if(cmNewPurposeTypeId != null){%>
@@ -130,16 +130,16 @@
                           (Since:<%=UtilDateTime.toDateString(partyContactMechPurpose.getTimestamp("fromDate"))%>)
                           <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate")), "(Expires:", ")")%>
                         &nbsp;</div></td>
-                      <td bgcolor='white'><div><a href='<ofbiz:url><%="/deletepartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&CONTACT_MECH_PURPOSE_TYPE_ID=" + partyContactMechPurpose.getString("contactMechPurposeTypeId") + "&FROM_DATE=" + UtilFormatOut.encodeQueryValue(partyContactMechPurpose.getTimestamp("fromDate").toString()) + "&DONE_PAGE=" + donePage + "&useValues=true"%></ofbiz:url>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
+                      <td bgcolor='white'><div><a href='<ofbiz:url><%="/deletepartycontactmechpurpose?contactMechId=" + contactMechId + "&contactMechPurposeTypeId=" + partyContactMechPurpose.getString("contactMechPurposeTypeId") + "&fromDate=" + UtilFormatOut.encodeQueryValue(partyContactMechPurpose.getTimestamp("fromDate").toString()) + "&DONE_PAGE=" + donePage + "&useValues=true"%></ofbiz:url>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
                     </tr>
                 <%}%>
               <%}%>
               <%Iterator purposeTypes = UtilMisc.toIterator(delegator.findByAnd("ContactMechTypePurpose", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), null));%>
               <%if(purposeTypes != null && purposeTypes.hasNext()){%>
               <tr>
-                <form method=POST action='<ofbiz:url><%="/createpartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&DONE_PAGE=" + donePage + "&useValues=true"%></ofbiz:url>' name='newpurposeform'>
+                <form method=POST action='<ofbiz:url><%="/createpartycontactmechpurpose?contactMechId=" + contactMechId + "&DONE_PAGE=" + donePage + "&useValues=true"%></ofbiz:url>' name='newpurposeform'>
                   <td bgcolor='white'>
-                    <SELECT name='CONTACT_MECH_PURPOSE_TYPE_ID'>
+                    <SELECT name='contactMechPurposeTypeId'>
                       <OPTION></OPTION>
                       <%while(purposeTypes != null && purposeTypes.hasNext()){%>
                         <%GenericValue contactMechTypePurpose = (GenericValue)purposeTypes.next();%>
@@ -159,7 +159,7 @@
         </tr>
         <%-- <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform"> --%>
         <form method="post" action="<ofbiz:url>/updatecontactmech?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcontactmechform">
-        <input type=hidden name="CONTACT_MECH_ID" value="<%=contactMechId%>">
+        <input type=hidden name="contactMechId" value="<%=contactMechId%>">
         <input type=hidden name="UPDATE_MODE" value="UPDATE">
     <%}%>
 

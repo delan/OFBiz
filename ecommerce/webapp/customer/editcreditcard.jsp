@@ -36,62 +36,78 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%
-  boolean useValues = true;
-  if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+    boolean tryEntity = true;
+    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null)
+        tryEntity = false;
 
-  String donePage = request.getParameter("DONE_PAGE");
-  if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
+    String donePage = request.getParameter("DONE_PAGE");
+    if (donePage == null || donePage.length() <= 0)
+        donePage = "viewprofile";
 
-  String creditCardId = request.getParameter("CREDIT_CARD_ID");
-  if(request.getAttribute("CREDIT_CARD_ID") != null) creditCardId = (String)request.getAttribute("CREDIT_CARD_ID");
+    String creditCardId = request.getParameter("creditCardId");
+    if (request.getAttribute("creditCardId") != null)
+        creditCardId = (String)request.getAttribute("creditCardId");
 
-  Iterator partyContactMechIterator = UtilMisc.toIterator(EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId")), null)));
-  GenericValue creditCard = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
+    Iterator partyContactMechIterator = UtilMisc.toIterator(EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId")), null)));
+    GenericValue creditCard = null;
+    if (UtilValidate.isNotEmpty(creditCardId))
+        creditCard = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
+    if (creditCard != null)
+        pageContext.setAttribute("creditCard", creditCard);
+    else
+        tryEntity = false;
+
+    
+    String curContactMechId = UtilFormatOut.checkNull(tryEntity?creditCard.getString("contactMechId"):request.getParameter("contactMechId"));
+    Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", curContactMechId), null));
+    GenericValue curPartyContactMech = EntityUtil.getFirst(partyContactMechs);
+
+    GenericValue curContactMech = curPartyContactMech!=null?curPartyContactMech.getRelatedOne("ContactMech"):null;
+    GenericValue curPostalAddress = curContactMech!=null?curContactMech.getRelatedOne("PostalAddress"):null;
+
+    pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 %>
 
-<%if(!security.hasPermission("USER_ADMIN", session) && creditCard != null && 
-     !userLogin.getString("partyId").equals(creditCard.getString("partyId"))){%>
+<%if (!security.hasPermission("USER_ADMIN", session) && creditCard != null && 
+      !userLogin.getString("partyId").equals(creditCard.getString("partyId"))) {%>
   <p><h3>The credit card specified does not belong to you, you may not view or edit it.</h3></p>
 &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Back]</a>
-<%}else{%>
-    <%if(creditCard == null){%>
-      <%useValues = false;%>
+<%} else {%>
+    <%if (creditCard == null){%>
       <p class="head1">Add New Credit Card</p>
       &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
-      <form method="post" action="<ofbiz:url>/updatecreditcard?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcreditcardform" style='margin: 0;'>
+      <form method="post" action="<ofbiz:url>/createcreditcard?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <input type=hidden name="UPDATE_MODE" value="CREATE">
-    <%}else{%>
+    <%} else {%>
       <p class="head1">Edit Credit Card</p>
       &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
       <form method="post" action="<ofbiz:url>/updatecreditcard?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <input type=hidden name="CREDIT_CARD_ID" value="<%=creditCardId%>">
-        <input type=hidden name="UPDATE_MODE" value="UPDATE">
+        <input type=hidden name="creditCardId" value="<%=creditCardId%>">
     <%}%>
 
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Name on Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" name="CC_NAME_ON_CARD" value="<%=UtilFormatOut.checkNull(useValues?creditCard.getString("nameOnCard"):request.getParameter("CC_NAME_ON_CARD"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="nameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Company Name on Card</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" name="CC_COMPANY_NAME_ON_CARD" value="<%=UtilFormatOut.checkNull(useValues?creditCard.getString("companyNameOnCard"):request.getParameter("CC_COMPANY_NAME_ON_CARD"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="companyNameOnCard" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Card Type</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <select name="CC_CARD_TYPE">
-          <option><%=UtilFormatOut.checkNull(useValues?creditCard.getString("cardType"):request.getParameter("CC_CARD_TYPE"))%></option>
+        <select name="cardType">
+          <option><ofbiz:inputvalue field="cardType" entityAttr="creditCard" tryEntityAttr="tryEntity"/></option>
           <option></option>
           <option>Visa</option>
           <option value='MasterCard'>Master Card</option>
@@ -107,14 +123,14 @@
       <td width="26%" align=right valign=top><div class="tabletext">Card Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" name="CC_CARD_NUMBER" value="<%=UtilFormatOut.checkNull(useValues?creditCard.getString("cardNumber"):request.getParameter("CC_CARD_NUMBER"))%>" size="20" maxlength="30">
+        <input type="text" size="20" maxlength="30" <ofbiz:inputvalue field="cardNumber" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Card Security Code</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" name="CC_CARD_SECURITY_CODE" value="<%=UtilFormatOut.checkNull(useValues?creditCard.getString("cardSecurityCode"):request.getParameter("CC_CARD_SECURITY_CODE"))%>" size="5" maxlength="10">
+        <input type="text" size="5" maxlength="10" <ofbiz:inputvalue field="cardSecurityCode" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
@@ -123,15 +139,15 @@
       <td width="74%">
         <%String expMonth = "";%>
         <%String expYear = "";%>
-        <%if(creditCard != null){%>
+        <%if (creditCard != null){%>
           <%String expDate = creditCard.getString("expireDate");%>
-          <%if(expDate != null && expDate.indexOf('/') > 0){%>
+          <%if (expDate != null && expDate.indexOf('/') > 0){%>
             <%expMonth = expDate.substring(0,expDate.indexOf('/'));%>
             <%expYear = expDate.substring(expDate.indexOf('/')+1);%>
           <%}%>
         <%}%>
-        <select name="CC_EXPIRE_DATE_MONTH">
-          <option><%=UtilFormatOut.checkNull(useValues?expMonth:request.getParameter("CC_EXPIRE_DATE_MONTH"))%></option>
+        <select name="expMonth">
+          <option><ofbiz:if name="tryEntity"><%=UtilFormatOut.checkNull(expMonth)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expMonth"))%></ofbiz:unless></option>
           <option></option>
           <option>01</option>
           <option>02</option>
@@ -146,8 +162,8 @@
           <option>11</option>
           <option>12</option>
         </select>
-        <select name="CC_EXPIRE_DATE_YEAR">
-          <option><%=UtilFormatOut.checkNull(useValues?expYear:request.getParameter("CC_EXPIRE_DATE_YEAR"))%></option>
+        <select name="expYear">
+          <option><ofbiz:if name="tryEntity"><%=UtilFormatOut.checkNull(expYear)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expYear"))%></ofbiz:unless></option>
           <option></option>
           <option>2001</option>
           <option>2002</option>
@@ -167,19 +183,11 @@
           [Create New Address]</a>&nbsp;&nbsp;
         --%>
         <table width="100%" border="0" cellpadding="1">
-        <%
-          String curContactMechId = UtilFormatOut.checkNull(useValues?creditCard.getString("contactMechId"):request.getParameter("CC_CONTACT_MECH_ID"));
-          Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", curContactMechId), null));
-          GenericValue curPartyContactMech = EntityUtil.getFirst(partyContactMechs);
-
-          GenericValue curContactMech = curPartyContactMech!=null?curPartyContactMech.getRelatedOne("ContactMech"):null;
-          GenericValue curPostalAddress = curContactMech!=null?curContactMech.getRelatedOne("PostalAddress"):null;
-        %>
         <%if(curPostalAddress != null){%>
           <%Iterator curPartyContactMechPurposesIter = UtilMisc.toIterator(EntityUtil.filterByDate(curPartyContactMech.getRelated("PartyContactMechPurpose")));%>
           <tr>
             <td align="right" valign="top" width="1%">
-              <INPUT type=radio name='CC_CONTACT_MECH_ID' value='<%=curContactMech.getString("contactMechId")%>' checked>
+              <INPUT type=radio name='contactMechId' value='<%=curContactMech.getString("contactMechId")%>' checked>
             </td>
             <td align="left" valign="top" width="80%">
               <div class="tabletext"><b>Use Current Address:</b></div>
@@ -230,7 +238,7 @@
                   <%GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");%>
                 <tr>
                   <td align="right" valign="top" width="1%">
-                    <INPUT type=radio name='CC_CONTACT_MECH_ID' value='<%=contactMech.getString("contactMechId")%>'>
+                    <INPUT type=radio name='contactMechId' value='<%=contactMech.getString("contactMechId")%>'>
                   </td>
                   <td align="left" valign="top" width="80%">
                     <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
@@ -259,7 +267,7 @@
                 </tr>
                 <%}%>
             <%}%>
-          <%}else{%>
+          <%} else {%>
             <p>No contact information on file.</p><br>
           <%}%>
         </table>

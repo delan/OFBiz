@@ -9,6 +9,7 @@
     <handler name="java" class="org.ofbiz.core.event.JavaEventHandler"/>
     <handler name="soap" class="org.ofbiz.core.event.SOAPEventHandler"/>
     <handler name="service" class="org.ofbiz.core.event.ServiceEventHandler"/>
+    <handler name="simple" class="org.ofbiz.core.event.SimpleEventHandler"/>
     
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
@@ -215,14 +216,14 @@
 
     <request-map uri="createpartycontactmechpurpose">
     	<security https="true" auth="true"/>
-		<event type="java" path="org.ofbiz.commonapp.party.contact.ContactEvents" invoke="createPartyContactMechPurpose"/>
-		<response name="success" type="view" value="editcontactmech"/>
-		<response name="error" type="view" value="editcontactmech"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createPartyContactMechPurpose"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="deletepartycontactmechpurpose">
     	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.commonapp.party.contact.ContactEvents" invoke="deletePartyContactMechPurpose"/>
+    	<event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="deletePartyContactMechPurpose"/>
     	<response name="success" type="view" value="editcontactmech"/>
     	<response name="error" type="view" value="editcontactmech"/>
     </request-map>
@@ -232,9 +233,21 @@
     	<response name="success" type="view" value="editcreditcard"/>
     </request-map>
 
+    <request-map uri="createcreditcard">
+    	<security https="true" auth="true"/>
+    	<event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createCreditCardInfo"/>
+    	<response name="success" type="view" value="editcreditcard"/>
+    	<response name="error" type="view" value="editcreditcard"/>
+    </request-map>
     <request-map uri="updatecreditcard">
     	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.commonapp.party.contact.ContactEvents" invoke="updateCreditCardInfo"/>
+    	<event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updateCreditCardInfo"/>
+    	<response name="success" type="view" value="editcreditcard"/>
+    	<response name="error" type="view" value="editcreditcard"/>
+    </request-map>
+    <request-map uri="deletecreditcard">
+    	<security https="true" auth="true"/>
+    	<event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="deleteCreditCardInfo"/>
     	<response name="success" type="view" value="editcreditcard"/>
     	<response name="error" type="view" value="editcreditcard"/>
     </request-map>
