@@ -559,6 +559,12 @@
         <response name="success" type="view" value="orderreportlist"/>
     </request-map>
 
+    <request-map uri="OrderPurchaseReportOptions"><security https="true" auth="true"/>
+        <response name="success" type="view" value="OrderPurchaseReportOptions"/>
+    </request-map>
+    <request-map uri="OrderPurchaseReportPayment.pdf"><security https="true" auth="true"/>
+        <response name="success" type="view" value="OrderPurchaseReportPayment"/>
+    </request-map>
     <request-map uri="OrderPurchaseReportProduct.pdf"><security https="true" auth="true"/>
         <response name="success" type="view" value="OrderPurchaseReportProduct"/>
     </request-map>
@@ -624,6 +630,8 @@
     <view-map name="orderreportjasper" type="jasperreportspdf" page="/reports/orderreport.xml" content-type="application/pdf" encoding="none"/>
     <view-map name="orderitemreportjasper" type="jasperreportspdf" page="/reports/orderitemreport.xml" content-type="application/pdf" encoding="none"/>
 
+    <view-map name="OrderPurchaseReportOptions" type="screen" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportOptions"/>
+    <view-map name="OrderPurchaseReportPayment" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportPayment" content-type="application/pdf" encoding="none"/>
     <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
     <!-- end of view mappings -->
 </site-conf>

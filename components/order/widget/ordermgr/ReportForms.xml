@@ -24,34 +24,44 @@
 -->
 
 <forms>
-    <form name="OrderPurchaseProductOptions" type="single" target="OrderPurchaseProductSummaryReport" title=""
+    <form name="OrderPurchaseReportOptions" type="single" title=""
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 
+        <field name="productStoreId"  title="Product Store">
+            <drop-down allow-empty="false">
+                <option key="" description="- Any -"/>
+                <entity-options entity-name="ProductStore" description="${storeName} [${productStoreId}]">
+                    <entity-order-by field-name="storeName"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="originFacilityId"  title="Origin Facility">
             <drop-down allow-empty="false">
-                <option key="" description="-Any-"/>
+                <option key="" description="- Any -"/>
                 <entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
                     <entity-order-by field-name="facilityName"/>
                 </entity-options>
             </drop-down>
         </field>
-        <!-- <field name="taxDutyCode" title="${uiLabelMap.ProductTaxDutyCode}" ><text size="10" maxlength="20"/></field> -->
+        <field name="terminalId" title="Terminal ID" ><text size="10" maxlength="20"/></field>
+        <field name="statusId"  title="Order Status">
+            <drop-down allow-empty="false">
+                <option key="" description="- Any -"/>
+                <entity-options entity-name="StatusItem" description="${description}">
+                    <entity-constraint value="ORDER_STATUS" name="statusTypeId"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromOrderDate" title="From Date (orderDate&gt;=)"><date-time type="timestamp"/></field>
+        <field name="thruOrderDate" title="Thru Date (orderDate&lt;)"><date-time type="timestamp"/></field>
 
         <field name="submitButton" title="Run Report" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="OrderPurchasePaymentOptions" type="single" target="OrderPurchasePaymentSummaryReport" title=""
-            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-
-        <field name="originFacilityId"  title="Origin Facility">
-            <drop-down allow-empty="false">
-                <option key="" description="-Any-"/>
-                <entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
-                    <entity-order-by field-name="facilityName"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <!-- <field name="taxDutyCode" title="${uiLabelMap.ProductTaxDutyCode}" ><text size="10" maxlength="20"/></field> -->
-
-        <field name="submitButton" title="Run Report" widget-style="standardSubmit"><submit button-type="button"/></field>
+    <form name="OrderPurchaseProductOptions" type="single" target="OrderPurchaseReportProduct.pdf" title=""
+            extends="OrderPurchaseReportOptions">
+    </form>
+    <form name="OrderPurchasePaymentOptions" type="single" target="OrderPurchaseReportPayment.pdf" title=""
+            extends="OrderPurchaseReportOptions">
     </form>
 </forms>
