@@ -133,7 +133,7 @@
             %>
 
            <script language="JavaScript">
-           <!--
+           <%-- NOTE: this JavaScript section is not in a comment because Java scriptlets (the <%...%> ones) are ignored in comments --%>
                 var IMG = new Array(<%=variantTree.size()%>);
                 var OPT = new Array(<%=featureOrder.size()%>);
 
@@ -224,8 +224,6 @@
                         document.addform.add_product_id.value = value;
                     }
                 }
-
-            //-->
             </script>
             </ofbiz:if>
         </ofbiz:if>
@@ -236,7 +234,6 @@
 
     <script language="JavaScript">
     <!--
-      
         function addItem() {
             if (document.addform.add_product_id.value == 'NULL') {
                 alert("Please enter all the required information.");
