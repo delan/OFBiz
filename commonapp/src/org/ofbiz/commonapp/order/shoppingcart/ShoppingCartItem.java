@@ -78,7 +78,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         
         if (product == null) {
-            String excMsg = "Product not found, not adding to cart. [productId: " + product.getString("productId") + "]";
+            String excMsg = "Product not found, not adding to cart. [productId: " + productId + "]";
             Debug.logWarning(excMsg);
             throw new CartItemModifyException(excMsg);
         }
