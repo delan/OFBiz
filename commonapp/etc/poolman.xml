@@ -3,10 +3,10 @@
 <poolman>
 
   <management-mode>local</management-mode>
-<!--  
+
   <datasource>
     <dbname>Postgres</dbname>
-    <jndiName>java:/PostgresDataSource</jndiName>
+    <!-- <jndiName>java:/PostgresDataSource</jndiName> -->
     <driver>org.postgresql.Driver</driver>
     <url>jdbc:postgresql://127.0.0.1/ofbiz</url>
     <username>ofbiz</username>
@@ -18,11 +18,11 @@
     <shrinkBy>2</shrinkBy>
     <debugging>false</debugging>
   </datasource>
--->
+
 
   <datasource>
     <dbname>MySql</dbname>
-    <jndiName>java:/MySqlDataSource</jndiName>
+    <!-- <jndiName>java:/MySqlDataSource</jndiName> -->
     <driver>org.gjt.mm.mysql.Driver</driver>
     <url>jdbc:mysql://127.0.0.1/ofbiz</url>
     <username>mysqldb</username>
@@ -35,12 +35,12 @@
     <debugging>false</debugging>
   </datasource>
 
-<!--
+
   <datasource>
     <dbname>Hsql</dbname>
-    <jndiName>java:/HsqlDataSource</jndiName>
+    <!-- <jndiName>java:/HsqlDataSource</jndiName> -->
     <driver>org.hsqldb.jdbcDriver</driver>
-    <url>jdbc:hsqldb:ofbiz</url>
+    <url>jdbc:hsqldb:../data/ofbiz</url>
     <username>sa</username>
     <password></password>
     <minimumSize>2</minimumSize>
@@ -50,7 +50,7 @@
     <shrinkBy>2</shrinkBy>
     <debugging>false</debugging>
   </datasource>
--->
+
 </poolman>
 
 
