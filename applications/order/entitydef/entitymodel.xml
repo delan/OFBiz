@@ -1825,6 +1825,8 @@
       <field name="reservLength" type="floating-point"></field>
       <field name="reservPersons" type="floating-point"></field>     
       <field name="unitPrice" type="currency-amount"></field>
+      <field name="reserv2ndPPPerc" type="floating-point"/>
+      <field name="reservNthPPPerc" type="floating-point"/>
       <field name="totalWithAdjustments" type="currency-amount"></field>
       <field name="wasReserved" type="indicator"></field>
       <prim-key field="visitId"/>
