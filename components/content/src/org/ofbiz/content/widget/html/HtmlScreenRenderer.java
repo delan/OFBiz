@@ -283,7 +283,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
                 Debug.logInfo("expandedContentId:" + expandedContentId, module);
             try {
             	if (UtilValidate.isNotEmpty(expandedContentId)) {
-                    renderedContent = ContentWorker.renderContentAsTextCache(delegator, expandedContentId, map, null, locale, mimeTypeId);
+                    renderedContent = ContentWorker.renderContentAsTextCache(delegator, expandedContentId, context, null, locale, mimeTypeId);
             	}
                 if (UtilValidate.isEmpty(renderedContent)) {
                     String editRequest = (String)context.get("directEditRequest");
