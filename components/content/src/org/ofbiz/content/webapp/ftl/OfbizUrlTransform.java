@@ -49,24 +49,24 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  */
 public class OfbizUrlTransform implements TemplateTransformModel {
     
-    public boolean checkArg(Map args, String key) {
+    public boolean checkArg(Map args, String key, boolean defaultValue) {
         if (!args.containsKey(key)) {        
-            return false;
+            return defaultValue;
         } else {
             Object o = args.get(key);
             if (o instanceof SimpleScalar) {
                 SimpleScalar s = (SimpleScalar) o;
                 return "true".equalsIgnoreCase(s.getAsString());
             }
-            return false;                        
-        }       
+            return defaultValue;
+        }
     }
     
     public Writer getWriter(final Writer out, Map args) {                      
         final StringBuffer buf = new StringBuffer();
-        final boolean fullPath = checkArg(args, "fullPath");
-        final boolean secure = checkArg(args, "secure");
-        final boolean encode = checkArg(args, "encode");
+        final boolean fullPath = checkArg(args, "fullPath", false);
+        final boolean secure = checkArg(args, "secure", false);
+        final boolean encode = checkArg(args, "encode", true);
         
         return new Writer(out) {
             public void write(char cbuf[], int off, int len) {

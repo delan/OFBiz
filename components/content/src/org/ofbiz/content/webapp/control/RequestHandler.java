@@ -577,7 +577,7 @@ public class RequestHandler implements Serializable {
     }
 
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url) {
-        return makeLink(request, response, url, false, false, false);
+        return makeLink(request, response, url, false, false, true);
     }
     
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, boolean fullPath, boolean secure, boolean encode) {
@@ -630,52 +630,78 @@ public class RequestHandler implements Serializable {
         String requestUri = RequestHandler.getRequestUri(url);
         StringBuffer newURL = new StringBuffer();
 
-        boolean useHttps = enableHttps.booleanValue();                
+        boolean useHttps = enableHttps.booleanValue();
+        boolean didFullSecure = false;
+        boolean didFullStandard = false;
         if (useHttps || fullPath || secure) {
             if (secure || (useHttps && requestManager.requiresHttps(requestUri) && !request.isSecure())) {
                 String server = httpsServer;
-
                 if (server == null || server.length() == 0) {
                     server = request.getServerName();
                 }
+                
                 newURL.append("https://");
                 newURL.append(server);
                 if (!httpsPort.equals("443")) {
                     newURL.append(":" + httpsPort);
                 }
+                
+                didFullSecure = true;
             } else if (fullPath || (useHttps && !requestManager.requiresHttps(requestUri) && request.isSecure())) {
                 String server = httpServer;
-
                 if (server == null || server.length() == 0) {
                     server = request.getServerName();
                 }
+                
                 newURL.append("http://");
                 newURL.append(server);
                 if (!httpPort.equals("80")) {
                     newURL.append(":" + httpPort);
                 }
+                
+                didFullStandard = true;
             }
         }
                 
         newURL.append(controlPath);
+        
+        // now add the actual passed url, but if it doesn't start with a / add one first
         if (!url.startsWith("/")) {
             newURL.append("/");
         }
         newURL.append(url);
+        
         String encodedUrl = null;
-        if (response != null && !encode) {
-            encodedUrl = response.encodeURL(newURL.toString());
-        } else {            
-            if (encode) {
+        if (encode) {
+            boolean forceManualJsessionid = false;
+            
+            // if this isn't a secure page, but we made a secure URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
+            if (!request.isSecure() && didFullSecure) {
+                forceManualJsessionid = true;
+            }
+            
+            // if this is a secure page, but we made a standard URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
+            if (request.isSecure() && didFullStandard) {
+                forceManualJsessionid = true;
+            }
+            
+            if (response != null && !forceManualJsessionid) {
+                encodedUrl = response.encodeURL(newURL.toString());
+            } else {
                 String sessionId = request.getSession().getId();
-                newURL.append(";jsessionid=" + sessionId);
-            }            
+                newURL.append(";jsessionid=");
+                newURL.append(sessionId);
+                encodedUrl = newURL.toString();
+            }
+        } else {
             encodedUrl = newURL.toString();
         }
         //if (encodedUrl.indexOf("null") > 0) {
             //Debug.logError("in makeLink, controlPath:" + controlPath + " url:" + url, "");
             //throw new RuntimeException("in makeLink, controlPath:" + controlPath + " url:" + url);
         //}
+        
+        //Debug.logInfo("Making URL, encode=" + encode + " for URL: " + newURL + "\n encodedUrl: " + encodedUrl, module);
         
         return encodedUrl;              
     }
