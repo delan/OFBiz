@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
     <classpathentry exported="true" kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
-    <classpathentry exported="true" kind="lib" path="common/castor-0.9.3.9.jar"/>
     <classpathentry exported="true" kind="lib" path="compile/activation.jar"/>
     <classpathentry exported="true" kind="lib" path="datavision/DataVision.jar"/>
     <classpathentry exported="true" kind="lib" path="jasperreports/itext-0.92.jar"/>
@@ -23,7 +22,6 @@
     <classpathentry exported="true" kind="lib" path="common/ots-jts_1.0.jar"/>
     <classpathentry exported="true" kind="lib" path="common/postgresql.jar"/>
     <classpathentry exported="true" kind="lib" path="common/sapdbc.jar"/>
-    <classpathentry exported="true" kind="lib" path="common/tyrex-1.0.jar"/>
     <classpathentry exported="true" kind="lib" path="compile/jboss-j2ee.jar"/>
     <classpathentry exported="true" kind="lib" path="compile/jdbc2_0-stdext.jar"/>
     <classpathentry exported="true" kind="lib" path="compile/mail.jar"/>
@@ -70,6 +68,8 @@
     <classpathentry exported="true" kind="lib" path="jasperreports/jasperreports-applet.jar"/>
     <classpathentry exported="true" kind="lib" path="share/EdenLib.jar"/>
     <classpathentry exported="true" kind="lib" path="share/JPublish.jar"/>
-    <classpathentry kind="lib" path="jotm/monolog.jar"/>
+    <classpathentry exported="true" kind="lib" path="jotm/monolog.jar"/>
+    <classpathentry exported="true" kind="lib" path="tyrex/castor-0.9.3.9.jar"/>
+    <classpathentry exported="true" kind="lib" path="tyrex/tyrex-1.0.jar"/>
     <classpathentry kind="output" path=""/>
 </classpath>
