@@ -1,5 +1,5 @@
 /*
- * $Id: PosContainer.java,v 1.1 2004/07/27 18:37:37 ajzeneski Exp $
+ * $Id: PosContainer.java,v 1.2 2004/07/28 23:03:55 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class PosContainer extends XuiContainer {
@@ -63,6 +63,11 @@ public class PosContainer extends XuiContainer {
             } catch (GenericEntityException e) {
                 throw new ContainerException("Invalid facilityId : " + facilityId);
             }
+        }
+
+        // verify the facility exists
+        if (facility == null) {
+            throw new ContainerException("Invalid facility; facility ID not found [" + facilityId + "]");
         }
         session.setAttribute("facility", facility);
 
