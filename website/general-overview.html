@@ -14,7 +14,7 @@
 <A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: May 17, 2001<br>
+Last Updated: Dec 17, 2001<br>
 <hr>
 <p><b><u>Technology</u></b></p>
 
@@ -25,48 +25,56 @@ databases, operating systems, and development environments will be supported wit
 minimal modifications to the project.
 </p>
 
-<p>
-The application server will initially be JBoss (see <a href="http://www.jboss.org">www.jboss.org</a>).
-The Servlet/JSP engine will initially be Tomcat from the Apache Jakarta project (see <a href="http://jakarta.apache.org">jakarta.apache.org</a>).
-The database will initially be MySQL (see <a href="http://www.mysql.com">www.mysql.com</a>).
-The development environment will initially be NetBeans (see <a href="http://www.netbeans.org">www.netbeans.org</a>).
-No particular operating system will be preferred, although we plan to develop and test on Linux and Windows.
+ <p>Other open source projects are leveraged in various places. Examples of this
+ include the Xerces XML library, the Axis Java SOAP tools, and the BeanShell
+ Java-like scripting language.
 </p>
 
 <p><b><u>Framework</u></b></p>
 
-<p>A major part of the project plan is to create a framework on which business 
+<p>A major part of the project is a framework on which business 
 applications can be easily and efficiently developed in a J2EE environment.  This 
 framework will include tools and components useful for data driven development
-as well as process driven development.</p>
+and process driven development.</p>
 
-<p>The data driven development tools will include a code generator to create Entity EJBs
-and everything needed to deploy them (including SQL to create a table and deployment descriptors),
-and everything needed to maintain and interact with the data from a web based (JSP/Servlet) client.</p>
+ <p>The primary data driven development tool is the Entity Engine which provides
+ generic value objects and primary key objects that can be used with a caching
+ tool and an API which handles all persistence with NO entity specific code. All
+ entities are defined in XML files and changing an entity is as simple as
+ changing the XML entity definition, and then modifying corresponding process
+ oriented code. This does a lot to enable fast paced iterative development.</p>
 
-<p>The process driven development tools will include a rules engine and a state based
-workflow tool.  These tools make the definition and maintenance of business
-processes easier and more efficient.  No modern enterprise system would be
-complete without them.</p>
+<p>The process driven development tools will include a Rules Engine and a
+Workflow Engine.  These tools make the definition and maintenance of business
+logic and processes easier, more natural, and more efficient than plain Java
+code could ever be.  No modern enterprise system would be
+complete without them. Another important tool related to process driven
+development is the Services Engine. This provides a framework for creating and
+using internal services which may also be exposed as web services creating
+sharable, reusable and distributable logic. Both rules and workflow invocation
+can be done through the Services Engine in addition to Java methods and
+BeanShell scripts.</p>
 
-<p><b><u>Features</u></b></p>
+<p><b><u>Application Features</u></b></p>
 
 <p>Our desired feature set is broad.  Our basic guideline for what to include versus
 what to not include is centered around whether or not businesses in general need
-a given feature.  Industry specific features can be added by adopters in those industries.
-Because of this focus, we intend to make it easy to customize this software for
-people in any industry and simply provide tools that will be useful in most
+a given feature. While general features are the first priority optional industry
+specific features will be added as the project progresses and interest is
+expressed. Because of this focus, we intend to make it easy to customize this software for
+people in any industry or market and simply provide tools that will be useful in most
 vertical industries.</p>
 
 <p>Some of the features that we believe are useful to nearly all business include:
-customer, employee, and other person management; catalog and inventory management;
+customer, employee, and other party management; catalog and inventory management;
 fixed and fluid asset management (including general accounting features); 
 transaction management for both sales and purchasing; partner relationship management;
 purchasing and sales automation; analysis for marketing and management; 
 anything else that comes up during the project that seems generally useful.</p>
 
 <hr>
-<p>For information about Open For Business contact David E. Jones at jonesde@yahoo.com</p>
+ <p>For information about Open For Business contact David E. Jones at <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+ or Andy Zeneski at <a href="mailto:jaz@zsolv.com">jaz@zsolv.com</a>. </p>
  
  </BODY>
 </HTML>
