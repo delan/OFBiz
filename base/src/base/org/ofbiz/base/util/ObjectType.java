@@ -446,8 +446,9 @@ public class ObjectType {
      * @throws GeneralException
      */
     public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale, boolean noTypeFail) throws GeneralException {
-        if (obj == null)
+        if (obj == null) {
             return null;
+        }
 
         if (obj.getClass().getName().equals(type)) {
             return obj;
@@ -844,10 +845,16 @@ public class ObjectType {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");            
             }
         } else {
+            // we can pretty much always do a conversion to a String, so do that here
+            if ("String".equals(type) || "java.lang.String".equals(type)) {
+                Debug.logWarning("No special conversion available for " + obj.getClass().getName() + " to String, returning object.toString().", module);
+                return obj.toString();
+            }
+            
             if (noTypeFail) {
                 throw new GeneralException("Conversion from " + obj.getClass().getName() + " to " + type + " not currently supported");
             } else {
-                Debug.logWarning("No type conversion available for " + obj.getClass().getName() + " to " + type, module);
+                Debug.logWarning("No type conversion available for " + obj.getClass().getName() + " to " + type + ", returning original object.", module);
                 return obj;
             }
         }
