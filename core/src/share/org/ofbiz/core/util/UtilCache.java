@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/12/03 18:09:55  jonesde
+ * Some changes to make caches faster, LRU and expiration stuff only done when enabled; added some error messages
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -423,9 +426,24 @@ public class UtilCache {
         UtilCache utilCache = (UtilCache) utilCacheTable.get(name);
         if (utilCache != null) {
             Object key = null;
-            try {
-                key = utilCache.keyLRUList.get(number);
-            } catch(Exception e) { }
+            if (utilCache.getMaxSize() > 0) {
+                try {
+                    key = utilCache.keyLRUList.get(number);
+                } catch(Exception e) { }
+            } else {
+                //no LRU, try looping through the keySet to see if we find the specified index...
+                Iterator ksIter = utilCache.valueTable.keySet().iterator();
+                int curNum = 0;
+                while(ksIter.hasNext()) {
+                    if (number == curNum) {
+                        key = ksIter.next();
+                        break;
+                    } else {
+                        ksIter.next();
+                    }
+                    curNum++;
+                }
+            }
             
             if (key != null) {
                 utilCache.remove(key);
