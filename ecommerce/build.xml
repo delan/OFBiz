@@ -127,7 +127,11 @@
 
 
     <target name="classes" depends="prepare">
-      <javac debug="on" srcdir="${src.dir}" classpath="${classpath}" destdir="${build.dir}/jar" />
+        <javac debug="on" srcdir="${src.dir}" classpath="${classpath}" destdir="${build.dir}/jar" />
+        <!-- also copy all .xml, .bsh & .logic files to classpath directory -->
+        <copy todir="${build.dir}/jar">
+            <fileset dir="${src.dir}" includes="**/*.xml,**/*.bsh,**/*.logic" />
+        </copy>
     </target>
 
     <target name="jar" depends="classes">
