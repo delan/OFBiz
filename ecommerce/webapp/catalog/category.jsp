@@ -17,4 +17,3 @@
 
 <%@ include file="/includes/rightcolumn.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
-

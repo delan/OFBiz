@@ -23,14 +23,14 @@
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
-            <ul style='margin-left: 15;'>
+            <div style='margin-left: 10px;'>
       <ofbiz:iterator name="category" property="topLevelList">
         <%request.setAttribute("subcat", category);%>
         <%request.setAttribute("curcatid", curCategoryId);%>
         <%request.setAttribute("topPageContext", pageContext);%>
         <jsp:include page="/catalog/sidesubcategory.jsp" />        
       </ofbiz:iterator>
-            </ul>
+            </div>
           </td>
         </tr>
       </table>

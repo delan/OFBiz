@@ -10,23 +10,23 @@
 <%PageContext topPageContext = (PageContext)request.getAttribute("topPageContext");%>
 
   <%if(curcatid != null && curcatid.equals(category.getString("productCategoryId"))) {%>
-    <li style='margin: 1;'><div class='tabletext'><b>&nbsp;<%=category.getString("description")%></b></div></li>
+    <div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;<%=category.getString("description")%></b></div>
   <%}else{%>
     <%String pstr = "";%><%if(pcategory != null) pstr = "&pcategory=" + pcategory.getString("productCategoryId");%>
-    <li style='margin: 1;'><a href="<ofbiz:url>/category?category_id=<%=category.getString("productCategoryId")%><%=pstr%></ofbiz:url>" class='buttontext'>&nbsp;<%=category.getString("description")%></a></li>
+    <div style='text-indent: -10px;'><a href="<ofbiz:url>/category?category_id=<%=category.getString("productCategoryId")%><%=pstr%></ofbiz:url>" class='buttontext'>-&nbsp;<%=category.getString("description")%></a></div>
   <%}%>
 
   <%if(CatalogHelper.checkTrailItem(topPageContext,category.getString("productCategoryId"))) {%>
     <%CatalogHelper.getRelatedCategories(pageContext,"subCatList",category.getString("productCategoryId"));%>
     <ofbiz:if name="subCatList">
       <ofbiz:iterator name="subcat" property="subCatList">
-        <ul style='margin-left: 10;'>
+        <div style='margin-left: 10px;'>
           <%request.setAttribute("subcat", subcat);%>
           <%request.setAttribute("category", category);%>
           <%request.setAttribute("curcatid", curcatid);%>
           <%request.setAttribute("topPageContext", topPageContext);%>
           <jsp:include page="/catalog/sidesubcategory.jsp" />
-        </ul>
+        </div>
       </ofbiz:iterator>
     </ofbiz:if>
   <%}%>
