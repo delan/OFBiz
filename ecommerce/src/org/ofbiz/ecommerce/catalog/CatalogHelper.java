@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.20  2001/09/23 12:19:31  jonesde
+ * Added comment
+ *
  * Revision 1.19  2001/09/23 12:06:46  jonesde
  * Fixed, and finished, the side category box for complete hierarchy and position maintenance.
  *
@@ -181,7 +184,7 @@ public class CatalogHelper {
     
     if(parentId == null)
       parentId = UtilFormatOut.checkNull(request.getParameter("catalog_id"), request.getParameter("CATALOG_ID"),
-      request.getParameter("category_id"), request.getParameter("CATEGORY_ID"));
+              request.getParameter("category_id"), request.getParameter("CATEGORY_ID"));
     if(parentId == null || parentId.length() <= 0) return;
     
     String curFindString = "ProductCategoryByParentId:" + parentId;
@@ -189,7 +192,10 @@ public class CatalogHelper {
     ArrayList prodCatMembers = (ArrayList)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
     String resultArrayName = (String)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
     
-    if(prodCatMembers == null || resultArrayName == null || curFindString.compareTo(resultArrayName) != 0 || viewIndex == 0) {
+    if(prodCatMembers == null || resultArrayName == null || !curFindString.equals(resultArrayName) || viewIndex == 0) {
+      //since cache is invalid, should not use prodCatMembers
+      prodCatMembers = null;
+      
       Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
       Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
       
@@ -202,9 +208,10 @@ public class CatalogHelper {
         try { prodCatMemberCol = category.getRelated("ProductCategoryMember"); }
         catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); prodCatMemberCol = null; }
         if(prodCatMemberCol != null) prodCatMembers = new ArrayList(prodCatMemberCol);
-      }
+      } 
       
       if(prodCatMembers != null) {
+        //XXX should be synchronized from multiple clients thrashing eachother (?) - how?
         pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", prodCatMembers);
         pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
       }

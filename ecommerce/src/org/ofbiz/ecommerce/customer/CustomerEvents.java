@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.22  2001/09/19 08:42:08  jonesde
+ * Initial checkin of refactored entity engine.
+ *
  * Revision 1.21  2001/09/18 22:31:48  jonesde
  * Cleaned up messages, fixed a few small bugs.
  *
@@ -117,7 +120,9 @@ public class CustomerEvents {
     
     String username = request.getParameter("USERNAME");
     String password = request.getParameter("PASSWORD");
-    String confirm_password = request.getParameter("CONFIRM_PASSWORD");
+    String confirmPassword = request.getParameter("CONFIRM_PASSWORD");
+    String passwordHint = request.getParameter("PASSWORD_HINT");
+
     
     //get all parameters:
     String firstName = request.getParameter("USER_FIRST_NAME");
@@ -173,15 +178,9 @@ public class CustomerEvents {
     if(!UtilValidate.isEmail(email)) errMsg += "<li>" + UtilValidate.isEmailMsg;
     
     if(!UtilValidate.isNotEmpty(username)) errMsg += "<li>Username missing.";
-    if((!UtilValidate.isNotEmpty(password) || !UtilValidate.isNotEmpty(confirm_password))
-    && UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true"))
-    { errMsg += "<li>Password(s) missing."; }
-    else if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")
-    && password.compareTo(confirm_password) != 0)
-    { errMsg += "<li>Passwords did not match."; }
-    
+
     if(username != null && username.length() > 0) {
-      GenericValue userLogin = null;
+      GenericValue userLogin;
       try { userLogin = delegator.findByPrimaryKey(delegator.makePK("UserLogin", UtilMisc.toMap("userLoginId", username))); }
       catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); userLogin = null; }
       if(userLogin != null) {
@@ -189,6 +188,12 @@ public class CustomerEvents {
         errMsg += "<li>Username in use, please choose another.";
       }
     }
+    
+    GenericValue tempUserLogin = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", username, "partyId", username));
+    if (UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) {
+        errMsg += setPassword(tempUserLogin, password, confirmPassword, passwordHint);
+    }
+ 
     
     if(errMsg.length() > 0) {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
@@ -199,10 +204,11 @@ public class CustomerEvents {
     //UserLogin with username does not exist: create new user...
     if(!UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) password = UtilProperties.getPropertyValue("ecommerce", "default.customer.password", "ungssblepswd");
     
-    GenericValue tempUserLogin = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", username, "currentPassword", password, "partyId", username));
+    Timestamp now = UtilDateTime.nowTimestamp();
+
     // create Party, PartyClass, Person, ContactMechs for Address, phones
     tempUserLogin.preStoreOther(delegator.makeValue("Party", UtilMisc.toMap("partyId", username)));
-    tempUserLogin.preStoreOther(delegator.makeValue("PartyClassification", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON", "partyClassificationTypeId", "PERSON_CLASSIFICATION", "fromDate", UtilDateTime.nowTimestamp())));
+    tempUserLogin.preStoreOther(delegator.makeValue("PartyClassification", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON", "partyClassificationTypeId", "PERSON_CLASSIFICATION", "fromDate", now)));
     tempUserLogin.preStoreOther(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", username, "roleTypeId", "CUSTOMER")));
     tempUserLogin.preStoreOther(delegator.makeValue("Person", UtilMisc.toMap("partyId", username, "firstName", firstName, "middleName", middleName, "lastName", lastName, "personalTitle", personalTitle, "suffix", suffix)));
     
@@ -223,16 +229,16 @@ public class CustomerEvents {
     newAddr.set("countryGeoId", country);
     //newAddr.set("postalCodeGeoId", postalCodeGeoId);
     tempUserLogin.preStoreOther(newAddr);
-    tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", addressAllowSolicitation)));
-    tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "fromDate", UtilDateTime.nowTimestamp())));
+    tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", addressAllowSolicitation)));
+    tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "fromDate", now)));
     
     //make home phone number
     if(UtilValidate.isNotEmpty(homeContactNumber)) {
       newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
       tempUserLogin.preStoreOther(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
       tempUserLogin.preStoreOther(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", homeCountryCode, "areaCode", homeAreaCode, "contactNumber", homeContactNumber)));
-      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", homeAllowSolicitation, "extension", homeExt)));
-      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_HOME", "fromDate", UtilDateTime.nowTimestamp())));
+      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", homeAllowSolicitation, "extension", homeExt)));
+      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_HOME", "fromDate", now)));
     }
     
     //make work phone number
@@ -240,8 +246,8 @@ public class CustomerEvents {
       newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
       tempUserLogin.preStoreOther(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
       tempUserLogin.preStoreOther(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", workCountryCode, "areaCode", workAreaCode, "contactNumber", workContactNumber)));
-      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", workAllowSolicitation, "extension", workExt)));
-      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_WORK", "fromDate", UtilDateTime.nowTimestamp())));
+      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", workAllowSolicitation, "extension", workExt)));
+      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_WORK", "fromDate", now)));
     }
     
     //make fax number
@@ -249,8 +255,8 @@ public class CustomerEvents {
       newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
       tempUserLogin.preStoreOther(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
       tempUserLogin.preStoreOther(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", faxCountryCode, "areaCode", faxAreaCode, "contactNumber", faxContactNumber)));
-      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", faxAllowSolicitation)));
-      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "FAX_NUMBER", "fromDate", UtilDateTime.nowTimestamp())));
+      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", faxAllowSolicitation)));
+      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "FAX_NUMBER", "fromDate", now)));
     }
     
     //make mobile phone number
@@ -258,14 +264,15 @@ public class CustomerEvents {
       newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
       tempUserLogin.preStoreOther(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
       tempUserLogin.preStoreOther(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", mobileCountryCode, "areaCode", mobileAreaCode, "contactNumber", mobileContactNumber)));
-      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", mobileAllowSolicitation)));
-      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_MOBILE", "fromDate", UtilDateTime.nowTimestamp())));
+      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", mobileAllowSolicitation)));
+      tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PHONE_MOBILE", "fromDate", now)));
     }
     
     //make email
     newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
     tempUserLogin.preStoreOther(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "EMAIL_ADDRESS", "infoString", email)));
-    tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", emailAllowSolicitation)));
+    tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", emailAllowSolicitation)));
+    tempUserLogin.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PRIMARY_EMAIL", "fromDate", now)));
     
     try { newUserLogin = delegator.create(tempUserLogin); }
     catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); newUserLogin = null; }
@@ -296,6 +303,7 @@ public class CustomerEvents {
     
     String updateMode = request.getParameter("UPDATE_MODE");
     
+    Timestamp now = UtilDateTime.nowTimestamp();
     if("CREATE".equals(updateMode)) {
       String contactMechTypeId = request.getParameter("CONTACT_MECH_TYPE_ID");
       if(contactMechTypeId == null) { errMsg = "<li>ERROR: Could not create new contact info, type not specified. Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
@@ -305,11 +313,11 @@ public class CustomerEvents {
       
       String allowSolicitation = request.getParameter("CM_ALLOW_SOL");
       String extension = request.getParameter("CM_EXTENSION");
-      tempContactMech.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", allowSolicitation, "extension", extension)));
+      tempContactMech.preStoreOther(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", allowSolicitation, "extension", extension)));
       
       String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
       if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0)
-        tempContactMech.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp())));
+        tempContactMech.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", now)));
       
       if("POSTAL_ADDRESS".equals(contactMechTypeId)) {
         String toName = request.getParameter("CM_TO_NAME");
@@ -361,6 +369,18 @@ public class CustomerEvents {
           return "error";
         }
         tempContactMech.set("infoString", infoString);
+
+        String cmPurposeTypeId;
+        try {
+            Collection c = delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechPurposeTypeId", "PRIMARY_EMAIL"), null);
+            Debug.logInfo("list of Primary Emails: " + c);
+            if (UtilValidate.isEmpty(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechPurposeTypeId", "PRIMARY_EMAIL"), null))) {
+                cmPurposeTypeId = "PRIMARY_EMAIL";
+            } else {
+                cmPurposeTypeId = "OTHER_EMAIL";
+            }
+            tempContactMech.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", cmPurposeTypeId, "fromDate", now)));
+        } catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); }
       }
       else {
         String infoString = request.getParameter("CM_INFO_STRING");
@@ -509,7 +529,7 @@ public class CustomerEvents {
         
         newContactMech.set("contactMechId", newCmId.toString());
         newPartyContactMech.set("contactMechId", newCmId.toString());
-        newPartyContactMech.set("fromDate", UtilDateTime.nowTimestamp());
+        newPartyContactMech.set("fromDate", now);
         newPartyContactMech.set("thruDate", null);
         
         try {
@@ -528,10 +548,10 @@ public class CustomerEvents {
         
         String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
         if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0) {
-          partyContactMech.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp())));
+          partyContactMech.preStoreOther(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", now)));
         }
         
-        partyContactMech.set("thruDate", UtilDateTime.nowTimestamp());
+        partyContactMech.set("thruDate", now);
         try { partyContactMech.store(); }
         catch(GenericEntityException e) {
           Debug.logWarning(e.getMessage());
@@ -545,7 +565,7 @@ public class CustomerEvents {
         String newCmPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");
         if(newCmPurposeTypeId != null && newCmPurposeTypeId.length() > 0) {
           try {
-            if(delegator.create("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", cmId, "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp())) == null) {
+            if(delegator.create("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", cmId, "contactMechPurposeTypeId", newCmPurposeTypeId, "fromDate", now)) == null) {
               request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.");
               return "error";
             }
@@ -569,6 +589,36 @@ public class CustomerEvents {
     request.setAttribute("EVENT_MESSAGE", "Contact Information Updated.");
     return "success";
   }
+
+  private static Collection getCurrentPartyContactMechList(GenericValue party, String contactMechPurposeTypeId) {
+    GenericDelegator delegator = party.getDelegator();
+    Iterator partyContactMechPurposeIter = null;
+    try {
+        partyContactMechPurposeIter = delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", party.getString("partyId"), "contactMechPurposeTypeId", contactMechPurposeTypeId), null).iterator();
+    } catch (GenericEntityException gee) {
+        Debug.logWarning(gee);
+        return Collections.EMPTY_LIST;
+    }
+    Collection result = new ArrayList();
+    java.util.Date now = new java.util.Date();
+    while(partyContactMechPurposeIter.hasNext()) {
+        GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposeIter.next();
+        if(partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(now)){
+            try {
+                GenericValue partyContactMech = partyContactMechPurpose.getRelatedOne("PartyContactMech");
+                if(partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(now)) {
+                    result.add(partyContactMech);
+                }
+            } catch (GenericEntityException gee) {
+                Debug.logWarning(gee);
+            }
+        }
+    }
+    return result;
+  }
+  
+  
+  
   
   /** Creates a PartyContactMechPurpose given the parameters in the request object
    *@param request The HTTPRequest object for the current request
@@ -676,6 +726,7 @@ public class CustomerEvents {
     
     String updateMode = request.getParameter("UPDATE_MODE");
     
+    Timestamp now = UtilDateTime.nowTimestamp();
     if("CREATE".equals(updateMode) || "UPDATE".equals(updateMode)) {
       boolean isModified = false;
       
@@ -726,14 +777,14 @@ public class CustomerEvents {
       if("UPDATE".equals(updateMode)) {
         if(!newCc.equals(creditCardInfo)) {
           newCc.set("creditCardId", newCcId.toString());
-          newCc.set("fromDate", UtilDateTime.nowTimestamp());
+          newCc.set("fromDate", now);
           isModified = true;
         }
       }
       else {
         //is CREATE, set values
         newCc.set("creditCardId", newCcId.toString());
-        newCc.set("fromDate", UtilDateTime.nowTimestamp());
+        newCc.set("fromDate", now);
         isModified = true;
       }
       
@@ -742,7 +793,7 @@ public class CustomerEvents {
         if("CREATE".equals(updateMode) || (creditCardInfo != null && !contactMechId.equals(creditCardInfo.getString("contactMechId")))) {
           //add a PartyContactMechPurpose of BILLING_LOCATION if necessary
           String contactMechPurposeTypeId = "BILLING_LOCATION";
-          newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp()));
+          newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
           
           GenericValue tempVal = null;
           try { tempVal = delegator.findByPrimaryKey(newPartyContactMechPurpose.getPrimaryKey()); }
@@ -751,7 +802,7 @@ public class CustomerEvents {
           if(tempVal != null) {
             //if exists already, and has a thruDate, reset or "undelete" it
             if(tempVal.get("thruDate") != null) {
-              tempVal.set("fromDate", UtilDateTime.nowTimestamp());
+              tempVal.set("fromDate", now);
               tempVal.set("thruDate", null);
               newPartyContactMechPurpose = tempVal;
             }
@@ -767,7 +818,7 @@ public class CustomerEvents {
         if(newPartyContactMechPurpose != null) newCc.preStoreOther(newPartyContactMechPurpose);
         if("UPDATE".equals(updateMode)) {
           //if it is an update, set thru date on old card
-          creditCardInfo.set("thruDate", UtilDateTime.nowTimestamp());
+          creditCardInfo.set("thruDate", now);
           newCc.preStoreOther(creditCardInfo);
         }
         
@@ -800,7 +851,7 @@ public class CustomerEvents {
         return "error";
       }
 
-      creditCardInfo.set("thruDate", UtilDateTime.nowTimestamp());
+      creditCardInfo.set("thruDate", now);
       try { creditCardInfo.store(); }
       catch(GenericEntityException e) {
         Debug.logWarning(e.getMessage());
@@ -978,12 +1029,11 @@ public class CustomerEvents {
     String password = request.getParameter("OLD_PASSWORD");
     String newPassword = request.getParameter("NEW_PASSWORD");
     String confirmPassword = request.getParameter("NEW_PASSWORD_CONFIRM");
+    String passwordHint = request.getParameter("PASSWORD_HINT");
     
-    if(password == null || password.length() <= 0 ||
-    newPassword == null || newPassword.length() <= 0 ||
-    confirmPassword == null || confirmPassword.length() <= 0) {
-      //one or more of the passwords was incomplete
-      request.setAttribute("ERROR_MESSAGE", "<li>One or more of the passwords was empty, please re-enter.");
+    if(!UtilValidate.isNotEmpty(password)) {
+      //the password was incomplete
+      request.setAttribute("ERROR_MESSAGE", "<li>The password was empty, please re-enter.");
       return "error";
     }
     
@@ -993,19 +1043,52 @@ public class CustomerEvents {
       return "error";
     }
     
-    //password was correct, check new password
-    if(!newPassword.equals(confirmPassword)) {
-      //passwords did not match
-      request.setAttribute("ERROR_MESSAGE", "<li>New Passwords did not match, please re-enter.");
-      return "error";
+    String errMsg = setPassword(userLogin, newPassword, confirmPassword, passwordHint);
+    if (UtilValidate.isNotEmpty(errMsg)) {
+        request.setAttribute("ERROR_MESSAGE", errMsg);
+        return "error";
     }
     
-    //all is well, update password
-    userLogin.set("currentPassword", newPassword);
     try { userLogin.store(); }
     catch(Exception e) { request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not change password (write failure). Please contact customer service."); return "error"; }
     
     request.setAttribute("EVENT_MESSAGE", "Password Changed.");
     return "success";
+  }
+  
+  /**
+   * Will not persist the password - just set the attribute
+   *
+   * @return empty String if success or the error message
+   */
+  private static String setPassword(GenericValue userLogin, String password, String confirmPassword, String passwordHint) {
+    String errMsg = "";
+    if (UtilValidate.isEmpty(passwordHint)) passwordHint = null;
+
+    if(!UtilValidate.isNotEmpty(password) || !UtilValidate.isNotEmpty(confirmPassword)) { 
+        errMsg += "<li>Password(s) missing."; 
+    } else if(!password.equals(confirmPassword)) { 
+        errMsg += "<li>Password confirmation did not match."; 
+    } else {
+        int minPasswordLength;
+        try { minPasswordLength = Integer.parseInt(UtilProperties.getPropertyValue("security", "password.length.min", "0"));
+        } catch (NumberFormatException nfe) { minPasswordLength = 0; };
+        if(!(password.length() >= minPasswordLength)) { 
+            errMsg += "<li>Password must be at least " + minPasswordLength + " characters long.";
+        } else if (password.equalsIgnoreCase(userLogin.getString("userLoginId"))) {
+            errMsg += "<li>Password may not equal the Username.";
+        } else if (UtilValidate.isNotEmpty(passwordHint) 
+                && (passwordHint.toUpperCase().indexOf(password.toUpperCase()) >= 0)) {
+            errMsg += "<li>Password hint may not contain the password.";
+        }
+    }
+    
+    if (errMsg.length() == 0) {
+        //all is well, update password
+        userLogin.set("currentPassword", password);
+        userLogin.set("passwordHint", passwordHint);
+    }
+    
+    return errMsg;
   }
 }
