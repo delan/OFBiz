@@ -34,16 +34,16 @@ public class ConnectionFactory
     boolean usingPoolMan = true;
     try {
        Class.forName("com.codestudio.sql.PoolMan").newInstance();
-       Debug.logInfo("Found PoolMan Driver...");
+       //Debug.logInfo("Found PoolMan Driver...");
     }
     catch ( Exception ex ) { usingPoolMan = false; }
    
     if ( usingPoolMan ) {
         String poolManName = UtilProperties.getPropertyValue("servers", serverName + ".jdbc.poolman");
-        Debug.logInfo("Attempting to connect to '"+poolManName+"'");
+        //Debug.logInfo("Attempting to connect to '"+poolManName+"'");
         Connection con = DriverManager.getConnection("jdbc:poolman://" + poolManName);
         if ( con != null ) {
-            Debug.logInfo("Connection to PoolMan established.");
+            //Debug.logInfo("Connection to PoolMan established.");
             return con;
         }
         usingPoolMan = false;
