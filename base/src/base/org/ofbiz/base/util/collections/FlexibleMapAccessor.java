@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleMapAccessor.java,v 1.1 2004/07/01 08:37:47 jonesde Exp $
+ * $Id: FlexibleMapAccessor.java,v 1.2 2004/07/15 02:11:58 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.base.util.UtilMisc;
  * list elements. See individual Map operations for more information.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class FlexibleMapAccessor {
@@ -206,6 +206,23 @@ public class FlexibleMapAccessor {
     
     public String toString() {
         return this.original;
+    }
+    
+    public boolean equals(Object that) {
+        FlexibleMapAccessor thatAcsr = (FlexibleMapAccessor) that;
+        if (this.original == null) {
+            if (thatAcsr.original == null) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return this.original.equals(thatAcsr.original);
+        }
+    }
+    
+    public int hashCode() {
+        return this.original.hashCode();
     }
     
     public class SubMapAccessor {
