@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceXaWrapper.java,v 1.7 2003/12/22 21:00:34 ajzeneski Exp $
+ * $Id: ServiceXaWrapper.java,v 1.8 2004/07/27 18:12:42 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
  * ServiceXaWrapper - XA Resource wrapper for running services on commit() or rollback()
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class ServiceXaWrapper extends GenericXaResource {
@@ -52,6 +52,10 @@ public class ServiceXaWrapper extends GenericXaResource {
     protected String commitService = null;
     protected Map rollbackContext = null;
     protected Map commitContext = null;
+    protected boolean rollbackAsync = true;
+    protected boolean rollbackAsyncPersist = true;
+    protected boolean commitAsync = false;
+    protected boolean commitAsyncPersist = false;
 
     protected ServiceXaWrapper() {}
     public ServiceXaWrapper(DispatchContext dctx) {
@@ -64,8 +68,20 @@ public class ServiceXaWrapper extends GenericXaResource {
      * @param context Context to use when running
      */
     public void setCommitService(String serviceName, Map context) {
+        this.setCommitService(serviceName, context, commitAsync, commitAsyncPersist);
+    }
+
+    /**
+     * Sets the service to run on rollback()
+     * @param serviceName Name of service to run
+     * @param context Context to use when running
+     * @param async override default async behavior
+     */
+    public void setCommitService(String serviceName, Map context, boolean async, boolean persist) {
         this.commitService = serviceName;
         this.commitContext = context;
+        this.commitAsync = async;
+        this.commitAsyncPersist = persist;
     }
 
     /**
@@ -88,8 +104,20 @@ public class ServiceXaWrapper extends GenericXaResource {
      * @param context Context to use when running
      */
     public void setRollbackService(String serviceName, Map context) {
+        this.setRollbackService(serviceName, context, rollbackAsync, rollbackAsyncPersist);
+    }
+
+    /**
+     * Sets the service to run on rollback()
+     * @param serviceName Name of service to run
+     * @param context Context to use when running
+     * @param async override default async behavior
+     */
+    public void setRollbackService(String serviceName, Map context, boolean async, boolean persist) {
         this.rollbackService = serviceName;
         this.rollbackContext = context;
+        this.rollbackAsync = async;
+        this.rollbackAsyncPersist = persist;
     }
 
     /**
@@ -143,10 +171,19 @@ public class ServiceXaWrapper extends GenericXaResource {
                 if (model.validate) {
                     thisContext = model.makeValid(this.commitContext, ModelService.IN_PARAM);
                 }
-                dctx.getDispatcher().runSyncIgnore(this.commitService, thisContext);
+                if (this.commitAsync) {
+                    Debug.log("[Commit] Invoking [" + this.commitService + "] via runAsync", module);
+                    dctx.getDispatcher().runAsync(this.commitService, thisContext, this.commitAsyncPersist);
+                } else {
+                    Debug.log("[Commit] Invoking [" + this.commitService + "] via runSyncIgnore", module);
+                    dctx.getDispatcher().runSyncIgnore(this.commitService, thisContext);
+                }
             } catch (GenericServiceException e) {
-                Debug.logError(e, "Problem calling sync service : " + this.commitService + " / " + this.commitContext, module);
-                serviceError = true; // don't throw the exception until we resume the transaction
+                Debug.logError(e, "Problem calling commit service : " + this.commitService + " / " + this.commitContext, module);
+                // async calls are assumed to not effect this TX
+                if (!this.commitAsync) {
+                    serviceError = true; // don't throw the exception until we resume the transaction
+                }
             }
 
             // resume the transaction
@@ -215,7 +252,13 @@ public class ServiceXaWrapper extends GenericXaResource {
                 if (model.validate) {
                     thisContext = model.makeValid(this.rollbackContext, ModelService.IN_PARAM);
                 }
-                dctx.getDispatcher().runAsync(this.rollbackService, thisContext, true);
+                if (this.rollbackAsync) {
+                    Debug.log("[Rollback] Invoking [" + this.rollbackService + "] via runAsync", module);
+                    dctx.getDispatcher().runAsync(this.rollbackService, thisContext, this.rollbackAsyncPersist);
+                } else {
+                    Debug.log("[Rollback] Invoking [" + this.rollbackService + "] via runSyncIgnore", module);
+                    dctx.getDispatcher().runSyncIgnore(this.rollbackService, thisContext);
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem calling async service : " + this.rollbackService + " / " + this.rollbackContext, module);
             }

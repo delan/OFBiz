@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEcaAction.java,v 1.3 2004/07/10 04:55:48 jonesde Exp $
+ * $Id: ServiceEcaAction.java,v 1.4 2004/07/27 18:12:42 ajzeneski Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,11 +39,12 @@ import javax.transaction.xa.XAException;
  * ServiceEcaAction
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ServiceEcaAction {
 
+    protected String eventName;
     protected String serviceName;
     protected String serviceMode;
     protected String resultMapName;
@@ -53,7 +54,8 @@ public class ServiceEcaAction {
 
     protected ServiceEcaAction() {}
 
-    public ServiceEcaAction(Element action) {
+    public ServiceEcaAction(Element action, String event) {
+        this.eventName = event;
         this.serviceName = action.getAttribute("service");
         this.serviceMode = action.getAttribute("mode");
         this.resultMapName = action.getAttribute("result-map-name");
@@ -64,7 +66,7 @@ public class ServiceEcaAction {
     }
 
     public void runAction(String selfService, DispatchContext dctx, Map context, Map result) throws GenericServiceException {
-        if (this.serviceName.equals(selfService)) {
+        if (serviceName.equals(selfService)) {
             throw new GenericServiceException("Cannot invoke self on ECA.");
         }
 
@@ -73,21 +75,25 @@ public class ServiceEcaAction {
         Map actionResult = null;
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
-        if (serviceMode.equals("sync")) {
-            actionResult = dispatcher.runSync(this.serviceName, actionContext);
-        } else if (serviceMode.equals("async")) {
-            dispatcher.runAsync(serviceName, actionContext, persist);
-        } else if (serviceMode.equals("_rollback") || serviceMode.equals("_commit")) {
+        if (eventName.startsWith("global-")) {
+            // XA resource ECA
             ServiceXaWrapper xaw = new ServiceXaWrapper(dctx);
-            if (serviceMode.equals("_rollback")) {
-                xaw.setRollbackService(this.serviceName, context); // using the actual context so we get updates
-            } else if (serviceMode.equals("_commit")) {
-                xaw.setCommitService(this.serviceName, context); // using the actual context so we get updates
+            if (eventName.equals("global-rollback")) {
+                xaw.setRollbackService(serviceName, context, "async".equals(serviceMode), persist); // using the actual context so we get updates
+            } else if (eventName.equals("global-commit")) {
+                xaw.setCommitService(serviceName, context, "async".equals(serviceMode), persist);   // using the actual context so we get updates
             }
             try {
                 xaw.enlist();
             } catch (XAException e) {
                 throw new GenericServiceException("Unable to enlist ServiceXaWrapper with transaction", e);
+            }
+        } else {
+            // standard ECA
+            if (serviceMode.equals("sync")) {
+                actionResult = dispatcher.runSync(serviceName, actionContext);
+            } else if (serviceMode.equals("async")) {
+                dispatcher.runAsync(serviceName, actionContext, persist);
             }
         }
 
