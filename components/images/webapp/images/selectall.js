@@ -11,8 +11,7 @@ function checkToggle(e) {
         var allchecked = true;
         for (var i = 0; i < len; i++) {
             var element = cform.elements[i];
-            var elementName = new java.lang.String(element.name);          
-            if (elementName.startsWith("_rowSubmit") && !element.checked) {       
+            if (element.name.substring(0, 10) == "_rowSubmit" && !element.checked) {       
                 allchecked = false;
             }
             cform.selectAll.checked = allchecked;            
@@ -26,8 +25,7 @@ function toggleAll(e) {
     var len = cform.elements.length;
     for (var i = 0; i < len; i++) {
         var element = cform.elements[i];                   
-        var eName = new java.lang.String(element.name);                
-        if (eName.startsWith("_rowSubmit") && element.checked != e.checked) {
+        if (element.name.substring(0, 10) == "_rowSubmit" && element.checked != e.checked) {
             toggle(element);
         } 
     }     
@@ -37,8 +35,7 @@ function selectAll() {
     var len = cform.elements.length;
     for (var i = 0; i < len; i++) {
         var element = cform.elements[i];                   
-        var eName = new java.lang.String(element.name);                
-        if ((element.name == "selectAll" || eName.startsWith("_rowSubmit")) && !element.checked) {
+        if ((element.name == "selectAll" || element.name.substring(0, 10) == "_rowSubmit") && !element.checked) {
             toggle(element);
         } 
     }     
