@@ -618,4 +618,48 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox">
     </form>
 
+    <form
+        name="TestPermission" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="TestPermission" title="" type="single">
+        <field name="contentId">
+            <text/>
+        </field>
+        <field name="partyId">
+            <text/>
+        </field>
+        <field name="userLoginId">
+            <text/>
+        </field>
+        <field name="targetOperationString">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="ContentOperation" key-field-name="contentOperationId"/>
+            </drop-down>
+        </field>
+        <field name="displayFailCond">
+            <hidden value="true"/>
+        </field>
+        <field name="displayPassCond">
+            <hidden value="true"/>
+        </field>
+        <!--
+        <field name="contentPurposeString">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="ContentPurposeType" key-field-name="contentPurposeTypeId"/>
+            </drop-down>
+        </field>
+        <field name="roleTypeString">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="RoleType" key-field-name="roleTypeId"/>
+            </drop-down>
+        </field>
+            -->
+        <field name="submitButton" title="Check" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 </forms>

@@ -121,12 +121,31 @@ public class ContentPermissionServices {
              displayFailCond = true;   
         }
                 Debug.logInfo("displayFailCond(0):" + displayFailCond, "");
+        Boolean bDisplayPassCond = (Boolean)context.get("displayPassCond");
+        boolean displayPassCond = false;
+        if (bDisplayPassCond != null && bDisplayPassCond.booleanValue()) {
+             displayPassCond = true;   
+        }
+                Debug.logInfo("displayPassCond(0):" + displayPassCond, "");
         Map results  = new HashMap();
         String contentId = null;
         if (content != null)
             contentId = content.getString("contentId");
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
         String partyId = (String) context.get("partyId");
+        if (UtilValidate.isEmpty(partyId)) {
+            String passedUserLoginId = (String)context.get("userLoginId");
+            if (UtilValidate.isNotEmpty(passedUserLoginId)) {
+                try {
+                    userLogin = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", passedUserLoginId));
+                    if (userLogin != null) {
+                        partyId = userLogin.getString("partyId");   
+                    }
+                } catch(GenericEntityException e) {
+                    ServiceUtil.returnError(e.getMessage());
+                }
+            }
+        }
         if (UtilValidate.isEmpty(partyId) && userLogin != null) {
             partyId = userLogin.getString("partyId");
         }
@@ -172,6 +191,11 @@ public class ContentPermissionServices {
         //Debug.logInfo("targetOperations(b):" + targetOperations, "");
         List passedRoles = (List) context.get("roleTypeList"); 
         if (passedRoles == null) passedRoles = new ArrayList();
+        String roleTypeString = (String) context.get("roleTypeString"); 
+        if (UtilValidate.isNotEmpty(roleTypeString)) {
+            List rolesFromString = StringUtil.split(roleTypeString, "|");
+            passedRoles.addAll(rolesFromString);
+        }
         roleGetter.setList(passedRoles);
         
         String entityAction = (String) context.get("entityOperation");
@@ -179,54 +203,74 @@ public class ContentPermissionServices {
         if (userLogin != null && entityAction != null) {
             passed = security.hasEntityPermission("CONTENTMGR", entityAction, userLogin);
         }
+        
+        StringBuffer errBuf = new StringBuffer();
+        String permissionStatus = null;
+        List entityIds = new ArrayList();
         if (passed) {
             results.put("permissionStatus", "granted");   
-            return results;
-        }
+            permissionStatus = "granted";
+            if (displayPassCond) {
+                 errBuf.append("\n    hasEntityPermission(" + entityAction + "): PASSED" );
+            } 
+                
+        } else {
+            if (displayFailCond || displayPassCond) {
+                 errBuf.append("\n    hasEntityPermission(" + entityAction + "): FAILED" );
+            } 
 
-        List entityIds = new ArrayList();
-        if (content != null)
-            entityIds.add(content);
-        String quickCheckContentId = (String) context.get("quickCheckContentId");
-        if (UtilValidate.isNotEmpty(quickCheckContentId)) {
-           List quickList = StringUtil.split(quickCheckContentId, "|"); 
-           if (UtilValidate.isNotEmpty(quickList)) entityIds.addAll(quickList);
-        }
-        try {
-            boolean check = checkPermissionMethod(delegator, partyId,  "Content", entityIds, auxGetter, roleGetter, permCondGetter);
-            if (check) {
-                results.put("permissionStatus", "granted");
-            } else {
-                results.put("permissionStatus", "rejected");
-                Debug.logInfo("displayFailCond(1):" + displayFailCond, "");
-                if (displayFailCond) {
-                     StringBuffer errBuf = new StringBuffer();
-                     errBuf.append("\n    targetOperations:" );
-                     errBuf.append(targetOperations);
-
-                     String errMsg = permCondGetter.dumpAsText();
-                     errBuf.append(errMsg);
-                     errBuf.append("\n    partyId:" );
-                     errBuf.append(partyId);
-                     errBuf.append("\n    entityIds:" );
-                     errBuf.append(entityIds);
-                     
-                     if (auxGetter != null) {
-                     	 errBuf.append("\n    auxList:" );
-                         errBuf.append(auxGetter.getList());
-                     }
-                     
-                     if (roleGetter != null) {
-                     	 errBuf.append("\n    roleList:" );
-                         errBuf.append(roleGetter.getList());
-                     }
-                     
-                     Debug.logInfo("displayFailCond(0), errBuf:" + errBuf.toString(), "");
-                     results.put(ModelService.ERROR_MESSAGE, errBuf.toString());
-                }
+            if (content != null)
+                entityIds.add(content);
+            String quickCheckContentId = (String) context.get("quickCheckContentId");
+            if (UtilValidate.isNotEmpty(quickCheckContentId)) {
+               List quickList = StringUtil.split(quickCheckContentId, "|"); 
+               if (UtilValidate.isNotEmpty(quickList)) entityIds.addAll(quickList);
             }
-        } catch (GenericEntityException e) {
-            ServiceUtil.returnError(e.getMessage());   
+            try {
+                boolean check = checkPermissionMethod(delegator, partyId,  "Content", entityIds, auxGetter, roleGetter, permCondGetter);
+                if (check) {
+                    results.put("permissionStatus", "granted");
+                } else {
+                    results.put("permissionStatus", "rejected");
+                }
+            } catch (GenericEntityException e) {
+                ServiceUtil.returnError(e.getMessage());   
+            }
+            permissionStatus = (String)results.get("permissionStatus");
+        }
+            
+        if ((permissionStatus.equals("granted") && displayPassCond)
+            || (permissionStatus.equals("rejected") && displayFailCond)) {
+            // Don't show this if passed on 'hasEntityPermission'
+            if (displayFailCond || displayPassCond) {
+              if (!passed) {
+                 errBuf.append("\n    permissionStatus:" );
+                 errBuf.append(permissionStatus);
+                 errBuf.append("\n    targetOperations:" );
+                 errBuf.append(targetOperations);
+
+                 String errMsg = permCondGetter.dumpAsText();
+                 errBuf.append("\n" );
+                 errBuf.append(errMsg);
+                 errBuf.append("\n    partyId:" );
+                 errBuf.append(partyId);
+                 errBuf.append("\n    entityIds:" );
+                 errBuf.append(entityIds);
+                 
+                 if (auxGetter != null) {
+                 	 errBuf.append("\n    auxList:" );
+                     errBuf.append(auxGetter.getList());
+                 }
+                 
+                 if (roleGetter != null) {
+                 	 errBuf.append("\n    roleList:" );
+                     errBuf.append(roleGetter.getList());
+                 }
+              }
+                 
+                 Debug.logInfo("displayPass/FailCond(0), errBuf:" + errBuf.toString(), "");
+                 results.put(ModelService.ERROR_MESSAGE, errBuf.toString());
+            }
         }
         return results;
     }
@@ -1267,8 +1311,8 @@ public class ContentPermissionServices {
         }
     
         public String dumpAsText() {
-             List fieldNames = UtilMisc.toList("operationFieldName",  "roleFieldName",  "auxiliaryFieldName",  "statusFieldName");
-             Map widths = UtilMisc.toMap("operationFieldName", new Integer(24), "roleFieldName", new Integer(24), "auxiliaryFieldName", new Integer(24), "statusFieldName", new Integer(24));
+             List fieldNames = UtilMisc.toList("roleFieldName",  "auxiliaryFieldName",  "statusFieldName");
+             Map widths = UtilMisc.toMap("roleFieldName", new Integer(24), "auxiliaryFieldName", new Integer(24), "statusFieldName", new Integer(24));
              StringBuffer buf = new StringBuffer();
              Integer wid = null;
              
@@ -1282,7 +1326,7 @@ public class ContentPermissionServices {
                  String fld = (String)itFields.next();
                  wid = (Integer)widths.get(fld);
                  buf.append(fld);  
-                 for (int i=0; i < (wid.intValue() - fld.length()); i++) buf.append(" ");
+                 for (int i=0; i < (wid.intValue() - fld.length()); i++) buf.append("^");
                  buf.append("  ");
              }
                      buf.append("\n");
@@ -1298,14 +1342,16 @@ public class ContentPermissionServices {
                  Iterator it = this.entityList.iterator();
                  while (it.hasNext()) {
                      GenericValue contentPurposeOperation = (GenericValue)it.next();  
+                     /*
                      String contentOperationId = contentPurposeOperation.getString(this.operationFieldName);
                      if (UtilValidate.isEmpty(contentOperationId)) {
                          contentOperationId = "";
                      }
                      wid = (Integer)widths.get("operationFieldName");
                      buf.append(contentOperationId);  
-                     for (int i=0; i < (wid.intValue() - contentOperationId.length()); i++) buf.append(" ");
+                     for (int i=0; i < (wid.intValue() - contentOperationId.length()); i++) buf.append("^");
                      buf.append("  ");
+                     */
                      
                      String roleTypeId = contentPurposeOperation.getString(this.roleFieldName);
                      if (UtilValidate.isEmpty(roleTypeId)) {
@@ -1313,7 +1359,7 @@ public class ContentPermissionServices {
                      }
                      wid = (Integer)widths.get("roleFieldName");
                      buf.append(roleTypeId);  
-                     for (int i=0; i < (wid.intValue() - roleTypeId.length()); i++) buf.append(" ");
+                     for (int i=0; i < (wid.intValue() - roleTypeId.length()); i++) buf.append("^");
                      buf.append("  ");
                      
                      String  auxiliaryFieldValue = contentPurposeOperation.getString(this.auxiliaryFieldName);
@@ -1322,16 +1368,18 @@ public class ContentPermissionServices {
                      }
                      wid = (Integer)widths.get("auxiliaryFieldName");
                      buf.append(auxiliaryFieldValue);  
-                     for (int i=0; i < (wid.intValue() - auxiliaryFieldValue.length()); i++) buf.append(" ");
+                     for (int i=0; i < (wid.intValue() - auxiliaryFieldValue.length()); i++) buf.append("^");
                      buf.append("  ");
                      
                      String statusId = contentPurposeOperation.getString(this.statusFieldName);
                      if (UtilValidate.isEmpty(statusId)) {
                          statusId = "";
                      }
-                     wid = (Integer)widths.get("statusFieldName");
                      buf.append(statusId);  
+                     /*
+                     wid = (Integer)widths.get("statusFieldName");
                      for (int i=0; i < (wid.intValue() - statusId.length()); i++) buf.append(" ");
+                     */
                      buf.append("  ");
                      
                      buf.append("\n");

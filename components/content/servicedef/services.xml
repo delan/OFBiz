@@ -172,6 +172,7 @@
              the service in a request event, so I added new ones without removing lists -->
         <attribute mode="IN" name="targetOperationString" optional="true" type="String"/>
         <attribute mode="IN" name="contentPurposeString" optional="true" type="String"/>
+        <attribute mode="IN" name="roleTypeString" optional="true" type="String"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="IN" name="currentContent" optional="true" type="GenericValue"/>
         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
@@ -182,6 +183,9 @@
         <attribute mode="IN" name="privilegeEnumId" optional="true" type="String"/>
         <attribute mode="IN" name="quickCheckContentId" optional="true" type="String"/>
         <attribute mode="IN" name="displayFailCond" optional="true" type="Boolean"/>
+        <attribute mode="IN" name="displayPassCond" optional="true" type="Boolean"/>
+        <attribute mode="IN" name="partyId" optional="true" type="String"/>
+        <attribute mode="IN" name="userLoginId" optional="true" type="String"/>
         <attribute mode="OUT" name="permissionStatus" optional="true" type="String"/>
         <attribute mode="OUT" name="permissionRecorder" optional="true" type="org.ofbiz.content.content.PermissionRecorder"/>
     </service>
