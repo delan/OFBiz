@@ -1,5 +1,5 @@
 /*
- * $Id: HttpClient.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: HttpClient.java,v 1.2 2003/10/24 20:26:26 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import java.util.Set;
  * Send HTTP GET/POST requests.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class HttpClient {
@@ -53,6 +53,7 @@ public class HttpClient {
     
     private String url = null;
     private String rawStream = null;
+    private String clientCertAlias = null;
     private Map parameters = null;
     private Map headers = null;
     
@@ -165,6 +166,16 @@ public class HttpClient {
     /** Return a string representing the requested URL. */
     public String getUrl() {
         return url;
+    }
+    
+    /** Sets the client certificate alias (from the keystore) to use for this SSL connection. */
+    public void setClientCertificateAlias(String alias) {
+        this.clientCertAlias = alias;
+    }
+    
+    /** Returns the alias of the client certificate to be used for this SSL connection. */
+    public String getClientCertificateAlias() {
+        return this.clientCertAlias;
     }
 
     /** Invoke HTTP request GET. */
@@ -349,7 +360,7 @@ public class HttpClient {
         // Create the URL and open the connection.
         try {
             requestUrl = new URL(url);
-            con = URLConnector.openConnection(requestUrl, timeout);
+            con = URLConnector.openConnection(requestUrl, timeout, clientCertAlias);
             if ((con instanceof HttpURLConnection))                 
                 ((HttpURLConnection) con).setInstanceFollowRedirects(followRedirects);
             
