@@ -580,6 +580,7 @@
         <description>Update an existing requirement</description>
         <implements service="requirementInterface"/>
         <attribute name="requirementId" type="String" mode="IN" optional="false"/>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>
     </service>
 
     <service name="deleteRequirement" engine="simple"
