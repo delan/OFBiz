@@ -2,6 +2,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/12/04 09:56:54  jonesde
+ * Fixed some bugs, now works fine with updated test file
+ *
  * Revision 1.9  2001/12/02 12:05:24  jonesde
  * Added error checking, now partially tested
  *
@@ -849,7 +852,7 @@ public class XpdlReader {
             Element participantElement = (Element) participantsIter.next();
             String participantId = participantElement.getAttribute("Id");
 
-            //if participant doesn't exist, create it
+            //if participant doesn't exist, create it; don't do an update because if settings are manually changed it would be annoying as all get out
             GenericValue testValue = null;
             try {
                 testValue = delegator.findByPrimaryKey("WorkflowParticipant", UtilMisc.toMap("participantId", participantId));
@@ -870,6 +873,10 @@ public class XpdlReader {
 
                 //Description?
                 participantValue.set("description", UtilXml.childElementValue(participantElement, "Description"));
+
+                //ExtendedAttributes
+                participantValue.set("partyId", getExtendedAttributeValue(participantElement, "partyId"), false);
+                participantValue.set("roleTypeId", getExtendedAttributeValue(participantElement, "roleTypeId"), false);
             }
 
             //regardless of whether the participant was created, create a participant list entry
@@ -1025,6 +1032,28 @@ public class XpdlReader {
           <field name="arrayLowerIndex" type="numeric"></field>
           <field name="arrayUpperIndex" type="numeric"></field>
          */
+    }
+    
+    protected String getExtendedAttributeValue(Element element, String name) {
+        if (element == null || name == null) 
+            return null;
+            
+        Element extendedAttributesElement = UtilXml.firstChildElement(element, "ExtendedAttributes");
+        if (extendedAttributesElement == null)
+            return null;
+        List extendedAttributes = UtilXml.childElementList(extendedAttributesElement, "ExtendedAttribute");
+        if (extendedAttributes == null || extendedAttributes.size() == 0)
+            return null;
+        
+        Iterator iter = extendedAttributes.iterator();
+        while (iter.hasNext()) {
+            Element extendedAttribute = (Element)iter.next();
+            String elementName = extendedAttribute.getAttribute("Name");
+            if (name.equals(elementName)) {
+                return extendedAttribute.getAttribute("Value");
+            }
+        }
+        return null;
     }
 
     // ---------------------------------------------------------
