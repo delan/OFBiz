@@ -38,7 +38,7 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public final class BeanShellEngine extends GenericAsyncEngine {
-            
+    
     /** Creates new BeanShellEngine */
     public BeanShellEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
@@ -64,7 +64,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
     
     // Invoke the BeanShell script service.
     private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {
-       if ( modelService.location == null || modelService.invoke == null )
+        if ( modelService.location == null || modelService.invoke == null )
             throw new GenericServiceException("Cannot locate service to invoke");
         
         // Get the classloader to use
@@ -73,6 +73,9 @@ public final class BeanShellEngine extends GenericAsyncEngine {
             cl = this.getClass().getClassLoader();
         else
             cl = dispatcher.getLocalContext(loader).getClassLoader();
+        
+        // Add the DispatchContext to the service context
+        context.put("DISPATCHCONTEXT",dispatcher.getLocalContext(loader));
         
         Interpreter bsh = null;
         try {
@@ -89,7 +92,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
             throw new GenericServiceException("Cannot instantiate the BeanShell Interpreter");
         }
         
-        Map result = null;                
+        Map result = null;
         try {
             bsh.set("context",context);             // set the context for the BSH script
             bsh.set("result",new HashMap());     // set the result for the script
@@ -108,7 +111,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
         catch ( ClassCastException e ) {
             throw new GenericServiceException("BeanShell script did not return a proper response");
         }
-                
+        
         return result;
     }
     

@@ -76,6 +76,9 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
         else
             cl = dispatcher.getLocalContext(loader).getClassLoader();
         
+        // Add the DispatchContext to the service context
+        context.put("DISPATCHCONTEXT",dispatcher.getLocalContext(loader));
+        
         try {
             Class c = cl.loadClass(modelService.location);
             Method m = c.getMethod(modelService.invoke, paramTypes);
