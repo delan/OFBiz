@@ -58,13 +58,11 @@ public class LocalDispatcher {
                 loader = this.getClass().getClassLoader();
             }
         }
-        DispatchContext dc =
-                new DispatchContext(name, readerURLs, loader, null);
+        DispatchContext dc = new DispatchContext(name, readerURLs, loader, null);
         init(name, delegator, dc);
     }
 
-    public LocalDispatcher(String name, GenericDelegator delegator,
-                           DispatchContext ctx) {
+    public LocalDispatcher(String name, GenericDelegator delegator, DispatchContext ctx) {
         init(name, delegator, ctx);
     }
 
