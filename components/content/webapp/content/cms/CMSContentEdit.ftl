@@ -20,19 +20,9 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
-<SCRIPT language="javascript">
-    function submitRows(rowCount) {
-        var rowCountElement = document.createElement("input");
-        rowCountElement.setAttribute("name", "_rowCount");
-        rowCountElement.setAttribute("type", "hidden");
-        rowCountElement.setAttribute("value", rowCount);
-        document.forms.publishsite.appendChild(rowCountElement);
-        document.forms.publishsite.submit();
-    }
-</SCRIPT>
 
 <#include "publishlib.ftl" />
 <#--
@@ -162,9 +152,6 @@ ${textData?if_exists}
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp; Roles </div>
           </td>
-          <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/EditPublishLinks?contentId=${contentId?if_exists}</@ofbizUrl>" class="submenutextright">Publish</a>
-          </td>
         </tr>
       </table>
     </TD>
@@ -180,13 +167,14 @@ ${textData?if_exists}
                     <#assign rowCount = 0 />
                     <#assign rootForumId=page.getProperty("rootForumId") />
                     <@publishContent forumId=rootForumId contentId=contentId />
+                    <tr>
+                      <td colspan="1">
+                          <input type="submit" name="submitBtn" value="Publish"/>
+                      </td>
+                    </tr>
               </table>
+              <input type="hidden" name="_rowCount" value="${rowCount}"/>
             </form>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="1">
-<div class="standardSubmit" ><a href="javascript:submitRows('${rowCount?default(0)}')">Publish</a></div>
           </td>
         </tr>
 

@@ -103,7 +103,7 @@
     returnAfterPickWhen="1==1";
 >
     <#local isPublished = "" />
-    <#assign contentAssocViewFrom=Static["org.ofbiz.content.content.ContentWorker"].getContentAssocViewFrom(delegator, context.subContentId, contentId, "PUBLISH_LINK", null, null)?if_exists />
+    <#assign contentAssocViewFrom=Static["org.ofbiz.content.content.ContentWorker"].getContentAssocViewFrom(delegator, subContentId, contentId, "PUBLISH_LINK", null, null)?if_exists />
     <#if contentAssocViewFrom?has_content>
         <#local isPublished = "checked" />
     </#if>
@@ -111,17 +111,17 @@
          <td >
             ${indent}
             <#local plusMinus="-"/>
-            ${plusMinus} ${context.content.contentName?if_exists}
+            ${plusMinus} ${content.contentName?if_exists}
          </td >
          <td  class="tabletext" >
             <input type="checkbox" name="publish_o_${rowCount}" value="Y" ${isPublished}/>
          </td >
-            <input type="hidden" name="contentIdTo_o_${rowCount}" value="${context.subContentId}" />
+            <input type="hidden" name="contentIdTo_o_${rowCount}" value="${subContentId}" />
             <input type="hidden" name="contentId_o_${rowCount}" value="${contentId}" />
             <input type="hidden" name="contentAssocTypeId_o_${rowCount}" value="PUBLISH_LINK" />
        </tr>
        <#assign rowCount = rowCount + 1 />
-       <@publishContent forumId=context.subContentId contentId=contentId indentIndex=(indentIndex + 1)/>
+       <@publishContent forumId=subContentId contentId=contentId indentIndex=(indentIndex + 1)/>
 </@loopSubContentCache >
 
 </#macro>
@@ -149,26 +149,26 @@
          <td class="tabletext" >
             ${indent}
             <#local plusMinus="-"/>
-            ${plusMinus} ${context.content.contentName?if_exists}
+            ${plusMinus} ${content.contentName?if_exists}
          </td >
          <td >
-            <a class="buttontext" href="<@ofbizUrl>/CMSSites?rootForumId=${rootForumId}&moderatedSiteId=${context.content.contentId}</@ofbizUrl>">Moderate</a>
-         </td >
-         <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
-         <td >
-            <a class="buttontext" href="<@ofbizUrl>/CMSSites?rootForumId=${rootForumId}&permRoleSiteId=${context.content.contentId}</@ofbizUrl>">User Roles</a>
+            <a class="buttontext" href="<@ofbizUrl>/CMSSites?rootForumId=${rootForumId}&moderatedSiteId=${content.contentId}</@ofbizUrl>">Moderate</a>
          </td >
          <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
          <td >
-            <a class="buttontext" href="<@ofbizUrl>/addSubSite?rootForumId=${rootForumId}&parentForumId=${context.content.contentId}</@ofbizUrl>" >Add Child Forum</a>
+            <a class="buttontext" href="<@ofbizUrl>/CMSSites?rootForumId=${rootForumId}&permRoleSiteId=${content.contentId}</@ofbizUrl>">User Roles</a>
          </td >
          <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
          <td >
-            <a class="buttontext" href="<@ofbizUrl>/removeSite?rootForumId=${rootForumId}&contentId=${context.content.contentId}&contentIdTo=${forumId}&contentAssocTypeId=SUBSITE</@ofbizUrl>">RemoveSite</a>
+            <a class="buttontext" href="<@ofbizUrl>/addSubSite?rootForumId=${rootForumId}&parentForumId=${content.contentId}</@ofbizUrl>" >Add Child Forum</a>
+         </td >
+         <td >&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </td >
+         <td >
+            <a class="buttontext" href="<@ofbizUrl>/removeSite?rootForumId=${rootForumId}&contentId=${content.contentId}&contentIdTo=${forumId}&contentAssocTypeId=SUBSITE</@ofbizUrl>">RemoveSite</a>
          </td >
        </tr>
        <#assign rowCount = rowCount + 1 />
-       <@showSites forumId=context.subContentId indentIndex=(indentIndex + 1)/>
+       <@showSites forumId=subContentId indentIndex=(indentIndex + 1)/>
 </@loopSubContentCache >
 
 </#macro>
@@ -177,14 +177,14 @@
 <table width="100%" border="0" >
  <form name="mostrecent" mode="POST" action="<@ofbizUrl>/publishResponse</@ofbizUrl>"/>
   <#assign row=0/>
-  <#list entityList as content>
+  <#list mostRecentList as content>
     <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_PUBLISH" subContentId=forumId >
         <tr>
           <td class="tabletext"> <b>id:</b>${content.contentId} </td>
           <td class="tabletext"> <b>name:</b>${content.contentName} </td>
       <@injectNodeTrailCsv subContentId=content.contentId redo="true" contentAssocTypeId="PUBLISH_LINK">
           <td>
-  <a class="tabButton" href="<@ofbizUrl>/showforumresponse?contentId=${content.contentId}&nodeTrailCsv=${context.nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
+  <a class="tabButton" href="<@ofbizUrl>/CMSContentEdit?contentId=${content.contentId}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
           </td>
           <td class="tabletext">
           <b>submitted:</b>
@@ -211,28 +211,19 @@
       </@injectNodeTrailCsv >
     </@checkPermission >
   </#list>
-    <#if 0 < entityList?size >
+    <#if 0 < mostRecentList?size >
         <tr>
           <td colspan="5">
-<div class="standardSubmit" ><a href="javascript:submitRows('${row?default(0)}')">Update</a></div>
+            <input type="submit" name="submitBtn" value="Update"/>
           </td>
         </tr>
     </#if>
           <input type="hidden" name="moderatedSiteId" value="${forumId}"/>
           <input type="hidden" name="rootForumId" value="${rootForumId}"/>
+          <input type="hidden" name="_rowCount" value="${mostRecentList?size}"/>
  </form>
 </table>
 
-<SCRIPT language="javascript">
-    function submitRows(rowCount) {
-        var rowCountElement = document.createElement("input");
-        rowCountElement.setAttribute("name", "_rowCount");
-        rowCountElement.setAttribute("type", "hidden");
-        rowCountElement.setAttribute("value", rowCount);
-        document.forms.mostrecent.appendChild(rowCountElement);
-        document.forms.mostrecent.submit();
-    }
-</SCRIPT>
 
 </#macro>
 
@@ -284,24 +275,17 @@
         </tr>
           <tr>
             <td>
-<div class="standardSubmit" ><a href="javascript:submitRows('${rowCount?if_exists}')">Update</a></div>
+            <input type="submit" name="submitBtn" value="Update"/>
             </td>
           </tr>
       </table>
+          <input type="hidden" name="_rowCount" value="${mostRecentList?size}"/>
       </form>
     </TD>
   </TR>
 </table>
 
 <SCRIPT language="javascript">
-    function submitRows(rowCount) {
-        var rowCountElement = document.createElement("input");
-        rowCountElement.setAttribute("name", "_rowCount");
-        rowCountElement.setAttribute("type", "hidden");
-        rowCountElement.setAttribute("value", rowCount);
-        document.forms.siteRoleForm.appendChild(rowCountElement);
-        document.forms.siteRoleForm.submit();
-    }
 function call_fieldlookup3(view_name) {
         window.target = document.siteRoleForm.partyId_o_${rowCount - 1};
 	var obj_lookupwindow = window.open(view_name,'FieldLookup', 'width=700,height=550,scrollbars=yes,status=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
