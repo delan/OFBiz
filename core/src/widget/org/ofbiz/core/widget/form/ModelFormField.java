@@ -23,15 +23,22 @@
  */
 package org.ofbiz.core.widget.form;
 
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import org.w3c.dom.*;
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
-import org.ofbiz.core.service.LocalDispatcher;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.FlexibleMapAccessor;
+import org.ofbiz.core.util.FlexibleStringExpander;
+import org.ofbiz.core.util.UtilDateTime;
+import org.ofbiz.core.util.UtilValidate;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Element;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -667,31 +674,55 @@ public class ModelFormField {
     }
     
     public static abstract class FieldInfo {
-        protected String fieldTypeName;
+        
+        public static final int DISPLAY = 1;
+        public static final int HYPERLINK = 2;
+        public static final int TEXT = 3;
+        public static final int TEXTAREA = 4;
+        public static final int DATE_TIME = 5;
+        public static final int DROP_DOWN = 6;
+        public static final int CHECK = 7;
+        public static final int RADIO = 8;
+        public static final int SUBMIT = 9;
+        public static final int RESET = 10;
+        public static final int HIDDEN = 11;
+        public static final int IGNORED = 12;
+        
+        public static Map fieldTypeByName = new HashMap();
+        
+        static {
+            fieldTypeByName.put("display", new Integer(1));
+            fieldTypeByName.put("hyperlink", new Integer(2));
+            fieldTypeByName.put("text", new Integer(3));
+            fieldTypeByName.put("textarea", new Integer(4));
+            fieldTypeByName.put("date-time", new Integer(5));
+            fieldTypeByName.put("drop-down", new Integer(6));
+            fieldTypeByName.put("check", new Integer(7));
+            fieldTypeByName.put("radio", new Integer(8));
+            fieldTypeByName.put("submit", new Integer(9));
+            fieldTypeByName.put("reset", new Integer(10));
+            fieldTypeByName.put("hidden", new Integer(11));
+            fieldTypeByName.put("ignored", new Integer(12));
+        }
+        
+        protected int fieldType;
         protected ModelFormField modelFormField;
         
         /** Don't allow the Default Constructor */
         protected FieldInfo() {}
 
         /** Value Constructor */        
-        public FieldInfo(String fieldTypeName, ModelFormField modelFormField) {
-            this.fieldTypeName = fieldTypeName;
+        public FieldInfo(int fieldType, ModelFormField modelFormField) {
+            this.fieldType = fieldType;
             this.modelFormField = modelFormField;
         }
         
         /** XML Constructor */        
         public FieldInfo(Element element, ModelFormField modelFormField) {
-            this.fieldTypeName = element.getTagName();
+            this.fieldType = findFieldTypeFromName(element.getTagName());
             this.modelFormField = modelFormField;
         }
         
-        /**
-         * @return
-         */
-        public String getFieldTypeName() {
-            return fieldTypeName;
-        }
-
         /**
          * @return
          */
@@ -699,11 +730,28 @@ public class ModelFormField {
             return modelFormField;
         }
 
+
         /**
-         * @param string
+         * @return
          */
-        public void setFieldTypeName(String string) {
-            fieldTypeName = string;
+        public int getFieldType() {
+            return fieldType;
+        }
+
+        /**
+         * @param i
+         */
+        public void setFieldType(int i) {
+            fieldType = i;
+        }
+
+        public static int findFieldTypeFromName(String name) {
+            Integer fieldTypeInt = (Integer) FieldInfo.fieldTypeByName.get(name);
+            if (fieldTypeInt != null) {
+                return fieldTypeInt.intValue();
+            } else {
+                throw new IllegalArgumentException("Could not get fieldType for field type name " + name);
+            }
         }
 
         public abstract void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer);
@@ -714,8 +762,8 @@ public class ModelFormField {
         
         protected List optionSources = new LinkedList();
 
-        public FieldInfoWithOptions(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public FieldInfoWithOptions(int fieldType, ModelFormField modelFormField) {
+            super(fieldType, modelFormField);
         }
 
         public FieldInfoWithOptions(Element element, ModelFormField modelFormField) {
@@ -869,7 +917,7 @@ public class ModelFormField {
         protected DisplayField() { super(); }
 
         public DisplayField(ModelFormField modelFormField) {
-            super("display", modelFormField);
+            super(FieldInfo.DISPLAY, modelFormField);
         }
 
         public DisplayField(Element element, ModelFormField modelFormField) {
@@ -923,7 +971,7 @@ public class ModelFormField {
         protected HyperlinkField() { super(); }
 
         public HyperlinkField(ModelFormField modelFormField) {
-            super("hyperlink", modelFormField);
+            super(FieldInfo.HYPERLINK, modelFormField);
         }
 
         public HyperlinkField(Element element, ModelFormField modelFormField) {
@@ -941,7 +989,7 @@ public class ModelFormField {
         /**
          * @return
          */
-        public boolean isAlsoHidden() {
+        public boolean getAlsoHidden() {
             return alsoHidden;
         }
 
@@ -988,7 +1036,7 @@ public class ModelFormField {
         protected TextField() { super(); }
 
         public TextField(ModelFormField modelFormField) {
-            super("text", modelFormField);
+            super(FieldInfo.TEXT, modelFormField);
         }
 
         public TextField(Element element, ModelFormField modelFormField) {
@@ -1054,7 +1102,7 @@ public class ModelFormField {
         protected TextareaField() { super(); }
 
         public TextareaField(ModelFormField modelFormField) {
-            super("textarea", modelFormField);
+            super(FieldInfo.TEXTAREA, modelFormField);
         }
 
         public TextareaField(Element element, ModelFormField modelFormField) {
@@ -1118,7 +1166,7 @@ public class ModelFormField {
         protected DateTimeField() { super(); }
 
         public DateTimeField(ModelFormField modelFormField) {
-            super("date-time", modelFormField);
+            super(FieldInfo.DATE_TIME, modelFormField);
         }
 
         public DateTimeField(Element element, ModelFormField modelFormField) {
@@ -1162,7 +1210,7 @@ public class ModelFormField {
         protected DropDownField() { super(); }
 
         public DropDownField(ModelFormField modelFormField) {
-            super("drop-down", modelFormField);
+            super(FieldInfo.DROP_DOWN, modelFormField);
         }
 
         public DropDownField(Element element, ModelFormField modelFormField) {
@@ -1213,7 +1261,7 @@ public class ModelFormField {
         protected CheckField() { super(); }
 
         public CheckField(ModelFormField modelFormField) {
-            super("check", modelFormField);
+            super(FieldInfo.CHECK, modelFormField);
         }
 
         public CheckField(Element element, ModelFormField modelFormField) {
@@ -1229,7 +1277,7 @@ public class ModelFormField {
         protected RadioField() { super(); }
 
         public RadioField(ModelFormField modelFormField) {
-            super("radio", modelFormField);
+            super(FieldInfo.RADIO, modelFormField);
         }
 
         public RadioField(Element element, ModelFormField modelFormField) {
@@ -1248,7 +1296,7 @@ public class ModelFormField {
         protected SubmitField() { super(); }
 
         public SubmitField(ModelFormField modelFormField) {
-            super("submit", modelFormField);
+            super(FieldInfo.SUBMIT, modelFormField);
         }
 
         public SubmitField(Element element, ModelFormField modelFormField) {
@@ -1294,7 +1342,7 @@ public class ModelFormField {
         protected ResetField() { super(); }
 
         public ResetField(ModelFormField modelFormField) {
-            super("reset", modelFormField);
+            super(FieldInfo.RESET, modelFormField);
         }
 
         public ResetField(Element element, ModelFormField modelFormField) {
@@ -1310,7 +1358,7 @@ public class ModelFormField {
         protected HiddenField() { super(); }
 
         public HiddenField(ModelFormField modelFormField) {
-            super("hidden", modelFormField);
+            super(FieldInfo.HIDDEN, modelFormField);
         }
 
         public HiddenField(Element element, ModelFormField modelFormField) {
@@ -1326,7 +1374,7 @@ public class ModelFormField {
         protected IgnoredField() { super(); }
 
         public IgnoredField(ModelFormField modelFormField) {
-            super("ignored", modelFormField);
+            super(FieldInfo.IGNORED, modelFormField);
         }
 
         public IgnoredField(Element element, ModelFormField modelFormField) {

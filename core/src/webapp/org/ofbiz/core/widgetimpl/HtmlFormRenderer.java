@@ -471,7 +471,10 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderHiddenField(StringBuffer buffer, Map context, HiddenField hiddenField) {
         ModelFormField modelFormField = hiddenField.getModelFormField();
-        
+        this.renderHiddenField(buffer, context, modelFormField);
+    }
+    
+    public void renderHiddenField(StringBuffer buffer, Map context, ModelFormField modelFormField) {
         buffer.append("<input type=\"hidden\"");
         
         buffer.append(" name=\"");
@@ -528,21 +531,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("</form>");
     }
 
-    /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatWrapperOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
-     */
-    public void renderFormatWrapperOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        if ("single".equals(modelForm.getType())) {
-            buffer.append("<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\">");
-        } else {
-            buffer.append("<table border=\"1\" cellpadding=\"2\" cellspacing=\"0\" width=\"100%\">");
-        }
+    public void renderFormatListWrapperOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
+        buffer.append("<table border=\"1\" cellpadding=\"2\" cellspacing=\"0\" width=\"100%\">");
     }
 
-    /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatWrapperClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
-     */
-    public void renderFormatWrapperClose(StringBuffer buffer, Map context, ModelForm modelForm) {
+    public void renderFormatListWrapperClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</table>");
     }
 
@@ -636,6 +629,28 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatItemRowFormCellClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</td>");
+    }
+
+    public void renderFormatSingleWrapperOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
+        buffer.append("<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\">");
+    }
+
+    public void renderFormatSingleWrapperClose(StringBuffer buffer, Map context, ModelForm modelForm) {
+        buffer.append("</table>");
+    }
+
+    /* (non-Javadoc)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatFieldRowOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     */
+    public void renderFormatFieldRowOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
+        buffer.append("<tr>");
+    }
+
+    /* (non-Javadoc)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatFieldRowClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     */
+    public void renderFormatFieldRowClose(StringBuffer buffer, Map context, ModelForm modelForm) {
+        buffer.append("</tr>");
     }
 
     /* (non-Javadoc)

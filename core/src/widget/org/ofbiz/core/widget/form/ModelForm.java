@@ -23,6 +23,7 @@
  */
 package org.ofbiz.core.widget.form;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -167,60 +168,142 @@ public class ModelForm {
      *   use the same form definitions for many types of form UIs
      */
     public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+        // find the highest position number to get the max positions used
+        int positions = 1;
+        Iterator fieldIter = this.fieldList.iterator();
+        while (fieldIter.hasNext()) {
+            ModelFormField modelFormField = (ModelFormField) fieldIter.next();
+            int curPos = modelFormField.getPosition();
+            if (curPos > positions) {
+                positions = curPos;
+            }
+        }
+            
         if ("single".equals(this.type)) {
             // render form open
             formStringRenderer.renderFormOpen(buffer, context, this);
             
             // render all hidden & ignored fields
-            Iterator fieldIter = this.fieldList.iterator();
+            fieldIter = this.fieldList.iterator();
             while (fieldIter.hasNext()) {
                 ModelFormField modelFormField = (ModelFormField) fieldIter.next();
                 ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
 
                 // render hidden/ignored field widget
-                if (fieldInfo instanceof ModelFormField.HiddenField) {
-                    formStringRenderer.renderHiddenField(buffer, context, (ModelFormField.HiddenField) fieldInfo);
-                } else if (fieldInfo instanceof ModelFormField.IgnoredField) {
-                    formStringRenderer.renderIgnoredField(buffer, context, (ModelFormField.IgnoredField) fieldInfo);
-                } else if (fieldInfo instanceof ModelFormField.DisplayField) {
-                    // TODO: for display and hyperlink with also hidden set to true: iterate through field list, find these and hidden fields and render them
-                } else if (fieldInfo instanceof ModelFormField.HyperlinkField) {
-                } else {
-                    continue;
+                switch (fieldInfo.getFieldType()) {
+                    case ModelFormField.FieldInfo.HIDDEN:
+                    case ModelFormField.FieldInfo.IGNORED:
+                    if (modelFormField.shouldUse(context)) {
+                        modelFormField.renderFieldString(buffer, context, formStringRenderer);
+                    }
+                    break;
+                    
+                    case ModelFormField.FieldInfo.DISPLAY:
+                    ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
+                    if (displayField.getAlsoHidden() && modelFormField.shouldUse(context)) {
+                        formStringRenderer.renderHiddenField(buffer, context, modelFormField);
+                    }
+                    break;
+                    
+                    case ModelFormField.FieldInfo.HYPERLINK:
+                    ModelFormField.HyperlinkField hyperlinkField = (ModelFormField.HyperlinkField) fieldInfo;
+                    if (hyperlinkField.getAlsoHidden() && modelFormField.shouldUse(context)) {
+                        formStringRenderer.renderHiddenField(buffer, context, modelFormField);
+                    }
+                    break;
                 }
             }
             
             // render formatting wrapper open
-            formStringRenderer.renderFormatWrapperOpen(buffer, context, this);
+            formStringRenderer.renderFormatSingleWrapperOpen(buffer, context, this);
             
-            // TODO: render each field row, except hidden & ignored rows
-            {
-                // TODO: render row formatting open
+            // render each field row, except hidden & ignored rows
+            fieldIter = this.fieldList.iterator();
+            while (fieldIter.hasNext()) {
+                ModelFormField modelFormField = (ModelFormField) fieldIter.next();
+                ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
                 
-                // TODO: render title formatting open
+                if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
+                    continue; 
+                }
+
+                if (!modelFormField.shouldUse(context)) {
+                    continue;
+                }
+
+                // render row formatting open
+                formStringRenderer.renderFormatFieldRowOpen(buffer, context, this);
                 
-                // TODO: render title (unless this is a submit field
+                // render title formatting open
+                formStringRenderer.renderFormatFieldRowTitleCellOpen(buffer, context, modelFormField);
                 
-                // TODO: render title formatting close
+                // render title (unless this is a submit field)
+                formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
                 
-                // TODO: render separator
+                // render title formatting close
+                formStringRenderer.renderFormatFieldRowTitleCellClose(buffer, context, modelFormField);
                 
-                // TODO: render widget formatting open
+                // render separator
+                formStringRenderer.renderFormatFieldRowSpacerCell(buffer, context, modelFormField);
+                                
+                // render widget formatting open
+                formStringRenderer.renderFormatFieldRowWidgetCellOpen(buffer, context, modelFormField, positions);
                 
-                // TODO: render widget
+                // render widget
+                modelFormField.renderFieldString(buffer, context, formStringRenderer);
                 
-                // TODO: render widget formatting close
+                // render widget formatting close
+                formStringRenderer.renderFormatFieldRowWidgetCellClose(buffer, context, modelFormField, positions);
                 
-                // TODO: render row formatting close
+                // render row formatting close
+                formStringRenderer.renderFormatFieldRowClose(buffer, context, this);
             }
             
             // render formatting wrapper close
-            formStringRenderer.renderFormatWrapperClose(buffer, context, this);
+            formStringRenderer.renderFormatSingleWrapperClose(buffer, context, this);
             
             // render form close
             formStringRenderer.renderFormClose(buffer, context, this);
         } else if ("list".equals(this.type)) {
-            // TODO: render list/tabular type forms
+            // render list/tabular type forms
+            
+            // render formatting wrapper open
+            formStringRenderer.renderFormatListWrapperOpen(buffer, context, this);
+            
+            // TODO: render header row
+            
+            // if list is empty, do not render rows
+            List items = (List) context.get(this.getListName());
+            if (items == null || items.size() == 0) {
+                // do nothing we could show an simple box with a message here too
+            } else {
+                // TODO: render item rows
+                Iterator itemIter = items.iterator();
+                while (itemIter.hasNext()) {
+                    Map localContext = new HashMap(context);
+                    Object item = itemIter.next();
+                    if (UtilValidate.isNotEmpty(this.getListEntryName())) {
+                        localContext.put(this.getListEntryName(), item);
+                    } else {
+                        Map itemMap = (Map) item;
+                        localContext.putAll(itemMap);
+                    }
+                
+                    // TODO: render row formatting open
+                    
+                    // TODO: render display & hyperlink cells
+                    
+                    // TODO: display form cell
+                    
+                    // TODO: display post-form display/link cells?
+
+                    // TODO: render row formatting close
+                
+                }
+            }
+            
+            // render formatting wrapper close
+            formStringRenderer.renderFormatListWrapperClose(buffer, context, this);
         } else {
             throw new IllegalArgumentException("The type " + this.getType() + " is not supported for form with name " + this.getName());
         }
