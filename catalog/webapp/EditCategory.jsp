@@ -98,7 +98,7 @@
     <%fieldName = "description";%><%paramName = "DESCRIPTION";%>    
     <td width="26%" align=right><div class="tabletext">Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
+    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%>" size="60" maxlength="60"></td>
   </tr>
   <tr>
     <%fieldName = "longDescription";%><%paramName = "LONG_DESCRIPTION";%>    
