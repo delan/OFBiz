@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.1 2003/08/18 17:03:09 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.2 2003/08/25 17:53:36 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -328,22 +328,22 @@ public class ShoppingCart implements java.io.Serializable {
 
     /** Clears out the cart. */
     public void clear() {
-        firstAttemptOrderId = null;
-        poNumber = null;
-        orderId = null;
+        this.firstAttemptOrderId = null;
+        this.poNumber = null;
+        this.orderId = null;
 
-        orderShipmentPreference.remove("shippingInstructions");
-        orderShipmentPreference.remove("maySplit");
-        orderShipmentPreference.remove("giftMessage");
-        orderShipmentPreference.remove("isGift");
+        this.orderShipmentPreference.remove("shippingInstructions");
+        this.orderShipmentPreference.remove("maySplit");
+        this.orderShipmentPreference.remove("giftMessage");
+        this.orderShipmentPreference.remove("isGift");
 
-        orderAdditionalEmails = null;
+        this.orderAdditionalEmails = null;
         this.freeShippingProductPromoActions.clear();
 
-        paymentMethodIds.clear();
-        paymentMethodTypeIds.clear();
-        adjustments.clear();
-        cartLines.clear();
+        this.paymentMethodIds.clear();
+        this.paymentMethodTypeIds.clear();
+        this.adjustments.clear();
+        this.cartLines.clear();
     }
     
     /** Sets the order type. */
