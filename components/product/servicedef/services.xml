@@ -29,6 +29,18 @@
         <implements service="interfaceProduct"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="updateProductQuickAdminName" default-entity-name="Product" engine="simple"
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="updateProductQuickAdminName" auth="true">
+        <description>Update a Product from Quick Admin</description>
+        <implements service="interfaceProduct"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="updateProductQuickAdminShipping" default-entity-name="Product" engine="java"
+                location="org.ofbiz.product.product.ProductServices" invoke="updateProductQuickAdminShipping" auth="true">
+        <description>Update product characteristics from Quick Admin</description>
+        <implements service="interfaceProduct"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
     <service name="duplicateProduct" engine="simple"
                 location="org/ofbiz/product/product/ProductServices.xml" invoke="duplicateProduct" auth="true">
         <description>Duplicate a Product using a new productId</description>

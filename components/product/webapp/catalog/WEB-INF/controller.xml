@@ -720,6 +720,78 @@
         <response name="error" type="view" value="EditProductFacilityLocations"/>
     </request-map>
 
+    <!-- ================ Quick Admin ================= -->
+    <request-map uri="EditProductQuickAdmin">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductQuickAdmin"/>
+    </request-map>
+    <request-map uri="updateProductQuickAdminName">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductQuickAdminName"/>
+        <response name="success" type="view" value="EditProductQuickAdmin"/>
+        <response name="error" type="view" value="EditProductQuickAdmin"/>
+    </request-map>
+    <request-map uri="updateProductQuickAdminShipping">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="updateProductQuickAdminShipping"/>
+        <response name="success" type="view" value="EditProductQuickAdmin"/>
+        <response name="error" type="view" value="EditProductQuickAdmin"/>
+    </request-map>
+    <request-map uri="updateProductQuickAdminSelFeat">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="updateProductQuickAdminSelFeat"/>
+        <response name="success" type="view" value="EditProductQuickAdmin"/>
+        <response name="error" type="view" value="EditProductQuickAdmin"/>
+    </request-map>
+    <request-map uri="updateProductQuickAdminDelFeatureTypes">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="removeFeaturesByFeatureTypeId"/>
+        <response name="success" type="view" value="EditProductQuickAdmin"/>
+        <response name="error" type="view" value="EditProductQuickAdmin"/>
+    </request-map>
+    <request-map uri="quickAdminUpdateProductAssoc">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="updateProductAssoc"/>
+        <response name="success" type="view" value="EditProductQuickAdmin"/>
+        <response name="error" type="view" value="EditProductQuickAdmin"/>
+    </request-map>
+    <request-map uri="quickAdminRemoveProductFeature">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="removeProductFeature"/>
+        <response name="success" type="view" value="EditProductQuickAdmin"/>
+        <response name="error" type="view" value="EditProductQuickAdmin"/>
+    </request-map>
+    <request-map uri="quickAdminAddCategories">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="addProductToCategories"/>
+        <response name="success" type="view" value="EditProductQuickAdmin"/>
+        <response name="error" type="view" value="EditProductQuickAdmin"/>
+    </request-map>
+    <request-map uri="quickAdminRemoveProductFromCategory">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductFromCategory"/>
+        <response name="success" type="view" value="EditProductQuickAdmin"/>
+        <response name="error" type="view" value="EditProductQuickAdmin"/>
+    </request-map>
+    <request-map uri="quickAdminUnPublish">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="updateProductCategoryMember"/>
+        <response name="success" type="view" value="EditProductQuickAdmin"/>
+        <response name="error" type="view" value="EditProductQuickAdmin"/>
+    </request-map>
+    <request-map uri="quickAdminApplyFeatureToProduct">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="addProductFeatures"/>
+        <response name="success" type="view" value="EditProductQuickAdmin"/>
+        <response name="error" type="view" value="EditProductQuickAdmin"/>
+    </request-map>
+    <request-map uri="quickAdminRemoveFeatureFromProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeFeatureFromProduct"/>
+        <response name="success" type="view" value="EditProductQuickAdmin"/>
+        <response name="error" type="view" value="EditProductQuickAdmin"/>
+    </request-map>
+
     <!-- ================ Inventory Requests ================= -->
     <request-map uri="EditProductInventoryItems">
         <security https="true" auth="true"/>
@@ -1808,6 +1880,7 @@
     <view-map name="ApplyFeaturesFromCategory" type="jpublish" page="/product/ApplyFeaturesFromCategory.ftl"/>
     <view-map name="EditProductFacilities" type="jpublish" page="/product/EditProductFacilities.ftl"/>
     <view-map name="EditProductFacilityLocations" type="jpublish" page="/product/EditProductFacilityLocations.ftl"/>
+    <view-map name="EditProductQuickAdmin" type="jpublish" page="/product/EditProductQuickAdmin.ftl"/>
     <view-map name="EditProductInventoryItems" type="jpublish" page="/product/EditProductInventoryItems.ftl"/>
     <view-map name="EditProductGlAccounts" type="jpublish" page="/product/EditProductGlAccounts.ftl"/>
     <view-map name="EditProductContentContent" type="jpublish" page="/product/EditProductContentContent.ftl"/>

@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
 -->
 
@@ -351,4 +351,5 @@
         <find-by-primary-key entity-name="ProductFeatureGroupAppl" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+
 </simple-methods>

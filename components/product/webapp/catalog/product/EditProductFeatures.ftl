@@ -60,7 +60,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <#list productFeatureAndAppls as productFeatureAndAppl>
             <#assign curProductFeatureType = productFeatureAndAppl.getRelatedOneCache("ProductFeatureType")>
             <#assign curProductFeatureApplType = productFeatureAndAppl.getRelatedOneCache("ProductFeatureApplType")>
-            <#assign curProductFeatureCategory = productFeatureAndAppl.getRelatedOneCache("ProductFeatureCategory")>
+            <#assign curProductFeatureCategory = (productFeatureAndAppl.getRelatedOneCache("ProductFeatureCategory")?if_exists)>
 <!--            <#if curProductFeatureCategory?exists> pageContext.setAttribute("curProductFeatureCategory", curProductFeatureCategory)</#if>	-->
             <tr valign="middle">
                 <input type=hidden name="productId_o_${rowCount}" value="${(productFeatureAndAppl.productId)?if_exists}">
