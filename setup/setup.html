@@ -19,6 +19,7 @@
 <ul>
   <li><a href="#Introduction">Introduction</a></li>
   <li><a href="#Quick_Easy_Setup">Quick &amp; Easy Setup</a></li>
+  <li><a href="#Building">Building From CVS</a></li>
   <li><a href="#External_Packages_Setup">External Packages Setup</a></li>
   <li><a href="#Paths">Paths</a></li>
   <li><a href="#File_Locations">File Locations and Building</a></li>
@@ -54,6 +55,21 @@ options and explanations, see the rest of this document.</p>
   <li>Have fun with it! You are running on a Java database, which isn't the best for deployment, but it's great for a demo...</li>
   <li>For more detailed options and configuration information, read on!</li>
 </ol>
+
+<hr>
+<h3><a name="Building">Building From CVS</a></h3>
+<hr>
+	
+<p>
+First create a work directory, we usually call it 'ofbiz'. Then checkout the 'all' module from CVS.
+For information on connecting to CVS <a href="http://sourceforge.net/cvs/?group_id=27173" target="_blank">click here.</a> 
+Next, copy [work dir]/setup/ofbiz/* to [work dir]. This 
+will give you several scripts for updating modules as well as a build script for ant. Finally, make sure you
+have ant installed and configured then run from the [work dir]. It will complile all modules and leave you an
+executable jar (ofbiz.jar) in the [work dir]. Run $JAVA_HOME/bin/java -jar ofbiz.jar (or %JAVA_HOME%\bin\java -jar ofbiz.jar) go to http://localhost:8080/webtools
+click install at the bottom and then follow the instructions to load the data.
+
+</p>
 
 <hr>
 <h3><a name="External_Packages_Setup">External Packages Setup</a></h3>
