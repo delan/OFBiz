@@ -46,7 +46,7 @@ import org.ofbiz.core.view.*;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Dustin Caldwell
  *@created    June 28, 2001
- *@version    1.0
+ *@version    1.1
  */
 public class RequestHandler implements Serializable {
 
@@ -64,22 +64,15 @@ public class RequestHandler implements Serializable {
     public void doRequest(HttpServletRequest request, HttpServletResponse response, String chain,
                           GenericValue userLogin, GenericDelegator delegator) throws RequestHandlerException {
 
-        String requestUri = null;
         String eventType = null;
         String eventPath = null;
         String eventMethod = null;
-        String nextView = null;
-        String viewType = null;
-        String nextPage = null;
-        boolean chainRequest = false;
-        boolean noDispatch = false;
-        boolean redirect = false;
 
         String cname = request.getContextPath().substring(1);
 
         /* Grab data from request object to process. */
-        requestUri = getRequestUri(request.getPathInfo());
-        nextView = getNextPageUri(request.getPathInfo());
+        String requestUri = getRequestUri(request.getPathInfo());
+        String nextView = getNextPageUri(request.getPathInfo());
 
         /* Check for chained request. */
         if (chain != null) {
@@ -116,6 +109,7 @@ public class RequestHandler implements Serializable {
         if (rm.requiresAuth(requestUri)) {
             // Invoke the security handler
             // catch exceptions and throw RequestHandlerException if failed.
+            Debug.logVerbose("[RequestHandler]: AuthRequired. Running security check.", module);
             String checkLoginType = rm.getEventType(SiteDefs.CHECK_LOGIN_REQUEST_URI);
             String checkLoginPath = rm.getEventPath(SiteDefs.CHECK_LOGIN_REQUEST_URI);
             String checkLoginMethod = rm.getEventMethod(SiteDefs.CHECK_LOGIN_REQUEST_URI);
@@ -137,10 +131,11 @@ public class RequestHandler implements Serializable {
             }
         }
 
+        // Make sure we have a default 'success' view
         if (nextView == null) nextView = rm.getViewName(requestUri);
         Debug.logVerbose("[Current View]: " + nextView, module);
 
-        /* Invoke the event if defined, and if login not already done. */
+        // Invoke the defined event (unless login failed)
         if (eventReturnString == null) {
             eventType = rm.getEventType(requestUri);
             eventPath = rm.getEventPath(requestUri);
@@ -152,125 +147,78 @@ public class RequestHandler implements Serializable {
                     eh.initialize(eventPath, eventMethod);
                     eventReturnString = eh.invoke(request, response);
                     ServerHitBin.countEvent(cname + "." + eventMethod, request.getSession().getId(), eventStartTime,
-                                            System.currentTimeMillis() - eventStartTime, userLogin, delegator);
+                            System.currentTimeMillis() - eventStartTime, userLogin, delegator);
                 } catch (EventHandlerException e) {
                     throw new RequestHandlerException(e.getMessage(), e);
                 }
             }
         }
 
-        /* Process the eventReturn. */
+        // Process the eventReturn.
         String eventReturn = rm.getRequestAttribute(requestUri, eventReturnString);
-        Debug.logVerbose("[Event Qualified]: " + eventReturn, module);
+        Debug.logVerbose("[Response Qualified]: " + eventReturn, module);
 
+        // Set the next view if we aren't 'success'
         if (eventReturn != null && !"success".equalsIgnoreCase(eventReturnString)) nextView = eventReturn;
-        Debug.logVerbose("[Next View after eventReturn]: " + nextView, module);
+        Debug.logVerbose("[Event Response Mapping]: " + nextView, module);
+
+        // get the previous request info
+        String previousRequest = (String) request.getSession().getAttribute(SiteDefs.PREVIOUS_REQUEST);
+        boolean loginPassed = requestUri.equals(SiteDefs.LOGIN_REQUEST_URI) &&
+                eventReturnString.equalsIgnoreCase("success") ? true : false;
 
         // check for a chain request.
         if (nextView != null && nextView.startsWith("request:")) {
+            Debug.logVerbose("[RequestHandler.doRequest]: Response is a chained request.", module);
             nextView = nextView.substring(8);
-            chainRequest = true;
-        }
-
-        // check for a url for redirection
-        if (nextView != null && nextView.startsWith("url:")) {
-            nextView = nextView.substring(4);
-            redirect = true;
-        }
-
-        // check for a JSP to dispatch to
-        if (nextView != null && nextView.startsWith("view:")) {
-            nextView = nextView.substring(5);
-        }
-
-        // check for a no dispatch return (meaning the return was processed by the event
-        if (nextView != null && nextView.startsWith("none:")) {
-            nextView = nextView.substring(5);  // *PLEASE NOTE* This is useless. View type NONE ignores the value of nextView
-            noDispatch = true;
-        }
-
-        // get the next view.
-        if (!chainRequest && !redirect && !noDispatch) {
-            String tempView = nextView;
-            if (tempView != null && tempView.length() > 0 && tempView.charAt(0) == '/') tempView = tempView.substring(1);
-            Debug.logVerbose("[Getting View Map]: " + tempView, module);
-
-            // before mapping the view, set a session attribute so we know where we are
-            request.setAttribute(SiteDefs.CURRENT_VIEW, tempView);
-
-            viewType = rm.getViewType(tempView);
-            tempView = rm.getViewPage(tempView);
-            nextPage = tempView != null ? tempView : "/" + nextView;
-            Debug.logVerbose("[Mapped To]: " + nextPage, module);
-
-        }
-
-        // handle errors
-        boolean normalReturn = true;
-        if (chainRequest || redirect || noDispatch)
-            normalReturn = false;
-
-        if (eventPath == null && nextPage == null && eventReturn == null && normalReturn)
-            throw new RequestHandlerException("RequestHandler: Unknown Request.");
-        if (nextPage == null && eventReturn == null && normalReturn)
-            throw new RequestHandlerException("RequestHandler: No Next Page To Display");
-
-        // invoke chained requests
-        if (chainRequest) {
-            Debug.logInfo("[Running Chained Request]: " + nextView, module);
             doRequest(request, response, nextView, userLogin, delegator);
         }
 
-        // if previous request exists, and a login just succeeded, do that now...
-        if (requestUri.equals(SiteDefs.LOGIN_REQUEST_URI) && "success".equalsIgnoreCase(eventReturnString)) {
-            String previousRequest = (String) request.getSession().getAttribute(SiteDefs.PREVIOUS_REQUEST);
-            if (previousRequest != null) {
-                request.getSession().removeAttribute(SiteDefs.PREVIOUS_REQUEST);
-                //here we need to display nothing, and do the previous request
-                Debug.logInfo("[Doing Previous Request]: " + previousRequest, module);
-                doRequest(request, response, previousRequest, userLogin, delegator);
-            }
+        // if previous request exists, and a login just succeeded, do that now.
+        else if (loginPassed && previousRequest != null) {
+            request.getSession().removeAttribute(SiteDefs.PREVIOUS_REQUEST);
+            Debug.logInfo("[Doing Previous Request]: " + previousRequest, module);
+            doRequest(request, response, previousRequest, userLogin, delegator);
         }
 
-        // if noDispatch return null to the control servlet
-        if (noDispatch)
-            return;
-
-        // if redirect - redirect to the url and return null to the control servlet
-        if (redirect) {
-            Debug.logInfo("[Sending redirect]: " + nextView, module);
-            try {
-                response.sendRedirect(nextView);
-            } catch (IOException ioe) {
-                throw new RequestHandlerException(ioe.getMessage(), ioe);
-            } catch (IllegalStateException ise) {
-                throw new RequestHandlerException(ise.getMessage(), ise);
-            }
-            return;
+        // check for a url for redirection
+        else if (nextView != null && nextView.startsWith("url:")) {
+            Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect.", module);
+            nextView = nextView.substring(4);
+            callRedirect(nextView, request, response);
         }
 
-        long viewStartTime = System.currentTimeMillis();
-        
-        try {
-            Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]");
-            ViewHandler vh = ViewFactory.getViewHandler(this, viewType);
-            vh.render(nextPage, request, response);
-        } catch (ViewHandlerException e) {
-            throw new RequestHandlerException("Error in view handler", e);
+        // check for a View
+        else if (nextView != null && nextView.startsWith("view:")) {
+            Debug.logVerbose("[RequestHandler.doRequest]: Response is a view.", module);
+            nextView = nextView.substring(5);
+            renderView(nextView, rm.allowExtView(requestUri), request, response);
         }
 
-        String vname = (String) request.getAttribute(SiteDefs.CURRENT_VIEW);
-        if (vname != null) {
-            ServerHitBin.countView(cname + "." + vname, request.getSession().getId(), viewStartTime, System.currentTimeMillis() - viewStartTime, userLogin, delegator);
+        // check for a no dispatch return (meaning the return was processed by the event
+        else if (nextView != null && nextView.startsWith("none:")) {
+            Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event.", module);
+        }
+
+        // a page request
+        else if (nextView != null) {
+            Debug.logVerbose("[RequestHandler.doRequest]: Response is a page.", module);
+            renderView(nextView, rm.allowExtView(requestUri), request, response);
+        }
+
+        // unknow request
+        else {
+            throw new RequestHandlerException("Illegal request; handler could not process the request.");
         }
     }
 
+    /** Returns the default error page for this request. */
     public String getDefaultErrorPage(HttpServletRequest request) {
         String requestUri = getRequestUri(request.getPathInfo());
         return rm.getErrorPage(requestUri);
     }
 
-    /* Returns the RequestManager Object. */
+    /** Returns the RequestManager Object. */
     public RequestManager getRequestManager() {
         return rm;
     }
@@ -280,7 +228,6 @@ public class RequestHandler implements Serializable {
         return context;
     }
 
-    /* Gets the mapped request URI from path_info */
     private String getRequestUri(String path) {
         if (path.indexOf('/') == -1)
             return path;
@@ -290,11 +237,65 @@ public class RequestHandler implements Serializable {
         return path.substring(1, nextIndex);
     }
 
-    /* Gets the next page to view from path_info */
     private String getNextPageUri(String path) {
         if (path.indexOf('/') == -1 || path.lastIndexOf('/') == 0)
             return null;
         int nextIndex = path.indexOf('/', 1);
         return path.substring(nextIndex + 1);
+    }
+
+    private void callRedirect(String url, HttpServletRequest req, HttpServletResponse resp)
+            throws RequestHandlerException {
+        Debug.logInfo("[Sending redirect]: " + url, module);
+        try {
+            resp.sendRedirect(url);
+        } catch (IOException ioe) {
+            throw new RequestHandlerException(ioe.getMessage(), ioe);
+        } catch (IllegalStateException ise) {
+            throw new RequestHandlerException(ise.getMessage(), ise);
+        }
+    }
+
+    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp)
+            throws RequestHandlerException {
+        GenericValue userLogin = (GenericValue) req.getSession().getAttribute("userLogin");
+        GenericDelegator delegator = (GenericDelegator) req.getAttribute("delegator");
+        String cname = req.getContextPath().substring(1);
+        String oldView = view;
+
+        if (view != null && view.length() > 0 && view.charAt(0) == '/') view = view.substring(1);
+        Debug.logVerbose("[Getting View Map]: " + view, module);
+
+        // before mapping the view, set a session attribute so we know where we are
+        req.setAttribute(SiteDefs.CURRENT_VIEW, view);
+
+        String viewType = rm.getViewType(view);
+        String tempView = rm.getViewPage(view);
+        String nextPage = null;
+        if (tempView == null) {
+            if (!allowExtView)
+                throw new RequestHandlerException("No view to render.");
+            else
+                nextPage = "/" + oldView;
+        } else {
+            nextPage = tempView;
+        }
+
+        Debug.logVerbose("[Mapped To]: " + nextPage, module);
+
+        long viewStartTime = System.currentTimeMillis();
+        try {
+            Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]");
+            ViewHandler vh = ViewFactory.getViewHandler(this, viewType);
+            vh.render(nextPage, req, resp);
+        } catch (ViewHandlerException e) {
+            throw new RequestHandlerException("Error in view handler", e);
+        }
+
+        String vname = (String) req.getAttribute(SiteDefs.CURRENT_VIEW);
+        if (vname != null) {
+            ServerHitBin.countView(cname + "." + vname, req.getSession().getId(), viewStartTime,
+                    System.currentTimeMillis() - viewStartTime, userLogin, delegator);
+        }
     }
 }

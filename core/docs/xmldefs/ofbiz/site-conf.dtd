@@ -44,12 +44,13 @@
 <!ELEMENT request-map (description?, security?, event?, response+)>
 <!ATTLIST request-map
     uri CDATA #REQUIRED
-    edit (true|false) #IMPLIED
+    edit (true|false) "true"
 >
 <!ELEMENT security EMPTY>
 <!ATTLIST security
-    https (true|false) #IMPLIED
-    auth (true|false) #IMPLIED
+    https (true|false) "false"
+    auth (true|false) "false"
+    extView (true|false) "true"
 >
 <!ELEMENT event EMPTY>
 <!ATTLIST event

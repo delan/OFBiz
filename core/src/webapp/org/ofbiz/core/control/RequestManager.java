@@ -211,6 +211,18 @@ public class RequestManager implements Serializable {
             return false;
     }
 
+    public boolean allowExtView(String uriStr) {
+        HashMap uri = getRequestMapMap(uriStr);
+        if (uri != null) {
+            String value = (String) uri.get(ConfigXMLReader.SECURITY_EXTVIEW);
+            if ("true".equalsIgnoreCase(value))
+                return true;
+            else
+                return false;
+        } else
+            return false;
+    }
+
     public Collection getPreProcessor() {
         Collection c = (Collection) ConfigXMLReader.getConfigMap(configFileUrl).get(ConfigXMLReader.PREPROCESSOR);
         return c;

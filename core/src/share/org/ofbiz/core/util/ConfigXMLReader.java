@@ -66,6 +66,7 @@ public class ConfigXMLReader {
     public static final String SECURITY = "security";
     public static final String SECURITY_HTTPS = "https";
     public static final String SECURITY_AUTH = "auth";
+    public static final String SECURITY_EXTVIEW = "extView";
 
     public static final String EVENT = "event";
     public static final String EVENT_PATH = "path";
@@ -159,8 +160,10 @@ public class ConfigXMLReader {
                         Element security = (Element) securityNode;
                         String securityHttps = security.getAttribute(SECURITY_HTTPS);
                         String securityAuth = security.getAttribute(SECURITY_AUTH);
+                        String securityExtView = security.getAttribute(SECURITY_EXTVIEW);
                         uriMap.put(SECURITY_HTTPS, securityHttps);
                         uriMap.put(SECURITY_AUTH, securityAuth);
+                        uriMap.put(SECURITY_EXTVIEW, securityExtView);
                     }
                 }
 
