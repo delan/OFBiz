@@ -389,6 +389,10 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
                 style = menuItem.getWidgetStyle();
         }
         
+        if (menuItem.getDisabled()) {
+        	style = menuItem.getDisabledTitleStyle();
+        }
+        
         if (UtilValidate.isNotEmpty(style)) {
             buffer.append(" class=\"");
             buffer.append(style);
@@ -407,6 +411,9 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             buffer.append("\"");
         }
         String target = link.getTarget(context);
+        if (menuItem.getDisabled()) {
+            target = null;
+        }
         if (UtilValidate.isNotEmpty(target)) {
             buffer.append(" href=\"");
             String urlMode = link.getUrlMode();

@@ -341,14 +341,10 @@ public abstract class ModelTreeAction {
 
     public static class EntityAnd extends ModelTreeAction {
         protected ByAndFinder finder;
-        boolean useCache = false;
         
         public EntityAnd(ModelTree.ModelNode.ModelSubNode modelSubNode, Element entityAndElement) {
             super (modelSubNode, entityAndElement);
-            String useCacheString = entityAndElement.getAttribute("use-cache");            
-            if ("true".equals(useCacheString)) {
-            	useCache = true;
-            }
+            boolean useCache = "true".equalsIgnoreCase(entityAndElement.getAttribute("use-cache"));
             Document ownerDoc = entityAndElement.getOwnerDocument();
             if (!useCache)
                 UtilXml.addChildElement(entityAndElement, "use-iterator", ownerDoc);
@@ -377,15 +373,11 @@ public abstract class ModelTreeAction {
 
     public static class EntityCondition extends ModelTreeAction {
         ByConditionFinder finder;
-        boolean useCache = false;
         
         public EntityCondition(ModelTree.ModelNode.ModelSubNode modelSubNode, Element entityConditionElement) {
             super (modelSubNode, entityConditionElement);
             Document ownerDoc = entityConditionElement.getOwnerDocument();
-            String useCacheString = entityConditionElement.getAttribute("use-cache");            
-            if ("true".equals(useCacheString)) {
-            	useCache = true;
-            }
+            boolean useCache = "true".equalsIgnoreCase(entityConditionElement.getAttribute("use-cache"));
             if (!useCache)
                 UtilXml.addChildElement(entityConditionElement, "use-iterator", ownerDoc);
             entityConditionElement.setAttribute( "list-name", "_LIST_ITERATOR_");

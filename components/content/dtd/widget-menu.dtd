@@ -29,10 +29,11 @@
 -->
 <!ENTITY % AllConditionals "and | xor | or | not | if-has-permission | if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-entity-permission">
 
+<!ENTITY % AllActions "set | property-map  | property-to-field | script" >
 
 <!ELEMENT menus ( menu+ )>
 
-<!ELEMENT menu ( menu-item* )>
+<!ELEMENT menu ( actions?, menu-item* )>
 <!ATTLIST menu
     name CDATA #REQUIRED
     type ( simple | cascade ) "simple"
@@ -52,12 +53,12 @@
     menu-width CDATA #IMPLIED
     default-cell-width CDATA #IMPLIED
     default-disabled-title-style CDATA #IMPLIED
-    selected-menuitem-context-field-name CDATA #IMPLIED
+    selected-menuitem-context-field-name CDATA "currentMenuItemName"
     menu-wrapper-style CDATA #IMPLIED
 >
 
 
-<!ELEMENT menu-item (condition?, img?, link?, menu-item* )>
+<!ELEMENT menu-item (condition?, actions?, img?, link?, menu-item* )>
 <!ATTLIST menu-item
     name CDATA #REQUIRED
     title CDATA #IMPLIED
@@ -76,6 +77,41 @@
     sub-menu CDATA #IMPLIED
 >
 
+
+<!ELEMENT actions ( (%AllActions;)* )>
+
+    <!ELEMENT set EMPTY>
+    <!ATTLIST set
+        field CDATA #REQUIRED
+        from-field CDATA #IMPLIED
+        value CDATA #IMPLIED
+        default-value CDATA #IMPLIED
+        global ( true | false ) "false"
+        type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Boolean | Object ) "String"
+        to-scope (screen | user | application) "screen"
+        from-scope (screen | user | application) "screen"
+    >
+
+    <!ELEMENT property-map EMPTY>
+    <!ATTLIST property-map
+        resource CDATA #REQUIRED
+        map-name CDATA #REQUIRED
+        global ( true | false ) "false"
+    >
+    <!ELEMENT property-to-field EMPTY>
+    <!ATTLIST property-to-field
+        resource CDATA #REQUIRED
+        property CDATA #REQUIRED
+        field CDATA #REQUIRED
+        default CDATA #IMPLIED
+        no-locale ( true | false ) "false"
+        arg-list-name CDATA #IMPLIED
+    >
+
+    <!ELEMENT script EMPTY>
+    <!ATTLIST script
+        location CDATA #REQUIRED
+    >
 
 
     <!ELEMENT image (#PCDATA)>
@@ -106,6 +142,19 @@
     >
 
 <!ELEMENT condition ( (%AllConditionals;)* )>
+
+    <!--
+     * If a pass-style provided and the condition passes, the widget-style of
+     * the parent menu-item is set with the pass-style. If no pass-style is given,
+     * the widget-style is not changed.
+     * If a disabled-style provided and the condition fails, the disabled-style of
+     * the parent menu-item is set with the disabled-style and processing is allowed to continue. 
+     * If no disabled-style is given, the widget-style is not changed and the menu-item is not rendered.
+     -->
+    <!ATTLIST condition
+        pass-style CDATA #IMPLIED
+        disabled-style CDATA #IMPLIED
+    >
 
     <!ELEMENT and ( (%AllConditionals;)+ )>
     <!ELEMENT xor ( (%AllConditionals;)+ )>

@@ -84,6 +84,9 @@ public class ModelMenuItem {
     protected EntityPermissionChecker permissionChecker;
     protected ModelMenuItem parentMenuItem;
     protected ModelMenuCondition condition;
+    protected boolean disabled = false;
+    protected List actions;
+    
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
     public ModelMenuItem(ModelMenu modelMenu) {
@@ -175,7 +178,12 @@ public class ModelMenuItem {
         // read condition under the "condition" element
         Element conditionElement = UtilXml.firstChildElement(fieldElement, "condition");
         if (conditionElement != null) {
-            this.condition = new ModelMenuCondition(modelMenu, conditionElement);
+            this.condition = new ModelMenuCondition(this, conditionElement);
+        }
+        // read all actions under the "actions" element
+        Element actionsElement = UtilXml.firstChildElement(conditionElement, "actions");
+        if (actionsElement != null) {
+            this.actions = ModelMenuAction.readSubActions(this, actionsElement);
         }
 
     }
@@ -209,7 +217,13 @@ public class ModelMenuItem {
         return;
     }
 
+    public void setDisabled(boolean val) {
+         this.disabled = val;   
+    }
 
+    public boolean getDisabled() {
+         return this.disabled;   
+    }
 
     public void mergeOverrideModelMenuItem(ModelMenuItem overrideModelMenuItem) {
         if (overrideModelMenuItem == null)
@@ -250,6 +264,7 @@ public class ModelMenuItem {
         }
            //Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
         if (passed) {
+            ModelMenuAction.runSubActions(this.actions, context);
             menuStringRenderer.renderMenuItem(buffer, context, this);
         }
     }
@@ -326,6 +341,10 @@ public class ModelMenuItem {
         } else {
             return this.modelMenu.getDefaultDisabledTitleStyle();
         }
+    }
+    
+    public void setDisabledTitleStyle(String style) {
+            this.disabledTitleStyle = style;
     }
 
     /**

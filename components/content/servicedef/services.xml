@@ -136,6 +136,7 @@
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
     <service name="checkContentPermission"
+        transaction-timout="72000" 
         auth="false" engine="java" invoke="checkContentPermission"
         location="org.ofbiz.content.content.ContentPermissionServices">
         <description>Check for permission to perform operation on Content</description>

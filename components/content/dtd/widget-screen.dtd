@@ -116,6 +116,8 @@
         default-value CDATA #IMPLIED
         global ( true | false ) "false"
         type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Boolean | Object ) "String"
+        to-scope (screen | user | application) "screen"
+        from-scope (screen | user | application) "screen"
     >
 
     <!ELEMENT property-map EMPTY>

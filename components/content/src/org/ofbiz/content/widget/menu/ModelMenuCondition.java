@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilXml;
@@ -58,69 +59,88 @@ import org.w3c.dom.Element;
 public class ModelMenuCondition {
     public static final String module = ModelMenuCondition.class.getName();
 
-    protected ModelMenu modelMenu;
+    protected ModelMenuItem modelMenuItem;
     protected MenuCondition rootCondition;
+    protected FlexibleStringExpander passStyleExdr;
+    protected FlexibleStringExpander failStyleExdr;
 
-    public ModelMenuCondition(ModelMenu modelMenu, Element conditionElement) {
-        this.modelMenu = modelMenu;
+    public ModelMenuCondition(ModelMenuItem modelMenuItem, Element conditionElement) {
+        this.modelMenuItem = modelMenuItem;
+        this.passStyleExdr = new FlexibleStringExpander(conditionElement.getAttribute("pass-style"));
+        this.failStyleExdr = new FlexibleStringExpander(conditionElement.getAttribute("disabled-style"));
         Element firstChildElement = UtilXml.firstChildElement(conditionElement);
-        this.rootCondition = readCondition(modelMenu, firstChildElement);
+        this.rootCondition = readCondition(modelMenuItem, firstChildElement);
     }
 
     public boolean eval(Map context) {
         if (rootCondition == null) {
             return true;
         }
-        return rootCondition.eval(context);
+        boolean cond = rootCondition.eval(context);
+        if (cond) {
+            String passStyle = passStyleExdr.expandString(context);
+            if (UtilValidate.isNotEmpty(passStyle)) {
+                modelMenuItem.setWidgetStyle(passStyle);   
+            }
+            modelMenuItem.setDisabled(false);
+        } else {
+            String failStyle = failStyleExdr.expandString(context);
+            if (UtilValidate.isNotEmpty(failStyle)) {
+                modelMenuItem.setDisabledTitleStyle(failStyle);   
+                modelMenuItem.setDisabled(true);
+                cond = true;
+            }
+        }
+        return cond;
     }
     
     public static abstract class MenuCondition {
-        protected ModelMenu modelMenu;
+        protected ModelMenuItem modelMenuItem;
 
-        public MenuCondition(ModelMenu modelMenu, Element conditionElement) {
-            this.modelMenu = modelMenu;
+        public MenuCondition(ModelMenuItem modelMenuItem, Element conditionElement) {
+            this.modelMenuItem = modelMenuItem;
         }
         
         public abstract boolean eval(Map context);
     }
     
-    public static List readSubConditions(ModelMenu modelMenu, Element conditionElement) {
+    public static List readSubConditions(ModelMenuItem modelMenuItem, Element conditionElement) {
         List condList = new LinkedList();
         List subElementList = UtilXml.childElementList(conditionElement);
         Iterator subElementIter = subElementList.iterator();
         while (subElementIter.hasNext()) {
             Element subElement = (Element) subElementIter.next();
-            condList.add(readCondition(modelMenu, subElement));
+            condList.add(readCondition(modelMenuItem, subElement));
         }
         return condList;
     }
     
-    public static MenuCondition readCondition(ModelMenu modelMenu, Element conditionElement) {
+    public static MenuCondition readCondition(ModelMenuItem modelMenuItem, Element conditionElement) {
         if (conditionElement == null) {
             return null;
         }
         if ("and".equals(conditionElement.getNodeName())) {
-            return new And(modelMenu, conditionElement);
+            return new And(modelMenuItem, conditionElement);
         } else if ("xor".equals(conditionElement.getNodeName())) {
-            return new Xor(modelMenu, conditionElement);
+            return new Xor(modelMenuItem, conditionElement);
         } else if ("or".equals(conditionElement.getNodeName())) {
-            return new Or(modelMenu, conditionElement);
+            return new Or(modelMenuItem, conditionElement);
         } else if ("not".equals(conditionElement.getNodeName())) {
-            return new Not(modelMenu, conditionElement);
+            return new Not(modelMenuItem, conditionElement);
         } else if ("if-has-permission".equals(conditionElement.getNodeName())) {
-            return new IfHasPermission(modelMenu, conditionElement);
+            return new IfHasPermission(modelMenuItem, conditionElement);
         } else if ("if-validate-method".equals(conditionElement.getNodeName())) {
-            return new IfValidateMethod(modelMenu, conditionElement);
+            return new IfValidateMethod(modelMenuItem, conditionElement);
         } else if ("if-compare".equals(conditionElement.getNodeName())) {
-            return new IfCompare(modelMenu, conditionElement);
+            return new IfCompare(modelMenuItem, conditionElement);
         } else if ("if-compare-field".equals(conditionElement.getNodeName())) {
-            return new IfCompareField(modelMenu, conditionElement);
+            return new IfCompareField(modelMenuItem, conditionElement);
         } else if ("if-regexp".equals(conditionElement.getNodeName())) {
-            return new IfRegexp(modelMenu, conditionElement);
+            return new IfRegexp(modelMenuItem, conditionElement);
         } else if ("if-empty".equals(conditionElement.getNodeName())) {
-            return new IfEmpty(modelMenu, conditionElement);
+            return new IfEmpty(modelMenuItem, conditionElement);
         } else if ("if-entity-permission".equals(conditionElement.getNodeName())) {
-            return new IfEntityPermission(modelMenu, conditionElement);
+            return new IfEntityPermission(modelMenuItem, conditionElement);
         } else {
             throw new IllegalArgumentException("Condition element not supported with name: " + conditionElement.getNodeName());
         }
@@ -129,9 +149,9 @@ public class ModelMenuCondition {
     public static class And extends MenuCondition {
         protected List subConditions;
         
-        public And(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
-            this.subConditions = readSubConditions(modelMenu, condElement);
+        public And(ModelMenuItem modelMenuItem, Element condElement) {
+            super (modelMenuItem, condElement);
+            this.subConditions = readSubConditions(modelMenuItem, condElement);
         }
         
         public boolean eval(Map context) {
@@ -150,9 +170,9 @@ public class ModelMenuCondition {
     public static class Xor extends MenuCondition {
         protected List subConditions;
         
-        public Xor(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
-            this.subConditions = readSubConditions(modelMenu, condElement);
+        public Xor(ModelMenuItem modelMenuItem, Element condElement) {
+            super (modelMenuItem, condElement);
+            this.subConditions = readSubConditions(modelMenuItem, condElement);
         }
         
         public boolean eval(Map context) {
@@ -177,9 +197,9 @@ public class ModelMenuCondition {
     public static class Or extends MenuCondition {
         protected List subConditions;
         
-        public Or(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
-            this.subConditions = readSubConditions(modelMenu, condElement);
+        public Or(ModelMenuItem modelMenuItem, Element condElement) {
+            super (modelMenuItem, condElement);
+            this.subConditions = readSubConditions(modelMenuItem, condElement);
         }
         
         public boolean eval(Map context) {
@@ -198,10 +218,10 @@ public class ModelMenuCondition {
     public static class Not extends MenuCondition {
         protected MenuCondition subCondition;
         
-        public Not(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public Not(ModelMenuItem modelMenuItem, Element condElement) {
+            super (modelMenuItem, condElement);
             Element firstChildElement = UtilXml.firstChildElement(condElement);
-            this.subCondition = readCondition(modelMenu, firstChildElement);
+            this.subCondition = readCondition(modelMenuItem, firstChildElement);
         }
         
         public boolean eval(Map context) {
@@ -213,8 +233,8 @@ public class ModelMenuCondition {
         protected FlexibleStringExpander permissionExdr;
         protected FlexibleStringExpander actionExdr;
         
-        public IfHasPermission(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfHasPermission(ModelMenuItem modelMenuItem, Element condElement) {
+            super (modelMenuItem, condElement);
             this.permissionExdr = new FlexibleStringExpander(condElement.getAttribute("permission"));
             this.actionExdr = new FlexibleStringExpander(condElement.getAttribute("action"));
         }
@@ -248,8 +268,8 @@ public class ModelMenuCondition {
         protected FlexibleStringExpander methodExdr;
         protected FlexibleStringExpander classExdr;
         
-        public IfValidateMethod(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfValidateMethod(ModelMenuItem modelMenuItem, Element condElement) {
+            super (modelMenuItem, condElement);
             this.fieldAcsr = new FlexibleMapAccessor(condElement.getAttribute("field-name"));
             this.methodExdr = new FlexibleStringExpander(condElement.getAttribute("method"));
             this.classExdr = new FlexibleStringExpander(condElement.getAttribute("class"));
@@ -310,8 +330,8 @@ public class ModelMenuCondition {
         protected String type;
         protected FlexibleStringExpander formatExdr;
         
-        public IfCompare(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfCompare(ModelMenuItem modelMenuItem, Element condElement) {
+            super (modelMenuItem, condElement);
             this.fieldAcsr = new FlexibleMapAccessor(condElement.getAttribute("field-name"));
             this.valueExdr = new FlexibleStringExpander(condElement.getAttribute("value"));
             
@@ -359,8 +379,8 @@ public class ModelMenuCondition {
         protected String type;
         protected FlexibleStringExpander formatExdr;
         
-        public IfCompareField(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfCompareField(ModelMenuItem modelMenuItem, Element condElement) {
+            super (modelMenuItem, condElement);
             this.fieldAcsr = new FlexibleMapAccessor(condElement.getAttribute("field-name"));
             this.toFieldAcsr = new FlexibleMapAccessor(condElement.getAttribute("to-field-name"));
             
@@ -407,8 +427,8 @@ public class ModelMenuCondition {
         protected FlexibleMapAccessor fieldAcsr;
         protected FlexibleStringExpander exprExdr;
         
-        public IfRegexp(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfRegexp(ModelMenuItem modelMenuItem, Element condElement) {
+            super (modelMenuItem, condElement);
             this.fieldAcsr = new FlexibleMapAccessor(condElement.getAttribute("field-name"));
             this.exprExdr = new FlexibleStringExpander(condElement.getAttribute("expr"));
         }
@@ -441,8 +461,8 @@ public class ModelMenuCondition {
     public static class IfEmpty extends MenuCondition {
         protected FlexibleMapAccessor fieldAcsr;
         
-        public IfEmpty(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfEmpty(ModelMenuItem modelMenuItem, Element condElement) {
+            super (modelMenuItem, condElement);
             this.fieldAcsr = new FlexibleMapAccessor(condElement.getAttribute("field-name"));
         }
         
@@ -454,8 +474,8 @@ public class ModelMenuCondition {
     public static class IfEntityPermission extends MenuCondition {
         protected EntityPermissionChecker permissionChecker;
         
-        public IfEntityPermission(ModelMenu modelMenu, Element condElement) {
-            super (modelMenu, condElement);
+        public IfEntityPermission(ModelMenuItem modelMenuItem, Element condElement) {
+            super (modelMenuItem, condElement);
             this.permissionChecker = new EntityPermissionChecker(condElement);
         }
         

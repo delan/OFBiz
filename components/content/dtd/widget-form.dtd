@@ -413,7 +413,7 @@
     <!ELEMENT entity-one ( field-map*, select-field* )>
     <!ATTLIST entity-one
         entity-name CDATA #REQUIRED
-        value-name CDATA #REQUIRED
+        value-name CDATA #IMPLIED
         use-cache ( true | false ) "false"
         auto-field-map ( true | false ) "true"
     >
@@ -423,7 +423,6 @@
         entity-name CDATA #REQUIRED
         use-cache ( true | false ) "false"
         filter-by-date ( true | false | by-name ) "false"
-        list-name CDATA #REQUIRED
         result-set-type ( forward | scroll ) "scroll"
     >
 
@@ -434,7 +433,6 @@
         filter-by-date ( true | false | by-name ) "false"
         distinct ( true | false ) "false"
         delegator-name CDATA #IMPLIED
-        list-name CDATA #REQUIRED
         result-set-type ( forward | scroll ) "scroll"
     >
         <!ELEMENT condition-list ( ( condition-expr | condition-list )+ )>

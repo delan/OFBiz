@@ -95,8 +95,19 @@ public class EntityPermissionChecker {
         	entityIdList = new ArrayList();
         }
     	String entityName = entityNameExdr.expandString(context);
+        HttpServletRequest request = (HttpServletRequest)context.get("request");
+        GenericValue userLogin = null;
+        String userLoginId = null; 
+        GenericDelegator delegator = null;
+        if (request != null) {
+            HttpSession session = request.getSession();
+            userLogin = (GenericValue)session.getAttribute("userLogin");
+            if (userLogin != null)
+            	userLoginId = userLogin.getString("userLoginId");
+           delegator = (GenericDelegator)request.getAttribute("delegator");
+        }
     	try {
-    		passed = checkPermission(context, targetOperationList, entityName, entityIdList);
+    		passed = ContentPermissionServices.checkPermissionMethod(delegator, userLogin, targetOperationList, entityName, entityIdList, null, null, null);
     	} catch(GenericEntityException e) {
             throw new RuntimeException(e.getMessage());
     	}
@@ -157,7 +168,8 @@ public class EntityPermissionChecker {
         if (modelOperationEntity.getField("privilegeEnumId") != null)
         	hasPrivilegeOp = true;
         
-        // Get all the condition operations that could apply
+        // Get all the condition operations that could apply, rather than having to go thru 
+        // entire table each time.
         List condList = new ArrayList();
         Iterator iterType = targetOperationList.iterator();
         while (iterType.hasNext()) {
@@ -467,7 +479,7 @@ public class EntityPermissionChecker {
      * and returns the ones that match the user.
      * Follows group parties to see if the user is a member.
      */
-    public static List getUserRoles(GenericValue entity, GenericValue userLogin, GenericDelegator delegator) {
+    public static List getUserRoles(GenericValue entity, GenericValue userLogin, GenericDelegator delegator) throws GenericEntityException {
 
     	String entityName = entity.getEntityName();
     	List roles = new ArrayList();
@@ -488,12 +500,8 @@ public class EntityPermissionChecker {
         
         String partyId = (String)userLogin.get("partyId");
         List relatedRoles = null;
-        try {
-            List tmpRelatedRoles = entity.getRelatedCache(entityName + "Role");
-            relatedRoles = EntityUtil.filterByDate(tmpRelatedRoles);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "No related roles found. ", module);
-        }
+        List tmpRelatedRoles = entity.getRelatedCache(entityName + "Role");
+        relatedRoles = EntityUtil.filterByDate(tmpRelatedRoles);
         if(relatedRoles != null ) {
             Iterator rolesIter = relatedRoles.iterator();
             while (rolesIter.hasNext() ) {
@@ -503,6 +511,8 @@ public class EntityPermissionChecker {
                 if (targPartyId.equals(partyId)) {
                     if (!roles.contains(roleTypeId))
                         roles.add(roleTypeId);
+                    if (roleTypeId.equals("AUTHOR") && !roles.contains("OWNER"))
+                        roles.add("OWNER");
                 } else { // Party may be of "PARTY_GROUP" type, in which case the userLogin may still possess this role
                     GenericValue party = null;
                     String partyTypeId = null;

@@ -60,6 +60,7 @@ import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceUtil;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -1297,6 +1298,7 @@ public class ContentWorker {
     public static String prepPermissionErrorMsg(Map permResults) {
 
         String errorMessage = "Permission is denied."; 
+        errorMessage += ServiceUtil.getErrorMessage(permResults);
         PermissionRecorder recorder = (PermissionRecorder)permResults.get("permissionRecorder");
             Debug.logInfo("recorder(0):" + recorder, "");
         if (recorder != null && recorder.isOn()) {

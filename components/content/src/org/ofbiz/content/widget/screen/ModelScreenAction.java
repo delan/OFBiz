@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ArrayList;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
@@ -39,6 +40,7 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.finder.ByAndFinder;
@@ -48,6 +50,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 
 import org.w3c.dom.Element;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 
 /**
@@ -118,6 +122,8 @@ public abstract class ModelScreenAction {
         protected FlexibleStringExpander defaultExdr;
         protected FlexibleStringExpander globalExdr;
         protected String type;
+        protected String toScope;
+        protected String fromScope;
         
         public SetField(ModelScreen modelScreen, Element setElement) {
             super (modelScreen, setElement);
@@ -127,6 +133,8 @@ public abstract class ModelScreenAction {
             this.defaultExdr = UtilValidate.isNotEmpty(setElement.getAttribute("default-value")) ? new FlexibleStringExpander(setElement.getAttribute("default-value")) : null;
             this.globalExdr = new FlexibleStringExpander(setElement.getAttribute("global"));
             this.type = setElement.getAttribute("type");
+            this.toScope = setElement.getAttribute("to-scope");
+            this.fromScope = setElement.getAttribute("from-scope");
             if (this.fromField != null && this.valueExdr != null) {
                 throw new IllegalArgumentException("Cannot specify a from-field [" + setElement.getAttribute("from-field") + "] and a value [" + setElement.getAttribute("value") + "] on the set action in a screen widget");
             }
@@ -138,11 +146,31 @@ public abstract class ModelScreenAction {
             boolean global = "true".equals(globalStr);
             
             Object newValue = null;
-            if (this.fromField != null) {
-                newValue = this.fromField.get(context);
-                if (Debug.verboseOn()) Debug.logVerbose("In screen getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
-            } else if (this.valueExdr != null) {
-                newValue = this.valueExdr.expandString(context);
+            if (this.fromScope != null && this.fromScope.equals("user")) {
+                if (this.fromField != null) {
+                    HttpSession session = (HttpSession)context.get("session");
+                	newValue = getInMemoryPersistedFromField(session, context);
+                    if (Debug.verboseOn()) Debug.logVerbose("In user getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
+                } else if (this.valueExdr != null) {
+                    newValue = this.valueExdr.expandString(context);
+                }
+                
+            } else if (this.fromScope != null && this.fromScope.equals("application")) {
+                if (this.fromField != null) {
+                    ServletContext servletContext = (ServletContext)context.get("application");
+                	newValue = getInMemoryPersistedFromField(servletContext, context);
+                    if (Debug.verboseOn()) Debug.logVerbose("In application getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
+                } else if (this.valueExdr != null) {
+                    newValue = this.valueExdr.expandString(context);
+                }
+                
+            } else {
+                if (this.fromField != null) {
+                    newValue = this.fromField.get(context);
+                    if (Debug.verboseOn()) Debug.logVerbose("In screen getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
+                } else if (this.valueExdr != null) {
+                    newValue = this.valueExdr.expandString(context);
+                }
             }
 
             // If newValue is still empty, use the default value
@@ -162,8 +190,36 @@ public abstract class ModelScreenAction {
                 }
          
             }
-            if (Debug.verboseOn()) Debug.logVerbose("In screen setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
-            this.field.put(context, newValue);
+            if (this.toScope != null && this.toScope.equals("user")) {
+                    String originalName = this.field.getOriginalName();
+                    List currentWidgetTrail = (List)context.get("_WIDGETTRAIL_");
+                    String newKey = "";
+                    if (currentWidgetTrail != null)
+                        newKey = StringUtil.join(currentWidgetTrail, "|");
+                    if (UtilValidate.isNotEmpty(newKey))
+                        newKey += "|";
+                    newKey += originalName;
+                    HttpSession session = (HttpSession)context.get("session");
+                    session.setAttribute(newKey, newValue);
+                    if (Debug.verboseOn()) Debug.logVerbose("In user setting value for field from [" + this.field.getOriginalName() + "]: " + newValue, module);
+                
+            } else if (this.toScope != null && this.toScope.equals("application")) {
+                    String originalName = this.field.getOriginalName();
+                    List currentWidgetTrail = (List)context.get("_WIDGETTRAIL_");
+                    String newKey = "";
+                    if (currentWidgetTrail != null)
+                        newKey = StringUtil.join(currentWidgetTrail, "|");
+                    if (UtilValidate.isNotEmpty(newKey))
+                        newKey += "|";
+                    newKey += originalName;
+                    ServletContext servletContext = (ServletContext)context.get("application");
+                    servletContext.setAttribute(newKey, newValue);
+                    if (Debug.verboseOn()) Debug.logVerbose("In application setting value for field from [" + this.field.getOriginalName() + "]: " + newValue, module);
+                
+            } else {
+            	if (Debug.verboseOn()) Debug.logVerbose("In screen setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
+                this.field.put(context, newValue);
+            }
             
             if (global) {
                 Map globalCtx = (Map) context.get("globalContext");
@@ -178,7 +234,35 @@ public abstract class ModelScreenAction {
                 this.field.put(page, newValue);
             }
         }
+    	
+    	public Object getInMemoryPersistedFromField( Object storeAgent, Map context) {
+    	            
+                    Object newValue = null;
+                    String originalName = this.fromField.getOriginalName();
+                    List currentWidgetTrail = (List)context.get("_WIDGETTRAIL_");
+                    List trailList = new ArrayList();
+                    if (currentWidgetTrail != null)
+                        trailList.addAll(currentWidgetTrail);
+                    
+                    for (int i=trailList.size(); i >= 0; i--) {
+                    	List subTrail = trailList.subList(0,i);
+                    	String newKey = null;
+                    	if (subTrail.size() > 0)
+                    	    newKey = StringUtil.join(subTrail, "|") + "|" + originalName;
+                    	else
+                    	    newKey = originalName;
+                        
+                    	if (storeAgent instanceof ServletContext)
+                    		newValue = ((ServletContext)storeAgent).getAttribute(newKey);
+                    	else if (storeAgent instanceof HttpSession)
+                    		newValue = ((HttpSession)storeAgent).getAttribute(newKey);
+                    	if (newValue != null)
+                            break;
+                    }
+                    return newValue;
+        }
     }
+    
     
     public static class PropertyMap extends ModelScreenAction {
         protected FlexibleStringExpander resourceExdr;

@@ -32,7 +32,9 @@
                 <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId"/>
             </drop-down>
         </field>
-        <field name="dataResourceId" title=""><lookup target-form-name="LookupDataResource"/></field>
+        <field name="dataResourceId" title="">
+            <lookup target-form-name="LookupDataResource"/>
+            </field>
         <field name="mimeTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="MimeType" key-field-name="mimeTypeId"/>
@@ -54,7 +56,14 @@
     </form>
     <form name="listFindContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" target="" paginate-target="/FindContent" title="" type="list">
+        list-iterator-name="listIt" target="" paginate-target="/FindContent" title="" type="list">
+      	<actions>
+          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <field-map field-name="inputFields" env-name="requestParameters"/>
+            <field-map field-name="entityName" env-name="entityName"/>
+          </service>
+        </actions>
+        
         <auto-fields-entity entity-name="Content" default-field-type="display"/>
         <field name="contentId" title="Edit" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
@@ -170,8 +179,15 @@
     </form>
     <form name="listLookupContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" target="" paginate-target="/LookupContent" 
+        list-iterator-name="listIt" target="" paginate-target="/LookupContent" 
         title="" type="list">
+      	<actions>
+          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <field-map field-name="inputFields" env-name="requestParameters"/>
+            <field-map field-name="entityName" env-name="entityName"/>
+          </service>
+        </actions>
+        
         <auto-fields-entity entity-name="Content" default-field-type="display"/>
         <field name="contentId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
@@ -186,6 +202,7 @@
     <form name="mruLookupContent" default-entity-name="Content"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
         list-name="mruList" target="" title="" type="list">
+        
         <field name="contentId" title="Id" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
         </field>
@@ -195,7 +212,15 @@
     <!-- ContentAssoc forms -->
     <form name="EditContentAssoc" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        default-map-name="contentAssocValue" target="updateContentAssoc" title="" type="single">
+        target="updateContentAssoc" title="" type="single">
+        <actions>
+        <entity-one entity-name="ContentAssoc" use-cache="true">
+            <field-map env-name="contentId" field-name="contentId" />
+            <field-map env-name="contentIdTo" field-name="contentIdTo" />
+            <field-map env-name="contentAssocTypeId" field-name="contentAssocTypeId" />
+            <field-map env-name="fromDate" field-name="fromDate" />
+        </entity-one>
+        </actions>
         <auto-fields-entity entity-name="ContentAssoc"/>
         <field name="contentId" title="" widget-style="buttontext"><display/></field>
         <field name="contentIdTo" title="" widget-style="buttontext"><display/></field>
@@ -231,7 +256,12 @@
     </form>
     <form name="ListContentAssocFrom" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="fromList" target="" title="Assoc From this Content" type="list">
+        target="" title="Assoc From this Content" type="list">
+        <actions>
+        <entity-and entity-name="ContentAssoc" use-cache="true">
+            <field-map env-name="contentId" field-name="contentId" />
+        </entity-and>
+        </actions>
         <auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/>
         <field name="contentId" title="" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
@@ -248,7 +278,12 @@
     </form>
     <form name="ListContentAssocTo" default-entity-name="Content"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="toList" target="EditContentAssoc" title="Assoc To this Content" type="list">
+        target="EditContentAssoc" title="Assoc To this Content" type="list">
+        <actions>
+        <entity-and entity-name="ContentAssoc" use-cache="true">
+            <field-map env-name="contentId" field-name="contentIdTo" />
+        </entity-and>
+        </actions>
         <auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/>
         <field name="contentId" title="Content Id " widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
@@ -270,7 +305,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addContentRole" title="" type="single">
         <auto-fields-service service-name="createContentRole"/>
-        <field name="contentId" title="" widget-style="buttontext" map-name="currentValue" > 
+        <field name="contentId" title="" widget-style="buttontext" > 
             <lookup target-form-name="LookupContent" />
         </field>
         <field name="partyId" title="" widget-style="buttontext"><lookup target-form-name="LookupPerson"/></field>
@@ -291,7 +326,12 @@
     </form>
     <form name="ListContentRole" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" target="updateContentRole" title="" type="list">
+        target="updateContentRole" title="" type="list">
+        <actions>
+          <entity-and entity-name="ContentRole" use-cache="true">
+            <field-map env-name="contentId" field-name="contentId" />
+          </entity-and>
+        </actions>
         <auto-fields-service service-name="updateContentRole" default-field-type="display" />
         <field name="thruDate" widget-style="buttontext"><date-time/></field>
         <field name="thruDate" widget-style="buttontext"><date-time/></field>
@@ -309,7 +349,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addContentPurpose" title="" type="single">
         <auto-fields-service service-name="createContentPurpose"/>
-        <field name="contentId" title="" widget-style="buttontext" map-name="currentValue"><lookup target-form-name="LookupContent"/></field>
+        <field name="contentId" title="" widget-style="buttontext" ><lookup target-form-name="LookupContent"/></field>
         <field name="contentPurposeTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="ContentPurposeType" key-field-name="contentPurposeTypeId"/>
@@ -319,7 +359,12 @@
     </form>
     <form name="ListContentPurpose" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" target="updateContentPurpose" title="" type="list">
+        target="updateContentPurpose" title="" type="list">
+        <actions>
+          <entity-and entity-name="ContentPurpose" use-cache="true">
+            <field-map env-name="contentId" field-name="contentId" />
+          </entity-and>
+        </actions>
         <auto-fields-service service-name="updateContentPurpose" default-field-type="display" />
         <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
@@ -331,12 +376,19 @@
     <form name="AddContentAttribute" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addContentAttribute" title="" type="single">
         <auto-fields-service service-name="createContentAttribute"/>
-        <field name="contentId" title="" widget-style="buttontext" map-name="currentValue"><display description="${currentValue.contentId}"/></field>
+        <field name="contentId" title="" widget-style="buttontext" > 
+            <lookup target-form-name="LookupContent" />
+        </field>
         <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        list-name="contentList" name="ListContentAttribute"
+        name="ListContentAttribute"
         target="updateContentAttribute" title="" type="list">
+        <actions>
+          <entity-and entity-name="ContentAttribute" use-cache="true">
+            <field-map env-name="contentId" field-name="contentId" />
+          </entity-and>
+        </actions>
         <auto-fields-service service-name="updateContentAttribute" default-field-type="display" />
         <field name="attrValue" widget-style="buttontext"><text/></field>
         <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
@@ -350,7 +402,9 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="addContentMetaData" title="" type="single">
         <auto-fields-service service-name="createContentMetaData"/>
-        <field name="contentId" title="" widget-style="buttontext" map-name="currentValue"><display description="${currentValue.contentId}"/></field>
+        <field name="contentId" title="" widget-style="buttontext" > 
+            <lookup target-form-name="LookupContent" />
+        </field>
         <field name="metaDataPredicateId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="MetaDataPredicate" key-field-name="metaDataPredicateId"/>
@@ -358,9 +412,14 @@
         </field>
         <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListContentMetaData" list-name="contentList" default-title-style="tableheadtext"
+    <form name="ListContentMetaData" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="updateContentMetaData" title="" type="list">
+        <actions>
+          <entity-and entity-name="ContentMetaData" use-cache="true">
+            <field-map env-name="contentId" field-name="contentId" />
+          </entity-and>
+        </actions>
         <auto-fields-service service-name="updateContentMetaData" default-field-type="edit" />
         <field name="contentId" title="ContentId" widget-style="buttontext"><display/></field>
         <field name="metaDataPredicateId" title="MetaDataPredicateId" widget-style="buttontext"><display/></field>
@@ -379,7 +438,14 @@
     </form>
     <form name="listLookupPerson" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" target="" paginate-target="LookupPerson" title="" type="list">
+        list-iterator-name="listIt" target="" paginate-target="LookupPerson" title="" type="list">
+      	<actions>
+          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <field-map field-name="inputFields" env-name="requestParameters"/>
+            <field-map field-name="entityName" env-name="entityName"/>
+          </service>
+        </actions>
+        
         <auto-fields-entity entity-name="Person" default-field-type="display"/>
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
                 
@@ -407,7 +473,14 @@
     </form>
     <form name="listLookupPartyAndUserLoginAndPerson" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" target="" paginate-target="LookupPartyAndUserLoginAndPerson" title="" type="list">
+        list-iterator-name="listIt" target="" paginate-target="LookupPartyAndUserLoginAndPerson" title="" type="list">
+      	<actions>
+          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <field-map field-name="inputFields" env-name="requestParameters"/>
+            <field-map field-name="entityName" env-name="entityName"/>
+          </service>
+        </actions>
+        
         <auto-fields-entity entity-name="PartyAndUserLoginAndPerson" default-field-type="display"/>
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
                 

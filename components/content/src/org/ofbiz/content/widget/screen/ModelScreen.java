@@ -27,6 +27,7 @@ import java.io.Writer;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Element;
@@ -84,6 +85,7 @@ public class ModelScreen {
      *   use the same screen definitions for many types of screen UIs
      */
     public void renderScreenString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+    
         // render the screen, starting with the top-level section
         this.section.renderWidgetString(writer, context, screenStringRenderer);
     }

@@ -65,6 +65,13 @@
         </section>
     </screen>
 
+    <screen name="lookup">
+        <section>
+            <widgets>
+                    <platform-specific><html><html-template location="component://content/webapp/content/includes/lookup.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
 </screens>
 
 
