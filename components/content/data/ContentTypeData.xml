@@ -80,6 +80,7 @@
 
   <SurveyApplType surveyApplTypeId="CART_ADD" description="Add-To Cart"/>
   <SurveyApplType surveyApplTypeId="CHECK_OUT" description="Check-Out"/>
+  <SurveyApplType surveyApplTypeId="CUSTOMER_PROFILE" description="Customer Profile"/>
   <SurveyApplType surveyApplTypeId="SORDER_PLACE" description="Sales Order Placement"/>
   <SurveyApplType surveyApplTypeId="PORDER_PLACE" description="Purchase Order Placement"/>
   <SurveyApplType surveyApplTypeId="PORDITM_PLACE" description="Purchase Order Item Placement"/>
