@@ -21,7 +21,7 @@
 	    <attribute name="result" type="String" mode="OUT"/>
 	</service>
 	<service name="testBsh" engine="bsh" 
-	location="BshServiceTest" invoke="">
+	location="BshServiceTest.bsh" invoke="">
 	    <description>Test BeanShell Script Service</description>
 	    <attribute name="message" type="String" mode="IN" optional="true"/>
 	    <attribute name="result" type="String" mode="OUT"/>
