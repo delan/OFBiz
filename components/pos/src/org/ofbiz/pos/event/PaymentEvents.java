@@ -309,6 +309,7 @@ public class PaymentEvents {
                 trans.processSale(pos.getOutput());
                 pos.getInput().setFunction("PAID");
             } catch (GeneralException e) {
+                Debug.logError(e, e.getMessage(), module);
                 pos.getInput().setLock(false);
                 pos.getButtons().setLock(false);
                 pos.showDialog("main/dialog/error/exception", e.getMessage());

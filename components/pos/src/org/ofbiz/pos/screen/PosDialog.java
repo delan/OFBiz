@@ -65,6 +65,7 @@ public class PosDialog {
 
     protected JDialog dialog = null;
     protected XTextArea output = null;
+    protected XButton closeBtn = null;
     protected XPage page = null;
     protected boolean modal = true;
     protected int padding = 0;
@@ -181,8 +182,12 @@ public class PosDialog {
 
     public void setText(String text) {
         if (this.output != null) {
-            Debug.log("Setting output text - " + text, module);
+            Debug.log("Setting output (text) text - " + text, module);
             this.output.setText(text);
+        } else if (this.closeBtn != null) {
+            Debug.log("Setting output (button) text - " + text, module);
+
+            this.closeBtn.setText("<html><center>" + text + "</center></html>");
         } else {
             Debug.log("PosDialog output edit box is NULL!", module);
         }
@@ -213,6 +218,7 @@ public class PosDialog {
         for (int i = 0; i < coms.length; i++) {
             if (coms[i].getName() != null && "closeBtn".equals(coms[i].getName())) {
                 if (coms[i] instanceof XButton) {
+                    this.closeBtn = (XButton) coms[i];
                     JButton b = (JButton) coms[i];
                     b.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent event) {

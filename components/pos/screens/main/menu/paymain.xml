@@ -24,7 +24,7 @@
 
         <Button name="" x="306" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
 
-        <Button name="testMsr" x="408" y="310" w="100" h="60" style="posButton" content="TEST MGR" alignment="Center"/>
+        <Button name="testMsr" x="408" y="310" w="100" h="60" style="posButton" content="TEST MSR" alignment="Center"/>
         <Button name="ALT.payFinish" x="510" y="310" w="100" h="60" style="posButton" content="FINISH" alignment="Center"/>
     </Components>
 </XPage>
