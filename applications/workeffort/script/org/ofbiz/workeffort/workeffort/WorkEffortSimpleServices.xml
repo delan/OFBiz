@@ -27,6 +27,7 @@
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+		
     <simple-method method-name="createWorkEffort" short-description="Create Work Effort">
         <make-value value-name="newEntity" entity-name="WorkEffort"/>
         <sequenced-id-to-env sequence-name="WorkEffort" env-name="workEffortId"/>
@@ -143,19 +144,83 @@
 
     <!-- communication event workeffort -->
     <simple-method method-name="makeCommunicationEventWorkEffort" short-description="Make a Communication Event WorkEffort">
-    	<make-value entity-name="CommunicationEventWorkEff" value-name="lookupMap"/>
-    	<set-pk-fields map-name="parameters" value-name="lookupMap"/>
-    	<find-by-primary-key entity-name="CommunicationEventWorkEff" map-name="lookupMap" value-name="eventWe"/>
-    	<if-not-empty field-name="workEffortId" map-name="eventWe">
-    		<set-nonpk-fields map-name="parameters" value-name="eventWe"/>
-    		<store-value value-name="eventWe"/>
-    	</if-not-empty>
-    	<if-empty field-name="workEffortId" map-name="eventWe">
-    		<set-nonpk-fields map-name="parameters" value-name="lookupMap"/>
-    		<create-value value-name="lookupMap"/>
-    	</if-empty>
+        <make-value entity-name="CommunicationEventWorkEff" value-name="lookupMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-primary-key entity-name="CommunicationEventWorkEff" map-name="lookupMap" value-name="eventWe"/>
+        <if-not-empty field-name="workEffortId" map-name="eventWe">
+            <set-nonpk-fields map-name="parameters" value-name="eventWe"/>
+            <store-value value-name="eventWe"/>
+        </if-not-empty>
+        <if-empty field-name="workEffortId" map-name="eventWe">
+            <set-nonpk-fields map-name="parameters" value-name="lookupMap"/>
+            <create-value value-name="lookupMap"/>
+        </if-empty>
     </simple-method>
-    
+
+    <!-- WorkEffortPartyAssignment -->    
+    <simple-method method-name="assignPartyToWorkEffort" short-description="Assign Party to Work Effort">
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+
+        <make-value value-name="newEntity" entity-name="WorkEffortPartyAssignment"/>
+
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <if-empty field-name="fromDate" map-name="newEntity">
+	        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.fromDate"/>
+        </if-empty>
+        <field-to-result field-name="fromDate" map-name="newValue"/>
+
+        <if-not-empty field-name="parameters.statusId">
+	        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.statusDateTime"/>
+	        <call-class-method class-name="org.ofbiz.workeffort.workeffort.WorkEffortPartyAssignmentServices" method-name="updateWorkflowEngine">
+				<field field-name="newEntity" type="org.ofbiz.entity.GenericValue"/>
+				<field field-name="userLogin" type="org.ofbiz.entity.GenericValue"/>
+			    <field field-name="dispatcher" type="org.ofbiz.service.LocalDispatcher"/>
+		    </call-class-method>
+        </if-not-empty>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePartyToWorkEffortAssignment" short-description="Update WorkEffortPartyAssignment entity">
+		<make-value value-name="lookupPKMap" entity-name="WorkEffortPartyAssignment"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="workEffortPartyAssignment"/>
+		
+		<if-compare-field field-name="userLogin.partyId" operator="not-equals" to-field-name="workEffortPartyAssignment.partyId">                
+			<check-permission permission="WORKEFFORTMGR" action="_UPDATE">
+				<fail-message message="You cannot update this Work Effort Party Assignment, you must either be associated with it or have administration permission."/>
+		   	</check-permission>
+			<check-errors/>
+        </if-compare-field>
+		
+		<field-to-env field-name="statusId" map-name="workEffortPartyAssignment" env-name="oldStatusId" />
+        <set-nonpk-fields map-name="parameters" value-name="workEffortPartyAssignment"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+		
+        <if-compare-field field-name="parameters.statusId" operator="not-equals" to-field-name="oldStatusId">
+	        <env-to-env env-name="nowTimestamp" to-env-name="workEffortPartyAssignment.statusDateTime"/>
+	        <call-class-method class-name="org.ofbiz.workeffort.workeffort.WorkEffortPartyAssignmentServices" method-name="updateWorkflowEngine" >
+				<field field-name="workEffortPartyAssignment" type="org.ofbiz.entity.GenericValue"/>
+				<field field-name="userLogin" type="org.ofbiz.entity.GenericValue"/>
+			    <field field-name="dispatcher" type="org.ofbiz.service.LocalDispatcher"/>
+            </call-class-method>
+        </if-compare-field>
+        <store-value value-name="workEffortPartyAssignment"/>
+    </simple-method>
+    <simple-method method-name="unassignPartyFromWorkEffort" short-description="Service that deletes a WorkEffortPartyAssignment entity">
+        <make-value value-name="lookupPKMap" entity-name="WorkEffortPartyAssignment"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="workEffortPartyAssignment"/>
+		<if-compare-field field-name="userLogin.partyId" operator="not-equals" to-field-name="workEffortPartyAssignment.partyId">                
+            <check-permission permission="WORKEFFORTMGR" action="_DELETE">
+                <fail-message message="You cannot delete this Work Effort Party Assignment, you must either be associated with it or have administration permission."/>
+            </check-permission>
+            <check-errors/>
+        </if-compare-field>
+        <remove-value value-name="workEffortPartyAssignment"/>
+    </simple-method>
+
+    <!-- Create a WorkEffortContactMech -->
     <simple-method method-name="createWorkEffortContactMech" short-description="Create a WorkEffortContactMech">
         <check-permission permission="WORKEFFORTMGR" action="_CREATE"><fail-message message="You do not have permission to perform this operation for this work effort."/></check-permission>
         <check-errors/>

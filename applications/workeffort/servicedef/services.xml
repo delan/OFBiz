@@ -73,8 +73,8 @@
     </service>
 
     <!-- WorkEffortPartyAssignment services -->
-    <service name="assignPartyToWorkEffort" default-entity-name="WorkEffortPartyAssignment" engine="java"
-            location="org.ofbiz.workeffort.workeffort.WorkEffortPartyAssignmentServices" invoke="assignPartyToWorkEffort">
+    <service name="assignPartyToWorkEffort" default-entity-name="WorkEffortPartyAssignment" engine="simple"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="assignPartyToWorkEffort">
         <description>Create a WorkEffortPartyAssignment Entity</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true">
@@ -83,16 +83,16 @@
         <override name="fromDate" mode="INOUT" optional="true"/>
         <override name="statusId" optional="false"/>
     </service>
-    <service name="updatePartyToWorkEffortAssignment" default-entity-name="WorkEffortPartyAssignment" engine="java"
-            location="org.ofbiz.workeffort.workeffort.WorkEffortPartyAssignmentServices" invoke="updatePartyToWorkEffortAssignment">
+    <service name="updatePartyToWorkEffortAssignment" default-entity-name="WorkEffortPartyAssignment" engine="simple"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updatePartyToWorkEffortAssignment">
         <description>Update a WorkEffortPartyAssignment Entity</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true">
             <exclude field-name="statusDateTime"/>
         </auto-attributes>
     </service>
-    <service name="unassignPartyFromWorkEffort" default-entity-name="WorkEffortPartyAssignment" engine="java"
-            location="org.ofbiz.workeffort.workeffort.WorkEffortPartyAssignmentServices" invoke="unassignPartyFromWorkEffort">
+    <service name="unassignPartyFromWorkEffort" default-entity-name="WorkEffortPartyAssignment" engine="simple"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="unassignPartyFromWorkEffort">
         <description>Delete a WorkEffortPartyAssignment Entity</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
