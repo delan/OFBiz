@@ -344,7 +344,7 @@ function insertImageName(size,ext) {
     <td>&nbsp;</td>
     <td width="24%">
       <SELECT name='taxable'>
-        <OPTION><ofbiz:inputvalue entityAttr='product' field='taxable' tryEntityAttr="tryEntity"/></OPTION>
+        <OPTION><ofbiz:inputvalue entityAttr='product' field='taxable' tryEntityAttr="tryEntity" default="Y"/></OPTION>
         <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
       </SELECT>
     </td>
@@ -369,7 +369,7 @@ function insertImageName(size,ext) {
     <td>&nbsp;</td>
     <td width="24%">
       <SELECT name='chargeShipping'>
-        <OPTION><ofbiz:inputvalue entityAttr='product' field='chargeShipping' tryEntityAttr="tryEntity"/></OPTION>
+        <OPTION><ofbiz:inputvalue entityAttr='product' field='chargeShipping' tryEntityAttr="tryEntity" default="Y"/></OPTION>
         <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
       </SELECT>
     </td>
@@ -378,7 +378,7 @@ function insertImageName(size,ext) {
     <td>&nbsp;</td>
     <td width="24%">
       <SELECT name='autoCreateKeywords'>
-        <OPTION><ofbiz:inputvalue entityAttr='product' field='autoCreateKeywords' tryEntityAttr="tryEntity"/></OPTION>
+        <OPTION><ofbiz:inputvalue entityAttr='product' field='autoCreateKeywords' tryEntityAttr="tryEntity" default="Y"/></OPTION>
         <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
       </SELECT>
     </td>
