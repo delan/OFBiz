@@ -506,18 +506,31 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             waiters.add(this.runService(toolId, params, extend));
         }
 
+        Debug.logVerbose("Waiting for services to complete.", module);
         while (waiters.size() > 0) {
             Iterator wi = waiters.iterator();
             Collection remove = new ArrayList();
             while (wi.hasNext()) {
                 GenericResultWaiter thw = (GenericResultWaiter) wi.next();
                 if (thw.isCompleted()) {
+                    Map thwResult = thw.getResult();
+                    if (thwResult != null && thwResult.containsKey(ModelService.RESPONSE_MESSAGE)) {
+                        if (thwResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+                            String errorMsg = (String) thwResult.remove(ModelService.ERROR_MESSAGE);
+                            Debug.logError("Service Error: " + errorMsg, module);
+                        }
+                        thwResult.remove(ModelService.RESPONSE_MESSAGE);
+                    }
+                    Debug.logVerbose("Service finished.", module);
                     try {
-                        this.setResult(thw.getResult());
-                        remove.add(thw);
+                        if (thwResult != null)
+                            this.setResult(thwResult);
+                    } catch (InvalidData id) {
+                        Debug.logError(id, module);
                     } catch (IllegalStateException e) {
                         throw new WfException("Unknown error", e);
                     }
+                    remove.add(thw);
                 }
             }
             waiters.removeAll(remove);
