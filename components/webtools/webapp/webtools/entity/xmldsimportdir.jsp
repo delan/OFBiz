@@ -35,6 +35,7 @@
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 <%
   String path = request.getParameter("path");
+  boolean mostlyInserts = request.getParameter("mostlyInserts") != null;
 %>
 
 <h3>XML Import to DataSource(s)</h3>
@@ -46,6 +47,7 @@
   <FORM method=POST action='<ofbiz:url>/xmldsimportdir</ofbiz:url>'>
     <div>Absolute directory path:</div>
     <INPUT type=text class='inputBox' size='60' name='path' value='<%=UtilFormatOut.checkNull(path)%>'>
+    Mostly Inserts?:<INPUT type=checkbox name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
     <INPUT type=submit value='Import Files'>
   </FORM>
   <hr>
@@ -55,9 +57,9 @@
   <%
     File baseDir = new File(path);
 
-    if (baseDir.isDirectory() && baseDir.canRead()){
+    if (baseDir.isDirectory() && baseDir.canRead()) {
 	File[] fileArray = baseDir.listFiles();
-        ArrayList files = new ArrayList(fileArray.length);
+    ArrayList files = new ArrayList(fileArray.length);
 	for (int a=0; a<fileArray.length; a++){
             files.add(fileArray[a]);
         }
@@ -66,7 +68,7 @@
         int passes = 0;
         for (int a=0; a<files.size(); a++){
         // Infinite loop defense
-        if ( a == fileListMarkedSize ) {
+        if (a == fileListMarkedSize) {
           passes++;
           fileListMarkedSize = files.size();
           %> <div>Pass <%=passes%> complete</div> <%
@@ -79,14 +81,17 @@
           }
           importedOne = false;
         }
-            File curFile = (File)files.get(a);
+        File curFile = (File)files.get(a);
 	    try{
 		URL url = curFile.toURL();
 		EntitySaxReader reader = new EntitySaxReader(delegator);
+        if (mostlyInserts) {
+          reader.setUseTryInsertMethod(true);
+        }
 		long numberRead = reader.parse(url);
 		%><div>Got <%=numberRead%> entities from <%=curFile%></div><%
-      importedOne = true;
-                curFile.delete();
+            importedOne = true;
+            curFile.delete();
 	    }catch (Exception ex){ 
                 %> <div>Error trying to read from <%=curFile%>: <%=ex%> <%
                 if (ex.toString().indexOf("referential integrity violation") > -1 || 
@@ -109,5 +114,4 @@
 <%}else{%>
   <div>You do not have permission to use this page (ENTITY_MAINT needed)</div>
 <%}%>
-
 
