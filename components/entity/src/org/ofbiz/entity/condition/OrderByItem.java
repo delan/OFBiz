@@ -1,5 +1,5 @@
 /*
- * $Id: OrderByItem.java,v 1.3 2004/07/21 06:37:22 doogie Exp $
+ * $Id: OrderByItem.java,v 1.4 2004/07/23 17:02:10 doogie Exp $
  *
  * <p>Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -140,13 +140,17 @@ public class OrderByItem implements Comparator {
         Object value1 = value.getValue(obj1);
         Object value2 = value.getValue(obj2);
 
+        int result;
         // null is defined as the largest possible value
-        if (value1 == null) return value2 == null ? 0 : 1;
-        if (value2 == null) return value1 == null ? 0 : -1;
-        int result = ((Comparable) value1).compareTo(value2);
-
+        if (value1 == null) {
+            result = value2 == null ? 0 : 1;
+        } else if (value2 == null) {
+            result = value1 == null ? 0 : -1;
+        } else {
+            result = ((Comparable) value1).compareTo(value2);
+        }
         // if (Debug.infoOn()) Debug.logInfo("[OrderByComparator.compareAsc] Result is " + result + " for [" + value + "] and [" + value2 + "]", module);
-        return result;
+        return descending ? -result : result;
     }
 
     public String makeOrderByString(ModelEntity modelEntity, boolean includeTablenamePrefix, DatasourceInfo datasourceInfo) {
@@ -157,6 +161,7 @@ public class OrderByItem implements Comparator {
 
     public void makeOrderByString(StringBuffer sb, ModelEntity modelEntity, boolean includeTablenamePrefix, DatasourceInfo datasourceInfo) {
         getValue().addSqlValue(sb, modelEntity, null, includeTablenamePrefix, datasourceInfo);
+        sb.append(descending ? " DESC" : " ASC");
     }
 
     public boolean equals(java.lang.Object obj) {
