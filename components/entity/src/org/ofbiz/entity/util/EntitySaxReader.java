@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySaxReader.java,v 1.3 2004/01/28 13:35:40 jonesde Exp $
+ * $Id: EntitySaxReader.java,v 1.4 2004/04/23 01:48:43 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.xml.sax.XMLReader;
  * SAX XML Parser Content Handler for Entity Engine XML files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler {
@@ -157,7 +157,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                 reader.parse(new InputSource(is));
                 // make sure all of the values to write got written...
                 if (valuesToWrite.size() > 0) {
-                    delegator.storeAll(valuesToWrite);
+                    writeValues(valuesToWrite);
                     valuesToWrite.clear();
                 }
                 TransactionUtil.commit(beganTransaction);
@@ -171,6 +171,10 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
         }
         Debug.logImportant("Finished writing " + numberRead + " values to the database from " + docDescription, module);
         return numberRead;
+    }
+
+    protected void writeValues(List valuesToWrite) throws GenericEntityException {
+        delegator.storeAll(valuesToWrite);
     }
 
     public void characters(char[] values, int offset, int count) throws org.xml.sax.SAXException {
@@ -213,7 +217,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                     } else {
                         valuesToWrite.add(currentValue);
                         if (valuesToWrite.size() >= valuesPerWrite) {
-                            delegator.storeAll(valuesToWrite);
+                            writeValues(valuesToWrite);
                             valuesToWrite.clear();
                         }
                     }
