@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  This is the DTD for the Open For Business Entity Engine configuration XML file.
- *  $Id: entity-config.dtd,v 1.11 2004/04/30 22:28:47 ajzeneski Exp $
+ *  $Id: entity-config.dtd,v 1.12 2004/06/01 06:13:23 jonesde Exp $
 -->
 
 <!-- ====================== Root Element ======================= -->
@@ -131,6 +131,7 @@
     check-indices-on-start ( true | false ) "false"
     join-style ( ansi | ansi-no-parenthesis | theta-oracle | theta-mssql ) "ansi"
     alias-view-columns ( true | false ) "true"
+    always-use-constraint-keyword ( true | false ) "false"
 >
     <!ELEMENT sql-load-path EMPTY>
     <!ATTLIST sql-load-path

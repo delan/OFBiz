@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConfigUtil.java,v 1.9 2004/04/30 22:28:48 ajzeneski Exp $
+ * $Id: EntityConfigUtil.java,v 1.10 2004/06/01 06:13:24 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class EntityConfigUtil {
@@ -406,6 +406,7 @@ public class EntityConfigUtil {
         public boolean checkIndicesOnStart = false;
         public String joinStyle = null;
         public boolean aliasViews = true;
+        public boolean alwaysUseConstraintKeyword = false;
 
         public DatasourceInfo(Element element) {
             this.name = element.getAttribute("name");
@@ -432,6 +433,7 @@ public class EntityConfigUtil {
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-indices (true)", module);
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-indices-on-start (false)", module);
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for join-style (ansi)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for always-use-constraint-keyword (false)", module);
             } else {
                 schemaName = datasourceElement.getAttribute("schema-name");
                 // anything but false is true
@@ -471,6 +473,8 @@ public class EntityConfigUtil {
                 checkIndicesOnStart = "true".equals(datasourceElement.getAttribute("check-indices-on-start"));
                 joinStyle = datasourceElement.getAttribute("join-style");
                 aliasViews = !"false".equals(datasourceElement.getAttribute("alias-view-columns"));
+                // anything but true is false
+                alwaysUseConstraintKeyword = "true".equals(datasourceElement.getAttribute("always-use-constraint-keyword"));
             }
             if (fkStyle == null || fkStyle.length() == 0) fkStyle = "name_constraint";
             if (joinStyle == null || joinStyle.length() == 0) joinStyle = "ansi";
