@@ -557,6 +557,7 @@ public class ShoppingCartEvents {
         clearCart(request, response);
         session.removeAttribute(SiteDefs.SHOPPING_CART);
         session.removeAttribute("orderPartyId");
+        session.removeAttribute("orderMode");
         return "success";
     }
 
