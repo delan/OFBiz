@@ -1362,22 +1362,24 @@
     <view-entity entity-name="ProductVirtualAndAssocPrices"
             package-name="org.ofbiz.commonapp.product.product"
             title="Virtual and Associated Product Prices View Entity">
+      <description>When using this to get an associated product price summary the only columns you should request are: productId, productName, assocProductCount, assocMinPrice, assocMaxPrice. The rest of the field aliases should only be used for specifying constraints since they will break the grouping.</description>
       <member-entity entity-alias="PVIRT" entity-name="Product"/>
       <member-entity entity-alias="PA" entity-name="ProductAssoc"/>
       <member-entity entity-alias="PASC" entity-name="Product"/>
       <member-entity entity-alias="PASCPRC" entity-name="ProductPrice"/>
-      <alias entity-alias="PVIRT" name="productId"/>
+      <alias entity-alias="PVIRT" name="productId" group-by="true"/>
       <alias entity-alias="PVIRT" name="productName"/>
       <alias entity-alias="PA" name="productAssocTypeId"/>
       <alias entity-alias="PA" name="fromDate"/>
       <alias entity-alias="PA" name="thruDate"/>
-      <alias entity-alias="PASC" name="variantProductId" field="productId" group-by="true"/>
-      <alias entity-alias="PASCPRC" name="variantPriceTypeId" field="productPriceTypeId"/>
-      <alias entity-alias="PASCPRC" name="variantCurrencyUomId" field="currencyUomId"/>
-      <alias entity-alias="PASCPRC" name="variantPriceFromDate" field="fromDate"/>
-      <alias entity-alias="PASCPRC" name="variantPriceThruDate" field="thruDate"/>
-      <alias entity-alias="PASCPRC" name="variantMinPrice" field="price" function="min"/>
-      <alias entity-alias="PASCPRC" name="variantMaxPrice" field="price" function="max"/>
+      <alias entity-alias="PASC" name="assocProductId" field="productId"/>
+      <alias entity-alias="PASC" name="assocProductCount" field="productId" function="count-distinct"/>
+      <alias entity-alias="PASCPRC" name="assocPriceTypeId" field="productPriceTypeId"/>
+      <alias entity-alias="PASCPRC" name="assocCurrencyUomId" field="currencyUomId"/>
+      <alias entity-alias="PASCPRC" name="assocPriceFromDate" field="fromDate"/>
+      <alias entity-alias="PASCPRC" name="assocPriceThruDate" field="thruDate"/>
+      <alias entity-alias="PASCPRC" name="assocMinPrice" field="price" function="min"/>
+      <alias entity-alias="PASCPRC" name="assocMaxPrice" field="price" function="max"/>
       <view-link entity-alias="PVIRT" rel-entity-alias="PA">
         <key-map field-name="productId"/>
       </view-link>
