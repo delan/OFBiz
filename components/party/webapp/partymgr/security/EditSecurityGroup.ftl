@@ -20,13 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
 <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
   ${pages.get("/security/SecurityGroupTabBar.ftl")}
-  <div class="head1">Edit SecurityGroup with ID "${groupId}"</div>
+  <div class="head1">Edit SecurityGroup with ID "${groupId?if_exists}"</div>
   <a href="<@ofbizUrl>/EditSecurityGroup</@ofbizUrl>" class="buttontext">[New Security Group]</a>
   <br>
   <br>
