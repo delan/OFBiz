@@ -294,10 +294,21 @@
   </tr>
 
   <tr>
-    <td colspan='3'><input type="submit" name="Update" value="Update"></td>
+    <td colspan='1' align=right><input type="submit" name="Update" value="Update"></td>
+    <td colspan='2'>&nbsp;</td>
   </tr>
 </table>
 </form>
+    <%if(productId != null){%>
+        <br>
+        <div class="head2">Duplicate Product</div>
+        <form action="<ofbiz:url>/DuplicateProduct</ofbiz:url>" method=POST style='margin: 0;'>
+            <INPUT type=hidden name='productId' value='<%=productId%>'>
+            <SPAN class='tabletext'>New ID:</SPAN>&nbsp;<INPUT type=text size='20' maxlength='20' name='PRODUCT_ID'>
+            <INPUT type=submit value='Duplicate'>
+        </form>
+    <%}%>
+
 <%}else{%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>

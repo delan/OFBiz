@@ -107,12 +107,16 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProduct"/>
     </request-map>
-
     <request-map uri="UpdateProduct">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProduct"/>
         <response name="success" type="view" value="EditProduct"/>
         <response name="error" type="view" value="EditProduct"/>
+    </request-map>
+    <request-map uri="DuplicateProduct"><security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/catalog/ProductEvents.xml" invoke="catalogDuplicateProduct"/>
+    	<response name="success" type="view" value="EditProduct"/>
+    	<response name="error" type="view" value="EditProduct"/>
     </request-map>
 
     <request-map uri="EditProductCategories">
