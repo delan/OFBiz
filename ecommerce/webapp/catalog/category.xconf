@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>/templates/main_lr.html</template>
+    <property name="title">Category</property>
+
+    <generator name="jsp" />
+    <pageEditor>OfbizCategoryEditor</pageEditor>
+</page>
