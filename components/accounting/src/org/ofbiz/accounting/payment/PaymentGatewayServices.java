@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.33 2004/06/02 16:41:15 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.34 2004/06/25 23:23:33 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import org.ofbiz.security.Security;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.33 $
+ * @version    $Revision: 1.34 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -1461,7 +1461,7 @@ public class PaymentGatewayServices {
         if (paymentMethodTypeId.equals("CREDIT_CARD")) {
             GenericValue creditCard = delegator.makeValue("CreditCard", null);
             creditCard.setAllFields(context, true, null, null);
-            if (creditCard.get("nameOnCard") == null || creditCard.get("cardType") == null || creditCard.get("cardNumber") == null) {
+            if (creditCard.get("firstNameOnCard") == null || creditCard.get("lastNameOnCard") == null || creditCard.get("cardType") == null || creditCard.get("cardNumber") == null) {
                 return ServiceUtil.returnError("Credit card is missing required fields.");
             }
             String expMonth = (String) context.get("expMonth");

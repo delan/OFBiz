@@ -1,5 +1,5 @@
 /*
- * $Id: PayflowPro.java,v 1.1 2003/08/18 19:37:43 jonesde Exp $
+ * $Id: PayflowPro.java,v 1.2 2004/06/25 23:23:34 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import com.Verisign.payment.PFProAPI;
  * PayflowPro - Verisign PayFlow Pro <=> OFBiz Service Module
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class PayflowPro {
@@ -86,7 +86,7 @@ public class PayflowPro {
 
         // get the payment information
         data.put("ACCT", cc.getString("cardNumber"));
-        data.put("COMMENT2", cc.getString("nameOnCard"));
+        data.put("COMMENT2", cc.getString("firstNameOnCard") + " " + cc.getString("lastNameOnCard"));
         if (cc.get("expireDate") != null) {
             String exp = cc.getString("expireDate");
             String expDate = exp.substring(0, 2);

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  */
 -->
 
@@ -1375,7 +1375,8 @@
       <field name="cardType" type="short-varchar"></field>
       <field name="cardNumber" type="credit-card-number"></field>
       <field name="expireDate" type="credit-card-date"></field>
-      <field name="nameOnCard" type="name"></field>
+      <field name="firstNameOnCard" type="name"></field>
+      <field name="lastNameOnCard" type="name"></field>      
       <field name="companyNameOnCard" type="name"></field>
       <field name="contactMechId" type="id-ne"></field>
       <prim-key field="paymentMethodId"/>
