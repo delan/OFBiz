@@ -262,6 +262,7 @@
   <ProductAssocType description="Marketing Package Component" hasTable="N" parentTypeId="" productAssocTypeId="MARKETING_PACKAGE"/>
   <ProductAssocType description="Actual Product Component" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPONENT"/>
   <ProductAssocType description="Equivalent or Substitute" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_SUBSTITUTE"/>
+  <ProductAssocType description="Product Variant" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_VARIANT"/>
   <ProductCategoryType description="Catalog" hasTable="N" parentTypeId="" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategoryType description="Industry" hasTable="N" parentTypeId="" productCategoryTypeId="INDUSTRY_CATEGORY"/>
   <ProductCategoryType description="Materials" hasTable="N" parentTypeId="" productCategoryTypeId="MATERIALS_CATEGORY"/>
