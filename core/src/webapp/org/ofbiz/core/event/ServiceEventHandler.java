@@ -105,7 +105,11 @@ public class ServiceEventHandler implements EventHandler {
         Iterator ci = model.getInParamNames().iterator();
         while (ci.hasNext()) {
             String name = (String) ci.next();
-            String value = request.getParameter(name);
+            Object value = request.getParameter(name);
+            if (value == null)
+                value = request.getAttribute(name);
+            if (value == null)
+                value = request.getSession().getAttribute(name);
             if ( value != null )
                 serviceContext.put(name,value);
         }
