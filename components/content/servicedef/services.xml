@@ -874,6 +874,28 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
+    <!-- SurveyQuestionOption Services -->
+    <service name="createSurveyQuestionOption" default-entity-name="SurveyQuestionOption" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyQuestionOption">
+        <description>Create a SurveyQuestionOption</description>
+        <auto-attributes include="all" mode="IN" optional="true">
+            <exclude field-name="surveyOptionSeqId"/>
+        </auto-attributes>
+        <attribute name="surveyOptionSeqId" type="String" mode="OUT" optional="false"/>
+        <override name="surveyQuestionId" optional="false"/>
+    </service>
+    <service name="updateSurveyQuestionOption" default-entity-name="SurveyQuestionOption" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="updateSurveyQuestionOption">
+        <description>Update a SurveyQuestionOption</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteSurveyQuestion" default-entity-name="SurveyQuestionOption" auth="true" engine="simple"
+        location="org/ofbiz/content/survey/SurveyServices.xml" invoke="deleteSurveyQuestionOption">
+        <description>Delete SurveyQuestionOption</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
     <!-- SurveyQuestionAppl Services -->
     <service name="createSurveyQuestionAppl" default-entity-name="SurveyQuestionAppl" auth="true" engine="simple"
         location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyQuestionAppl">

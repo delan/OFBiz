@@ -128,6 +128,41 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
+    <!-- Methods for SurveyQuestionOption -->
+    <simple-method method-name="createSurveyQuestionOption" short-description="Create Survey Question Option">
+        <check-permission action="_CREATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run createSurveyQuestionOption you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="SurveyQuestionOption" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <make-next-seq-id value-name="newEntity" seq-field-name="surveyOptionSeqId"/>
+        <create-value value-name="newEntity"/>
+        <field-to-result field-name="surveyOptionSeqId" map-name="newEntity" result-name="surveyOptionSeqId"/>
+    </simple-method>
+    <simple-method method-name="updateSurveyQuestionOption" short-description="Update Survey Question Option">
+        <check-permission action="_UPDATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run updateSurveyQuestionOption you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="SurveyQuestionOption" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteSurveyQuestion" short-description="Delete Survey Question Option">
+        <check-permission action="_DELETE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run deleteSurveyQuestionOption you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="SurveyQuestionOption" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
     <!-- Methods for SurveyQuestionAppl -->
     <simple-method method-name="createSurveyQuestionAppl" short-description="Create Survey Question Application">
         <check-permission action="_CREATE" permission="CONTENTMGR">

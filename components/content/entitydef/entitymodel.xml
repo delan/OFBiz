@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  */
 -->
 
@@ -1027,6 +1027,9 @@
       <relation type="one" fk-name="SRVYQST_SRVYQTCT" rel-entity-name="SurveyQuestionCategory">
         <key-map field-name="surveyQuestionCategoryId"/>
       </relation>
+      <relation type="many" rel-entity-name="SurveyQuestionOption">
+        <key-map field-name="surveyQuestionId"/>
+      </relation>
     </entity>
     <view-entity entity-name="SurveyQuestionAndAppl"
             package-name="org.ofbiz.content.survey"
@@ -1055,6 +1058,9 @@
       </relation>
       <relation type="one-nofk" rel-entity-name="Survey">
         <key-map field-name="surveyId"/>
+      </relation>
+      <relation type="many" rel-entity-name="SurveyQuestionOption">
+        <key-map field-name="surveyQuestionId"/>
       </relation>
     </view-entity>
     <entity entity-name="SurveyQuestionAppl"
