@@ -41,9 +41,11 @@
   </simple-map-processor>
   <simple-map-processor name="deleteContactMech">
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mechanism ID is missing"/></not-empty></process>
+    <process field="partyId"><copy/></process>
   </simple-map-processor>
 
   <simple-map-processor name="postalAddress">
+    <process field="partyId"><copy/></process>
     <process field="toName"><copy/></process>
     <process field="attnName"><copy/></process>
     <process field="address1"><copy/><not-empty><fail-message message="Address Line 1 is missing"/></not-empty></process>
@@ -58,6 +60,7 @@
   </simple-map-processor>
 
   <simple-map-processor name="telecomNumber">
+    <process field="partyId"><copy/></process>
     <process field="countryCode"><copy/></process>
     <process field="areaCode"><copy/></process>
     <process field="contactNumber"><copy/><not-empty><fail-message message="Contact Number is missing"/></not-empty></process>
@@ -66,6 +69,7 @@
   </simple-map-processor>
 
   <simple-map-processor name="emailAddress">
+    <process field="partyId"><copy/></process>
     <process field="emailAddress">
         <copy/>
         <not-empty><fail-message message="Email Address is missing"/></not-empty>
