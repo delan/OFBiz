@@ -197,6 +197,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="manualTx"/>
     </request-map>
+    <request-map uri="processManualCcTx">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="manualForcedCcTransaction"/>
+        <response name="success" type="view" value="manualTx"/>
+    </request-map>
+
 
     <!-- end of request mappings -->
 
