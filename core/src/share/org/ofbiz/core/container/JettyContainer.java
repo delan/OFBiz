@@ -34,10 +34,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.mortbay.http.*;
+import org.mortbay.http.ajp.AJP13Listener;
 import org.mortbay.http.handler.ResourceHandler;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.*;
 import org.mortbay.util.MultiException;
+import org.mortbay.util.ThreadedServer;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.component.ComponentConfig;
@@ -114,30 +116,41 @@ public class JettyContainer implements Container {
             
             if ("default".equals(listenerConf.type)) {
                 SocketListener listener = new SocketListener();
-                if (listenerConf.host != null && listenerConf.host.length() > 0) {
-                    try {
-                        listener.setHost(listenerConf.host);
-                    } catch (UnknownHostException e) {
-                        throw new ContainerException(e);                       
-                    }
-                }
-                listener.setPort(listenerConf.port);
-                listener.setMinThreads(listenerConf.minThreads);
-                listener.setMaxThreads(listenerConf.maxThreads);
-                listener.setMaxIdleTimeMs(listenerConf.maxIdleTime);
+                setListenerOptions(listener, listenerConf);
                 server.addListener(listener);                                               
             } else if ("sun-jsse".equals(listenerConf.type)) {
-                throw new ContainerException("Listener not supported yet [" + listenerConf.type + "]");
+                SunJsseListener listener = new SunJsseListener();
+                setListenerOptions(listener, listenerConf);
+                listener.setKeystore(listenerConf.keystore);
+                listener.setPassword(listenerConf.password);
+                listener.setKeyPassword(listenerConf.keyPassword);
+                server.addListener(listener);
             } else if ("ibm-jsse".equals(listenerConf.type)) {
                 throw new ContainerException("Listener not supported yet [" + listenerConf.type + "]");
             } else if ("nio".equals(listenerConf.type)) {
                 throw new ContainerException("Listener not supported yet [" + listenerConf.type + "]");
             } else if ("ajp13".equals(listenerConf.type)) {
-                throw new ContainerException("Listener not supported yet [" + listenerConf.type + "]");
+                AJP13Listener listener = new AJP13Listener();
+                setListenerOptions(listener, listenerConf);
+                server.addListener(listener);                
             }                       
         }
         return server;
-    }    
+    }  
+    
+    private void setListenerOptions(ThreadedServer listener, ContainerConfig.WebContainer.Server.Listener listenerConf) throws ContainerException {
+        if (listenerConf.host != null && listenerConf.host.length() > 0) {
+            try {
+                listener.setHost(listenerConf.host);
+            } catch (UnknownHostException e) {
+                throw new ContainerException(e);                       
+            }
+        }
+        listener.setPort(listenerConf.port);
+        listener.setMinThreads(listenerConf.minThreads);
+        listener.setMaxThreads(listenerConf.maxThreads);
+        listener.setMaxIdleTimeMs(listenerConf.maxIdleTime);            
+    }  
     
     /**
      * @see org.ofbiz.core.start.StartupContainer#start(java.lang.String)
