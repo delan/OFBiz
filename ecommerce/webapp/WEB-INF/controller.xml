@@ -71,6 +71,12 @@
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
+    
+    <request-map uri="authview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
 
     <request-map uri="main">
         <response name="success" type="view" value="main"/>
