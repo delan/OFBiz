@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.29 2004/05/11 12:40:14 jonesde Exp $
+ * $Id: CheckOutEvents.java,v 1.30 2004/05/18 03:29:37 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -341,7 +341,7 @@ public class CheckOutEvents {
 
         // get the product store
         GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
-        if (productStore != null && "N".equalsIgnoreCase(productStore.getString("checkGcBalance"))) {
+        if (productStore != null && !"Y".equalsIgnoreCase(productStore.getString("checkGcBalance"))) {
             return;
         }
 
