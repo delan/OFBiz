@@ -2592,7 +2592,9 @@
       <field name="companyName" type="name"></field>
       <field name="title" type="name"></field>
       <field name="subtitle" type="description"></field>
-      <field name="payToPartyId" type="id"></field>
+      <field name="payToPartyId" type="id">
+          <!-- Note that this corresponds with the organizationPartyId that GL transactions will be posted to. -->
+      </field>
       <field name="daysToCancelNonPay" type="numeric"></field>
       <field name="manualAuthIsCapture" type="indicator"></field>
       <field name="prorateShipping" type="indicator"></field>

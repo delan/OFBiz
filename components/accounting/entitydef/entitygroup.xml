@@ -71,6 +71,7 @@
     <entity-group group="org.ofbiz" entity="InvoiceItemAttribute" />
     <entity-group group="org.ofbiz" entity="InvoiceItemType" />
     <entity-group group="org.ofbiz" entity="InvoiceItemTypeAttr" />
+    <entity-group group="org.ofbiz" entity="InvoiceItemTypeGlAccount" />
     <entity-group group="org.ofbiz" entity="InvoiceItemTypeMap" />
     <entity-group group="org.ofbiz" entity="InvoiceRole" />
     <entity-group group="org.ofbiz" entity="InvoiceStatus" />
@@ -137,6 +138,7 @@
     <entity-group group="org.ofbiz" entity="PaymentBudgetAllocation" />
     <entity-group group="org.ofbiz" entity="PaymentMethod" />
     <entity-group group="org.ofbiz" entity="PaymentMethodType" />
+    <entity-group group="org.ofbiz" entity="PaymentMethodTypeGlAccount" />
     <entity-group group="org.ofbiz" entity="PaymentType" />
     <entity-group group="org.ofbiz" entity="PaymentTypeAttr" />
     <entity-group group="org.ofbiz" entity="PaymentGatewayRespMsg" />
