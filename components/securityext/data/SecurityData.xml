@@ -2,6 +2,8 @@
 <entity-engine-xml>
   <Party partyId="_NA_" partyTypeId="PERSON"/>
   <Person partyId="_NA_"/>
+  <PartyRole partyId="_NA_" roleTypeId="CARRIER"/>
+  <PartyRole partyId="_NA_" roleTypeId="_NA_"/>
 
   <Party partyId="admin" partyTypeId="PERSON"/>
   <Person firstName="THE" lastName="ADMINISTRATOR" middleName="PRIVILEGED" partyId="admin" personalTitle="Mr."/>
@@ -10,6 +12,7 @@
   <PartyRole partyId="admin" roleTypeId="ORDER_CLERK"/>
   <PartyRole partyId="admin" roleTypeId="SHIPMENT_CLERK"/>
   <PartyRole partyId="admin" roleTypeId="SALES_REP"/>
+  <PartyRole partyId="admin" roleTypeId="_NA_"/>
   <ContactMech contactMechId="5000" contactMechTypeId="EMAIL_ADDRESS" infoString="ofbiztest@yahoo.com"/>
   <PartyContactMech partyId="admin" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
 
@@ -17,6 +20,7 @@
   <Person firstName="Limited" lastName="Administrator" middleName="" partyId="ltdadmin" personalTitle="Mr."/>
   <PartyRole partyId="ltdadmin" roleTypeId="ORDER_CLERK"/>
   <PartyRole partyId="ltdadmin" roleTypeId="LTD_ADMIN"/>
+  <PartyRole partyId="ltdadmin" roleTypeId="_NA_"/>
   <PartyContactMech partyId="ltdadmin" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
 
   <Party partyId="externaluser" partyTypeId="PERSON"/>
