@@ -227,7 +227,27 @@ public class HttpClient {
         StringBuffer buf = new StringBuffer();
 
         try {
-            BufferedReader post = new BufferedReader(new InputStreamReader(in));
+            if (Debug.verboseOn()) Debug.logVerbose("ContentEncoding: " + con.getContentEncoding() + "; ContentType: " + con.getContentType() + " or: " + con.guessContentTypeFromStream(in));
+            
+            String charset = null;
+            String contentType = con.getContentType();
+            if (contentType == null) contentType = con.guessContentTypeFromStream(in);
+            
+            if (contentType != null) {
+                contentType = contentType.toUpperCase();
+                int charsetEqualsLoc = contentType.indexOf("=", contentType.indexOf("CHARSET"));
+                int afterSemiColon = contentType.indexOf(";", charsetEqualsLoc);
+                if (afterSemiColon >= 0) {
+                    charset = contentType.substring(charsetEqualsLoc + 1, afterSemiColon);
+                } else {
+                    charset = contentType.substring(charsetEqualsLoc + 1);
+                }
+                
+                if (charset != null) charset = charset.trim();
+                if (Debug.infoOn()) Debug.logInfo("Getting text from HttpClient with charset: " + charset);
+            }
+            
+            BufferedReader post = new BufferedReader(charset == null ? new InputStreamReader(in) : new InputStreamReader(in, charset));
             String line = new String();
 
             while ((line = post.readLine()) != null) {
