@@ -48,7 +48,7 @@
           <td width='100%'>
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
-                <td align="center" valign="center" width='100%'>
+                <td align="center" valign="middle" width='100%'>
                   <form method="POST" action="<@ofbizUrl>/login${previousParams?if_exists}</@ofbizUrl>" name="loginform" style='margin: 0;'>
                     <table width='100%' border='0' cellpadding='0' cellspacing='2'>
                       <tr>
