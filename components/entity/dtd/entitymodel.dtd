@@ -46,6 +46,7 @@
 	entity-name CDATA #REQUIRED
 	table-name CDATA #IMPLIED
 	package-name CDATA #REQUIRED
+	default-resource-name CDATA #IMPLIED
 	dependent-on CDATA #IMPLIED
 	enable-lock ( true | false ) "false"
 	never-cache ( true | false ) "false"
@@ -95,6 +96,7 @@
 	entity-name CDATA #REQUIRED
 	package-name CDATA #REQUIRED
 	dependent-on CDATA #IMPLIED
+	default-resource-name CDATA #IMPLIED
 	never-cache ( true | false ) "false"
 	title CDATA #IMPLIED
 	copyright CDATA #IMPLIED
