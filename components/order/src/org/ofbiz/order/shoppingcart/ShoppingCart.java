@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.53 2004/07/21 13:35:01 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.54 2004/07/22 00:03:46 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.53 $
+ * @version    $Revision: 1.54 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -630,6 +630,13 @@ public class ShoppingCart implements Serializable {
             }
         }
         return total;
+    }
+
+    public int selectedPayments() {
+        int payments = 0;
+        payments += paymentMethodTypeAmounts.size();
+        payments += paymentMethodAmounts.size();
+        return payments;
     }
 
     public boolean isPaymentSelected(String id) {
