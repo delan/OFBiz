@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.14 2004/01/18 11:36:28 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.15 2004/01/20 17:10:49 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -559,7 +559,9 @@ public class GenericDelegator implements DelegatorInterface {
         } else {
             this.create(value, doCacheClear);
         }
-        this.refresh(value);
+        if (value.lockEnabled()) {
+            this.refresh(value);
+        }
         return value;
     }
 
@@ -1101,12 +1103,12 @@ public class GenericDelegator implements DelegatorInterface {
         if (dummyPK.getModelEntity().getNoAutoStamp()) {
             return;
         }
-        
+
         // don't store remove info on things removed on an entity sync
         if (dummyPK.getIsFromEntitySync()) {
             return;
         }
-        
+
         String serializedPK = null;
         try {
             serializedPK = XmlSerializer.serialize(dummyPK);
@@ -1117,7 +1119,7 @@ public class GenericDelegator implements DelegatorInterface {
         } catch (IOException e) {
             Debug.logError(e, "Could not serialize primary key to save EntitySyncRemove", module);
         }
-        
+
         if (serializedPK != null) {
             GenericValue entitySyncRemove = this.makeValue("EntitySyncRemove", null);
             entitySyncRemove.set("entitySyncRemoveId", this.getNextSeqId("EntitySyncRemove"));
@@ -1125,7 +1127,7 @@ public class GenericDelegator implements DelegatorInterface {
             entitySyncRemove.create();
         }
     }
-    
+
     /** Remove a Generic Entity corresponding to the primaryKey
      *@param primaryKey  The primary key of the entity to remove.
      *@return int representing number of rows effected by this operation
@@ -1155,7 +1157,7 @@ public class GenericDelegator implements DelegatorInterface {
         this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
         int num = helper.removeByPrimaryKey(primaryKey);
         this.saveEntitySyncRemoveInfo(primaryKey);
-        
+
         this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
         return num;
     }
@@ -1187,7 +1189,7 @@ public class GenericDelegator implements DelegatorInterface {
         this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
         int num = helper.removeByPrimaryKey(value.getPrimaryKey());
         this.saveEntitySyncRemoveInfo(value.getPrimaryKey());
-        
+
         this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
         return num;
     }
@@ -1226,7 +1228,7 @@ public class GenericDelegator implements DelegatorInterface {
         this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
         int num = helper.removeByAnd(modelEntity, dummyPK.getAllFields());
         this.saveEntitySyncRemoveInfo(dummyPK);
-        
+
         this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
         return num;
     }
@@ -1690,10 +1692,10 @@ public class GenericDelegator implements DelegatorInterface {
                 if (doCacheClear) {
                     this.clearAllCacheLinesByDummyPK((List) curEntry.getValue());
                 }
-                
+
                 List helperDummyPKs = (List) curEntry.getValue();
                 numRemoved += helper.removeAll(helperDummyPKs);
-                
+
                 // TODO: iterate through and store fact that it was removed
                 Iterator helperDummyPKIter = helperDummyPKs.iterator();
                 while (helperDummyPKIter.hasNext()) {
@@ -2194,11 +2196,11 @@ public class GenericDelegator implements DelegatorInterface {
     public Long getNextSeqId(String seqName) {
         return this.getNextSeqId(seqName, 1);
     }
-    
+
     /** Get the next guaranteed unique seq id from the sequence with the given sequence name;
      * if the named sequence doesn't exist, it will be created
      *@param seqName The name of the sequence to get the next seq id from
-     *@param staggerMax The maximum amount to stagger the sequenced ID, if 1 the sequence will be incremented by 1, otherwise the current sequence ID will be incremented by a value between 1 and staggerMax 
+     *@param staggerMax The maximum amount to stagger the sequenced ID, if 1 the sequence will be incremented by 1, otherwise the current sequence ID will be incremented by a value between 1 and staggerMax
      *@return Long with the next seq id for the given sequence name
      */
     public Long getNextSeqId(String seqName, long staggerMax) {
