@@ -12,6 +12,7 @@
 <%}%>
 <%-- get these for the promoText --%>
 <%pageContext.setAttribute("productPromos", ProductPromoWorker.getCatalogProductPromos(delegator, request));%>
+<%String contentPathPrefix = CatalogWorker.getContentPathPrefix(pageContext);%>
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
