@@ -87,6 +87,11 @@
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
+    <request-map uri="setSessionLocale">
+        <event type="java" path="org.ofbiz.base.util.UtilHttp" invoke="setSessionLocale"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
 
     <request-map uri="keywordsearch"><security https="true" auth="true"/>
         <response name="success" type="view" value="keywordsearch"/>

@@ -20,27 +20,29 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine Heintz (catherine.heintz@nereide.biz)
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
-<div class="head1">Create Product in Category <span class="head2"><#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [ID:${productCategoryId?if_exists}]</span></div>
+<div class="head1">${uiLabelMap.ProductCreateProductInCategory }<span class="head2"><#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [ID:${productCategoryId?if_exists}]</span></div>
 <#if productCategoryId?has_content>
-    <a href="<@ofbizUrl>/EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[Back to Edit Category]</a>
+    <a href="<@ofbizUrl>/EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[uiLabelMap.ProductBackToEditCategory}]</a>
 </#if>
 
 <div class="head1">
-    Checking for existing product in category <#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [ID:${productCategoryId?if_exists}]
+    ${uiLabelMap.ProductCheckingForExistingProductInCategory} <#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [ID:${productCategoryId?if_exists}]
 
     <#if productFeatureAndTypeDatas?has_content>
-        where 
+       ${uiLabelMap.CommonWhere }
         <#list productFeatureAndTypeDatas as productFeatureAndTypeData>
             <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
             <#assign productFeature = productFeatureAndTypeData.productFeature>
             ${productFeatureType.description} = ${productFeature.description}
-            <#if productFeatureAndTypeData_has_next>, and </#if>
+            <#if productFeatureAndTypeData_has_next>,${uiLabelMap.CommonAnd} </#if>
         </#list>
     </#if>
 </div>
@@ -50,17 +52,17 @@
     <#list products as product>
         <tr>
             <td><div class="tabletext">${product.productName?default("-no name-")} [${product.productId}]</div></td>
-            <td width="10%"><a href="<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">[This is it]</a></td>
+            <td width="10%"><a href="<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductThisIsIt}]</a></td>
         </tr>
     </#list>
     </table>
 <#else>
-    <div class="head3">&nbsp;No existing products found.</div>
+    <div class="head3">&nbsp;${uiLabelMap.ProductNoExistingProductsFound}.</div>
 </#if>
 
 <hr class="sepbar"/>
 
-<form name="createProductInCategoryForm" method="POST" action="<@ofbizUrl>/createProductInCategory</@ofbizUrl>" style="margin: 0;">
+<form name="createProductInCategoryForm" method="POST" action="<@ofbizUrl>/ProductCreateProductInCategory</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="productCategoryId" value="${productCategoryId}">
     <table width="100%" cellpadding="1" cellspacing="0" border="1">
         <#list productFeatureAndTypeDatas?if_exists as productFeatureAndTypeData>
@@ -77,38 +79,38 @@
                         ${productFeature.description}
                         <#if requestParameters["pftsel_" + productFeatureTypeId]?exists>
                             <input type="hidden" name="pftsel_${productFeatureTypeId}" value="Y"/>
-                            [Selectable]
+                            [${uiLabelMap.ProductSelectable}]
                         <#else>
                             <input type="hidden" name="pftsel_${productFeatureTypeId}" value="N"/>
-                            [Standard]
+                            [${uiLabelMap.ProductStandard}]
                         </#if>
                     </div>
                 </td>
             </tr>
         </#list>
         <tr>
-            <td width="15%"><div class="tabletext">Product Name:</div></td>
+            <td width="15%"><div class="tabletext">${uiLabelMap.ProductProductName}:</div></td>
             <td>
                 <input type="hidden" name="productName" value="${requestParameters.productName?if_exists}"/>
                 <div class="tabletext">&nbsp;${requestParameters.productName?default("&nbsp;")}</div>
             </td>
         </tr>
         <tr>
-            <td width="15%"><div class="tabletext">Short Description:</div></td>
+            <td width="15%"><div class="tabletext">${uiLabelMap.ProductShortDescription}:</div></td>
             <td>
                 <input type="hidden" name="description" value="${requestParameters.description?if_exists}"/>
                 <div class="tabletext">&nbsp;${requestParameters.description?default("&nbsp;")}</div>
             </td>
         </tr>
         <tr>
-            <td width="15%"><div class="tabletext">Default Price:</div></td>
+            <td width="15%"><div class="tabletext">${uiLabelMap.ProductDefaultPrice}:</div></td>
             <td>
                 <input type="hidden" name="defaultPrice" value="${requestParameters.defaultPrice?if_exists}"/>
                 <div class="tabletext">&nbsp;${requestParameters.defaultPrice?default("&nbsp;")}</div>
             </td>
         </tr>
         <tr>
-            <td width="15%"><div class="tabletext">Average Cost:</div></td>
+            <td width="15%"><div class="tabletext">${uiLabelMap.ProductAverageCost}:</div></td>
             <td>
                 <input type="hidden" name="averageCost" value="${requestParameters.averageCost?if_exists}"/>
                 <div class="tabletext">&nbsp;${requestParameters.averageCost?default("&nbsp;")}</div>
@@ -117,8 +119,8 @@
         <tr>
             <td colspan="3">
                 <div class="tabletext">
-                    New Product ID: <input type="text" name="productId" value="" class="inputBox"/>
-                    <input type="submit" value="Create New Product" class="standardSubmit"/>
+                    ${uiLabelMap.ProductNewProductId}: <input type="text" name="productId" value="" class="inputBox"/>
+                    <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="standardSubmit"/>
                 </div>
             </td>
         </tr>
@@ -126,5 +128,5 @@
 </form>
   
 <#else>
-    <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+    <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
@@ -70,7 +70,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
             <input type=text size="25" name="thruDate" value="${productCategoryRollup.thruDate?if_exists}" class="inputBox" <#if hasExpired>style="color: red"</#if>>
             <a href="javascript:call_cal(document.lineParentForm${lineParent}.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <input type=text size="5" name="sequenceNum" value="${productCategoryRollup.sequenceNum?if_exists}" class="inputBox">
-            <input type=submit value="Update" style="font-size: x-small;">
+            <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
         </form>
       </td>
       <td>
@@ -100,7 +100,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
     </select>
   <input type=text size="25" name="fromDate" class="inputBox">
   <a href="javascript:call_cal(document.addParentForm.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-  <input type="submit" value="Add">
+  <input type="submit" value="${uiLabelMap.CommonAdd}">
 </form>
 <br>
 <hr>
@@ -136,7 +136,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
             <input type=text size="25" name="thruDate" value="${productCategoryRollup.thruDate?if_exists}" class="inputBox" <#if hasExpired>style="color: red;"</#if>>
             <a href="javascript:call_cal(document.lineChildForm${lineChild}.thruDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <input type=text size="5" name="sequenceNum" value="${productCategoryRollup.sequenceNum?if_exists}" class="inputBox">
-            <input type=submit value="Update" style="font-size: x-small;">
+            <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
         </form>
       </td>
       <td>
@@ -167,7 +167,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
     </select>
   <input type=text size="25" name="fromDate" class="inputBox">
   <a href="javascript:call_cal(document.addChildForm.fromDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-  <input type="submit" value="Add">
+  <input type="submit" value="${uiLabelMap.CommonAdd}">
 </form>
 </#if>
 

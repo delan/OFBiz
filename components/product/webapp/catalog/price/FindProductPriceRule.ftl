@@ -21,29 +21,30 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski
- *@version    $Revision: 1.2 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if hasPermission>
 
-<div class="head1">Global Price Rules</div>
-<a href="<@ofbizUrl>/EditProductPriceRules</@ofbizUrl>" class="buttontext">[Create Rule]</a>
+<div class="head1">${uiLabelMap.ProductGlobalPriceRules}</div>
+<a href="<@ofbizUrl>/EditProductPriceRules</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateRule}]</a>
 <#if activeOnly>
-    <a href="<@ofbizUrl>/FindProductPriceRules?activeOnly=false</@ofbizUrl>" class="buttontext">[Active and Inactive]</a>
+    <a href="<@ofbizUrl>/FindProductPriceRules?activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveAndInactive}]</a>
 <#else>
-    <a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="buttontext">[Active Only]</a>
+    <a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
 </#if>
 <br>
 <br>
 <#if productPriceRules?has_content>
   <table border="1" cellpadding="2" cellspacing="0">
     <tr>
-      <td><div class="tabletext"><b>Price&nbsp;Rule&nbsp;Name&nbsp;[ID]</b></div></td>
-      <td><div class="tabletext"><b>Sale&nbsp;Rule?</b></div></td>
-      <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
-      <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
+      <td><div class="tabletext"><b>${uiLabelMap.ProductPriceRuleNameId}</b></div></td>
+      <td><div class="tabletext"><b>${uiLabelMap.ProductSaleRule}?</b></div></td>
+      <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
+      <td><div class="tabletext"><b>${uiLabelMap.CommonThruDate}</b></div></td>
       <td><div class="tabletext">&nbsp;</div></td>
     </tr>
     <#list productPriceRules as rule>
@@ -65,15 +66,15 @@
         </div>
       </td>
       <td align="center">
-        <a href="<@ofbizUrl>/EditProductPriceRules?productPriceRuleId=${rule.productPriceRuleId}</@ofbizUrl>" class="buttontext">[Edit]</a>
+        <a href="<@ofbizUrl>/EditProductPriceRules?productPriceRuleId=${rule.productPriceRuleId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
       </td>
     </tr>
     </#list>
   </table>
 <#else>
-    <h3>No price rules found.</h3>
+    <h3>${uiLabelMap.ProductNoPriceRulesFound}.</h3>
 </#if>
 
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

@@ -21,22 +21,24 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski
- *@version    $Revision: 1.3 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if hasPermission>
 
-<div class="head1">Global Price Rule</div>
-<a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="buttontext">[Find Rule]</a>
+<div class="head1">${uiLabelMap.ProductGlobalPriceRule}</div>
+<a href="<@ofbizUrl>/FindProductPriceRules</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductFindRule}]</a>
 
 <br>
 <br>
 
 <table border="1" width="100%" cellpadding="2" cellspacing="0">
   <tr>
-    <td width="10%"><div class="tabletext"><b>Rule ID</b></div></td>
-    <td width="80%"><div class="tabletext"><b>Rule Name, From-Date, Thru-Date</b></div></td>
+    <td width="10%"><div class="tabletext"><b>${uiLabelMap.ProductRuleId}</b></div></td>
+    <td width="80%"><div class="tabletext"><b>${uiLabelMap.ProductRuleNameFromDateThruDate}</b></div></td>
     <td width="10%"><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 
@@ -53,25 +55,27 @@
             <input type=text size="22" name="thruDate" value="${productPriceRule.thruDate?if_exists}" class="inputBox">
             &nbsp;&nbsp;
             <#assign saleRule = productPriceRule.isSale?exists && productPriceRule.isSale == "Y">
-            <span class="tabletext"><b>Sale Price:</b>&nbsp;<input type=RADIO class="radioButton" name="isSale" value="Y" <#if saleRule>CHECKED</#if>>Yes&nbsp;<input type=RADIO name="isSale" value="N" <#if !saleRule>CHECKED</#if>>No</span>
+            <span class="tabletext"><b>${uiLabelMap.ProductSalePrice}:</b>&nbsp;
+            <input type=RADIO class="radioButton" name="isSale" value="Y" <#if saleRule>${uiLabelMap.CommonChecked}</#if>>${uiLabelMap.CommonYes}&nbsp;
+            <input type=RADIO name="isSale" value="N" <#if !saleRule>${uiLabelMap.CommonChecked}</#if>>${uiLabelMap.CommonNo}</span>
             &nbsp;&nbsp;
-            <INPUT type=submit value="Update" style="font-size: x-small;">
+            <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
         </FORM>
     </td>
     <td align="center">&nbsp;
       <#if !productPriceConds?has_content && !productPriceActions?has_content>
           <a href="<@ofbizUrl>/deleteProductPriceRule?productPriceRuleId=${productPriceRule.productPriceRuleId}</@ofbizUrl>" class="buttontext">
-          [Delete]</a>
+          [${uiLabelMap.CommonDelete}]</a>
       </#if>
     </td>
   </tr>
   <tr valign="top">
-    <td align="right"><div class="tabletext">Conditions:</div></td>
+    <td align="right"><div class="tabletext">${uiLabelMap.ProductConditions}:</div></td>
     <td align="left" colspan="2">
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
           <tr>
-            <td width="5%"><div class="tabletext"><b>SeqId</b></div></td>
-            <td width="85%"><div class="tabletext"><b>Input,&nbsp;Operator&nbsp;&amp;&nbsp;Value</b></div></td>
+            <td width="5%"><div class="tabletext"><b>${uiLabelMap.ProductSeqId}</b></div></td>
+            <td width="85%"><div class="tabletext"><b>${uiLabelMap.ProductInputOperatorValue}</b></div></td>
             <td width="10%"><div class="tabletext"><b>&nbsp;</b></div></td>
           </tr>
           <#assign maxCondSeqId = 1>
@@ -110,12 +114,12 @@
                             </#list>
                         </select>
                         <input type=text size="20" name="condValue" value="${productPriceCond.condValue?if_exists}" class="inputBox">
-                        <INPUT type=submit value="Update" style="font-size: x-small;">
+                        <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                     </FORM>
                 </td>
                 <td align="center">
                   <a href="<@ofbizUrl>/deleteProductPriceCond?productPriceRuleId=${productPriceCond.productPriceRuleId}&productPriceCondSeqId=${productPriceCond.productPriceCondSeqId}</@ofbizUrl>" class="buttontext">
-                  [Delete]</a>
+                  [${uiLabelMap.CommonDelete}]</a>
                 </td>
               </tr>
           </#list>
@@ -123,7 +127,7 @@
             <td align="left" colspan="3">
                 <FORM method=POST action="<@ofbizUrl>/createProductPriceCond</@ofbizUrl>">
                     <input type=hidden name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
-                    <span class="tabletext"><b>New:</b>&nbsp;</span>
+                    <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                     <input type=text size="5" name="productPriceCondSeqId" class="inputBox" value="${maxCondSeqId}">
                     <select name="inputParamEnumId" size="1" class="selectBox">
                     	<#list inputParamEnums as inputParamEnum>
@@ -136,7 +140,7 @@
                         </#list>
                     </select>
                     <input type=text size="20" name="condValue" class="inputBox">
-                    <INPUT type=submit value="Create" style="font-size: x-small;">
+                    <INPUT type="submit" value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                 </FORM>
             </td>
           </tr>
@@ -144,12 +148,12 @@
     </td>
   </tr>
   <tr valign="top">
-    <td align="right"><div class="tabletext">Actions:</div></td>
+    <td align="right"><div class="tabletext">${uiLabelMap.ProductActions}:</div></td>
     <td align="left" colspan="2">
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
           <tr>
-            <td width="5%"><div class="tabletext"><b>SeqId</b></div></td>
-            <td width="85%"><div class="tabletext"><b>ActionType,&nbsp;Amount</b></div></td>
+            <td width="5%"><div class="tabletext"><b>${uiLabelMap.ProductSeqId}</b></div></td>
+            <td width="85%"><div class="tabletext"><b>${uiLabelMap.ProductActionTypeAmount}</b></div></td>
             <td width="10%"><div class="tabletext"><b>&nbsp;</b></div></td>
           </tr>
           <#assign maxActionSeqId = 1>
@@ -176,12 +180,12 @@
                             </#list>
                         </select>
                         <input type=text size="8" name="amount" value="${productPriceAction.amount?if_exists}" class="inputBox">
-                        <INPUT type=submit value="Update" style="font-size: x-small;">
+                        <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                     </FORM>
                 </td>
                 <td align="center">
                   <a href="<@ofbizUrl>/deleteProductPriceAction?productPriceRuleId=${productPriceAction.productPriceRuleId}&productPriceActionSeqId=${productPriceAction.productPriceActionSeqId}</@ofbizUrl>" class="buttontext">
-                  [Delete]</a>
+                  [${uiLabelMap.CommonDelete}]</a>
                 </td>
               </tr>
           </#list>
@@ -189,7 +193,7 @@
             <td align="left" colspan="3">
                 <FORM method=POST action="<@ofbizUrl>/createProductPriceAction</@ofbizUrl>">
                     <input type=hidden name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}">
-                    <span class="tabletext"><b>New:</b>&nbsp;</span>
+                    <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                     <input type=text size="5" name="productPriceActionSeqId" value="${maxActionSeqId}" class="inputBox">
                     <select name="productPriceActionTypeId" size="1" class="selectBox">
                     	<#list productPriceActionTypes as productPriceActionType>
@@ -197,7 +201,7 @@
                         </#list>
                     </select>
                     <input type=text size="8" name="amount" class="inputBox">
-                    <INPUT type=submit value="Create" style="font-size: x-small;">
+                    <INPUT type="submit" value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                 </FORM>
             </td>
           </tr>
@@ -210,15 +214,15 @@
 <br>
 
 <form method="POST" action="<@ofbizUrl>/createProductPriceRule</@ofbizUrl>" style="margin: 0;">
-  <div class="head2">Add Price Rule:</div>
+  <div class="head2">${uiLabelMap.ProductAddPriceRule}:</div>
   <br>
-  ID: <input type=text size="20" class="inputBox" name="productPriceRuleId">
-  Name: <input type=text size="30" class="inputBox" name="ruleName">
-  <input type="submit" class="smallSubmit" value="Add">
+  ${uiLabelMap.CommonId}: <input type=text size="20" class="inputBox" name="productPriceRuleId">
+  ${uiLabelMap.ProductName}: <input type=text size="30" class="inputBox" name="ruleName">
+  <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}">
 </form>
 
 <br>
 
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

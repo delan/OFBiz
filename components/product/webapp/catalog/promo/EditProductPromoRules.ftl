@@ -21,22 +21,23 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.3 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 ${pages.get("/promo/PromoTabBar.ftl")}
     
-    <div class="head1">Rules <span class="head2">for <#if productPromo?exists>${(productPromo.promoName)?if_exists}</#if> [ID:${productPromoId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditProductPromo</@ofbizUrl>" class="buttontext">[New ProductPromo]</a>
+    <div class="head1">${uiLabelMap.ProductRules} <span class="head2">${uiLabelMap.CommonFor} <#if productPromo?exists>${(productPromo.promoName)?if_exists}</#if> [${uiLabelMap.CommonId}:${productPromoId?if_exists}]</span></div>
+    <a href="<@ofbizUrl>/EditProductPromo</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProductPromo}]</a>
     <br>
     <br>
     <#if productPromoId?exists && productPromo?exists>        
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
-            <td width="10%"><div class="tabletext"><b>Rule ID</b></div></td>
-            <td width="80%"><div class="tabletext"><b>Rule Name</b></div></td>
+            <td width="10%"><div class="tabletext"><b>${uiLabelMap.ProductRuleId}</b></div></td>
+            <td width="80%"><div class="tabletext"><b>${uiLabelMap.ProductRuleName}</b></div></td>
             <td width="10%"><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
         <#list productPromoRules as productPromoRule>
@@ -49,25 +50,25 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                     <input type=hidden name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
                     <input type=hidden name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
                     <input type=text size="30" name="ruleName" value="${(productPromoRule.ruleName)?if_exists}" class="inputBox">
-                    <INPUT type=submit value="Update" style="font-size: x-small;">
+                    <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                 </FORM>
             </td>
             <td align="center">&nbsp;
             <#if (productPromoConds.size() != 0)>
                 <#if (productPromoActions.size() != 0)>
                     <a href="<@ofbizUrl>/deleteProductPromoRule?productPromoId=${(productPromoRule.productPromoId)?if_exists}&productPromoRuleId=${(productPromoRule.productPromoRuleId)?if_exists}</@ofbizUrl>" class="buttontext">
-                    [Delete]</a>
+                    [${uiLabelMap.CommonDelete}]</a>
                 </#if>
             </#if>
             </td>
         </tr>
         <tr valign="top">
-            <td align="right"><div class="tabletext">Conditions:</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductConditions}:</div></td>
             <td align="left" colspan="2">
                 <table border="1" width="100%" cellpadding="2" cellspacing="0">
                 <tr>
-                    <td width="5%"><div class="tabletext"><b>SeqId</b></div></td>
-                    <td width="85%"><div class="tabletext"><b>Input,&nbsp;Operator&nbsp;&amp;&nbsp;Value</b></div></td>
+                    <td width="5%"><div class="tabletext"><b>S${uiLabelMap.ProductSeqId}</b></div></td>
+                    <td width="85%"><div class="tabletext"><b>${uiLabelMap.ProductInputOperatorValue}</b></div></td>
                     <td width="10%"><div class="tabletext"><b>&nbsp;</b></div></td>
                 </tr>
                 <#assign maxCondSeqId = 1>
@@ -111,12 +112,12 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                     </#list>
                                 </select>
                                 <input type=text size="30" name="condValue" value="${(productPromoCond.condValue)?if_exists}" class="inputBox">
-                                <INPUT type=submit value="Update" style="font-size: x-small;">
+                                <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                             </FORM>
                         </td>
                         <td align="center">
                         <a href="<@ofbizUrl>/deleteProductPromoCond?productPromoId=${(productPromoCond.productPromoId)?if_exists}&productPromoRuleId=${(productPromoCond.productPromoRuleId)?if_exists}&productPromoCondSeqId=${(productPromoCond.productPromoCondSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
-                        [Delete]</a>
+                        [${uiLabelMap.CommonDelete}]</a>
                         </td>
                     </tr>
                 </#list>
@@ -125,7 +126,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                         <FORM method=POST action="<@ofbizUrl>/createProductPromoCond</@ofbizUrl>">
                             <input type=hidden name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
                             <input type=hidden name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
-                            <span class="tabletext"><b>New:</b>&nbsp;</span>
+                            <span class="tabletext"><b>${uiLabelMap.CommonNew} :</b>&nbsp;</span>
                             <input type=text size="5" name="productPromoCondSeqId" value="${maxCondSeqId}" class="inputBox">
                             <select name="inputParamEnumId" size=1 class="selectBox">
                                 <#list inputParamEnums as inputParamEnum>
@@ -138,7 +139,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                 </#list>
                             </select>
                             <input type=text size="30" name="condValue" class="inputBox">
-                            <INPUT type=submit value="Create" style="font-size: x-small;">
+                            <INPUT type=submit value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                         </FORM>
                     </td>
                 </tr>
@@ -146,12 +147,12 @@ ${pages.get("/promo/PromoTabBar.ftl")}
             </td>
         </tr>
         <tr valign="top">
-            <td align="right"><div class="tabletext">Actions:</div></td>
+            <td align="right"><div class="tabletext">${uiLabelMap.ProductActions} :</div></td>
             <td align="left" colspan="2">
                 <table border="1" width="100%" cellpadding="2" cellspacing="0">
                 <tr>
-                    <td width="5%"><div class="tabletext"><b>SeqId</b></div></td>
-                    <td width="85%"><div class="tabletext"><b>ActionType,&nbsp;OrderAdjustmentType,&nbsp;Quantity,&nbsp;Item&nbsp;ID,&nbsp;Party&nbsp;ID&nbsp;&amp;&nbsp;Limit</b></div></td>
+                    <td width="5%"><div class="tabletext"><b>${uiLabelMap.ProductSeqId}</b></div></td>
+                    <td width="85%"><div class="tabletext"><b>${uiLabelMap.ProductActionTypeOrderAdjustmentTypeQuantityItemPartyLimit}</b></div></td>
                     <td width="10%"><div class="tabletext"><b>&nbsp;</b></div></td>
                 </tr>
                 <#assign maxActionSeqId = 1>
@@ -198,12 +199,12 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                 <input type=text size="15" name="productId" value="${(productPromoAction.productId)?if_exists}" class="inputBox">
                                 <input type=text size="10" name="partyId" value="${(productPromoAction.partyId)?if_exists}" class="inputBox">
                                 <input type=text size="4" name="actionLimit" value="${(productPromoAction.actionLimit)?if_exists}" class="inputBox">
-                                <INPUT type=submit value="Update" style="font-size: x-small;">
+                                <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                             </FORM>
                         </td>
                         <td align="center">
                         <a href="<@ofbizUrl>/deleteProductPromoAction?productPromoId=${(productPromoAction.productPromoId)?if_exists}&productPromoRuleId=${(productPromoAction.productPromoRuleId)?if_exists}&productPromoActionSeqId=${(productPromoAction.productPromoActionSeqId)?if_exists}</@ofbizUrl>" class="buttontext">
-                        [Delete]</a>
+                        [${uiLabelMap.CommonDelete}]</a>
                         </td>
                     </tr>
                 </#list>
@@ -212,7 +213,7 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                         <FORM method=POST action="<@ofbizUrl>/createProductPromoAction</@ofbizUrl>">
                             <input type=hidden name="productPromoId" value="${(productPromoRule.productPromoId)?if_exists}">
                             <input type=hidden name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
-                            <span class="tabletext"><b>New:</b>&nbsp;</span>
+                            <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                             <input type=text size="5" name="productPromoActionSeqId" value="${maxActionSeqId?if_exists}" class="inputBox">
                             <select name="productPromoActionTypeId" size=1 class="selectBox">
                                 <#list productPromoActionTypes as productPromoActionType>
@@ -228,13 +229,13 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                             <input type=text size="15" name="productId" class="inputBox">
                             <input type=text size="10" name="partyId" class="inputBox">
                             <input type=text size="4" name="actionLimit" class="inputBox">
-                            <INPUT type=submit value="Create" style="font-size: x-small;">
+                            <INPUT type=submit value="${uiLabelMap.CommonCreate}" style="font-size: x-small;">
                         </FORM>
                     </td>
                 </tr>
                 </table>
-                <div class="tabletext"><b>NOTE on Item ID:</b> The Item ID on an action is a Product ID for Gift With Purchase actions or for Free Shipping actions it is Shipment Method Type ID to give free shipping on (if blank any Shipment Method Types may receive free shipping).</div>
-                <div class="tabletext"><b>NOTE on Party ID:</b> The Party ID for Free Shipping actions is Carrier Party ID to give free shipping for (if blank any Carrier Parties may receive free shipping).</div>
+                <div class="tabletext"><b>${uiLabelMap.ProductNoteOnItemId} :</b> ${uiLabelMap.ProductItemIdForGiftWithPurchaseOrFreeShipping}</div>
+                <div class="tabletext"><b>${uiLabelMap.ProductNoteOnPartyId} :</b> ${uiLabelMap.ProductPartyForFreeShipping}</div>
             </td>
         </tr>
         </#list>
@@ -244,13 +245,13 @@ ${pages.get("/promo/PromoTabBar.ftl")}
         <form method="POST" action="<@ofbizUrl>/createProductPromoRule</@ofbizUrl>" style="margin: 0;">
         <input type="hidden" name="productPromoId" value="${productPromoId?if_exists}">
         
-        <div class="head2">Add Promo Rule:</div>
+        <div class="head2">${uiLabelMap.ProductAddPromoRule} :</div>
         <br>
-        ID: <input type=text size="20" class="inputBox" name="productPromoRuleId">
-        Name: <input type=text size="30" name="ruleName" class="inputBox">
-        <input type="submit" value="Add">
+        ${uiLabelMap.CommonId} : <input type=text size="20" class="inputBox" name="productPromoRuleId">
+        ${uiLabelMap.ProductName} : <input type=text size="30" name="ruleName" class="inputBox">
+        <input type="submit" value="${uiLabelMap.CommonAdd}">
         </form>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

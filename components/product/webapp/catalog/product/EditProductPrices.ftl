@@ -21,19 +21,20 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.4 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission> 
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">Prices <span class='head2'>for ${(product.productName)?if_exists}&nbsp;<#if product.productId?has_content>[ID:${product.getString("productId")}]</#if></span></div>
+    <div class="head1">${uiLabelMap.ProductPrices} <span class='head2'>${uiLabelMap.CommonFor} ${(product.productName)?if_exists}&nbsp;<#if product.productId?has_content>[${uiLabelMap.CommonId}:${product.getString("productId")}]</#if></span></div>
     
-    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[New Product]</a>
+    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content>
-    <a href="/ecommerce/control/product?product_id=${productId}" class='buttontext' target='_blank'>[Product Page]</a>
+    <a href="/ecommerce/control/product?product_id=${productId}" class='buttontext' target='_blank'>[${uiLabelMap.ProductProductPage}]</a>
     </#if>
     <br>
     <br>
@@ -41,12 +42,12 @@ ${pages.get("/product/ProductTabBar.ftl")}
     <#if productId?has_content>
         <table border="1" width="100%" cellpadding='2' cellspacing='0'>
         <tr>
-            <td><div class="tabletext"><b>Price&nbsp;Type</b></div></td>
-            <td><div class="tabletext"><b>Currency</b></div></td>
-            <td><div class="tabletext"><b>Product Store Group</b></div></td>
-            <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-            <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Price</b></div></td>
-            <td><div class="tabletext"><b>Last Modified By</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductPriceType}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductCurrency}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductProductStoreGroup}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
+            <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimePrice}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductLastModifiedBy}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
         <#assign line = 0>
@@ -78,13 +79,13 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     <input type='text' class='inputBox' size='25' name='thruDate' value='<#if productPrice.thruDate?has_content>${(productPrice.thruDate.toString())?if_exists}</#if>' <#if hasExpired> style='color: red;'</#if>>
                     <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productPrice.thruDate.toString())?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                     <input type='text' class='inputBox' size='8' name='price' value='${productPrice.price?if_exists}'>
-                    <INPUT type='submit' value='Update' style='font-size: x-small;'>
+                    <INPUT type='submit' value='${uiLabelMap.CommonUpdate}' style='font-size: x-small;'>
                 </form>
             </td>
-            <td><div class='tabletext'>[${productPrice.lastModifiedByUserLogin?if_exists}] on ${productPrice.lastModifiedDate?if_exists}</div></td>
+            <td><div class='tabletext'>[${productPrice.lastModifiedByUserLogin?if_exists}] ${uiLabelMap.CommonOn} ${productPrice.lastModifiedDate?if_exists}</div></td>
             <td align="center">
             <a href='<@ofbizUrl>/deleteProductPrice?productId=${productPrice.productId}&productPriceTypeId=${productPrice.productPriceTypeId}&currencyUomId=${productPrice.currencyUomId}&productStoreGroupId=${productPrice.productStoreGroupId}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productPrice.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">
-            [Delete]</a>
+            [${uiLabelMap.CommonDelete}]</a>
             </td>
         </tr>
         </#list>
@@ -94,22 +95,22 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <input type="hidden" name="productId" value="${productId}">
             <input type="hidden" name="useValues" value="true">
         
-            <div class='head2'>Add Price:</div>
+            <div class='head2'>${uiLabelMap.ProductAddPrice}:</div>
             <div class='tabletext'>
-                Price Type:
+                ${uiLabelMap.ProductPriceType}:
                 <select name="productPriceTypeId" class='selectBox'>
                     <#list productPriceTypes as productPriceType>
                         <option value='${productPriceType.productPriceTypeId}'> ${productPriceType.description}</option>
                     </#list>
                 </select>
-                Currency:
+                ${uiLabelMap.ProductCurrency}:
                 <select name="currencyUomId" class='selectBox'>
                     <#list currencyUoms as currencyUom>
                         <#assign isDefault = defaultCurrencyUomId.equals(currencyUom.getString("uomId"))>
                         <option value='${currencyUom.uomId}' <#if isDefault>selected</#if>> ${currencyUom.description} [${currencyUom.uomId}]</option>
                     </#list>
                 </select>
-                Product Store Group:
+                ${uiLabelMap.ProductProductStoreGroup}:
                 <select name="productStoreGroupId" class='selectBox'>
                     <#list productStoreGroups as productStoreGroup>
                         <#assign isDefault = productStoreGroup.productStoreGroupId.equals("_NA_")>
@@ -118,12 +119,12 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 </select>
             </div>
             <div class='tabletext'>
-                From Date: <input type='text' size='25' name='fromDate' class='inputBox' value='${(productPrice.fromDate.toString())?if_exists}'>
+                ${uiLabelMap.CommonFromDate} : <input type='text' size='25' name='fromDate' class='inputBox' value='${(productPrice.fromDate.toString())?if_exists}'>
                 <a href="javascript:call_cal(document.createProductPriceForm.fromDate, '${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}');"> <img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-                Price: <input type='text' size='8' name='price' class='inputBox'>&nbsp;<input type="submit" value="Add" style='font-size: x-small;'>
+                ${uiLabelMap.ProductPrice} : <input type='text' size='8' name='price' class='inputBox'>&nbsp;<input type="submit" value="${uiLabelMap.CommonAdd}" style='font-size: x-small;'>
             </div>        
         </form>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

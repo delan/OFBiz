@@ -21,26 +21,27 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">Attributes <span class="head2">for <#if product?exists>${(product.productName)?if_exists}</#if> [ID:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductAttributes} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists}</#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     
-    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[New Product]</a>
+    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content>
-    <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[Product Page]</a>
+    <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductProductPage}]</a>
     </#if>
     <p>    
     <#if productId?exists && product?exists>
         <table border="1" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>Name</b></div></td>
-            <td><div class="tabletext"><b>Value, Type</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductName}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductValueType}</b></div></td>
         </tr>
         <#list productAttributes as productAttribute>
         <tr valign="middle">
@@ -56,7 +57,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             <td>
             <a href="<@ofbizUrl>/UpdateProductAttribute?UPDATE_MODE=DELETE&PRODUCT_ID=${(productAttribute.productId)?if_exists}&ATTRIBUTE_NAME=${(productAttribute.attrName)?if_exists}</@ofbizUrl>" class="buttontext">
-            [Delete]</a>
+            [${uiLabelMap.CommonDelete}]</a>
             </td>
         </tr>
         </#list>
@@ -67,7 +68,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <input type="hidden" name="UPDATE_MODE" value="CREATE">
         <input type="hidden" name="useValues" value="true">
         
-        <div class="head2">Add ProductAttribute (enter Name, Value and Type):</div>
+        <div class="head2">${uiLabelMap.ProductAddProductAttributeNameValueType}:</div>
         <br>
         <input type="text" class="inputBox" name="ATTRIBUTE_NAME" size="15">&nbsp;
         <input type="text" class="inputBox" name="ATTRIBUTE_VALUE" size="50">&nbsp;
@@ -76,5 +77,5 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </form>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

@@ -21,18 +21,19 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.2 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">Quick Add Variants <span class="head2">for ${(product.productName)?if_exists} [ID:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductQuickAddVariants} <span class="head2">${uiLabelMap.CommonFor} ${(product.productName)?if_exists} [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     
     <#if (product.isVirtual)?if_exists != "Y">
-        WARNING: This product is not a virtual product, variants will not generally be used.
+        ${uiLabelMap.ProductWarningProductNotVirtual}
     </#if>
     
     <br>
@@ -42,8 +43,8 @@ ${pages.get("/product/ProductTabBar.ftl")}
 	            <#list featureTypes as featureType>
 	                <td><div class="tabletext"><b>${featureType}</b></div></td>
 	            </#list>
-	            <td><div class="tabletext"><b>New Product ID and Create!</b></div></td>
-	            <td><div class="tabletext"><b>Existing Variant IDs:</b></div></td>
+	            <td><div class="tabletext"><b>${uiLabelMap.ProductNewProductCreate} !</b></div></td>
+	            <td><div class="tabletext"><b>${uiLabelMap.ProductExistingVariant} :</b></div></td>
 	        </tr>
 	        
 	        <#list featureCombinationInfos as featureCombinationInfo>
@@ -62,7 +63,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
 			            </#list>
 			            <td>
 			                <input type=text size="20" maxlength="20" name="variantProductId">
-			                <INPUT type='submit' class='smallSubmit' value="Create!">
+			                <INPUT type='submit' class='smallSubmit' value="${uiLabelMap.CommonCreate} !">
 			            </td>
 			            <td>
 			                <div class="tabletext">&nbsp;
@@ -76,8 +77,8 @@ ${pages.get("/product/ProductTabBar.ftl")}
 			</#list>
 		</table>
 	<#else>
-	    <div class="tabletext"><b>No selectable features found. Please create some and try again.</b></div>
+	    <div class="tabletext"><b>${uiLabelMap.ProductNoSelectableFeaturesFound}</b></div>
 	</#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 
@@ -135,7 +135,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
             ${uiLabelMap.ProductProductId}: <input type=text size="20" name="productId" class="inputBox">
             ${uiLabelMap.CommonFromDate}: <input type=text size="22" name="fromDate" class="inputBox">
             <a href="javascript:call_cal(document.addProductCategoryMemberForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-            <input type="submit" value="Add">
+            <input type="submit" value="${uiLabelMap.CommonAdd}">
         </div>
         </form>
         
@@ -161,7 +161,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
                 <option>${uiLabelMap.CommonN}</option>
                 <option>${uiLabelMap.CommonY}</option>
             </select>
-            <input type="submit" value="Copy">
+            <input type="submit" value="${uiLabelMap.CommonCopy}">
         </div>
         </form>
         
@@ -173,7 +173,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <div class="head2">${uiLabelMap.ProductExpireAllProductMembers}:</div>
         <div class="tabletext">
             ${uiLabelMap.ProductOptionalExpirationDate}: <input type=text size="20" name="thruDate" class="inputBox">
-            <input type="submit" value="Expire All">
+            <input type="submit" value="${uiLabelMap.CommonExpireAll}">
         </div>
         </form>
         <br>
@@ -184,7 +184,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <div class="head2">${uiLabelMap.ProductRemoveExpiredProductMembers}:</div>
         <div class="tabletext">
             ${uiLabelMap.ProductOptionalExpiredBeforeDate}: <input type=text size="20" name="validDate" class="inputBox">
-            <input type="submit" value="Remove Expired">
+            <input type="submit" value="${uiLabelMap.CommonRemoveExpired}">
         </div>
         </form>
     </#if>

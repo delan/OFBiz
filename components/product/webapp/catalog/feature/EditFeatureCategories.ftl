@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -60,7 +60,7 @@
           </#list>
       </select>
     </td>
-    <td><INPUT type=submit value='Update'></td>
+    <td><INPUT type="submit" value="${uiLabelMap.CommonUpdate}"></td>
     <td><a href='<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategory.productFeatureCategoryId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonEdit}]</a></td>
     </FORM>
   </tr>
@@ -86,7 +86,7 @@
       </select></td>
     </tr>
     <tr>
-      <td colspan='2'><input type="submit" value="Create"></td>
+      <td colspan='2'><input type="submit" value="${uiLabelMap.CommonCreate}"></td>
     </tr>
   </table>
 </form>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 
@@ -76,7 +76,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
                         <option value="${(prodCatalogCategoryType.prodCatalogCategoryTypeId)?if_exists}">${(prodCatalogCategoryType.description)?if_exists}</option>
                         </#list>
                     </select>
-                    <INPUT type=submit value="Update" style="font-size: x-small;">
+                    <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                 </FORM>
             </td>
             <td align="center">
@@ -104,7 +104,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
             </select>
         <input type=text size="25" name="fromDate" class="inputBox">
         <a href="javascript:call_cal(document.addNewForm.fromDate, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-        <input type="submit" value="Add">
+        <input type="submit" value="${uiLabelMap.CommonAdd}">
         </form>
     </#if>
 <#else>

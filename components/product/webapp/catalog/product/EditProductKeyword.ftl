@@ -21,25 +21,26 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.3 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">Keywords <span class="head2">for <#if product?exists>${(product.productName)?if_exists}</#if>[ID:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductKeywords} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists}</#if>[${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     
-    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[New Product]</a>
+    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content >
-        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[Product Page]</a>
+        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductProductPage}]</a>
     </#if>
     <br>
     
     <#if productId?exists && product?exists>
         <br>
-        <div class="tabletext">NOTE: Keywords are automatically created when product information is changed, but you may manually CREATE or DELETE keywords here as well.</div>
+        <div class="tabletext">${uiLabelMap.ProductNoteKeywordsAutomaticallyCreated}</div>
         
         <TABLE border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
         <TR>
@@ -47,10 +48,10 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
                 <tr>
                 <TD align=left>
-                    <DIV class="boxhead">Add product keyword:</DIV>
+                    <DIV class="boxhead">${uiLabelMap.ProductAddProductKeyword}:</DIV>
                 </TD>
                 <TD align=right>
-                    <a href="<@ofbizUrl>/EditProduct?productId=${productId?if_exists}</@ofbizUrl>" class="submenutextright">Edit Product</a>
+                    <a href="<@ofbizUrl>/EditProduct?productId=${productId?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ProductEditProduct}</a>
                 </td>
                 </tr>
             </table>
@@ -64,9 +65,9 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     <form method="POST" action="<@ofbizUrl>/UpdateProductKeyword</@ofbizUrl>" style="margin: 0;">
                         <input type="hidden" name="UPDATE_MODE" value="CREATE">
                         <input type="hidden" name="PRODUCT_ID" value="${productId?if_exists}">
-                        <span class="tabletext">Keyword: </span><input type="text" size="20" name="KEYWORD" value="" class="inputBox">
-                        <span class="tabletext">Weight: </span><input type="text" size="4" name="relevancyWeight" value="1" class="inputBox">
-                        <input type="submit" value="Add" style="font-size: x-small;">
+                        <span class="tabletext">${uiLabelMap.ProductKeyword}: </span><input type="text" size="20" name="KEYWORD" value="" class="inputBox">
+                        <span class="tabletext">${uiLabelMap.ProductWeight}: </span><input type="text" size="4" name="relevancyWeight" value="1" class="inputBox">
+                        <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
                     </form>
                 </td>
                 </tr>
@@ -82,10 +83,10 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
             <tr>
                 <TD align=left>
-                    <DIV class="boxhead">Keywords</DIV>
+                    <DIV class="boxhead">${uiLabelMap.ProductKeywords}</DIV>
                 </TD>
                 <TD align=right>
-                    <a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=CREATE&PRODUCT_ID=${productId}</@ofbizUrl>" class="submenutext">Re-induce Keywords</a><a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}</@ofbizUrl>" class="submenutextright">Delete All Keywords</a>
+                    <a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=CREATE&PRODUCT_ID=${productId}</@ofbizUrl>" class="submenutext">${uiLabelMap.ProductReInduceKeywords}</a><a href="<@ofbizUrl>/UpdateProductKeywords?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ProductDeleteAllKeywords}</a>
                 </td>
             </tr>
             </table>
@@ -110,7 +111,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                         <td>&nbsp;&nbsp;</td>
                         <td align=left>
                             <a href="<@ofbizUrl>/UpdateProductKeyword?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}&KEYWORD=${(productKeyword.keyword)?if_exists}</@ofbizUrl>" class="buttontext">
-                            [Delete]</a>
+                            [${uiLabelMap.CommonDelete}]</a>
                         </td>
                     </tr>
                     <#assign kIdx = kIdx + 1>
@@ -124,7 +125,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     </#list>
                 <#else>
                     <tr>
-                    <td colspan="3"><div class="tabletext">No Keywords Found</div></td>
+                    <td colspan="3"><div class="tabletext">${uiLabelMap.ProductNoKeywordsFound}</div></td>
                     </tr>
                 </#if>
                 </TABLE>
@@ -135,8 +136,8 @@ ${pages.get("/product/ProductTabBar.ftl")}
     </TR>
     </TABLE>        
     <#else>
-        <div class="head2">Product not found with Product ID "${productId?if_exists}"</div>
+        <div class="head2">${uiLabelMap.ProductProductNotFoundWithProduct} "${productId?if_exists}"</div>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page.  ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>

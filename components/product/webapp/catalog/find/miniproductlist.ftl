@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -75,10 +77,10 @@
                   </#if>
                 </table>
               <#else>
-                <div class='tabletext'>No products in category.</div>
+                <div class='tabletext'>${uiLabelMap.ProductNoProductsInCategory}.</div>
               </#if>
             <#else>
-                <div class='tabletext'>No category specified.</div>
+                <div class='tabletext'>${uiLabelMap.ProductNoCategorySpecified}.</div>
             </#if>
           </td>
         </tr>

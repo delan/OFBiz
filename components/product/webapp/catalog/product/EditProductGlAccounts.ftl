@@ -21,26 +21,27 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">GL Accounts <span class="head2">for <#if product?exists>${(product.productName)?if_exists}</#if> [ID:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductGlAccounts} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists}</#if> [${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     
-    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[New Product]</a>
+    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content>
-        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[Product Page]</a>
+        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductProductPage}]</a>
     </#if>
     <p>    
     <#if productId?exists && product?exists>
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
-            <td><div class="tabletext"><b>Account&nbsp;Type</b></div></td>
-            <td align="center"><div class="tabletext"><b>GL&nbsp;Account</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductAccountType}</b></div></td>
+            <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductGlAccount}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
         <#assign line = 0>
@@ -69,7 +70,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             <td align="center">
             <a href="<@ofbizUrl>/deleteProductGlAccount?productId=${(productGlAccount.productId)?if_exists}&productGlAccountTypeId=${(productGlAccount.productGlAccountTypeId)?if_exists}</@ofbizUrl>" class="buttontext">
-            [Delete]</a>
+            [${uiLabelMap.CommonDelete}]</a>
             </td>
         </tr>
         </#list>
@@ -79,24 +80,24 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <input type="hidden" name="productId" value="${productId}">
             <input type="hidden" name="useValues" value="true">
         
-            <div class="head2">Add GL Account:</div>
+            <div class="head2">${uiLabelMap.ProductAddGlAccount} :</div>
             <div class="tabletext">
-                Account Type:
+                ${uiLabelMap.ProductAccountType} :
                 <select name="productGlAccountTypeId" class="selectBox">
                     <#list productGlAccountTypes as productGlAccountType>
                         <option value="${(productGlAccountType.productGlAccountTypeId)?if_exists}">${(productGlAccountType.description)?if_exists}</option>
                     </#list>
                 </select>
-                GL Account: 
+                ${uiLabelMap.ProductGlAccount} : 
                 <select name="glAccountId" class="inputBox">
                     <#list glAccounts as glAccount>
                         <option value="${(glAccount.glAccountId)?if_exists}">${(glAccount.accountCode)?if_exists} ${(glAccount.accountName)?if_exists}</option>
                     </#list>
                 </select>
-                <input type="submit" value="Add" style="font-size: x-small;">
+                <input type="submit" value="${uiLabelMap.CommonAdd}" style="font-size: x-small;">
             </div>        
         </form>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h<3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>
