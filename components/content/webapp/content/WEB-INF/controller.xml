@@ -554,10 +554,16 @@
         <response name="error" type="view" value="LookupDataResource"/>
     </request-map>
 
+    <request-map uri="LookupSubContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupSubContent"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+
     <request-map uri="gotoDataResource">
         <security auth="true" https="true"/>
         <!--
-        <event invoke="org/ofbiz/content/lruaddDataResource.bsh" path="" type="bsf" />
+        <event invoke="org/ofbiz/content/mruaddDataResource.bsh" path="" type="bsf" />
         <event invoke="org/ofbiz/content/clearCurrentDataResource.bsh" path="" type="bsf" />
         <response name="success" type="request" value="gotoDataResourceP2"/>
         -->
@@ -582,6 +588,10 @@
     <request-map uri="DataSetupMenu">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="DataSetupMenu"/>
+    </request-map>
+    <request-map uri="LayoutMenu">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LayoutMenu"/>
     </request-map>
 
 	<!-- Content requests -->
@@ -612,7 +622,7 @@
     <request-map uri="gotoContent">
         <security auth="true" https="true"/>
         <!--
-        <event invoke="org/ofbiz/content/lruadd.bsh" path="" type="bsf" />
+        <event invoke="org/ofbiz/content/mruadd.bsh" path="" type="bsf" />
         <event invoke="org/ofbiz/content/clearCurrentContent.bsh" path="" type="bsf" />
         <response name="success" type="request" value="gotoContentP2"/>
         -->
@@ -626,13 +636,13 @@
         <response name="success" type="view" value="EditContentAssoc"/>
         <response name="error" type="view" value="EditContentAssoc"/>
     </request-map>
-    <request-map uri="UpdateContentAssoc">
+    <request-map uri="updateContentAssoc">
         <security auth="true" https="true"/>
         <event invoke="updateContentAssoc" path="" type="service"/>
         <response name="success" type="view" value="EditContentAssoc"/>
         <response name="error" type="view" value="EditContentAssoc"/>
     </request-map>
-    <request-map uri="AddContentAssoc">
+    <request-map uri="createContentAssoc">
         <security auth="true" https="true"/>
         <event invoke="addContentAssoc" 
             path="org/ofbiz/content/content/ContentEvents.xml" type="simple"/>
@@ -957,7 +967,164 @@
         <response name="error" type="view" value="EditSurveyQuestions"/>
     </request-map>
     <!-- end of request mappings -->
+    <request-map uri="subcontent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="subcontent"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
 
+    <!-- ================ Layout Requests ================= -->
+    <request-map uri="FindLayout">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="FindLayout"/>
+    </request-map>
+    <request-map uri="EditLayout">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditLayout"/>
+        <response name="error" type="view" value="EditLayout"/>
+    </request-map>
+    <request-map uri="EditLayoutSubContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditLayoutSubContent"/>
+    </request-map>
+    <request-map uri="AddLayout">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="AddLayout"/>
+    </request-map>
+    <request-map uri="createLayout">
+        <security auth="true" https="true"/>
+        <event invoke="createLayout"
+            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <response name="success" type="view" value="EditLayout"/>
+        <response name="error" type="view" value="AddLayout"/>
+    </request-map>
+    <request-map uri="updateLayout">
+        <security auth="true" https="true"/>
+        <event invoke="updateLayout"
+            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <response name="success" type="view" value="EditLayout"/>
+        <response name="error" type="view" value="EditLayout"/>
+    </request-map>
+    <request-map uri="createLayoutSubContent">
+        <security auth="true" https="true"/>
+        <event invoke="createLayoutSubContent"
+            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <response name="success" type="view" value="EditLayoutSubContent"/>
+        <response name="error" type="view" value="AddLayoutSubContent"/>
+    </request-map>
+    <request-map uri="updateLayoutSubContent">
+        <security auth="true" https="true"/>
+        <event invoke="updateLayoutSubContent"
+            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <response name="success" type="view" value="EditLayoutSubContent"/>
+        <response name="error" type="view" value="EditLayoutSubContent"/>
+    </request-map>
+    <request-map uri="replaceSubContent">
+        <security auth="true" https="true"/>
+        <event invoke="replaceSubContent"
+            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <response name="success" type="view" value="EditLayout"/>
+        <response name="error" type="view" value="EditLayout"/>
+    </request-map>
+    <request-map uri="pasteSubContent">
+        <security auth="true" https="true"/>
+        <event invoke="pasteSubContent"
+            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <response name="success" type="view" value="EditLayout"/>
+        <response name="error" type="view" value="EditLayout"/>
+    </request-map>
+    <request-map uri="removeLayout">
+        <security auth="true" https="true"/>
+        <event invoke="removeLayout" path="" type="service"/>
+        <response name="success" type="view" value="EditLayout"/>
+        <response name="error" type="view" value="EditLayout"/>
+    </request-map>
+    <request-map uri="EditLayoutHtml">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditLayoutHtml"/>
+    </request-map>
+    <request-map uri="EditLayoutText">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditLayoutText"/>
+    </request-map>
+    <request-map uri="EditLayoutImage">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditLayoutImage"/>
+    </request-map>
+    <request-map uri="EditLayoutUrl">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditLayoutUrl"/>
+    </request-map>
+    <request-map uri="createLayoutText">
+        <security auth="true" https="true"/>
+        <event invoke="createLayoutText"
+            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <response name="success" type="view" value="EditLayoutText"/>
+        <response name="error" type="view" value="EditLayoutText"/>
+    </request-map>
+    <request-map uri="updateLayoutText">
+        <security auth="true" https="true"/>
+        <event invoke="updateLayoutText"
+            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <response name="success" type="view" value="EditLayoutText"/>
+        <response name="error" type="view" value="EditLayoutText"/>
+    </request-map>
+    <request-map uri="createLayoutHtml">
+        <security auth="true" https="true"/>
+        <event invoke="createLayoutText"
+            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <response name="success" type="view" value="EditLayoutHtml"/>
+        <response name="error" type="view" value="EditLayoutHtml"/>
+    </request-map>
+    <request-map uri="updateLayoutHtml">
+        <security auth="true" https="true"/>
+        <event invoke="updateLayoutText"
+            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <response name="success" type="view" value="EditLayoutHtml"/>
+        <response name="error" type="view" value="EditLayoutHtml"/>
+    </request-map>
+    <request-map uri="createLayoutUrl">
+        <security auth="true" https="true"/>
+        <event invoke="createLayoutUrl"
+            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <response name="success" type="view" value="EditLayoutUrl"/>
+        <response name="error" type="view" value="EditLayoutUrl"/>
+    </request-map>
+    <request-map uri="updateLayoutUrl">
+        <security auth="true" https="true"/>
+        <event invoke="updateLayoutUrl"
+            path="org/ofbiz/content/layout/LayoutEvents.xml" type="simple"/>
+        <response name="success" type="view" value="EditLayoutUrl"/>
+        <response name="error" type="view" value="EditLayoutUrl"/>
+    </request-map>
+    <request-map uri="createLayoutImage">
+        <security auth="true" https="true"/>
+        <event invoke="createLayoutImage"
+            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <response name="success" type="view" value="EditLayoutImage"/>
+        <response name="error" type="view" value="EditLayoutImage"/>
+    </request-map>
+    <request-map uri="updateLayoutImage">
+        <security auth="true" https="true"/>
+        <event invoke="updateLayoutImage"
+            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <response name="success" type="view" value="EditLayoutImage"/>
+        <response name="error" type="view" value="EditLayoutImage"/>
+    </request-map>
+    <request-map uri="updateLayoutImageOnly">
+        <security auth="true" https="true"/>
+        <event invoke="updateLayoutImageOnly"
+            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <response name="success" type="view" value="EditLayoutImage"/>
+        <response name="error" type="view" value="EditLayoutImage"/>
+    </request-map>
+    <request-map uri="cloneLayout">
+        <security auth="true" https="true"/>
+        <event invoke="cloneLayout"
+            path="org.ofbiz.content.layout.LayoutEvents" type="java"/>
+        <response name="success" type="view" value="EditLayout"/>
+        <response name="error" type="view" value="EditLayout"/>
+    </request-map>
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" page="/main.ftl" type="jpublish"/>
@@ -1010,10 +1177,22 @@
     <view-map name="EditMimeType" page="/datasetup/EditMimeType.ftl" type="jpublish"/>
     <view-map name="EditHtmlText" page="/data/EditHtmlText.ftl" type="jpublish"/>
 
+    <view-map name="FindLayout" page="/layout/FindLayout.ftl" type="jpublish"/>
+    <view-map name="EditLayout" page="/layout/EditLayout.ftl" type="jpublish"/>
+    <view-map name="AddLayout" page="/layout/AddLayout.ftl" type="jpublish"/>
+    <view-map name="EditLayoutSubContent" page="/layout/EditLayoutSubContent.ftl" type="jpublish"/>
+    <view-map name="EditLayoutText" page="/layout/EditLayoutText.ftl" type="jpublish"/>
+    <view-map name="EditLayoutHtml" page="/layout/EditLayoutHtml.ftl" type="jpublish"/>
+    <view-map name="EditLayoutImage" page="/layout/EditLayoutImage.ftl" type="jpublish"/>
+    <view-map name="EditLayoutUrl" page="/layout/EditLayoutUrl.ftl" type="jpublish"/>
+    <view-map name="LookupSubContent" page="/layout/LookupSubContent.ftl" type="jpublish"/>
+
     <view-map name="ContentMenu" page="/content/ContentMenu.ftl" type="jpublish"/>
     <view-map name="ContentSetupMenu" page="/contentsetup/ContentSetupMenu.ftl" type="jpublish"/>
     <view-map name="DataMenu" page="/data/DataMenu.ftl" type="jpublish"/>
     <view-map name="DataSetupMenu" page="/datasetup/DataSetupMenu.ftl" type="jpublish"/>
+    <view-map name="LayoutMenu" page="/layout/LayoutMenu.ftl" type="jpublish"/>
+    <view-map name="subcontent" page="/subcontent.ftl" type="jpublish"/>
 
     <view-map name="FindSurvey" page="/survey/FindSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurvey" page="/survey/EditSurvey.ftl" type="jpublish"/>
