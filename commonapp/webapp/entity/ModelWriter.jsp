@@ -1,4 +1,10 @@
-<%@ page contentType="text/plain" %><%@ page import="java.util.*" %>
+<%@ page contentType="text/plain" %><%@ page import="java.util.*" %><%
+String title = "Entity of an Open For Business Project Component";
+String description = "None";
+String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org";
+String author = "David E. Jones";
+String version = "1.0";
+%>
 <!--
 /**
  *  $Id$
@@ -57,11 +63,11 @@
   <!-- ========================================================= -->
   <!-- ======================== Defaults ======================= -->
   <!-- ========================================================= -->
-    <title>Entity of an Open For Business Project Component</title>
-    <description>None</description>
-    <copyright>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org</copyright>
-    <author>David E. Jones</author>
-    <version>1.0</version>
+    <title><%=title%></title>
+    <description><%=description%></description>
+    <copyright><%=copyright%></copyright>
+    <author><%=author%></author>
+    <version><%=version%></version>
 
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
@@ -95,16 +101,24 @@
       String entityName = (String)i.next();
       ModelEntity entity = reader.getModelEntity(entityName);
 %>	
-    <entity>
-      <title><%=entity.title%></title>
-      <description><%=entity.description%></description>
+    <entity><%if(!title.equals(entity.title)){%>
+      <title><%=entity.title%></title><%}%><%if(!description.equals(entity.description)){%>
+      <description><%=entity.description%></description><%}%><%if(!copyright.equals(entity.copyright)){%>
+      <copyright><%=entity.copyright%></copyright><%}%><%if(!author.equals(entity.author)){%>
+      <author><%=entity.author%></author><%}%><%if(!version.equals(entity.version)){%>
+      <version><%=entity.version%></version><%}%>
       <package-name><%=entity.packageName%></package-name>
       <table-name><%=entity.tableName%></table-name>
       <entity-name><%=entity.entityName%></entity-name><%
   for(int y = 0; y < entity.fields.size(); y++)
   {
-    ModelField field = (ModelField) entity.fields.elementAt(y);%>	
-      <field><col-name><%=field.colName%></col-name><type><%=field.type%></type></field><%
+    ModelField field = (ModelField) entity.fields.elementAt(y);%>
+      <field><col-name><%=field.colName%></col-name><type><%=field.type%></type><%
+    for(int v = 0; v<field.validators.size(); v++)
+    {
+      String valName = (String)field.validators.get(v);
+      %><validate><%=valName%></validate><%
+    }%></field><%
   }
   for(int y = 0; y < entity.pks.size(); y++)
   {
