@@ -140,8 +140,19 @@
     
     <request-map uri="viewBillingAccountInvoices">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="viewBillingAccountInvoices"/>
-    </request-map>    
+        <response name="success" type="view" value="billingAccountInvoices"/>
+    </request-map>  
+    
+    <request-map uri="viewInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editInvoice"/>
+    </request-map>  
+    
+    <request-map uri="createInvoiceItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createInvoiceItem"/>
+        <response name="success" type="view" value="editInvoice"/>
+    </request-map>
                 
     <!-- end of request mappings -->
 
@@ -154,6 +165,8 @@
     <view-map name="editBillingAccount" type="jpublish" page="/billingaccount/EditBillingAccount.ftl"/>
     <view-map name="editBillingAccountRoles" type="jpublish" page="/billingaccount/EditBillingAccountRoles.ftl"/>
     <view-map name="editBillingAccountTerms" type="jpublish" page="/billingaccount/EditBillingAccountTerms.ftl"/>
-    <view-map name="viewBillingAccountInvoices" type="jpublish" page="/billingaccount/ViewBillingAccountInvoices.ftl"/>
+    <view-map name="billingAccountInvoices" type="jpublish" page="/billingaccount/BillingAccountInvoices.ftl"/>
+    
+    <view-map name="editInvoice" type="jpublish" page="/invoice/EditInvoice.ftl"/>
     <!-- end of view mappings -->
 </site-conf>
