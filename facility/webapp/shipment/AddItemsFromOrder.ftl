@@ -33,7 +33,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<input type="hidden" name="shipmentId" value="${shipmentId}"/>
 	<div class="tabletext">
         Order ID: <input type="text" class='inputBox' size="20" name="orderId" value="${orderId?if_exists}"/>
-        <input type="submit" value="Select" class="standardButton"/>
+        <input type="submit" value="Select" class="smallSubmit"/>
     </div>
 </form>
 
@@ -192,7 +192,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             </#if>
         </#list>
         <tr>
-            <td colspan="6" align="right"><input type="submit" value="Issue All"/></td>
+            <td colspan="6" align="right"><input type="submit" class="smallSubmit" value="Issue All"/></td>
         </tr>
     </table>
     <input type="hidden" name="_rowCount" value="${rowCount}">
