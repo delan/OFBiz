@@ -32,7 +32,7 @@ import java.util.Collection;
  * See detailed description below.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      1.0
  *
  *
@@ -203,6 +203,10 @@ public class UtilValidate {
     /** Check whether collection c is NOT empty. */
     public static boolean isNotEmpty(Collection c) {
         return ((c != null) && (c.size() > 0));
+    }
+
+    public static boolean isString(Object obj) {
+        return ((obj != null) && (obj instanceof java.lang.String));
     }
 
     /** Returns true if string s is empty or whitespace characters only. */
