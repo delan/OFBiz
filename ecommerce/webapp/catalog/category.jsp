@@ -4,7 +4,7 @@
 
 <% pageContext.setAttribute("PageName", "categoryDisplay"); %> 
 <%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ include file="/includes/leftcolumn.jsp" %> 
 
 <%
 	// Get a list of all available categories.
@@ -53,6 +53,6 @@
   </table>
 </center>
 
-<%@ include file="/includes/onecolumnclose.jsp" %>
+<%@ include file="/includes/rightcolumn.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
 

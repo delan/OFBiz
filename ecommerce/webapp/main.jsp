@@ -1,9 +1,9 @@
 
 <% pageContext.setAttribute("PageName", "main"); %> 
 <%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ include file="/includes/leftcolumn.jsp" %> 
 
-<br>
+<br> 
 
-<%@ include file="/includes/onecolumnclose.jsp" %>
+<%@ include file="/includes/rightcolumn.jsp" %>
 <%@ include file="/includes/footer.jsp" %>

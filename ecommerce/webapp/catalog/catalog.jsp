@@ -4,7 +4,7 @@
 
 <% pageContext.setAttribute("PageName", "catalog"); %>
 <%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ include file="/includes/leftcolumn.jsp" %> 
 
 <%
 	// Get a list of all available categories
@@ -36,5 +36,5 @@
   </center>
 </ofbiz:if>
 
-<%@ include file="/includes/onecolumnclose.jsp" %>
+<%@ include file="/includes/rightcolumn.jsp" %>
 <%@ include file="/includes/footer.jsp" %>

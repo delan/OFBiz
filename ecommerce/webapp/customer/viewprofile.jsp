@@ -79,7 +79,7 @@
   <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td valign="middle" align="left">
-      <p class="head2"><font color="white">&nbsp;Personal Information</font>
+      <div class="boxhead">&nbsp;Personal Information</div>
     </td>
     <td valign="middle" align="right">
       <a href="<%=response.encodeURL(controlPath + "/editperson")%>" class="lightbuttontext">
@@ -136,7 +136,7 @@
   <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td valign="middle" align="left">
-      <p class="head2"><font color="white">&nbsp;Contact Information</font>
+      <div class="boxhead">&nbsp;Contact Information</div>
     </td>
     <td valign="middle" align="right">
         <a href="<%=response.encodeURL(controlPath + "/editcontactmech")%>" class="lightbuttontext">
@@ -237,7 +237,7 @@
   <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td valign="middle" align="left">
-      <p class="head2"><font color="white">&nbsp;Credit Card Information</font>
+      <div class="boxhead">&nbsp;Credit Card Information</div>
     </td>
     <td valign="middle" align="right">
       <a href="<%=response.encodeURL(controlPath + "/editcreditcard")%>" class="lightbuttontext">
@@ -300,7 +300,7 @@
   <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td valign="middle" align="left">
-      <p class="head2"><font color="white">&nbsp;User Name & Password</font>
+      <div class="boxhead">&nbsp;User Name & Password</div>
     </td>
     <td valign="middle" align="right">
       <a href="<%=response.encodeURL(controlPath + "/changepassword")%>" class="lightbuttontext">

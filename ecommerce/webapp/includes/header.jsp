@@ -46,11 +46,14 @@ function mClk(src){
 
 <TABLE width='100%' cellpadding='4' cellspacing='1' border='0' bgcolor='black'>
   <TR>
-    <TD bgcolor='#CCCCCC'>
+    <TD bgcolor='#678475'>
       <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
         <TR>
-          <TD>
-            <H1 style="margin:0;">&nbsp;The Open For Business Project</H1>
+          <TD align=left width='50%' >
+            <H1 style="margin:0;"><font color="white">&nbsp;Open&nbsp;For&nbsp;eCommerce</font></H1>
+          </TD>
+          <TD align=right width='50%'>
+<%@ include file="/cart/microcart.jsp"%>
           </TD>
         </TR>
       </TABLE>
@@ -86,8 +89,8 @@ function mClk(src){
           <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonLeft"><a href="<%=response.encodeURL(controlPath + "/orderhistory")%>" class="buttontext">Order&nbsp;History</a></td>
           <TD bgcolor="#cccc99" width="90%">&nbsp;</TD>
           <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonRight"><a href="<%=response.encodeURL(controlPath + "/viewprofile")%>" class="buttontext">Profile</a></td>
-          <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonRight"><a href="<%=response.encodeURL(controlPath + "/view/showcart")%>" class="buttontext">ViewCart</a></td>
-          <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonRight"><a href="<%=response.encodeURL(controlPath + "/shippingAddress")%>" class="buttontext">CheckOut</a></td>
+          <%-- <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonRight"><a href="<%=response.encodeURL(controlPath + "/view/showcart")%>" class="buttontext">ViewCart</a></td> --%>
+          <%-- <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonRight"><a href="<%=response.encodeURL(controlPath + "/shippingAddress")%>" class="buttontext">CheckOut</a></td> --%>
           <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonRight"><a href="<%=response.encodeURL(controlPath + "/sitemap")%>" class="buttontext">Site&nbsp;Map</a></td>
         </TR>
       </TABLE>

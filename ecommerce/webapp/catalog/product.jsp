@@ -4,7 +4,7 @@
 
 <% pageContext.setAttribute("PageName", "product"); %>
 <%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ include file="/includes/leftcolumn.jsp" %> 
 
 <%
 	// Get the value object of the request product id.
@@ -49,5 +49,5 @@
   </ofbiz:object>
 </ofbiz:if>
 
-<%@ include file="/includes/onecolumnclose.jsp" %>
+<%@ include file="/includes/rightcolumn.jsp" %> 
 <%@ include file="/includes/footer.jsp" %>
