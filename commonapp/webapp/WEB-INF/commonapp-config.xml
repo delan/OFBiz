@@ -76,6 +76,10 @@
     	<security https="true" auth="true"/><response name="success" type="view" value="xmldsdump"/>
     </request-map>
 
+    <request-map uri="xmldsimport">
+    	<security https="true" auth="true"/><response name="success" type="view" value="xmldsimport"/>
+    </request-map>
+
     <request-map uri="FindGeneric">
     	<security https="true" auth="true"/><response name="success" type="view" value="FindGeneric"/>
     </request-map>
@@ -155,6 +159,7 @@
     <view-map name="EditEntity" page="/entity/EditEntity.jsp"/>
     <view-map name="checkdb" page="/entity/checkdb.jsp"/>
     <view-map name="xmldsdump" page="/entity/xmldsdump.jsp"/>
+    <view-map name="xmldsimport" page="/entity/xmldsimport.jsp"/>
 
     <view-map name="EditUtilCache" page="/cache/EditUtilCache.jsp"/>
     <view-map name="FindUtilCache" page="/cache/FindUtilCache.jsp"/>
