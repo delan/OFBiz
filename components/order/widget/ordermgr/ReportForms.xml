@@ -45,7 +45,7 @@
         </field>
         <field name="terminalId" title="Terminal ID" ><text size="10" maxlength="20"/></field>
         <field name="statusId"  title="Order Status">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="false" no-current-selected-key="ORDER_COMPLETED">
                 <option key="" description="- Any -"/>
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint value="ORDER_STATUS" name="statusTypeId"/>
@@ -53,15 +53,19 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromOrderDate" title="From Date (orderDate&gt;=)"><date-time type="timestamp"/></field>
-        <field name="thruOrderDate" title="Thru Date (orderDate&lt;)"><date-time type="timestamp"/></field>
-
-        <field name="submitButton" title="Run Report" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="OrderPurchaseProductOptions" type="single" target="OrderPurchaseReportProduct.pdf" title=""
             extends="OrderPurchaseReportOptions">
+        <field name="fromOrderDate" title="From Date (orderDate&gt;=)"><date-time type="timestamp"/></field>
+        <field name="thruOrderDate" title="Thru Date (orderDate&lt;)"><date-time type="timestamp"/></field>
+
+        <field name="submitButton" title="Run Product Report" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
     <form name="OrderPurchasePaymentOptions" type="single" target="OrderPurchaseReportPayment.pdf" title=""
             extends="OrderPurchaseReportOptions">
+        <field name="fromOrderDate" title="From Date (orderDate&gt;=)"><date-time type="timestamp"/></field>
+        <field name="thruOrderDate" title="Thru Date (orderDate&lt;)"><date-time type="timestamp"/></field>
+
+        <field name="submitButton" title="Run Payment Report" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
 </forms>
