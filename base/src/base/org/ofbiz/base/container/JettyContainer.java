@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.15 2003/10/22 23:03:39 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.16 2003/11/21 17:41:49 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.base.util.UtilURL;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
-  *@version    $Revision: 1.15 $
+  *@version    $Revision: 1.16 $
  * @since      3.0
  */
 public class JettyContainer implements Container {
@@ -82,7 +82,7 @@ public class JettyContainer implements Container {
         Iterator sci = jc.properties.values().iterator();
         while (sci.hasNext()) {
             ContainerConfig.Container.Property prop = (ContainerConfig.Container.Property) sci.next();
-            servers.put(prop.name, createServer(prop.name, prop));
+            servers.put(prop.name, createServer(prop));
         }
 
         // load the applications
@@ -134,11 +134,10 @@ public class JettyContainer implements Container {
         }
     }
 
-    private Server createServer(String serverName, ContainerConfig.Container.Property serverConfig) throws ContainerException {
+    private Server createServer(ContainerConfig.Container.Property serverConfig) throws ContainerException {
         Server server = new Server();
 
         // configure the listeners/loggers
-        int listeners = 0;
         Iterator properties = serverConfig.properties.values().iterator();
         while (properties.hasNext()) {
             ContainerConfig.Container.Property props =
@@ -147,7 +146,7 @@ public class JettyContainer implements Container {
             if ("listener".equals(props.value)) {
                 if ("default".equals(props.getProperty("type").value)) {
                     SocketListener listener = new SocketListener();
-                    setListenerOptions(listener, props, serverName);
+                    setListenerOptions(listener, props);
                     if (props.getProperty("low-resource-persist-time") != null) {
                         int value = 0;
                         try {
@@ -162,7 +161,7 @@ public class JettyContainer implements Container {
                     server.addListener(listener);
                 } else if ("sun-jsse".equals(props.getProperty("type").value)) {
                     SunJsseListener listener = new SunJsseListener();
-                    setListenerOptions(listener, props, serverName);
+                    setListenerOptions(listener, props);
                     if (props.getProperty("keystore") != null) {
                         listener.setKeystore(props.getProperty("keystore").value);
                     }
@@ -190,7 +189,7 @@ public class JettyContainer implements Container {
                     throw new ContainerException("Listener not supported yet [" + props.getProperty("type").value + "]");
                 } else if ("ajp13".equals(props.getProperty("type").value)) {
                     AJP13Listener listener = new AJP13Listener();
-                    setListenerOptions(listener, props, serverName);
+                    setListenerOptions(listener, props);
                     server.addListener(listener);
                 }
             } else if ("request-log".equals(props.value)) {
@@ -235,7 +234,7 @@ public class JettyContainer implements Container {
         return server;
     }
 
-    private void setListenerOptions(ThreadedServer listener, ContainerConfig.Container.Property listenerProps, String serverName) throws ContainerException {
+    private void setListenerOptions(ThreadedServer listener, ContainerConfig.Container.Property listenerProps) throws ContainerException {
         String systemHost = null;
         if ("default".equals(listenerProps.getProperty("type").value)) {
             systemHost = System.getProperty(listenerProps.name + ".host");
@@ -322,7 +321,7 @@ public class JettyContainer implements Container {
     }
 
     /**
-     * @see org.ofbiz.base.start.StartupContainer#start(java.lang.String)
+     * @see org.ofbiz.base.container.Container#start(java.lang.String)
      */
     public boolean start(String configFile) throws ContainerException {
         // start the server(s)
@@ -342,7 +341,7 @@ public class JettyContainer implements Container {
     }
 
     /**
-     * @see org.ofbiz.base.start.StartupContainer#stop()
+     * @see org.ofbiz.base.container.Container#stop()
      */
     public void stop() throws ContainerException {
         if (servers != null) {
