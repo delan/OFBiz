@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.29 2004/07/19 15:47:34 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.30 2004/07/29 20:52:57 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -116,7 +116,7 @@ public class ProductStoreWorker {
     }
 
     public static boolean autoSaveCart(GenericValue productStore) {
-        return "Y".equalsIgnoreCase(productStore.getString("autoSaveCart"));
+        return productStore == null ? false : "Y".equalsIgnoreCase(productStore.getString("autoSaveCart"));
     }
 
     public static String getProductStorePaymentProperties(ServletRequest request, String paymentMethodTypeId, String paymentServiceTypeEnumId, boolean anyServiceType) {

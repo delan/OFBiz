@@ -1,5 +1,5 @@
 /*
- * $Id: CatalogWorker.java,v 1.6 2003/09/02 02:17:15 ajzeneski Exp $
+ * $Id: CatalogWorker.java,v 1.7 2004/07/29 20:52:56 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class CatalogWorker {
@@ -89,7 +89,10 @@ public class CatalogWorker {
     public static List getStoreCatalogs(ServletRequest request) {
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        return getStoreCatalogs(delegator, productStoreId);
+    }
 
+    public static List getStoreCatalogs(GenericDelegator delegator, String productStoreId) {
         try {
             return EntityUtil.filterByDate(delegator.findByAndCache("ProductStoreCatalog", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNum", "prodCatalogId")), true);
         } catch (GenericEntityException e) {
@@ -106,6 +109,13 @@ public class CatalogWorker {
         String partyId = userLogin.getString("partyId");
         if (partyId == null) return null;
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        return getPartyCatalogs(delegator, partyId);
+    }
+
+    public static List getPartyCatalogs(GenericDelegator delegator, String partyId) {
+        if (delegator == null || partyId == null) {
+            return null;
+        }
 
         try {
             return EntityUtil.filterByDate(delegator.findByAndCache("ProdCatalogRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "CUSTOMER"), UtilMisc.toList("sequenceNum", "prodCatalogId")), true);
@@ -165,9 +175,19 @@ public class CatalogWorker {
     }
     
     public static List getCatalogIdsAvailable(ServletRequest request) {
-        List categoryIds = new LinkedList();
         List partyCatalogs = getPartyCatalogs(request);
         List storeCatalogs = getStoreCatalogs(request);
+        return getCatalogIdsAvailable(partyCatalogs, storeCatalogs);
+    }
+
+    public static List getCatalogIdsAvailable(GenericDelegator delegator, String productStoreId, String partyId) {
+        List storeCatalogs = getStoreCatalogs(delegator, productStoreId);
+        List partyCatalogs = getPartyCatalogs(delegator, partyId);
+        return getCatalogIdsAvailable(partyCatalogs, storeCatalogs);
+    }
+    
+    public static List getCatalogIdsAvailable(List partyCatalogs, List storeCatalogs) {
+        List categoryIds = new LinkedList();
         List allCatalogLinks = new ArrayList((storeCatalogs == null ? 0 : storeCatalogs.size()) + (partyCatalogs == null ? 0 : partyCatalogs.size()));
         if (partyCatalogs != null) allCatalogLinks.addAll(partyCatalogs);
         if (storeCatalogs != null) allCatalogLinks.addAll(storeCatalogs);
