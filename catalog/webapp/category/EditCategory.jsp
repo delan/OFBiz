@@ -65,12 +65,10 @@
 %>
 <br>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
-  <hr class='sepbar'>
-  <a href="<ofbiz:url>/EditCategory?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontextdisabled">[Category]</a>
-  <a href="<ofbiz:url>/EditCategoryRollup?showProductCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Rollup]</a>
-  <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Products]</a>
-  <a href="<ofbiz:url>/EditCategoryProdCatalogs?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Catalogs]</a>
-  <hr class='sepbar'>
+  <a href="<ofbiz:url>/EditCategory?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="bgbuttonSelected">Category</a>
+  <a href="<ofbiz:url>/EditCategoryRollup?showProductCategoryId=<%=productCategoryId%></ofbiz:url>" class="bgbutton">Rollup</a>
+  <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="bgbutton">Products</a>
+  <a href="<ofbiz:url>/EditCategoryProdCatalogs?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="bgbutton">Catalogs</a>
 <%}%>
 <div class="head1">Category <span class='head2'><%=UtilFormatOut.ifNotEmpty(productCategory==null?null:productCategory.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productCategoryId)%>]</span></div>
 <a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[New Category]</a>
