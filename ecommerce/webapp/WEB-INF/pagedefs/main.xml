@@ -3,5 +3,6 @@
     <template>main_lr</template>    
     <property name="title">Main Page</property>
     <page-action name="main.bsh"/>
+    <page-action name="/catalog/category.bsh"/>
 </page>
 
