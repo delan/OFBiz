@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.Arrays;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -917,7 +918,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         return featureSet;
     }
 
-    /** Returns the item's size ((height * 2) + (width * 2) + depth) */
+    /** Returns the item's size (length + girth) */
     public double getSize() {
         GenericValue product = getProduct();
         if (product != null) {
@@ -939,8 +940,11 @@ public class ShoppingCartItem implements java.io.Serializable {
             if (width == null) width = new Double(0);
             if (depth == null) depth = new Double(0);
 
-            double size = (height.doubleValue() * 2) + (width.doubleValue() * 2) + depth.doubleValue();
-            return size;
+            // determine girth (longest field is length)
+            double[] sizeInfo = { height.doubleValue(), width.doubleValue(), depth.doubleValue() };
+            Arrays.sort(sizeInfo);
+            
+            return (sizeInfo[0] * 2) + (sizeInfo[1] * 2) + sizeInfo[2];
         } else {
             // non-product items have 0 size
             return 0;
