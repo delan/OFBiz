@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -61,8 +61,10 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td>&nbsp;</td>
         <td>
           <select name="inventoryItemTypeId" size=1 class="selectBox">
-            <option selected value="${inventoryItemType.inventoryItemTypeId}">${inventoryItemType.description}</option>
-            <option value="${inventoryItemType.inventoryItemTypeId}">----</option>
+            <#if inventoryItemType?exists>
+                <option selected value="${inventoryItemType.inventoryItemTypeId}">${inventoryItemType.description}</option>
+                <option value="${inventoryItemType.inventoryItemTypeId}">----</option>
+            </#if>
             <#list inventoryItemTypes as nextInventoryItemType>
               <option value="${nextInventoryItemType.inventoryItemTypeId}">${nextInventoryItemType.description}</option>
             </#list>
