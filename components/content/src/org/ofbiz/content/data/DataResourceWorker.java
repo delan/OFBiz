@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.21 2004/03/24 23:37:32 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.22 2004/03/25 16:00:20 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import freemarker.template.Template;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -561,9 +561,15 @@ public class DataResourceWorker {
 
         Map context = (Map)templateContext.get("context");
         String webSiteId = (String) templateContext.get("webSiteId");
-        //if (UtilValidate.isEmpty(webSiteId)) webSiteId = (String) context.get("webSiteId");
+        if (UtilValidate.isEmpty(webSiteId)) {
+            if (context != null)
+                webSiteId = (String) context.get("webSiteId");
+        }
         String https = (String) templateContext.get("https");
-        //if (UtilValidate.isEmpty(https)) https = (String) context.get("https");
+        if (UtilValidate.isEmpty(https)) {
+            if (context != null)
+                https = (String) context.get("https");
+        }
         
         String dataResourceId = dataResource.getString("dataResourceId");
         String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
@@ -630,7 +636,10 @@ public class DataResourceWorker {
             outWriter.write(text);
         } else if (dataResourceTypeId.indexOf("_FILE") >= 0) {
             String rootDir = (String) templateContext.get("rootDir");
-            //if (UtilValidate.isEmpty(rootDir)) rootDir = (String) context.get("rootDir");
+            if (UtilValidate.isEmpty(rootDir)) {
+                if (context != null)
+                    rootDir = (String) context.get("rootDir");
+            }
             renderFile(dataResourceTypeId, dataResource.getString("objectInfo"), rootDir, outWriter);
         } else {
             throw new GeneralException("The dataResourceTypeId [" + dataResourceTypeId + "] is not supported in renderDataResourceAsText");
