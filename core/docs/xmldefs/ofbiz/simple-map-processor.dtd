@@ -47,17 +47,17 @@
 
 <!ELEMENT compare ( fail-message | fail-property )>
 <!ATTLIST compare
-    value CDATA #REQUIRED
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
-    type ( String | Number | Date | Time | Timestamp ) "String"
+    value CDATA #REQUIRED
+    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
     format CDATA #IMPLIED
 >
 
 <!ELEMENT compare-field ( fail-message | fail-property )>
 <!ATTLIST compare-field
-    field CDATA #REQUIRED
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
-    type ( String | Number | Date | Time | Timestamp ) "String"
+    field CDATA #REQUIRED
+    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
     format CDATA #IMPLIED
 >
 
