@@ -567,26 +567,20 @@ public class PartyServices {
     public static Map getPartyFromEmail(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-        Collection parties = new ArrayList();
+        Collection parties = new LinkedList();
         String email = (String) context.get("email");
         try {
             List exprs = new LinkedList();
             exprs.add(new EntityExpr("infoString", true, EntityOperator.LIKE, "%" + email.toUpperCase() + "%", true));
-            Collection c = delegator.findByAnd("ContactMech", exprs, UtilMisc.toList("infoString"));
-            Debug.logInfo("Collection: " + c);
+            Collection c = EntityUtil.filterByDate(delegator.findByAnd("PartyAndContactMech", exprs, UtilMisc.toList("infoString")));
+            Debug.logVerbose("Collection: " + c);
+            Debug.logInfo("PartyFromEmail number found: " + c.size());
             if (c != null) {
                 Iterator i = c.iterator();
                 while (i.hasNext()) {
-                    GenericValue cm = (GenericValue) i.next();
-                    Collection pcmc = delegator.findByAnd("PartyContactMech", UtilMisc.toMap("contactMechId", cm.getString("contactMechId")));
-                    if (pcmc != null) {
-                        pcmc = EntityUtil.filterByDate(pcmc);
-                        Iterator pcmi = pcmc.iterator();
-                        while (pcmi.hasNext()) {
-                            GenericValue pcm = (GenericValue) pcmi.next();
-                            parties.add(pcm.getRelatedOne("Party"));
-                        }
-                    }
+                    GenericValue pacm = (GenericValue) i.next();
+                    GenericValue party = delegator.makeValue("Party", UtilMisc.toMap("partyId", pacm.get("partyId"), "partyTypeId", pacm.get("partyTypeId")));
+                    parties.add(UtilMisc.toMap("party", party));
                 }
             }
         } catch (GenericEntityException e) {
@@ -607,26 +601,28 @@ public class PartyServices {
         Debug.logWarning("Running the getPartyFromUserLogin Service...");
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-        Collection parties = new ArrayList();
+        Collection parties = new LinkedList();
         String userLoginId = (String) context.get("userLoginId");
         try {
             List exprs = new LinkedList();
             exprs.add(new EntityExpr("userLoginId", true, EntityOperator.LIKE, "%" + userLoginId.toUpperCase() + "%", true));
-            Collection ulc = delegator.findByAnd("UserLogin", exprs, UtilMisc.toList("userloginId"));
-            Debug.logInfo("Collection: " + ulc);
+            Collection ulc = delegator.findByAnd("PartyAndUserLogin", exprs, UtilMisc.toList("userloginId"));
+            Debug.logVerbose("Collection: " + ulc);
+            Debug.logInfo("PartyFromUserLogin number found: " + ulc.size());
             if (ulc != null) {
                 Iterator i = ulc.iterator();
                 while (i.hasNext()) {
                     GenericValue ul = (GenericValue) i.next();
-                    GenericValue p = ul.getRelatedOne("Party");
-                    parties.add(p);
+                    GenericValue party = delegator.makeValue("Party", UtilMisc.toMap("partyId", ul.get("partyId"), "partyTypeId", ul.get("partyTypeId")));
+                    parties.add(UtilMisc.toMap("party", party));
                 }
             }
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Cannot get party entities (read failure): " + e.getMessage());
         }
-        if (parties.size() > 0)
+        if (parties.size() > 0) {
             result.put("parties", parties);
+        }
         return result;
     }
 
@@ -639,32 +635,39 @@ public class PartyServices {
     public static Map getPartyFromPerson(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-        Collection parties = new ArrayList();
+        Collection parties = new LinkedList();
         String firstName = (String) context.get("firstName");
         String lastName = (String) context.get("lastName");
-        if (firstName == null)
+        if (firstName == null) {
             firstName = "";
-        if (lastName == null)
+        }
+        if (lastName == null) {
             lastName = "";
+        }
         try {
             List exprs = new LinkedList();
             exprs.add(new EntityExpr("firstName", true, EntityOperator.LIKE, "%" + firstName.toUpperCase() + "%", true));
             exprs.add(new EntityExpr("lastName", true, EntityOperator.LIKE, "%" + lastName.toUpperCase() + "%", true));
             Collection pc = delegator.findByAnd("Person", exprs, UtilMisc.toList("lastName", "firstName", "partyId"));
-            Debug.logInfo("Collection: " + pc);
+            //NOTE: This can be very big, if annoying just comment out:
+            Debug.logVerbose("Collection: " + pc);
+            Debug.logInfo("PartyFromPerson number found: " + pc.size());
             if (pc != null) {
                 Iterator i = pc.iterator();
                 while (i.hasNext()) {
-                    GenericValue pr = (GenericValue) i.next();
-                    GenericValue p = pr.getRelatedOne("Party");
-                    parties.add(p);
+                    GenericValue person = (GenericValue) i.next();
+                    //GenericValue party = person.getRelatedOne("Party");
+                    //dummy up this one...
+                    GenericValue party = delegator.makeValue("Party", UtilMisc.toMap("partyId", person.get("partyId"), "partyTypeId", "PERSON"));
+                    parties.add(UtilMisc.toMap("person", person, "party", party));
                 }
             }
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Cannot get party entities (read failure): " + e.getMessage());
         }
-        if (parties.size() > 0)
+        if (parties.size() > 0) {
             result.put("parties", parties);
+        }
         return result;
     }
 
@@ -678,8 +681,9 @@ public class PartyServices {
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Cannot get person entity (read failure): " + e.getMessage());
         }
-        if (person != null)
+        if (person != null) {
             result.put("person", person);
+        }
         return result;
     }
 
