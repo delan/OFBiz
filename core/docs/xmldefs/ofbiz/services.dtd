@@ -44,6 +44,7 @@
 	auth (true|false) "false"
 	export (true|false) "false"
 	validate (true|false) "true"
+        use-transaction (true|false) "true"
 >
 <!ELEMENT attribute EMPTY>
 <!ATTLIST attribute

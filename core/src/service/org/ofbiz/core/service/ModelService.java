@@ -80,6 +80,9 @@ public class ModelService {
     /** Validate the context info for this service */
     public boolean validate;
 
+    /** Create a transaction for this service (if one is not already in place...)? */
+    public boolean useTransaction;
+
     /** Context Information, a list of parameters used by the service, contains ModelParam objects */
     protected Map contextInfo = new HashMap();
 

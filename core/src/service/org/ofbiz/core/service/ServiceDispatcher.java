@@ -130,10 +130,12 @@ public class ServiceDispatcher {
     public Map runSync(String localName, ModelService service, Map context) throws GenericServiceException {
         // start the transaction
         boolean beganTrans = false;
-        try {
-            beganTrans = TransactionUtil.begin();
-        } catch (GenericTransactionException te) {
-            throw new GenericServiceException("Cannot start the transaction.", te.getNested());
+        if (service.useTransaction) {
+            try {
+                beganTrans = TransactionUtil.begin();
+            } catch (GenericTransactionException te) {
+                throw new GenericServiceException("Cannot start the transaction.", te.getNested());
+            }
         }
 
         try {
@@ -229,10 +231,12 @@ public class ServiceDispatcher {
     public void runSyncIgnore(String localName, ModelService service, Map context) throws GenericServiceException {
         // start the transaction
         boolean beganTrans = false;
-        try {
-            beganTrans = TransactionUtil.begin();
-        } catch (GenericTransactionException te) {
-            throw new GenericServiceException("Cannot start the transaction.", te.getNested());
+        if (service.useTransaction) {
+            try {
+                beganTrans = TransactionUtil.begin();
+            } catch (GenericTransactionException te) {
+                throw new GenericServiceException("Cannot start the transaction.", te.getNested());
+            }
         }
 
         try {

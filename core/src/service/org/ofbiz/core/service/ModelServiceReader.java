@@ -251,6 +251,7 @@ public class ModelServiceReader {
         service.export = "true".equalsIgnoreCase(serviceElement.getAttribute("export"));
         //this defaults to true, so if anything but false, make it true
         service.validate = !"false".equalsIgnoreCase(serviceElement.getAttribute("validate"));
+        service.useTransaction = !"false".equalsIgnoreCase(serviceElement.getAttribute("use-transaction"));
         service.description = getCDATADef(serviceElement, "description");
         service.nameSpace = getCDATADef(serviceElement, "namespace");
         service.contextInfo = new HashMap();

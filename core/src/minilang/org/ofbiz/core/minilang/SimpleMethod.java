@@ -347,8 +347,8 @@ public class SimpleMethod {
         //declare errorMsg here just in case transaction ops fail
         String errorMsg = "";
 
-        //if beganTransaction and finished commit here
-        if (beganTransaction && finished) {
+        if (finished) {
+            //if finished commit here passing beganTransaction to perform it properly
             try {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericTransactionException e) {
@@ -357,10 +357,8 @@ public class SimpleMethod {
                 Debug.logWarning(errMsg);
                 Debug.logWarning(e);
             }
-        }
-
-        //if beganTransaction and NOT finished rollback here
-        if (beganTransaction && !finished) {
+        } else {
+            //if NOT finished rollback here passing beganTransaction to either rollback, or set rollback only
             try {
                 TransactionUtil.rollback(beganTransaction);
             } catch (GenericTransactionException e) {
