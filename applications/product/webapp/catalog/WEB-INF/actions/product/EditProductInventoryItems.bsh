@@ -115,6 +115,115 @@ while (incomingShipmentAndItemIter.hasNext()) {
 	incomingShipmentAndItemList.add(incomingShipmentAndItem);
 }
 
+// --------------------
+// Production Runs - INCOMING
+
+findIncomingProductionRunsConds = new LinkedList();
+
+findIncomingProductionRunsConds.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
+findIncomingProductionRunsConds.add(new EntityExpr("statusId", EntityOperator.EQUALS, "WIP_OUTGOING_FULFIL"));
+
+findIncomingProductionRunsStatusConds = new LinkedList();   
+findIncomingProductionRunsStatusConds.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "PRUN_CREATED"));
+findIncomingProductionRunsStatusConds.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "PRUN_DOC_PRINTED"));
+findIncomingProductionRunsStatusConds.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "PRUN_RUNNING"));
+findIncomingProductionRunsStatusConds.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "PRUN_COMPLETED"));
+findIncomingProductionRunsConds.add(new EntityConditionList(findIncomingProductionRunsStatusConds, EntityOperator.OR));
+
+findIncomingProductionRunsCondition = new EntityConditionList(findIncomingProductionRunsConds, EntityOperator.AND);
+incomingProductionRuns = delegator.findByCondition("WorkEffortAndGoods", findIncomingProductionRunsCondition, null, UtilMisc.toList("-estimatedCompletionDate"));
+incomingProductionRunsIter = incomingProductionRuns.iterator();
+while (incomingProductionRunsIter.hasNext()) {
+	incomingProductionRun = incomingProductionRunsIter.next();
+
+        if (incomingProductionRun.getString("currentStatusId").equals("PRUN_COMPLETED")) {
+            double estimatedQuantity = 0.0;
+            if (incomingProductionRun.get("estimatedQuantity") != null) {
+                estimatedQuantity = incomingProductionRun.getDouble("estimatedQuantity");
+            }
+            inventoryItems = delegator.findByAnd("WorkEffortAndInventoryProduced", UtilMisc.toMap("productId", productId, "workEffortId", incomingProductionRun.getString("workEffortId")));
+            inventoryItemsIter = inventoryItems.iterator();
+            double producedQtyTot = 0.0;
+            while (inventoryItemsIter.hasNext()) {
+                inventoryItem = inventoryItemsIter.next();
+                inventoryItemDetail = delegator.findByPrimaryKey("InventoryItemDetail", UtilMisc.toMap("inventoryItemId", inventoryItem.getString("inventoryItemId"), "inventoryItemDetailSeqId", "0001"));
+                if (inventoryItemDetail != null && inventoryItemDetail.get("quantityOnHandDiff") != null) {
+                    inventoryItemQty = inventoryItemDetail.getDouble("quantityOnHandDiff");
+                    producedQtyTot += inventoryItemQty.doubleValue();
+                }
+            }
+            if (estimatedQuantity - producedQtyTot > 0) {
+                estimatedQuantityDbl = new Double(estimatedQuantity - producedQtyTot);
+                incomingProductionRun.set("estimatedQuantity", estimatedQuantityDbl);
+            } else {
+                continue;
+            }
+        }
+	facilityId = incomingProductionRun.getString("facilityId");
+	facility = null;
+	if (UtilValidate.isNotEmpty(facilityId)) {
+		facility = delegator.findByPrimaryKeyCache("Facility", UtilMisc.toMap("facilityId", facilityId));
+	}
+
+	quantitySummary = quantitySummaryByFacility.get(facilityId);
+	if (quantitySummary == null) {
+		quantitySummary = new HashMap();
+		quantitySummary.put("facilityId", facilityId);
+		quantitySummary.put("facility", facility);
+		quantitySummaryByFacility.put(facilityId, quantitySummary);
+	}
+	
+	incomingProductionRunList = quantitySummary.get("incomingProductionRunList");
+	if (incomingProductionRunList == null) {
+		incomingProductionRunList = new LinkedList();
+		quantitySummary.put("incomingProductionRunList", incomingProductionRunList);
+	}
+	incomingProductionRunList.add(incomingProductionRun);
+}
+
+// --------------------
+// Production Runs - OUTGOING
+
+findOutgoingProductionRunsConds = new LinkedList();
+
+findOutgoingProductionRunsConds.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
+findOutgoingProductionRunsConds.add(new EntityExpr("statusId", EntityOperator.EQUALS, "WIP_INCOMING_FULFIL"));
+
+findOutgoingProductionRunsStatusConds = new LinkedList();
+findOutgoingProductionRunsStatusConds.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "PRUN_CREATED"));
+findOutgoingProductionRunsStatusConds.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "PRUN_DOC_PRINTED"));
+findOutgoingProductionRunsStatusConds.add(new EntityExpr("currentStatusId", EntityOperator.EQUALS, "PRUN_RUNNING"));
+findOutgoingProductionRunsConds.add(new EntityConditionList(findOutgoingProductionRunsStatusConds, EntityOperator.OR));
+
+findOutgoingProductionRunsCondition = new EntityConditionList(findOutgoingProductionRunsConds, EntityOperator.AND);
+outgoingProductionRuns = delegator.findByCondition("WorkEffortAndGoods", findOutgoingProductionRunsCondition, null, UtilMisc.toList("-estimatedStartDate"));
+outgoingProductionRunsIter = outgoingProductionRuns.iterator();
+while (outgoingProductionRunsIter.hasNext()) {
+	outgoingProductionRun = outgoingProductionRunsIter.next();
+
+	facilityId = outgoingProductionRun.getString("facilityId");
+	facility = null;
+	if (UtilValidate.isNotEmpty(facilityId)) {
+		facility = delegator.findByPrimaryKeyCache("Facility", UtilMisc.toMap("facilityId", facilityId));
+	}
+
+	quantitySummary = quantitySummaryByFacility.get(facilityId);
+	if (quantitySummary == null) {
+		quantitySummary = new HashMap();
+		quantitySummary.put("facilityId", facilityId);
+		quantitySummary.put("facility", facility);
+		quantitySummaryByFacility.put(facilityId, quantitySummary);
+	}
+	
+	outgoingProductionRunList = quantitySummary.get("outgoingProductionRunList");
+	if (outgoingProductionRunList == null) {
+		outgoingProductionRunList = new LinkedList();
+		quantitySummary.put("outgoingProductionRunList", outgoingProductionRunList);
+	}
+	
+	outgoingProductionRunList.add(outgoingProductionRun);
+}
+
 showEmpty = "true".equals(request.getParameter("showEmpty"));
 
 context.put("productId", productId);

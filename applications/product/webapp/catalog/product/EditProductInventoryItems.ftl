@@ -43,6 +43,8 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <td><div class="tabletext"><b>${uiLabelMap.ProductAtp}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductQoh}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductIncomingShipments}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductIncomingProductionRuns}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductOutgoingProductionRuns}</b></div></td>
         </tr>
         <#list quantitySummaryByFacility.values() as quantitySummary>
             <#assign facilityId = quantitySummary.facilityId?if_exists>
@@ -50,6 +52,9 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <#assign totalQuantityOnHand = quantitySummary.totalQuantityOnHand?if_exists>
             <#assign totalAvailableToPromise = quantitySummary.totalAvailableToPromise?if_exists>
             <#assign incomingShipmentAndItemList = quantitySummary.incomingShipmentAndItemList?if_exists>
+            <#assign incomingProductionRunList = quantitySummary.incomingProductionRunList?if_exists>
+            <#assign outgoingProductionRunList = quantitySummary.outgoingProductionRunList?if_exists>
+
             <tr>
                 <td><div class="tabletext">${(facility.facilityName)?if_exists} [${facilityId?default("[No Facility]")}]</div></td>
                 <td><div class="tabletext"><#if totalAvailableToPromise?exists>${totalAvailableToPromise}<#else>&nbsp;</#if></div></td>
@@ -58,6 +63,24 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     <#if incomingShipmentAndItemList?has_content>
                         <#list incomingShipmentAndItemList as incomingShipmentAndItem>
                             <div class="tabletext">${incomingShipmentAndItem.shipmentId}:${incomingShipmentAndItem.shipmentItemSeqId}-${(incomingShipmentAndItem.estimatedArrivalDate.toString())?if_exists}-<#if incomingShipmentAndItem.quantity?exists>${incomingShipmentAndItem.quantity?string.number}<#else>[${uiLabelMap.ProductQuantityNotSet}]</#if></div>
+                        </#list>
+                    <#else>
+                        <div class="tabletext">&nbsp;</div>
+                    </#if>
+                </td>
+                <td>
+                    <#if incomingProductionRunList?has_content>
+                        <#list incomingProductionRunList as incomingProductionRun>
+                            <div class="tabletext">${incomingProductionRun.workEffortId}-${(incomingProductionRun.estimatedCompletionDate.toString())?if_exists}-<#if incomingProductionRun.estimatedQuantity?exists>${incomingProductionRun.estimatedQuantity?string.number}<#else>[${uiLabelMap.ProductQuantityNotSet}]</#if></div>
+                        </#list>
+                    <#else>
+                        <div class="tabletext">&nbsp;</div>
+                    </#if>
+                </td>
+                <td>
+                    <#if outgoingProductionRunList?has_content>
+                        <#list outgoingProductionRunList as outgoingProductionRun>
+                            <div class="tabletext">${outgoingProductionRun.workEffortParentId}:${outgoingProductionRun.workEffortId}-${(outgoingProductionRun.estimatedStartDate.toString())?if_exists}-<#if outgoingProductionRun.estimatedQuantity?exists>${outgoingProductionRun.estimatedQuantity?string.number}<#else>[${uiLabelMap.ProductQuantityNotSet}]</#if></div>
                         </#list>
                     <#else>
                         <div class="tabletext">&nbsp;</div>
