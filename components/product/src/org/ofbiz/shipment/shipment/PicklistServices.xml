@@ -23,57 +23,57 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  -->
 <simple-methods>
     <simple-method method-name="findOrdersToPickMove" short-description="Find Orders Ready to Pick or that need Stock Moves">
-    	<!-- filter on:
-		 + OrderHeader.orderType = SALES_ORDER
-		 + OrderHeader.statusId = ORDER_APPROVED
-		 - OrderItem.statusId = ITEM_APPROVED
-		 - total number of orders to pick: limit to X
-		 + OrderShipmentPreference.shipmentMethodTypeId = group by
-		 + ShipmentMethodType.sequenceNum = order display of methods by
-		 x OrderShipmentPreference.carrierPartyId = group by along with ship method?
-		 + OrderShipmentPreference.shipAfterDate is null or <= now
-		 + OrderShipmentPreference.maySplit = decide to include based on whether all items available or not
-		 x OrderItemInventoryRes.reservedDatetime = sort by, or by order date?
-		 + OrderItemInventoryRes.quantityNotAvailable = if not null and not 0, and maySplit is N, exclude whole order
-		 + OrderItemInventoryRes.pickStartDate = if not null already being picked, set when creating the pick list
-		 + InventoryItem.facilityId = passed facilityId
-		 + FacilityLocation.locationTypeEnumId = FLT_PICKLOC, can be picked now
-		 + FacilityLocation.locationTypeEnumId = FLT_BULK, stock move needed, remove whole order from list to be picked, add to list needing stock move
-    	-->
-    	<!-- data to create - in Map in List pickMoveByShipmentMethodInfoList
-    	 + shipmentMethodType
-		 + orderReadyToPickInfoList
-		 + orderNeedsStockMoveInfoList
-		 With each list containing a Map with:
-		 + orderHeader
-		 + orderShipmentPreference
-		 + orderItemList
-		 + orderItemInventoryResList
-		 + orderItemInventoryResInfoList
-		 Each entry in the orderItemInventoryResInfoList is a Map with:
-		 + orderItemInventoryRes
-		 + inventoryItem
-		 + facilityLocation (may be null)
-    	-->
+        <!-- filter on:
+         + OrderHeader.orderType = SALES_ORDER
+         + OrderHeader.statusId = ORDER_APPROVED
+         - OrderItem.statusId = ITEM_APPROVED
+         - total number of orders to pick: limit to X
+         + OrderShipmentPreference.shipmentMethodTypeId = group by
+         + ShipmentMethodType.sequenceNum = order display of methods by
+         x OrderShipmentPreference.carrierPartyId = group by along with ship method?
+         + OrderShipmentPreference.shipAfterDate is null or <= now
+         + OrderShipmentPreference.maySplit = decide to include based on whether all items available or not
+         x OrderItemInventoryRes.reservedDatetime = sort by, or by order date?
+         + OrderItemInventoryRes.quantityNotAvailable = if not null and not 0, and maySplit is N, exclude whole order
+         + OrderItemInventoryRes.pickStartDate = if not null already being picked, set when creating the pick list
+         + InventoryItem.facilityId = passed facilityId
+         + FacilityLocation.locationTypeEnumId = FLT_PICKLOC, can be picked now
+         + FacilityLocation.locationTypeEnumId = FLT_BULK, stock move needed, remove whole order from list to be picked, add to list needing stock move
+        -->
+        <!-- data to create - in Map in List pickMoveByShipmentMethodInfoList
+         + shipmentMethodType
+         + orderReadyToPickInfoList
+         + orderNeedsStockMoveInfoList
+         With each list containing a Map with:
+         + orderHeader
+         + orderShipmentPreference
+         + orderItemList
+         + orderItemInventoryResList
+         + orderItemInventoryResInfoList
+         Each entry in the orderItemInventoryResInfoList is a Map with:
+         + orderItemInventoryRes
+         + inventoryItem
+         + facilityLocation (may be null)
+        -->
 
         <check-permission permission="FACILITY" action="_VIEW">
             <fail-message message="Security Error: to run getPicklistData you must have the FACILITY_VIEW or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
-    	
-    	<now-timestamp-to-env env-name="nowTimestamp"/>
-    	
-		<string-to-field string="SALES_ORDER" field-name="orderTypeId" map-name="orderHeaderLkpMp"/>
-		<string-to-field string="ORDER_APPROVED" field-name="statusId" map-name="orderHeaderLkpMp"/>
-		<string-to-list string="+orderDate" list-name="orderHeaderOrdLst"/><!-- oldest first -->
-		<find-by-and list-name="orderHeaderList" entity-name="OrderHeader" map-name="orderHeaderLkpMp" order-by-list-name="orderHeaderOrdLst"/>
+        
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        
+        <string-to-field string="SALES_ORDER" field-name="orderTypeId" map-name="orderHeaderLkpMp"/>
+        <string-to-field string="ORDER_APPROVED" field-name="statusId" map-name="orderHeaderLkpMp"/>
+        <string-to-list string="+orderDate" list-name="orderHeaderOrdLst"/><!-- oldest first -->
+        <find-by-and list-name="orderHeaderList" entity-name="OrderHeader" map-name="orderHeaderLkpMp" order-by-list-name="orderHeaderOrdLst"/>
 
-		<iterate entry-name="orderHeader" list-name="orderHeaderList">
+        <iterate entry-name="orderHeader" list-name="orderHeaderList">
             <!-- get the order items and the order item inventory res entries -->
             <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="orderShipmentPreferenceLkupMap"/>
             <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="orderShipmentPreferenceLkupMap"/>
@@ -81,142 +81,142 @@
             
             <!-- if a shipmentMethodTypeId was not passed or is the same as the current, then process this order -->
             <if>
-            	<condition>
-            		<and>
-            			<!-- only pick if it is the right shipmentMethodTypeId, if one was passed in -->
-						<or>
-							<if-empty field-name="parameters.shipmentMethodTypeId"/>
-							<if-compare-field field-name="parameters.shipmentMethodTypeId" operator="equals" to-field-name="orderShipmentPreference.shipmentMethodTypeId"/>
-						</or>
-						<!-- only pick if now is after the shipAfterDate or the shipAfterDate is empty -->
-            			<or>
-            				<if-empty field-name="orderShipmentPreference.shipAfterDate"/>
-	            			<if-compare-field field-name="nowTimestamp" operator="greater-equals" to-field-name="orderShipmentPreference.shipAfterDate"/>
-            			</or>
-            		</and>
-            	</condition>
-            	<then>
-					<get-related value-name="orderHeader" relation-name="OrderItemInventoryRes" list-name="orderItemInventoryResList"/>
-					<string-to-list string="+orderItemSeqId" list-name="orderItemOrdLst"/>
-					<get-related value-name="orderHeader" relation-name="OrderItem" list-name="orderItemList" order-by-list-name="orderItemOrdLst"/>
-		
-					<!-- only add to picklist if inventory is not available (quantityNotAvailable on OIIR greater than 0) when maySplit is N (wait until all available to ship) -->
-					<string-to-field string="Y" field-name="pickThisOrder"/>
-					<string-to-field string="N" field-name="needsStockMove"/>
-					<string-to-field string="Y" field-name="allPickStarted"/>
-					<iterate entry-name="orderItemInventoryRes" list-name="orderItemInventoryResList">
-						<if-compare field-name="pickThisOrder" operator="equals" value="Y">
-							<get-related-one value-name="orderItemInventoryRes" relation-name="InventoryItem" to-value-name="inventoryItem"/>
-							<!-- if all orderItemInventoryRes.pickStartDate are set, don't include order as a pick candidate; keep a flag to see -->
-							<if-empty field-name="orderItemInventoryRes.pickStartDate">
-								<!-- note that this is separate because we can't really use it as a break condition, must check all of them before any useful information is to be had -->
-								<string-to-field string="N" field-name="allPickStarted"/>
-								
-								<if>
-									<condition>
-										<or>
-											<!-- check all OIIRs and if quantityNotAvailable is not empty and > 0 for any, don't pick order -->
-											<and>
-												<if-compare field-name="maySplit"  map-name="orderShipmentPreference" operator="equals" value="N"/>
-												<not><if-empty field-name="orderItemInventoryRes.quantityNotAvailable"/></not>
-												<if-compare field-name="orderItemInventoryRes.quantityNotAvailable" operator="greater" value="0" type="Double"/>
-											</and>
-											<!-- make sure the inventoryItem is in the specified facility -->
-											<if-compare-field field-name="parameters.facilityId" operator="not-equals" to-field-name="inventoryItem.facilityId"/>
-										</or>
-									</condition>
-									<then>
-										<string-to-field string="N" field-name="pickThisOrder"/>
-									</then>
-									<else>
-										<!-- check InventoryItem->FacilityLocation (if exists), if it is of type FLT_BULK set needs stock move to true -->
-										<get-related-one value-name="inventoryItem" relation-name="FacilityLocation" to-value-name="facilityLocation"/>
-										<if-not-empty field-name="facilityLocation">
-											<if-compare field-name="facilityLocation.locationTypeEnumId" operator="equals" value="FLT_BULK">
-												<string-to-field string="Y" field-name="needsStockMove"/>
-											</if-compare>
-										</if-not-empty>
-										
-										<!-- make the orderItemInventoryResInfo and add it to the orderItemInventoryResInfoList -->
-										<env-to-env env-name="orderItemInventoryRes" to-env-name="orderItemInventoryResInfo.orderItemInventoryRes"/>
-										<env-to-env env-name="inventoryItem" to-env-name="orderItemInventoryResInfo.inventoryItem"/>
-										<env-to-env env-name="facilityLocation" to-env-name="orderItemInventoryResInfo.facilityLocation"/>
-										<field-to-list field-name="orderItemInventoryResInfo" list-name="orderItemInventoryResInfoList"/>
-										<clear-field field-name="orderItemInventoryResInfo"/>
-									</else>
-								</if>
-							</if-empty>
-						</if-compare>
-					</iterate>
-					
-					<if>
-						<condition>
-							<and>
-								<if-compare field-name="pickThisOrder" operator="equals" value="Y"/>
-								<if-compare field-name="allPickStarted" operator="equals" value="N"/>
-							</and>
-						</condition>
-						<then>
-							<!-- make the info map for this orderHeader -->
-							<env-to-env env-name="orderHeader" to-env-name="orderHeaderInfo.orderHeader"/>
-							<env-to-env env-name="orderShipmentPreference" to-env-name="orderHeaderInfo.orderShipmentPreference"/>
-							<env-to-env env-name="orderItemList" to-env-name="orderHeaderInfo.orderItemList"/>
-							<env-to-env env-name="orderItemInventoryResList" to-env-name="orderHeaderInfo.orderItemInventoryResList"/>
-							<env-to-env env-name="orderItemInventoryResInfoList" to-env-name="orderHeaderInfo.orderItemInventoryResInfoList"/>
-					
-							<!-- pick now, or needs stock move first? -->
-							<!-- put in pick or move lists for the given shipmentMethodTypeId -->
-							<env-to-env env-name="orderShipmentPreference.shipmentMethodTypeId" to-env-name="shipmentMethodTypeId"/>
-							<if-empty field-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}">
-								<get-related-one value-name="orderShipmentPreference" relation-name="ShipmentMethodType" to-value-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.shipmentMethodType"/>
-							</if-empty>
-							<if-compare field-name="needsStockMove" operator="equals" value="Y">
-								<field-to-list field-name="orderHeaderInfo" list-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.orderNeedsStockMoveInfoList"/>
-							<else>
-								<field-to-list field-name="orderHeaderInfo" list-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.orderReadyToPickInfoList"/>
-							</else>
-							</if-compare>
-							<clear-field field-name="orderHeaderInfo"/>
-						</then>
-					</if>
-					
-					<clear-field field-name="orderShipmentPreference"/>
-					<clear-field field-name="orderItemList"/>
-					<clear-field field-name="orderItemInventoryResInfoList"/>
-            	</then>
+                <condition>
+                    <and>
+                        <!-- only pick if it is the right shipmentMethodTypeId, if one was passed in -->
+                        <or>
+                            <if-empty field-name="parameters.shipmentMethodTypeId"/>
+                            <if-compare-field field-name="parameters.shipmentMethodTypeId" operator="equals" to-field-name="orderShipmentPreference.shipmentMethodTypeId"/>
+                        </or>
+                        <!-- only pick if now is after the shipAfterDate or the shipAfterDate is empty -->
+                        <or>
+                            <if-empty field-name="orderShipmentPreference.shipAfterDate"/>
+                            <if-compare-field field-name="nowTimestamp" operator="greater-equals" to-field-name="orderShipmentPreference.shipAfterDate"/>
+                        </or>
+                    </and>
+                </condition>
+                <then>
+                    <get-related value-name="orderHeader" relation-name="OrderItemInventoryRes" list-name="orderItemInventoryResList"/>
+                    <string-to-list string="+orderItemSeqId" list-name="orderItemOrdLst"/>
+                    <get-related value-name="orderHeader" relation-name="OrderItem" list-name="orderItemList" order-by-list-name="orderItemOrdLst"/>
+        
+                    <!-- only add to picklist if inventory is not available (quantityNotAvailable on OIIR greater than 0) when maySplit is N (wait until all available to ship) -->
+                    <string-to-field string="Y" field-name="pickThisOrder"/>
+                    <string-to-field string="N" field-name="needsStockMove"/>
+                    <string-to-field string="Y" field-name="allPickStarted"/>
+                    <iterate entry-name="orderItemInventoryRes" list-name="orderItemInventoryResList">
+                        <if-compare field-name="pickThisOrder" operator="equals" value="Y">
+                            <get-related-one value-name="orderItemInventoryRes" relation-name="InventoryItem" to-value-name="inventoryItem"/>
+                            <!-- if all orderItemInventoryRes.pickStartDate are set, don't include order as a pick candidate; keep a flag to see -->
+                            <if-empty field-name="orderItemInventoryRes.pickStartDate">
+                                <!-- note that this is separate because we can't really use it as a break condition, must check all of them before any useful information is to be had -->
+                                <string-to-field string="N" field-name="allPickStarted"/>
+                                
+                                <if>
+                                    <condition>
+                                        <or>
+                                            <!-- check all OIIRs and if quantityNotAvailable is not empty and > 0 for any, don't pick order -->
+                                            <and>
+                                                <if-compare field-name="maySplit"  map-name="orderShipmentPreference" operator="equals" value="N"/>
+                                                <not><if-empty field-name="orderItemInventoryRes.quantityNotAvailable"/></not>
+                                                <if-compare field-name="orderItemInventoryRes.quantityNotAvailable" operator="greater" value="0" type="Double"/>
+                                            </and>
+                                            <!-- make sure the inventoryItem is in the specified facility -->
+                                            <if-compare-field field-name="parameters.facilityId" operator="not-equals" to-field-name="inventoryItem.facilityId"/>
+                                        </or>
+                                    </condition>
+                                    <then>
+                                        <string-to-field string="N" field-name="pickThisOrder"/>
+                                    </then>
+                                    <else>
+                                        <!-- check InventoryItem->FacilityLocation (if exists), if it is of type FLT_BULK set needs stock move to true -->
+                                        <get-related-one value-name="inventoryItem" relation-name="FacilityLocation" to-value-name="facilityLocation"/>
+                                        <if-not-empty field-name="facilityLocation">
+                                            <if-compare field-name="facilityLocation.locationTypeEnumId" operator="equals" value="FLT_BULK">
+                                                <string-to-field string="Y" field-name="needsStockMove"/>
+                                            </if-compare>
+                                        </if-not-empty>
+                                        
+                                        <!-- make the orderItemInventoryResInfo and add it to the orderItemInventoryResInfoList -->
+                                        <env-to-env env-name="orderItemInventoryRes" to-env-name="orderItemInventoryResInfo.orderItemInventoryRes"/>
+                                        <env-to-env env-name="inventoryItem" to-env-name="orderItemInventoryResInfo.inventoryItem"/>
+                                        <env-to-env env-name="facilityLocation" to-env-name="orderItemInventoryResInfo.facilityLocation"/>
+                                        <field-to-list field-name="orderItemInventoryResInfo" list-name="orderItemInventoryResInfoList"/>
+                                        <clear-field field-name="orderItemInventoryResInfo"/>
+                                    </else>
+                                </if>
+                            </if-empty>
+                        </if-compare>
+                    </iterate>
+                    
+                    <if>
+                        <condition>
+                            <and>
+                                <if-compare field-name="pickThisOrder" operator="equals" value="Y"/>
+                                <if-compare field-name="allPickStarted" operator="equals" value="N"/>
+                            </and>
+                        </condition>
+                        <then>
+                            <!-- make the info map for this orderHeader -->
+                            <env-to-env env-name="orderHeader" to-env-name="orderHeaderInfo.orderHeader"/>
+                            <env-to-env env-name="orderShipmentPreference" to-env-name="orderHeaderInfo.orderShipmentPreference"/>
+                            <env-to-env env-name="orderItemList" to-env-name="orderHeaderInfo.orderItemList"/>
+                            <env-to-env env-name="orderItemInventoryResList" to-env-name="orderHeaderInfo.orderItemInventoryResList"/>
+                            <env-to-env env-name="orderItemInventoryResInfoList" to-env-name="orderHeaderInfo.orderItemInventoryResInfoList"/>
+                    
+                            <!-- pick now, or needs stock move first? -->
+                            <!-- put in pick or move lists for the given shipmentMethodTypeId -->
+                            <env-to-env env-name="orderShipmentPreference.shipmentMethodTypeId" to-env-name="shipmentMethodTypeId"/>
+                            <if-empty field-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}">
+                                <get-related-one value-name="orderShipmentPreference" relation-name="ShipmentMethodType" to-value-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.shipmentMethodType"/>
+                            </if-empty>
+                            <if-compare field-name="needsStockMove" operator="equals" value="Y">
+                                <field-to-list field-name="orderHeaderInfo" list-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.orderNeedsStockMoveInfoList"/>
+                            <else>
+                                <field-to-list field-name="orderHeaderInfo" list-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.orderReadyToPickInfoList"/>
+                            </else>
+                            </if-compare>
+                            <clear-field field-name="orderHeaderInfo"/>
+                        </then>
+                    </if>
+                    
+                    <clear-field field-name="orderShipmentPreference"/>
+                    <clear-field field-name="orderItemList"/>
+                    <clear-field field-name="orderItemInventoryResInfoList"/>
+                </then>
             </if>
             
             <clear-field field-name="orderHeaderInfo"/>
             <clear-field field-name="orderShipmentPreference"/>
             <clear-field field-name="orderShipmentPreferenceLkupMap"/>
             <clear-field field-name="orderShipmentPreferenceLkupMap"/>
-		</iterate>
-		
-		<!-- find all ShipmentMethodType in order by sequenceNum, for each one get the value from the pickMoveByShipmentMethodInfoMap and add it to the pickMoveByShipmentMethodInfoList -->
-		<string-to-list string="+sequenceNum" list-name="shipmentMethodTypeOrdLst"/>
-		<find-by-and list-name="shipmentMethodTypeList" entity-name="ShipmentMethodType" map-name="" order-by-list-name="shipmentMethodTypeOrdLst"/>
-		<iterate entry-name="shipmentMethodType" list-name="shipmentMethodTypeList">
-			<if-not-empty field-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodType.shipmentMethodTypeId}">
-				<field-to-list field-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodType.shipmentMethodTypeId}" list-name="pickMoveByShipmentMethodInfoList"/>
-			</if-not-empty>
-		</iterate>
-		
-		<field-to-result field-name="pickMoveByShipmentMethodInfoList"/>
+        </iterate>
+        
+        <!-- find all ShipmentMethodType in order by sequenceNum, for each one get the value from the pickMoveByShipmentMethodInfoMap and add it to the pickMoveByShipmentMethodInfoList -->
+        <string-to-list string="+sequenceNum" list-name="shipmentMethodTypeOrdLst"/>
+        <find-by-and list-name="shipmentMethodTypeList" entity-name="ShipmentMethodType" map-name="" order-by-list-name="shipmentMethodTypeOrdLst"/>
+        <iterate entry-name="shipmentMethodType" list-name="shipmentMethodTypeList">
+            <if-not-empty field-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodType.shipmentMethodTypeId}">
+                <field-to-list field-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodType.shipmentMethodTypeId}" list-name="pickMoveByShipmentMethodInfoList"/>
+            </if-not-empty>
+        </iterate>
+        
+        <field-to-result field-name="pickMoveByShipmentMethodInfoList"/>
     </simple-method>
-	
+    
     <simple-method method-name="getPicklistData" short-description="Get Picklist Data">
-    	<!--
-    		Parameters:
-    			facilityId
-    			shipmentMethodTypeId
-    			maxNumberOfOrders
-    		Returns:
-    			inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, statusItem, quantity
-    			orderHeaderInfoList: List of Maps with orderHeader and orderItemInfoList which is List of Maps with orderItem, product and orderItemInventoryResList
-    			wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem
-    			insufficientQohList: List of Maps with inventoryItem and quantityNeeded
-    	-->
-    	
+        <!--
+            Parameters:
+                facilityId
+                shipmentMethodTypeId
+                maxNumberOfOrders
+            Returns:
+                inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, statusItem, quantity
+                orderHeaderInfoList: List of Maps with orderHeader and orderItemInfoList which is List of Maps with orderItem, product and orderItemInventoryResList
+                wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem
+                insufficientQohList: List of Maps with inventoryItem and quantityNeeded
+        -->
+        
         <check-permission permission="FACILITY" action="_VIEW">
             <fail-message message="Security Error: to run getPicklistData you must have the FACILITY_VIEW or FACILITY_ADMIN permission"/>
         </check-permission>
@@ -225,35 +225,35 @@
         </check-permission>
         <check-errors/>
 
-    	<now-timestamp-to-env env-name="nowTimestamp"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
         
         <set-service-fields map-name="parameters" service-name="findOrdersToPickMove" to-map-name="findOrdersToPickMoveMap"/>
         <call-service service-name="findOrdersToPickMove" in-map-name="findOrdersToPickMoveMap">
-        	<result-to-field result-name="pickMoveByShipmentMethodInfoList"/>
+            <result-to-field result-name="pickMoveByShipmentMethodInfoList"/>
         </call-service>
 
-		<!-- if maxNumberOfOrders is passed, get at most that many orders and go over them -->
-		<calculate field-name="numberSoFar" type="Long"><number value="0"/></calculate>
+        <!-- if maxNumberOfOrders is passed, get at most that many orders and go over them -->
+        <calculate field-name="numberSoFar" type="Long"><number value="0"/></calculate>
         <iterate entry-name="pickMoveByShipmentMethodInfo" list-name="pickMoveByShipmentMethodInfoList">
-        	<if>
-        		<condition>
-        			<or>
-        				<if-empty field-name="parameters.maxNumberOfOrders"/>
-        				<if-compare-field field-name="numberSoFar" operator="less" to-field-name="parameters.maxNumberOfOrders"></if-compare-field>
-        			</or>
-        		</condition>
-        		<then>
-        			<field-to-list field-name="pickMoveByShipmentMethodInfo" list-name="limitedPickMoveByShipmentMethodInfoList"/>
-        		</then>
-        	</if>
-        	
-        	<calculate field-name="numberSoFar" type="Long">
-        		<calcop field-name="numberSoFar" operator="add"><number value="1"/></calcop>
-        	</calculate>
+            <if>
+                <condition>
+                    <or>
+                        <if-empty field-name="parameters.maxNumberOfOrders"/>
+                        <if-compare-field field-name="numberSoFar" operator="less" to-field-name="parameters.maxNumberOfOrders"></if-compare-field>
+                    </or>
+                </condition>
+                <then>
+                    <field-to-list field-name="pickMoveByShipmentMethodInfo" list-name="limitedPickMoveByShipmentMethodInfoList"/>
+                </then>
+            </if>
+            
+            <calculate field-name="numberSoFar" type="Long">
+                <calcop field-name="numberSoFar" operator="add"><number value="1"/></calcop>
+            </calculate>
         </iterate>
         
         <iterate entry-name="pickMoveByShipmentMethodInfo" list-name="limitedPickMoveByShipmentMethodInfoList">
-        	<iterate entry-name="orderReadyToPickInfo" list-name="pickMoveByShipmentMethodInfo.orderReadyToPickInfoList">
+            <iterate entry-name="orderReadyToPickInfo" list-name="pickMoveByShipmentMethodInfo.orderReadyToPickInfoList">
                 <iterate entry-name="orderItem" list-name="orderReadyToPickInfo.orderItemList">
                     <if-compare value="ITEM_APPROVED" operator="equals" field-name="orderItem.statusId">
                         <calculate field-name="reservedQuantity" type="Double"><number value="0"/></calculate>
@@ -298,8 +298,8 @@
                             
                             <!-- if setPickStartedDate == "Y" then set the OrderItemInventoryRes.pickStartDate to now -->
                             <if-compare field-name="parameters.setPickStartedDate" operator="equals" value="Y">
-                            	<env-to-env env-name="nowTimestamp" to-env-name="orderItemInventoryRes.pickStartDate"/>
-                            	<store-value value-name="orderItemInventoryRes"/>
+                                <env-to-env env-name="nowTimestamp" to-env-name="orderItemInventoryRes.pickStartDate"/>
+                                <store-value value-name="orderItemInventoryRes"/>
                             </if-compare>
                         </iterate>
                         
@@ -347,91 +347,91 @@
                     <field-to-list field-name="orderHeaderInfo" list-name="orderHeaderInfoList"/>
                 </if-not-empty>
                 
-				<clear-field field-name="orderHeaderInfo"/>
-				<clear-field field-name="orderItemInfoList"/>
-        	</iterate>
+                <clear-field field-name="orderHeaderInfo"/>
+                <clear-field field-name="orderItemInfoList"/>
+            </iterate>
         </iterate>
         
 
-	    <!-- go through all quantities and get inventoryItem and facilityLocation -->
-    	<!-- warn if insufficient QOH for reserved amount -->
-    	<iterate-map key-name="inventoryItemId" value-name="quantityNeeded" map-name="inventoryItemQuantities">
-    		<field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
-    		
-    		<if>
-    			<condition>
-    				<or>
-    					<and>
-	    					<if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItem.inventoryItemTypeId"/>
-	    					<if-compare value="1" operator="less" field-name="quantityNeeded" type="Double"/>
-    					</and>
-    					<if-compare-field field-name="quantityNeeded" operator="greater" to-field-name="inventoryItem.quantityOnHand" type="Double"/>
-    				</or>
-    			</condition>
-    			<then>
-		            <env-to-field env-name="inventoryItem" map-name="insufficientQoh"/>
-		            <env-to-field env-name="quantityNeeded" map-name="insufficientQoh"/>
-		            <field-to-list field-name="insufficientQoh" list-name="insufficientQohList"/>
-		            <clear-field field-name="insufficientQoh"/>
-    			</then>
-    		</if>
-    		
-    		<!-- create a list of locations, then sort it, will have to create a reverse Map to go from location to inventory item -->
-    		<get-related-one value-name="inventoryItem" relation-name="FacilityLocation" to-value-name="facilityLocation"/>
-    		<if-not-empty field-name="facilityLocation">
-	    		<field-to-list field-name="facilityLocation" list-name="facilityLocations"/>
-	    		<!-- support multiple invnetoryItemIds per facilityLocation.locationSeqId -->
-	    		<field-to-env field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation" env-name="inventoryItemIdList"/>
-	    		<field-to-list field-name="inventoryItemId" list-name="inventoryItemIdList"/>
-	    		<env-to-field env-name="inventoryItemIdList" field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation"/>
-	    		<clear-field field-name="inventoryItemIdList"/>
-    		<else>
-    			<field-to-list field-name="inventoryItemId" list-name="noLocationInventoryItemIds"/>
-    		</else>
-    		</if-not-empty>
-    		<clear-field field-name="facilityLocation"/>
-    	</iterate-map>
-    	
-		<!-- order the facilityLocations -->
-		<string-to-list string="+areaId" list-name="facilityLocsOrdLst"/>
-		<string-to-list string="+aisleId" list-name="facilityLocsOrdLst"/>
-		<string-to-list string="+sectionId" list-name="facilityLocsOrdLst"/>
-		<string-to-list string="+levelId" list-name="facilityLocsOrdLst"/>
-		<string-to-list string="+positionId" list-name="facilityLocsOrdLst"/>
-		<order-value-list list-name="facilityLocations" order-by-list-name="facilityLocsOrdLst"/>
-		
-		<!-- for each facility location add an entry to the inventoryItemInfoList -->
-		<iterate entry-name="facilityLocation" list-name="facilityLocations">
-			<!-- inventoryItemInfoList: facilityLocation, inventoryItem, orderItems, quantity -->
-    		<field-to-env field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation" env-name="inventoryItemIdList"/>
-    		<iterate entry-name="inventoryItemId" list-name="inventoryItemIdList">
-				<env-to-field env-name="facilityLocation" map-name="inventoryItemInfo"/>
-				<field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
-				<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
-				<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
-				<get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="Product" to-value-name="inventoryItemInfo.product"/>
-				<get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
+        <!-- go through all quantities and get inventoryItem and facilityLocation -->
+        <!-- warn if insufficient QOH for reserved amount -->
+        <iterate-map key-name="inventoryItemId" value-name="quantityNeeded" map-name="inventoryItemQuantities">
+            <field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
+            
+            <if>
+                <condition>
+                    <or>
+                        <and>
+                            <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItem.inventoryItemTypeId"/>
+                            <if-compare value="1" operator="less" field-name="quantityNeeded" type="Double"/>
+                        </and>
+                        <if-compare-field field-name="quantityNeeded" operator="greater" to-field-name="inventoryItem.quantityOnHand" type="Double"/>
+                    </or>
+                </condition>
+                <then>
+                    <env-to-field env-name="inventoryItem" map-name="insufficientQoh"/>
+                    <env-to-field env-name="quantityNeeded" map-name="insufficientQoh"/>
+                    <field-to-list field-name="insufficientQoh" list-name="insufficientQohList"/>
+                    <clear-field field-name="insufficientQoh"/>
+                </then>
+            </if>
+            
+            <!-- create a list of locations, then sort it, will have to create a reverse Map to go from location to inventory item -->
+            <get-related-one value-name="inventoryItem" relation-name="FacilityLocation" to-value-name="facilityLocation"/>
+            <if-not-empty field-name="facilityLocation">
+                <field-to-list field-name="facilityLocation" list-name="facilityLocations"/>
+                <!-- support multiple invnetoryItemIds per facilityLocation.locationSeqId -->
+                <field-to-env field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation" env-name="inventoryItemIdList"/>
+                <field-to-list field-name="inventoryItemId" list-name="inventoryItemIdList"/>
+                <env-to-field env-name="inventoryItemIdList" field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation"/>
+                <clear-field field-name="inventoryItemIdList"/>
+            <else>
+                <field-to-list field-name="inventoryItemId" list-name="noLocationInventoryItemIds"/>
+            </else>
+            </if-not-empty>
+            <clear-field field-name="facilityLocation"/>
+        </iterate-map>
+        
+        <!-- order the facilityLocations -->
+        <string-to-list string="+areaId" list-name="facilityLocsOrdLst"/>
+        <string-to-list string="+aisleId" list-name="facilityLocsOrdLst"/>
+        <string-to-list string="+sectionId" list-name="facilityLocsOrdLst"/>
+        <string-to-list string="+levelId" list-name="facilityLocsOrdLst"/>
+        <string-to-list string="+positionId" list-name="facilityLocsOrdLst"/>
+        <order-value-list list-name="facilityLocations" order-by-list-name="facilityLocsOrdLst"/>
+        
+        <!-- for each facility location add an entry to the inventoryItemInfoList -->
+        <iterate entry-name="facilityLocation" list-name="facilityLocations">
+            <!-- inventoryItemInfoList: facilityLocation, inventoryItem, orderItems, quantity -->
+            <field-to-env field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation" env-name="inventoryItemIdList"/>
+            <iterate entry-name="inventoryItemId" list-name="inventoryItemIdList">
+                <env-to-field env-name="facilityLocation" map-name="inventoryItemInfo"/>
+                <field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
+                <field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
+                <field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
+                <get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="Product" to-value-name="inventoryItemInfo.product"/>
+                <get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
 
-				<field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
-				<clear-field field-name="inventoryItemInfo"/>
-    		</iterate>
-		</iterate>
-		
-    	<!-- add all noLocationInventoryItemIds to inventoryItemInfoList with all entries except facilityLocation -->
-    	<iterate entry-name="inventoryItemId" list-name="noLocationInventoryItemIds">
-	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
-	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
-	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
-			<get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="Product" to-value-name="inventoryItemInfo.product"/>
-			<get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
+                <field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
+                <clear-field field-name="inventoryItemInfo"/>
+            </iterate>
+        </iterate>
+        
+        <!-- add all noLocationInventoryItemIds to inventoryItemInfoList with all entries except facilityLocation -->
+        <iterate entry-name="inventoryItemId" list-name="noLocationInventoryItemIds">
+            <field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
+            <field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
+            <field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
+            <get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="Product" to-value-name="inventoryItemInfo.product"/>
+            <get-related-one value-name="inventoryItemInfo.inventoryItem" relation-name="StatusItem" to-value-name="inventoryItemInfo.statusItem"/>
 
-			<field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
-	    	<clear-field field-name="inventoryItemInfo"/>
-    	</iterate>
-		
-		<field-to-result field-name="inventoryItemInfoList"/>
-		<field-to-result field-name="orderHeaderInfoList"/>
-		<field-to-result field-name="wrongQuantityReservedList"/>
-		<field-to-result field-name="insufficientQohList"/>
+            <field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
+            <clear-field field-name="inventoryItemInfo"/>
+        </iterate>
+        
+        <field-to-result field-name="inventoryItemInfoList"/>
+        <field-to-result field-name="orderHeaderInfoList"/>
+        <field-to-result field-name="wrongQuantityReservedList"/>
+        <field-to-result field-name="insufficientQohList"/>
     </simple-method>    
 </simple-methods>
