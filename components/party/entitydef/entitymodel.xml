@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  */
 -->
 
@@ -1394,16 +1394,30 @@
         <key-map field-name="partyId"/>
       </relation>
     </entity>
-    <view-entity entity-name="PartyRoleAndPerson"
+    <view-entity entity-name="PartyRoleAndPartyDetail"
             package-name="org.ofbiz.party.party"
-            title="PartyRole and Person View Entity">
+            title="Party Role and Party Detail (Person, PartyGroup, etc) View Entity">
+      <member-entity entity-alias="PTY" entity-name="Party"/>
       <member-entity entity-alias="PR" entity-name="PartyRole"/>
-      <member-entity entity-alias="PS" entity-name="Person"/>
-      <alias entity-alias="PR" name="partyId"/>
-      <alias entity-alias="PR" name="roleTypeId"/>
-      <alias entity-alias="PS" name="firstName"/>
-      <alias entity-alias="PS" name="lastName"/>
-      <view-link entity-alias="PR" rel-entity-alias="PS">
+      <member-entity entity-alias="PERSON" entity-name="Person"/>
+      <member-entity entity-alias="PTYGRP" entity-name="PartyGroup"/>
+      <alias-all entity-alias="PTY"/>
+      <alias-all entity-alias="PR"/>
+      <alias-all entity-alias="PERSON">
+        <exclude field="comments"/>
+      </alias-all>
+      <alias-all entity-alias="PTYGRP">
+        <exclude field="comments"/>
+      </alias-all>
+      <alias entity-alias="PERSON" name="personComments" field="comments"/>
+      <alias entity-alias="PTYGRP" name="partyGroupComments" field="comments"/>
+      <view-link entity-alias="PTY" rel-entity-alias="PR">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="PTY" rel-entity-alias="PERSON" rel-optional="true">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="PTY" rel-entity-alias="PTYGRP" rel-optional="true">
         <key-map field-name="partyId"/>
       </view-link>
     </view-entity>
@@ -1472,33 +1486,6 @@
         <index-field name="lastName"/>
       </index>
     </entity>
-    <view-entity entity-name="PersonRoleView"
-            package-name="org.ofbiz.party.party"
-            title="Person Role View Entity">
-      <member-entity entity-alias="PR" entity-name="PartyRole"/>
-      <member-entity entity-alias="PS" entity-name="Person"/>
-      <alias entity-alias="PS" name="partyId"/>
-      <alias entity-alias="PS" name="lastName"/>
-      <alias entity-alias="PS" name="firstName"/>
-      <alias entity-alias="PS" name="middleName"/>
-      <alias entity-alias="PS" name="personalTitle"/>
-      <alias entity-alias="PS" name="suffix"/>
-      <alias entity-alias="PS" name="nickname"/>
-      <alias entity-alias="PS" name="gender"/>
-      <alias entity-alias="PS" name="height"/>
-      <alias entity-alias="PS" name="weight"/>
-      <alias entity-alias="PS" name="mothersMaidenName"/>
-      <alias entity-alias="PS" name="maritalStatus"/>
-      <alias entity-alias="PS" name="socialSecurityNumber"/>
-      <alias entity-alias="PS" name="passportNumber"/>
-      <alias entity-alias="PS" name="passportExpireDate"/>
-      <alias entity-alias="PS" name="totalYearsWorkExperience"/>
-      <alias entity-alias="PS" name="comments"/>
-      <alias entity-alias="PR" name="roleTypeId"/>
-      <view-link entity-alias="PS" rel-entity-alias="PR">
-        <key-map field-name="partyId"/>
-      </view-link>
-    </view-entity>
     <entity entity-name="PriorityType"
             package-name="org.ofbiz.party.party"
             title="Priority Type Entity">
