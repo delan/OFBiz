@@ -144,7 +144,7 @@ public class TyrexFactory implements TransactionFactoryInterface {
         EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
 
         if (datasourceInfo.inlineJdbcElement != null) {
-            // Use JOTM (enhydra-jdbc.jar) connection pooling
+            // Use JOTM (xapool.jar) connection pooling
             try {
                 Connection con = TyrexConnectionFactory.getConnection(helperName, datasourceInfo.inlineJdbcElement);
                 if (con != null) return con;
