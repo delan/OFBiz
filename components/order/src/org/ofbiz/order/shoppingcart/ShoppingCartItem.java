@@ -23,6 +23,7 @@
  */
 package org.ofbiz.order.shoppingcart;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,16 +33,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import java.sql.Timestamp;
-
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.collections.OrderedSet;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
@@ -52,13 +50,15 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
+import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
-import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+
+import org.apache.commons.collections.set.ListOrderedSet;
 
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
@@ -883,7 +883,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns a Set of the item's features */
     public Set getFeatureSet() {
-        Set featureSet = new OrderedSet();
+        Set featureSet = new ListOrderedSet();
         GenericValue product = this.getProduct();
         if (product != null) {
             List featureAppls = null;

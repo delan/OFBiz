@@ -30,14 +30,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.collections.OrderedMap;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -47,6 +45,8 @@ import org.ofbiz.product.config.ProductConfigWrapper.ConfigOption;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+
+import org.apache.commons.collections.map.LinkedMap;
 
 /**
  * Product Worker class to reduce code in JSPs.
@@ -348,7 +348,7 @@ public class ProductWorker {
     }
 
     public static Map getOptionalProductFeatures(GenericDelegator delegator, String productId) {
-        Map featureMap = new OrderedMap();
+        Map featureMap = new LinkedMap();
 
         List productFeatureAppls = null;
         try {
