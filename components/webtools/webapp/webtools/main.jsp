@@ -148,8 +148,7 @@
               <%}%>
             </ul>
 
-            <DIV class='tabletext'>NOTE: If you have not already run the installation data loading script, <a href="<ofbiz:url>/install</ofbiz:url>" class='buttontext'>click here</a> to run it.</DIV>
-            <DIV class='tabletext'>DOUBLE NOTE: If you are deploying this version of commonapp on a public server, remove the install.jsp page and these two paragraphs about it.</DIV>
+            <DIV class='tabletext'>NOTE: If you have not already run the installation data loading script, from the ofbiz home directory run "ant run-install" or "java -jar ofbiz.jar install"</DIV>
           </td>
         </tr>
       </table>

@@ -1,6 +1,6 @@
 <html>
 <head>
-<!--  $Id: setup.html,v 1.9 2004/05/26 12:35:19 jonesde Exp $ -->
+<!--  $Id: setup.html,v 1.10 2004/06/24 02:16:33 jonesde Exp $ -->
 <title>The Open For Business Project: General Setup</title>
 </head>
 
@@ -68,8 +68,11 @@ options and explanations, see the rest of this document.</p>
 
 <p>For information on connecting to CVS <a href="https://ofbiz.dev.java.net/source/browse/ofbiz/" target="_blank">click here.</a></p>
 <p>Now go into the "ofbiz" directory and run "ant". It will complile all modules and leave you an
-executable jar (ofbiz.jar) in the "ofbiz" directory. Run $JAVA_HOME/bin/java -jar ofbiz.jar (or %JAVA_HOME%\bin\java -jar ofbiz.jar) go to http://localhost:8080/webtools
-click install at the bottom and then follow the instructions to load the seed data.</p>
+executable jar (ofbiz.jar) in the "ofbiz" directory. 
+
+<p>To load the seed data run &quot;ant run-install&quot;, or &quot;$JAVA_HOME/bin/java -jar ofbiz.jar install&quot;, or &quot;%JAVA_HOME%\bin\java -jar ofbiz.jar install&quot;</p>
+
+<p>To start the server run &quot;ant run-install&quot;, or &quot;$JAVA_HOME/bin/java -jar ofbiz.jar&quot;,or &quot;%JAVA_HOME%\bin\java -jar ofbiz.jar&quot;</p>
 
 <p>Another build option in the Ant build script that is useful is "ant clean". That will clean out all built classes allowing you to run "ant" again to get a clean build.
 If you are running into funny errors after updating from CVS in the future, give this a try first.</p>

@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySaxReader.java,v 1.12 2004/06/17 00:10:50 jonesde Exp $
+ * $Id: EntitySaxReader.java,v 1.13 2004/06/24 02:16:31 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -67,7 +67,7 @@ import freemarker.template.TemplateHashModel;
  * SAX XML Parser Content Handler for Entity Engine XML files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler {
@@ -198,7 +198,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
         } catch (GenericTransactionException e) {
             throw new SAXException("A transaction error occurred reading data", e);
         }
-        Debug.logImportant("Finished writing " + numberRead + " values to the database from " + docDescription, module);
+        Debug.logImportant("Finished " + numberRead + " values from " + docDescription, module);
         return numberRead;
     }
 
