@@ -30,6 +30,7 @@
   <simple-map-processor name="dataResourceIn">
       <process field="drDataResourceId"><copy to-field="dataResourceId" replace="true" set-if-null="false" /></process>
       <process field="drDataResourceTypeId"><copy to-field="dataResourceTypeId" replace="true" set-if-null="false" /></process>
+      <process field="drDataTemplateTypeId"><copy to-field="dataTemplateTypeId" replace="true" set-if-null="false" /></process>
       <process field="drDataCategoryId"><copy to-field="dataCategoryId" replace="true" set-if-null="false" /></process>
       <process field="drDataSourceId"><copy to-field="dataSourceId" replace="true" set-if-null="false" /></process>
       <process field="drDataResourceName"><copy to-field="dataResourceName" replace="true" set-if-null="false" /></process>
