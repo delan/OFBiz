@@ -75,34 +75,37 @@
     primaryProductCategoryId="202" productId="WG-9943-S4" productTypeId="FINISHED_GOOD"
     productName="Giant Widget" quantityIncluded="10.0" weight="22.0"/>
 
-  <ProductFeature productFeatureId="10000" productFeatureTypeId="COLOR" description="Black"/>
-  <ProductFeature productFeatureId="10001" productFeatureTypeId="COLOR" description="Silver"/>
-  <ProductFeature productFeatureId="10002" productFeatureTypeId="SIZE" description="3-Wheel"/>
-  <ProductFeature productFeatureId="10003" productFeatureTypeId="SIZE" description="4-Wheel"/>
+  <ProductFeatureCategory productFeatureCategoryId="9000" description="Widget Features"/>
+  
+  <ProductFeature productFeatureId="9000" productFeatureCategoryId="9000" productFeatureTypeId="COLOR" description="Black"/>
+  <ProductFeature productFeatureId="9001" productFeatureCategoryId="9000" productFeatureTypeId="COLOR" description="Silver"/>
+  <ProductFeature productFeatureId="9002" productFeatureCategoryId="9000" productFeatureTypeId="SIZE" description="3-Wheel"/>
+  <ProductFeature productFeatureId="9003" productFeatureCategoryId="9000" productFeatureTypeId="SIZE" description="4-Wheel"/>
 
-  <ProductFeatureAppl productId="WG-9943" productFeatureId="10000"
+  <ProductFeatureAppl productId="WG-9943" productFeatureId="9000"
     productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
-  <ProductFeatureAppl productId="WG-9943" productFeatureId="10001"
+  <ProductFeatureAppl productId="WG-9943" productFeatureId="9001"
     productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
-  <ProductFeatureAppl productId="WG-9943" productFeatureId="10002"
+  <ProductFeatureAppl productId="WG-9943" productFeatureId="9002"
     productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="3"/>
-  <ProductFeatureAppl productId="WG-9943" productFeatureId="10003"
+  <ProductFeatureAppl productId="WG-9943" productFeatureId="9003"
     productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="4"/>
-  <ProductFeatureAppl productId="WG-9943-B3" productFeatureId="10000"
+  
+  <ProductFeatureAppl productId="WG-9943-B3" productFeatureId="9000"
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
-  <ProductFeatureAppl productId="WG-9943-B3" productFeatureId="10002"
+  <ProductFeatureAppl productId="WG-9943-B3" productFeatureId="9002"
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
-  <ProductFeatureAppl productId="WG-9943-B4" productFeatureId="10000"
+  <ProductFeatureAppl productId="WG-9943-B4" productFeatureId="9000"
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
-  <ProductFeatureAppl productId="WG-9943-B4" productFeatureId="10003"
+  <ProductFeatureAppl productId="WG-9943-B4" productFeatureId="9003"
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
-  <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="10001"
+  <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="9001"
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
-  <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="10002"
+  <ProductFeatureAppl productId="WG-9943-S3" productFeatureId="9002"
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
-  <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="10001"
+  <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="9001"
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
-  <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="10003"
+  <ProductFeatureAppl productId="WG-9943-S4" productFeatureId="9003"
     productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
 
   <ProductAssoc fromDate="2001-01-01 12:00:00.0"
