@@ -509,6 +509,7 @@
 	
     <entity-group group="org.ofbiz.commonapp" entity="FeatureDataObject" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeature" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureAndAppl" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureAppl" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureApplType" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureCategory" />	

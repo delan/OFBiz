@@ -348,7 +348,26 @@
       <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="productFeatureId" />
       </relation>
-    </entity>
+    </entity>	
+    <view-entity entity-name="ProductFeatureAndAppl" 
+            package-name="org.ofbiz.commonapp.product.feature"
+            title="Work Effort And Party Assignment Entity">	
+      <member-entity entity-alias="PFA" entity-name="ProductFeatureAppl" />	
+      <member-entity entity-alias="PF" entity-name="ProductFeature" />
+      <alias entity-alias="PF" name="productFeatureId" prim-key="true" />
+      <alias entity-alias="PF" name="productFeatureTypeId" />
+      <alias entity-alias="PF" name="productFeatureCategoryId" />
+      <alias entity-alias="PF" name="description" />
+      <alias entity-alias="PF" name="uomId" />
+      <alias entity-alias="PF" name="numberSpecified" />
+      <alias entity-alias="PFA" name="productId" prim-key="true" />
+      <alias entity-alias="PFA" name="productFeatureApplTypeId" />
+      <alias entity-alias="PFA" name="fromDate" prim-key="true" />
+      <alias entity-alias="PFA" name="thruDate" />
+      <view-link entity-alias="PF" rel-entity-alias="PFA">
+        <key-map field-name="productFeatureId" />
+      </view-link>
+    </view-entity>
     <entity entity-name="ProductFeatureAppl" 
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Applicability Entity">
