@@ -61,6 +61,7 @@
 
         facility = inventoryItem.getRelatedOne("Facility");
         if (facility != null) pageContext.setAttribute("facility", facility);
+		if (facility != null && facilityId == null) facilityId = facility.getString("facilityId");
 
         //statuses
         if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {
