@@ -21,10 +21,11 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -32,7 +33,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
-            <div class="boxhead">Search&nbsp;Catalog</div>
+            <div class="boxhead">${uiLabelMap.CatalogSearchCatalog}</div>
           </td>
         </tr>
       </table>
@@ -51,7 +52,7 @@
               <#if 0 < otherSearchProdCatalogCategories?size>
                 <div class='tabletext'>
                   <select name='SEARCH_CATEGORY_ID' size='1' class='selectBox'>
-                    <option value="${searchCategoryId?if_exists}">Entire Catalog</option>
+                    <option value="${searchCategoryId?if_exists}">${uiLabelMap.CatalogEntireCatalog}</option>
                     <#list otherSearchProdCatalogCategories as otherSearchProdCatalogCategory>
                       <#assign searchProductCategory = otherSearchProdCatalogCategory.getRelatedOneCache("ProductCategory")>
                       <#if searchProductCategory?exists>
@@ -63,11 +64,7 @@
               <#else>
                 <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}">
               </#if>
-              <div class='tabletext'>
-                Any<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked</#if>>
-                All<input type='RADIO' name='SEARCH_OPERATOR' value='AND' <#if searchOperator == "AND">checked</#if>>
-                &nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">Find</a>
-              </div>
+              <div class='tabletext'>${uiLabelMap.CatalogAny}<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked</#if>>${uiLabelMap.CatalogAll}<input type='RADIO' name='SEARCH_OPERATOR' value='AND' <#if searchOperator == "AND">checked</#if>>&nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">${uiLabelMap.CatalogFind}</a></div>
             </form>
           </td>
         </tr>
@@ -81,10 +78,10 @@
           <td align=center>
             <form name="advancedsearchform" method="POST" action="<@ofbizUrl>/advancedsearch</@ofbizUrl>" style='margin: 0;'>
               <#if 0 < otherSearchProdCatalogCategories?size>
-                <div class='tabletext'>Advanced Search in: </div>
+                <div class='tabletext'>${uiLabelMap.CatalogAdvancedSearchIn}: </div>
                 <div class='tabletext'>
                   <select name='SEARCH_CATEGORY_ID' size='1' class='selectBox'>
-                    <option value="${searchCategoryId?if_exists}">Entire Catalog</option>
+                    <option value="${searchCategoryId?if_exists}">${uiLabelMap.CatalogEntireCatalog}</option>
                     <#list otherSearchProdCatalogCategories as otherSearchProdCatalogCategory>
                       <#assign searchProductCategory = otherSearchProdCatalogCategory.getRelatedOneCache("ProductCategory")>
                       <#if searchProductCategory?exists>
@@ -97,7 +94,7 @@
                 <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}">
               </#if>
               <div class='tabletext'>
-                <a href="javascript:document.advancedsearchform.submit()" class="buttontext">Advanced Search</a>
+                <a href="javascript:document.advancedsearchform.submit()" class="buttontext">${uiLabelMap.CatalogAdvancedSearch}</a>
               </div>
             </form>
           </td>

@@ -20,10 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if sessionAttributes.lastViewedProducts?exists && sessionAttributes.lastViewedProducts?has_content>
   <br>
   <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -32,11 +32,11 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
             <td valign="middle" align="center">
-              <div class="boxhead">Last Viewed...</div>
+              <div class="boxhead">${uiLabelMap.CatalogLastViewed}...</div>
             </td>
             <#if 4 < sessionAttributes.lastViewedProducts?size>
             <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/lastviewedproducts</@ofbizUrl>" class="lightbuttontextsmall">more</a>
+              <a href="<@ofbizUrl>/lastviewedproducts</@ofbizUrl>" class="lightbuttontextsmall">${uiLabelMap.CatalogMore}</a>
             </td>
             </#if>
           </tr>

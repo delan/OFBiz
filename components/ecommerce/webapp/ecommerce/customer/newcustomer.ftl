@@ -22,10 +22,10 @@
  *@author     David E. Jones
  *@version    1.0
 -->
-
-<p class="head1">Request a New Account</p>
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<p class="head1">${uiLabelMap.CustomerRequestNewAccount}</p>
 <br>
-<p class='tabletext'>If you already have an account, <a href='<@ofbizUrl>/checkLogin/main</@ofbizUrl>' class='buttontext'>log in here</a>.</p>
+<p class='tabletext'>${uiLabelMap.CustomerAlreadyHaveAccount}, <a href='<@ofbizUrl>/checkLogin/main</@ofbizUrl>' class='buttontext'>${uiLabelMap.CustomerLoginHere}</a>.</p>
 
 <form method="post" action="<@ofbizUrl>/createcustomer${previousParams}</@ofbizUrl>" name="newuserform" style='margin:0;'>
 	
@@ -35,7 +35,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class='boxhead'>&nbsp;Name and Shipping Address</div>
+            <div class='boxhead'>&nbsp;${uiLabelMap.CustomerNameAndShippingAddress}</div>
           </td>
         </tr>
       </table>
@@ -48,71 +48,71 @@
           <td>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
-    <td width="26%"><div class="tabletext">Title</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerTitle}</div></td>
     <td width="74%">
       <input type="text" class='inputBox' name="USER_TITLE" value="${requestParameters.USER_TITLE?if_exists}" size="10" maxlength="30">
     </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">First name</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerFirstName}</div></td>
     <td width="74%">
       <input type="text" class='inputBox' name="USER_FIRST_NAME" value="${requestParameters.USER_FIRST_NAME?if_exists}" size="30" maxlength="30">
     * </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">Middle initial</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerMiddleInitial}</div></td>
     <td width="74%">
         <input type="text" class='inputBox' name="USER_MIDDLE_NAME" value="${requestParameters.USER_MIDDLE_NAME?if_exists}" size="4" maxlength="4">
     </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">Last name </div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerLastName} </div></td>
     <td width="74%">
       <input type="text" class='inputBox' name="USER_LAST_NAME" value="${requestParameters.USER_LAST_NAME?if_exists}" size="30" maxlength="30">
     * </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">Suffix</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerSuffix}</div></td>
     <td width="74%">
       <input type="text" class='inputBox' name="USER_SUFFIX" value="${requestParameters.USER_SUFFIX?if_exists}" size="10" maxlength="30">
     </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">Address Line 1</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerAddressLine1}</div></td>
     <td width="74%">
       <input type="text" class='inputBox' name="CUSTOMER_ADDRESS1" value="${requestParameters.CUSTOMER_ADDRESS1?if_exists}" size="30" maxlength="30">
     *</td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">Address Line 2</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerAddressLine2}</div></td>
     <td width="74%">
         <input type="text" class='inputBox' name="CUSTOMER_ADDRESS2" value="${requestParameters.CUSTOMER_ADDRESS2?if_exists}" size="30" maxlength="30">
     </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">City</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerCity}</div></td>
     <td width="74%">
         <input type="text" class='inputBox' name="CUSTOMER_CITY" value="${requestParameters.CUSTOMER_CITY?if_exists}" size="30" maxlength="30">
     * </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">State/Province</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerState}</div></td>
     <td width="74%">
       <select name="CUSTOMER_STATE" class='selectBox'>
           <#if requestParameters.CUSTOMER_STATE?exists><option value='${requestParameters.CUSTOMER_STATE}'>${selectedStateName?default(requestParameters.CUSTOMER_STATE)}</option></#if>
-          <option value="">No State/Province</option>          
+          <option value="">${uiLabelMap.CustomerNoState}</option>          
           <#include "../includes/states.ftl">
       </select>
     * </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">Zip/Postal Code</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerPostalCode}</div></td>
     <td width="74%">
         <input type="text" class='inputBox' name="CUSTOMER_POSTAL_CODE" value="${requestParameters.CUSTOMER_POSTAL_CODE?if_exists}" size="12" maxlength="10">
     * </td>
   </tr>
   <tr>
-      <td width="26%"><div class="tabletext">Country</div></td>
+      <td width="26%"><div class="tabletext">${uiLabelMap.CustomerCountry}</div></td>
       <td width="74%">
           <select name="CUSTOMER_COUNTRY" class='selectBox'>
             <#if requestParameters.CUSTOMER_COUNTRY?exists><option value='${requestParameters.CUSTOMER_COUNTRY}'>${selectedCountryName?default(requestParameters.CUSTOMER_COUNTRY)}</option></#if>
@@ -121,7 +121,7 @@
       * </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">Allow Address Solicitation?</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerAllowAddressSolicitation}?</div></td>
     <td width="74%">
       <select name="CUSTOMER_ADDRESS_ALLOW_SOL" class='selectBox'>
         <option>${requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL?default("Y")}</option>
@@ -145,7 +145,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class='boxhead'>&nbsp;Phone Numbers</div>
+            <div class='boxhead'>&nbsp;${uiLabelMap.CustomerPhoneNumbers}</div>
           </td>
         </tr>
       </table>
@@ -158,11 +158,11 @@
           <td>
 <table width="100%">
   <tr>
-    <td width="26%"><div class="tabletext">All phone numbers:</div></td>
-    <td width="74%"><div class="tabletext">[Country] [Area Code] [Contact Number] [Extension]</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerAllPhoneNumbers}:</div></td>
+    <td width="74%"><div class="tabletext">[${uiLabelMap.CustomerCountry}] [${uiLabelMap.CustomerAreaCode}] [${uiLabelMap.CustomerContactNumber}] [${uiLabelMap.CustomerExtension}]</div></td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">Home phone<BR>(allow solicitation?)</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerHomePhone}<BR>(${uiLabelMap.CustomerAllowSolicitation}?)</div></td>
     <td width="74%">
         <input type="text" class='inputBox' name="CUSTOMER_HOME_COUNTRY" value="${requestParameters.CUSTOMER_HOME_COUNTRY?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_HOME_AREA" value="${requestParameters.CUSTOMER_HOME_AREA?if_exists}" size="4" maxlength="10">
@@ -176,7 +176,7 @@
     </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">Business phone<BR>(allow solicitation?)</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerBusinessPhone}<BR>(${uiLabelMap.CustomerAllowSolicitation}?)</div></td>
     <td width="74%">
         <input type="text" class='inputBox' name="CUSTOMER_WORK_COUNTRY" value="${requestParameters.CUSTOMER_WORK_COUNTRY?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_WORK_AREA" value="${requestParameters.CUSTOMER_WORK_AREA?if_exists}" size="4" maxlength="10">
@@ -190,7 +190,7 @@
     </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">Fax number<BR>(allow solicitation?)</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerFaxNumber}<BR>(${uiLabelMap.CustomerAllowSolicitation}?)</div></td>
     <td width="74%">
         <input type="text" class='inputBox' name="CUSTOMER_FAX_COUNTRY" value="${requestParameters.CUSTOMER_FAX_COUNTRY?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_FAX_AREA" value="${requestParameters.CUSTOMER_FAX_AREA?if_exists}" size="4" maxlength="10">
@@ -203,7 +203,7 @@
     </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext">Mobile phone<BR>(allow solicitation?)</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerMobilePhone}<BR>(${uiLabelMap.CustomerAllowSolicitation}?)</div></td>
     <td width="74%">
         <input type="text" class='inputBox' name="CUSTOMER_MOBILE_COUNTRY" value="${requestParameters.CUSTOMER_MOBILE_COUNTRY?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_MOBILE_AREA" value="${requestParameters.CUSTOMER_MOBILE_AREA?if_exists}" size="4" maxlength="10">
@@ -231,7 +231,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class='boxhead'>&nbsp;Email Address</div>
+            <div class='boxhead'>&nbsp;${uiLabelMap.CustomerEmailAddress}</div>
           </td>
         </tr>
       </table>
@@ -244,7 +244,7 @@
           <td>
 <table width="100%">
   <tr>
-    <td width="26%"><div class="tabletext">Email address<BR>(allow solicitation?)</div></td>
+    <td width="26%"><div class="tabletext">${uiLabelMap.CustomerEmailAddress}<BR>(${uiLabelMap.CustomerAllowSolicitation}?)</div></td>
     <td width="74%">
         <input type="text" class='inputBox' name="CUSTOMER_EMAIL" value="${requestParameters.CUSTOMER_EMAIL?if_exists}" size="60" maxlength="255"> *
         <BR>
@@ -280,7 +280,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class='boxhead'>&nbsp;Username and Password</div>
+            <div class='boxhead'>&nbsp;${uiLabelMap.CustomerUsername} & ${uiLabelMap.CustomerPassword}</div>
           </td>          
         </tr>
       </table>
@@ -293,7 +293,7 @@
           <td>
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%"><div class="tabletext">Username</div></td>
+      <td width="26%"><div class="tabletext">${uiLabelMap.CustomerUsername}</div></td>
       <td width="74%">
           <input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50">
       * </td>
@@ -301,7 +301,7 @@
     <#if createAllowPassword>
       <tr>
         <td width="26%">
-            <div class="tabletext">Password</div>
+            <div class="tabletext">${uiLabelMap.CustomerPassword}</div>
         </td>
         <td width="74%">
             <input type="password" class='inputBox' name="PASSWORD" value="" size="20" maxlength="50">
@@ -309,7 +309,7 @@
       </tr>
       <tr>
         <td width="26%">
-            <div class="tabletext">Repeat password to confirm</div>
+            <div class="tabletext">${uiLabelMap.CustomerRepeatPassword}</div>
         </td>
         <td width="74%">
             <input type="password" class='inputBox' name="CONFIRM_PASSWORD" value="" size="20" maxlength="50">
@@ -317,7 +317,7 @@
       </tr>
       <tr>
         <td width="26%">
-            <div class="tabletext">Password Hint</div>
+            <div class="tabletext">${uiLabelMap.CustomerPasswordHint}</div>
         </td>
         <td width="74%">
             <input type="text" class='inputBox' name="PASSWORD_HINT" value="${requestParameters.PASSWORD_HINT?if_exists}" size="40" maxlength="100">
@@ -326,10 +326,10 @@
     <#else>
       <tr>
         <td width="26%">
-            <div class="tabletext">Password</div>
+            <div class="tabletext">${uiLabelMap.CustomerPassword}</div>
         </td>
         <td>
-           <div class="commentary">You will receive a password by email when your new account is approved.</div>
+           <div class="commentary">${uiLabelMap.CustomerRecievePasswordByEmail}You will receive a password by email when your new account is approved.</div>
         </td>
       </tr>
     </#if>
@@ -345,7 +345,7 @@
 
 <br><div class="commentary">Fields marked with (*) are required.</div>
 
-&nbsp;&nbsp;<a href="<@ofbizUrl>/checkLogin/main</@ofbizUrl>" class="buttontext">[Back]</a>
-&nbsp;&nbsp;<a href="javascript:document.newuserform.submit()" class="buttontext">[Save]</a>
+&nbsp;&nbsp;<a href="<@ofbizUrl>/checkLogin/main</@ofbizUrl>" class="buttontext">[${uiLabelMap.CustomerBack}]</a>
+&nbsp;&nbsp;<a href="javascript:document.newuserform.submit()" class="buttontext">[${uiLabelMap.CustomerSave}]</a>
 <br>
 <br>

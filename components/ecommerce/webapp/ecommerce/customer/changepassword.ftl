@@ -20,37 +20,37 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+  <p class="head1">${uiLabelMap.CustomerChangePassword}</p>
 
-  <p class="head1">Change Password</p>
-
-    &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
-    &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
+    &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CustomerGoBack}]</a>
+    &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[${uiLabelMap.CustomerSave}]</a>
 
   <form method="post" action="<@ofbizUrl>/updatePassword/${donePage}</@ofbizUrl>" name="changepasswordform">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align=right><div class="tabletext">Current (Old) Password</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerOldPassword}</div></td>
       <td width="74%">
         <input type="password" class='inputBox' name="currentPassword" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">New Password</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerNewPassword}</div></td>
       <td width="74%">
         <input type="password" class='inputBox' name="newPassword" size="20" maxlength="20"/>
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">New Password Verify</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerNewPasswordVerify}</div></td>
       <td width="74%">
         <input type="password" class='inputBox' name="newPasswordVerify" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">Password Hint</div></td>
+      <td width="26%" align=right><div class="tabletext">${uiLabelMap.CustomerPasswordHint}</div></td>
       <td width="74%">
         <input type="text" class='inputBox' size="40" maxlength="100" name="passwordHint" value="${userLoginData.passwordHint?if_exists}"/>
       </td>
@@ -58,5 +58,3 @@
   </table>
   </form>
 
-    &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
-    &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>

@@ -20,33 +20,34 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <div class='head1'>
-    Search Results for "${requestAttributes.keywordString?if_exists}"
-    where <#if searchOperator?default("OR") == "OR">any keyword<#else>all keywords</#if> matched
+    ${uiLabelMap.CatalogSearchResultfor} "${requestAttributes.keywordString?if_exists}"
+   ${uiLabelMap.CatalogWhere} <#if searchOperator?default("OR") == "OR">${uiLabelMap.CatalgAnyKeyword}<#else>${uiLabelMap.CatalgAnyKeyword}</#if> ${uiLabelMap.CatalogMatched}
 
   <#assign featureIdByType = requestAttributes.featureIdByType>
   <#if requestAttributes.featureIdByType?has_content>
-  	and where 
+  	${uiLabelMap.CatalogAnd} ${uiLabelMap.CatalogWhere} 
     <#list featureIdByType.keySet() as productFeatureTypeId>
       <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
       <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
       <#assign findProdFeatMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureId", featureIdByType[productFeatureTypeId])>
       <#assign productFeature = delegator.findByPrimaryKeyCache("ProductFeature", findProdFeatMap)>
       ${productFeatureType.description} = ${productFeature.description}
-      <#if productFeatureTypeId_has_next>, and </#if>
+      <#if productFeatureTypeId_has_next>, ${uiLabelMap.CatalogAnd} </#if>
     </#list>
   </#if>
   <#if searchCategory?exists>
-    in the ${searchCategory.description} category
+   ${uiLabelMap.CatalogInThe} ${searchCategory.description} ${uiLabelMap.CatalogCategory}
   </#if>
 </div>
 
 <#if !requestAttributes.searchProductList?has_content>
-  <br><div class='head2'>&nbsp;No results found.</div>
+  <br><div class='head2'>&nbsp;${uiLabelMap.CatalogNoResultsFound}.</div>
 </#if>
 
 <#if requestAttributes.searchProductList?has_content>
@@ -55,13 +56,13 @@
       <td align=right>
         <b>
         <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch/${prevStr}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+          <a href="<@ofbizUrl>/keywordsearch/${prevStr}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogPrevious}]</a> |
         </#if>
         <#if 0 < requestAttributes.listSize?int>
           <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
         </#if>
         <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>      
-          | <a href="<@ofbizUrl>/keywordsearch/${nextStr}</@ofbizUrl>" class="buttontext">[Next]</a>
+          | <a href="<@ofbizUrl>/keywordsearch/${nextStr}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogNext}]</a>
         </#if>
         </b>
       </td>
@@ -95,13 +96,13 @@
       <td align=right>
         <b>
         <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch/${prevStr}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+          <a href="<@ofbizUrl>/keywordsearch/${prevStr}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogPrevious}]</a> |
         </#if>
         <#if 0 < requestAttributes.listSize?int>
           <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
         </#if>
         <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>      
-          | <a href="<@ofbizUrl>/keywordsearch/${nextStr}</@ofbizUrl>" class="buttontext">[Next]</a>
+          | <a href="<@ofbizUrl>/keywordsearch/${nextStr}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogNext}]</a>
         </#if>
         </b>
       </td>

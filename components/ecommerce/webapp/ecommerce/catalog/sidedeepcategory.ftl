@@ -20,10 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#-- variable setup and worker calls -->
 <#assign topLevelList = requestAttributes.topLevelList?if_exists>
 <#assign curCategoryId = requestAttributes.curCategoryId?if_exists>
@@ -62,7 +62,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
-            <div class="boxhead">Browse&nbsp;Categories</div>
+            <div class="boxhead">${uiLabelMap.CatalogBrowseCategories}</div>
           </td>
         </tr>
       </table>

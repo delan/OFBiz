@@ -20,9 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
+<@assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -30,11 +31,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Return Items</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.OrderReturnItems}</div>
           </td>
           <#if maySelectItems?default(false)>
             <td valign="middle" align="right" nowrap>
-              <a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="submenutext">Add All to Cart</a><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="submenutextright">Add Checked to Cart</a>
+              <a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="submenutext">${uiLabelMap.OrderAddAlltoCart}</a><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="submenutextright">${uiLabelMap.OrderAddCheckedToCart}</a>
             </td>
           </#if>
         </tr>
@@ -55,18 +56,18 @@
   <input type="hidden" name="order_id" value="${orderId}">  
   <table border='0' width='100%' cellpadding='2' cellspacing='0'>
     <tr>
-      <td colspan="5"><div class="head3">Return Item(s) From Order #<a href="<@ofbizUrl>/orderstatus?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>      
+      <td colspan="5"><div class="head3">${uiLabelMap.OrderReturnItemsFromOrder} #<a href="<@ofbizUrl>/orderstatus?order_id=${orderId}</@ofbizUrl>" class="buttontext">${orderId}</div></td>
       <td align="right">
-        <span class="tableheadtext">Select All</span>&nbsp;
+        <span class="tableheadtext">${uiLabelMap.OrderSelectAll}</span>&nbsp;
         <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
       </td>      
     </tr>
     <tr>
-      <td><div class="tableheadtext">Description</div></td>  
-      <td><div class="tableheadtext">Quantity</div></td>
-      <td><div class="tableheadtext">Price</div></td>    
-      <td><div class="tableheadtext">Reason</div></td>
-      <td><div class="tableheadtext">Requested Response</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.OrderDescription}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.OrderQuantity}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.OrderPrice}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.OrderReason}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.OrderRequestedResponse}</div></td>
       <td>&nbsp;</td>  
     </tr>
     <tr><td colspan="6"><hr class="sepbar"></td></tr>
@@ -129,7 +130,7 @@
       </#list>
       <input type="hidden" name="_rowCount" value="${rowCount}">
       <tr>
-        <td colspan="6"><div class='tableheadtext'>Please select a ship from address:</td>
+        <td colspan="6"><div class='tableheadtext'>${uiLabelMap.OrderSelectShipFromAddress}:</td>
       </tr>
       <tr><td colspan="6"><hr class='sepbar'></td></tr>
       <tr>
@@ -143,15 +144,15 @@
                 </td>
                 <td align="left" width="99%" valign="top" nowrap>
                   <div class="tabletext">
-                    <#if shippingAddress.toName?has_content><b>To:</b>&nbsp;${shippingAddress.toName}<br></#if>
-                    <#if shippingAddress.attnName?has_content><b>Attn:</b>&nbsp;${shippingAddress.attnName}<br></#if>
+                    <#if shippingAddress.toName?has_content><b>${uiLabelMap.OrderTo}:</b>&nbsp;${shippingAddress.toName}<br></#if>
+                    <#if shippingAddress.attnName?has_content><b>${uiLabelMap.OrderAttn}:</b>&nbsp;${shippingAddress.attnName}<br></#if>
                     <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
                     <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
                     <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
                     <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
                     <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
                     <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>                                                            
-                    <a href="<@ofbizUrl>/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="buttontext">[Update]</a>
+                    <a href="<@ofbizUrl>/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.OrderUpdate}]</a>
                   </div>
                 </td>
               </tr>
@@ -162,11 +163,12 @@
       </#list>      
       <tr>
         <td colspan="6" align="right">
-          <a href="javascript:document.returnItems.submit();" class="buttontext">Return Selected Item(s)</a>
+          <a href="javascript:document.returnItems.submit();" class="buttontext">${uiLabelMap.OrderReturnSelectedItems}</a>
         </td>
       </tr>      
     <#else>
       <tr><td colspan="6"><div class="tabletext">No returnable items found for order #${orderId}</div></td></tr>
+      <tr><td colspan="6"><div class="tabletext">${uiLabelMap.OrderNoReturnableItems} #${orderId}</div></td></tr>
     </#if>    
   </table>
 </form>

@@ -32,47 +32,58 @@
 <simple-map-processors>
 
   <simple-map-processor name="newAffilParty">
-    <process field="AFFILIATE_ID"><copy to-field="partyId"/><not-empty><fail-message message="Affiliate Code is missing"/></not-empty></process>
+    <process field="AFFILIATE_ID"><copy to-field="partyId"/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceAffiliateCodeMissingError"/></not-empty></process>
   </simple-map-processor>
 
   <simple-map-processor name="newAffilGroup">
-    <process field="COMPANY_NAME"><copy to-field="groupName"/><not-empty><fail-message message="Company Name is missing"/></not-empty></process>
+    <process field="COMPANY_NAME"><copy to-field="groupName"/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceCompanyNameMissingError"/></not-empty></process>
   </simple-map-processor>
 
   <simple-map-processor name="newAffilPostal">
     <process field="COMPANY_NAME"><copy to-field="toName"/></process>
     <process field="COMPANY_ATTN"><copy to-field="attnName"/></process>
-    <process field="COMPANY_ADDRESS1"><copy to-field="address1"/><not-empty><fail-message message="Address Line 1 is missing"/></not-empty></process>
+    <process field="COMPANY_ADDRESS1"><copy to-field="address1"/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceAddressLine1MissingError"/></not-empty></process>
     <process field="COMPANY_ADDRESS2"><copy to-field="address2"/></process>
-    <process field="COMPANY_CITY"><copy to-field="city"/><not-empty><fail-message message="City is missing"/></not-empty></process>
-    <process field="COMPANY_STATE"><copy to-field="stateProvinceGeoId"/><not-empty><fail-message message="State/Province is missing"/></not-empty></process>
-    <process field="COMPANY_POSTAL_CODE"><copy to-field="postalCode"/><not-empty><fail-message message="Zip/Postal Code is missing"/></not-empty></process>
+    <process field="COMPANY_CITY"><copy to-field="city"/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceCityMissingError"/></not-empty></process>
+    <process field="COMPANY_STATE"><copy to-field="stateProvinceGeoId"/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceProvinceMissingError"/></not-empty></process>
+    <process field="COMPANY_POSTAL_CODE"><copy to-field="postalCode"/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommercePostalCodeMissingError"/></not-empty></process>
     <process field="COMPANY_COUNTRY"><copy to-field="countryGeoId"/></process>
     <process field="COMPANY_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
   </simple-map-processor>
 
   <simple-map-processor name="newAffilPostalPurpose">
     <make-in-string field="contactMechPurposeTypeId"><constant>BILLING_LOCATION</constant></make-in-string>
-    <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
+    <process field="contactMechId"><copy/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceContactMechIDMissingError"/></not-empty></process>
     <process field="contactMechPurposeTypeId"><copy/></process>
   </simple-map-processor>
 
   <simple-map-processor name="newAffilContact">
-    <process field="CONTACT_FIRST_NAME"><copy to-field="firstName"/><not-empty><fail-message message="First Name is missing"/></not-empty></process>
-    <process field="CONTACT_LAST_NAME"><copy to-field="lastName"/><not-empty><fail-message message="Last Name is missing"/></not-empty></process>
+    <process field="CONTACT_FIRST_NAME"><copy to-field="firstName"/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceFirstNameMissingError"/></not-empty></process>
+    <process field="CONTACT_LAST_NAME"><copy to-field="lastName"/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceLastNameMissingError"/></not-empty></process>
   </simple-map-processor>
 
   <simple-map-processor name="newAffilPhone">
     <process field="COMPANY_WORK_COUNTRY"><copy to-field="countryCode"/></process>
     <process field="COMPANY_WORK_AREA"><copy to-field="areaCode"/></process>
-    <process field="COMPANY_WORK_CONTACT"><copy to-field="contactNumber"/><not-empty><fail-message message="Contact Number is missing"/></not-empty></process>
+    <process field="COMPANY_WORK_CONTACT"><copy to-field="contactNumber"/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceContactNumberMissingError"/></not-empty></process>
     <process field="COMPANY_WORK_EXT"><copy to-field="extension"/></process>
     <process field="COMPANY_WORK_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
   </simple-map-processor>
 
   <simple-map-processor name="newAffilPhonePurpose">
     <make-in-string field="contactMechPurposeTypeId"><constant>PHONE_WORK</constant></make-in-string>
-    <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
+    <process field="contactMechId"><copy/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceContactMechIDMissingError"/></not-empty></process>
     <process field="contactMechPurposeTypeId"><copy/></process>
   </simple-map-processor>
 
@@ -93,10 +104,10 @@
     <process field="COMPANY_EMAIL">
       <copy to-field="emailAddress"/>
       <not-empty>
-        <fail-message message="Email Address is missing"/>
+      <fail-property resource="EcommerceUiLabels" property="EcommerceEmailAddressMissingError"/>
       </not-empty>
       <validate-method method="isEmail">
-        <fail-message message="Email Address is not formatted correctly, must be like foo@bar.com"/>
+      <fail-property resource="EcommerceUiLabels" property="EcommerceValidEmailMissingError"/>
       </validate-method>
     </process>
     <process field="COMPANY_EMAIL_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
@@ -104,32 +115,37 @@
 
   <simple-map-processor name="newAffilEmailPurpose">
     <make-in-string field="contactMechPurposeTypeId"><constant>PRIMARY_EMAIL</constant></make-in-string>
-    <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
+    <process field="contactMechId"><copy/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceContactMechIDMissingError"/></not-empty></process>
     <process field="contactMechPurposeTypeId"><copy/></process>
   </simple-map-processor>
 
   <simple-map-processor name="newAffilURL">
     <make-in-string field="contactMechTypeId"><constant>WEB_ADDRESS</constant></make-in-string>
     <make-in-string field="allowSolicitation"><constant>Y</constant></make-in-string>
-    <process field="SITE_URL"><copy to-field="infoString"/><not-empty><fail-message message="Site URL is missing"/></not-empty></process>
+    <process field="SITE_URL"><copy to-field="infoString"/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceSiteURLMissingError"/></not-empty></process>
     <process field="contactMechTypeId"><copy/></process>
     <process field="allowSolicitation"><copy/></process>
   </simple-map-processor>
 
   <simple-map-processor name="newAffil">
-    <process field="SITE_NAME"><copy to-field="affiliateName"/><not-empty><fail-message message="Affiliate Name is missing"/></not-empty></process>
+    <process field="SITE_NAME"><copy to-field="affiliateName"/><not-empty>
+     <fail-property resource="EcommerceUiLabels" property="EcommerceAffiliateNameMissingError"/></not-empty></process>
     <process field="SITE_DESCRIPTION"><copy to-field="affiliateDescription"/></process>
   </simple-map-processor>
 
   <simple-map-processor name="newAffilUser">
-    <process field="AFFILIATE_ID"><copy to-field="userLoginId"/><not-empty><fail-message message="Affiliate Code is missing"/></not-empty></process>
-    <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-message message="Password is missing"/></not-empty></process>
+    <process field="AFFILIATE_ID"><copy to-field="userLoginId"/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommerceAffiliateCodeMissingError"/></not-empty></process>
+    <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty>
+    <fail-property resource="EcommerceUiLabels" property="EcommercePasswordMissingError"/></not-empty></process>
     <process field="CONFIRM_PASSWORD">
       <compare-field operator="equals" field="PASSWORD">
-        <fail-message message="Your passwords do not match"/>
+    <fail-property resource="EcommerceUiLabels" property="EcommercePasswordMatchError"/>
       </compare-field>
         <not-empty>
-          <fail-message message="You must enter your password twice"/>
+         <fail-property resource="EcommerceUiLabels" property="EcommerceEnterPasswordTwiceError"/>
         </not-empty>
         <copy to-field="currentPasswordVerify"/>
     </process>

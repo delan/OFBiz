@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
@@ -30,11 +30,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Order Items</div>
+            <div class="boxhead">&nbsp; ${requestAttributes.uiLabelMap.OrderItems}</div>
           </td>
           <#if maySelectItems?default(false)>
             <td valign="middle" align="right" nowrap>
-              <a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="submenutext">Add All to Cart</a><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="submenutextright">Add Checked to Cart</a>
+              <a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="submenutext">${requestAttributes.uiLabelMap.OrderAddAlltoCart}</a><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="submenutextright">${requestAttributes.uiLabelMap.OrderAddCheckedToCart}</a>
             </td>
           </#if>
         </tr>
@@ -48,19 +48,19 @@
           <td>
             <table width="100%" border="0" cellpadding="0">
               <tr align='left' valign='bottom'>
-                <td width="35%" align="left"><span class="tableheadtext"><b>Product</b></span></td>               
+                <td width="35%" align="left"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderProduct}</b></span></td>               
                 <#if maySelectItems?default(false)>
-                <td width="10%" align="right"><span class="tableheadtext"><b>Qty Ordered</b></span></td>
-                <td width="10%" align="right"><span class="tableheadtext"><b>Qty Shipped</b></span></td>
-                <td width="10%" align="right"><span class="tableheadtext"><b>Qty Canceled</b></span></td>
+                <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderQtyOrdered}</b></span></td>
+                <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderQtyShipped}</b></span></td>
+                <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderQtyCanceled}</b></span></td>
                 <#else>
                 <td width="10%" align="right">&nbsp;</td>
                 <td width="10%" align="right">&nbsp;</td>
-                <td width="10%" align="right"><span class="tableheadtext"><b>Qty Ordered</b></span></td>
+                <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderQtyOrdered}</b></span></td>
                 </#if>
-                <td width="10%" align="right"><span class="tableheadtext"><b>Unit Price</b></span></td>
-                <td width="10%" align="right"><span class="tableheadtext"><b>Adjustments</b></span></td>
-                <td width="10%" align="right"><span class="tableheadtext"><b>Subtotal</b></span></td>
+                <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderUnitPrice}</b></span></td>
+                <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderAdjustments}</b></span></td>
+                <td width="10%" align="right"><span class="tableheadtext"><b>${requestAttributes.uiLabelMap.OrderSubtotal}</b></span></td>
                 <#if maySelectItems?default(false)>
                 <td width="5%" align="right">&nbsp;</td>
                 </#if>
@@ -153,12 +153,12 @@
                 </#list>
                </#list>
                <#if orderItems?size == 0 || !orderItems?has_content>
-                 <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
+                 <tr><td><font color="red">${requestAttributes.uiLabelMap.OrderSalesOrderLookupFailed}.</font></td></tr>
                </#if>
 
               <tr><td colspan="10"><hr class='sepbar'></td></tr>
               <tr>
-                <td align="right" colspan="6"><div class="tabletext"><b>Subtotal</b></div></td>
+                <td align="right" colspan="6"><div class="tabletext"><b>${requestAttributes.uiLabelMap.OrderSubtotal}</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderSubTotal?string.currency}</div></td>
               </tr>
               <#list headerAdjustmentsToShow as orderHeaderAdjustment>
@@ -168,17 +168,17 @@
                 </tr>
               </#list>
               <tr>
-                <td align="right" colspan="6"><div class="tabletext"><b>Shipping and Handling</b></div></td>
+                <td align="right" colspan="6"><div class="tabletext"><b>${requestAttributes.uiLabelMap.OrderShippingAndHandling}</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderShippingTotal?string.currency}</div></td>
               </tr>
               <tr>
-                <td align="right" colspan="6"><div class="tabletext"><b>Sales Tax</b></div></td>
+                <td align="right" colspan="6"><div class="tabletext"><b>${requestAttributes.uiLabelMap.OrderSalesTax}</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderTaxTotal?string.currency}</div></td>
               </tr>
 
               <tr><td colspan=2></td><td colspan="9"><hr class='sepbar'></td></tr>
               <tr>
-                <td align="right" colspan="6"><div class="tabletext"><b>Grand Total</b></div></td>
+                <td align="right" colspan="6"><div class="tabletext"><b>${requestAttributes.uiLabelMap.OrderGrandTotal}</b></div></td>
                 <td align="right" nowrap>
                   <div class="tabletext">${orderGrandTotal?string.currency}</div>
                 </td>

@@ -21,11 +21,12 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<div class="head1">Log&nbsp;In</div>
+<div class="head1">${uiLabelMap.CommonLogin}</div>
 <br>
 
 <table width='100%' border='0' cellpadding='0' cellspacing='0'>
@@ -37,7 +38,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign='middle' align='center'>
-                  <div class="boxhead">Registered&nbsp;User</div>
+                  <div class="boxhead">${uiLabelMap.CommonRegistred}</div>
                 </td>
               </tr>
             </table>
@@ -51,7 +52,7 @@
                   <form method="POST" action="<@ofbizUrl>/login${previousParams}</@ofbizUrl>" name="loginform" style='margin: 0;'>
                     <table width='100%' border='0' cellpadding='0' cellspacing='2'>
                       <tr align="center">
-                        <td align='right'><span class="tabletext">Username:&nbsp;</span></td>
+                        <td align='right'><span class="tabletext">${uiLabelMap.CommonUsername}:&nbsp;</span></td>
                         <#-- another possible way...
                         <#if autoUserLogin?exists>
                           <input type="hidden" name="USERNAME" value='${autoUserLogin.userLoginId}'>
@@ -59,7 +60,7 @@
                             <span class="head2">${autoUserLogin.userLoginId}</span>
                             <span class="tabletext">
                               (Not&nbsp;${autoUserLogin.userLoginId}?&nbsp;
-                              <a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>" class="buttontext">click here</a>)
+                              <a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)
                             </span>
                           </td>
                         </#if>
@@ -73,17 +74,17 @@
                           <td align=right>&nbsp;</td>
                           <td align=left>
                             <span class="tabletext">
-                              (Not&nbsp;${autoUserLogin.userLoginId}?&nbsp;<a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>" class="buttontext">click&nbsp;here</a>)
+                              (${uiLabelMap.CommonNot}&nbsp;${autoUserLogin.userLoginId}?&nbsp;<a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonClickHere}</a>)
                             </span>
                           </td>
                         </tr>
                       </#if>
                       <tr align="center">
-                        <td align='right'><span class="tabletext">Password:&nbsp;</span></td>
+                        <td align='right'><span class="tabletext">${uiLabelMap.CommonPassword}:&nbsp;</span></td>
                           <td align='left'><input type="password" class='inputBox' name="PASSWORD" value="" size="20"></td>
                       </tr>
                       <tr>
-                        <td colspan="2" align="center"><input type="submit" class="smallSubmit" value="Login"></td>
+                        <td colspan="2" align="center"><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonLogin}"></td>
                       </tr>
                     </table>
                   </form>
@@ -100,7 +101,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign='middle' align='center'>
-                  <div class="boxhead">Forgot&nbsp;Your&nbsp;Password?</div>
+                  <div class="boxhead">${uiLabelMap.CommonForgotYourPassword}?</div>
                 </td>
               </tr>
             </table>
@@ -112,8 +113,8 @@
               <tr>
                 <td valign='middle' align='center'>
                   <form method="POST" action="<@ofbizUrl>/forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style='margin: 0;'>
-                    <span class="tabletext">Username:&nbsp;</span><input type="text" size="20" class='inputBox' name="USERNAME" value='<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>'>
-                    <div><input type="submit" class="smallSubmit" value="Get Password Hint" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" class="smallSubmit" value="Email Password" name="EMAIL_PASSWORD"></div>
+                    <span class="tabletext">${uiLabelMap.CommonUsername}:&nbsp;</span><input type="text" size="20" class='inputBox' name="USERNAME" value='<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>'>
+                    <div><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonGetPasswordHint}" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" class="smallSubmit" value="${uiLabelMap.CommonEmailPassword}" name="EMAIL_PASSWORD"></div>
                   </form>
                 </td>
               </tr>
@@ -130,7 +131,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign='middle' align='center'>
-                  <div class="boxhead">New&nbsp;User</div>
+                  <div class="boxhead">${uiLabelMap.CommonNewUser}</div>
                 </td>
               </tr>
             </table>
@@ -142,8 +143,8 @@
               <tr>
                 <td>
                   <form method="POST" action="<@ofbizUrl>/newcustomer${previousParams}</@ofbizUrl>" style='margin: 0;'>
-                    <div class="tabletext" align=center>You may create a new account here:</div>
-                    <div align='center'><input type="submit" class="smallSubmit" value="Create"></div>
+                    <div class="tabletext" align=center>${uiLabelMap.CommonMayCreateNewAccountHere}:</div>
+                    <div align='center'><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonMayCreate}"></div>
                   </form>
                 </td>
               </tr>

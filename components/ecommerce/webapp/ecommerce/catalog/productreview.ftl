@@ -20,10 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if requestParameters.product_id?exists>
   <form name="reviewProduct" method="post" action="<@ofbizUrl>/createProductReview</@ofbizUrl>">
     <input type="hidden" name="productId" value="${requestParameters.product_id}">
@@ -33,7 +33,7 @@
       <tr>
         <td valign="top">
           <div class="tabletext">
-            <b>Rating (1-5; 5 being best):</b>
+            <b>${uiLabelMap.CatalogRating}:</b>
             &nbsp;1&nbsp;<input type="radio" name="productRating" value="1.0">
             &nbsp;2&nbsp;<input type="radio" name="productRating" value="2.0">
             &nbsp;3&nbsp;<input type="radio" name="productRating" value="3.0">
@@ -45,15 +45,15 @@
       <tr>
         <td>
           <div class="tabletext">
-            <b>Post Anonymous:</b>
-            &nbsp;Yes&nbsp;<input type="radio" name="postedAnonymous" value="true">
-            &nbsp;No&nbsp;<input type="radio" name="postedAnonymous" value="false">
+            <b>${uiLabelMap.CatalogPostAnonymous}:</b>
+            &nbsp;${uiLabelMap.CatalogYes}&nbsp;<input type="radio" name="postedAnonymous" value="true">
+            &nbsp;${uiLabelMap.CatalogNo}&nbsp;<input type="radio" name="postedAnonymous" value="false">
           </div>
         </td>
       </tr>
       <tr>
         <td>
-          <div class="tabletext"><b>Review:</b>
+          <div class="tabletext"><b>${uiLabelMap.CatalogReview}:</b>
         </td>
       </tr>
       <tr>
@@ -63,12 +63,12 @@
       </tr>
       <tr>
         <td>
-          <a href="javascript:document.reviewProduct.submit();" class="buttontext">[Save]</a>&nbsp;
-          <a href="<@ofbizUrl>/product?product_id=${requestParameters.product_id}</@ofbizUrl>" class="buttontext">[Cancel]</a>
+          <a href="javascript:document.reviewProduct.submit();" class="buttontext">[${uiLabelMap.CatalogSave}]</a>&nbsp;
+          <a href="<@ofbizUrl>/product?product_id=${requestParameters.product_id}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CatalogCancel}]</a>
         </td>
       </tr>
     </table>
   </form>
 <#else>
-  <h2>Cannot review an unknown product.</h2>
+  <h2>${uiLabelMap.CatalogCannotReviewUnKnownProduct}.</h2>
 </#if>

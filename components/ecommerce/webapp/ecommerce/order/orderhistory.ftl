@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -29,9 +29,9 @@
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align='left'><div class="boxhead">Order History</div></td>
+          <td align='left'><div class="boxhead">${requestAttributes.uiLabelMap.OrderHistory}</div></td>
           <#--<td align='right'>
-            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[Back Home]</a>&nbsp;&nbsp;
+            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[${requestAttributes.uiLabelMap.OrderBackHome}]</a>&nbsp;&nbsp;
           </td>-->
         </tr>
       </table>      
@@ -45,16 +45,16 @@
             <table width="100%" cellpadding="1" cellspacing="0" border="0">
               <tr>
                 <td width="30%">
-                  <div class="tabletext"><b>Date</b></div>
+                  <div class="tabletext"><b>${requestAttributes.uiLabelMap.OrderDate}</b></div>
                 </td>
                 <td width="15%">
-                  <div class="tabletext"><b><nobr>Order #</nobr></b></div>
+                  <div class="tabletext"><b><nobr>${requestAttributes.uiLabelMap.OrderOrder} #</nobr></b></div>
                 </td>
                 <td width="15%">
-                  <div class="tabletext"><b>Amount</b></div>
+                  <div class="tabletext"><b>${requestAttributes.uiLabelMap.OrderAmount}</b></div>
                 </td>
                 <td width="15%">
-                  <div class="tabletext"><b>Status</b></div>
+                  <div class="tabletext"><b>${requestAttributes.uiLabelMap.OrderStatus}</b></div>
                 </td>
                 <td width="15%"><b></b></td>                
               </tr>
@@ -75,12 +75,12 @@
                     <div class="tabletext">${status.description}</div>
                   </td>
                   <td align=right>
-                    <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[View]</a>
+                    <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>[${requestAttributes.uiLabelMap.OrderView}]</a>
                   </td>
                 </tr>
               </#list>
               <#if !orderHeaderList?has_content>
-                <tr><td colspan="8"><div class='head3'>No Orders Found</div></td></tr>
+                <tr><td colspan="8"><div class='head3'>${requestAttributes.uiLabelMap.OrderNoOrderFound}</div></td></tr>
               </#if>
             </table>
           </td>

@@ -21,10 +21,10 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if reorderProducts?has_content>
   <br>
   <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -33,7 +33,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
             <td valign="middle" align="center">
-              <div class="boxhead">Quick&nbsp;Reorder...</div>
+              <div class="boxhead">${uiLabelMap.CatalogQuickReorder}...</div>
             </td>
           </tr>
         </table>

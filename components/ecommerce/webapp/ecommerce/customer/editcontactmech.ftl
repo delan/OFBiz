@@ -20,29 +20,29 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if canNotView>
-  <p><h3>The contact information specified does not belong to you, you may not view or edit it.</h3></p>
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[Back]</a>
+  <p><h3>${uiLabelMap.CustomerContactInfoNotBelongToYou}.</h3></p>
+  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CustomerBack}]</a>
 <#else>
 
   <#if !contactMech?exists>
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !requestParameters.preContactMechTypeId?exists && !preContactMechTypeId?exists>
-    <p class="head1">Create New Contact Information</p>
+    <p class="head1">${uiLabelMap.CustomerCreateNewContactInfo}</p>
     <form method="post" action='<@ofbizUrl>/editcontactmech?DONE_PAGE=${donePage}</@ofbizUrl>' name="createcontactmechform">
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <tr>
-          <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
+          <td width="26%"><div class="tabletext">${uiLabelMap.CustomerSelectContactType}:</div></td>
           <td width="74%">
             <select name="preContactMechTypeId" class='selectBox'>
               <#list contactMechTypes as contactMechType>
                 <option value='${contactMechType.contactMechTypeId}'>${contactMechType.description}</option>
               </#list>
-            </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="buttontext">[Create]</a>
+            </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="buttontext">[${uiLabelMap.CustomerCreate}]</a>
           </td>
         </tr>
       </table>
@@ -53,26 +53,26 @@
 
   <#if contactMechTypeId?exists>
     <#if !contactMech?exists>
-      <div class="head1">Create New Contact Information</div>
-      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[Go&nbsp;Back]</a>
-      &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
+      <div class="head1">${uiLabelMap.CustomerCreateNewContactInfo}</div>
+      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CustomerGoBack}]</a>
+      &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[${uiLabelMap.CustomerSave}]</a>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <form method="post" action='<@ofbizUrl>/${requestName}</@ofbizUrl>' name="editcontactmechform">
         <input type='hidden' name='DONE_PAGE' value='${donePage}'>
         <input type='hidden' name='contactMechTypeId' value='${contactMechTypeId}'>
         <#if contactMechPurposeType?exists>
-            <div>(Note: this new contact information will have the purpose <b>"${contactMechPurposeType.description?if_exists}"</b>)</div>
+            <div>(${uiLabelMap.CustomerNote} <b>"${contactMechPurposeType.description?if_exists}"</b>)</div>
         </#if>
         <#if cmNewPurposeTypeId?has_content><input type='hidden' name='contactMechPurposeTypeId' value='${cmNewPurposeTypeId}'></#if>
         <#if preContactMechTypeId?has_content><input type='hidden' name='preContactMechTypeId' value='${preContactMechTypeId}'></#if>
         <#if paymentMethodId?has_content><input type='hidden' name='paymentMethodId' value='${paymentMethodId}'></#if>
     <#else>
-      <p class="head1">Edit Contact Information</p>
-      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class='buttontext'>[Go&nbsp;Back]</a>
-      &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
+      <p class="head1">${uiLabelMap.CustomerEditContactInfo}</p>
+      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class='buttontext'>[${uiLabelMap.CustomerGoBack}]</a>
+      &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[${uiLabelMap.CustomerSave}]</a>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <tr>
-          <td width="26%" align=right valign=top><div class="tabletext">Contact Purposes</div></td>
+          <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerConactPurposes}</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
             <table border='0' cellspacing='1' bgcolor='black'>
@@ -84,12 +84,12 @@
                       <#if contactMechPurposeType?exists>
                         <b>${contactMechPurposeType.description}</b>
                       <#else>
-                        <b>Purpose Type not found with ID: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
+                        <b>${uiLabelMap.CustomerPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
                       </#if>
                       (Since:${partyContactMechPurpose.fromDate.toString()})
-                      <#if partyContactMechPurpose.thruDate?exists>(Expires:${partyContactMechPurpose.thruDate.toString()})</#if>
+                      <#if partyContactMechPurpose.thruDate?exists>(${uiLabelMap.CustomerExpires}:${partyContactMechPurpose.thruDate.toString()})</#if>
                     &nbsp;</div></td>
-                  <td bgcolor='white'><div><a href='<@ofbizUrl>/deletePartyContactMechPurpose?contactMechId=${contactMechId}&contactMechPurposeTypeId=${partyContactMechPurpose.contactMechPurposeTypeId}&fromDate=${partyContactMechPurpose.fromDate.toString()?html}&DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
+                  <td bgcolor='white'><div><a href='<@ofbizUrl>/deletePartyContactMechPurpose?contactMechId=${contactMechId}&contactMechPurposeTypeId=${partyContactMechPurpose.contactMechPurposeTypeId}&fromDate=${partyContactMechPurpose.fromDate.toString()?html}&DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' class='buttontext'>&nbsp;${uiLabelMap.CustomerDelete}&nbsp;</a></div></td>
                 </tr>
               </#list>
               <#if purposeTypes?has_content>
@@ -104,7 +104,7 @@
                     </select>
                   </td>
                 </form>
-                <td bgcolor='white'><div><a href='javascript:document.newpurposeform.submit()' class='buttontext'>&nbsp;Add&nbsp;Purpose&nbsp;</a></div></td>
+                <td bgcolor='white'><div><a href='javascript:document.newpurposeform.submit()' class='buttontext'>${uiLabelMap.CustomerAddPurpose}&nbsp;</a></div></td>
               </tr>
               </#if>
             </table>
@@ -117,60 +117,60 @@
 
   <#if contactMechTypeId = "POSTAL_ADDRESS">
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">To Name</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerToName}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="toName" value="${postalAddressData.toName?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Attention Name</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerAttentionName}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="attnName" value="${postalAddressData.attnName?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Address Line 1</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerAddressLine1}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="30" name="address1" value="${postalAddressData.address1?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Address Line 2</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerAddressLine2}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" class='inputBox' size="30" maxlength="30" name="address2" value="${postalAddressData.address2?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">City</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerCity}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" class='inputBox' size="30" maxlength="30" name="city" value="${postalAddressData.city?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">State/Province</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerState}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="stateProvinceGeoId" class='selectBox'>
           <#if postalAddressData.stateProvinceGeoId?exists><option value='${postalAddressData.stateProvinceGeoId}'>${selectedStateName?default(postalAddressData.stateProvinceGeoId)}</option></#if>
-          <option value="">No State/Province</option>          
+          <option value="">${uiLabelMap.CustomerNoState}</option>          
           <#include "../includes/states.ftl">          
         </select>
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Zip/Postal Code</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerPostalCode}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="12" maxlength="10" name="postalCode" value="${postalAddressData.postalCode?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Country</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerCountry}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="countryGeoId" class='selectBox'>
@@ -181,7 +181,7 @@
     </tr>
   <#elseif contactMechTypeId = "TELECOM_NUMBER">
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Phone Number</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerPhoneNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <div class="tabletext">
@@ -195,11 +195,11 @@
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext"></div></td>
       <td width="5">&nbsp;</td>
-      <td><div class="tabletext">[Country Code] [Area Code] [Contact Number] [Extension]</div></td>
+      <td><div class="tabletext">[${uiLabelMap.CustomerCountryCode}] [${uiLabelMap.CustomerAreaCode}] [${uiLabelMap.CustomerContactNumber}] [${uiLabelMap.CustomerExtension}]</div></td>
     </tr>
   <#elseif contactMechTypeId = "EMAIL_ADDRESS">
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Email address</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerEmailAddress}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
           <input type="text" class='inputBox' size="60" maxlength="255" name="emailAddress" value="<#if tryEntity>${contactMech.infoString?if_exists}<#else>${requestParameters.emailAddress?if_exists}</#if>">
@@ -215,7 +215,7 @@
     </tr>
   </#if>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Allow Solicitation?</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerAllowSolicitation}?</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="allowSolicitation" class='selectBox'>
@@ -227,10 +227,10 @@
   </form>
   </table>
 
-    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[Go&nbsp;Back]</a>
-    &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
+    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CustomerGoBack}]</a>
+    &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[${uiLabelMap.CustomerSave}]</a>
   <#else>
-    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[Go&nbsp;Back]</a>
+    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CustomerGoBack}]</a>
   </#if>
 </#if>
 
