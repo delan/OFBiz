@@ -429,6 +429,10 @@ public class RequestHandler implements Serializable {
     public static String getNextPageUri(String path) {
         List pathInfo = StringUtil.split(path, "/");
         String nextPage = null;
+        if (pathInfo == null) {
+            return nextPage;
+        }
+        
         for (int i = 1; i < pathInfo.size(); i++) {
             String element = (String) pathInfo.get(i);
             if (element.indexOf('~') != 0) {
