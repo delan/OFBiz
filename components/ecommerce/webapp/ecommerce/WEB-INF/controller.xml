@@ -3,7 +3,7 @@
 
 <site-conf>
     <description>OFBiz: eCommerce Controller Configuration File</description>
-    <owner>The Open For Business Project Copyright (c) 2001</owner>
+    <owner>The Open For Business Project Copyright (c) 2001-2003</owner>
     <errorpage>/error/error.jsp</errorpage>
 
     <handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/>

@@ -21,24 +21,24 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign=middle align=center>
             <div class="boxhead">${uiLabelMap.ProductSearchProducts}</div>
           </td>
           <td valign=middle align=right>
             <#if isOpen>
-                <a href='<@ofbizUrl>/main?SearchProductsState=close</@ofbizUrl>' class='lightbuttontext'>&nbsp;_&nbsp;</a>
+                <a href="<@ofbizUrl>/main?SearchProductsState=close</@ofbizUrl>" class="lightbuttontext">&nbsp;_&nbsp;</a>
             <#else>
-                <a href='<@ofbizUrl>/main?SearchProductsState=open</@ofbizUrl>' class='lightbuttontext'>&nbsp;[]&nbsp;</a>
+                <a href="<@ofbizUrl>/main?SearchProductsState=open</@ofbizUrl>" class="lightbuttontext">&nbsp;[]&nbsp;</a>
             </#if>
           </td>
         </tr>
@@ -47,28 +47,57 @@
   </tr>
 <#if isOpen>
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>
-            <form name="keywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch?VIEW_SIZE=25</@ofbizUrl>" style='margin: 0;'>
-              <div class='tabletext'>${uiLabelMap.ProductKeywords}: <input type="text" class="inputBox" name="SEARCH_STRING" size="20" maxlength="50"></div>
-              <div class='tabletext'>
+            <form name="keywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch?VIEW_SIZE=25</@ofbizUrl>" style="margin: 0;">
+              <div class="tabletext">${uiLabelMap.ProductKeywords}: <input type="text" class="inputBox" name="SEARCH_STRING" size="20" maxlength="50"></div>
+              <div class="tabletext">
                 ${uiLabelMap.ProductCategoryId}:
                 <select class="selectBox" name="SEARCH_CATEGORY_ID">
+                    <option value="">- Any Category -</option>
                     <#list productCategories as productCategory>
                         <#assign displayDesc = productCategory.description>
                         <#if 18 < displayDesc?length>
                             <#assign displayDesc = displayDesc[0..15] + "...">
                         </#if>
-                        <option value='${productCategory.productCategoryId}'>${displayDesc}</option>
+                        <option value="${productCategory.productCategoryId}">${displayDesc}</option>
                     </#list>
                 </select>
               </div>
-              <div class='tabletext'>
-                ${uiLabelMap.CommonAny}<input type=RADIO name='SEARCH_OPERATOR' value='OR' checked>
-                ${uiLabelMap.CommonAll}<input type=RADIO name='SEARCH_OPERATOR' value='AND'>
+              <div class="tabletext">
+                ${uiLabelMap.CommonAny}<input type=RADIO name="SEARCH_OPERATOR" value="OR" checked>
+                ${uiLabelMap.CommonAll}<input type=RADIO name="SEARCH_OPERATOR" value="AND">
                 &nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a>
+              </div>
+            </form>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+        <tr>
+          <td>
+            <form name="advancedsearchform" method="POST" action="<@ofbizUrl>/advancedsearch</@ofbizUrl>" style="margin: 0;">
+              <div class="tabletext">
+                ${uiLabelMap.ProductCategoryId}:
+                <select class="selectBox" name="SEARCH_CATEGORY_ID">
+                    <option value="">- Any Category -</option>
+                    <#list productCategories as productCategory>
+                        <#assign displayDesc = productCategory.description>
+                        <#if 18 < displayDesc?length>
+                            <#assign displayDesc = displayDesc[0..15] + "...">
+                        </#if>
+                        <option value="${productCategory.productCategoryId}">${displayDesc}</option>
+                    </#list>
+                </select>
+              </div>
+              <div class="tabletext">
+                <a href="javascript:document.advancedsearchform.submit()" class="buttontext">Advanced Search</a>
               </div>
             </form>
           </td>
