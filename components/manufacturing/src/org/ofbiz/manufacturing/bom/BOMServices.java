@@ -1,5 +1,5 @@
 /*
- * $Id: BOMServices.java,v 1.9 2004/06/04 14:00:46 jacopo Exp $
+ * $Id: BOMServices.java,v 1.10 2004/07/17 10:37:32 jacopo Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -98,7 +98,7 @@ public class BOMServices {
         } else {
             bomTypes.add(bomType);
         }
-
+        
         int depth = 0;
         int maxDepth = 0;
         Iterator bomTypesIt = bomTypes.iterator();
@@ -136,7 +136,6 @@ public class BOMServices {
         if (alsoComponents == null) {
             alsoComponents = new Boolean(true);
         }
-
         Integer llc = null;
         try {
             GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
@@ -152,7 +151,7 @@ public class BOMServices {
                 for (int i = 0; i < products.size(); i++) {
                     ItemConfigurationNode oneNode = (ItemConfigurationNode)products.get(i);
                     GenericValue oneProduct = oneNode.getProduct();
-                    if (oneProduct.getInteger("billOfMaterialLevel").intValue() < oneNode.getDepth()) {
+                    if (oneProduct.getLong("billOfMaterialLevel").intValue() < oneNode.getDepth()) {
                         oneProduct.set("billOfMaterialLevel", new Integer(oneNode.getDepth()));
                         oneProduct.store();
                     }
@@ -212,7 +211,6 @@ public class BOMServices {
      * @return
      */    
     public static Map searchDuplicatedAncestor(DispatchContext dctx, Map context) {
-
         Map result = new HashMap();
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
@@ -221,7 +219,6 @@ public class BOMServices {
         String productIdKey = (String) context.get("productIdKey");
         String fromDateStr = (String) context.get("fromDate");
         String bomType = (String) context.get("bomType");
-        
         Date fromDate = null;
         if (UtilValidate.isNotEmpty(fromDateStr)) {
             try {
@@ -232,16 +229,13 @@ public class BOMServices {
         if (fromDate == null) {
             fromDate = new Date();
         }
-        
         GenericValue duplicatedProductAssoc = null;
         try {
             duplicatedProductAssoc = BOMHelper.searchDuplicatedAncestor(productId, productIdKey, bomType, fromDate, delegator, dispatcher);
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error running duplicated ancestor search: " + gee.getMessage());
         }
-
         result.put("duplicatedProductAssoc", duplicatedProductAssoc);
-
         return result;
     }
 
@@ -384,7 +378,6 @@ public class BOMServices {
     }
 
     public static Map getNotAssembledComponents(DispatchContext dctx, Map context) {
-
         Map result = new HashMap();
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
@@ -393,7 +386,7 @@ public class BOMServices {
         Double quantity = (Double) context.get("quantity");
         String fromDateStr = (String) context.get("fromDate");
         GenericValue userLogin = (GenericValue)context.get("userLogin");
-        
+
         if (quantity == null) {
             quantity = new Double(1);
         }
@@ -428,7 +421,4 @@ public class BOMServices {
         result.put("notAssembledComponents" , notAssembledComponents);
         return result;
     }
-
 }
-
-
