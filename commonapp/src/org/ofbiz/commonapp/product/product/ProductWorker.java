@@ -30,6 +30,7 @@ import javax.servlet.ServletRequest;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.stats.*;
 
 /**
  * Product Worker class to reduce code in JSPs.
@@ -133,7 +134,7 @@ public class ProductWorker {
             if (Debug.infoOn()) Debug.logInfo("curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
             //productIds will be pre-sorted
-            productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, anyPrefix, anySuffix, intraKeywordOperator);
+            productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, VisitHandler.getVisitId(pageContext.getSession()), anyPrefix, anySuffix, intraKeywordOperator);
 
             if (productIds != null) {
                 pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", productIds);
