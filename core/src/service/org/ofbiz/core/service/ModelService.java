@@ -575,7 +575,7 @@ public class ModelService {
      * @return ModelService object with inherited parameters
      */
     public synchronized void interfaceUpdate(DispatchContext dctx) throws GenericServiceException {                       
-        if (!inheritedParameters) {
+        if (!inheritedParameters) {            
             // services w/ engine 'group' auto-implement the grouped services
             if (this.engineName.equals("group") && implServices.size() == 0) {
                 GroupModel group = ServiceGroupReader.getGroupModel(this.location);
@@ -589,7 +589,9 @@ public class ModelService {
                     }
                 }                
             }
-            if (implServices.size() > 0 && dctx != null) {                 
+            
+            // handle interfaces
+            if (implServices != null && implServices.size() > 0 && dctx != null) {                 
                 // backup the old info                 
                 List oldParams = this.contextParamList;
                               
@@ -606,12 +608,14 @@ public class ModelService {
                     } else {
                         Debug.logWarning("Inherited model [" + serviceName + "] not found for [" + this.name + "]", module);
                     }
-                }
+                }                          
                 
                 // put the old values back on top
-                copyParams(oldParams);                           
+                copyParams(oldParams);
+            }                           
                   
-                // now loop through the override params and override any existing params                                                     
+            // handle any override parameters
+            if (overrideParameters != null && overrideParameters.size() > 0) {                                                                   
                 Iterator keySetIter = overrideParameters.iterator();
                 while (keySetIter.hasNext()) {                    
                     ModelParam overrideParam = (ModelParam) keySetIter.next();                    
