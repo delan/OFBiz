@@ -822,10 +822,10 @@ public class GenericDelegator {
     }
 
     /** Store the Entities from the Collection GenericValue instances to the persistent store.
-     *  This is different than the normal store method in that the store method only does
+     *  <br>This is different than the normal store method in that the store method only does
      *  an update, while the storeAll method checks to see if each entity exists, then
      *  either does an insert or an update as appropriate.
-     *  These updates all happen in one transaction, so they will either all succeed or all fail,
+     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
      *  if the data source supports transactions. This is just like to othersToStore feature
      *  of the GenericEntity on a create or store.
      *@param values Collection of GenericValue instances containing the entities to store
@@ -859,9 +859,49 @@ public class GenericDelegator {
         }
     }
 
+    /** Remove the Entities from the Collection from the persistent store.
+     *  <br>The Collection contains GenericEntity objects, can be either GenericPK or GenericValue.
+     *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
+     *  to that primary key will be removed, this is like a removeByPrimary Key.
+     *  <br>On the other hand, if a certain entity is an incomplete or non primary key,
+     *  if will behave like the removeByAnd method.
+     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
+     *  if the data source supports transactions.
+     *@param dummyPKs Collection of GenericEntity instances containing the entities or by and fields to remove
+     */
+    public void removeAll(Collection dummyPKs) throws GenericEntityException {
+        if (dummyPKs == null)
+            return;
 
+        //from the delegator level this is complicated because different GenericValue
+        // objects in the collection may correspond to different helpers
+        HashMap valuesPerHelper = new HashMap();
+        Iterator viter = dummyPKs.iterator();
+        while (viter.hasNext()) {
+            GenericEntity entity = (GenericEntity) viter.next();
+            String helperName = this.getEntityHelperName(entity.getEntityName());
+            Collection helperValues = (Collection) valuesPerHelper.get(helperName);
+            if (helperValues == null) {
+                helperValues = new LinkedList();
+                valuesPerHelper.put(helperName, helperValues);
+            }
+            helperValues.add(entity);
+        }
+
+        Iterator helperIter = valuesPerHelper.entrySet().iterator();
+        while (helperIter.hasNext()) {
+            Map.Entry curEntry = (Map.Entry) helperIter.next();
+            String helperName = (String) curEntry.getKey();
+            GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+            this.clearAllCacheLines((Collection) curEntry.getValue());
+            helper.removeAll((Collection) curEntry.getValue());
+        }
+    }
+
+
+
+    // ======================================
     // ======= Cache Related Methods ========
-
 
     /** Remove a CACHED Generic Entity (Collection) from the cache, either a PK, ByAnd, or All
      *@param entityName The Name of the Entity as defined in the entity XML file
@@ -879,12 +919,10 @@ public class GenericDelegator {
                 allCache.remove(entityName);
             }
         } else {
-            GenericPK tempPK = new GenericPK(getModelReader().getModelEntity(entityName), fields);
+            GenericPK tempPK = new GenericPK(entity, fields);
 
             //check to see if passed fields names exactly make the primary key...
-            Collection pkNames = entity.getPkFieldNames();
-            Collection passedNames = fields.keySet();
-            if (pkNames.containsAll(passedNames) && passedNames.containsAll(pkNames)) {
+            if (tempPK.isPrimaryKey()) {
                 //findByPrimaryKey
                 if (primaryKeyCache != null) {
                     primaryKeyCache.remove(tempPK);
@@ -908,13 +946,13 @@ public class GenericDelegator {
         }
     }
 
-    public void clearAllCacheLines(Collection primaryKeys) {
-        if (primaryKeys == null)
+    public void clearAllCacheLines(Collection dummyPKs) {
+        if (dummyPKs == null)
             return;
-        Iterator iter = primaryKeys.iterator();
+        Iterator iter = dummyPKs.iterator();
         while (iter.hasNext()) {
-            GenericPK primaryKey = (GenericPK) iter.next();
-            this.clearCacheLine(primaryKey);
+            GenericEntity entity = (GenericEntity) iter.next();
+            this.clearCacheLine(entity.getEntityName(), entity.getAllFields());
         }
     }
 
