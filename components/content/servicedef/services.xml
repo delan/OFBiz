@@ -138,6 +138,10 @@
         <description>Check for permission to perform operation on Content</description>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <!-- it was a mistake to pass in List objects because it makes it difficult to use
+             the service in a request event, so I added new ones without removing lists -->
+        <attribute mode="IN" name="targetOperationString" optional="true" type="String"/>
+        <attribute mode="IN" name="contentPurposeString" optional="true" type="String"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="IN" name="currentContent" optional="true" type="GenericValue"/>
         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
@@ -213,6 +217,7 @@
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="deactivateExisting" optional="true" type="String"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdFrom" optional="true" type="String"/>
     </service>
@@ -306,6 +311,14 @@
         <description>Update a ContentRole</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deactivateAllContentRoles" engine="simple" invoke="deactivateAllContentRoles"
+        location="org/ofbiz/content/content/ContentServices.xml"
+        default-entity-name="ContentRole" auth="true">
+        <description>Deactivate all ContentRoles</description>
+        <attribute mode="IN" name="contentId" optional="false" type="String"/>
+        <attribute mode="IN" name="roleTypeId" optional="false" type="String"/>
+        <attribute mode="IN" name="partyId" optional="false" type="String"/>
     </service>
     <service name="removeContentRole" engine="simple" invoke="removeContentRole"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -1211,6 +1224,10 @@
         <attribute mode="IN" name="rootDir" optional="true" type="String"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <!-- it was a mistake to pass in List objects because it makes it difficult to use
+             the service in a request event, so I added new ones without removing lists -->
+        <attribute mode="IN" name="targetOperationString" optional="true" type="String"/>
+        <attribute mode="IN" name="contentPurposeString" optional="true" type="String"/>
         <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
         <attribute mode="IN" name="imageData" optional="true" type="org.ofbiz.entity.util.ByteWrapper"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
