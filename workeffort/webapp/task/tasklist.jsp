@@ -78,9 +78,9 @@
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="priority"/></DIV></TD>
                     <%GenericValue currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId")));%>
-                    <%pageContext.setAttribute("currentStatusItem", currentStatusItem);%>
+                    <%if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);%>
                     <%GenericValue statusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId")));%>
-                    <%pageContext.setAttribute("statusItem", statusItem);%>
+                    <%if (statusItem != null) pageContext.setAttribute("statusItem", statusItem);%>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="currentStatusItem" field="description"/></DIV></TD>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="statusItem" field="description"/></DIV></TD>
                     <TD><A class='buttontext' href='<ofbiz:url>/activity?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
@@ -115,7 +115,7 @@
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="priority"/></DIV></TD>
                     <%GenericValue currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId")));%>
-                    <%pageContext.setAttribute("currentStatusItem", currentStatusItem);%>
+                    <%if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);%>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="currentStatusItem" field="description"/></DIV></TD>
                     <TD><A class='buttontext' href='<ofbiz:url>/task?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
                         <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>

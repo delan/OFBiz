@@ -250,7 +250,7 @@
                       <td width='74%'>
                         <SELECT name='statusId'>
                           <%GenericValue wepaStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", statusId));%>
-                          <%pageContext.setAttribute("wepaStatusItem", wepaStatusItem);%>
+                          <%if (wepaStatusItem != null) pageContext.setAttribute("wepaStatusItem", wepaStatusItem);%>
                           <OPTION value='<ofbiz:entityfield field="statusId" attribute="wepaStatusItem" default="CAL_SENT"/>'><ofbiz:entityfield field="description" attribute="wepaStatusItem"/></OPTION>
                           <OPTION value=''>--</OPTION>
                           <ofbiz:iterator name="statusValidChangeToDetail" property="taskStatusDetails">
