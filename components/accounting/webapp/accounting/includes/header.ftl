@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
@@ -39,6 +39,7 @@
   <div class="col"><a href="<@ofbizUrl>/FindBillingAccount</@ofbizUrl>" class="${selectedLeftClassMap.billingaccount?default(unselectedLeftClassName)}">${uiLabelMap.AccountingBillingAccounts}</a></div>
   <div class="col"><a href="<@ofbizUrl>/findInvoices</@ofbizUrl>" class="${selectedLeftClassMap.invoices?default(unselectedLeftClassName)}">${uiLabelMap.AccountingInvoices}</a></div>
   <div class="col"><a href="<@ofbizUrl>/findPayment</@ofbizUrl>" class="${selectedLeftClassMap.payments?default(unselectedLeftClassName)}">${uiLabelMap.AccountingPayments}</a></div>
+  <div class="col"><a href="<@ofbizUrl>/FindGlobalGlAccount</@ofbizUrl>" class="${selectedLeftClassMap.chartofaccounts?default(unselectedLeftClassName)}">Chart of Accounts</a></div>
   <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
     <div class="col"><a href="<@ofbizUrl>/manualETx</@ofbizUrl>" class="${selectedLeftClassMap.manualTx?default(unselectedLeftClassName)}">Manual Tx</a></div>
   </#if>

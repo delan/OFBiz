@@ -1,0 +1,111 @@
+<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<forms>
+    <form name="EditGlAccount" type="single" 
+            target="updateGlAccount" title="" default-map-name="glAccount"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <alt-target use-when="glAccount==null" target="createGlAccount"/>
+        
+        <auto-fields-service service-name="updateGlAccount" map-name=""/>
+        
+        <field use-when="glAccount!=null" name="glAccountId" tooltip="This cannot be changed without re-creating the GL Account."><display/></field>
+        <field use-when="glAccount==null&amp;&amp;glAccountId!=null" name="glAccountId" tooltip="Could not find GlAccount with ID [${glAccountId}]"><text size="20" maxlength="20"/></field>
+        <!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
+        <field use-when="glAccount==null&amp;&amp;glAccountId==null" name="glAccountId"><text size="20" maxlength="20"/></field>
+
+        <field name="glAccountTypeId" title="GL Account Type" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="GlAccountType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options> 
+            </drop-down>
+        </field>
+        <field name="glAccountClassId" title="GL Account Class" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="GlAccountClass" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="glResourceTypeId" title="GL Resource Type" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="GlResourceType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="glXbrlClassId" title="XBRL Class" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="GlXbrlClass" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="parentGlAccountId" title="Parent GL Account" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="GlAccount" description="[${glAccountId}] ${accountName}-${accountCode}">
+                    <entity-order-by field-name="glAccountId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="postedBalance"><display/></field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <!--
+    <form name="CreateProductStoreCatalog" type="single" 
+            target="createGlAccountStore" title=""
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createProductStoreCatalog"/>
+        <field name="glAccountId" map-name="glAccount"><hidden/></field>
+        <field name="productStoreId" title="${uiLabelMap.ProductStore}" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductStore" description="${storeName}">
+                    <entity-order-by field-name="storeName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="UpdateProductStoreCatalog" type="list"
+            target="updateGlAccountStore" title="" list-name="productStoreCatalogDatas"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updateProductStoreCatalog" map-name="productStoreCatalog"/>
+        <field name="glAccountId"><hidden/></field>
+        <field name="productStoreId" title="${uiLabelMap.ProductStoreId}" widget-style="buttontext">
+            <hyperlink target-type="intra-app" target="EditProductStore?productStoreId=${productStoreCatalog.productStoreId}"
+                description="${productStore.storeName} [${productStoreCatalog.productStoreId}]"/>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDateTime}"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="deleteGlAccountStore?glAccountId=${productStoreCatalog.glAccountId}&amp;productStoreId=${productStoreCatalog.productStoreId}&amp;fromDate=${productStoreCatalog.fromDate}"
+                description="[Delete]" also-hidden="false"/>
+        </field>
+    </form>
+    -->
+</forms>

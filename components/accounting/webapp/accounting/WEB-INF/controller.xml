@@ -203,7 +203,61 @@
         <response name="success" type="view" value="manualTx"/>
     </request-map>
 
+    <!-- GlAccount requests -->
+    <request-map uri="FindGlobalGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindGlobalGlAccount"/>
+    </request-map>
+    <request-map uri="EditGlobalGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditGlobalGlAccount"/>
+    </request-map> 
+    <request-map uri="createGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccount"/>
+        <response name="success" type="view" value="EditGlobalGlAccount"/>
+        <response name="error" type="view" value="EditGlobalGlAccount"/>
+    </request-map>
+    <request-map uri="updateGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlAccount"/>
+        <response name="success" type="view" value="EditGlobalGlAccount"/>
+        <response name="error" type="view" value="EditGlobalGlAccount"/>
+    </request-map>
 
+    <request-map uri="EditGlobalGlAccountOrganizations">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditGlobalGlAccountOrganizations"/>
+    </request-map> 
+    <request-map uri="createGlAccountOrganization">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccount"/>
+        <response name="success" type="view" value="EditGlobalGlAccountOrganizations"/>
+        <response name="error" type="view" value="EditGlobalGlAccountOrganizations"/>
+    </request-map>
+    <request-map uri="createGlAccountOrganization">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlAccount"/>
+        <response name="success" type="view" value="EditGlobalGlAccountOrganizations"/>
+        <response name="error" type="view" value="EditGlobalGlAccountOrganizations"/>
+    </request-map>
+
+    <request-map uri="EditGlobalGlAccountRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditGlobalGlAccountRoles"/>
+    </request-map> 
+    <request-map uri="createGlAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccountRole"/>
+        <response name="success" type="view" value="EditGlobalGlAccountRoles"/>
+        <response name="error" type="view" value="EditGlobalGlAccountRoles"/>
+    </request-map>
+    <request-map uri="updateGlAccountRole">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlAccountRole"/>
+        <response name="success" type="view" value="EditGlobalGlAccountRoles"/>
+        <response name="error" type="view" value="EditGlobalGlAccountRoles"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -225,5 +279,10 @@
     <view-map name="findPayment" type="jpublish" page="/payment/findPayment.ftl"/>
     <view-map name="editPayment" type="jpublish" page="/payment/editPayment.ftl"/>
     <view-map name="manualTx" type="jpublish" page="/payment/manualTx.ftl"/>
+
+    <view-map name="FindGlobalGlAccount" type="jpublish" page="/chartofaccounts/FindGlobalGlAccount.ftl"/>
+    <view-map name="EditGlobalGlAccount" type="jpublish" page="/chartofaccounts/EditGlobalGlAccount.ftl"/>
+    <view-map name="EditGlobalGlAccountOrganizations" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountOrganizations.ftl"/>
+    <view-map name="EditGlobalGlAccountRoles" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountRoles.ftl"/>
     <!-- end of view mappings -->
 </site-conf>

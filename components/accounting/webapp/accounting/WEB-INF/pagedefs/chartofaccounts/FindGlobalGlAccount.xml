@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Find Global GL Account(s)</property>
+    <property name="titleProperty">PageTitleFindGlobalGlAccount</property>
+    <property name="headerItem">chartofaccounts</property>
+    <page-action name="/chartofaccounts/FindGlobalGlAccount.bsh"/>
+</page>
