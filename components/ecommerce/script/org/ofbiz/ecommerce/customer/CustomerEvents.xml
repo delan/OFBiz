@@ -55,6 +55,10 @@
             <field-to-field field-name="defaultPassword" to-field-name="CONFIRM_PASSWORD" to-map-name="parameters"/>
             <string-to-field string="No hint set, accout not yet enabled" field-name="PASSWORD_HINT" map-name="parameters"/>
         </if-compare>
+        
+        <if-compare field-name="productStore.usePrimaryEmailUsername" operator="equals" value="Y">
+            <field-to-field field-name="CUSTOMER_EMAIL" map-name="parameters" to-field-name="USERNAME"/>
+        </if-compare>
 
         <!-- if username and/or password should be lowercased, do that now -->
         <if-compare field-name="username_lowercase" operator="equals" value="true">
@@ -68,10 +72,8 @@
         <!-- Create the UserLogin Record -->
         <call-map-processor in-map-name="parameters" out-map-name="userLoginContext">
             <simple-map-processor name="newUserLogin">
-                <process field="USERNAME"><copy to-field="userLoginId"/><not-empty>
-                <fail-property resource="EcommerceUiLabels" property="PartyUserLoginMissingError"/></not-empty></process>
-                <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty>
-                <fail-property resource="EcommerceUiLabels" property="PartyPasswordMissing"/></not-empty></process>
+                <process field="USERNAME"><copy to-field="userLoginId"/><not-empty><fail-property resource="EcommerceUiLabels" property="PartyUserLoginMissingError"/></not-empty></process>
+                <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-property resource="EcommerceUiLabels" property="PartyPasswordMissing"/></not-empty></process>
                 <process field="CONFIRM_PASSWORD">
                     <compare-field operator="equals" field="PASSWORD">
                     <fail-property resource="EcommerceUiLabels" property="PartyPasswordMatchError"/></compare-field>

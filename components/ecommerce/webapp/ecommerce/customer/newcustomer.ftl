@@ -21,17 +21,18 @@
  *
  *@author     David E. Jones
  *@version    1.0
+ *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <p class="head1">${uiLabelMap.PartyRequestNewAccount}</p>
-<br>
+<br/>
 <p class='tabletext'>${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>/checkLogin/main</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonLoginHere}</a>.</p>
 
 <form method="post" action="<@ofbizUrl>/createcustomer${previousParams}</@ofbizUrl>" name="newuserform" style='margin:0;'>
 <input type="hidden" name="productStoreId" value="${productStoreId}">
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
+<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
@@ -39,10 +40,10 @@
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
+    </td>
+  </tr>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
@@ -133,15 +134,15 @@
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-</TABLE>
+    </td>
+  </tr>
+</table>
 
-<br>
+<br/>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
+<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
@@ -149,10 +150,10 @@
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
+    </td>
+  </tr>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
@@ -219,15 +220,15 @@
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-</TABLE>
+    </td>
+  </tr>
+</table>
 
-<br>
+<br/>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
+<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
@@ -235,10 +236,10 @@
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
+    </td>
+  </tr>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
@@ -247,7 +248,7 @@
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyEmailAddress}<BR>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
     <td width="74%">
         <input type="text" class='inputBox' name="CUSTOMER_EMAIL" value="${requestParameters.CUSTOMER_EMAIL?if_exists}" size="60" maxlength="255"> *
-        <BR>
+        <br/>
         <select name="CUSTOMER_EMAIL_ALLOW_SOL" class='selectBox'>
           <option>${requestParameters.CUSTOMER_EMAIL_ALLOW_SOL?default("Y")}</option>
           <option></option><option>Y</option><option>N</option>
@@ -268,36 +269,38 @@
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-</TABLE>
+    </td>
+  </tr>
+</table>
 
-<br>
+<br/>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
+<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class='boxhead'>&nbsp;${uiLabelMap.CommonUsername} & ${uiLabelMap.CommonPassword}</div>
+            <div class='boxhead'>&nbsp;<#if getUsername>${uiLabelMap.CommonUsername} & </#if>${uiLabelMap.CommonPassword}</div>
           </td>          
         </tr>
       </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
+    </td>
+  </tr>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
+    <#if getUsername>
     <tr>
       <td width="26%"><div class="tabletext">${uiLabelMap.CommonUsername}</div></td>
       <td width="74%">
           <input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50">
       * </td>
     </tr>
+    </#if>
     <#if createAllowPassword>
       <tr>
         <td width="26%">
@@ -337,15 +340,15 @@
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-</TABLE>
+    </td>
+  </tr>
+</table>
 <input type="image" src="/images/spacer.gif" onClick="javascript:document.newuserform.submit();">
 </form>
 
-<br><div class="commentary">Fields marked with (*) are required.</div>
+<br/><div class="commentary">Fields marked with (*) are required.</div>
 
 &nbsp;&nbsp;<a href="<@ofbizUrl>/checkLogin/main</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonBack}]</a>
 &nbsp;&nbsp;<a href="javascript:document.newuserform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
-<br>
-<br>
+<br/>
+<br/>
