@@ -104,7 +104,7 @@
         <%if(primaryProductCategory != null) {%>
           <option selected value='<%=primaryProductCategory.getString("productCategoryId")%>'><%=primaryProductCategory.getString("description")%> [<%=primaryProductCategory.getString("productCategoryId")%>]</option>
         <%}%>
-        <option>&nbsp;</option>
+        <option value=''>&nbsp;</option>
         <%Iterator categoryIter = UtilMisc.toIterator(categoryCol);%>
         <%while(categoryIter != null && categoryIter.hasNext()) {%>
           <%GenericValue nextCategory=(GenericValue)categoryIter.next();%>
@@ -152,7 +152,7 @@
   </tr>
   <tr>
     <%fieldName = "longDescription";%><%paramName = "LONG_DESCRIPTION";%>    
-    <td width="26%">Long Description</td>
+    <td width="26%"><div class="tabletext">Long Description</div></td>
     <td width="74%"><textarea cols="60" rows="3" name="<%=paramName%>" maxlength="2000"><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%></textarea></td>
   </tr>
 

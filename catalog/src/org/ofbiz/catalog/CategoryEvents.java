@@ -83,6 +83,7 @@ public class CategoryEvents {
     
     String primaryParentCategoryId = request.getParameter("PRIMARY_PARENT_CATEGORY_ID");
     String description = request.getParameter("DESCRIPTION");
+    String longDescription = request.getParameter("LONG_DESCRIPTION");
     String categoryImageUrl = request.getParameter("CATEGORY_IMAGE_URL");
 
     if(!UtilValidate.isNotEmpty(productCategoryId)) errMsg += "<li>Product Category ID is missing.";
@@ -96,6 +97,7 @@ public class CategoryEvents {
     category.set("productCategoryId", productCategoryId);
     category.set("primaryParentCategoryId", primaryParentCategoryId);
     category.set("description", description);
+    category.set("longDescription", longDescription);
     category.set("categoryImageUrl", categoryImageUrl);
     
     if(UtilValidate.isNotEmpty(primaryParentCategoryId)) {

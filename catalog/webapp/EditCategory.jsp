@@ -96,6 +96,11 @@
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
   </tr>
   <tr>
+    <%fieldName = "longDescription";%><%paramName = "LONG_DESCRIPTION";%>    
+    <td width="26%"><div class="tabletext">Long Description</div></td>
+    <td width="74%"><textarea cols="60" rows="3" name="<%=paramName%>" maxlength="2000"><%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%></textarea></td>
+  </tr>
+  <tr>
     <%fieldName = "categoryImageUrl";%><%paramName = "CATEGORY_IMAGE_URL";%>    
     <td width="26%"><div class="tabletext">Category Image URL</div></td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?category.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
@@ -108,7 +113,7 @@
         <%if(primaryParentCategory != null) {%>
           <option selected value='<%=primaryParentCategory.getString("productCategoryId")%>'><%=primaryParentCategory.getString("description")%> [<%=primaryParentCategory.getString("productCategoryId")%>]</option>
         <%}%>
-        <option>&nbsp;</option>
+        <option value=''>&nbsp;</option>
         <%Iterator categoryIter = UtilMisc.toIterator(categoryCol);%>
         <%while(categoryIter != null && categoryIter.hasNext()) {%>
           <%GenericValue nextCategory=(GenericValue)categoryIter.next();%>
@@ -147,7 +152,7 @@
     <%GenericValue productCategoryRollup = (GenericValue)ppcIterator.next();%>
     <%GenericValue curCategory = productCategoryRollup.getRelatedOne("ParentProductCategory");%>
     <tr valign="middle">
-      <td><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("productCategoryId")%></a></td>
+      <td><%if(curCategory!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("productCategoryId")%></a><%}%></td>
       <td><%if(curCategory!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("description")%></a><%}%>&nbsp;</td>
       <td>
         <a href="<ofbiz:url>/UpdateProductCategoryRollup?UPDATE_MODE=DELETE&PRODUCT_CATEGORY_ID=<%=productCategoryId%>&UPDATE_PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("productCategoryId")%>&UPDATE_PARENT_PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("parentProductCategoryId")%></ofbiz:url>" class="buttontext">
