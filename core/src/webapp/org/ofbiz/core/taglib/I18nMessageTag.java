@@ -30,6 +30,9 @@ import java.util.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
+import org.ofbiz.core.util.UtilJ2eeCompat;
+import org.ofbiz.core.util.Debug;
+
 /**
  * I18nMessageTag - JSP tag to use a resource bundle to internationalize
  * content in a web page.
@@ -86,7 +89,12 @@ public class I18nMessageTag extends BodyTagSupport {
             String s = this.bundle.getString(this.key);
             this.value = new String(s.getBytes ("ISO8859_1"));
         } catch (Exception e) {
-            throw new JspException(e.getMessage());
+            if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
+                throw new JspException(e.getMessage(), e);
+            } else {
+                Debug.logError(e, "Server does not support nested exceptions, here is the exception");
+                throw new JspException(e.toString());
+            }
         }
         
         return EVAL_BODY_AGAIN;
@@ -102,7 +110,12 @@ public class I18nMessageTag extends BodyTagSupport {
             
             this.pageContext.getOut().print(this.value);
         } catch (Exception e) {
-            throw new JspException(e.getMessage());
+            if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
+                throw new JspException(e.getMessage(), e);
+            } else {
+                Debug.logError(e, "Server does not support nested exceptions, here is the exception");
+                throw new JspException(e.toString());
+            }
         }
         
         return EVAL_PAGE;

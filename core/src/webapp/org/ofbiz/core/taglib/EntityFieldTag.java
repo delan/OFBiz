@@ -105,9 +105,19 @@ public class EntityFieldTag extends TagSupport {
         try {
             EntityField.run(attribute, field, prefix, suffix, defaultStr, type, pageContext);
         } catch (IOException e) {
-            throw new JspException(e.getMessage(), e);
+            if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
+                throw new JspException(e.getMessage(), e);
+            } else {
+                Debug.logError(e, "Server does not support nested exceptions, here is the exception");
+                throw new JspException(e.toString());
+            }
         } catch (GenericEntityException e) {
-            throw new JspException("Entity Engine error: " + e.getMessage(), e);
+            if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
+                throw new JspException("Entity Engine error: " + e.getMessage(), e);
+            } else {
+                Debug.logError(e, "Server does not support nested exceptions, here is the exception");
+                throw new JspException("Entity Engine error: " + e.toString());
+            }
         }
 
         return (SKIP_BODY);

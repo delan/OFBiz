@@ -47,7 +47,8 @@ public class UtilJ2eeCompat {
     
     protected static Boolean doFlushOnRenderValue = null;
     protected static Boolean useOutputStreamNotWriterValue = null;
-    
+    protected static Boolean useNestedJspException = null;
+
     public static boolean doFlushOnRender(ServletContext context) {
         initCompatibilityOptions(context);
         return doFlushOnRenderValue.booleanValue();
@@ -57,13 +58,19 @@ public class UtilJ2eeCompat {
         initCompatibilityOptions(context);
         return useOutputStreamNotWriterValue.booleanValue();
     }
-    
+
+    public static boolean useNestedJspException(ServletContext context) {
+        initCompatibilityOptions(context);
+        return useNestedJspException.booleanValue();
+    }
+
     protected static void initCompatibilityOptions(ServletContext context) {
         //this check to see if we should flush is done because on most servers this 
         // will just slow things down and not solve any problems, but on Tomcat, Orion, etc it is necessary
         if (useOutputStreamNotWriterValue == null || doFlushOnRenderValue == null) {
             boolean doflush = true;
             boolean usestream = true;
+            boolean nestjspexception = true;
             //if context is null use an empty string here which will cause the defaults to be used
             String serverInfo = context == null ? "" : context.getServerInfo();
             Debug.logInfo("serverInfo: " + serverInfo);
@@ -80,10 +87,15 @@ public class UtilJ2eeCompat {
             } else if (serverInfo.indexOf(JRUN) >= 0) {
                 Debug.logImportant("JRun detected, using response.getWriter to write text out instead of response.getOutputStream");
                 usestream = false;
+            } else if (serverInfo.indexOf(ORION) >= 0) {
+                Debug.logImportant("Orion detected, using non-nested JspException");
+                nestjspexception = false;
             }
-            
+
             doFlushOnRenderValue = new Boolean(doflush);
             useOutputStreamNotWriterValue = new Boolean(usestream);
+            useNestedJspException = new Boolean(nestjspexception);
+
         }
     }
 }

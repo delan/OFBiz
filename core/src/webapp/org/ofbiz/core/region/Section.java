@@ -76,11 +76,17 @@ public class Section extends Content {
             render((HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
         } catch (java.io.IOException e) {
             Debug.logError(e, "Error rendering section: ");
-            throw new JspException(e);
+            if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext()))
+                throw new JspException(e);
+            else
+                throw new JspException(e.toString());
         } catch (ServletException e) {
             Throwable throwable = e.getRootCause() != null ? e.getRootCause() : e;
             Debug.logError(throwable, "Error rendering section: ");
-            throw new JspException(throwable);
+            if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext()))
+                throw new JspException(throwable);
+            else
+                throw new JspException(throwable.toString());
         }
     }
     

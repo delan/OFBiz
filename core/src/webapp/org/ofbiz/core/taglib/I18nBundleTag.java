@@ -29,6 +29,8 @@ import java.util.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
+import org.ofbiz.core.util.*;
+
 /**
  * I18nBundleTag - JSP tag that the MessageTags will use when retrieving keys
  * for this page.
@@ -68,7 +70,12 @@ public class I18nBundleTag extends TagSupport {
                 pageContext.setAttribute(this.getId(), this.bundle);
             }
         } catch (Exception e) {
-            throw new JspException (e.getMessage());
+            if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
+                throw new JspException(e.getMessage(), e);
+            } else {
+                Debug.logError(e, "Server does not support nested exceptions, here is the exception");
+                throw new JspException(e.toString());
+            }
         }
         
         return EVAL_BODY_INCLUDE;

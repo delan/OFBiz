@@ -31,10 +31,12 @@ import java.util.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
+import org.ofbiz.core.util.*;
+
 /**
  * FormatTag - JSP Tag to format numbers and dates.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @version    1.0
  * @created    August 4, 2001
  */
@@ -64,27 +66,35 @@ public class FormatTag extends BodyTagSupport {
         DateFormat df = null;
         BodyContent body = getBodyContent();
         String value = body.getString();
+        if (value == null || value.length() == 0)
+            return SKIP_BODY;
 
-        if (type.substring(0, 1).equalsIgnoreCase("C"))
+        if (type.charAt(0) == 'C' || type.charAt(0) == 'c')
             nf = NumberFormat.getCurrencyInstance();
-        if (type.substring(0, 1).equalsIgnoreCase("N"))
+        if (type.charAt(0) == 'N' || type.charAt(0) == 'n')
             nf = NumberFormat.getNumberInstance();
-        if (type.substring(0, 1).equalsIgnoreCase("D"))
+        if (type.charAt(0) == 'D' || type.charAt(0) == 'd')
             df = DateFormat.getDateInstance();
 
         try {
             if (nf != null) {
                 // do the number formatting
-                getPreviousOut().print(nf.format(Double.parseDouble(value)));
+                NumberFormat strFormat = NumberFormat.getInstance();
+                getPreviousOut().print(nf.format(strFormat.parse(value.trim())));
             } else if (df != null) {
                 // do the date formatting
-                getPreviousOut().print(df.format(df.parse(value)));
+                getPreviousOut().print(df.format(df.parse(value.trim())));
             } else {
                 // just return the value
                 getPreviousOut().print(value);
             }
         } catch (Exception e) {
-            throw new JspException(e.getMessage(), e);
+            if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
+                throw new JspException(e.getMessage(), e);
+            } else {
+                Debug.logError(e, "Server does not support nested exceptions, here is the exception");
+                throw new JspException(e.toString());
+            }
         }
 
         return SKIP_BODY;

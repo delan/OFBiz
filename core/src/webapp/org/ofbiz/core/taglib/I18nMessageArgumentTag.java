@@ -28,6 +28,9 @@ package org.ofbiz.core.taglib;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
+import org.ofbiz.core.util.UtilJ2eeCompat;
+import org.ofbiz.core.util.Debug;
+
 /**
  * I18nMessageArgumentTag - JSP tag that used inside a MessageTag to create an
  * ordered list of arguments to use with java.text.MessageFormat.
@@ -42,7 +45,12 @@ public class I18nMessageArgumentTag extends TagSupport {
             I18nMessageTag messageTag = (I18nMessageTag) this.getParent();
             messageTag.addArgument (argumentValue);
         } catch (Exception e) {
-            throw new JspException (e.getMessage());
+            if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
+                throw new JspException(e.getMessage(), e);
+            } else {
+                Debug.logError(e, "Server does not support nested exceptions, here is the exception");
+                throw new JspException(e.toString());
+            }
         }
     }
 }

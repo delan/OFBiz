@@ -37,7 +37,7 @@ import org.ofbiz.core.util.*;
 /**
  * UrlTag - Creates a URL string prepending the current control path.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @version    1.0
  * @created    August 4, 2001
  */
@@ -111,7 +111,12 @@ public class UrlTag extends BodyTagSupport {
             encodedURL = response.encodeURL(encodedURL);
             getPreviousOut().print(encodedURL);
         } catch (IOException e) {
-            throw new JspException(e.getMessage(), e);
+            if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
+                throw new JspException(e.getMessage(), e);
+            } else {
+                Debug.logError(e, "Server does not support nested exceptions, here is the exception");
+                throw new JspException(e.toString());
+            }
         }
         return SKIP_BODY;
     }
