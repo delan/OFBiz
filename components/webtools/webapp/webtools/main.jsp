@@ -62,40 +62,42 @@
               <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
                 <li><div class="tabletext">Cache Tools</div>
                 <ul>
-                  <li><a href="<ofbiz:url>/FindUtilCache</ofbiz:url>" class="buttontext">Cache Maintenance</A>
+                  <li><a href="<ofbiz:url>/FindUtilCache</ofbiz:url>" class="buttontext">Cache Maintenance</a>
                 </ul>
               <%}%>
               <%if(security.hasPermission("UTIL_DEBUG_VIEW", session)){%>
                 <li><div class="tabletext">Debug Tools</div>
                 <ul>
-                  <li><a href="<ofbiz:url>/debuglevels</ofbiz:url>" class="buttontext">Adjust Debugging Levels</A>
+                  <li><a href="<ofbiz:url>/debuglevels</ofbiz:url>" class="buttontext">Adjust Debugging Levels</a>
                 </ul>
               <%}%>
               <%if(security.hasPermission("ENTITY_MAINT", session)){%>
                 <li><div class="tabletext">Entity Engine Tools</div>
                 <ul>
-                  <li><a href="<ofbiz:url>/entitymaint</ofbiz:url>" class="buttontext">Entity Data Maintenance</A>
+                  <li><a href="<ofbiz:url>/entitymaint</ofbiz:url>" class="buttontext">Entity Data Maintenance</a>
                   <li><a href="<ofbiz:url>/view/entityref</ofbiz:url>" class="buttontext" target="_blank">Entity Reference &amp; Editing Tools</a>&nbsp;<a href="<ofbiz:url>/view/entityref?forstatic=true</ofbiz:url>" class="buttontext" target="_blank">[Static Version]</a>
                   <ul>
-                    <li><a href="<ofbiz:url>/view/checkdb</ofbiz:url>" class="buttontext">Check/Update Database</A>                    
-                    <li><a href="<ofbiz:url>/ModelWriter</ofbiz:url>" class="buttontext" target="_blank">Generate Entity Model XML (all in one)</A>
-                    <li><a href="<ofbiz:url>/ModelWriter?savetofile=true</ofbiz:url>" target="_blank" class="buttontext">Save Entity Model XML to Files</A><BR>
-                    <!-- not working right now anyway
-                    <li><a href="<ofbiz:url>/ModelGroupWriter</ofbiz:url>" target="_blank" class="buttontext">Generate Entity Group XML</A><BR>
-                    <li><a href="<ofbiz:url>/ModelGroupWriter?savetofile=true</ofbiz:url>" target="_blank" class="buttontext">Save Entity Group XML to File</A><BR>
+                    <li><a href="<ofbiz:url>/view/checkdb</ofbiz:url>" class="buttontext">Check/Update Database</a>
+                    <!-- want to leave these out because they are only working so-so, and cause people more problems that they solve, IMHO
+                    <li><a href="<ofbiz:url>/view/EditEntity</ofbiz:url>" class="buttontext" target="_blank">Edit Entity Definitions</a>
+                    <li><a href="<ofbiz:url>/ModelWriter</ofbiz:url>" class="buttontext" target="_blank">Generate Entity Model XML (all in one)</a>
+                    <li><a href="<ofbiz:url>/ModelWriter?savetofile=true</ofbiz:url>" target="_blank" class="buttontext">Save Entity Model XML to Files</a><BR>
                     -->
-                    <li><a href="<ofbiz:url>/view/EditEntity</ofbiz:url>" class="buttontext" target="_blank">Edit Entity Definitions</A>
-                    <li><a href="<ofbiz:url>/view/ModelInduceFromDb</ofbiz:url>" target="_blank" class="buttontext">Induce Model XML from Database</A><BR>
+                    <!-- not working right now anyway
+                    <li><a href="<ofbiz:url>/ModelGroupWriter</ofbiz:url>" target="_blank" class="buttontext">Generate Entity Group XML</a><BR>
+                    <li><a href="<ofbiz:url>/ModelGroupWriter?savetofile=true</ofbiz:url>" target="_blank" class="buttontext">Save Entity Group XML to File</a><BR>
+                    -->
+                    <li><a href="<ofbiz:url>/view/ModelInduceFromDb</ofbiz:url>" target="_blank" class="buttontext">Induce Model XML from Database</a><BR>
                   </ul>
-                  <li><a href="<ofbiz:url>/xmldsdump</ofbiz:url>" class="buttontext">XML Data Export</A>
-                  <li><a href="<ofbiz:url>/xmldsdumpall</ofbiz:url>" class="buttontext">XML Data Export All</A>
-                  <li><a href="<ofbiz:url>/xmldsimport</ofbiz:url>" class="buttontext">XML Data Import</A>
-                  <li><a href="<ofbiz:url>/xmldsimportdir</ofbiz:url>" class="buttontext">XML Data Import Dir</A>
-            <!--
-                  <li><a href="<ofbiz:url>/view/tablesMySql</ofbiz:url>" class="buttontext">MySQL Table Creation SQL</A>
-                  <li><a href="<ofbiz:url>/view/dataMySql</ofbiz:url>" class="buttontext">MySQL Auto Data SQL</A>
-            -->
-                  <li><a href="<ofbiz:url>/EntitySyncStatus</ofbiz:url>" class="buttontext">Entity Sync Status</A>
+                  <li><a href="<ofbiz:url>/xmldsdump</ofbiz:url>" class="buttontext">XML Data Export</a>
+                  <li><a href="<ofbiz:url>/xmldsdumpall</ofbiz:url>" class="buttontext">XML Data Export All</a>
+                  <li><a href="<ofbiz:url>/xmldsimport</ofbiz:url>" class="buttontext">XML Data Import</a>
+                  <li><a href="<ofbiz:url>/xmldsimportdir</ofbiz:url>" class="buttontext">XML Data Import Dir</a>
+                  <!--
+                  <li><a href="<ofbiz:url>/view/tablesMySql</ofbiz:url>" class="buttontext">MySQL Table Creation SQL</a>
+                  <li><a href="<ofbiz:url>/view/dataMySql</ofbiz:url>" class="buttontext">MySQL Auto Data SQL</a>
+                  -->
+                  <li><a href="<ofbiz:url>/EntitySyncStatus</ofbiz:url>" class="buttontext">Entity Sync Status</a>
             
                 </ul>
               <%}%>
@@ -112,19 +114,19 @@
                 <li><div class="tabletext">Workflow Engine Tools</div>
                 <ul>
                   <li><a href="<ofbiz:url>/workflowMonitor</ofbiz:url>" class="buttontext">Workflow Monitor</a>
-                  <li><a href="<ofbiz:url>/readxpdl</ofbiz:url>" class="buttontext">Read XPDL File</A>
+                  <li><a href="<ofbiz:url>/readxpdl</ofbiz:url>" class="buttontext">Read XPDL File</a>
                 </ul>
               <%}%>
               <%if(security.hasPermission("RULES_MAINT", session)){%>
                 <li><div class="tabletext">Rule Engine Tools</div>
                 <ul>
-                  <li><a href="<ofbiz:url>/logikus</ofbiz:url>" class="buttontext">Logikus - Run Rulesets</A>
+                  <li><a href="<ofbiz:url>/logikus</ofbiz:url>" class="buttontext">Logikus - Run Rulesets</a>
                 </ul>
               <%}%>
               <%if(security.hasPermission("DATAFILE_MAINT", session)){%>
                 <li><div class="tabletext">Data File Tools</div>
                 <ul>
-                  <li><a href="<ofbiz:url>/viewdatafile</ofbiz:url>" class="buttontext">View Data File</A>
+                  <li><a href="<ofbiz:url>/viewdatafile</ofbiz:url>" class="buttontext">View Data File</a>
                 </ul>
               <%}%>
               <% if (session.getAttribute("userLogin") != null) { %>

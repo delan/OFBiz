@@ -72,8 +72,10 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <a href="<%=response.encodeURL(controlPath + "/view/entityref_main")%>" target="entityFrame" class='listtext'>Entity Reference Main Page</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/checkdb")%>" target="entityFrame" class='listtext'>Check/Update Database</A>
 <HR>
+<!-- want to leave these out because they are only working so-so, and cause people more problems that they solve, IMHO
 <a href="<%=response.encodeURL(controlPath + "/ModelWriter")%>" target='_blank' class='listtext'>Generate Entity Model XML (all in one)</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/ModelWriter?savetofile=true")%>" target='_blank' class='listtext'>Save Entity Model XML to Files</A><BR>
+-->
 <!-- this is not working now anyway...
 <a href="<%=response.encodeURL(controlPath + "/ModelGroupWriter")%>" target='_blank' class='listtext'>Generate Entity Group XML</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/ModelGroupWriter?savetofile=true")%>" target='_blank' class='listtext'>Save Entity Group XML to File</A><BR>
@@ -106,7 +108,9 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   <%if (forstatic) {%>
 	<a href="entityref_main.html#<%=entityName%>" target="entityFrame" class='listtext'><%= entityName %></a>
   <%} else {%>
+    <!-- want to leave these out because they are only working so-so, and cause people more problems that they solve, IMHO
 	<a href="<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>" target="_blank" class='listtext'>[EditDef]</a>
+	-->
 	<a href="<%=response.encodeURL(controlPath + "/view/" + url)%>" target="entityFrame" class='listtext'><%= entityName %></a>
   <%}%>
 <br>
