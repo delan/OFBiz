@@ -1,5 +1,5 @@
 /*
- * $Id: SQLProcessor.java,v 1.11 2004/04/30 22:28:50 ajzeneski Exp $
+ * $Id: SQLProcessor.java,v 1.12 2004/06/11 16:40:25 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class SQLProcessor {
@@ -329,7 +329,7 @@ public class SQLProcessor {
      * @throws GenericEntityException
      */
     public void prepareStatement(String sql) throws GenericDataSourceException, GenericEntityException {
-        this.prepareStatement(sql, false, 0, 0);
+        this.prepareStatement(sql, false, 0, 0, -1, -1);
     }
 
     /**
@@ -342,6 +342,19 @@ public class SQLProcessor {
      * @throws GenericEntityException
      */
     public void prepareStatement(String sql, boolean specifyTypeAndConcur, int resultSetType, int resultSetConcurrency) throws GenericDataSourceException, GenericEntityException {
+        this.prepareStatement(sql, specifyTypeAndConcur, resultSetType, resultSetConcurrency, -1, -1);
+    }
+
+    /**
+     * Prepare a statement. In case no connection has been given, allocate a
+     * new one.
+     *
+     * @param sql  The SQL statement to be executed
+     *
+     * @throws GenericDataSourceException
+     * @throws GenericEntityException
+     */
+    public void prepareStatement(String sql, boolean specifyTypeAndConcur, int resultSetType, int resultSetConcurrency, int fetchSize, int maxRows) throws GenericDataSourceException, GenericEntityException {
         if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.prepareStatement] sql=" + sql, module);
 
         if (_connection == null) {
@@ -358,6 +371,11 @@ public class SQLProcessor {
                 _ps = _connection.prepareStatement(sql);
                 if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.prepareStatement] (def) _ps=" + _ps, module);
             }
+            if (maxRows > 0) {
+                _ps.setMaxRows(maxRows);
+                if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.prepareStatement] max rows set : " + maxRows, module);
+            }
+            this.setFetchSize(_ps, fetchSize);
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         }
@@ -372,7 +390,6 @@ public class SQLProcessor {
     public ResultSet executeQuery() throws GenericDataSourceException {
         try {
             // if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.executeQuery] ps=" + _ps.toString(), module);
-            this.setFetchSize(_ps); // set the result fetch size
             _rs = _ps.executeQuery();
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
@@ -762,18 +779,23 @@ public class SQLProcessor {
         }
     }
 
-    protected void setFetchSize(Statement stmt) throws SQLException {
+    protected void setFetchSize(Statement stmt, int fetchSize) throws SQLException {
         // do not set fetch size when using the cursor connection
         if (_connection instanceof CursorConnection) return;
-        // otherwise only set if the size is > -1 (0 is sometimes used to note ALL rows)
-        EntityConfigUtil.DatasourceInfo ds = EntityConfigUtil.getDatasourceInfo(helperName);
-        if (ds != null) {
-            int fetchSize = ds.resultFetchSize;
-            if (fetchSize > -1) {
-                stmt.setFetchSize(fetchSize);
+
+        // check if the statement was called with a specific fetchsize, if not grab the default from the datasource
+        if (fetchSize < 0) {
+            EntityConfigUtil.DatasourceInfo ds = EntityConfigUtil.getDatasourceInfo(helperName);
+            if (ds != null) {
+                fetchSize = ds.resultFetchSize;
+            } else {
+                Debug.logWarning("DatasourceInfo is null, not setting fetch size!", module);
             }
-        } else {
-            Debug.logWarning("DatasourceInfo is null, not setting fetch size!", module);
+        }
+
+        // otherwise only set if the size is > -1 (0 is sometimes used to note ALL rows)
+        if (fetchSize > -1) {
+            stmt.setFetchSize(fetchSize);
         }
     }
 }

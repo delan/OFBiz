@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.15 2004/03/10 14:33:51 jonesde Exp $
+ * $Id: GenericDAO.java,v 1.16 2004/06/11 16:40:25 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -804,7 +804,9 @@ public class GenericDAO {
         String sql = sqlBuffer.toString();
 
         SQLProcessor sqlP = new SQLProcessor(helperName);
-        sqlP.prepareStatement(sql, findOptions.getSpecifyTypeAndConcur(), findOptions.getResultSetType(), findOptions.getResultSetConcurrency());
+        sqlP.prepareStatement(sql, findOptions.getSpecifyTypeAndConcur(), findOptions.getResultSetType(),
+                findOptions.getResultSetConcurrency(), findOptions.getFetchSize(), findOptions.getMaxRows());
+
         if (verboseOn) {
             // put this inside an if statement so that we don't have to generate the string when not used...
             Debug.logVerbose("Setting the whereEntityConditionParams: " + whereEntityConditionParams, module);
