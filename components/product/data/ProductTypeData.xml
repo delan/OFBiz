@@ -146,6 +146,7 @@
   <ProductFeatureType description="Fabric" hasTable="N" parentTypeId="" productFeatureTypeId="FABRIC"/>
   <ProductFeatureType description="Genre" hasTable="N" parentTypeId="" productFeatureTypeId="GENRE"/>
   <ProductFeatureType description="Hardware Feature" hasTable="N" parentTypeId="" productFeatureTypeId="HARDWARE_FEATURE"/>
+  <ProductFeatureType description="Hazmat" hasTable="N" parentTypeId="" productFeatureTypeId="HAZMAT"/>
   <ProductFeatureType description="Origin" hasTable="N" parentTypeId="" productFeatureTypeId="ORIGIN"/>
   <ProductFeatureType description="Other Feature" hasTable="N" parentTypeId="" productFeatureTypeId="OTHER_FEATURE"/>
   <ProductFeatureType description="Product Quality" hasTable="N" parentTypeId="" productFeatureTypeId="PRODUCT_QUALITY"/>
@@ -153,6 +154,10 @@
   <ProductFeatureType description="Software Feature" hasTable="N" parentTypeId="" productFeatureTypeId="SOFTWARE_FEATURE"/>
   <ProductFeatureType description="Topic" hasTable="N" parentTypeId="" productFeatureTypeId="TOPIC"/>
   <ProductFeatureType description="Warranty" hasTable="N" parentTypeId="" productFeatureTypeId="WARRANTY"/>
+
+  <ProductFeatureCategory productFeatureCategoryId="1000" description="Hazmat Features"/>
+  <ProductFeature productFeatureId="1000" productFeatureCategoryId="1000" productFeatureTypeId="HAZMAT" description="Hazmat" idCode="Y"/>
+  <ProductFeature productFeatureId="1001" productFeatureCategoryId="1000" productFeatureTypeId="HAZMAT" description="Non-Hazmat" idCode="N"/>
 
   <ProductGlAccountType description="Sales" productGlAccountTypeId="SALES"/>
   <ProductGlAccountType description="Cost of Goods Sold" productGlAccountTypeId="COGS"/>

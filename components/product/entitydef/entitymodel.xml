@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.40 $
+ * @version    $Revision: 1.41 $
  */
 -->
 
@@ -731,6 +731,33 @@
       </relation>
       <relation type="one" fk-name="FEAT_CNT_CNT" rel-entity-name="Content">
         <key-map field-name="contentId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFeatureGroup"
+            package-name="org.ofbiz.product.feature"
+            title="Product Feature Group Entity">
+      <field name="productFeatureGroupId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productFeatureGroupId"/>
+      <relation type="many" rel-entity-name="ProductFeatureGroupAppl">
+        <key-map field-name="productFeatureGroupId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFeatureGroupAppl"
+            package-name="org.ofbiz.product.feature"
+            title="Product Feature Group Applicability Entity">
+      <field name="productFeatureGroupId" type="id-ne"></field>
+      <field name="productFeatureId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="productFeatureGroupId"/>
+      <prim-key field="productFeatureId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PROD_FAPPL_PRODUCT" rel-entity-name="ProductFeatureGroup">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FAPPL_FEATURE" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureId"/>
       </relation>
     </entity>
     <entity entity-name="ProductFeatureIactn"
@@ -2956,6 +2983,10 @@
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
+      <field name="minWeight" type="floating-point"></field>
+      <field name="maxWeight" type="floating-point"></field>
+      <field name="includeFeatureGroup" type="id"></field>
+      <field name="excludeFeatureGroup" type="id"></field>
       <field name="sequenceNumber" type="numeric"></field>
       <prim-key field="productStoreId"/>
       <prim-key field="shipmentMethodTypeId"/>
@@ -2971,6 +3002,10 @@
       <alias entity-alias="PSSM" name="shipmentMethodTypeId"/>
       <alias entity-alias="PSSM" name="partyId"/>
       <alias entity-alias="PSSM" name="roleTypeId"/>
+      <alias entity-alias="PSSM" name="minWeight"/>
+      <alias entity-alias="PSSM" name="maxWeight"/>
+      <alias entity-alias="PSSM" name="includeFeatureGroup"/>
+      <alias entity-alias="PSSM" name="excludeFeatureGroup"/>
       <alias entity-alias="PSSM" name="sequenceNumber"/>
       <alias entity-alias="SM" name="description"/>
       <view-link entity-alias="PSSM" rel-entity-alias="SM">

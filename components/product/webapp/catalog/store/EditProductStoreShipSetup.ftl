@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -150,7 +150,7 @@ function setAssocFields(select) {
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFlatBasePercent}</span></td>
           <td>
             <span class="tabletext">${estimate.orderPricePercent?default(0)?string.number}%</span>
-            <span class="tabletext"> -${uiLabelMap.ProductShipamountOrderTotalPercent}</span>
+            <span class="tabletext"> - ${uiLabelMap.ProductShipamountOrderTotalPercent}</span>
           </td>
           <td>&nbsp;</td>
         </tr>                          
@@ -166,7 +166,32 @@ function setAssocFields(select) {
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFlatItemPrice}</span></td>
           <td>
             <span class="tabletext">${estimate.orderItemFlatPrice?default(0)?string.currency}</span>
-            <span class="tabletext"> -${uiLabelMap.ProductShipamountTotalQuantityPrice}</span>
+            <span class="tabletext"> - ${uiLabelMap.ProductShipamountTotalQuantityPrice}</span>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr><td colspan="3"><hr class="sepbar"></td></tr>
+        <tr>
+          <td align='right'><span class="tableheadtext">Feature Group</span></td>
+          <td>
+            <span class="tabletext">${estimate.productFeatureGroupId?default("N/A")}</span>
+            <span class="tabletext"> - Below surcharge(s) will be added per-product * per-feature</span>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td align='right'><span class="tableheadtext">Per-Feature Percent</span></td>
+          <td>
+            <span class="tabletext">${estimate.featurePercent?default(0)?string.number}%</span>
+            <span class="tabletext"> - shipamount : shipamount + ((orderTotal * percent) * total feature(s) applied)</span>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td align='right'><span class="tableheadtext">Per-Feature Price</span></td>
+          <td>
+            <span class="tabletext">${estimate.featurePrice?default(0)?string.currency}</span>
+            <span class="tabletext"> - shipamount : shipamount + (price * total feature(s) applied)</span>
           </td>
           <td>&nbsp;</td>
         </tr>
@@ -195,9 +220,9 @@ function setAssocFields(select) {
         </tr>
         <tr><td colspan="3"><hr class="sepbar"></td></tr>
         <tr>
-          <td colspan="1"><span class="tableheadtext">${uiLabelMap.ProductQuantity}</span></td
+          <td colspan="1"><span class="tableheadtext">${uiLabelMap.ProductQuantity}</span></td>
           <td colspan="2"><span class="tabletext">${uiLabelMap.ProductMinMax}</span></td>
-        <tr>
+        </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductMinMaxSpan}</span></td>
           <td><span class="tabletext">${quantityValue.fromQuantity?if_exists}-${quantityValue.thruQuantity?if_exists}</span></td>
@@ -220,7 +245,7 @@ function setAssocFields(select) {
         <tr>
           <td colspan="1"><span class="tableheadtext">${uiLabelMap.ProductPrice}</span></td>
           <td colspan="2"><span class="tabletext">${uiLabelMap.ProductMinMax}</span></td>
-        <tr>
+        </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductMinMaxSpan}</span></td>
           <td><span class="tabletext">${priceValue.fromQuantity?if_exists}-${priceValue.thruQuantity?if_exists}</span></td>
@@ -315,6 +340,31 @@ function setAssocFields(select) {
         </tr>
         <tr><td colspan="3"><hr class="sepbar"></td></tr>
         <tr>
+          <td align='right'><span class="tableheadtext">Feature Group</span></td>
+          <td>
+            <input type="text" class="inputBox" name="productFeatureGroupId" value="" size="15">
+            <span class="tabletext">Below surcharge(s) will be added per-product * per-feature</span>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td align='right'><span class="tableheadtext">Per-Feature Percent</span></td>
+          <td>
+            <input type="text" class="inputBox" name="featurePercent" value="0" size="5">
+            <span class="tabletext">shipamount : shipamount + ((orderTotal * percent) * total feature(s) applied)</span>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td align='right'><span class="tableheadtext">Per-Feature Price</span></td>
+          <td>
+            <input type="text" class="inputBox" name="featurePrice" value="0.00" size="5">
+            <span class="tabletext">shipamount : shipamount + (price * total feature(s) applied)</span>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr><td colspan="3"><hr class="sepbar"></td></tr>
+        <tr>
           <td colspan="1"><span class="tableheadtext">${uiLabelMap.ProductWeight}</span></td>
           <td colspan="2"><span class="tabletext">${uiLabelMap.ProductMinMax}</span></td>
         </tr>
@@ -346,9 +396,9 @@ function setAssocFields(select) {
         </tr>
         <tr><td colspan="3"><hr class="sepbar"></td></tr>
         <tr>
-          <td colspan="1"><span class="tableheadtext">${uiLabelMap.ProductQuantity}</span></td
+          <td colspan="1"><span class="tableheadtext">${uiLabelMap.ProductQuantity}</span></td>
           <td colspan="2"><span class="tabletext">${uiLabelMap.ProductMinMax}</span></td>
-        <tr>
+        </tr>
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductMinMaxSpan}</span></td>
           <td><input type="text" class="inputBox" name="qmin" size="4"> - <input type="text" class="inputBox" name="qmax" size="4"></td>
@@ -408,6 +458,10 @@ function setAssocFields(select) {
         <td><span class="tableheadtext">${uiLabelMap.ProductMethodType}</span></td>
         <td><span class="tableheadtext">${uiLabelMap.ProductParty}</span></td>
         <td><span class="tableheadtext">${uiLabelMap.ProductRole}</span></td>
+        <td><span class="tableheadtext">Min Weight</span></td>
+        <td><span class="tableheadtext">Max Weight</span></td>
+        <td><span class="tableheadtext">Include Features</span></td>
+        <td><span class="tableheadtext">Exclude Features</span></td>
         <td><span class="tableheadtext">${uiLabelMap.ProductSequence}</span></td>
         <td>&nbsp;</td>
       </tr>
@@ -426,7 +480,11 @@ function setAssocFields(select) {
               <td><span class="tabletext">${meth.description}</span></td>
               <td><span class="tabletext">${meth.partyId}</span></td>
               <td><span class="tabletext">${meth.roleTypeId}</span></td>
-              <td><input type="text" size="5" class="inputBox" name="sequenceNumber" value="${meth.sequenceNumber}"></td>
+              <td><input type="text" size="5" class="inputBox" name="minWeight" value="${meth.minWeight?if_exists}"></td>
+              <td><input type="text" size="5" class="inputBox" name="maxWeight" value="${meth.maxWeight?if_exists}"></td>
+              <td><input type="text" size="10" class="inputBox" name="includeFeatureGroup" value="${meth.includeFeatureGroup?if_exists}"></td>
+              <td><input type="text" size="10" class="inputBox" name="excludeFeatureGroup" value="${meth.excludeFeatureGroup?if_exists}"></td>
+              <td><input type="text" size="5" class="inputBox" name="sequenceNumber" value="${meth.sequenceNumber?if_exists}"></td>
               <td width='1' align="right">
                 <nobr>
                   <a href="javascript:document.methUpdate${idx}.submit();" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
@@ -457,7 +515,35 @@ function setAssocFields(select) {
               </#list>
             </select> *                           
           </td>
-        </tr>                                   
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Min Weight</span></td>
+          <td>
+            <input type="text" class="inputBox" name="minWeight" size="5">
+            <span class="tabletext">Displays only if weight is less then this value</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Max Weight</span></td>
+          <td>
+            <input type="text" class="inputBox" name="maxWeight" size="5">
+            <span class="tabletext">Displays only if weight is greater then this value</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Include Feature Category</span></td>
+          <td>
+            <input type="text" class="inputBox" name="includeFeatureCat" size="20">
+            <span class="tabletext">Displays only if all items have all features in this group</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Exclude Feature Category</span></td>
+          <td>
+            <input type="text" class="inputBox" name="excludeFeatureCat" size="20">
+            <span class="tabletext">Displays only if all items have no features in this group</span>
+          </td>
+        </tr>
         <tr>
           <td align="right"><span class="tableheadtext">${uiLabelMap.ProductSequence}#</span></td>
           <td>

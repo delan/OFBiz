@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.6 2003/11/16 19:07:13 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.7 2003/11/17 01:38:32 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,9 +23,7 @@
  */
 package org.ofbiz.product.store;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +45,7 @@ import org.ofbiz.service.ModelService;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -113,8 +111,85 @@ public class ProductStoreWorker {
         }
            
         return storePayment;                          
-    }    
-    
+    }
+
+    public static List getAvailableStoreShippingMethods(GenericDelegator delegator, String productStoreId, Set featureIdSet, double weight) {
+        if (featureIdSet == null) {
+            featureIdSet = new HashSet();
+        }
+        List shippingMethods = null;
+        try {
+            shippingMethods = delegator.findByAndCache("ProductStoreShipmentMethView", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNumber"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to get ProductStore shipping methods", module);
+            return null;
+        }
+
+        // clone the list for concurrent modification
+        List returnShippingMethods = new LinkedList(shippingMethods);
+
+        if (shippingMethods != null) {
+            Iterator i = shippingMethods.iterator();
+            while (i.hasNext()) {
+                GenericValue method = (GenericValue) i.next();
+
+                // test min/max weight first
+                Double minWeight = method.getDouble("minWeight");
+                Double maxWeight = method.getDouble("maxWeight");
+                if (minWeight != null && minWeight.doubleValue() > 0 && minWeight.doubleValue() < weight) {
+                    returnShippingMethods.remove(method);
+                    continue;
+                }
+                if (maxWeight != null && maxWeight.doubleValue() > 0 && maxWeight.doubleValue() > weight) {
+                    returnShippingMethods.remove(method);
+                    continue;
+                }
+
+                // now check the features
+                String includeFeatures = method.getString("includeFeatureGroup");
+                String excludeFeatures = method.getString("excludeFeatureGroup");
+                if (includeFeatures != null && includeFeatures.length() > 0) {
+                    List includedFeatures = null;
+                    try {
+                        includedFeatures = delegator.findByAndCache("ProductFeatureGroupAppl", UtilMisc.toMap("productFeatureGroupId", includeFeatures));
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Unable to lookup ProductFeatureGroupAppl records for group : " + includeFeatures, module);
+                    }
+                    if (includedFeatures != null) {
+                        Iterator ifet = includedFeatures.iterator();
+                        while (ifet.hasNext()) {
+                            GenericValue appl = (GenericValue) ifet.next();
+                            if (!featureIdSet.contains(appl.getString("productFeatureId"))) {
+                                returnShippingMethods.remove(method);
+                                continue;
+                            }
+                        }
+                    }
+                }
+                if (excludeFeatures != null && excludeFeatures.length() > 0) {
+                    List excludedFeatures = null;
+                    try {
+                        excludedFeatures = delegator.findByAndCache("ProductFeatureGroupAppl", UtilMisc.toMap("productFeatureGroupId", excludeFeatures));
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Unable to lookup ProductFeatureGroupAppl records for group : " + excludeFeatures, module);
+                    }
+                    if (excludedFeatures != null) {
+                        Iterator ifet = excludedFeatures.iterator();
+                        while (ifet.hasNext()) {
+                            GenericValue appl = (GenericValue) ifet.next();
+                            if (featureIdSet.contains(appl.getString("productFeatureId"))) {
+                                returnShippingMethods.remove(method);
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return returnShippingMethods;
+    }
+
     public static boolean isStoreInventoryRequired(String productStoreId, String productId, GenericDelegator delegator) {
         GenericValue product = null;
 

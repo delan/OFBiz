@@ -976,6 +976,43 @@
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
     </service>
 
+    <!-- ProductFeatureGroup Services -->
+    <service name="createProductFeatureGroup" engine="simple"
+            location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureGroup" auth="true">
+        <description>Create a ProductFeatureGroup</description>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="productFeatureGroupId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateProductFeatureGroup" engine="simple"
+            location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="updateProductFeatureGroup" auth="true">
+        <description>Create a ProductFeatureGroup</description>
+        <attribute name="productFeatureGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createProductFeatureGroupAppl" engine="simple"
+                location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureGroupAppl" auth="true">
+        <description>Create a ProductFeatureGroup to ProductFeature Application</description>
+        <attribute name="productFeatureGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductFeatureGroupAppl" engine="simple"
+                location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="updateProductFeatureGroupAppl" auth="true">
+        <description>Update a ProductFeatureGroup to ProductFeature Application</description>
+        <attribute name="productFeatureGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="removeProductFeatureGroupAppl" engine="simple"
+                location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="removeProductFeatureGroupAppl" auth="true">
+        <description>Remove a ProductFeatureGroup to ProductFeature Application</description>
+        <attribute name="productFeatureGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
+    </service>
+
     <!-- Product Storage Services -->
     <service name="createFacility" default-entity-name="Facility" engine="simple"
                 location="org/ofbiz/product/storage/StorageServices.xml" invoke="createFacility" auth="true">
@@ -1316,12 +1353,14 @@
     <service name="createProductStoreShipMeth" default-entity-name="ProductStoreShipmentMeth" engine="simple"
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreShipMeth" auth="true">
         <description>Create a Product Store Email Setting</description>
-        <auto-attributes include="all" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateProductStoreShipMeth" default-entity-name="ProductStoreShipmentMeth" engine="simple"
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="updateProductStoreShipMeth" auth="true">
         <description>Update a Product Store Email Setting</description>
-        <auto-attributes include="all" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="removeProductStoreShipMeth" default-entity-name="ProductStoreShipmentMeth" engine="simple"
             location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="removeProductStoreShipMeth" auth="true">
