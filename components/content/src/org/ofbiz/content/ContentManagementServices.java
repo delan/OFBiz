@@ -34,7 +34,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      3.0
  *
  * 
@@ -344,7 +344,6 @@ public class ContentManagementServices {
       GenericValue userLogin = (GenericValue)context.get("userLogin");
       String userLoginPartyId = userLogin.getString("partyId");
       Map results = new HashMap();
-      Map serviceContext = new HashMap();
       // siteContentId will equal "ADMIN_MASTER", "AGINC_MASTER", etc.
       // Remember that this service is called in the "multi" mode,
       // with a new siteContentId each time.
@@ -352,10 +351,10 @@ public class ContentManagementServices {
       // service is used for updating department roles, too.
       String siteContentId = (String)context.get("contentId");
       String partyId = (String)context.get("partyId");
-      serviceContext.put("partyId", partyId);
-      serviceContext.put("userLogin", userLogin);
-      serviceContext.put("contentId", siteContentId);
-      //Debug.logInfo("updateSiteRoles, serviceContext(0):" + serviceContext, module);
+
+      if (UtilValidate.isEmpty(siteContentId) || UtilValidate.isEmpty(partyId))
+          return results;
+
       //Debug.logInfo("updateSiteRoles, context(0):" + context, module);
 
       List siteRoles = null;
@@ -366,22 +365,37 @@ public class ContentManagementServices {
       }
       Iterator siteRoleIter = siteRoles.iterator();
       while (siteRoleIter.hasNext()) {
+          Map serviceContext = new HashMap();
+          serviceContext.put("partyId", partyId);
+          serviceContext.put("contentId", siteContentId);
+          serviceContext.put("userLogin", userLogin);
+          Debug.logInfo("updateSiteRoles, serviceContext(0):" + serviceContext, module);
       	  GenericValue roleType = (GenericValue)siteRoleIter.next();
           String siteRole = (String)roleType.get("roleTypeId"); // BLOG_EDITOR, BLOG_ADMIN, etc.
           String cappedSiteRole = ModelUtil.dbNameToVarName(siteRole);
-          //if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, cappediteRole(1):" + cappedSiteRole, module);
+          if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, cappediteRole(1):" + cappedSiteRole, module);
 
           String siteRoleVal = (String)context.get(cappedSiteRole);
+          if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, siteRoleVal(1):" + siteRoleVal, module);
+          if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, context(1):" + context, module);
           Object fromDate = context.get(cappedSiteRole + "FromDate");
+          if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, fromDate(1):" + fromDate, module);
           serviceContext.put("roleTypeId", siteRole);
           if (siteRoleVal != null && siteRoleVal.equalsIgnoreCase("Y")) {
                   // for now, will assume that any error is due to duplicates - ignore
                   //return ServiceUtil.returnError(e.getMessage());
               if (fromDate == null ) {
                   try {
+                      Map newContext = new HashMap();
+                      newContext.put("contentId", serviceContext.get("contentId"));
+                      newContext.put("partyId", serviceContext.get("partyId"));
+                      newContext.put("roleTypeId", serviceContext.get("roleTypeId"));
+                      newContext.put("userLogin", userLogin);
+                      Map permResults = dispatcher.runSync("deactivateAllContentRoles", newContext);
+
                       serviceContext.put("fromDate", UtilDateTime.nowTimestamp());
                       if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, serviceContext(1):" + serviceContext, module);
-                      Map permResults = dispatcher.runSync("createContentRole", serviceContext);
+                      permResults = dispatcher.runSync("createContentRole", serviceContext);
                       addRoleToUser(delegator, dispatcher, serviceContext);
                   } catch (GenericServiceException e) {
                       Debug.logError(e, e.getMessage(), module);
@@ -431,5 +445,79 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         Debug.logError(e, "No action, except returning, taken.", module);
     }
 }
+
+  public static Map updateSiteRolesDyn(DispatchContext dctx, Map context) {
+
+      LocalDispatcher dispatcher = dctx.getDispatcher();
+      GenericDelegator delegator = dctx.getDelegator();
+      Map results = new HashMap();
+      Map serviceContext = new HashMap();
+      // siteContentId will equal "ADMIN_MASTER", "AGINC_MASTER", etc.
+      // Remember that this service is called in the "multi" mode,
+      // with a new siteContentId each time.
+      // siteContentId could also have been name deptContentId, since this same
+      // service is used for updating department roles, too.
+      String siteContentId = (String)context.get("contentId");
+      String partyId = (String)context.get("partyId");
+      serviceContext.put("partyId", partyId);
+      serviceContext.put("contentId", siteContentId);
+      //Debug.logInfo("updateSiteRoles, serviceContext(0):" + serviceContext, module);
+      //Debug.logInfo("updateSiteRoles, context(0):" + context, module);
+
+      List siteRoles = null;
+      try {
+      	  siteRoles = delegator.findByAndCache("RoleType", UtilMisc.toMap("parentTypeId", "BLOG"));
+      } catch(GenericEntityException e) {
+          return ServiceUtil.returnError( e.getMessage());
+      }
+      Iterator siteRoleIter = siteRoles.iterator();
+      while (siteRoleIter.hasNext()) {
+      	  GenericValue roleType = (GenericValue)siteRoleIter.next();
+          String siteRole = (String)roleType.get("roleTypeId"); // BLOG_EDITOR, BLOG_ADMIN, etc.
+          String cappedSiteRole = ModelUtil.dbNameToVarName(siteRole);
+          //if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, cappediteRole(1):" + cappedSiteRole, module);
+
+          String siteRoleVal = (String)context.get(cappedSiteRole);
+          Object fromDate = context.get(cappedSiteRole + "FromDate");
+          serviceContext.put("roleTypeId", siteRole);
+          if (siteRoleVal != null && siteRoleVal.equalsIgnoreCase("Y")) {
+                  // for now, will assume that any error is due to duplicates - ignore
+                  //return ServiceUtil.returnError(e.getMessage());
+              if (fromDate == null ) {
+                  try {
+                      serviceContext.put("fromDate", UtilDateTime.nowTimestamp());
+                      if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, serviceContext(1):" + serviceContext, module);
+                      addRoleToUser(delegator, dispatcher, serviceContext);
+                      Map permResults = dispatcher.runSync("createContentRole", serviceContext);
+                  } catch (GenericServiceException e) {
+                      Debug.logError(e, e.getMessage(), module);
+                  } catch (Exception e2) {
+                      Debug.logError(e2, e2.getMessage(), module);
+                  }
+              }
+          } else {
+              if (fromDate != null ) {
+                      // for now, will assume that any error is due to non-existence - ignore
+                      //return ServiceUtil.returnError(e.getMessage());
+                  try {
+Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
+                      //Timestamp thruDate = UtilDateTime.nowTimestamp();
+                      //serviceContext.put("thruDate", thruDate);
+                      //serviceContext.put("fromDate", fromDate);
+                      Map newContext = new HashMap();
+                      newContext.put("contentId", serviceContext.get("contentId"));
+                      newContext.put("partyId", serviceContext.get("partyId"));
+                      newContext.put("roleTypeId", serviceContext.get("roleTypeId"));
+                      Map permResults = dispatcher.runSync("deactivateAllContentRoles", newContext);
+                  } catch (GenericServiceException e) {
+                      Debug.logError(e, e.getMessage(), module);
+                  } catch (Exception e2) {
+                      Debug.logError(e2, e2.getMessage(), module);
+                  }
+              }
+          }
+      }
+      return results;
+  }
 
 }

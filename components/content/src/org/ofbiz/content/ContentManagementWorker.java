@@ -15,6 +15,7 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCache;
@@ -36,7 +37,7 @@ import org.ofbiz.security.Security;
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      3.0
  *
  * 
@@ -550,6 +551,7 @@ public class ContentManagementWorker {
         // Set up one map with all the top-level publish points (to which only one sub point can be attached to)
         // and another map (publishPointMapAll) that points to one of the top-level points.
         List allPublishPointList = getAllPublishPoints( delegator, rootPubId );
+        //if (Debug.infoOn()) Debug.logInfo("in getPublishLinks, allPublishPointList:" + allPublishPointList, module);
         List publishPointList = getPermittedPublishPoints( delegator, allPublishPointList, userLogin, security , permittedAction, permittedOperations, passedRoles );
         Map publishPointMap = new HashMap();
         Map publishPointMapAll = new HashMap();

@@ -606,6 +606,10 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LayoutMenu"/>
     </request-map>
+    <request-map uri="CMSMenu">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="CMSMenu"/>
+    </request-map>
 
 	<!-- Content requests -->
     <request-map uri="EditContent">
@@ -1188,16 +1192,45 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="CMSContentFind"/>
     </request-map>
+    <request-map uri="CMSFindOwnedContent">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="CMSFindOwnedContent"/>
+    </request-map>
     <request-map uri="CMSContentEdit">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="CMSContentEdit"/>
     </request-map>
-   <request-map uri="updateSiteRoles">
-        <security https="false" auth="true"/>
-        <event type="service-multi" invoke="updateSiteRoles"/>
-        <response name="success" type="view" value="UserPermissions"/>
-        <response name="error" type="view" value="UserPermissions"/>
+    <request-map uri="CMSContentAdd">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="CMSContentAdd"/>
     </request-map>
+    <request-map uri="CMSEditContentPurposeOperation">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="CMSEditContentPurposeOperation"/>
+    </request-map>
+    <request-map uri="CMSSites">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="CMSSites"/>
+    </request-map>
+   <request-map uri="updateSiteRoles">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateSiteRoles"/>
+        <response name="success" type="view" value="CMSSites"/>
+        <response name="error" type="view" value="CMSSites"/>
+    </request-map>
+   <request-map uri="linkContentToPubPt">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="linkContentToPubPt"/>
+        <response name="success" type="view" value="CMSContentEdit"/>
+        <response name="error" type="view" value="CMSContentEdit"/>
+    </request-map>
+   <request-map uri="publishResponse">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateContent"/>
+        <response name="success" type="view" value="CMSSites"/>
+        <response name="error" type="view" value="CMSSites"/>
+    </request-map>
+
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
@@ -1271,7 +1304,6 @@
     <view-map name="DataSetupMenu" page="/datasetup/DataSetupMenu.ftl" type="jpublish"/>
     <view-map name="LayoutMenu" page="/layout/LayoutMenu.ftl" type="jpublish"/>
     <view-map name="subcontent" page="/subcontent.ftl" type="jpublish"/>
-    <view-map name="UserPermissions" page="/cms/UserPermissions.ftl" type="jpublish"/>
 
     <view-map name="FindSurvey" page="/survey/FindSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurvey" page="/survey/EditSurvey.ftl" type="jpublish"/>
@@ -1282,5 +1314,11 @@
     <view-map name="CMSSiteEdit" page="/cms/CMSSiteEdit.ftl" type="jpublish"/>
     <view-map name="CMSContentFind" page="/cms/CMSContentFind.ftl" type="jpublish"/>
     <view-map name="CMSContentEdit" page="/cms/CMSContentEdit.ftl" type="jpublish"/>
+    <view-map name="CMSContentAdd" page="/cms/CMSContentAdd.ftl" type="jpublish"/>
+    <view-map name="CMSContentOwnedFind" page="/cms/CMSContentOwnedFind.ftl" type="jpublish"/>
+    <view-map name="UserPermissions" page="/cms/UserPermissions.ftl" type="jpublish"/>
+    <view-map name="CMSSites" page="/cms/CMSSites.ftl" type="jpublish"/>
+    <view-map name="CMSEditContentPurposeOperation" page="/cms/CMSEditContentPurposeOperation.ftl" type="jpublish"/>
+    <view-map name="CMSMenu" page="/cms/CMSMenu.ftl" type="jpublish"/>
     <!-- end of view mappings -->
 </site-conf>

@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.26 2004/05/11 14:42:47 byersa Exp $
+ * $Id: ContentWorker.java,v 1.27 2004/06/06 07:43:02 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  * @since 2.2
  * 
  *  
@@ -1182,5 +1182,44 @@ public class ContentWorker {
             errorMessage += " \n " + permissionMessage;
         }
         return errorMessage;
+    }
+
+    public static GenericValue getContentAssocViewFrom(GenericDelegator delegator, String contentIdTo, String contentId, String contentAssocTypeId, String statusId, String privilegeEnumId) throws GenericEntityException {
+
+        List exprListAnd = new ArrayList();
+
+        if (UtilValidate.isNotEmpty(contentIdTo)) {
+            EntityExpr expr = new EntityExpr("caContentIdTo", EntityOperator.EQUALS, contentIdTo);
+            exprListAnd.add(expr);
+        }
+
+        if (UtilValidate.isNotEmpty(contentId)) {
+            EntityExpr expr = new EntityExpr("contentId", EntityOperator.EQUALS, contentId);
+            exprListAnd.add(expr);
+        }
+
+        if (UtilValidate.isNotEmpty(contentAssocTypeId)) {
+            EntityExpr expr = new EntityExpr("caContentAssocTypeId", EntityOperator.EQUALS, contentAssocTypeId);
+            exprListAnd.add(expr);
+        }
+
+        if (UtilValidate.isNotEmpty(statusId)) {
+            EntityExpr expr = new EntityExpr("statusId", EntityOperator.EQUALS, statusId);
+            exprListAnd.add(expr);
+        }
+
+        if (UtilValidate.isNotEmpty(privilegeEnumId)) {
+            EntityExpr expr = new EntityExpr("privilegeEnumId", EntityOperator.EQUALS, privilegeEnumId);
+            exprListAnd.add(expr);
+        }
+
+        EntityConditionList contentCondList = new EntityConditionList(exprListAnd, EntityOperator.AND);
+        List contentList = delegator.findByCondition("ContentAssocViewFrom", contentCondList, null, null);
+        List filteredList = EntityUtil.filterByDate(contentList, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
+        GenericValue val = null;
+        if (filteredList.size() > 0 ) {
+            val = (GenericValue)filteredList.get(0);
+        }
+        return val;
     }
 }
