@@ -182,8 +182,8 @@ public class IteratorTag extends BodyTagSupport {
                 thisCollection = (Collection) objectTag.getObject();
             } else {
                 try {
-                    Method[] m =
-                        Class.forName(objectTag.getType()).getDeclaredMethods();
+                    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                    Method[] m = loader.loadClass(objectTag.getType()).getDeclaredMethods();
 
                     for (int i = 0; i < m.length; i++) {
                         if (m[i].getName().equals("iterator")) {

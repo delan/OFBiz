@@ -61,7 +61,8 @@ public class GenericHelperFactory {
 
                         if (helperClassName != null && helperClassName.length() > 0) {
                             try {
-                                helperClass = Class.forName(helperClassName);
+                                ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                                helperClass = loader.loadClass(helperClassName);
                             } catch (ClassNotFoundException e) {
                                 Debug.logWarning(e);
                                 throw new IllegalStateException("Error loading GenericHelper class \"" + helperClassName + "\": " + e.getMessage());

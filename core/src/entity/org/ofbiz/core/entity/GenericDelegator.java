@@ -157,7 +157,8 @@ public class GenericDelegator implements DelegatorInterface {
             String distributedCacheClearClassName = getDelegatorInfo().distributedCacheClearClassName;
 
             try {
-                Class dccClass = Class.forName(distributedCacheClearClassName);
+                ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                Class dccClass = loader.loadClass(distributedCacheClearClassName);
 
                 this.distributedCacheClear = (DistributedCacheClear) dccClass.newInstance();
                 this.distributedCacheClear.setDelegator(this, getDelegatorInfo().distributedCacheClearUserLoginId);

@@ -82,7 +82,8 @@ public class GenericEngineFactory {
                     Object[] params = new Object[] {dispatcher};
 
                     try {
-                        Class c = Class.forName(className);
+                        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                        Class c = loader.loadClass(className);
                         Constructor cn = c.getConstructor(paramTypes);
                         engine = (GenericEngine) cn.newInstance(params);
                     } catch (Exception e) {

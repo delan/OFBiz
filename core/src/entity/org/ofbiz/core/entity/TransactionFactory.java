@@ -55,7 +55,8 @@ public class TransactionFactory {
 
                         if (className != null && className.length() > 0) {
                             try {
-                                tfClass = Class.forName(className);
+                                ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                                tfClass = loader.loadClass(className);
                             } catch (ClassNotFoundException e) {
                                 Debug.logWarning(e);
                                 throw new IllegalStateException("Error loading TransactionFactory class \"" + className + "\": " + e.getMessage());

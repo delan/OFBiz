@@ -226,7 +226,8 @@ public class GenericWebEvent {
                 Class valClass;
 
                 try {
-                    valClass = Class.forName(className);
+                    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                    valClass = loader.loadClass(className);
                 } catch (ClassNotFoundException cnfe) {
                     Debug.logError("[updateGeneric] Could not find validation class: " + className + "; ignoring.");
                     continue;

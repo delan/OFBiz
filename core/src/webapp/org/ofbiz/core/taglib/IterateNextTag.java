@@ -52,7 +52,8 @@ public class IterateNextTag extends BodyTagSupport {
     }
 
     public void setType(String type) throws ClassNotFoundException {
-        this.type = Class.forName(type);
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        this.type = loader.loadClass(type);
     }
 
     public void setExpandMap(String expMap) {

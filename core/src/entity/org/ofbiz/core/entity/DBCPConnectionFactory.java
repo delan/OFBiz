@@ -77,7 +77,8 @@ public class DBCPConnectionFactory {
                 String password = dbcpJdbcElement.getAttribute("jdbc-password");
 
                 String driverClassName = dbcpJdbcElement.getAttribute("jdbc-driver");
-                Class.forName(driverClassName);
+                ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                loader.loadClass(driverClassName);
                 org.apache.commons.dbcp.ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(connectURI,username,password);
 
                 // Now we'll create the PoolableConnectionFactory, which wraps

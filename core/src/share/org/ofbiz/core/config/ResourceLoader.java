@@ -140,7 +140,8 @@ public abstract class ResourceLoader {
 
             if (className != null && className.length() > 0) {
                 try {
-                    lClass = Class.forName(className);
+                    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                    lClass = classLoader.loadClass(className);
                 } catch (ClassNotFoundException e) {
                     throw new GenericConfigException("Error loading Resource Loader class \"" + className + "\"", e);
                 }

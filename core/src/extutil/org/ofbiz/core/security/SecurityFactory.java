@@ -72,7 +72,8 @@ public class SecurityFactory {
 
         synchronized (SecurityFactory.class) {
             try {
-                Class c = Class.forName(getSecurityClass(securityName));
+                ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                Class c = loader.loadClass(getSecurityClass(securityName));
                 security = (Security) c.newInstance();
                 security.setDelegator(delegator);
             } catch (ClassNotFoundException cnf) {

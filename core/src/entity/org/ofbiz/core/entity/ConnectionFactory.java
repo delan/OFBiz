@@ -219,7 +219,8 @@ public class ConnectionFactory {
 
             if (driverClassName != null && driverClassName.length() > 0) {
                 try {
-                    Class.forName(driverClassName);
+                    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                    loader.loadClass(driverClassName);
                 } catch (ClassNotFoundException cnfe) {
                     Debug.logWarning("Could not find JDBC driver class named " + driverClassName + ".\n");
                     Debug.logWarning(cnfe);
