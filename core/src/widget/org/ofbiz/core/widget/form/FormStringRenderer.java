@@ -23,6 +23,11 @@
  */
 package org.ofbiz.core.widget.form;
 
+import java.util.Map;
+
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.service.LocalDispatcher;
+
 /**
  * Widget Library - Form String Renderer interface
  *
@@ -31,8 +36,20 @@ package org.ofbiz.core.widget.form;
  * @since      2.2
  */
 public interface FormStringRenderer {
-    public void renderDisplayField(StringBuffer buffer, ModelFormField.DisplayField displayField);
-    public void renderHyperlinkField(StringBuffer buffer, ModelFormField.HyperlinkField hyperlinkField);
-    public void renderTextField(StringBuffer buffer, ModelFormField.TextField textField);
-    public void renderTextareaField(StringBuffer buffer, ModelFormField.TextareaField textareaField);
+    public void renderDisplayField(StringBuffer buffer, Map context, ModelFormField.DisplayField displayField, GenericDelegator delegator, LocalDispatcher dispatcher);
+    public void renderHyperlinkField(StringBuffer buffer, Map context, ModelFormField.HyperlinkField hyperlinkField, GenericDelegator delegator, LocalDispatcher dispatcher);
+
+    public void renderTextField(StringBuffer buffer, Map context, ModelFormField.TextField textField, GenericDelegator delegator, LocalDispatcher dispatcher);
+    public void renderTextareaField(StringBuffer buffer, Map context, ModelFormField.TextareaField textareaField, GenericDelegator delegator, LocalDispatcher dispatcher);
+    public void renderDateTimeField(StringBuffer buffer, Map context, ModelFormField.DateTimeField dateTimeField, GenericDelegator delegator, LocalDispatcher dispatcher);
+
+    public void renderDropDownField(StringBuffer buffer, Map context, ModelFormField.DropDownField dropDownField, GenericDelegator delegator, LocalDispatcher dispatcher);
+    public void renderCheckField(StringBuffer buffer, Map context, ModelFormField.CheckField checkField, GenericDelegator delegator, LocalDispatcher dispatcher);
+    public void renderRadioField(StringBuffer buffer, Map context, ModelFormField.RadioField radioField, GenericDelegator delegator, LocalDispatcher dispatcher);
+
+    public void renderSubmitField(StringBuffer buffer, Map context, ModelFormField.SubmitField submitField, GenericDelegator delegator, LocalDispatcher dispatcher);
+    public void renderResetField(StringBuffer buffer, Map context, ModelFormField.ResetField resetField, GenericDelegator delegator, LocalDispatcher dispatcher);
+
+    public void renderHiddenField(StringBuffer buffer, Map context, ModelFormField.HiddenField hiddenField, GenericDelegator delegator, LocalDispatcher dispatcher);
+    public void renderIgnoredField(StringBuffer buffer, Map context, ModelFormField.IgnoredField ignoredField, GenericDelegator delegator, LocalDispatcher dispatcher);
 }

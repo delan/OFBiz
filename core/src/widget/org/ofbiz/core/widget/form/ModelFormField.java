@@ -25,6 +25,8 @@ package org.ofbiz.core.widget.form;
 
 import java.util.*;
 import org.w3c.dom.*;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.service.LocalDispatcher;
 import org.ofbiz.core.util.*;
 
 /**
@@ -50,9 +52,11 @@ public class ModelFormField {
     protected String tooltip;
     protected String titleStyle;
     protected String widgetStyle;
-    protected int position;
+    protected int position = 1;
     protected String redWhen;
     protected String useWhen;
+    
+    protected FieldInfo fieldInfo;
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -79,13 +83,12 @@ public class ModelFormField {
         try {
             position = Integer.parseInt(positionStr);
         } catch (Exception e) {
-            position = 1;
             if (positionStr != null && positionStr.length() > 0) {
-                Debug.logError(e, "Could not convert position attribute of the field element to an integer: [" + positionStr + "], using the default of 1");
+                Debug.logError(e, "Could not convert position attribute of the field element to an integer: [" + positionStr + "], using the default of " + position);
             }
         }
         
-        
+        // TODO: get sub-element and set fieldInfo
     }
     
     /**
@@ -338,7 +341,102 @@ public class ModelFormField {
             fieldTypeName = string;
         }
 
-        public abstract void renderFieldString(StringBuffer buffer, FormStringRenderer formStringRenderer);
+        public abstract void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher);
+    }
+    
+    public static abstract class FieldInfoWithOptions extends FieldInfo {
+        protected FieldInfoWithOptions() { super(); }
+        
+        protected List optionSources = new LinkedList();
+
+        public FieldInfoWithOptions(String fieldTypeName, ModelFormField modelFormField) {
+            super(fieldTypeName, modelFormField);
+        }
+
+        public FieldInfoWithOptions(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+            
+            // TODO: read all option and entity-options sub-elements, maintaining order
+        }
+
+        public List getAllOptionValues(Map context, GenericDelegator delegator) {
+            List optionValues = new LinkedList();
+            
+            Iterator optionSourceIter = this.optionSources.iterator();
+            while (optionSourceIter.hasNext()) {
+                OptionSource optionSource = (OptionSource) optionSourceIter.next();
+                optionSource.addOptionValues(optionValues, context, delegator);
+            }
+                  
+            return optionValues;
+        }
+    }
+    
+    public static class OptionValue {
+        protected String key;
+        protected String description;
+        
+        public OptionValue(String key, String description) {
+            this.key = key;
+            this.description = description;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+    }
+    
+    public static abstract class OptionSource {
+        public abstract void addOptionValues(List optionValues, Map context, GenericDelegator delegator);
+    }
+    
+    public static class SingleOption extends OptionSource {
+        protected String key;
+        protected String description;
+        
+        public SingleOption(String key, String description) {
+            this.key = key;
+            this.description = UtilXml.checkEmpty(description, key);
+        }
+        
+        public SingleOption(Element optionElement) {
+            this.key = optionElement.getAttribute("key");
+            this.description = UtilXml.checkEmpty(optionElement.getAttribute("description"), this.key);
+        }
+        
+        public void addOptionValues(List optionValues, Map context, GenericDelegator delegator) {
+            // TODO: add key and description with string expansion, ie expanding ${} stuff
+        }
+    }
+    
+    public static class EntityOptions extends OptionSource {
+        /*
+    entity-name CDATA #REQUIRED
+    key-field-name CDATA #IMPLIED
+    description CDATA #REQUIRED
+    cache ( true | false ) "true"
+         * 
+         */
+        protected String entityName;
+        protected String keyFieldName;
+        protected String description;
+        protected boolean cache = true;
+        
+        public EntityOptions() {
+        }
+        
+        public EntityOptions(Element entityOptionsElement) {
+            // TODO: add all setup code for entity-options attributes
+            // TODO: add all setup code for entity-options sub-elements
+        }
+        
+        public void addOptionValues(List optionValues, Map context, GenericDelegator delegator) {
+            // TODO: add key and description with string expansion, ie expanding ${} stuff
+        }
     }
     
     public static class DisplayField extends FieldInfo {
@@ -354,10 +452,10 @@ public class ModelFormField {
         public DisplayField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
             
-            String description = element.getAttribute("description");
+            this.description = element.getAttribute("description");
             String alsoHiddenStr = element.getAttribute("also-hidden");
             try {
-                alsoHidden = Boolean.getBoolean(alsoHiddenStr);
+                this.alsoHidden = Boolean.getBoolean(alsoHiddenStr);
             } catch (Exception e) {
                 if (alsoHiddenStr != null && alsoHiddenStr.length() > 0) {
                     Debug.logError("Could not parse the size value of the text element: [" + alsoHiddenStr + "], setting to default of " + alsoHidden);
@@ -365,8 +463,8 @@ public class ModelFormField {
             }
         }
 
-        public void renderFieldString(StringBuffer buffer, FormStringRenderer formStringRenderer) {
-            formStringRenderer.renderDisplayField(buffer, this);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            formStringRenderer.renderDisplayField(buffer, context, this, delegator, dispatcher);
         }
         
         /**
@@ -412,11 +510,11 @@ public class ModelFormField {
         public HyperlinkField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
             
-            String target = element.getAttribute("target");
-            String description = element.getAttribute("description");
+            this.target = element.getAttribute("target");
+            this.description = element.getAttribute("description");
             String alsoHiddenStr = element.getAttribute("also-hidden");
             try {
-                alsoHidden = Boolean.getBoolean(alsoHiddenStr);
+                this.alsoHidden = Boolean.getBoolean(alsoHiddenStr);
             } catch (Exception e) {
                 if (alsoHiddenStr != null && alsoHiddenStr.length() > 0) {
                     Debug.logError("Could not parse the size value of the text element: [" + alsoHiddenStr + "], setting to default of " + alsoHidden);
@@ -424,8 +522,8 @@ public class ModelFormField {
             }
         }
 
-        public void renderFieldString(StringBuffer buffer, FormStringRenderer formStringRenderer) {
-            formStringRenderer.renderHyperlinkField(buffer, this);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            formStringRenderer.renderHyperlinkField(buffer, context, this, delegator, dispatcher);
         }
         
         /**
@@ -504,8 +602,8 @@ public class ModelFormField {
             }
         }
 
-        public void renderFieldString(StringBuffer buffer, FormStringRenderer formStringRenderer) {
-            formStringRenderer.renderTextField(buffer, this);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            formStringRenderer.renderTextField(buffer, context, this, delegator, dispatcher);
         }
         
         /**
@@ -569,8 +667,8 @@ public class ModelFormField {
             }
         }
 
-        public void renderFieldString(StringBuffer buffer, FormStringRenderer formStringRenderer) {
-            formStringRenderer.renderTextareaField(buffer, this);
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            formStringRenderer.renderTextareaField(buffer, context, this, delegator, dispatcher);
         }
         
         /**
@@ -602,4 +700,222 @@ public class ModelFormField {
         }
     }
 
+    public static class DateTimeField extends FieldInfo {
+        protected String type;
+        
+        protected DateTimeField() { super(); }
+
+        public DateTimeField(String fieldTypeName, ModelFormField modelFormField) {
+            super(fieldTypeName, modelFormField);
+        }
+
+        public DateTimeField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+            type = element.getAttribute("type");
+        }
+
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            formStringRenderer.renderDateTimeField(buffer, context, this, delegator, dispatcher);
+        }
+        
+        /**
+         * @return
+         */
+        public String getType() {
+            return type;
+        }
+
+        /**
+         * @param string
+         */
+        public void setType(String string) {
+            type = string;
+        }
+    }
+
+    public static class DropDownField extends FieldInfoWithOptions {
+        protected boolean allowEmpty = false;
+        protected String current;
+        
+        protected DropDownField() { super(); }
+
+        public DropDownField(String fieldTypeName, ModelFormField modelFormField) {
+            super(fieldTypeName, modelFormField);
+        }
+
+        public DropDownField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+            
+            this.current = element.getAttribute("current");
+            String allowEmptyStr = element.getAttribute("allow-empty");
+            try {
+                this.allowEmpty = Boolean.getBoolean(allowEmptyStr);
+            } catch (Exception e) {
+                if (allowEmptyStr != null && allowEmptyStr.length() > 0) {
+                    Debug.logError("Could not parse the size value of the text element: [" + allowEmptyStr + "], setting to default of " + allowEmpty);
+                }
+            }
+        }
+
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            formStringRenderer.renderDropDownField(buffer, context, this, delegator, dispatcher);
+        }
+        
+        /**
+         * @return
+         */
+        public boolean isAllowEmpty() {
+            return allowEmpty;
+        }
+
+        /**
+         * @return
+         */
+        public String getCurrent() {
+            return current;
+        }
+
+        /**
+         * @param b
+         */
+        public void setAllowEmpty(boolean b) {
+            allowEmpty = b;
+        }
+
+        /**
+         * @param string
+         */
+        public void setCurrent(String string) {
+            current = string;
+        }
+    }
+
+    public static class CheckField extends FieldInfoWithOptions {
+        protected CheckField() { super(); }
+
+        public CheckField(String fieldTypeName, ModelFormField modelFormField) {
+            super(fieldTypeName, modelFormField);
+        }
+
+        public CheckField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+        }
+
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            formStringRenderer.renderCheckField(buffer, context, this, delegator, dispatcher);
+        }
+    }
+
+    public static class RadioField extends FieldInfoWithOptions {
+        protected RadioField() { super(); }
+
+        public RadioField(String fieldTypeName, ModelFormField modelFormField) {
+            super(fieldTypeName, modelFormField);
+        }
+
+        public RadioField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+        }
+
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            formStringRenderer.renderRadioField(buffer, context, this, delegator, dispatcher);
+        }
+    }
+
+    public static class SubmitField extends FieldInfo {
+        protected String buttonType;
+        protected String imageLocation;
+        
+        protected SubmitField() { super(); }
+
+        public SubmitField(String fieldTypeName, ModelFormField modelFormField) {
+            super(fieldTypeName, modelFormField);
+        }
+
+        public SubmitField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+            this.buttonType = element.getAttribute("button-type");
+            this.imageLocation = element.getAttribute("image-location");
+        }
+
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            formStringRenderer.renderSubmitField(buffer, context, this, delegator, dispatcher);
+        }
+        
+        /**
+         * @return
+         */
+        public String getButtonType() {
+            return buttonType;
+        }
+
+        /**
+         * @return
+         */
+        public String getImageLocation() {
+            return imageLocation;
+        }
+
+        /**
+         * @param string
+         */
+        public void setButtonType(String string) {
+            buttonType = string;
+        }
+
+        /**
+         * @param string
+         */
+        public void setImageLocation(String string) {
+            imageLocation = string;
+        }
+    }
+
+    public static class ResetField extends FieldInfo {
+        protected ResetField() { super(); }
+
+        public ResetField(String fieldTypeName, ModelFormField modelFormField) {
+            super(fieldTypeName, modelFormField);
+        }
+
+        public ResetField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+        }
+
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            formStringRenderer.renderResetField(buffer, context, this, delegator, dispatcher);
+        }
+    }
+
+    public static class HiddenField extends FieldInfo {
+        protected HiddenField() { super(); }
+
+        public HiddenField(String fieldTypeName, ModelFormField modelFormField) {
+            super(fieldTypeName, modelFormField);
+        }
+
+        public HiddenField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+        }
+
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            formStringRenderer.renderHiddenField(buffer, context, this, delegator, dispatcher);
+        }
+    }
+
+    public static class IgnoredField extends FieldInfo {
+        protected IgnoredField() { super(); }
+
+        public IgnoredField(String fieldTypeName, ModelFormField modelFormField) {
+            super(fieldTypeName, modelFormField);
+        }
+
+        public IgnoredField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+        }
+
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            formStringRenderer.renderIgnoredField(buffer, context, this, delegator, dispatcher);
+        }
+    }
 }

@@ -115,6 +115,7 @@ public class ModelForm {
             autoFieldsEntities.add(new AutoFieldsEntity(autoFieldsEntityElement));
         }
 
+        // TODO: read in add field defs, add/override one by one using the fieldList and fieldMap
     }
 
     /**
