@@ -73,6 +73,10 @@ public class GetRelated extends MethodOperation {
         }
 
         GenericValue value = (GenericValue) valueAcsr.get(methodContext);
+        if (value == null) {
+            Debug.logWarning("Value not found with name: " + listAcsr + ", not getting related...");
+            return true;
+        }
         try {
             if (useCache) {
                 listAcsr.put(methodContext, value.getRelatedCache(relationName, constraintMap, orderByNames));
