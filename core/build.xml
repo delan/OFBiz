@@ -62,6 +62,7 @@
             <fileset dir="${extlib.dir}/jasperreports" includes="*.jar"/>
             <fileset dir="${extlib.dir}/weka" includes="*.jar"/>
             <fileset dir="${extlib.dir}/wspublisher" includes="*.jar"/>
+            <fileset dir="${extlib.dir}/jotm" includes="*.jar"/>
         </path>
     </target>
 
