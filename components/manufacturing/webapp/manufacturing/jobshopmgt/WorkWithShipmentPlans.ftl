@@ -29,13 +29,13 @@ ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
 <#if shipment?exists>
   <div class="head1">Shipment Plan: ${shipment.shipmentId}</div>
   ${listShipmentPlanForm.renderFormString()}
-  <div><a href="/manufacturing/control/createProductionRunsForOrder?shipmentId=${shipmentId}" class="buttontext">[${uiLabelMap.CreateProductionRuns}]</a></div>
-<!--
-  <div><a href="<@ofbizUrl>/AddItemsFromOrder?selectFromShipmentPlan=Y&shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductShipmentPlanToOrderItems}]</a></div>
-  <div><a href="<@ofbizUrl>/ShipmentPlanMancantiReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="new">[Stampa dei mancanti]</a></div>
-  <div><a href="<@ofbizUrl>/ShipmentLabel.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="new">[Stampa Labels]</a></div>
-  <div><a href="<@ofbizUrl>/ShipmentWorkEffortTasks.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="new">[Stampa Tasks]</a></div>
--->
+  <div><a href="<@ofbizUrl>createProductionRunsForOrder?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CreateProductionRuns}]</a></div>
+  <br>
+  <div><a href="<@ofbizUrl>/ShipmentPlanStockReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_report" class="buttontext">[${uiLabelMap.ManufacturingShipmentPlanStockReport}]</a></div>
+  <div><a href="<@ofbizUrl>/CuttingListReport.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_report" class="buttontext">[${uiLabelMap.ManufacturingCuttingListReport}]</a></div>
+  <div><a href="<@ofbizUrl>/ShipmentLabel.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingPackageLabelsReport}]</a></div>
+  <div><a href="<@ofbizUrl>/ShipmentWorkEffortTasks.pdf?shipmentId=${shipmentId}</@ofbizUrl>" class="buttontext" target="_report">[${uiLabelMap.ManufacturingTasksReport}]</a></div>
+
 <#else>
 <div class="head1">Shipment Plans</div>
 <#if listShipmentPlansForm?has_content>
