@@ -34,4 +34,11 @@
 		<field use-when="returnHeader==null&amp;&amp;returnId==null" name="returnId"><ignored/></field>
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
+	<form name="ReturnItems" type="multi" target="createReturnItem" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		<auto-fields-service service-name="createReturnItem"/>
+		<field name="returnId"><hidden/></field>
+		<field name="orderId"><hidden/></field>
+		<field name="orderItemSeqId"><hidden/></field>
+		<field name="statusId"><ignored/></field>
+	</form>
 </forms>
