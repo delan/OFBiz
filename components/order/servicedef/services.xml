@@ -449,6 +449,13 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 
+    <!-- ZipSales Tax Services -->
+    <service name="importZipSalesTaxData" engine="java" transaction-timout="7200"
+            location="org.ofbiz.order.thirdparty.zipsales.ZipSalesServices" invoke="importFlatTable">
+        <description>Import ZipSales Flat File</description>
+        <attribute name="fileLocation" type="String" mode="IN" optional="false"/>
+    </service>
+
     <!-- Customer Request Services -->
     <service name="interfaceCustRequest" engine="interface" location="" invoke="">
         <description>CustRequest Interface</description>
