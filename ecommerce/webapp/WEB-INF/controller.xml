@@ -534,7 +534,7 @@
     <view-map name="keywordsearch" type="wsp" page="/catalog/keywordsearch.ftl"/>
 
     <view-map name="checkoutoptions" type="wsp" page="/order/checkoutoptions.ftl"/>
-    <view-map name="checkout" type="region"/>
+    <view-map name="checkout" type="wsp" page="/order/checkoutreview.ftl"/>
     <view-map name="confirmorder" page="/order/confirmorder.jsp"/>
     <view-map name="showconfirmorder" type="region"/>
     <view-map name="orderhistory" type="region"/>
