@@ -172,7 +172,7 @@ if (lastParties != null && searchString.equals(lastSearchString)) {
         }
     }            
     context.put("parties", partyList); 
-    session.setAttribute("LAST_SEARCH_VALUES", parties); 
+    session.setAttribute("LAST_SEARCH_VALUES", partyList); 
     
 }  
   
@@ -206,4 +206,5 @@ context.put("viewSize", new Integer(viewSize));
 context.put("highIndex", new Integer(highIndex));
 context.put("lowIndex", new Integer(lowIndex));
 context.put("searchString", searchString);
+context.put("listSize", new Integer(listSize));
 
