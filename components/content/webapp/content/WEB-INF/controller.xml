@@ -987,6 +987,14 @@
         <response name="success" type="view" value="EditSurveyQuestions"/>
         <response name="error" type="view" value="EditSurveyQuestions"/>
     </request-map>
+
+    <!-- SurveyResponse Requests -->
+    <request-map uri="ViewSurveyResponses">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="SurveyResponse"/>
+        <response name="error" type="view" value="SurveyResponse"/>
+    </request-map>
+
     <!-- end of request mappings -->
     <request-map uri="subcontent">
         <security auth="true" https="true"/>
@@ -1237,5 +1245,6 @@
     <view-map name="FindSurvey" page="/survey/FindSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurvey" page="/survey/EditSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurveyQuestions" page="/survey/EditSurveyQuestions.ftl" type="jpublish"/>
+    <view-map name="SurveyResponse" page="/survey/SurveyResponse.ftl" type="jpublish"/>
     <!-- end of view mappings -->
 </site-conf>

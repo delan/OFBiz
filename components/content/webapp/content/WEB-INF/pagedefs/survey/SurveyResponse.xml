@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Survey Responses</property>
+    <property name="headerItem">Survey</property>
+    <property name="tabButtonItem">ViewSurveyResponses</property>
+    <page-action name="/survey/SurveyResponse.bsh"/>
+</page>
