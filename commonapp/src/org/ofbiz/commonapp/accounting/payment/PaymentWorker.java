@@ -29,6 +29,9 @@ import javax.servlet.jsp.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
+import org.ofbiz.commonapp.accounting.invoice.InvoiceWorker;
+import org.ofbiz.commonapp.order.order.OrderReadHelper;
+
 /**
  * Worker methods for Payments
  *
@@ -79,7 +82,7 @@ public class PaymentWorker {
         return paymentMethodValueMaps;
     }
 
-    /** TO BE REMOVED (DEJ 20030301): This is the OLD style and should be removed when the eCommerce and party mgr JSPs are */
+    /** TODO: REMOVE (DEJ 20030301): This is the OLD style and should be removed when the eCommerce and party mgr JSPs are */
     public static void getPaymentMethodAndRelated(PageContext pageContext, String partyId,
             String paymentMethodAttr, String creditCardAttr, String eftAccountAttr, String paymentMethodIdAttr, String curContactMechIdAttr,
             String donePageAttr, String tryEntityAttr) {
@@ -172,5 +175,52 @@ public class PaymentWorker {
         }
                 
         return webSitePayment;                          
+    }
+    
+    public static double getBillingAccountBalance(GenericDelegator delegator, String billingAccountId) {
+        double balance = 0.00;
+        
+        // first get all the pending orders (not cancelled, rejected or completed)
+        List orderHeaders = null;
+        List exprs1 = new LinkedList();
+        exprs1.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));
+        exprs1.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"));
+        exprs1.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+        exprs1.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_COMPLETED"));
+        try {
+            orderHeaders = delegator.findByAnd("OrderHeader", exprs1);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting OrderHeader list", module);
+            return 0.01;
+        }
+        if (orderHeaders != null) {
+            Iterator ohi = orderHeaders.iterator();
+            while (ohi.hasNext()) {
+                GenericValue orderHeader = (GenericValue) ohi.next();
+                OrderReadHelper orh = new OrderReadHelper(orderHeader);
+                balance += orh.getOrderGrandTotal();
+            }
+        }
+        
+        // next get all the un-paid invoices (this will include all completed orders)
+        List invoices = null;
+        List exprs2 = new LinkedList();
+        exprs2.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));
+        exprs2.add(new EntityExpr("statusId", EntityOperator.EQUALS, "INVOICE_SENT"));
+        try {
+            invoices = delegator.findByAnd("Invoice", exprs2);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting Invoice list", module);
+            return 0.01;
+        }
+        if (invoices != null) {
+            Iterator ii = invoices.iterator();
+            while (ii.hasNext()) {
+                GenericValue invoice = (GenericValue) ii.next();
+                balance += InvoiceWorker.getInvoiceTotal(invoice);
+            }
+        }
+        
+        return balance;
     }
 }
