@@ -82,7 +82,7 @@
     <td><%if (webSite!=null) {%><%--<a href='<ofbiz:url>/EditWebSite?webSiteId=<ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId"/></ofbiz:url>' class="buttontext">--%><%=webSite.getString("siteName")%><%--</a>--%><%}%>&nbsp;</td>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="webSiteCatalog" field="fromDate"/></div></td>
     <td align="center">
-        <FORM method=POST action='<ofbiz:url>/updateProductToCategory</ofbiz:url>'>
+        <FORM method=POST action='<ofbiz:url>/updateProdCatalogToWebSite</ofbiz:url>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="webSiteCatalog" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="webSiteCatalog" field="fromDate" fullattrs="true"/>>
@@ -92,14 +92,14 @@
         </FORM>
     </td>
     <td align="center">
-      <a href='<ofbiz:url>/removeProductFromCategory?prodCatalogId=<ofbiz:entityfield attribute="webSiteCatalog" field="prodCatalogId"/>&webSiteId=<ofbiz:entityfield attribute="webSiteCatalog" field="webSiteId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(webSiteCatalog.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/removeProdCatalogFromWebSite?prodCatalogId=<ofbiz:entityfield attribute="webSiteCatalog" field="prodCatalogId"/>&webSiteId=<ofbiz:entityfield attribute="webSiteCatalog" field="webSiteId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(webSiteCatalog.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
 </ofbiz:iterator>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/addProductToCategory</ofbiz:url>" style='margin: 0;'>
+<form method="POST" action="<ofbiz:url>/addProdCatalogToWebSite</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="prodCatalogId" value="<%=prodCatalogId%>">
   <input type="hidden" name="tryEntity" value="true">
 
