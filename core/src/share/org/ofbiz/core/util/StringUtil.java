@@ -204,4 +204,14 @@ public class StringUtil {
         }
         return cppBuff.toString();
     }
+    
+    /** Removes all spaces from a string */
+    public static String removeSpaces(String str) {
+        StringBuffer newString = new StringBuffer();
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) != ' ')
+                newString.append(str.charAt(i));
+        }
+        return newString.toString();        
+    }
 }
