@@ -32,11 +32,11 @@ import java.util.*;
 
 public class ModelField {
   /** The name of the Field */
-  public String name = null;
+  public String name = "";
   /** The type of the Field */
-  public String type = null;
+  public String type = "";
   /** The col-name of the Field */
-  public String colName = null;
+  public String colName = "";
   /** boolean which specifies whether or not the Field is a Primary Key */
   public boolean isPk = false;
   /** validators to be called when an update is done */
