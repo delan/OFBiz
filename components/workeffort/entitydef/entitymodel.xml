@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  */
 -->
 
@@ -114,9 +114,6 @@
       <relation type="one" fk-name="TIME_ENT_TSHT" rel-entity-name="Timesheet">
         <key-map field-name="timesheetId"/>
       </relation>
-      <relation type="many" rel-entity-name="TimeEntryBilling">
-        <key-map field-name="timeEntryId"/>
-      </relation>
     </entity>
     <entity entity-name="TimeEntryBilling"
             package-name="org.ofbiz.workeffort.timesheet"
@@ -157,12 +154,6 @@
       <relation type="one-nofk" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="TimeEntry">
-        <key-map field-name="timesheetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="TimesheetRole">
-        <key-map field-name="timesheetId"/>
       </relation>
     </entity>
     <entity entity-name="TimesheetRole"

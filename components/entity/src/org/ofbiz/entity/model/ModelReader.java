@@ -1,5 +1,5 @@
 /*
- * $Id: ModelReader.java,v 1.9 2004/06/20 07:09:20 jonesde Exp $
+ * $Id: ModelReader.java,v 1.10 2004/07/04 07:35:22 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ModelReader {
@@ -285,7 +285,7 @@ public class ModelReader {
                             Iterator relationsIter = curModelEntity.getRelationsIterator();
                             while (relationsIter.hasNext()) {
                                 ModelRelation modelRelation = (ModelRelation) relationsIter.next();
-                                if ("one".equals(modelRelation.getType()) || "one-nofk".equals(modelRelation.getType())) {
+                                if (("one".equals(modelRelation.getType()) || "one-nofk".equals(modelRelation.getType())) && !modelRelation.isAutoRelation()) {
                                     ModelEntity relatedEnt = this.getModelEntity(modelRelation.getRelEntityName());
                                     if (relatedEnt != null) {
                                         // don't do relationship to the same entity, unless title is "Parent", then do a "Child" automatically
