@@ -224,6 +224,21 @@
   <!-- org.ofbiz.commonapp.shipment.shipment -->
   <!-- ========================================================= -->
 
+    <view-entity entity-name="CarrierAndShipmentMethod"
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Carrier Andy Shipment Method Type View Entity">
+      <member-entity entity-alias="CS" entity-name="CarrierShipmentMethod"/>
+      <member-entity entity-alias="SM" entity-name="ShipmentMethodType"/>
+      <alias entity-alias="CS" name="shipmentMethodTypeId"/>
+      <alias entity-alias="CS" name="partyId"/>
+      <alias entity-alias="CS" name="roleTypeId"/>
+      <alias entity-alias="CS" name="isDisplayable"/>
+      <alias entity-alias="CS" name="sequenceNumber"/>
+      <alias entity-alias="SM" name="description"/>
+      <view-link entity-alias="CS" rel-entity-alias="SM">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="CarrierShipmentMethod"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Carrier Shipment Method Entity">

@@ -759,6 +759,7 @@
   <!-- org.ofbiz.commonapp.shipment.shipment -->
   <!-- ========================================================= -->
 
+    <entity-group group="org.ofbiz.commonapp" entity="CarrierAndShipmentMethod" />
     <entity-group group="org.ofbiz.commonapp" entity="CarrierShipmentMethod" />
     <entity-group group="org.ofbiz.commonapp" entity="Shipment" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentAttribute" />
