@@ -13,6 +13,7 @@
   <SecurityPermission description="Use the Entity Maintenance pages." permissionId="ENTITY_MAINT"/>
   <SecurityPermission description="Use the Rules Maintenance pages." permissionId="RULES_MAINT"/>
   <SecurityPermission description="Use the Workflow Maintenance pages." permissionId="WORKFLOW_MAINT"/>
+  <SecurityPermission description="Use the Period Maintenance pages." permissionId="PERIOD_MAINT"/>
   <SecurityPermission description="View a UtilCache instance." permissionId="UTIL_CACHE_VIEW"/>
   <SecurityPermission description="Edit a UtilCache instance." permissionId="UTIL_CACHE_EDIT"/>
   <SecurityPermission description="View a UtilDebug instance." permissionId="UTIL_CACHE_VIEW"/>
@@ -105,6 +106,7 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="RULES_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKFLOW_MAINT"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PERIOD_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_EDIT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_DEBUG_EDIT"/>
@@ -116,6 +118,7 @@
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENTITY_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="RULES_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKFLOW_MAINT"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="PERIOD_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_EDIT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_DEBUG_EDIT"/>
