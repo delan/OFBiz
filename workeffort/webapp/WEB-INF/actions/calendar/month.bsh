@@ -66,7 +66,7 @@ getFrom = new Timestamp(tempCal.getTime().getTime());
 
 
 dispatcher = request.getAttribute("dispatcher");
-Map serviceCtx = UtilMisc.toMap("userLogin",context.getSession().getAttribute("userLogin"),"start",getFrom,"numPeriods",new Integer(numDays),"periodSeconds",new Integer(3600*24));
+Map serviceCtx = UtilMisc.toMap("userLogin",context.getSession().getAttribute("userLogin"),"start",getFrom,"numPeriods",new Integer(numDays),"periodSeconds",new Integer(3600*24), "partyId", request.getParameter("partyId"), "facilityId", request.getParameter("facilityId"));
 Map result = dispatcher.runSync("getWorkEffortEventsByPeriod",serviceCtx);
 context.put("periods",result.get("periods"));
 context.put("maxConcurrentEntries",result.get("maxConcurrentEntries"));

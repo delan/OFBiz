@@ -32,8 +32,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.ofbiz.core.entity.EntityExpr;
 import org.ofbiz.core.entity.EntityOperator;
@@ -47,6 +45,7 @@ import org.ofbiz.core.service.ServiceUtil;
 import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.util.UtilDateTime;
 import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.core.util.UtilValidate;
 
 /**
  * WorkEffortServices - WorkEffort related Services
@@ -224,7 +223,7 @@ public class WorkEffortServices {
                     Debug.logWarning(e);
                 }
             }
-            canView = (workEffortPartyAssignments != null && workEffortPartyAssignments.size() > 0) ? new Boolean(true) : new Boolean(false);
+            canView = (workEffortPartyAssignments != null && workEffortPartyAssignments.size() > 0) ? Boolean.TRUE : Boolean.FALSE;
             if (!canView.booleanValue() && security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", userLogin)) {
                 canView = new Boolean(true);
             }
@@ -240,25 +239,32 @@ public class WorkEffortServices {
             }
         }
         
-            if (workEffortId != null) resultMap.put("workEffortId", workEffortId);
-            if (workEffort != null) resultMap.put("workEffort", workEffort);
-            if (canView != null) resultMap.put("canView", canView);
-            if (workEffortPartyAssignments != null) resultMap.put("partyAssigns", workEffortPartyAssignments);
-            if (tryEntity != null) resultMap.put("tryEntity", tryEntity);
-            if (currentStatus != null) resultMap.put("currentStatusItem", currentStatus);
-            return resultMap;
+        if (workEffortId != null) resultMap.put("workEffortId", workEffortId);
+        if (workEffort != null) resultMap.put("workEffort", workEffort);
+        if (canView != null) resultMap.put("canView", canView);
+        if (workEffortPartyAssignments != null) resultMap.put("partyAssigns", workEffortPartyAssignments);
+        if (tryEntity != null) resultMap.put("tryEntity", tryEntity);
+        if (currentStatus != null) resultMap.put("currentStatusItem", currentStatus);
+        return resultMap;
     } 
         
-    private static List getWorkEffortEvents(DispatchContext ctx,Timestamp startStamp, Timestamp endStamp, String partyId) {
+    private static List getWorkEffortEvents(DispatchContext ctx, Timestamp startStamp, Timestamp endStamp, String partyId, String facilityId) {
         GenericDelegator delegator = ctx.getDelegator();
         List validWorkEfforts = new ArrayList();
         try {
+            List entityExprList = UtilMisc.toList(
+                    new EntityExpr("estimatedCompletionDate", EntityOperator.GREATER_THAN_EQUAL_TO, startStamp),
+                    new EntityExpr("estimatedStartDate", EntityOperator.LESS_THAN, endStamp),
+                    new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "EVENT"));
+            if (UtilValidate.isNotEmpty(partyId)) {
+                entityExprList.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
+            }
+            if (UtilValidate.isNotEmpty(facilityId)) {
+                entityExprList.add(new EntityExpr("facilityId", EntityOperator.EQUALS, facilityId));
+            }
+            
             validWorkEfforts = new ArrayList(delegator.findByAnd("WorkEffortAndPartyAssign",
-            UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, partyId),
-                            new EntityExpr("estimatedCompletionDate", EntityOperator.GREATER_THAN_EQUAL_TO, startStamp),
-                            new EntityExpr("estimatedStartDate", EntityOperator.LESS_THAN, endStamp),
-                            new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "EVENT")),
-                            UtilMisc.toList("estimatedStartDate")));
+                    entityExprList, UtilMisc.toList("estimatedStartDate")));
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
@@ -322,7 +328,7 @@ public class WorkEffortServices {
         } else {
             // Use the View Entity
             if (userLogin != null && userLogin.get("partyId") != null) {
-                validWorkEfforts = getWorkEffortEvents(ctx,startStamp,endStamp,userLogin.getString("partyId"));                
+                validWorkEfforts = getWorkEffortEvents(ctx, startStamp, endStamp, userLogin.getString("partyId"), null);                
             }
         }
         
@@ -369,12 +375,16 @@ public class WorkEffortServices {
     
     public static Map getWorkEffortEventsByPeriod(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");    
         Map resultMap = new HashMap();
         
         Timestamp startDay = (Timestamp) context.get("start");
         Integer numPeriodsInteger = (Integer) context.get("numPeriods");
         Integer periodInteger = (Integer) context.get("periodSeconds");
+
+        String partyId = (String) context.get("partyId");
+        String facilityId = (String) context.get("facilityId");
         
         //To be returned, the max concurrent entries for a single period
         int maxConcurrentEntries = 0;
@@ -391,12 +401,25 @@ public class WorkEffortServices {
         startStamp.setNanos(0);
         // Get the WorkEfforts
         List validWorkEfforts = null;
+        String partyIdToUse = null;
         
-        
+        if (UtilValidate.isNotEmpty(partyId)) {
+            if (partyId.equals(userLogin.getString("partyId")) || security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", userLogin)) {
+                partyIdToUse = partyId;
+            } else {
+                return ServiceUtil.returnError("You do not have permission to view information for party with ID [" + partyId + "], you must be logged in as a user associated with this party, or have the WORKEFFORTMGR_VIEW or WORKEFFORTMGR_ADMIN permissions.");
+            }
+        } else {
+            // if a facilityId is specified, don't set a default partyId...
+            if (UtilValidate.isEmpty(facilityId)) {
+                partyIdToUse = userLogin.getString("partyId");
+            }
+        }
+                
         // Use the View Entity
-        if (userLogin != null && userLogin.get("partyId") != null) {
-            validWorkEfforts = getWorkEffortEvents(ctx,startStamp,endStamp,userLogin.getString("partyId"));                
-}
+        if (UtilValidate.isNotEmpty(partyIdToUse) || UtilValidate.isNotEmpty(facilityId)) {
+            validWorkEfforts = getWorkEffortEvents(ctx, startStamp, endStamp, partyIdToUse, facilityId);                
+        }
         
         // Split the WorkEffort list into a map with entries for each period, period start is the key
         List periods = new ArrayList();

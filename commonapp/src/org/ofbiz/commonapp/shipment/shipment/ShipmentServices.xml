@@ -61,6 +61,7 @@
         <string-to-field string="CAL_TENTATIVE" field-name="currentStatusId" map-name="shipWorkEffortMap"/>
         <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedStartDate" to-map-name="shipWorkEffortMap"/>
         <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedCompletionDate" to-map-name="shipWorkEffortMap"/>
+        <field-to-field map-name="parameters" field-name="originFacilityId" to-field-name="facilityId" to-map-name="shipWorkEffortMap"/>
         <env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="shipWorkEffortMap"/>
         <call-service service-name="createWorkEffort" in-map-name="shipWorkEffortMap">
             <result-to-field result-name="workEffortId" map-name="newEntity" field-name="estimatedShipWorkEffId"/>
@@ -79,6 +80,7 @@
         <string-to-field string="CAL_TENTATIVE" field-name="currentStatusId" map-name="arrivalWorkEffortMap"/>
         <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedStartDate" to-map-name="arrivalWorkEffortMap"/>
         <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedCompletionDate" to-map-name="arrivalWorkEffortMap"/>
+        <field-to-field map-name="parameters" field-name="destinationFacilityId" to-field-name="facilityId" to-map-name="shipWorkEffortMap"/>
         <env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="arrivalWorkEffortMap"/>
         <call-service service-name="createWorkEffort" in-map-name="arrivalWorkEffortMap">
             <result-to-field result-name="workEffortId" map-name="newEntity" field-name="estimatedArrivalWorkEffId"/>
@@ -135,37 +137,48 @@
         <check-errors/>
 
         <!-- Check the pickup and delivery dates for changes and update the corresponding WorkEfforts -->
-<log level="info" message="About to check estimated date work effort for Shipment: ${lookedUpValue}"/>
         <if>
             <condition>
-                <and>
-                    <not><if-empty field-name="estimatedShipDate" map-name="parameters"/></not>
-                    <if-compare-field field-name="parameters.estimatedShipDate" operator="not-equals" to-field-name="lookedUpValue.estimatedShipDate"/>
-                </and>
+            	<or>
+					<and>
+						<not><if-empty field-name="estimatedShipDate" map-name="parameters"/></not>
+						<if-compare-field field-name="parameters.estimatedShipDate" operator="not-equals" to-field-name="lookedUpValue.estimatedShipDate"/>
+					</and>
+					<and>
+						<not><if-empty field-name="originFacilityId" map-name="parameters"/></not>
+						<if-compare-field field-name="parameters.originFacilityId" operator="not-equals" to-field-name="lookedUpValue.originFacilityId"/>
+					</and>
+            	</or>
             </condition>
             <then>
                 <field-to-field field-name="estimatedShipWorkEffId" map-name="lookedUpValue" to-field-name="workEffortId" to-map-name="estimatedShipWorkEffortMap"/>
                 <find-by-primary-key entity-name="WorkEffort" map-name="estimatedShipWorkEffortMap" value-name="estimatedShipWorkEffort"/>
-<log level="info" message="About to update estimatedShipWorkEffort: ${estimatedShipWorkEffort}"/>
                 <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedStartDate" to-map-name="estimatedShipWorkEffort"/>
                 <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedCompletionDate" to-map-name="estimatedShipWorkEffort"/>
+                <field-to-field map-name="parameters" field-name="originFacilityId" to-field-name="facilityId" to-map-name="estimatedShipWorkEffort"/>
                 <set-service-fields service-name="updateWorkEffort" map-name="estimatedShipWorkEffort" to-map-name="estimatedShipWorkEffortUpdMap"/>
                 <call-service service-name="updateWorkEffort" in-map-name="estimatedShipWorkEffortUpdMap"/>
             </then>
         </if>
         <if>
             <condition>
-                <and>
-                    <not><if-empty field-name="estimatedArrivalDate" map-name="parameters"/></not>
-                    <if-compare-field field-name="parameters.estimatedArrivalDate" operator="not-equals" to-field-name="lookedUpValue.estimatedArrivalDate"/>
-                </and>
+            	<or>
+					<and>
+						<not><if-empty field-name="estimatedArrivalDate" map-name="parameters"/></not>
+						<if-compare-field field-name="parameters.estimatedArrivalDate" operator="not-equals" to-field-name="lookedUpValue.estimatedArrivalDate"/>
+					</and>
+					<and>
+						<not><if-empty field-name="destinationFacilityId" map-name="parameters"/></not>
+						<if-compare-field field-name="parameters.destinationFacilityId" operator="not-equals" to-field-name="lookedUpValue.destinationFacilityId"/>
+					</and>
+            	</or>
             </condition>
             <then>
                 <field-to-field field-name="estimatedArrivalWorkEffId" map-name="lookedUpValue" to-field-name="workEffortId" to-map-name="estimatedArrivalWorkEffortMap"/>
                 <find-by-primary-key entity-name="WorkEffort" map-name="estimatedArrivalWorkEffortMap" value-name="estimatedArrivalWorkEffort"/>
-<log level="info" message="About to update estimatedArrivalWorkEffort: ${estimatedArrivalWorkEffort}"/>
                 <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedStartDate" to-map-name="estimatedArrivalWorkEffort"/>
                 <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedCompletionDate" to-map-name="estimatedArrivalWorkEffort"/>
+                <field-to-field map-name="parameters" field-name="destinationFacilityId" to-field-name="facilityId" to-map-name="estimatedShipWorkEffort"/>
                 <set-service-fields service-name="updateWorkEffort" map-name="estimatedArrivalWorkEffort" to-map-name="estimatedArrivalWorkEffortUpdMap"/>
                 <call-service service-name="updateWorkEffort" in-map-name="estimatedArrivalWorkEffortUpdMap"/>
             </then>
