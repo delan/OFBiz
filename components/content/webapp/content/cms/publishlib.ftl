@@ -280,7 +280,7 @@
             </td>
           </tr>
       </table>
-          <input type="hidden" name="_rowCount" value="${mostRecentList?size}"/>
+          <input type="hidden" name="_rowCount" value="${blogRoleIdList}"/>
       </form>
     </TD>
   </TR>
