@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.19 2003/11/25 00:17:19 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.20 2003/12/06 23:57:46 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,15 +37,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.*;
 import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.marketing.tracking.TrackingCodeEvents;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -61,7 +59,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -425,20 +423,34 @@ public class CheckOutEvents {
 
     // Event wrapper for processPayment.
     public static String processPayment(HttpServletRequest request, HttpServletResponse response) {
+        // run the process payment process + approve order when complete; may also run sync fulfillments
+        int failureCode = 0;
         try {
-            if (processPayment(request))
-                return "success";
-            else
-                return "fail";
+            if (!processPayment(request)) {
+                failureCode = 1;
+            }
         } catch (GeneralException e) {
-            Debug.logError(e, "", module);
-            return "error";
+            Debug.logError(e, module);
+            ServiceUtil.setMessages(request, "<li>" + e.getMessage() + "</li>", null, null);
+            failureCode = 2;
+        } catch (GeneralRuntimeException e) {
+            Debug.logError(e, module);
+            ServiceUtil.setMessages(request, "<li>" + e.getMessage() + "</li>", null, null);
+        }
+
+        // event return based on failureCode
+        switch (failureCode) {
+            case 0:
+                return "success";
+            case 1:
+                return "fail";
+            default:
+                return "error";
         }
     }
 
     private static boolean processPayment(HttpServletRequest request) throws GeneralException {
         HttpSession session = request.getSession();
-        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");

@@ -1,5 +1,5 @@
 /*
- * $Id: OrderChangeHelper.java,v 1.9 2003/11/14 20:59:49 ajzeneski Exp $
+ * $Id: OrderChangeHelper.java,v 1.10 2003/12/06 23:57:46 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,9 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -38,6 +36,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.workflow.WfException;
 import org.ofbiz.workflow.client.WorkflowClient;
 
@@ -45,7 +44,7 @@ import org.ofbiz.workflow.client.WorkflowClient;
  * Order Helper - Helper Methods For Non-Read Actions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class OrderChangeHelper {
@@ -73,8 +72,10 @@ public class OrderChangeHelper {
 
             // call the service to check/run digial fulfillment
             Map checkDigi = dispatcher.runSync("checkDigitalItemFulfillment", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
-            if (ModelService.RESPOND_ERROR.equals(checkDigi.get(ModelService.RESPONSE_MESSAGE))) {
-                Debug.logError("Problems checking for digital fulfillment", module);
+            // this service will return a message with success if there were any problems. Get this message and return it to the user
+            String message = (String) checkDigi.get(ModelService.SUCCESS_MESSAGE);
+            if (UtilValidate.isNotEmpty(message)) {
+                throw new GeneralRuntimeException(message);
             }
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);

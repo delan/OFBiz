@@ -296,7 +296,7 @@
         <description>Check an order for digital items and invoice/capture + fulfill the items</description>
         <attribute name="orderId" type="String" mode="IN"/>
     </service>
-   <service name="fulfillDigitalItems" engine="java"
+   <service name="fulfillDigitalItems" engine="java" require-new-transaction="true" transaction-timout="300"
        location="org.ofbiz.order.order.OrderServices" invoke="fulfillDigitalItems">
        <description>Order Fulfillment</description>
        <attribute name="orderId" type="String" mode="IN" optional="false"/>
