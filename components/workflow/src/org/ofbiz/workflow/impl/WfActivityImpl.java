@@ -1,5 +1,5 @@
 /*
- * $Id: WfActivityImpl.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
+ * $Id: WfActivityImpl.java,v 1.3 2003/08/28 19:06:14 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,6 +46,7 @@ import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.workflow.AlreadyRunning;
@@ -72,7 +73,7 @@ import org.ofbiz.workflow.WfResource;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de)
  * @author     Oswin Ondarza and Manuel Soto 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
@@ -99,10 +100,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
     private void init() throws WfException {
         GenericValue valueObject = getDefinitionObject();
-
-        // set the service loader the same as the parent
-        this.setServiceLoader(container().getRuntimeObject().getString("serviceLoaderName"));
-
+        
         // set the activity context
         this.setProcessContext(container().contextKey());
         
@@ -647,24 +645,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
     // schedule the limit service to run
     private void setLimitService() throws WfException {
-        String serviceLoader = null;
+        LocalDispatcher dispatcher = getDispatcher();        
 
-        try {
-            serviceLoader = getServiceLoader();
-        } catch (WfException e) {
-            serviceLoader = container().getRuntimeObject().getString("serviceLoaderName");
-        }
-        if (serviceLoader == null) {        
-            throw new WfException("Cannot get dispatch service loader name");
-        }
-
-        ServiceDispatcher ds = getDispatcher(serviceLoader);
-
-        if (ds == null) {        
-            throw new WfException("Cannot find dispatcher for the associated loader");
-        }
-
-        DispatchContext dctx = ds.getLocalContext(serviceLoader);
+       
+        DispatchContext dctx = dispatcher.getDispatchContext();
         String limitService = getDefinitionObject().getString("limitService");
         ModelService service = null;
 
@@ -741,7 +725,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         context.put("workEffortId", runtimeKey());
 
         try {
-            dctx.getDispatcher().schedule("wfLimitInvoker", context, startTime); // yes we are hard coded!
+            dispatcher.schedule("wfLimitInvoker", context, startTime); // yes we are hard coded!
         } catch (GenericServiceException e) {
             throw new WfException(e.getMessage(), e);
         }

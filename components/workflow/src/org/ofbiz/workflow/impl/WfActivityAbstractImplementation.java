@@ -1,5 +1,5 @@
 /*
- * $Id: WfActivityAbstractImplementation.java,v 1.1 2003/08/17 09:29:35 ajzeneski Exp $
+ * $Id: WfActivityAbstractImplementation.java,v 1.2 2003/08/28 19:06:14 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,6 +32,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericResultWaiter;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.workflow.WfException;
 
@@ -40,7 +41,7 @@ import org.ofbiz.workflow.WfException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     Oswin Ondarza and Manuel Soto 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public abstract class WfActivityAbstractImplementation {
@@ -62,7 +63,8 @@ public abstract class WfActivityAbstractImplementation {
     public abstract void run() throws WfException;
 
     protected GenericResultWaiter runService(String serviceName, String params, String extend) throws WfException {
-        DispatchContext dctx = getActivity().getDispatcher().getLocalContext(getActivity().getServiceLoader());
+        LocalDispatcher dispatcher = getActivity().getDispatcher();
+        DispatchContext dctx = dispatcher.getDispatchContext();
         ModelService service = null;
         Debug.logVerbose("[WfActivityAbstractImplementation.runService] : Getting the service model.", module);
         try {
@@ -77,6 +79,7 @@ public abstract class WfActivityAbstractImplementation {
     }
 
     protected GenericResultWaiter runService(ModelService service, String params, String extend) throws WfException { 
+        LocalDispatcher dispatcher = getActivity().getDispatcher();
         List paramNames = service.getParameterNames(ModelService.IN_PARAM, true);
         if (paramNames != null && paramNames.size() == 0)
             paramNames =  null;
@@ -86,7 +89,7 @@ public abstract class WfActivityAbstractImplementation {
         GenericResultWaiter waiter = new GenericResultWaiter();
         Debug.logVerbose("[WfActivityAbstractImplementation.runService] : Invoking the service.", module);
         try {
-            getActivity().getDispatcher().runAsync(getActivity().getServiceLoader(), service, ctx, waiter, false);
+            dispatcher.runAsync(service.name, ctx, waiter, false);
         } catch (GenericServiceException e) {
             throw new WfException(e.getMessage(), e);
         }

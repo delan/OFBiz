@@ -1,5 +1,5 @@
 /*
- * $Id: WfProcessImpl.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
+ * $Id: WfProcessImpl.java,v 1.3 2003/08/28 19:06:14 ajzeneski Exp $
  *
  * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -40,6 +40,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericResultWaiter;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.job.Job;
 import org.ofbiz.service.job.JobManager;
@@ -68,7 +69,7 @@ import org.ofbiz.workflow.client.StartActivityJob;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
@@ -397,10 +398,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         if (Debug.verboseOn()) Debug.logVerbose("[WfProcess.startActivity] : Attempting to start activity (" + activity.name() + ")", module);
         
         // locate the dispatcher to use
-        ServiceDispatcher dispatcher = this.getDispatcher();
-        if (dispatcher == null) {
-            throw new WfException("Service Dispatcher not found for thie process; cannot start activity");
-        }
+        LocalDispatcher dispatcher = this.getDispatcher();
         
         // get the job manager
         JobManager jm = dispatcher.getJobManager();

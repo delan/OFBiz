@@ -1,5 +1,5 @@
 /*
- * $Id: WfExecutionObject.java,v 1.1 2003/08/17 09:29:33 ajzeneski Exp $
+ * $Id: WfExecutionObject.java,v 1.2 2003/08/28 19:06:14 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.entity.GenericValue;
  * WfExecutionObject - Workflow Execution Object Interface
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public interface WfExecutionObject {
@@ -264,13 +264,6 @@ public interface WfExecutionObject {
      * @throws WfException
      */
     public GenericValue getRuntimeObject() throws WfException;
-
-    /**
-     * Sets the name of the local dispatcher to be used with this workflow
-     * @param loader The name of the loader
-     * @throws WfException
-     */
-    public void setServiceLoader(String loader) throws WfException;
 
     /**
      * Returns the delegator being used by this workflow

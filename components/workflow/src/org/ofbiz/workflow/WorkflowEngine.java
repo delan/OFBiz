@@ -1,5 +1,5 @@
 /*
- * $Id: WorkflowEngine.java,v 1.2 2003/08/20 04:49:16 jonesde Exp $
+ * $Id: WorkflowEngine.java,v 1.3 2003/08/28 19:06:14 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.ofbiz.service.job.JobManagerException;
  * WorkflowEngine - Workflow Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class WorkflowEngine implements GenericEngine {
@@ -188,19 +188,7 @@ public class WorkflowEngine implements GenericEngine {
                 Debug.logError(e, "Un-handled process exception", module);
                 throw new GenericServiceException(e.getMessage(), e);
             }
-
-            // Set the service dispatcher for the workflow
-            try {
-                process.setServiceLoader(localName);
-            } catch (WfException e) {
-                try {
-                    TransactionUtil.rollback(beganTransaction);
-                } catch (GenericTransactionException gte) {
-                    Debug.logError(gte, "Unable to rollback nested exception.", module);
-                }
-                throw new GenericServiceException(e.getMessage(), e);
-            }
-
+            
             // Assign the owner of the process
             GenericValue userLogin = null;
             if (context.containsKey("userLogin")) {
