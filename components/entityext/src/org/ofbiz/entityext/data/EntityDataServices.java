@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.11 2004/02/06 19:41:55 ajzeneski Exp $
+ * $Id: EntityDataServices.java,v 1.12 2004/02/06 19:46:34 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.1
  */
 public class EntityDataServices {
@@ -241,23 +241,23 @@ public class EntityDataServices {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String[] header = readEntityHeader(file, delimiter, reader);
 
-        Debug.log("Opened data file [" + file.getName() + "] now running...", module);
+        //Debug.log("Opened data file [" + file.getName() + "] now running...", module);
         GeneralException exception = null;
         String line = null;
         int lineNumber = 1;
         while ((line = reader.readLine()) != null) {
             // process the record
             String fields[] = line.split(delimiter);
-            Debug.log("Split record", module);
+            //Debug.log("Split record", module);
             if (fields.length < 1) {
                 exception = new GeneralException("Illegal number of fields [" + file.getName() + " / " + lineNumber);
                 break;
             }
 
             GenericValue newValue = makeGenericValue(delegator, entityName, header, fields);
-            Debug.log("Made value object", module);
+            //Debug.log("Made value object", module);
             newValue = delegator.createOrStore(newValue);
-            Debug.log("Stored record", module);
+            //Debug.log("Stored record", module);
 
             if (lineNumber % 500 == 0 || lineNumber == 1) {
                 Debug.log("Records Stored [" + file.getName() + "]: " + lineNumber, module);
