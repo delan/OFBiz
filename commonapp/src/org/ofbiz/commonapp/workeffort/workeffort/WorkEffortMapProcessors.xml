@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<!DOCTYPE simple-map-processor PUBLIC "-//OFBiz//DTD Simple Map Processor//EN" "http://www.ofbiz.org/dtds/simple-map-processor.dtd">
+<!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Map Processors//EN" "http://www.ofbiz.org/dtds/simple-map-processors.dtd">
 
 <!--
  * <p><b>Title:</b> WorkEffortProcessor
