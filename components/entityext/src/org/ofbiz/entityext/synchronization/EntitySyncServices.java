@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.21 2003/12/17 03:39:04 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.22 2003/12/19 18:45:11 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -77,7 +77,7 @@ public class EntitySyncServices {
 
     /**
      * Run an Entity Sync (checks to see if other already running, etc)
-     *@param ctx The DispatchContext that this service is operating in
+     *@param dctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
      */
@@ -460,7 +460,7 @@ public class EntitySyncServices {
                 
                 if (matchesAlways || (matchesInclude && !matchesExclude)) {
                     // make sure this log message is not checked in uncommented:
-                    //Debug.logInfo("In runEntitySync adding [" + modelEntity.getEntityName() + "] to list of Entities to sync", module);
+                    //Debug.log("In runEntitySync adding [" + modelEntity.getEntityName() + "] to list of Entities to sync", module);
                     entityModelToUseList.add(modelEntity);
                 }
             }
@@ -472,7 +472,7 @@ public class EntitySyncServices {
 
     /**
      * Store Entity Sync Data
-     *@param ctx The DispatchContext that this service is operating in
+     *@param dctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
      */
@@ -577,7 +577,7 @@ public class EntitySyncServices {
 
     /**
      * Clean EntitySyncRemove Info
-     *@param ctx The DispatchContext that this service is operating in
+     *@param dctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
      */
