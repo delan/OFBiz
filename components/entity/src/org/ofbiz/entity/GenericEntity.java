@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.5 2003/09/21 05:58:51 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.6 2003/10/14 22:41:14 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -820,11 +820,14 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
             theString.append(anEntry.getKey());
             theString.append(',');
             theString.append(anEntry.getValue());
+            theString.append('(');
+            theString.append(anEntry.getValue() != null ? anEntry.getValue().getClass().getName() : "");
+            theString.append(')');
             theString.append(']');
         }
         return theString.toString();
     }
-
+    
     /** Compares this GenericEntity to the passed object
      *@param obj Object to compare this to
      *@return int representing the result of the comparison (-1,0, or 1)
