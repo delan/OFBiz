@@ -63,7 +63,7 @@
     List notes = delegator.findByAnd("PartyNoteView", UtilMisc.toMap("targetPartyId", partyId), UtilMisc.toList("-noteDateTime"));
     if (notes != null && notes.size() > 0) pageContext.setAttribute("notes", notes);
 
-    GenericValue avsOverride = delegator.findByPrimaryKey("PartyICSAVSOverride", UtilMisc.toMap("partyId", partyId));
+    GenericValue avsOverride = delegator.findByPrimaryKey("PartyIcsAvsOverride", UtilMisc.toMap("partyId", partyId));
     if (avsOverride != null) pageContext.setAttribute("avsOverride", avsOverride);
 
     PartyWorker.getPartyOtherValues(pageContext, partyId, "party", "lookupPerson", "lookupGroup");
