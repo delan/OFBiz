@@ -37,6 +37,7 @@
 
 <%pageContext.setAttribute("PageName", "FindGeneric"); %>
 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 

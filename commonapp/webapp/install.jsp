@@ -3,6 +3,7 @@
 <%@ page import="org.ofbiz.core.entity.model.*"%>
 
 <% pageContext.setAttribute("PageName", "Install"); %> 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %> 
 

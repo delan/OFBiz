@@ -33,6 +33,7 @@
 
 <% pageContext.setAttribute("PageName", "Main Page"); %> 
 
+<%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <BR>
