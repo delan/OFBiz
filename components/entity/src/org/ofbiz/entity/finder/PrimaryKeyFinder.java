@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -58,7 +59,8 @@ public class PrimaryKeyFinder {
 
     public PrimaryKeyFinder(Element entityOneElement) {
         this.entityNameExdr = new FlexibleStringExpander(entityOneElement.getAttribute("entity-name"));
-        this.valueNameAcsr = new FlexibleMapAccessor(entityOneElement.getAttribute("value-name"));
+        if (UtilValidate.isNotEmpty(entityOneElement.getAttribute("value-name")))
+            this.valueNameAcsr = new FlexibleMapAccessor(entityOneElement.getAttribute("value-name"));
         this.useCacheExdr = new FlexibleStringExpander(entityOneElement.getAttribute("use-cache"));
         this.autoFieldMapExdr = new FlexibleStringExpander(entityOneElement.getAttribute("auto-field-map"));
 
@@ -120,7 +122,11 @@ public class PrimaryKeyFinder {
             }
             //Debug.logInfo("PrimaryKeyFinder: valueOut=" + valueOut, module);
             //Debug.logInfo("PrimaryKeyFinder: going into=" + this.valueNameAcsr.getOriginalName(), module);
-            this.valueNameAcsr.put(context, valueOut);
+            if (valueNameAcsr != null)
+               this.valueNameAcsr.put(context, valueOut);
+           else
+               if (valueOut != null)
+                   context.putAll(valueOut);
         } catch (GenericEntityException e) {
             String errMsg = "Error finding entity value by primary key with entity-one: " + e.toString();
             Debug.logError(e, errMsg, module);
