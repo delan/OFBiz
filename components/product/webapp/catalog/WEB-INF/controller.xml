@@ -744,7 +744,7 @@
     </request-map>
     <request-map uri="updateProductQuickAdminDelFeatureTypes">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="removeFeaturesByFeatureTypeId"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="removeFeatureApplsByFeatureTypeId"/>
         <response name="success" type="view" value="EditProductQuickAdmin"/>
         <response name="error" type="view" value="EditProductQuickAdmin"/>
     </request-map>
@@ -756,7 +756,7 @@
     </request-map>
     <request-map uri="quickAdminRemoveProductFeature">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="removeProductFeature"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="removeProductFeatureAppl"/>
         <response name="success" type="view" value="EditProductQuickAdmin"/>
         <response name="error" type="view" value="EditProductQuickAdmin"/>
     </request-map>
