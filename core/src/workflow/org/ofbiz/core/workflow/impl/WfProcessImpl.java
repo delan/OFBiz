@@ -7,6 +7,7 @@ package org.ofbiz.core.workflow.impl;
 import bsh.*;
 import java.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
 /**
@@ -65,7 +66,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         // Build up the activities (steps)
         Collection activityEntities = null;
         try {
-            activityEntities = valueObject.getRelatedCache("WorkflowActivity");
+            activityEntities = valueObject.getRelated("WorkflowActivity");
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
@@ -241,7 +242,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     public void activityComplete(WfActivity activity) throws WfException {
         if ( !activity.state().equals("closed.completed") )
             throw new WfException("Activity state is not completed");
-        // implement me
+        queueNext(activity);
     }
     
     public String executionObjectType() {
@@ -256,18 +257,20 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             GenericValue trans = (GenericValue) i.next();
                         
             // Get the activity definition
-            GenericValue toActivity = null;
+            GenericValue toActivityVo = null;
             try {
-                toActivity = trans.getRelatedOne("ToWorkflowActivity");
+                toActivityVo = trans.getRelatedOne("ToWorkflowActivity");
             }
             catch ( GenericEntityException e ) {
                 throw new WfException(e.getMessage(),e);
             }
             
+            WfActivity toActivity = getActivity(toActivityVo.getString("activityId"));
+            
             // get the transaction restriction
             GenericValue restriction = null;
             try {
-                restriction = fromActivity.getDefinitionObject().getRelatedOne("WorkflowTransRestriction");
+                restriction = toActivity.getDefinitionObject().getRelatedOne("WorkflowTransRestriction");
             }
             catch ( GenericEntityException e ) {
                 throw new WfException(e.getMessage(),e);
@@ -280,18 +283,18 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             
             // activate if XOR or test the join transition(s)
             if ( join.equals("WJT_XOR") )
-                startActivity(getActivity(toActivity.getString("activityId")));
+                startActivity(toActivity);
             else
                 joinTransition(toActivity, trans);
         }
     }
     
     // Follows the and-join transition
-    private void joinTransition(GenericValue toActivity, GenericValue transition) throws WfException {
+    private void joinTransition(WfActivity toActivity, GenericValue transition) throws WfException {
         // get all TO transitions to this activity
         Collection toTrans = null;
         try {
-            toActivity.getRelated("ToWorkflowTransition");
+            toActivity.getDefinitionObject().getRelated("ToWorkflowTransition");
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
@@ -300,11 +303,8 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         // get a list of followed transition to this activity        
         Collection followed = null;
         try {
-            Map fields = new HashMap();
-            fields.put("packageId",toActivity.getString("packageId"));
-            fields.put("processId",toActivity.getString("processId"));
-            fields.put("activityId",toActivity.getString("activityId"));
-            followed = toActivity.getDelegator().findByAnd("WorkFlowTransHolder",fields);
+            Map fields = UtilMisc.toMap("workEffortId",toActivity.getRuntimeObject().getString("workEffortId"));                                   
+            followed = toActivity.getDelegator().findByAnd("WorkEffortTransBox",fields);
         }
         catch ( GenericEntityException e ) {
             throw new WfException(e.getMessage(),e);
@@ -312,13 +312,10 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         
         // check to see if all transition requirements are met
         if ( toTrans.size() == (followed.size() + 1) ) {
-            startActivity(getActivity(toActivity.getString("activityId")));
+            startActivity(toActivity);
             try {
-                Map fields = new HashMap();
-                fields.put("packageId",toActivity.getString("packageId"));
-                fields.put("processId",toActivity.getString("processId"));
-                fields.put("activityId",toActivity.getString("activityId"));                
-                getDelegator().removeByAnd("WorkflowTransHolder", fields);
+                Map fields = UtilMisc.toMap("workEffortId",toActivity.getRuntimeObject().getString("workEffortId"));                                                                                   
+                getDelegator().removeByAnd("WorkEffortTransBox", fields);
             }
             catch ( GenericEntityException e ) {
                 throw new WfException(e.getMessage(),e);
@@ -328,10 +325,10 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             try {
                 Map fields = new HashMap();
                 fields.put("packageId",transition.getString("packageId"));
-                fields.put("processId",transition.getString("processId"));
-                fields.put("activityId",transition.getString("toActivityId"));
+                fields.put("processId",transition.getString("processId"));                
                 fields.put("transitionId",transition.getString("transitionId"));
-                GenericValue obj = getDelegator().makeValue("WorkflowTransHolder", fields);
+                fields.put("workEffortId",toActivity.getRuntimeObject().getString("workEffortId"));
+                GenericValue obj = getDelegator().makeValue("WorkEffortTransBox", fields);
                 getDelegator().create(obj);
             }
             catch ( GenericEntityException e ) {
