@@ -1,5 +1,5 @@
 /*
- * $Id: MainResourceHandler.java,v 1.2 2003/08/20 23:02:13 jonesde Exp $
+ * $Id: MainResourceHandler.java,v 1.3 2004/07/07 16:23:10 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * Contains resource information and provides for loading data
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class MainResourceHandler implements ResourceHandler {
@@ -66,7 +66,7 @@ public class MainResourceHandler implements ResourceHandler {
 
     public Document getDocument() throws GenericConfigException {
         try {
-            return UtilXml.readXmlDocument(this.getStream());
+            return UtilXml.readXmlDocument(this.getStream(), this.xmlFilename);
         } catch (org.xml.sax.SAXException e) {
             throw new GenericConfigException("Error reading " + this.toString(), e);
         } catch (javax.xml.parsers.ParserConfigurationException e) {
