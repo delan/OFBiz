@@ -41,20 +41,35 @@ import org.ofbiz.core.minilang.method.*;
  *@created    February 19, 2002
  *@version    1.0
  */
-public class EnvToList extends MethodOperation {
-    String envName;
+public class FieldToList extends MethodOperation {
+    String mapName;
+    String fieldName;
     String listName;
 
-    public EnvToList(Element element, SimpleMethod simpleMethod) {
+    public FieldToList(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        envName = element.getAttribute("env-name");
+        mapName = element.getAttribute("map-name");
+        fieldName = element.getAttribute("field-name");
         listName = element.getAttribute("list-name");
     }
 
     public boolean exec(MethodContext methodContext) {
-        Object envVar = methodContext.getEnv(envName);
-        if (envVar == null) {
-            Debug.logWarning("Environment field not found with name " + envName + ", not copying env field");
+        Object fieldVal = null;
+        if (mapName != null && mapName.length() > 0) {
+            Map fromMap = (Map) methodContext.getEnv(mapName);
+            if (fromMap == null) {
+                Debug.logWarning("Map not found with name " + mapName);
+                return true;
+            }
+
+            fieldVal = fromMap.get(fieldName);
+        } else {
+            //no map name, try the env
+            fieldVal = methodContext.getEnv(fieldName);
+        }
+
+        if (fieldVal == null) {
+            Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
             return true;
         }
 
@@ -65,7 +80,7 @@ public class EnvToList extends MethodOperation {
             methodContext.putEnv(listName, toList);
         }
 
-        toList.add(envVar);
+        toList.add(fieldVal);
         return true;
     }
 }

@@ -776,7 +776,7 @@ result field.</p>
 </table>
 <p>The field-to-field tag copies a field from a map to a field in another map.</p>
 
-<p><b><u>env-to-list</u></b></p>
+<p><b><u>field-to-list</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
     <td><b>Attribute&nbsp;Name</b></td>
@@ -784,15 +784,20 @@ result field.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>env-name</td><td>Y</td>
-    <td>The name of the method environment field the object will come from.</td>
+    <td>map-name</td><td>N</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to get the field from the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
 </tr>
 <tr>
     <td>list-name</td><td>Y</td>
     <td>The name of the list in the method environment that the object will be appended to.</td>
 </tr>
 </table>
-<p>The env-to-list tag appends a method environment field to the specified list.</p>
+<p>The field-to-list tag appends a field to the specified list.</p>
 
 <p><b><u>env-to-field</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
