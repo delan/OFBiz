@@ -508,6 +508,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="PartyDataObject" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyDataSource" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyGroup" />
+    <entity-group group="org.ofbiz.commonapp" entity="PartyICSAVSOverride" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyNote" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyNoteView" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyRelationship" />
