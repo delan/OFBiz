@@ -155,7 +155,7 @@ public class ProductServices {
             GenericValue v = (GenericValue) sFIt.next();
             String featureType = v.getString("productFeatureTypeId");
             String feature = v.getString("description");
-            if (features.containsKey(featureType)) {
+            if (!features.containsKey(featureType)) {
                 List featureList = new LinkedList();
                 featureList.add(feature);
                 features.put(featureType, featureList);
