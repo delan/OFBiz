@@ -316,9 +316,9 @@ public class CatalogWorker {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         try {
-            return EntityUtil.filterByDate(delegator.findByAndCache("PartyCatalog", UtilMisc.toMap("partyId", partyId), UtilMisc.toList("sequenceNum", "prodCatalogId")), true);
+            return EntityUtil.filterByDate(delegator.findByAndCache("ProdCatalogRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "CUSTOMER"), UtilMisc.toList("sequenceNum", "prodCatalogId")), true);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up party catalogs for party with id " + partyId);
+            Debug.logError(e, "Error looking up ProdCatalog Roles for party with id " + partyId);
         }
         return null;
     }

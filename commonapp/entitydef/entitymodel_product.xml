@@ -60,24 +60,6 @@
   <!-- org.ofbiz.commonapp.product.catalog -->
   <!-- ========================================================= -->
 
-    <entity entity-name="PartyCatalog"
-            package-name="org.ofbiz.commonapp.product.catalog"
-            title="Party Catalog Association Entity">
-      <field name="partyId" type="id-ne"></field>
-      <field name="prodCatalogId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="sequenceNum" type="numeric"></field>
-      <prim-key field="partyId"/>
-      <prim-key field="prodCatalogId"/>
-      <prim-key field="fromDate"/>
-      <relation type="one" fk-name="PTY_CAT_PARTY" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one" fk-name="PTY_CAT_CATALOG" rel-entity-name="ProdCatalog">
-        <key-map field-name="prodCatalogId"/>
-      </relation>
-    </entity>
     <entity entity-name="ProdCatalog"
             package-name="org.ofbiz.commonapp.product.catalog"
             title="Catalog Entity">
@@ -112,7 +94,7 @@
       <relation type="many" rel-entity-name="WebSiteCatalog">
         <key-map field-name="prodCatalogId"/>
       </relation>
-      <relation type="many" rel-entity-name="PartyCatalog">
+      <relation type="many" rel-entity-name="ProdCatalogRole">
         <key-map field-name="prodCatalogId"/>
       </relation>
       <relation type="many" rel-entity-name="InventoryItemTempRes">
@@ -185,6 +167,38 @@
       </relation>
       <relation type="one" fk-name="PROD_CPA_PROMO" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProdCatalogRole"
+            package-name="org.ofbiz.commonapp.product.catalog"
+            title="ProdCatalog Role Association Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <prim-key field="prodCatalogId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyGroup">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PCATRLE_PTYRLE" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PCATRLE_CATALOG" rel-entity-name="ProdCatalog">
+        <key-map field-name="prodCatalogId"/>
       </relation>
     </entity>
     <entity entity-name="WebSiteCatalog"

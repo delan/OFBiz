@@ -130,7 +130,7 @@
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run addProdCatalogToParty you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value value-name="newEntity" entity-name="PartyCatalog"/>
+        <make-value value-name="newEntity" entity-name="ProdCatalogRole"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
@@ -145,9 +145,9 @@
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProdCatalogToParty you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="PartyCatalog"/>
+        <make-value value-name="lookupPKMap" entity-name="ProdCatalogRole"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="PartyCatalog" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key entity-name="ProdCatalogRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -155,9 +155,9 @@
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProdCatalogFromParty you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="PartyCatalog"/>
+        <make-value value-name="lookupPKMap" entity-name="ProdCatalogRole"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="PartyCatalog" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key entity-name="ProdCatalogRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 </simple-methods>

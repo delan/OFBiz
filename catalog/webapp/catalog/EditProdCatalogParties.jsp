@@ -26,6 +26,7 @@
 
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.core.widgetimpl.*" %>
 <%@ page import="org.ofbiz.commonapp.party.party.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -34,22 +35,29 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
-    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
-
-    boolean tryEntity = true;
-    if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
-
     String prodCatalogId = request.getParameter("prodCatalogId");
     GenericValue prodCatalog = delegator.findByPrimaryKey("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
-    Collection partyCatalogs = null;
-    if (prodCatalog == null) {
-        tryEntity = false;
-    } else {
-        partyCatalogs = prodCatalog.getRelated("PartyCatalog", null, UtilMisc.toList("sequenceNum", "partyId"));
-        if (partyCatalogs != null) pageContext.setAttribute("partyCatalogs", partyCatalogs);
+    List prodCatalogRoles = null;
+    List prodCatalogRoleDatas = new LinkedList();
+    if (prodCatalog != null) {
+        prodCatalogRoles = prodCatalog.getRelated("ProdCatalogRole", null, UtilMisc.toList("sequenceNum", "partyId"));
+        Iterator prodCatalogRoleIter = prodCatalogRoles.iterator();
+        while (prodCatalogRoleIter.hasNext()) {
+        	GenericValue prodCatalogRole = (GenericValue) prodCatalogRoleIter.next();
+        	Map prodCatalogRoleData = new HashMap();
+        	prodCatalogRoleData.put("prodCatalogRole", prodCatalogRole);
+        	prodCatalogRoleData.put("person", prodCatalogRole.getRelatedOne("Person"));
+        	prodCatalogRoleData.put("partyGroup", prodCatalogRole.getRelatedOne("PartyGroup"));
+        	prodCatalogRoleData.put("roleType", prodCatalogRole.getRelatedOneCache("RoleType"));
+        	prodCatalogRoleDatas.add(prodCatalogRoleData);
+        }
     }
 
-    if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;
+    HtmlFormWrapper updateProdCatalogToPartyWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "UpdateProdCatalogToParty", request, response);
+    updateProdCatalogToPartyWrapper.putInContext("prodCatalogRoleDatas", prodCatalogRoleDatas);
+
+    HtmlFormWrapper addProdCatalogToPartyWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "AddProdCatalogToParty", request, response);
+    addProdCatalogToPartyWrapper.putInContext("prodCatalog", prodCatalog);
 %>
 
 <%if(prodCatalogId != null && prodCatalogId.length() > 0){%>
@@ -68,78 +76,9 @@
 <br>
 <br>
 <%if (prodCatalogId != null && prodCatalog != null) {%>
-
-<table border="1" width="100%" cellpadding='2' cellspacing='0'>
-  <tr>
-    <td><div class="tabletext"><b>Party ID</b></div></td>
-    <td><div class="tabletext"><b>Name</b></div></td>
-    <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-    <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
-    <td><div class="tabletext"><b>&nbsp;</b></div></td>
-  </tr>
-<%int line = 0;%>
-<ofbiz:iterator name="partyCatalog" property="partyCatalogs">
-  <%line++;%>
-  <%PartyWorker.getPartyOtherValues(pageContext, partyCatalog.getString("partyId"), "party", "lookupPerson", "lookupGroup");%>
-  <%-- GenericValue party = partyCatalog.getRelatedOne("Party"); --%>
-  <tr valign="middle">
-    <td><a href='/partymgr/control/viewprofile?partyId=<ofbiz:inputvalue entityAttr="partyCatalog" field="partyId"/>' class="buttontext" target="partymgr">[<ofbiz:inputvalue entityAttr="partyCatalog" field="partyId"/>]</a></td>
-    <td>
-        <%--<a href='<ofbiz:url>/EditParty?partyId=<ofbiz:inputvalue entityAttr="partyCatalog" field="partyId"/></ofbiz:url>' class="buttontext">--%>
-        <div class='tabletext'>
-            <ofbiz:if name="lookupPerson">
-              <ofbiz:inputvalue entityAttr="lookupPerson" field="personalTitle"/>
-              <ofbiz:inputvalue entityAttr="lookupPerson" field="firstName"/>
-              <ofbiz:inputvalue entityAttr="lookupPerson" field="middleName"/>
-              <ofbiz:inputvalue entityAttr="lookupPerson" field="lastName"/>
-              <ofbiz:inputvalue entityAttr="lookupPerson" field="suffix"/>
-            </ofbiz:if>
-            <ofbiz:unless name="lookupPerson">
-              <ofbiz:if name="lookupGroup">
-                <ofbiz:inputvalue entityAttr="lookupGroup" field="groupName"/>
-              </ofbiz:if>
-              <ofbiz:unless name="lookupGroup">"Unnamed Party"</ofbiz:unless>
-            </ofbiz:unless>
-        </div>
-        <%--</a>&nbsp;--%>
-    </td>
-    <%boolean hasntStarted = false;%>
-    <%if (partyCatalog.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(partyCatalog.getTimestamp("fromDate"))) { hasntStarted = true; }%>
-    <td><div class='tabletext'<%if (hasntStarted) {%> style='color: red;'<%}%>><ofbiz:inputvalue entityAttr="partyCatalog" field="fromDate"/></div></td>
-    <td align="center">
-        <%boolean hasExpired = false;%>
-        <%if (partyCatalog.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(partyCatalog.getTimestamp("thruDate"))) { hasExpired = true; }%>
-        <FORM method=POST action='<ofbiz:url>/updateProdCatalogToParty</ofbiz:url>' name='lineForm<%=line%>'>
-            <input type=hidden <ofbiz:inputvalue entityAttr="partyCatalog" field="prodCatalogId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="partyCatalog" field="partyId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="partyCatalog" field="fromDate" fullattrs="true"/>>
-            <input type=text size='25' <ofbiz:inputvalue entityAttr="partyCatalog" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
-            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="partyCatalog" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="partyCatalog" field="sequenceNum" fullattrs="true"/> class='inputBox'>
-            <INPUT type=submit value='Update' style='font-size: x-small;'>
-        </FORM>
-    </td>
-    <td align="center">
-      <a href='<ofbiz:url>/removeProdCatalogFromParty?prodCatalogId=<ofbiz:entityfield attribute="partyCatalog" field="prodCatalogId"/>&partyId=<ofbiz:entityfield attribute="partyCatalog" field="partyId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(partyCatalog.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
-      [Delete]</a>
-    </td>
-  </tr>
-</ofbiz:iterator>
-</table>
+<%=updateProdCatalogToPartyWrapper.renderFormString()%>
 <br>
-<form method="POST" action="<ofbiz:url>/addProdCatalogToParty</ofbiz:url>" style='margin: 0;' name='addNewForm'>
-  <input type="hidden" name="prodCatalogId" value="<%=prodCatalogId%>">
-  <input type="hidden" name="tryEntity" value="true">
-
-  <div class='head2'>Add Catalog for Party:</div>
-  <br>
-  <div class='tabletext'>
-    Party&nbsp;ID:&nbsp;<input type=text size='15' class='inputBox' name='partyId'>
-    From&nbsp;Date:&nbsp;<input type=text size='25' class='inputBox' name='fromDate'>
-    <a href="javascript:call_cal(document.addNewForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-    <input type="submit" value="Add">
-  </div>
-</form>
+<%=addProdCatalogToPartyWrapper.renderFormString()%>
 <%}%>
 <br>
 

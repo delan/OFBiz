@@ -128,8 +128,6 @@
 			</drop-down>
 		</field>
 		<field name="comments"><ignored/></field>
-		<field name="userLogin"><ignored/></field>
-		<field name="locale"><ignored/></field>
 		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
 	<form name="UpdateProductCategoryMemeber" type="list" 
@@ -145,8 +143,6 @@
 		<field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
 		<field name="thruDate" title="Thru Date &amp;amp; Time"></field>
 		<field name="comments"><ignored/></field>
-		<field name="userLogin"><ignored/></field>
-		<field name="locale"><ignored/></field>
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
 			<hyperlink target="removeProductFromCategory?productId=${productCategoryMember.productId}&amp;productCategoryId=${productCategoryMember.productCategoryId}&amp;fromDate=${productCategoryMember.fromDate}"

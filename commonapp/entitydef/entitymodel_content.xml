@@ -1112,6 +1112,41 @@
       <relation type="many" rel-entity-name="WebSitePaymentSetting">
         <key-map field-name="webSiteId"/>
       </relation>
+      <relation type="many" rel-entity-name="WebSiteRole">
+        <key-map field-name="webSiteId"/>
+      </relation>
+    </entity>
+    <entity entity-name="WebSiteRole"
+            package-name="org.ofbiz.commonapp.content.website"
+            title="WebSite Role Association Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="webSiteId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <prim-key field="webSiteId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyGroup">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="WSRLE_PTYRLE" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="WSRLE_WSITE" rel-entity-name="WebSite">
+        <key-map field-name="webSiteId"/>
+      </relation>
     </entity>
     <entity entity-name="WebSitePaymentSetting"
             package-name="org.ofbiz.commonapp.content.website"
