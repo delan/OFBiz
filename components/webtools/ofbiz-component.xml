@@ -21,12 +21,13 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.3 2003/12/07 18:02:16 ajzeneski Exp $
+ *  $Id: ofbiz-component.xml,v 1.4 2004/07/09 16:45:22 jonesde Exp $
 -->
 
 <ofbiz-component name="webtools">
     <resource-loader name="main" type="component"/>
     <classpath type="jar" location="build/lib/*"/>
+    <classpath type="dir" location="config"/>
     
     <webapp name="webtools" 
     	    title="WebTools" 
