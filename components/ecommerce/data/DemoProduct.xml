@@ -446,8 +446,8 @@
     <ProductFeature productFeatureId="2004" productFeatureTypeId="AMOUNT" productFeatureCategoryId="2000" description="$50.00" uomId="USD" numberSpecified="50.0" defaultSequenceNum="3"/>
     <ProductFeature productFeatureId="2005" productFeatureTypeId="AMOUNT" productFeatureCategoryId="2000" description="$100.00" uomId="USD" numberSpecified="100.0" defaultSequenceNum="4"/>
     <ProductFeature productFeatureId="2006" productFeatureTypeId="AMOUNT" productFeatureCategoryId="2000" description="Other Amount"/>
-    <ProductFeature productFeatureId="2007" productFeatureTypeId="TYPE" productFeatureCategoryId="2000" description="Promo #10841" idCode="10841"/>
-    <ProductFeature productFeatureId="2008" productFeatureTypeId="TYPE" productFeatureCategoryId="2000" description="Promo #10840" idCode="10840"/>
+    <ProductFeature productFeatureId="2007" productFeatureTypeId="TYPE" productFeatureCategoryId="2000" description="Gift Card Type - See idCode" idCode="1"/>
+    <ProductFeature productFeatureId="2008" productFeatureTypeId="TYPE" productFeatureCategoryId="2000" description="Gift Card Type - See idCode" idCode="2"/>
 
     <ProductFeatureAppl productId="GC-001" productFeatureId="2000" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2003-11-20 13:50:07.796" sequenceNum="1"/>
     <ProductFeatureAppl productId="GC-001" productFeatureId="2001" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2003-11-20 13:50:26.411" sequenceNum="2"/>
