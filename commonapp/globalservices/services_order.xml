@@ -132,7 +132,7 @@
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
     </service>
 
-    <service name="storeOrder" engine="java" validate="true" auth="true" debug="true"
+    <service name="storeOrder" engine="java" validate="true" auth="true"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrder">
         <description>Creates order entities</description>
         <attribute name="partyId" type="String" mode="IN"/>
