@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.22 2003/11/26 10:07:23 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.23 2003/11/28 11:42:43 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -128,7 +128,7 @@ public class ProductPromoWorker {
         // TODO: add code to store ProductPromoUse information when an order is placed
         // TODO: add code to remove ProductPromoUse if an order is cancelled
         // TODO: add code to check ProductPromoUse limits per promo (customer, promo), and per code (customer, code) to avoid use of promos or codes getting through due to multiple carts getting promos applied at the same time, possibly on totally different servers
-        // TODO: add code to limit sub total for promos to not use gift cards, also should exclude gift cards from all other promotion considerations
+        // TODO: add code to limit sub total for promos to not use gift cards (products with a don't use in promo indicator), also should exclude gift cards from all other promotion considerations
         GenericDelegator delegator = cart.getDelegator();
         String partyId = cart.getPartyId();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
@@ -185,7 +185,6 @@ public class ProductPromoWorker {
                     if (productPromoRules != null && productPromoRules.size() > 0) {
                         // always have a useLimit to avoid unlimited looping, default to 1 if no other is specified
                         Long candidateUseLimit = getProductPromoUseLimit(productPromo, partyId, delegator);
-
                         long useLimit = candidateUseLimit == null ? 1 : candidateUseLimit.longValue();
                         if (Debug.infoOn()) Debug.logInfo("Running promotion [" + productPromoId + "], useLimit=" + useLimit + ", # of rules=" + productPromoRules.size(), module);
 
@@ -426,7 +425,8 @@ public class ProductPromoWorker {
             while (quantityNeeded > 0 && lineOrderedByBasePriceIter.hasNext()) {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
-                if (!cartItem.getIsPromo() && productIds.contains(cartItem.getProductId())) {
+                String parentProductId = cartItem.getParentProductId();
+                if (!cartItem.getIsPromo() && (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId)))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     quantityNeeded -= cartItem.addPromoQuantityCandidateUse(quantityNeeded, productPromoCond);
                 }
