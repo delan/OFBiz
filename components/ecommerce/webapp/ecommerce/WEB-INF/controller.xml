@@ -547,6 +547,21 @@
         <response name="success" type="view" value="keywordsearch"/>
         <response name="none" type="none" value=""/>
     </request-map>
+    <request-map uri="clearSearchOptionsHistoryList">
+        <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="clearSearchOptionsHistoryList"/>
+        <response name="success" type="view" value="advancedsearch"/>
+        <response name="error" type="view" value="advancedsearch"/>
+    </request-map>
+    <request-map uri="setCurrentSearchFromHistory">
+        <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="setCurrentSearchFromHistory"/>
+        <response name="success" type="view" value="advancedsearch"/>
+        <response name="error" type="view" value="advancedsearch"/>
+    </request-map>
+    <request-map uri="setCurrentSearchFromHistoryAndSearch">
+        <event type="java" path="org.ofbiz.product.product.ProductSearchSession" invoke="setCurrentSearchFromHistory"/>
+        <response name="success" type="request" value="keywordsearch"/>
+        <response name="error" type="view" value="advancedsearch"/>
+    </request-map>
 
     <request-map uri="orderhistory">
         <security https="true" auth="true"/>

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchSession.java,v 1.10 2004/04/30 10:19:25 jonesde Exp $
+ * $Id: ProductSearchSession.java,v 1.11 2004/05/08 10:36:50 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -22,17 +22,26 @@
  */
 package org.ofbiz.product.product;
 
-import java.util.*;
 import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.entity.GenericDelegator;
@@ -41,129 +50,211 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.feature.ParametricSearch;
-import org.ofbiz.product.product.ProductSearch.*;
+import org.ofbiz.product.product.ProductSearch.CategoryConstraint;
+import org.ofbiz.product.product.ProductSearch.FeatureConstraint;
+import org.ofbiz.product.product.ProductSearch.KeywordConstraint;
+import org.ofbiz.product.product.ProductSearch.ProductSearchConstraint;
+import org.ofbiz.product.product.ProductSearch.ProductSearchContext;
+import org.ofbiz.product.product.ProductSearch.ResultSortOrder;
+import org.ofbiz.product.product.ProductSearch.SortKeywordRelevancy;
 import org.ofbiz.product.store.ProductStoreWorker;
 
 /**
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.0
  */
 public class ProductSearchSession {
 
     public static final String module = ProductSearchSession.class.getName();
 
-    protected static class ProductSearchOptions {
-    	protected List constraintList = null;
-    	protected ResultSortOrder resultSortOrder = null;
-    	protected Integer viewIndex = null;
-    	protected Integer viewSize = null;
-    	protected boolean changed = false;
+    public static class ProductSearchOptions {
+        protected List constraintList = null;
+        protected ResultSortOrder resultSortOrder = null;
+        protected Integer viewIndex = null;
+        protected Integer viewSize = null;
+        protected boolean changed = false;
 
-    	public static ProductSearchOptions getProductSearchOptions(HttpSession session) {
-            ProductSearchOptions productSearchOptions = (ProductSearchOptions) session.getAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_"); 
-    		if (productSearchOptions == null) {
-    			productSearchOptions = new ProductSearchOptions();
-    			session.setAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_", productSearchOptions);
-    		}
-    		return productSearchOptions;
-    	}
-    	
-    	public List getConstraintList() {
-    	    return this.constraintList;
-    	}
-    	public static List getConstraintList(HttpSession session) {
+        public ProductSearchOptions() { }
+
+        /** Basic copy constructor */
+        public ProductSearchOptions(ProductSearchOptions productSearchOptions) {
+            this.constraintList = new LinkedList(productSearchOptions.constraintList);
+            this.resultSortOrder = productSearchOptions.resultSortOrder;
+            this.viewIndex = productSearchOptions.viewIndex;
+            this.viewSize = productSearchOptions.viewSize;
+            this.changed = productSearchOptions.changed;
+        }
+
+        public List getConstraintList() {
+            return this.constraintList;
+        }
+        public static List getConstraintList(HttpSession session) {
             return getProductSearchOptions(session).constraintList;
-    	}
-		public static void addConstraint(ProductSearchConstraint productSearchConstraint, HttpSession session) {
+        }
+        public static void addConstraint(ProductSearchConstraint productSearchConstraint, HttpSession session) {
             ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
             if (productSearchOptions.constraintList == null) {
-            	productSearchOptions.constraintList = new LinkedList();
+                productSearchOptions.constraintList = new LinkedList();
             }
             if (!productSearchOptions.constraintList.contains(productSearchConstraint)) {
-            	productSearchOptions.constraintList.add(productSearchConstraint);
+                productSearchOptions.constraintList.add(productSearchConstraint);
                 productSearchOptions.changed = true;
             }
-		}
+        }
 
-		public ResultSortOrder getResultSortOrder() {
-	        if (this.resultSortOrder == null) {
-	        	this.resultSortOrder = new SortKeywordRelevancy();
-	        	this.changed = true;
-	        }
-	        return this.resultSortOrder;
-		}
-		public static ResultSortOrder getResultSortOrder(HttpSession session) {
-			ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
+        public ResultSortOrder getResultSortOrder() {
+            if (this.resultSortOrder == null) {
+                this.resultSortOrder = new SortKeywordRelevancy();
+                this.changed = true;
+            }
+            return this.resultSortOrder;
+        }
+        public static ResultSortOrder getResultSortOrder(HttpSession session) {
+            ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
             return productSearchOptions.getResultSortOrder();
-    	}
-		public static void setResultSortOrder(ResultSortOrder resultSortOrder, HttpSession session) {
+        }
+        public static void setResultSortOrder(ResultSortOrder resultSortOrder, HttpSession session) {
             ProductSearchOptions productSearchOptions = getProductSearchOptions(session); 
             productSearchOptions.resultSortOrder = resultSortOrder;
             productSearchOptions.changed = true;
-		}
-    	
-    	public static void clearSearchOptions(HttpSession session) {
+        }
+        
+        public static void clearSearchOptions(HttpSession session) {
             ProductSearchOptions productSearchOptions = getProductSearchOptions(session); 
             productSearchOptions.constraintList = null;
             productSearchOptions.resultSortOrder = null;
-    	}
-    	
-		public static void checkSaveSearchOptionsHistory(HttpSession session) {
-            ProductSearchOptions productSearchOptions = getProductSearchOptions(session); 
-	        // if the options have changed since the last search, add it to the beginning of the search options history
-	        if (productSearchOptions.changed) {
-	            List optionsHistoryList = getSearchOptionsHistoryList(session); 
-	            optionsHistoryList.add(0, productSearchOptions);
-	            productSearchOptions.changed = false;
-	        }
-			
-		}
-		public static List getSearchOptionsHistoryList(HttpSession session) {
-            List optionsHistoryList = (List) session.getAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_"); 
-    		if (optionsHistoryList == null) {
-    			optionsHistoryList = new LinkedList();
-    			session.setAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
-    		}
-    		return optionsHistoryList;
-		}
-		public static void clearSearchOptionsHistoryList(HttpSession session) {
-			session.removeAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_");
-		}
-		
-		public void clearViewInfo() {
-			this.viewIndex = null;
-			this.viewSize = null;
-		}
+        }
+        
+        public void clearViewInfo() {
+            this.viewIndex = null;
+            this.viewSize = null;
+        }
 
-		/**
-		 * @return Returns the viewIndex.
-		 */
-		public Integer getViewIndex() {
-			return viewIndex;
-		}
-		/**
-		 * @param viewIndex The viewIndex to set.
-		 */
-		public void setViewIndex(Integer viewIndex) {
-			this.viewIndex = viewIndex;
-		}
-		/**
-		 * @return Returns the viewSize.
-		 */
-		public Integer getViewSize() {
-			return viewSize;
-		}
-		/**
-		 * @param viewSize The viewSize to set.
-		 */
-		public void setViewSize(Integer viewSize) {
-			this.viewSize = viewSize;
-		}
+        /**
+         * @return Returns the viewIndex.
+         */
+        public Integer getViewIndex() {
+            return viewIndex;
+        }
+        /**
+         * @param viewIndex The viewIndex to set.
+         */
+        public void setViewIndex(Integer viewIndex) {
+            this.viewIndex = viewIndex;
+        }
+        /**
+         * @return Returns the viewSize.
+         */
+        public Integer getViewSize() {
+            return viewSize;
+        }
+        /**
+         * @param viewSize The viewSize to set.
+         */
+        public void setViewSize(Integer viewSize) {
+            this.viewSize = viewSize;
+        }
+
+        public List searchGetConstraintStrings(boolean detailed, GenericDelegator delegator) {
+            List productSearchConstraintList = this.getConstraintList();
+            List constraintStrings = new ArrayList();
+            if (productSearchConstraintList == null) {
+                return constraintStrings;
+            }
+            Iterator productSearchConstraintIter = productSearchConstraintList.iterator();
+            while (productSearchConstraintIter.hasNext()) {
+                ProductSearchConstraint productSearchConstraint = (ProductSearchConstraint) productSearchConstraintIter.next();
+                if (productSearchConstraint == null) continue;
+                String constraintString = productSearchConstraint.prettyPrintConstraint(delegator, detailed);
+                if (UtilValidate.isNotEmpty(constraintString)) {
+                    constraintStrings.add(constraintString);
+                } else {
+                    constraintStrings.add("Description not available");
+                }
+            }
+            return constraintStrings;
+        }
     }
 
+    public static ProductSearchOptions getProductSearchOptions(HttpSession session) {
+        ProductSearchOptions productSearchOptions = (ProductSearchOptions) session.getAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_"); 
+        if (productSearchOptions == null) {
+            productSearchOptions = new ProductSearchOptions();
+            session.setAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_", productSearchOptions);
+        }
+        return productSearchOptions;
+    }
+
+    public static void checkSaveSearchOptionsHistory(HttpSession session) {
+        ProductSearchOptions productSearchOptions = getProductSearchOptions(session); 
+        // if the options have changed since the last search, add it to the beginning of the search options history
+        if (productSearchOptions.changed) {
+            List optionsHistoryList = getSearchOptionsHistoryList(session); 
+            optionsHistoryList.add(0, new ProductSearchOptions(productSearchOptions));
+            productSearchOptions.changed = false;
+        }
+    }
+    public static List getSearchOptionsHistoryList(HttpSession session) {
+        List optionsHistoryList = (List) session.getAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_"); 
+        if (optionsHistoryList == null) {
+            optionsHistoryList = new LinkedList();
+            session.setAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
+        }
+        return optionsHistoryList;
+    }
+    public static void clearSearchOptionsHistoryList(HttpSession session) {
+        session.removeAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_");
+    }
+    
+    public static void setCurrentSearchFromHistory(int index, boolean removeOld, HttpSession session) {
+        List searchOptionsHistoryList = getSearchOptionsHistoryList(session);
+        if (index < searchOptionsHistoryList.size()) {
+            ProductSearchOptions productSearchOptions = (ProductSearchOptions) searchOptionsHistoryList.get(index);
+            if (removeOld) {
+                searchOptionsHistoryList.remove(index);
+            }
+            if (productSearchOptions != null) {
+                session.setAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_", new ProductSearchOptions(productSearchOptions));
+            }
+        } else {
+            throw new IllegalArgumentException("Could not set current search options to history index [" + index + "], only [" + searchOptionsHistoryList.size() + "] entries in the history list.");
+        }
+    }
+
+    public static String clearSearchOptionsHistoryList(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        clearSearchOptionsHistoryList(session);
+        return "success";
+    }
+    
+    public static String setCurrentSearchFromHistory(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        String searchHistoryIndexStr = request.getParameter("searchHistoryIndex");
+        String removeOldStr = request.getParameter("removeOld");
+        
+        if (UtilValidate.isEmpty(searchHistoryIndexStr)) {
+            request.setAttribute("_ERROR_MESSAGE_", "No search history index passed, cannot set current search to previous.");
+            return "error";
+        }
+        
+        try {
+            int searchHistoryIndex = Integer.parseInt(searchHistoryIndexStr);
+            boolean removeOld = true;
+            if (UtilValidate.isNotEmpty(removeOldStr)) {
+                removeOld = !"false".equals(removeOldStr);
+            }
+            setCurrentSearchFromHistory(searchHistoryIndex, removeOld, session);
+        } catch (Exception e) {
+            request.setAttribute("_ERROR_MESSAGE_", e.toString());
+            return "error";
+        }
+        
+        return "success";
+    }
+    
     /** A ControlServlet event method used to check to see if there is an override for any of the current keywords in the search */
     public static final String checkDoKeywordOverride(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
@@ -178,15 +269,15 @@ public class ProductSearchSession {
             Set keywords = new HashSet();
             List constraintList = ProductSearchOptions.getConstraintList(session);
             if (constraintList != null) {
-	            Iterator constraintIter = constraintList.iterator();
-	            while (constraintIter.hasNext()) {
-	                Object constraint = constraintIter.next();
-	                if (constraint instanceof KeywordConstraint) {
-	                    KeywordConstraint keywordConstraint = (KeywordConstraint) constraint;
-	                    Set keywordSet = keywordConstraint.makeFullKeywordSet(delegator);
-	                    if (keywordSet != null) keywords.addAll(keywordSet);
-	                }
-	            }
+                Iterator constraintIter = constraintList.iterator();
+                while (constraintIter.hasNext()) {
+                    Object constraint = constraintIter.next();
+                    if (constraint instanceof KeywordConstraint) {
+                        KeywordConstraint keywordConstraint = (KeywordConstraint) constraint;
+                        Set keywordSet = keywordConstraint.makeFullKeywordSet(delegator);
+                        if (keywordSet != null) keywords.addAll(keywordSet);
+                    }
+                }
             }
 
             if (keywords.size() > 0) {
@@ -241,7 +332,7 @@ public class ProductSearchSession {
 
     public static ArrayList searchDo(HttpSession session, GenericDelegator delegator, String prodCatalogId) {
         String visitId = VisitHandler.getVisitId(session);
-        ProductSearchOptions productSearchOptions = ProductSearchOptions.getProductSearchOptions(session);
+        ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
         List productSearchConstraintList = productSearchOptions.getConstraintList();
         if (productSearchConstraintList == null || productSearchConstraintList.size() == 0) {
             // no constraints, don't do a search...
@@ -253,7 +344,7 @@ public class ProductSearchSession {
         ResultSortOrder resultSortOrder = productSearchOptions.getResultSortOrder();
 
         // if the search options have changed since the last search, put at the beginning of the options history list
-        ProductSearchOptions.checkSaveSearchOptionsHistory(session);
+        checkSaveSearchOptionsHistory(session);
         
         return ProductSearch.searchProducts(productSearchConstraintList, resultSortOrder, delegator, visitId);
     }
@@ -272,27 +363,12 @@ public class ProductSearchSession {
     }
 
     public static void searchClear(HttpSession session) {
-    	ProductSearchOptions.clearSearchOptions(session);
+        ProductSearchOptions.clearSearchOptions(session);
     }
-
+    
     public static List searchGetConstraintStrings(boolean detailed, HttpSession session, GenericDelegator delegator) {
-        List productSearchConstraintList = ProductSearchOptions.getConstraintList(session);
-        List constraintStrings = new ArrayList();
-        if (productSearchConstraintList == null) {
-            return constraintStrings;
-        }
-        Iterator productSearchConstraintIter = productSearchConstraintList.iterator();
-        while (productSearchConstraintIter.hasNext()) {
-            ProductSearchConstraint productSearchConstraint = (ProductSearchConstraint) productSearchConstraintIter.next();
-            if (productSearchConstraint == null) continue;
-            String constraintString = productSearchConstraint.prettyPrintConstraint(delegator, detailed);
-            if (UtilValidate.isNotEmpty(constraintString)) {
-                constraintStrings.add(constraintString);
-            } else {
-                constraintStrings.add("Description not available");
-            }
-        }
-        return constraintStrings;
+        ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
+        return productSearchOptions.searchGetConstraintStrings(detailed, delegator);
     }
 
     public static String searchGetSortOrderString(boolean detailed, HttpSession session) {
@@ -302,7 +378,7 @@ public class ProductSearchSession {
     }
 
     public static void searchSetSortOrder(ResultSortOrder resultSortOrder, HttpSession session) {
-    	ProductSearchOptions.setResultSortOrder(resultSortOrder, session);
+        ProductSearchOptions.setResultSortOrder(resultSortOrder, session);
     }
 
     public static void searchAddFeatureIdConstraints(Collection featureIds, HttpSession session) {
@@ -317,7 +393,7 @@ public class ProductSearchSession {
     }
 
     public static void searchAddConstraint(ProductSearchConstraint productSearchConstraint, HttpSession session) {
-    	ProductSearchOptions.addConstraint(productSearchConstraint, session);
+        ProductSearchOptions.addConstraint(productSearchConstraint, session);
     }
 
     public static void searchRemoveConstraint(int index, HttpSession session) {
@@ -427,30 +503,30 @@ public class ProductSearchSession {
             }
         }
         
-        ProductSearchOptions productSearchOptions = ProductSearchOptions.getProductSearchOptions(session);
+        ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
         if (constraintsChanged) {
             // query changed, clear out the VIEW_INDEX & VIEW_SIZE
-        	productSearchOptions.clearViewInfo();
+            productSearchOptions.clearViewInfo();
         }
 
         String viewIndexStr = (String) parameters.get("VIEW_INDEX");
         if (UtilValidate.isNotEmpty(viewIndexStr)) {
             try {
-            	productSearchOptions.setViewIndex(Integer.valueOf(viewIndexStr));
+                productSearchOptions.setViewIndex(Integer.valueOf(viewIndexStr));
             } catch (Exception e) {
                 Debug.logError(e, "Error formatting VIEW_INDEX, setting to 0", module);
                 // we could just do nothing here, but we know something was specified so we don't want to use the previous value from the session
-            	productSearchOptions.setViewIndex(new Integer(0));
+                productSearchOptions.setViewIndex(new Integer(0));
             }
         }
 
         String viewSizeStr = (String) parameters.get("VIEW_SIZE");
         if (UtilValidate.isNotEmpty(viewSizeStr)) {
             try {
-            	productSearchOptions.setViewSize(Integer.valueOf(viewSizeStr));
+                productSearchOptions.setViewSize(Integer.valueOf(viewSizeStr));
             } catch (Exception e) {
                 Debug.logError(e, "Error formatting VIEW_SIZE, setting to 20", module);
-            	productSearchOptions.setViewSize(new Integer(20));
+                productSearchOptions.setViewSize(new Integer(20));
             }
         }
     }
@@ -464,7 +540,7 @@ public class ProductSearchSession {
         int lowIndex = 0;
         int listSize = 0;
 
-        ProductSearchOptions productSearchOptions = ProductSearchOptions.getProductSearchOptions(session);
+        ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
         
         Integer viewIndexInteger = productSearchOptions.getViewIndex();
         if (viewIndexInteger != null) viewIndex = viewIndexInteger.intValue();
@@ -484,6 +560,9 @@ public class ProductSearchSession {
         List productSearchConstraintList = ProductSearchOptions.getConstraintList(session);
         // if no constraints, don't do a search...
         if (productSearchConstraintList != null && productSearchConstraintList.size() > 0) {
+            // if the search options have changed since the last search, put at the beginning of the options history list
+            checkSaveSearchOptionsHistory(session);
+
             productSearchConstraintList = ensureViewAllowConstraint(productSearchConstraintList, prodCatalogId, delegator);
             ResultSortOrder resultSortOrder = ProductSearchOptions.getResultSortOrder(session);
 

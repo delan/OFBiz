@@ -20,10 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)>
+
 <div class="head1">${uiLabelMap.ProductAdvancedSearchinCategory}</div>
 <br>
 <form name="advtokeywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style="margin: 0;">
@@ -114,5 +116,31 @@
       </td>
     </tr>
   </table>
+  
+  <#if searchOptionsHistoryList?has_content>
+    <hr class="sepbar"/>
+  
+    <div class="head2">${uiLabelMap.EcommerceLastSearches}...</div>
+  
+    <div class="tabletext">
+      <a href="<@ofbizUrl>/clearSearchOptionsHistoryList</@ofbizUrl>" class="buttontext">[Clear Search History]</a>
+      (Note that your history will automatically be cleared after you leave the site)
+    </div>
+    <#list searchOptionsHistoryList as searchOptions>
+    <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
+        <div class="tabletext">
+          <b>Search #${searchOptions_index + 1}</b>
+          <a href="<@ofbizUrl>/setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[Search]</a>
+          <a href="<@ofbizUrl>/setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="buttontext">[Refine]</a>
+        </div>
+        <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator)>
+        <#list constraintStrings as constraintString>
+          <div class="tabletext">&nbsp;-&nbsp;${constraintString}</div>
+        </#list>
+        <#if searchOptions_has_next>
+          <hr class="sepbar"/>
+        </#if>
+    </#list>
+  </#if>
 </form>
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchEvents.java,v 1.7 2004/04/30 10:14:18 jonesde Exp $
+ * $Id: ProductSearchEvents.java,v 1.8 2004/05/08 10:36:50 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.product.product.ProductSearch.ResultSortOrder;
  * Product Search Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class ProductSearchEvents {
@@ -347,7 +347,7 @@ public class ProductSearchEvents {
         // if no constraints, don't do a search...
         if (productSearchConstraintList != null && productSearchConstraintList.size() > 0) {
             ResultSortOrder resultSortOrder = ProductSearchSession.ProductSearchOptions.getResultSortOrder(session);
-            ProductSearchSession.ProductSearchOptions.checkSaveSearchOptionsHistory(session);
+            ProductSearchSession.checkSaveSearchOptionsHistory(session);
             ProductSearchContext productSearchContext = new ProductSearchContext(delegator, visitId);
 
             productSearchContext.addProductSearchConstraints(productSearchConstraintList);
