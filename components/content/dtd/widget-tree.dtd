@@ -39,6 +39,7 @@
     expand-collapse-request CDATA #IMPLIED
     trail-name CDATA #IMPLIED
     open-depth CDATA "0"
+    entity-name CDATA "Content"
 >
 
 <!ELEMENT node ( (entity-one | service | script ), (include-screen | label | link )?, sub-node* )>
