@@ -57,7 +57,7 @@ public class RequestHandler implements Serializable {
 
     public void init(ServletContext context) {
         this.context = context;
-        Debug.logInfo("[RerquestHandler Loading...]", module);
+        Debug.logInfo("[RequestHandler Loading...]", module);
         rm = new RequestManager(context);
     }
 
