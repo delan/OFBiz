@@ -43,7 +43,7 @@
   if(nextPageUrl == null || nextPageUrl.length() <= 0) nextPageUrl = request.getContextPath() + "/main.jsp";
 %>
  
-  <table width="100%" border="1" cellpadding="3" cellspacing="0">
+  <table border="1" cellpadding="3" cellspacing="0">
     <tr>
       <form method="POST" action="<%=response.encodeURL(nextPageUrl)%>" name="loginform">
         <input type="hidden" name="WEBPREEVENT" value="login">
