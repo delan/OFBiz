@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  */
 -->
 
@@ -438,6 +438,7 @@
             title="Fixed Asset Entity">
       <field name="fixedAssetId" type="id-ne"></field>
       <field name="fixedAssetTypeId" type="id"></field>
+      <field name="parentFixedAssetId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="uomId" type="id"></field>
@@ -446,6 +447,7 @@
       <field name="dateLastServiced" type="date-time"></field>
       <field name="dateNextService" type="date-time"></field>
       <field name="productionCapacity" type="floating-point"></field>
+      <field name="calendarId" type="id-ne"></field>
       <prim-key field="fixedAssetId"/>
       <relation type="one" fk-name="FIXEDAST_TYPE" rel-entity-name="FixedAssetType">
         <key-map field-name="fixedAssetTypeId"/>
@@ -455,6 +457,12 @@
       </relation>
       <relation type="many" rel-entity-name="FixedAssetAttribute">
         <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="one" fk-name="FIXEDAST_PAR" title="Parent" rel-entity-name="FixedAsset">
+        <key-map field-name="parentFixedAssetId" rel-field-name="fixedAssetId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="FixedAsset">
+        <key-map field-name="fixedAssetId" rel-field-name="parentFixedAssetId"/>
       </relation>
       <relation type="one" fk-name="FIXEDAST_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -489,6 +497,9 @@
       </relation>
       <relation type="many" rel-entity-name="Delivery">
         <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="one" fk-name="FIXEDAST_CALENDAR" rel-entity-name="TechDataCalendar">
+        <key-map field-name="calendarId"/>
       </relation>
     </entity>
     <entity entity-name="FixedAssetAttribute"

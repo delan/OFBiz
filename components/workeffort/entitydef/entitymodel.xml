@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  */
 -->
 
@@ -331,12 +331,14 @@
       <field name="estimatedStartDate" type="date-time"></field>
       <field name="estimatedCompletionDate" type="date-time"></field>
       <field name="estimatedMilliSeconds" type="floating-point"></field>
+      <field name="estimatedSetupMillis" type="floating-point"></field>
       <field name="totalMilliSecondsAllowed" type="floating-point"></field>
       <field name="totalMoneyAllowed" type="currency-amount"></field>
       <field name="moneyUomId" type="id"></field>
       <field name="actualStartDate" type="date-time"></field>
       <field name="actualCompletionDate" type="date-time"></field>
       <field name="actualMilliSeconds" type="floating-point"></field>
+      <field name="actualSetupMillis" type="floating-point"></field>
       <field name="specialTerms" type="long-varchar"></field>
       <field name="timeTransparency" type="numeric"></field>
       <field name="infoUrl" type="long-varchar"></field>
@@ -344,9 +346,9 @@
       <field name="runtimeDataId" type="id"></field>
       <field name="noteId" type="id"></field>
       <field name="serviceLoaderName" type="name"></field>
-      <field name="quantityToProduce" type="numeric"></field>
-      <field name="quantityProduced" type="numeric"></field>
-      <field name="quantityRejected" type="numeric"></field>
+      <field name="quantityToProduce" type="floating-point"></field>
+      <field name="quantityProduced" type="floating-point"></field>
+      <field name="quantityRejected" type="floating-point"></field>
       <field name="sourceReferenceId" type="id-long"></field>
       <prim-key field="workEffortId"/>
       <relation type="one" fk-name="WK_EFFRT_TYPE" rel-entity-name="WorkEffortType">
@@ -847,7 +849,7 @@
       <relation type="one-nofk" rel-entity-name="TelecomNumber">
         <key-map field-name="contactMechId"/>
       </relation>
-    </entity>    
+    </entity>
     <entity entity-name="WorkEffortDeliverableProd"
             package-name="org.ofbiz.workeffort.workeffort"
             title="Work Effort Deliverable Produced Entity">
