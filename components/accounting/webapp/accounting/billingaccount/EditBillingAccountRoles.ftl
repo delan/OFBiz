@@ -75,13 +75,8 @@
       <td width="74%">
         <input type="text" class="inputBox" size="25" name="partyId" value="">*
         <span class='tabletext'>
-          <a href="javascript:call_fieldlookup2(document.billingform.partyId,'LookupPartyGroup');">
-            <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Party Group Lookup'>
-          </a> 
-        </span>
-        <span class='tabletext'>
-          <a href="javascript:call_fieldlookup2(document.billingform.partyId,'LookupPerson');">
-            <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Person Lookup'>
+          <a href="javascript:call_fieldlookup2(document.billingform.partyId,'LookupPartyName');">
+            <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Party Name Lookup'>
           </a> 
         </span>
       </td>

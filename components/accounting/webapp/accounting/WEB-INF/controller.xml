@@ -519,6 +519,10 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupPartyGroup"/>
     </request-map>
+    <request-map uri="LookupPartyName">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupPartyName"/>
+    </request-map>
     <request-map uri="LookupFixedAsset">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupFixedAsset"/>
@@ -583,6 +587,7 @@
     <!-- Lookup request mappings -->
     <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
     <view-map name="LookupPartyGroup" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup" type="screen"/>
+    <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
     <view-map name="LookupFixedAsset" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset" type="screen"/>
         

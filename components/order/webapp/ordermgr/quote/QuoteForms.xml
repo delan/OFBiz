@@ -34,7 +34,7 @@
             </drop-down>
         </field>
         <field name="partyId">
-            <lookup target-form-name="LookupPartyGroup"/>
+            <lookup target-form-name="LookupPartyName"/>
         </field>
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
@@ -73,7 +73,7 @@
             </drop-down>
         </field>
         <field name="partyId">
-            <lookup target-form-name="LookupPartyGroup"/>
+            <lookup target-form-name="LookupPartyName"/>
         </field>
         <field name="submitButton" title="Submit" widget-style="standardSubmit">
             <submit button-type="button"/>
