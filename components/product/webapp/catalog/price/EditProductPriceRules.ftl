@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -55,9 +55,9 @@
             <input type=text size="22" name="thruDate" value="${productPriceRule.thruDate?if_exists}" class="inputBox">
             &nbsp;&nbsp;
             <#assign saleRule = productPriceRule.isSale?exists && productPriceRule.isSale == "Y">
-            <span class="tabletext"><b>${uiLabelMap.ProductSalePrice}:</b>&nbsp;
-            <input type=RADIO class="radioButton" name="isSale" value="Y" <#if saleRule>${uiLabelMap.CommonChecked}</#if>>${uiLabelMap.CommonYes}&nbsp;
-            <input type=RADIO name="isSale" value="N" <#if !saleRule>${uiLabelMap.CommonChecked}</#if>>${uiLabelMap.CommonNo}</span>
+            <span class="tabletext"><b>${uiLabelMap.ProductNotifySale}:</b>&nbsp;
+            <input type=RADIO class="radioButton" name="isSale" value="Y" <#if saleRule>CHECKED</#if>>${uiLabelMap.CommonYes}&nbsp;
+            <input type=RADIO name="isSale" value="N" <#if !saleRule>CHECKED</#if>>${uiLabelMap.CommonNo}</span>
             &nbsp;&nbsp;
             <INPUT type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
         </FORM>
