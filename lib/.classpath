@@ -64,7 +64,7 @@
     <classpathentry exported="true" kind="lib" path="jotm/jotm_jrmp_stubs.jar"/>
     <classpathentry exported="true" kind="lib" path="jotm/jotm.jar"/>
     <classpathentry exported="true" kind="lib" path="jotm/objectweb-datasource.jar"/>
-    <classpathentry exported="true" kind="lib" path="jotm/enhydra-jdbc.jar"/>
+    <classpathentry exported="true" kind="lib" path="jotm/xapool.jar"/>
     <classpathentry exported="true" kind="lib" path="jasperreports/jasperreports-applet.jar"/>
     <classpathentry exported="true" kind="lib" path="share/EdenLib.jar"/>
     <classpathentry exported="true" kind="lib" path="share/JPublish.jar"/>
