@@ -23,9 +23,14 @@
  */
 package org.ofbiz.core.util;
 
-import java.net.*;
-import java.util.*;
-import javax.servlet.http.*;
+import java.net.URLEncoder;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * HttpUtil - Misc TTP Utility Functions
@@ -43,10 +48,10 @@ public class UtilHttp {
     public static Map getParameterMap(HttpServletRequest request) {
         Map paramMap = new OrderedMap();        
         // first add in all path info parameters /~name1=value1/~name2=value2/
-        //Note: this is called a lot, so not using split for performance reasons: List pathInfo = StringUtil.split(request.getPathInfo(), "/"); for (int i = 1; i < pathInfo.size(); i++) {
+        // Note: this is called a lot, so not using split for performance reasons: List pathInfo = StringUtil.split(request.getPathInfo(), "/"); for (int i = 1; i < pathInfo.size(); i++) {
         String pathInfoStr = request.getPathInfo();
         
-        //make sure string ends with a trailing '/' so we get all values
+        // make sure string ends with a trailing '/' so we get all values
         if (!pathInfoStr.endsWith("/")) pathInfoStr += "/";
         
         int current = pathInfoStr.indexOf('/');
@@ -72,7 +77,7 @@ public class UtilHttp {
 
     /** 
      * Given a request, returns the application name or "root" if deployed on root 
-     * @param request
+     * @param request An HttpServletRequest to get the name info from
      * @return String
      */
     public static String getApplicationName(HttpServletRequest request) {
@@ -88,11 +93,11 @@ public class UtilHttp {
      * @param request
      */
     public static void parametersToAttributes(HttpServletRequest request) {
-    	java.util.Enumeration e = request.getParameterNames();
-    	while (e.hasMoreElements()) {
-    		String name = (String) e.nextElement();
-    		request.setAttribute(name, request.getParameter(name));
-    	}
+        java.util.Enumeration e = request.getParameterNames();
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
+            request.setAttribute(name, request.getParameter(name));
+        }
     }
 
     public static StringBuffer getServerRootUrl(HttpServletRequest request) {
@@ -167,19 +172,21 @@ public class UtilHttp {
             String name = (String) i.next();
             Object value = args.get(name);
             String valueStr = null;
-            if (value != null && value instanceof String)
-                valueStr = (String) value;
-            else if (value != null)
-                valueStr = value.toString();
+            if (value != null) {
+                if (value instanceof String) {
+                    valueStr = (String) value;
+                } else {
+                    valueStr = value.toString();
+                }
+            }
                         
             if (name != null) {
+                if (buf.length() > 0) buf.append('&');
                 buf.append(URLEncoder.encode(name));
-                buf.append("=");
-                if (valueStr == null)
-                    valueStr = "";
-                buf.append(URLEncoder.encode(valueStr));
-                if (i.hasNext())
-                    buf.append("&");
+                buf.append('=');
+                if (valueStr != null) {
+                    buf.append(URLEncoder.encode(valueStr));
+                }
             }
         }
         return buf.toString();
