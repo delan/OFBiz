@@ -31,9 +31,14 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Map;
 
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.SocketFactory;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.HttpClient;
+import org.ofbiz.base.util.HttpClientException;
 
 import org.apache.commons.collections.MapIterator;
 import org.apache.commons.collections.map.LinkedMap;
@@ -108,6 +113,7 @@ public class RitaApi {
     // instance variables
     protected LinkedMap document = null;
     protected String host = null;
+    protected boolean ssl = false;
     protected int port = 0;
     protected int mode = 0;
 
@@ -121,10 +127,11 @@ public class RitaApi {
         this.mode = MODE_IN;
     }
 
-    public RitaApi(String host, int port) {
+    public RitaApi(String host, int port, boolean ssl) {
         this();
         this.host = host;
         this.port = port;
+        this.ssl = ssl;
     }
 
     public void set(String name, Object value) {
@@ -184,9 +191,21 @@ public class RitaApi {
             throw new GeneralException("TCP transaction not supported without valid host/port configuration");
         }
 
-        Debug.log("Sending - \n" + this.toString(), module);
         if (mode == MODE_IN) {
-            Socket sock = new Socket(host, port);
+            String stream = this.toString() + "..\r\n";
+            Debug.log("Sending - \n" + stream, module);
+            String urlString = "http://" + host + ":" + port;
+            HttpClient http = new HttpClient(urlString);
+            http.setDebug(true);
+
+            /*
+            SocketFactory sf = null;
+            if (ssl) {
+                sf = SSLSocketFactory.getDefault();
+            } else {
+                sf = SocketFactory.getDefault();
+            }
+            Socket sock = sf.createSocket(host, port);
 
             // get the streams
             BufferedReader br = new BufferedReader(new InputStreamReader(sock.getInputStream()));
@@ -223,7 +242,31 @@ public class RitaApi {
             // close the streams
             ps.close();
             br.close();
+            */
 
+            LinkedMap docMap = new LinkedMap();            
+            String resp = null;
+            try {
+                resp = http.post(stream);
+            } catch (HttpClientException e) {
+                Debug.logError(e, module);
+                throw new IOException(e.getMessage());
+            }
+
+            String[] lines = resp.split("\n");
+            for (int i = 0; i < lines.length; i++) {
+                Debug.log(lines[i], module);
+                if (!lines[i].trim().equals(".")) {
+                    String[] lineSplit = lines[i].trim().split(" ");
+                    if (lineSplit != null && lineSplit.length == 2) {
+                        docMap.put(lineSplit[0], lineSplit[1]);
+                    } else {
+                        Debug.logWarning("Line split error - " + lines[i], module);
+                    }
+                } else {
+                    break;
+                }
+            }
             RitaApi out = new RitaApi(docMap);
             return out;
         } else {

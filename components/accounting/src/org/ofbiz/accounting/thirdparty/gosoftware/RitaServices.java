@@ -379,9 +379,11 @@ public class RitaServices {
         } catch (Exception e) {
             Debug.logError(e, module);
         }
+        boolean ssl = props.getProperty("ssl", "N").equals("Y") ? true : false;
+
         RitaApi api = null;
         if (port > 0 && host != null) {
-            api = new RitaApi(host, port);
+            api = new RitaApi(host, port, ssl);
         } else {
             api = new RitaApi();
         }
@@ -412,6 +414,7 @@ public class RitaServices {
         String userPw = UtilProperties.getPropertyValue(configString, "payment.rita.userPW");
         String host = UtilProperties.getPropertyValue(configString, "payment.rita.host");
         String port = UtilProperties.getPropertyValue(configString, "payment.rita.port");
+        String ssl = UtilProperties.getPropertyValue(configString, "payment.rita.ssl", "N");
         String autoBill = UtilProperties.getPropertyValue(configString, "payment.rita.autoBill", "0");
         String forceTx = UtilProperties.getPropertyValue(configString, "payment.rita.forceTx", "0");
 
@@ -436,6 +439,7 @@ public class RitaServices {
         props.put("userPW", userPw);
         props.put("host", host);
         props.put("port", port);
+        props.put("ssl", ssl);
         props.put("autoBill", autoBill);
         props.put("forceTx", forceTx);
         Debug.log("Returning properties - " + props, module);
