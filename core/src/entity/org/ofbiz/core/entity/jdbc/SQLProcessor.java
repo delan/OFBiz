@@ -104,13 +104,13 @@ public class SQLProcessor {
             return;
         }
 
-        try {
-            if (_manualTX) {
+        if (_manualTX) {
+            try {
                 _connection.commit();
+            } catch (SQLException sqle) {
+                rollback();
+                throw new GenericDataSourceException("SQL Exception occured on commit", sqle);
             }
-        } catch (SQLException sqle) {
-            rollback();
-            throw new GenericDataSourceException("SQL Exception occured on commit", sqle);
         }
     }
 
@@ -219,19 +219,20 @@ public class SQLProcessor {
             } catch (SQLException e) {
                 Debug.logError(e, "Problems getting the connection's isolation level", module);
             }
-            if (isoLevel == Connection.TRANSACTION_NONE) 
+            if (isoLevel == Connection.TRANSACTION_NONE) {
                 Debug.logVerbose("Transaction isolation level set to 'None'.", module);
-            else if (isoLevel == Connection.TRANSACTION_READ_COMMITTED)
+            } else if (isoLevel == Connection.TRANSACTION_READ_COMMITTED) {
                 Debug.logVerbose("Transaction isolation level set to 'ReadCommited'.", module);
-            else if (isoLevel == Connection.TRANSACTION_READ_UNCOMMITTED)
+            } else if (isoLevel == Connection.TRANSACTION_READ_UNCOMMITTED) {
                 Debug.logVerbose("Transaction isolation level set to 'ReadUncommitted'.", module);
-            else if (isoLevel == Connection.TRANSACTION_REPEATABLE_READ)
+            } else if (isoLevel == Connection.TRANSACTION_REPEATABLE_READ) {
                 Debug.logVerbose("Transaction isolation level set to 'RepeatableRead'.", module);
-            else if (isoLevel == Connection.TRANSACTION_SERIALIZABLE)
+            } else if (isoLevel == Connection.TRANSACTION_SERIALIZABLE) {
                 Debug.logVerbose("Transaction isolation level set to 'Serializable'.", module);
+            }
         }
                             
-        // NOTE: the fancy ethernet type stuff is for the case where transactions not available
+        // always try to set auto commit to false, but if we can't then later on we won't commit
         try {
             _connection.setAutoCommit(false);
         } catch (SQLException sqle) {
