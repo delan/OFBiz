@@ -428,6 +428,8 @@
       <field name="description" type="description"></field>
       <field name="uomId" type="id"></field>
       <field name="numberSpecified" type="floating-point"></field>
+      <field name="defaultSequenceNum" type="numeric"></field>
+      <field name="idCode" type="id"></field>
       <prim-key field="productFeatureId"/>
       <relation type="one" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="productFeatureCategoryId"/>

@@ -77,7 +77,9 @@
     <td><div class="tabletext"><b>Feature&nbsp;Type</b></div></td>
     <td><div class="tabletext"><b>Feature&nbsp;Category</b></div></td>
     <td><div class="tabletext"><b>Unit of Measure ID</b></div></td>
-    <td><div class="tabletext"><b>Num/Quant</b></div></td>
+    <td><div class="tabletext"><b>Quantity</b></div></td>
+    <td><div class="tabletext"><b>DSeqNum</b></div></td>
+    <td><div class="tabletext"><b>ID Code</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
     <%if (productId != null && productId.length() > 0) {%>
       </tr>
@@ -86,8 +88,9 @@
         <td><div class="tabletext"><b>Appl&nbsp;Type</b></div></td>
         <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
         <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
-        <td><div class="tabletext"><b>Sequence</b></div></td>
         <td><div class="tabletext">&nbsp;</div></td>
+        <td><div class="tabletext"><b>Sequence</b></div></td>
+        <td colspan='2'><div class="tabletext">&nbsp;</div></td>
     <%}%>
   </tr>
 <ofbiz:iterator name="productFeature" property="productFeatures">
@@ -117,6 +120,8 @@
       </select></td>
       <td><input type=text size='10' <ofbiz:inputvalue entityAttr="productFeature" field="uomId" fullattrs="true"/>></td>
       <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeature" field="numberSpecified" fullattrs="true"/>></td>
+      <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeature" field="defaultSequenceNum" fullattrs="true"/>></td>
+      <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeature" field="idCode" fullattrs="true"/>></td>
       <td><INPUT type=submit value='Update'></td>
     </FORM>
     <%if (productId != null && productId.length() > 0) {%>
@@ -135,8 +140,9 @@
         </td>
         <td><input type=text size='18' name='fromDate'></td>
         <td><input type=text size='18' name='thruDate'></td>
+        <td>&nbsp;</td>
         <td><input type=text size='5' name='sequenceNum'></td>
-      <td><INPUT type=submit value='Apply'></td>
+      <td colspan='2' align=left><INPUT type=submit value='Apply'></td>
       </FORM>
     <%}%>
   </tr>
@@ -178,6 +184,14 @@
     <tr>
       <td><div class='tabletext'>Number/Quantity:</div></td>
       <td><input type=text size='10' name='numberSpecified' value=''></td>
+    </tr>
+    <tr>
+      <td><div class='tabletext'>Default Sequence Number:</div></td>
+      <td><input type=text size='10' name='defaultSequenceNum' value=''></td>
+    </tr>
+    <tr>
+      <td><div class='tabletext'>ID Code:</div></td>
+      <td><input type=text size='10' name='idCode' value=''></td>
     </tr>
     <tr>
       <td colspan='2'><input type="submit" value="Create"></td>
