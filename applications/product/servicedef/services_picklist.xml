@@ -36,21 +36,6 @@
         <attribute name="pickMoveByShipmentMethodInfoList" type="List" mode="OUT" optional="true"/>
     </service>
     
-    <!-- this old service definition is for one that used to get data for the picklist report
-    <service name="getPicklistData" engine="simple"
-            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="getPicklistData">
-        <description>Gets Picklist Data</description>
-        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
-        <attribute name="shipmentMethodTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="maxNumberOfOrders" type="Long" mode="IN" optional="true"/>
-        <attribute name="facilityLocationInfoList" type="List" mode="OUT" optional="true"/>
-        <attribute name="inventoryItemInfoList" type="List" mode="OUT" optional="true"/>
-        <attribute name="orderHeaderInfoList" type="List" mode="OUT" optional="true"/>
-        <attribute name="wrongQuantityReservedList" type="List" mode="OUT" optional="true"/>
-        <attribute name="insufficientQohList" type="List" mode="OUT" optional="true"/>
-    </service>
-    -->
-    
     <!-- Persisted Picklist Services -->
     <service name="createPicklistFromOrders" engine="simple"
             location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="createPicklistFromOrders">
