@@ -348,8 +348,7 @@ public class UtilCache implements Serializable {
     }
     
     /** This is used for internal remove calls because we only want to count external calls */
-    protected synchronized Object removeInternal(Object key, boolean countRemove) {
-        Debug.log("Calling UtilCache.removeInternal() for cache - " + name + " / " + key, module);
+    protected synchronized Object removeInternal(Object key, boolean countRemove) {        
         CacheLine line = (CacheLine) cacheLineTable.remove(key);
         if (line != null) {
             noteRemoval(key, line.getValue());
@@ -363,7 +362,6 @@ public class UtilCache implements Serializable {
 
     /** Removes all elements from this cache */
     public synchronized void clear() {
-        Debug.log("Calling UtilCache.clear() for cache - " + name, module);
         Iterator it = cacheLineTable.keySet().iterator();
         while (it.hasNext()) {
             Object key = it.next();
