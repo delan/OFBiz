@@ -1358,19 +1358,22 @@ public class GenericDelegator {
             synchronized (this) {
                 if (sequencer == null) {
                     String helperName = this.getEntityHelperName("SequenceValueItem");
-                    sequencer = new SequenceUtil(helperName);
+                    ModelEntity seqEntity = this.getModelEntity("SequenceValueItem");
+                    sequencer = new SequenceUtil(helperName, seqEntity, "seqName", "seqId");
                 }
             }
         }
-        if (sequencer != null)
+        if (sequencer != null) {
             return sequencer.getNextSeqId(seqName);
-        else
+        } else {
             return null;
+        }
     }
 
     protected void absorbCollection(Collection col) {
-        if (col == null)
+        if (col == null) {
             return;
+        }
         Iterator iter = col.iterator();
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();

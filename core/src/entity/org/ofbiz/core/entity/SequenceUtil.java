@@ -28,6 +28,7 @@ import java.sql.*;
 import java.util.*;
 
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.model.*;
 
 /**
  * <p>Sequence Utility to get unique sequences from named sequence banks
@@ -43,15 +44,38 @@ public class SequenceUtil {
 
     Map sequences = new Hashtable();
     String helperName;
+    ModelEntity seqEntity;
+    String tableName;
+    String nameColName;
+    String idColName;
 
-    public SequenceUtil(String helperName) {
+    private SequenceUtil() { }
+    
+    public SequenceUtil(String helperName, ModelEntity seqEntity, String nameFieldName, String idFieldName) {
         this.helperName = helperName;
+        this.seqEntity = seqEntity;
+        if (seqEntity == null) {
+            throw new IllegalArgumentException("The sequence model entity was null but is required.");
+        }
+        this.tableName = seqEntity.getTableName();
+        
+        ModelField nameField = seqEntity.getField(nameFieldName);
+        if (nameField == null) {
+            throw new IllegalArgumentException("Could not find the field definition for the sequence name field " + nameFieldName);
+        }
+        this.nameColName = nameField.getColName();
+
+        ModelField idField = seqEntity.getField(idFieldName);
+        if (idField == null) {
+            throw new IllegalArgumentException("Could not find the field definition for the sequence id field " + idFieldName);
+        }
+        this.idColName = idField.getColName();
     }
 
     public Long getNextSeqId(String seqName) {
         SequenceBank bank = (SequenceBank) sequences.get(seqName);
         if (bank == null) {
-            bank = new SequenceBank(seqName, helperName);
+            bank = new SequenceBank(seqName, this);
             sequences.put(seqName, bank);
         }
         return bank.getNextSeqId();
@@ -68,11 +92,11 @@ public class SequenceUtil {
         long curSeqId;
         long maxSeqId;
         String seqName;
-        String helperName;
+        SequenceUtil parentUtil;
 
-        public SequenceBank(String seqName, String helperName) {
+        public SequenceBank(String seqName, SequenceUtil parentUtil) {
             this.seqName = seqName;
-            this.helperName = helperName;
+            this.parentUtil = parentUtil;
             curSeqId = 0;
             maxSeqId = 0;
             fillBank();
@@ -107,7 +131,7 @@ public class SequenceUtil {
             Statement stmt = null;
             ResultSet rs = null;
             try {
-                connection = ConnectionFactory.getConnection(helperName);
+                connection = ConnectionFactory.getConnection(parentUtil.helperName);
             } catch (SQLException sqle) {
                 Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was:", module);
                 Debug.logWarning(sqle.getMessage(), module);
@@ -141,10 +165,10 @@ public class SequenceUtil {
                 while (val1 + bankSize != val2) {
                     Debug.logVerbose("[SequenceUtil.SequenceBank.fillBank] Trying to get a bank of sequenced ids for " +
                                      this.seqName + "; start of loop val1=" + val1 + ", val2=" + val2 + ", bankSize=" + bankSize, module);
-                    sql = "SELECT SEQ_ID FROM SEQUENCE_VALUE_ITEM WHERE SEQ_NAME='" + this.seqName + "'";
+                    sql = "SELECT " + parentUtil.idColName + " FROM " + parentUtil.tableName + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
                     rs = stmt.executeQuery(sql);
                     if (rs.next()) {
-                        val1 = rs.getInt("SEQ_ID");
+                        val1 = rs.getInt(parentUtil.idColName);
                     } else {
                         Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] first select failed: trying to add " +
                                          "row, result set was empty for sequence: " + seqName, module);
@@ -152,7 +176,7 @@ public class SequenceUtil {
                             if (rs != null) rs.close();
                         } catch (SQLException sqle) {
                         }
-                        sql = "INSERT INTO SEQUENCE_VALUE_ITEM (SEQ_NAME, SEQ_ID) VALUES ('" + this.seqName + "', " + startSeqId + ")";
+                        sql = "INSERT INTO " + parentUtil.tableName + " (" + parentUtil.nameColName + ", " + parentUtil.idColName + ") VALUES ('" + this.seqName + "', " + startSeqId + ")";
                         if (stmt.executeUpdate(sql) <= 0) return;
                         continue;
                     }
@@ -161,7 +185,7 @@ public class SequenceUtil {
                     } catch (SQLException sqle) {
                     }
 
-                    sql = "UPDATE SEQUENCE_VALUE_ITEM SET SEQ_ID=SEQ_ID+" + this.bankSize + " WHERE SEQ_NAME='" + this.seqName + "'";
+                    sql = "UPDATE " + parentUtil.tableName + " SET " + parentUtil.idColName + "=" + parentUtil.idColName + "+" + this.bankSize + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
                     if (stmt.executeUpdate(sql) <= 0) {
                         Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] update failed, no rows changes for seqName: " + seqName, module);
                         return;
@@ -171,10 +195,10 @@ public class SequenceUtil {
                         connection.commit();
                     }
 
-                    sql = "SELECT SEQ_ID FROM SEQUENCE_VALUE_ITEM WHERE SEQ_NAME='" + this.seqName + "'";
+                    sql = "SELECT " + parentUtil.idColName + " FROM " + parentUtil.tableName + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
                     rs = stmt.executeQuery(sql);
                     if (rs.next()) {
-                        val2 = rs.getInt("SEQ_ID");
+                        val2 = rs.getInt(parentUtil.idColName);
                     } else {
                         Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] second select failed: aborting, result " +
                                          "set was empty for sequence: " + seqName, module);
