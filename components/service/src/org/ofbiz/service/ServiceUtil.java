@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.2 2003/08/26 18:00:13 jonesde Exp $
+ * $Id: ServiceUtil.java,v 1.3 2003/09/24 00:20:08 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,8 @@
  */
 package org.ofbiz.service;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,16 +33,23 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.security.Security;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.security.Security;
+import org.ofbiz.service.config.ServiceConfigUtil;
 
 /**
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ServiceUtil {
@@ -218,5 +227,42 @@ public class ServiceUtil {
             }
         }
         return outMsg.toString();
+    }
+    
+    public static Map purgeOldJobs(DispatchContext dctx, Map context) {
+        String sendPool = ServiceConfigUtil.getSendPool();
+        int daysToKeep = ServiceConfigUtil.getDaysToKeepJobs();
+        GenericDelegator delegator = dctx.getDelegator();
+        
+        Timestamp now = UtilDateTime.nowTimestamp();
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(now.getTime());
+        cal.add(Calendar.DAY_OF_YEAR, daysToKeep);
+        Timestamp purgeTime = new Timestamp(cal.getTimeInMillis());
+        
+        List exprs = UtilMisc.toList(new EntityExpr("poolId", EntityOperator.EQUALS, sendPool));
+        exprs.add(new EntityExpr("finishDateTime", EntityOperator.NOT_EQUAL, null));
+        exprs.add(new EntityExpr("finishDateTime", EntityOperator.GREATER_THAN, purgeTime));
+        List foundJobs = null;
+        try {
+            foundJobs = delegator.findByAnd("JobSandbox", exprs);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot get jobs to purge");
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        
+        if (foundJobs != null && foundJobs.size() > 0) {
+            Iterator i = foundJobs.iterator();
+            while (i.hasNext()) {
+                GenericValue job = (GenericValue) i.next();
+                try {
+                    job.remove();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Unable to remove job : " + job, module);
+                }                  
+            }
+        }
+        
+        return ServiceUtil.returnSuccess();
     }
 }
