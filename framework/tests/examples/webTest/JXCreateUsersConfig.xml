@@ -1,0 +1,34 @@
+<!--
+ - JXCreateUsersConfig.xml
+ -
+ - author:  Phil Thunborg
+ - Created: 1/4/2002
+ - Copyright © 2001-2002, In2M Corporation, All Rights Reserved.
+ -->
+<jxuConfig>
+    <applicationLogins>
+        <applicationLogin output="JXApplicationLoginOutput.xml"/>
+    </applicationLogins>
+    <users>
+        <user appLoginRef="al-1">
+            <lastName>Thunborg</lastName>
+            <firstName>Phil</firstName>
+            <address1>9830 W. 2350 N.</address1>
+            <address2>Master Suite</address2>
+            <city>Cedar Hills</city>
+            <state>UT</state>
+            <zip>84062</zip>
+            <country>USA</country>
+            <ssNumber>111-11-1111</ssNumber>
+            <homePhone>(111)111-1111</homePhone>
+            <workPhone>(222)222-2222</workPhone>
+            <email>phil.thunborg@in2m.com</email>
+            <fax>(333)333-3333</fax>
+            <birthDay>2/5/1901</birthDay>
+            <gender>M</gender>
+            <modificationDate>1/4/2002 12:44:36 PM</modificationDate>
+            <syncFlag>1</syncFlag>
+            <mvelopesStartDate>2/4/2002 1:23:21 PM</mvelopesStartDate>
+        </user>
+    </users>
+</jxuConfig>

@@ -1,0 +1,24 @@
+/*
+Here is a simple example of lists.
+Try the query:
+    ok(N, A, B)
+which should produce the result:
+    N = 1.0, A = dark, B = full
+    N = 2.0, A = continental, B = viennese
+    N = 3.0, A = dark, B = [full, high, viennese, continental]
+    N = 4.0, A = viennese, B = continental
+    N = 5.0, A = viennese, B = [continental]
+    no more results
+*/
+
+french(["dark", "full", "high", "viennese", "continental"]);
+
+ok(N, A, B) :- #(N, 1), french([A, B, C, D, E]);
+ok(N, A, B) :- #(N, 2), french([E, D, C, B, A]);
+ok(N, A, B) :- #(N, 3), french([A | B]);
+ok(N, A, B) :- #(N, 4), french([C, D, E | [A, B]]); 
+ok(N, A, B) :- #(N, 5), french([C, D, E | [A | B]]);
+
+// these fail:
+ok(N, A, B) :- #(N, -1), french(A, B, C, D, E);
+ok(N, A, B) :- #(N, -2), french([A, B]);

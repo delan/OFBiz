@@ -1,0 +1,22 @@
+/*
+Here is a simple set of facts and a simple rule.
+Try the query:
+    highCity(Where)
+which should produce the result:
+    Where = addis ababa
+    Where = denver
+    Where = flagstaff
+    Where = leadville
+    no more results
+*/
+city("abilene", 1718);
+city("addis ababa", 8000);
+city("denver", 5280);
+city("flagstaff", 6970);
+city("jacksonville", 8);
+city("leadville", 10200);
+city("madrid", 1305);
+city("richmond", 19);
+city("spokane", 1909);
+city("wichita", 1305); 
+highCity(Name) :- city(Name, Alt), >(Alt, 5000);

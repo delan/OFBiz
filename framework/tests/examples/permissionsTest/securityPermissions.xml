@@ -1,0 +1,50 @@
+<entity-config name="Test Create Security Permissions">
+
+<!-- This tests sets creates new Security Permissions that will be verified 
+	later in the test.  Note how the test data maps closely to the Entity definition.
+
+    <entity entity-name="SecurityPermission"
+            package-name="org.ofbiz.security.securitygroup"
+            title="Security Component - Security Permission Entity">
+      <field name="permissionId" type="id-long-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="permissionId"/>
+      <relation type="many" rel-entity-name="SecurityGroupPermission">
+        <key-map field-name="permissionId"/>
+      </relation>
+    </entity>
+-->
+    <entity entity-name="SecurityPermission" >
+      <field name="permissionId" type="id-long-ne">TEST_PERM_ONE</field>
+      <field name="description" type="description">JXUnit Test Permission</field>
+    </entity>
+    <entity entity-name="SecurityPermission" >
+      <field name="permissionId" type="id-long-ne">TEST_PERM_TWO</field>
+      <field name="description" type="description">JXUnit Test Permission</field>
+    </entity>
+    <entity entity-name="SecurityPermission" >
+      <field name="permissionId" type="id-long-ne">TEST_PERM_THREE</field>
+      <field name="description" type="description">JXUnit Test Permission</field>
+    </entity>
+    <entity entity-name="SecurityPermission" >
+      <field name="permissionId" type="id-long-ne">TEST_PERM_FOUR</field>
+      <field name="description" type="description">JXUnit Test Permission</field>
+    </entity>
+    <entity entity-name="SecurityPermission" >
+      <field name="permissionId" type="id-long-ne">TEST_PERM_FIVE</field>
+      <field name="description" type="description">JXUnit Test Permission</field>
+    </entity>
+    <entity entity-name="SecurityPermission" >
+      <field name="permissionId" type="id-long-ne">TEST_PERM_SIX</field>
+      <field name="description" type="description">JXUnit Test Permission</field>
+    </entity>
+    <entity entity-name="SecurityPermission" >
+      <field name="permissionId" type="id-long-ne">TEST_PERM_SEVEN</field>
+      <field name="description" type="description">JXUnit Test Permission</field>
+    </entity>
+    <entity entity-name="SecurityPermission" >
+      <field name="permissionId" type="id-long-ne">TEST_PERM_EIGHT</field>
+      <field name="description" type="description">JXUnit Test Permission</field>
+    </entity>
+
+</entity-config>

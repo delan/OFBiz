@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rulebase>
+    <!-- NOTE: This RuleML file is a rewritten version of the logikus family example (Family.logic) -->
+    <!--
+
+    /*
+    This ruleset shows a number of examples of useful information isolated from other
+    facts.
+
+    Try the query:
+        male(X)
+    which should produce the result:
+        X = jim
+        X = kyle
+        X = kirk
+        X = kevin
+        X = leo
+        no more results
+
+    Try the query:
+        grandfather(grandFather, grandChild)
+    which should produce the result:
+        grandFather = jim, grandChild = leo
+        grandFather = jim, grandChild = lisa
+        grandFather = jim, grandChild = laura
+        no more results
+    */
+
+    begat(900, "jim", 19350801, "male");
+
+    begat(901, "janie", 19370310, "female");
+
+    begat(902, "kyle", 19600829, "male");
+    begat(903, "kirk", 19550404, "male");
+    begat(904, "kevin", 19580815, "male");
+
+    marriage(001, "jim", "janie", 19560512, "present");
+    begat(001, "karla", 19570114, "female");
+    begat(001, "katie", 19590712, "female");
+
+    marriage(002, "kevin", "karla", 19790623, 19831112);
+    begat(002, "leo", 19800115, "male");
+    begat(002, "lisa", 19810226, "female");
+
+    marriage(003, "kirk", "karla", 19900114, "present");
+
+    marriage(004, "katie", "kyle", 19951203, "present");
+    begat(004, "laura", 19980217, "female");
+    -->
+   <fact><_head><atom><_opr><rel>begat</rel></_opr><ind>900</ind><ind>jim</ind><ind>19350801</ind><ind>male</ind></atom></_head></fact>
+   <fact><_head><atom><_opr><rel>begat</rel></_opr><ind>901</ind><ind>janie</ind><ind>19370310</ind><ind>female</ind></atom></_head></fact>
+   <fact><_head><atom><_opr><rel>begat</rel></_opr><ind>902</ind><ind>kyle</ind><ind>19600829</ind><ind>male</ind></atom></_head></fact>
+   <fact><_head><atom><_opr><rel>begat</rel></_opr><ind>903</ind><ind>kirk</ind><ind>19550404</ind><ind>male</ind></atom></_head></fact>
+   <fact><_head><atom><_opr><rel>begat</rel></_opr><ind>904</ind><ind>kevin</ind><ind>19580815</ind><ind>male</ind></atom></_head></fact>
+   <fact><_head><atom><_opr><rel>begat</rel></_opr><ind>001</ind><ind>karla</ind><ind>19570114</ind><ind>female</ind></atom></_head></fact>
+   <fact><_head><atom><_opr><rel>begat</rel></_opr><ind>001</ind><ind>katie</ind><ind>19590712</ind><ind>female</ind></atom></_head></fact>
+   <fact><_head><atom><_opr><rel>begat</rel></_opr><ind>002</ind><ind>leo</ind><ind>19800115</ind><ind>male</ind></atom></_head></fact>
+   <fact><_head><atom><_opr><rel>begat</rel></_opr><ind>002</ind><ind>lisa</ind><ind>19810226</ind><ind>female</ind></atom></_head></fact>
+   <fact><_head><atom><_opr><rel>begat</rel></_opr><ind>004</ind><ind>laura</ind><ind>19980217</ind><ind>female</ind></atom></_head></fact>
+
+   <fact><_head><atom><_opr><rel>marriage</rel></_opr><ind>001</ind><ind>jim</ind><ind>janie</ind><ind>19560512</ind><ind>present</ind></atom></_head></fact>
+   <fact><_head><atom><_opr><rel>marriage</rel></_opr><ind>002</ind><ind>kevin</ind><ind>karla</ind><ind>19790623</ind><ind>19831112</ind></atom></_head></fact>
+   <fact><_head><atom><_opr><rel>marriage</rel></_opr><ind>003</ind><ind>kirk</ind><ind>karla</ind><ind>19900114</ind><ind>present</ind></atom></_head></fact>
+   <fact><_head><atom><_opr><rel>marriage</rel></_opr><ind>004</ind><ind>katie</ind><ind>kyle</ind><ind>19951203</ind><ind>present</ind></atom></_head></fact>
+
+    <!--
+    male(X) :- begat(_, X, _, "male");
+    female(X) :- begat(_, X, _, "female");
+    birthdate(X, D) :- begat(_, X, D, _);
+
+    marriagePartner(M, X) :- marriage(M, X, _, _, _);
+    marriagePartner(M, X) :- marriage(M, _, X, _, _);
+
+    husband(M, X) :- marriagePartner(M, X), male(X);
+    wife(M, X) :- marriagePartner(M, X), female(X);
+
+    // if X & Y are siblings, this relation will find both (X, Y)
+    // and (Y, X). The siblingPair relations finds only one of
+    // these.
+    siblings(X, Y) :- 
+        begat(MarriageID, X, _, _),
+        begat(MarriageID, Y, _, _),
+        !=(X, Y);
+
+    siblingPair(X, Y) :- 
+        begat(MarriageID, X, Dx, _),
+        begat(MarriageID, Y, Dy, _),
+        <(Dx, Dy);
+
+    parent(P, C) :- 
+        marriagePartner(MarriageID, P),
+        begat(MarriageID, C, _, _);
+
+    father(P, C) :- parent(P, C), male(P);
+    mother(P, C) :- parent(P, C), female(P);
+    sister(X, Y) :- siblings(X, Y), female(X);
+    brother(X, Y) :- siblings(X, Y), male(X);
+
+    grandparent(G, C) :- parent(G, P), parent(P, C);
+    grandfather(G, C) :- father(G, P), parent(P, C);
+    grandmother(G, C) :- mother(G, P), parent(P, C);
+    -->
+   <imp>
+      <_head><atom><_opr><rel>male</rel></_opr><var>X</var></atom></_head>
+      <_body><atom><_opr><rel>begat</rel></_opr><var>_</var><var>X</var><var>_</var><ind>male</ind></atom></_body>
+   </imp>
+   <imp>
+      <_head><atom><_opr><rel>female</rel></_opr><var>X</var></atom></_head>
+      <_body><atom><_opr><rel>begat</rel></_opr><var>_</var><var>X</var><var>_</var><ind>female</ind></atom></_body>
+   </imp>
+   <imp>
+      <_head><atom><_opr><rel>birthdate</rel></_opr><var>X</var><var>D</var></atom></_head>
+      <_body><atom><_opr><rel>begat</rel></_opr><var>_</var><var>X</var><var>D</var><var>_</var></atom></_body>
+   </imp>
+
+   <imp>
+      <_head><atom><_opr><rel>marriagePartner</rel></_opr><var>M</var><var>X</var></atom></_head>
+      <_body><atom><_opr><rel>marriage</rel></_opr><var>M</var><var>X</var><var>_</var><var>_</var><var>_</var></atom></_body>
+   </imp>
+   <imp>
+      <_head><atom><_opr><rel>marriagePartner</rel></_opr><var>M</var><var>X</var></atom></_head>
+      <_body><atom><_opr><rel>marriage</rel></_opr><var>M</var><var>_</var><var>M</var><var>_</var><var>_</var></atom></_body>
+   </imp>
+
+   <imp>
+      <_head><atom><_opr><rel>husband</rel></_opr><var>M</var><var>X</var></atom></_head>
+      <_body>
+         <and>
+            <atom><_opr><rel>marriagePartner</rel></_opr><var>M</var><var>X</var></atom>
+            <atom><_opr><rel>male</rel></_opr><var>X</var></atom>
+         </and>
+      </_body>
+   </imp>
+   <imp>
+      <_head><atom><_opr><rel>wife</rel></_opr><var>M</var><var>X</var></atom></_head>
+      <_body>
+         <and>
+            <atom><_opr><rel>marriagePartner</rel></_opr><var>M</var><var>X</var></atom>
+            <atom><_opr><rel>female</rel></_opr><var>X</var></atom>
+         </and>
+      </_body>
+   </imp>
+
+   <imp>
+      <_head><atom><_opr><rel>siblings</rel></_opr><var>X</var><var>Y</var></atom></_head>
+      <_body>
+         <and>
+            <atom><_opr><rel>begat</rel></_opr><var>MarriageID</var><var>X</var><var>_</var><var>_</var></atom>
+            <atom><_opr><rel>begat</rel></_opr><var>MarriageID</var><var>Y</var><var>_</var><var>_</var></atom>
+            <atom><_opr><rel>!=</rel></_opr><var>X</var><var>Y</var></atom>
+         </and>
+      </_body>
+   </imp>
+   <imp>
+      <_head><atom><_opr><rel>siblingPair</rel></_opr><var>X</var><var>Y</var></atom></_head>
+      <_body>
+         <and>
+            <atom><_opr><rel>begat</rel></_opr><var>MarriageID</var><var>X</var><var>Dx</var><var>_</var></atom>
+            <atom><_opr><rel>begat</rel></_opr><var>MarriageID</var><var>Y</var><var>Dy</var><var>_</var></atom>
+            <atom><_opr><rel><![CDATA[<]]></rel></_opr><var>Dx</var><var>Dy</var></atom>
+         </and>
+      </_body>
+   </imp>
+
+   <imp>
+      <_head><atom><_opr><rel>parent</rel></_opr><var>P</var><var>C</var></atom></_head>
+      <_body>
+         <and>
+            <atom><_opr><rel>marriagePartner</rel></_opr><var>MarriageID</var><var>P</var></atom>
+            <atom><_opr><rel>begat</rel></_opr><var>MarriageID</var><var>C</var><var>_</var><var>_</var></atom>
+         </and>
+      </_body>
+   </imp>
+
+   <imp>
+      <_head><atom><_opr><rel>father</rel></_opr><var>P</var><var>C</var></atom></_head>
+      <_body>
+         <and>
+            <atom><_opr><rel>parent</rel></_opr><var>P</var><var>C</var></atom>
+            <atom><_opr><rel>male</rel></_opr><var>P</var></atom>
+         </and>
+      </_body>
+   </imp>
+   <imp>
+      <_head><atom><_opr><rel>mother</rel></_opr><var>P</var><var>C</var></atom></_head>
+      <_body>
+         <and>
+            <atom><_opr><rel>parent</rel></_opr><var>P</var><var>C</var></atom>
+            <atom><_opr><rel>female</rel></_opr><var>P</var></atom>
+         </and>
+      </_body>
+   </imp>
+
+   <imp>
+      <_head><atom><_opr><rel>sister</rel></_opr><var>X</var><var>Y</var></atom></_head>
+      <_body>
+         <and>
+            <atom><_opr><rel>siblings</rel></_opr><var>X<var><var>Y</var></atom>
+            <atom><_opr><rel>female</rel></_opr><var>X</var></atom>
+         </and>
+      </_body>
+   </imp>
+   <imp>
+      <_head><atom><_opr><rel>brother</rel></_opr><var>X</var><var>Y</var></atom></_head>
+      <_body>
+         <and>
+            <atom><_opr><rel>siblings</rel></_opr><var>X<var><var>Y</var></atom>
+            <atom><_opr><rel>male</rel></_opr><var>X</var></atom>
+         </and>
+      </_body>
+   </imp>
+
+   <imp>
+      <_head><atom><_opr><rel>grandparent</rel></_opr><var>G</var><var>C</var></atom></_head>
+      <_body>
+         <and>
+            <atom><_opr><rel>parent</rel></_opr><var>G<var><var>P</var></atom>
+            <atom><_opr><rel>parent</rel></_opr><var>P<var><var>C</var></atom>
+         </and>
+      </_body>
+   </imp>
+   <imp>
+      <_head><atom><_opr><rel>grandfather</rel></_opr><var>G</var><var>C</var></atom></_head>
+      <_body>
+         <and>
+            <atom><_opr><rel>father</rel></_opr><var>G<var><var>P</var></atom>
+            <atom><_opr><rel>parent</rel></_opr><var>P<var><var>C</var></atom>
+         </and>
+      </_body>
+   </imp>
+   <imp>
+      <_head><atom><_opr><rel>grandmother</rel></_opr><var>G</var><var>C</var></atom></_head>
+      <_body>
+         <and>
+            <atom><_opr><rel>mother</rel></_opr><var>G<var><var>P</var></atom>
+            <atom><_opr><rel>parent</rel></_opr><var>P<var><var>C</var></atom>
+         </and>
+      </_body>
+   </imp>
+</rulebase>
+
+
+<!--
+RuleML Notes
+
+Useful Additions
+1. an ignored anonymous var tag: <!ELEMENT anonvar EMPTY>
+2. non-rel operator atoms: ie #(eval), <, >, +, /, ...
+3.
+
+Questions
+1. to look into: why _opr->rel and not just rel (look at other DTDs)
+
+-->

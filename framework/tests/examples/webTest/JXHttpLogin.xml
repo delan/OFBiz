@@ -1,0 +1,15 @@
+<jxuConfig>
+http://localhost:8080/ecommerce/control/checkLogin/main
+    <!-- webRequest session="login" host="localhost" port="8080" context="ecommerce" path="control/login" -->
+    <webRequest session="login" host="localhost" port="8080" context="ecommerce" path="control/checkLogin/main" >
+		<httpParam name="USERNAME">admin</httpParam>
+		<httpParam name="PASSWORD">ofbiz</httpParam>
+    	<webResponse>ADMINISTRATOR</webResponse>
+	</webRequest>
+    <webRequest session="login" host="localhost" port="8080" context="ecommerce" path="control/viewprofile" > 
+		<webResponse>PRIVILEGED</webResponse>
+	</webRequest>
+    <!-- webRequest session="login" host="localhost" port="8080" context="ecommerce" path="control/login">
+    	<webResponse>ADMINISTRATOR</webResponse>
+	</webRequest -->
+</jxuConfig>

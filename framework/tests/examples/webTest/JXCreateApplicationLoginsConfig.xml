@@ -1,0 +1,33 @@
+<!--
+ - JXCreateApplicationLoginsConfig.xml
+ -
+ - author:  Phil Thunborg
+ - Created: 1/7/2002
+ - Copyright © 2001-2002, In2M Corporation, All Rights Reserved.
+ -->
+<jxuConfig>
+    <masterLogins>
+        <masterLogin output="JXMasterLoginOutput.xml"/>
+    </masterLogins>
+    <tpUsers>
+        <tpUser output="JXTPUserOutput.xml"/>
+    </tpUsers>
+    <applicationLogins>
+        <applicationLogin masterLoginRef="ml-1" tpUserRef="tpUser-1">
+            <applicationUserName>jxuTest-1</applicationUserName>
+            <applicationPassword>password</applicationPassword>
+            <applicationName>Mvelopes</applicationName>
+            <convertUserIdToNumber>N</convertUserIdToNumber>
+            <loginStatus>Active</loginStatus>
+            <timeLocked>1/7/2002 12:30:23 PM</timeLocked>
+        </applicationLogin>
+        <applicationLogin masterLoginRef="ml-1" tpUserRef="tpUser-1">
+            <applicationUserName>jxuTest-1</applicationUserName>
+            <applicationPassword>password</applicationPassword>
+            <applicationName>TekPortal</applicationName>
+            <convertUserIdToNumber>N</convertUserIdToNumber>
+            <loginStatus>Active</loginStatus>
+            <timeLocked>1/7/2002 2:30:55 PM</timeLocked>
+        </applicationLogin>
+    </applicationLogins>
+</jxuConfig>

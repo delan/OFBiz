@@ -1,0 +1,13 @@
+TODO List for Test Component
+
+Nov. 23, 2003
+
+* Creat a sample JXWeb test to demonstrate how to make HttpUnit tests 
+with XML data definitions.
+* Ability to config entities for update mode
+* Map service engine data types to Java data types.  
+* any bug fixes
+
+Nov. 25, 2003
+* Docs describing each JXEngine and how to write your own JXGeneric engine
+
