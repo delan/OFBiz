@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Jacopo Cappellato (tiz@sastau.it)
+ *@version    $Revision: 1.1 $
+ *@since      3.0
+-->
+
+<forms>
+
+    <form name="ListProductManufacturingRules" type="list" 
+            target="UpdateProductManufacturingRule" title="" list-name="manufacturingRules"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext"
+            >
+        <auto-fields-service service-name="updateProductManufacturingRule" map-name="manufacturingRule"/>
+        <field name="ruleId"><display/></field>
+        <field name="productId"><display/></field>
+        <field name="productIdFor"><display/></field>
+        <field name="productIdIn"><display/></field>
+        <field name="productIdInSubst"><display/></field>
+        <field name="productFeature"><display/></field>
+        <field name="ruleOperator"><display/></field>
+        <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="EditProductManufacturingRules?ruleId=${ruleId}" description="[${uiLabelMap.CommonSelected}]" />
+        </field> 
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="DeleteProductManufacturingRule?ruleId=${ruleId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+
+     <form name="UpdateProductManufacturingRule" type="single" 
+            target="UpdateProductManufacturingRule" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updateProductManufacturingRule" map-name="manufacturingRule"/>
+        <field name="ruleId"><display/></field>
+        <field name="productIdIn">
+            <lookup target-form-name="LookupVirtualProduct"/>
+        </field>
+        <field name="ruleOperator">
+            <drop-down>
+                <option key="OR"/>
+                <option key="AND"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="AddProductManufacturingRule" type="single" 
+            target="AddProductManufacturingRule" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="addProductManufacturingRule" map-name="manufacturingRule"/>
+        <field name="ruleId"><display/></field>
+        <field name="ruleOperator">
+            <drop-down>
+                <option key="OR"/>
+                <option key="AND"/>
+            </drop-down>
+        </field>
+        <field name="productIdIn">
+            <lookup target-form-name="LookupVirtualProduct"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" >
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form
+        name="lookupVirtualProduct" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupVirtualProduct" title="" type="single">
+        <auto-fields-entity entity-name="Product" default-field-type="find" />
+        <field name="isVirtual">
+            <hidden value="Y"/>
+        </field>
+        <field name="isVirtual_op">
+            <hidden value="equals"/>
+        </field>
+        <field name="productTypeId">
+            <drop-down>
+                <option key="" description=""/>
+                <entity-options entity-name="ProductType" description="${description}">
+                    <entity-constraint name="parentTypeId" value="GOOD"/>
+                </entity-options>
+             </drop-down>
+        </field>
+        <field name="productTypeId_op">
+            <hidden value="equals"/>
+        </field>
+        <field name="primaryProductCategoryId"><ignored/></field>
+        <field name="manufacturerPartyId"><ignored/></field>
+        <field name="introductionDate"><ignored/></field>
+        <field name="supportDiscontinuationDate"><ignored/></field>
+        <field name="salesDiscontinuationDate"><ignored/></field>
+        <field name="salesDiscWhenNotAvail"><ignored/></field>
+        <field name="internalName"><ignored/></field>
+        <field name="brandName"><ignored/></field>
+        <field name="comments"><ignored/></field>
+        <field name="description"><ignored/></field>
+        <field name="longDescription"><ignored/></field>
+        <field name="inventoryMessage"><ignored/></field>
+        <field name="requireInventory"><ignored/></field>
+        <field name="smallImageUrl"><ignored/></field>
+        <field name="mediumImageUrl"><ignored/></field>
+        <field name="largeImageUrl"><ignored/></field>
+        <field name="detailImageUrl"><ignored/></field>
+        <field name="detailTemplate"><ignored/></field>
+        <field name="quantityUomId"><ignored/></field>
+        <field name="quantityIncluded"><ignored/></field>
+        <field name="piecesIncluded"><ignored/></field>
+        <field name="weightUomId"><ignored/></field>
+        <field name="weight"><ignored/></field>
+        <field name="returnable"><ignored/></field>
+        <field name="taxable"><ignored/></field>
+        <field name="taxCategory"><ignored/></field>
+        <field name="taxVatCode"><ignored/></field>
+        <field name="taxDutyCode"><ignored/></field>
+        <field name="chargeShipping"><ignored/></field>
+        <field name="autoCreateKeywords"><ignored/></field>
+        <field name="isVariant"><ignored/></field>
+        <field name="totalQuantityOrdered"><ignored/></field>
+        <field name="createdDate"><ignored/></field>
+        <field name="createdByUserLogin"><ignored/></field>
+        <field name="lastModifiedDate"><ignored/></field>
+        <field name="lastModifiedByUserLogin"><ignored/></field>
+        <field name="submitButton" title="Lookup" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form
+        name="listLookupVirtualProduct" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" paginate-target="/LookupVirtualProduct" 
+	title="" type="list">
+        <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
+        </field>
+        <field name="productName"><display/></field>
+        <field name="productTypeId"><display/></field>
+    </form>
+    <form 
+        name="lruLookupVirtualProduct" 
+        default-entity-name="Product"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="lruList" 
+        target="" title="" type="list">
+        <field name="productId" title="Id" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
+        </field>
+        <field name="productName" title="Name" widget-style="buttontext">
+                <display/>
+        </field>
+    </form>
+
+</forms>
