@@ -63,6 +63,14 @@
     if (paymentMethods != null && paymentMethods.size() > 0) {
         paymentMethod = (GenericValue) paymentMethods.get(0);
     }
+    List paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
+    GenericValue paymentMethodType = null;
+    String paymentMethodTypeId = null;
+    if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
+    	paymentMethodTypeId = (String) paymentMethodTypeIds.get(0);
+    	paymentMethodType = delegator.findByPrimaryKey("PaymentMethodType", UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId));
+    }   
+    
     GenericValue billingAddress = null;
     if (paymentMethod != null) {
         GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");

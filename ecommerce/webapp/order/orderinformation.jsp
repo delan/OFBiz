@@ -159,6 +159,7 @@
               <table width="100%" border="0" cellpadding="1">
               <ofbiz:unless name="paymentMethod">
                 <tr>
+                  <%if (paymentMethodTypeId.equals("EXT_OFFLINE")) {%>
                   <td colspan="2" valign="top">
                   <div class="tabletext" align="center"><b>Offline Payment</b></div>
                   <ofbiz:if name="orderHeader">
@@ -169,6 +170,11 @@
                     <div class="tabletext" align="center"><b>Be sure to include your order #</b></div>
                   </td>
                   </ofbiz:if>
+                  <%} else {%>
+                  <td colspan="2" valign="top">
+                  <div class="tabletext" align="center"><b>Payment Via <%=paymentMethodType.getString("description")%></b></div>
+                  </td>
+                  <%}%>
                 </tr>
               </ofbiz:unless>
               <ofbiz:if name="paymentMethod">
