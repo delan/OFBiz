@@ -1365,7 +1365,7 @@
       <field name="requiredByDate" type="date-time"></field>
       <field name="estimatedBudget" type="currency-amount"></field>
       <field name="quantity" type="floating-point"></field>
-      <field name="story" type="long-varchar"></field>
+      <field name="story" type="very-long"></field>
       <field name="reason" type="long-varchar"></field>
       <prim-key field="requirementId"/>
       <relation type="one" fk-name="REQ_TYPE" rel-entity-name="RequirementType">
