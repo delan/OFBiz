@@ -37,6 +37,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
@@ -294,6 +295,9 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
                         ContentWorker.renderContentAsTextCache(delegator, "NOCONTENTFOUND", writer, context, null, locale, mimeTypeId);
                     }
                 } else {
+                    if (content.xmlEscape())
+                        renderedContent = UtilFormatOut.encodeXmlValue(renderedContent);
+                    
                     writer.write(renderedContent);
                 }
 
@@ -372,6 +376,9 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
                         ContentWorker.renderContentAsTextCache(delegator, "NOCONTENTFOUND", writer, context, null, locale, mimeTypeId);
                     }
                 } else {
+                    if (content.xmlEscape())
+                        renderedContent = UtilFormatOut.encodeXmlValue(renderedContent);
+                        
                     writer.write(renderedContent);
                 }
 

@@ -80,14 +80,14 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             sb.append("&nbsp;&nbsp;");
         writer.write(sb.toString());
         */
-        writer.write("<div");
         String style = node.getWrapStyle(context);
         if (UtilValidate.isNotEmpty(style)) {
+        	writer.write("<div");
             writer.write(" class=\"");
             writer.write(style);
             writer.write("\"");
+            writer.write(">");
         }
-        writer.write(">");
 
         String pkName = node.getModelTree().getPkName();
         String entityId = (String)context.get(pkName);
@@ -160,7 +160,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             }
             renderLink( writer, context, expandCollapseLink);
         } else if (!hasChildren){
-                writer.write("&nbsp;");
+                writer.write(" ");
                 context.put("processChildren", new Boolean(false));
                 //currentNodeTrail.add(contentId);
         }
@@ -168,7 +168,10 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
     }
 
     public void renderNodeEnd(Writer writer, Map context, ModelTree.ModelNode node) throws IOException {
+        String style = node.getWrapStyle(context);
+        if (UtilValidate.isNotEmpty(style)) {
         writer.write("</div>");
+        }
         return;
     }
 
