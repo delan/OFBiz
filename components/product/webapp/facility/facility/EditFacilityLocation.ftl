@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -64,6 +64,22 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     </#if>
     
     <#if facilityId?exists>      
+        <tr>
+            <td width="26%" align=right><div class="tabletext">Type</div></td>
+            <td>&nbsp;</td>
+            <td width="74%">
+                <select name="locationTypeEnumId">
+                    <#if (facilityLocation.locationTypeEnumId)?has_content>
+                        <#assign locationTypeEnum = facilityLocation.getRelatedOneCache("TypeEnumeration")?if_exists>
+                        <option value="${facilityLocation.locationTypeEnumId}">${(locationTypeEnum.description)?default(facilityLocation.locationTypeEnumId)}</option>
+                        <option value="${facilityLocation.locationTypeEnumId}">----</option>
+                    </#if>
+                    <#list locationTypeEnums as locationTypeEnum>
+                        <option value="${locationTypeEnum.enumId}">${locationTypeEnum.description}</option>
+                    </#list>
+                </select>
+            </td>
+        </tr>
         <tr>
             <td width="26%" align=right><div class="tabletext">Area</div></td>
             <td>&nbsp;</td>
