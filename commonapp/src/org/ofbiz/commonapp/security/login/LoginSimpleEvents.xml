@@ -31,8 +31,14 @@
 <simple-methods>
     <!-- UserLogin events -->
     <simple-method method-name="updatePassword" short-description="Update Password">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/security/login/LoginMapProcs.xml" 
+        <if-has-permission permission="PARTYMGR" action="_CREATE">
+            <call-map-processor xml-resource="org/ofbiz/commonapp/security/login/LoginMapProcs.xml"
+                processor-name="adminUpdatePassword" in-map-name="parameters" out-map-name="context"/>
+        <else>
+             <call-map-processor xml-resource="org/ofbiz/commonapp/security/login/LoginMapProcs.xml"
                 processor-name="updatePassword" in-map-name="parameters" out-map-name="context"/>
+        </else>
+        </if-has-permission>
         <check-errors/>
         <call-service service-name="updatePassword" in-map-name="context">
             <default-message>Password successfully updated.</default-message></call-service>
