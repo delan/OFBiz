@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.17 2003/11/07 04:34:39 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.18 2003/11/17 20:08:04 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 
@@ -1632,9 +1632,21 @@ public class OrderServices {
                 Debug.logError(e, "ERROR: Unable to get Product from OrderItem", module);
             }
         }
+
+        // check returnable status
         boolean returnable = true;
+
+        // first check returnable flag
         if (product != null && product.get("returnable") != null &&
                 "N".equalsIgnoreCase(product.getString("returnable"))) {
+            // the product is not returnable at all
+            returnable = false;
+        }
+
+        // next check support discontinuation
+        if (product != null && product.get("supportDiscontinuationDate") != null &&
+                !UtilDateTime.nowTimestamp().before(product.getTimestamp("supportDiscontinuationDate"))) {
+            // support discontinued either now or in the past
             returnable = false;
         }
 
