@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceGroupReader.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: ServiceGroupReader.java,v 1.2 2003/08/17 08:42:35 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,7 @@ package org.ofbiz.service.group;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
@@ -39,7 +40,7 @@ import org.w3c.dom.Element;
  * ServiceGroupReader.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ServiceGroupReader {
@@ -60,11 +61,18 @@ public class ServiceGroupReader {
 
         List serviceGroupElements = UtilXml.childElementList(rootElement, "service-groups");
         Iterator groupsIter = serviceGroupElements.iterator();
-
         while (groupsIter.hasNext()) {
             Element serviceGroupElement = (Element) groupsIter.next();
             ResourceHandler handler = new MainResourceHandler(ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME, serviceGroupElement);
             addGroupDefinitions(handler);
+        }
+
+        // get all of the component resource group stuff, ie specified in each ofbiz-component.xml file
+        List componentResourceInfos = ComponentConfig.getAllServiceResourceInfos("group");
+        Iterator componentResourceInfoIter = componentResourceInfos.iterator();
+        while (componentResourceInfoIter.hasNext()) {
+            ComponentConfig.ServiceResourceInfo componentResourceInfo = (ComponentConfig.ServiceResourceInfo) componentResourceInfoIter.next();
+            addGroupDefinitions(componentResourceInfo.createResourceHandler());
         }
     }    
     
