@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -63,6 +63,7 @@ request.setAttribute("availableLocales",availableLocales);
 locale = UtilHttp.getLocale(request);
 request.setAttribute("locale",locale);
 uiLabelMap = UtilProperties.getResourceBundleMap("ProductUiLabels", locale);
+uiLabelMap.addBottomResourceBundle("CommonUiLabels");
 request.setAttribute("uiLabelMap", uiLabelMap);
 
 layoutSettings = new HashMap();
