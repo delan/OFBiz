@@ -153,7 +153,7 @@
                            </td>
                           <#else>
                             <td align="right">                            
-                              <a valign="top" href="<@ofbizUrl>/receivepayment?${qString?if_exists}</@ofbizUrl>" class="buttontext">Receive Payment</a>
+                              <a valign="top" href="<@ofbizUrl>/receivepayment?${paramString}</@ofbizUrl>" class="buttontext">Receive Payment</a>
                             </td>
                           </#if>
                         </tr>
