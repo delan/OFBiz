@@ -1035,11 +1035,11 @@
         <find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
         <if-compare field-name="reserveInventory" map-name="productStore" operator="not-equals" value="Y">
             <!-- no reservations; no shipment; cannot use quick ship -->
-            <add-error><fail-message message="ProductStore [${productStore.productStoreID}] does not reserve inventory; cannot use Quick Ship for Multiple Facilities"/></add-error>
+            <add-error><fail-message message="ProductStore [${productStore.productStoreId}] does not reserve inventory; cannot use Quick Ship for Multiple Facilities"/></add-error>
         </if-compare>
         <if-compare field-name="explodeOrderItems" map-name="productStore" operator="equals" value="Y">
             <!-- can't insert duplicate rows in shipmentPackageContent -->
-            <add-error><fail-message message="ProductStore [${productStore.productStoreID}] explodes order items; cannot use Quick Ship for Multiple Facilities"/></add-error>
+            <add-error><fail-message message="ProductStore [${productStore.productStoreId}] explodes order items; cannot use Quick Ship for Multiple Facilities"/></add-error>
         </if-compare>
         <!-- locate shipping facilities associated with order item rez's -->
         <entity-condition entity-name="OrderItemAndShipGrpInvResAndItem" list-name="orderItemAndShipGrpInvResAndItemList">
@@ -1191,7 +1191,7 @@
                 
                 <if-compare field-name="reserveInventory" map-name="productStore" operator="not-equals" value="Y">
                     <!-- no reservations; no shipment; cannot use quick ship -->
-                    <add-error><fail-message message="ProductStore [${productStore.productStoreID}] does not reserve inventory; cannot use Quick Ship"/></add-error>
+                    <add-error><fail-message message="ProductStore [${productStore.productStoreId}] does not reserve inventory; cannot use Quick Ship"/></add-error>
                 </if-compare>
                 <if-compare field-name="oneInventoryFacility" map-name="productStore" operator="not-equals" value="Y">
                     <!-- if we allow multiple facilities we cannot use quick ship; throw error -->
