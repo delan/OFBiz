@@ -293,7 +293,13 @@ public class InventoryServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");        
-               
+
+        boolean skipThisNeedsUpdating = true;
+        if (skipThisNeedsUpdating) {
+            Debug.logWarning("NOT Running the checkInventoryAvailability service, no backorders or such will be automatically created; the reason is that this serice needs to be updated to use OrderItemShipGroup instead of OrderShipmentPreference which it currently does.", module);
+            return ServiceUtil.returnSuccess();
+        }
+        
         Map ordersToUpdate = new HashMap();
         Map ordersToCancel = new HashMap();       
         
