@@ -119,7 +119,7 @@ public class DataFile {
         if (ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle) || ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle)) {
             BufferedReader br = new BufferedReader(new InputStreamReader(dataFileStream));
             boolean isFixedRecord = ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle);
-            Debug.logInfo("[DataFile.readDataFile] separatorStyle is " + modelDataFile.separatorStyle + ", isFixedRecord: " + isFixedRecord);
+            //Debug.logInfo("[DataFile.readDataFile] separatorStyle is " + modelDataFile.separatorStyle + ", isFixedRecord: " + isFixedRecord);
 
             int lineNum = 1;
             String line = null;
@@ -310,6 +310,7 @@ public class DataFile {
             String typeCode = line.substring(curModelRecord.tcPosition, curModelRecord.tcPosition + curModelRecord.tcLength);
             //try to match with a single typecode
             if (curModelRecord.typeCode.length() > 0) {
+                //Debug.logInfo("[DataFile.findModelForLine] Doing plain typecode match - code=" + curModelRecord.typeCode + ", filelinecode=" + typeCode);
                 if (typeCode != null && typeCode.equals(curModelRecord.typeCode)) {
                     modelRecord = curModelRecord;
                     break;
@@ -318,13 +319,15 @@ public class DataFile {
             //try to match a ranged typecode (tcMin <= typeCode <= tcMax)
             else if (curModelRecord.tcMin.length() > 0 || curModelRecord.tcMax.length() > 0) {
                 if (curModelRecord.tcIsNum) {
-                    long typeCodeNum = Long.parseLong(curModelRecord.typeCode);
+                    //Debug.logInfo("[DataFile.findModelForLine] Doing ranged number typecode match - minNum=" + curModelRecord.tcMinNum + ", maxNum=" + curModelRecord.tcMaxNum + ", filelinecode=" + typeCode);
+                    long typeCodeNum = Long.parseLong(typeCode);
                     if ((curModelRecord.tcMinNum < 0 || typeCodeNum >= curModelRecord.tcMinNum) &&
                         (curModelRecord.tcMaxNum < 0 || typeCodeNum <= curModelRecord.tcMaxNum)) {
                         modelRecord = curModelRecord;
                         break;
                     }
                 } else {
+                    //Debug.logInfo("[DataFile.findModelForLine] Doing ranged String typecode match - min=" + curModelRecord.tcMin + ", max=" + curModelRecord.tcMax + ", filelinecode=" + typeCode);
                     if ((typeCode.compareTo(curModelRecord.tcMin) >= 0) &&
                         (typeCode.compareTo(curModelRecord.tcMax) <= 0)) {
                         modelRecord = curModelRecord;
@@ -336,6 +339,7 @@ public class DataFile {
         if (modelRecord == null)
             throw new DataFileException("Could not find record definition for line " + lineNum + "; first bytes: " +
                     line.substring(0, (line.length() > 5) ? 5 : line.length()));
+        //Debug.logInfo("[DataFile.findModelForLine] Got record model named " + modelRecord.name);
         return modelRecord;
     }
 }
