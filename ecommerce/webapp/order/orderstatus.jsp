@@ -111,7 +111,7 @@
   <form name="addOrderToCartForm" action="<ofbiz:url><%="/addordertocart/orderstatus?order_id=" + orderId%></ofbiz:url>" method="GET">
   <input type="HIDDEN" name="add_all" value="false">
   <input type="HIDDEN" name="order_id" value="<%=orderId%>">
-
+<BR>
 <%@ include file="orderitems.jsp" %>
 
   </form>

@@ -78,7 +78,7 @@
           </tr>
           <%listIndex++;%>
         <%}%>
-        <tr><td height="1" bgcolor="#999999"></td></tr>
+        <tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
       </ofbiz:iterator>
     </ofbiz:if>
 
@@ -103,7 +103,7 @@
           </tr>
           <%listIndex++;%>
         <%}%>
-        <tr><td height="1" bgcolor="#999999"></td></tr>
+        <tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
       </ofbiz:iterator>
     </ofbiz:if>
 
@@ -128,7 +128,7 @@
           </tr>
           <%listIndex++;%>
         <%}%>
-        <tr><td height="1" bgcolor="#999999"></td></tr>
+        <tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
       </ofbiz:iterator>
     </ofbiz:if>
 
@@ -153,7 +153,7 @@
           </tr>
           <%listIndex++;%>
         <%}%>
-        <tr><td height="1" bgcolor="#999999"></td></tr>
+        <tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
       </ofbiz:iterator>
     </ofbiz:if>
 

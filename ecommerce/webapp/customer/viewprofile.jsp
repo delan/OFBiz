@@ -172,7 +172,7 @@
         <%GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");%>
         <%GenericValue contactMechType = (contactMech==null?null:contactMech.getRelatedOne("ContactMechType"));%>
         <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(showOld ? partyContactMech.getRelated("PartyContactMechPurpose") : EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose")));%>
-          <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
+          <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
           <tr>
             <td align="right" valign="top" width="15%">
               <div class="tabletext">&nbsp;<b><%if(contactMechType!=null){%><%=UtilFormatOut.checkNull(contactMechType.getString("description"))%><%}%></b></div>

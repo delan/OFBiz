@@ -8,6 +8,7 @@
 <ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCart" />  
 <%if(cart != null) {%>
   <%pageContext.setAttribute("cartIter", cart.iterator());%>
+  <%org.ofbiz.ecommerce.catalog.CatalogHelper.getRandomCartProductAssoc(pageContext, "associatedProducts");%>
 <%}%>
 <BR>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
@@ -82,7 +83,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="white">
+      <table width="100%" border="0" cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
 <ofbiz:if name="_SHOPPING_CART_">
@@ -97,7 +98,7 @@
         </TR>
 
         <ofbiz:iterator name="item" property="cartIter" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCartItem">
-          <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
+          <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
           <TR>
             <TD><div class='tabletext'><%-- <b><%= cart.getItemIndex(item)%></b> - --%><a href='<ofbiz:url>/product?product_id=<%=item.getProductId()%></ofbiz:url>' class='buttontext'><%= item.getProductId()%> - <%= item.getName()%></a> : <%= item.getDescription()%></div></TD>
             <TD NOWRAP ALIGN="center"><div class='tabletext'><input size="5" type="text" name="update_<%=cart.getItemIndex(item) %>" value="<ofbiz:format><%= item.getQuantity() %></ofbiz:format>"></div></TD>
@@ -142,6 +143,7 @@
       </table>
     </TD>
   </TR>
+<%--
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
@@ -171,7 +173,53 @@
       </table>
     </TD>
   </TR>
+--%>
 </TABLE>
+
+<ofbiz:if name="_SHOPPING_CART_">
+ <ofbiz:if name="associatedProducts" size="0">
+  <BR>
+  <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+    <TR>
+      <TD width='100%'>
+        <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+          <tr>
+            <td valign="middle" align="left">
+              <div class="boxhead">&nbsp;You might be interested in these as well:</div>
+            </td>
+            <td valign="middle" align="right">&nbsp;</td>
+          </tr>
+        </table>
+      </TD>
+    </TR>
+    <TR>
+      <TD width='100%'>
+        <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+          <tr>
+            <td>
+    <table width='100%' CELLSPACING="0" CELLPADDING="4" BORDER="0">
+      <%int listIndex = 1;%>
+      <!-- random complementary products -->
+      <ofbiz:iterator name="product" property="associatedProducts">
+        <%if(listIndex > 1) {%>
+          <tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
+        <%}%>
+        <tr>
+          <td>
+            <%@ include file="/catalog/productsummary.jsp"%>
+          </td>
+        </tr>
+        <%listIndex++;%>
+      </ofbiz:iterator>
+    </table>
+            </td>
+          </tr>
+        </table>
+      </TD>
+    </TR>
+  </TABLE>
+ </ofbiz:if>
+</ofbiz:if>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>

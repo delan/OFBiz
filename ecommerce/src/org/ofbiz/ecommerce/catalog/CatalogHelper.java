@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.26  2001/09/28 21:57:53  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.25  2001/09/27 15:53:31  epabst
  * refactored code to use getRelatedByAnd, filterByDate
  *
@@ -88,6 +91,7 @@ package org.ofbiz.ecommerce.catalog;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -466,19 +470,39 @@ public class CatalogHelper {
     if(cart == null || cart.size() <= 0) return;
     
     try {
-      TreeSet cartAssocs = new TreeSet();
+      Map products = new HashMap();
       
       Iterator cartiter = cart.iterator();
       while(cartiter != null && cartiter.hasNext()) {
         ShoppingCartItem item = (ShoppingCartItem)cartiter.next();
-        Collection upgradeProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_UPGRADE"), null);
-        //Collection complementProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_COMPLEMENT"), null);
+        //Collection upgradeProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_UPGRADE"), null);
+        Collection complementProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", item.getProductId(), "productAssocTypeId", "PRODUCT_COMPLEMENT"), null);
 
         //if(upgradeProducts != null && upgradeProducts.size() > 0) pageContext.setAttribute(assocPrefix + "upgrade", upgradeProducts);
-        //if(complementProducts != null && complementProducts.size() > 0) pageContext.setAttribute(assocPrefix + "complement", complementProducts);
+        if(complementProducts != null && complementProducts.size() > 0) {
+          Iterator complIter = complementProducts.iterator();
+          while(complIter.hasNext()) {
+            GenericValue productAssoc = (GenericValue)complIter.next();
+            GenericValue product = productAssoc.getRelatedOneCache("AssocProduct");
+            products.put(product.getString("productId"), product);
+          }
+        }
+      }
+      
+      //remove all products that are already in the cart
+      cartiter = cart.iterator();
+      while(cartiter != null && cartiter.hasNext()) {
+        ShoppingCartItem item = (ShoppingCartItem)cartiter.next();
+        products.remove(item.getProductId());
       }
 
-      pageContext.setAttribute(assocsAttrName, (Collection)cartAssocs);
+      ArrayList cartAssocs = new ArrayList(products.values());
+      //randomly remove products while there are more than 3
+      while(cartAssocs.size() > 3) {
+        int toRemove = (int)(Math.random()*(double)(cartAssocs.size()));
+        cartAssocs.remove(toRemove);
+      }
+      pageContext.setAttribute(assocsAttrName, cartAssocs);
     }
     catch(GenericEntityException e) {
       Debug.logWarning(e);
