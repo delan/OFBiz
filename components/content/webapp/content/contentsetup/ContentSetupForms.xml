@@ -38,7 +38,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
-        paginate="false"
         target="updateContentType" title="" type="list">
         <auto-fields-service service-name="updateContentType"/>
         <field name="contentTypeId" title="ContentTypeId" widget-style="buttontext">
@@ -74,7 +73,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
-        paginate="false"
         target="updateContentTypeAttr" title="" type="list">
         <auto-fields-service service-name="createContentTypeAttr"/>
         <field name="contentTypeId" title="ContentTypeId" widget-style="buttontext">
@@ -104,7 +102,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
-        paginate="false"
         target="updateContentAssocType" title="" type="list">
         <auto-fields-service service-name="updateContentAssocType"/>
         <field name="contentAssocTypeId" title="ContentAssocTypeId" widget-style="buttontext">
@@ -134,7 +131,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
-        paginate="false"
         target="updateContentPurposeType" title="" type="list">
         <auto-fields-service service-name="updateContentPurposeType"/>
         <field name="contentPurposeTypeId" title="ContentPurposeTypeId" widget-style="buttontext">
@@ -165,7 +161,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
-        paginate="false"
         target="updateContentAssocPredicate" title="" type="list">
         <auto-fields-service service-name="updateContentAssocPredicate"/>
         <field name="contentAssocPredicateId"
@@ -196,7 +191,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
-        paginate="false"
         target="updateContentOperation" title="" type="list">
         <auto-fields-service service-name="updateContentOperation"/>
         <field name="contentOperationId" title="ContentOperationId" widget-style="buttontext">
@@ -243,7 +237,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
-        paginate="false"
         target="" title="" type="list">
         <auto-fields-service service-name="updateContentPurposeOperation" default-field-type="display"/>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">

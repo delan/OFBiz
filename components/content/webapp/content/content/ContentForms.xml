@@ -54,7 +54,6 @@
     </form>
     <form name="listFindContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        paginate="false"
         list-name="entityList" target="" paginate-target="/FindContent" title="" type="list">
         <auto-fields-entity entity-name="Content" default-field-type="display"/>
         <field name="contentId" title="Edit" widget-style="buttontext">
@@ -172,7 +171,6 @@
     <form name="listLookupContent" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="entityList" target="" paginate-target="/LookupContent" 
-        paginate="false"
         title="" type="list">
         <auto-fields-entity entity-name="Content" default-field-type="display"/>
         <field name="contentId" title="&amp;nbsp;" widget-style="buttontext">
@@ -187,7 +185,6 @@
     </form>
     <form name="mruLookupContent" default-entity-name="Content"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
-        paginate="false"
         list-name="mruList" target="" title="" type="list">
         <field name="contentId" title="Id" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
@@ -234,7 +231,6 @@
     </form>
     <form name="ListContentAssocFrom" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        paginate="false"
         list-name="fromList" target="" title="Assoc From this Content" type="list">
         <auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/>
         <field name="contentId" title="" widget-style="buttontext">
@@ -252,7 +248,6 @@
     </form>
     <form name="ListContentAssocTo" default-entity-name="Content"
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
-        paginate="false"
         list-name="toList" target="EditContentAssoc" title="Assoc To this Content" type="list">
         <auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/>
         <field name="contentId" title="Content Id " widget-style="buttontext">
@@ -296,7 +291,6 @@
     </form>
     <form name="ListContentRole" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        paginate="false"
         list-name="contentList" target="updateContentRole" title="" type="list">
         <auto-fields-service service-name="updateContentRole" default-field-type="display" />
         <field name="thruDate" widget-style="buttontext"><date-time/></field>
@@ -325,7 +319,6 @@
     </form>
     <form name="ListContentPurpose" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        paginate="false"
         list-name="contentList" target="updateContentPurpose" title="" type="list">
         <auto-fields-service service-name="updateContentPurpose" default-field-type="display" />
         <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
@@ -343,7 +336,6 @@
     </form>
     <form default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" name="ListContentAttribute"
-        paginate="false"
         target="updateContentAttribute" title="" type="list">
         <auto-fields-service service-name="updateContentAttribute" default-field-type="display" />
         <field name="attrValue" widget-style="buttontext"><text/></field>
@@ -368,7 +360,6 @@
     </form>
     <form name="ListContentMetaData" list-name="contentList" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
-        paginate="false"
         target="updateContentMetaData" title="" type="list">
         <auto-fields-service service-name="updateContentMetaData" default-field-type="edit" />
         <field name="contentId" title="ContentId" widget-style="buttontext"><display/></field>
@@ -388,7 +379,6 @@
     </form>
     <form name="listLookupPerson" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        paginate="false"
         list-name="entityList" target="" paginate-target="LookupPerson" title="" type="list">
         <auto-fields-entity entity-name="Person" default-field-type="display"/>
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
@@ -401,7 +391,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="mruList" 
-        paginate="false"
         target="" title="" type="list">
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
                 
@@ -418,7 +407,6 @@
     </form>
     <form name="listLookupPartyAndUserLoginAndPerson" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        paginate="false"
         list-name="entityList" target="" paginate-target="LookupPartyAndUserLoginAndPerson" title="" type="list">
         <auto-fields-entity entity-name="PartyAndUserLoginAndPerson" default-field-type="display"/>
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
@@ -431,7 +419,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="mruList" 
-        paginate="false"
         target="" title="" type="list">
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
                 
