@@ -81,6 +81,8 @@ public class ControlServlet extends HttpServlet {
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
+        if (request.getCharacterEncoding() == null)
+            request.setCharacterEncoding("UTF-8");
         
         String nextPage  = null;
         
