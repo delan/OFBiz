@@ -34,17 +34,23 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %>
 
-<%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
+<%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
-  boolean useValues = true;
-  if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+    boolean useValues = true;
+    if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
-  String productId = request.getParameter("PRODUCT_ID");
-  GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-  if(product == null) useValues = false;
+    String productId = request.getParameter("PRODUCT_ID");
+    GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+    if (product == null) useValues = false;
+    Collection productCategoryMembers = product.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productCategoryId"));
+    if (productCategoryMembers != null)
+        pageContext.setAttribute("productCategoryMembers", productCategoryMembers);
 
-  Collection categoryCol = delegator.findAll("ProductCategory", null);
-  if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
+    Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
+    if (categoryCol != null)
+        pageContext.setAttribute("categoryCol", categoryCol);
+
+    if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 %>
 <br>
 
@@ -72,22 +78,30 @@
     <td><div class="tabletext"><b>Category ID</b></div></td>
     <td><div class="tabletext"><b>Description</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
+    <td><div class="tabletext"><b>Sequence</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
-<%Iterator pcIterator = UtilMisc.toIterator(product.getRelated("ProductCategoryMember"));%>
-<%while(pcIterator != null && pcIterator.hasNext()) {%>
-  <%GenericValue productCategoryMember = (GenericValue)pcIterator.next();%>
+<ofbiz:iterator name="productCategoryMember" property="productCategoryMembers">
   <%GenericValue category = productCategoryMember.getRelatedOne("ProductCategory");%>
   <tr valign="middle">
-    <td><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=productCategoryMember.getString("productCategoryId")%></a></td>
-    <td><%if(category!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=category.getString("description")%></a><%}%>&nbsp;</td>
-    <td><div class='tabletext'><%=productCategoryMember.getTimestamp("fromDate")%></div></td>
+    <td><a href='<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/></a></td>
+    <td><%if (category!=null) {%><a href='<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><%=category.getString("description")%></a><%}%>&nbsp;</td>
+    <td><div class='tabletext'><ofbiz:entityfield attribute="productCategoryMember" field="fromDate"/></div></td>
     <td>
-      <a href="<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%>&useValues=true</ofbiz:url>" class="buttontext">
+        <FORM method=POST action='<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=UPDATE</ofbiz:url>'>
+            <input type=hidden name='PRODUCT_ID' value='<%=productId%>'>
+            <input type=hidden name='PRODUCT_CATEGORY_ID' value='<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>'>
+            <input type=hidden name='FROM_DATE' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate"/>'>
+            <input type=text size='5' name='SEQUENCE_NUM' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum"/>'>
+            <INPUT type=submit value='Update'>
+        </FORM>
+    </td>
+    <td>
+      <a href='<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_CATEGORY_ID=<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
-<%}%>
+</ofbiz:iterator>
 </table>
 <br>
 <form method="POST" action="<ofbiz:url>/UpdateProductCategoryMember</ofbiz:url>" style='margin: 0;'>
@@ -98,11 +112,9 @@
   <div class='head2'>Add ProductCategoryMember (enter Category ID):</div>
   <br>
   <select name="PRODUCT_CATEGORY_ID">
-  <%Iterator it = UtilMisc.toIterator(categoryCol);%>
-  <%while(it != null && it.hasNext()) {%>
-    <%GenericValue category = (GenericValue)it.next();%>
-    <option value="<%=category.getString("productCategoryId")%>"><%=category.getString("description")%> [<%=category.getString("productCategoryId")%>]</option>
-  <%}%>
+  <ofbiz:iterator name="category" property="categoryCol">
+    <option value='<ofbiz:entityfield attribute="category" field="productCategoryId"/>'><ofbiz:entityfield attribute="category" field="description"/> [<ofbiz:entityfield attribute="category" field="productCategoryId"/>]</option>
+  </ofbiz:iterator>
   </select>
   <input type="submit" value="Add">
 </form>
