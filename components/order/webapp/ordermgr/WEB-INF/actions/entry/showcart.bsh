@@ -151,7 +151,7 @@ if (partyId != null || userLoginId != null) {
     } 
 } else {
     partyId = session.getAttribute("orderPartyId");
-    if (partyId.equals("_NA_")) partyId = null;
+    if (partyId != null && partyId.equals("_NA_")) partyId = null;
 }
 
 context.put("partyId", partyId);  
