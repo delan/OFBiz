@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.21 $
+ *@version    $Revision: 1.22 $
  *@since      2.1
  */
 
@@ -260,8 +260,7 @@ if (product != null) {
 	                    if (detailImage != null && detailImage.length() > 0) {
 	                        detailImageUrl = ContentUrlTag.getContentPrefix(request) + detailImage;
 	                        // base64 encode the image url for a little protection
-	                        detailImageUrl = Base64.base64Encode(detailImageUrl);
-	                        Debug.log("Detail : " + detailImageUrl);
+	                        detailImageUrl = URLEncoder.encode(Base64.base64Encode(detailImageUrl), "UTF-8");
 	                    }
 	                    if (largeImage != null && largeImage.length() > 0) {
 	                        largeImageUrl = ContentUrlTag.getContentPrefix(request) + largeImage;
