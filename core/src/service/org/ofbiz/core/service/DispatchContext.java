@@ -73,8 +73,10 @@ public class DispatchContext implements Serializable {
         this.readers = readers;
         this.loader = loader;
         this.dispatcher = dispatcher;
-        this.attributes = new HashMap();
-        
+        this.attributes = new HashMap();                
+    }
+
+    public void loadReaders() {
         Map localService = addReaders(readers);
         if (localService != null) {
             modelService.put(name, localService);
@@ -236,7 +238,7 @@ public class DispatchContext implements Serializable {
             return null;
         }
 
-        ModelServiceReader reader = ModelServiceReader.getModelServiceReader(readerURL);
+        ModelServiceReader reader = ModelServiceReader.getModelServiceReader(readerURL, this);
 
         if (reader == null) {
             Debug.logError("Could not load the reader for the reader URL " + readerURL);
@@ -249,7 +251,7 @@ public class DispatchContext implements Serializable {
     }
 
     private Map addReader(ResourceHandler handler) {
-        ModelServiceReader reader = ModelServiceReader.getModelServiceReader(handler);
+        ModelServiceReader reader = ModelServiceReader.getModelServiceReader(handler, this);
 
         if (reader == null) {
             Debug.logError("Could not load the reader for " + handler);

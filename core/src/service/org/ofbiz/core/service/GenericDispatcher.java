@@ -68,6 +68,7 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
         this.name = ctx.getName();
                 
         ctx.setDispatcher(this);
+        ctx.loadReaders();
         dispatcher.register(name, ctx);
     }
 
