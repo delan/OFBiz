@@ -337,7 +337,7 @@
             <div class="tabletext"><font color='<%=fontColor%>'>Password Hint</font></div>
         </td>
         <td width="74%">
-            <input type="text" name="PASSWORD_HINT" value="" size="40" maxlength="100">
+            <input type="text" name="PASSWORD_HINT" value="<%=UtilFormatOut.checkNull(request.getParameter("PASSWORD_HINT"))%>" size="40" maxlength="100">
         </td>
       </tr>
     </ofbiz:if>
