@@ -159,6 +159,13 @@
 	  <response name="error" type="view" value="showcart"/>
     </request-map>
 
+	<request-map uri="updateCheckoutOptions">
+      <security https="true" auth="true"/>
+	  <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="setPartialCheckOutOptions"/>
+	  <response name="success" type="view" value="checkoutoptions"/>
+	  <response name="error" type="view" value="checkoutoptions"/>		
+	</request-map>
+	
 	<request-map uri="setOptions">
       <security https="true" auth="true" direct-request="false"/>
 	  <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="setCheckOutOptions"/>

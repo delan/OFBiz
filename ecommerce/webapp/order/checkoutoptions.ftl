@@ -24,9 +24,49 @@
  *@since      2.1
 -->
 
+<script language="javascript" type="text/javascript">
+<!--
+function submitForm(form, mode, value) {	
+	if (mode == "DN") {	
+		// done action; checkout
+		form.action="<@ofbizUrl>/checkout</@ofbizUrl>";
+		form.submit();
+	} else if (mode == "CS") {	
+		// continue shopping	
+		form.action="<@ofbizUrl>/updateCheckoutOptions/showcart</@ofbizUrl>";
+		form.submit();
+	} else if (mode == "NA") {
+		// new address
+		form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</@ofbizUrl>";
+		form.submit();
+	} else if (mode == "EA") {
+		// edit address
+		form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId="+value+"</@ofbizUrl>";
+		form.submit();
+	} else if (mode == "NC") {
+		// new credit card
+		form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutoptions</@ofbizUrl>";
+		form.submit();
+	} else if (mode == "EC") {
+		// edit credit card
+		form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutoptions&paymentMethodId="+value+"</@ofbizUrl>";
+		form.submit();
+	} else if (mode == "NE") {
+		// new eft account
+		form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions</@ofbizUrl>";
+		form.submit();
+	} else if (mode == "EE") {
+		// edit eft account
+		form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions&paymentMethodId="+value+"</@ofbizUrl>";
+		form.submit();
+	}
+}
+// -->
+</script>
+
 <#assign cart = context.shoppingCart?if_exists>
 
-<form method="post" name="checkoutInfoForm" action="<@ofbizUrl>/checkout</@ofbizUrl>" style='margin:0;'>
+<form method="post" name="checkoutInfoForm" style='margin:0;'>
   <table width="100%" border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
       <td height='100%'>
@@ -110,8 +150,8 @@
                         <td colspan="2">
                           <div>
                             <span class="head2"><b>Is This a Gift?</b></span>
-                            <input type='radio' name='is_gift' value='true' <#if cart.getIsGift()?default(false)>checked</#if>><span class='tabletext'>Yes</span>
-                            <input type='radio' name='is_gift' value='false' <#if !cart.getIsGift()?default(false)>checked</#if><span class='tabletext'>No</span>
+                            <input type='radio' <#if cart.getIsGift()?default(false)>checked</#if> name='is_gift' value='true'><span class='tabletext'>Yes</span>
+                            <input type='radio' <#if !cart.getIsGift()?default(false)>checked</#if> name='is_gift' value='false'><span class='tabletext'>No</span>
                           </div>
                         </td>
                       </tr>
@@ -178,7 +218,7 @@
                     <table width="100%" border="0" cellpadding="1" cellspacing="0">
                       <tr>
                         <td colspan="2">
-                          <a href="<@ofbizUrl>/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">[Add New Address]</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[Add New Address]</a>
                         </td>
                       </tr>
                        <#if context.shippingContactMechList?has_content>
@@ -199,7 +239,7 @@
                                  <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
                                  <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
                                  <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>                                                            
-                                 <a href="<@ofbizUrl>/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="buttontext">[Update]</a>
+                                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">[Update]</a>
                                </div>
                              </td>
                            </tr>
@@ -236,8 +276,8 @@
                     <table width="100%" cellpadding="1" cellspacing="0" border="0">
                       <tr><td colspan="2">
                         <span class='tabletext'>Add:</span>
-                        <a href="<@ofbizUrl>/editcreditcard?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">[Credit Card]</a>
-                        <a href="<@ofbizUrl>/editeftaccount?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">[EFT Account]</a>
+                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">[Credit Card]</a>
+                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">[EFT Account]</a>
                       </td></tr>
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
                       <tr>
@@ -274,7 +314,7 @@
                             </td>
                             <td width="50%" nowrap>
                               <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.commonapp.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
-                              <a href="<@ofbizUrl>/editcreditcard?DONE_PAGE=checkoutoptions&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">[Update]</a>
+                              <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="buttontext">[Update]</a>
                             </td>
                           </tr>
                         <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
@@ -285,7 +325,7 @@
                             </td>
                             <td width="50%" nowrap>
                               <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>
-                              <a href="<@ofbizUrl>/editeftaccount?DONE_PAGE=checkoutoptions&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">[Update]</a>
+                              <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="buttontext">[Update]</a>
                             </td>
                           </tr>
                           <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -333,10 +373,10 @@
 <table width="100%">
   <tr valign="top">
     <td align="left">
-      &nbsp;<a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontextbig">[Back to Shopping Cart]</a>
+      &nbsp;<a href="javascript:void(0);" onClick="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">[Back to Shopping Cart]</a>
     </td>
     <td align="right">
-      <a href="javascript:document.checkoutInfoForm.submit()" class="buttontextbig">[Continue to Final Order Review]</a>
+      <a href="javascript:void(0);" onClick="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">[Continue to Final Order Review]</a>
     </td>
   </tr>
 </table>

@@ -64,6 +64,11 @@ public class CheckOutEvents {
         }
     }
 
+    public static String setPartialCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
+        String resp = setCheckOutOptions(request, response);
+        request.setAttribute(SiteDefs.ERROR_MESSAGE, "");
+        return "success";
+    }            
     public static String setCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         StringBuffer errorMessage = new StringBuffer();
