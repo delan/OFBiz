@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      3.0
 -->
 
@@ -46,7 +46,7 @@
 <div class="head1">${survey.description?if_exists}</div>
 <br>
 
-<table border="0" cellpadding="2" cellspacing="0">
+<table width="100%" border="0" cellpadding="2" cellspacing="0">
   <#list surveyQuestions as question>
     <#-- special formatting for select boxes -->
     <#assign align = "left">
@@ -61,12 +61,17 @@
     <tr>
       <#-- seperator options -->
       <#if question.surveyQuestionTypeId == "SEPERATOR_TEXT">
-        <td colspan="4"><div class="tabletext">${question.question?if_exists}</div></td>
+        <td colspan="5"><div class="tabletext">${question.question?if_exists}</div></td>
       <#elseif question.surveyQuestionTypeId == "SEPERATOR_LINE">
-        <td colspan="4"><hr class="sepbar"></td>
+        <td colspan="5"><hr class="sepbar"></td>
       <#else>
         <#-- standard question options -->
-        <td align='right'><div class="tabletext">${question.question?if_exists}</div></td>
+        <td align='right' nowrap>
+          <div class="tabletext">${question.question?if_exists}</div>
+          <#if question.hint?has_content>
+            <div class="tabletext">${question.hint}</div>
+          </#if>
+        </td>
         <td width='1'>&nbsp;</td>
         <td align="${align}">
           <#if question.surveyQuestionTypeId == "BOOLEAN">
@@ -121,19 +126,20 @@
             <div class="tabletext">Unsupported question type : ${question.surveyQuestionTypeId}</div>
           </#if>
         </td>
-        <td>
+        <td nowrap>
           <#if question.requiredField?default("N") == "Y">
             <span class="tabletext">*</span>
           <#else>
             <span class="tabletext">[optional]</span>
           </#if>
         </td>
+        <td width="90%">&nbsp;</td>
       </#if>
     </tr>
   </#list>
   <tr>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
-    <td><input type="submit" value="Submit"></td>
+    <td colspan="2"><input type="submit" value="Submit"></td>
   </tr>
 </table>
