@@ -47,7 +47,7 @@ import org.ofbiz.minerva.pool.jdbc.xa.wrapper.XAResourceImpl;
  *
  * REVISIONS:
  * 20010703 bill added code for transaction isolation
- @version $Revision: 1.2 $
+ @version $Revision: 1.3 $
  */
 public class XAConnectionFactory extends PoolObjectFactory {
 
@@ -135,7 +135,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
                         // Wrapper - we can only release it if there's no current transaction
                         // Can't just check TM because con may have been committed but left open
                         //   so if there's a current transaction it may not apply to the con.
-                        log.warn("XAConnectionImpl: " + xaCon + " has no current tx!");
+                        log.debug("XAConnectionImpl: " + xaCon + " has no current tx!");
                         try {
                             xaCon.rollback();
                         } catch (SQLException e) {
