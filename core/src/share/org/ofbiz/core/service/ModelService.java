@@ -243,10 +243,11 @@ public class ModelService {
      * Gets the parameter names of the specified mode (IN/OUT/INOUT)
      * Note: IN and OUT will also contains INOUT parameters
      * @param mode The mode (IN/OUT/INOUT)
+     * @param optional True if to include optional parameters
      * @return List of parameter names
      */
-    public List getParameterNames(String mode) {
-        List names = new ArrayList();
+    public List getParameterNames(String mode, boolean optional) {
+        List names = new ArrayList();        
         if ( !mode.equals("IN") && !mode.equals("OUT") && !mode.equals("INOUT") )
             return names;
         if ( contextInfo == null || contextInfo.size() == 0 )
@@ -257,8 +258,10 @@ public class ModelService {
             Object key = i.next();
             String name = (String) key;
             ModelParam param = (ModelParam) contextInfo.get(key);
-            if ( param.mode.equals("INOUT") || param.mode.equals(mode) )
-                names.add(name);
+            if ( param.mode.equals("INOUT") || param.mode.equals(mode) ) {
+                if ( optional || ( !optional && !param.optional) )                    
+                    names.add(name);
+            }
         }
         return names;
     }
@@ -277,7 +280,7 @@ public class ModelService {
             return target;
         if ( contextInfo == null || contextInfo.size() == 0 )
             return target;
-        List names = getParameterNames(mode);
+        List names = getParameterNames(mode,true);
         Iterator i = names.iterator();
         while ( i.hasNext() ) {
             Object key = i.next();

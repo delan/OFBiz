@@ -526,7 +526,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if ( service == null )
             throw new WfException("Cannot determine model service for service name");                
         
-        List inNames = service.getParameterNames(ModelService.IN_PARAM);
+        List inNames = service.getParameterNames(ModelService.IN_PARAM,false);
         String params = StringUtil.join(inNames,",");
         Map serviceContext = actualContext(params,null);        
         
@@ -543,25 +543,17 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             return;
                 
         Map context = new HashMap();
-        context.put("serviceName",limitService);
-        context.put("timeLimit", timeLimit);
-        context.put("durationUom", durationUOM);
+        context.put("serviceName",limitService);               
         context.put("serviceContext",serviceContext);
+        context.put("workEffortId", runtimeKey());
         
-        ModelService model = new ModelService();
-        model.name = "wf-INTERNAL-schLimit";
-        model.location = "org.ofbiz.core.workflow.WorkflowServices";
-        model.invoke = "activityScheduleLimit";
-        model.engineName = "java";
-        model.contextInfo = null;
-        model.description = null;
-        model.nameSpace = null;
-        model.validate = false;
-        model.export = false;
-        model.auth = false;
+        long startTime = -1;
         
+        // todo fix duration uom to support other methods besides HOUR        
+        startTime = (new Date()).getTime() + (timeLimit.longValue() * 60 * 1000); // fixme
+                                   
         try {
-            getDispatcher().runSync(getServiceLoader(),model,context);
+            dctx.getDispatcher().schedule("wfLimitInvoker",context,startTime); // yes we are hard coded!
         }
         catch ( GenericServiceException e ) {
             throw new WfException(e.getMessage(),e);

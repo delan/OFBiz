@@ -543,4 +543,27 @@ public class RecurrenceRule {
         return 0;
     }
     
+    public String primaryKey() {
+        return rule.getString("recurrenceRuleId");
+    }
+    
+    public static RecurrenceRule makeRule(GenericDelegator delegator, String frequency, int interval, int count) throws RecurrenceRuleException {
+        try {
+            String ruleId = delegator.getNextSeqId("RecurrenceRule").toString();
+            GenericValue value = delegator.makeValue("RecurrenceRule",UtilMisc.toMap("recurrenceRuleId",ruleId));
+            value.set("frequency",frequency);
+            value.set("intervalNumber",new Long(interval));
+            value.set("countNumber",new Long(count));
+            delegator.create(value);
+            RecurrenceRule newRule = new RecurrenceRule(value);
+            return newRule;
+        }
+        catch ( GenericEntityException ee ) {
+            throw new RecurrenceRuleException(ee.getMessage(),ee);
+        }
+        catch ( RecurrenceRuleException re ) {
+            throw re;
+        }        
+    }
+                            
 }

@@ -84,7 +84,7 @@ public class WorkflowServices {
     public static Map checkActivityState(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        String workEffortId = (String) context.get("workEffortId");        
+        String workEffortId = (String) context.get("workEffortId");
         try {
             WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
             result.put("activityState",activity.state());
@@ -122,7 +122,7 @@ public class WorkflowServices {
         boolean removeOldAssign = false;
         if ( context.containsKey("removeOldAssignments") ) {
             removeOldAssign = ((String)context.get("removeOldAssignments")).equals("true") ? true : false;
-        }        
+        }
         try {
             WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
             WfResource resource = WfFactory.getWfResource(delegator,null,null,partyId,roleType);
@@ -145,7 +145,7 @@ public class WorkflowServices {
         String partyId = (String) context.get("partyId");
         String roleType = (String) context.get("roleTypeId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
-               
+        
         try {
             WfAssignment assign = WfFactory.getWfAssignment(delegator,workEffortId,partyId,roleType,fromDate);
             assign.accept();
@@ -178,21 +178,37 @@ public class WorkflowServices {
         catch ( WfException we ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE,we.getMessage());
-        }        
+        }
         return result;
     }
     
-    public static Map activityScheduleLimit(DispatchContext ctx, Map context) {
+    public static Map limitInvoker(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
-        
-        Integer limit = (Integer) context.get("limit");
+                
         String workEffortId = (String) context.get("workEffortId");
-        // todo - schedule a job to run after the limit expires to check status
+        String limitService = (String) context.get("limitService");
+        Map limitContext = (Map) context.get("limitContext");
+                
+        try {
+            WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
+            if ( activity.state().startsWith("open") ) 
+                dispatcher.runSync(limitService,limitContext);
+        }
+        catch ( WfException we ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,we.getMessage());
+        }
+        catch ( GenericServiceException se ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,se.getMessage());
+        }       
+                        
         return result;
     }
-            
+    
+     
     // -------------------------------------------------------------------
     // Client 'Worker' Methods
     // -------------------------------------------------------------------

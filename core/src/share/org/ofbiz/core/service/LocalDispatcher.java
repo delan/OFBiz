@@ -115,6 +115,22 @@ public class LocalDispatcher {
         return waiter;
     }
     
+    /** Schedule a service to run asynchronously at a specific start time
+     *@param serviceName Name of the service to invoke
+     *@param context The name/value pairs composing the context
+     *@param startTime The time to run this service
+     */
+    public void schedule(String serviceName, Map context, long startTime) throws GenericServiceException {
+        try {
+            getJobManager().schedule(getName(),serviceName,context,startTime);
+            Debug.logInfo("[LocalDispatcher.schedule] : Current time: " + (new Date()).getTime());
+            Debug.logInfo("[LocalDispatcher.schedule] : Runtime: " + startTime);
+        }
+        catch ( JobSchedulerException e ) {
+            throw new GenericServiceException(e.getMessage(),e);
+        }
+    }
+    
     /** Gets the JobManager associated with this dispatcher
      *@return JobManager that is associated with this dispatcher
      */

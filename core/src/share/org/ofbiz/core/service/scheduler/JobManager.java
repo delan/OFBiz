@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 package org.ofbiz.core.service.scheduler;
@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.*;
 import javax.xml.parsers.*;
 import org.xml.sax.*;
+import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.*;
@@ -54,7 +55,7 @@ public class JobManager {
     }
     
     /** Loads / Re-Loads Job Definitions from the Job Entity. */
-    public void loadJobs() {        
+    public void loadJobs() {
         // Get all scheduled jobs from the database.
         Collection jobList = null;
         Debug.logInfo("[JobScheduler.loadJobs] : loading jobs...");
@@ -65,9 +66,9 @@ public class JobManager {
             Debug.logError(npe,"[JobManager.loadJobs] : null pointer from delegator");
         }
         catch ( GenericEntityException e ) {
-            Debug.logError(e,"[JobManager.loadJobs] : Cannot get JobSandbox entities");            
-        }        
-        if ( jobList != null ) {            
+            Debug.logError(e,"[JobManager.loadJobs] : Cannot get JobSandbox entities");
+        }
+        if ( jobList != null ) {
             Iterator i = jobList.iterator();
             while ( i.hasNext() ) {
                 // Add the job.
@@ -76,8 +77,8 @@ public class JobManager {
                     GenericValue jobObj = (GenericValue) i.next();
                     GenericValue contextObj = jobObj.getRelatedOne("RuntimeData");
                     if ( contextObj != null )
-                        ctx = (Map) XmlSerializer.deserialize(contextObj.getString("runtimeInfo"), delegator);                                            
-                    Job thisJob = addJob(jobObj,ctx); 
+                        ctx = (Map) XmlSerializer.deserialize(contextObj.getString("runtimeInfo"), delegator);
+                    Job thisJob = addJob(jobObj,ctx);
                 }
                 catch ( GenericEntityException e ) {
                     Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
@@ -94,7 +95,7 @@ public class JobManager {
                 catch ( SAXException e ) {
                     Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
                     // e.printStackTrace();
-                }                    
+                }
                 catch ( IOException e ) {
                     Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
                     // e.printStackTrace();
@@ -104,7 +105,7 @@ public class JobManager {
                     // e.printStackTrace();
                 }
             }
-        }        
+        }
     }
     
     /** Create a Job object and add to the queue. */
@@ -122,7 +123,7 @@ public class JobManager {
             boolean queued = false;
             while (!queued) {
                 if ( !js.containsJob(job) ) {
-                    js.queueJob(job);        
+                    js.queueJob(job);
                     queued = true;
                 }
                 else {
@@ -135,13 +136,13 @@ public class JobManager {
         }
         return job;
     }
-        
+    
     /** Removes all jobs and stops the scheduler. */
     public synchronized void clearJobs() {
-        if ( js != null ) 
-            js.clearJobs();                    
+        if ( js != null )
+            js.clearJobs();
     }
-        
+    
     /** Returns a list of Jobs. */
     public synchronized List getJobList() {
         LinkedList jobList = new LinkedList();
@@ -150,7 +151,7 @@ public class JobManager {
             jobList.add(iterator.next());
         return jobList;
     }
-                     
+    
     /** Close out the scheduler thread. */
     public void finalize() {
         if (js != null) {
@@ -163,5 +164,47 @@ public class JobManager {
     /** Returns the ServiceDispatcher. */
     public ServiceDispatcher getDispatcher() {
         return this.dispatcher;
+    }
+    
+    public synchronized void schedule(String loader, String serviceName, Map context, long startTime) throws JobSchedulerException {
+        schedule(loader,serviceName,context,startTime,"DAILY",1,1);
+    }
+    
+    public synchronized void schedule(String loader, String serviceName, Map context, long startTime, String frequency, int interval, int count) throws JobSchedulerException {
+        String dataId = null;
+        String infoId = null;
+        String jobName = new String(new Long((new Date().getTime())).toString());
+        try {
+            dataId = delegator.getNextSeqId("RuntimeData").toString();
+            GenericValue runtimeData = delegator.makeValue("RuntimeData",UtilMisc.toMap("runtimeDataId",dataId));
+            runtimeData.set("runtimeInfo",XmlSerializer.serialize(context));
+            delegator.create(runtimeData);
+        }
+        catch ( GenericEntityException ee ) {
+            throw new JobSchedulerException(ee.getMessage(),ee);
+        }
+        catch ( SerializeException se ) {
+            throw new JobSchedulerException(se.getMessage(),se);
+        }      
+        catch ( IOException ioe ) {
+            throw new JobSchedulerException(ioe.getMessage(),ioe);
+        }
+        try {
+            RecurrenceInfo info = RecurrenceInfo.makeInfo(delegator,startTime,frequency,interval,count);
+            infoId = info.primaryKey();
+        }
+        catch ( RecurrenceInfoException e ) {
+            throw new JobSchedulerException(e.getMessage(),e);
+        }
+        Map jFields = UtilMisc.toMap("jobName",jobName,"serviceName",serviceName,"loaderName",loader,"recurrenceInfoId",infoId,"runtimeDataId",dataId);
+        GenericValue job = null;
+        try {
+            job = delegator.makeValue("JobSandbox",jFields);
+            delegator.create(job);
+        }
+        catch ( GenericEntityException e ) {
+            throw new JobSchedulerException(e.getMessage(),e);
+        }
+        addJob(job,context);
     }
 }

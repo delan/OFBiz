@@ -249,4 +249,34 @@ public class RecurrenceInfo {
         return true;
     }
     
+    public String primaryKey() {
+        return info.getString("recurrenceInfoId");
+    }
+    
+    public static RecurrenceInfo makeInfo(GenericDelegator delegator, long startTime) throws RecurrenceInfoException {
+        return makeInfo(delegator,startTime,"DAILY",1,1);
+    }
+    
+    public static RecurrenceInfo makeInfo(GenericDelegator delegator, long startTime, String frequency, int interval, int count) throws RecurrenceInfoException {
+        try {
+            RecurrenceRule r = RecurrenceRule.makeRule(delegator,frequency,interval,count);
+            String ruleId = r.primaryKey();
+            String infoId = delegator.getNextSeqId("RecurrenceInfo").toString();
+            GenericValue value = delegator.makeValue("RecurrenceInfo",UtilMisc.toMap("recurrenceInfoId",infoId));
+            value.set("recurrenceRuleId",ruleId);
+            value.set("startDateTime",new java.sql.Timestamp(startTime));
+            delegator.create(value);
+            RecurrenceInfo newInfo = new RecurrenceInfo(value);
+            return newInfo;
+        }
+        catch ( RecurrenceRuleException re ) {
+            throw new RecurrenceInfoException(re.getMessage(),re);
+        }
+        catch ( GenericEntityException ee ) {
+            throw new RecurrenceInfoException(ee.getMessage(),ee);
+        }
+        catch ( RecurrenceInfoException rie ) {
+            throw rie;
+        }
+    }
 }
