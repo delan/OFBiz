@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.10 2003/12/13 17:11:38 ajzeneski Exp $
+ * $Id: UtilHttp.java,v 1.11 2004/04/10 13:54:27 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.1
  */
 public class UtilHttp {
@@ -395,13 +395,30 @@ public class UtilHttp {
      */
     public static void streamContent(OutputStream out, InputStream in, int length) throws IOException {
         int bufferSize = 512; // same as the default buffer size; change as needed
+
+        // make sure we have something to write to
+        if (out == null) {
+            throw new IOException("Attempt to write to null output stream");
+        }
+
+        // make sure we have something to read from
+        if (in == null) {
+            throw new IOException("Attempt to read from null input stream");
+        }
+
+        // make sure we have some content
+        if (length == 0) {
+            throw new IOException("Attempt to write 0 bytes of content to output stream");
+        }
+
+        // initialize the buffered streams
         BufferedOutputStream bos = new BufferedOutputStream(out, bufferSize);
         BufferedInputStream bis = new BufferedInputStream(in, bufferSize);
 
         byte[] buffer = new byte[length];
         int read = 0;
         try {
-            while (-1 != (read = bis.read(buffer, 0, buffer.length))) {
+            while ((read = bis.read(buffer, 0, buffer.length)) != -1) {
                 bos.write(buffer, 0, read);
             }
         } catch (IOException e) {
