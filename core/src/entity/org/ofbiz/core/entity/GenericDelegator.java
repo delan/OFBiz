@@ -635,10 +635,13 @@ public class GenericDelegator {
      */
     public Collection findByAnd(String entityName, Map fields, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        if (modelEntity == null) {
+            throw new GenericModelException("Could not find definition for entity name " + entityName);
+        }
         GenericHelper helper = getEntityHelper(modelEntity);
 
         if (fields != null && !modelEntity.areFields(fields.keySet()))
-            throw new IllegalArgumentException("[GenericDelegator.findByAnd] At least one of the passed fields is not valid: " + fields.keySet().toString());
+            throw new GenericModelException("At least one of the passed fields is not valid: " + fields.keySet().toString());
 
         Collection collection = null;
         collection = helper.findByAnd(modelEntity, fields, orderBy);
