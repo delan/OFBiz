@@ -18,10 +18,10 @@
   
   <!-- Security services -->
   <service name="userLogin" engine="java"
-    location="org.ofbiz.commonapp.security.login" invoke="userLogin"/>
+    location="org.ofbiz.commonapp.security.login.LoginServices" invoke="userLogin">
 	  <description>Authenticate a username/password; create a UserLogin object</description>
 	  <attribute name="login.username" type="String" mode="IN"/>
-	  <attribute name="login.password" type="String" mode="OUT"/>
+	  <attribute name="login.password" type="String" mode="IN"/>
 	  <attribute name="userLoginObject" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
   </service>
   
