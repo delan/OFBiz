@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  */
 -->
 
@@ -616,13 +616,13 @@
       <field name="unitPrice" type="currency-amount"></field>
       <field name="unitListPrice" type="currency-amount"></field>
       <field name="unitAverageCost" type="currency-amount"></field>
-      <field name="estimatedDeliveryDate" type="date-time"></field>
       <field name="itemDescription" type="description"></field>
       <field name="comments" type="comment"></field>
       <field name="correspondingPoId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="syncStatusId" type="id"></field>
       <field name="estimatedShipDate" type="date-time"></field>
+      <field name="estimatedDeliveryDate" type="date-time"></field>
       <field name="autoCancelDate" type="date-time"></field>
       <field name="dontCancelSetDate" type="date-time"></field>
       <field name="dontCancelSetUserLogin" type="id-vlong"></field>

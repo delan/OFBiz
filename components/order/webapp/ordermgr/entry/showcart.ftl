@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      2.1
 -->
 
@@ -149,11 +149,38 @@ function gwAll(e) {
                   </#if>
                 </tr>              
               </table>
-              <div class="tableheadtext">
-                Product&nbsp;ID:&nbsp;<input type="text" class="inputBox" size="20" name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
-                Quantity:&nbsp;<input type="text" class="inputBox" size="6" name="quantity" value="${requestParameters.quantity?default("1")}">
-                <input type="submit" class="smallSubmit" value="Add To Order">
-              </div>
+	      
+              <table border="0">
+                <tr>
+                  <td align="right"><div class="tableheadtext">Product Id :<div></td>
+                  <td><input type="text" class="inputBox" size="25" name="add_product_id"
+		                     value="${requestParameters.add_product_id?if_exists}"></td>
+                </tr>
+                <tr>
+                  <td align="right"><div class="tableheadtext">Quantity :</div></td>
+                  <td><input type="text" class="inputBox" size="6" name="quantity"
+		                     value="${requestParameters.quantity?default("1")}"></td>
+                </tr>
+                <tr>
+                  <td align="right"><div class="tableheadtext">Desired Delivery Date :</div></td>
+                  <td><input type="text" class="inputBox" size="25" maxlength="30"
+                             name="itemDesiredDeliveryDate" ></td>
+                  <td valign="bottom">
+                    <a href="javascript:call_cal(document.quickaddform.itemDesiredDeliveryDate,'${defaultDesiredDeliveryDate} 00:00:00.0');">
+                      <img src="/images/cal.gif" width="16" height="16" border="0"
+		                   alt="Click here For Calendar">
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right"><div class="tableheadtext">Comment :</div></td>
+                  <td><input type="text" class="inputBox" size="25" name="itemComment" value=""></td>
+                </tr>
+                  <tr>
+                  <td></td>
+                  <td><input type="submit" class="smallSubmit" value="Add To Order"></td>
+                </tr>
+              </table>
             </form>
           </td>
         </tr>
@@ -249,6 +276,8 @@ function gwAll(e) {
           <tr>
             <td>&nbsp;</td>         
             <td>
+	      <table border="0">
+	      <tr><td colspan="2">
                 <div class="tabletext">                    
                   <#if cartLine.getProductId()?exists>
                     <#-- product item -->
@@ -269,9 +298,22 @@ function gwAll(e) {
                   <#else>
                     <#-- this is a non-product item -->
                     <b>${cartLine.getItemTypeDescription()?if_exists}</b> : ${cartLine.getName()?if_exists}
-                  </#if>                    
+                  </#if>
+		  		  
                 </div>
-                
+	        </td></tr>
+	        <#if cartLine.getItemComment()?has_content>
+	          <tr><td align="left"><div class="tableheadtext">Comment : </div></td>
+	              <td align="left"><div class="tabletext">${cartLine.getItemComment()?if_exists}</div>
+	          </td></tr>
+	        </#if>
+	        <#if cartLine.getDesiredDeliveryDate()?has_content>
+	          <tr><td align="left"><div class="tableheadtext">D. Delivery date : </div></td>
+	              <td align="left"><div class="tabletext">${cartLine.getDesiredDeliveryDate()?if_exists}</div>
+	          </td></tr>
+	        </#if>
+	      </table>
+
                 <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
                   <#-- Show alternate gifts if there are any... -->
                   <div class="tableheadtext">You may also choose one of the following for your gift:</div>
@@ -304,7 +346,7 @@ function gwAll(e) {
               </#if>
             </td>
             <#-- end gift wrap option -->
-
+		
             <td nowrap align="center">
               <div class="tabletext">
                 <#if cartLine.getIsPromo() || cartLine.getShoppingListId()?exists>
