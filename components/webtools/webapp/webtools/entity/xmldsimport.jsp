@@ -26,7 +26,8 @@
 <%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.w3c.dom.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.* " %>
-<%@ page import="java.io.InputStream, java.io.StringWriter, java.io.FileReader, freemarker.template.*, freemarker.ext.dom.NodeModel, java.io.IOException, org.xml.sax.InputSource " %>
+<%@ page import="java.io.InputStream, java.io.StringWriter, java.io.FileReader, freemarker.template.*, freemarker.ext.dom.NodeModel, java.io.IOException, org.xml.sax.InputSource, freemarker.ext.beans.BeansWrapper " %>
+
 <%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -121,6 +122,10 @@
 
         NodeModel nodeModel = NodeModel.parse(new InputSource(is));
         context.put("doc", nodeModel);
+        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+        TemplateHashModel staticModels = wrapper.getStaticModels();
+        context.put("Static", staticModels);
+
         template.process(context, outWriter);
         String s = outWriter.toString();
         //Debug.logInfo("filtered xml:" + s, "JSP");
