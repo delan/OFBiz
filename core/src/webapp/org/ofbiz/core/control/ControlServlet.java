@@ -49,16 +49,22 @@ public class ControlServlet extends HttpServlet {
     // Debug module name
     public static final String module = ControlServlet.class.getName();
 
+    protected ClassLoader localCachedClassLoader = null;
+    
     /** Creates new ControlServlet  */
     public ControlServlet() {
         super();
     }
 
     public void init(ServletConfig config) throws ServletException {
-        super.init(config);
+        super.init(config);        
         if (Debug.infoOn()) Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " +
                 config.getServletContext().getRealPath("/"), module);
 
+        //initialize the cached class loader for this application
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());
+        
         // initialize the delegator
         getDelegator();
         // initialize security
@@ -77,6 +83,9 @@ public class ControlServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //first thing's first: set the cached class loader for more speedy running in this thread
+        Thread.currentThread().setContextClassLoader(localCachedClassLoader);
+        
         // setup DEFAULT chararcter encoding and content type, this will be overridden in the RequestHandler for view rendering
         String charset = getServletContext().getInitParameter("charset");
         if (charset == null || charset.length() == 0) charset = request.getCharacterEncoding();
