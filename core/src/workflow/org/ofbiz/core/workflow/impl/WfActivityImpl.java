@@ -68,17 +68,6 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
     private void init() throws WfException {
         GenericValue valueObject = getDefinitionObject();
-        GenericValue performer = null;
-
-        if (valueObject.get("performerParticipantId") != null) {
-            try {
-                performer = valueObject.getRelatedOne("PerformerWorkflowParticipant");
-            } catch (GenericEntityException e) {
-                throw new WfException(e.getMessage(), e);
-            }
-        }
-        if (performer != null)
-            createAssignments(performer);
 
         // set the service loader the same as the parent
         this.setServiceLoader(container().getRuntimeObject().getString("serviceLoaderName"));
@@ -112,12 +101,23 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
         if (Debug.infoOn())
             Debug.logInfo("[WfActivity.init]: limitAfterStart - " + limitAfterStart, module);
-        if (!limitAfterStart
-            && valueObject.get("limitService") != null
-            && !valueObject.getString("limitService").equals("")) {
+        if (!limitAfterStart && valueObject.get("limitService") != null && 
+                !valueObject.getString("limitService").equals("")) {                        
             Debug.logVerbose("[WfActivity.init]: limit service is not after start, setting up now.", module);
             setLimitService();
         }
+        
+        GenericValue performer = null;
+        if (valueObject.get("performerParticipantId") != null) {
+            try {
+                performer = valueObject.getRelatedOne("PerformerWorkflowParticipant");
+            } catch (GenericEntityException e) {
+                throw new WfException(e.getMessage(), e);
+            }
+        }
+        if (performer != null)
+            createAssignments(performer);
+        
     }
 
     private void createAssignments(GenericValue performer) throws WfException {
