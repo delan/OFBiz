@@ -97,6 +97,8 @@
         <attribute name="title" type="String" mode="IN" optional="false"/>
         <attribute name="subtitle" type="String" mode="IN" optional="true"/>
         <attribute name="inventoryFacilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="oneInventoryFacility" type="String" mode="IN" optional="true"/>
+        <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updateProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalog" auth="true">
@@ -106,6 +108,8 @@
         <attribute name="title" type="String" mode="IN" optional="false"/>
         <attribute name="subtitle" type="String" mode="IN" optional="true"/>
         <attribute name="inventoryFacilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="oneInventoryFacility" type="String" mode="IN" optional="true"/>
+        <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
     </service>
     <service name="deleteProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="deleteProdCatalog" auth="true">
