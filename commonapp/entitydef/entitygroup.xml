@@ -219,6 +219,8 @@
     <entity-group group="org.ofbiz.commonapp" entity="ContentAssocType" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentMetaData" />
+    <entity-group group="org.ofbiz.commonapp" entity="ContentPurpose" />
+    <entity-group group="org.ofbiz.commonapp" entity="ContentPurposeType" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentRole" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentType" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentTypeAttr" />
@@ -233,7 +235,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="DataResourceAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResourceMetaData" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResourcePurpose" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataResourcePurposeType" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResourceRole" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResourceType" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResourceTypeAttr" />

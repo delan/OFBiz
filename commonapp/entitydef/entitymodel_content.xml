@@ -226,6 +226,33 @@
         <key-map field-name="dataSourceId"/>
       </relation>
     </entity>
+    <entity entity-name="ContentPurpose"
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Purpose Entity">
+      <field name="contentId" type="id-ne"></field>
+      <field name="contentPurposeTypeId" type="id-ne"></field>
+      <prim-key field="contentId"/>
+      <prim-key field="contentPurposeTypeId"/>
+      <relation type="one" fk-name="CONTENT_PRP" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
+      </relation>
+      <relation type="one" fk-name="CONTENT_PRP_TYPE" rel-entity-name="ContentPurposeType">
+        <key-map field-name="contentPurposeTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ContentPurposeType"
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Purpose Type Entity">
+      <field name="contentPurposeTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="contentPurposeTypeId"/>
+      <relation type="many" rel-entity-name="ContentPurpose">
+        <key-map field-name="contentPurposeTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="DataResourcePurpose">
+        <key-map field-name="contentPurposeTypeId"/>
+      </relation>
+    </entity>
     <entity entity-name="ContentRole"
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Role Entity">
@@ -423,24 +450,14 @@
             package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Purpose Entity">
       <field name="dataResourceId" type="id-ne"></field>
-      <field name="dataResourcePurposeTypeId" type="id-ne"></field>
+      <field name="contentPurposeTypeId" type="id-ne"></field>
       <prim-key field="dataResourceId"/>
-      <prim-key field="dataResourcePurposeTypeId"/>
+      <prim-key field="contentPurposeTypeId"/>
       <relation type="one" fk-name="DATA_REC_PRP" rel-entity-name="DataResource">
         <key-map field-name="dataResourceId"/>
       </relation>
-      <relation type="one" fk-name="DATA_REC_PRP_TYPE" rel-entity-name="DataResourcePurposeType">
-        <key-map field-name="dataResourcePurposeTypeId"/>
-      </relation>
-    </entity>
-    <entity entity-name="DataResourcePurposeType"
-            package-name="org.ofbiz.commonapp.content.data"
-            title="Data Object Purpose Type Entity">
-      <field name="dataResourcePurposeTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="dataResourcePurposeTypeId"/>
-      <relation type="many" rel-entity-name="DataResourcePurpose">
-        <key-map field-name="dataResourcePurposeTypeId"/>
+      <relation type="one" fk-name="DATA_REC_PRP_TYPE" rel-entity-name="ContentPurposeType">
+        <key-map field-name="contentPurposeTypeId"/>
       </relation>
     </entity>
     <entity entity-name="DataResourceRole"
