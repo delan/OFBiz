@@ -1511,8 +1511,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
         int highIndex = (viewIndex + 1) * viewSize;
         int actualPageSize = modelForm.getActualPageSize();
         // if this is all there seems to be (if listSize < 0, then size is unknown)
-        if (actualPageSize >= listSize && listSize > 0)
+        if (actualPageSize >= listSize && listSize > 0) {
             return;
+        }
 
         String str = (String) context.get("queryString");
         String queryString = stripViewParamsFromQueryString(str);
@@ -1536,7 +1537,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         }
         if (listSize > 0) {
-            buffer.append("          <span class=\"tabletext\">" + (lowIndex + 1) + " - " + (lowIndex + actualPageSize) + " of " + listSize + "</span> \n");
+            buffer.append("          <span class=\"tabletext\">" + (lowIndex + 1) + " - " + (lowIndex + actualPageSize + 1) + " of " + listSize + "</span> \n");
         }
         if (highIndex < listSize) {
             buffer.append(" <a href=\"");

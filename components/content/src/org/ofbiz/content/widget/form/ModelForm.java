@@ -1404,18 +1404,12 @@ public class ModelForm {
     }
     
     public void getListLimits(Map context) {
-        
-        
         try {
             listSize = ((Integer) context.get("listSize")).intValue();
         } catch (Exception e) {
             List items = (List) context.get(this.getListName());
-            int sz = 0;
             if (items != null) {
-            	sz = items.hashCode();
-            }
-            if (sz > 0) {
-            	listSize = sz;
+                listSize = items.size();
             } else {
                 ListIterator listIt = getListIterator(context);
                 if (listIt != null && listIt instanceof EntityListIterator) {
@@ -1423,8 +1417,9 @@ public class ModelForm {
                         ((EntityListIterator)listIt).last();
                         listSize = ((EntityListIterator)listIt).currentIndex();
                         ((EntityListIterator)listIt).beforeFirst();
-                    } catch(GenericEntityException e2) {
-                        listSize = -1;
+                    } catch (GenericEntityException e2) {
+                        Debug.logError(e2, "Error getting list size", module);
+                        listSize = 0;
                     }
                     
                 }
@@ -1445,7 +1440,7 @@ public class ModelForm {
             }
             lowIndex = viewIndex * viewSize;
             highIndex = (viewIndex + 1) * viewSize;
-            
+    
     
             /*
             try {
