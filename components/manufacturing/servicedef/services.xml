@@ -184,6 +184,66 @@
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="productionRunId" type="String" mode="OUT" optional="false"/>
     </service>
+    <service name="updateProductionRun" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="updateProductionRun" auth="true">
+        <description>Update a Production Run</description>
+        <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN"/>
+        <attribute name="estimatedStartDate" type="Timestamp" mode="IN"/>
+        <attribute name="workEffortName" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="addProductionRunRoutingTask" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="addProductionRunRoutingTask" auth="true">
+        <description>add a RoutingTask to an existing ProductionRun</description>
+        <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
+        <attribute name="routingTaskId" type="String" mode="OUT" optional="false"/>
+        <attribute name="priority" type="Long" mode="IN"/>
+        <attribute name="workEffortName" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="estimatedStartDate" type="Timestamp" mode="INOUT"/>
+        <attribute name="estimatedCompletionDate" type="Timestamp" mode="INOUT"/>
+        <attribute name="estimatedSetupMillis" type="Double" mode="IN"/>
+        <attribute name="estimatedMilliSeconds" type="Double" mode="IN"/>
+    </service>
+    <service name="checkUpdatePrunRoutingTask" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="checkUpdatePrunRoutingTask" auth="true">
+        <description>check if field for routingTask update are correct and if needed  recalculated data and update Production Run</description>
+        <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
+        <attribute name="routingTaskId" type="String" mode="IN" optional="false"/>
+        <attribute name="priority" type="Long" mode="IN"/>
+        <attribute name="estimatedStartDate" type="Timestamp" mode="IN"/>
+        <attribute name="estimatedSetupMillis" type="Double" mode="IN"/>
+        <attribute name="estimatedMilliSeconds" type="Double" mode="IN"/>
+    </service>
+    <service name="deleteProductionRunRoutingTask" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="deleteProductionRunRoutingTask" auth="true">
+        <description>delete a RoutingTask to an existing ProductionRun</description>
+        <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
+        <attribute name="routingTaskId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="addProductionRunComponent" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="addProductionRunComponent" auth="true">
+        <description>add a Product Component to an existing ProductionRun</description>
+        <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="estimatedQuantity" type="Double" mode="IN"/>
+        <attribute name="workEffortId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductionRunComponent" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="updateProductionRunComponent" auth="true">
+        <description>update a Product Component to an existing ProductionRun</description>
+        <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="estimatedQuantity" type="Double" mode="IN"/>
+        <attribute name="workEffortId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductionRunComponent" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="deleteProductionRunComponent" auth="true">
+        <description>delete a Product Component to an existing ProductionRun</description>
+        <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <!-- MRP services -->
     <service name="runningMrp" engine="java"

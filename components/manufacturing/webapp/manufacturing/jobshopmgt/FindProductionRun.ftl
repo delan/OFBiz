@@ -42,7 +42,16 @@ ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
     	</tr>
 	</table>
     <#if requestParameters.hideSearch?default("N") != "Y">
-		${singleWrapper.renderFormString()}
+    <table>
+    	<tr>
+    		<td width=80%>
+				${singleWrapper.renderFormString()}
+			<td>
+			<td width=20%>
+			&nbsp;
+			</td>
+		</tr>
+	</table>		
     </#if>
     </td>
   </tr>

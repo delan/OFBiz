@@ -1,5 +1,5 @@
 /*
- * $Id: pagelistprep.bsh,v 1.4 2004/04/21 22:30:37 holivier Exp $
+ * $Id: pagelistprep.bsh,v 1.5 2004/05/09 21:14:03 holivier Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,12 +25,14 @@
  /* copy from content component  actions/includes/pagelistprep.bsh 1.4 
  * with modification:
  *       - line 67 : added a test to know if it's necessary to build the list, variable showList
- *       - line 177 : added the uiLabel reading
+ *       - line 180 : added the uiLabel reading
+ *       - line 181 : put the hasUpdatePermission in the listWrapper context
+ *       - line 182 : put the hasDeletePermission in the listWrapper context
 */
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
 
  * This script breaks out the generic list pagination code so that it can be
@@ -176,6 +178,8 @@ if (UtilValidate.isEmpty(context.get("showList")) || context.get("showList").equ
     
     listWrapper.putInContext("entityName", context.get("entityName"));
     listWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+    listWrapper.putInContext("hasUpdatePermission", request.getAttribute("hasUpdatePermission"));
+    listWrapper.putInContext("hasDeletePermission", request.getAttribute("hasDeletePermission"));
     ModelForm modelForm    = listWrapper.getModelForm();
     modelForm.setListName(listName);
     context.put("listWrapper", listWrapper);

@@ -96,10 +96,8 @@ if (productId != null && workEffortId != null && fromDateString != null) {
 		updateRoutingProductLinkWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 		updateRoutingProductLinkWrapper.putInContext("byProduct", byProduct);
 		updateRoutingProductLinkWrapper.putInContext("routingTemplate", routingTemplate);
-		if ("N".equals(byProduct)) {
-				updateRoutingProductLinkWrapper.putInContext("workEffortName", workEffortName);
-				updateRoutingProductLinkWrapper.putInContext("internalName", routingProductLink.getRelatedOne("Product").getString("internalName"));
-		}
+        updateRoutingProductLinkWrapper.putInContext("workEffortName", workEffortName);
+        updateRoutingProductLinkWrapper.putInContext("internalName", routingProductLink.getRelatedOne("Product").getString("internalName"));
 		context.put("routingProductLink", routingProductLink);
 		context.put("updateRoutingProductLinkWrapper", updateRoutingProductLinkWrapper);
 	}

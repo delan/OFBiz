@@ -420,6 +420,7 @@
     </request-map>
     <request-map uri="EditProductionRun">
         <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/manufacturing/jobshopmgt/ProductionRunSimpleEvents.xml" invoke="actionEditProductionRun"/>
         <response name="success" type="view" value="EditProductionRun"/>
     </request-map>
     <request-map uri="ProductionRunDeclaration">
