@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.34 $
+ *@version    $Revision: 1.35 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -145,8 +145,6 @@ ${requestAttributes.virtualJavaScript?if_exists}
     }
  //-->
  </script>
-
-${pages.get("/catalog/breadcrumbs.ftl")}
 
 <table border="0" width="100%" cellpadding="2" cellspacing='0'>
   <#-- Category next/previous -->
@@ -403,7 +401,7 @@ ${pages.get("/catalog/breadcrumbs.ftl")}
   <tr>
     <td colspan="2">
       <div class="tableheadtext">${uiLabelMap.EcommerceCustomerReviews}:</div>
-      <#if averageRating?exists && (averageRating?double > 0) && numRatings?exists && (numRatings?double > 2)>
+      <#if averageRating?exists && (averageRating?double > 0) && numRatings?exists && (numRatings?double > 1)>
           <div class="tabletext">${uiLabelMap.EcommerceAverageRating}: ${averageRating} <#if numRatings?exists>(${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.EcommerceRatings})</#if></div>
       </#if>
     </td>

@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.34 $
+ *@version    $Revision: 1.35 $
  *@since      2.1
  */
 
@@ -40,12 +40,14 @@
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.service.*;
 import org.ofbiz.content.webapp.taglib.*;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductSearch;
 import org.ofbiz.product.product.ProductSearchSession;
+import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 import org.ofbiz.content.stats.VisitHandler;
@@ -182,20 +184,10 @@ if (product != null) {
     context.put("productReviews", reviews);
     // get the average rating
     if (reviews != null && reviews.size() > 0) {
-        reviewIter = reviews.iterator();
-        double totalProductRating = 0;
-        long numRatings = 0;
-        while (reviewIter.hasNext()) {
-            productReview = reviewIter.next();
-            productRating = productReview.get("productRating");
-            if (productRating != null) {
-                totalProductRating += productRating;
-                numRatings++;
-            }
-        }
-        if (numRatings > 0) {
-            context.put("averageRating", totalProductRating/numRatings);
-            context.put("numRatings", numRatings);
+        List ratingReviews = EntityUtil.filterByAnd(reviews, UtilMisc.toList(new EntityExpr("productRating", EntityOperator.NOT_EQUAL, null)));
+        if (ratingReviews.size() > 0) {
+            context.put("averageRating", ProductWorker.getAverageProductRating(product, reviews, productStoreId));
+            context.put("numRatings", ratingReviews.size());
         }
     }
 
