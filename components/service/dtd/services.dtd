@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  Service Framework - Service Definition DTD
- *  $Id: services.dtd,v 1.6 2004/06/17 00:52:10 ajzeneski Exp $
+ *  $Id$
 -->
 
 <!ELEMENT services (description?, vendor?, version?, created?, service+)>
@@ -68,7 +68,7 @@
 <!ATTLIST implements
 	service CDATA #REQUIRED
 >
-<!ELEMENT attribute EMPTY>
+<!ELEMENT attribute (type-validate*)>
 <!ATTLIST attribute
 	name CDATA #REQUIRED
 	type CDATA #REQUIRED
@@ -93,7 +93,7 @@
     form-display (true|false) "true"
     optional (true|false) "false"
 >
-<!ELEMENT override EMPTY>
+<!ELEMENT override (type-validate*)>
 <!ATTLIST override
     name CDATA #REQUIRED
     type CDATA #IMPLIED
@@ -104,5 +104,18 @@
     form-display (true|false) #IMPLIED
     optional (true|false) #IMPLIED
 >
-
+<!ELEMENT type-validate (fail-message | fail-property)>
+<!ATTLIST type-validate
+    method CDATA #IMPLIED
+    class CDATA "org.ofbiz.base.util.UtilValidate"
+>
+<!ELEMENT fail-message EMPTY>
+<!ATTLIST fail-message
+    message CDATA #REQUIRED
+>
+<!ELEMENT fail-property EMPTY>
+<!ATTLIST fail-property
+    resource CDATA #REQUIRED
+    property CDATA #REQUIRED
+>
 

@@ -26,25 +26,23 @@ package org.ofbiz.service;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * ServiceValidationException
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ServiceValidationException extends GenericServiceException {
 
+    protected List messages = new ArrayList();
     protected List missingFields = new ArrayList();
     protected List extraFields = new ArrayList();
     protected String errorMode = null;
     protected ModelService service = null;
-
-    protected ServiceValidationException() {
-        super();
-    }
-
+    
     public ServiceValidationException(ModelService service, List missingFields, List extraFields, String errorMode) {
         super();
         this.service = service;
@@ -57,8 +55,9 @@ public class ServiceValidationException extends GenericServiceException {
         }
     }
 
-    protected ServiceValidationException(String str) {
+    public ServiceValidationException(String str, ModelService service) {
         super(str);
+        this.service = service;
     }
 
     public ServiceValidationException(String str, ModelService service, List missingFields, List extraFields, String errorMode) {
@@ -73,8 +72,9 @@ public class ServiceValidationException extends GenericServiceException {
         }
     }
 
-    protected ServiceValidationException(String str, Throwable nested) {
+    public ServiceValidationException(String str, Throwable nested, ModelService service) {
         super(str, nested);
+        this.service = service;
     }
 
     public ServiceValidationException(String str, Throwable nested, ModelService service, List missingFields, List extraFields, String errorMode) {
@@ -89,12 +89,36 @@ public class ServiceValidationException extends GenericServiceException {
         }
     }
 
+    public ServiceValidationException(List messages, ModelService service, List missingFields, List extraFields, String errorMode) {
+        super();
+        this.messages = messages;
+        this.service = service;
+        this.errorMode = errorMode;
+        if (missingFields != null) {
+            this.missingFields = missingFields;
+        }
+        if (extraFields != null) {
+            this.extraFields = extraFields;
+        }
+    }
+
+    public ServiceValidationException(List messages, ModelService service, String errorMode) {
+        this(messages, service, null, null, errorMode);
+    }
+
     public List getExtraFields() {
         return extraFields;
     }
 
     public List getMissingFields() {
         return missingFields;
+    }
+
+    public List getMessageList() {
+        if (this.messages == null || this.messages.size() == 0) {
+            return null;
+        }
+        return this.messages;
     }
 
     public ModelService getModelService() {
@@ -111,6 +135,22 @@ public class ServiceValidationException extends GenericServiceException {
         } else {
             return null;
         }
+    }
+
+    public String getMessage() {
+        String msg = super.getMessage();
+        if (this.messages != null && this.messages.size() > 0) {
+            if (msg != null) {
+                msg += "\n";
+            } else {
+                msg = "";
+            }
+            Iterator i = this.messages.iterator();
+            while (i.hasNext()) {
+                msg += i.next();
+            }
+        }
+        return msg;
     }
 }
 

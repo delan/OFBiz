@@ -266,7 +266,11 @@ public class ServiceEventHandler implements EventHandler {
         } catch (ServiceValidationException e) {
             // not logging since the service engine already did
             request.setAttribute("serviceValidationException", e);
-            request.setAttribute("_ERROR_MESSAGE_", e.getNonNestedMessage());
+            if (e.getMessageList() != null) {                
+                request.setAttribute("_ERROR_MESSAGE_LIST_", e.getMessageList());
+            } else {
+                request.setAttribute("_ERROR_MESSAGE_", e.getNonNestedMessage());
+            }
             return "error";
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error", module);
