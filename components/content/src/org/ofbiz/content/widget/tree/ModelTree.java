@@ -299,11 +299,12 @@ public class ModelTree {
         protected List actions = new ArrayList();
         protected String name;
         protected ModelTree modelTree;
-        //protected List subNodeValues;
+        protected List subNodeValues;
         protected String expandCollapseStyle;
         protected FlexibleStringExpander wrapStyleExdr;
         protected ModelTreeCondition condition;
         protected String renderStyle;
+        protected String entryName;
 
         public ModelNode() {}
 
@@ -314,6 +315,7 @@ public class ModelTree {
             this.expandCollapseStyle = nodeElement.getAttribute("expand-collapse-style");
             this.wrapStyleExdr = new FlexibleStringExpander(nodeElement.getAttribute("wrap-style"));
             this.renderStyle = nodeElement.getAttribute("render-style");
+            this.entryName = UtilFormatOut.checkEmpty(nodeElement.getAttribute("entry-name"), null); 
     
             Element actionElement = UtilXml.firstChildElement(nodeElement, "entity-one");
             if (actionElement != null) {
@@ -384,7 +386,7 @@ public class ModelTree {
 			}
 			//Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
 			if (passed) {
-				List subNodeValues = new ArrayList();
+				//this.subNodeValues = new ArrayList();
 				//context.put("subNodeValues", new ArrayList());
 				//if (Debug.infoOn()) Debug .logInfo(" renderNodeString, " + modelTree.getPkName() + " :" + context.get(modelTree.getPkName()), module);
 				context.put("processChildren", new Boolean(true));
@@ -395,7 +397,7 @@ public class ModelTree {
 				context.put("currentNodeTrail", modelTree.currentNodeTrail);
 				String currentNodeTrailPiped = StringUtil.join( modelTree.currentNodeTrail, "|");
 				context.put("currentNodeTrailPiped", currentNodeTrailPiped);
-				treeStringRenderer.renderNodeBegin(writer, context, this, depth, isLast, subNodeValues);
+				treeStringRenderer.renderNodeBegin(writer, context, this, depth, isLast);
 				//if (Debug.infoOn()) Debug.logInfo(" context:" +
 				// context.entrySet(), module);
 				try {
@@ -419,8 +421,8 @@ public class ModelTree {
 					Boolean processChildren = (Boolean) context .get("processChildren");
 					//if (Debug.infoOn()) Debug.logInfo(" processChildren:" + processChildren, module);
 					if (processChildren.booleanValue()) {
-						getChildren(context, subNodeValues);
-						Iterator nodeIter = subNodeValues.iterator();
+						getChildren(context);
+						Iterator nodeIter = this.subNodeValues.iterator();
 						int nodeIndex = -1;
 						int newDepth = depth + 1;
 						while (nodeIter.hasNext()) {
@@ -435,7 +437,12 @@ public class ModelTree {
 							String pkName = this.modelTree.getPkName();
 							String thisEntityId = (String) val.get(pkName);
 							Map newContext = ((MapStack) context) .standAloneChildStack();
-							newContext.putAll(val);
+							String nodeEntryName = node.getEntryName();
+							if (UtilValidate.isNotEmpty(nodeEntryName)) {
+                                newContext.put(nodeEntryName, val);                        
+                            } else {
+							    newContext.putAll(val);
+                            }
 							newContext.put("currentNodeIndex", new Integer(nodeIndex));
 							String targetEntityId = null;
 							List targetNodeTrail = this.modelTree .getTrailList();
@@ -470,11 +477,15 @@ public class ModelTree {
 			}
 		}
 
-        public boolean hasChildren(Map context, List subNodeValues) {
+        public boolean hasChildren(Map context) {
 
              boolean hasChildren = false;
              Long nodeCount = null;
-       		Object obj = context.get("childBranchCount");
+             String countFieldName = "childBranchCount";
+             if (UtilValidate.isNotEmpty(this.entryName)) {
+                 countFieldName = this.entryName + "." + countFieldName;  
+             }
+       		Object obj = context.get(countFieldName);
        		if (obj != null)
                 nodeCount = (Long)obj;
              String entName = modelTree.getEntityName();
@@ -482,6 +493,8 @@ public class ModelTree {
              ModelEntity modelEntity = delegator.getModelEntity(entName);
              ModelField modelField = modelEntity.getField("childBranchCount"); 
              if (nodeCount == null && modelField != null) {
+                 getChildren(context);
+                 /*
                  String id = (String)context.get(modelTree.getPkName());
                  if (UtilValidate.isNotEmpty(id)) {
                  	try {
@@ -495,8 +508,19 @@ public class ModelTree {
                 		throw new RuntimeException(e.getMessage());
                  	}
                  }
+                 */
+                 nodeCount = new Long(this.subNodeValues.size());
+                 String id = (String)context.get(modelTree.getPkName());
+                 	try {
+                 		GenericValue entity = delegator.findByPrimaryKey(entName, UtilMisc.toMap(modelTree.getPkName(), id));
+                 	    entity.put("childBranchCount", nodeCount);
+                 	    entity.store();
+                 	} catch(GenericEntityException e) {
+                 		Debug.logError(e, module); 
+                		throw new RuntimeException(e.getMessage());
+                 	}
              } else if (nodeCount == null ) {
-             	getChildren(context, subNodeValues);
+             	getChildren(context);
                 if (subNodeValues != null )
                     nodeCount = new Long(subNodeValues.size());
              }
@@ -508,11 +532,9 @@ public class ModelTree {
              return hasChildren;
         }
 
-        public void getChildren(Map context, List subNodeValues) {
+        public void getChildren(Map context) {
       
-        	if (subNodeValues != null && subNodeValues.size() > 0) {
-        		return;
-            } else {
+             this.subNodeValues = new ArrayList();
              Iterator nodeIter = subNodeList.iterator();
              while (nodeIter.hasNext()) {
                  ModelSubNode subNode = (ModelSubNode)nodeIter.next();
@@ -527,7 +549,7 @@ public class ModelTree {
                      //GenericValue val = (GenericValue)dataIter.next();
                      Map val = (Map)dataIter.next();
                      Object [] arr = {node,val};
-                     subNodeValues.add(arr);
+                     this.subNodeValues.add(arr);
                  }
                  if (dataIter instanceof EntityListIterator) {
                  	try {
@@ -538,12 +560,16 @@ public class ModelTree {
                  }
                  
              }
+             
              return;
-            }
         }
 
         public String getName() {
             return name;
+        }
+
+        public String getEntryName() {
+            return this.entryName;
         }
 
         public String getRenderStyle() {

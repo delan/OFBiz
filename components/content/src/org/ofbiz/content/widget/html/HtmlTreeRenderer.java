@@ -67,7 +67,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
         return buf.toString();
     }
 
-    public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast, List subNodeValues) throws IOException {
+    public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast) throws IOException {
 
         String pathString = buildPathString(node.getModelTree(), depth);
         String currentNodeTrailPiped = null;
@@ -87,7 +87,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
 
         String pkName = node.getModelTree().getPkName();
         String entityId = (String)context.get(pkName);
-        boolean hasChildren = node.hasChildren(context, subNodeValues);
+        boolean hasChildren = node.hasChildren(context);
             //Debug.logInfo("HtmlTreeExpandCollapseRenderer, hasChildren(1):" + hasChildren, module);
 
         // check to see if this node needs to be expanded.

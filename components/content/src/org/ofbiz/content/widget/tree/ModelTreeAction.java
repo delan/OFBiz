@@ -322,9 +322,12 @@ public abstract class ModelTreeAction {
 
     public static class EntityOne extends ModelTreeAction {
         protected PrimaryKeyFinder finder;
+        String valueName;
         
         public EntityOne(ModelTree.ModelNode modelNode, Element entityOneElement) {
             super (modelNode, entityOneElement);
+            this.valueName = UtilFormatOut.checkEmpty(entityOneElement.getAttribute("value-name"), null); 
+            entityOneElement.setAttribute( "value-name", this.valueName);
             finder = new PrimaryKeyFinder(entityOneElement);
         }
         
@@ -341,6 +344,7 @@ public abstract class ModelTreeAction {
 
     public static class EntityAnd extends ModelTreeAction {
         protected ByAndFinder finder;
+        String listName;
         
         public EntityAnd(ModelTree.ModelNode.ModelSubNode modelSubNode, Element entityAndElement) {
             super (modelSubNode, entityAndElement);
@@ -348,15 +352,16 @@ public abstract class ModelTreeAction {
             Document ownerDoc = entityAndElement.getOwnerDocument();
             if (!useCache)
                 UtilXml.addChildElement(entityAndElement, "use-iterator", ownerDoc);
-            entityAndElement.setAttribute( "list-name", "_LIST_ITERATOR_");
+            this.listName = UtilFormatOut.checkEmpty(entityAndElement.getAttribute("list-name"), "_LIST_ITERATOR_"); 
+            entityAndElement.setAttribute( "list-name", this.listName);
             finder = new ByAndFinder(entityAndElement);
         }
         
         public void runAction(Map context) {
             try {
-                context.put("_LIST_ITERATOR_", null);
+                context.put(this.listName, null);
                 finder.runFind(context, this.modelTree.getDelegator());
-                Object obj = context.get("_LIST_ITERATOR_");
+                Object obj = context.get(this.listName);
                 if (obj != null && (obj instanceof EntityListIterator || obj instanceof ListIterator)) {
                     this.modelSubNode.setListIterator((ListIterator)obj);
                 } else {
@@ -373,6 +378,7 @@ public abstract class ModelTreeAction {
 
     public static class EntityCondition extends ModelTreeAction {
         ByConditionFinder finder;
+        String listName;
         
         public EntityCondition(ModelTree.ModelNode.ModelSubNode modelSubNode, Element entityConditionElement) {
             super (modelSubNode, entityConditionElement);
@@ -380,15 +386,17 @@ public abstract class ModelTreeAction {
             boolean useCache = "true".equalsIgnoreCase(entityConditionElement.getAttribute("use-cache"));
             if (!useCache)
                 UtilXml.addChildElement(entityConditionElement, "use-iterator", ownerDoc);
-            entityConditionElement.setAttribute( "list-name", "_LIST_ITERATOR_");
+               
+            this.listName = UtilFormatOut.checkEmpty(entityConditionElement.getAttribute("list-name"), "_LIST_ITERATOR_"); 
+            entityConditionElement.setAttribute( "list-name", this.listName);
             finder = new ByConditionFinder(entityConditionElement);
         }
         
         public void runAction(Map context) {
             try {
-                context.put("_LIST_ITERATOR_", null);
+                context.put(this.listName, null);
                 finder.runFind(context, this.modelTree.getDelegator());
-                Object obj = context.get("_LIST_ITERATOR_");
+                Object obj = context.get(this.listName);
                 if (obj != null && (obj instanceof EntityListIterator || obj instanceof ListIterator)) {
                     this.modelSubNode.setListIterator((ListIterator)obj);
                 } else {
