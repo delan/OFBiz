@@ -1792,6 +1792,19 @@
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
+    <view-entity entity-name="PartyRoleAndPerson"
+            package-name="org.ofbiz.commonapp.party.party"
+            title="PartyRole and Person View Entity">
+      <member-entity entity-alias="PR" entity-name="PartyRole"/>
+      <member-entity entity-alias="PS" entity-name="Person"/>
+      <alias entity-alias="PR" name="partyId"/>
+      <alias entity-alias="PR" name="roleTypeId"/>
+      <alias entity-alias="PS" name="firstName"/>
+      <alias entity-alias="PS" name="lastName"/>    
+      <view-link entity-alias="PR" rel-entity-alias="PS">
+        <key-map field-name="partyId"/>
+      </view-link> 
+    </view-entity>    
     <entity entity-name="PartySurveyResponse"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Survey Response Entity">
