@@ -96,12 +96,20 @@ function addToList() {
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
-          <td>
-           <div class="tabletext"><b>Product Entry:</b></div>
+          <td>           
             <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style='margin: 0;'>
-              <input type='text' class='inputBox' size='20' name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
-              <input type='text' class='inputBox' size='5' name="quantity" value="${requestParameters.quantity?default("1")}">
-              <input type='submit' value="Add To Order">              
+              <table border='0' cellspacing='0' cellpadding='2'>
+                <tr>
+                  <td><div class="tableheadtext">Product ID</div></td>
+                  <td><div class="tableheadtext">Quantity</div></td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td><input type='text' class='inputBox' size='20' name="add_product_id" value="${requestParameters.add_product_id?if_exists}"></td>
+                  <td><input type='text' class='inputBox' size='6' name="quantity" value="${requestParameters.quantity?default("1")}"></td>
+                  <td><input type='submit' value="Add To Order"></td>
+                </tr>
+              </table>
             </form>
           </td>
         </tr>
@@ -109,15 +117,28 @@ function addToList() {
         <tr><td><hr class="sepbar"></td></tr>
         <tr>
           <td>
-           <div class="tabletext"><b>Non-Product Entry:</b></div>
             <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style='margin: 0;'>
-              <select name="itemType" class="selectBox">
-                <option value="BULK_ITEM">Bulk Item</option>
-                <option value="WORK_ITEM">Work Item</option>
-              </select>
-              <input type='text' class='inputBox' size='40' name="add_product_desc" value="${requestParameters.add_product_description?if_exists}">
-              <input type='text' class='inputBox' size="5" name="quantity" value="${requestParameters.quantity?default("1")}">
-              <input type='submit' value="Add To Order">              
+              <table border='0' cellspacing='0' cellpadding='2'>
+                <tr>
+                  <td><div class="tableheadtext">Item Type</div></td>
+                  <td><div class="tableheadtext">Description</div></td>
+                  <td><div class="tableheadtext">Quantity</div></td>
+                  <td><div class="tableheadtext">Price</div></td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td>
+                    <select name="add_item_type" class="selectBox">
+                      <option value="BULK_ORDER_ITEM">Bulk Item</option>
+                      <option value="WORK_ORDER_ITEM">Work Item</option>
+                    </select>
+                  </td>
+                  <td><input type='text' class='inputBox' size='30' name="add_item_description" value="${requestParameters.add_product_id?if_exists}"></td>
+                  <td><input type='text' class='inputBox' size='6' name="quantity" value="${requestParameters.quantity?default("1")}"></td>
+                  <td><input type='text' class='inputBox' size='6' name="price" value="${requestParameters.price?if_exists}"></td>
+                  <td><input type='submit' value="Add To Order"></td>
+                </tr>
+              </table>               
             </form>
           </td>
         </tr>  
@@ -162,8 +183,7 @@ function addToList() {
           <TD NOWRAP align='center'><div class='tabletext'><b>Quantity</b></div></TD>
           <TD NOWRAP align='right'><div class='tabletext'><b>Unit Price</b></div></TD>
           <TD NOWRAP align='right'><div class='tabletext'><b>Adjustments</b></div></TD>
-          <TD NOWRAP align='right'><div class='tabletext'><b>Item Total</b></div></TD>
-          <TD NOWRAP align='center'><input type='checkbox' name='selectAll' value='0' onclick="javascript:toggleAll();"></TD>
+          <TD NOWRAP align='right'><div class='tabletext'><b>Item Total</b></div></TD>         
         </TR>
 
         <#assign itemsFromList = false>
@@ -173,18 +193,27 @@ function addToList() {
           <tr>
             <td>&nbsp;</td>         
             <td>
-                <div class='tabletext'>
-                    <#-- <b>${cartLineIndex}</b> - -->
+                <div class='tabletext'>                    
+                  <#if cartLine.getProductId()?exists>
+                    <#-- product item -->
                     <a href='<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>' class='buttontext'>${cartLine.getProductId()} - 
                     ${cartLine.getName()?if_exists}</a> : ${cartLine.getDescription()?if_exists}
 
-                    <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
-                    <#assign itemProduct = cartLine.getProduct()>
-                    <#assign isCatalogInventoryRequired = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].isCatalogInventoryRequired(request, itemProduct)>
-                    <#assign isCatalogInventoryAvailable = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].isCatalogInventoryAvailable(request, cartLine.getProductId(), cartLine.getQuantity())>
-                    <#if !isCatalogInventoryRequired && !isCatalogInventoryAvailable && itemProduct.inventoryMessage?has_content>
-                        <b>(${itemProduct.inventoryMessage})</b>
+                    <#if shoppingCart.getOrderType() == "SALES_ORDER">
+                      <#-- only applies to sales orders, not purchase orders
+                      <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
+                      <#assign itemProduct = cartLine.getProduct()>
+                      <#assign isCatalogInventoryRequired = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].isCatalogInventoryRequired(request, itemProduct)>
+                      <#assign isCatalogInventoryAvailable = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].isCatalogInventoryAvailable(request, cartLine.getProductId(), cartLine.getQuantity())>
+                      <#if !isCatalogInventoryRequired && !isCatalogInventoryAvailable && itemProduct.inventoryMessage?has_content>
+                          <b>(${itemProduct.inventoryMessage})</b>
+                      </#if>
                     </#if>
+                    
+                  <#else>
+                    <#-- this is a non-product item -->
+                    <b>${cartLine.getItemTypeDescription()?if_exists}</b> : ${cartLine.getName()?if_exists}
+                  </#if>                    
                 </div>
             </td>
             <td nowrap align="center">
@@ -196,10 +225,17 @@ function addToList() {
                 </#if>
               </div>
             </td>
-            <td nowrap align="right"><div class='tabletext'>${cartLine.getBasePrice()?string.currency}</div></TD>
-            <td nowrap align="right"><div class='tabletext'>${cartLine.getOtherAdjustments()?string.currency}</div></TD>
-            <td nowrap align="right"><div class='tabletext'>${cartLine.getItemSubTotal()?string.currency}</div></TD>
-            <td nowrap align="center"><div class='tabletext'><#if !cartLine.getIsPromo()><input type="checkbox" name="selectedItem" value="${cartLineIndex}" onclick="javascript:checkToggle(this);"><#else>&nbsp;</#if></div></TD>
+            <td nowrap align="right">
+              <div class='tabletext'>
+                <#if cartLine.getIsPromo()>
+                  ${cartLine.getBasePrice()?string.currency}
+                <#else>
+                  <input size="6" class='inputBox' type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()}">
+                </#if>
+              </div>
+            </td>
+            <td nowrap align="right"><div class='tabletext'>${cartLine.getOtherAdjustments()?string.currency}</div></td>
+            <td nowrap align="right"><div class='tabletext'>${cartLine.getItemSubTotal()?string.currency}</div></td>
           </TR>
         </#list>
 

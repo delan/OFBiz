@@ -60,7 +60,11 @@
                   <tr>
                     <td valign="top"><div class="tabletext" nowrap>${cartLine.getQuantity()?string.number}</div></td>                    
                     <td valign="top">
-                      <div><a href="<transform ofbizUrl>/product?product_id=${cartLine.getProductId()}</transform>" class="buttontext">${cartLine.getName()}</a></div>
+                      <#if cartLine.getProductId()?exists>
+                        <div><a href="<transform ofbizUrl>/product?product_id=${cartLine.getProductId()}</transform>" class="buttontext">${cartLine.getName()}</a></div>
+                      <#else>
+                        <div class="tabletext"><b>${cartLine.getItemTypeDescription()?if_exists}</b></div>
+                      </#if>
                     </td>
                     <td align="right" valign="top"><div class="tabletext" nowrap>${cartLine.getItemSubTotal()?string.currency}</div></td>
                   </tr>
