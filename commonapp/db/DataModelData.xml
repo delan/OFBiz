@@ -220,11 +220,11 @@
   <PartyQualType description="" hasTable="N" parentTypeId="" partyQualTypeId="DEGREE"/>
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="DISTRIBUTION_CHANNEL" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
   <PartyRelationshipType description="" hasTable="Y" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="EMPLOYMENT" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="ORGANIZATION_CONTRAC" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="ORGANIZATION_ROLLUP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="CONTACT_REL" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="PARTNERSHIP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="SUPPLIER_RELATIONSHI" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="CUSTOMER_RELATIONSHI" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="SUPPLIER_REL" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="CUSTOMER_REL" roleTypeIdValidFrom="CUSTOMER" roleTypeIdValidTo=""/>
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="HOST_SERVER_VISITOR" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="VISITOR_ISP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="WEB_MASTER_ASSIGNMEN" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
@@ -306,7 +306,7 @@
   <RoleType description="" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="FAMILY_MEMBER"/>
   <RoleType description="" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="MANAGER"/>
   <RoleType description="" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="WORKER"/>
-  <RoleType description="" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="CUSTOMER"/>
+  <RoleType description="" hasTable="N" parentTypeId="" roleTypeId="CUSTOMER"/>
   <RoleType description="" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="END_USER_CUSTOMER"/>
   <RoleType description="" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="SHIP_TO_CUSTOMER"/>
   <RoleType description="" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="BILL_TO_CUSTOMER"/>
