@@ -58,24 +58,31 @@
             </ofbiz:unless>
             <BR>
             <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
+              <DIV class='tabletext'>Edit Catalog with Catalog ID:</DIV>
+              <FORM method=POST action='<ofbiz:url>/EditProdCatalog</ofbiz:url>' style='margin: 0;'>
+                <INPUT type='text' size='20' maxlength='20' name='prodCatalogId' value=''>                
+                <INPUT type='submit' value='Edit Catalog' style='font-size: x-small;'>
+              </FORM>
+              <DIV class='tabletext'>OR: <A href='<ofbiz:url>/EditProdCatalog</ofbiz:url>' class='buttontext'>Create New Catalog</A></DIV>
+            <BR>            
               <DIV class='tabletext'>Edit Category with Category ID:</DIV>
               <FORM method=POST action='<ofbiz:url>/EditCategory</ofbiz:url>' style='margin: 0;'>
                 <INPUT type=text size='20' maxlength='20' name='productCategoryId' value=''>
-                <INPUT type=submit value='Edit Category'>
+                <INPUT type=submit value='Edit Category' style="font-size: x-small;">
               </FORM>
               <DIV class='tabletext'>OR: <A href='<ofbiz:url>/EditCategory</ofbiz:url>' class='buttontext'>Create New Category</A></DIV>
             <BR>
               <DIV class='tabletext'>Edit Product with Product ID:</DIV>
               <FORM method=POST action='<ofbiz:url>/EditProduct</ofbiz:url>' style='margin: 0;'>
                 <INPUT type=text size='20' maxlength='20' name='productId' value=''>
-                <INPUT type=submit value='Edit Product'>
+                <INPUT type=submit value='Edit Product' style='font-size: x-small;'>
               </FORM>
               <DIV class='tabletext'>OR: <A href='<ofbiz:url>/EditProduct</ofbiz:url>' class='buttontext'>Create New Product</A></DIV>
             <BR>
               <DIV class='tabletext'>Find Product with ID Value:</DIV>
               <FORM method=POST action='<ofbiz:url>/FindProductById</ofbiz:url>' style='margin: 0;'>
                 <INPUT type=text size='20' maxlength='20' name='idValue' value=''>
-                <INPUT type=submit value='Find Product'>
+                <INPUT type=submit value='Find Product' style='font-size: x-small;'>
               </FORM>
             <BR>
             <BR>
