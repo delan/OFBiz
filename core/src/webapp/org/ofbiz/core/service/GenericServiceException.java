@@ -28,11 +28,11 @@ import java.io.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created Sep 17, 2001
  *@version 1.0
  */
-public class GenericServiceException extends Exception {
-    Throwable nested = null;
+public class GenericServiceException extends org.ofbiz.core.util.GenerException {
     
     public GenericServiceException() {
         super();
@@ -43,31 +43,6 @@ public class GenericServiceException extends Exception {
     }
     
     public GenericServiceException(String str, Throwable nested) {
-        super(str);
-        this.nested = nested;
-    }
-    
-    /** Returns the detail message, including the message from the nested exception if there is one. */
-    public String getMessage() {
-        if(nested != null) return super.getMessage() + " (" + nested.getMessage() + ")";
-        else return super.getMessage();
-    }
-    
-    /** Prints the composite message to System.err. */
-    public void printStackTrace() {
-        super.printStackTrace();
-        if(nested != null) nested.printStackTrace();
-    }
-    
-    /** Prints the composite message and the embedded stack trace to the specified stream ps. */
-    public void printStackTrace(PrintStream ps) {
-        super.printStackTrace(ps);
-        if(nested != null) nested.printStackTrace(ps);
-    }
-    
-    /** Prints the composite message and the embedded stack trace to the specified print writer pw. */
-    public void printStackTrace(PrintWriter pw) {
-        super.printStackTrace(pw);
-        if(nested != null) nested.printStackTrace(pw);
-    }
+        super(str,nested);        
+    }        
 }
