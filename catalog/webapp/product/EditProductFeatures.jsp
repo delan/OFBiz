@@ -119,7 +119,7 @@
     </td>
     </FORM>
     <td>
-      <a href='<ofbiz:url>/RemoveFeatureFromProduct?productId=<ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="productId"/>&productFeatureId=<ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="productFeatureId"/>&fromDate=<ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="fromDate"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/RemoveFeatureFromProduct?productId=<ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="productId"/>&productFeatureId=<ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="productFeatureId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(productFeatureAndAppl.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
