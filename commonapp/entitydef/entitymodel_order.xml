@@ -452,6 +452,8 @@
       <field name="productFeatureId" type="id"></field>
       <field name="quoteId" type="id"></field>
       <field name="quoteItemSeqId" type="id"></field>
+      <field name="shoppingListId" type="id"></field>
+      <field name="shoppingListItemSeqId" type="id"></field>
       <field name="subscriptionId" type="id"></field>
       <field name="deploymentId" type="id"></field>
       <field name="quantity" type="floating-point"></field>

@@ -59,6 +59,8 @@ public class ShoppingCartItem implements java.io.Serializable {
     private double listPrice = 0.0;
     private Map additionalProductFeatureAndAppls = null;
     private Map attributes = null;
+    private String shoppingListId = null;
+    private String shoppingListItemSeqId = null;
     private String orderItemSeqId = null;
     private GenericValue orderShipmentPreference = null;
 
@@ -297,6 +299,19 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     public String getOrderItemSeqId() {
         return orderItemSeqId;
+    }
+    
+    public void setShoppingList(String shoppingListId, String itemSeqId) {
+        this.shoppingListId = shoppingListId;
+        this.shoppingListItemSeqId = itemSeqId;
+    }
+    
+    public String getShoppingListId() {
+        return this.shoppingListId;
+    }
+    
+    public String getShoppingListItemSeqId() {
+        return this.shoppingListItemSeqId;
     }
 
     /** Returns true if shipping charges apply to this item. */

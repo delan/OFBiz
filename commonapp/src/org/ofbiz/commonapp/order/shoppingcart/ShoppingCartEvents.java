@@ -59,6 +59,10 @@ public class ShoppingCartEvents {
 
         // Get the parameters as a MAP, remove the productId and quantity params.        
         Map paramMap = UtilHttp.getParameterMap(request);
+        
+        // Get shoppingList info if passed
+        String shoppingListId = request.getParameter("shoppingListId");
+        String shoppingListItemSeqId = request.getParameter("shoppingListItemSeqId");
 
         if (paramMap.containsKey("ADD_PRODUCT_ID")) {
             productId = (String) paramMap.remove("ADD_PRODUCT_ID");
@@ -99,7 +103,11 @@ public class ShoppingCartEvents {
          */
 
         try {
-            cart.addOrIncreaseItem(productId, quantity, null, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+            int itemId = cart.addOrIncreaseItem(productId, quantity, null, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+            if (shoppingListId != null && shoppingListItemSeqId != null) {
+                ShoppingCartItem item = cart.findCartItem(itemId);
+                item.setShoppingList(shoppingListId, shoppingListItemSeqId);
+            }                
         } catch (CartItemModifyException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
             return "success"; // don't return error because this is a non-critical error and should go back to the same page
