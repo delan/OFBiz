@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Wed Sep 26 08:43:00 MDT 2001
+ *@created    Thu Sep 27 10:23:20 MDT 2001
  *@version    1.0
  */
 -->
@@ -3896,7 +3896,7 @@
         <key-map field-name="partyIdTo" rel-field-name="partyId" />
         <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId" />
       </relation>
-      <relation type="one" rel-entity-name="PartyRelationship">
+      <relation type="many" rel-entity-name="PartyRelationship">
         <key-map field-name="roleTypeIdFrom" />
         <key-map field-name="roleTypeIdTo" />
         <key-map field-name="partyIdFrom" />
