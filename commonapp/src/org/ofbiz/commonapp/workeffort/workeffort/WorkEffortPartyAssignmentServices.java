@@ -134,23 +134,19 @@ public class WorkEffortPartyAssignmentServices {
             return result;
         }
 
-        GenericValue newWorkEffortPartyAssignment = null;
-
-        newWorkEffortPartyAssignment = (GenericValue) workEffortPartyAssignment.clone();
-        List toBeStored = new LinkedList();
-        toBeStored.add(newWorkEffortPartyAssignment);
+        GenericValue newWorkEffortPartyAssignment = (GenericValue) workEffortPartyAssignment.clone();              
 
         Timestamp nowStamp = UtilDateTime.nowTimestamp();
-        newWorkEffortPartyAssignment.setNonPKFields(context);
+        workEffortPartyAssignment.setNonPKFields(context);
 
         // if necessary create new status entry, and set statusDateTime date
         String statusId = (String) context.get("statusId");
 
         if (statusId != null && !statusId.equals(workEffortPartyAssignment.getString("statusId"))) {
             // set the current status & timestamp
-            newWorkEffortPartyAssignment.set("statusId", statusId);
-            newWorkEffortPartyAssignment.set("statusDateTime", nowStamp);
-            updateWorkflowEngine(newWorkEffortPartyAssignment, userLogin, ctx.getDispatcher());
+            workEffortPartyAssignment.set("statusId", statusId);
+            workEffortPartyAssignment.set("statusDateTime", nowStamp);
+            updateWorkflowEngine(workEffortPartyAssignment, userLogin, ctx.getDispatcher());
         }
 
         // if nothing has changed, return
@@ -161,7 +157,7 @@ public class WorkEffortPartyAssignmentServices {
         }
 
         try {
-            delegator.storeAll(toBeStored);
+            workEffortPartyAssignment.store();            
         } catch (GenericEntityException e) {
             Debug.logWarning("[WorkEffortPartyAssignmentEvents.updateWorkEffortPartyAssignment] Could not update WorkEffortPartyAssignment (write error)");
             Debug.logWarning(e);
