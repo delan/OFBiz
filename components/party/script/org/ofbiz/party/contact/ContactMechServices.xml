@@ -218,7 +218,6 @@
             <result-to-request result-name="contactMechId"/>
         </call-service>        	
     </simple-method>
-    
     <simple-method method-name="updateEmailAddress" short-description="Update an email address contact mechanism">
         <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
             processor-name="emailAddress" in-map-name="parameters" out-map-name="context"/>
@@ -230,4 +229,20 @@
             <result-to-request result-name="contactMechId"/>
         </call-service>        	
     </simple-method>                     
+
+   <simple-method method-name="createContactMechLink" short-description="Create a link between two ContactMechs, such as PostalAddress and TelecomNumber or email">
+       <!--TODO: need security check of some sort? -->
+       <check-errors/>
+       <make-value value-name="newEntity" entity-name="ContactMechLink"/>
+       <set-pk-fields map-name="parameters" value-name="newEntity"/>
+       <create-value value-name="newEntity"/>
+   </simple-method>
+   <simple-method method-name="deleteContactMechLink" short-description="Delete a link between two ContactMechs">
+       <!--TODO: need security check of some sort? -->
+       <check-errors/>
+       <make-value value-name="lookupPKMap" entity-name="ContactMechLink"/>
+       <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+       <find-by-primary-key entity-name="ContactMechLink" map-name="lookupPKMap" value-name="contactMechLinkInstance"/>
+       <remove-value value-name="contactMechLinkInstance"/>
+   </simple-method>
 </simple-methods>

@@ -343,7 +343,7 @@
         <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
     </service>
 
-    <!-- Party ContactMech Purpose services -->
+    <!-- PartyContactMechPurpose services -->
     <service name="createPartyContactMechPurpose" engine="java"
             location="org.ofbiz.party.contact.ContactMechServices" invoke="createPartyContactMechPurpose" auth="true">
         <description>Create a Party ContactMech Purpose</description>
@@ -359,6 +359,16 @@
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ContactMechList services -->
+    <service name="createContactMechLink" default-entity-name="ContactMechLink" engine="simple"
+            location="org/sinfonia/party/contact/ContactMechServices.xml" invoke="createContactMechLink" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteContactMechLink" default-entity-name="ContactMechLink" engine="simple"
+            location="org/sinfonia/party/contact/ContactMechServices.xml" invoke="deleteContactMechLink" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <!-- Party view services -->
