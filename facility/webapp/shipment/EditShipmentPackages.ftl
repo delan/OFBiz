@@ -27,6 +27,7 @@
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
+<#if shipment?exists>
 <table width="100%" cellspacing="0" cellpadding="2" border="1">
     <tr>
         <td><div class="tableheadtext">Package#</div></td>
@@ -147,6 +148,9 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     </tr>
 </form>
 </table>
+<#else>
+  <h3>The Shipment was not found with ID: [${shipmentId?if_exists}]</h3>
+</#if>
 
 <#else>
   <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>

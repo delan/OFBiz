@@ -33,25 +33,27 @@ delegator = request.getAttribute("delegator");
 shipmentId = request.getParameter("shipmentId");
 shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
 
-shipmentItems = shipment.getRelated("ShipmentItem", null, UtilMisc.toList("shipmentItemSeqId"));
-shipmentItemDatas = new LinkedList();
-if (shipmentItems != null && shipmentItems.size() > 0) {
-	shipmentItemIter = shipmentItems.iterator();
-	while (shipmentItemIter.hasNext()) {
-	    shipmentItem = shipmentItemIter.next();
-	    shipmentItemData = new HashMap();
-	    shipmentItemData.put("shipmentItem", shipmentItem);
-	    shipmentItemData.put("shipmentPackageContents", shipmentItem.getRelated("ShipmentPackageContent"));
-	    shipmentItemData.put("itemIssuances", shipmentItem.getRelated("ItemIssuance"));
-	    shipmentItemData.put("product", shipmentItem.getRelatedOne("Product"));
-	    shipmentItemDatas.add(shipmentItemData);
-	}
+if (shipment != null) {
+    shipmentItems = shipment.getRelated("ShipmentItem", null, UtilMisc.toList("shipmentItemSeqId"));
+    shipmentItemDatas = new LinkedList();
+    if (shipmentItems != null && shipmentItems.size() > 0) {
+        shipmentItemIter = shipmentItems.iterator();
+        while (shipmentItemIter.hasNext()) {
+            shipmentItem = shipmentItemIter.next();
+            shipmentItemData = new HashMap();
+            shipmentItemData.put("shipmentItem", shipmentItem);
+            shipmentItemData.put("shipmentPackageContents", shipmentItem.getRelated("ShipmentPackageContent"));
+            shipmentItemData.put("itemIssuances", shipmentItem.getRelated("ItemIssuance"));
+            shipmentItemData.put("product", shipmentItem.getRelatedOne("Product"));
+            shipmentItemDatas.add(shipmentItemData);
+        }
+    }
+    
+    shipmentPackages = shipment.getRelated("ShipmentPackage", null, UtilMisc.toList("shipmentPackageSeqId"));
+    
+    context.put("shipment", shipment);
+    context.put("shipmentItemDatas", shipmentItemDatas);
+    context.put("shipmentPackages", shipmentPackages);
 }
 
-shipmentPackages = shipment.getRelated("ShipmentPackage", null, UtilMisc.toList("shipmentPackageSeqId"));
-
 context.put("shipmentId", shipmentId);
-context.put("shipment", shipment);
-context.put("shipmentItemDatas", shipmentItemDatas);
-context.put("shipmentPackages", shipmentPackages);
-

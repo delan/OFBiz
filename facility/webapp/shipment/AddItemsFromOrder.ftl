@@ -27,11 +27,19 @@
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
+<#if shipment?exists>
+
 <form action="<@ofbizUrl>/AddItemsFromOrder</@ofbizUrl>">
 	<input type="hidden" name="shipmentId" value="${shipmentId}"/>
-	<div class="tabletext">Order ID: <input type="text" size="20" name="orderId" value="${orderId?if_exists}"/></div>
-	<input type="submit" value="Select"/>
+	<div class="tabletext">
+        Order ID: <input type="text" size="20" name="orderId" value="${orderId?if_exists}"/>
+        <input type="submit" value="Select"/>
+    </div>
 </form>
+
+<#else>
+  <h3>The Shipment was not found with ID: [${shipmentId?if_exists}]</h3>
+</#if>
 
 <#else>
   <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
