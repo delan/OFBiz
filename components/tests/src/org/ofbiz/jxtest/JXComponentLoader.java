@@ -1,5 +1,5 @@
 /*
- * $Id: JXComponentLoader.java,v 1.1 2004/06/04 02:36:14 jonesde Exp $
+ * $Id: JXComponentLoader.java,v 1.2 2004/07/31 20:10:16 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.base.util.UtilValidate;
  * Follows examples from the ComponentContainers and Start classes
  *
  * @author     <a href="mailto:bgpalmer@computer.org">Brett G. Palmer</a> 
-  *@version    $Revision: 1.1 $
+  *@version    $Revision: 1.2 $
  * @since      3.0
  */
 public class JXComponentLoader {
@@ -182,9 +182,15 @@ public class JXComponentLoader {
 		if (componentObj == null) {
 			throw new StartupException("Unable to create instance of component container");
 		}
+
+        try {
+            componentObj.init(null, configFileLocation);
+        } catch (ContainerException e) {
+            throw new StartupException(e);
+        }
         
 		try {
-			componentObj.start(configFileLocation);
+			componentObj.start();
 		} catch (ContainerException e) {
 			throw new StartupException(e);
 		}  

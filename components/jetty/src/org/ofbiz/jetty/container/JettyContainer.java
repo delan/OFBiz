@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.2 2004/06/22 19:00:47 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.3 2004/07/31 20:10:14 ajzeneski Exp $
  *
  * Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -61,21 +61,24 @@ import org.ofbiz.base.container.ContainerConfig;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class JettyContainer implements Container {
 
     public static final String module = JettyContainer.class.getName();
+
+    protected String configFile = null;
     private Map servers = new HashMap();
 
     /**
-     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
      */
-    public void init(String[] args) {
+    public void init(String[] args, String configFile) {
+        this.configFile = configFile;
     }
 
-    private void initJetty(String configFile) throws ContainerException {
+    private void initJetty() throws ContainerException {
         // configure JSSE properties
         SSLUtil.loadJsseProperties();
 
@@ -402,11 +405,11 @@ public class JettyContainer implements Container {
     }
 
     /**
-     * @see org.ofbiz.base.container.Container#start(String)
+     * @see org.ofbiz.base.container.Container#start()
      */
-    public boolean start(String configFile) throws ContainerException {
+    public boolean start() throws ContainerException {
         // start the server(s)
-        this.initJetty(configFile);
+        this.initJetty();
         if (servers != null) {
             Iterator i = servers.values().iterator();
             while (i.hasNext()) {

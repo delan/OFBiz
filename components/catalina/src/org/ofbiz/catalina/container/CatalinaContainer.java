@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.16 2004/07/06 17:07:18 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.17 2004/07/31 20:10:13 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -124,7 +124,7 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      3.1
  */
 public class CatalinaContainer implements Container {
@@ -148,17 +148,14 @@ public class CatalinaContainer implements Container {
     protected boolean enableDefaultMimeTypes = true;
 
     /**
-     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
      */
-    public void init(String[] args) {
-    }
-    
-    public boolean start(String configFileLocation) throws ContainerException {
+    public void init(String[] args, String configFile) throws ContainerException {
         // set catalina_home
         System.setProperty("catalina.home", System.getProperty("ofbiz.home") + "/components/catalina");
 
         // get the container config
-        ContainerConfig.Container cc = ContainerConfig.getContainer("catalina-container", configFileLocation);
+        ContainerConfig.Container cc = ContainerConfig.getContainer("catalina-container", configFile);
         if (cc == null) {
             throw new ContainerException("No catalina-container configuration found in container config!");
         }
@@ -204,8 +201,9 @@ public class CatalinaContainer implements Container {
             ContainerConfig.Container.Property connectorProp = (ContainerConfig.Container.Property) ci.next();
             createConnector(connectorProp);
         }
+    }
 
-
+    public boolean start() throws ContainerException {
         // Start the embedded server
         try {
             embedded.start();

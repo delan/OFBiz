@@ -1,5 +1,5 @@
 /*
- * $Id: RmiServiceContainer.java,v 1.5 2004/06/22 19:00:48 ajzeneski Exp $
+ * $Id: RmiServiceContainer.java,v 1.6 2004/07/31 20:10:15 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.service.LocalDispatcher;
  * RMI Service Engine Container / Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  */
 public class RmiServiceContainer implements Container {
@@ -51,17 +51,19 @@ public class RmiServiceContainer implements Container {
     public static final String module = RmiServiceContainer.class.getName();
 
     protected RemoteDispatcherImpl remote = null;
+    protected String configFile = null;
     protected String name = null;
 
     // Container methods
 
     /**
-     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
      */
-    public void init(String[] args) {
+    public void init(String[] args, String configFile) {
+        this.configFile = configFile;
     }
     
-    public boolean start(String configFile) throws ContainerException {
+    public boolean start() throws ContainerException {
         // get the container config
         ContainerConfig.Container cfg = ContainerConfig.getContainer("rmi-dispatcher", configFile);
         ContainerConfig.Container.Property initialCtxProp = cfg.getProperty("use-initial-context");
