@@ -125,6 +125,10 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupVirtualProduct"/>
     </request-map>
+    <request-map uri="LookupVariantProduct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupVariantProduct"/>
+    </request-map>
     <request-map uri="LookupProductFeature">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupProductFeature"/>
@@ -560,6 +564,7 @@
     
     <!-- Lookup view mappings -->
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
+    <view-map name="LookupVariantProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct" type="screen"/>
     <view-map name="LookupVirtualProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVirtualProduct" type="screen"/>
     <view-map name="LookupRouting" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupRouting" type="screen"/>
     <view-map name="LookupRoutingTask" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupRoutingTask" type="screen"/>

@@ -212,6 +212,12 @@ function lookupBom() {
     </tr>
 
     <tr>
+        <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingFormula}:</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" class="inputBox" name="formula" <#if useValues>value="${(productAssoc.formula)?if_exists}"<#else>value="${(request.getParameter("formula"))?if_exists}"</#if> size="60" maxlength="255"></td>
+    </tr>
+
+    <tr>
         <td width="26%" align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingRoutingTask}:</div></td>
         <td>&nbsp;</td>
         <td width="74%">
