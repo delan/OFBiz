@@ -34,8 +34,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JRootPane;
@@ -46,6 +44,7 @@ import net.xoetrope.xui.XPage;
 import net.xoetrope.xui.XResourceManager;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilCache;
 
 /**
  * 
@@ -56,7 +55,7 @@ import org.ofbiz.base.util.Debug;
 public class PosDialog {
 
     public static final String module = PosDialog.class.getName();
-    protected static Map instances = new HashMap();
+    protected static UtilCache instances = new UtilCache("pos.Dialogs", 0, 0);
 
     protected final Frame clientFrame = XResourceManager.getAppFrame();
     protected final Window appWindow = XResourceManager.getAppWindow();
@@ -102,8 +101,9 @@ public class PosDialog {
 
     protected void configure() {
         // create the new dialog box
-        this.dialog = new JDialog(clientFrame, modal);
+        this.dialog = new JDialog(clientFrame, "Alert", modal);
         dialog.setUndecorated(true);
+        dialog.setResizable(false);
         dialog.setSize(page.getSize());
         dialog.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
 
@@ -207,7 +207,7 @@ public class PosDialog {
             cb.receiveDialogCb(this);
         }
     }
-    
+
     private void setCloseBtn(Container con) {
         Component[] coms = con.getComponents();
         for (int i = 0; i < coms.length; i++) {
@@ -245,7 +245,7 @@ public class PosDialog {
 
     private void setSize(int width, int height) {
         dialog.getContentPane().setBounds(padding, padding, width - (padding * 2), height - (padding * 2));
-        dialog.setSize(width, height);
+        dialog.setSize(width, height + 2);
     }
 
     private Point getMaxCoordinates(Container cont) {
