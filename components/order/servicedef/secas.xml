@@ -3,6 +3,9 @@
 
 <service-eca>
     <!-- order item status changes -->
+    <eca service="storeOrder" event="return">
+        <action service="resetGrandTotal" mode="sync"/>
+    </eca>
     <eca service="changeOrderItemStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="ITEM_CANCELLED"/>
         <action service="cancelOrderInventoryReservation" mode="sync"/>
