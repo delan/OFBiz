@@ -25,7 +25,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Tue Aug 28 12:04:58 PDT 2001
+ *@created    Thu Aug 30 11:19:12 PDT 2001
  *@version    1.0
  */
 -->
@@ -1616,9 +1616,9 @@
       <package-name>org.ofbiz.commonapp.common.sequence</package-name>
       <table-name>SEQUENCE</table-name>
       <field><col-name>SEQ_NAME</col-name><type>id-ne</type></field>
-      <field><col-name>SEQ_ID</col-name><type>id</type></field>
+      <field><col-name>SEQ_ID</col-name><type>id</type></field>	
       <prim-key-col>SEQ_NAME</prim-key-col>
-    </entity>	
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.status -->
@@ -3439,8 +3439,8 @@
       <field><col-name>ORDER_TYPE_ID</col-name><type>id</type></field>
       <field><col-name>ORDER_DATE</col-name><type>date-time</type></field>
       <field><col-name>ENTRY_DATE</col-name><type>date-time</type></field>
-      <field><col-name>VISIT_ID</col-name><type>id</type></field>	
-      <field><col-name>STATUS_ID</col-name><type>id</type></field>
+      <field><col-name>VISIT_ID</col-name><type>id</type></field>
+      <field><col-name>STATUS_ID</col-name><type>id</type></field>	
       <prim-key-col>ORDER_ID</prim-key-col>
       <relation>
         <type>one</type>
@@ -3549,8 +3549,8 @@
       <field><col-name>SHIPPING_INSTRUCTIONS</col-name><type>long-varchar</type></field>
       <field><col-name>ITEM_DESCRIPTION</col-name><type>description</type></field>
       <field><col-name>COMMENT</col-name><type>comment</type></field>
-      <field><col-name>CORRESPONDING_PO_ID</col-name><type>id</type></field>	
-      <field><col-name>STATUS_ID</col-name><type>id</type></field>
+      <field><col-name>CORRESPONDING_PO_ID</col-name><type>id</type></field>
+      <field><col-name>STATUS_ID</col-name><type>id</type></field>	
       <prim-key-col>ORDER_ID</prim-key-col>	
       <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>
       <relation>
@@ -5413,6 +5413,11 @@
         <rel-table-name>ORDER_ITEM_CONTACT_MECH</rel-table-name>
         <key-map><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>CONTACT_MECH_TYPE_PURPOSE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Contact Mechanism Type Entity</title>
@@ -5448,6 +5453,11 @@
         <rel-table-name>VALID_CONTACT_MECH_ROLE</rel-table-name>
         <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>CONTACT_MECH_TYPE_PURPOSE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Contact Mechanism Type Attribute Entity</title>
@@ -5471,6 +5481,26 @@
         <type>many</type>
         <rel-table-name>CONTACT_MECH</rel-table-name>
         <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>	
+    <entity>
+      <title>Contact Mechanism Type Purpose Entity</title>
+      <description>Defines which ContactMechPurposeType entites apply to which ContactMechType</description>
+      <package-name>org.ofbiz.commonapp.party.contact</package-name>
+      <table-name>CONTACT_MECH_TYPE_PURPOSE</table-name>
+      <field><col-name>CONTACT_MECH_TYPE_ID</col-name><type>id-ne</type></field>
+      <field><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name><type>id-ne</type></field>	
+      <prim-key-col>CONTACT_MECH_TYPE_ID</prim-key-col>	
+      <prim-key-col>CONTACT_MECH_PURPOSE_TYPE_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>CONTACT_MECH_TYPE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>CONTACT_MECH_PURPOSE_TYPE</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_PURPOSE_TYPE_ID</col-name></key-map>
       </relation>
     </entity>	
     <entity>
@@ -5650,9 +5680,9 @@
       <package-name>org.ofbiz.commonapp.party.contact</package-name>
       <table-name>TELECOM_NUMBER</table-name>
       <field><col-name>CONTACT_MECH_ID</col-name><type>id-ne</type></field>
-      <field><col-name>COUNTRY_CODE</col-name><type>very-short</type></field>	
+      <field><col-name>COUNTRY_CODE</col-name><type>very-short</type></field>
       <field><col-name>AREA_CODE</col-name><type>very-short</type></field>
-      <field><col-name>CONTACT_NUMBER</col-name><type>short-varchar</type></field>
+      <field><col-name>CONTACT_NUMBER</col-name><type>short-varchar</type></field>	
       <prim-key-col>CONTACT_MECH_ID</prim-key-col>
       <relation>
         <type>one</type>
@@ -9022,3 +9052,4 @@
       </relation>
     </entity>  
 </entitymodel>
+
