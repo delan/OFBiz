@@ -1,5 +1,5 @@
 /*
- * $Id: CommonServices.java,v 1.1 2003/08/17 10:12:40 jonesde Exp $
+ * $Id: CommonServices.java,v 1.2 2003/08/26 14:08:25 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class CommonServices {
@@ -143,7 +143,13 @@ public class CommonServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map sendMail(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
+        // first check to see if sending mail is enabled
+        String mailEnabled = UtilProperties.getPropertyValue("general.properties", "mail.notifications.enabled", "N");
+        if (!"Y".equalsIgnoreCase(mailEnabled)) {
+            // no error; just return as if we already processed
+            Debug.logImportant("Mail notifications disabled in general.properties", module);
+            return ServiceUtil.returnSuccess();
+        }      
         String sendTo = (String) context.get("sendTo");
         String sendCc = (String) context.get("sendCc");
         String sendBcc = (String) context.get("sendBcc");
