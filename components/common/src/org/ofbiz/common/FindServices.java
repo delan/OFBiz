@@ -1,5 +1,5 @@
 /*
- * $Id: FindServices.java,v 1.2 2003/09/23 17:28:09 jonesde Exp $
+ * $Id: FindServices.java,v 1.3 2003/11/05 12:08:00 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,9 +35,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
@@ -48,7 +46,7 @@ import org.ofbiz.service.ServiceUtil;
  * FindServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class FindServices {
@@ -78,7 +76,7 @@ public class FindServices {
     /**
      * performFind
      *
-     * This is a generic method that expects entity data affixed with special suffixes 
+     * This is a generic method that expects entity data affixed with special suffixes
      * to indicate their purpose in formulating an SQL query statement.
      */
     public static Map performFind(DispatchContext dctx, Map context) {
@@ -90,14 +88,14 @@ public class FindServices {
 
         String fieldName = null;
         String fieldNameRaw = null; // The name as it appeas in the HTML form
-        String fieldNameRoot = null; // The entity field name. 
+        String fieldNameRoot = null; // The entity field name.
         // Everything to the left of the first "_" if
         // it exists, or the whole word, if not.
         String fieldPair = null; // "fld0" or "fld1" - begin/end of range
         // or just fld0 if no range.
         String fieldValue = null; // If it is a "value" field, it will be the value
-        // to be used in the query. 
-        // If it is an "op" field, it will be 
+        // to be used in the query.
+        // If it is an "op" field, it will be
         // "equals", "greaterThan", etc.
         int iPos = -1;
         int iPos2 = -1;
@@ -106,7 +104,7 @@ public class FindServices {
         String fieldMode = null;
         EntityOperator fieldOp = null;
 
-        // Strip the "_suffix" off of the parameter name and 
+        // Strip the "_suffix" off of the parameter name and
         // build a three-level map of values keyed by fieldRoot name,
         //    fld0 or fld1,  and, then, "op" or "value"
         // ie. id
@@ -242,7 +240,7 @@ public class FindServices {
                 subMap2.put("op", "lessThan");
             }
 
-            cond = new EntityExpr(fieldName, fieldOp, fieldValue);
+            cond = new EntityExpr(fieldName, (EntityComparisonOperator) fieldOp, fieldValue);
             tmpList.add(cond);
             count++;
 
@@ -279,11 +277,11 @@ public class FindServices {
                 fieldOp = (EntityOperator) entityOperators.get("lessThan");
             }
             String rhs = fieldValue.toString();
-            cond = new EntityExpr(fieldName, fieldOp, fieldValue);
+            cond = new EntityExpr(fieldName, (EntityComparisonOperator) fieldOp, fieldValue);
             tmpList.add(cond);
 
         }
-        EntityConditionList exprList = new EntityConditionList(tmpList, entOp);
+        EntityConditionList exprList = new EntityConditionList(tmpList, (EntityJoinOperator) entOp);
         EntityListIterator listIt = null;
 
         if (count > 0) {

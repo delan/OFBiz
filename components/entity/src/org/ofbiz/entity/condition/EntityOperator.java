@@ -1,5 +1,5 @@
 /*
- * $Id: EntityOperator.java,v 1.1 2003/08/17 04:56:25 jonesde Exp $
+ * $Id: EntityOperator.java,v 1.2 2003/11/05 12:08:00 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,7 @@
 
 package org.ofbiz.entity.condition;
 
+import java.util.HashMap;
 
 /**
  * Encapsulates operations between entities and entity fields. This is a immutable class.
@@ -50,22 +51,75 @@ public class EntityOperator implements java.io.Serializable {
     public static final int ID_LIKE = 12;
     public static final int ID_NOT_IN = 13;
     
-    public static final EntityOperator EQUALS = new EntityOperator(ID_EQUALS, "=");
-    public static final EntityOperator NOT_EQUAL = new EntityOperator(ID_NOT_EQUAL, "<>");
-    public static final EntityOperator LESS_THAN = new EntityOperator(ID_LESS_THAN, "<");
-    public static final EntityOperator GREATER_THAN = new EntityOperator(ID_GREATER_THAN, ">");
-    public static final EntityOperator LESS_THAN_EQUAL_TO = new EntityOperator(ID_LESS_THAN_EQUAL_TO, "<=");
-    public static final EntityOperator GREATER_THAN_EQUAL_TO = new EntityOperator(ID_GREATER_THAN_EQUAL_TO, ">=");
-    public static final EntityOperator IN = new EntityOperator(ID_IN, "IN");
-    public static final EntityOperator BETWEEN = new EntityOperator(ID_BETWEEN, "BETWEEN");
-    public static final EntityOperator NOT = new EntityOperator(ID_NOT, "NOT");
-    public static final EntityOperator AND = new EntityOperator(ID_AND, "AND");
-    public static final EntityOperator OR = new EntityOperator(ID_OR, "OR");
-    public static final EntityOperator LIKE = new EntityOperator(ID_LIKE, "LIKE");
-    public static final EntityOperator NOT_IN = new EntityOperator(ID_NOT_IN, "NOT IN");
+    private static HashMap registry = new HashMap();
 
-    private int idInt;
-    private String codeString;
+    private static void register(String name, EntityOperator operator) {
+        registry.put(name, operator);
+    }
+
+    public static EntityOperator lookup(String name) {
+        return (EntityOperator)registry.get(name);
+    }
+
+    public static EntityComparisonOperator lookupComparison(String name) {
+        EntityOperator operator = lookup(name);
+        if ( !(operator instanceof EntityComparisonOperator ) )
+            throw new IllegalArgumentException(name + " is not a comparison operator");
+        return (EntityComparisonOperator)operator;
+    }
+
+    public static EntityJoinOperator lookupJoin(String name) {
+        EntityOperator operator = lookup(name);
+        if ( !(operator instanceof EntityJoinOperator ) )
+            throw new IllegalArgumentException(name + " is not a join operator");
+        return (EntityJoinOperator)operator;
+    }
+
+    public static final EntityComparisonOperator EQUALS = new EntityComparisonOperator(ID_EQUALS, "=") {
+        public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareEqual(lhs, rhs); }
+    };
+    static { register( "equals", EQUALS ); }
+    public static final EntityComparisonOperator NOT_EQUAL = new EntityComparisonOperator(ID_NOT_EQUAL, "<>") {
+        public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareNotEqual(lhs, rhs); }
+    };
+    static { register( "notEqual", NOT_EQUAL ); }
+    public static final EntityComparisonOperator LESS_THAN = new EntityComparisonOperator(ID_LESS_THAN, "<") {
+        public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareLessThan(lhs, rhs); }
+    };
+    static { register( "lessThan", LESS_THAN ); }
+    public static final EntityComparisonOperator GREATER_THAN = new EntityComparisonOperator(ID_GREATER_THAN, ">") {
+        public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareGreaterThan(lhs, rhs); }
+    };
+    static { register( "greaterThan", GREATER_THAN ); }
+    public static final EntityComparisonOperator LESS_THAN_EQUAL_TO = new EntityComparisonOperator(ID_LESS_THAN_EQUAL_TO, "<=") {
+        public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareLessThanEqualTo(lhs, rhs); }
+    };
+    static { register( "lessThanEqualTo", LESS_THAN_EQUAL_TO ); }
+    public static final EntityComparisonOperator GREATER_THAN_EQUAL_TO = new EntityComparisonOperator(ID_GREATER_THAN_EQUAL_TO, ">=") {
+        public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareGreaterThanEqualTo(lhs, rhs); }
+    };
+    static { register( "greaterThanEqualTo", GREATER_THAN_EQUAL_TO ); }
+    public static final EntityComparisonOperator IN = new EntityComparisonOperator(ID_IN, "IN") {
+        public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareIn(lhs, rhs); }
+    };
+    static { register( "in", IN ); }
+    public static final EntityComparisonOperator BETWEEN = new EntityComparisonOperator(ID_BETWEEN, "BETWEEN");
+    static { register( "between", BETWEEN ); }
+    public static final EntityComparisonOperator NOT = new EntityComparisonOperator(ID_NOT, "NOT");
+    static { register( "not", NOT ); }
+    public static final EntityJoinOperator AND = new EntityJoinOperator(ID_AND, "AND", false);
+    static { register( "and", AND ); }
+    public static final EntityJoinOperator OR = new EntityJoinOperator(ID_OR, "OR", true);
+    static { register( "or", OR ); }
+    public static final EntityComparisonOperator LIKE = new EntityComparisonOperator(ID_LIKE, "LIKE") {
+        public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareLike(lhs, rhs); }
+    };
+    static { register( "like", LIKE ); }
+    public static final EntityComparisonOperator NOT_IN = new EntityComparisonOperator(ID_NOT_IN, "NOT IN");
+    static { register( "not-in", NOT_IN ); }
+
+    protected int idInt;
+    protected String codeString;
 
     public EntityOperator(int id, String code) {
         idInt = id;
@@ -94,5 +148,10 @@ public class EntityOperator implements java.io.Serializable {
     public boolean equals(Object obj) {
         EntityOperator otherOper = (EntityOperator) obj;
         return this.idInt == otherOper.idInt;
+    }
+
+    public class MatchResult {
+        public boolean shortCircuit = false;
+        public boolean matches = false;
     }
 }
