@@ -29,12 +29,14 @@ public class ItemConfigurationNode {
     private ItemConfigurationNode parentNode; // the parent node (null if it's not present)
     private ItemConfigurationNode substitutedNode; // The virtual node (if any) that this instance substitutes
     private String productForRules;
-    private GenericValue part; // the current part (from Part entity)
-    private ArrayList children; // part's children (from PartBom entity)
-    private ArrayList childrenNodes; // part's children nodes (ItemConfigurationNode)
-    private int depth;
-    private float quantity;
-    private String bomTypeId;
+    private GenericValue part; // the current product (from Product entity)
+    private ArrayList children; // current node's children (ProductAssocs)
+    private ArrayList childrenNodes; // current node's children nodes (ItemConfigurationNode)
+    private float quantityMultiplier; // the necessary quantity as declared in the bom (from ProductAssocs or ProductManufacturingRule)
+    // Runtime fields
+    private int depth; // the depth of this node in the current tree
+    private float quantity; // the quantity of this node in the current tree
+    private String bomTypeId; // the type of the current tree
    
     public ItemConfigurationNode(GenericValue part) {
         this.part = part;
@@ -43,6 +45,7 @@ public class ItemConfigurationNode {
         parentNode = null;
         productForRules = null;
         bomTypeId = null;
+        quantityMultiplier = 1;
         // Now we initialize the fields used in breakdowns
         depth = 0;
         quantity = 0;
@@ -98,6 +101,13 @@ public class ItemConfigurationNode {
                 String ruleCondition = (String)rule.get("productFeature");
                 String ruleOperator = (String)rule.get("ruleOperator");
                 String newPart = (String)rule.get("productIdInSubst");
+                float ruleQuantity = 0;
+                try {
+                    ruleQuantity = rule.getDouble("quantity").floatValue();
+                } catch(Exception exc) {
+                    ruleQuantity = 0;
+                }
+
                 GenericValue feature = null;
                 boolean ruleSatisfied = false;
                 if (ruleCondition == null || ruleCondition.equals("")) {
@@ -120,10 +130,13 @@ public class ItemConfigurationNode {
                     } else {
                         oneChildNode = new ItemConfigurationNode(newPart, delegator);
                         oneChildNode.setSubstitutedNode(tmpNode);
+                        if (ruleQuantity > 0) {
+                            oneChildNode.setQuantityMultiplier(ruleQuantity);
+                        }
                     }
                     break;
                 }
-                // FIXME: implementare AND
+                // FIXME: AND operator still not implemented
             } // end of for
             
         }
@@ -132,6 +145,11 @@ public class ItemConfigurationNode {
     
     private ItemConfigurationNode configurator(GenericValue node, List productFeatures, String productIdForRules, GenericDelegator delegator) throws GenericEntityException {
         ItemConfigurationNode oneChildNode = new ItemConfigurationNode((String)node.get("productIdTo"), delegator);
+        try {
+            oneChildNode.setQuantityMultiplier(node.getDouble("quantity").floatValue());
+        } catch(NumberFormatException nfe) {
+            oneChildNode.setQuantityMultiplier(1);
+        }
         ItemConfigurationNode newNode = oneChildNode;
         // CONFIGURATOR
         if (oneChildNode.isVirtual()) {
@@ -153,13 +171,11 @@ public class ItemConfigurationNode {
                 // If no substitution has been done (no valid rule applied),
                 // we try to search for a generic link-rule
                 List genericLinkRules = delegator.findByAnd("ProductManufacturingRule",
-                                                        UtilMisc.toMap("productId", "",
-                                                        "productIdFor", node.get("productId"),
+                                                        UtilMisc.toMap("productIdFor", node.get("productId"),
                                                         "productIdIn", node.get("productIdTo")));
                 if (substitutedNode != null) {
                     genericLinkRules.addAll(delegator.findByAnd("ProductManufacturingRule",
-                                                        UtilMisc.toMap("productId", "",
-                                                        "productIdFor", substitutedNode.getPart().getString("productId"),
+                                                        UtilMisc.toMap("productIdFor", substitutedNode.getPart().getString("productId"),
                                                         "productIdIn", node.get("productIdTo"))));
                 }
                 newNode = null;
@@ -168,9 +184,7 @@ public class ItemConfigurationNode {
                     // If no substitution has been done (no valid rule applied),
                     // we try to search for a generic node-rule
                     List genericNodeRules = delegator.findByAnd("ProductManufacturingRule",
-                                                            UtilMisc.toMap("productId", "",
-                                                            "productIdFor", "",
-                                                            "productIdIn", node.get("productIdTo")),
+                                                            UtilMisc.toMap("productIdIn", node.get("productIdTo")),
                                                             UtilMisc.toList("ruleSeqId"));
                     newNode = null;
                     newNode = substituteNode(oneChildNode, productFeatures, genericNodeRules, delegator);
@@ -278,7 +292,7 @@ public class ItemConfigurationNode {
         // Now we set the depth and quantity of the current node
         // in this breakdown.
         this.depth = depth;
-        this.quantity = quantity;
+        this.quantity = quantity * quantityMultiplier;
         // First of all we visit the corrent node.
         arr.add(this);
         // Now (recursively) we visit the children.
@@ -287,15 +301,16 @@ public class ItemConfigurationNode {
         depth++;
         for (int i = 0; i < children.size(); i++) {
             oneChild = (GenericValue)children.get(i);
-            float bomQuantity = 0;
-            try {
-                bomQuantity = oneChild.getDouble("quantity").floatValue();
-            } catch(Exception exc) {
-                bomQuantity = 1;
-            }
+//            float bomQuantity = 0;
+//            try {
+//                bomQuantity = oneChild.getDouble("quantity").floatValue();
+//            } catch(Exception exc) {
+//                bomQuantity = 1;
+//            }
             oneChildNode = (ItemConfigurationNode)childrenNodes.get(i);
             if (oneChildNode != null) {
-                oneChildNode.print(arr, (quantity * bomQuantity), depth);
+//                oneChildNode.print(arr, (quantity * bomQuantity), depth);
+                oneChildNode.print(arr, this.quantity, depth);
             }
         }
     }
@@ -412,6 +427,21 @@ public class ItemConfigurationNode {
         return bomTypeId;
     }
     
+    /** Getter for property quantityMultiplier.
+     * @return Value of property quantityMultiplier.
+     *
+     */
+    public float getQuantityMultiplier() {
+        return quantityMultiplier;
+    }    
+    
+    /** Setter for property quantityMultiplier.
+     * @param quantityMultiplier New value of property quantityMultiplier.
+     *
+     */
+    public void setQuantityMultiplier(float quantityMultiplier) {
+        this.quantityMultiplier = quantityMultiplier;
+    }
     
 }
 
