@@ -1,5 +1,5 @@
 /*
- * $Id: MenuStringRenderer.java,v 1.4 2004/06/02 17:50:12 byersa Exp $
+ * $Id: MenuStringRenderer.java,v 1.5 2004/07/29 04:42:36 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
  * Widget Library - Form String Renderer interface
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  */
 public interface MenuStringRenderer {
@@ -42,5 +42,7 @@ public interface MenuStringRenderer {
     public void renderFormatSimpleWrapperClose(StringBuffer buffer, Map context, ModelMenu menu);
     public void renderFormatSimpleWrapperRows(StringBuffer buffer, Map context, Object menu);
     public void setUserLoginIdHasChanged(boolean b);
+    public void renderLink(StringBuffer buffer, Map context, ModelMenuItem.Link link);
+    public void renderImage(StringBuffer buffer, Map context, ModelMenuItem.Image image);
     public MenuTarget selectMenuTarget(ModelMenuItem menuItem, Map context);
 }

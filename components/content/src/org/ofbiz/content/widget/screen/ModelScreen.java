@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreen.java,v 1.6 2004/07/18 10:09:35 jonesde Exp $
+ * $Id: ModelScreen.java,v 1.7 2004/07/29 04:42:37 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.1
  */
 public class ModelScreen {
@@ -137,6 +137,9 @@ public class ModelScreen {
         public void render(String resourceName, String screenName) throws IOException, SAXException, ParserConfigurationException {
             ModelScreen modelScreen = ScreenFactory.getScreenFromLocation(resourceName, screenName);
             modelScreen.renderScreenString(writer, context, screenStringRenderer);
+        }
+        public ScreenStringRenderer getScreenStringRenderer() {
+            return this.screenStringRenderer;
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlTreeRenderer.java,v 1.2 2004/07/27 20:29:40 byersa Exp $
+ * $Id: HtmlTreeRenderer.java,v 1.3 2004/07/29 04:42:36 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,10 @@ import java.util.Map;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.widget.tree.ModelTree;
 import org.ofbiz.content.widget.tree.TreeStringRenderer;
+import org.ofbiz.content.widget.screen.ScreenStringRenderer;
+import org.ofbiz.content.widget.screen.ModelScreen;
+import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
+import org.ofbiz.content.widget.html.HtmlScreenRenderer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -44,10 +48,12 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class HtmlTreeRenderer implements TreeStringRenderer {
+
+    ScreenStringRenderer screenStringRenderer = null;
 
     public HtmlTreeRenderer() {}
 
@@ -226,5 +232,18 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
         // appending line ends for now, but this could be replaced with a simple space or something
         writer.write("\r\n");
         //writer.write(' ');
+    }
+
+    public ScreenStringRenderer getScreenStringRenderer(Map context) {
+
+        ScreenRenderer screenRenderer = (ScreenRenderer)context.get("screens"); 
+        if (screenRenderer != null) {
+            screenStringRenderer = screenRenderer.getScreenStringRenderer();
+        } else {
+            if (screenStringRenderer == null) {
+                screenStringRenderer = new HtmlScreenRenderer();
+            }
+        }
+        return screenStringRenderer;
     }
 }
