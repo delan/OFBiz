@@ -409,6 +409,7 @@
         <attribute name="productStoreId" type="String" mode="IN"/>
         <attribute name="itemProductList" type="java.util.List" mode="IN"/>
         <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
+        <attribute name="itemPriceList" type="java.util.List" mode="IN"/>
         <attribute name="itemShippingList" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderShippingAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="shippingAddress" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
@@ -430,6 +431,7 @@
         <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
         <attribute name="taxCategory" type="String" mode="IN" optional="true"/>
         <attribute name="taxShipping" type="String" mode="IN" optional="false"/>
+        <attribute name="minItemPrice" type="Double" mode="IN" optional="false"/>
         <attribute name="minPurchase" type="Double" mode="IN" optional="false"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="salesTaxPercentage" type="Double" mode="IN" optional="false"/>
@@ -444,6 +446,7 @@
         <attribute name="countryGeoId" type="String" mode="IN" optional="false"/>
         <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
         <attribute name="taxCategory" type="String" mode="IN" optional="false"/>
+        <attribute name="minItemPrice" type="Double" mode="IN" optional="false"/>
         <attribute name="minPurchase" type="Double" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>

@@ -2215,6 +2215,7 @@ public class OrderServices {
         String productStoreId = (String) context.get("productStoreId");
         List itemProductList = (List) context.get("itemProductList");
         List itemAmountList = (List) context.get("itemAmountList");
+        List itemPriceList = (List) context.get("itemPriceList");
         List itemShippingList = (List) context.get("itemShippingList");
         Double orderShippingAmount = (Double) context.get("orderShippingAmount");
         GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
@@ -2238,15 +2239,16 @@ public class OrderServices {
         for (int i = 0; i < itemProductList.size(); i++) {
             GenericValue product = (GenericValue) itemProductList.get(i);
             Double itemAmount = (Double) itemAmountList.get(i);
+            Double itemPrice = (Double) itemPriceList.get(i);
             Double shippingAmount = (Double) itemShippingList.get(i);
             List taxList = null;
             if (shippingAddress != null) {
-                taxList = getTaxAmount(delegator, product, productStoreId, countryCode, stateCode, itemAmount.doubleValue(), shippingAmount.doubleValue());
+                taxList = getTaxAmount(delegator, product, productStoreId, countryCode, stateCode, itemPrice.doubleValue(), itemAmount.doubleValue(), shippingAmount.doubleValue());
             }
             itemAdjustments.add(taxList);
         }
         if (orderShippingAmount.doubleValue() > 0) {
-            List taxList = getTaxAmount(delegator, null, productStoreId, countryCode, stateCode, 0.00, orderShippingAmount.doubleValue());
+            List taxList = getTaxAmount(delegator, null, productStoreId, countryCode, stateCode, 0.00, 0.00, orderShippingAmount.doubleValue());
             orderAdjustments.addAll(taxList);
         }
 
@@ -2256,7 +2258,7 @@ public class OrderServices {
 
     }
 
-    private static List getTaxAmount(GenericDelegator delegator, GenericValue item, String productStoreId, String countryCode, String stateCode, double itemAmount, double shippingAmount) {
+    private static List getTaxAmount(GenericDelegator delegator, GenericValue item, String productStoreId, String countryCode, String stateCode, double itemPrice, double itemAmount, double shippingAmount) {
         List adjustments = new ArrayList();
 
         // store expr
@@ -2287,7 +2289,7 @@ public class OrderServices {
         EntityCondition mainCondition = new EntityConditionList(mainExprs, EntityOperator.AND);
 
         // create the orderby clause
-        List orderList = UtilMisc.toList("minPurchase", "fromDate");
+        List orderList = UtilMisc.toList("minItemPrice", "minPurchase", "fromDate");
 
         try {
             List lookupList = delegator.findByCondition("SimpleSalesTaxLookup", mainCondition, null, orderList);
@@ -2302,10 +2304,10 @@ public class OrderServices {
             Iterator flIt = filteredList.iterator();
             while (flIt.hasNext()) {
                 GenericValue taxLookup = (GenericValue) flIt.next();
-                //Debug.logInfo("Testing " + itemAmount + " with : " + taxLookup, module);
-                if (itemAmount >= taxLookup.getDouble("minPurchase").doubleValue()) {
-                    //Debug.logInfo("TaxLookup: " + taxLookup, module);
+                double minPrice = taxLookup.get("minItemPrice") != null ? taxLookup.getDouble("minItemPrice").doubleValue() : 0.00;
+                double minAmount = taxLookup.get("minPurchase") != null ? taxLookup.getDouble("minPurchase").doubleValue() : 0.00;
 
+                if (itemPrice >= minPrice && itemAmount >= minAmount) {
                     double taxRate = taxLookup.get("salesTaxPercentage") != null ? taxLookup.getDouble("salesTaxPercentage").doubleValue() : 0;
                     double taxable = 0.00;
 

@@ -56,7 +56,7 @@
     <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="9000" fromDate="2001-05-13 12:00:00.0"/>
     <ProductStoreKeywordOvrd productStoreId="9000" keyword="gizmo" fromDate="2001-05-13 12:00:00.0" target="100" targetTypeEnumId="KOTT_PRODCAT"/>
 
-    <SimpleSalesTaxLookup productStoreId="9000" countryGeoId="_NA_" stateProvinceGeoId="_NA_" taxCategory="_NA_" fromDate="2001-01-01 00:00:00.001" description="10% OFB Tax" minPurchase="0.0" taxShipping="N" salesTaxPercentage="0.1"/>
+    <SimpleSalesTaxLookup productStoreId="9000" countryGeoId="_NA_" stateProvinceGeoId="_NA_" taxCategory="_NA_" fromDate="2001-01-01 00:00:00.001" description="10% OFB Tax" minItemPrice="25.00" minPurchase="0.0" taxShipping="N" salesTaxPercentage="0.1"/>
 
     <WebSite webSiteId="WebStore" siteName="eCommerce Web Site" productStoreId="9000"/>
     <WebSite webSiteId="OrderEntry" siteName="Order Entry Web Site" productStoreId="9000"/>

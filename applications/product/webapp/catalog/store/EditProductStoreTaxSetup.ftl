@@ -37,6 +37,7 @@
       <td nowrap><div class="tableheadtext">${uiLabelMap.ProductCountry}</td>
       <td nowrap><div class="tableheadtext">${uiLabelMap.ProductState}</div></td>
       <td nowrap><div class="tableheadtext">${uiLabelMap.ProductTaxCategory}</div></td>
+      <td nowrap><div class="tableheadtext">${uiLabelMap.ProductMinItemPrice}</div></td>
       <td nowrap><div class="tableheadtext">${uiLabelMap.ProductMinPurchase}</div></td>
       <td nowrap><div class="tableheadtext">${uiLabelMap.ProductTaxRate}</div></td>
       <td nowrap><div class="tableheadtext">${uiLabelMap.CommonFromDate}</div></td>             
@@ -47,7 +48,8 @@
         <td><div class="tabletext">${taxItem.countryGeoId}</div></td>
         <td><div class="tabletext">${taxItem.stateProvinceGeoId}</div></td>
         <td><div class="tabletext">${taxItem.taxCategory}</div></td>
-        <td><div class="tabletext">${taxItem.minPurchase?string("##0.00")}</div></td>
+        <td><div class="tabletext">${taxItem.minItemPrice?default(0)?string("##0.00")}</div></td>
+        <td><div class="tabletext">${taxItem.minPurchase?default(0)?string("##0.00")}</div></td>
         <td><div class="tabletext">${taxItem.salesTaxPercentage?if_exists}</div></td>
         <td><div class="tabletext">${taxItem.fromDate?string}</div></td>
         <#if security.hasEntityPermission("TAXRATE", "_DELETE", session)>
@@ -85,6 +87,10 @@
         <tr>
           <td><span class="tableheadtext">${uiLabelMap.ProductTaxCategory}</span></td>      
           <td><input type="text" size="20" name="taxCategory" class="inputBox"></td>      
+        </tr>
+        <tr>
+          <td><span class="tableheadtext">${uiLabelMap.ProductMinimumItemPrice}</span></td>
+          <td><input type="text" size="10" name="minItemPrice" class="inputBox" value="0.00"></td>
         </tr>
         <tr>
           <td><span class="tableheadtext">${uiLabelMap.ProductMinimumPurchase}</span></td>
