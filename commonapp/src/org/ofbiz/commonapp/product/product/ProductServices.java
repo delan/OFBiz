@@ -113,7 +113,7 @@ public class ProductServices {
         // * String productId      -- Parent (virtual) product ID
         // * List featureOrder     -- Order of features
         Map result = new HashMap();
-        List featureOrder = (List) context.get("featureOrder");
+        List featureOrder = new LinkedList((Collection)context.get("featureOrder"));
         if (featureOrder == null || featureOrder.size() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Empty list of features passed");
