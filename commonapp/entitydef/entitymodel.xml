@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Fri Sep 07 12:02:16 MDT 2001
+ *@created    Fri Sep 07 14:53:46 PDT 2001
  *@version    1.0
  */
 -->
@@ -1066,6 +1066,11 @@
       <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
       <field><col-name>DESCRIPTION</col-name><type>description</type></field>	
       <prim-key-col>BILLING_ACCOUNT_ID</prim-key-col>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>BILLING_ACCOUNT_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Billing Account Role Entity</title>
@@ -1412,6 +1417,11 @@
       <field><col-name>PAYMENT_METHOD_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>DESCRIPTION</col-name><type>description</type></field>	
       <prim-key-col>PAYMENT_METHOD_TYPE_ID</prim-key-col>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_PAYMENT_PREFERENCE</rel-table-name>
+        <key-map><col-name>PAYMENT_METHOD_TYPE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Payment Type Entity</title>
@@ -3439,7 +3449,8 @@
       <field><col-name>ORDER_DATE</col-name><type>date-time</type></field>
       <field><col-name>ENTRY_DATE</col-name><type>date-time</type></field>
       <field><col-name>VISIT_ID</col-name><type>id</type></field>
-      <field><col-name>STATUS_ID</col-name><type>id</type></field>	
+      <field><col-name>STATUS_ID</col-name><type>id</type></field>
+      <field><col-name>BILLING_ACCOUNT_ID</col-name><type>id</type></field>	
       <prim-key-col>ORDER_ID</prim-key-col>
       <relation>
         <type>one</type>
@@ -3529,6 +3540,16 @@
       <relation>
         <type>many</type>
         <rel-table-name>ORDER_SHIPMENT_PREFERENCE</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>BILLING_ACCOUNT</rel-table-name>
+        <key-map><col-name>BILLING_ACCOUNT_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_PAYMENT_PREFERENCE</rel-table-name>
         <key-map><col-name>ORDER_ID</col-name></key-map>
       </relation>
     </entity>	
@@ -3876,6 +3897,36 @@
         <type>many</type>
         <rel-table-name>ORDER_ITEM</rel-table-name>
         <key-map><col-name>ORDER_ITEM_TYPE_ID</col-name></key-map>
+      </relation>
+    </entity>	
+    <entity>
+      <title>The Order Payment Preference Entity</title>
+      <description></description>
+      <copyright></copyright>
+      <author></author>
+      <version></version>
+      <package-name>org.ofbiz.commonapp.order.order</package-name>
+      <table-name>ORDER_PAYMENT_PREFERENCE</table-name>
+      <field><col-name>ORDER_PAYMENT_PREFERENCE_ID</col-name><type>id-ne</type></field>
+      <field><col-name> ORDER_ID</col-name><type>id</type></field>
+      <field><col-name>PAYMENT_METHOD_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>PAYMENT_INFO_ID</col-name><type>id</type></field>
+      <field><col-name>MAX_AMOUNT</col-name><type>currency-amount</type></field>	
+      <prim-key-col>ORDER_PAYMENT_PREFERENCE_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PAYMENT_METHOD_TYPE</rel-table-name>
+        <key-map><col-name>PAYMENT_METHOD_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>CREDIT_CARD_INFO</rel-table-name>
+        <key-map><col-name>PAYMENT_INFO_ID</col-name><rel-col-name>CREDIT_CARD_ID</rel-col-name></key-map>
       </relation>
     </entity>	
     <entity>
@@ -5594,6 +5645,11 @@
         <type>one</type>
         <rel-table-name>POSTAL_ADDRESS</rel-table-name>
         <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_PAYMENT_PREFERENCE</rel-table-name>
+        <key-map><col-name>CREDIT_CARD_ID</col-name><rel-col-name>PAYMENT_INFO_ID</rel-col-name></key-map>
       </relation>
     </entity>	
     <entity>
