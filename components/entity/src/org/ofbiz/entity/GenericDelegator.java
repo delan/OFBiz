@@ -2248,16 +2248,35 @@ public class GenericDelegator implements DelegatorInterface {
      *@return Long with the next seq id for the given sequence name
      */
     public String getNextSeqId(String seqName, long staggerMax) {
-        Long nextSeqLong = this.getNextSeqIdLong(seqName, staggerMax);
-        
-        if (nextSeqLong == null) {
-            throw new IllegalArgumentException("Could not get next sequenced ID for sequence name: " + seqName);
-        }
-        
-        if (UtilValidate.isNotEmpty(this.getDelegatorInfo().sequencedIdPrefix)) {
-            return this.getDelegatorInfo().sequencedIdPrefix + nextSeqLong.toString();
-        } else {
-            return nextSeqLong.toString();
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
+
+            Long nextSeqLong = this.getNextSeqIdLong(seqName, staggerMax);
+            
+            if (nextSeqLong == null) {
+                throw new IllegalArgumentException("Could not get next sequenced ID for sequence name: " + seqName);
+            }
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+
+            if (UtilValidate.isNotEmpty(this.getDelegatorInfo().sequencedIdPrefix)) {
+                return this.getDelegatorInfo().sequencedIdPrefix + nextSeqLong.toString();
+            } else {
+                return nextSeqLong.toString();
+            }
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            Debug.logError(e, "[GenericDelegator] Error getting next sequence ID: " + e.toString(), module);
+            return null;
         }
     }
     
@@ -2277,18 +2296,36 @@ public class GenericDelegator implements DelegatorInterface {
      *@return Long with the next seq id for the given sequence name
      */
     public Long getNextSeqIdLong(String seqName, long staggerMax) {
-        if (sequencer == null) {
-            synchronized (this) {
-                if (sequencer == null) {
-                    String helperName = this.getEntityHelperName("SequenceValueItem");
-                    ModelEntity seqEntity = this.getModelEntity("SequenceValueItem");
-                    sequencer = new SequenceUtil(helperName, seqEntity, "seqName", "seqId");
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
+
+            if (sequencer == null) {
+                synchronized (this) {
+                    if (sequencer == null) {
+                        String helperName = this.getEntityHelperName("SequenceValueItem");
+                        ModelEntity seqEntity = this.getModelEntity("SequenceValueItem");
+                        sequencer = new SequenceUtil(helperName, seqEntity, "seqName", "seqId");
+                    }
                 }
             }
-        }
-        if (sequencer != null) {
-            return sequencer.getNextSeqId(seqName, staggerMax);
-        } else {
+            
+            Long newSeqId = sequencer == null ? null : sequencer.getNextSeqId(seqName, staggerMax);
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+
+            return newSeqId;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            Debug.logError(e, "[GenericDelegator] Error getting next sequence ID: " + e.toString(), module);
             return null;
         }
     }
@@ -2313,7 +2350,13 @@ public class GenericDelegator implements DelegatorInterface {
             value.remove(seqFieldName);
             GenericValue lookupValue = this.makeValue(value.getEntityName(), null);
             lookupValue.setPKFields(value);
+
+            boolean beganTransaction = false;
             try {
+                if (alwaysUseTransaction) {
+                    beganTransaction = TransactionUtil.begin();
+                }
+
                 // get values in whatever order, we will go through all of them to find the highest value
                 List allValues = this.findByAnd(value.getEntityName(), lookupValue, null);
                 //Debug.logInfo("Get existing values from entity " + value.getEntityName() + " with lookupValue: " + lookupValue + ", and the seqFieldName: " + seqFieldName + ", and the results are: " + allValues, module);
@@ -2344,7 +2387,16 @@ public class GenericDelegator implements DelegatorInterface {
                 int seqValToUse = (highestSeqVal == null ? 1 : highestSeqVal.intValue() + incrementBy);
                 String newSeqId = sequencedIdPrefix + UtilFormatOut.formatPaddedNumber(seqValToUse, numericPadding);
                 value.set(seqFieldName, newSeqId);
+
+                // only commit the transaction if we started one...
+                TransactionUtil.commit(beganTransaction);
             } catch (Exception e) {
+                try {
+                    // only rollback the transaction if we started one...
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericEntityException e2) {
+                    Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+                }
                 Debug.logError(e, "Error making next seqId", module);
             }
         }
