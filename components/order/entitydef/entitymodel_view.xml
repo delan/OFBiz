@@ -85,11 +85,16 @@
       <member-entity entity-alias="PF" entity-name="OrderPaymentPreference"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderDate"/>
+      <alias entity-alias="OH" name="originFacilityId"/>
       <alias entity-alias="OH" name="productStoreId"/>
+      <alias entity-alias="OH" name="terminalId"/>
+      <alias entity-alias="OH" name="webSiteId"/>
       <alias entity-alias="PF" name="orderPaymentPreferenceId"/>
       <alias entity-alias="PF" name="paymentMethodTypeId"/>
       <alias entity-alias="OH" name="orderStatusId" field="statusId"/>
       <alias entity-alias="PF" name="paymentStatusId" field="statusId"/>
+      <alias entity-alias="PF" name="maxAmount"/>
       <view-link entity-alias="OH" rel-entity-alias="PF">
         <key-map field-name="orderId"/>
       </view-link>
