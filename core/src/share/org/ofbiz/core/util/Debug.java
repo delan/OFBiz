@@ -23,11 +23,15 @@
  */
 package org.ofbiz.core.util;
 
-import java.io.*;
-import java.util.*;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.text.DateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.apache.log4j.*;
+import org.apache.log4j.Category;
+import org.apache.log4j.Priority;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
  * Configurable Debug logging wrapper class
@@ -76,11 +80,11 @@ public final class Debug {
         levelStringMap.put("always", new Integer(Debug.ALWAYS));
         
         // initialize Log4J
-        PropertyConfigurator.configure(FlexibleProperties.makeFlexibleProperties(UtilURL.fromResource("debug")));
+        PropertyConfigurator.configure(FlexibleProperties.makeFlexibleProperties(UtilURL.fromResource("debug.properties")));
 
         // initialize levelOnCache
         for (int i = 0; i < 8; i++) {
-            levelOnCache[i] = (i == Debug.ALWAYS || UtilProperties.propertyValueEqualsIgnoreCase("debug", levelProps[i], "true"));
+            levelOnCache[i] = (i == Debug.ALWAYS || UtilProperties.propertyValueEqualsIgnoreCase("debug.properties", levelProps[i], "true"));
         }
     }
 
@@ -131,7 +135,6 @@ public final class Debug {
         if (isOn(level)) {
             if (useLog4J) {
                 Category logger = getLogger(module);
-
                 logger.log(callingClass, levelObjs[level], msg, t);
             } else {
                 StringBuffer prefixBuf = new StringBuffer();
