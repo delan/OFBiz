@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
@@ -44,7 +44,7 @@ ${common.get("/includes/appbar.ftl")}
         </tr>
       </table>       
     </div>
-    <div class='spacer'></div>
+    <div class='endcolumns'></div>
   </div>
 </div>
 
