@@ -766,6 +766,12 @@
         <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
     </service>
 
+    <service name="balanceInventoryItems" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="balanceInventoryItems" auth="true">
+        <description>Balance inventory items based on the item passed</description>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <service name="reserveProductInventory" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
         <description>Reserve Inventory for a Product.
