@@ -65,7 +65,7 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">Password Hint</div></td>
       <td width="74%">
-        <input type="text" name="PASSWORD_HINT" value="" size="40" maxlength="100">
+        <input type="text" name="PASSWORD_HINT" value="<%=UtilFormatOut.checkEmpty(request.getParameter("PASSWORD_HINT"),userLogin.getString("passwordHint"))%>" size="40" maxlength="100">
       </td>
     </tr>
   </table>
