@@ -1291,6 +1291,7 @@
     </entity>
     <entity entity-name="ProductKeyword"
             package-name="org.ofbiz.commonapp.product.product"
+            never-cache="true"
             title="Product Keyword Entity">
       <field name="productId" type="id-ne"></field>
       <field name="keyword" type="short-varchar"></field>
@@ -1303,6 +1304,7 @@
     </entity>
     <entity entity-name="ProductKeywordResult"
             package-name="org.ofbiz.commonapp.product.product"
+            never-cache="true"
             title="Product Keyword Result Entity">
       <field name="productKeywordResultId" type="id-ne"></field>
       <field name="visitId" type="id"></field>

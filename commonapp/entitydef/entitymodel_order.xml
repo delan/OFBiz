@@ -57,6 +57,7 @@
 
     <entity entity-name="OrderAdjustment"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Adjustment Entity">
       <description>Note that both includeInTax and includeInShipping should default to true, except in the case where this adjustment is a tax or shipping adjustment then should be ignored.</description>
       <field name="orderAdjustmentId" type="id-ne"></field>
@@ -176,6 +177,7 @@
     </entity>
     <entity entity-name="OrderContactMech"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Contact Mechanism Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="contactMechPurposeTypeId" type="id-ne"></field>
@@ -194,6 +196,7 @@
     </entity>
     <entity entity-name="OrderHeader"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Header Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderTypeId" type="id"></field>
@@ -289,6 +292,7 @@
     </entity>
     <view-entity entity-name="OrderHeaderAndPaymentPref"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Header And Payment Preference View Entity">
       <member-entity entity-alias="PF" entity-name="OrderPaymentPreference"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
@@ -309,6 +313,7 @@
     </view-entity>
     <entity entity-name="OrderHeaderNote"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Header Note Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="noteId" type="id-ne"></field>
@@ -323,6 +328,7 @@
     </entity>
     <view-entity entity-name="OrderHeaderNoteView"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Header Note View Entity">
       <member-entity entity-alias="PR" entity-name="Person"/>
       <member-entity entity-alias="OD" entity-name="OrderHeaderNote"/>
@@ -344,6 +350,7 @@
     </view-entity>
     <entity entity-name="OrderItem"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Item Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
@@ -448,6 +455,7 @@
     </entity>
     <entity entity-name="OrderItemAssociation"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Item Association Entity">
       <field name="salesOrderId" type="id-ne"></field>
       <field name="soItemSeqId" type="id-ne"></field>
@@ -492,6 +500,7 @@
     </entity>
     <entity entity-name="OrderItemBilling"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Item Billing Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
@@ -520,6 +529,7 @@
     </entity>
     <entity entity-name="OrderItemContactMech"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Item Contact Mechanism Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
@@ -544,6 +554,7 @@
     </entity>
     <entity entity-name="OrderItemInventoryRes"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Item Inventory Reservation Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
@@ -569,6 +580,7 @@
     </entity>
     <entity entity-name="OrderItemPriceInfo"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Item Price Info Entity">
       <field name="orderItemPriceInfoId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
@@ -595,6 +607,7 @@
     </entity>
     <entity entity-name="OrderItemRole"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Item Role Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
@@ -662,6 +675,7 @@
     </entity>
     <entity entity-name="OrderPaymentPreference"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="The Order Payment Preference Entity">
       <field name="orderPaymentPreferenceId" type="id-ne"></field>
       <field name="orderId" type="id"></field>
@@ -698,6 +712,7 @@
     </entity>
     <entity entity-name="OrderRole"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Role Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
@@ -724,6 +739,7 @@
     </entity>
     <entity entity-name="OrderShipment"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Shipment Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
@@ -751,6 +767,7 @@
     </entity>
     <entity entity-name="OrderShipmentPreference"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="The Order Shipment Preference Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
@@ -789,6 +806,7 @@
     </entity>
     <entity entity-name="OrderStatus"
             package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
             title="Order Status Entity">
       <field name="orderStatusId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
@@ -1675,6 +1693,7 @@
 
     <entity entity-name="CartAbandonedLine"
             package-name="org.ofbiz.commonapp.order.shoppingcart"
+            never-cache="true"
             title="Order Abandoned Line Entity">
       <field name="visitId" type="id-ne"></field>
       <field name="cartAbandonedLineSeqId" type="id-ne"></field>

@@ -1205,6 +1205,7 @@
     </entity>
     <entity entity-name="ServerHit"
             package-name="org.ofbiz.commonapp.content.visit"
+            never-cache="true"
             title="Server Hit Entity">
       <field name="visitId" type="id-ne"></field>
       <field name="contentId" type="id-vlong-ne"></field>
@@ -1252,6 +1253,7 @@
     </entity>
     <entity entity-name="ServerHitBin"
             package-name="org.ofbiz.commonapp.content.visit"
+            never-cache="true"
             title="Server Hit Bin Entity">
       <field name="serverHitBinId" type="id-ne"></field>
       <field name="contentId" type="id-vlong-ne"></field>
@@ -1336,6 +1338,7 @@
     </entity>
     <entity entity-name="Visit"
             package-name="org.ofbiz.commonapp.content.visit"
+            never-cache="true"
             title="Visit Entity">
       <field name="visitId" type="id-ne"></field>
       <field name="contactMechId" type="id"></field>
@@ -1448,6 +1451,7 @@
     </entity>
     <entity entity-name="UserLoginHistory"
             package-name="org.ofbiz.commonapp.security.login"
+            never-cache="true"
             title="User Login History Entity">
       <field name="userLoginId" type="id-vlong-ne"></field>
       <field name="fromDate" type="date-time"></field>
