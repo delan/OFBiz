@@ -1,0 +1,82 @@
+DavaVision is currently owned and developed by Jim Menard, jimm@io.com. The
+following people have kindly submitted bug reports, bug fixes, and
+suggestions for improvement. Many thanks to all of them.
+
+Bug reports, fixes, and suggestions have come from:
+
+Stephen <stephen@webreserve.com>
+
+    Found bug in new reports: table linker was useless until fields were
+    added to the report.
+
+TonyTomov <ttomov@abs.bg>
+
+    Reported Windows problems that helped improve documentation. Found that
+    the Sun JDBC/ODBC driver for Windows does not implement some optional
+    features required by DataVision. Found bug in new reports: many
+    uninitialized things were written as "null" in the XML. Found special
+    field dragging bug. Found serious SQL generation bugs. Many, many more
+    good suggestions. Found font size change bug. Discussions about
+    arbitrary SQL statements, UNION, etc. Found subtotal creation bugs
+    (null format in original field caused NullPointerException; non-Float
+    values were not properly converted). Found database column title
+    creation bug. Found many, many more bugs.
+
+Achim Weﬂling <Achim.Wessling@gt-net.de>
+
+    Found Informix driver issues. Found field widget selection bug.
+
+Gareth Cronin <GarethC@kiwiplan.co.nz>
+
+    Found and reported ODBC driver issues.
+
+Konstantin V. Oussanov <ukv@lab321.ru>
+
+    Found and reported Oracle driver issues. Found and fixed null value bug
+    in Field.java. Submitted patches for ResultSet creation for Oracle
+    drivers. Found and submitted patch for command-line argument processing
+    and password handling when creating a report and using a layout engine.
+    Found and fixed line-reading bug. Submitted fix that lets database
+    fields appear in report header.
+
+Tom Van Overbeke <tom.van.overbeke@pandora.be>
+
+    Found cause  of startup font error messages and found the solution.
+    Found field deletion bug. Found working MySQL driver and provided links.
+
+Jaume from Tau Ingenieros <tauinge@menta.net>
+
+    Found fix for printing from report run window. Submitted code to resize
+    page when printing.
+
+John Wilson <tug@wilson.co.uk>
+
+    Author of the MinML XML parser used by DataVision.
+
+Kai Toedter <kai@toedter.com>
+
+    Author of JCalendar, the calendar Swing widget used by DataVision.
+
+Alex Bogdanov <agb@bogdanov.fsbusiness.co.uk>
+
+    Found problems with WHERE clauses. Made suggestions about making
+    reports more usable for multiple users.
+
+Arash Bijanzadeh <arashb@users.sourceforge.net>
+ 
+    Suggestion to use TreeMap instead of HashMap in Database to keep tables
+    sorted by name.
+
+Brendon Price <Brendon.Price@sytec.co.nz>
+
+    Found field id creation bug (all newly-created fields had the same id
+    number.) Contributed enhancements and fixes to HTMLLE.
+
+Miguel Angel Rojas Aquino <mrojas_aquino@mail.flashmail.com>
+
+    Suggested code to look for table names without grabbing system tables.
+    Pointed out Oracle date/timestamp issues.
+
+William Colls <bcolls@cbnlottery.com>
+
+    Found special field formatting bug.

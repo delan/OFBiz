@@ -1,0 +1,131 @@
+<!-- Version 0.3 -->
+<!-- NOTE: THIS DTD IS ONLY A GUIDE. IT MAY NOT BE CORRECT. -->
+<!-- DON'T TRUST IT. -->
+<!-- All sizes are in points (72 points == 1 inch) -->
+
+<!ELEMENT report	(database query parameters? formulas? headers?
+			 footers? page? groups? details)
+>
+
+<!ATTLIST report	version		CDATA	#REQUIRED
+			name		CDATA
+			title		CDATA
+			author		CDATA
+>
+
+<!-- With description, PCDATA is text of report description -->
+<!ELEMENT description	(#PCDATA)>
+
+<!ELEMENT paper>
+<!ATTLIST paper		name		CDATA	#REQUIRED>
+
+<!ELEMENT database>
+<!ATTLIST database	driverClassName	CDATA	#REQUIRED
+			connInfo	CDATA	#REQUIRED
+			name		CDATA	#REQUIRED
+			username	CDATA	#REQUIRED
+>
+
+<!ELEMENT query		(join|where|sort)*>
+
+<!ELEMENT join>
+<!ATTLIST join		from		CDATA	#REQUIRED
+			to		CDATA	#REQUIRED
+			relation	CDATA	#REQUIRED
+>
+
+<!-- With where clause, PCDATA is text of where clause -->
+<!ELEMENT where		(#PCDATA)>
+
+<!ELEMENT sort>
+<!ATTLIST sort		column		CDATA	#REQUIRED
+			order		(ascending|descending)	ascending
+>
+
+<!ELEMENT parameters	parameter*>
+<!ELEMENT parameter	default*>
+<!ATTLIST parameter	id		CDATA	#REQUIRED
+			type		(boolean
+					|string
+					|numeric
+					|date)	#REQUIRED
+			name		CDATA	#REQUIRED
+			question	CDATA	#REQUIRED
+			arity		(single
+					|range
+					|list-single
+					|list-multiple)	#REQUIRED
+>
+
+<!ELEMENT default	(#PCDATA)>
+
+<!ELEMENT formulas	formula*>
+
+<!-- With formula, PCDATA is text of formula -->
+<!ELEMENT formula	(#PCDATA)>
+<!ATTLIST formula	id		CDATA	#REQUIRED
+			name		CDATA	#REQUIRED
+>
+
+<!ELEMENT page		headers footers>
+
+<!ELEMENT headers	section*>
+
+<!ELEMENT footers	section*>
+
+<!ELEMENT groups	group*>
+
+<!ELEMENT group		headers? footers?>
+<!ATTLIST group		column		CDATA	#REQUIRED>
+
+<!ELEMENT details	section*>
+
+<!ELEMENT section	(field|line)*>
+<!ATTLIST section	height		CDATA	#REQUIRED>
+
+<!ELEMENT field		(bounds|format|border)*>
+<!ATTLIST field		type		(column
+					|formula
+					|parameter
+					|text
+					|special)
+						#REQUIRED
+			value		CDATA	#REQUIRED
+>
+
+<!ELEMENT bounds	EMPTY>
+<!ATTLIST bounds	x		CDATA	#REQUIRED
+			y		CDATA	#REQUIRED
+			width		CDATA	#REQUIRED
+			height		CDATA	#REQUIRED
+>
+
+<!-- Color is stored as "red;green;blue;alpha" -->
+<!ELEMENT format	EMPTY>
+<!ATTLIST format	font		CDATA
+			size		CDATA
+			bold		CDATA
+			italic		CDATA
+			underline	CDATA
+			wrap		CDATA
+			color		CDATA
+			align		(left|right|center)
+>
+
+<!-- A border has from one to four edges -->
+<!ELEMENT border	(edge (edge (edge (edge)?)?)?) >
+
+<!ELEMENT edge		EMPTY>
+<!ATTLIST edge		location	(top|left|bottom|right)	#REQUIRED
+			style		(line|dot|dash)
+			thickness	CDATA
+			number		CDATA
+>
+
+<!ELEMENT line		point point>
+<!ATTLIST line		thickness	CDATA>
+
+<!ELEMENT point		EMPTY>
+<!ATTLIST point		x		CDATA	#REQUIRED
+			y		CDATA	#REQUIRED
+>

@@ -1,0 +1,318 @@
+================================================================
+    Bugs
+================================================================
+
+* [Need to reproduce. This will be tough without a printer.] When "bunching
+  up" fields in the report designer close to the left hand margin to enable
+  one to fit more fields into a report across an A4 portraited page layout,
+  leftmost fields are excluded in the print. It seems as though they are
+  positioned outside of the margined print area.
+
+* Java help HTML pages don't understand XHTML, for examples the XML Decl
+  and the <a id="foo" /> elements. Even worse, links don't work because the
+  targets use the XHTML "id" attribute instead of the HTML "name"
+  attribute. (I could use both in the <a> element, of course.) It seems to
+  look OK if I change the latter to <a...><h2>...</h2></a>, but is that
+  legal XHTML?
+
+* "Page" should not be a part of report.page.
+
+* Typing Control-A in the FieldPicker window goes to first item instead of
+  executing the menu item associated with that key. NOTE: This happends
+  under Linux but not under Mac OS X. Therefore, it is a Java
+  implementation issue and not my bug. Perhaps I should assign a different
+  key anyway.
+
+* When the text insertion caret is at the left of a text field, it is not
+  visible; it's hidden behind the gray "field selected" border.
+
+* When printing from the Swing window, the background of the page is
+  "painted" a light gray.
+
+* Handle CHAR(30) BINARY columns...but how?
+
+* Microsoft Windows only: Tony reports, "The formatting in data fields does
+  not accept in the same time bold and italic. If the both are checked only
+  italic works. This is not true for a text fields."
+
+* When editing a text field, clicking and dragging in the field does not
+  always visually display the selection of a range of text. Nor does
+  shift-clicking. Instead, these actions move the carat but do not paint the
+  text blue. [One user has reported that he has seen the same problem in
+  other Java programs, so this may not be a DataVision problem.] When I
+  hide and re-show the window during editing, everything behaves properly.
+
+* If you close a report while editing a text field, the edit is not
+  enforced. Capture the dispose? I think that ignoreKeys will be true.
+
+* SubtotWin: modified flags of each section not being reset properly on
+  revert or cancel. Don't worry about this too much; when we start
+  implementing undoable commands, their existance will provide us with the
+  dirty flag.
+
+* In FieldWidget.applyNewFormatAndBorder, are the setFormat, setBorder
+  calls correctly dirtying the field? The dirty bits will always get set
+  (unless both old and new values are null), but this may not always be
+  appropriate. No harm done, I think.
+
+* If a dialog box is open and you hit "Apply", a snapshot of data is taken,
+  including dirty bits. If some other window changes the same data while
+  that dialog box is still open, the saved dirty bits may be invalid.
+
+* All dialog boxes must be prevented from opening multiple instances for a
+  single design window.
+
+* Why does the window beep when I hit the delete key?
+
+* LaTeX:
+
+-- Underline always at same height (currently gets pushed down by '#' in
+  'Job #') (use baseline?)
+
+-- Limit text to box
+
+================================================================
+    To Do 
+================================================================
+
+* Docs: Add reference to field formatting in edit.html.
+
+* Test for non-null format when field created by being dragged. (really
+  default format not containing null color).
+
+* On OS X, Command-Q quits app with no chance of saving report. Is there
+  any way of trapping that?
+
+* Ask for number of pages to print (all, current page, or page range)
+  before printing. This is only necessary on systems that don't ask in
+  their print dialog, and I don't think I can find out programatically if
+  the system asks this of the user. Should this be an application
+  preference?
+
+* Allow column names (not table.column) in editor windows, but only if the
+  name is (a) unique across all tables and (b) not an otherwise reserved
+  word.
+
+* Separate XML file for database connection info (perhaps via a URL)? That
+  way the report can be distributed to separate users or used with separate
+  database instances.
+
+* New layout engine classes from Adeline and Edison. Add them to Credits.
+  LE is not different, except for creation of page, use of TextField, and
+  page.addTextField().
+  Page has new setMargin(), setPage(), and addTextField() methods. Page
+  holds list of fields and iterates over them to paint instead of adding
+  them to the swing page. See print(), paintComponent(), and doPaint().
+
+* Keyboard navigation and defaults for dialogs.
+
+* In the field picker window, visually mark formulas and parameters used in
+  the report.
+
+* Add more screenshots. One with everything open?
+
+* Pop-up list of example driver names and connection strings? Suggestion
+  from Guido Amoruso <guidonte@libero.it>.
+
+* Send email to swing-feedback@java.sun.com. See
+  http://java.sun.com/products/jfc/tsc/sightings/.
+
+* Allow subtotaling of time intervals.
+
+* Add printout and export examples to Web site.
+
+* Access to SQL functions like SUM, AVG. New field type?
+
+* Cataloging/searching reports (XML files).
+
+* Arrow keys nudge selected fields a pixel at a time.
+
+* Separate data layer just like layout engine layer.
+
+* When trying to log in, notify user of error messages. Perhaps quit after
+  three or five times instead of looping indefinitely.
+
+* Let user open connection info dialog from login dialog.
+
+* Make formats easier to use. Don't require user to understand
+  SimpleDateFormat and DecimalFormat.
+
+* Can we use SQL error number or message to determine if we want to retry a
+  botched login? How was it botched: bad password or something else?
+
+* Docs: testdata directory.
+
+* FAQ:
+
+-- classpath error messages
+
+-- mailing lists
+
+* Avoid circular references in formulas.
+
+* Need another way to open field picker window besides the "Insert" menu.
+
+* Joins should support inner and outer joins.
+
+* Let user enable/disable ErrorHandler's stack trace printing.
+
+* In db conn info window, disable OK and Apply buttons until both class
+  name and conn info are supplied.
+
+* Save last used directory of file open widget.
+
+* Save layout engine type in report for use as default next time?
+
+* Let report run window use same code as design window to export report.
+
+* Factor out common code in GroupWin and SortWin?
+
+* "Are you sure?" when exporting over an existing file.
+
+* Page breaks after sections.
+
+* CharSepLE: make quotes around fields optional, at least for fields that
+  don't contain quotes or separator characters.
+
+* Display borders in Swing layout. Problem: borders in LaTeX are outside
+  the bounds, borders in Swing are much easier to implement inside the bounds.
+
+* Shortcut keys for buttons like Yes/No/Cancel and OK/Apply/Revert/Cancel.
+
+* Reduce coupling (Demeter principle).
+
+* Complete javadoc comments.
+
+* VisTableWin: only enable Delete Selected button when some join's delete
+  check box is selected.
+
+* Save window positions and sizes. Save info in report XML?
+
+* Visual join editor (tables are visual; drag arrows between columns to
+  create joins).
+
+* Formula parser checks syntax and types.
+
+* Strings into props file for future I18N.
+
+* Command line opt for alternate string props file.
+
+* Multiple sections moot since no suppression proces yet.
+
+* Dynamically load LayoutEngine subclasses. Allows for dynamic extension.
+
+* Use XQL?
+
+* Use XSchema instead of DTD?
+
+* Select fields by clicking and dragging a selection box with the mouse.
+  (Can already use shift-select, of course.)
+
+* Field picker toolbar: create, delete, edit.
+
+* Use Action objects for actions common to menu and popup? The problem is
+  that some shared actions aren't really identical when invoked from the
+  window menu and from a field (the popup in the field).
+
+* Stored procedures.
+
+* Icons for field picker win.
+
+* Grid toggle for window. When moving or putting down (drag and drop)
+  fields, snap to grid. Menu item in Format menu.
+
+* Can add action listener to an entire menu instead of just one item at a 
+  time.
+
+* Use a Menu Listener!! That way we can enable/disable menus in dialog 
+  window without resorting to calling enable after every select.
+  (See JMenu addMenuListener)
+
+* Logo for DataVision.
+
+* Image for dragging fields (use Field.DEFAULT_WIDTH and
+  Field.DEFAULT_HEIGHT).
+
+* Design window toolbar (make it optional).
+
+* Suggestions from Tony: images, combos, areas, checkbox, background,
+  working borders, line, rectangles.
+
+* Add math functions to expressions (sin, cos, ln, min, max). If we switch
+  to embedded Ruby, it will be taken care of.
+
+* Add if-then-else and booleans to formula expressions: &, |, &&, ||, <, >,
+  <=, >=, =, ==, !=, <>. Will need booleans for suppression procs, anyway.
+
+* Instead of "This report has been modified" in save dialog, use report
+  title.
+
+* Handle page/paper orientations in layout engines.
+
+* Handle page/paper orientations in design window.
+
+* Command pattern w/undo. See
+  http://java.sun.com/docs/books/tutorial/uiswing/components/generaltext.html#undo
+
+* ASCII layout engine.
+
+* RTF layout engine.
+
+* Group display name different from group value.
+
+* Provide schema-building scripts for ODBC databases.
+
+* Suppression procs: implement, load, save.
+
+* Arbitrary SQL?
+
+* Hide ancillary windows when another report window becomes the front one.
+  We'll need to associate those windows with the report window first, of
+  course.
+
+* Line types (dash, etc.)
+
+* Fix DTD
+
+* When have visual preview of output, only read first page from database.
+
+* Special fields: report.date, report.time, report.datetime, run.date,
+  run.time, run.datetime
+
+* Graph generation.
+
+* In border tab, example field that displays selected border edges.
+
+================================================================
+Notes
+================================================================
+
+See /etc/paper.config for size values.
+
+Is "dirty" equivalent to "something in command history"? If not, could make
+a command attribute that stores old dirty flag and sets new one.
+
+From comp.lang.java.programmer: "Normally, question marks (?) inside of
+quoted strings are ignored when scanning for placeholders, however I notice
+you are quoting strings in SQL using a double quote("). You should use
+single quote (') for quoting strings in SQL. Perhaps your JDBC driver
+doesn't see the double quotes because it is expecting single quotes."
+
+Command: make redo() call perform() by default.
+
+How about if delete commands don't really delete, but just mark fields and 
+sections as deleted? That way, undo is really easy. However, report 
+running becomes more complicated. (Does it? The Element class needs a 
+deleted flag, as does the section class. Is that all?)
+
+Installer script that edits classpath?
+
+Formula language: keep RPN, use embedded Ruby, or write a tree parser?
+Formulas turn into SQL? How reference other formulas? (Find dependencies
+and put them in order in the SQL.) How inclue subtotals?
+
+http://java.sun.com/docs/books/tutorial/uiswing/painting/example-swing/SelectionDemo.java
+
+http://jdbc.postgresql.org/doc.html
+
+ksnapshot

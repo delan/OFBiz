@@ -1,0 +1,52 @@
+Introduction
+============
+
+DataVision is a database reporting tool similar to Crystal Reports. Reports
+can be viewed and printed from the application or output as HTML, LaTeX,
+XML, DocBook, or tab- or comma-delimited text files. The output files
+produced by LaTeX and DocBook can in turn be used to produce PDF, text,
+HTML, PostScript, and more.
+
+Report descriptions are stored as XML files. This means you can not only
+use the DataVision GUI, but you may also edit reports using your favorite
+text editor.
+
+DataVision is written in Java. It runs under Linux, Windows, various
+flavors of BSD and Unix, and Mac OS X. It can generate reports from Oracle,
+PostgreSQL, MySQL, Informix, hsqldb, Microsoft Access, and any other
+database with available JDBC drivers.
+
+DataVision is developed and maintained by Jim Menard (<jimm@io.com>). The
+latest version of DataVision can be found on the official DataVision Web
+page (http://datavision.sourceforge.net).
+
+
+Documentation
+=============
+
+For quick-and-dirty installation instructions, see the file INSTALL.
+
+For complete documentation, see the docs directory. The User's Manual
+starts at docs/DataVision/DataVision.html.
+
+Copying
+=======
+
+For licensing information, see the file COPYING.
+
+DataVision uses the XML parser MinML developed by John Wilson
+(tug@wilson.co.uk), the JCalendar widget developed by Kai Toedter
+(kai@toedter.com), and icons developed by Sun. For their respective
+copyright notices see the file COPYING.
+
+Miscellaneous Last-Minute Notes
+===============================
+
+For the most up-to-date notes, see the DataVision Web page.
+
+There's one more thing that's not yet documented, but you may want to play
+with: the stuff in jimm/datavision/testdata. There you will find code to
+create example databases. The PostgreSQL and mySQL directories work. The
+Oracle directory might work, but I'm not sure. You will probably have to be
+either root or the database user (postgres, oracle) to create the
+databases.
