@@ -1,6 +1,6 @@
 
 BODY {
-background-color: #D4D0C8;
+background-color: #FFFFFF;
 margin-top: 10px;
 margin-right: 10px;
 margin-bottom: 10px;
@@ -60,22 +60,22 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .headerboxoutside {
-background-color: white;
+background-color: #FFFFFF;
 padding: 0;
 }
 
 .headerboxtop {
-background-color: white;
+background-color: #FFFFFF;
 padding: 4;
-border-color: white;
+border-color: #FFFFFF;
 border-style: solid;
 border-width: 1px 1px 0px 1px;
 }
 
 .headerboxbottom {
-background-color: white;
+background-color: #FFFFFF;
 padding: 0;
-border-color: white;
+border-color: #FFFFFF;
 border-style: solid;
 border-width: 0px 1px 1px 1px;
 }
@@ -108,7 +108,7 @@ color: red;
 }
 
 .boxoutside {
-background-color: white;
+background-color: #FFFFFF;
 padding: 0px;
 border-color: #999999;
 border-style: solid;
@@ -127,7 +127,7 @@ border-width: 0px 0px 0px 0px;
 }
 
 .boxbottom {
-background-color: white;
+background-color: #FFFFFF;
 padding: 4px;
 border-color: #999999;
 border-style: solid;
@@ -512,7 +512,7 @@ border-width: 3px;
 a.onlnk {
 font-size: 8pt;
 font-weight: bold;
-color: white;
+color: #FFFFFF;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 text-decoration: none;
 padding: 2px;
@@ -543,7 +543,7 @@ color: red;
 font-size: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-weight: bold;
-color: white;
+color: #FFFFFF;
 width: 100%;
 background-color: black;
 padding: 2px;
@@ -589,38 +589,38 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .editInputBox {
-background-color: white;
+background-color: #FFFFFF;
 font-size: 8pt;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .inputBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-background-color: white;
+background-color: #FFFFFF;
 font-size: 8pt;
 }
 
 .selectBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-background-color: white;
+background-color: #FFFFFF;
 font-size: 8pt;
 }
 
 .textAreaBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-background-color: white;
+background-color: #FFFFFF;
 font-size: 8pt;
 }
 
 .radioButton {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-background-color: white;
+background-color: #FFFFFF;
 font-size: 8pt;
 }
 
 .checkBox {
 font-family: Verdana, Arial, Helvetica, sans-serif;
-background-color: white;
+background-color: #FFFFFF;
 font-size: 8pt;
 }
 
