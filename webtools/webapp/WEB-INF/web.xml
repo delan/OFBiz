@@ -33,11 +33,6 @@
     <description>The Name of the Entity Delegator to use, defined in entityengine.xml</description>
   </context-param>
   <context-param>
-    <param-name>siteConfigurationFile</param-name>
-    <param-value>/WEB-INF/webtools-config.xml</param-value>
-    <description>Request/View Mapping And Site Configuration File</description>
-  </context-param>
-  <context-param>
     <param-name>localDispatcherName</param-name>
     <param-value>webtools</param-value>
     <description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>

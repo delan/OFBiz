@@ -28,11 +28,6 @@
   <description>Demo Store for the Open For Business Project</description>
 
   <context-param>
-    <param-name>siteConfigurationFile</param-name>
-    <param-value>/WEB-INF/demostore-config.xml</param-value>
-    <description>Request/View Mapping And Site Configuration File</description>
-  </context-param>
-  <context-param>
     <param-name>localDispatcherName</param-name>
     <param-value>ecommerce</param-value>
     <description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>
