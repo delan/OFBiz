@@ -441,6 +441,37 @@
         <attribute name="refundAmount" type="Double" mode="IN" optional="false"/>
         <attribute name="paymentId" type="String" mode="OUT" optional="false"/>
     </service>
+    
+    <service name="processAuthResult" engine="java"
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="processAuthResult" auth="true">
+        <description>Process the payment authorization result(s)</description>
+        <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="processAmount" type="Double" mode="IN" optional="false"/>
+        <attribute name="authResult" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="captureResult" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="authCode" type="String" mode="IN" optional="true"/>
+        <attribute name="authRefNum" type="String" mode="IN" optional="false"/>
+        <attribute name="authFlag" type="String" mode="IN" optional="true"/>
+        <attribute name="authMessage" type="String" mode="IN" optional="true"/>
+        <attribute name="cvCode" type="String" mode="IN" optional="true"/>
+        <attribute name="avsCode" type="String" mode="IN" optional="true"/>
+        <attribute name="scoreCode" type="String" mode="IN" optional="true"/>
+        <attribute name="internalRespMsgs" type="List" mode="IN" optional="true"/>
+    </service>
+
+    <service name="processCaptureResult" engine="java"
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="processCaptureResult" auth="true">
+        <description>Process the payment capture result(s)</description>
+        <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="isFromAuth" type="Boolean" mode="IN" optional="false"/>
+        <attribute name="payToPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="captureAmount" type="Double" mode="IN" optional="false"/>
+        <attribute name="captureResult" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="captureRefNum" type="String" mode="IN" optional="false"/>
+        <attribute name="captureCode" type="String" mode="IN" optional="true"/>
+        <attribute name="captureFlag" type="String" mode="IN" optional="true"/>
+        <attribute name="captureMessage" type="String" mode="IN" optional="true"/>
+    </service>
 
     <!-- Payment Gateway Interfaces -->
     <service name="paymentProcessInterface" engine="interface" location="" invoke="">
@@ -536,6 +567,7 @@
         <attribute name="captureCode" type="String" mode="OUT" optional="true"/>
         <attribute name="captureFlag" type="String" mode="OUT" optional="true"/>
         <attribute name="captureMessage" type="String" mode="OUT" optional="true"/>
+        <attribute name="internalRespMsgs" type="List" mode="OUT" optional="true"/>
     </service>
 
     <service name="ccCreditInterface" engine="interface" location="" invoke="">

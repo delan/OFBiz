@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Payment maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class PaymentServices {
@@ -946,5 +946,5 @@ public class PaymentServices {
         result.put("paymentId", payment.getString("paymentId"));
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
-    }    
+    }
 }
