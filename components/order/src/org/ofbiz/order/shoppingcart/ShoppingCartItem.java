@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.24 2003/12/05 18:55:19 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.25 2003/12/09 16:32:18 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -466,13 +466,13 @@ public class ShoppingCartItem implements java.io.Serializable {
                 //Debug.logInfo("promoQuantityToUse=" + promoQuantityToUse + ", quantityDesired=" + quantityDesired + ", for promoCondAction: " + productPromoCondAction, module);
                 //Debug.logInfo("promoQuantityUsed now=" + promoQuantityUsed, module);
             }
-            
+
             return promoQuantityToUse;
         } else {
             return 0;
         }
     }
-    
+
     public double getPromoQuantityCandidateUse(GenericValue productPromoCondAction) {
         GenericPK productPromoCondActionPK = productPromoCondAction.getPrimaryKey();
         Double existingValue = (Double) this.quantityUsedPerPromoCandidate.get(productPromoCondActionPK);
@@ -487,13 +487,13 @@ public class ShoppingCartItem implements java.io.Serializable {
         double totalUse = 0;
         String productPromoId = productPromoAction.getString("productPromoId");
         String productPromoRuleId = productPromoAction.getString("productPromoRuleId");
-        
+
         GenericPK productPromoActionPK = productPromoAction.getPrimaryKey();
         Double existingValue = (Double) this.quantityUsedPerPromoCandidate.get(productPromoActionPK);
         if (existingValue != null) {
             totalUse = existingValue.doubleValue();
         }
-        
+
         Iterator entryIter = this.quantityUsedPerPromoCandidate.entrySet().iterator();
         while (entryIter.hasNext()) {
             Map.Entry entry = (Map.Entry) entryIter.next();
@@ -501,14 +501,14 @@ public class ShoppingCartItem implements java.io.Serializable {
             Double quantityUsed = (Double) entry.getValue();
             if (quantityUsed != null) {
                 // must be in the same rule and be a condition
-                if (productPromoId.equals(productPromoCondActionPK.getString("productPromoId")) && 
+                if (productPromoId.equals(productPromoCondActionPK.getString("productPromoId")) &&
                         productPromoRuleId.equals(productPromoCondActionPK.getString("productPromoRuleId")) &&
                         productPromoCondActionPK.containsKey("productPromoCondSeqId")) {
                     totalUse += quantityUsed.doubleValue();
                 }
             }
         }
-        
+
         return totalUse;
     }
 
@@ -1048,16 +1048,14 @@ public class ShoppingCartItem implements java.io.Serializable {
             return false;
         }
 
-        if (!(this.additionalProductFeatureAndAppls == null && additionalProductFeatureAndAppls == null) &&
-                !(this.additionalProductFeatureAndAppls != null && additionalProductFeatureAndAppls != null) &&
-                !(this.additionalProductFeatureAndAppls.size() == 0 && additionalProductFeatureAndAppls.size() == 0) &&
+        if ((this.additionalProductFeatureAndAppls != null && additionalProductFeatureAndAppls != null) &&
+                (this.additionalProductFeatureAndAppls.size() != additionalProductFeatureAndAppls.size()) &&
                 !(this.additionalProductFeatureAndAppls.equals(additionalProductFeatureAndAppls))) {
             return false;
         }
 
-        if (!(this.attributes == null && attributes == null) &&
-                !(this.attributes != null && attributes != null) &&
-                !(this.attributes.size() == 0 && attributes.size() == 0) &&
+        if ((this.attributes != null && attributes != null) &&
+                (this.attributes.size() != attributes.size()) &&
                 !(this.attributes.equals(attributes))) {
             return false;
         }
