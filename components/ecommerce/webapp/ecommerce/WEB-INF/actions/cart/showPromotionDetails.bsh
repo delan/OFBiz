@@ -35,13 +35,49 @@ productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("produc
 Set productIdsCond = new HashSet();
 Set productIdsAction = new HashSet();
 ProductPromoWorker.makeProductPromoCondActionIdSets(productPromoId, productIdsCond, productIdsAction, delegator, null);
-Debug.logInfo("productIdsCond=" + productIdsCond.toString(), "showProductPromoDetails.bsh");
-Debug.logInfo("productIdsAction=" + productIdsAction.toString(), "showProductPromoDetails.bsh");
+// Debug.logInfo("productIdsCond=" + productIdsCond.toString(), "showProductPromoDetails.bsh");
+// Debug.logInfo("productIdsAction=" + productIdsAction.toString(), "showProductPromoDetails.bsh");
 
-Set productIds = new HashSet(productIdsCond);
-productIds.addAll(productIdsAction);
+Set productIdSet = new TreeSet(productIdsCond);
+productIdSet.addAll(productIdsAction);
+List productIds = new ArrayList(productIdSet);
 
+context.put("productPromoId", productPromoId);
 context.put("productPromo", productPromo);
 context.put("productIdsCond", productIdsCond);
 context.put("productIdsAction", productIdsAction);
 context.put("productIds", productIds);
+
+int viewIndex = 0;
+int viewSize = 10;
+int highIndex = 0;
+int lowIndex = 0;
+int listSize = 0;
+
+try {
+    viewIndex = Integer.valueOf((String) context.getRequest().getParameter("VIEW_INDEX")).intValue();
+} catch (Exception e) {
+    viewIndex = 0;
+}
+
+try {
+    viewSize = Integer.valueOf((String) context.getRequest().getParameter("VIEW_SIZE")).intValue();
+} catch (Exception e) {
+    viewSize = 10;
+}
+
+if (productIds != null) {
+    listSize = productIds.size();
+}
+
+lowIndex = viewIndex * viewSize;
+highIndex = (viewIndex + 1) * viewSize;
+if (listSize < highIndex) {
+    highIndex = listSize;
+}
+
+context.put("viewIndex", viewIndex);
+context.put("viewSize", viewSize);
+context.put("listSize", listSize);
+context.put("lowIndex", lowIndex);
+context.put("highIndex", highIndex);
