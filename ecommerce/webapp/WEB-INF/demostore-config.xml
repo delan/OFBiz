@@ -91,14 +91,21 @@
       <success>view:showcart</success>
       <error>view:showcart</error>
     </request-map>		
-    <request-map><uri>checkoutoptions</uri><secure>true</secure><auth>true</auth><success>view:checkoutoptions</success></request-map>
+    <request-map>
+      <uri>checkoutoptions</uri><secure>true</secure><auth>true</auth>
+      <event-type>java</event-type>
+      <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
+      <event-invoke>cartNotEmpty</event-invoke> 
+      <success>view:checkoutoptions</success>
+      <error>view:main</error>
+    </request-map>
     <request-map>
       <uri>checkout</uri><secure>true</secure><auth>true</auth>
       <event-type>java</event-type>
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>setCheckOutOptions</event-invoke> 
       <success>view:checkout</success>
-      <error>view:checkoutoptions</error>
+      <error>request:checkoutoptions</error>
     </request-map>		
     <request-map>
       <uri>createorder</uri><secure>true</secure><auth>true</auth>
@@ -106,7 +113,7 @@
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>createOrder</event-invoke> 
       <success>request:renderconfirmorder</success>
-      <error>view:checkout</error>
+      <error>request:checkoutoptions</error>
     </request-map>		
     <request-map>
       <uri>renderconfirmorder</uri><secure>true</secure><auth>true</auth>
@@ -114,7 +121,7 @@
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>renderConfirmOrder</event-invoke> 
       <success>request:emailorder</success>
-      <error>view:checkout</error>
+      <error>request:checkoutoptions</error>
     </request-map>		
     <request-map><uri>confirmorder</uri><secure>false</secure><auth>false</auth><success>view:confirmorder</success></request-map>		
     <request-map>
@@ -123,7 +130,7 @@
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>emailOrder</event-invoke> 
       <success>view:showconfirmorder</success>
-      <error>view:checkout</error>
+      <error>view:showconfirmorder</error>
     </request-map>		
 
     <request-map><uri>catalog</uri><success>view:catalog</success></request-map>
