@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE Package SYSTEM "xpdl.dtd">
+<!DOCTYPE Package SYSTEM "../xpdl.dtd">
 <Package Id="POTATO">
   <PackageHeader><!-- Required -->
     <XPDLVersion><!-- Required -->#PCDATA</XPDLVersion>
