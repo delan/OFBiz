@@ -48,7 +48,7 @@
           <td>
             <table width="100%" border="0" cellpadding="0">
               <tr align='left' valign='bottom'>
-                <td width="45%" align="left"><span class="tableheadtext"><b>Product</b></span></td>
+                <td width="35%" align="left"><span class="tableheadtext"><b>Product</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Qty Ordered</b></span></td>
                 <#if maySelectItems?default(false)>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Qty Shipped</b></span></td>
@@ -57,9 +57,10 @@
                 <td width="10%" align="right"><span class="tableheadtext"><b>Unit Price</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Adjustments</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Subtotal</b></span></td>
+                <td width="5%" align="right">&nbsp;</td>
               </tr>
               <#list orderItems as orderItem>
-                <tr><td colspan="8"><hr class='sepbar'></td></tr>
+                <tr><td colspan="9"><hr class='sepbar'></td></tr>
                 <tr>
                   <#if orderItem.productId == "_?_">
                     <td colspan="1" valign="top">
@@ -93,6 +94,7 @@
                     <td align="right" valign="top" nowrap>
                       <div class="tabletext">${localOrderReadHelper.getOrderItemTotal(orderItem)?string.currency}</div>
                     </td>
+                    <td>&nbsp;</td>
                     <#if maySelectItems?default(false)>
                       <td>
                         <input name="item_id" value="${orderItem.orderItemSeqId}" type="checkbox">
@@ -125,29 +127,29 @@
                  <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
                </#if>
 
-              <tr><td colspan="8"><hr class='sepbar'></td></tr>
+              <tr><td colspan="9"><hr class='sepbar'></td></tr>
               <tr>
-                <td align="right" colspan="4"><div class="tabletext"><b>Subtotal</b></div></td>
+                <td align="right" colspan="6"><div class="tabletext"><b>Subtotal</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderSubTotal?string.currency}</div></td>
               </tr>
               <#list headerAdjustmentsToShow as orderHeaderAdjustment>
                 <tr>
-                  <td align="right" colspan="4"><div class="tabletext"><b>${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</b></div></td>
+                  <td align="right" colspan="6"><div class="tabletext"><b>${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</b></div></td>
                   <td align="right" nowrap><div class="tabletext">${localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment)?string.currency}</div></td>
                 </tr>
               </#list>
               <tr>
-                <td align="right" colspan="4"><div class="tabletext"><b>Shipping and Handling</b></div></td>
+                <td align="right" colspan="6"><div class="tabletext"><b>Shipping and Handling</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderShippingTotal?string.currency}</div></td>
               </tr>
               <tr>
-                <td align="right" colspan="4"><div class="tabletext"><b>Sales Tax</b></div></td>
+                <td align="right" colspan="6"><div class="tabletext"><b>Sales Tax</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderTaxTotal?string.currency}</div></td>
               </tr>
 
-              <tr><td colspan=2></td><td colspan="8"><hr class='sepbar'></td></tr>
+              <tr><td colspan=2></td><td colspan="9"><hr class='sepbar'></td></tr>
               <tr>
-                <td align="right" colspan="4"><div class="tabletext"><b>Grand Total</b></div></td>
+                <td align="right" colspan="6"><div class="tabletext"><b>Grand Total</b></div></td>
                 <td align="right" nowrap>
                   <div class="tabletext">${orderGrandTotal?string.currency}</div>
                 </td>
