@@ -4,6 +4,9 @@
 
 package org.ofbiz.core.workflow.impl;
 
+import java.util.*;
+import org.ofbiz.core.workflow.*;
+
 /**
  * <p><b>Title:</b> WfExecutionObjectImpl
  * <p><b>Description:</b> Workflow Execution Object implementation
@@ -32,25 +35,6 @@ package org.ofbiz.core.workflow.impl;
  *@version    1.0
  */
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.ofbiz.core.workflow.WfProcess;
-import org.ofbiz.core.workflow.WfActivity;
-import org.ofbiz.core.workflow.WfRequester;
-import org.ofbiz.core.workflow.WfProcessMgr;
-
-import org.ofbiz.core.workflow.WfException;
-import org.ofbiz.core.workflow.CannotStart;
-import org.ofbiz.core.workflow.AlreadyRunning;
-import org.ofbiz.core.workflow.InvalidState;
-import org.ofbiz.core.workflow.ResultNotAvailable;
-import org.ofbiz.core.workflow.CannotChangeRequester;
-
 public class WfProcessImpl extends WfExecutionObjectImpl
 implements WfProcess {
 
@@ -58,13 +42,13 @@ implements WfProcess {
     private WfRequester requestor;
     
     // Attribute instance 'steps'
-    private ArrayList steps;
+    private List steps;
     
     // Attribute instance 'manager'
     private WfProcessMgr manager;
     
     // Attribute instance 'result'
-    private HashMap result;
+    private Map result;
     
     /**
      * Creates new WfProcessImpl
@@ -73,6 +57,7 @@ implements WfProcess {
      */
     public WfProcessImpl(String pName, String pDescriprion) {
         super(pName, pDescriprion);
+        steps = new ArrayList();
     }
 
     /**
@@ -93,6 +78,8 @@ implements WfProcess {
      * @return List of WfActivity objects.
      */
     public List getSequenceStep(int maxNumber) throws WfException {
+        if ( maxNumber > 0 )
+            return new ArrayList(steps.subList(0, maxNumber-1));
         return steps;
     }
     
@@ -103,6 +90,22 @@ implements WfProcess {
      * @throws AlreadyRunning Process is already running.
      */
     public void start() throws WfException, CannotStart, AlreadyRunning {
+        if (steps.size() == 0)
+            throw new CannotStart("No Activities exist");
+        
+        if (workflowState() == WORKFLOW_OPEN_RUNNING)
+            throw new AlreadyRunning("Process is already running");
+        
+        WfActivity activity = (WfActivity)steps.get(0);
+        
+        try {
+            // TODO use defines and not hard coded
+            activity.changeState("Start");
+        } catch (InvalidState ise) {
+            throw new WfException("InvalidState exeption", ise);
+        } catch (TransitionNotAllowed tna) {
+            throw new WfException("TransitionNotAllowed exeption", tna);
+        }
     }
     
     /**
@@ -129,9 +132,6 @@ implements WfProcess {
      * @return Iterator of WfActivity objects.
      */
     public Iterator getIteratorStep() throws WfException {
-        if (steps == null)
-            return (new ArrayList()).iterator();
-        else
             return steps.iterator();
     }
     
@@ -143,7 +143,7 @@ implements WfProcess {
      * false otherwise.
      */
     public boolean isMemberOfStep(WfActivity member) throws WfException {
-        return true;
+        return steps.contains(member);
     }
     
     /**
@@ -155,7 +155,15 @@ implements WfProcess {
      */
     public Iterator getActivitiesInState(String state) throws WfException, 
     InvalidState {
-        return (new ArrayList()).iterator();
+        ArrayList res = new ArrayList();
+        for ( Iterator i = steps.iterator(); i.hasNext(); ) {
+            WfActivity a = (WfActivity)i.next();
+            // TODO:
+            //if (a.workflowState() == StateToString(state))
+            if (false)
+                res.add(a);
+        }
+        return res.iterator();
     }
     
     /**
@@ -165,6 +173,8 @@ implements WfProcess {
      * @return Result Map.
      */
     public Map result() throws WfException, ResultNotAvailable {
+        if (result == null)
+            throw new ResultNotAvailable("Result is null");
         return result;
     }
     
@@ -174,9 +184,6 @@ implements WfProcess {
      * @return Number of activities of this process
      */
     public int howManyStep() throws WfException {
-        if (steps == null) 
-            return 0;
-        else
             return steps.size();
     }    
 }

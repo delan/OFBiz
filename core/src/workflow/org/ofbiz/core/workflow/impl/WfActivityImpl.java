@@ -4,6 +4,9 @@
 
 package org.ofbiz.core.workflow.impl;
 
+import java.util.*;
+import org.ofbiz.core.workflow.*;
+
 /**
  * <p><b>Title:</b> WfExecutionObjectImpl
  * <p><b>Description:</b> Workflow Execution Object implementation
@@ -32,22 +35,6 @@ package org.ofbiz.core.workflow.impl;
  *@version    1.0
  */
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.ofbiz.core.workflow.WfProcess;
-import org.ofbiz.core.workflow.WfActivity;
-import org.ofbiz.core.workflow.WfAssignment;
-
-import org.ofbiz.core.workflow.WfException;
-import org.ofbiz.core.workflow.InvalidData;
-import org.ofbiz.core.workflow.ResultNotAvailable;
-import org.ofbiz.core.workflow.CannotComplete;
-
 public class WfActivityImpl extends WfExecutionObjectImpl
 implements WfActivity
 {
@@ -55,10 +42,10 @@ implements WfActivity
     private WfProcess process;
     
     // Attribute instance 'result'
-    private HashMap result;
+    private Map result;
     
-    // Attribute instance 'assignments'    
-    private ArrayList assignments;
+    // Attribute instance 'assignments'
+    private List assignments;
     
     /**
      * Creates new WfProcessImpl
@@ -67,6 +54,8 @@ implements WfActivity
      */
     public WfActivityImpl(String pName, String pDescription) {
         super(pName, pDescription);
+        result = new HashMap();
+        assignments = new ArrayList();
     }
 
     /**
@@ -86,7 +75,7 @@ implements WfActivity
      */
     public boolean isMemberOfAssignment(WfAssignment member) throws 
     WfException {
-        return true;
+        return assignments.contains(member);
     }
     
     /**
@@ -114,10 +103,7 @@ implements WfActivity
      * @return Amount of current assignments.
      */
     public int howManyAssignment() throws WfException {
-        if (assignments == null)
-            return 0;
-        else
-            return assignments.size();
+        return assignments.size();
     }
     
     /**
@@ -146,9 +132,6 @@ implements WfActivity
      * @return Assignment Iterator.
      */
     public Iterator getIteratorAssignment() throws WfException {
-        if (assignments == null)
-            return (new ArrayList()).iterator();
-        else
             return assignments.iterator();
-    }    
+    }
 }
