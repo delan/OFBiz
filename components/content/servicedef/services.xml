@@ -1355,6 +1355,7 @@
     </service>
 
   <service auth="true" engine="java" name="indexTree" validate="true"
+        transaction-timout="72000" 
         location="org.ofbiz.content.search.SearchServices" invoke="indexTree">
     <description>Index content under publish point</description>
     <attribute mode="IN" name="contentId" optional="false" type="String"/>
