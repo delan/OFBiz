@@ -76,6 +76,24 @@ public class EntityListIterator implements ListIterator {
         }
     }
     
+    /** Sets the cursor position to last result; if result set is empty returns false */
+    public boolean last() throws GenericEntityException {
+        try {
+            return resultSet.last();
+        } catch (SQLException e) {
+            throw new GenericEntityException("Error setting the cursor to last", e);
+        }
+    }
+    
+    /** Sets the cursor position to last result; if result set is empty returns false */
+    public boolean first() throws GenericEntityException {
+        try {
+            return resultSet.first();
+        } catch (SQLException e) {
+            throw new GenericEntityException("Error setting the cursor to first", e);
+        }
+    }
+    
     public void close() throws GenericEntityException {
         if (closed) throw new GenericResultSetClosedException("This EntityListIterator has been closed, this operation cannot be performed");
         
@@ -108,6 +126,21 @@ public class EntityListIterator implements ListIterator {
             return resultSet.getRow();
         } catch (SQLException e) {
             throw new GenericEntityException("Error getting the current index", e);
+        }
+    }
+    
+    /** performs the same function as the ResultSet.absolute method; 
+     * if rowNum is positive, goes to that position relative to the beginning of the list;
+     * if rowNum is negative, goes to that position relative to the end of the list;
+     * a rowNum of 1 is the same as first(); a rowNum of -1 is the same as last()
+     */
+    public boolean absolute(int rowNum) throws GenericEntityException {
+        if (closed) throw new GenericResultSetClosedException("This EntityListIterator has been closed, this operation cannot be performed");
+        
+        try {
+            return resultSet.absolute(rowNum);
+        } catch (SQLException e) {
+            throw new GenericEntityException("Error setting the absolute index to " + rowNum, e);
         }
     }
     
@@ -216,6 +249,33 @@ public class EntityListIterator implements ListIterator {
             Object nextValue = null;
             while ((nextValue = this.next()) != null) {
                 collection.add(nextValue);
+            }
+            return collection;
+        } catch (SQLException e) {
+            throw new GeneralRuntimeException("Error getting results", e);
+        } catch (GeneralRuntimeException e) {
+            throw new GenericEntityException(e.getNonNestedMessage(), e.getNested());
+        }
+    }
+
+    /** Gets a partial collection of results starting at start and containing at most number elements. 
+     * Start is a one based value, ie 1 is the first element. 
+     */
+    public Collection getPartialCollection(int start, int number) throws GenericEntityException {
+        try {
+            resultSet.absolute(start);
+            Collection collection = new LinkedList();
+            if (number == 0) return collection;
+            
+            //get the first as the current one
+            collection.add(this.currentGenericValue());
+            
+            Object nextValue = null;
+            //init numRetreived to one since we have already grabbed the initial one
+            int numRetreived = 1;
+            while ((nextValue = this.next()) != null && number > numRetreived) {
+                collection.add(nextValue);
+                numRetreived++;
             }
             return collection;
         } catch (SQLException e) {

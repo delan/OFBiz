@@ -58,6 +58,9 @@ public class ModelViewEntity extends ModelEntity {
     /** List of view links to define how entities are connected (or "joined") */
     protected List viewLinks = new ArrayList();
 
+    /** A List of the Field objects for the View Entity, one for each GROUP BY field */
+    protected List groupBys = new ArrayList();
+    
     public ModelViewEntity(ModelReader reader, Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues) {
         this.modelReader = reader;
 
@@ -98,6 +101,8 @@ public class ModelViewEntity extends ModelEntity {
             } else {
                 alias.isPk = null;
             }
+            alias.groupBy = "true".equals(UtilXml.checkEmpty(aliasElement.getAttribute("group-by")));
+            alias.function = UtilXml.checkEmpty(aliasElement.getAttribute("function"));
             this.aliases.add(alias);
         }
 
@@ -161,6 +166,10 @@ public class ModelViewEntity extends ModelEntity {
         return new ArrayList(this.aliases);
     }
 
+    public List getGroupBysCopy() {
+        return new ArrayList(this.groupBys);
+    }
+
     /** List of view links to define how entities are connected (or "joined") */
     public ModelViewLink getViewLink(int index) {
         return (ModelViewLink) this.viewLinks.get(index);
@@ -222,7 +231,6 @@ public class ModelViewEntity extends ModelEntity {
             if (alias.isPk != null) {
                 field.isPk = alias.isPk.booleanValue();
             } else {
-                alias.isPk = new Boolean(aliasedField.isPk);
                 field.isPk = aliasedField.isPk;
             }
 
@@ -233,8 +241,48 @@ public class ModelViewEntity extends ModelEntity {
                 this.nopks.add(field);
             }
 
-            field.type = aliasedField.type;
-            field.colName = alias.entityAlias + "." + aliasedField.colName;
+            //if this is a groupBy field, add it to the groupBys list
+            if (alias.groupBy) {
+                this.groupBys.add(field);
+            }
+
+            //show a warning if function is specified and groupBy is true
+            if (UtilValidate.isNotEmpty(alias.function) && alias.groupBy) {
+                Debug.logWarning("The view-entity alias with name=" + alias.name + " has a function value and is specified as a group-by field; this may be an error, but is not necessarily.");
+            }
+            
+            if ("count".equals(alias.function) || "count-distinct".equals(alias.function)) {
+                //if we have a "count" function we have to change the type
+                field.type = "numeric";
+            } else {
+                field.type = aliasedField.type;
+            }
+            
+            if (UtilValidate.isNotEmpty(alias.function)) {
+                if ("min".equals(alias.function)) {
+                    field.colName = "MIN(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                } else if ("max".equals(alias.function)) {
+                    field.colName = "MAX(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                } else if ("sum".equals(alias.function)) {
+                    field.colName = "SUM(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                } else if ("avg".equals(alias.function)) {
+                    field.colName = "AVG(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                } else if ("count".equals(alias.function)) {
+                    field.colName = "COUNT(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                } else if ("count-distinct".equals(alias.function)) {
+                    field.colName = "COUNT(DISTINCT " + alias.entityAlias + "." + aliasedField.colName + ")";
+                } else if ("upper".equals(alias.function)) {
+                    field.colName = "UPPER(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                } else if ("lower".equals(alias.function)) {
+                    field.colName = "LOWER(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                } else {
+                    Debug.logWarning("Specified alias function [" + alias.function + "] not valid; must be: min, max, sum, avg, count or count-distinct; using a column name with no function function");
+                    field.colName = alias.entityAlias + "." + aliasedField.colName;
+                }
+            } else {
+                field.colName = alias.entityAlias + "." + aliasedField.colName;
+            }
+            
             field.validators = aliasedField.validators;
         }
     }
@@ -247,13 +295,26 @@ public class ModelViewEntity extends ModelEntity {
         return new ModelViewLink();
     }
 
-    public class ModelAlias {
+    public static class ModelAlias {
         protected String entityAlias = "";
         protected String name = "";
         protected String field = "";
+        //this is a Boolean object for a tri-state: null, true or false
         protected Boolean isPk = null;
+        protected boolean groupBy = false;
+        //is specified this alias is a calculated value; can be: min, max, sum, avg, count, count-distinct
+        protected String function = null;
 
-        public ModelAlias() {}
+        public ModelAlias() { }
+
+        public ModelAlias(String entityAlias, String name, String field, Boolean isPk, boolean groupBy, String function) {
+            this.entityAlias = entityAlias;
+            this.name = name;
+            this.field = field;
+            this.isPk = isPk;
+            this.groupBy = groupBy;
+            this.function = function;
+        }
 
         public String getEntityAlias() {
             return this.entityAlias;
@@ -270,15 +331,29 @@ public class ModelViewEntity extends ModelEntity {
         public Boolean getIsPk() {
             return this.isPk;
         }
+
+        public boolean getGroupBy() {
+            return this.groupBy;
+        }
+
+        public String getFunction() {
+            return this.function;
+        }
     }
 
 
-    public class ModelViewLink {
+    public static class ModelViewLink {
         protected String entityAlias = "";
         protected String relEntityAlias = "";
         protected List keyMaps = new ArrayList();
 
-        public ModelViewLink() {}
+        public ModelViewLink() { }
+
+        public ModelViewLink(String entityAlias, String relEntityAlias, List keyMaps) {
+            this.entityAlias = entityAlias;
+            this.relEntityAlias = relEntityAlias;
+            this.keyMaps.addAll(keyMaps);
+        }
 
         public String getEntityAlias() {
             return this.entityAlias;
@@ -305,4 +380,3 @@ public class ModelViewEntity extends ModelEntity {
         }
     }
 }
-

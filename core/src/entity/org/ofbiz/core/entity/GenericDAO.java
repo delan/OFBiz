@@ -1040,7 +1040,15 @@ public class GenericDAO {
             sqlBuffer.append(whereString.toString());
         }
 
-        //GROUP BY clause - TODO...
+        //GROUP BY clause for view-entity
+        if (modelEntity instanceof ModelViewEntity) {
+            ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
+            String groupByString = modelViewEntity.colNameString(modelViewEntity.getGroupBysCopy(), ", ", "");
+            if (UtilValidate.isNotEmpty(groupByString)) {
+                sqlBuffer.append(" GROUP BY ");
+                sqlBuffer.append(groupByString);
+            }
+        }
         
         //HAVING clause
         String entityCondHavingString = "";
