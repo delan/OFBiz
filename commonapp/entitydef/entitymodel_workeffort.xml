@@ -1059,7 +1059,7 @@
     <view-entity entity-name="WorkEffortPartyAssignByGroup"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort And Party Assignment By Group Entity">
-      <description>Also includes PartyRelationship Link so that a groupPartyId can be specified to find all PartyAssignments for all groups a party is in</description>
+      <description>Includes PartyRelationship Link so that a partyId can be specified to find all PartyAssignments for all groups the party is in.</description>
       <member-entity entity-alias="WE" entity-name="WorkEffort"/>
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
       <member-entity entity-alias="PREL" entity-name="PartyRelationship"/>
@@ -1105,13 +1105,13 @@
       <alias entity-alias="WEPA" name="comments"/>
       <alias entity-alias="WEPA" name="mustRsvp"/>
       <alias entity-alias="WEPA" name="expectationEnumId"/>
-      <alias entity-alias="PREL" name="partyId" field="partyIdFrom"/>
-      <alias entity-alias="PREL" name="groupPartyId" field="partyIdTo"/>
+      <alias entity-alias="PREL" name="partyId" field="partyIdTo"/>
+      <alias entity-alias="PREL" name="groupPartyId" field="partyIdFrom"/>
       <view-link entity-alias="WE" rel-entity-alias="WEPA">
         <key-map field-name="workEffortId"/>
       </view-link>
       <view-link entity-alias="WEPA" rel-entity-alias="PREL">
-        <key-map field-name="partyId" rel-field-name="partyIdTo"/>
+        <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
