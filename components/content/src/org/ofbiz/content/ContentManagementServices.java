@@ -231,34 +231,24 @@ public class ContentManagementServices {
                 if (UtilValidate.isEmpty(dataResourceId)) {
                     dataResourceExists = false;
                     Map thisResult = DataServices.createDataResourceMethod(dctx, context);
-                    String errorResult = (String)thisResult.get(ModelService.RESPONSE_MESSAGE);
-                    if (errorResult != null && errorResult.equals(ModelService.RESPOND_ERROR)) {
-                            return ServiceUtil.returnError((String)thisResult.get(ModelService.ERROR_MESSAGE));
+                    String errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                    if (UtilValidate.isNotEmpty(errorMsg)) {
+                            return ServiceUtil.returnError(errorMsg);
                     }
                     dataResourceId = (String)thisResult.get("dataResourceId");
                     if (Debug.infoOn()) Debug.logInfo("in persist... dataResourceId(0):" + dataResourceId, null);
                     dataResource = (GenericValue)thisResult.get("dataResource");
-                    if (dataResourceTypeId.indexOf("_FILE_BIN") >=0) {
-                        dataResource = (GenericValue)thisResult.get("dataResource");
-                        context.put("dataResource", dataResource);
-                        context.put("dataResourceId", dataResourceId);
-                        ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
-                        if (byteWrapper != null) 
-                            context.put("binData", byteWrapper);
-			/* removed to interact with Andy's changes
-                        byte[] imageBytes = byteWrapper.getBytes();
-                        if (Debug.infoOn()) Debug.logInfo("in persist... imageBytes(C):" + imageBytes, null);
-                        if (imageBytes != null) 
-                            context.put("imageData", imageBytes);
-			*/
-                        thisResult = DataServices.createBinaryFileMethod(dctx, context);
-                    } else if (dataResourceTypeId.indexOf("_FILE") >=0) {
+                    if ( dataResourceTypeId.indexOf("_FILE") >=0) {
                         dataResource = (GenericValue)thisResult.get("dataResource");
                         context.put("dataResource", dataResource);
                         ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
                         if (byteWrapper != null) 
                             context.put("binData", byteWrapper);
                         thisResult = DataServices.createFileMethod(dctx, context);
+                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                        if (UtilValidate.isNotEmpty(errorMsg)) {
+                            return ServiceUtil.returnError(errorMsg);
+                        }
                     } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
                         ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
                         if (byteWrapper != null) {
@@ -273,12 +263,17 @@ public class ContentManagementServices {
                         if (UtilValidate.isNotEmpty(textData)) {
                             context.put("dataResourceId", dataResourceId);
                             thisResult = DataServices.createElectronicTextMethod(dctx, context);
+                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                        	if (UtilValidate.isNotEmpty(errorMsg)) {
+                            	return ServiceUtil.returnError(errorMsg);
+                        	}
                         }
                     }
                 } else {
                     Map newDrContext = new HashMap();
                     newDrContext.putAll(dataResource);
                     newDrContext.put("userLogin", userLogin);
+                    newDrContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                     Map thisResult = dispatcher.runSync("updateDataResource", newDrContext);
                     String errMsg = ServiceUtil.getErrorMessage(thisResult);
         			if (UtilValidate.isNotEmpty(errMsg)) {
@@ -287,22 +282,11 @@ public class ContentManagementServices {
                     //Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
                     if (Debug.infoOn()) Debug.logInfo("in persist... thisResult.permissionStatus(0):" + thisResult.get("permissionStatus"), null);
                         //thisResult = DataServices.updateElectronicTextMethod(dctx, context);
-                    if (dataResourceTypeId.indexOf("_FILE_BIN") >=0) {
+                    if (dataResourceTypeId.indexOf("_FILE") >=0) {
                         dataResource = (GenericValue)thisResult.get("dataResource");
-                        context.put("dataResource", dataResource);
-                        context.put("dataResourceId", dataResourceId);
                         ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
-                        byte[] imageBytes = byteWrapper.getBytes();
-                        if (Debug.infoOn()) Debug.logInfo("in persist... imageBytes(U):" + imageBytes, null);
-                        if (imageBytes != null) 
-                            context.put("imageData", imageBytes);
-                        try {
-                            thisResult = DataServices.updateBinaryFileMethod(dctx, context);
-                        } catch(GenericServiceException e) {
-                            return ServiceUtil.returnError(e.getMessage());
-                        }
-                    } else if (dataResourceTypeId.indexOf("_FILE") >=0) {
-                        dataResource = (GenericValue)thisResult.get("dataResource");
+                        if (byteWrapper != null) 
+                            context.put("binData", byteWrapper);
                         context.put("dataResource", dataResource);
                         try {
                             thisResult = DataServices.updateFileMethod(dctx, context);
@@ -317,10 +301,12 @@ public class ContentManagementServices {
                         newContext.put("dataResourceId", dataResourceId);
                         newContext.put("textData", textData);
                         newContext.put("userLogin", userLogin);
+                        newContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                         thisResult = dispatcher.runSync("updateElectronicText", newContext);
                     }
                     errMsg = ServiceUtil.getErrorMessage(thisResult);
         			if (UtilValidate.isNotEmpty(errMsg)) {
+            			Debug.logError(errMsg, module);
             			return ServiceUtil.returnError(errMsg);
         			}
                 }
