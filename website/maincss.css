@@ -5,12 +5,19 @@
   h2 {margin-top: 0; margin-bottom: 0; }
   h3 {margin-top: 0; margin-bottom: 0; }
 
-  .ontab {FONT-SIZE: small; background-color: black; padding: 2; padding-right: 5px; padding-left: 5px; border-right:solid white 2px;}
-  a.onlnk {FONT-SIZE: small; FONT: bold; COLOR: white; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none; padding: 2;}
-  .offtab {FONT-SIZE: x-small; background-color: #CCCCCC; padding: 2; padding-right: 5px; padding-left: 5px; border-right:solid white 2px;}
-  a.offlnk {FONT-SIZE: x-small; FONT: bold; COLOR: blue; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none;padding: 2;}
+  .ontab {FONT-SIZE: small; background-color: #999999; padding: 2; padding-right: 5px; padding-left: 5px; border-right: solid white 2px;}
+  .ontabright {FONT-SIZE: small; background-color: #999999; padding: 2; padding-right: 5px; padding-left: 5px; }
+  a.onlnk {FONT-SIZE: small; FONT: bold; COLOR: black; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none; padding: 2;}
+  a.onlnk:hover {COLOR: red;}
+  .offtab {FONT-SIZE: small; background-color: #CCCCCC; padding: 2; padding-right: 5px; padding-left: 5px; border-right: solid white 2px;}
+  .offtabright {FONT-SIZE: small; background-color: #CCCCCC; padding: 2; padding-right: 5px; padding-left: 5px; }
+  a.offlnk {FONT-SIZE: small; FONT: bold; COLOR: blue; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none; padding: 2;}
   a.offlnk:hover {COLOR: red;}
-  .areaheader {FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif; FONT: bold; color: white; width: 100%; background-color: black; padding: 2; padding-left: 5px; }
+  .areaheader {FONT-SIZE: medium; FONT-FAMILY: Arial, Helvetica, sans-serif; FONT: bold; color: black; padding: 2; padding-left: 5px;}
+
+  .headersmalltext {FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif; FONT: bold; color: black;}
+  a.headersmalllink {FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif; FONT: bold; color: blue; TEXT-DECORATION: none;}
+  a.headersmalllink:hover {COLOR: red;}
 </style>
 
 
