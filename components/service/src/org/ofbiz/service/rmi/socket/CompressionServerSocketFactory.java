@@ -1,5 +1,5 @@
 /*
- * $Id: CompressionServerSocketFactory.java,v 1.1 2003/12/02 06:39:32 ajzeneski Exp $
+ * $Id: CompressionServerSocketFactory.java,v 1.2 2004/01/23 15:16:51 ajzeneski Exp $
  *
  * Copyright (c) 1998, 1999 Sun Microsystems, Inc. All Rights Reserved.
  *
@@ -36,6 +36,8 @@ import java.net.ServerSocket;
 import java.rmi.server.RMIServerSocketFactory;
 
 public class CompressionServerSocketFactory implements RMIServerSocketFactory, Serializable {
+
+    public static final String module = CompressionServerSocketFactory.class.getName();
 
     public ServerSocket createServerSocket(int port) throws IOException {
         ServerSocket socket = new CompressionServerSocket(port);
