@@ -1,0 +1,144 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision$
+ *@since      2.2
+*/
+
+import java.util.*;
+import java.sql.Timestamp;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+
+delegator = request.getAttribute("delegator");
+
+// create the fromDate for calendar
+fromCal = Calendar.getInstance();
+fromCal.setTime(new java.util.Date());
+//fromCal.set(Calendar.DAY_OF_WEEK, fromCal.getActualMinimum(Calendar.DAY_OF_WEEK));
+fromCal.set(Calendar.HOUR_OF_DAY, fromCal.getActualMinimum(Calendar.HOUR_OF_DAY));
+fromCal.set(Calendar.MINUTE, fromCal.getActualMinimum(Calendar.MINUTE));
+fromCal.set(Calendar.SECOND, fromCal.getActualMinimum(Calendar.SECOND));
+fromCal.set(Calendar.MILLISECOND, fromCal.getActualMinimum(Calendar.MILLISECOND));
+fromTs = new Timestamp(fromCal.getTimeInMillis());
+fromStr = fromTs.toString();
+fromStr = fromStr.substring(0, fromStr.indexOf('.'));
+context.put("fromDateStr", fromStr);
+
+// create the thruDate for calendar
+toCal = Calendar.getInstance();
+toCal.setTime(new java.util.Date());
+//toCal.set(Calendar.DAY_OF_WEEK, toCal.getActualMaximum(Calendar.DAY_OF_WEEK));
+toCal.set(Calendar.HOUR_OF_DAY, toCal.getActualMaximum(Calendar.HOUR_OF_DAY));
+toCal.set(Calendar.MINUTE, toCal.getActualMaximum(Calendar.MINUTE));
+toCal.set(Calendar.SECOND, toCal.getActualMaximum(Calendar.SECOND));
+toCal.set(Calendar.MILLISECOND, toCal.getActualMaximum(Calendar.MILLISECOND));
+toTs = new Timestamp(toCal.getTimeInMillis());
+toStr = toTs.toString();
+context.put("thruDateStr", toStr);
+
+// blank param list
+paramList = "";
+
+orderHeaderList = null;
+lookupFlag = "Y";
+if (lookupFlag != null) {
+    paramList = paramList + "&lookupFlag=" + lookupFlag;
+    lookupErrorMessage = null;   
+    andExprs = new ArrayList();
+    entityName = "OrderHeader"; 
+    
+    // find the orders for party    
+    partyId = request.getParameter("partyId");
+    userLoginId = request.getParameter("userLoginId");
+    if (userLoginId != null && userLoginId.length() > 0) {        
+        requestedUserLogin = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+        if (requestedUserLogin != null) {
+            partyId = requestedUserLogin.getString("partyId");
+        } else {
+            lookupErrorMessage = "No userLogin found for userLoginId: " + userLoginId;
+        }
+    }
+        
+    if (partyId != null && partyId.length() > 0) {
+        paramList = paramList + "&partyId=" + partyId;
+        entityName = "OrderHeaderAndRoles";
+        andExprs.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));      
+    }
+    
+    // define the main condition
+    mainCond = null;
+    
+    // now do the filtering
+    if (lookupErrorMessage == null) {        
+        orderType = "PURCHASE_ORDER";
+
+        paramList = paramList + "&orderTypeId=" + orderType;        
+        andExprs.add(new EntityExpr("orderTypeId", EntityOperator.EQUALS, orderType));
+        mainCond = new EntityConditionList(andExprs, EntityOperator.AND);        
+    }
+    
+    if (lookupErrorMessage == null) {
+        // do the lookup
+        orderHeaderList = delegator.findByCondition(entityName, mainCond, null, UtilMisc.toList("-orderDate"));            
+    }
+    
+    context.put("orderHeaderList", orderHeaderList);
+    
+    if (lookupErrorMessage != null) {
+        context.put("lookupErrorMessage", lookupErrorMessage);
+    }
+}
+
+context.put("paramList", paramList);
+
+// set the page parameters
+viewIndex = 0;
+try {
+    viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
+} catch (Exception e) {
+    viewIndex = 0;
+}
+
+viewSize = 20;
+try {
+    viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
+} catch (Exception e) {
+    viewSize = 20;
+}
+
+listSize = 0;
+if (orderHeaderList != null) {
+    listSize = orderHeaderList.size();
+}
+
+lowIndex = viewIndex * viewSize;
+highIndex = (viewIndex + 1) * viewSize;
+
+if (listSize < highIndex) {
+    highIndex = listSize;
+}
+context.put("viewIndex", viewIndex);
+context.put("listSize", listSize);
+context.put("highIndex", highIndex);
+context.put("lowIndex", lowIndex);
+context.put("viewSize", viewSize);

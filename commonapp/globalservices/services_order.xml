@@ -479,4 +479,20 @@
         <attribute name="distributorId" type="String" mode="OUT"/>
         <attribute name="statusString" type="String" mode="OUT"/>
     </service>
+
+    <!-- Purchase Order Delivery Services -->
+    <service name="scheduleInterface" engine="interface" location="" invoke="">
+        <description>The interface for the Purchase Order Delivery Schedule</description>
+        <auto-attributes entity-name="OrderDeliverySchedule" mode="IN" optional="false"/>
+    </service>
+    <service name="createSchedule" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderDeliveryServices" invoke="createSchedule">
+        <description>Creates a delivery schedule for the specified purchase order</description>
+        <implements service="scheduleInterface"/>
+    </service>
+    <service name="updateSchedule" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderDeliveryServices" invoke="updateSchedule">
+        <description>Update an existing delivery schedule for a specified purchase order</description>
+        <implements service="scheduleInterface"/>
+    </service>
 </services>
