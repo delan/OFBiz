@@ -74,8 +74,9 @@ public class EntitySyncServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map runEntitySync(DispatchContext dctx, Map context) {
+        EntitySyncContext esc = null;
         try {
-            EntitySyncContext esc = new EntitySyncContext(dctx, context);
+            esc = new EntitySyncContext(dctx, context);
             if ("Y".equals(esc.entitySync.get("forPullOnly"))) {
                 return ServiceUtil.returnError("Cannot do Entity Sync Push because entitySyncId [] is set for Pull Only.");
             }
@@ -110,6 +111,11 @@ public class EntitySyncServices {
             esc.saveFinalSyncResults();
             
         } catch (GeneralServiceException e) {
+            if (esc != null) {
+                List errorList = new LinkedList();
+                esc.saveSyncErrorInfo("ESR_DATA_ERROR", errorList);
+                e.addErrorMessages(errorList);
+            }
             return e.returnError(module);
         }
         
@@ -352,8 +358,9 @@ public class EntitySyncServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map pullAndReportEntitySyncData(DispatchContext dctx, Map context) {
+        EntitySyncContext esc = null;
         try {
-            EntitySyncContext esc = new EntitySyncContext(dctx, context);
+            esc = new EntitySyncContext(dctx, context);
             
             if ("Y".equals(esc.entitySync.get("forPushOnly"))) {
                 return ServiceUtil.returnError("Cannot do Entity Sync Pull because entitySyncId [] is set for Push Only.");
@@ -402,6 +409,11 @@ public class EntitySyncServices {
                 esc.saveFinalSyncResults();
             }
         } catch (GeneralServiceException e) {
+            if (esc != null) {
+                List errorList = new LinkedList();
+                esc.saveSyncErrorInfo("ESR_DATA_ERROR", errorList);
+                e.addErrorMessages(errorList);
+            }
             return e.returnError(module);
         }
         return ServiceUtil.returnSuccess();
