@@ -17,6 +17,7 @@
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderEmailData">
         <description>Prepares the data for a order notification email</description>
         <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="extraFields" type="Map" mode="IN" optional="true"/>
         <attribute name="orderItemSeqId" type="String" mode="INOUT" optional="true"/>
         <attribute name="orderHeader" type="Map" mode="OUT" optional="false"/>
         <attribute name="orderItems" type="List" mode="OUT" optional="false"/>
@@ -78,7 +79,8 @@
         <description>Send a order confirmation</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="emailType" type="String" mode="IN" optional="false"/>    
+        <attribute name="emailType" type="String" mode="IN" optional="false"/>
+        <attribute name="extraFields" type="Map" mode="IN" optional="true"/>    
     </service>
                 	
     <service name="sendOrderNotification" engine="java"
@@ -88,6 +90,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
+        <attribute name="extraFields" type="Map" mode="IN" optional="true"/>
     </service>
 
     <service name="sendProcessNotification" engine="java"

@@ -871,6 +871,10 @@ public class OrderServices {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         String orderId = (String) context.get("orderId");
+        Map extraFields = (Map) context.get("extraFields");
+        if (extraFields != null) {
+            result.putAll(extraFields);
+        }
         
         try {
             GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));                               
