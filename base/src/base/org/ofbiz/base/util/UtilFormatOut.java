@@ -35,7 +35,7 @@ import java.util.Currency;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class UtilFormatOut {
@@ -52,6 +52,7 @@ public class UtilFormatOut {
     
     // ------------------- price format handlers -------------------
     static DecimalFormat priceDecimalFormat = new DecimalFormat("#,##0.00");
+    static DecimalFormat priceNumberFormat = new DecimalFormat("##0.00");
 
     /** Formats a Double representing a price into a string
      * @param price The price Double to be formatted
@@ -72,7 +73,7 @@ public class UtilFormatOut {
 
     public static Double formatPriceNumber(double price) {
         try {
-            return new Double(priceDecimalFormat.parse(formatPrice(price)).doubleValue());
+            return new Double(priceNumberFormat.parse(formatPrice(price)).doubleValue());
         } catch (ParseException e) {
             Debug.logError(e, module);
             return null;
