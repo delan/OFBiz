@@ -58,7 +58,7 @@ public class FieldToList extends MethodOperation {
         if (mapName != null && mapName.length() > 0) {
             Map fromMap = (Map) methodContext.getEnv(mapName);
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapName);
+                Debug.logWarning("Map not found with name " + mapName + ", Not copying to list");
                 return true;
             }
 
@@ -69,13 +69,13 @@ public class FieldToList extends MethodOperation {
         }
 
         if (fieldVal == null) {
-            Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
+            Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName + ", Not copying to list");
             return true;
         }
 
         List toList = (List) methodContext.getEnv(listName);
         if (toList == null) {
-            Debug.logInfo("List not found with name " + listName + ", creating new list");
+            Debug.logVerbose("List not found with name " + listName + ", creating new list");
             toList = new LinkedList();
             methodContext.putEnv(listName, toList);
         }

@@ -71,7 +71,7 @@ public class FieldToField extends MethodOperation {
         }
         Map toMap = (Map) methodContext.getEnv(toMapName);
         if (toMap == null) {
-            Debug.logInfo("Map not found with name " + toMapName + ", creating new map");
+            Debug.logVerbose("Map not found with name " + toMapName + ", creating new map");
             toMap = new HashMap();
             methodContext.putEnv(toMapName, toMap);
         }

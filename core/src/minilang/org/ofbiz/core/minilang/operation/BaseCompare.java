@@ -119,7 +119,7 @@ public abstract class BaseCompare extends SimpleMapOperation {
             }
         }
 
-        if ("String".equals(type)) {
+        if ("String".equals(type) || "PlainString".equals(type)) {
             String str1 = (String) convertedValue1;
             String str2 = (String) convertedValue2;
             if (str1.length() == 0 || str2.length() == 0) {

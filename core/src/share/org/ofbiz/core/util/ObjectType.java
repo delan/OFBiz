@@ -173,15 +173,22 @@ public class ObjectType {
         if (obj == null)
             return null;
 
+        if ("PlainString".equals(type)) {
+            return obj.toString();
+        }
+
         String fromType = null;
         if (obj instanceof java.lang.String) {
             fromType = "String";
             String str = (String) obj;
-            if ("String".equals(type))
+            if ("String".equals(type)) {
                 return obj;
+            }
 
-            if (str.length() == 0)
+            if (str.length() == 0) {
                 return null;
+            }
+            
             if ("Double".equals(type)) {
                 try {
                     NumberFormat nf = null;

@@ -60,7 +60,7 @@ public class EnvToField extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         Map toMap = (Map) methodContext.getEnv(mapName);
         if (toMap == null) {
-            Debug.logInfo("Map not found with name " + mapName + ", creating new map");
+            Debug.logVerbose("Map not found with name " + mapName + ", creating new map");
             toMap = new HashMap();
             methodContext.putEnv(mapName, toMap);
         }

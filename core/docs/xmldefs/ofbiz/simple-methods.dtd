@@ -43,7 +43,7 @@
 <!ENTITY % CallOperations "call-map-processor | call-service | call-service-asynch | call-bsh | check-errors">
 <!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field | webapp-property-to-field">
 <!ENTITY % ServiceOperations "field-to-result">
-<!ENTITY % EnvOperations "field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | property-to-field">
+<!ENTITY % EnvOperations "field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | property-to-field | to-string">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env | set-current-user-login">
 <!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and">
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-by-and">
@@ -305,6 +305,12 @@ Error messages go on the error list and are handled with the check-errors tag.
     field-name CDATA #REQUIRED
 >
 
+<!ELEMENT to-string EMPTY>
+<!ATTLIST to-string
+    map-name CDATA #IMPLIED
+    field-name CDATA #REQUIRED
+>
+
 <!--
 These operations are used to interact with a data source through the entity 
 engine and facilitate related operations.
@@ -403,7 +409,7 @@ simple-map-processor process operations that validate incoming data
     field-name CDATA #REQUIRED
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
     value CDATA #REQUIRED
-    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
     format CDATA #IMPLIED
 >
 
@@ -414,7 +420,7 @@ simple-map-processor process operations that validate incoming data
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
     to-map-name CDATA #IMPLIED
     to-field-name CDATA #IMPLIED
-    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
     format CDATA #IMPLIED
 >
 
@@ -488,7 +494,7 @@ simple-map-processor process operations that validate incoming data
 <!ATTLIST compare
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
     value CDATA #REQUIRED
-    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
     format CDATA #IMPLIED
 >
 
@@ -496,7 +502,7 @@ simple-map-processor process operations that validate incoming data
 <!ATTLIST compare-field
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
     field CDATA #REQUIRED
-    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
     format CDATA #IMPLIED
 >
 
@@ -519,7 +525,7 @@ simple-map-processor process operations that validate incoming data
 <!ELEMENT convert ( fail-message | fail-property )>
 <!ATTLIST convert
     to-field CDATA #IMPLIED
-    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) #REQUIRED
+    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp ) #REQUIRED
     replace ( true | false ) "true"
     set-if-null ( true | false ) "false"
     format CDATA #IMPLIED

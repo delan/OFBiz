@@ -34,20 +34,18 @@ import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 
 /**
- * Copies the specified String to a field
+ * Converts the specified field to a String, using toString()
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 19, 2002
+ *@created    March 16, 2002
  *@version    1.0
  */
-public class StringToField extends MethodOperation {
-    String string;
+public class ToString extends MethodOperation {
     String mapName;
     String fieldName;
 
-    public StringToField(Element element, SimpleMethod simpleMethod) {
+    public ToString(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        string = element.getAttribute("string");
         mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
     }
@@ -56,13 +54,22 @@ public class StringToField extends MethodOperation {
         if (mapName != null && mapName.length() > 0) {
             Map toMap = (Map) methodContext.getEnv(mapName);
             if (toMap == null) {
+                //it seems silly to create a new map, but necessary since whenever
+                // an env field like a Map or List is referenced it should be created, even if empty
                 Debug.logVerbose("Map not found with name " + mapName + ", creating new map");
                 toMap = new HashMap();
                 methodContext.putEnv(mapName, toMap);
             }
-            toMap.put(fieldName, string);
+            
+            Object obj = toMap.get(fieldName);
+            if (obj != null) {
+                toMap.put(fieldName, obj.toString());
+            }
         } else {
-            methodContext.putEnv(fieldName, string);
+            Object obj = methodContext.getEnv(fieldName);
+            if (obj != null) {
+                methodContext.putEnv(fieldName, obj.toString());
+            }
         }
 
         return true;

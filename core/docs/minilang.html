@@ -943,7 +943,27 @@ result field.</p>
     <td>The name (key) of the map field to use.</td>
 </tr>
 </table>
-<p>The property-to-field tag put the inlined string value in the specified field.</p>
+<p>The property-to-field tag puts the inlined string value in the specified field.</p>
+
+<p><b><u>to-string</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>N</td>
+    <td>The name of the map in the method environment. If not specified the 
+    field-name will be used to get the field from the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
+</tr>
+</table>
+<p>The to-string tag converts the Object in the specified field to a String,
+putting the string in the same field.</p>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
