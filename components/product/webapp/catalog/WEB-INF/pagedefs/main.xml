@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Catalog Manager Main Page</property>
-     <property name="titleProperty">PageTitleCatalogManagerMainPage</property>
-    <property name="headerItem">main</property>
-    <property name="leftbar">/templates/leftbar.ftl</property>
-</page>

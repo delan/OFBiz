@@ -25,7 +25,7 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-    <screen name="main">
+    <screen name="main-decorator">
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
@@ -113,6 +113,40 @@
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://product/webapp/catalog/find/miniproductlist.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <!-- <set field="leftbarScreenLocation" value=""/> -->
+    
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/main.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="login">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://common/webcommon/login.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

@@ -1925,8 +1925,8 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="jpublish" page="/main.ftl"/>
-    <view-map name="login" type="jpublish" page="/login.ftl"/>
+    <view-map name="main" type="screen" page="component://product/widget/catalog/CommonScreens.xml#main"/>
+    <view-map name="login" type="screen" page="component://product/widget/catalog/CommonScreens.xml#login"/>
 
     <view-map name="FastLoadCache" type="region"/>
     <view-map name="FindProductById" type="region"/>
