@@ -1,5 +1,5 @@
 /*
- * $Id: ValueLinkApi.java,v 1.3 2004/02/23 21:54:48 ajzeneski Exp $
+ * $Id: ValueLinkApi.java,v 1.4 2004/03/11 16:36:02 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,6 +35,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.interfaces.DHPublicKey;
+import javax.crypto.interfaces.DHPrivateKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.DHParameterSpec;
@@ -52,7 +53,7 @@ import java.text.ParseException;
  * ValueLinkApi - Implementation of ValueLink Encryption & Transport
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class ValueLinkApi {
@@ -289,9 +290,14 @@ public class ValueLinkApi {
             String publicHex = StringUtil.toHexString(publicBytes);
 
             // the private key -- FULL
-            PrivateKey privateKey = keyPair.getPrivate();
+            DHPrivateKey privateKey = (DHPrivateKey) keyPair.getPrivate();
             byte[] privateBytes = privateKey.getEncoded();
             String privateHex = StringUtil.toHexString(privateBytes);
+
+            // the private key (just Y)
+            BigInteger x = privateKey.getX();
+            byte[] xBytes = x.toByteArray();
+            String xHex = StringUtil.toHexString(xBytes);
 
             if (publicBytes.length != 128) {
                 // run again until we get a 128 byte public key for VL
@@ -314,6 +320,9 @@ public class ValueLinkApi {
             buf.append(publicHex + "\n");
             buf.append("======== End Public Key ========\n\n");
 
+            buf.append("======== Begin Private Key (X @ " + xBytes.length + " / " + xHex.length() + ") ========\n");
+            buf.append(xHex + "\n");
+            buf.append("======== End Private Key ========\n\n");
 
             buf.append("======== Begin Private Key (Full @ " + privateBytes.length + " / " + privateHex.length() + ") ========\n");
             buf.append(privateHex + "\n");
