@@ -122,6 +122,9 @@ public class EntityPermissionChecker {
             }
            delegator = (GenericDelegator)request.getAttribute("delegator");
         }
+        
+        if (auxiliaryValueGetter != null) auxiliaryValueGetter.clearList();
+        if (relatedRoleGetter != null) relatedRoleGetter.clearList();
     	try {
             permissionConditionGetter.init(delegator);
     		passed = ContentPermissionServices.checkPermissionMethod(delegator, partyId,  entityName, entityIdList, auxiliaryValueGetter, relatedRoleGetter, permissionConditionGetter);
