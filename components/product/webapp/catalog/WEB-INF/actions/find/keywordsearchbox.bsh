@@ -20,12 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
  */
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
+
+delegator = request.getAttribute("delegator");
 
 state = request.getParameter("SearchProductsState");
 isOpen = true;
@@ -38,4 +40,8 @@ if (state != null) {
         isOpen = "open".equals(state);
     }
 }
+
+productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
+
 context.put("isOpen", isOpen);
+context.put("productCategories", productCategories);
