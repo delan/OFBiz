@@ -2,6 +2,7 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="java.util.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*"%>
 <%@ page import="org.ofbiz.core.pseudotag.*, org.ofbiz.commonapp.product.product.*"%>
+<%@ page import="org.ofbiz.ecommerce.catalog.*"%>
 
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
@@ -48,6 +49,7 @@
             <ofbiz:service name="getProductVariantTree">
                 <ofbiz:param name='productId' value='<%=productId%>'/>
                 <ofbiz:param name='featureOrder' attribute='featureSet'/>
+                <ofbiz:param name='prodCatalogId' value='<%=CatalogWorker.getCurrentCatalogId(request)%>'/>
             </ofbiz:service>
  
             <ofbiz:if name="variantTree" size="0">
@@ -232,11 +234,11 @@
       <tr>
         <td colspan="2" align="right">
           <ofbiz:if name="previousProductId">
-              <a href="<ofbiz:url>/product?category_id=<%=categoryId%>&product_id=<ofbiz:print attribute="previousProductId"/></ofbiz:url>" class="buttontext">[Previous]</a>&nbsp;|&nbsp;
+              <a href='<ofbiz:url>/product?category_id=<%=categoryId%>&product_id=<ofbiz:print attribute="previousProductId"/></ofbiz:url>' class="buttontext">[Previous]</a>&nbsp;|&nbsp;
           </ofbiz:if>
-          <a href="<ofbiz:url>/category?category_id=<%=categoryId%></ofbiz:url>" class="buttontext"><ofbiz:entityfield attribute='category' field='description'/></a>
+          <a href="<ofbiz:url>/category?category_id=<%=categoryId%></ofbiz:url>" class="buttontext"><%EntityField.run("category", "description", pageContext);%></a>
           <ofbiz:if name="nextProductId">
-              &nbsp;|&nbsp;<a href="<ofbiz:url>/product?category_id=<%=categoryId%>&product_id=<ofbiz:print attribute="nextProductId"/></ofbiz:url>" class="buttontext">[Next]</a>
+              &nbsp;|&nbsp;<a href='<ofbiz:url>/product?category_id=<%=categoryId%>&product_id=<ofbiz:print attribute="nextProductId"/></ofbiz:url>' class="buttontext">[Next]</a>
           </ofbiz:if>
         </td>
       </tr>
@@ -247,15 +249,15 @@
         <ofbiz:entityfield attribute="product" field="largeImageUrl" prefix="<img src='" suffix="' name='mainImage' vspace='5' hspace='5' border='1' width='200' align=left>"/>
       </td>
       <td align="right" valign="top">
-        <div class="head2"><ofbiz:entityfield attribute="product" field="productName"/></div>
-        <div class="tabletext"><ofbiz:entityfield attribute="product" field="description"/></div>
-        <div class="tabletext"><b><ofbiz:entityfield attribute="product" field="productId"/></b></div>
-        <div class="tabletext"><b>Our price: <font color="#126544"><ofbiz:entityfield attribute="product" field="defaultPrice"/></font></b>
-           (Reg. <ofbiz:entityfield attribute="product" field="listPrice"/>)</div>
+        <div class="head2"><%EntityField.run("product", "productName", pageContext);%></div>
+        <div class="tabletext"><%EntityField.run("product", "description", pageContext);%></div>
+        <div class="tabletext"><b><%EntityField.run("product", "productId", pageContext);%></b></div>
+        <div class="tabletext"><b>Our price: <font color="#126544"><%EntityField.run("product", "defaultPrice", pageContext);%></font></b>
+           (Reg. <%EntityField.run("product", "listPrice", pageContext);%>)</div>
             <%if (product.get("quantityIncluded") != null && product.getDouble("quantityIncluded").doubleValue() != 0) {%>
                 <div class="tabletext">Size:
-                  <ofbiz:entityfield attribute="product" field="quantityIncluded"/>
-                  <ofbiz:entityfield attribute="product" field="quantityUomId"/>
+                  <%EntityField.run("product", "quantityIncluded", pageContext);%>
+                  <%EntityField.run("product", "quantityUomId", pageContext);%>
                 </div>
             <%}%>
         </div>
@@ -270,22 +272,34 @@
           <%-- ================= --%>
           <%-- Variant Selection --%>
           <%-- ================= --%>
-          <ofbiz:if name="variantTree" size="0">            
-            <ofbiz:iterator name="currentType" property="featureSet" type="java.lang.String">
-              <%Debug.logVerbose("CurrentType: " + currentType);%>
-              <div class="tabletext">
-                <select name="<%=currentType%>" onChange="getList(this.name, this.options[this.selectedIndex].value)">
-                  <option><%=featureTypes.get(currentType)%></option>
-                </select>
-              </div>
-            </ofbiz:iterator>
-              <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="product" field="productId"/>'>
-              <input type='hidden' name="add_product_id" value='NULL'>
-          </ofbiz:if>
-          <ofbiz:unless name="variantTree" size="0">
-            <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="product" field="productId"/>'>
-            <input type='hidden' name="add_product_id" value='<ofbiz:entityfield attribute="product" field="productId"/>'>
-          </ofbiz:unless>
+          <%if ("Y".equals(product.getString("isVirtual"))) {%>
+              <ofbiz:if name="variantTree" size="0">            
+                <ofbiz:iterator name="currentType" property="featureSet" type="java.lang.String">
+                  <%Debug.logVerbose("CurrentType: " + currentType);%>
+                  <div class="tabletext">
+                    <select name="<%=currentType%>" onChange="getList(this.name, this.options[this.selectedIndex].value)">
+                      <option><%=featureTypes.get(currentType)%></option>
+                    </select>
+                  </div>
+                </ofbiz:iterator>
+                <input type='hidden' name="product_id" value='<%EntityField.run("product", "productId", pageContext);%>'>
+                <input type='hidden' name="add_product_id" value='NULL'>
+
+              </ofbiz:if>
+              <ofbiz:unless name="variantTree" size="0">
+                <!-- inventory check is a bit different here, instead of showing drop-downs show message -->
+                <input type='hidden' name="product_id" value='<%EntityField.run("product", "productId", pageContext);%>'>
+                <input type='hidden' name="add_product_id" value='NULL'>
+                <div class='tabletext'><b>This item is out of stock.</b></div>
+              </ofbiz:unless>
+          <%} else {%>
+            <input type='hidden' name="product_id" value='<%EntityField.run("product", "productId", pageContext);%>'>
+            <input type='hidden' name="add_product_id" value='<%EntityField.run("product", "productId", pageContext);%>'>
+
+            <%if (!CatalogWorker.isCatalogInventoryAvailable(request, productId, 1.0)) {%>
+                <div class='tabletext'><b>This item is out of stock.</b></div>
+            <%}%>
+          <%}%>
           <%-- ======================== --%>
           <%-- End of Variant Selection --%>
           <%-- ======================== --%>
@@ -337,7 +351,7 @@
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td colspan="2">
-        <div class="tabletext"><ofbiz:entityfield attribute="product" field="longDescription"/></div>
+        <div class="tabletext"><%EntityField.run("product", "longDescription", pageContext);%></div>
       </td>
     </tr>
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -357,16 +371,16 @@
     </ofbiz:service>
     <ofbiz:if name="assocProducts" size="0">
         <tr><td>&nbsp;</td></tr>
-        <tr><td colspan="2"><div class="head2"><ofbiz:entityfield attribute="productValue" field="productName"/> is made obsolete by these products:</div></td></tr>
+        <tr><td colspan="2"><div class="head2"><%EntityField.run("productValue", "productName", pageContext);%> is made obsolete by these products:</div></td></tr>
         <tr><td><hr class='sepbar'></td></tr>
 
         <ofbiz:iterator name="productAssoc" property="assocProducts">
             <tr><td>
               <div class="tabletext">
-                <a href='<ofbiz:url>/product?product_id=<ofbiz:entityfield attribute="productAssoc" field="productIdTo"/></ofbiz:url>' class="buttontext">
-                  <ofbiz:entityfield attribute="productAssoc" field="productIdTo"/>
+                <a href='<ofbiz:url>/product?product_id=<%EntityField.run("productAssoc", "productIdTo", pageContext);%></ofbiz:url>' class="buttontext">
+                  <%EntityField.run("productAssoc", "productIdTo", pageContext);%>
                 </a>
-                - <b><ofbiz:entityfield attribute="productAssoc" field="reason"/></b>
+                - <b><%EntityField.run("productAssoc", "reason", pageContext);%></b>
               </div>
             </td></tr>
 
@@ -399,10 +413,10 @@
         <ofbiz:iterator name="productAssoc" property="assocProducts">
             <tr><td>
               <div class="tabletext">
-                <a href='<ofbiz:url>/product?product_id=<ofbiz:entityfield attribute="productAssoc" field="productIdTo"/></ofbiz:url>' class="buttontext">
-                  <ofbiz:entityfield attribute="productAssoc" field="productIdTo"/>
+                <a href='<ofbiz:url>/product?product_id=<%EntityField.run("productAssoc", "productIdTo", pageContext);%></ofbiz:url>' class="buttontext">
+                  <%EntityField.run("productAssoc", "productIdTo", pageContext);%>
                 </a>
-                - <b><ofbiz:entityfield attribute="productAssoc" field="reason"/></b>
+                - <b><%EntityField.run("productAssoc", "reason", pageContext);%></b>
               </div>
             </td></tr>
 
@@ -429,16 +443,16 @@
     </ofbiz:service>
     <ofbiz:if name="assocProducts" size="0">
         <tr><td>&nbsp;</td></tr>
-        <tr><td colspan="2"><div class="head2">Try these instead of <ofbiz:entityfield attribute="productValue" field="productName"/>:</div></td></tr>
+        <tr><td colspan="2"><div class="head2">Try these instead of <%EntityField.run("productValue", "productName", pageContext);%>:</div></td></tr>
         <tr><td><hr class='sepbar'></td></tr>
 
         <ofbiz:iterator name="productAssoc" property="assocProducts">
             <tr><td>
               <div class="tabletext">
-                <a href='<ofbiz:url>/product?product_id=<ofbiz:entityfield attribute="productAssoc" field="productIdTo"/></ofbiz:url>' class="buttontext">
-                  <ofbiz:entityfield attribute="productAssoc" field="productIdTo"/>
+                <a href='<ofbiz:url>/product?product_id=<%EntityField.run("productAssoc", "productIdTo", pageContext);%></ofbiz:url>' class="buttontext">
+                  <%EntityField.run("productAssoc", "productIdTo", pageContext);%>
                 </a>
-                - <b><ofbiz:entityfield attribute="productAssoc" field="reason"/></b>
+                - <b><%EntityField.run("productAssoc", "reason", pageContext);%></b>
               </div>
             </td></tr>
 
@@ -465,16 +479,16 @@
     </ofbiz:service>
     <ofbiz:if name="assocProducts" size="0">
         <tr><td>&nbsp;</td></tr>
-        <tr><td colspan="2"><div class="head2"><ofbiz:entityfield attribute="productValue" field="productName"/> makes these products obsolete:</div></td></tr>
+        <tr><td colspan="2"><div class="head2"><%EntityField.run("productValue", "productName", pageContext);%> makes these products obsolete:</div></td></tr>
         <tr><td><hr class='sepbar'></td></tr>
 
         <ofbiz:iterator name="productAssoc" property="assocProducts">
             <tr><td>
               <div class="tabletext">
-                <a href='<ofbiz:url>/product?product_id=<ofbiz:entityfield attribute="productAssoc" field="productIdTo"/></ofbiz:url>' class="buttontext">
-                  <ofbiz:entityfield attribute="productAssoc" field="productIdTo"/>
+                <a href='<ofbiz:url>/product?product_id=<%EntityField.run("productAssoc", "productIdTo", pageContext);%></ofbiz:url>' class="buttontext">
+                  <%EntityField.run("productAssoc", "productIdTo", pageContext);%>
                 </a>
-                - <b><ofbiz:entityfield attribute="productAssoc" field="reason"/></b>
+                - <b><%EntityField.run("productAssoc", "reason", pageContext);%></b>
               </div>
             </td></tr>
 

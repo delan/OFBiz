@@ -294,62 +294,9 @@ public class CatalogWorker {
             Debug.logWarning("No current catalog id found, return false for inventory check");
             return false;
         }
-        
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        GenericValue prodCatalog = null;
-        try {
-            prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId);
-        }
-
-        if (prodCatalog == null) {
-            Debug.logWarning("No catalog found with id " + prodCatalogId + ", return false for inventory check");
-            return false;
-        }
-        
-        if ("Y".equals(prodCatalog.getString("oneInventoryFacility"))) {
-            String inventoryFacilityId = prodCatalog.getString("inventoryFacilityId");
-            if (UtilValidate.isEmpty(inventoryFacilityId)) {
-                Debug.logWarning("Catalog with id " + prodCatalogId + " has Y for oneInventoryFacility but inventoryFacilityId is empty, return false for inventory check");
-                return false;
-            }
-            
-            Double availableToPromise = null;
-            try {
-                Map result = dispatcher.runSync("getInventoryAvailableByFacility", 
-                        UtilMisc.toMap("productId", productId, "facilityId", inventoryFacilityId));
-                availableToPromise = (Double) result.get("availableToPromise");
-
-                if (availableToPromise == null) {
-                    Debug.logWarning("The getInventoryAvailableByFacility service returned a null availableToPromise, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE));
-                    return false;
-                }
-            } catch (GenericServiceException e) {
-                Debug.logWarning(e, "Error invoking getInventoryAvailableByFacility service in isCatalogInventoryAvailable");
-                return false;
-            }
-            
-            //whew, finally here: now check to see if we got enough back...
-            if (availableToPromise.doubleValue() > quantity) {
-                Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
-                return true;
-            } else {
-                Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
-                return false;
-            }
-            
-        } else {
-            Debug.logWarning("Catalog with id " + prodCatalogId + " uses multiple inventory facilities, which is not yet implemented, return false for inventory check");
-            return false;
-
-            //TODO: check multiple inventory locations
-            
-            //must entire quantity be available in one location?
-            
-            //loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
-        }
+        return org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, productId, quantity, delegator, dispatcher);
     }
     
     /* ========================================================================================*/
