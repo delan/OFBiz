@@ -86,30 +86,35 @@ public abstract class GenericAsyncEngine implements GenericEngine {
         
         // Build the value object(s).
         try {
+            Collection toBeStored = new LinkedList();
+            
             // Create the recurrence info
             String ruleId = dispatcher.getDelegator().getNextSeqId("RecurrenceRule").toString();
             GenericValue rule = dispatcher.getDelegator().makeValue("RecurrenceRule",UtilMisc.toMap("recurrenceRuleId",ruleId));
+            rule.set("frequency","DAILY");
+            rule.set("intervalNumber",new Long(1));
+            rule.set("countNumber",new Long(1));
+            toBeStored.add(rule);
+
             String infoId = dispatcher.getDelegator().getNextSeqId("RecurrenceInfo").toString();
             GenericValue info = dispatcher.getDelegator().makeValue("RecurrenceInfo",UtilMisc.toMap("recurrenceInfoId",infoId));
             info.set("recurrenceRuleId",ruleId);
             info.set("startDateTime",new java.sql.Timestamp(RecurrenceUtil.now()));
-            rule.set("frequency","DAILY");
-            rule.set("intervalNumber",new Long(1));
-            rule.set("countNumber",new Long(1));
-            info.preStoreOther(rule);
+            toBeStored.add(info);
             
             // Create the runtime data 
             String dataId = dispatcher.getDelegator().getNextSeqId("RuntimeData").toString();
             GenericValue runtimeData = dispatcher.getDelegator().makeValue("RuntimeData",UtilMisc.toMap("runtimeDataId",dataId));
             runtimeData.set("runtimeInfo",XmlSerializer.serialize(context));
+            toBeStored.add(runtimeData);
             
             // Create the job info
             String jobName = new String(new Long((new Date().getTime())).toString());
             Map jFields = UtilMisc.toMap("jobName",jobName,"serviceName",modelService.name,"loaderName",loader,"recurrenceInfoId",infoId,"runtimeDataId",dataId);
             job = dispatcher.getDelegator().makeValue("JobSandbox",jFields);
-            job.preStoreOther(runtimeData);
-            job.preStoreOther(info);
-            dispatcher.getDelegator().create(job);           
+            toBeStored.add(job);
+            
+            dispatcher.getDelegator().storeAll(toBeStored);
         }
         catch ( GenericEntityException e ) {
             throw new GenericServiceException(exceptionMessage,e);
