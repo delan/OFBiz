@@ -42,12 +42,11 @@ import org.jpublish.Page;
 import org.jpublish.Repository;
 import org.jpublish.util.JPublishContextMap;
 
-import com.anthonyeden.lib.config.Configuration;
+import com.anthonyeden.lib.config.*;
 import com.wspublisher.WSPException;
 import com.wspublisher.generators.AbstractGenerator;
 import freemarker.ext.beans.BeansWrapper;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
+import freemarker.template.*;
 
 import org.ofbiz.core.util.Debug;
 
@@ -64,6 +63,7 @@ public class FreeMarkerGenerator extends AbstractGenerator {
     public static final String module = FreeMarkerGenerator.class.getName();
 
     public static final String NAME = "ofbiz-freemarker";
+    protected freemarker.template.Configuration config = null;
     
     public FreeMarkerGenerator() {
         super(NAME);
@@ -73,11 +73,24 @@ public class FreeMarkerGenerator extends AbstractGenerator {
     /*
      * @see Generator#generate(Page, JPublishContext)
      */
-    public void generate(JPublishContext inContext, Configuration inConfig, OutputStream inOutput) throws Throwable {
+    public void generate(JPublishContext inContext, com.anthonyeden.lib.config.Configuration inConfig, OutputStream inOutput) throws Throwable {
         Writer out = new OutputStreamWriter(inOutput);
+        HttpServletRequest request = (HttpServletRequest) inContext.get("request");
+        HttpServletResponse response = (HttpServletResponse) inContext.get("response");
+        ServletContext servletContext = (ServletContext) inContext.get("application");
         Page page = (Page) inContext.get("page");
 
         //System.out.println("=========== Running generate ===========");
+
+        if (config == null) {
+            synchronized(this) {
+                if (config == null) {
+                    config = freemarker.template.Configuration.getDefaultConfiguration();
+                    config.setServletContextForTemplateLoading(servletContext, "/");
+                    config.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
+                }
+            }
+        }
         
         //First we let the child generator work
         InputStream in = null;
@@ -95,16 +108,18 @@ public class FreeMarkerGenerator extends AbstractGenerator {
             //should cache this I guess
             /*String template = inConfig.getChildValue("template");
              */
-            Template parsedTemplate = new Template(page.getContentFile().getAbsolutePath(), new FileReader(page.getContentFile()));
+            Template parsedTemplate = null;
+            try {
+                parsedTemplate = config.getTemplate(page.getContentPath(), request.getLocale());
+            } catch (IOException e) {
+                throw new WSPException(e);
+            }
+            //Template parsedTemplate = new Template(page.getContentFile().getAbsolutePath(), new FileReader(page.getContentFile()));
             Writer writer = new OutputStreamWriter(inOutput ,"UTF-8");
             
             try {
-                SimpleHash root = new SimpleHash();
+                SimpleHash root = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
 
-                HttpServletRequest request = (HttpServletRequest) inContext.get("request");
-                HttpServletResponse response = (HttpServletResponse) inContext.get("response");
-                ServletContext application = null;
-                
                 //TODO: should make the config file tell us what TemplateModel to create
                 Map map = new JPublishContextMap(inContext);
                 for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {

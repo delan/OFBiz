@@ -61,11 +61,8 @@ public class FreeMarkerViewHandler implements ViewHandler {
     public void init(ServletContext context) throws ViewHandlerException {
         this.servletContext = context;
         config = Configuration.getDefaultConfiguration();
-        try {        
-            config.setDirectoryForTemplateLoading(new File(context.getRealPath("/")));
-        } catch (IOException e) {
-            Debug.logError(e, "Problems creating file for root path.", module);
-        }
+        config.setServletContextForTemplateLoading(context, "/");
+        config.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
     }    
     
     public void render(String name, String page, String info, String contentType, String encoding, 
@@ -74,7 +71,7 @@ public class FreeMarkerViewHandler implements ViewHandler {
             throw new ViewHandlerException("Invalid template source");
         
         // make the root context (data model) for freemarker            
-        SimpleHash root = new SimpleHash();
+        SimpleHash root = new SimpleHash(ObjectWrapper.BEANS_WRAPPER);
         prepOfbizRoot(root, request, response);
         
         // get the template
