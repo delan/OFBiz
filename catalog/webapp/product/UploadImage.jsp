@@ -29,7 +29,7 @@
  */
 %>
 
-<%@ page import="java.util.*, java.io.*" %>
+<%@ page import="java.util.*, java.io.*, java.net.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
