@@ -739,9 +739,22 @@ public abstract class ModelScreenWidget {
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
             try {
+                // pushing the contentId on the context as "contentId" is done
+                // because many times there will be embedded "subcontent" elements
+                // that use the syntax: <subcontent content-id="${contentId}"...
+                // and this is a step to make sure that it is there.
+                String expandedContentId = getContentId(context);
+                if (!(context instanceof MapStack)) {
+                    context = new MapStack(context);
+                }
+                
+                ((MapStack) context).push();
+                context.put("contentId", expandedContentId);
+                
                 screenStringRenderer.renderContentBegin(writer, context, this);
                 screenStringRenderer.renderContentBody(writer, context, this);
                 screenStringRenderer.renderContentEnd(writer, context, this);
+                ((MapStack) context).pop();
             } catch (IOException e) {
                 String errMsg = "Error rendering content with contentId [" + getContentId(context) + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);

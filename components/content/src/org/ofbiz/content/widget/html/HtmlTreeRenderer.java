@@ -86,7 +86,14 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
         }
 
         String pkName = node.getModelTree().getPkName();
-        String entityId = (String)context.get(pkName);
+        String entityId = null;
+        String entryName = node.getEntryName();
+    	if (UtilValidate.isNotEmpty(entryName)) {
+    		Map map = (Map)context.get(entryName);
+            entityId = (String)map.get(pkName);
+        } else {
+			entityId = (String) context.get(pkName);
+        }
         boolean hasChildren = node.hasChildren(context);
             //Debug.logInfo("HtmlTreeExpandCollapseRenderer, hasChildren(1):" + hasChildren, module);
 
