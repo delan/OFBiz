@@ -1,5 +1,5 @@
 /*
- * $Id: WebShoppingCart.java,v 1.2 2003/08/20 01:18:13 ajzeneski Exp $
+ * $Id: WebShoppingCart.java,v 1.3 2003/09/04 03:21:55 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,11 +43,11 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class WebShoppingCart extends ShoppingCart {
-    private HttpSession session;
+    private HttpSession session = null;
 
     /** Creates a new cloned ShoppingCart Object. */
     public WebShoppingCart(ShoppingCart cart, HttpSession session) {
