@@ -58,7 +58,7 @@
 		Object o = i.next();
 		String entityName = (String) o;
 		if ( search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1 ) {						
-			String url = search == null ? "entityref_main.jsp#"+entityName : "entityref_main.jsp#"+entityName+"?search="+search;
+			String url = search == null ? "entityref_main#"+entityName : "entityref_main.jsp#"+entityName+"?search="+search;
 %>	
 <a href="<%= url %>" target="entityFrame" class='listtext'><%= entityName %></a><br>
 <%
