@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.11 2003/12/17 19:29:08 jonesde Exp $
+ * $Id: ModelViewEntity.java,v 1.12 2004/04/30 00:24:05 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -642,7 +642,7 @@ public class ModelViewEntity extends ModelEntity {
         public ComplexAlias(Element complexAliasElement) {
             this.operator = complexAliasElement.getAttribute("operator");
             // handle all complex-alias and complex-alias-field sub-elements
-            List subElements = UtilXml.childElementList(complexAliasElement, null);
+            List subElements = UtilXml.childElementList(complexAliasElement);
             Iterator subElementIter = subElements.iterator();
             while (subElementIter.hasNext()) {
                 Element subElement = (Element) subElementIter.next();

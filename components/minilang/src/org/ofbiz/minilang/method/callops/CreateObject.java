@@ -1,5 +1,5 @@
 /*
- * $Id: CreateObject.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: CreateObject.java,v 1.2 2004/04/30 00:24:08 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.minilang.method.*;
  * Creates a Java object using the given fields as parameters
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class CreateObject extends MethodOperation {
@@ -56,7 +56,7 @@ public class CreateObject extends MethodOperation {
         fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
         mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         
-        List parameterElements = UtilXml.childElementList(element, null);
+        List parameterElements = UtilXml.childElementList(element);
         if (parameterElements.size() > 0) {
             parameters = new ArrayList(parameterElements.size());
             

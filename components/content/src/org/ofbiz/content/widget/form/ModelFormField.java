@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.12 2004/04/16 07:17:06 jonesde Exp $
+ * $Id: ModelFormField.java,v 1.13 2004/04/30 00:24:04 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -133,7 +133,7 @@ public class ModelFormField {
         }
 
         // get sub-element and set fieldInfo
-        Element subElement = UtilXml.firstChildElement(fieldElement, null);
+        Element subElement = UtilXml.firstChildElement(fieldElement);
         if (subElement != null) {
             String subElementName = subElement.getTagName();
             if (Debug.verboseOn())
@@ -1216,7 +1216,7 @@ public class ModelFormField {
             noCurrentSelectedKey = element.getAttribute("no-current-selected-key");
 
             // read all option and entity-options sub-elements, maintaining order
-            List childElements = UtilXml.childElementList(element, null);
+            List childElements = UtilXml.childElementList(element);
             Iterator childElementIter = childElements.iterator();
             while (childElementIter.hasNext()) {
                 Element childElement = (Element) childElementIter.next();

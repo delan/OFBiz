@@ -1,5 +1,5 @@
 /*
- * $Id: UtilXml.java,v 1.3 2003/12/06 16:00:29 ajzeneski Exp $
+ * $Id: UtilXml.java,v 1.4 2004/04/30 00:24:03 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,6 +33,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -54,7 +55,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Utilities methods to simplify dealing with JAXP & DOM XML parsing
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class UtilXml {
@@ -66,9 +67,17 @@ public class UtilXml {
             Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing", module);
             return null;
         }
+        return writeXmlDocument(document.getDocumentElement());
+    }
+
+    public static String writeXmlDocument(Element element) throws java.io.IOException {
+        if (element == null) {
+            Debug.logWarning("[UtilXml.writeXmlDocument] Element was null, doing nothing", module);
+            return null;
+        }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        writeXmlDocument(bos, document);
+        writeXmlDocument(bos, element);
         String outString = bos.toString("UTF-8");
 
         if (bos != null) bos.close();
@@ -81,6 +90,15 @@ public class UtilXml {
             Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing", module);
             return;
         }
+        writeXmlDocument(filename, document.getDocumentElement());
+    }
+
+    public static void writeXmlDocument(String filename, Element element)
+        throws java.io.FileNotFoundException, java.io.IOException {
+        if (element == null) {
+            Debug.logWarning("[UtilXml.writeXmlDocument] Element was null, doing nothing", module);
+            return;
+        }
         if (filename == null) {
             Debug.logWarning("[UtilXml.writeXmlDocument] Filename was null, doing nothing", module);
             return;
@@ -91,7 +109,7 @@ public class UtilXml {
         fos = new FileOutputStream(outFile);
 
         try {
-            writeXmlDocument(fos, document);
+            writeXmlDocument(fos, element);
         } finally {
             if (fos != null) fos.close();
         }
@@ -100,6 +118,13 @@ public class UtilXml {
     public static void writeXmlDocument(OutputStream os, Document document) throws java.io.IOException {
         if (document == null) {
             Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing", module);
+            return;
+        }
+        writeXmlDocument(os, document.getDocumentElement());
+    }
+    public static void writeXmlDocument(OutputStream os, Element element) throws java.io.IOException {
+        if (element == null) {
+            Debug.logWarning("[UtilXml.writeXmlDocument] Element was null, doing nothing", module);
             return;
         }
         if (os == null) {
@@ -114,12 +139,12 @@ public class UtilXml {
         // }
         // else {
         // Xerces writer
-        OutputFormat format = new OutputFormat(document);
+        OutputFormat format = new OutputFormat(element.getOwnerDocument());
         format.setIndent(2);
         
         XMLSerializer serializer = new XMLSerializer(os, format);
         serializer.asDOMSerializer();
-        serializer.serialize(document.getDocumentElement());
+        serializer.serialize(element);
         // }
     }
 
@@ -240,6 +265,25 @@ public class UtilXml {
         return newElement;
     }
 
+    /** Return a List of Element objects that are children of the given element */
+    public static List childElementList(Element element) {
+        if (element == null) return null;
+
+        List elements = new LinkedList();
+        Node node = element.getFirstChild();
+
+        if (node != null) {
+            do {
+                if (node.getNodeType() == Node.ELEMENT_NODE) { 
+                    Element childElement = (Element) node;
+
+                    elements.add(childElement);
+                }
+            } while ((node = node.getNextSibling()) != null);
+        }
+        return elements;
+    }
+
     /** Return a List of Element objects that have the given name and are
      * immediate children of the given element; if name is null, all child
      * elements will be included. */
@@ -260,6 +304,66 @@ public class UtilXml {
             } while ((node = node.getNextSibling()) != null);
         }
         return elements;
+    }
+
+    /** Return a List of Element objects that have the given name and are
+     * immediate children of the given element; if name is null, all child
+     * elements will be included. */
+    public static List childElementList(Element element, Set childElementNames) {
+        if (element == null) return null;
+
+        List elements = new LinkedList();
+        if (childElementNames == null) return elements;
+        Node node = element.getFirstChild();
+
+        if (node != null) {
+            do {
+                if (node.getNodeType() == Node.ELEMENT_NODE && childElementNames.contains(node.getNodeName())) {
+                    Element childElement = (Element) node;
+
+                    elements.add(childElement);
+                }
+            } while ((node = node.getNextSibling()) != null);
+        }
+        return elements;
+    }
+
+    /** Return the first child Element
+     * returns the first element. */
+    public static Element firstChildElement(Element element, Set childElementNames) {
+        if (element == null) return null;
+        // get the first element with the given name
+        Node node = element.getFirstChild();
+
+        if (node != null) {
+            do {
+                if (node.getNodeType() == Node.ELEMENT_NODE && childElementNames.contains(node.getNodeName())) {
+                    Element childElement = (Element) node;
+
+                    return childElement;
+                }
+            } while ((node = node.getNextSibling()) != null);
+        }
+        return null;
+    }
+
+    /** Return the first child Element
+     * returns the first element. */
+    public static Element firstChildElement(Element element) {
+        if (element == null) return null;
+        // get the first element with the given name
+        Node node = element.getFirstChild();
+
+        if (node != null) {
+            do {
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element childElement = (Element) node;
+
+                    return childElement;
+                }
+            } while ((node = node.getNextSibling()) != null);
+        }
+        return null;
     }
 
     /** Return the first child Element with the given name; if name is null
