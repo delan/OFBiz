@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.7 2004/07/06 23:40:41 doogie Exp $
+ * $Id: EntityExpr.java,v 1.8 2004/07/06 23:54:38 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class EntityExpr extends EntityCondition {
@@ -115,7 +115,7 @@ public class EntityExpr extends EntityCondition {
 
     /** @deprecated */
     public boolean isLUpper() {
-        return rhs instanceof EntityFunction.UPPER;
+        return lhs instanceof EntityFunction.UPPER;
     }
 
     /** @deprecated */
