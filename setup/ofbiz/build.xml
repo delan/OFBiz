@@ -336,8 +336,6 @@
         <mkdir dir="${ext.dir}/commonapp/entitydef"/>
         <mkdir dir="${ext.dir}/commonapp/db"/>
         <mkdir dir="${ext.dir}/lib/ext"/>
-        <mkdir dir="${ext.dir}/service"/>
-        <mkdir dir="${ext.dir}/entity"/>
         <mkdir dir="${ext.dir}/etc"/>
         <mkdir dir="${ext.dir}/webapps"/>
 
