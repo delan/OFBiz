@@ -35,62 +35,40 @@
 <!ELEMENT resource-loader EMPTY>
 <!ATTLIST resource-loader
     name CDATA #REQUIRED
-    class CDATA #REQUIRED
+    type ( component | file | classpath | url ) "component"
     prepend-env CDATA #IMPLIED
     prefix CDATA #IMPLIED
 >
 
-<!ELEMENT classpath-jar EMPTY>
-<!ATTLIST classpath-jar
-    loader CDATA #REQUIRED
-    location CDATA #REQUIRED
->
-<!ELEMENT classpath-dir EMPTY>
-<!ATTLIST classpath-dir
+<!ELEMENT classpath EMPTY>
+<!ATTLIST classpath
+    type ( jar | dir ) #REQUIRED
     loader CDATA #REQUIRED
     location CDATA #REQUIRED
 >
 
-<!ELEMENT entity-model EMPTY>
-<!ATTLIST entity-model
-    reader-name CDATA #REQUIRED
-    loader CDATA #REQUIRED
-    location CDATA #REQUIRED
->
-<!ELEMENT entity-group EMPTY>
-<!ATTLIST entity-group
-    reader-name CDATA #REQUIRED
-    loader CDATA #REQUIRED
-    location CDATA #REQUIRED
->
-<!ELEMENT entity-eca EMPTY>
-<!ATTLIST entity-eca
+<!ELEMENT entity-resource EMPTY>
+<!ATTLIST entity-resource
+    type ( model | group | eca ) #REQUIRED
     reader-name CDATA #REQUIRED
     loader CDATA #REQUIRED
     location CDATA #REQUIRED
 >
 
-<!ELEMENT service-model EMPTY>
-<!ATTLIST service-model
-    loader CDATA #REQUIRED
-    location CDATA #REQUIRED
->
-<!ELEMENT service-group EMPTY>
-<!ATTLIST service-group
-    loader CDATA #REQUIRED
-    location CDATA #REQUIRED
->
-<!ELEMENT service-eca EMPTY>
-<!ATTLIST service-eca
+<!ELEMENT service-resource EMPTY>
+<!ATTLIST service-resource
+    type ( model | group | eca ) #REQUIRED
     loader CDATA #REQUIRED
     location CDATA #REQUIRED
 >
 
 <!ATTLIST webapp
     name CDATA #REQUIRED
+    title CDATA #IMPLIED
     server CDATA #REQUIRED
     loader CDATA #REQUIRED
     location CDATA #REQUIRED
+    mount-point CDATA #IMPLIED
 >
 
 
@@ -101,17 +79,17 @@
     <resource-loader name="maincp" class="org.ofbiz.core.config.ClasspathLoader"/>
     <resource-loader name="mainurl" class="org.ofbiz.core.config.UrlLoader"/>
 
-    <classpath-jar loader="maincomponent" location="lib/product.jar"/>
-    <classpath-dir loader="maincomponent" location="classes"/>
+    <classpath type="jar" loader="maincomponent" location="lib/product.jar"/>
+    <classpath type="dir" loader="maincomponent" location="classes"/>
 
-    <entity-model reader-name="main" loader="maincomponent" location="entity/entitymodel.xml"/>
-    <entity-group reader-name="main" loader="maincomponent" location="entity/entitygroup.xml"/>
-    <entity-eca reader-name="main" loader="maincomponent" location="entity/eecas.xml"/>
+    <entity-resource type="model" reader-name="main" loader="maincomponent" location="entity/entitymodel.xml"/>
+    <entity-resource type="group" reader-name="main" loader="maincomponent" location="entity/entitygroup.xml"/>
+    <entity-resource type="eca" reader-name="main" loader="maincomponent" location="entity/eecas.xml"/>
     
-    <service-model loader="maincomponent" location="service/services_test.xml"/>
-    <service-group loader="maincomponent" location="service/groups_test.xml"/>
-    <service-eca loader="maincomponent" location="service/secas_test.xml"/>
+    <service-resource type="model" loader="maincomponent" location="service/services_test.xml"/>
+    <service-resource type="group" loader="maincomponent" location="service/groups_test.xml"/>
+    <service-resource type="eca" loader="maincomponent" location="service/secas_test.xml"/>
 
-	<webapp name="webtools" server="default" loader="maincomponent" location="webtools"/>
+	<webapp name="webtools" title="WebTools" server="default" loader="maincomponent" location="webtools" mount-point="/webtools"/>
 </ofbiz-component> 
 -->
