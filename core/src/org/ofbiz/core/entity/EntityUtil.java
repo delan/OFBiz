@@ -188,7 +188,7 @@ public class EntityUtil {
             Object value2 = obj2.get(field);
             //null is defined as the smallest possible value
             if (value == null) return value2 == null ? 0 : -1;
-            return ((Comparable)obj).compareTo(value2);
+            return ((Comparable)value).compareTo(value2);
         }
 
         public boolean equals(java.lang.Object obj) {
