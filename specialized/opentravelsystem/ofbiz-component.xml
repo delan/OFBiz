@@ -62,11 +62,25 @@
         mount-point="/hotelbackend"
         app-bar-display="false"/>
 
+    <webapp name="hotelbackendimages"
+        title="Hotel Demo Backend Images directory"
+        server="default-server"
+        location="webapp/hotelbackend/images"
+        mount-point="/hotelbackend/images"
+        app-bar-display="false"/>        
+
     <webapp name="hotelfrontend"
-        title="Hotel Demo Website Site Frontend"
+        title="Hotel Demo Website Site Frontend images"
         server="default-server"
         location="webapp/hotelfrontend"
         mount-point="/hotelfrontend"
+        app-bar-display="false"/>        
+    
+    <webapp name="hotelfrontendimages"
+        title="Hotel Demo Backend Images directory"
+        server="default-server"
+        location="webapp/hotelfrontend/images"
+        mount-point="/hotelfrontend/images"
         app-bar-display="false"/>        
     
 </ofbiz-component>

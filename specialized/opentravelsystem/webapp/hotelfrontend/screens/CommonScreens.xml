@@ -29,6 +29,7 @@
                 <!--set field="request.productStoreId" value="HotelDemoStore" global="true"/>
                 <set field="request.webSiteId" value="HotelDemoStore" global="true"/>
                 <set field="request.prodCatalogId" value="HotelDemoCtlg" global="true"/-->
+                <set field="imageServerPath" to-scope="application" value="/images/"/> 
                 <property-map resource="opentravelsystemUiLabels"
                     map-name="uiLabelMap" global="true"/>
                 <set field="layoutSettings.companyName"

@@ -1,7 +1,7 @@
 <table width="200"><tr>
                     <td width="200" height="100%"><table width="200" height="100%" border="0" align="center" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td width="200" height="10" align="center" valign="top"><img src="/images/hotelfrontend/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
+                        <td width="200" height="10" align="center" valign="top"><img src="/hotelfrontend/images/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
                       </tr>
                       <tr>
                         <td width="200" align="center" valign="middle" class="unnamed2"><!-- Clock Part 1 - Put Anywhere Before Part 2 -->
@@ -29,23 +29,23 @@ var dN=new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat'),mN=new Array('Jan','
 <!-- Clock Part 2 - Ends Here --></td>
                       </tr>
                       <tr>
-                        <td width="200" height="10" align="center" valign="middle"><img src="/images/hotelfrontend/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
+                        <td width="200" height="10" align="center" valign="middle"><img src="/hotelfrontend/images/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
                       </tr>
                       <tr>
-                        <td width="200" height="100%" align="center" valign="middle"><script webstyle3>document.write('<scr'+'ipt src="/images/hotelfrontend/dimpleroundend.js">'+'</scr'+'ipt>');/*img src="DimpleRoundend.gif" moduleid="Default (Project)\DimpleRoundend1_off.xws"*/</script>
+                        <td width="200" height="100%" align="center" valign="middle"><script webstyle3>document.write('<scr'+'ipt src="/hotelfrontend/images/dimpleroundend.js">'+'</scr'+'ipt>');/*img src="DimpleRoundend.gif" moduleid="Default (Project)\DimpleRoundend1_off.xws"*/</script>
                         
                           </td>
                       </tr>
                       <tr>
-                        <td width="200" height="10" align="center" valign="top"><img src="/images/hotelfrontend/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
+                        <td width="200" height="10" align="center" valign="top"><img src="/hotelfrontend/images/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
                       </tr>
                       <tr>
                         <td width="200" align="center" valign="top"><table width="200" border="0" align="center" cellpadding="0" cellspacing="0">
                           <tr>
-                            <td width="200" height="21" align="center" valign="middle" background="/images/hotelfrontend/title_bar.gif"><table width="200" height="21" border="0" align="center" cellpadding="0" cellspacing="0">
+                            <td width="200" height="21" align="center" valign="middle" background="/hotelfrontend/images/title_bar.gif"><table width="200" height="21" border="0" align="center" cellpadding="0" cellspacing="0">
                                 <tr valign="middle">
-                                  <td width="10" height="21" align="center"><img src="/images/hotelfrontend/spacer.gif" width="10" height="0" border="0" align="absmiddle"></td>
-                                  <td height="21" align="left"><img src="/images/hotelfrontend/arrow.gif" width="9" height="9" border="0" align="absmiddle"> <a href="http://www.rydges-chiangmai.com/roomfacilities.shtml" target="_self" class="unnamed1">Room
+                                  <td width="10" height="21" align="center"><img src="/hotelfrontend/images/spacer.gif" width="10" height="0" border="0" align="absmiddle"></td>
+                                  <td height="21" align="left"><img src="/hotelfrontend/images/arrow.gif" width="9" height="9" border="0" align="absmiddle"> <a href="http://www.rydges-chiangmai.com/roomfacilities.shtml" target="_self" class="unnamed1">Room
                                       Rates</a></td>
                                 </tr>
                               </table>
@@ -54,7 +54,7 @@ var dN=new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat'),mN=new Array('Jan','
                           <tr>
                             <td width="200" align="center" valign="middle"><table width="200" border="0" align="center" cellpadding="0" cellspacing="0">
                                 <tr align="center" valign="middle">
-                                  <td width="10" background="/images/hotelfrontend/l_bar.gif"><img src="/images/hotelfrontend/spacer.gif" width="10" height="0" border="0" align="absmiddle"></td>
+                                  <td width="10" background="/hotelfrontend/images/l_bar.gif"><img src="/hotelfrontend/images/spacer.gif" width="10" height="0" border="0" align="absmiddle"></td>
                                   <td width="200" align="center" bgcolor="#FFFFFF" class="unnamed5"><table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="unnamed5">
                                     <tr align="left" valign="middle" class="unnamed4">
                                       <td>Room
@@ -83,18 +83,18 @@ var dN=new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat'),mN=new Array('Jan','
                                     </tr>
                                   </table>
 </td>
-                                  <td width="12" background="/images/hotelfrontend/r_bar.gif"><img src="/images/hotelfrontend/spacer.gif" width="12" height="0" border="0" align="absmiddle"></td>
+                                  <td width="12" background="/hotelfrontend/images/r_bar.gif"><img src="/hotelfrontend/images/spacer.gif" width="12" height="0" border="0" align="absmiddle"></td>
                                 </tr>
                                 <tr align="center" valign="middle">
-                                  <td background="/images/hotelfrontend/l_bar.gif">&nbsp;</td>
+                                  <td background="/hotelfrontend/images/l_bar.gif">&nbsp;</td>
                                   <td align="center" bgcolor="#FFFFFF"><a href="http://www.rydges-chiangmai.com/roomfacilities.shtml" target="_self" class="unnamed1">More &gt;&gt;&gt;</a></td>
-                                  <td background="/images/hotelfrontend/r_bar.gif">&nbsp;</td>
+                                  <td background="/hotelfrontend/images/r_bar.gif">&nbsp;</td>
                                 </tr>
                               </table>
                             </td>
                           </tr>
                           <tr>
-                            <td width="200" height="19" align="center" valign="middle" background="/images/hotelfrontend/bot_bar.gif"><table width="200" height="19" border="0" align="center" cellpadding="0" cellspacing="0">
+                            <td width="200" height="19" align="center" valign="middle" background="/hotelfrontend/images/bot_bar.gif"><table width="200" height="19" border="0" align="center" cellpadding="0" cellspacing="0">
                                 <tr>
                                   <td width="200" height="19" align="center" valign="middle">&nbsp;</td>
                                 </tr>
@@ -104,15 +104,15 @@ var dN=new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat'),mN=new Array('Jan','
                         </table></td>
                       </tr>
                       <tr>
-                        <td width="200" height="10" align="center" valign="top"><img src="/images/hotelfrontend/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
+                        <td width="200" height="10" align="center" valign="top"><img src="/hotelfrontend/images/spacer.gif" width="0" height="10" border="0" align="absmiddle"></td>
                       </tr>
                       <tr>
                         <td width="200" align="center" valign="top"><table width="200" border="0" align="center" cellpadding="0" cellspacing="0">
                           <tr>
-                            <td width="200" height="21" align="center" valign="middle" background="/images/hotelfrontend/title_bar.gif"><table width="200" height="21" border="0" align="center" cellpadding="0" cellspacing="0">
+                            <td width="200" height="21" align="center" valign="middle" background="/hotelfrontend/images/title_bar.gif"><table width="200" height="21" border="0" align="center" cellpadding="0" cellspacing="0">
                               <tr valign="middle">
-                                <td width="10" height="21" align="center"><img src="/images/hotelfrontend/spacer.gif" width="10" height="0" border="0" align="absmiddle"></td>
-                                <td height="21" align="left"><img src="/images/hotelfrontend/arrow.gif" width="9" height="9" border="0" align="absmiddle"> <a href="http://www.rydges-chiangmai.com/golf_special.shtml" target="_self" class="unnamed1">Special
+                                <td width="10" height="21" align="center"><img src="/hotelfrontend/images/spacer.gif" width="10" height="0" border="0" align="absmiddle"></td>
+                                <td height="21" align="left"><img src="/hotelfrontend/images/arrow.gif" width="9" height="9" border="0" align="absmiddle"> <a href="http://www.rydges-chiangmai.com/golf_special.shtml" target="_self" class="unnamed1">Special
                                   Deals</a></td>
                               </tr>
                             </table></td>
@@ -120,46 +120,46 @@ var dN=new Array('Sun','Mon','Tue','Wed','Thu','Fri','Sat'),mN=new Array('Jan','
                           <tr>
                             <td width="200" align="center" valign="middle"><table width="200" border="0" align="center" cellpadding="0" cellspacing="0">
                               <tr align="center" valign="middle">
-                                <td width="10" background="/images/hotelfrontend/l_bar.gif"><img src="/images/hotelfrontend/spacer.gif" width="10" height="0" border="0" align="absmiddle"></td>
+                                <td width="10" background="/hotelfrontend/images/l_bar.gif"><img src="/hotelfrontend/images/spacer.gif" width="10" height="0" border="0" align="absmiddle"></td>
                                 <td align="left" bgcolor="#FFFFFF" class="unnamed5"><span class="unnamed4">Golf
                                   Package:</span><br>
-                                  <span class="unnamed5"><img src="/images/hotelfrontend/bulletb.gif" width="8" height="8" border="0" align="absmiddle"> 5
+                                  <span class="unnamed5"><img src="/hotelfrontend/images/bulletb.gif" width="8" height="8" border="0" align="absmiddle"> 5
                                   days / 4 nights<br>
-                                  <img src="/images/hotelfrontend/bulletb.gif" width="8" height="8" border="0" align="absmiddle"> Single
+                                  <img src="/hotelfrontend/images/bulletb.gif" width="8" height="8" border="0" align="absmiddle"> Single
                                   room Bt. 15,000<br>                                  
-                                  <img src="/images/hotelfrontend/bulletb.gif" width="8" height="8" border="0" align="absmiddle"> Twin/Double
+                                  <img src="/hotelfrontend/images/bulletb.gif" width="8" height="8" border="0" align="absmiddle"> Twin/Double
                                   Bt. 21,500<br>
                                   <br>
                                   </span><span class="unnamed4">Package includes:</span><br>
-                                  <span class="unnamed5"><img src="/images/hotelfrontend/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Four
+                                  <span class="unnamed5"><img src="/hotelfrontend/images/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Four
                                   nights in deluxe room<br>
-                                  <span class="unnamed5"><img src="/images/hotelfrontend/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Free
+                                  <span class="unnamed5"><img src="/hotelfrontend/images/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Free
                                   mini bar consumption<br>
-                                  <span class="unnamed5"><img src="/images/hotelfrontend/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Daily
+                                  <span class="unnamed5"><img src="/hotelfrontend/images/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Daily
                                   buffet breakfast<br>
-                                  <span class="unnamed5"><img src="/images/hotelfrontend/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> One
+                                  <span class="unnamed5"><img src="/hotelfrontend/images/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> One
                                   free massage <br>
-                                  <span class="unnamed5"><img src="/images/hotelfrontend/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Three
+                                  <span class="unnamed5"><img src="/hotelfrontend/images/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Three
                                   days of golf<br>
-                                  <span class="unnamed5"><img src="/images/hotelfrontend/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span>                                  Free
+                                  <span class="unnamed5"><img src="/hotelfrontend/images/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span>                                  Free
                                   caddie<br>
-                                  <span class="unnamed5"><img src="/images/hotelfrontend/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Roundtrip
+                                  <span class="unnamed5"><img src="/hotelfrontend/images/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Roundtrip
                                   transfer<br>
-                                  <span class="unnamed5"><img src="/images/hotelfrontend/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Welcome
+                                  <span class="unnamed5"><img src="/hotelfrontend/images/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Welcome
                                   drink<br>
-                                  <span class="unnamed5"><img src="/images/hotelfrontend/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Fruit
+                                  <span class="unnamed5"><img src="/hotelfrontend/images/bulletb.gif" width="8" height="8" border="0" align="absmiddle"></span> Fruit
                                   basket<br></td>
-                                <td width="12" background="/images/hotelfrontend/r_bar.gif"><img src="/images/hotelfrontend/spacer.gif" width="12" height="0" border="0" align="absmiddle"></td>
+                                <td width="12" background="/hotelfrontend/images/r_bar.gif"><img src="/hotelfrontend/images/spacer.gif" width="12" height="0" border="0" align="absmiddle"></td>
                               </tr>
                               <tr align="center" valign="middle">
-                                <td background="/images/hotelfrontend/l_bar.gif">&nbsp;</td>
+                                <td background="/hotelfrontend/images/l_bar.gif">&nbsp;</td>
                                 <td align="center" bgcolor="#FFFFFF"><a href="http://www.rydges-chiangmai.com/golf_special.shtml" target="_self" class="unnamed1">More &gt;&gt;&gt;</a></td>
-                                <td background="/images/hotelfrontend/r_bar.gif">&nbsp;</td>
+                                <td background="/hotelfrontend/images/r_bar.gif">&nbsp;</td>
                               </tr>
                             </table></td>
                           </tr>
                           <tr>
-                            <td width="200" height="19" align="center" valign="middle" background="/images/hotelfrontend/bot_bar.gif"><table width="200" height="19" border="0" align="center" cellpadding="0" cellspacing="0">
+                            <td width="200" height="19" align="center" valign="middle" background="/hotelfrontend/images/bot_bar.gif"><table width="200" height="19" border="0" align="center" cellpadding="0" cellspacing="0">
                               <tr>
                                 <td width="200" height="19" align="center" valign="middle">&nbsp;</td>
                               </tr>
