@@ -159,23 +159,6 @@
       <input type='hidden' name='finalizeMode' value='type'>
       <input type='hidden' name='orderMode' value='PURCHASE_ORDER'>
       <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td >&nbsp;</td>
-          <td align='right' valign='middle' nowrap><div class='tableheadtext'>${uiLabelMap.ProductProductStore}</div></td>
-          <td >&nbsp;</td>
-          <td valign='middle'>
-            <div class='tabletext' valign='top'>
-              <select class="selectBox" name="productStoreId"<#if sessionAttributes.orderMode?exists> disabled</#if>>
-                <#assign currentStore = shoppingCart.getProductStoreId()?default("NA")>
-                <#list productStores as productStore>
-                  <option value="${productStore.productStoreId}"<#if productStore.productStoreId == currentStore> selected</#if>>${productStore.storeName}</option>
-                </#list>
-              </select>
-              <#if !sessionAttributes.orderMode?exists>&nbsp;&nbsp;*<font color='red'>${uiLabelMap.OrderRequiredForSO}</font><#else>${uiLabelMap.OrderCannotBeChanged}</#if>
-            </div>
-          </td>
-        </tr>
-        <tr><td colspan="4">&nbsp;</td></tr>
         <#if partyId?exists>
           <#assign thisPartyId = partyId>
         <#else>
