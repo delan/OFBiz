@@ -120,18 +120,21 @@
 
   <ProductFeatureType description="Accessory" hasTable="N" parentTypeId="" productFeatureTypeId="ACCESSORY"/>
   <ProductFeatureType description="Amount" hasTable="N" parentTypeId="" productFeatureTypeId="AMOUNT"/>
+  <ProductFeatureType description="Artist" hasTable="N" parentTypeId="" productFeatureTypeId="ARTIST"/>
   <ProductFeatureType description="Billing Feature" hasTable="N" parentTypeId="" productFeatureTypeId="BILLING_FEATURE"/>
   <ProductFeatureType description="Brand" hasTable="N" parentTypeId="" productFeatureTypeId="BRAND"/>
   <ProductFeatureType description="Care" hasTable="N" parentTypeId="" productFeatureTypeId="CARE"/>
   <ProductFeatureType description="Color" hasTable="N" parentTypeId="" productFeatureTypeId="COLOR"/>
+  <ProductFeatureType description="Dimension" hasTable="N" parentTypeId="" productFeatureTypeId="DIMENSION"/>
   <ProductFeatureType description="Fabric" hasTable="N" parentTypeId="" productFeatureTypeId="FABRIC"/>
+  <ProductFeatureType description="Genre" hasTable="N" parentTypeId="" productFeatureTypeId="GENRE"/>
   <ProductFeatureType description="Hardware Feature" hasTable="N" parentTypeId="" productFeatureTypeId="HARDWARE_FEATURE"/>
   <ProductFeatureType description="Origin" hasTable="N" parentTypeId="" productFeatureTypeId="ORIGIN"/>
   <ProductFeatureType description="Other Feature" hasTable="N" parentTypeId="" productFeatureTypeId="OTHER_FEATURE"/>
   <ProductFeatureType description="Product Quality" hasTable="N" parentTypeId="" productFeatureTypeId="PRODUCT_QUALITY"/>
   <ProductFeatureType description="Size" hasTable="N" parentTypeId="" productFeatureTypeId="SIZE"/>
   <ProductFeatureType description="Software Feature" hasTable="N" parentTypeId="" productFeatureTypeId="SOFTWARE_FEATURE"/>
-  <ProductFeatureType description="Dimension" hasTable="N" parentTypeId="" productFeatureTypeId="DIMENSION"/>
+  <ProductFeatureType description="Topic" hasTable="N" parentTypeId="" productFeatureTypeId="TOPIC"/>
   <ProductFeatureType description="Warranty" hasTable="N" parentTypeId="" productFeatureTypeId="WARRANTY"/>
 
   <ProductGlAccountType description="Sales" productGlAccountTypeId="SALES"/>
