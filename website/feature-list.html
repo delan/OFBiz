@@ -35,6 +35,7 @@
   <li class='contenttext'>Free & open source software
   <ul>
     <li class='contenttext'>No license or license maintenance costs
+    <li class='contenttext'>No vendor, service provider, or application lock-in
     <li class='contenttext'>Active and supportive community
     <li class='contenttext'>You get full source code
     <ul>
@@ -63,6 +64,20 @@
     <li class='contenttext'>No need to deal with limited features because of poor integrations between disparate technologies
     <li class='contenttext'>Huge cost savings because of consist and easy to maintain components
   </ul>
+  <li class='contenttext'>Standards based flexible and generic data model
+  <ul>
+    <li class='contenttext'>Covers all major entities used in businesses
+    <li class='contenttext'>Provides a structure to simplify acheiving custom data needs
+    <li class='contenttext'>Uses common terms for entity names to make it easier to understand and use
+  </ul>
+  <li class='contenttext'>Flexible and efficient to use data layer
+  <ul>
+    <li class='contenttext'>No database system lock-in; supports many different databases
+    <li class='contenttext'>No need to write redundant persistence code and configuration
+    <li class='contenttext'>Easy to use XML data definitions
+    <li class='contenttext'>Powerful API offers generic operations that behave differently based on data definitions
+    <li class='contenttext'>Most operations can be done with a single line of code and no need for writing supporting code
+  </ul>
   <li class='contenttext'>Loosely coupled multi-layer component architecure
   <ul>
     <li class='contenttext'>It is easy to customize and reuse components
@@ -75,20 +90,187 @@
     <li class='contenttext'>It is easy to scale multiple servers or pools of servers
     <li class='contenttext'>It is easy to seamlessly integrate &amp; communicate with other systems
   </ul>
-  <li class='contenttext'>Standards based flexible and generic data model
+  <li class='contenttext'>Service based logic layer
   <ul>
-    <li class='contenttext'>Covers all major entities used in businesses
-    <li class='contenttext'>Provides a structure to simplify custom data needs
-    <li class='contenttext'>Uses common terms for entity names to make it easier to understand and use
-    <li class='contenttext'>
+    <li class='contenttext'>All logic modeled as a service
+    <li class='contenttext'>Makes it easy to reuse logic
+    <li class='contenttext'>Services can be automatically exposed as Web Services
+    <li class='contenttext'>Makes it easy add custom user interfaces, even many at once
+    <li class='contenttext'>Makes it easy to distribute the system over multiple servers
+    <li class='contenttext'>Makes it easy to communicate with other systems
+  </ul>
+  <li class='contenttext'>Advanced web application framework
+  <ul>
+    <li class='contenttext'>Separates input processing logic, view data preparation logic and view presentation templates
+    <li class='contenttext'>Supports many different types of logic, including scripting languages and services
+    <li class='contenttext'>Supports many different types of view templates including XML/XSLT, FreeMarker, Velocity, JSP, and any other
+    <li class='contenttext'>Tracks all visits and page hits for security and marketing purposes
+    <li class='contenttext'>Keeps statistical traffic and performance data since server start and in time bins
   </ul>
 </ul>
 
 <p class='contenttext'><b><u>Applications</u></b></p>
 
+<p class='contenttext'><b>eCommerce</b></p>
+<ul>
+  <li class='contenttext'>Product Finding
+  <li class='contenttext'>Promotions & Pricing
+  <li class='contenttext'>Customer Profile
+  <li class='contenttext'>Shopping Cart &amp; Checkout Process
+  <li class='contenttext'>Order History
+  <li class='contenttext'>Affiliate &amp; Marketing Data
+</ul>
+
+<p class='contenttext'><b>Party Manager</b></p>
+<ul>
+  <li class='contenttext'>Party Types: Persons and Groups
+  <li class='contenttext'>Finding Parties
+  <li class='contenttext'>Party Data Maintenance
+  <ul>
+    <li class='contenttext'>Personal Data
+    <li class='contenttext'>Organization Data
+    <li class='contenttext'>UserLogin & Security Data
+    <li class='contenttext'>Contact Mechanisms: Telecom Number, Postal Address, Email Address, Web Page Address, etc.
+    <li class='contenttext'>Payment Mechanisms: Credit Cards, EFT Accounts
+    <li class='contenttext'>Party Roles
+    <li class='contenttext'>Party Relationships
+  </ul>
+  <li class='contenttext'>Security Data Maintenance
+  <ul>
+    <li class='contenttext'>Security Permissions
+    <li class='contenttext'>Security Groups
+    <li class='contenttext'>UserLogin Group Membership
+    <li class='contenttext'>Group Permission Association
+  </ul>
+</ul>
+
+<p class='contenttext'><b>Marketing Manager</b></p>
+<ul>
+  <li class='contenttext'>
+</ul>
+
+<p class='contenttext'><b>Catalog Manager</b></p>
+<ul>
+  <li class='contenttext'>
+</ul>
+
+<p class='contenttext'><b>Facility Manager</b></p>
+<ul>
+  <li class='contenttext'>
+</ul>
+
+<p class='contenttext'><b>Order Manager</b></p>
+<ul>
+  <li class='contenttext'>
+</ul>
+
+<p class='contenttext'><b>Accounting Manager</b></p>
+<ul>
+  <li class='contenttext'>Not much yet...
+</ul>
+
+<p class='contenttext'><b>Work Effort Manager</b></p>
+<ul>
+  <li class='contenttext'>Track work efforts
+  <ul>
+    <li class='contenttext'>Tasks & to do items
+    <ul>
+      <li class='contenttext'>Hierarchical items for projects, phases, tasks, sub-tasks, etc.
+      <li class='contenttext'>Assign items to multiple parties
+      <li class='contenttext'>Track priority, cost estimates, etc
+      <li class='contenttext'>Track estimated and actual: start times, end times, durations
+    </ul>
+    <li class='contenttext'>Calendar events
+    <li class='contenttext'>Workflow activities
+    <li class='contenttext'>Work efforts are associated with the cost side of the Cost-Benefit analysis; to manage both sides of the comparison work efforts can be associated with requirements or requests
+  </ul>
+  <li class='contenttext'>Track requests
+  <ul>
+    <li class='contenttext'>Supports requests: for support, for features, for fixes, for information, for quotes, for proposals
+    <li class='contenttext'>Associate requests with requirements
+    <li class='contenttext'>Associate requests with work efforts (tasks, projects, etc)
+    <li class='contenttext'>Each request consists of multiple items, each of which contains details about what is desired
+    <li class='contenttext'>The request acts as a package of multple desired items
+    <li class='contenttext'>Each request item contains a "story" of what is desired
+    <li class='contenttext'>In the Cost-Benefit scheme of things a request is associated with the benefit side; costs are associated with the resulting work efforts, allowing you to track and manage BOTH sides of the comparison
+  </ul>
+  <li class='contenttext'>Track requirements
+  <ul>
+    <li class='contenttext'>Used to internally manage required features for a product
+    <li class='contenttext'>Usually based on requests, or request items to be more accurate
+    <li class='contenttext'>Each requirement contains a "use case" for a more formal description of what is to be created
+    <li class='contenttext'>Requirements are also on the benefit side of the Cost-Benefit analysis, but the benefits are generally better understood through associated requests
+  </ul>
+</ul>
+
+<p class='contenttext'><b>Content Manager</b></p>
+<ul>
+  <li class='contenttext'>Not much yet...
+</ul>
+
+<p class='contenttext'><b>WebTools</b></p>
+<ul>
+  <li class='contenttext'>Cache Tools
+  <ul>
+    <li class='contenttext'>Cache Maintenance
+    <ul>
+      <li class='contenttext'>View cache size and hit/miss statistics
+      <li class='contenttext'>Clear all caches, individual caches, even individual cache lines
+      <li class='contenttext'>Clear all expired cache entries
+      <li class='contenttext'>Manage cache prameters such as size limit, expire time, soft references, etc
+      <li class='contenttext'>View inidividual elements in each cache
+    </ul>
+  </ul>
+  <li class='contenttext'>Debug Tools
+  <ul>
+    <li class='contenttext'>Adjust Debugging Levels
+    <ul>
+      <li class='contenttext'>Adjust debug log message levels as the application is running
+      <li class='contenttext'>Changes here stay until the server is shut down
+      <li class='contenttext'>For permanent changes, use the debug.properties file
+    </ul>
+  </ul>
+  <li class='contenttext'>Entity Engine Tools
+  <ul>
+    <li class='contenttext'>Entity Data Maintenance
+    <li class='contenttext'>Entity Reference &amp; Editing
+    <li class='contenttext'>XML Data Export
+    <li class='contenttext'>XML Data Import
+  </ul>
+  <li class='contenttext'>Service Engine Tools
+  <ul>
+    <li class='contenttext'>Job List
+    <li class='contenttext'>Schedule Job
+  </ul>
+  <li class='contenttext'>Workflow Engine Tools
+  <ul>
+    <li class='contenttext'>Workflow Monitor
+    <li class='contenttext'>Read XPDL File
+  </ul>
+  <li class='contenttext'>Rule Engine Tools
+  <ul>
+    <li class='contenttext'>Logikus - Run Rulesets
+  </ul>
+  <li class='contenttext'>Data File Tools
+  <ul>
+    <li class='contenttext'>View Data File
+  </ul>
+  <li class='contenttext'>Misc. Setup Tools
+  <ul>
+    <li class='contenttext'>Edit Custom Time Periods
+    <li class='contenttext'>Edit Enumerations
+    <li class='contenttext'>Edit Status Options
+  </ul>
+  <li class='contenttext'>Server Hit Statistics Tools
+  <ul>
+    <li class='contenttext'>Stats Since Server Start
+  </ul>
+  
+</ul>
+
 <hr class='sepbar'>
- <p class='contenttext'>For information about Open For Business contact David E. Jones at <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
- or Andy Zeneski at <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a>. </p>
+<p class='contenttext'>For information about Open For Business contact David E. Jones at <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+or Andy Zeneski at <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a>.</p>
  
  </BODY>
 </HTML>
