@@ -1,5 +1,5 @@
 /*
- * $Id: CommonEvents.java,v 1.3 2004/07/09 18:14:34 ajzeneski Exp $
+ * $Id: CommonEvents.java,v 1.4 2004/07/09 18:18:01 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class CommonEvents {
@@ -183,13 +183,19 @@ public class CommonEvents {
 
             // update the UserLogin object
             GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-            GenericValue ulUpdate = new GenericValue(userLogin);
-            ulUpdate.set("lastLocale", localeString);
-            try {
-                ulUpdate.store();
-                userLogin.refreshFromCache();
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e, module);
+            if (userLogin == null) {
+                userLogin = (GenericValue) request.getSession().getAttribute("autoUserLogin");
+            }
+
+            if (userLogin != null) {
+                GenericValue ulUpdate = new GenericValue(userLogin);
+                ulUpdate.set("lastLocale", localeString);
+                try {
+                    ulUpdate.store();
+                    userLogin.refreshFromCache();
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, module);
+                }
             }
         }
         return "success";
@@ -204,13 +210,19 @@ public class CommonEvents {
 
             // update the UserLogin object
             GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-            GenericValue ulUpdate = new GenericValue(userLogin);
-            ulUpdate.set("lastCurrencyUom", currencyUom);
-            try {
-                ulUpdate.store();
-                userLogin.refreshFromCache();
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e, module);
+            if (userLogin == null) {
+                userLogin = (GenericValue) request.getSession().getAttribute("autoUserLogin");
+            }
+
+            if (userLogin != null) {
+                GenericValue ulUpdate = new GenericValue(userLogin);
+                ulUpdate.set("lastCurrencyUom", currencyUom);
+                try {
+                    ulUpdate.store();
+                    userLogin.refreshFromCache();
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, module);
+                }
             }
         }
         return "success";
