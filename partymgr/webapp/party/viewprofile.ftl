@@ -469,7 +469,7 @@
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
           <td valign="middle" align="right">&nbsp;
-            <a href="<@ofbizUrl>/createnewlogin</@ofbizUrl>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
+            <a href="<@ofbizUrl>/createnewlogin?partyId=${party.partyId}</@ofbizUrl>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
           </td>
           </#if>
         </tr>
@@ -491,18 +491,23 @@
                 <td align="left" valign="top" width="30%">
                   <div class="tabletext">
                     <#assign enabled = "ENABLED">
-                    <#if (userUserLogin.enabled)?default("Y") = "N">
-                      <#assign enabled = "DISABLED - "+userUserLogin.disabledDateTime.toString()>
+                    <#if (userUserLogin.enabled)?default("Y") == "N">
+                      <#if userUserLogin.disabledDateTime?exists>
+                        <#assign disabledTime = userUserLogin.disabledDateTime.toString()>
+                      <#else>
+                        <#assign disabledTime = "??">
+                      </#if>
+                      <#assign enabled = "DISABLED - " + disabledTime>
                     </#if>
                     ${enabled}
                   </div>
                 </td>
                 <td align="right" valign="top" width="20%">
                   <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-                      <a href="<@ofbizUrl>/editlogin?userlogin_id=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[Edit]</a>&nbsp;
+                      <a href="<@ofbizUrl>/editlogin?partyId=${party.partyId}&userlogin_id=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[Edit]</a>&nbsp;
                   </#if>
                   <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
-                      <a href="<@ofbizUrl>/EditUserLoginSecurityGroups?userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[SecurityGroups]</a>&nbsp;
+                      <a href="<@ofbizUrl>/EditUserLoginSecurityGroups?partyId=${party.partyId}&userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[SecurityGroups]</a>&nbsp;
                   </#if>
                 </td>
               </tr>
