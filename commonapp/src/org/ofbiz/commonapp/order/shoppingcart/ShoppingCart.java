@@ -58,7 +58,7 @@ public class ShoppingCart implements java.io.Serializable {
 
     private GenericValue orderShipmentPreference = null;
     private String orderAdditionalEmails = null;
-    private boolean viewCartOnAdd = true;
+    private boolean viewCartOnAdd = false;
 
     /** Holds value of order adjustments. */
     private List adjustments = new LinkedList();
