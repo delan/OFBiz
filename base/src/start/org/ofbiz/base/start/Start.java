@@ -442,6 +442,7 @@ public class Start implements Runnable {
         public String logDir;
         public List loaders;
         public String awtHeadless;
+        public String splashLogo;
         public boolean shutdownAfterLoad = false;
         public boolean useShutdownHook = true;
         public boolean requireToolsJar = false;
@@ -634,6 +635,9 @@ public class Start implements Runnable {
             if (awtHeadless != null) {
                 System.setProperty("java.awt.headless", awtHeadless);
             }
+
+            // get the splash logo
+            splashLogo = props.getProperty("ofbiz.start.splash.logo", null);
 
             // set the property to tell Jetty to use 2.4 SessionListeners
             System.setProperty("org.mortbay.jetty.servlet.AbstractSessionManager.24SessionDestroyed", "true");
