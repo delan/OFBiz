@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.30 2004/05/14 18:53:35 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.31 2004/05/14 19:16:22 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,6 +54,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
@@ -68,7 +69,7 @@ import org.ofbiz.security.Security;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -1290,6 +1291,7 @@ public class PaymentGatewayServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String orderId = (String) context.get("orderId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         // get the order header
         GenericValue orderHeader = null;
@@ -1314,7 +1316,7 @@ public class PaymentGatewayServices {
         // run the auth service and check for failure(s)
         Map serviceResult = null;
         try {
-            serviceResult = dispatcher.runSync("authOrderPayments", UtilMisc.toMap("orderId", orderId));
+            serviceResult = dispatcher.runSync("authOrderPayments", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -1330,9 +1332,11 @@ public class PaymentGatewayServices {
         } else {
             if ("FAILED".equals(authResp)) {
                 // declined; update the order status
+                OrderChangeHelper.rejectOrder(dispatcher, userLogin, orderId);
 
             } else if ("APPROVED".equals(authResp)) {
                 // approved; update the order status
+                OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
             }
 
             // service completed; we either were approved or declined
@@ -1347,6 +1351,7 @@ public class PaymentGatewayServices {
     public static Map retryFailedAuths(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         // get a list of all payment prefs still pending
         List exprs = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.EQUALS, "PAYMENT_NOT_AUTH"),
@@ -1369,7 +1374,8 @@ public class PaymentGatewayServices {
                 if (!processList.contains(orderId)) { // just try each order once
                     try {
                         // each re-try is independent of each other; if one fails it should not effect the others
-                        dispatcher.runAsync("retryFailedOrderAuth", UtilMisc.toMap("orderId", orderId));
+                        dispatcher.runAsync("retryFailedOrderAuth", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
+                        processList.add(orderId);
                     } catch (GenericServiceException e) {
                         Debug.logError(e, module);
                     }
@@ -1383,6 +1389,7 @@ public class PaymentGatewayServices {
             }
         }
 
+        processList = null;
         return ServiceUtil.returnSuccess();
     }
 
