@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  */
 -->
 
@@ -433,7 +433,7 @@
       <alias entity-alias="OH" name="grandTotal"/>
       <view-link entity-alias="OT" rel-entity-alias="OH">
         <key-map field-name="orderId"/>
-      </view-link> 
+      </view-link>
       <relation type="one-nofk" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId"/>
       </relation>
@@ -514,8 +514,8 @@
       </relation>
       <relation type="many" rel-entity-name="ShipmentReceipt">
         <key-map field-name="orderId"/>
-      </relation>      
-    </view-entity>  
+      </relation>
+    </view-entity>
     <view-entity entity-name="OrderHeaderItemAndRoles"
             package-name="org.ofbiz.order.order"
             never-cache="true"
@@ -551,7 +551,7 @@
         <key-map field-name="orderId"/>
       </view-link>
       <view-link entity-alias="OH" rel-entity-alias="OI">
-      	<key-map field-name="orderId"/>
+        <key-map field-name="orderId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId"/>
@@ -633,8 +633,8 @@
       </relation>
       <relation type="many" rel-entity-name="ShipmentReceipt">
         <key-map field-name="orderId"/>
-      </relation>      
-    </view-entity>          
+      </relation>
+    </view-entity>
     <entity entity-name="OrderHeaderNote"
             package-name="org.ofbiz.order.order"
             never-cache="true"
@@ -860,7 +860,7 @@
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>
-      <field name="itemIssuanceId" type="id"></field>      
+      <field name="itemIssuanceId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="amount" type="currency-amount"></field>
       <prim-key field="orderId"/>
@@ -912,7 +912,7 @@
             never-cache="true"
             title="Order Item Inventory Reservation Entity">
       <field name="orderId" type="id-ne"></field>
-      <field name="orderItemSeqId" type="id-ne"></field>      
+      <field name="orderItemSeqId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="reserveOrderEnumId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
@@ -950,9 +950,9 @@
       <alias-all entity-alias="OIIR"/>
       <alias-all entity-alias="II"/>
       <view-link entity-alias="OIIR" rel-entity-alias="II">
-      	<key-map field-name="inventoryItemId"/>
+        <key-map field-name="inventoryItemId"/>
       </view-link>
-    </view-entity>          
+    </view-entity>
     <view-entity entity-name="OrderItemInventoryResAndItemLocation"
             package-name="org.ofbiz.order.order"
             never-cache="true"
@@ -966,15 +966,15 @@
       <alias-all entity-alias="FL"/>
       <alias entity-alias="OI" name="orderItemStatusId" field="statusId"/>
       <view-link entity-alias="OIIR" rel-entity-alias="II">
-      	<key-map field-name="inventoryItemId"/>
+        <key-map field-name="inventoryItemId"/>
       </view-link>
       <view-link entity-alias="II" rel-entity-alias="FL">
-      	<key-map field-name="facilityId"/>
-      	<key-map field-name="locationSeqId"/>
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
       </view-link>
       <view-link entity-alias="OIIR" rel-entity-alias="OI">
-      	<key-map field-name="orderId"/>
-      	<key-map field-name="orderItemSeqId"/>
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="Product">
         <key-map field-name="productId"/>
@@ -984,11 +984,11 @@
         <key-map field-name="locationSeqId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderItemInventoryRes">
-      	<key-map field-name="orderId"/>
-      	<key-map field-name="orderItemSeqId"/>
-      	<key-map field-name="inventoryItemId"/>
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+        <key-map field-name="inventoryItemId"/>
       </relation>
-    </view-entity>          
+    </view-entity>
     <entity entity-name="OrderItemPriceInfo"
             package-name="org.ofbiz.order.order"
             never-cache="true"
@@ -1090,14 +1090,14 @@
             title="Order Notification Entity">
       <field name="orderNotificationId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
-      <field name="emailType" type="id-ne"></field>      
+      <field name="emailType" type="id-ne"></field>
       <field name="notificationDate" type="date-time"></field>
       <prim-key field="orderNotificationId"/>
       <relation type="one" fk-name="ORD_NOTIFY_ORDHDR" rel-entity-name="OrderHeader">
-      	<key-map field-name="orderId"/>
+        <key-map field-name="orderId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderItem">
-      	<key-map field-name="orderId"/>
+        <key-map field-name="orderId"/>
       </relation>
       <relation type="one" fk-name="ORD_NOTIFY_ENUM" rel-entity-name="Enumeration">
         <key-map field-name="emailType" rel-field-name="enumId"/>
@@ -1138,6 +1138,9 @@
       <relation type="many" rel-entity-name="Payment">
         <key-map field-name="orderPaymentPreferenceId" rel-field-name="paymentPreferenceId"/>
       </relation>
+      <relation type="many" rel-entity-name="PaymentGatewayResponse">
+        <key-map field-name="orderPaymentPreferenceId"/>
+      </relation>
       <relation type="one-nofk" rel-entity-name="CreditCard">
         <key-map field-name="paymentMethodId"/>
       </relation>
@@ -1176,27 +1179,27 @@
       <alias entity-alias="OI" name="quantity"/>
       <alias entity-alias="OI" name="unitPrice"/>
       <view-link entity-alias="OH" rel-entity-alias="OI">
-      	<key-map field-name="orderId"/>
+        <key-map field-name="orderId"/>
       </view-link>
       <view-link entity-alias="OH" rel-entity-alias="OPP" rel-optional="true">
-      	<key-map field-name="orderId"/>
+        <key-map field-name="orderId"/>
       </view-link>
       <view-link entity-alias="OPP" rel-entity-alias="PMT" rel-optional="true">
-      	<key-map field-name="paymentMethodTypeId"/>
+        <key-map field-name="paymentMethodTypeId"/>
       </view-link>
       <view-link entity-alias="OH" rel-entity-alias="OSP" rel-optional="true">
-      	<key-map field-name="orderId"/>
+        <key-map field-name="orderId"/>
       </view-link>
       <view-link entity-alias="OSP" rel-entity-alias="SMT" rel-optional="true">
-      	<key-map field-name="shipmentMethodTypeId"/>
+        <key-map field-name="shipmentMethodTypeId"/>
       </view-link>
       <view-link entity-alias="OH" rel-entity-alias="OS">
-      	<key-map field-name="statusId"/>
+        <key-map field-name="statusId"/>
       </view-link>
       <view-link entity-alias="OI" rel-entity-alias="OIS">
-      	<key-map field-name="statusId"/>
+        <key-map field-name="statusId"/>
       </view-link>
-    </view-entity>          
+    </view-entity>
     <entity entity-name="OrderRole"
             package-name="org.ofbiz.order.order"
             never-cache="true"
@@ -1498,14 +1501,14 @@
       <field name="productStoreId" type="id-ne"></field>
       <field name="countryGeoId" type="id-ne"></field>
       <field name="stateProvinceGeoId" type="id-ne"></field>
-      <field name="taxCategory" type="id-ne"></field>      
+      <field name="taxCategory" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="description" type="description"></field>
       <field name="minPurchase" type="currency-amount"></field>
       <field name="taxShipping" type="indicator"></field>
       <field name="salesTaxPercentage" type="floating-point"></field>
-      <prim-key field="productStoreId"/>     
+      <prim-key field="productStoreId"/>
       <prim-key field="countryGeoId"/>
       <prim-key field="stateProvinceGeoId"/>
       <prim-key field="taxCategory"/>
@@ -1518,7 +1521,7 @@
     <entity entity-name="ReturnHeader"
             package-name="org.ofbiz.order.order"
             title="Return Entity">
-      <field name="returnId" type="id-ne"></field>     
+      <field name="returnId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
       <field name="fromPartyId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
@@ -1527,14 +1530,14 @@
       <field name="destinationFacilityId" type="id"></field>
       <prim-key field="returnId"/>
       <relation type="many" rel-entity-name="ReturnItem">
-        <key-map field-name="returnId"/>        
+        <key-map field-name="returnId"/>
       </relation>
       <relation type="one" fk-name="RTN_FROM_PARTY" rel-entity-name="Party">
         <key-map field-name="fromPartyId" rel-field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="RTN_TO_BACT" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId"/>
-      </relation>      
+      </relation>
       <relation type="one" fk-name="RTN_TO_FACILITY" rel-entity-name="Facility">
         <key-map field-name="destinationFacilityId" rel-field-name="facilityId"/>
       </relation>
@@ -1549,7 +1552,7 @@
       </relation>
       <relation type="many" rel-entity-name="ReturnStatus">
         <key-map field-name="returnId"/>
-      </relation>      
+      </relation>
     </entity>
     <entity entity-name="ReturnItem"
             package-name="org.ofbiz.order.order"
@@ -1575,17 +1578,17 @@
       </relation>
       <relation type="one" fk-name="RTN_ITEM_TYPE" rel-entity-name="ReturnType">
         <key-map field-name="returnTypeId"/>
-      </relation>      
+      </relation>
       <relation type="one" fk-name="RTN_ITEM_ODR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
       <relation type="one" fk-name="RTN_ITEM_ODRIT" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
-      </relation>      
+      </relation>
       <relation type="one" fk-name="RTN_ITEM_STTSIT" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
-      </relation>      
+      </relation>
       <relation type="many" rel-entity-name="ReturnStatus">
         <key-map field-name="returnId"/>
         <key-map field-name="returnItemSeqId"/>
@@ -1593,11 +1596,11 @@
       <relation type="many" rel-entity-name="ShipmentReceipt">
         <key-map field-name="returnId"/>
         <key-map field-name="returnItemSeqId"/>
-      </relation>      
+      </relation>
       <relation type="many" rel-entity-name="OrderItemInventoryRes">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
-      </relation>         
+      </relation>
     </entity>
     <entity entity-name="ReturnItemResponse"
             package-name="org.ofbiz.order.order"
@@ -1609,21 +1612,21 @@
       <field name="paymentId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
       <field name="responseAmount" type="currency-amount"></field>
-      <field name="responseDate" type="date-time"></field>    
-      <prim-key field="returnItemResponseId"/>   
+      <field name="responseDate" type="date-time"></field>
+      <prim-key field="returnItemResponseId"/>
       <relation type="one" fk-name="RTN_PAY_ORDPAYPF" rel-entity-name="OrderPaymentPreference">
         <key-map field-name="orderPaymentPreferenceId"/>
       </relation>
       <relation type="one" fk-name="RTN_RESP_NEWORD" rel-entity-name="OrderHeader">
-        <key-map field-name="replacementOrderId" rel-field-name="orderId"/>   
+        <key-map field-name="replacementOrderId" rel-field-name="orderId"/>
       </relation>
       <relation type="one" fk-name="RTN_PAY_PAYMENT" rel-entity-name="Payment">
         <key-map field-name="paymentId"/>
-      </relation> 
+      </relation>
       <relation type="one" fk-name="RTN_PAY_BACT" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId"/>
-      </relation>              
-    </entity>    
+      </relation>
+    </entity>
     <entity entity-name="ReturnReason"
             package-name="org.ofbiz.order.order"
             title="Return Reason Entity">
@@ -1661,7 +1664,7 @@
       <field name="returnTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="sequenceId" type="id"></field>
-      <prim-key field="returnTypeId"/>      	
+      <prim-key field="returnTypeId"/>
     </entity>
     <entity entity-name="WorkOrderItemFulfillment"
             package-name="org.ofbiz.order.order"
@@ -2519,7 +2522,7 @@
       <relation type="one" fk-name="RESP_PTY_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-    </entity> 
+    </entity>
     <entity entity-name="WorkReqFulfType"
             package-name="org.ofbiz.order.request"
             title="Work Requirement Fulfillment Type Entity">

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  */
 -->
 
@@ -616,7 +616,7 @@
         <key-map field-name="invoiceId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceContactMech">
-      	<key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceId"/>
       </relation>
       <relation type="one" fk-name="INVOICE_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -702,7 +702,7 @@
       <relation type="one" fk-name="INVOICE_CMECH_CMPT" rel-entity-name="ContactMechPurposeType">
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
-    </entity>    
+    </entity>
     <entity entity-name="InvoiceItem"
             package-name="org.ofbiz.accounting.invoice"
             title="Invoice Item Entity">
@@ -833,11 +833,11 @@
       <prim-key field="invoiceItemMapKey"/>
       <relation type="one" fk-name="INVOICE_ITEM_MAP" rel-entity-name="InvoiceItemType">
         <key-map field-name="invoiceItemTypeId"/>
-      </relation>     
+      </relation>
       <relation type="many" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceItemTypeId"/>
       </relation>
-    </entity>    
+    </entity>
     <entity entity-name="InvoiceRole"
             package-name="org.ofbiz.accounting.invoice"
             title="Invoice Role Entity">
@@ -1443,7 +1443,7 @@
       </relation>
       <relation type="many" rel-entity-name="BillingAccountTerm">
         <key-map field-name="billingAccountId"/>
-      </relation>      
+      </relation>
       <relation type="many" rel-entity-name="Invoice">
         <key-map field-name="billingAccountId"/>
       </relation>
@@ -1493,7 +1493,7 @@
       </relation>
       <relation type="one-nofk" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
-      </relation>      
+      </relation>
       <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
@@ -1503,7 +1503,7 @@
       <relation type="one-nofk" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
-      </relation>              
+      </relation>
     </view-entity>
     <entity entity-name="BillingAccountRole"
             package-name="org.ofbiz.accounting.payment"
@@ -1548,7 +1548,7 @@
       </relation>
       <relation type="one" fk-name="BILLACCT_TRM_BILLACCT" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId"/>
-      </relation>     
+      </relation>
     </entity>
     <entity entity-name="BillingAccountTermAttr"
             package-name="org.ofbiz.accounting.payment"
@@ -1557,14 +1557,14 @@
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>
       <prim-key field="billingAccountTermId"/>
-      <prim-key field="attrName"/>      
+      <prim-key field="attrName"/>
       <relation type="one" fk-name="BILLACCT_TRM_ATTR" rel-entity-name="BillingAccountTerm">
         <key-map field-name="billingAccountTermId"/>
       </relation>
       <relation type="many" rel-entity-name="TermTypeAttr">
         <key-map field-name="attrName"/>
       </relation>
-    </entity>    
+    </entity>
     <entity entity-name="CreditCard"
             package-name="org.ofbiz.accounting.payment"
             title="Credit Card Information Entity">
@@ -1841,6 +1841,7 @@
       <field name="paymentTypeId" type="id-ne"></field>
       <field name="paymentMethodTypeId" type="id-ne"></field>
       <field name="paymentMethodId" type="id"></field>
+      <field name="paymentGatewayResponseId" type="id"></field>
       <field name="paymentPreferenceId" type="id"></field>
       <field name="partyIdFrom" type="id-ne"></field>
       <field name="partyIdTo" type="id-ne"></field>
@@ -1876,6 +1877,9 @@
       <relation type="one" fk-name="PAYMENT_ORDPMPRF" rel-entity-name="OrderPaymentPreference">
         <key-map field-name="paymentPreferenceId" rel-field-name="orderPaymentPreferenceId"/>
       </relation>
+      <relation type="one" fk-name="PAYMENT_PAYGATR" rel-entity-name="PaymentGatewayResponse">
+        <key-map field-name="paymentGatewayResponseId"/>
+      </relation>
       <relation type="one" fk-name="PAYMENT_FPTY" title="From" rel-entity-name="Party">
         <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
       </relation>
@@ -1891,7 +1895,7 @@
       </relation>
       <relation type="one" fk-name="PAYMENT_STTSITM" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
-      </relation>      
+      </relation>
       <relation type="one" fk-name="PAYMENT_FACTX" rel-entity-name="FinAccountTrans">
         <key-map field-name="finAccountTransId"/>
       </relation>
@@ -1920,6 +1924,7 @@
       <alias entity-alias="PY" name="paymentId"/>
       <alias entity-alias="PY" name="paymentTypeId"/>
       <alias entity-alias="PY" name="statusId"/>
+      <alias entity-alias="PY" name="paymentGatewayResponseId"/>
       <alias entity-alias="PY" name="paymentMethodTypeId"/>
       <alias entity-alias="PY" name="paymentMethodId"/>
       <alias entity-alias="PY" name="paymentPreferenceId"/>
@@ -1937,14 +1942,17 @@
       <alias entity-alias="PA" name="amountApplied"/>
       <view-link entity-alias="PY" rel-entity-alias="PA">
         <key-map field-name="paymentId"/>
-      </view-link> 
+      </view-link>
       <relation type="one-nofk" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
-      </relation>      
-    </view-entity>        
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PaymentGatewayResponse">
+        <key-map field-name="paymentGatewayResponseId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="PaymentApplication"
             package-name="org.ofbiz.accounting.payment"
             title="Payment Application Entity">
@@ -2085,6 +2093,36 @@
       </relation>
       <relation type="many" rel-entity-name="Payment">
         <key-map field-name="paymentTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="PaymentGatewayResponse"
+            package-name="org.ofbiz.accounting.payment"
+            title="Payment Gateway Response">
+      <field name="paymentGatewayResponseId" type="id-ne"></field>
+      <field name="paymentServiceTypeEnumId" type="id-ne"></field>
+      <field name="orderPaymentPreferenceId" type="id"></field>
+      <field name="paymentMethodTypeId" type="id"></field>
+      <field name="paymentMethodId" type="id"></field>
+      <field name="amount" type="currency-amount"></field>
+      <field name="referenceNum" type="short-varchar"></field>
+      <field name="gatewayCode" type="short-varchar"></field>
+      <field name="gatewayFlag" type="short-varchar"></field>
+      <field name="gatewayAvsResult" type="short-varchar"></field>
+      <field name="gatewayScoreResult" type="short-varchar"></field>
+      <field name="gatewayMessage" type="long-varchar"></field>
+      <field name="transactionDate" type="date-time"></field>
+      <prim-key field="paymentGatewayResponseId"/>
+      <relation type="one" fk-name="PAYGATR_PSTENUM" rel-entity-name="Enumeration">
+        <key-map field-name="paymentServiceTypeEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="PAYGATR_ORDPMPRF" rel-entity-name="OrderPaymentPreference">
+        <key-map field-name="orderPaymentPreferenceId"/>
+      </relation>
+      <relation type="one" fk-name="PAYGATR_PMTP" rel-entity-name="PaymentMethodType">
+        <key-map field-name="paymentMethodTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PAYGATR_PMETH" rel-entity-name="PaymentMethod">
+        <key-map field-name="paymentMethodId"/>
       </relation>
     </entity>
 </entitymodel>
