@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySaxReader.java,v 1.9 2004/05/07 15:52:00 ajzeneski Exp $
+ * $Id: EntitySaxReader.java,v 1.10 2004/05/23 03:20:36 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.xml.sax.XMLReader;
  * SAX XML Parser Content Handler for Entity Engine XML files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler {
@@ -121,7 +121,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
             Debug.logWarning("location URL was null, doing nothing", module);
             return 0;
         }
-        Debug.logImportant("Being import from URL: " + location.toExternalForm(), module);
+        Debug.logImportant("Beginning import from URL: " + location.toExternalForm(), module);
         return this.parse(location.openStream(), location.toString());
     }
 

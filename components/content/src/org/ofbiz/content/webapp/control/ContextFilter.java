@@ -1,5 +1,5 @@
 /*
- * $Id: ContextFilter.java,v 1.4 2004/04/01 18:16:54 ajzeneski Exp $
+ * $Id: ContextFilter.java,v 1.5 2004/05/23 03:20:34 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.WebAppDispatcher;
  * ContextFilter - Restricts access to raw files and configures servlet objects.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  */
 public class ContextFilter implements Filter {
@@ -102,6 +102,8 @@ public class ContextFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {                
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) response);
+        
+        // Debug.logInfo("Running ContextFilter.doFilter", module);
 
         // ----- Servlet Object Setup -----        
         // set the cached class loader for more speedy running in this thread
@@ -150,6 +152,7 @@ public class ContextFilter implements Filter {
 
         // test to see if we have come through the control servlet already, if not do the processing
         if (request.getAttribute(ContextFilter.FORWARDED_FROM_SERVLET) == null) {
+            // Debug.logInfo("In ContextFilter.doFilter, FORWARDED_FROM_SERVLET is NOT set", module);
             String allowedPath = config.getInitParameter("allowedPaths");
             String redirectPath = config.getInitParameter("redirectPath");
             String errorCode = config.getInitParameter("errorCode");

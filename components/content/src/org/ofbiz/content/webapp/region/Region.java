@@ -1,5 +1,5 @@
 /*
- * $Id: Region.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
+ * $Id: Region.java,v 1.3 2004/05/23 03:20:35 jonesde Exp $
  *
  * Copyright (c) 2001-2003 Sun Microsystems Inc., published in "Advanced Java Server Pages" by Prentice Hall PTR
  * Copyright (c) 2001-2002 The Open For Business Project - www.ofbiz.org
@@ -44,7 +44,7 @@ import org.ofbiz.base.util.UtilJ2eeCompat;
  *
  * @author     David M. Geary in the book "Advanced Java Server Pages"
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class Region extends Content {
@@ -101,10 +101,11 @@ public class Region extends Content {
             Throwable throwable = e.getRootCause() != null ? e.getRootCause() : e;
 
             Debug.logError(throwable, "Error rendering region: ", module);
-            if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext()))
+            if (UtilJ2eeCompat.useNestedJspException(pageContext.getServletContext())) {
                 throw new JspException(throwable);
-            else
+            } else {
                 throw new JspException(throwable.toString());
+            }
         }
     }
 
@@ -112,9 +113,11 @@ public class Region extends Content {
         if (Debug.verboseOn()) Debug.logVerbose("Rendering " + this.toString(), module);
 
         RequestDispatcher rd = request.getRequestDispatcher(content);
-
         if (rd == null) {
-            throw new IllegalArgumentException("Source returned a null dispatcher (" + content + ")");
+            throw new IllegalArgumentException("HttpServletRequest returned a null RequestDispatcher for: [" + content + "]");
+        } else {
+            // Exception newE = new Exception("Stack Trace");
+            // Debug.logInfo(newE, "Got RD for: [" + content + "]: " + rd.toString(), module);
         }
         rd.include(request, response);
     }
