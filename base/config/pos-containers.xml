@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz POS Containers
- *  $Id: pos-containers.xml,v 1.1 2004/07/09 15:40:17 ajzeneski Exp $
+ *  $Id: pos-containers.xml,v 1.2 2004/07/10 19:55:05 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -41,6 +41,7 @@
         <property name="startup-file" value="xui.properties"/>
         <property name="dispatcher-name" value="POSDispatcher"/>
         <property name="delegator-name" value="default"/>
+        <property name="xui-session-id" value="pos-1"/>
     </container>
 
     <!-- load BeanShell remote telnet server -->
