@@ -20,12 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 */
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.util.*;
 import org.ofbiz.service.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
@@ -120,6 +121,19 @@ if (product != null) {
             request.setAttribute("previousProductId", catNextPreviousResult.get("previousProductId"));
             request.setAttribute("nextProductId", catNextPreviousResult.get("nextProductId"));
         }
+    }
+
+    // get a defined survey
+    productStoreId = ProductStoreWorker.getProductStoreId(request);
+    productSurvey = ProductStoreWorker.getProductSurveys(delegator, productStoreId, productId, "CART_ADD");
+    if (productSurvey != null && productSurvey.size() > 0) {
+        survey = EntityUtil.getFirst(productSurvey);
+        surveyContext = UtilHttp.getParameterMap(request);
+        if (userLogin != null) {
+            surveyContext.put("partyId", userLogin.getString("partyId"));
+        }
+        ProductStoreSurveyWrapper wrapper = new ProductStoreSurveyWrapper(survey, surveyContext);
+        request.setAttribute("surveyWrapper", wrapper);
     }
 
     // get the product price

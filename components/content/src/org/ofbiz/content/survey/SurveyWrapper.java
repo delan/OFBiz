@@ -1,5 +1,5 @@
 /*
- * $Id: SurveyWrapper.java,v 1.2 2003/11/19 21:48:50 ajzeneski Exp $
+ * $Id: SurveyWrapper.java,v 1.3 2003/11/26 18:41:21 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import freemarker.ext.beans.BeansWrapper;
  * Survey Wrapper - Class to render survey forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class SurveyWrapper {
@@ -73,12 +73,10 @@ public class SurveyWrapper {
         }
     }
 
-    public String renderSurvey(String formAction, String formName) throws SurveyWrapperException {
+    public String renderSurvey() throws SurveyWrapperException {
         GenericValue survey = this.getSurvey();
         List questions = this.getQuestions();
         Map templateContext = new HashMap();
-        templateContext.put("formAction", formAction);
-        templateContext.put("formName", formName);
         templateContext.put("survey", survey);
         templateContext.put("surveyQuestions", questions);
         templateContext.put("additionalFields", passThru);
@@ -106,7 +104,6 @@ public class SurveyWrapper {
     }
 
     protected List getQuestions() {
-        GenericValue survey = this.getSurvey();
         List surveyQuestions = null;
         try {
             Map fields = UtilMisc.toMap("surveyId", surveyId);
