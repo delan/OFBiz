@@ -50,12 +50,6 @@ public final class SiteDefs {
     /** Location of regions configuration XML file */
     public static final String REGIONS_CONFIG_LOCATION = "/WEB-INF/regions.xml";
 
-
-    /** Required context init parameter to locate scheduler configuration */
-    public static final String SCHEDULER_CONFIG = "schedulerConfigurationFile";
-    /** Required to parse the date strings in the scheduler config file. */
-    public static final String SCHEDULER_DATE_FORMAT = "yyyy-MM-dd hh:mm";
-
     /** Used in session object to determine if a previous request is waiting */
     public static final String PREVIOUS_REQUEST = "_PREVIOUS_REQUEST_";
     /** Used in session object to store previous parameters */
@@ -84,14 +78,11 @@ public final class SiteDefs {
     /** Used in servlet context to store the request handler */
     public static final String REQUEST_HANDLER = "_REQUEST_HANDLER_";
 
-    /** Used in servlet request to store the job manager */
-    public static final String JOB_MANAGER = "_JOB_MANAGER_";
-
     /** Used session object to locate the shopping cart */
     public static final String SHOPPING_CART = "_SHOPPING_CART_";
 
     /** Session attribute name for UserLogin entity of current logged in user, if one is logged in */
-    public static final String USER_LOGIN = "_USER_LOGIN_";
+    public static final String USER_LOGIN = "userLogin";
     /** Session attribute name for Person entity of current logged in user, if one is logged in and it is a person */
     public static final String PERSON = "_PERSON_";
 
