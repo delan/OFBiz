@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.14 $
+ *@version    $Revision: 1.15 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -628,6 +628,7 @@ function setAssocFields(select) {
               <option>N</option>
               <option>Y</option>
             </select>
+            <span class="tabletext">Setting ignored if Allow is 'N'</span>
           </td>
         </tr>
         <tr>
@@ -646,6 +647,7 @@ function setAssocFields(select) {
               <option>N</option>
               <option>Y</option>
             </select>
+            <span class="tabletext">Setting ignored if Allow is 'N'</span>
           </td>
         </tr>
         <tr>
