@@ -200,7 +200,8 @@ public class ServiceEventHandler implements EventHandler {
                 Object resultValue = result.get((Object) resultKey);
 
                 if (!resultKey.equals(ModelService.RESPONSE_MESSAGE) && !resultKey.equals(ModelService.ERROR_MESSAGE) &&
-                    !resultKey.equals(ModelService.ERROR_MESSAGE_LIST) && !resultKey.equals(ModelService.SUCCESS_MESSAGE) && !resultKey.equals(ModelService.SUCCESS_MESSAGE_LIST)) {
+                        !resultKey.equals(ModelService.ERROR_MESSAGE_LIST) && !resultKey.equals(ModelService.ERROR_MESSAGE_MAP) &&
+                        !resultKey.equals(ModelService.SUCCESS_MESSAGE) && !resultKey.equals(ModelService.SUCCESS_MESSAGE_LIST)) {
                     request.setAttribute(resultKey, resultValue);
                 }
             }
