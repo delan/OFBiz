@@ -55,7 +55,7 @@
         -->
         <!-- always create the WorkEfforts, even if dates aren't specified yet; when they are they will be set in the update service... -->
 
-        <!-- Define the fields and values of the Ship WorkEffort entity -->
+        <!-- the Ship WorkEffort entity -->
         <string-to-field string="Shipment Ship" field-name="workEffortName" map-name="shipWorkEffortMap"/>
         <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="shipWorkEffortMap"/>
         <string-to-field string="CAL_TENTATIVE" field-name="currentStatusId" map-name="shipWorkEffortMap"/>
@@ -65,8 +65,15 @@
         <call-service service-name="createWorkEffort" in-map-name="shipWorkEffortMap">
             <result-to-field result-name="workEffortId" map-name="shipment" field-name="estimatedShipWorkEffId"/>
         </call-service>
+        <if-not-empty field-name="partyIdFrom" map-name="shipment">
+            <field-to-field field-name="estimatedShipWorkEffId" map-name="shipment" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortShip"/>
+            <field-to-field field-name="partyIdFrom" map-name="shipment" to-field-name="partyId" to-map-name="assignPartyToWorkEffortShip"/>
+            <string-to-field string="CAL_ATTENDEE" field-name="roleTypeId" map-name="assignPartyToWorkEffortShip"/>
+            <string-to-field string="CAL_SENT" field-name="statusId" map-name="assignPartyToWorkEffortShip"/>
+            <call-service service-name="assignPartyToWorkEffort" in-map-name="assignPartyToWorkEffortShip"/>
+        </if-not-empty>
         
-        <!-- Define the fields and values of the Arrival WorkEffort entity -->
+        <!-- the Arrival WorkEffort entity -->
         <string-to-field string="Shipment Arrival" field-name="workEffortName" map-name="arrivalWorkEffortMap"/>
         <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="arrivalWorkEffortMap"/>
         <string-to-field string="CAL_TENTATIVE" field-name="currentStatusId" map-name="arrivalWorkEffortMap"/>
@@ -76,6 +83,13 @@
         <call-service service-name="createWorkEffort" in-map-name="arrivalWorkEffortMap">
             <result-to-field result-name="workEffortId" map-name="shipment" field-name="estimatedArrivalWorkEffId"/>
         </call-service>
+        <if-not-empty field-name="partyIdTo" map-name="shipment">
+            <field-to-field field-name="estimatedArrivalWorkEffId" map-name="shipment" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortArrival"/>
+            <field-to-field field-name="partyIdTo" map-name="shipment" to-field-name="partyId" to-map-name="assignPartyToWorkEffortArrival"/>
+            <string-to-field string="CAL_ATTENDEE" field-name="roleTypeId" map-name="assignPartyToWorkEffortArrival"/>
+            <string-to-field string="CAL_SENT" field-name="statusId" map-name="assignPartyToWorkEffortArrival"/>
+            <call-service service-name="assignPartyToWorkEffort" in-map-name="assignPartyToWorkEffortArrival"/>
+        </if-not-empty>
 
         <create-value value-name="newEntity"/>
         
@@ -135,7 +149,7 @@
                 </and>
             </condition>
             <then>
-                <!-- Update the existing WorkEfforts -->
+                <!-- Update the existing WorkEffort -->
                 <field-to-field field-name="estimatedArrivalWorkEffId" map-name="shipment" to-field-name="workEffortId" to-map-name="estimatedArrivalWorkEffortMap"/>
                 <find-by-primary-key entity-name="WorkEffort" map-name="estimatedArrivalWorkEffortMap" value-name="estimatedArrivalWorkEffort"/>
                 <field-to-field map-name="shipment" field-name="estimatedArrivalDate" to-field-name="estimatedStartDate" to-map-name="estimatedArrivalWorkEffort"/>
@@ -144,6 +158,8 @@
                 <call-service service-name="updateWorkEffort" in-map-name="estimatedArrivalWorkEffortUpdMap"/>
             </then>
         </if>
+        
+        <!-- TODO: if the partyIdTo or partyIdFrom has changed, add WEPAs -->
         
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <now-timestamp-to-env env-name="lookedUpValue.lastModifiedDate"/>
@@ -302,7 +318,8 @@
             <call-service service-name="createShipmentRouteSegment" in-map-name="shipmentRouteSegmentMap"/>
         </if-empty>
 
-        <store-value value-name="shipment"/>
+        <set-service-fields service-name="updateShipment" map-name="shipment" to-map-name="shipmentUpdateMap"/>
+        <call-service service-name="updateShipment" in-map-name="shipmentUpdateMap"/>
     </simple-method>
 
     <!-- ShipmentItem services -->
