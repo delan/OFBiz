@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -164,12 +164,27 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
           <#-- <a href='#' onclick='setNow("datetimeReceived")' class='buttontext'>[Now]</a> -->
         </td>                
       </tr>	
+      
+      <#-- facility location(s) -->
+      <#assign facilityLocations = (product.getRelatedByAnd("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId)))?if_exists>
       <tr>
         <td width='14%'>&nbsp;</td>
         <td width='6%' align='right' nowrap><div class="tabletext">Facility Location</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='locationSeqId_o_0' size='20' maxlength="20" class="inputBox">
+          <#if facilityLocations?has_content>            
+            <select name='locationSeqId_o_0' class='selectBox'>
+              <#list facilityLocations as productFacilityLocation>
+                <#assign facility = productFacilityLocation.getRelatedOneCache("Facility")>
+                <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation")?if_exists>
+                <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
+                <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</option>                              
+              </#list>
+              <option value="">No Location</option>
+            </select>
+          <#else>
+            <input type='text' name='locationSeqId_o_0' size='20' maxlength="20" class="inputBox">
+          </#if>
         </td>                
       </tr>	
       <tr>
@@ -329,8 +344,22 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                   <td align="right">
                     <div class="tableheadtext">Location:</div>
                   </td>
+                  <#-- location(s) -->
                   <td align="right">
-                    <input type="text" class="inputBox" name="locationSeqId_o_${rowCount}" size="12">
+                    <#assign facilityLocations = (orderItem.getRelatedByAnd("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId)))?if_exists>
+                    <#if facilityLocations?has_content>
+                      <select name="locationSeqId_o_${rowCount}" class="selectBox">
+                        <#list facilityLocations as productFacilityLocation>
+                          <#assign facility = productFacilityLocation.getRelatedOneCache("Facility")>
+                          <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation")?if_exists>
+                          <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
+                          <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</option>
+                        </#list>
+                        <option value="">No Location</option>
+                      </select>
+                    <#else>
+                      <input type="text" class="inputBox" name="locationSeqId_o_${rowCount}" size="12">
+                    </#if>
                   </td>
                   <td align="right">
                     <div class="tableheadtext">Qty Received:</div>
