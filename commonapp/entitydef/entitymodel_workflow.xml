@@ -55,9 +55,9 @@
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity Entity">
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="processVersion" type="short-varchar"></field>
       <field name="activityId" type="id-long-ne"></field>
       <field name="objectName" type="name"></field>
       <field name="objectPriority" type="numeric"></field>
@@ -196,9 +196,9 @@
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity Loop Entity">
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="processVersion" type="short-varchar"></field>
       <field name="activityId" type="id-long-ne"></field>
       <field name="conditionExpr" type="very-long"></field>
       <field name="loopKindEnumId" type="id"></field>
@@ -219,9 +219,9 @@
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity SubFlow Entity">
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="processVersion" type="short-varchar"></field>
       <field name="activityId" type="id-long-ne"></field>
       <field name="actualParameters" type="very-long"></field>
       <field name="subFlowProcessId" type="id-long"></field>
@@ -250,9 +250,9 @@
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity Tool Entity">
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="processVersion" type="short-varchar"></field>
       <field name="activityId" type="id-long-ne"></field>
       <field name="toolId" type="id-long-ne"></field>
       <field name="toolTypeEnumId" type="id"></field>
@@ -278,9 +278,9 @@
             title="Workflow Application Entity">
       <description>The primary key of a WorkflowApplication is funny because it can be associated with either a WorkflowPackage or a WorkflowProcess. If it is associated with a WorkflowPackage, then the processId will be set to the constant "_NA_".</description>
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="processVersion" type="short-varchar"></field>
       <field name="applicationId" type="id-long-ne"></field>
       <field name="applicationName" type="name"></field>
       <field name="description" type="description"></field>
@@ -335,9 +335,9 @@
             title="Workflow Data Field Entity">
       <description>The primary key of a WorkflowDataField is funny because it can be associated with either a WorkflowPackage or a WorkflowProcess. If it is associated with a WorkflowPackage, then the processId will be set to the constant "_NA_".</description>
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="processVersion" type="short-varchar"></field>
       <field name="dataFieldId" type="id-long-ne"></field>
       <field name="dataFieldName" type="name"></field>
       <field name="description" type="description"></field>
@@ -373,9 +373,9 @@
             title="Workflow Formal Parameter Entity">
       <description>The primary key of a WorkflowFormalParam is funny because it can be associated with either a WorkflowProcess or a WorkflowApplication. If it is associated with a WorkflowProcess, then the applicationId will be set to the constant "_NA_". Note that if it is associated with a WorkflowApplication, that entity may be associated with either a package or a process, so see the description on the WorkflowApplication entity.</description>
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="processVersion" type="short-varchar"></field>
       <field name="applicationId" type="id-long-ne"></field>
       <field name="formalParamId" type="id-long-ne"></field>
       <field name="indexNumber" type="numeric"></field>
@@ -416,7 +416,7 @@
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Package Entity">
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="packageName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="specificationVersion" type="very-short"></field>
@@ -485,7 +485,7 @@
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Package External Entity">
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="externalPackageId" type="id-long-ne"></field>
       <prim-key field="packageId"/>
       <prim-key field="packageVersion"/>
@@ -503,9 +503,9 @@
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Participant Entity">
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="processVersion" type="short-varchar"></field>
       <field name="participantId" type="id-ne"></field>
       <field name="participantName" type="name"></field>
       <field name="partyId" type="id-long"></field>
@@ -540,9 +540,9 @@
             title="Workflow Participant List Entity">
       <field name="participantListId" type="id-ne"></field>
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="processVersion" type="short-varchar"></field>
       <field name="participantId" type="id"></field>
       <field name="participantIndex" type="numeric"></field>
       <prim-key field="participantListId"/>
@@ -588,9 +588,9 @@
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Process Entity">
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="processVersion" type="short-varchar"></field>
       <field name="objectName" type="name"></field>
       <field name="objectPriority" type="numeric"></field>
       <field name="description" type="description"></field>
@@ -688,9 +688,9 @@
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Transition Entity">
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="processVersion" type="short-varchar"></field>
       <field name="transitionId" type="id-long-ne"></field>
       <field name="transitionName" type="name"></field>
       <field name="description" type="description"></field>
@@ -743,9 +743,9 @@
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Transition Reference Entity">
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="processId" type="id-long-ne"></field>
-      <field name="processVersion" type="very-short"></field>
+      <field name="processVersion" type="short-varchar"></field>
       <field name="activityId" type="id-long-ne"></field>
       <field name="transitionId" type="id-long-ne"></field>
       <prim-key field="packageId"/>
@@ -773,7 +773,7 @@
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Type Declaration Entity">
       <field name="packageId" type="id-long-ne"></field>
-      <field name="packageVersion" type="very-short"></field>
+      <field name="packageVersion" type="short-varchar"></field>
       <field name="typeId" type="id-ne"></field>
       <field name="typeName" type="name"></field>
       <field name="description" type="description"></field>

@@ -395,9 +395,9 @@
       <field name="workEffortPurposeTypeId" type="id"></field>
       <field name="workEffortParentId" type="id"></field>
       <field name="workflowPackageId" type="id-long"></field>
-      <field name="workflowPackageVersion" type="very-short"></field>
+      <field name="workflowPackageVersion" type="short-varchar"></field>
       <field name="workflowProcessId" type="id-long"></field>
-      <field name="workflowProcessVersion" type="very-short"></field>
+      <field name="workflowProcessVersion" type="short-varchar"></field>
       <field name="workflowActivityId" type="id-long"></field>
       <field name="currentStatusId" type="id"></field>
       <field name="lastStatusUpdate" type="date-time"></field>
