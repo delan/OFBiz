@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordSearch.java,v 1.9 2003/11/12 07:47:44 jonesde Exp $
+ * $Id: KeywordSearch.java,v 1.10 2003/11/25 06:05:36 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -22,25 +22,27 @@
  */
 package org.ofbiz.product.product;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.jdbc.ConnectionFactory;
 
 /**
  *  Does a product search by keyword using the PRODUCT_KEYWORD table.
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.1
  */
 public class KeywordSearch {

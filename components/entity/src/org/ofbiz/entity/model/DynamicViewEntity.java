@@ -1,5 +1,5 @@
 /*
- * $Id: DynamicViewEntity.java,v 1.2 2003/10/18 21:13:29 jonesde Exp $
+ * $Id: DynamicViewEntity.java,v 1.3 2003/11/25 06:05:36 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,24 +23,25 @@
  */
 package org.ofbiz.entity.model;
 
-import java.util.*;
-import org.w3c.dom.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.*;
-
-import org.ofbiz.entity.model.ModelViewEntity.ModelMemberEntity;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.model.ModelViewEntity.ComplexAliasMember;
 import org.ofbiz.entity.model.ModelViewEntity.ModelAlias;
 import org.ofbiz.entity.model.ModelViewEntity.ModelAliasAll;
+import org.ofbiz.entity.model.ModelViewEntity.ModelMemberEntity;
 import org.ofbiz.entity.model.ModelViewEntity.ModelViewLink;
-import org.ofbiz.entity.model.ModelViewEntity.ComplexAliasMember;
 /**
  * This class is used for declaring Dynamic View Entities, to be used and thrown away.
  * A special method exists on the GenericDelegator to accept a DynamicViewEntity instead
  * of an entity-name.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class DynamicViewEntity {

@@ -1,5 +1,5 @@
 /*
- * $Id: MakeNextSeqId.java,v 1.2 2003/11/01 10:03:35 jonesde Exp $
+ * $Id: MakeNextSeqId.java,v 1.3 2003/11/25 06:05:36 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,14 +23,13 @@
  */
 package org.ofbiz.minilang.method.entityops;
 
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.ContextAccessor;
 import org.ofbiz.minilang.method.MethodContext;
@@ -41,7 +40,7 @@ import org.w3c.dom.Element;
  * Gets a sequenced ID from the delegator and puts it in the env
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class MakeNextSeqId extends MethodOperation {

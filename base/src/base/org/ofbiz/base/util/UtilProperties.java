@@ -1,5 +1,5 @@
 /*
- * $Id: UtilProperties.java,v 1.6 2003/10/12 10:21:21 jonesde Exp $
+ * $Id: UtilProperties.java,v 1.7 2003/11/25 06:05:35 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -23,7 +23,6 @@
  */
 package org.ofbiz.base.util;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Enumeration;
@@ -39,7 +38,7 @@ import java.util.ResourceBundle;
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      1.0
  */
 public class UtilProperties {
