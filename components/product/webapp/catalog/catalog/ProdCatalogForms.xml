@@ -106,7 +106,7 @@
 		<field name="prodCatalogId"><hidden/></field>
 		<field name="productStoreId" title="Store [ID]" widget-style="buttontext">
 			<hyperlink target-type="intra-app" target="EditProductStore?productStoreId=${productStoreCatalog.productStoreId}"
-				description="${productStoreCatalog.storeName} [${productStoreCatalog.productStoreId}]"/>
+				description="${productStore.storeName} [${productStoreCatalog.productStoreId}]"/>
 		</field>
 		<field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
 		<field name="thruDate" title="Thru Date &amp;amp; Time"></field>
