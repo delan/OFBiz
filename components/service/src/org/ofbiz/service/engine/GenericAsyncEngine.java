@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAsyncEngine.java,v 1.2 2003/10/30 20:30:34 ajzeneski Exp $
+ * $Id: GenericAsyncEngine.java,v 1.3 2004/03/12 23:50:45 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,6 +39,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.service.*;
+import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.job.GenericServiceJob;
 import org.ofbiz.service.job.Job;
 import org.ofbiz.service.job.JobManagerException;
@@ -47,7 +48,7 @@ import org.ofbiz.service.job.JobManagerException;
  * Generic Asynchronous Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public abstract class GenericAsyncEngine implements GenericEngine {
@@ -106,8 +107,8 @@ public abstract class GenericAsyncEngine implements GenericEngine {
 
                 // Create the job info
                 String jobName = new String(new Long((new Date().getTime())).toString());
-                Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", UtilDateTime.nowTimestamp(),
-                        "serviceName", modelService.name, "loaderName", localName, "runtimeDataId", dataId);
+                Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", UtilDateTime.nowTimestamp(), "poolId",
+                        ServiceConfigUtil.getSendPool(), "serviceName", modelService.name, "loaderName", localName, "runtimeDataId", dataId);
 
                 jobV = dispatcher.getDelegator().makeValue("JobSandbox", jFields);
                 toBeStored.add(jobV);
