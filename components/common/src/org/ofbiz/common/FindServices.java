@@ -1,5 +1,5 @@
 /*
- * $Id: FindServices.java,v 1.9 2004/04/11 08:28:10 jonesde Exp $
+ * $Id: FindServices.java,v 1.10 2004/04/23 02:59:45 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * FindServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.2
  */
 public class FindServices {
@@ -81,47 +81,36 @@ public class FindServices {
     public FindServices() {}
 
     /**
-     * performFind
+     * prepareField, analyse inputFields to created normalizedFields a map with field name and operator.
      *
-     * This is a generic method that expects entity data affixed with special suffixes
+     * This is use to the generic method that expects entity data affixed with special suffixes
      * to indicate their purpose in formulating an SQL query statement.
+     * @param inputFields     Input parameters run thru UtilHttp.getParameterMap  
+     * @return a map with field name and operator
      */
-    public static Map performFind(DispatchContext dctx, Map context) {
-
-        String entityName = (String) context.get("entityName");
-        String orderBy = (String) context.get("orderBy");
-
-        Map inputFields = (Map) context.get("inputFields"); // Input
-        // parameters run thru UtilHttp.getParameterMap
-
-        String fieldName = null;
+    public static HashMap prepareField(Map inputFields, Map queryStringMap, Map origValueMap) {
         String fieldNameRaw = null; // The name as it appeas in the HTML form
-        String fieldNameRoot = null; // The entity field name.
-        // Everything to the left of the first "_" if
-        // it exists, or the whole word, if not.
-        String fieldPair = null; // "fld0" or "fld1" - begin/end of range
-        // or just fld0 if no range.
-        String fieldValue = null; // If it is a "value" field, it will be the value
-        // to be used in the query.
-        // If it is an "op" field, it will be
-        // "equals", "greaterThan", etc.
+        String fieldNameRoot = null; // The entity field name. Everything to the left of the first "_" if
+                                                             //  it exists, or the whole word, if not.
+        String fieldPair = null; // "fld0" or "fld1" - begin/end of range or just fld0 if no range.
+        String fieldValue = null; // If it is a "value" field, it will be the value to be used in the query.
+                                                    // If it is an "op" field, it will be "equals", "greaterThan", etc.
         int iPos = -1;
         int iPos2 = -1;
         HashMap subMap = null;
         HashMap subMap2 = null;
         String fieldMode = null;
-        EntityOperator fieldOp = null;
 
         // Strip the "_suffix" off of the parameter name and
         // build a three-level map of values keyed by fieldRoot name,
         //    fld0 or fld1,  and, then, "op" or "value"
         // ie. id
-        //	- fld0
-        //		- op:like
-        // 		- value:abc
-        //	- fld1 (if there is a range)
-        //		- op:lessThan
-        // 		- value:55 (note: these two "flds" wouldn't really go together)
+        //  - fld0
+        //      - op:like
+        //      - value:abc
+        //  - fld1 (if there is a range)
+        //      - op:lessThan
+        //      - value:55 (note: these two "flds" wouldn't really go together)
         // Also note that op/fld can be in any order. (eg. id_fld1_equals or id_equals_fld1)
         // Note that "normalizedFields" will contain values other than those
         // Contained in the associated entity.
@@ -129,8 +118,6 @@ public class FindServices {
         HashMap normalizedFields = new HashMap();
         Iterator ifIter = inputFields.keySet().iterator();
         //StringBuffer queryStringBuf = new StringBuffer();
-        Map queryStringMap = new HashMap();
-        Map origValueMap = new HashMap();
         while (ifIter.hasNext()) {
             fieldNameRaw = (String) ifIter.next();
             fieldValue = (String) inputFields.get(fieldNameRaw);
@@ -208,17 +195,25 @@ public class FindServices {
             String [] origValues = {fieldNameRaw, fieldValue};
             origList.add(origValues);
         }
-
-        // Now use only the values that correspond to entity fields to build
-        //   an EntityConditionList
-        GenericDelegator delegator = dctx.getDelegator();
-
-        GenericValue entityValue = delegator.makeValue(entityName, new HashMap());
-
-        ModelEntity modelEntity = entityValue.getModelEntity();
-        List keys = modelEntity.getAllFieldNames();
+        return normalizedFields;
+    }
+    /**
+     * createCondition, comparing the normalizedFields with the list of keys, .
+     *
+     * This is use to the generic method that expects entity data affixed with special suffixes
+     * to indicate their purpose in formulating an SQL query statement.
+     * @param keys     list of field for which it's possible to make the query  
+     * @param normalizedFields     list of field the user have populated  
+     * @return a arrayList usable to create an entityCondition
+     */
+    public static ArrayList createCondition(List keys, HashMap normalizedFields, Map queryStringMap, Map origValueMap) {
+        String fieldName = null;
+        HashMap subMap = null;
+        HashMap subMap2 = null;
+        EntityOperator fieldOp = null;
+        String fieldValue = null; // If it is a "value" field, it will be the value to be used in the query.
+                                                    // If it is an "op" field, it will be "equals", "greaterThan", etc.
         Iterator iter = keys.iterator();
-        EntityOperator entOp = EntityOperator.AND;
         EntityExpr cond = null;
         ArrayList tmpList = new ArrayList();
         String opString = null;
@@ -340,6 +335,36 @@ public class FindServices {
                 }
             }
         }
+        return tmpList;
+    }
+    /**
+     * performFind
+     *
+     * This is a generic method that expects entity data affixed with special suffixes
+     * to indicate their purpose in formulating an SQL query statement.
+     */
+    public static Map performFind(DispatchContext dctx, Map context) {
+
+        String entityName = (String) context.get("entityName");
+        String orderBy = (String) context.get("orderBy");
+
+        Map inputFields = (Map) context.get("inputFields"); // Input
+        // parameters run thru UtilHttp.getParameterMap
+        Map queryStringMap = new HashMap();
+        Map origValueMap = new HashMap();
+        HashMap normalizedFields = prepareField(inputFields, queryStringMap, origValueMap);
+
+        // Now use only the values that correspond to entity fields to build
+        //   an EntityConditionList
+        GenericDelegator delegator = dctx.getDelegator();
+
+        GenericValue entityValue = delegator.makeValue(entityName, new HashMap());
+
+        ModelEntity modelEntity = entityValue.getModelEntity();
+        List keys = modelEntity.getAllFieldNames();
+        ArrayList tmpList = createCondition(keys, normalizedFields, queryStringMap, origValueMap);
+
+        EntityOperator entOp = EntityOperator.AND;
         EntityConditionList exprList = new EntityConditionList(tmpList, (EntityJoinOperator) entOp);
         EntityListIterator listIt = null;
         List orderByList = null;
@@ -347,7 +372,7 @@ public class FindServices {
             orderByList = StringUtil.split(orderBy,"|");
         }
 
-        if (count > 0) {
+        if (tmpList.size() > 0) {
             // Retrieve entities  - an iterator over all the values
             try {
                 listIt = delegator.findListIteratorByCondition(entityName, exprList,
