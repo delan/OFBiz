@@ -77,9 +77,9 @@ function removeSelected() {
 </script>
 
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Return</a>  
-    <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Items</a>
-    <a href="<@ofbizUrl>/returnRefund?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Refund</a>
+    <a href="<@ofbizUrl>/returnMain?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButton">Return</a>  
+    <a href="<@ofbizUrl>/returnItems?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Items</a>
+    <a href="<@ofbizUrl>/returnRefund?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButton">Refund</a>
 </div>
 
 <#if !requestParameters.orderId?exists>
@@ -96,12 +96,13 @@ function removeSelected() {
   <tr><td colspan="5"><hr class="sepbar"></td></tr> 
   <#if returnItems?has_content>
     <#list returnItems as item>
+      <#assign returnReason = item.getRelatedOne("ReturnReason")>
       <tr>
-        <td><div class="tabletext">${item.orderId}</div></td>
+        <td><a href="<@ofbizUrl>/orderview?order_id=${item.orderId}</@ofbizUrl>" class="buttontext">${item.orderId}</a></td>
         <td><div class="tabletext">${item.orderItemSeqId}</div></td>
         <td><div class="tabletext">${item.returnQuantity?string.number}</div></td>
         <td><div class="tabletext">${item.returnPrice?string.currency}</div></td>
-        <td><div class="tabletext">${item.returnReason}</div></td>
+        <td><div class="tabletext">${returnReason.description}</div></td>
       </tr>
     </#list>
   <#else>
@@ -133,6 +134,7 @@ function removeSelected() {
 </form>
 <#else>                            
 <form name="returnItems" method="post" action="<@ofbizUrl>/createReturnItems</@ofbizUrl>">
+  <input type="hidden" name="returnId" value="${requestParameters.returnId}">
   <table border='0' width='100%' cellpadding='2' cellspacing='0'>
     <tr>
       <td colspan="4"><div class="head3">Return Item(s) From Order #${requestParameters.orderId}</div></td>
@@ -171,7 +173,11 @@ function removeSelected() {
           <input type="text" class="inputBox" size="8" name="returnPrice_o_${rowCount}" value="${orderItem.unitPrice}">
         </td>  
         <td>
-          <input type="text" class="inputBox" size="30" name="returnReason_o_${rowCount}">
+          <select name="returnReasonId_o_${rowCount}" class="selectBox">
+            <#list returnReasons as reason>
+            <option value="${reason.returnReasonId}">${reason.description?default(reason.returnReasonId)}</option>
+            </#list>
+          </select>
         </td>
         <td align="right">              
           <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
@@ -180,6 +186,7 @@ function removeSelected() {
       <tr><td colspan="5"><hr class="sepbar"></td></tr>  
       <#assign rowCount = rowCount + 1>        
       </#list>
+      <input type="hidden" name="_rowCount" value="${rowCount}">
       <tr>
         <td colspan="5" align="right">
           <a href="javascript:document.returnItems.submit();" class="buttontext">Return Selected Item(s)</a>

@@ -10,6 +10,7 @@
     <handler name="java" type="request" class="org.ofbiz.core.event.JavaEventHandler"/>
     <handler name="soap" type="request" class="org.ofbiz.core.event.SOAPEventHandler"/>
     <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
+    <handler name="service-multi" type="request" class="org.ofbiz.core.event.ServiceMultiEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.core.event.SimpleEventHandler"/>
 
     <!-- view handlers -->
@@ -319,17 +320,27 @@
     <request-map uri="returnItems">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="returnitems"/>    
-    </request-map>        	
+    </request-map>
+    <request-map uri="createReturn">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createReturnHeader"/>
+        <response name="success" type="view" value="returnhead"/>    
+    </request-map>          	
     <request-map uri="updateReturn">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateReturnHeader"/>
-        <response name="success" type="view" value="returnitems"/>    
+        <response name="success" type="view" value="returnhead"/>    
     </request-map> 
     <request-map uri="createReturnItems">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createReturnItem"/>
+        <event type="service-multi" invoke="createReturnItem"/>
         <response name="success" type="view" value="returnitems"/>    
-    </request-map>       
+    </request-map>
+    <request-map uri="removeReturnItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeReturnItem"/>
+        <response name="success" type="view" value="returnitems"/>    
+    </request-map>
     
     <!-- Payment Processor Setup Requests -->
     <request-map uri="paysetup">

@@ -32,6 +32,9 @@ returnId = request.getParameter("returnId");
 returnItems = delegator.findByAnd("ReturnItem", UtilMisc.toMap("returnId", returnId));
 context.put("returnItems", returnItems);
 
+returnReasons = delegator.findAll("ReturnReason", UtilMisc.toList("description"));
+context.put("returnReasons", returnReasons);
+
 orderId = request.getParameter("orderId");
 if (orderId != null) {
     orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));

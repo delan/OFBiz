@@ -1295,6 +1295,9 @@
       <relation type="one-nofk" rel-entity-name="PostalAddress">
         <key-map field-name="originContactMechId" rel-field-name="contactMechId"/>
       </relation>
+      <relation type="one" fk-name="RTN_STTS_ITEM" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
       <relation type="many" rel-entity-name="ReturnStatus">
         <key-map field-name="returnId"/>
       </relation>      
@@ -1312,16 +1315,30 @@
       <field name="returnPrice" type="currency-amount"></field>
       <prim-key field="returnId"/>
       <prim-key field="returnItemSeqId"/>
-      <relation type="one" fk-name="RTN_ITEM_RTN" rel-entity-name="ReturnHeader">
+      <relation type="one" fk-name="RTNI_ITEM_RTN" rel-entity-name="ReturnHeader">
         <key-map field-name="returnId"/>
       </relation>
-      <relation type="one" fk-name="RTN_ITEM_REASON" rel-entity-name="ReturnReason">
+      <relation type="one" fk-name="RTNI_REASON" rel-entity-name="ReturnReason">
         <key-map field-name="returnReasonId"/>
       </relation>
+      <relation type="one" fk-name="RTNI_ODR_HEADER" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="RTNI_ODR_ITEM" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>      
+      <relation type="one" fk-name="RTN_STTS_ITEM" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>      
       <relation type="many" rel-entity-name="ReturnStatus">
         <key-map field-name="returnId"/>
         <key-map field-name="returnItemSeqId"/>
-      </relation>      
+      </relation>
+      <relation type="many" rel-entity-name="OrderItemInventoryRes">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>         
     </entity>
     <entity entity-name="ReturnReason"
             package-name="org.ofbiz.commonapp.order.order"

@@ -29,6 +29,7 @@ import org.ofbiz.core.entity.*;
 
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
+paramMap = UtilHttp.getParameterMap(request);
 
 orderId = request.getParameter("orderId");
 returnId = request.getParameter("returnId");
@@ -38,9 +39,19 @@ if (returnId == null)
 returnHeader = null;
 if (returnId != null) {
     returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
+    if (returnHeader != null) {    
+        currentStatus = returnHeader.getRelatedOne("StatusItem");
+        context.put("currentStatus", currentStatus);
+    }
 }
 context.put("returnHeader", returnHeader);
 context.put("returnId", returnId);
+
+if (returnHeader != null) {
+    context.put("returnInfo", returnHeader);
+} else {
+    context.put("returnInfo", paramMap);
+}
 
 facilityList = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
 context.put("facilityList", facilityList);

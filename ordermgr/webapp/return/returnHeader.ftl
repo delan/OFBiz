@@ -24,38 +24,56 @@
  *@since      2.2
 -->
 
+<#if returnHeader?exists>
 <div class='tabContainer'>
     <a href="<@ofbizUrl>/returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return</a>  
     <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}<#if requestParameters.orderId?exists>&orderId=${requestParameters.orderId}</#if></@ofbizUrl>" class="tabButton">Items</a>
     <a href="<@ofbizUrl>/returnRefund?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Refund</a>
 </div>
+</#if>
 
-<form name="returnhead">
+<form name="returnhead" method="post" action="<@ofbizUrl>/createReturn</@ofbizUrl>" >
 <table border='0' cellpadding='2' cellspacing='0'>
-  <#if returnId?exists>
+  <#if returnHeader?exists>
   <tr>
     <td width='14%'>&nbsp;</td>
     <td width='6%' align='right' nowrap><div class="tabletext">Return ID:</div></td>
     <td width='6%'>&nbsp;</td>
     <td width='74%'>
-      <b>${returnId}</b>
+      <b>${returnHeader.returnId}</b>
     </td>                
   </tr>
+  </#if>
   <tr>
     <td width='14%'>&nbsp;</td>
     <td width='6%' align='right' nowrap><div class="tabletext">Entry Date:</div></td>
     <td width='6%'>&nbsp;</td>
     <td width='74%'>
-      <input type='text' class='inputBox' size='25' name='entryDate' value=''>
+      <#if returnInfo.entryDate?exists>
+        <#assign entryDate = returnInfo.get("entryDate").toString()>
+      </#if>
+      <input type='text' class='inputBox' size='25' name='entryDate' value='${entryDate?if_exists}'>
       <a href="javascript:call_cal(document.returnhead.entryDate, '');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
     </td>                
   </tr>
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%' align='right' nowrap><div class="tabletext">Return From Party:</div></td>
+    <td width='6%'>&nbsp;</td>
+    <td width='74%'>
+      <input type='text' class='inputBox' size='20' name='fromPartyId' value='${returnInfo.fromPartyId?if_exists}'>
+    </td>                
+  </tr>  
   <tr>
     <td width='14%'>&nbsp;</td>
     <td width='6%' align='right' nowrap><div class="tabletext">Return Status:</div></td>
     <td width='6%'>&nbsp;</td>
     <td width='74%'>
       <select name="statusId" class="selectBox">
+        <#if currentStatus?exists>
+        <option value="${currentStatus.statusId}">${currentStatus.description}</option>
+        <option value="${currentStatus.statusId}">---</option>
+        </#if>
         <#list returnStatus as status>
           <option value="${status.statusId}">${status.description}</option>
         </#list>
@@ -75,13 +93,13 @@
     <td width='74%'>
       <table border='0' cellpadding='1' cellspacing='0'>
         <tr>
-          <td><input type='radio' name="destinationFacilityId" value=""></td>
+          <td><input type='radio' name="destinationFacilityId" value="" <#if returnInfo.destinationFacilityId?exists && returnInfo.destinationFacilityId == "">checked</#if>></td>
           <td><div class='tabletext'>No Facility</div></td>
         </tr>
         <#list facilityList as facility>
         <tr>
         <tr>
-          <td><input type='radio' name="destinationFacilityId" value="${facility.facilityId}"></td>
+          <td><input type='radio' name="destinationFacilityId" value="${facility.facilityId}"<#if returnInfo.destinationFacilityId?exists && returnInfo.destinationFacilityId == facility.facilityId>checked</#if>></td>
           <td><div class='tabletext'>${facility.facilityName}</div></td>
         </tr>
         </#list>
@@ -112,13 +130,23 @@
     <td width='6%'>&nbsp;</td>
     <td width='6%'><hr class="sepbar"></td>   
     <td width='74%'>&nbsp;</td>
-  </tr>       
+  </tr>  
+  <#if returnHeader?exists>     
   <tr>
     <td width='14%'>&nbsp;</td>
     <td width='6%'>&nbsp;</td>
     <td width='6%'>&nbsp;</td>   
     <td width='74%'>
       <input type="submit" class="standardButton" value="Update">      
+    </td>
+  </tr>     
+  <#else>  
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%'>&nbsp;</td>
+    <td width='6%'>&nbsp;</td>   
+    <td width='74%'>
+      <input type="submit" class="standardButton" value="Create New">      
     </td>
   </tr>     
   </#if>

@@ -86,8 +86,7 @@
         </if-empty>        
         
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <field-to-result field-name="returnItemSeqId" map-name="newEntity"/>                                        
-        <field-to-result field-name="returnId" map-name="newEntity"/>                                        
+        <field-to-result field-name="returnItemSeqId" map-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>       
     <simple-method method-name="updateReturnItem" short-description="Update Return Item">
