@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.15 2003/10/30 19:29:41 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.16 2003/11/03 21:16:06 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -546,7 +546,7 @@ public class CheckOutEvents {
                 // no userLogin means we are an anonymous shopper; fake the UL for service calls
                 if (userLogin == null) {
                     try {
-                        userLogin = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", "anonymous"));
+                        userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", "anonymous"));
                     } catch (GenericEntityException e) {
                         Debug.logError(e, module);
                     }

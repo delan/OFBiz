@@ -35,7 +35,7 @@
 
   <EnumerationType description="Product Store Payment Service Type" enumTypeId="PRDS_PAYSVC" hasTable="N" parentTypeId=""/>
   <Enumeration description="Payment Authorization Service" enumCode="PAY_AUTH" enumId="PRDS_PAY_AUTH" sequenceId="01" enumTypeId="PRDS_PAYSVC"/>
-  <Enumeration description="Payment Auth Verification Service" enumCode="PAY_AUTH_VERIFICATION" enumId="PRDS_PAY_AUTH_VERIFICATION" sequenceId="06" enumTypeId="PRDS_PAYSVC"/>
+  <Enumeration description="Payment Auth Verification Service" enumCode="PAY_AUTH_VERIFY" enumId="PRDS_PAY_AUTH_VERIFY" sequenceId="06" enumTypeId="PRDS_PAYSVC"/>
   <Enumeration description="Payment Re-Authorization Service" enumCode="PAY_REAUTH" enumId="PRDS_PAY_REAUTH" sequenceId="02" enumTypeId="PRDS_PAYSVC"/>
   <Enumeration description="Payment Release Authorization Service" enumCode="PAY_RELEASE" enumId="PRDS_PAY_RELEASE" sequenceId="03" enumTypeId="PRDS_PAYSVC"/>
   <Enumeration description="Payment Capture Service" enumCode="PAY_CAPTURE" enumId="PRDS_PAY_CAPTURE" sequenceId="04" enumTypeId="PRDS_PAYSVC"/>
