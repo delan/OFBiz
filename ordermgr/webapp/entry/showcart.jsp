@@ -110,7 +110,7 @@
             </td>
             <td nowrap align="center">
               <div class='tabletext'>
-                <%if (item.getIsPromo()) {%>
+                <%if (!item.getIsPromo()) {%>
                     <ofbiz:format><%=item.getQuantity()%></ofbiz:format>
                 <%} else {%>
                     <input size="6" type="text" name="update_<%=cart.getItemIndex(item)%>" value="<ofbiz:format><%=item.getQuantity()%></ofbiz:format>" style="font-size: x-small;">
