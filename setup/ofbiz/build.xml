@@ -90,6 +90,7 @@
         <copy file="lib/share/bsh-1.2b3.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/share/clutil.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/share/wsdl4j.jar" toDir="${catalina.dir}/lib"/>
+        <copy file="lib/share/jakarta-oro-2.0.4.jar" toDir="${catalina.dir}/lib"/>
 
         <delete file="${catalina.dir}/common/lib/tyrex-0.9.7.0.jar"/> 
         
@@ -224,19 +225,21 @@
           <echo message="[build] ===== Building core =====" />
           <ant dir="core" target="war" />
         -->
-        <echo message="[build] ===== Building commonapp =====" />
+        <echo message="[war] ===== Building webtools =====" />
+        <ant dir="webtools" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building commonapp =====" />
         <ant dir="commonapp" target="war" inheritAll="false" />
         
-        <echo message="[build] ===== Building ecommerce =====" />
+        <echo message="[war] ===== Building ecommerce =====" />
         <ant dir="ecommerce" target="war" inheritAll="false" />
         
-        <echo message="[build] ===== Building catalog =====" />
+        <echo message="[war] ===== Building catalog =====" />
         <ant dir="catalog" target="war" inheritAll="false" />
-        <echo message="[build] ===== Building partymgr =====" />
+        <echo message="[war] ===== Building partymgr =====" />
         <ant dir="partymgr" target="war" inheritAll="false" />
-        <echo message="[build] ===== Building ordermgr =====" />
+        <echo message="[war] ===== Building ordermgr =====" />
         <ant dir="ordermgr" target="war" inheritAll="false" />
-        <echo message="[build] ===== Building workeffort =====" />
+        <echo message="[war] ===== Building workeffort =====" />
         <ant dir="workeffort" target="war" inheritAll="false" />
         
         <echo message="[build] ===== Done Building =====" />
@@ -340,5 +343,28 @@
             toFile="${j2eedeploy.dir}/workeffort-ext.war" />
     </target>
 
-</project>
+    <!-- ================================================================== -->
+    <!-- Deploy the app                                                     -->
+    <!-- ================================================================== -->
 
+    <target name="ear" depends="war">
+        <property name="eartemp.dir" value="eartemp" />
+        <mkdir dir="${eartemp.dir}/META-INF" />
+        <copy file="commonapp/earetc/application.xml"
+            toFile="${eartemp.dir}/META-INF/application.xml" />
+    
+        <copy file="webtools/lib/ofbwebtools.war" toFile="${eartemp.dir}/ofbwebtools.war" />
+        <copy file="commonapp/lib/ofbcommonapp.war" toFile="${eartemp.dir}/ofbcommonapp.war" />
+            
+        <copy file="ecommerce/lib/ofbecom.war" toFile="${eartemp.dir}/ofbecom.war" />
+    
+        <copy file="catalog/lib/ofbcatalog.war" toFile="${eartemp.dir}/ofbcatalog.war" />
+        <copy file="partymgr/lib/ofbpartymgr.war" toFile="${eartemp.dir}/ofbpartymgr.war" />
+        <copy file="ordermgr/lib/ofbordermgr.war" toFile="${eartemp.dir}/ofbordermgr.war" />
+        <copy file="workeffort/lib/ofbworkeffort.war" toFile="${eartemp.dir}/ofbworkeffort.war" />
+            
+        <jar jarfile="./ofbiz.ear" basedir="${eartemp.dir}" />
+    </target>
+    
+    	
+</project>
