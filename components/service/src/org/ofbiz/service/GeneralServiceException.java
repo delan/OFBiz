@@ -1,7 +1,7 @@
 /*
  * $Id: GenericServiceException.java 3103 2004-08-20 21:45:49Z jaz $
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,6 +24,7 @@
  */
 package org.ofbiz.service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +74,9 @@ public class GeneralServiceException extends org.ofbiz.base.util.GeneralExceptio
     }
     
     public void addErrorMessages(List errMsgs) {
+        if (this.errorMsgList == null) {
+            this.errorMsgList = new LinkedList();
+        }
         this.errorMsgList.addAll(errMsgs);
     }
 }
