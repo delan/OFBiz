@@ -66,7 +66,7 @@
 
   int fileNumber = 1;
   long numberWritten = 0;
-  Document document = null;
+
   if (outpath != null){
       File outdir = new File(outpath);
       if(!outdir.exists()){
@@ -125,7 +125,7 @@
     
       <h3>Export:</h3>
       <FORM method=POST action='<ofbiz:url>/xmldsdumpall</ofbiz:url>'>
-        <div>Filename: <INPUT type=text class='inputBox' size='60' name='outpath' value='<%=UtilFormatOut.checkNull(outpath)%>'></div>
+        <div>Output Directory: <INPUT type=text class='inputBox' size='60' name='outpath' value='<%=UtilFormatOut.checkNull(outpath)%>'></div>
         <br>
         <INPUT type=submit value='Export'>
       </FORM>

@@ -33,6 +33,7 @@
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 <%
+  String outpath = request.getParameter("outpath");
   String filename = request.getParameter("filename");
   String[] entityName = request.getParameterValues("entityName");
 
@@ -116,7 +117,8 @@
 
   int numberOfEntities = passedEntityNames.size();
   long numberWritten = 0;
-  Document document = null;
+
+  // single file
   if(filename != null && filename.length() > 0 && numberOfEntities > 0) {
     PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")));
     writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -124,7 +126,7 @@
 
     Iterator i = passedEntityNames.iterator();
     while(i.hasNext()) { 
-        boolean beganTransaction = TransactionUtil.begin(3600);
+        //boolean beganTransaction = TransactionUtil.begin(3600);
         try {
             String curEntityName = (String)i.next();
             EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, null, null, null);
@@ -135,28 +137,71 @@
                 numberWritten++;
             }
             values.close();
-            TransactionUtil.commit(beganTransaction);
+            //TransactionUtil.commit(beganTransaction);
         } catch (Exception e) {
             Debug.logError(e, "Error reading data for XML export:", "JSP");
-            TransactionUtil.rollback(beganTransaction);
+            //TransactionUtil.rollback(beganTransaction);
         }
     }
     writer.println("</entity-engine-xml>");
     writer.close();
-
-/* the OLD way:
-    document = GenericEntity.makeXmlDocument(null);
-    Iterator i = passedEntityNames.iterator();
-    while(i.hasNext()) { 
-      String curEntityName = (String)i.next();
-      Collection values = delegator.findAll(curEntityName, null);
-      numberWritten += values.size();
-      GenericEntity.addToXmlDocument(values, document);
-    }
-    UtilXml.writeXmlDocument(filename, document);
-*/
   }
-%>    
+
+  // multiple files in a directory
+  Collection results = new ArrayList();
+  int fileNumber = 1;
+
+  if (outpath != null){
+      File outdir = new File(outpath);
+      if(!outdir.exists()){
+          outdir.mkdir();
+      }
+      if(outdir.isDirectory() && outdir.canWrite()) {
+        Iterator i= passedEntityNames.iterator();
+
+        while(i.hasNext()) {
+            numberWritten = 0;
+            String curEntityName = (String)i.next();
+            EntityListIterator values = null;
+            try{
+                ModelEntity me = delegator.getModelEntity(curEntityName);
+                if (me instanceof ModelViewEntity) {
+                    results.add("["+fileNumber +"] [vvv] " + curEntityName + " skipping view entity");
+                    continue;
+                }
+                values = delegator.findListIteratorByCondition(curEntityName, null, null, null, me.getPkFieldNames(), null);
+
+                //Don't bother writing the file if there's nothing
+                //to put into it
+                if (values.hasNext()) {
+                    PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, curEntityName +".xml")), "UTF-8")));
+                    writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                    writer.println("<entity-engine-xml>");
+
+                    GenericValue value = null;
+                    while ((value = (GenericValue) values.next()) != null) {
+                        value.writeXmlText(writer, "");
+                        numberWritten++;
+                    }
+                    writer.println("</entity-engine-xml>");
+                    writer.close();
+                    results.add("["+fileNumber +"] [" + numberWritten + "] " + curEntityName + " wrote " + numberWritten + " records");
+                } else {
+                    results.add("["+fileNumber +"] [---] " + curEntityName + " has no records, not writing file");
+                }
+                values.close();
+            } catch (Exception ex) {
+                if (values != null) {
+                    values.close();
+                }
+                results.add("["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + ex);
+            }
+            fileNumber++;
+        }
+    }
+  }
+
+%>
     <h3>XML Export from DataSource(s)</h3>
     <div>This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</div>
     <hr>
@@ -167,6 +212,11 @@
       <%if(filename != null && filename.length() > 0 && numberOfEntities > 0) {%>
         <div>Wrote XML for all data in <%=numberOfEntities%> entities.</div>
         <div>Wrote <%=numberWritten%> records to XML file <%=filename%></div>
+      <%} else if (outpath != null && numberOfEntities > 0) {%>
+        <%Iterator re = results.iterator();%>
+        <%while (re.hasNext()){%>
+            <div><%=(String)re.next()%> </div>
+        <%}%>
       <%} else {%>
         <div>No filename specified or no entity names specified, doing nothing.</div>
       <%}%>
@@ -175,7 +225,8 @@
     
       <h3>Export:</h3>
       <FORM method=POST action='<ofbiz:url>/xmldsdump</ofbiz:url>'>
-        <div>Filename: <INPUT type=text class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'></div>
+        <div>Output Directory&nbsp;: <INPUT type=text class='inputBox' size='60' name='outpath' value='<%=UtilFormatOut.checkNull(outpath)%>'></div>
+        <div>Single Filename&nbsp;&nbsp;: <INPUT type=text class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'></div>
         <div>OR Out to Browser: <INPUT type=checkbox name='tobrowser' <%=tobrowser?"checked":""%>></div>
         <br>
         <div>Entity Names:</div>
