@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  */
 -->
 
@@ -50,8 +50,9 @@
   <!-- org.ofbiz.manufacturing.mrp -->
   <!-- ========================================================= -->
 
+    <entity-group group="org.ofbiz" entity="InventoryEventPlanned" />
+    <entity-group group="org.ofbiz" entity="InventoryEventPlannedType" />
     <entity-group group="org.ofbiz" entity="MrpInventoryEventPlanned" />
-    <entity-group group="org.ofbiz" entity="MrpInventoryEventType" />
 
 </entitygroup>
 
