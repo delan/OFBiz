@@ -54,7 +54,11 @@ public abstract class AbstractParameterTag extends TagSupport {
             return parameters;
     }
 
-    public abstract int doStartTag() throws JspTagException;
+    public int doStartTag() throws JspTagException {
+        parameters = new HashMap();
+        return EVAL_BODY_INCLUDE;
+    }
+
     public abstract int doEndTag() throws JspTagException;
 
 }

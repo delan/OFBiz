@@ -72,10 +72,6 @@ public class ServiceTag extends AbstractParameterTag {
         return resultScope;
     }
 
-     public int doStartTag() throws JspTagException {
-         return EVAL_BODY_INCLUDE;
-     }
-
     public int doEndTag() throws JspTagException {
         LocalDispatcher dispatcher = (LocalDispatcher) pageContext.getRequest().getAttribute("dispatcher");
         if (dispatcher == null)
