@@ -91,7 +91,7 @@
         <string-to-field field-name="parentMethodName" string="removeShoppingList"/>
         <string-to-field field-name="permissionAction" string="DELETE"/>
         <call-simple-method method-name="checkShoppingListSecurity"/>
-        <check-errors/>    	     
+        <check-errors/>
 
         <remove-value value-name="shoppingList"/>
     </simple-method>
@@ -109,7 +109,7 @@
         <string-to-list string="-shoppingListItemSeqId" list-name="orderBy"/>
         <find-by-and entity-name="ShoppingListItem" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"></find-by-and>
         <if-empty field-name="currentItems">
-            <string-to-field string="00001" field-name="shoppingListItemSeqId" map-name="newEntity"/>                        
+            <string-to-field string="1" field-name="shoppingListItemSeqId" map-name="newEntity"/>
         <else>
            <first-from-list entry-name="newestItem" list-name="currentItems"/>
            <calculate field-name="shoppingListItemSeqId" map-name="newEntity" type="Integer">
@@ -117,9 +117,9 @@
                    <number value="1"/>
                </calcop>
            </calculate>
-           <to-string field-name="shoppingListItemSeqId" map-name="newEntity" numeric-padding="5"/>
         </else>
         </if-empty>
+        <to-string field-name="shoppingListItemSeqId" map-name="newEntity" numeric-padding="5"/>
 
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <field-to-result field-name="shoppingListItemSeqId" map-name="newEntity"/>                                        
