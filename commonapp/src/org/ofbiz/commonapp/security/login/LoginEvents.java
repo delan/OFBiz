@@ -187,7 +187,7 @@ public class LoginEvents {
             result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password));
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error calling userLogin service");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<b>The following error occured during login:</b><br>" + e.getMessage());
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<b>The following error occurred during login:</b><br>" + e.getMessage());
             return "error";
         }
 
@@ -207,7 +207,7 @@ public class LoginEvents {
         } else {
             String errMsg = (String) result.get(ModelService.ERROR_MESSAGE);
 
-            errMsg = "<b>The following error occured during login:</b><br>" + errMsg;
+            errMsg = "<b>The following error occurred during login:</b><br>" + errMsg;
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }

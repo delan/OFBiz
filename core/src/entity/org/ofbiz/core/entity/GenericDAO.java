@@ -284,7 +284,7 @@ public class GenericDAO {
             }
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
-            throw new GenericDataSourceException("Exception occured in storeAll", e);
+            throw new GenericDataSourceException("Exception occurred in storeAll", e);
         } finally {
             sqlP.close();
         }
@@ -1334,7 +1334,7 @@ public class GenericDAO {
             return deleteByAnd(modelEntity, fields, sqlP.getConnection());
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
-            throw new GenericDataSourceException("Generic Entity Exception occured in deleteByAnd", e);
+            throw new GenericDataSourceException("Generic Entity Exception occurred in deleteByAnd", e);
         } finally {
             sqlP.close();
         }
@@ -1407,7 +1407,7 @@ public class GenericDAO {
             return numDeleted;
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
-            throw new GenericDataSourceException("Generic Entity Exception occured in deleteAll", e);
+            throw new GenericDataSourceException("Generic Entity Exception occurred in deleteAll", e);
         } finally {
             sqlP.close();
         }

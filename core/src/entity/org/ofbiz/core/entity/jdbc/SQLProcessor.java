@@ -109,7 +109,7 @@ public class SQLProcessor {
                 _connection.commit();
             } catch (SQLException sqle) {
                 rollback();
-                throw new GenericDataSourceException("SQL Exception occured on commit", sqle);
+                throw new GenericDataSourceException("SQL Exception occurred on commit", sqle);
             }
         }
     }

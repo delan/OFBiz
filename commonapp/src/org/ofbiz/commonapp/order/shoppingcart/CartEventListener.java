@@ -99,11 +99,11 @@ public class CartEventListener implements HttpSessionListener {
                 }
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
-                Debug.logError(e, "An entity engine error occured while saving abandoned cart information", module);
+                Debug.logError(e, "An entity engine error occurred while saving abandoned cart information", module);
                 TransactionUtil.rollback(beganTransaction);
             }
         } catch (GenericTransactionException e) {
-            Debug.logError(e, "A transaction error occured while saving abandoned cart information", module);
+            Debug.logError(e, "A transaction error occurred while saving abandoned cart information", module);
         }
     }
 }

@@ -266,7 +266,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                     value = BshUtil.eval(expr.trim().substring(5).trim(), context);
                     if (Debug.verboseOn()) Debug.logVerbose("Evaluated expression: " + value, module);
                 } catch (bsh.EvalError e) {
-                    throw new WfException("Bsh evaluation error occured.", e);
+                    throw new WfException("Bsh evaluation error occurred.", e);
                 }
                 field = "partyId";
             }
@@ -280,7 +280,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                     value = BshUtil.eval(expr.trim().substring(5).trim(), context);
                     if (Debug.verboseOn()) Debug.logVerbose("Evaluated expression: " + value, module);
                 } catch (bsh.EvalError e) {
-                    throw new WfException("Bsh evaluation error occured.", e);
+                    throw new WfException("Bsh evaluation error occurred.", e);
                 }                    
                 field = "roleTypeId";
             }

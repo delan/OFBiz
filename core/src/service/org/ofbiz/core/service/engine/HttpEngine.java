@@ -131,7 +131,7 @@ public class HttpEngine extends GenericAsyncEngine {
                     }
                 } catch (Exception e) {
                     Debug.logError(e, "Deserialization error", module);
-                    result.put(ModelService.ERROR_MESSAGE, "Error occured deserializing context: " + e.toString());
+                    result.put(ModelService.ERROR_MESSAGE, "Error occurred deserializing context: " + e.toString());
                 }
             }
         }

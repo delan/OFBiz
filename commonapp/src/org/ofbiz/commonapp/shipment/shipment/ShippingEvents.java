@@ -83,12 +83,12 @@ public class ShippingEvents {
             if (Debug.verboseOn()) Debug.logVerbose("Estimate(s): " + estimates);
         } catch (GenericEntityException e) {
             Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occured calculating shipping. Fees will be calculated offline.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occurred calculating shipping. Fees will be calculated offline.");
             return "succes";
         }
         if (estimates == null || estimates.size() < 1) {
             Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occured calculating shipping. Fees will be calculated offline.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occurred calculating shipping. Fees will be calculated offline.");
             return "success";
         }
 
@@ -101,7 +101,7 @@ public class ShippingEvents {
             shipAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMechId));
         } catch (GenericEntityException e) {
             Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping address entity.");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occured calculating shipping. Fees will be calculated offline.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occurred calculating shipping. Fees will be calculated offline.");
             return "success";
         }
 
@@ -193,7 +193,7 @@ public class ShippingEvents {
 
         if (estimateList.size() < 1) {
             Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occured calculating shipping. Fees will be calculated offline.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "A problem occurred calculating shipping. Fees will be calculated offline.");
             return "success";
         }
 

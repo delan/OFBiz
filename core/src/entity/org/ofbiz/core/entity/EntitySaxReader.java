@@ -148,12 +148,12 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                 }
                 TransactionUtil.commit(beganTransaction);
             } catch (Exception e) {
-                Debug.logError(e, "An error occured saving the data, rolling back transaction");
+                Debug.logError(e, "An error occurred saving the data, rolling back transaction");
                 TransactionUtil.rollback(beganTransaction);
-                throw new SAXException("A transaction error occured reading data", e);
+                throw new SAXException("A transaction error occurred reading data", e);
             }
         } catch (GenericTransactionException e) {
-            throw new SAXException("A transaction error occured reading data", e);
+            throw new SAXException("A transaction error occurred reading data", e);
         }
         Debug.logImportant("Finished writing " + numberRead + " values to the database from " + docDescription);
         return numberRead;

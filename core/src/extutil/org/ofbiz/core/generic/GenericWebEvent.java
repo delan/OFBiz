@@ -267,7 +267,7 @@ public class GenericWebEvent {
         }
 
         if (errMsg.length() > 0) {
-            errMsg = "<br><b>The following error(s) occured:</b><ul>" + errMsg + "</ul>";
+            errMsg = "<br><b>The following error(s) occurred:</b><ul>" + errMsg + "</ul>";
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }

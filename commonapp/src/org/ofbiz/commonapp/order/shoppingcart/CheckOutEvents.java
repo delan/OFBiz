@@ -546,7 +546,7 @@ public class CheckOutEvents {
             serviceResult = dispatcher.runSync(taxService, serviceContext);
         } catch (GenericServiceException e) {
             Debug.logError(e);
-            throw new GeneralException("Problem occured in tax service (" + e.getMessage() + ")", e);
+            throw new GeneralException("Problem occurred in tax service (" + e.getMessage() + ")", e);
         }
 
         // the adjustments (returned in order) from taxware.

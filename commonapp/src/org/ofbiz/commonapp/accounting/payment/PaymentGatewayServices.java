@@ -174,7 +174,7 @@ public class PaymentGatewayServices {
                 processorResult = dispatcher.runSync(serviceName, processContext);
             } catch (GenericServiceException gse) {
                 Debug.logError(gse, "Problems invoking payment processor!" + "(" + orderId + ")", module);
-                Debug.logError("Error occured on: " + serviceName + " => " + processContext, module);
+                Debug.logError("Error occurred on: " + serviceName + " => " + processContext, module);
                 continue;
             }
             
