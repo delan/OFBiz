@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -51,6 +51,64 @@
       </td>
     </tr>
   </table>
+
+<#if productPromoCategoryIncludeList?has_content || productPromoCategoryExcludeList?has_content || productPromoCategoryAlwaysList?has_content>
+  <br/>
+
+  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+    <tr>
+      <td width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+          <tr>
+            <td valign="middle" align="left">
+              <div class="boxhead">&nbsp;Categories For Promotion:</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%">
+        <table width="100%" border="0" cellspacing="0" cellpadding="4" class="boxbottom">
+          <tr>
+            <td>
+        <#if productPromoCategoryIncludeList?has_content>
+          <div class="tabletext">This promotion includes all products in these categories:</div>
+          <#list productPromoCategoryIncludeList as productPromoCategory>
+            <#assign productCategory = productPromoCategory.getRelatedOneCache("ProductCategory")>
+            <div class="tabletext">
+                -&nbsp;<a href="<@ofbizUrl>/category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
+                <#if productPromoCategory.includeSubCategories?if_exists = "Y">(or any sub-category)</#if>
+            </div>
+          </#list>
+        </#if>
+        <#if productPromoCategoryExcludeList?has_content>
+          <div class="tabletext">unless they are in these categories:</div>
+          <#list productPromoCategoryExcludeList as productPromoCategory>
+            <#assign productCategory = productPromoCategory.getRelatedOneCache("ProductCategory")>
+            <div class="tabletext">
+                -&nbsp;<a href="<@ofbizUrl>/category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
+                <#if productPromoCategory.includeSubCategories?if_exists = "Y">(or any sub-category)</#if>
+            </div>
+          </#list>
+        </#if>
+        <#if productPromoCategoryAlwaysList?has_content>
+          <div class="tabletext">but will stll be included if they are in these categories:</div>
+          <#list productPromoCategoryAlwaysList as productPromoCategory>
+            <#assign productCategory = productPromoCategory.getRelatedOneCache("ProductCategory")>
+            <div class="tabletext">
+                -&nbsp;<a href="<@ofbizUrl>/category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="buttontext">${(productCategory.description)?default(productPromoCategory.productCategoryId)}</a>
+                <#if productPromoCategory.includeSubCategories?if_exists = "Y">(or any sub-category)</#if>
+            </div>
+          </#list>
+        </#if>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</#if>
 
   <br/>
 
