@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2002/01/02 23:44:27  jonesde
+ * Using compare-field for begin-end date validation
+ *
  * Revision 1.11  2002/01/02 04:15:22  jonesde
  * Finished getting the StringProcessor stuff working with the WorkEffort event
  *
@@ -112,7 +115,7 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            ServiceUtil.getHtmlMessages(request, result, "Work Effort successfully deleted.");
+            ServiceUtil.getMessages(request, result, "Work Effort successfully deleted.", "", "", "", "", "<li>", "</li>");
             // return the result
             return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         }
@@ -124,13 +127,13 @@ public class WorkEffortEvents {
         Map strings = UtilMisc.getParameterMap(request);
 
         try {
-            StringProcessor.runStringProcessor("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcessor.xml", strings, context, messages);
+            StringProcessor.runStringProcessor("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcUpdate.xml", strings, context, messages);
         } catch (MiniLangException e) {
             messages.add("Error running StringProcessor: " + e.toString());
         }
         
         if (messages.size() > 0) {
-            String errMsg = "<b>The following errors occured:</b><br><ul>" + ServiceUtil.makeHtmlMessageList(messages) + "</ul>";
+            String errMsg = "<b>The following errors occured:</b><br><ul>" + ServiceUtil.makeMessageList(messages, "<li>", "</li>") + "</ul>";
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
@@ -148,7 +151,7 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            ServiceUtil.getHtmlMessages(request, result, "Work Effort successfully created.");
+            ServiceUtil.getMessages(request, result, "Work Effort successfully created.", "", "", "", "", "<li>", "</li>");
             request.setAttribute("workEffortId", result.get("workEffortId"));
 
             // return the result
@@ -164,7 +167,7 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            ServiceUtil.getHtmlMessages(request, result, "Work Effort successfully updated.");
+            ServiceUtil.getMessages(request, result, "Work Effort successfully updated.", "", "", "", "", "<li>", "</li>");
             // return the result
             return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         } else {
@@ -245,7 +248,7 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            ServiceUtil.getHtmlMessages(request, result, "Work Effort Party Assignment successfully deleted.");
+            ServiceUtil.getMessages(request, result, "Work Effort Party Assignment successfully deleted.", "", "", "", "", "<li>", "</li>");
             // return the result
             return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         }
@@ -286,7 +289,7 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            ServiceUtil.getHtmlMessages(request, result, "Work Effort Party Assignment successfully created.");
+            ServiceUtil.getMessages(request, result, "Work Effort Party Assignment successfully created.", "", "", "", "", "<li>", "</li>");
             request.setAttribute("fromDate", result.get("fromDate"));
 
             // return the result
@@ -303,7 +306,7 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            ServiceUtil.getHtmlMessages(request, result, "Work Effort Party Assignment successfully updated.");
+            ServiceUtil.getMessages(request, result, "Work Effort Party Assignment successfully updated.", "", "", "", "", "<li>", "</li>");
             // return the result
             return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         } else {
