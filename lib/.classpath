@@ -31,9 +31,9 @@
     <classpathentry exported="true" kind="lib" path="datavision/MinML.jar"/>
     <classpathentry exported="true" kind="lib" path="datavision/jcalendar.jar"/>
     <classpathentry exported="true" kind="lib" path="jasperreports/jasperreports.jar"/>
-    <classpathentry exported="true" kind="lib" path="share/bsh-1.2b6.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/bsh-1.2b7.jar"/>
     <classpathentry exported="true" kind="lib" path="share/clutil.jar"/>
-    <classpathentry exported="true" kind="lib" path="share/jakarta-oro-2.0.4.jar"/>
+    <classpathentry exported="true" kind="lib" path="share/jakarta-oro-2.0.6.jar"/>
     <classpathentry exported="true" kind="lib" path="share/velocity-1.2.jar"/>
     <classpathentry exported="true" kind="lib" path="share/velocity-dep-1.2.jar"/>
     <classpathentry exported="true" kind="lib" path="share/wsdl4j.jar"/>
