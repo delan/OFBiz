@@ -463,6 +463,7 @@ engine and facilitate related operations.
     sequence-name CDATA #REQUIRED
     env-name CDATA #REQUIRED
     to-string ( true | false ) "false"
+    stagger-max CDATA #IMPLIED
 >
 <!ELEMENT make-next-seq-id EMPTY>
 <!ATTLIST make-next-seq-id
