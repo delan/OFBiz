@@ -66,6 +66,7 @@
   <SecurityPermission description="Limited Create operations in the Catalog Manager." permissionId="CATALOG_ROLE_CREATE"/>
   <SecurityPermission description="Limited Update operations in the Catalog Manager." permissionId="CATALOG_ROLE_UPDATE"/>
   <SecurityPermission description="Limited Delete operations in the Catalog Manager." permissionId="CATALOG_ROLE_DELETE"/>
+  <SecurityPermission description="Permission required, in addition to other applicable permissions, to maintain product price information including prices, promotions, and price rules." permissionId="CATALOG_PRICE_MAINT"/>
 
   <SecurityPermission description="View operations in the Party Manager." permissionId="PARTYMGR_VIEW"/>
   <SecurityPermission description="Create operations in the Party Manager." permissionId="PARTYMGR_CREATE"/>
@@ -189,7 +190,9 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_VIEW"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_PRICE_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_ADMIN"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_PRICE_MAINT"/>
 
   <SecurityGroupPermission groupId="CATALOGADMIN_LTD" permissionId="CATALOG_VIEW"/>
   <SecurityGroupPermission groupId="CATALOGADMIN_LTD" permissionId="CATALOG_ROLE_CREATE"/>
