@@ -504,7 +504,10 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append('"');
 
             // if current value should be selected in the list, select it
+            String noCurrentSelectedKey = radioField.getNoCurrentSelectedKey(context);
             if (UtilValidate.isNotEmpty(currentValue) && currentValue.equals(optionValue.getKey())) {
+                buffer.append(" checked");
+            } else if (UtilValidate.isEmpty(currentValue) && noCurrentSelectedKey != null && noCurrentSelectedKey.equals(optionValue.getKey())) {
                 buffer.append(" checked");
             }
             buffer.append(" name=\"");
