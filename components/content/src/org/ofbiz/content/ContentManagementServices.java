@@ -41,7 +41,7 @@ import org.ofbiz.content.content.ContentWorker;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  *
  * 
@@ -192,6 +192,7 @@ public class ContentManagementServices {
                     dataResourceExists = false;
                     Map thisResult = DataServices.createDataResourceMethod(dctx, context);
                     dataResourceId = (String)thisResult.get("dataResourceId");
+                    dataResource = (GenericValue)thisResult.get("dataResource");
                     if (dataResourceTypeId.indexOf("_FILE") >=0) {
                         dataResource = (GenericValue)thisResult.get("dataResource");
                         context.put("dataResource", dataResource);
@@ -202,6 +203,7 @@ public class ContentManagementServices {
                             return ServiceUtil.returnError(e.getMessage());
                         }
                     } else {
+                        context.put("dataResourceId", dataResourceId);
                         thisResult = DataServices.createElectronicTextMethod(dctx, context);
                     }
                 //Debug.logInfo("dataResourceId(create):" + dataResourceId, null);
