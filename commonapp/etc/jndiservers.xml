@@ -18,4 +18,9 @@
             context-provider-url="rmi://127.0.0.1:1099/JndiServer"
             initial-context-factory="org.exolab.jms.jndi.rmi.RmiJndiInitialContextFactory"/>
 
+    <jndi-server name="localorion"
+            context-provider-url="ormi://localhost/default"
+            initial-context-factory="com.evermind.server.ApplicationClientInitialContextFactory"
+            security-principal="admin"
+            security-credentials="admin"/>
 </jndi-config>
