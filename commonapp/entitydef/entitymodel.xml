@@ -106,6 +106,7 @@
   <!-- The modules in this file are as follows:                  -->
   <!--  - org.ofbiz.commonapp.common.currency -->
   <!--  - org.ofbiz.commonapp.common.geo -->
+  <!--  - org.ofbiz.commonapp.common.note -->
   <!--  - org.ofbiz.commonapp.common.period -->
   <!--  - org.ofbiz.commonapp.common.sequence -->
   <!--  - org.ofbiz.commonapp.common.status -->
@@ -254,11 +255,11 @@
             package-name="org.ofbiz.commonapp.common.note"
             title="Note Data Entity">
       <field name="noteId" type="id-ne"></field>
-      <field name="noteName" type="name"></field>	
+      <field name="noteName" type="name"></field>
       <field name="noteInfo" type="very-long"></field>	
       <prim-key field="noteId" />
-    </entity>	
-	
+    </entity>
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.period -->
   <!-- ========================================================= -->

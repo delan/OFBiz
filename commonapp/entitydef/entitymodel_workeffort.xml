@@ -105,6 +105,7 @@
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
   <!--  - org.ofbiz.commonapp.workeffort.definition -->
+  <!--  - org.ofbiz.commonapp.workeffort.scheduler -->
   <!--  - org.ofbiz.commonapp.workeffort.timesheet -->
   <!--  - org.ofbiz.commonapp.workeffort.workeffort -->
   <!-- ========================================================= -->
@@ -113,7 +114,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.workeffort.definition -->
   <!-- ========================================================= -->
-
+	
     <entity entity-name="WorkEffortDef" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Work Effort Definition Entity">
@@ -186,31 +187,42 @@
       <relation type="many" rel-entity-name="WorkEffortTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
-    
+    </entity>
+
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.workeffort.scheduler -->
   <!-- ========================================================= -->
-
+	
+    <entity entity-name="JobSandbox" 
+            package-name="org.ofbiz.commonapp.workeffort.scheduler"
+            title="Job Scheduler Sandbox Entity">
+      <field name="jobName" type="name"></field>
+      <field name="serviceName" type="name"></field>
+      <field name="recurrenceInfoId" type="id-ne"></field>
+      <field name="runtimeDataId" type="id-ne"></field>
+      <field name="lastRuntime" type="date-time"></field>
+      <field name="runCount" type="numeric"></field>	
+      <prim-key field="jobName" />
+    </entity>	
     <entity entity-name="RecurrenceInfo" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
             title="Recurrence Info Entity">
-      <field name="recurrenceInfoId" type="id-ne"></field>	
+      <field name="recurrenceInfoId" type="id-ne"></field>
       <field name="startDateTime" type="date-time"></field>
       <field name="endDateTime" type="date-time"></field>
-      <field name="exceptionDateTimes" type="very-long"></field>	
-      <field name="exceptionRule" type="long-varchar"></field>	
-      <field name="recurrenceDateTimes" type="very-long"></field>	
+      <field name="exceptionDateTimes" type="very-long"></field>
+      <field name="exceptionRule" type="long-varchar"></field>
+      <field name="recurrenceDateTimes" type="very-long"></field>
       <field name="recurrenceRule" type="long-varchar"></field>	
       <prim-key field="recurrenceInfoId" />
     </entity>	
     <entity entity-name="RuntimeData" 
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
             title="Runtime Data Entity">
-      <field name="runtimeDataId" type="id-ne"></field>	
+      <field name="runtimeDataId" type="id-ne"></field>
       <field name="runtimeInfo" type="very-long"></field>	
       <prim-key field="runtimeDataId" />
-    </entity>	
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.workeffort.timesheet -->
@@ -357,12 +369,12 @@
       <field name="actualStartDate" type="date-time"></field>
       <field name="actualCompletionDate" type="date-time"></field>
       <field name="actualMilliSeconds" type="floating-point"></field>
-      <field name="specialTerms" type="long-varchar"></field>	
-      <field name="timeTransparency" type="numeric"></field>	
-      <field name="infoUrl" type="long-varchar"></field>	
-      <field name="recurrenceInfoId" type="id"></field>	
-      <field name="contextDataId" type="id"></field>	
-      <field name="resultDataId" type="id"></field>	
+      <field name="specialTerms" type="long-varchar"></field>
+      <field name="timeTransparency" type="numeric"></field>
+      <field name="infoUrl" type="long-varchar"></field>
+      <field name="recurrenceInfoId" type="id"></field>
+      <field name="contextDataId" type="id"></field>
+      <field name="resultDataId" type="id"></field>
       <field name="noteId" type="id"></field>	
       <prim-key field="workEffortId" />
       <relation type="one" rel-entity-name="WorkEffortType">
@@ -493,16 +505,16 @@
             title="Work Effort Category Entity">
       <field name="workEffortCategoryId" type="id-ne"></field>
       <field name="parentCategoryId" type="id"></field>
-      <field name="categoryName" type="name"></field>
-      <prim-key field="workEffortCategoryId" />	
+      <field name="categoryName" type="name"></field>	
+      <prim-key field="workEffortCategoryId" />
     </entity>	
     <entity entity-name="WorkEffortCategoryMember" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Category Member Entity">
       <field name="workEffortId" type="id-ne"></field>
-      <field name="workEffortCategoryId" type="id-ne"></field>
+      <field name="workEffortCategoryId" type="id-ne"></field>	
       <prim-key field="workEffortId" />	
-      <prim-key field="workEffortCategoryId" />	
+      <prim-key field="workEffortCategoryId" />
     </entity>	
     <entity entity-name="WorkEffortDeliverableProd" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -517,7 +529,7 @@
             title="Work Effort Expectation Entity">
       <field name="expectationId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key field="expectationId" />	
+      <prim-key field="expectationId" />
     </entity>	
     <entity entity-name="WorkEffortFixedAssetAssign" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
@@ -581,9 +593,9 @@
       <field name="thruDate" type="date-time"></field>
       <field name="facilityId" type="id"></field>
       <field name="statusId" type="id"></field>
-      <field name="comments" type="comment"></field>	
+      <field name="comments" type="comment"></field>
       <field name="mustRsvp" type="indicator"></field>
-      <field name="expectationId" type="id"></field>
+      <field name="expectationId" type="id"></field>	
       <prim-key field="workEffortId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />	
@@ -594,7 +606,7 @@
             title="Work Effort Scope Entity">
       <field name="workEffortScopeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
-      <prim-key field="workEffortScopeId" />	
+      <prim-key field="workEffortScopeId" />
     </entity>	
     <entity entity-name="WorkEffortSkillStandard" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
