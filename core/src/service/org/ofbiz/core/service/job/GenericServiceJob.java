@@ -95,13 +95,23 @@ public class GenericServiceJob extends AbstractJob {
 
             // call the finish method
             finish();
+            
+            boolean isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
 
             // commit the transaction if we started it.
             if (trans && begunTransaction) {
-                try {
-                    TransactionUtil.commit(begunTransaction);
-                } catch (GenericTransactionException te) {
-                    throw new GenericServiceException("Cannot commit transaction.", te.getNested());
+                if (!isError) {
+                    try {
+                        TransactionUtil.commit(begunTransaction);
+                    } catch (GenericTransactionException te) {
+                        Debug.logError(te, "Cannot commit transaction", module);
+                    }
+                } else {
+                    try {
+                        TransactionUtil.rollback(begunTransaction);
+                    } catch (GenericTransactionException te) {
+                        Debug.logError(te, "Cannot rollback transaction", module);
+                    }
                 }
             }
         } catch (Exception e) {            
