@@ -127,7 +127,7 @@
 
     Iterator i = passedEntityNames.iterator();
     while(i.hasNext()) { 
-        //boolean beganTransaction = TransactionUtil.begin(3600);
+        boolean beganTransaction = TransactionUtil.begin(3600);
         try {
             String curEntityName = (String)i.next();
             EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, null, null, null, null, efo);
@@ -144,10 +144,10 @@
             }
             values.close();
             Debug.log("Wrote [" + curNumberWritten + "] from entity : " + curEntityName);
-            //TransactionUtil.commit(beganTransaction);
+            TransactionUtil.commit(beganTransaction);
         } catch (Exception e) {
             Debug.logError(e, "Error reading data for XML export:", "JSP");
-            //TransactionUtil.rollback(beganTransaction);
+            TransactionUtil.rollback(beganTransaction);
         }
     }
     writer.println("</entity-engine-xml>");
@@ -171,6 +171,7 @@
             numberWritten = 0;
             String curEntityName = (String)i.next();
             EntityListIterator values = null;
+            boolean beganTransaction = TransactionUtil.begin(3600);
             try{
                 ModelEntity me = delegator.getModelEntity(curEntityName);
                 if (me instanceof ModelViewEntity) {
@@ -206,6 +207,7 @@
                     results.add(thisResult);
                 }
                 values.close();
+                TransactionUtil.commit(beganTransaction);
             } catch (Exception ex) {
                 if (values != null) {
                     values.close();
@@ -213,7 +215,8 @@
                 String thisResult = "["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + ex;
                 Debug.log(thisResult);
                 results.add(thisResult);
-            }
+                TransactionUtil.rollback(beganTransaction);
+            }            
             fileNumber++;
         }
     }
