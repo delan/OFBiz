@@ -99,7 +99,7 @@ public class GenericServiceJob extends AbstractJob {
             // commit the transaction if we started it.
             if (trans && begunTransaction) {
                 try {
-                    TransactionUtil.commit();
+                    TransactionUtil.commit(begunTransaction);
                 } catch (GenericTransactionException te) {
                     throw new GenericServiceException("Cannot commit transaction.", te.getNested());
                 }
@@ -107,7 +107,7 @@ public class GenericServiceJob extends AbstractJob {
         } catch (Exception e) {            
             if (trans && begunTransaction) {
                 try {
-                    TransactionUtil.rollback();
+                    TransactionUtil.rollback(begunTransaction);
                 } catch (GenericTransactionException te) {
                     Debug.logError(te, "Cannot rollback transaction", module);
                 }
