@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.12 2004/05/11 12:56:45 jonesde Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.13 2004/05/11 17:20:34 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -454,7 +454,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
         //Debug.logInfo("in doPermissionCheck, content:" + content,"");
         //Debug.logInfo("in doPermissionCheck, targetOperations:" + targetOperations,"");
-        Map results = ContentPermissionServices.checkPermission(content, permissionStatusId, userLogin, passedPurposes, targetOperations, passedRoles, delegator , security, entityAction, privilegeEnumId );
+        Map results = ContentPermissionServices.checkPermission(content, permissionStatusId, userLogin, passedPurposes, targetOperations, passedRoles, delegator , security, entityAction, privilegeEnumId, null );
         String permissionStatus = (String)results.get("permissionStatus");
                 //Debug.logInfo("in doPermissionCheck, permissionStatus:" + permissionStatus,"");
                 //Debug.logInfo("in HtmlMenuRenderer, results:" + results,"");
