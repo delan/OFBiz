@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.20 2004/02/28 19:49:47 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.21 2004/05/11 12:40:14 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -404,12 +404,10 @@ public class CheckOutHelper {
     // Create order event - uses createOrder service for processing
     public Map createOrder(GenericValue userLogin, String distributorId, String affiliateId,
             List trackingCodeOrders, boolean areOrderItemsExploded, String visitId, String webSiteId) {
-        String errMsg = null;
         if (this.cart == null) {
             return null;
         }
         String orderId = this.cart.getOrderId();
-        Map result;
 
         // format the grandTotal
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
@@ -421,9 +419,8 @@ public class CheckOutHelper {
             grandTotal = new Double(formatter.parse(grandTotalString).doubleValue());
         } catch (ParseException e) {
             Debug.logError(e, "Problem getting parsed currency amount from DecimalFormat", module);
-            errMsg = UtilProperties.getMessage(resource,"checkhelper.could_not_create_order_parsing_totals", (cart != null ? cart.getLocale() : Locale.getDefault()));
-            result = ServiceUtil.returnError(errMsg);
-            return result;
+            String errMsg = UtilProperties.getMessage(resource,"checkhelper.could_not_create_order_parsing_totals", (cart != null ? cart.getLocale() : Locale.getDefault()));
+            return ServiceUtil.returnError(errMsg);
         }
 
         // store the order - build the context
@@ -461,23 +458,19 @@ public class CheckOutHelper {
         } catch (GenericServiceException e) {
             String service = e.getMessage();
             Map messageMap = UtilMisc.toMap("service", service);
-            errMsg = UtilProperties.getMessage(resource,"checkhelper.could_not_create_order_invoking_service", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
-            result = ServiceUtil.returnError(errMsg);
-            Debug.logError(e, module);
-            return result;
+            String errMsg = UtilProperties.getMessage(resource,"checkhelper.could_not_create_order_invoking_service", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);
         }
 
         // check for error message(s)
-        if (ModelService.RESPOND_ERROR.equals(storeResult.get(ModelService.RESPONSE_MESSAGE)) ||
-                storeResult.containsKey(ModelService.ERROR_MESSAGE) ||
-                storeResult.containsKey(ModelService.ERROR_MESSAGE)) {
-            errMsg = UtilProperties.getMessage(resource,"checkhelper.did_not_complete_order_following_occurred", (cart != null ? cart.getLocale() : Locale.getDefault()));
-            result = ServiceUtil.returnError(errMsg);
-            return result;
+        if (ServiceUtil.isError(storeResult)) {
+            String errMsg = UtilProperties.getMessage(resource,"checkhelper.did_not_complete_order_following_occurred", (cart != null ? cart.getLocale() : Locale.getDefault()));
+            return ServiceUtil.returnError(errMsg);
         }
 
         // set the orderId for use by chained events
-        result = ServiceUtil.returnSuccess();
+        Map result = ServiceUtil.returnSuccess();
         result.put("order_id", orderId);
         result.put("orderId", orderId);
         result.put("orderAdditionalEmails", this.cart.getOrderAdditionalEmails());
@@ -525,11 +518,6 @@ public class CheckOutHelper {
             try {
                 if (Debug.verboseOn()) Debug.logVerbose("To Be Stored: " + toBeStored, module);
                 this.delegator.storeAll(toBeStored);
-                /* Why is this here?
-                try {
-                    Thread.sleep(2000);
-                } catch (Exception e) {}
-                */
             } catch (GenericEntityException e) {
                 // not a fatal error; so just print a message
                 Debug.logWarning(e, "Problems storing order email contact information", module);
