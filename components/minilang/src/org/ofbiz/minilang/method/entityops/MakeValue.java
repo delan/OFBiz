@@ -1,5 +1,5 @@
 /*
- * $Id: MakeValue.java,v 1.1 2003/08/17 06:06:11 ajzeneski Exp $
+ * $Id: MakeValue.java,v 1.2 2003/09/04 18:49:27 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.minilang.method.*;
  * Uses the delegator to find entity values by anding the map fields
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class MakeValue extends MethodOperation {
@@ -52,7 +52,7 @@ public class MakeValue extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         String entityName = methodContext.expandString(this.entityName);
         Map ctxMap = (Map) (mapAcsr.isEmpty() ? null : mapAcsr.get(methodContext));
-        valueAcsr.put(methodContext, methodContext.getDelegator().makeValue(entityName, ctxMap));
+        valueAcsr.put(methodContext, methodContext.getDelegator().makeValidValue(entityName, ctxMap));
         return true;
     }
 }
