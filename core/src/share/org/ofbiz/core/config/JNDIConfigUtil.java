@@ -40,21 +40,21 @@ import org.ofbiz.core.util.*;
  */
 public class JNDIConfigUtil {
 
-    public static final String JNDI_CONFIG_XML_FILENAME = "jndiserverx.xml";
+    public static final String JNDI_CONFIG_XML_FILENAME = "jndiservers.xml";
     protected static Map jndiServerInfos = new HashMap();
 
     protected static Element getXmlRootElement() throws GenericConfigException {
         try {
             return ResourceLoader.getXmlRootElement(JNDIConfigUtil.JNDI_CONFIG_XML_FILENAME);
         } catch (GenericConfigException e) {
-            throw new GenericConfigException("Could not get entity engine XML root element", e);
+            throw new GenericConfigException("Could not get JNDI XML root element", e);
         }
     }
     protected static Document getXmlDocument() throws GenericConfigException {
         try {
             return ResourceLoader.getXmlDocument(JNDIConfigUtil.JNDI_CONFIG_XML_FILENAME);
         } catch (GenericConfigException e) {
-            throw new GenericConfigException("Could not get entity engine XML document", e);
+            throw new GenericConfigException("Could not get JNDI XML document", e);
         }
     }
 
@@ -62,7 +62,7 @@ public class JNDIConfigUtil {
         try {
             initialize(getXmlRootElement());
         } catch (Exception e) {
-            Debug.logError(e, "Error loading entity config XML file " + JNDI_CONFIG_XML_FILENAME);
+            Debug.logError(e, "Error loading JNDI config XML file " + JNDI_CONFIG_XML_FILENAME);
         }
     }
     public static void initialize(Element rootElement) throws GenericConfigException {

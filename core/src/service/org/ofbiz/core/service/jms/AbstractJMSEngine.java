@@ -26,28 +26,60 @@ package org.ofbiz.core.service.jms;
 import java.util.*;
 import javax.jms.*;
 
-import org.ofbiz.core.service.engine.*;
+import org.ofbiz.core.config.*;
+import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.service.config.*;
+import org.ofbiz.core.service.engine.*;
+import org.ofbiz.core.util.*;
+
+import org.w3c.dom.Element;
 
 /**
- * JMSAbstractEngine
+ * AbstractJMSEngine
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @created    Jul 16, 2002
  * @version    1.0
  */
-public abstract class JMSAbstractEngine implements GenericEngine {
+public abstract class AbstractJMSEngine implements GenericEngine {
 
     protected ServiceDispatcher dispatcher;
 
-    public JMSAbstractEngine(ServiceDispatcher dispatcher) {
+    public AbstractJMSEngine(ServiceDispatcher dispatcher) {
         this.dispatcher = dispatcher;
     }
 
     protected abstract Map run(ModelService modelService, Map context) throws GenericServiceException;
 
-    protected Message makeMessage(Session session, Map context) throws JMSException {
-        Message message = session.createTextMessage("Test");
+    protected Element getServiceElement(ModelService modelService) throws GenericServiceException {
+       Element rootElement = null;
+        try {
+            rootElement = ServiceConfigUtil.getXmlRootElement();
+        } catch (GenericConfigException e) {
+            throw new GenericServiceException("Error getting JMS Service element", e);
+        }
+        Element serviceElement = UtilXml.firstChildElement(rootElement, "jms-service", "name", modelService.location);
+        if (serviceElement == null) {
+            throw new GenericServiceException("Cannot find an JMS service definition for the name [" + modelService.location + "] in the serviceengine.xml file");
+        }
+        return serviceElement;
+    }
+
+    protected Message makeMessage(Session session, ModelService modelService, Map context)
+            throws GenericServiceException, JMSException {
+        List outParams = modelService.getParameterNames(ModelService.OUT_PARAM, false);
+        if (outParams != null && outParams.size() > 0)
+            throw new GenericServiceException("JMS service cannot have required OUT parameters; no parameters will be returned.");
+        String xmlContext = null;
+        try {
+            xmlContext = XmlSerializer.serialize(context);
+        } catch (Exception e) {
+            throw new GenericServiceException("Cannot serialize context.", e);
+        }
+        MapMessage message = session.createMapMessage();
+        message.setString("serviceName", modelService.invoke);
+        message.setString("serviceContext", xmlContext);
         return message;
     }
 

@@ -56,7 +56,7 @@ public class JNDIContextFactory {
                 if (ic == null) {
                     JNDIConfigUtil.JndiServerInfo jndiServerInfo = JNDIConfigUtil.getJndiServerInfo(jndiServerName);
                     if (jndiServerInfo == null) {
-                        throw new GenericConfigException("ERROR: no jndi-server definition was found with the name " + jndiServerName + " in entityengine.xml");
+                        throw new GenericConfigException("ERROR: no jndi-server definition was found with the name " + jndiServerName + " in jndiservers.xml");
                     }
                     
                     try {

@@ -28,9 +28,7 @@ import java.util.*;
 import javax.naming.*;
 import javax.jms.*;
 
-import org.ofbiz.core.config.*;
 import org.ofbiz.core.service.*;
-import org.ofbiz.core.service.config.*;
 import org.ofbiz.core.service.engine.*;
 import org.ofbiz.core.util.*;
 
@@ -43,7 +41,7 @@ import org.w3c.dom.Element;
  * @created    Jul 16, 2002
  * @version    1.0
  */
-public class JMSQueueSender extends JMSAbstractEngine {
+public class JMSQueueSender extends AbstractJMSEngine {
 
     private QueueConnection connect = null;
     private QueueSession session = null;
@@ -55,22 +53,12 @@ public class JMSQueueSender extends JMSAbstractEngine {
 
     protected Map run(ModelService modelService, Map context) throws GenericServiceException {
         // get the config
-        Element rootElement = null;
-        try {
-            rootElement = ServiceConfigUtil.getXmlRootElement();
-        } catch (GenericConfigException e) {
-            throw new GenericServiceException("Error getting JMS Service element", e);
-        }
-        Element serviceElement = UtilXml.firstChildElement(rootElement, "engine", "name", modelService.location);
-        if (serviceElement == null) {
-            throw new GenericServiceException("Cannot find an JMS service definition for the name [" + modelService.location + "] in the serviceengine.xml file");
-        }
-        // get the values
+        Element serviceElement = getServiceElement(modelService);
         String broker = serviceElement.getAttribute("broker");
         String userName = serviceElement.getAttribute("userName");
         String password = serviceElement.getAttribute("password");
         String queueName = serviceElement.getAttribute("topic-queue");
-        String jndiName = serviceElement.getAttribute("jndiName");
+        String jndiName = serviceElement.getAttribute("jndi-name");
 
         try {
             InitialContext jndi = JNDIContextFactory.getInitialContext(jndiName);
@@ -84,7 +72,7 @@ public class JMSQueueSender extends JMSAbstractEngine {
             QueueSender sender = session.createSender(queue);
 
             // create/send the message
-            Message message = makeMessage(session, context);
+            Message message = makeMessage(session, modelService, context);
             sender.send(message);
 
             // close the connections
@@ -93,10 +81,13 @@ public class JMSQueueSender extends JMSAbstractEngine {
             con.close();
 
         } catch (GeneralException ge) {
+            Debug.logError(ge);
             throw new GenericServiceException("Problems getting JNDI InitialContext.", ge.getNested());
         } catch (NamingException ne) {
+            Debug.logError(ne);
             throw new GenericServiceException("JNDI Lookup problems.", ne);
         } catch (JMSException je) {
+            Debug.logError(je);
             throw new GenericServiceException("JMS Internal Error.", je);
         }
         return ServiceUtil.returnSuccess();

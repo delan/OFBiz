@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *This is the DTD for the Open For Business Entity Engine configuration XML file.
+ *This is the DTD for the Open For Business JNDI configuration XML file.
 -->
 
 <!ELEMENT jndi-config (jndi-server*)>

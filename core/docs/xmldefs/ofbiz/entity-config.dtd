@@ -29,7 +29,7 @@
 -->
 
 <!-- ====================== Root Element ======================= -->
-<!ELEMENT entity-config ( resource-loader+, jndi-server*, transaction-factory, delegator+, 
+<!ELEMENT entity-config ( resource-loader+, transaction-factory, delegator+,
         entity-model-reader+, entity-group-reader+, field-type+, datasource+ )>
 
 <!ELEMENT resource-loader EMPTY>
@@ -38,16 +38,6 @@
     class CDATA #REQUIRED
     prepend-env CDATA #IMPLIED
     prefix CDATA #IMPLIED
->
-
-<!ELEMENT jndi-server EMPTY>
-<!ATTLIST jndi-server 
-    name CDATA #REQUIRED
-    context-provider-url CDATA #IMPLIED
-    initial-context-factory CDATA #IMPLIED
-    url-pkg-prefixes CDATA #IMPLIED
-    security-principal CDATA #IMPLIED
-    security-credentials CDATA #IMPLIED
 >
 
 <!ELEMENT transaction-factory ( user-transaction-jndi?, transaction-manager-jndi? )>
