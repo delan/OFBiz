@@ -47,8 +47,9 @@
     where <%="OR".equalsIgnoreCase(searchOperator)?"any keyword":"all keywords"%> matched.
 </div>
 
-<% String nextStr = "SEARCH_STRING="+keywordString+"&SEARCH_CATEGORY_ID="+searchCategoryId+"&VIEW_SIZE="+viewSize+"&VIEW_INDEX="+(viewIndex.intValue()+1);%>
-<% String prevStr = "SEARCH_STRING="+keywordString+"&SEARCH_CATEGORY_ID="+searchCategoryId+"&VIEW_SIZE="+viewSize+"&VIEW_INDEX="+(viewIndex.intValue()-1);%>
+<%String baseSearchStr = "SEARCH_STRING="+keywordString+"&SEARCH_OPERATOR="+searchOperator+"&SEARCH_CATEGORY_ID="+searchCategoryId+"&VIEW_SIZE="+viewSize;%>
+<%String nextStr = baseSearchStr+"&VIEW_INDEX="+(viewIndex.intValue()+1);%>
+<%String prevStr = baseSearchStr+"&VIEW_INDEX="+(viewIndex.intValue()-1);%>
 
 <ofbiz:unless name="searchProductList">
   <br><div class='head2'>&nbsp;No results found.</div>
@@ -60,13 +61,13 @@
       <td align=right>
         <b>
         <%if(viewIndex.intValue() > 0){%>
-          <a href="<ofbiz:url><%="/keywordsearch?" + prevStr%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url>/keywordsearch?<%=prevStr%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize.intValue() > 0){%>
           <span class="tabletext"><%=lowIndex%> - <%=highIndex%> of <%=listSize%></span>
         <%}%>
         <%if(listSize.intValue() > highIndex.intValue()){%>
-          | <a href="<ofbiz:url><%="/keywordsearch?" + nextStr%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url>/keywordsearch?<%=nextStr%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
@@ -96,13 +97,13 @@
       <td align=right>
         <b>
         <%if(viewIndex.intValue() > 0){%>
-          <a href="<ofbiz:url><%="/keywordsearch?" + prevStr%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url>/keywordsearch?<%=prevStr%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize.intValue() > 0){%>
           <span class="tabletext"><%=lowIndex%> - <%=highIndex%> of <%=listSize%></span>
         <%}%>
         <%if(listSize.intValue() > highIndex.intValue()){%>
-          | <a href="<ofbiz:url><%="/keywordsearch?" + nextStr%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url>/keywordsearch?<%=nextStr%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
