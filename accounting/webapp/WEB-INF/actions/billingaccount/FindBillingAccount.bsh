@@ -1,4 +1,4 @@
-<#--
+/*
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -22,17 +22,19 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Revision$
  *@since      2.1
--->
+ */
+ 
+import java.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
 
-<#assign security = requestAttributes.security>
-<div class="apptitle">&nbsp;Accounts Manager Application&nbsp;</div>
-<div class="row">
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerButtonLeft">Main</a></div>  
-  <div class="col"><a href="<@ofbizUrl>/findBillingAccount</@ofbizUrl>" class="headerButtonLeft">Billing Accounts</a></div>
-  <#if requestAttributes.userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
-  <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='headerButtonRight'>Login</a></div>
-  </#if>
-  <div class="col-fill">&nbsp;</div>
-</div>
+requestParams = UtilHttp.getParameterMap(request);
+delegator = request.getAttribute("delegator");
+partyId = requestParams.get("partyId");
+if (partyId != null) {
+    accountsByParty = delegator.findByAnd("BillingAccountRole", UtilMisc.toMap("partyId", partyId));
+    context.put("billingAccountRolesByParty", accountsByParty);
+} else {
+    allAccounts = delegator.findAll("BillingAccount");
+    context.put("billingAccounts", allAccounts);
+}
