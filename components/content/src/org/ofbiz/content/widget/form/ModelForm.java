@@ -87,6 +87,7 @@ public class ModelForm {
     protected boolean separateColumns = false;
     protected FlexibleMapAccessor listIteratorName;
     protected boolean paginate = true;
+    protected boolean useRowSubmit = false;
 
     protected List altTargets = new LinkedList();
     protected List autoFieldsServices = new LinkedList();
@@ -121,6 +122,7 @@ public class ModelForm {
     protected List actions;
     protected FlexibleStringExpander rowCountExdr;
     protected ModelFormField multiSubmitField;
+    protected int rowCount = 0;
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -224,6 +226,11 @@ public class ModelForm {
             String sepColumns = formElement.getAttribute("separate-columns");
             if (sepColumns != null && sepColumns.equalsIgnoreCase("true"))
                 separateColumns = true;
+        }
+        if (formElement.hasAttribute("use-row-submit")) {
+            String rowSubmit = formElement.getAttribute("use-row-submit");
+            if (rowSubmit != null && rowSubmit.equalsIgnoreCase("true"))
+                useRowSubmit = true;
         }
         if (formElement.hasAttribute("view-size"))
             setViewSize(formElement.getAttribute("view-size"));
@@ -798,6 +805,7 @@ public class ModelForm {
 
     public void renderItemRows(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, boolean formPerItem) {
         
+    	this.rowCount = 0;
         // if list is empty, do not render rows
         ListIterator iter = getListIterator(context);
         List items = (List) context.get(this.getListName());
@@ -829,6 +837,8 @@ public class ModelForm {
                     localContext.putAll(itemMap);
                 }
                 localContext.put("itemIndex", new Integer(itemIndex));
+                
+              	this.rowCount++;
 
                 // render row formatting open
                 formStringRenderer.renderFormatItemRowOpen(buffer, localContext, this);
@@ -1441,8 +1451,16 @@ public class ModelForm {
         }
     }
     
-    public String getRowCount(Map context) {
+    public String getPassedRowCount(Map context) {
     	return rowCountExdr.expandString(context);
+    }
+    
+    public int getRowCount() {
+    	return this.rowCount;
+    }
+
+    public boolean getUseRowSubmit() {
+    	return this.useRowSubmit;
     }
 
     public ModelFormField getMultiSubmitField() {
