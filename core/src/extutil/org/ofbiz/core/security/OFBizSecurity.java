@@ -228,7 +228,7 @@ public class OFBizSecurity extends Security {
         }            
         
         Map simpleRoleMap = (Map) OFBizSecurity.simpleRoleEntity.get(application);
-        if (simpleRoleMap != null) {
+        if (simpleRoleMap != null && roles != null) {
             entityName = (String) simpleRoleMap.get("name");
             String pkey = (String) simpleRoleMap.get("pkey");
             if (pkey != null) {
