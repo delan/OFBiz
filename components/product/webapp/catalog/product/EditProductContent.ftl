@@ -31,6 +31,9 @@
 function insertNowTimestamp(field) {
   eval('document.productForm.' + field + '.value="${nowTimestampString}";');
 };
+function insertImageName(size,nameValue) {
+  eval('document.productForm.' + size + 'ImageUrl.value=nameValue;');
+};
 </SCRIPT>
 
 <#if hasPermission>
@@ -146,9 +149,9 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                <a href="javascript:document.productForm.smallImageUrl.value='${imageNameSmall}.jpg';" class="buttontext">[.jpg]</a>
-                <a href="javascript:document.productForm.smallImageUrl.value='${imageNameSmall}.gif';" class="buttontext">[.gif]</a>
-                <a href="javascript:document.productForm.smallImageUrl.value='';" class="buttontext">[clear]</a>
+                <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="buttontext">[.jpg]</a>
+                <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="buttontext">[.gif]</a>
+                <a href="javascript:insertImageName('small','');" class="buttontext">[clear]</a>
                 </div>
             </#if>
             </td>
@@ -166,9 +169,9 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                <a href="javascript:document.productForm.mediumImageUrl.value='${imageNameMedium}.jpg';" class="buttontext">[.jpg]</a>
-                <a href="javascript:document.productForm.mediumImageUrl.value='${imageNameMedium}.gif';" class="buttontext">[.gif]</a>
-                <a href="javascript:document.productForm.mediumImageUrl.value='';" class="buttontext">[clear]</a>
+                <a href="javascript:insertImageName('medium','${imageNameMedium}.jpg');" class="buttontext">[.jpg]</a>
+                <a href="javascript:insertImageName('medium','${imageNameMedium}.gif');" class="buttontext">[.gif]</a>
+                <a href="javascript:insertImageName('medium','');" class="buttontext">[clear]</a>
                 </div>
             </#if>
             </td>
@@ -186,9 +189,9 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                <a href="javascript:document.productForm.largeImageUrl.value='${imageNameLarge}.jpg';" class="buttontext">[.jpg]</a>
-                <a href="javascript:document.productForm.largeImageUrl.value='${imageNameLarge}.gif';" class="buttontext">[.gif]</a>
-                <a href="javascript:document.productForm.largeImageUrl.value='';" class="buttontext">[clear]</a>
+                <a href="javascript:insertImageName('large','${imageNameLarge}.jpg');" class="buttontext">[.jpg]</a>
+                <a href="javascript:insertImageName('large','${imageNameLarge}.gif');" class="buttontext">[.gif]</a>
+                <a href="javascript:insertImageName('large','');" class="buttontext">[clear]</a>
                 </div>
             </#if>
             </td>
@@ -206,9 +209,9 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                <a href="javascript:document.productForm.detailImageUrl.value='${imageNameDetail}.jpg';" class="buttontext">[.jpg]</a>
-                <a href="javascript:document.productForm.detailImageUrl.value='${imageNameDetail}.gif';" class="buttontext">[.gif]</a>
-                <a href="javascript:document.productForm.detailImageUrl.value='';" class="buttontext">[clear]</a>
+                <a href="javascript:insertImageName('detail','${imageNameDetail}.jpg');" class="buttontext">[.jpg]</a>
+                <a href="javascript:insertImageName('detail','${imageNameDetail}.gif');" class="buttontext">[.gif]</a>
+                <a href="javascript:insertImageName('detail','');" class="buttontext">[clear]</a>
                 </div>
             </#if>
             </td>
