@@ -8,7 +8,7 @@
     <!-- Increased default split time to 10 minutes (600000 seconds) instead of 10 seconds, for demonstrations and normal
         testing this should perform MUCH better; for busy sites this should be reduced closer to something like 10 seconds;
         the point is to find a balance between the time required for the queries and the amount of data sent over the wire per call -->
-    <EntitySync entitySyncId="1500" runStatusId="ESR_NOT_STARTED" syncSplitMillis="600000" targetServiceName="remoteStoreEntitySyncDataRmi" keepRemoveInfoHours="24"/>
+    <EntitySync entitySyncId="1500" runStatusId="ESR_NOT_STARTED" syncSplitMillis="600000" targetServiceName="remoteStoreEntitySyncDataRmi" keepRemoveInfoHours="24" forPushOnly="Y"/>
     <EntitySyncInclude entitySyncId="1500" entityOrPackage="ServerHit" applEnumId="ESIA_EXCLUDE"/>
     <EntitySyncInclude entitySyncId="1500" entityOrPackage="ServerHitBin" applEnumId="ESIA_EXCLUDE"/>
     <EntitySyncInclude entitySyncId="1500" entityOrPackage="org.ofbiz.service" applEnumId="ESIA_EXCLUDE"/>

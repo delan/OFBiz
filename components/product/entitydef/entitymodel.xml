@@ -48,6 +48,7 @@
   <!--  - org.ofbiz.product.cost -->
   <!--  - org.ofbiz.product.feature -->
   <!--  - org.ofbiz.product.inventory -->
+  <!--  - org.ofbiz.product.location -->
   <!--  - org.ofbiz.product.price -->
   <!--  - org.ofbiz.product.product -->
   <!--  - org.ofbiz.product.promo -->
@@ -1149,8 +1150,20 @@
         <key-map field-name="partyId"/>
       </relation>
     </view-entity>
-    <entity entity-name="ProductFacility"
+    <entity entity-name="VarianceReason"
             package-name="org.ofbiz.product.inventory"
+            title="Variance Reason Entity">
+      <field name="varianceReasonId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="varianceReasonId"/>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.location -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ProductFacility"
+            package-name="org.ofbiz.product.location"
             title="Product Facility Entity">
       <field name="productId" type="id-ne"></field>
       <field name="facilityId" type="id-ne"></field>
@@ -1167,7 +1180,7 @@
       </relation>
     </entity>
     <entity entity-name="ProductFacilityLocation"
-            package-name="org.ofbiz.product.inventory"
+            package-name="org.ofbiz.product.location"
             title="Product Facility Entity">
       <field name="productId" type="id-ne"></field>
       <field name="facilityId" type="id-ne"></field>
@@ -1189,7 +1202,7 @@
       </relation>
     </entity>
     <view-entity entity-name="ProductFacilityLocationQuantityTest"
-            package-name="org.ofbiz.product.inventory"
+            package-name="org.ofbiz.product.location"
             title="ProductFacilityLocation Quantity Test View Entity">
       <member-entity entity-alias="PFL" entity-name="ProductFacilityLocation"/>
       <member-entity entity-alias="FL" entity-name="FacilityLocation"/>
@@ -1225,7 +1238,7 @@
       </relation>
     </view-entity>
     <view-entity entity-name="ProductFacilityLocationView"
-            package-name="org.ofbiz.product.inventory"
+            package-name="org.ofbiz.product.location"
             title="ProductFacilityLocation And FacilityLocation View Entity">
       <member-entity entity-alias="PFL" entity-name="ProductFacilityLocation"/>
       <member-entity entity-alias="FL" entity-name="FacilityLocation"/>
@@ -1250,13 +1263,6 @@
         <key-map field-name="locationSeqId"/>
       </relation>
     </view-entity>
-    <entity entity-name="VarianceReason"
-            package-name="org.ofbiz.product.inventory"
-            title="Variance Reason Entity">
-      <field name="varianceReasonId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="varianceReasonId"/>
-    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.price -->

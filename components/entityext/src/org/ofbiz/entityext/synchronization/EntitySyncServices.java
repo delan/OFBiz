@@ -76,7 +76,10 @@ public class EntitySyncServices {
     public static Map runEntitySync(DispatchContext dctx, Map context) {
         try {
             EntitySyncContext esc = new EntitySyncContext(dctx, context);
-            
+            if ("Y".equals(esc.entitySync.get("forPullOnly"))) {
+                return ServiceUtil.returnError("Cannot do Entity Sync Push because entitySyncId [] is set for Pull Only.");
+            }
+
             esc.runPushStartRunning();
 
             // increment starting time to run until now
@@ -351,6 +354,10 @@ public class EntitySyncServices {
     public static Map pullAndReportEntitySyncData(DispatchContext dctx, Map context) {
         try {
             EntitySyncContext esc = new EntitySyncContext(dctx, context);
+            
+            if ("Y".equals(esc.entitySync.get("forPushOnly"))) {
+                return ServiceUtil.returnError("Cannot do Entity Sync Pull because entitySyncId [] is set for Push Only.");
+            }
 
             // restore info from last pull, or if no results start new run
             esc.runPullStartOrRestoreSavedResults();
