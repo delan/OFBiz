@@ -37,7 +37,7 @@
 <%@ include file="/includes/onecolumn.jsp" %>
 <%
   boolean useValues = true;
-  if(request.getAttribute("ERROR_MESSAGE") != null) useValues = false;
+  if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
   String donePage = request.getParameter("DONE_PAGE");
   if(donePage == null || donePage.length() <= 0) donePage="viewprofile";

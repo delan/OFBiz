@@ -338,7 +338,7 @@
 <table width="100%">
 <tr valign="top">
 <td align="left">
-&nbsp;<a href="<ofbiz:url>/shoppingcart</ofbiz:url>" class="buttontextbig">[Back to Shopping Cart]</a>
+&nbsp;<a href="<ofbiz:url>/view/showcart</ofbiz:url>" class="buttontextbig">[Back to Shopping Cart]</a>
 </td>
 <td align="right">
 <a href="javascript:document.checkoutInfoForm.submit()" class="buttontextbig">[Continue to Final Order Review]</a>

@@ -48,4 +48,7 @@
   A.microCartLink:hover {color: red;}
   .microCartDisabled {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: #CCCCCC;}
 
-  HR.sepbar { height: 1px; background-color: #999999; border-width: 0px; }
+  HR.sepbar {height: 1px; background-color: #999999; border-width: 0px;}
+
+  .errorMessage {font-family: Helvetica,sans-serif; margin: 0px; font-size: 10pt; font-weight: bold; COLOR: red;}
+  .eventMEssage {font-family: Helvetica,sans-serif; margin: 0px; font-size: 10pt; font-weight: bold; COLOR: blue;}

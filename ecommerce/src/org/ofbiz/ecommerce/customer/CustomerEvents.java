@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.37  2001/12/23 06:35:51  jonesde
+ * Replaced preStoreOther stuff with storeAll
+ *
  * Revision 1.36  2001/12/15 21:20:59  jonesde
  * A few fixes related to tighter restrictions in the entity engine on makeValue
  *
@@ -149,7 +152,7 @@ public class CustomerEvents {
         
         if(errMsg.length() > 0) {
             errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-            request.setAttribute("ERROR_MESSAGE", errMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
         
@@ -167,7 +170,7 @@ public class CustomerEvents {
         Long newCmId = null;
         //make address
         newCmId = delegator.getNextSeqId("ContactMech");
-        if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+        if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
         toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "POSTAL_ADDRESS")));
         GenericValue newAddr = delegator.makeValue("PostalAddress", null);
         newAddr.set("contactMechId", newCmId.toString());
@@ -186,7 +189,7 @@ public class CustomerEvents {
         
         //make home phone number
         if(UtilValidate.isNotEmpty(homeContactNumber)) {
-            newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+            newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
             toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
             toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", homeCountryCode, "areaCode", homeAreaCode, "contactNumber", homeContactNumber)));
             toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", homeAllowSolicitation, "extension", homeExt)));
@@ -195,7 +198,7 @@ public class CustomerEvents {
         
         //make work phone number
         if(UtilValidate.isNotEmpty(workContactNumber)) {
-            newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+            newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
             toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
             toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", workCountryCode, "areaCode", workAreaCode, "contactNumber", workContactNumber)));
             toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", workAllowSolicitation, "extension", workExt)));
@@ -204,7 +207,7 @@ public class CustomerEvents {
         
         //make fax number
         if(UtilValidate.isNotEmpty(faxContactNumber)) {
-            newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+            newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
             toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
             toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", faxCountryCode, "areaCode", faxAreaCode, "contactNumber", faxContactNumber)));
             toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", faxAllowSolicitation)));
@@ -213,7 +216,7 @@ public class CustomerEvents {
         
         //make mobile phone number
         if(UtilValidate.isNotEmpty(mobileContactNumber)) {
-            newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+            newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
             toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
             toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), "countryCode", mobileCountryCode, "areaCode", mobileAreaCode, "contactNumber", mobileContactNumber)));
             toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", mobileAllowSolicitation)));
@@ -221,7 +224,7 @@ public class CustomerEvents {
         }
         
         //make email
-        newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+        newCmId = delegator.getNextSeqId("ContactMech"); if(newCmId == null) { errMsg = "<li>ERROR: Could not create new account (id generation failure). Please contact customer service."; request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg); return "error"; }
         toBeStored.add(delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", "EMAIL_ADDRESS", "infoString", email)));
         toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", emailAllowSolicitation)));
         toBeStored.add(delegator.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCmId.toString(), "contactMechPurposeTypeId", "PRIMARY_EMAIL", "fromDate", now)));
@@ -230,7 +233,7 @@ public class CustomerEvents {
             delegator.storeAll(toBeStored);
         }
         catch(GenericEntityException e) {
-            request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not create new account (create failure). Please contact customer service.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not create new account (create failure). Please contact customer service.");
             return "error";
         }
         
