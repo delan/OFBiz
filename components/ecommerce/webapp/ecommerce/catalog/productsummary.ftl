@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.20 $
+ *@version    $Revision: 1.21 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -112,7 +112,7 @@
               <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"></#if>
               <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"></#if>
               <input type="hidden" name="clearSearch" value="N">
-              <br><a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddtoCart}]</nobr></a>
+              <br><a href="javascript:document.the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a>
             </form>
 
             <#if requestAttributes.productCategoryMember?exists>
