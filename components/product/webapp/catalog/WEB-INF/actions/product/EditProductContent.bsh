@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -60,30 +60,32 @@ productContent = null;
 if (product != null) productContent = product.getRelated("ProductContent", null, UtilMisc.toList("productContentTypeId"));
 context.put("productContent", productContent);
 
-List productContentDatas = new LinkedList();
-Iterator productContentIter = productContent.iterator();
-while (productContentIter.hasNext()) {
-    GenericValue productContent = (GenericValue) productContentIter.next();
-    GenericValue content = productContent.getRelatedOne("Content");
-    productContentDatas.add(UtilMisc.toMap("productContent", productContent, "content", content));
+if (productContent != null) {
+    List productContentDatas = new LinkedList();
+    Iterator productContentIter = productContent.iterator();
+    while (productContentIter.hasNext()) {
+        GenericValue productContent = (GenericValue) productContentIter.next();
+        GenericValue content = productContent.getRelatedOne("Content");
+        productContentDatas.add(UtilMisc.toMap("productContent", productContent, "content", content));
+    }
+    
+    HtmlFormWrapper updateProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "UpdateProductContentAssoc", request, response);
+    context.put("updateProductContentWrapper", updateProductContentWrapper);
+    updateProductContentWrapper.putInContext("productContentDatas", productContentDatas);
+    updateProductContentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+    
+    HtmlFormWrapper prepareAddProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "PrepareAddProductContentAssoc", request, response);
+    context.put("prepareAddProductContentWrapper", prepareAddProductContentWrapper);
+    prepareAddProductContentWrapper.putInContext("product", product);
+    prepareAddProductContentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+    
+    HtmlFormWrapper addProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "AddProductContentAssoc", request, response);
+    context.put("addProductContentWrapper", addProductContentWrapper);
+    addProductContentWrapper.putInContext("product", product);
+    addProductContentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+    
+    context.put("productContentList", productContentDatas);
 }
-
-HtmlFormWrapper updateProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "UpdateProductContentAssoc", request, response);
-context.put("updateProductContentWrapper", updateProductContentWrapper);
-updateProductContentWrapper.putInContext("productContentDatas", productContentDatas);
-updateProductContentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-
-HtmlFormWrapper prepareAddProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "PrepareAddProductContentAssoc", request, response);
-context.put("prepareAddProductContentWrapper", prepareAddProductContentWrapper);
-prepareAddProductContentWrapper.putInContext("product", product);
-prepareAddProductContentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-
-HtmlFormWrapper addProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "AddProductContentAssoc", request, response);
-context.put("addProductContentWrapper", addProductContentWrapper);
-addProductContentWrapper.putInContext("product", product);
-addProductContentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-
-context.put("productContentList", productContentDatas);
 // End ProductContent stuff
 
 boolean tryEntity = true;

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -49,26 +49,27 @@ context.put("nowTimestampString", nowTimestampString);
 boolean useValues = true;
 if (request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
 
-String productId = request.getParameter("PRODUCT_ID");
+productId = request.getParameter("productId");
+if (productId == null) productId = request.getParameter("PRODUCT_ID");
 if (productId != null) context.put("productId", productId);
 
-String productIdTo = request.getParameter("PRODUCT_ID_TO");
+productIdTo = request.getParameter("PRODUCT_ID_TO");
 if (productIdTo != null) context.put("productIdTo", productIdTo);
 
-String productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID");
+productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID");
 if (productAssocTypeId != null) context.put("productAssocTypeId", productAssocTypeId);
 
-String fromDateStr = request.getParameter("FROM_DATE");
+fromDateStr = request.getParameter("FROM_DATE");
 
 Timestamp fromDate = null;
 if (fromDateStr != null && fromDateStr.length() > 0) fromDate = Timestamp.valueOf(fromDateStr);
 if (fromDate == null) fromDate = (Timestamp)request.getAttribute("ProductAssocCreateFromDate");
 if (fromDate != null) context.put("fromDate", fromDate);
 
-GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 if (product != null) context.put("product", product);
 
-GenericValue productAssoc = delegator.findByPrimaryKey("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
+productAssoc = delegator.findByPrimaryKey("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
 if (productAssoc != null) context.put("productAssoc", productAssoc);
 
 if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
@@ -81,9 +82,10 @@ context.put("isCreate", isCreate);
 Collection assocTypes = delegator.findAll("ProductAssocType");
 context.put("assocTypes", assocTypes);
 
-List assocFromProducts = product.getRelated("MainProductAssoc", null, UtilMisc.toList("sequenceNum"));
-if (assocFromProducts != null) context.put("assocFromProducts", assocFromProducts);
-
-List assocToProducts = product.getRelated("AssocProductAssoc");
-if (assocTOProducts != null) context.put("assocToProducts", assocToProducts);
-
+if (product != null) {
+    assocFromProducts = product.getRelated("MainProductAssoc", null, UtilMisc.toList("sequenceNum"));
+    context.put("assocFromProducts", assocFromProducts);
+    
+    assocToProducts = product.getRelated("AssocProductAssoc");
+    context.put("assocToProducts", assocToProducts);
+}

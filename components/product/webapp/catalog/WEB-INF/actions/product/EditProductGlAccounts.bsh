@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -50,14 +50,17 @@ GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("pro
 if (product != null) context.put("product", product);
 
 if (product == null) useValues = false;
-Collection productGlAccounts = product.getRelated("ProductGlAccount", null, UtilMisc.toList("productGlAccountTypeId"));
-if (productGlAccounts != null) context.put("productGlAccounts", productGlAccounts);
 
-Collection productGlAccountTypes = delegator.findAllCache("ProductGlAccountType", UtilMisc.toList("description"));
-if (productGlAccountTypes != null) context.put("productGlAccountTypes", productGlAccountTypes);
+if (product != null) {
+    productGlAccounts = product.getRelated("ProductGlAccount", null, UtilMisc.toList("productGlAccountTypeId"));
+    context.put("productGlAccounts", productGlAccounts);
+}
 
-Collection glAccounts = delegator.findAllCache("GlAccount", UtilMisc.toList("accountCode"));
-if (glAccounts != null) context.put("glAccounts", glAccounts);
+productGlAccountTypes = delegator.findAllCache("ProductGlAccountType", UtilMisc.toList("description"));
+context.put("productGlAccountTypes", productGlAccountTypes);
+
+glAccounts = delegator.findAllCache("GlAccount", UtilMisc.toList("accountCode"));
+context.put("glAccounts", glAccounts);
 
 if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 context.put("useValues", useValues);
