@@ -47,7 +47,7 @@
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <TD align=left width='40%' >
-            <div class='boxhead'>&nbsp;Task List</div>
+            <div class='boxhead'>&nbsp;Current Task List</div>
           </TD>
           <TD align=right width='60%'>
             <A href='<ofbiz:url>/tasklist</ofbiz:url>' class='lightbuttontextdisabled'>[Task&nbsp;List]</A>
@@ -71,6 +71,7 @@
                   <TD><DIV class='tabletext'><b>My Status</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Activity Name</b></DIV></TD>
                 </TR>
+                <TR><TD colspan='3'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="workEffort" property="activities">
                   <TR>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
@@ -100,6 +101,7 @@
                   <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
                   <TD><DIV class='tabletext'><b>Task Name</b></DIV></TD>
                 </TR>
+                <TR><TD colspan='3'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="workEffort" property="tasks">
                   <TR>
                     <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
