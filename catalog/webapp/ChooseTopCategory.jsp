@@ -48,7 +48,7 @@
           <td>
               <ofbiz:iterator name="category" property="noParentCategories">
                 <div>
-                  <a href='<ofbiz:url>/ChooseTopCategory?CATALOG_TOP_CATEGORY=<ofbiz:entityfield attribute="category" field="productCategoryId"/></ofbiz:url>' class='buttontext'>
+                  <a href='<ofbiz:url>/EditCategory?CATALOG_TOP_CATEGORY=<ofbiz:entityfield attribute="category" field="productCategoryId"/>&productCategoryId=<ofbiz:entityfield attribute="category" field="productCategoryId"/></ofbiz:url>' class='buttontext'>
                     <ofbiz:entityfield attribute="category" field="description"/> (<ofbiz:entityfield attribute="category" field="productCategoryId"/>)
                   </a>
                 </div>
