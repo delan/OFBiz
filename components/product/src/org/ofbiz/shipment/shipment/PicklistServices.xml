@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  -->
 <simple-methods>
@@ -74,7 +74,6 @@
 		<find-by-and list-name="orderHeaderList" entity-name="OrderHeader" map-name="orderHeaderLkpMp" order-by-list-name="orderHeaderOrdLst"/>
 
 		<iterate entry-name="orderHeader" list-name="orderHeaderList">
-			<log level="info" message="Checking if approved order should be picked: ${orderHeader}"/>
             <!-- get the order items and the order item inventory res entries -->
             <field-to-field field-name="orderId" map-name="orderHeader" to-map-name="orderShipmentPreferenceLkupMap"/>
             <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="orderShipmentPreferenceLkupMap"/>
@@ -172,10 +171,8 @@
 								<get-related-one value-name="orderShipmentPreference" relation-name="ShipmentMethodType" to-value-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.shipmentMethodType"/>
 							</if-empty>
 							<if-compare field-name="needsStockMove" operator="equals" value="Y">
-								<log level="info" message="Order needs stock move: ${orderHeader}"/>
 								<field-to-list field-name="orderHeaderInfo" list-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.orderNeedsStockMoveInfoList"/>
 							<else>
-								<log level="info" message="Order ready to pick: ${orderHeader}"/>
 								<field-to-list field-name="orderHeaderInfo" list-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.orderReadyToPickInfoList"/>
 							</else>
 							</if-compare>
@@ -329,7 +326,6 @@
 	    <!-- go through all quantities and get inventoryItem and facilityLocation -->
     	<!-- warn if insufficient QOH for reserved amount -->
     	<iterate-map key-name="inventoryItemId" value-name="quantityNeeded" map-name="inventoryItemQuantities">
-    		<log level="info" message="For inventoryItemId ${inventoryItemId} need quantity ${quantityNeeded}"/>
     		<field-to-env field-name="${inventoryItemId}" map-name="inventoryItems" env-name="inventoryItem"/>
     		
     		<if>
@@ -376,7 +372,6 @@
 		
 		<!-- for each facility location add an entry to the inventoryItemInfoList -->
 		<iterate entry-name="facilityLocation" list-name="facilityLocations">
-			<log level="info" message="Doing facilityLocation ${facilityLocation}"/>
 			<!-- inventoryItemInfoList: facilityLocation, inventoryItem, orderItems, quantity -->
     		<field-to-env field-name="${facilityLocation.locationSeqId}" map-name="inventoryItemsByLocation" env-name="inventoryItemIdList"/>
     		<iterate entry-name="inventoryItemId" list-name="inventoryItemIdList">
@@ -394,7 +389,6 @@
 		
     	<!-- add all noLocationInventoryItemIds to inventoryItemInfoList with all entries except facilityLocation -->
     	<iterate entry-name="inventoryItemId" list-name="noLocationInventoryItemIds">
-    		<log level="info" message="Doing inventoryItemId with no location: ${inventoryItemId}"/>
 	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
 	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
 	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
