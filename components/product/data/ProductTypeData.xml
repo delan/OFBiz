@@ -113,6 +113,12 @@
   <ProductAssocType description="Product Variant" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_VARIANT"/>
   <ProductAssocType description="Unique Item" hasTable="N" parentTypeId="" productAssocTypeId="UNIQUE_ITEM"/>
 
+  <ProductAssocType description="Revision" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_REVISION"/>
+  <ProductAssocType description="Manufacturing Bill of Materials" hasTable="N" parentTypeId="PRODUCT_COMPONENT" productAssocTypeId="MANUF_COMPONENT"/>
+  <ProductAssocType description="Engineering Bill of Materials" hasTable="N" parentTypeId="PRODUCT_COMPONENT" productAssocTypeId="ENGINEER_COMPONENT"/>
+  <ProductAssocType description="Product Manufactured As" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_MANUFACTURED"/>
+  
+
   <ProductCategoryType description="Catalog" hasTable="N" parentTypeId="" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategoryType description="Industry" hasTable="N" parentTypeId="" productCategoryTypeId="INDUSTRY_CATEGORY"/>
   <ProductCategoryType description="Materials" hasTable="N" parentTypeId="" productCategoryTypeId="MATERIALS_CATEGORY"/>
