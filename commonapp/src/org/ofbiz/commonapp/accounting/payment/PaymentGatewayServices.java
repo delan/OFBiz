@@ -123,7 +123,17 @@ public class PaymentGatewayServices {
         Iterator payments = paymentPrefs.iterator();
         while (payments.hasNext()) {
             GenericValue paymentPref = (GenericValue) payments.next();
-            Map processorResult = authPayment(dispatcher, orh, paymentPref, amountToBill, false);
+            boolean reAuth = false;
+            
+            // if we are already authorized, then this is a re-auth request
+            if (paymentPref.get("statusId") != null && "PAYMENT_AUTHORIZED".equals(paymentPref.getString("statusId"))) {
+                reAuth = true;
+            }
+            
+            // call the authPayment method
+            Map processorResult = authPayment(dispatcher, orh, paymentPref, amountToBill, reAuth);
+            
+            // handle the response
             if (processorResult != null) {
                 GenericValue paymentSettings = (GenericValue) processorResult.get("paymentSettings");
                 Double thisAmount = (Double) processorResult.get("processAmount");
@@ -242,6 +252,7 @@ public class PaymentGatewayServices {
         processContext.put("shippingAddress", orh.getShippingAddress());
         processContext.put("paymentConfig", paymentConfig);
         processContext.put("currency", orh.getCurrency());
+        processContext.put("orderPaymentPreference", paymentPreference);
         
         // get the billing information
         getBillingInformation(orh, paymentPreference, processContext);

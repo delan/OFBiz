@@ -295,7 +295,7 @@
     <!-- Payment Auth/Capture Services -->
     <service name="authOrderPayments" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="authOrderPayments" auth="false">
-        <description>Process (authorizes) payments for an order</description>
+        <description>Process (authorizes/re-authorizes) payments for an order</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>
     </service>
@@ -328,6 +328,7 @@
 	<service name="ccAuthInterface" engine="interface" location="" invoke="">
         <description>Credit Card Authorization Interface</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="processAmount" type="Double" mode="INOUT" optional="false"/>
         <attribute name="orderItems" type="List" mode="IN" optional="false"/>
         <attribute name="contactPerson" type="GenericValue" mode="IN" optional="false"/>
