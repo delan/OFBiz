@@ -1,5 +1,5 @@
 /*
- * $Id: CallSimpleMethod.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: CallSimpleMethod.java,v 1.2 2003/09/14 05:40:41 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * An operation that calls a simple method in the same, or from another, file
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class CallSimpleMethod extends MethodOperation {
@@ -63,16 +63,9 @@ public class CallSimpleMethod extends MethodOperation {
                 try {
                     simpleMethods = SimpleMethod.getSimpleMethods(xmlResource, methodName, methodContext.getLoader());
                 } catch (MiniLangException e) {
-                    Debug.logError(e, module);
                     String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [error getting methods from resource: " + e.getMessage() + "]";
-
-                    if (methodContext.getMethodType() == MethodContext.EVENT) {
-                        methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
-                        methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
-                    } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                        methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
-                        methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
-                    }
+                    Debug.logError(e, errMsg, module);
+                    methodContext.setErrorReturn(errMsg, simpleMethod);
                     return false;
                 }
 
@@ -81,38 +74,41 @@ public class CallSimpleMethod extends MethodOperation {
 
             if (simpleMethodToCall == null) {
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process, could not find SimpleMethod " + methodName + " in XML document in resource: " + xmlResource;
-
+                methodContext.setErrorReturn(errMsg, simpleMethod);
+                return false;
+            }
+            
+            String returnVal = simpleMethodToCall.exec(methodContext);
+            if (Debug.verboseOn()) Debug.logVerbose("Called inline simple-method named [" + methodName + "] in resource [" + xmlResource + "], returnVal is [" + returnVal + "]", module);
+            
+            if (returnVal != null && returnVal.equals(simpleMethodToCall.getDefaultErrorCode())) {
+                // in this case just set the error code just in case it hasn't already been set, the error messages will already be in place...
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
-                    methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
                     methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
                 } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                    methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
                     methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
                 }
                 return false;
             }
             
-            String returnVal = simpleMethodToCall.exec(methodContext);
-            if (returnVal != null && returnVal.equals(simpleMethodToCall.getDefaultErrorCode())) {
-                // in this case just set the error code, the error messages will already be in place...
-                if (methodContext.getMethodType() == MethodContext.EVENT) {
-                    methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
-                } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                    methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
+            // if the response code/meassge is error, if so show the error and return false
+            if (methodContext.getMethodType() == MethodContext.EVENT) {
+                String responseCode = (String) methodContext.getEnv(simpleMethod.getEventResponseCodeName());
+                if (responseCode != null && responseCode.equals(simpleMethod.getDefaultErrorCode())) {
+                    Debug.logWarning("Got error [" + responseCode + "] calling inline simple-method named [" + methodName + "] in resource [" + xmlResource + "], message is " + methodContext.getEnv(simpleMethod.getEventErrorMessageName()) , module);
+                    return false;
                 }
-                return false;
+            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+                String resonseMessage = (String) methodContext.getEnv(simpleMethod.getServiceResponseMessageName());
+                if (resonseMessage != null && resonseMessage.equals(simpleMethod.getDefaultErrorCode())) {
+                    Debug.logWarning("Got error [" + resonseMessage + "] calling inline simple-method named [" + methodName + "] in resource [" + xmlResource + "], message is " + methodContext.getEnv(simpleMethod.getServiceErrorMessageName()) + ", and the error message list is: " + methodContext.getEnv(simpleMethod.getServiceErrorMessageListName()), module);
+                    return false;
+                }
             }
         } else {
             String errMsg = "ERROR in call-simple-method: methodName was missing; not running simpleMethod";
             Debug.logError(errMsg, module);
-
-            if (methodContext.getMethodType() == MethodContext.EVENT) {
-                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
-                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
-            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
-                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
-            }
+            methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
         }
 

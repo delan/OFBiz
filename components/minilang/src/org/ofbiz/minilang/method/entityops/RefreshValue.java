@@ -1,5 +1,5 @@
 /*
- * $Id: GetRelatedOne.java,v 1.2 2003/09/14 05:40:41 jonesde Exp $
+ * $Id: RefreshValue.java,v 1.1 2003/09/14 05:40:41 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,54 +33,40 @@ import org.ofbiz.minilang.method.MethodOperation;
 import org.w3c.dom.Element;
 
 /**
- * Gets a list of related entity instance according to the specified relation-name
+ * Uses the delegator to refresh the specified value object entity from the datasource
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
- * @since      2.0
+ * @version    $Revision: 1.1 $
+ * @since      3.0
  */
-public class GetRelatedOne extends MethodOperation {
+public class RefreshValue extends MethodOperation {
     
-    public static final String module = GetRelatedOne.class.getName();
+    public static final String module = RemoveValue.class.getName();
     
     ContextAccessor valueAcsr;
-    ContextAccessor toValueAcsr;
-    String relationName;
-    String useCacheStr;
+    String doCacheClearStr;
 
-    public GetRelatedOne(Element element, SimpleMethod simpleMethod) {
+    public RefreshValue(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         valueAcsr = new ContextAccessor(element.getAttribute("value-name"));
-        toValueAcsr = new ContextAccessor(element.getAttribute("to-value-name"));
-        relationName = element.getAttribute("relation-name");
-        useCacheStr = element.getAttribute("use-cache");
+        doCacheClearStr = element.getAttribute("do-cache-clear");
     }
 
     public boolean exec(MethodContext methodContext) {
-        String relationName = methodContext.expandString(this.relationName);
-        String useCacheStr = methodContext.expandString(this.useCacheStr);
-        boolean useCache = "true".equals(useCacheStr);
-
-        Object valueObject = valueAcsr.get(methodContext);
-        if (!(valueObject instanceof GenericValue)) {
-            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [env variable for value-name " + valueAcsr.toString() + " is not a GenericValue object; for the relation-name: " + relationName + "]";
-            Debug.logError(errMsg, module);
+        boolean doCacheClear = !"false".equals(methodContext.expandString(doCacheClearStr));
+        
+        GenericValue value = (GenericValue) valueAcsr.get(methodContext);
+        if (value == null) {
+            String errMsg = "In remove-value a value was not found with the specified valueAcsr: " + valueAcsr + ", not removing";
+            Debug.logWarning(errMsg, module);
             methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
         }
-        GenericValue value = (GenericValue) valueObject;
-        if (value == null) {
-            Debug.logWarning("Value not found with name: " + valueAcsr + ", not getting related...", module);
-            return true;
-        }
+
         try {
-            if (useCache) {
-                toValueAcsr.put(methodContext, value.getRelatedOneCache(relationName));
-            } else {
-                toValueAcsr.put(methodContext, value.getRelatedOne(relationName));
-            }
+            methodContext.getDelegator().refresh(value, doCacheClear);
         } catch (GenericEntityException e) {
-            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem getting related one from entity with name " + value.getEntityName() + " for the relation-name: " + relationName + ": " + e.getMessage() + "]";
+            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem removing the " + valueAcsr + " value: " + e.getMessage() + "]";
             Debug.logError(e, errMsg, module);
             methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;

@@ -1,5 +1,5 @@
 /*
- * $Id: IfCompare.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: IfCompare.java,v 1.2 2003/09/14 05:40:41 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.minilang.operation.*;
  * Iff the comparison between the constant and the specified field is true process sub-operations
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class IfCompare extends MethodOperation {
@@ -102,9 +102,9 @@ public class IfCompare extends MethodOperation {
         List messages = new LinkedList();
         Boolean resultBool = BaseCompare.doRealCompare(fieldVal, value, operator, type, format, messages, null, methodContext.getLoader());
         if (messages.size() > 0) {
+            messages.add(0, "Error with comparison in if-compare between field [" + mapAcsr.toString() + "." + fieldAcsr.toString() + "] with value [" + fieldVal + "] and value [" + value + "] with operator [" + operator + "] and type [" + type + "]: ");
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 StringBuffer fullString = new StringBuffer();
-                fullString.append("Error with comparison: ");
                 
                 Iterator miter = messages.iterator();
                 while (miter.hasNext()) {

@@ -1,5 +1,5 @@
 /*
- * $Id: FieldToEnv.java,v 1.1 2003/08/17 06:06:12 ajzeneski Exp $
+ * $Id: FieldToEnv.java,v 1.2 2003/09/14 05:40:41 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Copies a map field to an environment field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class FieldToEnv extends MethodOperation {
@@ -51,9 +51,13 @@ public class FieldToEnv extends MethodOperation {
         mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
 
-        // set fieldAcsr to their defualt value of envAcsr if empty
+        // set fieldAcsr to their defualt value of envAcsr if empty - this is the way it USED to work, so still supporting it, but a parsing error will result
         if (fieldAcsr.isEmpty()) {
             fieldAcsr = envAcsr;
+        }
+        // this is the new way that makes more sense, ie the destination should default to the source
+        if (envAcsr.isEmpty()) {
+            envAcsr = fieldAcsr;
         }
     }
 

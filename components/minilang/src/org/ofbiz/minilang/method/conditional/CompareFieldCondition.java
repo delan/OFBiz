@@ -1,5 +1,5 @@
 /*
- * $Id: CompareFieldCondition.java,v 1.1 2003/08/17 06:06:12 ajzeneski Exp $
+ * $Id: CompareFieldCondition.java,v 1.2 2003/09/14 05:40:41 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.operation.*;
  * Implements compare to a field condition.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class CompareFieldCondition implements Conditional {
@@ -107,12 +107,11 @@ public class CompareFieldCondition implements Conditional {
         Boolean resultBool = BaseCompare.doRealCompare(fieldVal1, fieldVal2, operator, type, format, messages, null, methodContext.getLoader());
 
         if (messages.size() > 0) {
+            messages.add(0, "Error with comparison in if-compare-field between fields [" + mapAcsr.toString() + "." + fieldAcsr.toString() + "] with value [" + fieldVal1 + "] and [" + toMapAcsr.toString() + "." + toFieldAcsr.toString() + "] with value [" + fieldVal2 + "] with operator [" + operator + "] and type [" + type + "]: ");
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 StringBuffer fullString = new StringBuffer();
 
-                fullString.append("Error with comparison: ");
                 Iterator miter = messages.iterator();
-
                 while (miter.hasNext()) {
                     fullString.append((String) miter.next());
                 }
