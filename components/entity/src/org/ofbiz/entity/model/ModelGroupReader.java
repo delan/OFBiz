@@ -1,5 +1,5 @@
 /*
- * $Id: ModelGroupReader.java,v 1.1 2003/08/16 22:05:48 ajzeneski Exp $
+ * $Id: ModelGroupReader.java,v 1.2 2003/08/17 05:55:11 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
@@ -50,7 +51,7 @@ import org.w3c.dom.Node;
  * Generic Entity - Entity Group Definition Reader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ModelGroupReader {
@@ -98,6 +99,14 @@ public class ModelGroupReader {
         while (resourceElementIter.hasNext()) {
             Element resourceElement = (Element) resourceElementIter.next();
             entityGroupResourceHandlers.add(new MainResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, resourceElement));
+        }
+
+        // get all of the component resource model stuff, ie specified in each ofbiz-component.xml file
+        List componentResourceInfos = ComponentConfig.getAllEntityResourceInfos("group");
+        Iterator componentResourceInfoIter = componentResourceInfos.iterator();
+        while (componentResourceInfoIter.hasNext()) {
+            ComponentConfig.EntityResourceInfo componentResourceInfo = (ComponentConfig.EntityResourceInfo) componentResourceInfoIter.next();
+            entityGroupResourceHandlers.add(componentResourceInfo.createResourceHandler());
         }
 
         // preload caches...

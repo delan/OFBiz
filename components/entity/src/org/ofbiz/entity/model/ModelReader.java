@@ -1,5 +1,5 @@
 /*
- * $Id: ModelReader.java,v 1.1 2003/08/16 22:05:48 ajzeneski Exp $
+ * $Id: ModelReader.java,v 1.2 2003/08/17 05:55:11 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
@@ -51,7 +52,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ModelReader {
@@ -114,12 +115,21 @@ public class ModelReader {
             throw new GenericEntityConfException("Cound not find an entity-model-reader with the name " + modelName);
         }
 
+        // get all of the main resource model stuff, ie specified in the entityengine.xml file
         List resourceElements = entityModelReaderInfo.resourceElements;
         Iterator resIter = resourceElements.iterator();
         while (resIter.hasNext()) {
             Element resourceElement = (Element) resIter.next();
             ResourceHandler handler = new MainResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, resourceElement);
             entityResourceHandlers.add(handler);
+        }
+        
+        // get all of the component resource model stuff, ie specified in each ofbiz-component.xml file
+        List componentResourceInfos = ComponentConfig.getAllEntityResourceInfos("model");
+        Iterator componentResourceInfoIter = componentResourceInfos.iterator();
+        while (componentResourceInfoIter.hasNext()) {
+            ComponentConfig.EntityResourceInfo componentResourceInfo = (ComponentConfig.EntityResourceInfo) componentResourceInfoIter.next();
+            entityResourceHandlers.add(componentResourceInfo.createResourceHandler());
         }
     }
 
