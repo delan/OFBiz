@@ -37,10 +37,10 @@
             </drop-down>
         </field>
         <field name="partyIdFrom">
-            <lookup target-form-name="LookupPartyGroup"/>
+            <lookup target-form-name="LookupPartyName"/>
         </field>
         <field name="partyIdTo">
-            <lookup target-form-name="LookupPartyGroup"/>
+            <lookup target-form-name="LookupPartyName"/>
         </field>
         <field name="roleTypeIdFrom"><hidden/></field>
         <field name="roleTypeIdTo"><hidden/></field>
@@ -94,7 +94,7 @@
             </drop-down>
         </field>
         <field name="partyIdFrom">
-            <lookup target-form-name="LookupPartyGroup"/>
+            <lookup target-form-name="LookupPartyName"/>
         </field>
         <field name="roleTypeIdFrom">
             <drop-down allow-empty="true">
@@ -107,7 +107,7 @@
             </drop-down>
         </field>
         <field name="partyIdTo">
-            <lookup target-form-name="LookupPartyGroup"/>
+            <lookup target-form-name="LookupPartyName"/>
         </field>
         
         <field name="submitButton" title="Submit" widget-style="standardSubmit">

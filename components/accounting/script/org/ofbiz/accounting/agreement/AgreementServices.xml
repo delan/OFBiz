@@ -99,7 +99,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <!-- create a non existing ID -->
-        <sequenced-id-to-env sequence-name="AgreementItem" env-name="agreementItemSeqId"/>
+        <make-next-seq-id value-name="newEntity" seq-field-name="agreementItemSeqId"/>
         <field-to-field field-name="parameters.agreementId" to-field-name="newEntity.agreementId"/>
         <env-to-field env-name="agreementItemSeqId" map-name="newEntity"/>
         <field-to-result field-name="agreementId" result-name="agreementId"/>
