@@ -86,27 +86,29 @@
           <#elseif question.surveyQuestionTypeId == "TEXTAREA">
             <textarea class="textAreaBox" cols="40" rows="5" name="answers_${question.surveyQuestionId}">${(answer.textResponse)?if_exists}</textarea>
           <#elseif question.surveyQuestionTypeId == "TEXT_SHORT">
-            <input type="text" size="15" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
+            <input type="text" size="15" class="inputBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "TEXT_LONG">
-            <input type="text" size="35" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
+            <input type="text" size="35" class="inputBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "EMAIL">
-            <input type="text" size="30" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
+            <input type="text" size="30" class="inputBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "URL">
-            <input type="text" size="40" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
+            <input type="text" size="40" class="inputBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "DATE">
-            <input type="text" size="12" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
+            <input type="text" size="12" class="inputBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "CREDIT_CARD">
-            <input type="text" size="20" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
+            <input type="text" size="20" class="inputBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "GIFT_CARD">
-            <input type="text" size="20" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
+            <input type="text" size="20" class="inputBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "NUMBER_CURRENCY">
-            <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.currencyResponse)?if_exists}">
+            <input type="text" size="6" class="inputBox" name="answers_${question.surveyQuestionId}" value="${(answer.currencyResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "NUMBER_FLOAT">
-            <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.floatResponse)?if_exists}">
+            <input type="text" size="6" class="inputBox" name="answers_${question.surveyQuestionId}" value="${(answer.floatResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "NUMBER_LONG">
-            <input type="text" size="6" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.numericResponse?string("#"))?if_exists}">
+            <input type="text" size="6" class="inputBox" name="answers_${question.surveyQuestionId}" value="${(answer.numericResponse?string("#"))?if_exists}">
           <#elseif question.surveyQuestionTypeId == "PASSWORD">
             <input type="password" size="30" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
+          <#elseif question.surveyQuestionTypeId == "CONTENT">
+            <input type="file" size="50" name="answers_${question.surveyQuestionId}">
           <#elseif question.surveyQuestionTypeId == "OPTION">
             <#assign options = question.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
             <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
