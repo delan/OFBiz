@@ -215,34 +215,7 @@ function insertImageName(size,ext) {
     <td width="74%" colspan='5'><textarea cols="60" rows="5" name="longDescription" maxlength="2000"><ofbiz:inputvalue entityAttr='product' field='longDescription' tryEntityAttr="tryEntity"/></textarea></td>
   </tr>
 
-  <tr>
-    <td width="26%" align=right valign=top><div class="tabletext">Inventory Message</div></td>
-    <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" size="30" maxlength="250" <ofbiz:inputvalue entityAttr='product' field='inventoryMessage' tryEntityAttr="tryEntity" fullattrs="true"/>></td>
-  </tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext">Require Inventory?</div></td>
-    <td>&nbsp;</td>
-    <td width="74%" colspan='5'>
-        <SELECT name='requireInventory'>
-            <%
-                String reqInvLabel = "Use Catalog Default";
-                if (product != null) {
-                    if ("Y".equals(product.getString("requireInventory"))) {
-                        reqInvLabel = "Yes";
-                    } else if ("N".equals(product.getString("requireInventory"))) {
-                        reqInvLabel = "No";
-                    }
-                }
-            %>
-            <OPTION value='<ofbiz:inputvalue entityAttr="product" field="requireInventory" tryEntityAttr="tryEntity"/>'><%=reqInvLabel%></OPTION>
-            <OPTION value='<ofbiz:inputvalue entityAttr="product" field="requireInventory" tryEntityAttr="tryEntity"/>'>----</OPTION>
-            <OPTION value=''>Use Catalog Default</OPTION>
-            <OPTION value='Y'>Yes</OPTION>
-            <OPTION value='N'>No</OPTION>
-        </SELECT>
-    </td>
-  </tr>
+  <tr><td colspan="7"><hr class="sepbar"></td></tr>
 
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Small Image URL</div></td>
@@ -305,6 +278,8 @@ function insertImageName(size,ext) {
     </td>
   </tr>
 
+  <tr><td colspan="7"><hr class="sepbar"></td></tr>
+
   <tr>
     <td width="26%" align=right><div class="tabletext">Manufacturer Party Id</div></td>
     <td>&nbsp;</td>
@@ -326,13 +301,42 @@ function insertImageName(size,ext) {
     <td>&nbsp;</td>
     <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='supportDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22"> <a href='#' onclick='insertNowTimestamp("supportDiscontinuationDate")' class='buttontext'>[Now]</a> (yyyy-MM-dd hh:mm:ss)</td>
   </tr>
+
+  <tr>
+    <td width="26%" align=right valign=top><div class="tabletext">Inventory Message</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='5'><input type="text" size="30" maxlength="250" <ofbiz:inputvalue entityAttr='product' field='inventoryMessage' tryEntityAttr="tryEntity" fullattrs="true"/>></td>
+  </tr>
+  <tr>
+    <td width="26%" align=right><div class="tabletext">Require Inventory?</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='5'>
+        <SELECT name='requireInventory'>
+            <%
+                String reqInvLabel = "Use Catalog Default";
+                if (product != null) {
+                    if ("Y".equals(product.getString("requireInventory"))) {
+                        reqInvLabel = "Yes";
+                    } else if ("N".equals(product.getString("requireInventory"))) {
+                        reqInvLabel = "No";
+                    }
+                }
+            %>
+            <OPTION value='<ofbiz:inputvalue entityAttr="product" field="requireInventory" tryEntityAttr="tryEntity"/>'><%=reqInvLabel%></OPTION>
+            <OPTION value='<ofbiz:inputvalue entityAttr="product" field="requireInventory" tryEntityAttr="tryEntity"/>'>----</OPTION>
+            <OPTION value=''>Use Catalog Default</OPTION>
+            <OPTION value='Y'>Yes</OPTION>
+            <OPTION value='N'>No</OPTION>
+        </SELECT>
+    </td>
+  </tr>
   <tr>
     <td width="26%" align=right><div class="tabletext">Comment</div></td>
     <td>&nbsp;</td>
     <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='comments' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255"></td>
   </tr>
 
-  <tr><td colspan="6">&nbsp;</td></tr>
+  <tr><td colspan="7"><hr class="sepbar"></td></tr>
 
   <tr>
     <td width="26%" align=right><div class="tabletext"><b>Weight</b></div></td>
@@ -408,11 +412,13 @@ function insertImageName(size,ext) {
       </SELECT>
     </td>
   </tr>
-  
+
+  <tr><td colspan="7">&nbsp;</td></tr>
   <tr>
     <td colspan='1' align=right><input type="submit" name="Update" value="Update"></td>
     <td colspan='2'>&nbsp;</td>
   </tr>
+  <tr><td colspan="7">&nbsp;</td></tr>
 </table>
 </form>
     <%if (productId != null) {%>
