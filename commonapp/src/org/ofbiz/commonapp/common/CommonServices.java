@@ -37,7 +37,7 @@ import org.ofbiz.core.util.*;
 /**
  * Common Services
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */
@@ -97,7 +97,7 @@ public class CommonServices {
         String body = null;
 
         try {
-            body = httpClient.get();
+            body = httpClient.post();
         } catch (HttpClientException e) {
             Debug.logWarning(e);
             return ServiceUtil.returnError("Error getting content: " + e.toString());
