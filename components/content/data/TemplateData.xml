@@ -63,7 +63,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers(byersa@automationgroups.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -195,12 +195,12 @@ ResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[Edit]</a>
         <textData><![CDATA[<table>
   <tr>
     <td>
-            <#assign thisContentId=context.contentId?if_exists/>
+            <#assign thisContentId=contentId?if_exists/>
         <@traverseSubContentCache subContentId=thisContentId
             pickWhen="mapKey != null && mapKey.equals(\"IMAGE\")"
             returnFromPickWhen="mapKey != null && mapKey.equals(\"IMAGE\")"
         >
-            <#assign drDataResourceId=context.content.dataResourceId?if_exists/>
+            <#assign drDataResourceId=content.dataResourceId?if_exists/>
         </@traverseSubContentCache>
         <img src="<@ofbizUrl>/img?imgId=${drDataResourceId?if_exists}</@ofbizUrl>" />
     </td>
@@ -232,47 +232,47 @@ ResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[Edit]</a>
     </ElectronicText>
     <ElectronicText dataResourceId="WRAP_ARTICLE" lastUpdatedStamp="2004-03-16 12:05:33.806" lastUpdatedTxStamp="2004-03-16 12:05:33.806" createdStamp="2004-01-21 16:10:53.043" createdTxStamp="2004-01-21 16:10:53.026">
         <textData><![CDATA[<#assign thisContentId = ""/>
-<#if context.nodeTrailCsv?exists>
-    <#assign idList = context.nodeTrailCsv?split(",")/>
+<#if nodeTrailCsv?exists>
+    <#assign idList = nodeTrailCsv?split(",")/>
     <#if 0 < idList?size >
         <#assign thisContentId = idList?last>
     </#if>
 </#if>
 
-<a class="tabButton" href="<@ofbizUrl>/ViewArticle?contentId=${thisContentId}&nodeTrailCsv=${context.nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
+<a class="tabButton" href="<@ofbizUrl>/ViewArticle?contentId=${thisContentId}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
 
 ]]></textData>
     </ElectronicText>
     <ElectronicText dataResourceId="WRAP_ARTICLE_TABLE" lastUpdatedStamp="2004-03-16 12:04:07.687" lastUpdatedTxStamp="2004-03-16 12:04:07.687" createdStamp="2004-03-16 12:04:07.687" createdTxStamp="2004-03-16 12:04:07.687">
         <textData><![CDATA[<#assign thisContentId = ""/>
-<#if context.nodeTrailCsv?exists>
-    <#assign idList = context.nodeTrailCsv?split(",")/>
+<#if nodeTrailCsv?exists>
+    <#assign idList = nodeTrailCsv?split(",")/>
     <#if 0 < idList?size >
         <#assign thisContentId = idList?last>
     </#if>
 </#if>
 <tr>
 <td>
-${context.wrappedContent?if_exists} 
+${wrappedContent?if_exists} 
 </td>
 </tr>
 <tr>
 <td align="right">
 
-<a class="tabButton" href="<@ofbizUrl>/ViewArticle?contentId=${thisContentId}&nodeTrailCsv=${context.nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
+<a class="tabButton" href="<@ofbizUrl>/ViewArticle?contentId=${thisContentId}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
 </td>
 </tr>
 ]]></textData>
     </ElectronicText>
     <ElectronicText dataResourceId="WRAP_NEXT_PREV" lastUpdatedStamp="2004-02-12 15:41:07.692" lastUpdatedTxStamp="2004-02-12 15:41:07.692" createdStamp="2004-02-03 14:04:15.768" createdTxStamp="2004-02-03 14:04:15.768">
-        <textData><![CDATA[<tr><td>${context.wrappedContent}</td></tr>
+        <textData><![CDATA[<tr><td>${wrappedContent}</td></tr>
 
-<#assign listSize=context.listSize?number/>
-<#assign viewIndex=context.viewIndex?number/>
-<#assign highIndex=context.highIndex?number/>
-<#assign lowIndex=context.lowIndex?number/>
-<#assign requestURL=context.requestURL?if_exists/>
-<#assign queryString=context.queryString?if_exists/>
+<#assign listSize=listSize?number/>
+<#assign viewIndex=viewIndex?number/>
+<#assign highIndex=highIndex?number/>
+<#assign lowIndex=lowIndex?number/>
+<#assign requestURL=requestURL?if_exists/>
+<#assign queryString=queryString?if_exists/>
 <#assign lowIndexShow=lowIndex + 1 />
 
 <#if highIndex < lowIndexShow >
@@ -333,10 +333,10 @@ ResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[Edit]</a>
 </div>]]></textData>
     </ElectronicText>
     <ElectronicText dataResourceId="WRAP_STD_LOOP" lastUpdatedStamp="2004-02-11 22:29:52.832" lastUpdatedTxStamp="2004-02-11 22:29:52.832" createdStamp="2004-01-20 22:24:40.238" createdTxStamp="2004-01-20 22:24:40.236">
-        <textData><![CDATA[<#assign contentIdTo=context.contentIdTo?if_exists/>
+        <textData><![CDATA[<#assign contentIdTo=contentIdTo?if_exists/>
 
 <tr><td>
-<@checkPermission entityOperation="_CREATE" targetPurpose="${context.targetPurpose?if_exists}">
+<@checkPermission entityOperation="_CREATE" targetPurpose="${targetPurpose?if_exists}">
 <a class="tabButton" style="height:14pt;" href="<@ofbizUrl>/EditCombo?contentIdTo=${contentIdTo?if_exists}&mode=add</@ofbizUrl>" >New</a>
 <br/>
 </@checkPermission>
@@ -349,30 +349,30 @@ ResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[Edit]</a>
 -->
 
 <#assign outputIndex = 0/>
-<#if context.outputIndex?exists >
-<#assign outputIndex = context.outputIndex?number/>
+<#if outputIndex?exists >
+<#assign outputIndex = outputIndex?number/>
 <#else>
 <#assign outputIndex = 0/>
 </#if>
-<#if context.listSize?exists >
-<#assign listSize = context.listSize?number/>
+<#if listSize?exists >
+<#assign listSize = listSize?number/>
 <#else>
 <#assign listSize = 0/>
 </#if>
-<#if context.viewIndex?exists >
-<#assign viewIndex = context.viewIndex?number/>
+<#if viewIndex?exists >
+<#assign viewIndex = viewIndex?number/>
 <#else>
 <#assign viewIndex = 0/>
 </#if>
-<#if context.lowIndex?exists >
-<#assign lowIndex = context.lowIndex?number/>
+<#if lowIndex?exists >
+<#assign lowIndex = lowIndex?number/>
 <#else>
 <#assign lowIndex = 0/>
 </#if>
 <#assign lowPlusOne = lowIndex + 1/>
 <#assign prevStr = "" />
-<#if context.highIndex?exists >
-<#assign highIndex = context.highIndex?number/>
+<#if highIndex?exists >
+<#assign highIndex = highIndex?number/>
 <#else>
 <#assign highIndex = 0/>
 </#if>
@@ -402,11 +402,11 @@ ResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[Edit]</a>
 ]]></textData>
     </ElectronicText>
     <ElectronicText dataResourceId="WRAP_VIEW" lastUpdatedStamp="2004-03-06 15:18:33.369" lastUpdatedTxStamp="2004-03-06 15:18:33.369" createdStamp="2004-01-21 16:10:53.054" createdTxStamp="2004-01-21 16:10:53.026">
-        <textData><![CDATA[<#assign txt=context.wrappedContent?default("")/>
+        <textData><![CDATA[<#assign txt=wrappedContent?default("")/>
 ${txt}
 <br/>
 <@checkPermission targetOperation="CONTENT_CREATE|CONTENT_RESPOND">
-<a class="tabButton" href="<@ofbizUrl>/AddResponse?contentIdTo=${subContentId?if_exists}&nodeTrailCsv=${context.nodeTrailCsv?if_exists}</@ofbizUrl>" >Respond</a>
+<a class="tabButton" href="<@ofbizUrl>/AddResponse?contentIdTo=${subContentId?if_exists}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >Respond</a>
 </@checkPermission>
 <br/>
 ]]></textData>
