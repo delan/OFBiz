@@ -1,5 +1,5 @@
 /*
- * $Id: ModelUtil.java,v 1.2 2003/12/11 01:58:19 jonesde Exp $
+ * $Id: ModelUtil.java,v 1.3 2003/12/25 00:24:35 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - General Utilities
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ModelUtil {
@@ -272,32 +272,31 @@ public class ModelUtil {
     public static String induceFieldType(String sqlTypeName, int length, int precision, ModelFieldTypeReader fieldTypeReader) {
         if (sqlTypeName == null) return "invalid";
 
-        if (sqlTypeName.equals("VARCHAR") || sqlTypeName.equals("VARCHAR2")) {
+        if (sqlTypeName.equalsIgnoreCase("VARCHAR") || sqlTypeName.equalsIgnoreCase("VARCHAR2")) {
             if (length <= 10) return "very-short";
             if (length <= 60) return "short-varchar";
             if (length <= 255) return "long-varchar";
-            if (length <= 4000) return "very-long";
-            return "invalid";
-        } else if (sqlTypeName.equals("TEXT")) {
             return "very-long";
-        } else if (sqlTypeName.equals("DECIMAL") || sqlTypeName.equals("NUMERIC")) {
+        } else if (sqlTypeName.equalsIgnoreCase("TEXT")) {
+            return "very-long";
+        } else if (sqlTypeName.equalsIgnoreCase("DECIMAL") || sqlTypeName.equalsIgnoreCase("NUMERIC")) {
             if (length > 18) return "invalid";
             if (precision == 0) return "numeric";
             if (precision <= 2) return "currency-amount";
             if (precision <= 6) return "floating-point";
-            return "invalid";
-        } else if (sqlTypeName.equals("BLOB") || sqlTypeName.equals("OID")) {
+            return "invalid-" + sqlTypeName;
+        } else if (sqlTypeName.equalsIgnoreCase("BLOB") || sqlTypeName.equalsIgnoreCase("OID")) {
             return "blob";
-        } else if (sqlTypeName.equals("DATETIME") || sqlTypeName.equals("TIMESTAMP")) {
+        } else if (sqlTypeName.equalsIgnoreCase("DATETIME") || sqlTypeName.equalsIgnoreCase("TIMESTAMP")) {
             return "date-time";
-        } else if (sqlTypeName.equals("DATE")) {
+        } else if (sqlTypeName.equalsIgnoreCase("DATE")) {
             return "date";
-        } else if (sqlTypeName.equals("TIME")) {
+        } else if (sqlTypeName.equalsIgnoreCase("TIME")) {
             return "time";
-        } else if (sqlTypeName.equals("CHAR") && length == 1) {
+        } else if (sqlTypeName.equalsIgnoreCase("CHAR") && length == 1) {
             return "indicator";
         } else {
-            return "invalid";
+            return "invalid-" + sqlTypeName;
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.9 2003/12/24 01:57:36 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.10 2003/12/25 00:24:35 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ModelEntity implements Comparable {
@@ -54,8 +54,8 @@ public class ModelEntity implements Comparable {
     /** The name of the time stamp field for locking/syncronization */
     public static final String STAMP_FIELD = "lastUpdatedStamp";
     public static final String STAMP_TX_FIELD = "lastUpdatedTxStamp";
-    public static final String CREATE_STAMP_FIELD = "lastCreatedStamp";
-    public static final String CREATE_STAMP_TX_FIELD = "lastCreatedTxStamp";
+    public static final String CREATE_STAMP_FIELD = "createdStamp";
+    public static final String CREATE_STAMP_TX_FIELD = "createdTxStamp";
     
     /** The ModelReader that created this Entity */
     protected ModelReader modelReader = null;
@@ -200,7 +200,12 @@ public class ModelEntity implements Comparable {
 
     /** DB Names Constructor */
     public ModelEntity(String tableName, List colList, ModelFieldTypeReader modelFieldTypeReader) {
+        // if there is a dot in the name, remove it and everything before it, should be the schema name
         this.tableName = tableName;
+        int dotIndex = this.tableName.indexOf(".");
+        if (dotIndex >= 0) {
+            this.tableName = this.tableName.substring(dotIndex + 1);
+        }
         this.entityName = ModelUtil.dbNameToClassName(this.tableName);
         Iterator columns = colList.iterator();
 

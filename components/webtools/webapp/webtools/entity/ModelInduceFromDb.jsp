@@ -1,4 +1,4 @@
-<%@ page import="java.util.*, java.io.*, java.net.*, java.sql.*, org.ofbiz.base.util.*, org.ofbiz.entity.*, org.ofbiz.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" /><jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" /><%
+<%@ page import="java.util.*, java.io.*, java.net.*, java.sql.*, org.ofbiz.base.util.*, org.ofbiz.entity.*, org.ofbiz.entity.model.*, org.ofbiz.entity.datasource.*" %><jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" /><jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" /><%
 
 if(security.hasPermission("ENTITY_MAINT", session)) {
   String helperName = request.getParameter("helperName");
@@ -34,12 +34,10 @@ ERRORS:
         String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org";
         String author = "None";
         String version = "1.0";
-%><?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+%><?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE entitymodel PUBLIC "-//OFBiz//DTD Entity Model//EN" "http://www.ofbiz.org/dtds/entitymodel.dtd">
 <!--
-/**
- *  Title: Entity Generator Definitions for the General Data Model
- *  Description: None
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -58,73 +56,7 @@ ERRORS:
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *@author David E. Jones (jonesde@ofbiz.org)
- *@version    1.0
- */
 -->
-
-<!DOCTYPE entitymodel [
-    <!-- ====================== Root Element ======================= -->
-    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
-    <!-- ================= Children of entitymodel =================== -->
-    <!ELEMENT entity ( description?, field*, prim-key*, relation* )>
-    <!ELEMENT title ( #PCDATA  )>
-    <!ELEMENT description ( #PCDATA  )>
-    <!ELEMENT copyright ( #PCDATA  )>
-    <!ELEMENT author ( #PCDATA  )>
-    <!ELEMENT version ( #PCDATA  )>
-    <!-- ================== Children of entity ===================== -->
-    <!-- see the children of entitymodel section for description, etc. -->
-    <!ATTLIST entity
-	entity-name CDATA #REQUIRED >
-    <!ATTLIST entity
-	table-name CDATA #IMPLIED >
-    <!ATTLIST entity
-	package-name CDATA #REQUIRED >
-    <!ATTLIST entity
-	dependent-on CDATA #IMPLIED >
-    <!ATTLIST entity
-	title CDATA #IMPLIED >
-    <!ATTLIST entity
-	copyright CDATA #IMPLIED >
-    <!ATTLIST entity
-	author CDATA #IMPLIED >
-    <!ATTLIST entity
-	version CDATA #IMPLIED >
-    <!ELEMENT field ( validate* )>
-    <!ELEMENT prim-key EMPTY>
-    <!ATTLIST prim-key
-	field CDATA #REQUIRED >
-    <!ELEMENT relation ( key-map* )>
-    <!-- ==================== Children of field ===================== -->
-    <!ATTLIST field
-	name CDATA #REQUIRED >
-    <!ATTLIST field
-	col-name CDATA #IMPLIED >
-    <!ATTLIST field
-	type CDATA #REQUIRED >
-    <!ELEMENT validate EMPTY>
-    <!ATTLIST validate
-	name CDATA #REQUIRED >
-    <!-- ==================== Children of relation ====================== -->
-    <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
-    <!ATTLIST relation
-	type ( one | many ) #REQUIRED >
-    <!ATTLIST relation
-	title CDATA #IMPLIED >
-    <!ATTLIST relation
-	rel-entity-name CDATA #REQUIRED >
-    <!ATTLIST relation
-	rel-table-name CDATA #IMPLIED >
-    <!ELEMENT key-map EMPTY>
-    <!-- see definition of relation in entity section above -->
-    <!-- ===================== Children of key-map ====================== -->
-    <!ATTLIST key-map
-	field-name CDATA #REQUIRED >
-    <!ATTLIST key-map
-	rel-field-name CDATA #IMPLIED >
-]>
 
 <entitymodel>
   <!-- ========================================================= -->
