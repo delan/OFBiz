@@ -1,5 +1,5 @@
 /*
- * $Id: DebugXaResource.java,v 1.1 2004/05/25 06:19:14 ajzeneski Exp $
+ * $Id: DebugXaResource.java,v 1.2 2004/05/25 06:30:56 ajzeneski Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.base.util.Debug;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class DebugXaResource extends GenericXaResource {
@@ -39,6 +39,10 @@ public class DebugXaResource extends GenericXaResource {
     public static final String module = DebugXaResource.class.getName();
     public Exception ex = null;
 
+    public DebugXaResource(String info) {
+        this.ex = new Exception(info);
+    }
+    
     public DebugXaResource() {
         this.ex = new Exception();
     }
@@ -51,6 +55,11 @@ public class DebugXaResource extends GenericXaResource {
     public void rollback(Xid xid) throws XAException {
         TransactionUtil.debugResMap.remove(xid);
         if (Debug.verboseOn()) Debug.logVerbose("Xid : " + xid.toString() + " cleared [rollback]", module);
+    }
+
+    public void enlist() throws XAException {
+        super.enlist();
+        TransactionUtil.debugResMap.put(xid, this);
     }
 
     public void log() {

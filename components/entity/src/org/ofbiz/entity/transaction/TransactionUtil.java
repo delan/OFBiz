@@ -1,5 +1,5 @@
 /*
- * $Id: TransactionUtil.java,v 1.5 2004/05/25 06:19:14 ajzeneski Exp $
+ * $Id: TransactionUtil.java,v 1.6 2004/05/25 06:30:57 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.base.util.UtilDateTime;
  * <p>Provides a wrapper around the transaction objects to allow for changes in underlying implementations in the future.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class TransactionUtil implements Status {
@@ -109,8 +109,7 @@ public class TransactionUtil implements Status {
                 if (debugResources) {
                     DebugXaResource dxa = new DebugXaResource();
                     try {
-                        dxa.enlist();
-                        debugResMap.put(dxa.getXid(), dxa);
+                        dxa.enlist();                        
                     } catch (XAException e) {
                         Debug.logError(e, module);
                     }

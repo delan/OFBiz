@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.15 2004/02/19 18:52:35 ajzeneski Exp $
+ * $Id: ServiceDispatcher.java,v 1.16 2004/05/25 06:30:57 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,6 +40,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionFactory;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.transaction.DebugXaResource;
 import org.ofbiz.security.Security;
 import org.ofbiz.security.SecurityConfigurationException;
 import org.ofbiz.security.SecurityFactory;
@@ -55,7 +56,7 @@ import org.ofbiz.service.job.JobManager;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -236,6 +237,16 @@ public class ServiceDispatcher {
             }
         }
 
+        // XAResource debugging
+        if (beganTrans && TransactionUtil.debugResources) {
+            DebugXaResource dxa = new DebugXaResource(modelService.name);
+            try {
+                dxa.enlist();
+            } catch (Exception e) {
+                Debug.logError(e, module);
+            }
+        }
+
         // needed for events
         DispatchContext ctx = (DispatchContext) localContext.get(localName);
 
@@ -413,6 +424,16 @@ public class ServiceDispatcher {
                 } catch (GenericTransactionException gte) {
                     throw new GenericServiceException("Cannot start the transaction.", gte.getNested());
                 }
+            }
+        }
+
+        // XAResource debugging
+        if (beganTrans && TransactionUtil.debugResources) {
+            DebugXaResource dxa = new DebugXaResource(service.name);
+            try {
+                dxa.enlist();
+            } catch (Exception e) {
+                Debug.logError(e, module);
             }
         }
 
