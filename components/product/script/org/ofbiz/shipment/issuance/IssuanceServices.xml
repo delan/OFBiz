@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -114,9 +114,7 @@
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked" xml-resource="org/ofbiz/shipment/shipment/ShipmentServices.xml"/>
 
         <!-- get orderHeader -->
-        <make-value entity-name="OrderHeader" value-name="orderHeaderLookupPk"/>
-        <set-pk-fields value-name="orderHeaderLookupPk" map-name="parameters"/>
-        <find-by-primary-key map-name="orderHeaderLookupPk" value-name="orderHeader"/>
+        <entity-one entity-name="OrderHeader" value-name="orderHeader" auto-field-map="true"/>
         
         <!-- make sure the order is NOT of orderTypeId: SALES_ORDER -->
         <if-compare field-name="orderTypeId" map-name="orderHeader" operator="equals" value="SALES_ORDER">
@@ -125,13 +123,11 @@
         <check-errors/>
 
         <!-- get orderItem -->
-        <make-value entity-name="OrderItem" value-name="orderItemLookupPk"/>
-        <set-pk-fields value-name="orderItemLookupPk" map-name="parameters"/>
-        <find-by-primary-key map-name="orderItemLookupPk" value-name="orderItem"/>
+        <entity-one entity-name="OrderItem" value-name="orderItem" auto-field-map="true"/>
+        <!-- get orderItemShipGroupAssoc -->
+        <entity-one entity-name="OrderItemShipGroupAssoc" value-name="orderItemShipGroupAssoc" auto-field-map="true"/>
         <!-- get shipment -->
-        <make-value entity-name="Shipment" value-name="shipmentLookupPk"/>
-        <set-pk-fields value-name="shipmentLookupPk" map-name="parameters"/>
-        <find-by-primary-key map-name="shipmentLookupPk" value-name="shipment"/>
+        <entity-one entity-name="Shipment" value-name="shipment" auto-field-map="true"/>
         
         <call-simple-method method-name="findCreateIssueShipmentItem"/>
         <call-simple-method method-name="callCreateItemIssuance"/>
@@ -320,11 +316,17 @@
         <field-to-field field-name="shipmentItemSeqId" map-name="shipmentItem" to-map-name="itemIssuanceCreate"/>
         <field-to-field field-name="orderId" map-name="orderItem" to-map-name="itemIssuanceCreate"/>
         <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="itemIssuanceCreate"/>
+        
         <if-not-empty field-name="orderItemShipGrpInvRes">
             <!-- if this is coming from an OrderItem issue instead of an OrderItemShipGrpInvRes issue, we won't have this info -->
             <field-to-field field-name="inventoryItemId" map-name="orderItemShipGrpInvRes" to-map-name="itemIssuanceCreate"/>
             <field-to-field field-name="shipGroupSeqId" map-name="orderItemShipGrpInvRes" to-map-name="itemIssuanceCreate"/>
         </if-not-empty>
+        <if-not-empty field-name="orderItemShipGroupAssoc">
+            <!-- If we have a ShipGroup Assoc for this Item to focus on, set that; this is mostly the case for purchase orders and such -->
+            <field-to-field field-name="shipGroupSeqId" map-name="orderItemShipGroupAssoc" to-map-name="itemIssuanceCreate"/>
+        </if-not-empty>
+        
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="issuedByUserLoginId" to-map-name="itemIssuanceCreate"/>
         <call-service service-name="createItemIssuance" in-map-name="itemIssuanceCreate" >
             <result-to-field result-name="itemIssuanceId"/>
