@@ -386,74 +386,74 @@
   <GeoAssoc geoId="WY" geoIdTo="USCN" geoAssocTypeId="GROUP_MEMBER"/>
 
   <!-- Associations -->
-  <GeoAssoc geoId="USA" geoId="AK" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="AL" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="AR" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="AZ" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="CA" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="CO" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="CT" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="DC" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="DE" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="FL" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="GA" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="GU" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="HI" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="IA" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="ID" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="IL" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="IN" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="KS" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="KY" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="LA" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="MA" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="MD" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="ME" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="MI" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="MN" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="MO" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="MS" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="MT" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="NC" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="ND" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="NE" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="NH" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="NJ" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="NM" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="NV" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="NY" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="OH" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="OK" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="OR" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="PA" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="PR" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="RI" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="SC" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="SD" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="TN" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="TX" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="UT" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="VA" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="VT" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="WA" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="WI" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="WV" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="WY" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="VI" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="AB" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="BC" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="MB" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="NB" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="NF" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="NS" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="NT" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="NU" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="ON" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="PE" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="QC" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="SK" geoAssocTypeId="REGIONS" />
-  <GeoAssoc geoId="USA" geoId="YT" geoAssocTypeId="REGIONS" />
-
+  <GeoAssoc geoId="USA" geoIdTo="AK" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="AL" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="AR" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="AZ" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="CA" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="CO" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="CT" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="DC" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="DE" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="FL" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="GA" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="GU" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="HI" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="IA" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="ID" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="IL" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="IN" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="KS" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="KY" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="LA" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="MA" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="MD" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="ME" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="MI" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="MN" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="MO" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="MS" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="MT" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="NC" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="ND" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="NE" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="NH" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="NJ" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="NM" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="NV" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="NY" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="OH" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="OK" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="OR" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="PA" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="PR" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="RI" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="SC" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="SD" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="TN" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="TX" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="UT" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="VA" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="VT" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="WA" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="WI" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="WV" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="WY" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="VI" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="AB" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="BC" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="MB" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="NB" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="NF" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="NS" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="NT" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="NU" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="ON" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="PE" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="QC" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="SK" geoAssocTypeId="REGIONS" />
+  <GeoAssoc geoId="USA" geoIdTo="YT" geoAssocTypeId="REGIONS" />
+<!-- The Geo records need to be defined for these assocs, leaving out for now
   <GeoAssoc geoId="GBR" geoIdTo="Avon" geoAssocTypeId="REGIONS" /> 
   <GeoAssoc geoId="GBR" geoIdTo="Bfd" geoAssocTypeId="REGIONS" /> 
   <GeoAssoc geoId="GBR" geoIdTo="Bkh" geoAssocTypeId="REGIONS" /> 
@@ -523,4 +523,5 @@
   <GeoAssoc geoId="GBR" geoIdTo="WYorks" geoAssocTypeId="REGIONS" /> 
   <GeoAssoc geoId="GBR" geoIdTo="War" geoAssocTypeId="REGIONS" /> 
   <GeoAssoc geoId="GBR" geoIdTo="Wts" geoAssocTypeId="REGIONS" /> 
+-->
 </entity-engine-xml>
