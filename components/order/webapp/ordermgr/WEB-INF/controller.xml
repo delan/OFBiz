@@ -209,8 +209,8 @@
     <request-map uri="quickShipOrder">
         <security https="true" auth="true"/>
         <event type="service" invoke="quickShipEntireOrder"/>
-        <response name="success" type="view" value="orderview"/>
-        <response name="error" type="view" value="orderview"/>
+        <response name="success" type="request-redirect" value="orderview"/>
+        <response name="error" type="request-redirect" value="orderview"/>
     </request-map>
 
     <!-- Order Note Requests -->
@@ -486,8 +486,8 @@
     <request-map uri="quickRefundOrder">
         <security https="true" auth="true"/>
         <event type="service" invoke="quickReturnOrder"/>
-        <response name="success" type="view" value="orderview"/>
-        <response name="error" type="view" value="orderview"/>
+        <response name="success" type="request-redirect" value="orderview"/>
+        <response name="error" type="request-redirect" value="orderview"/>
     </request-map>
 
     <request-map uri="returnMain">
