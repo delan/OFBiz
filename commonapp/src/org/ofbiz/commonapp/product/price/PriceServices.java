@@ -43,6 +43,8 @@ import org.ofbiz.core.service.*;
  *@created    June 6, 2002
  */
 public class PriceServices {
+    public static final String module = PriceServices.class.getName();
+
     /**
      * <p>Calculates the price of a product from pricing rules given the following input, and of course access to the database:</p>
      * <ul>
@@ -53,6 +55,10 @@ public class PriceServices {
      * </ul>
      */
     public static Map calculateProductPrice(DispatchContext dctx, Map context) {
+        UtilTimer utilTimer = new UtilTimer();
+        utilTimer.setLog(true);
+        utilTimer.timerString("Starting price calc", module);
+        
         GenericDelegator delegator = dctx.getDelegator();
         Map result = new HashMap();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
@@ -70,6 +76,18 @@ public class PriceServices {
         Double listPriceDbl = product.getDouble("listPrice");
         if (listPriceDbl == null) {
             //no list price, use defaultPrice for the final price
+            
+            // ========= ensure calculated price is not below minSalePrice or above maxSalePrice =========
+            Double maxSellPrice = product.getDouble("maxSellPrice");
+            if (maxSellPrice != null && defaultPrice > maxSellPrice.doubleValue()) {
+                defaultPrice = maxSellPrice.doubleValue();
+            }
+            //min price second to override max price, safety net
+            Double minSellPrice = product.getDouble("minSellPrice");
+            if (minSellPrice != null && defaultPrice < minSellPrice.doubleValue()) {
+                defaultPrice = minSellPrice.doubleValue();
+            }
+            
             result.put("price", new Double(defaultPrice));
         } else {
             try {
@@ -82,6 +100,7 @@ public class PriceServices {
                 double price = listPrice;
 
                 // ========= find all rules that must be run for each input type; this is kind of like a pre-filter to slim down the rules to run =========
+                utilTimer.timerString("Before create rule id list", module);
                 TreeSet productPriceRuleIds = new TreeSet();
 
                 // ------- These are all of them that DON'T depend on the current inputs -------
@@ -164,6 +183,7 @@ public class PriceServices {
 
 
                 // ========= go through each price rule by id and eval all conditions =========
+                utilTimer.timerString("Before eval rules", module);
                 Iterator productPriceRuleIdsIter = productPriceRuleIds.iterator();
                 int totalConds = 0;
                 int totalActions = 0;
@@ -254,7 +274,7 @@ public class PriceServices {
                                 if (productPriceAction.get("amount") != null) {
                                     price = productPriceAction.getDouble("amount").doubleValue();
                                 } else {
-                                    Debug.logError("ERROR: ProductPriceAction had null amount, using default price: " + defaultPrice + " for product with id " + productId);
+                                    Debug.logError("ERROR: ProductPriceAction had null amount, using default price: " + defaultPrice + " for product with id " + productId, module);
                                     price = defaultPrice;
                                 }
                             }
@@ -289,13 +309,18 @@ public class PriceServices {
                 }
                 
                 if (Debug.verboseOn()) {
-                    Debug.logVerbose("Unchecked Calculated price: " + price);
-                    Debug.logVerbose("PriceInfo:");
+                    Debug.logVerbose("Unchecked Calculated price: " + price, module);
+                    Debug.logVerbose("PriceInfo:", module);
                     Iterator orderItemPriceInfosIter = orderItemPriceInfos.iterator();
                     while (orderItemPriceInfosIter.hasNext()) {
                         GenericValue orderItemPriceInfo = (GenericValue) orderItemPriceInfosIter.next();
-                        Debug.logVerbose(" --- " + orderItemPriceInfo.toString());
+                        Debug.logVerbose(" --- " + orderItemPriceInfo.toString(), module);
                     }
+                }
+
+                //if no actions were run on the list price, then use the default price
+                if (totalActions == 0) {
+                    price = defaultPrice;
                 }
 
                 // ========= ensure calculated price is not below minSalePrice or above maxSalePrice =========
@@ -303,28 +328,30 @@ public class PriceServices {
                 if (maxSellPrice != null && price > maxSellPrice.doubleValue()) {
                     price = maxSellPrice.doubleValue();
                 }
+                //min price second to override max price, safety net
                 Double minSellPrice = product.getDouble("minSellPrice");
                 if (minSellPrice != null && price < minSellPrice.doubleValue()) {
                     price = minSellPrice.doubleValue();
                 }
 
-                Debug.logInfo("Final Calculated price: " + price + ", rules: " + totalRules + ", conds: " + totalConds + ", actions: " + totalActions);
+                Debug.logInfo("Final Calculated price: " + price + ", rules: " + totalRules + ", conds: " + totalConds + ", actions: " + totalActions, module);
                 
                 result.put("price", new Double(price));
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Error getting rules from the database while calculating price");
+                Debug.logError(e, "Error getting rules from the database while calculating price", module);
                 return ServiceUtil.returnError("Error getting rules from the database while calculating price: " + e.toString());
             }
         }
         
         result.put("orderItemPriceInfos", orderItemPriceInfos);
         result.put("isSale", new Boolean(isSale));
+        utilTimer.timerString("Finished price calc", module);
         return result;
     }
 
     public static boolean checkPriceCondition(GenericValue productPriceCond, String productId, String prodCatalogId, 
             String partyId, double quantity, GenericDelegator delegator) throws GenericEntityException {
-        Debug.logVerbose("Checking price condition: " + productPriceCond);
+        Debug.logVerbose("Checking price condition: " + productPriceCond, module);
         int compare = 0;
         if ("PRIP_PRODUCT_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
             compare = productId.compareTo(productPriceCond.getString("condValue"));
@@ -362,11 +389,11 @@ public class PriceServices {
                 compare = 1;
             }
         } else {
-            Debug.logWarning("An un-supported productPriceCond input parameter (lhs) was used: " + productPriceCond.getString("inputParamEnumId") + ", returning false, ie check failed");
+            Debug.logWarning("An un-supported productPriceCond input parameter (lhs) was used: " + productPriceCond.getString("inputParamEnumId") + ", returning false, ie check failed", module);
             return false;
         }
         
-        Debug.logVerbose("Price Condition compare done, compare=" + compare);
+        Debug.logVerbose("Price Condition compare done, compare=" + compare, module);
 
         if ("PRC_EQ".equals(productPriceCond.getString("operatorEnumId"))) {
             if (compare == 0) return true;
@@ -381,7 +408,7 @@ public class PriceServices {
         } else if ("PRC_GTE".equals(productPriceCond.getString("operatorEnumId"))) {
             if (compare >= 0) return true;
         } else {
-            Debug.logWarning("An un-supported productPriceCond condition was used: " + productPriceCond.getString("operatorEnumId") + ", returning false, ie check failed");
+            Debug.logWarning("An un-supported productPriceCond condition was used: " + productPriceCond.getString("operatorEnumId") + ", returning false, ie check failed", module);
             return false;
         }
         return false;
