@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+
+<jaws>
+  <datasource>MainDataSource</datasource>
+  <!-- <type-mapping></type-mapping> -->
+
+  <enterprise-beans>
+    <entity>
+      <ejb-name>Person</ejb-name>
+      <table-name>PERSON</table-name>
+        <create-table>true</create-table>
+        <remove-table>false</remove-table>
+        <tuned-updates>false</tuned-updates>
+        <read-only>false</read-only>
+        <time-out>300</time-out>
+
+      <cmp-field>
+        <field-name>username</field-name>
+        <column-name>USERNAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>password</field-name>
+        <column-name>PASSWORD</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>firstName</field-name>
+        <column-name>FIRST_NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>middleName</field-name>
+        <column-name>MIDDLE_NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>lastName</field-name>
+        <column-name>LAST_NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>title</field-name>
+        <column-name>TITLE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>suffix</field-name>
+        <column-name>SUFFIX</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homePhone</field-name>
+        <column-name>HOME_PHONE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>workPhone</field-name>
+        <column-name>WORK_PHONE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>fax</field-name>
+        <column-name>FAX</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>email</field-name>
+        <column-name>EMAIL</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homeStreet1</field-name>
+        <column-name>HOME_STREET1</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homeStreet2</field-name>
+        <column-name>HOME_STREET2</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homeCity</field-name>
+        <column-name>HOME_CITY</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homeCounty</field-name>
+        <column-name>HOME_COUNTY</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homeState</field-name>
+        <column-name>HOME_STATE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homeCountry</field-name>
+        <column-name>HOME_COUNTRY</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>homePostalCode</field-name>
+        <column-name>HOME_POSTAL_CODE</column-name>
+      </cmp-field>
+
+      <finder>
+        <name>findByFirstName</name>
+        <query>FIRST_NAME like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByLastName</name>
+        <query>LAST_NAME like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByFirstNameAndLastName</name>
+        <query>FIRST_NAME like {0} AND LAST_NAME like {1}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByHomePhone</name>
+        <query>HOME_PHONE like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByEmail</name>
+        <query>EMAIL like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>PersonAttribute</ejb-name>
+      <table-name>PERSON_ATTRIBUTE</table-name>
+        <create-table>true</create-table>
+        <remove-table>false</remove-table>
+        <tuned-updates>false</tuned-updates>
+        <read-only>false</read-only>
+        <time-out>300</time-out>
+
+      <cmp-field>
+        <field-name>username</field-name>
+        <column-name>USERNAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>value</field-name>
+        <column-name>VALUE</column-name>
+      </cmp-field>
+
+      <finder>
+        <name>findByUsername</name>
+        <query>USERNAME like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>PersonType</ejb-name>
+      <table-name>PERSON_TYPE</table-name>
+        <create-table>true</create-table>
+        <remove-table>false</remove-table>
+        <tuned-updates>false</tuned-updates>
+        <read-only>false</read-only>
+        <time-out>300</time-out>
+
+      <cmp-field>
+        <field-name>typeId</field-name>
+        <column-name>TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+
+    </entity>
+    <entity>
+      <ejb-name>PersonTypeAttribute</ejb-name>
+      <table-name>PERSON_TYPE_ATTRIBUTE</table-name>
+        <create-table>true</create-table>
+        <remove-table>false</remove-table>
+        <tuned-updates>false</tuned-updates>
+        <read-only>false</read-only>
+        <time-out>300</time-out>
+
+      <cmp-field>
+        <field-name>typeId</field-name>
+        <column-name>TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+
+      <finder>
+        <name>findByTypeId</name>
+        <query>TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByName</name>
+        <query>NAME like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>PersonPersonType</ejb-name>
+      <table-name>PERSON_PERSON_TYPE</table-name>
+        <create-table>true</create-table>
+        <remove-table>false</remove-table>
+        <tuned-updates>false</tuned-updates>
+        <read-only>false</read-only>
+        <time-out>300</time-out>
+
+      <cmp-field>
+        <field-name>username</field-name>
+        <column-name>USERNAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>typeId</field-name>
+        <column-name>TYPE_ID</column-name>
+      </cmp-field>
+
+      <finder>
+        <name>findByUsername</name>
+        <query>USERNAME like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByTypeId</name>
+        <query>TYPE_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+
+    <entity>
+      <ejb-name>SecurityGroup</ejb-name>
+      <table-name>SECURITY_GROUP</table-name>
+        <create-table>true</create-table>
+        <remove-table>false</remove-table>
+        <tuned-updates>false</tuned-updates>
+        <read-only>false</read-only>
+        <time-out>300</time-out>
+
+      <cmp-field>
+        <field-name>groupId</field-name>
+        <column-name>GROUP_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+
+    </entity>
+    <entity>
+      <ejb-name>SecurityPermission</ejb-name>
+      <table-name>SECURITY_PERMISSION</table-name>
+        <create-table>true</create-table>
+        <remove-table>false</remove-table>
+        <tuned-updates>false</tuned-updates>
+        <read-only>false</read-only>
+        <time-out>300</time-out>
+
+      <cmp-field>
+        <field-name>permissionId</field-name>
+        <column-name>PERMISSION_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+
+      <finder>
+        <name>findByPermissionId</name>
+        <query>PERMISSION_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>SecurityGroupPermission</ejb-name>
+      <table-name>SECURITY_GROUP_PERMISSION</table-name>
+        <create-table>true</create-table>
+        <remove-table>false</remove-table>
+        <tuned-updates>false</tuned-updates>
+        <read-only>false</read-only>
+        <time-out>300</time-out>
+
+      <cmp-field>
+        <field-name>groupId</field-name>
+        <column-name>GROUP_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>permissionId</field-name>
+        <column-name>PERMISSION_ID</column-name>
+      </cmp-field>
+
+      <finder>
+        <name>findByGroupId</name>
+        <query>GROUP_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPermissionId</name>
+        <query>PERMISSION_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>PersonSecurityGroup</ejb-name>
+      <table-name>PERSON_SECURITY_GROUP</table-name>
+        <create-table>true</create-table>
+        <remove-table>false</remove-table>
+        <tuned-updates>false</tuned-updates>
+        <read-only>false</read-only>
+        <time-out>300</time-out>
+
+      <cmp-field>
+        <field-name>username</field-name>
+        <column-name>USERNAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>groupId</field-name>
+        <column-name>GROUP_ID</column-name>
+      </cmp-field>
+
+      <finder>
+        <name>findByUsernameAndPermissionId</name>
+        <query>,SECURITY_GROUP_PERMISSION
+        WHERE PERSON_SECURITY_GROUP.GROUP_ID=SECURITY_GROUP_PERMISSION.GROUP_ID AND USERNAME={0} AND SECURITY_GROUP_PERMISSION.PERMISSION_ID={1}</query>
+        <order>GROUP_ID</order>
+      </finder>
+      <finder>
+        <name>findByUsername</name>
+        <query>USERNAME like {0}</query>
+        <order>GROUP_ID</order>
+      </finder>
+      <finder>
+        <name>findByGroupId</name>
+        <query>GROUP_ID like {0}</query>
+        <order>USERNAME</order>
+      </finder>
+    </entity>
+<!--
+    <entity>
+      <ejb-name>Product</ejb-name>
+      <table-name>PRODUCT</table-name>
+        <create-table>true</create-table>
+        <remove-table>false</remove-table>
+        <tuned-updates>false</tuned-updates>
+        <read-only>false</read-only>
+        <time-out>300</time-out>
+
+      <cmp-field>
+        <field-name>sku</field-name>
+        <column-name>SKU</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>shortDesc</field-name>
+        <column-name>SHORT_DESC</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>longDesc</field-name>
+        <column-name>LONG_DESC</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>smallImageUrl</field-name>
+        <column-name>SMALL_IMAGE_URL</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>largeImageUrl</field-name>
+        <column-name>LARGE_IMAGE_URL</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>promoImageUrl</field-name>
+        <column-name>PROMO_IMAGE_URL</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>moreInfoUrl</field-name>
+        <column-name>MORE_INFO_URL</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>typeId</field-name>
+        <column-name>TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>unitOfMeasure</field-name>
+        <column-name>UNIT_OF_MEASURE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>productType</field-name>
+        <column-name>PRODUCT_TYPE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>weight</field-name>
+        <column-name>WEIGHT</column-name>
+      </cmp-field>
+
+    </entity>
+    <entity>
+      <ejb-name>FixedAsset</ejb-name>
+      <table-name>FIXED_ASSET</table-name>
+        <create-table>true</create-table>
+        <remove-table>false</remove-table>
+        <tuned-updates>false</tuned-updates>
+        <read-only>false</read-only>
+        <time-out>300</time-out>
+
+      <cmp-field>
+        <field-name>fixedAssetId</field-name>
+        <column-name>FIXED_ASSET_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>companyUnitId</field-name>
+        <column-name>COMPANY_UNIT_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>ownerUsername</field-name>
+        <column-name>OWNER_USERNAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>saleTransId</field-name>
+        <column-name>SALE_TRANS_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>saleTransLineId</field-name>
+        <column-name>SALE_TRANS_LINE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>purchaseTransId</field-name>
+        <column-name>PURCHASE_TRANS_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>purchaseTransLineId</field-name>
+        <column-name>PURCHASE_TRANS_LINE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>description</field-name>
+        <column-name>DESCRIPTION</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>typeId</field-name>
+        <column-name>TYPE_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>serialNumber</field-name>
+        <column-name>SERIAL_NUMBER</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>make</field-name>
+        <column-name>MAKE</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>model</field-name>
+        <column-name>MODEL</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>year</field-name>
+        <column-name>YEAR</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>status</field-name>
+        <column-name>STATUS</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>notes</field-name>
+        <column-name>NOTES</column-name>
+      </cmp-field>
+
+      <finder>
+        <name>findByCompanyUnitId</name>
+        <query>COMPANY_UNIT_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByCompanyUnitIdAndTypeId</name>
+        <query>COMPANY_UNIT_ID like {0} AND TYPE_ID like {1}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByOwnerUsername</name>
+        <query>OWNER_USERNAME like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findBySaleTransId</name>
+        <query>SALE_TRANS_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findBySaleTransIdAndSaleTransLineId</name>
+        <query>SALE_TRANS_ID like {0} AND SALE_TRANS_LINE_ID like {1}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPurchaseTransId</name>
+        <query>PURCHASE_TRANS_ID like {0}</query>
+        <order></order>
+      </finder>
+      <finder>
+        <name>findByPurchaseTransIdAndPurchaseTransLineId</name>
+        <query>PURCHASE_TRANS_ID like {0} AND PURCHASE_TRANS_LINE_ID like {1}</query>
+        <order></order>
+      </finder>
+    </entity>
+    <entity>
+      <ejb-name>FixedAssetAttribute</ejb-name>
+      <table-name>FIXED_ASSET_ATTRIBUTE</table-name>
+        <create-table>true</create-table>
+        <remove-table>false</remove-table>
+        <tuned-updates>false</tuned-updates>
+        <read-only>false</read-only>
+        <time-out>300</time-out>
+
+      <cmp-field>
+        <field-name>fixedAssetId</field-name>
+        <column-name>FIXED_ASSET_ID</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>name</field-name>
+        <column-name>NAME</column-name>
+      </cmp-field>
+      <cmp-field>
+        <field-name>value</field-name>
+        <column-name>VALUE</column-name>
+      </cmp-field>
+
+      <finder>
+        <name>findByFixedAssetId</name>
+        <query>FIXED_ASSET_ID like {0}</query>
+        <order></order>
+      </finder>
+    </entity>
+-->
+  </enterprise-beans>
+</jaws>
+
