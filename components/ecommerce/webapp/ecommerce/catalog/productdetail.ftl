@@ -266,7 +266,7 @@ ${virtualJavaScript?if_exists}
           </#if>
             ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class='${priceStyle}'><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
              <#if product.productTypeId == "ASSET_USAGE">
-            <#if product.reserv2ndPPPerc?exists && product.reserv2ndPPPerc != 0><br/><span class='${priceStyle}'>Price for the 2nd <#if !product.reservNthPPPerc?exists || product.reservNthPPPerc == 0>until the ${product.reservMaxPersons}</#if>  person, each: <@ofbizCurrency amount=product.reserv2ndPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
+            <#if product.reserv2ndPPPerc?exists && product.reserv2ndPPPerc != 0><br/><span class='${priceStyle}'>Price for the 2nd <#if !product.reservNthPPPerc?exists || product.reservNthPPPerc == 0>until the ${product.reservMaxPersons}</#if>  person: <@ofbizCurrency amount=product.reserv2ndPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
             <#if product.reservNthPPPerc?exists &&product.reservNthPPPerc != 0><br/><span class='${priceStyle}'>Price for the <#if !product.reserv2ndPPPerc?exists || product.reserv2ndPPPerc == 0>second <#else> 3rd </#if> until the ${product.reservMaxPersons}th person, each: <@ofbizCurrency amount=product.reservNthPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
             <#if (!product.reserv2ndPPPerc?exists || product.reserv2ndPPPerc == 0) && (!product.reservNthPPPerc?exists || product.reservNthPPPerc == 0)><br/>Maximum ${product.reservMaxPersons} persons.</#if>
              </#if>
@@ -300,8 +300,8 @@ ${virtualJavaScript?if_exists}
         <a href="javascript:popUpSmall('<@ofbizUrl>/tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" class="buttontext">${uiLabelMap.CommonTellAFriend}</a>
       </div>
 
-      <p>&nbsp;</p>
       <#if disFeatureList?exists && 0 < disFeatureList.size()>
+      <p>&nbsp;</p>
         <#list disFeatureList as currentFeature>
             <div class="tabletext">
                 ${currentFeature.productFeatureTypeId}:&nbsp;${currentFeature.description}
@@ -344,10 +344,10 @@ ${virtualJavaScript?if_exists}
             </#if>
           </#if>
         </#if>
-
-        <p>&nbsp;</p>
+      </td></tr><tr><td colspan="2" align="right">
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
+        <p>&nbsp;</p>
           <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.after(product.salesDiscontinuationDate)>
