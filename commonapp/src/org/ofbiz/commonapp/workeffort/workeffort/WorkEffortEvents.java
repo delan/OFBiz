@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/11/08 03:03:46  jonesde
+ * Initial WorkEffort event and worker files, very little functionality in place so far
+ *
  */
 package org.ofbiz.commonapp.workeffort.workeffort;
 
@@ -63,31 +66,40 @@ public class WorkEffortEvents {
       return "error";
     }
     
-    //get, and validate, the primary keys
-    String workEffortId = request.getParameter("WORK_EFFORT_ID");
-    if(!UtilValidate.isNotEmpty(workEffortId)) errMsg += "<li>Work Effort ID missing.";
-    if(errMsg.length() > 0) {
-      errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-      request.setAttribute("ERROR_MESSAGE", errMsg);
-      return "error";
-    }
-    
-    //do a findByPrimary key to see if the entity exists, and other things later
+    String workEffortId = null;
     GenericValue workEffort = null;
-    try { workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId)); }
-    catch(GenericEntityException e) { Debug.logWarning(e); }
-    
-    //get a collection of workEffortPartyAssignments, if empty then this user CANNOT view the event, unless they have permission to view all
-    Collection workEffortPartyAssignments = null;
-    if(userLogin != null && userLogin.get("partyId") != null && workEffortId != null) {
-      try { workEffortPartyAssignments = delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId"))); }
-      catch(GenericEntityException e) { Debug.logWarning(e); }
+    if("CREATE".equals(updateMode)) {
+      Long nextSeqId = delegator.getNextSeqId("WorkEffort");
+      if(nextSeqId == null) {
+        request.setAttribute("ERROR_MESSAGE", "Could not get an Id for a new WorkEffort (NextSeqIdError)");
+        return "error";
+      }
+      else workEffortId = nextSeqId.toString();
     }
-    
-    //check permissions before moving on:
-    // 1) if create, no permission necessary
-    // 2) if update or delete logged in user must be associated OR have the corresponding UPDATE or DELETE permissions
-    if(!"CREATE".equals(updateMode)) {
+    else {
+      //get, and validate, the primary keys
+      workEffortId = request.getParameter("WORK_EFFORT_ID");
+      if(!UtilValidate.isNotEmpty(workEffortId)) errMsg += "<li>Work Effort ID missing.";
+      if(errMsg.length() > 0) {
+        errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+        request.setAttribute("ERROR_MESSAGE", errMsg);
+        return "error";
+      }
+
+      //do a findByPrimary key to see if the entity exists, and other things later
+      try { workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId)); }
+      catch(GenericEntityException e) { Debug.logWarning(e); }
+
+      //get a collection of workEffortPartyAssignments, if empty then this user CANNOT view the event, unless they have permission to view all
+      Collection workEffortPartyAssignments = null;
+      if(userLogin != null && userLogin.get("partyId") != null && workEffortId != null) {
+        try { workEffortPartyAssignments = delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId"))); }
+        catch(GenericEntityException e) { Debug.logWarning(e); }
+      }
+
+      //check permissions before moving on:
+      // 1) if create, no permission necessary
+      // 2) if update or delete logged in user must be associated OR have the corresponding UPDATE or DELETE permissions
       boolean associatedWith = (workEffortPartyAssignments != null && workEffortPartyAssignments.size()>0)?true:false;
       if(!associatedWith && !security.hasEntityPermission("WORKEFFORTMGR", "_" + updateMode, request.getSession())) {
         request.setAttribute("ERROR_MESSAGE", "You cannot update or delete this Work Effort, you must either be associated with it or have administration permission.");
@@ -262,7 +274,7 @@ public class WorkEffortEvents {
     newWorkEffort.set("infoUrl", infoUrl, false);
     
     //if nothing has changed and we are updating, return
-    if("UPDATE".equals(updateMode) && workEffort != null && newWorkEffort != null && !newWorkEffort.equals(workEffort)) {
+    if("UPDATE".equals(updateMode) && workEffort != null && !newWorkEffort.equals(workEffort)) {
       request.setAttribute("EVENT_MESSAGE", "No changes made, not saving.");
       return "success";
     }
