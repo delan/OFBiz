@@ -1312,7 +1312,9 @@ public class GenericDelegator {
 
     public void putInAllCache(String entityName, List values) {
         if (entityName == null || values == null) return;
-        allCache.put(entityName, values);
+        //make the values immutable so that the list can be returned directly from the cache without copying and still be safe
+        //NOTE that this makes the list immutable, but not the elements in it, those will still be changeable GenericValue objects...
+        allCache.put(entityName, Collections.unmodifiableList(values));
     }
 
     public void putInAndCache(String entityName, Map fields, List values) {
@@ -1325,7 +1327,9 @@ public class GenericDelegator {
         if (entity == null || fields == null || values == null) return;
         GenericPK tempPK = new GenericPK(entity, fields);
         if (tempPK == null) return;
-        andCache.put(tempPK, values);
+        //make the values immutable so that the list can be returned directly from the cache without copying and still be safe
+        //NOTE that this makes the list immutable, but not the elements in it, those will still be changeable GenericValue objects...
+        andCache.put(tempPK, Collections.unmodifiableList(values));
     }
 
     // ======= XML Related Methods ========
