@@ -242,9 +242,17 @@ public class ModelDataFileReader {
         record.limit = UtilXml.checkEmpty(recordElement.getAttribute("limit"));
 
         NodeList fList = recordElement.getElementsByTagName("field");
+        int priorEnd = -1;
         for (int i = 0; i < fList.getLength(); i++) {
             Element fieldElement = (Element) fList.item(i);
             ModelField modelField = createModelField(fieldElement);
+            
+            // if the position is not specified, assume the start position based on last entry
+            if ((i>0) && (modelField.position == -1)) {
+              modelField.position = priorEnd;
+            }
+            priorEnd = modelField.position + modelField.length;
+
             if (modelField != null)
                 record.fields.add(modelField);
             else
