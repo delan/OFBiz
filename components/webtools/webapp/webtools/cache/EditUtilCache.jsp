@@ -63,8 +63,28 @@
       <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getHitCount())%></TD>
     </TR>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-      <TD>missCount</TD>
-      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCount())%></TD>
+      <TD>Miss Count Total</TD>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCountTotal())%></TD>
+    </TR>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
+      <TD>Miss Count Not Found</TD>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCountNotFound())%></TD>
+    </TR>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
+      <TD>Miss Count Expired</TD>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCountExpired())%></TD>
+    </TR>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
+      <TD>Miss Count SoftRef Cleared</TD>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getMissCountSoftRef())%></TD>
+    </TR>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
+      <TD>Remove Hit Count</TD>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getRemoveHitCount())%></TD>
+    </TR>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
+      <TD>Remove Miss Count</TD>
+      <TD colspan="2"><%=UtilFormatOut.formatQuantity(utilCache.getRemoveMissCount())%></TD>
     </TR>
     <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
       <TD>maxSize</TD>
