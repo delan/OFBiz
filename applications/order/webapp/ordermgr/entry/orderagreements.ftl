@@ -23,33 +23,21 @@
  *@version    1.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+<table border=0 cellspacing='0' cellpadding='0'>
   <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">${uiLabelMap.OrderOrderEntry}</div>
-          </td>
-          <td valign="middle" align="right">
-             <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderClearOrder}</a>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td width='100%'>
-      <table width="100%" border="0" cellspacing="0" cellpadding="2">
+    <td>
+      <table border="0" cellspacing="0" cellpadding="2">
          <tr>
             <td valign="middle">
             <span class="tabletext">${uiLabelMap.OrderOrderFor} : </span>
             <#if person?has_content>
-                <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}&nbsp;[${person.partyId}]</a>
+                <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam?if_exists}" target="partymgr" class="buttontext">${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}&nbsp;[${person.partyId}]</a>
             <#elseif partyGroup?has_content>
-                <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${partyGroup.groupName?if_exists}&nbsp;[${partyGroup.partyId}]</a>
+                <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam?if_exists}" target="partymgr" class="buttontext">${partyGroup.groupName?if_exists}&nbsp;[${partyGroup.partyId}]</a>
              <#else>
                    <span class="tabletext">[${uiLabelMap.PartyPartyNotDefined}]</span>
               </#if>
@@ -57,19 +45,19 @@
                </td>
            </tr>
       </table>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+      <table border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <#if hasAgreements=='Y'>
         <form method="post" name="agreementForm" action="<@ofbizUrl>/setOrderAgreement</@ofbizUrl>">
         <input type='hidden' name='hasAgreements' value='${hasAgreements}'>
         <tr>
-          <td width='10%'>&nbsp;</td>
-          <td wdith='20%' align='right' valign='top' nowrap>
+          <td>&nbsp;</td>
+          <td align='right' valign='top' nowrap>
              <div class='tableheadtext'>
                     ${uiLabelMap.OrderSelectAgreement}
              </div>
           </td>
-          <td width='6%'>&nbsp;</td>
-          <td width='64%' valign='middle'>
+          <td>&nbsp;</td>
+          <td valign='middle'>
             <div class='tabletext' valign='top'>
                 <#list agreements as agreement>
                    <input type='radio' name='agreementId' value='${agreement.agreementId}' >${agreement.agreementId} - ${agreement.description?if_exists} <br />
@@ -87,14 +75,14 @@
         <form method="post" name="agreementForm" action="<@ofbizUrl>/setOrderCurrency</@ofbizUrl>">
          <input type='hidden' name='hasAgreements' value='${hasAgreements}'>
          <tr>
-          <td width='14%'>&nbsp;</td>
-          <td wdith='6%' align='right' valign='middle' nowrap>
+          <td>&nbsp;</td>
+          <td align='right' valign='middle' nowrap>
              <div class='tableheadtext'>
                  ${uiLabelMap.OrderSelectCurrency}
              </div>
           </td>
-          <td width='6%'>&nbsp;</td>
-          <td width='74%' valign='middle'>
+          <td>&nbsp;</td>
+          <td valign='middle'>
             <div class='tabletext' valign='top'>
                   <select class="selectBox" name="currencyUomId">
                   <option value=""></option>

@@ -25,7 +25,9 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists>
+  <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
 <#-- ==================== Party Selection dialog box ========================= -->
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
@@ -158,5 +160,3 @@
   </#if> <#-- additionalPartyType?has_content -->
 </table>
 <br>
-
-${pages.get("/entry/additionalPartyListing.ftl")}

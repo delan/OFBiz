@@ -27,7 +27,8 @@
 <#if (requestAttributes.uiLabelMap)?exists>
     <#assign uiLabelMap = requestAttributes.uiLabelMap>
 </#if>
-<!--#if 0 < catalogCol?size-->
+<#-- Only show if there is more than 1 (one) catalog, no sense selecting when there is only one option... -->
+<#if (catalogCol?size > 1)>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
       <TD width='100%'>
@@ -45,7 +46,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td align=center>
-              <form name="choosecatalogform" method="POST" action="<@ofbizUrl>/orderentry</@ofbizUrl>" style='margin: 0;'>
+              <form name="choosecatalogform" method="POST" action="<@ofbizUrl>/choosecatalog</@ofbizUrl>" style='margin: 0;'>
                 <SELECT name='CURRENT_CATALOG_ID' class='selectBox'>
                   <OPTION value='${currentCatalogId}'>${currentCatalogName}</OPTION>
                   <OPTION value='${currentCatalogId}'></OPTION>
@@ -62,5 +63,5 @@
       </TD>
     </TR>
   </TABLE>
-<!--/#if-->
+</#if>
 

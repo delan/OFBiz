@@ -23,9 +23,8 @@
  *@version    $Rev:$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -46,7 +45,7 @@
                 <#list shoppingCart.getProductPromoUseInfoIter() as productPromoUseInfo>
                     <div class="tabletext">
 	                    <#-- TODO: when promo pretty print is done show promo short description here -->
-                    	${uiLabelMap.EcommercePromotion} <a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromoUseInfo.productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a>
+                    	   ${uiLabelMap.EcommercePromotion} <a href="<@ofbizUrl>/showPromotionDetails?productPromoId=${productPromoUseInfo.productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDetails}]</a>
 	                    <#if productPromoUseInfo.productPromoCodeId?has_content> - with Code [${productPromoUseInfo.productPromoCodeId}]</#if>
     	                <#if (productPromoUseInfo.totalDiscountAmount != 0)> - Total Value <@ofbizCurrency amount=(-1*productPromoUseInfo.totalDiscountAmount) isoCode=shoppingCart.getCurrency()/></#if>
     	            </div>
@@ -60,9 +59,9 @@
                 <#list shoppingCart.items() as cartLine>
                     <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
                     <#if cartLine.getIsPromo()>
-                        <div class="tabletext">${uiLabelMap.EcommerceItem} #${cartLineIndex+1} [${cartLine.getProductId()?if_exists}] - ${uiLabelMap.EcommerceIsAPromotionalItem}</div>
+                        <div class="tabletext">${uiLabelMap.EcommerceItemN} ${cartLineIndex+1} [${cartLine.getProductId()?if_exists}] - ${uiLabelMap.EcommerceIsAPromotionalItem}</div>
                     <#else>
-                        <div class="tabletext">${uiLabelMap.EcommerceItem} #${cartLineIndex+1} [${cartLine.getProductId()?if_exists}] - ${cartLine.getPromoQuantityUsed()?string.number}/${cartLine.getQuantity()?string.number} ${uiLabelMap.CommonUsed} - ${cartLine.getPromoQuantityAvailable()?string.number} ${uiLabelMap.CommonAvailable}</div>
+                        <div class="tabletext">${uiLabelMap.EcommerceItemN} ${cartLineIndex+1} [${cartLine.getProductId()?if_exists}] - ${cartLine.getPromoQuantityUsed()?string.number}/${cartLine.getQuantity()?string.number} ${uiLabelMap.CommonUsed} - ${cartLine.getPromoQuantityAvailable()?string.number} ${uiLabelMap.CommonAvailable}</div>
                         <#list cartLine.getQuantityUsedPerPromoActualIter() as quantityUsedPerPromoActualEntry>
                             <#assign productPromoActualPK = quantityUsedPerPromoActualEntry.getKey()>
                             <#assign actualQuantityUsed = quantityUsedPerPromoActualEntry.getValue()>

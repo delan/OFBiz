@@ -25,7 +25,9 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists>
+  <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
 <script language="javascript">
 <!-- //
@@ -281,7 +283,7 @@ function makeExpDate() {
                       <option value="${postalFields.stateProvinceGeoId}">---</option>
                       </#if>
                       <option value=""></option>
-                      ${pages.get("/includes/states.ftl")}
+                      ${screens.render("component://common/widget/CommonScreens.xml#states")}
                     </select>
                   </td>
                 </tr>
@@ -301,7 +303,7 @@ function makeExpDate() {
                       <option>${postalFields.countryGeoId}</option>
                       <option value="${postalFields.countryGeoId}">---</option>
                       </#if>
-                      ${pages.get("/includes/countries.ftl")}
+                      ${screens.render("component://common/widget/CommonScreens.xml#countries")}
                     </select>
                   *</td>
                 </tr> 

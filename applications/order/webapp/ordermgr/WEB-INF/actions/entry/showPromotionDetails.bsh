@@ -27,10 +27,6 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
-delegator = request.getAttribute("delegator");
-userLogin = session.getAttribute("userLogin");
-locale = UtilHttp.getLocale(request);
-
 productPromoId = request.getParameter("productPromoId");
 productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
 
@@ -70,13 +66,13 @@ int lowIndex = 0;
 int listSize = 0;
 
 try {
-    viewIndex = Integer.valueOf((String) context.getRequest().getParameter("VIEW_INDEX")).intValue();
+    viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
 } catch (Exception e) {
     viewIndex = 0;
 }
 
 try {
-    viewSize = Integer.valueOf((String) context.getRequest().getParameter("VIEW_SIZE")).intValue();
+    viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
 } catch (Exception e) {
     viewSize = 10;
 }

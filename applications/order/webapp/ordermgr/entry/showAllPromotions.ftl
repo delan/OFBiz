@@ -23,14 +23,13 @@
  *@version    $Rev:$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if (shoppingCartSize > 0)>
-  <#include "/entry/promoUseDetailsInline.ftl"/>
+  ${screens.render("component://order/widget/ordermgr/OrderEntryCartScreens.xml#promoUseDetailsInline")}
   <br/>
 </#if>
 
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -67,4 +66,3 @@
       </td>
     </tr>
   </table>
-

@@ -35,7 +35,7 @@ delegator = request.getAttribute("delegator");
 
 requestParams = UtilHttp.getParameterMap(request);
 prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
-ProductSearchSession.processSearchParameters(requestParams, session);
+// this is done in the checkDoKeywordOverride event, so we won't do it again here: ProductSearchSession.processSearchParameters(requestParams, session);
 Map result = ProductSearchSession.getProductSearchResult(session, delegator, prodCatalogId);
 
 context.put("productIds", result.get("productIds"));

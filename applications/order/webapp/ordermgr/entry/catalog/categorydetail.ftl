@@ -24,11 +24,10 @@
  *@since      2.1
 -->
 
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
+${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#breadcrumbs")}
+
 <#if productCategory?exists>
-<table border="0" width="100%" cellpadding="3">
+<table border="0" cellpadding="3">
   <tr>
     <td colspan="2">
       <div class="head1">
@@ -65,10 +64,19 @@
 </table>
 </#if>
 
-<#if productCategoryMembers?exists && 0 < productCategoryMembers.size()>
-<table border="0" width="100%" cellpadding="2">
+<#if productCategoryMembers?has_content>
+<table border="0" cellpadding="2">
   <tr>
-    <td align=right>
+    <td align="right">
+      <#-- Start Page Select Drop-Down -->
+      <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
+      <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
+        <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
+        <#list 1..viewIndexMax as curViewNum>
+          <option value="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int - 1}</@ofbizUrl>">Go to Page ${curViewNum}</option>
+        </#list>
+      </select>
+      <#-- End Page Select Drop-Down -->
       <b>
         <#if 0 < viewIndex?int>
           <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
@@ -77,7 +85,7 @@
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a> |
+          | <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
       </b>
     </td>
@@ -85,7 +93,7 @@
 </table>
 
 <center>
-  <table width='100%' border='0' cellpadding='0' cellspacing='0'>    
+  <table border="0" cellpadding="0" cellspacing="0">    
     <#assign startIndex = viewSize * viewIndex>
     <#if highIndex < listSize>
       <#assign endIndex = highIndex - 1>
@@ -98,8 +106,9 @@
       <tr>
         <td>
           ${setRequestAttribute("optProductId", productCategoryMember.productId)} 
+          ${setRequestAttribute("productCategoryMember", productCategoryMember)} 
           ${setRequestAttribute("listIndex", productCategoryMember_index)}         
-          ${pages.get("/entry/catalog/productsummary.ftl")}
+          ${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary")}
         </td>
       </tr>
     </#list>
@@ -107,9 +116,18 @@
   </table>
 </center>
 
-<table border="0" width="100%" cellpadding="2">
+<table border="0" cellpadding="2">
   <tr>
     <td align=right>
+      <#-- Start Page Select Drop-Down -->
+      <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
+      <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
+        <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
+        <#list 1..viewIndexMax as curViewNum>
+          <option value="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int - 1}</@ofbizUrl>">Go to Page ${curViewNum}</option>
+        </#list>
+      </select>
+      <#-- End Page Select Drop-Down -->
       <b>
         <#if 0 < viewIndex?int>
           <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
@@ -118,7 +136,7 @@
           <span class="tabletext">${lowIndex} - ${highIndex} of ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a> |
+          | <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
         </#if>
       </b>
     </td>
@@ -126,7 +144,7 @@
 </table>
 
 <#else>
-<table border="0" width="100%" cellpadding="2">
+<table border="0" cellpadding="2">
   <tr>
     <td colspan="2"><hr class='sepbar'></td>
   </tr>
@@ -137,4 +155,3 @@
   </tr>
 </table>
 </#if>
-

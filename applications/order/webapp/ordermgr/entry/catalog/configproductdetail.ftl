@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,12 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <#-- variable setup -->
+<#assign productContentWrapper = productContentWrapper?if_exists>
 <#assign price = priceMap?if_exists>
-<#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
 <#-- end variable setup -->
 
 <#-- virtual product javascript -->
@@ -53,18 +53,14 @@ ${virtualJavaScript?if_exists}
         </#if>
         return isVirtual;
      }
+
     function addItem() {
-       if (document.addform.add_product_id.value == 'NULL') {
-           alert("Please enter all the required information.");
-           return;
-       } else {
-             if (isVirtual(document.addform.add_product_id.value)) {
-                document.location = '<@ofbizUrl>/product?category_id=${categoryId?if_exists}&product_id=</@ofbizUrl>' + document.addform.add_product_id.value;
-                return;
-             } else {
-                 document.addform.submit();
-             }
-       }
+        document.configform.action = document.addform.action;
+        document.configform.quantity.value = document.addform.quantity.value;
+        document.configform.submit();
+    }
+    function verifyConfig() {
+        document.configform.submit();
     }
 
     function popupDetail() {
@@ -140,67 +136,17 @@ ${virtualJavaScript?if_exists}
             toggleAmt(checkAmtReq(sku));
         }
     }
-
-    function validate(x){
-        var msg=new Array();
-        msg[0]="Please use correct date format [yyyy-mm-dd]";
-        
-        var y=x.split("-");
-        if(y.length!=3){ alert(msg[0]);return false; }
-        if((y[2].length>2)||(parseInt(y[2])>31)) { alert(msg[0]);     return false;    }
-        if(y[2].length==1){ y[2]="0"+y[2]; }
-        if((y[1].length>2)||(parseInt(y[1])>12)){    alert(msg[0]);    return false;    }
-        if(y[1].length==1){ y[1]="0"+y[1]; }            
-        if(y[0].length>4){ alert(msg[0]);     return false;     }
-        if(y[0].length<4) {
-            if(y[0].length==2) {
-                y[0]="20"+y[0];
-            }
-            else {
-                alert(msg[0]);
-                return false;
-            }
-        }
-        return (y[0]+"-"+y[1]+"-"+y[2]);
-    }    
-
-    function additemSubmit(){
-        <#if product.productTypeId == "ASSET_USAGE">
-        newdatevalue = validate(document.addform.reservStart.value);
-        if (newdatevalue == false) {
-            document.addform.reservStart.focus();
-        } else {
-            document.addform.reservStart.value = newdatevalue;
-            document.addform.submit();
-        }
-        <#else>
-        document.addform.submit();
-        </#if>
-    }
-
-    function addShoplistSubmit(){
-        <#if product.productTypeId == "ASSET_USAGE">
-        if (document.addToShoppingList.reservStartStr.value == "") {
-            document.addToShoppingList.submit();
-        } else {
-            newdatevalue = validate(document.addToShoppingList.reservStartStr.value);
-            if (newdatevalue == false) {
-                document.addToShoppingList.reservStartStr.focus();
-            } else {
-                document.addToShoppingList.reservStartStr.value = newdatevalue;
-                // document.addToShoppingList.reservStart.value = ;
-                document.addToShoppingList.reservStartStr.value.slice(0,9)+" 00:00:00.000000000";
-                document.addToShoppingList.submit();
-            }
-        }
-        <#else>
-        document.addToShoppingList.submit();
-        </#if>
-    }
  //-->
  </script>
 
-<table border="0" cellpadding="2" cellspacing="0">
+<script language="JavaScript">
+<!--
+     function resetTotalPrice(name) {
+     }
+-->
+</script>
+<table border="0" cellpadding="2" cellspacing='0'>
+
   <#-- Category next/previous -->
   <#if category?exists>
     <tr>
@@ -233,9 +179,7 @@ ${virtualJavaScript?if_exists}
     <td align="right" valign="top">
       <div class="head2">${productContentWrapper.get("PRODUCT_NAME")?if_exists}</div>
       <div class="tabletext">${productContentWrapper.get("DESCRIPTION")?if_exists}</div>
-      <#if product.productId?has_content>
-        <div class="tabletext"><b>${product.productId}</b> <a href="/catalog/control/EditProduct?productId=${product.productId}<#if requestAttributes.externalLoginKey?exists>&externalLoginKey=${requestAttributes.externalLoginKey}</#if>" class="buttontext">[Edit&nbsp;Product]</a></div>
-      </#if>
+      <div class="tabletext"><b>${product.productId?if_exists}</b></div>
       <#-- example of showing a certain type of feature with the product -->
       <#if sizeProductFeatureAndAppls?has_content>
         <div class="tabletext">
@@ -249,13 +193,17 @@ ${virtualJavaScript?if_exists}
           </#list>
         </div>
       </#if>
-
+      
       <#-- for prices:
+              - if totalPrice is present, use it (totalPrice is the price calculated from the parts)
               - if price < competitivePrice, show competitive or "Compare At" price
               - if price < listPrice, show list price
               - if price < defaultPrice and defaultPrice < listPrice, show default
               - if isSale show price with salePrice style and print "On Sale!"
       -->
+      <#if totalPrice?exists>
+        <div class="tabletext">${uiLabelMap.ProductAggregatedPrice}: <span class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=price.currencyUsed/></span></div>
+      <#else>
       <#if price.competitivePrice?exists && price.price?exists && price.price?double < price.competitivePrice?double>
         <div class="tabletext">${uiLabelMap.ProductCompareAtPrice}: <span class='basePrice'><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></div>
       </#if>
@@ -274,17 +222,13 @@ ${virtualJavaScript?if_exists}
             <#assign priceStyle = "regularPrice">
           </#if>
             ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class='${priceStyle}'><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
-             <#if product.productTypeId == "ASSET_USAGE">
-            <#if product.reserv2ndPPPerc?exists && product.reserv2ndPPPerc != 0><br/><span class='${priceStyle}'>Price for the 2nd <#if !product.reservNthPPPerc?exists || product.reservNthPPPerc == 0>until the ${product.reservMaxPersons}</#if>  person: <@ofbizCurrency amount=product.reserv2ndPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
-            <#if product.reservNthPPPerc?exists &&product.reservNthPPPerc != 0><br/><span class='${priceStyle}'>Price for the <#if !product.reserv2ndPPPerc?exists || product.reserv2ndPPPerc == 0>second <#else> 3rd </#if> until the ${product.reservMaxPersons}th person, each: <@ofbizCurrency amount=product.reservNthPPPerc*price.price/100 isoCode=price.currencyUsed/></span></#if>
-            <#if (!product.reserv2ndPPPerc?exists || product.reserv2ndPPPerc == 0) && (!product.reservNthPPPerc?exists || product.reservNthPPPerc == 0)><br/>Maximum ${product.reservMaxPersons} persons.</#if>
-             </#if>
-         </b>
+        </b>
       </div>
       <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
         <#assign priceSaved = price.listPrice?double - price.price?double>
         <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
         <div class="tabletext">${uiLabelMap.EcommerceSave}: <span class="basePrice"><@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/> (${percentSaved?int}%)</span></div>
+      </#if>
       </#if>
 
       <#-- Included quantities/pieces -->
@@ -310,7 +254,7 @@ ${virtualJavaScript?if_exists}
       </div>
 
       <#if disFeatureList?exists && 0 < disFeatureList.size()>
-      <p>&nbsp;</p>
+        <p>&nbsp;</p>
         <#list disFeatureList as currentFeature>
             <div class="tabletext">
                 ${currentFeature.productFeatureTypeId}:&nbsp;${currentFeature.description}
@@ -319,11 +263,11 @@ ${virtualJavaScript?if_exists}
             <div class="tabletext">&nbsp;</div>
       </#if>
 
-      <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name='addform'  style='margin: 0;'>
+      <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
-          <#if variantTree?exists && (variantTree.size() > 0)>
+          <#if variantTree?exists && 0 < variantTree.size()>
             <#list featureSet as currentType>
               <div class="tabletext">
                 <select name="FT${currentType}" class="selectBox" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
@@ -342,9 +286,8 @@ ${virtualJavaScript?if_exists}
         <#else>
           <input type='hidden' name="product_id" value='${product.productId}'>
           <input type='hidden' name="add_product_id" value='${product.productId}'>
-          <#assign isStoreInventoryNotAvailable = !(Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, product, 1.0?double))>
-          <#assign isStoreInventoryRequired = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
-          <#if isStoreInventoryNotAvailable>
+          <#if productNotAvailable?exists>
+            <#assign isStoreInventoryRequired = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
             <#if isStoreInventoryRequired>
               <div class='tabletext'><b>${uiLabelMap.ProductItemOutofStock}.</b></div>
               <#assign inStock = false>
@@ -353,10 +296,12 @@ ${virtualJavaScript?if_exists}
             </#if>
           </#if>
         </#if>
-      </td></tr><tr><td colspan="2" align="right">
+
+        </td></tr><tr><td colspan="2" align="right">
+
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
-        <p>&nbsp;</p>
+          <p>&nbsp;</p>
           <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.after(product.salesDiscontinuationDate)>
@@ -368,27 +313,30 @@ ${virtualJavaScript?if_exists}
               <#assign hiddenStyle = "tabletext">
             <#else>
               <#assign hiddenStyle = "tabletexthidden">
-            </#if>           
+            </#if>
             <div id="add_amount" class="${hiddenStyle}">
               <nobr><b>Amount:</b></nobr>&nbsp;
               <input type="text" class="inputBox" size="5" name="add_amount" value="">
             </div>
-            <#if product.productTypeId == "ASSET_USAGE"><table width="100%"><tr><td  width="80%">&nbsp;</td><td class="tabletext" nowrap align="right">Start Date<br/>(yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStart"></td><td class="tabletext" nowrap align="right">Number<br/>of days</td><td><input type="text" class="inputBox" size="4" name="reservLength"></td></tr><tr><td>&nbsp;</td><td class="tabletext" align="right" nowrap>Number of<br/>persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="1"></td><td class="tabletext" align="right">Qty&nbsp;</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"></td></tr></table><#else><input type="text" class="inputBox" size="5" name="quantity" value="1"></#if>
-            <a href='javascript:additemSubmit()' class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a>&nbsp;
+            <#if !configwrapper.isCompleted()>
+              <div class="tabletext">[${uiLabelMap.EcommerceProductNotConfigured}]&nbsp;
+              <input type="text" class="inputBox" size="5" name="quantity" value="0" disabled></div>
+            <#else>
+              <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddToCart}]</nobr></a>&nbsp;
+              <input type="text" class="inputBox" size="5" name="quantity" value="1" >
+            </#if>
           </#if>
           <#if requestParameters.category_id?exists>
             <input type='hidden' name='category_id' value='${requestParameters.category_id}'>
           </#if>
         </#if>
       </form>
-    <div class="tabletext">
+	<div class="tabletext">
       <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
         <hr class="sepbar">
         <form name="addToShoppingList" method="post" action="<@ofbizUrl>/addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
           <input type="hidden" name="productId" value="${requestParameters.product_id}">
           <input type="hidden" name="product_id" value="${requestParameters.product_id}">
-          <input type="hidden" name="productStoreId" value="${productStoreId}">
-          <input type="hidden" name="reservStart" value= "">
           <select name="shoppingListId" class="selectBox">
             <#if shoppingLists?has_content>
               <#list shoppingLists as shoppingList>
@@ -399,14 +347,14 @@ ${virtualJavaScript?if_exists}
             <option value="">${uiLabelMap.EcommerceNewShoppingList}</option>
           </select>
           &nbsp;&nbsp;
-          <#if product.productTypeId == "ASSET_USAGE"><table><tr><td>&nbsp;</td><td class="tabletext" align="right">Start Date (yyyy-mm-dd)</td><td><input type="text" class="inputBox" size="10" name="reservStartStr" ></td><td class="tabletext">Number of&nbsp;days</td><td><input type="text" class="inputBox" size="4" name="reservLength"></td><td>&nbsp;</td><td class="tabletext" align="right">Number of&nbsp;persons</td><td><input type="text" class="inputBox" size="4" name="reservPersons" value="1"></td><td class="tabletext" align="right">Qty&nbsp;</td><td><input type="text" class="inputBox" size="5" name="quantity" value="1"></td></tr></table><#else><input type="text" class="inputBox" size="5" name="quantity" value="1"><input type="hidden" name="reservStartStr" value= ""></#if>
-          <a href='javascript:addShoplistSubmit();' class="buttontext">[${uiLabelMap.EcommerceAddToShoppingList}]</a>
+          <input type="text" size="5" class="inputBox" name="quantity" value="1">
+          <a href="javascript:document.addToShoppingList.submit();" class="buttontext">[${uiLabelMap.EcommerceAddToShoppingList}]</a>
         </form>
       <#else> <br>
         ${uiLabelMap.EcommerceYouMust} <a href="<@ofbizUrl>/checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
         ${uiLabelMap.EcommerceToAddSelectedItemsToShoppingList}.&nbsp;
       </#if>
-      </div>
+	  </div>
       <#-- Prefill first select box (virtual products only) -->
       <#if variantTree?exists && 0 < variantTree.size()>
         <script language="JavaScript">eval("list" + "${featureOrderFirst}" + "()");</script>
@@ -460,6 +408,135 @@ ${virtualJavaScript?if_exists}
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
 
   <#-- Any attributes/etc may go here -->
+  <#-- Product Configurator -->
+  <tr>
+    <td colspan="2">
+      <form name="configform" method="post" action="<@ofbizUrl>/product<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+        <input type='hidden' name='add_product_id' value='${product.productId}'>
+        <input type='hidden' name='add_category_id' value=''>
+        <input type='hidden' name='quantity' value='1'>
+
+        <input type='hidden' name='product_id' value='${product.productId}'>
+        <table >
+          <tr>
+            <td>
+                <div class="tabletext">
+                    <a href="javascript:verifyConfig();" class="buttontext">Verify Configuration</a>
+                </div>
+            </td>
+          </tr>
+          <tr><td><hr></td></tr>
+          <#assign counter = 0>
+          <#assign questions = configwrapper.questions>
+          <#list questions as question>
+          <tr>
+            <td>
+              <div class="tableheadtext">${question.question}</div>
+              <#if question.isFirst()>
+                <a name='#${question.getConfigItem().getString("configItemId")}'></a>
+                <div class="tabletext">${question.description?if_exists}</div>
+                <#assign instructions = question.content.get("INSTRUCTIONS")?if_exists>
+                <#if instructions?has_content>
+                  <a href="javascript:alert('${instructions}');" class="buttontext">Instructions</a>
+                </#if>
+                <#assign image = question.content.get("IMAGE_URL")?if_exists>
+                <#if image?has_content>
+                  <img src='<@ofbizContentUrl>${contentPathPrefix?if_exists}${image?if_exists}</@ofbizContentUrl>' vspace='5' hspace='5' border='0' width='200' align='left'>
+                </#if>
+              <#else>
+                <div class="tabletext"><a href='#${question.getConfigItem().getString("configItemId")}' class="buttontext">Details</a></div>
+              </#if>
+            </td>
+          </tr>
+          <tr>
+            <td>
+            <#if question.isStandard()>
+              <#-- Standard item: all the options are always included -->
+              <#assign options = question.options>
+              <#list options as option>
+                <div class="tabletext">${option.description} <#if !option.isAvailable()> (*)</#if></div>
+              </#list>
+            <#else>
+              <#if question.isSingleChoice()>
+                <#-- Single choice question -->
+                <#assign options = question.options>
+                <#assign selectedOption = question.getSelected()?if_exists>
+                <#assign selectedPrice = 0.0>
+                <#if selectedOption?has_content>
+                  <#assign selectedPrice = selectedOption.getPrice()>
+                </#if>
+                <#-- The single choice input can be implemented with radio buttons or a select field -->
+                <#if renderSingleChoiceWithRadioButtons?exists && "Y" == renderSingleChoiceWithRadioButtons>
+                <#-- This is the radio button implementation -->
+                <#if !question.isMandatory()>
+                  <div class="tabletext"><input type='RADIO' name='${counter}' value='<#if !question.isSelected()>checked</#if>'> No option</div>
+                </#if>
+                <#assign optionCounter = 0>
+                <#list options as option>
+                  <#if showOffsetPrice?exists && "Y" == showOffsetPrice>
+                    <#assign shownPrice = option.price - selectedPrice>
+                  <#else>
+                    <#assign shownPrice = option.price>
+                  </#if>
+                  <div class="tabletext">
+                    <input type='RADIO' name='${counter}' value='${optionCounter}' <#if option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())>checked</#if>>
+                    ${option.description}&nbsp;
+                    <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
+                    <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
+                    <#if !option.isAvailable()>(*)</#if>
+                  </div>
+                  <#assign optionCounter = optionCounter + 1>
+                </#list>
+                <#else>
+                <#-- And this is the select box implementation -->
+                <select name='${counter}' class='selectBox'>
+                <#if !question.isMandatory()>
+                  <option value=''>---</option>
+                </#if>
+                <#assign options = question.options>
+                <#assign optionCounter = 0>
+                <#list options as option>
+                  <#if showOffsetPrice?exists && "Y" == showOffsetPrice>
+                    <#assign shownPrice = option.price - selectedPrice>
+                  <#else>
+                    <#assign shownPrice = option.price>
+                  </#if>
+                  <#if option.isSelected()>
+                    <#assign optionCounter = optionCounter + 1>
+                  </#if>
+                  <option value='${optionCounter}' <#if option.isSelected()>selected</#if>>
+                    ${option.description}&nbsp;
+                    <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
+                    <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
+                    <#if !option.isAvailable()> (*)</#if>
+                  </option>
+                  <#assign optionCounter = optionCounter + 1>
+                </#list>
+                </select>
+                </#if>
+              <#else>
+                <#-- Multi choice question -->
+                <#assign options = question.options>
+                <#assign optionCounter = 0>
+                <#list options as option>
+                  <div class="tabletext">
+                    <input type='CHECKBOX' name='${counter}' value='${optionCounter}' <#if option.isSelected()>checked</#if>>
+                    ${option.description} +<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if>
+                  </div>
+                  <#assign optionCounter = optionCounter + 1>
+                </#list>
+              </#if>
+            </#if>
+            </td>
+          </tr>
+          <tr><td><hr></td></tr>
+          <#assign counter = counter + 1>
+        </#list>
+        </table>
+      </form>
+    </td>
+  </tr>
+  <tr><td colspan="2"><hr class='sepbar'></td></tr>
 
   <#-- Product Reviews -->
   <tr>
@@ -565,7 +642,7 @@ ${virtualJavaScript?if_exists}
 <#assign listIndex = 1>
 ${setRequestAttribute("productValue", productValue)}
 
-<table>
+<table >
   <#-- obsolete -->
   <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
   <#-- cross sell -->

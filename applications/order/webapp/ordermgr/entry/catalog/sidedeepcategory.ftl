@@ -63,9 +63,10 @@
   </#if>
 </#macro>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
+<#if topLevelList?has_content>
+<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
@@ -73,24 +74,23 @@
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
+    </td>
+  </tr>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <div style='margin-left: 10px;'>
-              <#if topLevelList?exists>
-                  <#list topLevelList as category>
-                    <@categoryList parentCategory=category category=category/>
-                  </#list>
-              </#if>
+              <#list topLevelList as category>
+                <@categoryList parentCategory=category category=category/>
+              </#list>
             </div>
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-</TABLE>
+    </td>
+  </tr>
+</table>
 <br>
+</#if>

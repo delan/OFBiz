@@ -25,7 +25,9 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists>
+  <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
