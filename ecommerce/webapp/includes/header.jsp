@@ -14,8 +14,8 @@
             <TD align=left width='1%'><IMG src='<ofbiz:contenturl><%=(String) layoutSettings.get("headerImageUrl")%></ofbiz:contenturl>'></TD>
           <%}%>
           <TD align=center width='98%' <%if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerMiddleBackgroundUrl"))) {%>background='<ofbiz:contenturl><%=(String) layoutSettings.get("headerMiddleBackgroundUrl")%></ofbiz:contenturl>'<%}%>>
-              <%EntityField.run("layoutSettings", "companyName", "&nbsp;&nbsp;<span class='headerCompanyName'>", "</span>", "&nbsp;", null, pageContext);%>
-              <%EntityField.run("layoutSettings", "companySubtitle", "<br>&nbsp;&nbsp;<span class='headerCompanySubtitle'>", "</span>", pageContext);%>
+              <%EntityField.run("layoutSettings", "companyName", "<span class='headerCompanyName'>", "</span>", "&nbsp;", null, pageContext);%>
+              <%EntityField.run("layoutSettings", "companySubtitle", "<br><span class='headerCompanySubtitle'>", "</span>", pageContext);%>
           </TD>
           <TD align=right width='1%' nowrap <%if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerRightBackgroundUrl"))) {%>background='<ofbiz:contenturl><%=(String) layoutSettings.get("headerRightBackgroundUrl")%></ofbiz:contenturl>'<%}%>>
             <%@ include file="/cart/microcart.jsp"%>
