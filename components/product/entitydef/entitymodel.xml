@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.69 $
+ * @version    $Revision: 1.70 $
  */
 -->
 
@@ -2170,6 +2170,7 @@
       <field name="productPromoActionSeqId" type="id-ne"></field>
       <field name="productPromoCondSeqId" type="id-ne"></field>
       <field name="productCategoryId" type="id-ne"></field>
+      <field name="andGroupId" type="id"></field>
       <field name="productPromoApplEnumId" type="id-ne"></field>
       <field name="includeSubCategories" type="indicator"></field>
       <prim-key field="productPromoId"/>
@@ -2177,6 +2178,7 @@
       <prim-key field="productPromoActionSeqId"/>
       <prim-key field="productPromoCondSeqId"/>
       <prim-key field="productCategoryId"/>
+      <prim-key field="andGroupId"/>
       <relation type="one" fk-name="PROD_PRCAT_PROMO" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
       </relation>
