@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
- * <p><b>Title:</b> PartySimpleEvents
- * <p><b>Description:</b> Events to handle form input and other data changes
- * <p>Copyright (c) 2001-2004 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ * Copyright (c) 2001-2004 The Open For Business Project and repected authors.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included
+ * The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
@@ -21,9 +20,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author    <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version   1.0
- * Created    February 23, 2002
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -122,7 +119,7 @@
             </simple-map-processor>
         </call-map-processor>
 
-        <log level="info" message="UserLogin : ${userLogin}"/>
+        <log level="info" message="Creating new customer, newUserLogin=${newUserLogin}"/>
 
         <!-- Create the PartyRole -->
         <field-to-field field-name="roleTypeId" map-name="parameters" to-map-name="partyRoleContext"/>
@@ -146,12 +143,12 @@
                         </process>
                         <process field="CUSTOMER_ADDRESS2"><copy to-field="address2"/></process>
                         <process field="CUSTOMER_CITY">
-                        	<copy to-field="city"/>
-                        	<not-empty><fail-property resource="EcommerceUiLabels" property="PartyCityMissing"/></not-empty>
+                            <copy to-field="city"/>
+                            <not-empty><fail-property resource="EcommerceUiLabels" property="PartyCityMissing"/></not-empty>
                         </process>
                         <process field="CUSTOMER_STATE"><copy to-field="stateProvinceGeoId"/></process>
                         <process field="CUSTOMER_POSTAL_CODE">
-                        	<copy to-field="postalCode"/>
+                            <copy to-field="postalCode"/>
                             <not-empty><fail-property resource="EcommerceUiLabels" property="PartyZipCodeMissing"/></not-empty>
                         </process>
                         <process field="CUSTOMER_COUNTRY">
@@ -163,12 +160,12 @@
                 </call-map-processor>
                 <if-compare value="USA" operator="equals" field-name="CUSTOMER_COUNTRY" map-name="parameters">
                     <if-empty field-name="CUSTOMER_STATE" map-name="parameters">
-                    	<string-to-list string="State is missing, and is required for an address in the United States." message-field-name="CUSTOMER_STATE" list-name="error_list"/>
+                        <string-to-list string="State is missing, and is required for an address in the United States." message-field-name="CUSTOMER_STATE" list-name="error_list"/>
                     </if-empty>
                 </if-compare>
                 <if-compare value="CAN" operator="equals" field-name="CUSTOMER_COUNTRY" map-name="parameters">
                     <if-empty field-name="CUSTOMER_STATE" map-name="parameters">
-                    	<string-to-list string="State is missing, and is required for an address in the Canada." message-field-name="CUSTOMER_STATE" list-name="error_list"/>
+                        <string-to-list string="State is missing, and is required for an address in the Canada." message-field-name="CUSTOMER_STATE" list-name="error_list"/>
                     </if-empty>
                 </if-compare>
             </else>
