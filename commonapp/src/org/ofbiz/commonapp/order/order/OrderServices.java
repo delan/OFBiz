@@ -1055,7 +1055,7 @@ public class OrderServices {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator(); 
         String orderId = (String) context.get("orderId");
-        String emailType = (String) context.get("orderType");                                        
+        String emailType = (String) context.get("emailType");                                        
         String ofbizHome = System.getProperty("ofbiz.home");
         
         // get the order header and website
