@@ -359,7 +359,11 @@ public class LoginEvents {
         String bodyUrl = serverRoot + controlPath + "/passwordemail";
         
         Map context = new HashMap();
-        context.put("subject", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Password Reminder");
+        if (useEncryption) {
+            context.put("subject", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " New Password");
+        } else {
+            context.put("subject", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Password Reminder");
+        }
         context.put("bodyUrl", bodyUrl);
         context.put("sendTo", emails.toString());
         context.put("sendFrom", PASSWORD_SENDER_EMAIL);
