@@ -80,91 +80,91 @@
     </request-map>
 
     <request-map uri="additem">
-        <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="addordertocart">
-        <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="addToCartFromOrder"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="addToCartFromOrder"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="orderstatus"/>
     </request-map>
 
     <request-map uri="addtocartbulk">
-        <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="addToCartBulk"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="addToCartBulk"/>
         <response name="success" type="view" value="quickadd"/>
         <response name="error" type="view" value="quickadd"/>
     </request-map>
     <request-map uri="addCategoryDefaults">
-        <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="addCategoryDefaults"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="addCategoryDefaults"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="addseperator">
-        <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="modifycart">
-        <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="modifyCart"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="modifyCart"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="emptycart">
-        <event type="java" path="org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents" invoke="clearCart"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="clearCart"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
     </request-map>
 
     <request-map uri="checkoutoptions">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="cartNotEmpty"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
         <response name="success" type="view" value="checkoutoptions"/>
         <response name="error" type="view" value="main"/>
     </request-map>
 
     <request-map uri="checkout">
       <security https="true" auth="true"/>
-	  <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="cartNotEmpty"/>
+	  <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
       <response name="success" type="request" value="setOptions"/>
 	  <response name="error" type="view" value="showcart"/>
     </request-map>
 
 	<request-map uri="setOptions">
       <security https="true" auth="true"/>
-	  <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="setCheckOutOptions"/>
+	  <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="setCheckOutOptions"/>
 	  <response name="success" type="request" value="calcShipping"/>
 	  <response name="error" type="view" value="checkoutoptions"/>
 	</request-map>
 
     <request-map uri="calcShipping">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.ecommerce.checkout.ShippingEvents" invoke="getShipEstimate"/>
+        <event type="java" path="org.ofbiz.commonapp.shipment.shipment.ShippingEvents" invoke="getShipEstimate"/>
         <response name="success" type="view" value="checkout"/>
         <response name="error" type="view" value="checkoutoptions"/>
     </request-map>
 
     <request-map uri="processorder">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="createOrder"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>
         <response name="success" type="request" value="renderconfirmorder"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
 
     <request-map uri="renderconfirmorder">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="renderConfirmOrder"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="renderConfirmOrder"/>
         <response name="success" type="request" value="emailorder"/>
         <response name="error" type="view" value="orderhistory"/>
     </request-map>
 
     <request-map uri="emailorder">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="emailOrder"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="emailOrder"/>
         <response name="success" type="view" value="showconfirmorder"/>
         <response name="error" type="view" value="showconfirmorder"/>
     </request-map>

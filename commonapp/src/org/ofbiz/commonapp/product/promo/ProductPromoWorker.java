@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.ecommerce.catalog;
+package org.ofbiz.commonapp.product.promo;
 
 import java.util.*;
 import java.net.*;
@@ -34,7 +34,8 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
-import org.ofbiz.ecommerce.shoppingcart.*;
+import org.ofbiz.commonapp.order.shoppingcart.*;
+import org.ofbiz.commonapp.product.catalog.*;
 
 /**
  * ProductPromoWorker - Worker class for catalog/product promotion related functionality

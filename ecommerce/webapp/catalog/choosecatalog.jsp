@@ -1,6 +1,6 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<%@ page import="java.util.*, org.ofbiz.ecommerce.catalog.*, org.ofbiz.core.pseudotag.*, org.ofbiz.core.util.*" %>
+<%@ page import="java.util.*, org.ofbiz.commonapp.product.catalog.*, org.ofbiz.core.pseudotag.*, org.ofbiz.core.util.*" %>
 
 <%Collection catalogCol = CatalogWorker.getCatalogIdsAvailable(pageContext);%>
 <%pageContext.setAttribute("catalogCol", catalogCol);%>

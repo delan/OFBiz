@@ -3,7 +3,7 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*, org.ofbiz.core.entity.*" %>
 
 
-<%org.ofbiz.ecommerce.catalog.CatalogWorker.getQuickReorderProducts(pageContext, "miniReorderProducts", "miniReorderQuantities");%>
+<%org.ofbiz.commonapp.product.catalog.CatalogWorker.getQuickReorderProducts(pageContext, "miniReorderProducts", "miniReorderQuantities");%>
 <ofbiz:if name="miniReorderProducts" size="0">
   <%Map miniReorderQuantities = (Map) pageContext.getAttribute("miniReorderQuantities");%>
   <BR>

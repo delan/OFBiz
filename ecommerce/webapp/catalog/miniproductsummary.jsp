@@ -1,4 +1,4 @@
-<%@ page import="org.ofbiz.ecommerce.catalog.*"%>
+<%@ page import="org.ofbiz.commonapp.product.catalog.*"%>
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <ofbiz:if name="miniProduct">

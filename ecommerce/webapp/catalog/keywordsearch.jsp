@@ -27,7 +27,7 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
-<%@ page import="org.ofbiz.ecommerce.catalog.*, org.ofbiz.commonapp.product.product.*"%>
+<%@ page import="org.ofbiz.commonapp.product.catalog.*, org.ofbiz.commonapp.product.product.*"%>
 
 <%String searchCategoryId = request.getParameter("SEARCH_CATEGORY_ID");%>
 <%String searchOperator = request.getParameter("SEARCH_OPERATOR");%>

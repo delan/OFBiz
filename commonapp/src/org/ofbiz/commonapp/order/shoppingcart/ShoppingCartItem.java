@@ -22,13 +22,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.ecommerce.shoppingcart;
+package org.ofbiz.commonapp.order.shoppingcart;
 
 import java.util.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.commonapp.order.order.OrderReadHelper;
+
+import org.ofbiz.commonapp.order.order.*;
 
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
@@ -199,7 +201,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         
         //apply/unapply promotions
         if (doPromotions) {
-            org.ofbiz.ecommerce.catalog.ProductPromoWorker.doPromotions(prodCatalogId, cart, this, oldQuantity, getDelegator(), dispatcher);
+            org.ofbiz.commonapp.product.promo.ProductPromoWorker.doPromotions(prodCatalogId, cart, this, oldQuantity, getDelegator(), dispatcher);
         }
     }
     /** Returns the quantity. */

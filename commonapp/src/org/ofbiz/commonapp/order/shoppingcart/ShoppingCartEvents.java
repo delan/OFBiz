@@ -22,17 +22,19 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.ecommerce.shoppingcart;
+package org.ofbiz.commonapp.order.shoppingcart;
 
 import java.util.*;
 import java.text.*;
+
 import javax.servlet.http.*;
 import javax.servlet.*;
+
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.ecommerce.catalog.*;
 
+import org.ofbiz.commonapp.product.catalog.*;
 
 /**
  * Shopping cart events.

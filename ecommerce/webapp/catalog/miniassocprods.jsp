@@ -1,7 +1,7 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*, org.ofbiz.core.entity.*" %>
 
-<%org.ofbiz.ecommerce.catalog.CatalogWorker.getRandomCartProductAssoc(pageContext, "miniAssociatedProducts");%>
+<%org.ofbiz.commonapp.product.catalog.CatalogWorker.getRandomCartProductAssoc(pageContext, "miniAssociatedProducts");%>
 <ofbiz:if name="miniAssociatedProducts" size="0">
   <BR>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>

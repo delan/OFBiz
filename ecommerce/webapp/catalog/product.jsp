@@ -2,7 +2,7 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="java.util.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*"%>
 <%@ page import="org.ofbiz.core.pseudotag.*, org.ofbiz.commonapp.product.product.*"%>
-<%@ page import="org.ofbiz.ecommerce.catalog.*"%>
+<%@ page import="org.ofbiz.commonapp.product.catalog.*"%>
 
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <%try {%>

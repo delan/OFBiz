@@ -26,7 +26,7 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
-<%@ page import="org.ofbiz.commonapp.product.category.*, org.ofbiz.ecommerce.catalog.*" %>
+<%@ page import="org.ofbiz.commonapp.product.category.*, org.ofbiz.commonapp.product.catalog.*" %>
 
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>

@@ -1,12 +1,13 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*, org.ofbiz.core.entity.*" %>
-<%@ page import="java.util.*, org.ofbiz.ecommerce.catalog.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*, org.ofbiz.core.entity.*,
+                 org.ofbiz.commonapp.product.promo.ProductPromoWorker" %>
+<%@ page import="java.util.*, org.ofbiz.commonapp.product.catalog.*" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
-<ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCart" />  
+<ofbiz:object name="cart" property="_SHOPPING_CART_" type="org.ofbiz.commonapp.order.shoppingcart.ShoppingCart" />
 <%if(cart != null && cart.size() > 0) {%>
   <%pageContext.setAttribute("cartIter", cart.iterator());%>
-  <%org.ofbiz.ecommerce.catalog.CatalogWorker.getRandomCartProductAssoc(pageContext, "associatedProducts");%>
+  <%org.ofbiz.commonapp.product.catalog.CatalogWorker.getRandomCartProductAssoc(pageContext, "associatedProducts");%>
 <%}%>
 <%-- get these for the promoText --%>
 <%pageContext.setAttribute("productPromos", ProductPromoWorker.getCatalogProductPromos(delegator, request));%>
@@ -98,7 +99,7 @@
           <TD NOWRAP align=center><div class='tabletext'><b>Remove</b></div></TD>
         </TR>
 
-        <ofbiz:iterator name="item" property="cartIter" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCartItem">
+        <ofbiz:iterator name="item" property="cartIter" type="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartItem">
           <tr><td colspan="7"><hr class='sepbar'></td></tr>
           <TR>
             <TD><div class='tabletext'><%-- <b><%= cart.getItemIndex(item)%></b> - --%><a href='<ofbiz:url>/product?product_id=<%=item.getProductId()%></ofbiz:url>' class='buttontext'><%=item.getProductId()%> - <%=UtilFormatOut.checkNull(item.getName())%></a> : <%=UtilFormatOut.checkNull(item.getDescription())%></div></TD>

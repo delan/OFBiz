@@ -1,6 +1,6 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.ecommerce.catalog.*, org.ofbiz.commonapp.product.category.*" %>
+<%@ page import="org.ofbiz.commonapp.product.catalog.*, org.ofbiz.commonapp.product.category.*" %>
 <%@ page import="java.util.*" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 

@@ -1,7 +1,7 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
-<%@ page import="org.ofbiz.ecommerce.catalog.*, org.ofbiz.commonapp.common.*" %>
+<%@ page import="org.ofbiz.commonapp.product.catalog.*, org.ofbiz.commonapp.common.*" %>
 <%@ page import="java.util.*" %>
 <%Map layoutSettings = (Map) pageContext.findAttribute("layoutSettings");%>
 

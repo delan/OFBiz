@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.ecommerce.shoppingcart;
+package org.ofbiz.commonapp.order.shoppingcart;
 
 import java.text.*;
 import java.util.*;

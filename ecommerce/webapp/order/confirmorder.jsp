@@ -36,8 +36,8 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.ecommerce.misc.*" %>
-<%@ page import="org.ofbiz.ecommerce.catalog.*" %>
-<%@ page import="org.ofbiz.ecommerce.shoppingcart.*" %>
+<%@ page import="org.ofbiz.commonapp.product.catalog.*" %>
+<%@ page import="org.ofbiz.commonapp.order.shoppingcart.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.ContactHelper" %>
 <%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>

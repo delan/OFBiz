@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.ecommerce.checkout;
+package org.ofbiz.commonapp.order.shoppingcart;
 
 import java.net.*;
 import java.util.*;
@@ -36,17 +36,16 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.party.contact.*;
-import org.ofbiz.ecommerce.shoppingcart.*;
-import org.ofbiz.ecommerce.catalog.*;
+import org.ofbiz.commonapp.product.catalog.*;
 
 /**
  * Events used for processing checkout and orders.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on August 23, 2001, 7:58 PM
+ * @version    1.0
+ * @created    August 23, 2001
  */
 public class CheckOutEvents {
 
@@ -158,7 +157,7 @@ public class CheckOutEvents {
         URL ecommercePropertiesUrl = null;
         try {
             ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
-        } catch (java.net.MalformedURLException e) {
+        } catch (MalformedURLException e) {
             Debug.logWarning(e, module);
         }
 
@@ -327,7 +326,7 @@ public class CheckOutEvents {
         URL ecommercePropertiesUrl = null;
         try {
             ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
-        } catch (java.net.MalformedURLException e) {
+        } catch (MalformedURLException e) {
             Debug.logWarning(e, module);
         }
 
@@ -350,7 +349,7 @@ public class CheckOutEvents {
             serverRoot.append(":" + port);
 
         try {
-            java.net.URL url = new java.net.URL(serverRoot.toString() + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
+            URL url = new URL(serverRoot.toString() + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
             //as nice as it would be to run this through localhost, we can't because the page has to have the correct host so the urls will be created for the email, etc; we could do this and pass the base url in a parameter...
             //Debug.logInfo("Original URL: " + url, module);
             //url = new URL(url.getProtocol(), "127.0.0.1", url.getPort(), url.getFile());
@@ -373,7 +372,7 @@ public class CheckOutEvents {
         URL ecommercePropertiesUrl = null;
         try {
             ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
-        } catch (java.net.MalformedURLException e) {
+        } catch (MalformedURLException e) {
             Debug.logWarning(e, module);
         }
         try {

@@ -1,4 +1,4 @@
-<%@ page import="org.ofbiz.ecommerce.catalog.*"%>
+<%@ page import="org.ofbiz.commonapp.product.catalog.*"%>
 <ofbiz:if name="product">
     <%-- calculate the "your" price --%>
     <ofbiz:service name='calculateProductPrice'>

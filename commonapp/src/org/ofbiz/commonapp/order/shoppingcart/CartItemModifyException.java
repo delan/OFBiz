@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.ecommerce.shoppingcart;
+package org.ofbiz.commonapp.order.shoppingcart;
 
 import java.io.*;
 import org.ofbiz.core.util.*;
@@ -35,6 +35,7 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class CartItemModifyException extends GeneralException {
+
     public CartItemModifyException() {
         super();
     }
