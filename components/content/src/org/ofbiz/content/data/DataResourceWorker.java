@@ -1038,7 +1038,7 @@ public class DataResourceWorker {
         }
 
         Debug.log("Directory Name : " + latestDir.getName(), module);
-        return latestDir.getAbsolutePath();
+        return latestDir.getAbsolutePath().replace('\\','/');
     }
 
     private static File makeNewDirectory(File parent) {
