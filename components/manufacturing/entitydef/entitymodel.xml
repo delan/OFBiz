@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  */
 -->
 
@@ -158,8 +158,10 @@
             package-name="org.ofbiz.manufacturing.mrp"
             title="Inventory event planned"
             author="Olivier Heintz">
-      <description>Contain all the planned InventoryEvent by ProductId to be able to check the product availability 
-                          and if necessary generate some requirements</description>
+      <description>
+        Contains all the planned InventoryEvent by ProductId to be able to check the product availability 
+        and if necessary generate some requirements
+      </description>
       <field name="productId" type="id-ne"></field>
       <field name="eventDate" type="date-time"></field>
       <field name="inventoryEventPlanTypeId" type="id-ne"></field>
@@ -203,5 +205,71 @@
         <key-map field-name="productId"/>
       </relation>
     </view-entity>
+    
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.manufacturing.jobshopmgt -->
+  <!-- ========================================================= -->
+
+    <view-entity entity-name="WorkEffortAndGoods" package-name="org.ofbiz.manufacturing.jobshopmgt" 
+        title="WorkEffort and related WorkEffortGoodStandard" author="Jacopo Cappellato">
+      <description>WorkEffort and its WorkEffortGoodStandard</description>
+      <member-entity entity-alias="WE" entity-name="WorkEffort"></member-entity>
+      <member-entity entity-alias="WEGS" entity-name="WorkEffortGoodStandard"></member-entity>
+      <alias-all entity-alias="WE"></alias-all>
+      <alias entity-alias="WEGS" name="productId"></alias>
+      <alias entity-alias="WEGS" name="statusId"></alias>
+      <alias entity-alias="WEGS" name="estimatedQuantity"></alias>
+      <view-link entity-alias="WE" rel-entity-alias="WEGS">
+        <key-map field-name="workEffortId"></key-map>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="WorkEffortInventoryAssign" package-name="org.ofbiz.manufacturing.jobshopmgt" 
+        title="Inventory Item and Product assigned for WorkEffort" author="Jacopo Cappellato">
+      <description>Inventory Item and Product assigned for WorkEffort</description>
+      <member-entity entity-alias="WEIA" entity-name="WorkEffortInventoryAssign"></member-entity>
+      <member-entity entity-alias="II" entity-name="InventoryItem"></member-entity>
+      <alias-all entity-alias="WEIA"></alias-all>
+      <alias entity-alias="II" name="productId"></alias>
+      <view-link entity-alias="WEIA" rel-entity-alias="II">
+        <key-map field-name="inventoryItemId"></key-map>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="WorkEffortInventoryProduced" package-name="org.ofbiz.manufacturing.jobshopmgt" 
+        title="Inventory Item and Product produced by WorkEffort" author="Jacopo Cappellato">
+      <description>Inventory Item and Product produced by WorkEffort</description>
+      <member-entity entity-alias="WEIP" entity-name="WorkEffortInventoryProduced"></member-entity>
+      <member-entity entity-alias="II" entity-name="InventoryItem"></member-entity>
+      <alias-all entity-alias="WEIP"></alias-all>
+      <alias entity-alias="II" name="productId"></alias>
+      <view-link entity-alias="WEIP" rel-entity-alias="II">
+        <key-map field-name="inventoryItemId"></key-map>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="OrderHeaderAndItems2"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Order Items View Entity">
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OI" entity-name="OrderItem"/>
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderDate"/>
+      <alias entity-alias="OH" name="orderStatusId" field="statusId"/>
+      <alias entity-alias="OH" name="grandTotal"/>
+      <alias entity-alias="OH" name="productStoreId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OI" name="orderItemSeqId"/>
+      <alias entity-alias="OI" name="productId"/>
+      <alias entity-alias="OI" name="quantity"/>
+      <alias entity-alias="OI" name="unitPrice"/>
+      <alias entity-alias="OI" name="unitListPrice"/>
+      <alias entity-alias="OI" name="itemDescription"/>
+      <alias entity-alias="OI" name="itemStatusId" field="statusId"/>
+      <alias entity-alias="OI" name="estimatedShipDate"/>
+      <view-link entity-alias="OH" rel-entity-alias="OI">
+        <key-map field-name="orderId"/>
+      </view-link>
+    </view-entity>
+
 </entitymodel>
 
