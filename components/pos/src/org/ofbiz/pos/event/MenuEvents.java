@@ -92,8 +92,18 @@ public class MenuEvents {
                 SecurityEvents.mgrLogin(pos);
             } else if ("LOGIN".equals(lastFunc[0])) {
                 SecurityEvents.login(pos);
-            } else if ("CREDIT".equals(lastFunc[0]) || "MSRINFO".equals(lastFunc[0])) {
+            } else if ("CREDIT".equals(lastFunc[0])) {
                 PaymentEvents.payCredit(pos);
+            } else if ("CHECK".equals(lastFunc[0])) {
+                PaymentEvents.payCheck(pos);
+            } else if ("GIFTCARD".equals(lastFunc[0])) {
+                PaymentEvents.payGiftCard(pos);
+            } else if ("MSRINFO".equals(lastFunc[0])) {
+                if (input.isFunctionSet("CREDIT")) {
+                    PaymentEvents.payCredit(pos);                 
+                } else if (input.isFunctionSet("GIFTCARD")) {
+                    PaymentEvents.payGiftCard(pos);
+                }
             } else if ("SKU".equals(lastFunc[0])) {
                 MenuEvents.addItem(pos);
             }

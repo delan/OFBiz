@@ -46,6 +46,7 @@ public class Output {
     public static final String CREDEX = "Enter Expiration Date (MMYY):";
     public static final String CREDCF = "Enter Last 4 Digits:";
     public static final String CREDZP = "Enter Billing ZipCode:";
+    public static final String REFNUM = "Enter Reference Number:";
     public static final String ISOPEN = "Register Is Open";
 
     protected XEdit output = null;

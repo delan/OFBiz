@@ -12,8 +12,8 @@
 
         <Button name="payCash" x="0" y="310" w="100" h="60" style="posButton" content="CASH" alignment="Center"/>
         <Button name="payCheck" x="102" y="310" w="100" h="60" style="posButton" content="CHECK" alignment="Center"/>
-        <Button name="payCredit" x="204" y="310" w="100" h="60" style="posButton" content="CREDIT" alignment="Center"/>       
-        <Button name="" x="306" y="310" w="100" h="60" style="posButton" content="GIFT CERT" alignment="Center"/>
+        <Button name="payCredit" x="204" y="310" w="100" h="60" style="posButton" content="CREDIT" alignment="Center"/>
+        <Button name="payGiftCard" x="306" y="310" w="100" h="60" style="posButton" content="GIFT CERT" alignment="Center"/>
         <Button name="payClearAll" x="408" y="310" w="100" h="60" style="posButton" content="CLEAR ALL" alignment="Center"/>
         <Button name="payFinish" x="510" y="310" w="100" h="60" style="posButton" content="FINISH" alignment="Center"/>
     </Components>
