@@ -39,4 +39,13 @@
     <process field="passwordHint"><copy/></process>
     <process field="userLoginId"><copy/></process>
   </simple-map-processor>
+  <simple-map-processor name="adminUpdatePassword">
+    <process field="newPassword"><copy/><not-empty><fail-message message="New Password is missing"/></not-empty></process>
+    <process field="newPasswordVerify">
+        <compare-field operator="equals" field="newPassword"><fail-message message="New Password does not equal Verfiy Password"/></compare-field>
+        <not-empty><fail-message message="New Password Verify is missing"/></not-empty>
+        <copy/></process>
+    <process field="passwordHint"><copy/></process>
+    <process field="userLoginId"><copy/></process>
+  </simple-map-processor>
 </simple-map-processors>
