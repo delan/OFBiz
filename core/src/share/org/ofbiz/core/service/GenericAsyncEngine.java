@@ -41,17 +41,20 @@ public abstract class GenericAsyncEngine implements GenericEngine {
     
     protected ServiceDispatcher dispatcher;
     protected String loader;
-    
+        
     /** Creates new GenericAsyncEngine */
     public GenericAsyncEngine(ServiceDispatcher dispatcher) {
         this.dispatcher = dispatcher;
         this.loader = null;
     }
     
-    public void setLoader(String name) {
-        this.loader = name;
+    /** Set the name of the local dispatcher
+     *@param loader of the local dispatcher
+     */
+    public void setLoader(String loader) {
+        this.loader = loader;
     }
-    
+                
     /** Run the service synchronously and return the result
      *@param context Map of name, value pairs composing the context
      *@return Map of name, value pairs composing the result

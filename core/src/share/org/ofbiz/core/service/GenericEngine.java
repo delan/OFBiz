@@ -60,7 +60,7 @@ public interface GenericEngine {
     public void runAsync(ModelService modelService, Map context) throws GenericServiceException;
     
     /** Set the name of the local dispatcher
-     *@param Name of the local dispatcher
+     *@param loader name of the local dispatcher
      */
-    public void setLoader(String name);
+    public void setLoader(String loader);
 }

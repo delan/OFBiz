@@ -36,7 +36,7 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public final class StandardJavaEngine extends GenericAsyncEngine {
-    
+            
     /** Creates new StandardJavaEngine */
     public StandardJavaEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
@@ -55,21 +55,29 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
      */
     public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
         Object result = serviceInvoker(modelService,context);
-        if ( result == null || !(result instanceof Map))                    
+        if ( result == null || !(result instanceof Map))
             throw new GenericServiceException("Service did not return expected result.");
         return (Map) result;
     }
     
     // Invoke the static java method service.
-    private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {        
+    private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {
         Class[] paramTypes = new Class[] { Map.class };
-        Object[] params = new Object[] { context };        
+        Object[] params = new Object[] { context };
         Object result = null;
         
         if ( modelService.location == null || modelService.invoke == null )
             throw new GenericServiceException("Cannot locate service to invoke.");
+        
+        // Get the classloader to use
+        ClassLoader cl = null;
+        if ( loader == null )
+            cl = this.getClass().getClassLoader();
+        else
+            cl = dispatcher.getLocalContext(loader).getClassLoader();
+        
         try {
-            Class c = Class.forName(modelService.location);
+            Class c = cl.loadClass(modelService.location);
             Method m = c.getMethod(modelService.invoke, paramTypes);
             result = m.invoke(null, params);
         }

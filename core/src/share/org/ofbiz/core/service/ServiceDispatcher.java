@@ -44,6 +44,7 @@ public class ServiceDispatcher {
     protected JobManager jm;
     
     public ServiceDispatcher(GenericDelegator delegator) {
+        Debug.logInfo("[ServiceDispatcher] : Creating new instance.");
         this.delegator = delegator;
         this.localContext = new HashMap();
         this.jm = new JobManager(this,this.delegator);
@@ -60,7 +61,8 @@ public class ServiceDispatcher {
         if ( dispatchers.containsKey(delegator) ) 
             sd = (ServiceDispatcher) dispatchers.get(delegator);        
         else 
-            sd = new ServiceDispatcher(delegator);            
+            sd = new ServiceDispatcher(delegator);       
+        dispatchers.put(delegator,sd);
         sd.register(name,context);
         return sd;
     }
