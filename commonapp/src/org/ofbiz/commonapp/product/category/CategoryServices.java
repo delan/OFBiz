@@ -112,9 +112,16 @@ public class CategoryServices {
         if (index.intValue() - 1 >= 0 && index.intValue() -1 < memberList.size())  {
             previous = ((GenericValue) memberList.get(index.intValue() - 1)).getString("productId");
             result.put("previousProductId", previous);
+        } else {
+            previous = ((GenericValue) memberList.get(memberList.size() - 1)).getString("productId");
+            result.put("previousProductid", previous);
         }
+
         if (index.intValue() + 1 < memberList.size()) {
             next = ((GenericValue) memberList.get(index.intValue() + 1)).getString("productId");
+            result.put("nextProductId", next);
+        } else {
+            next = ((GenericValue) memberList.get(0)).getString("productId");
             result.put("nextProductId", next);
         }
         return result;

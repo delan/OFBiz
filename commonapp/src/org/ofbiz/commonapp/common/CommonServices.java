@@ -110,6 +110,7 @@ public class CommonServices {
 
             Transport.send(mail);
         } catch (Exception e) {
+            e.printStackTrace();
             return ServiceUtil.returnError("Cannot send mail: " + e.getMessage());
         }
         return ServiceUtil.returnSuccess();
