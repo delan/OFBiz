@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.7 2003/12/21 09:22:11 jonesde Exp $
+ * $Id: ContentWorker.java,v 1.8 2003/12/21 09:34:12 jonesde Exp $
  * 
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  * 
@@ -39,6 +39,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.content.data.DataResourceWorker;
@@ -52,7 +53,7 @@ import freemarker.template.SimpleHash;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 2.2
  * 
  *  
@@ -74,9 +75,11 @@ public class ContentWorker {
         try {
             alternateViews = view.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"));
         } catch (GenericEntityException e) {
-            throw new IOException(e.getMessage());
+            Debug.logError(e, "Error finding alternate locale content: " + e.toString(), module);
+            return contentAssocDataResourceViewFrom;
         }
         
+        alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
         Iterator alternateViewIter = alternateViews.iterator();
         while (alternateViewIter.hasNext()) {
             GenericValue thisView = (GenericValue) alternateViewIter.next();
