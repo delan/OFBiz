@@ -19,22 +19,9 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@version    $Revision: 1.1 $
  *@since      2.1
 -->
 
-<#assign security = requestAttributes.security>
-<div class="apptitle">&nbsp;Marketing Manager Application&nbsp;</div>
-<div class="row">
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerButtonLeft">Main</a></div>
-  <div class="col"><a href="<@ofbizUrl>/EditDataSources</@ofbizUrl>" class="headerButtonLeft">DataSource</a></div>
-  <div class="col"><a href="<@ofbizUrl>/FindMarketingCampaign</@ofbizUrl>" class="headerButtonLeft">Campaign</a></div>
-  <div class="col"><a href="<@ofbizUrl>/FindTrackingCode</@ofbizUrl>" class="headerButtonLeft">Tracking</a></div>
-  <#if requestAttributes.userLogin?has_content>
-    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerButtonRight">Logout</a></div>
-  <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='headerButtonRight'>Login</a></div>
-  </#if>
-  <div class="col-fill">&nbsp;</div>
-</div>
+${pages.get(page.path)}
