@@ -536,9 +536,13 @@ public class UpsServices {
             throw new UpsConnectException("Incomplete connection URL; check your UPS configuration");
         }
         
+        // need a ups service to call
         if (upsService == null) {
             throw new UpsConnectException("UPS service name cannot be null");
         }
+        
+        // xmlString should contain the auth document at the beginning
+        // all documents require an <?xml version="1.0"?> header
         if (xmlString == null) {
             throw new UpsConnectException("XML message cannot be null");
         }
@@ -550,8 +554,8 @@ public class UpsServices {
         }
         conStr = conStr + upsService;
                
-        Debug.logInfo("UPS Connect URL :" + conStr, module); 
-        Debug.logInfo("UPS XML String : " + xmlString, module);
+        if (Debug.verboseOn()) Debug.logVerbose("UPS Connect URL : " + conStr, module); 
+        if (Debug.verboseOn()) Debug.logVerbose("UPS XML String : " + xmlString, module);
         
         HttpClient http = new HttpClient(conStr);
         String response = null;
@@ -565,6 +569,7 @@ public class UpsServices {
         if (response == null) {
             throw new UpsConnectException("Received a null response");
         }
+        if (Debug.verboseOn()) Debug.logVerbose("UPS Response : " + response, module);
         
         return response;
     }    
