@@ -224,14 +224,14 @@ public class ShoppingCartItem implements java.io.Serializable {
         // set basePrice using the calculateProductPrice service
         try {
             Map priceContext = new HashMap();
-
+            
             priceContext.put("product", this.getProduct());
             priceContext.put("prodCatalogId", prodCatalogId);
-            if (cart.getUserLogin() != null) {
-                priceContext.put("partyId", cart.getUserLogin().getString("partyId"));
-            } else if (cart.getAutoUserLogin() != null) {
-                priceContext.put("partyId", cart.getAutoUserLogin().getString("partyId"));
-            }
+            
+            String partyId = cart.getPartyId();
+            if (partyId != null)
+            	priceContext.put("partyId", partyId);
+            
             priceContext.put("quantity", new Double(quantity));
             Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
 
