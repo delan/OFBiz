@@ -1,33 +1,34 @@
 <?xml version="1.0"?>
 
-<project name="Open For Business Core Component" default="jar" basedir=".">
+<project name="Open For Business Core Component" default="deploy" basedir=".">
 
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
 
-    <target name="init">
-	 	<property environment="env"                                 />
+        <target name="init">
+	<property environment="env"                                 />
         <property name="name"           value="core"                />
         <property name="src.dir"        value="src"                 />
         <property name="etc.dir"        value="etc"                 />
         <property name="lib.dir"        value="lib"                 />
-		<property name="doc.dir"        value="docs"                />
+	<property name="doc.dir"        value="docs"                />
         <property name="build.dir"      value="build"               />
         <property name="build.compiler" value="classic"             /> 
         <property name="pkg-dist.name"  value="${name}-pkg"         />
+        <property name="deploy.dir"     value="../jbossdeploy"      /> 
 		
-		<!-- Classpath setting -->
-		<property name="servlet.jar" value="${env.TOMCAT_HOME}/lib/servlet.jar"       />
-		<property name="ejb.jar"     value="${env.JBOSS_HOME}/lib/ext/ejb.jar"        />
-		<property name="jaxp.jar"    value="${env.JBOSS_HOME}/lib/jaxp.jar"           />
-		<property name="parser.jar"  value="${env.JBOSS_HOME}/lib/xml.jar"            />
-		<property name="jdbc.jar"    value="${env.JBOSS_HOME}/lib/jdbc2_0-stdext.jar" />
-		<property name="api-jars"    value="${servlet.jar}:${ejb.jar}:${jdbc.jar}"    />
-		<property name="xml-jars"    value="${jaxp.jar}:${parser.jar}"                />
-		<property name="classpath"   value="${env.CLASSPATH}:${lib.dir}:${api-jars}:${xml-jars}" />
-		<echo message="classpath: ${classpath}" />
+	<!-- Classpath setting -->
+	<property name="servlet.jar" value="${env.TOMCAT_HOME}/lib/servlet.jar"       />
+	<property name="ejb.jar"     value="${env.JBOSS_HOME}/lib/ext/ejb.jar"        />
+	<property name="jaxp.jar"    value="${env.JBOSS_HOME}/lib/jaxp.jar"           />
+	<property name="parser.jar"  value="${env.JBOSS_HOME}/lib/xml.jar"            />
+	<property name="jdbc.jar"    value="${env.JBOSS_HOME}/lib/jdbc2_0-stdext.jar" />
+	<property name="api-jars"    value="${servlet.jar}:${ejb.jar}:${jdbc.jar}"    />
+	<property name="xml-jars"    value="${jaxp.jar}:${parser.jar}"                />
+	<property name="classpath"   value="${env.CLASSPATH}:${lib.dir}:${api-jars}:${xml-jars}" />
+	<echo message="classpath: ${classpath}" />
     </target>
 
 
@@ -47,8 +48,9 @@
 
     <target name="prepare" depends="clean">
         <mkdir dir="${lib.dir}" />
-		<mkdir dir="${lib.dir}/META-INF" />
+	<mkdir dir="${lib.dir}/META-INF" />
         <mkdir dir="${build.dir}" />
+        <mkdir dir="${deploy.dir}" />
     </target>
 	
 	<target name="prepare-docs" depends="init">
@@ -73,8 +75,14 @@
                destdir="${lib.dir}" />               
     </target>
 
+	<target name="ejbxml" depends="prepare">
+		<copy file="${src.dir}/META-INF/ejb-jar.xml"
+		      tofile="${lib.dir}/META-INF/ejb-jar.xml" />
+		<copy file="${src.dir}/META-INF/jboss.xml"
+		      tofile="${lib.dir}/META-INF/jboss.xml" />
+	</target>
 
-    <target name="jar" depends="classes">
+    <target name="jar" depends="classes,ejbxml">
         <jar jarfile="${build.dir}/${name}.jar"
              basedir="${lib.dir}" />
     </target>
@@ -121,5 +129,14 @@
     </target>
 
     <target name="all" depends="jar,pkg-dist" />
+
+    <!-- ================================================================== -->
+    <!-- Deploy the app                                                     -->
+    <!-- ================================================================== -->
+	
+	<target name="deploy" depends="jar">
+                <copy file="${build.dir}/${name}.jar"
+                      tofile="${deploy.dir}/${name}.jar" />
+	</target>
 
 </project>

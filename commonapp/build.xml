@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="Open For Business CommonApp Component" default="ear" basedir=".">
+<project name="Open For Business CommonApp Component" default="deploy" basedir=".">
 
 
     <!-- ================================================================== -->
@@ -8,26 +8,30 @@
     <!-- ================================================================== -->
 
     <target name="init">
-		<property environment="env"                                 />
+	<property environment="env"                                 />
         <property name="name"           value="commonapp"           />
         <property name="src.dir"        value="src"                 />
         <property name="etc.dir"        value="etc"                 />
+        <property name="conf.dir"       value="conf"                />
         <property name="lib.dir"        value="lib"                 />
-		<property name="doc.dir"        value="docs"                />
+        <property name="webapp.dir"     value="./webapp"            />
+        <property name="walib.dir"      value="${webapp.dir}/WEB-INF/lib" />
+	<property name="doc.dir"        value="docs"                />
         <property name="build.dir"      value="build"               />
         <property name="build.compiler" value="classic"             /> 
         <property name="pkg-dist.name"  value="${name}-pkg"         />
+        <property name="deploy.dir"     value="../jbossdeploy"      /> 
 		
-		<!-- Classpath setting -->
-		<property name="core.jar"       value="../core/build/core.jar"             />		
-		<property name="servlet.jar"    value="${env.TOMCAT_HOME}/lib/servlet.jar" />
-		<property name="ejb.jar"        value="${env.JBOSS_HOME}/lib/ext/ejb.jar"  />
-		<property name="jaxp.jar"       value="${env.JBOSS_HOME}/lib/jaxp.jar"     />
-		<property name="parser.jar"     value="${env.JBOSS_HOME}/lib/xml.jar"      />
-		<property name="api-jars"       value="${servlet.jar}:${ejb.jar}"          />
-		<property name="xml-jars"       value="${jaxp.jar}:${parser.jar}"          />
-		<property name="classpath"      value="${env.CLASSPATH}:${lib.dir}:${core.jar}:${api-jars}:${xml-jars}" />
-		<echo message="classpath: ${classpath}" />
+	<!-- Classpath setting -->
+	<property name="core.jar"       value="../core/build/core.jar"             />		
+	<property name="servlet.jar"    value="${env.TOMCAT_HOME}/lib/servlet.jar" />
+	<property name="ejb.jar"        value="${env.JBOSS_HOME}/lib/ext/ejb.jar"  />
+	<property name="jaxp.jar"       value="${env.JBOSS_HOME}/lib/jaxp.jar"     />
+	<property name="parser.jar"     value="${env.JBOSS_HOME}/lib/xml.jar"      />
+	<property name="api-jars"       value="${servlet.jar}:${ejb.jar}"          />
+	<property name="xml-jars"       value="${jaxp.jar}:${parser.jar}"          />
+	<property name="classpath"      value="${env.CLASSPATH}:${lib.dir}:${core.jar}:${api-jars}:${xml-jars}" />
+	<echo message="classpath: ${classpath}" />
     </target>
 
 
@@ -38,6 +42,7 @@
     <target name="clean" depends="init">
         <delete dir="${lib.dir}" />
         <delete dir="${build.dir}" />
+        <delete dir="${walib.dir}" />
     </target>
 
 	<target name="prepare-docs" depends="init">
@@ -52,12 +57,14 @@
 
     <target name="prepare" depends="clean">
         <mkdir dir="${lib.dir}" />
-		<mkdir dir="${lib.dir}/jar" />
-		<mkdir dir="${lib.dir}/ejb" />
-		<mkdir dir="${lib.dir}/ejb/META-INF" />
-		<mkdir dir="${lib.dir}/j2ee" />
-		<mkdir dir="${lib.dir}/j2ee/META-INF" />
+	<mkdir dir="${lib.dir}/jar" />
+	<mkdir dir="${lib.dir}/ejb" />
+	<mkdir dir="${lib.dir}/ejb/META-INF" />
+	<mkdir dir="${lib.dir}/j2ee" />
+	<mkdir dir="${lib.dir}/j2ee/META-INF" />
         <mkdir dir="${build.dir}" />
+        <mkdir dir="${walib.dir}" />
+        <mkdir dir="${deploy.dir}" />
     </target>
 
 
@@ -65,33 +72,44 @@
     <!-- Compilation of the common application components                   -->
     <!-- ================================================================== -->
 
-
     <target name="classes" depends="prepare">
         <javac srcdir="${src.dir}"
 		       classpath="${classpath}"
                destdir="${lib.dir}/jar" />               
     </target>
 
-    <target name="jar" depends="classes">
+    <target name="conf-jar" depends="prepare">
+        <copy file="${conf.dir}/cache.properties"
+              tofile="${lib.dir}/jar/cache.properties" />
+        <copy file="${conf.dir}/debug.properties"
+              tofile="${lib.dir}/jar/debug.properties" />
+        <copy file="${conf.dir}/servers.properties"
+              tofile="${lib.dir}/jar/servers.properties" />
+    </target>
+    
+    <!-- <target name="jar" depends="classes,conf-jar"> -->
+    <target name="jar" depends="conf-jar">
         <jar jarfile="${build.dir}/${name}.jar"
              basedir="${lib.dir}/jar" />
     </target>
-
 
     <!-- ================================================================== -->
     <!-- Build the WAR                                                      -->
     <!-- ================================================================== -->
 	
-	<target name="war" depends="prepare">
+	<target name="war" depends="prepare,jar">
+                <copy file="${build.dir}/${name}.jar"
+                      tofile="${walib.dir}/${name}.jar" />
+                <copy file="${core.jar}"
+                      tofile="${walib.dir}/core.jar" />
 		<jar jarfile="${build.dir}/${name}.war"
-		     basedir="./webapp" />
+		     basedir="${webapp.dir}" />
 	</target>
 
 
     <!-- ================================================================== -->
     <!-- Build the EJB jar and EAR                                          -->
     <!-- ================================================================== -->
-	
 	<target name="meta-info" depends="jar,war">
 		<copy file="${etc.dir}/ejb-jar.xml"
 		      tofile="${lib.dir}/ejb/META-INF/ejb-jar.xml" />
@@ -112,7 +130,6 @@
 		<jar jarfile="${build.dir}/${name}.ear"
 		     basedir="${lib.dir}/j2ee" />
 	</target>
-
 	
     <!-- ================================================================== -->
     <!-- Build JavaDoc                                                      -->
@@ -154,6 +171,16 @@
 
     </target>
 
-    <target name="all" depends="jar,pkg-dist" />
+    <!-- <target name="all" depends="jar,pkg-dist" /> -->
+    <target name="all" depends="war,pkg-dist" />
+
+    <!-- ================================================================== -->
+    <!-- Deploy the app                                                     -->
+    <!-- ================================================================== -->
+	
+	<target name="deploy" depends="war">
+                <copy file="${build.dir}/${name}.war"
+                      tofile="${deploy.dir}/${name}.war" />
+	</target>
 
 </project>

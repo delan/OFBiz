@@ -265,7 +265,7 @@
              If security manager is enabled, you'll have read perms.
              in the webapps dir and read/write in the workdir.
          -->
-      
+<!--      
         <Context path="/entitygen" 
                  docBase="../ofbiz/entitygen/webapp"
                  debug="2" 
@@ -278,7 +278,13 @@
                  reloadable="true" 
                  trusted="false" >
         </Context>
-        
+        <Context path="/ecommerce"
+                 docBase="../ofbiz/ecommerce/webapp"
+                 debug="2" 
+                 reloadable="true" 
+                 trusted="false" >
+        </Context>
+-->        
         <!-- Admin context will use tomcat.core to add/remove/get info about
              the webapplications and tomcat internals. 
              By default it is not trusted - i.e. it is not allowed access to 
