@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.17 2004/03/16 17:27:13 byersa Exp $
+ * $Id: ContentWorker.java,v 1.18 2004/03/16 17:48:07 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -57,13 +57,13 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 
 import bsh.EvalError;
-import com.clarkware.profiler.Profiler;
+//import com.clarkware.profiler.Profiler;
 
 /**
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @since 2.2
  * 
  *  
