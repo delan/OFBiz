@@ -421,8 +421,7 @@ public class InvoiceServices {
                         String applId = delegator.getNextSeqId("PaymentApplication").toString();
                         GenericValue appl = delegator.makeValue("PaymentApplication", UtilMisc.toMap("paymentApplicationId", applId));
                         appl.set("paymentId", payment.get("paymentId"));
-                        appl.set("invoiceId", invoice.get("invoiceId"));
-                        appl.set("invoiceItemSeqId", "_NA_");
+                        appl.set("invoiceId", invoice.get("invoiceId"));                        
                         appl.set("billingAccountId", invoice.get("billingAccountId"));
                         appl.set("amountApplied", payment.get("amount"));
                         toStore.add(appl);
