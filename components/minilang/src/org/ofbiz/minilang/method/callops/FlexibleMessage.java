@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleMessage.java,v 1.2 2003/10/10 09:55:53 jonesde Exp $
+ * $Id: FlexibleMessage.java,v 1.3 2004/07/22 05:00:59 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.minilang.method.*;
  * Simple class to wrap messages that come either from a straight string or a properties file
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class FlexibleMessage {
@@ -83,7 +83,7 @@ public class FlexibleMessage {
             String propMsg = UtilProperties.getMessage(propertyResource, message, methodContext.getEnvMap(), methodContext.getLocale());
 
             // if (Debug.infoOn()) Debug.logInfo("[FlexibleMessage.getMessage] Got property message: " + propMsg, module);
-            if (propMsg == null || propMsg.length() == 0) {
+            if (propMsg == null) {
                 return "In Simple Map Processing property message could not be found in resource [" + propertyResource + "] with name [" + message + "]. ";
             } else {
                 return propMsg;
