@@ -37,6 +37,7 @@
 <%
   boolean useValues = true;
   if(request.getAttribute("ERROR_MESSAGE") != null) useValues = false;
+  if("true".equals(request.getParameter("useValues"))) useValues = true;
 
   String donePage = request.getParameter("DONE_PAGE");
   if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
@@ -107,26 +108,32 @@
               <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));%>
               <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
                 <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
-                <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>            
-                <%if(partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
-                  <tr>
-                    <td bgcolor='white'>
-                      <div class="tabletext">&nbsp;
-                        <b><%=contactMechPurposeType.getString("description")%></b>
-                        (Since:<%=UtilDateTime.toDateString(partyContactMechPurpose.getTimestamp("fromDate"))%>)
-                        <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate")), "(Expires:", ")")%>
-                      &nbsp;</div></td>
-                    <td bgcolor='white'><div><a href='<ofbiz:url><%="/deletepartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&CONTACT_MECH_PURPOSE_TYPE_ID=" + contactMechPurposeType.getString("contactMechPurposeTypeId") + "&DONE_PAGE=" + donePage%></ofbiz:url>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
-                  </tr>
+                <%if(partyContactMechPurpose != null) {%>
+                  <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>            
+                  <%if(partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
+                    <tr>
+                      <td bgcolor='white'>
+                        <div class="tabletext">&nbsp;
+                          <%if(contactMechPurposeType != null) {%>
+                            <b><%=contactMechPurposeType.getString("description")%></b>
+                          <%}else{%>
+                            <b>Purpose Type not found with ID: "<%=partyContactMechPurpose.getString("contactMechPurposeTypeId")%>"</b>
+                          <%}%>
+                          (Since:<%=UtilDateTime.toDateString(partyContactMechPurpose.getTimestamp("fromDate"))%>)
+                          <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate")), "(Expires:", ")")%>
+                        &nbsp;</div></td>
+                      <td bgcolor='white'><div><a href='<ofbiz:url><%="/deletepartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&CONTACT_MECH_PURPOSE_TYPE_ID=" + partyContactMechPurpose.getString("contactMechPurposeTypeId") + "&DONE_PAGE=" + donePage%></ofbiz:url>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
+                    </tr>
+                  <%}%>
                 <%}%>
               <%}%>
               <%Iterator purposeTypes = UtilMisc.toIterator(delegator.findByAnd("ContactMechTypePurpose", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), null));%>
               <%if(purposeTypes != null && purposeTypes.hasNext()){%>
               <tr>
-                <form method=POST action='<ofbiz:url><%="/createpartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&DONE_PAGE=" + donePage%></ofbiz:url>' name='newpurposeform'>
+                <form method=POST action='<ofbiz:url><%="/createpartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&DONE_PAGE=" + donePage + "&useValues=true"%></ofbiz:url>' name='newpurposeform'>
                   <td bgcolor='white'>
                     <SELECT name='CONTACT_MECH_PURPOSE_TYPE_ID'>
-                      <OPTION>&nbsp;</OPTION>
+                      <OPTION></OPTION>
                       <%while(purposeTypes != null && purposeTypes.hasNext()){%>
                         <%GenericValue contactMechTypePurpose = (GenericValue)purposeTypes.next();%>
                         <%GenericValue contactMechPurposeType = contactMechTypePurpose.getRelatedOne("ContactMechPurposeType");%>

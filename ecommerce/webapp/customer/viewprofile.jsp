@@ -181,14 +181,20 @@
             <td align="left" valign="top" width="80%">
               <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
                 <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
-                <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
-                <%if(showOld || partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
-                  <div class="tabletext">
-                    <b><%=contactMechPurposeType.getString("description")%></b>
-                    <%if(showOld && partyContactMechPurpose.get("thruDate") != null){%>
-                      (Expire:<%=UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate"))%>)
-                    <%}%>
-                  </div>
+                <%if(partyContactMechPurpose != null) {%>
+                  <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
+                  <%if(showOld || partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
+                    <div class="tabletext">
+                      <%if(contactMechPurposeType != null) {%>
+                        <b><%=contactMechPurposeType.getString("description")%></b>
+                      <%}else{%>
+                        <b>Purpose Type not found with ID: "<%=partyContactMechPurpose.getString("contactMechPurposeTypeId")%>"</b>
+                      <%}%>
+                      <%if(showOld && partyContactMechPurpose.get("thruDate") != null){%>
+                        (Expire:<%=UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate"))%>)
+                      <%}%>
+                    </div>
+                  <%}%>
                 <%}%>
               <%}%>
           <%if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
