@@ -20,11 +20,20 @@
     String contextRoot = (String) request.getAttribute("_CONTEXT_ROOT_");
     String serverRoot = (String) request.getAttribute("_SERVER_ROOT_URL_");
 
+	/* reading of the localization information */
+	Collection availableLocales = UtilMisc.availableLocales();
+	request.setAttribute("availableLocales",availableLocales);
+	
+	Locale locale = UtilHttp.getLocale(request);
+	request.setAttribute("locale",locale);
+	Map uiLabelMap = UtilProperties.getResourceBundleMap("WorkEffortUiLabels", locale);
+	request.setAttribute("uiLabelMap", uiLabelMap);
+
     Map layoutSettings = new HashMap();
     request.setAttribute("layoutSettings", layoutSettings);
     
-    layoutSettings.put("companyName", "OFBiz: Work Effort Manager");
-    layoutSettings.put("companySubtitle", "Part of the Open For Business Family of Open Source Software");
+	layoutSettings.put("companyName", uiLabelMap.get("WorkEffortCompanyName"));
+	layoutSettings.put("companySubtitle", uiLabelMap.get("WorkEffortCompanySubtitle"));
     layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
     layoutSettings.put("headerMiddleBackgroundUrl", null);
     layoutSettings.put("headerRightBackgroundUrl", null);

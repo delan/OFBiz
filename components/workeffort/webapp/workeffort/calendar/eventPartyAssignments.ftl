@@ -21,9 +21,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
- *@version    $Revision: 1.2 $
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -31,7 +34,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align=left width='40%' >
-            <div class='boxhead'>&nbsp;Calendar Event Roles : ${workEffort.workEffortName?if_exists}</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortCalendarEventRoles} : ${workEffort.workEffortName?if_exists}</div>
           </td>
         </tr>
       </table>
@@ -48,16 +51,16 @@
                     <td>
                     <#if workEffortId?exists>
                       <div class='tabContainer'>
-                          <a href="<@ofbizUrl>/event?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Event</a>
-                          <a href="<@ofbizUrl>/eventPartyAssignments?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButtonSelected">Parties</a>
-                          <a href="<@ofbizUrl>/eventContactMechs?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Contact information</a>
+                          <a href="<@ofbizUrl>/event?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortEvent}</a>
+                          <a href="<@ofbizUrl>/eventPartyAssignments?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.PartyParties}</a>
+                          <a href="<@ofbizUrl>/eventContactMechs?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyContactInformation}</a>
                       </div>
                     </#if>
                     <table width="100%" cellpadding="2" cellspacing="0" border="0">
                       <tr>
-                        <td><div class="tableheadtext">PartyId</div></td>
-                        <td><div class="tableheadtext">Name</div></td>
-                        <td><div class="tableheadtext">RoleTypeId</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.PartyPartyId}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.PartyName}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.PartyRoleTypeId}</div></td>
                         <td>&nbsp;</td>
                       </tr>
                       <tr>
@@ -77,7 +80,7 @@
                               <td><div class="tabletext">${partyGroup.groupName}</div></td>
                             </#if>
                             <td><div class="tabletext">${roleType.description}</div></td>
-                            <td align="right"><div class="tabletext"><a href="<@ofbizUrl>/removeEventPartyAssign?workEffortId=${workEffortId}&partyId=${role.partyId}&roleTypeId=${role.roleTypeId}&fromDate=${role.fromDate.toString()}</@ofbizUrl>" class="buttontext">[Remove]</a></td>
+                            <td align="right"><div class="tabletext"><a href="<@ofbizUrl>/removeEventPartyAssign?workEffortId=${workEffortId}&partyId=${role.partyId}&roleTypeId=${role.roleTypeId}&fromDate=${role.fromDate.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a></td>
                           </tr>
                         </#list>
                       </table>
@@ -85,7 +88,7 @@
                   </tr>
                 <#else>
                   <tr>
-                    <td><div class="tabletext">No roles associated with this customer request.</div></td>
+                    <td><div class="tabletext">${uiLabelMap.WorkEffortNoRolesAssociatedWithThisCustomerRequest}.</div></td>
                   </tr>
                 </#if>
                 <#if workEffort?exists>
@@ -93,7 +96,7 @@
                   <td><hr class="sepbar"></td>
                 </tr>
                 <tr>
-                  <td><div class="head3">Add New:</div></td>
+                  <td><div class="head3">${uiLabelMap.CommonAddNew}:</div></td>
                 </tr>
                 <tr>
                   <td>
@@ -103,15 +106,15 @@
                       <table width="100%" cellpadding="2" cellspacing="0" border="0">
                         <tr>
                           <td colspan="2">&nbsp;&nbsp;&nbsp;</td>
-                          <td align="right"><div class="tableheadtext">Party ID</div></td>
+                          <td align="right"><div class="tableheadtext">${uiLabelMap.PartyPartyId}</div></td>
                           <td><input type="text" name="partyId" class="inputBox" size="30">
 							<a href="javascript:call_fieldlookup(document.partyform.partyId,'<@ofbizUrl>/fieldLookup</@ofbizUrl>', 'lookupParty');"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>                          
                           </td>
-                          <td align="right"><div class="tableheadtext">Role Type ID</div></td>
+                          <td align="right"><div class="tableheadtext">${uiLabelMap.PartyRoleTypeId}</div></td>
                           <td>
                             <select name="roleTypeId" class="selectBox">
-                              <option value="CAL_ATTENDEE">Attender</option>
-                              <option value="CAL_ORGANIZER">Organizer</option>
+                              <option value="CAL_ATTENDEE">${uiLabelMap.WorkEffortAttender}</option>
+                              <option value="CAL_ORGANIZER">${uiLabelMap.WorkEffortOrganizer}</option>
                             </select>
                           </td>
                           <td align="center"><input type="submit" style="font-size: small;" value="Add"></td>

@@ -1,11 +1,13 @@
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align=left width='40%' class="boxhead">Calendar Up-Coming Events View</td>
+          <td align=left width='40%' class="boxhead">${uiLabelMap.WorkEffortCalendarUpComingEventsView}</td>
           <td align=right width='60%'>		  
-            <a href='<@ofbizUrl>/day</@ofbizUrl>' class='submenutext'>Day&nbsp;View</a><a href='<@ofbizUrl>/week</@ofbizUrl>' class='submenutext'>Week&nbsp;View</a><a href='<@ofbizUrl>/month</@ofbizUrl>' class='submenutext'>Month&nbsp;View</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutextdisabled'>Upcoming&nbsp;Events</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextright'>New&nbsp;Event</a>
+            <a href='<@ofbizUrl>/day</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortDayView}</a><a href='<@ofbizUrl>/week</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortWeekView}</a><a href='<@ofbizUrl>/month</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortMonthView}</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutextdisabled'>${uiLabelMap.WorkEffortUpcomingEvents}</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextright'>${uiLabelMap.WorkEffortNewEvent}</a>
 		  </td>
         </tr>
       </table>
@@ -19,9 +21,9 @@
           <#if days?has_content>
               <table width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <tr>
-                  <td><div class='tabletext'><b>Start Date/Time</b></div></td>
-                  <td><div class='tabletext'><b>End Date/Time</b></div></td>
-                  <td><div class='tabletext'><b>Event Name</b></div></td>
+                  <td><div class='tabletext'><b>${uiLabelMap.CommonStartDateTime}</b></div></td>
+                  <td><div class='tabletext'><b>${uiLabelMap.CommonEndDateTime}</b></div></td>
+                  <td><div class='tabletext'><b>${uiLabelMap.WorkEffortEventName}</b></div></td>
                 </tr>                
                 <#list days as workEfforts>
                   <tr><td colspan='3'><hr class='sepbar'></td></tr>
@@ -37,7 +39,7 @@
                 </#list>
               </table>
             <#else>
-              <div class='tabletext'>No events found.</div>
+              <div class='tabletext'>${uiLabelMap.WorkEffortNoEventsFound}.</div>
             </#if>
           </td>
         </tr>

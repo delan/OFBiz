@@ -20,17 +20,20 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
  *@created    May 19 2003
  *@version    1.0
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
 <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr> 
     <td width='100%'> 
 	  <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
       	<tr> 
-          <td align=left width='40%' class="boxhead">Calendar Day View</td>
+          <td align=left width='40%' class="boxhead">${uiLabelMap.WorkEffortCalendarDayView}</td>
           <td align=right width='60%'>		  
-            <a href='<@ofbizUrl>/day?start=${start.time?string("#")}</@ofbizUrl>' class='submenutextdisabled'>Day&nbsp;View</a><a href='<@ofbizUrl>/week?start=${start.time?string("#")}</@ofbizUrl>' class='submenutext'>Week&nbsp;View</a><a href='<@ofbizUrl>/month?start=${start.time?string("#")}</@ofbizUrl>' class='submenutext'>Month&nbsp;View</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutext'>Upcoming&nbsp;Events</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextright'>New&nbsp;Event</a>
+            <a href='<@ofbizUrl>/day?start=${start.time?string("#")}</@ofbizUrl>' class='submenutextdisabled'>${uiLabelMap.WorkEffortDayView}</a><a href='<@ofbizUrl>/week?start=${start.time?string("#")}</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortWeekView}</a><a href='<@ofbizUrl>/month?start=${start.time?string("#")}</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortMonthView}</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortUpcomingEvents}</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextright'>${uiLabelMap.WorkEffortNewEvent}</a>
 		  </td>
         </tr>
       </table></td>
@@ -39,7 +42,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="monthheadertable">
   <tr>
 	<td width="100%" class="monthheadertext">${start?date?string("EEEE")?cap_first} ${start?date?string.long}</td>
-    <td nowrap class="previousnextmiddle"><a href='<@ofbizUrl>/day?start=${prev.time?string("#")}</@ofbizUrl>' class="previousnext">Previous Day</a> | <a href='<@ofbizUrl>/day?start=${next.time?string("#")}</@ofbizUrl>' class="previousnext">Next Day</a> | <a href='<@ofbizUrl>/day?start=${now.time?string("#")}</@ofbizUrl>' class="previousnext">Today</a></td>
+    <td nowrap class="previousnextmiddle"><a href='<@ofbizUrl>/day?start=${prev.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortPreviousDay}</a> | <a href='<@ofbizUrl>/day?start=${next.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortNextDay}</a> | <a href='<@ofbizUrl>/day?start=${now.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.CommonToday}</a></td>
   </tr>
 </table>
 <#if periods?has_content>
@@ -53,15 +56,15 @@
 </#if>
 <table width="100%" cellspacing="1" border="0" cellpadding="1" class="calendar">                
   <tr>             
-    <td nowrap class="monthdayheader">Time<br>
+    <td nowrap class="monthdayheader">${uiLabelMap.CommonTime}<br>
       <img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1" width="88"></td>
-    <td colspan=${maxConcurrentEntries} class="monthdayheader">Calendar Entries<br>
+    <td colspan=${maxConcurrentEntries} class="monthdayheader">${uiLabelMap.WorkEffortCalendarEntries}<br>
       <img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1" width="88"></td>
   </tr>
   <#list periods as period>              
   <tr>                  
     <td valign=top nowrap width="1%" class="monthweekheader" height="36"><span class="monthweeknumber">${period.start?time?string.short}</span><br>
-      <a href='<@ofbizUrl>/event?estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>'>Add New</a></td>
+      <a href='<@ofbizUrl>/event?estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>'>${uiLabelMap.CommonAddNew}</a></td>
     <#list period.calendarEntries as calEntry>
     <#if calEntry.startOfPeriod>			  
     <td class="calendarentry" rowspan='${calEntry.periodSpan}' colspan=1 width='${entryWidth?string("#")}%' valign=top>
@@ -90,5 +93,5 @@
   </#list>                  
 </table>
 <#else>               
-  <p>Failed to get calendar entries!</p>
+  <p>${uiLabelMap.WorkEffortFailedToGetCalendarEntries}!</p>
 </#if>

@@ -20,20 +20,21 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
- *@version    $Revision: 1.1 $
+ *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski)
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap) 
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 
 <div class='tabContainer'>
-  <a href="<@ofbizUrl>/request?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">Request</a>
-  <a href="<@ofbizUrl>/requestroles?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">Request Roles</a>
-  <a href="<@ofbizUrl>/requestitems?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">Request Items</a>
-  <a href="<@ofbizUrl>/requestitem?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButton">Item</a>
-  <a href="<@ofbizUrl>/requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButtonSelected">Notes</a>
-  <a href="<@ofbizUrl>/requestitemrequirements?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButton">Requirements</a>    
+  <a href="<@ofbizUrl>/request?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortRequest}</a>
+  <a href="<@ofbizUrl>/requestroles?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortRequestRoles}</a>
+  <a href="<@ofbizUrl>/requestitems?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortRequestItems}</a>
+  <a href="<@ofbizUrl>/requestitem?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortItem}</a>
+  <a href="<@ofbizUrl>/requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.WorkEffortNotes}</a>
+  <a href="<@ofbizUrl>/requestitemrequirements?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortRequirements}</a>    
   <a href="#" class="tabButton">Tasks</a>    
 </div>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -42,13 +43,13 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD>
-            <div class='boxhead'>&nbsp;Notes For Request Item: ${custRequestItem.description?if_exists}</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortNotesForRequestItem}: ${custRequestItem.description?if_exists}</div>
           </TD>
           <td align="right">
             <#if showAll = "false">
-            <a href="<@ofbizUrl>/requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}&showAll=true</@ofbizUrl>" class="lightbuttontext">[Show All Notes]</a>
+            <a href="<@ofbizUrl>/requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}&showAll=true</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.WorkEffortShowAllNotes}]</a>
             <#else>
-            <a href="<@ofbizUrl>/requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}&showAll=false</@ofbizUrl>" class="lightbuttontext">[Show This Item's Notes]</a>
+            <a href="<@ofbizUrl>/requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}&showAll=false</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.WorkEffortShowThisItemsNotes}]</a>
             </#if>
           </td>
         </tr>
@@ -81,7 +82,7 @@
               </#list>
             </table>
             <#else>
-              <div class="tabletext">&nbsp;No notes for this request item.</div>
+              <div class="tabletext">${uiLabelMap.WorkEffortNoNotesForThisRequestItem}.</div>
             </#if>  
           </td>
         </tr>
@@ -95,7 +96,7 @@
               <input type="hidden" name="custRequestItemSeqId" value="${custRequestItemSeqId}">
               <table width="90%" border="0" cellpadding="2" cellspacing="0">
                 <tr>
-                  <td width="26%" align='right'><div class="tableheadtext">New Note</div></td>
+                  <td width="26%" align='right'><div class="tableheadtext">${uiLabelMap.WorkEffortNewNote}</div></td>
                   <td width="74%">
                     <textarea class="textAreaBox" name="note" rows="5" cols="70"></textarea>
                   </td>

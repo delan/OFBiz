@@ -21,9 +21,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
- *@version    $Revision: 1.2 $
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -31,7 +34,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align=left width='40%' >
-            <div class='boxhead'>&nbsp;Calendar Event Contacts : ${workEffort.workEffortName?if_exists}</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortCalendarEventContacts} : ${workEffort.workEffortName?if_exists}</div>
           </td>
         </tr>
       </table>
@@ -47,9 +50,9 @@
                     <td>
                     <#if workEffortId?exists>
                       <div class='tabContainer'>
-                          <a href="<@ofbizUrl>/event?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Event</a>
+                          <a href="<@ofbizUrl>/event?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortEvent}</a>
                           <a href="<@ofbizUrl>/eventPartyAssignments?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Parties</a>
-                          <a href="<@ofbizUrl>/eventContactMechs?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButtonSelected">Contact information</a>
+                          <a href="<@ofbizUrl>/eventContactMechs?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.WorkEffortContactinformation}</a>
                       </div>
                     </#if>
 <#-- ============================================================= -->
@@ -59,9 +62,9 @@
   <#if contactMeches?has_content>
     <table width="100%" border="0" cellpadding="0">
       <tr align=left valign=bottom>
-        <th>Contact&nbsp;Type</th>
+        <th>${uiLabelMap.WorkEffortContactType}</th>
         <th width="5">&nbsp;</th>
-        <th>Information</th>
+        <th>${uiLabelMap.WorkEffortInformation}</th>
         <th>&nbsp;</th>
       </tr>
       <#list contactMeches as contactMechMap>
@@ -77,8 +80,8 @@
               <#if contactMechMap.postalAddress?exists>
                   <#assign postalAddress = contactMechMap.postalAddress>
                   <div class="tabletext">                    
-                    <#if postalAddress.toName?has_content><b>To:</b> ${postalAddress.toName}<br></#if>
-                    <#if postalAddress.attnName?has_content><b>Attn:</b> ${postalAddress.attnName}<br></#if>
+                    <#if postalAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}<br></#if>
+                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${postalAddress.attnName}<br></#if>
                     ${postalAddress.address1?if_exists}<br>
                     <#if postalAddress.address2?has_content><br></#if>
                     ${postalAddress.city?if_exists},
@@ -108,8 +111,8 @@
                     <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber}
                     
                     <#if (telecomNumber?has_content && !telecomNumber.countryCode?has_content) || telecomNumber.countryCode = "011">
-                      <a target='_blank' href='http://www.anywho.com/qry/wp_rl?npa=${telecomNumber.areaCode?if_exists}&telephone=${telecomNumber.contactNumber?if_exists}&btnsubmit.x=20&btnsubmit.y=8' class='buttontext'>(lookup:anywho.com)</a>
-                      <a target='_blank' href='http://whitepages.com/find_person_results.pl?fid=p&ac=${telecomNumber.areaCode?if_exists}&s=&p=${telecomNumber.contactNumber?if_exists}&pt=b&x=40&y=9' class='buttontext'>(lookup:whitepages.com)</a>
+                      <a target='_blank' href='http://www.anywho.com/qry/wp_rl?npa=${telecomNumber.areaCode?if_exists}&telephone=${telecomNumber.contactNumber?if_exists}&btnsubmit.x=20&btnsubmit.y=8' class='buttontext'>(${uiLabelMap.WorkEffortLookup}:anywho.com)</a>
+                      <a target='_blank' href='http://whitepages.com/find_person_results.pl?fid=p&ac=${telecomNumber.areaCode?if_exists}&s=&p=${telecomNumber.contactNumber?if_exists}&pt=b&x=40&y=9' class='buttontext'>(${uiLabelMap.WorkEffortLookup}:whitepages.com)</a>
                     </#if>
                   </div>
               <#elseif "EMAIL_ADDRESS" = contactMech.contactMechTypeId>
@@ -122,7 +125,7 @@
                     ${contactMech.infoString?if_exists}
                     <#assign openAddress = contactMech.infoString?default("")>
                     <#if !openAddress?starts_with("http") && !openAddress.starts_with("HTTP")><#assign openAddress = "http://" + openAddress></#if>
-                    <a target='_blank' href='${openAddress}' class='buttontext'>(open&nbsp;page&nbsp;in&nbsp;new&nbsp;window)</a>
+                    <a target='_blank' href='${openAddress}' class='buttontext'>(${uiLabelMap.WorkEffortOpenPageInNewWindow})</a>
                   </div>
               <#else>
                   <div class="tabletext">
@@ -143,7 +146,7 @@
           </tr>
                 </#list>
             <#else>
-    <tr><td colspan="4"><div class="tabletext">No contact information on file.</div></td></tr>
+    <tr><td colspan="4"><div class="tabletext">${uiLabelMap.WorkEffortNoContactInformationOnFile}.</div></td></tr>
   </#if>
 
       <#if workEffort?exists>
@@ -160,7 +163,7 @@
 					  <input type="hidden" name="statusId" value="CAL_ACCEPTED">
                       <table width="100%" cellpadding="2" cellspacing="0" border="0">
                         <tr>
-                        <td nowrap>Add new&nbsp;<select name="preContactMechTypeId" class="selectBox">
+                        <td nowrap>${uiLabelMap.CommonAddNew}<select name="preContactMechTypeId" class="selectBox">
               <#list contactMechTypes as contactMechType>
                 <option value='${contactMechType.contactMechTypeId}'>${contactMechType.description}</option>
               </#list>
@@ -168,7 +171,7 @@
             
             &nbsp;from party&nbsp;
             <select name="partyId" class="selectBox">
-                          <option selected value="">none</option>
+                          <option selected value="">${uiLabelMap.CommonNone}</option>
                           <#list roles as role>
                            <#assign party = delegator.findByPrimaryKey("Party", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId",role.partyId))>
                             <#assign partyGroup = delegator.findByPrimaryKey("PartyGroup", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId",party.partyId))?if_exists>

@@ -21,16 +21,19 @@
  *
  *@author     Johan Isacsson
  *@created    May 19 2003
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
  *@version    1.0
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
 <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr> 
     <td width='100%'> 
 	  <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
       	<tr> 
-          <td align=left width='40%' class="boxhead">Calendar Month View</td>
+          <td align=left width='40%' class="boxhead">${uiLabelMap.WorkEffortCalendarMonthView}</td>
           <td align=right width='60%'>		  
-            <a href='<@ofbizUrl>/day?start=${start.time?string("#")}</@ofbizUrl>' class='submenutext'>Day&nbsp;View</a><a href='<@ofbizUrl>/week?start=${start.time?string("#")}</@ofbizUrl>' class='submenutext'>Week&nbsp;View</a><a href='<@ofbizUrl>/month?start=${start.time?string("#")}</@ofbizUrl>' class='submenutextdisabled'>Month&nbsp;View</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutext'>Upcoming&nbsp;Events</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextright'>New&nbsp;Event</a>
+            <a href='<@ofbizUrl>/day?start=${start.time?string("#")}</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortDayView}</a><a href='<@ofbizUrl>/week?start=${start.time?string("#")}</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortWeekView}</a><a href='<@ofbizUrl>/month?start=${start.time?string("#")}</@ofbizUrl>' class='submenutextdisabled'>${uiLabelMap.WorkEffortMonthView}</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortUpcomingEvents}</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextright'>${uiLabelMap.WorkEffortNewEvent}</a>
           </td>				
 		</tr>
       </table>
@@ -40,7 +43,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="monthheadertable">
   <tr>
 	<td width="100%" class="monthheadertext">${start?date?string("MMMM yyyy")?cap_first}</td>
-    <td nowrap class="previousnextmiddle"><a href='<@ofbizUrl>/month?start=${prev.time?string("#")}</@ofbizUrl>' class="previousnext">Previous Month</a> | <a href='<@ofbizUrl>/month?start=${next.time?string("#")}</@ofbizUrl>' class="previousnext">Next Month</a> | <a href='<@ofbizUrl>/month?start=${now.time?string("#")}</@ofbizUrl>' class="previousnext">This Month</a></td>
+    <td nowrap class="previousnextmiddle"><a href='<@ofbizUrl>/month?start=${prev.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortPreviousMonth}</a> | <a href='<@ofbizUrl>/month?start=${next.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortNextMonth}</a> | <a href='<@ofbizUrl>/month?start=${now.time?string("#")}</@ofbizUrl>' class="previousnext">${uiLabelMap.WorkEffortThisMonth}</a></td>
   </tr>
 </table>
 <#if periods?has_content> 
@@ -64,7 +67,7 @@
       <table width="100%" cellspacing="0" cellpadding="0" border="0">			
         <tr>
           <td nowrap class="monthdaynumber"><a href='<@ofbizUrl>/day?start=${period.start.time?string("#")}</@ofbizUrl>' class="monthdaynumber">${period.start?date?string("d")?cap_first}</a></td>
-          <td align="right"><a href='<@ofbizUrl>/event?estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>' class="add">Add New</a>&nbsp;&nbsp;</td>
+          <td align="right"><a href='<@ofbizUrl>/event?estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>' class="add">${uiLabelMap.CommonAddNew}</a>&nbsp;&nbsp;</td>
         </tr>			
       </table>
       <#list period.calendarEntries as calEntry>
@@ -103,7 +106,7 @@
 				<form action="<@ofbizUrl>/month</@ofbizUrl>" method="POST">
 					<input type="hidden" name="start" value="${start.time?string("#")}"/>
 					By Party ID: <input type="text" name="partyId" value="${requestParameters.partyId?if_exists}" class="inputbox"/>
-					<input type="submit" value="View" class="smallSubmit"/>
+					<input type="submit" value="${uiLabelMap.CommonView}" class="smallSubmit"/>
 				</form>
 			</div>
 		</td>
@@ -114,7 +117,7 @@
 					By Facility: 
 						<select name="facilityId" class="selectbox">
 							<#list allFacilities as facility>
-								<option value="${facility.facilityId}"<#if requestParameters.facilityId?has_content && requestParameters.facilityId == facility.facilityId> selected</#if>>${facility.facilityName}</option>
+								<option value="${facility.facilityId}"<#if requestParameters.facilityId?has_content && requestParameters.facilityId == facility.facilityId>${uiLabelMap.WorkEffortSelected}</#if>>${facility.facilityName}</option>
 							</#list>
 						</select>
 					<input type="submit" value="View" class="smallSubmit"/>
@@ -125,5 +128,5 @@
 </table>
 
 <#else> 
-<p>Failed to get calendar entries!</p>
+<p>${uiLabelMap.WorkEffortFailedToGetCalendarEntries}!</p>
 </#if>

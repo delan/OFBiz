@@ -20,10 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by Dustin Caldwell (from code by David Jones))
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
  *@created    May 13, 2003
  *@version    1.0
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -31,10 +32,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left>
-            <div class='boxhead'>&nbsp;Projects</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortProjects}</div>
           </TD>
           <TD align=right>            
-            <#if showAllProjects = "true"><A href='<@ofbizUrl>/projectlist</@ofbizUrl>' class='submenutext'>Show Active</A><#else><A href='<@ofbizUrl>/projectlist?ShowAllProjects=true</@ofbizUrl>' class='submenutext'>Show All</A></#if><A href='<@ofbizUrl>/editproject</@ofbizUrl>' class='submenutextright'>New Project</A>
+            <#if showAllProjects = "true"><A href='<@ofbizUrl>/projectlist</@ofbizUrl>' class='submenutext'>Show Active</A><#else><A href='<@ofbizUrl>/projectlist?ShowAllProjects=true</@ofbizUrl>' class='submenutext'>${uiLabelMap.CommonShowAll}</A></#if><A href='<@ofbizUrl>/editproject</@ofbizUrl>' class='submenutextright'>${uiLabelMap.WorkEffortNewProject}</A>
           </TD>
         </tr>
       </table>
@@ -48,11 +49,11 @@
 <!--              <div class='head3'>Assigned Tasks</div>-->
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <TR>
-                  <TD><DIV class='tabletext'><b>Name</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Description</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Start Date</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
-                  <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortName}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.CommonDescription}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.CommonStartDate}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortStatus}</b></DIV></TD>
+                  <TD align=right><DIV class='tabletext'><b>${uiLabelMap.CommonEdit}</b></DIV></TD>
                 </TR>
                 <TR><TD colspan='5'><HR class='sepbar'></TD></TR>
                 <#list projects as workEffort>
@@ -65,7 +66,7 @@
                     <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.currentStatusId))>                    
                     <TD><DIV class='tabletext'>${(currentStatusItem.description)?if_exists}</DIV></TD>
                     <TD align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/editproject?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
-                        [Edit]</a></DIV></TD>
+                        [${uiLabelMap.CommonEdit}]</a></DIV></TD>
                   </TR>
                 </#list>
               </TABLE>
