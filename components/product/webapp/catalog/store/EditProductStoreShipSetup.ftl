@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -501,6 +501,7 @@ function setAssocFields(select) {
         <td><span class="tableheadtext">Req USPS</span></td>
         <td><span class="tableheadtext">Allow Co</span></td>
         <td><span class="tableheadtext">Req Co</span></td>
+        <td><span class="tableheadtext">Inc FreeShip</span></td>
         <td><span class="tableheadtext">Inc Geo</span></td>
         <td><span class="tableheadtext">Exc Geo</span></td>
         <td><span class="tableheadtext">Inc Feature</span></td>
@@ -532,6 +533,7 @@ function setAssocFields(select) {
               <td><span class="tabletext">${meth.requireUspsAddr?default("N")}</span></td>
               <td><span class="tabletext">${meth.allowCompanyAddr?default("N")}</span></td>
               <td><span class="tabletext">${meth.requireCompanyAddr?default("N")}</span></td>
+              <td><span class="tabletext">${meth.includeNoChargeItems?default("Y")}</span></td>
               <td><span class="tabletext">${meth.includeGeoId?if_exists}</span></td>
               <td><span class="tabletext">${meth.excludeGeoId?if_exists}</span></td>
               <td><span class="tabletext">${meth.includeFeatureGroup?if_exists}</span></td>
@@ -651,6 +653,16 @@ function setAssocFields(select) {
           <td>
             <input type="text" class="inputBox" name="companyPartyId" size="20">
             <span class="tabletext">Used with allow company address</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Include Free Ship Items</span></td>
+          <td>
+            <select name="includeNoChargeItems" class="selectBox">
+              <option>Y</option>
+              <option>N</option>
+            </select>
+            <span class="tabletext">Set to N to hide when the cart contains ONLY free shipping items</span>
           </td>
         </tr>
         <tr>
