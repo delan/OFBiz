@@ -55,10 +55,38 @@
     <request-map uri="main"><security https="false" auth="false"/>
     	<response name="success" type="view" value="main"/>
     </request-map>
+
+    <request-map uri="task"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="task"/>
+    </request-map>
+    <request-map uri="tasklist"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="tasklist"/>
+    </request-map>
+
+    <request-map uri="event"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="event"/>
+    </request-map>
+    <request-map uri="day"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="day"/>
+    </request-map>
+    <request-map uri="week"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="week"/>
+    </request-map>
+    <request-map uri="month"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="month"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" page="/main.jsp"/>
+
+    <view-map name="task" page="/task/task.jsp"/>
+    <view-map name="tasklist" page="/task/tasklist.jsp"/>
+
+    <view-map name="event" page="/calendar/event.jsp"/>
+    <view-map name="day" page="/calendar/day.jsp"/>
+    <view-map name="week" page="/calendar/week.jsp"/>
+    <view-map name="month" page="/calendar/month.jsp"/>
     <!-- end of view mappings -->
 </site-conf>
