@@ -74,38 +74,38 @@ public final class BeanShellEngine extends GenericAsyncEngine {
         else
             cl = dispatcher.getLocalContext(loader).getClassLoader();
       
-        String rootPath = dispatcher.getLocalContext(loader).getRootPath();
-        String globalRootPath = dispatcher.getLocalContext(loader).getGlobalRootPath();
+        String scriptPath = dispatcher.getLocalContext(loader).getScriptPath();
+        String globalScriptPath = dispatcher.getLocalContext(loader).getGlobalScriptPath();
         
-        if ( rootPath.charAt(rootPath.length() - 1 ) != '/' )
-            rootPath = rootPath + "/";
-        if ( globalRootPath.charAt(globalRootPath.length() - 1 ) != '/' )
-            globalRootPath = globalRootPath + "/";
+        if ( scriptPath.charAt(scriptPath.length() - 1 ) != '/' )
+            scriptPath = scriptPath + "/";
+        if ( globalScriptPath.charAt(globalScriptPath.length() - 1 ) != '/' )
+            globalScriptPath = globalScriptPath + "/";
         
         // locate the script
-        String scriptPath = null;
+        String path = null;
         try {
             File file = new File(modelService.location);            
             if ( !file.exists() ) {
                 Debug.logInfo("[BeanShellEngine.invoke] : File not found: " + modelService.location);
-                file = new File(rootPath + modelService.location);
+                file = new File(scriptPath + modelService.location);
                 if ( !file.exists() ) {
-                    Debug.logInfo("[BeanShellEngine.invoke] : File not found: " + rootPath + modelService.location);
-                    file = new File(globalRootPath + modelService.location);
+                    Debug.logInfo("[BeanShellEngine.invoke] : File not found: " + scriptPath + modelService.location);
+                    file = new File(globalScriptPath + modelService.location);
                     if ( !file.exists() ) {
-                        Debug.logInfo("[BeanShellEngine.invoke] : File not found: " + globalRootPath + modelService.location);
+                        Debug.logInfo("[BeanShellEngine.invoke] : File not found: " + globalScriptPath + modelService.location);
                         throw new GenericServiceException("Script location not valid or file not found"); 
                     }
                     else {
-                        scriptPath = globalRootPath + modelService.location;
+                        path = globalScriptPath + modelService.location;
                     }
                 }
                 else {
-                    scriptPath = rootPath + modelService.location;
+                    path = scriptPath + modelService.location;
                 }
             }
             else {
-                scriptPath = modelService.location;
+                path = modelService.location;
             }
         }
         catch ( SecurityException e ) {
@@ -132,7 +132,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
         try {
             bsh.set("dctx",dispatcher.getLocalContext(loader)); // set the dispatch context
             bsh.set("context",context); // set the parameter context used for both IN and OUT            
-            bsh.source(scriptPath);
+            bsh.source(path);
             Map bshResult = (Map) bsh.get("result");
             if ( bshResult != null ) 
                 context.putAll(bshResult);

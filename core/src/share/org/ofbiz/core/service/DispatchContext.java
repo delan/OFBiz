@@ -45,6 +45,7 @@ public class DispatchContext {
     
     protected String name;
     protected String root;    
+    protected String rootExt;
     protected Map attributes;
     protected Collection readers;
     protected ClassLoader loader;
@@ -54,9 +55,10 @@ public class DispatchContext {
      *@param readers a collection of reader URLs
      *@param loader the classloader to use for dispatched services
      */
-    public DispatchContext(String name, String root, Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
+    public DispatchContext(String name, String root, String rootExt, Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
         this.name = name;
         this.root = root;
+        this.rootExt = rootExt;
         this.readers = readers;
         this.loader = loader;
         this.dispatcher = dispatcher;
@@ -111,8 +113,18 @@ public class DispatchContext {
     /** Gets the 'global root' property of this context (used as a path)
      *@return String global root directory for this context (raw path)
      */
-    public String getGlobalRootPath() {
+    public String getGlobalScriptPath() {
         return globalRoot;
+    }
+    
+    /** Gets the context script path 
+     *@return String context script path
+     */
+    public String getScriptPath() {
+        if ( root.endsWith("/") && rootExt.startsWith("/") )
+            return root + rootExt.substring(1);
+        else
+            return root + rootExt;
     }
     
     /** Gets the 'root' property of this context (used as a path)

@@ -43,11 +43,11 @@ public class LocalDispatcher {
     protected ServiceDispatcher dispatcher;
     protected String name;
     
-    public LocalDispatcher(String name, String root, GenericDelegator delegator, Collection readerURLs) {
-        this(name,root,delegator,readerURLs,null);
+    public LocalDispatcher(String name, String root, String rootExt, GenericDelegator delegator, Collection readerURLs) {
+        this(name,root,rootExt,delegator,readerURLs,null);
     }
     
-    public LocalDispatcher(String name, String root, GenericDelegator delegator, Collection readerURLs, ClassLoader loader) {
+    public LocalDispatcher(String name, String root, String rootExt, GenericDelegator delegator, Collection readerURLs, ClassLoader loader) {
         if ( loader == null ) {
             try {
                 loader = Thread.currentThread().getContextClassLoader();
@@ -56,7 +56,7 @@ public class LocalDispatcher {
                 loader = this.getClass().getClassLoader();
             }
         }
-        DispatchContext dc = new DispatchContext(name,root,readerURLs,loader,null);
+        DispatchContext dc = new DispatchContext(name,root,rootExt,readerURLs,loader,null);
         init(name, delegator, dc);        
     }
     
