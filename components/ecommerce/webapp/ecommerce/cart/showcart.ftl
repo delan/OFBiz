@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.31 $
+ *@version    $Revision: 1.32 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -251,7 +251,7 @@ function gwAll(e) {
                   </#if>
                 </div>
                 
-                <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?size > 0)>
+                <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
                   <#-- Show alternate gifts if there are any... -->
                   <div class="tableheadtext">You may also choose one of the following for your gift:</div>
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
