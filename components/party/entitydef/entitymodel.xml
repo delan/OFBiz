@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  */
 -->
 
@@ -811,6 +811,9 @@
         <key-map field-name="contactMechId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="TelecomNumber">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyContactMechPurpose">

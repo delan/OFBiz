@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEvents.java,v 1.7 2003/11/21 00:06:43 ajzeneski Exp $
+ * $Id: ShippingEvents.java,v 1.8 2003/11/21 02:35:39 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,11 +45,11 @@ import org.ofbiz.common.geo.GeoWorker;
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ShippingEvents {
-    
+
     public static final String module = ShippingEvents.class.getName();
 
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
@@ -60,7 +60,7 @@ public class ShippingEvents {
         if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
             return "error";
         }
-        
+
         Double shippingTotal = (Double) result.get("shippingTotal");
         // remove old shipping adjustments if there
         cart.removeAdjustmentByType("SHIPPING_CHARGES");
@@ -75,58 +75,58 @@ public class ShippingEvents {
         // all done
         return "success";
     }
-    
+
     public static Map getShipEstimate(GenericDelegator delegator, ShoppingCart cart, String shippingMethod) {
         String shipmentMethodTypeId = null;
         String carrierPartyId = null;
         if (UtilValidate.isNotEmpty(shippingMethod)) {
-            int delimiterPos = shippingMethod.indexOf('@');                        
+            int delimiterPos = shippingMethod.indexOf('@');
             if (delimiterPos > 0) {
                 shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
                 carrierPartyId = shippingMethod.substring(delimiterPos + 1);
-            }                      
+            }
         } else {
             shipmentMethodTypeId = cart.getShipmentMethodTypeId();
-            carrierPartyId = cart.getCarrierPartyId();            
-        }         
+            carrierPartyId = cart.getCarrierPartyId();
+        }
         return getShipEstimate(delegator, cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, cart.getShippingContactMechId(), cart.getProductStoreId(), cart.getShippableSizes(), cart.getFeatureIdQtyMap(), cart.getShippableWeight(), cart.getShippableQuantity(), cart.getShippableTotal());
     }
-    
+
     public static Map getShipEstimate(GenericDelegator delegator, OrderReadHelper orh) {
         String shippingMethod = orh.getShippingMethodCode();
         String shipmentMethodTypeId = null;
         String carrierPartyId = null;
         if (UtilValidate.isNotEmpty(shippingMethod)) {
-            int delimiterPos = shippingMethod.indexOf('@');                        
+            int delimiterPos = shippingMethod.indexOf('@');
             if (delimiterPos > 0) {
                 shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
                 carrierPartyId = shippingMethod.substring(delimiterPos + 1);
-            }                      
+            }
         }
         GenericValue shipAddr = orh.getShippingAddress();
-        String contactMechId = shipAddr.getString("contactMechId");    
+        String contactMechId = shipAddr.getString("contactMechId");
         return getShipEstimate(delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, contactMechId, orh.getProductStoreId(), orh.getShippableSizes(), orh.getFeatureIdQtyMap(), orh.getShippableWeight(), orh.getShippableQuantity(), orh.getShippableTotal());
     }
-    
+
     public static Map getShipEstimate(GenericDelegator delegator, String orderTypeId, String shipmentMethodTypeId, String carrierPartyId, String shippingContactMechId, String productStoreId, List itemSizes, Map featureMap, double shippableWeight, double shippableQuantity, double shippableTotal) {
         String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
-        List errorMessageList = new ArrayList();                             
+        List errorMessageList = new ArrayList();
         StringBuffer errorMessage = new StringBuffer();
-                                               
+
         if (shipmentMethodTypeId == null || carrierPartyId == null) {
             if ("SALES_ORDER".equals(orderTypeId)) {
                 errorMessageList.add("Please Select Your Shipping Method.");
-                return ServiceUtil.returnError(errorMessageList);                
+                return ServiceUtil.returnError(errorMessageList);
             } else {
                 return ServiceUtil.returnSuccess();
             }
         }
-                
+
         if (shippingContactMechId == null) {
             errorMessageList.add("Please Select Your Shipping Address.");
             return ServiceUtil.returnError(errorMessageList);
         }
-        
+
         if (Debug.verboseOn()) {
             Debug.logVerbose("Shippable Weight : " + shippableWeight, module);
             Debug.logVerbose("Shippable Qty : " + shippableQuantity, module);
@@ -146,16 +146,16 @@ public class ShippingEvents {
         try {
             Map fields = UtilMisc.toMap("productStoreId", productStoreId, "shipmentMethodTypeId", shipmentMethodTypeId, "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER");
 
-            estimates = delegator.findByAnd("ShipmentCostEstimate", fields);            
+            estimates = delegator.findByAnd("ShipmentCostEstimate", fields);
             if (Debug.verboseOn()) Debug.logVerbose("Estimate fields: " + fields, module);
-            if (Debug.verboseOn()) Debug.logVerbose("Estimate(s): " + estimates, module);            
+            if (Debug.verboseOn()) Debug.logVerbose("Estimate(s): " + estimates, module);
         } catch (GenericEntityException e) {
-            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.", module);            
-            return ServiceUtil.returnSuccess(standardMessage);                 
+            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.", module);
+            return ServiceUtil.returnSuccess(standardMessage);
         }
         if (estimates == null || estimates.size() < 1) {
-            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);            
-            return ServiceUtil.returnSuccess(standardMessage);            
+            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
+            return ServiceUtil.returnSuccess(standardMessage);
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Estimates begin size: " + estimates.size(), module);
@@ -166,7 +166,7 @@ public class ShippingEvents {
         try {
             shipAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMechId));
         } catch (GenericEntityException e) {
-            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping address entity.", module);                   
+            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping address entity.", module);
             return ServiceUtil.returnSuccess(standardMessage);
         }
 
@@ -308,7 +308,7 @@ public class ShippingEvents {
         // Grab the estimate and work with it.
         GenericValue estimate = (GenericValue) estimateList.get(estimateIndex);
 
-        Debug.log("[ShippingEvents.getShipEstimate] Working with estimate [" + estimateIndex + "]: " + estimate, module);
+        //Debug.log("[ShippingEvents.getShipEstimate] Working with estimate [" + estimateIndex + "]: " + estimate, module);
 
         // flat fees
         double orderFlat = 0.00;
