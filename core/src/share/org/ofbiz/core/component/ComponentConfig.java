@@ -49,35 +49,90 @@ public class ComponentConfig {
     public static final String OFBIZ_COMPONENT_XML_FILENAME = "ofbiz-component.xml";
 
     // this is not a UtilCache because reloading may cause problems
-    public static Map componentConfigs = new HashMap();
+    protected static Map componentConfigs = new OrderedMap();
 
+    public static ComponentConfig getComponentConfig(String globalName) throws ComponentException {
+        return getComponentConfig(globalName, null);
+    }
+    
     public static ComponentConfig getComponentConfig(String globalName, String rootLocation) throws ComponentException {
         ComponentConfig componentConfig = (ComponentConfig) componentConfigs.get(globalName);
         if (componentConfig == null) {
-            synchronized (ComponentConfig.class) {
-                componentConfig = (ComponentConfig) componentConfigs.get(globalName);
-                if (componentConfig == null) {
-                    componentConfig = new ComponentConfig(globalName, rootLocation);
-                    componentConfigs.put(globalName, componentConfig);
+            if (rootLocation != null) {
+                synchronized (ComponentConfig.class) {
+                    componentConfig = (ComponentConfig) componentConfigs.get(globalName);
+                    if (componentConfig == null) {
+                        componentConfig = new ComponentConfig(globalName, rootLocation);
+                        componentConfigs.put(globalName, componentConfig);                        
+                    }
                 }
+            } else {
+                throw new ComponentException("No component found named : " + globalName);
             }
         }
         return componentConfig;
     }
+        
+    public static Collection getAllComponents() {
+        return componentConfigs.values();
+        
+    }
+    
+    public static List getAllClasspathInfos() {
+        List classpaths = new LinkedList();
+        Iterator i = getAllComponents().iterator();
+        while (i.hasNext()) {
+            ComponentConfig cc = (ComponentConfig) i.next();
+            classpaths.addAll(cc.getClasspathInfos());
+        }
+        return classpaths;
+    } 
+    
+    public static List getAllEntityResourceInfos() {
+        List entityInfos = new LinkedList();
+        Iterator i = getAllComponents().iterator();
+        while (i.hasNext()) {
+            ComponentConfig cc = (ComponentConfig) i.next();
+            entityInfos.addAll(cc.getEntityResourceInfos());
+        }
+        return entityInfos;
+    }
+    
+    public static List getAllServiceResourceInfos() {
+        List serviceInfos = new LinkedList();
+        Iterator i = getAllComponents().iterator();
+        while (i.hasNext()) {
+            ComponentConfig cc = (ComponentConfig) i.next();
+            serviceInfos.addAll(cc.getServiceResourceInfos());
+        }
+        return serviceInfos;        
+        
+    }
+    
+    public static List getAllWebappResourceInfos() {
+        List webappInfos = new LinkedList();
+        Iterator i = getAllComponents().iterator();
+        while (i.hasNext()) {
+            ComponentConfig cc = (ComponentConfig) i.next();
+            webappInfos.addAll(cc.getWebappInfos());
+        }
+        return webappInfos;        
+        
+    }    
 
     // ========== component info fields ==========
-    public String globalName;
-    public String rootLocation;
+    protected String globalName = null;
+    protected String rootLocation = null;    
+    protected String componentName = null;
     
-    public String componentName;
-    
-    public Map resourceLoaderInfos = new HashMap();
-    public List classpathInfos = new LinkedList();
-    public List entityResourceInfos = new LinkedList();
-    public List serviceResourceInfos = new LinkedList();
-    public List webappInfos = new LinkedList();
+    protected Map resourceLoaderInfos = new HashMap();
+    protected List classpathInfos = new LinkedList();
+    protected List entityResourceInfos = new LinkedList();
+    protected List serviceResourceInfos = new LinkedList();
+    protected List webappInfos = new LinkedList();
 
     protected ComponentConfig() {}
+    
     protected ComponentConfig(String globalName, String rootLocation) throws ComponentException {
         this.globalName = globalName;
         this.rootLocation = rootLocation;
@@ -93,7 +148,7 @@ public class ComponentConfig {
         String xmlFilename = rootLocation + "/" + OFBIZ_COMPONENT_XML_FILENAME;
         URL xmlUrl = UtilURL.fromFilename(xmlFilename);
         if (xmlUrl == null) {
-            throw new ComponentException("Could not find the " + OFBIZ_COMPONENT_XML_FILENAME + " configuration file  in the component root location: " + rootLocation);
+            throw new ComponentException("Could not find the " + OFBIZ_COMPONENT_XML_FILENAME + " configuration file in the component root location: " + rootLocation);
         }
         
         Document ofbizComponentDocument = null;
@@ -110,7 +165,7 @@ public class ComponentConfig {
         Element ofbizComponentElement = ofbizComponentDocument.getDocumentElement();
         this.componentName = ofbizComponentElement.getAttribute("name");
         
-        Iterator elementIter;
+        Iterator elementIter = null;
         
         // resource-loader - resourceLoaderInfos
         elementIter = UtilXml.childElementList(ofbizComponentElement, "resource-loader").iterator();
@@ -151,6 +206,8 @@ public class ComponentConfig {
             WebappInfo webappInfo = new WebappInfo(curElement);
             this.webappInfos.add(webappInfo);
         }
+        
+        Debug.logInfo("Loaded component : " + globalName + " [" + rootLocation + "]", module);
     }
     
     public boolean isFileResource(ResourceInfo resourceInfo) throws ComponentException {
@@ -160,6 +217,38 @@ public class ComponentConfig {
         }
         return "file".equals(resourceLoaderInfo.type) || "component".equals(resourceLoaderInfo.type);
     }
+       
+    public List getClasspathInfos() {
+        return classpathInfos;
+    }
+   
+    public String getComponentName() {
+        return componentName;
+    }
+    
+    public List getEntityResourceInfos() {
+        return entityResourceInfos;
+    }
+    
+    public String getGlobalName() {
+        return globalName;
+    }
+    
+    public Map getResourceLoaderInfos() {
+        return resourceLoaderInfos;
+    }
+    
+    public String getRootLocation() {
+        return rootLocation;
+    }
+    
+    public List getServiceResourceInfos() {
+        return serviceResourceInfos;
+    }
+   
+    public List getWebappInfos() {
+        return webappInfos;
+    }    
     
 
     public static class ResourceLoaderInfo {
@@ -227,45 +316,27 @@ public class ComponentConfig {
             this.title = element.getAttribute("title");
             this.server = element.getAttribute("server");
             this.mountPoint = element.getAttribute("mount-point");
-        }
-        /**
-         * @return
-         */
-        public String getMountPoint() {
-            if (UtilValidate.isNotEmpty(mountPoint)) {
-                return mountPoint;
-            } else if (UtilValidate.isNotEmpty(name)) {
-                return "/" + name;
-            } else {
-                return null;
+            
+            // default title is name w/ upper-cased first letter
+            if (UtilValidate.isEmpty(this.title)) {                
+                this.title = Character.toUpperCase(name.charAt(0)) + name.substring(1).toLowerCase();               
             }
-        }
-
-        /**
-         * @return
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * @return
-         */
-        public String getServer() {
-            return server;
-        }
-
-        /**
-         * @return
-         */
-        public String getTitle() {
-            if (UtilValidate.isNotEmpty(title)) {
-                return title;
-            } else if (UtilValidate.isNotEmpty(name)) {
-                return Character.toUpperCase(name.charAt(0)) + name.substring(1);
-            } else {
-                return null;
+            
+            // default mount point is name if none specified
+            if (UtilValidate.isEmpty(this.mountPoint)) {
+                this.mountPoint = this.name;
             }
-        }
+            
+            // check the mount point and make sure it is properly formatted
+            if (!this.mountPoint.startsWith("/")) {
+                this.mountPoint = "/" + this.mountPoint;
+            }
+            if (!this.mountPoint.endsWith("/*")) {
+                if (!this.mountPoint.endsWith("/")) {
+                    this.mountPoint = this.mountPoint + "/";
+                }
+                this.mountPoint = this.mountPoint + "*";   
+            }
+        }               
     }
 }
