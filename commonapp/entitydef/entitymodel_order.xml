@@ -780,6 +780,7 @@
       <field name="paymentMethodTypeId" type="id"></field>
       <field name="paymentMethodId" type="id"></field>
       <field name="maxAmount" type="currency-amount"></field>
+      <field name="authAmount" type="currency-amount"></field>
       <field name="authRefNum" type="short-varchar"></field>
       <field name="authCode" type="short-varchar"></field>
       <field name="authFlag" type="short-varchar"></field>
