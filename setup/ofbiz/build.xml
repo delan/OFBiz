@@ -212,6 +212,8 @@
         <delete file="${classes.dir}/payflow.properties" />
         <delete file="${classes.dir}/taxware.properties" />
         <delete file="${classes.dir}/jndiservers.xml" />
+        <delete file="${classes.dir}/inventoryalerts.properties" />
+        <delete file="${classes.dir}/payment.properties" />
 
         <delete dir="${classes.dir}/org/ofbiz/commonapp" />
 
