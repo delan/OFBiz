@@ -3,15 +3,15 @@ importPackage(Packages.java.net);
 importPackage(Packages.java.util);
 importPackage(Packages.org.ofbiz.core.util);
 importPackage(Packages.org.ofbiz.core.entity);
-importPackage(Packages.org.ofbiz.commonapp.product.catalog);
+importClass(Packages.org.ofbiz.commonapp.product.catalog.CatalogWorker);
+importClass(Packages.org.ofbiz.commonapp.common.CommonWorkers);
 importPackage(Packages.org.ofbiz.commonapp.order.shoppingcart);
 
 var userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
-if (userLogin != null) request.setAttribute("userLogin", userLogin);
 
 var ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
 var layoutSettings = new HashMap();
-request.setAttribute("layoutSettings", layoutSettings);
+context.put("layoutSettings", layoutSettings);
 
 layoutSettings.put("companyName", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name"));
 layoutSettings.put("companySubtitle", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.subtitle"));
@@ -22,10 +22,13 @@ layoutSettings.put("headerRightBackgroundUrl", UtilProperties.getPropertyValue(e
 var prodCatalog = CatalogWorker.getProdCatalog(request);
 if (prodCatalog != null) {
     var catalogStyleSheet = prodCatalog.get("styleSheet");
-    if (catalogStyleSheet != null) request.setAttribute("catalogStyleSheet", catalogStyleSheet);
+    if (catalogStyleSheet != null) context.put("catalogStyleSheet", catalogStyleSheet);
     var catalogHeaderLogo = prodCatalog.get("headerLogo");
-    if (catalogHeaderLogo != null) request.setAttribute("catalogHeaderLogo", catalogHeaderLogo);
+    if (catalogHeaderLogo != null) context.put("catalogHeaderLogo", catalogHeaderLogo);
 }
+
+context.put("checkLoginUrl", CommonWorkers.makeLoginUrl(request, "checkLogin"));
+context.put("catalogQuickaddUse", CatalogWorker.getCatalogQuickaddUse(request));
 
 var eventMsgReq = request.getAttribute(SiteDefs.EVENT_MESSAGE);
 var errorMsgReq = request.getAttribute(SiteDefs.ERROR_MESSAGE);

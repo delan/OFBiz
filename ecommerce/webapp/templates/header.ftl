@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -25,8 +25,6 @@
  *@since      2.1
 -->
 
-<#assign layoutSettings = requestAttributes.layoutSettings>
-
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -34,8 +32,8 @@
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
     
     <#-- Append CSS for catalog -->
-    <#if requestAttributes.catalogStyleSheet?exists>
-    <link rel='stylesheet' href='${requestAttribute.catalogStyleSheet}' type="text/css">
+    <#if catalogStyleSheet?exists>
+    <link rel='stylesheet' href='${catalogStyleSheet}' type="text/css">
     </#if>
      
     <#-- Append CSS for tracking codes -->
@@ -59,9 +57,9 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
           <#if sessionAttributes.overrideLogo?exists>
-            <td align=left width='1%'><IMG src='${sessionAttributes.overrideLogo}'></TD> 
-          <#elseif requestAttributes.catalogHeaderLogo?exists>
-            <td align=left width='1%'><IMG src='${requestAttributes.catalogHeaderLogo}'></TD> 
+            <TD align=left width='1%'><IMG src='${sessionAttributes.overrideLogo}'></TD> 
+          <#elseif catalogHeaderLogo?exists>
+            <TD align=left width='1%'><IMG src='${catalogHeaderLogo}'></TD> 
           <#elseif layoutSettings.headerImageUrl?has_content>
             <td align=left width='1%'><IMG src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></TD>
           </#if>
@@ -83,7 +81,7 @@
           <#if userLogin?has_content>
             <td class="headerButtonLeft"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerbuttontext">Logout</a></td>
           <#else>
-            <td class="headerButtonLeft"><a href='<@ofbizUrl>${Static["org.ofbiz.commonapp.common.CommonWorkers"].makeLoginUrl(request, "checkLogin")}</@ofbizUrl>' class='headerbuttontext'>Login</a></td>
+            <td class="headerButtonLeft"><a href='<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>' class='headerbuttontext'>Login</a></td>
           </#if>
           <td class="headerButtonLeft"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerbuttontext">Main</a></td>
 
@@ -96,7 +94,7 @@
               <td width="90%" align=center class='headerCenter'>Welcome!</TD>
           </#if>
 
-          <#if Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCatalogQuickaddUse(request)>
+          <#if catalogQuickaddUse>
             <td class="headerButtonRight"><a href="<@ofbizUrl>/quickadd</@ofbizUrl>" class="headerbuttontext">Quick&nbsp;Add</a></td>
           </#if>
           <td class="headerButtonRight"><a href="<@ofbizUrl>/orderhistory</@ofbizUrl>" class="headerbuttontext">Order&nbsp;History</a></td>
@@ -108,3 +106,4 @@
 </table>
 
 <br>
+
