@@ -579,10 +579,10 @@
     <view-map name="createnewnote" type="region"/>
     <view-map name="createnewrole" type="region"/>
 
-    <view-map name="FindSecurityGroup" type="region"/>
-    <view-map name="EditSecurityGroup" type="region"/>
-    <view-map name="EditSecurityGroupPermissions" type="region"/>
-    <view-map name="EditSecurityGroupUserLogins" type="region"/>
+    <view-map name="FindSecurityGroup" type="jpublish" page="/security/FindSecurityGroup.ftl"/>
+    <view-map name="EditSecurityGroup" type="jpublish" page="/security/EditSecurityGroup.ftl"/>
+    <view-map name="EditSecurityGroupPermissions" type="jpublish" page="/security/EditSecurityGroupPermissions.ftl"/>
+    <view-map name="EditSecurityGroupUserLogins" type="jpublish" page="security/EditSecurityGroupUserLogins.ftl"/>
     
     <view-map name="showvisits" type="jpublish" page="/visit/showvisits.ftl"/>
     <view-map name="visitdetail" type="jpublish" page="/visit/visitdetail.ftl"/>
