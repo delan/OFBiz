@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-  <CustRequestType custRequestTypeId="RFB" description="Request For Bug Fix" hasTable="N" parentTypeId=""/>
-  <CustRequestType custRequestTypeId="RFF" description="Request For Feature" hasTable="N" parentTypeId=""/>
-  <CustRequestType custRequestTypeId="RFI" description="Request For Information" hasTable="N" parentTypeId=""/>
-  <CustRequestType custRequestTypeId="RFP" description="Request For Proposal" hasTable="N" parentTypeId=""/>
-  <CustRequestType custRequestTypeId="RFQ" description="Request For Quote" hasTable="N" parentTypeId=""/>
-  <CustRequestType custRequestTypeId="RFS" description="Request For Support" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RF_BUGFIX" description="Request For Bug Fix" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RF_FEATURE" description="Request For Feature" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RF_INFO" description="Request For Information" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RF_PROPOSAL" description="Request For Proposal" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RF_QUOTE" description="Request For Quote" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RF_SUPPORT" description="Request For Support" hasTable="N" parentTypeId=""/>
 
   <OrderAdjustmentType description="Promotion" hasTable="N" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" parentTypeId=""/>
   <OrderAdjustmentType description="Discount" hasTable="N" orderAdjustmentTypeId="DISCOUNT_ADJUSTMENT" parentTypeId=""/>
