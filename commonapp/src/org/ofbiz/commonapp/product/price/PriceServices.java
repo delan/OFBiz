@@ -57,18 +57,18 @@ public class PriceServices {
      */
     public static Map calculateProductPrice(DispatchContext dctx, Map context) {
         boolean optimizeForLargeRuleSet = false;
-        
+
         //UtilTimer utilTimer = new UtilTimer();
         //utilTimer.timerString("Starting price calc", module);
         //utilTimer.setLog(false);
-        
+
         GenericDelegator delegator = dctx.getDelegator();
         Map result = new HashMap();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        
+
         boolean isSale = false;
         List orderItemPriceInfos = new LinkedList();
-        
+
         GenericValue product = (GenericValue) context.get("product");
         String productId = product.getString("productId");
         String prodCatalogId = (String) context.get("prodCatalogId");
@@ -105,7 +105,7 @@ public class PriceServices {
             }
             virtualProductPrices = EntityUtil.filterByDate(virtualProductPrices, true);
         }
-        
+
         //NOTE: partyId CAN be null
         String partyId = (String) context.get("partyId");
         if (partyId == null && context.get("userLogin") != null) {
@@ -122,7 +122,7 @@ public class PriceServices {
         Double quantityDbl = (Double) context.get("quantity");
         if (quantityDbl == null) quantityDbl = new Double(1.0);
         double quantity = quantityDbl.doubleValue();
-        
+
         //for prices, get all ProductPrice entities for this productId and currencyUomId
         List productPrices = null;
         try {
@@ -131,20 +131,20 @@ public class PriceServices {
             Debug.logError(e, "An error occurred while getting the product prices", module);
         }
         productPrices = EntityUtil.filterByDate(productPrices, true);
-       
+
         // ===== get the prices we need: list, default, average cost, promo, min, max =====
         List listPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
         GenericValue listPriceValue = EntityUtil.getFirst(listPrices);
         if (listPrices != null && listPrices.size() > 1) {
             Debug.logWarning("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + listPriceValue.getDouble("price"));
         }
-        
+
         List defaultPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
         GenericValue defaultPriceValue = EntityUtil.getFirst(defaultPrices);
         if (defaultPrices != null && defaultPrices.size() > 1) {
             Debug.logWarning("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"));
         }
-        
+
         List averageCosts = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "AVERAGE_COST"));
         GenericValue averageCostValue = EntityUtil.getFirst(averageCosts);
         if (averageCosts != null && averageCosts.size() > 1) {
@@ -153,7 +153,7 @@ public class PriceServices {
 
         List promoPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "PROMO_PRICE"));
         GenericValue promoPriceValue = EntityUtil.getFirst(promoPrices);
-        if (averageCosts != null && averageCosts.size() > 1) {
+        if (promoPrices != null && promoPrices.size() > 1) {
             Debug.logWarning("There is more than one PROMO_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + promoPriceValue.getDouble("price"));
         }
 
@@ -162,13 +162,13 @@ public class PriceServices {
         if (minimumPrices != null && minimumPrices.size() > 1) {
             Debug.logWarning("There is more than one MINIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + minimumPriceValue.getDouble("price"));
         }
-        
+
         List maximumPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "MAXIMUM_PRICE"));
         GenericValue maximumPriceValue = EntityUtil.getFirst(maximumPrices);
         if (maximumPrices != null && maximumPrices.size() > 1) {
             Debug.logWarning("There is more than one MAXIMUM_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + maximumPriceValue.getDouble("price"));
         }
-        
+
         // if any of these prices is missing and this product is a variant, default to the corresponding price on the virtual product
         if (virtualProductPrices != null && virtualProductPrices.size() > 0) {
             if (listPriceValue == null) {
@@ -220,7 +220,7 @@ public class PriceServices {
         Double listPriceDbl = listPriceValue != null ? listPriceValue.getDouble("price") : null;
         if (listPriceDbl == null) {
             //no list price, use defaultPrice for the final price
-            
+
             // ========= ensure calculated price is not below minSalePrice or above maxSalePrice =========
             Double maxSellPrice = maximumPriceValue != null ? maximumPriceValue.getDouble("price") : null;
             if (maxSellPrice != null && defaultPrice > maxSellPrice.doubleValue()) {
@@ -231,7 +231,7 @@ public class PriceServices {
             if (minSellPrice != null && defaultPrice < minSellPrice.doubleValue()) {
                 defaultPrice = minSellPrice.doubleValue();
             }
-            
+
             result.put("price", new Double(defaultPrice));
             result.put("defaultPrice", new Double(defaultPrice));
             result.put("averageCost", averageCostValue != null ? averageCostValue.getDouble("price") : null);
@@ -241,7 +241,7 @@ public class PriceServices {
                 double listPrice = listPriceDbl.doubleValue();
                 double averageCost = (averageCostValue != null && averageCostValue.get("price") != null) ? averageCostValue.getDouble("price").doubleValue() : listPrice;
                 double margin = listPrice - averageCost;
-                
+
                 //calculate running sum based on listPrice and rules found
                 double price = listPrice;
 
@@ -261,7 +261,7 @@ public class PriceServices {
                     //by productCategoryId
                     // for we will always include any rules that go by category, shouldn't be too many to iterate through each time and will save on cache entries
                     // note that we always want to put the category, quantity, etc ones that find all rules with these conditions in separate cache lists so that they can be easily cleared
-                    Collection productCategoryIdConds = delegator.findByAndCache("ProductPriceCond", 
+                    Collection productCategoryIdConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CAT_ID"));
                     if (productCategoryIdConds != null && productCategoryIdConds.size() > 0) {
                         Iterator productCategoryIdCondsIter = productCategoryIdConds.iterator();
@@ -271,10 +271,10 @@ public class PriceServices {
                         }
                     }
 
-                    //by quantity -- should we really do this one, ie is it necessary? 
+                    //by quantity -- should we really do this one, ie is it necessary?
                     // we could say that all rules with quantity on them must have one of these other values
                     // but, no we'll do it the other way, any that have a quantity will always get compared
-                    Collection quantityConds = delegator.findByAndCache("ProductPriceCond", 
+                    Collection quantityConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_QUANTITY"));
                     if (quantityConds != null && quantityConds.size() > 0) {
                         Iterator quantityCondsIter = quantityConds.iterator();
@@ -285,7 +285,7 @@ public class PriceServices {
                     }
 
                     //by roleTypeId
-                    Collection roleTypeIdConds = delegator.findByAndCache("ProductPriceCond", 
+                    Collection roleTypeIdConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_ROLE_TYPE"));
                     if (roleTypeIdConds != null && roleTypeIdConds.size() > 0) {
                         Iterator roleTypeIdCondsIter = roleTypeIdConds.iterator();
@@ -300,7 +300,7 @@ public class PriceServices {
                     //later: (by partyClassificationTypeId)
 
                     //by listPrice
-                    Collection listPriceConds = delegator.findByAndCache("ProductPriceCond", 
+                    Collection listPriceConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_LIST_PRICE"));
                     if (listPriceConds != null && listPriceConds.size() > 0) {
                         Iterator listPriceCondsIter = listPriceConds.iterator();
@@ -313,7 +313,7 @@ public class PriceServices {
                     // ------- These are all of them that DO depend on the current inputs -------
 
                     //by productId
-                    Collection productIdConds = delegator.findByAndCache("ProductPriceCond", 
+                    Collection productIdConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", productId));
                     if (productIdConds != null && productIdConds.size() > 0) {
                         Iterator productIdCondsIter = productIdConds.iterator();
@@ -325,7 +325,7 @@ public class PriceServices {
 
                     //by virtualProductId, if not null
                     if (virtualProductId != null) {
-                        Collection virtualProductIdConds = delegator.findByAndCache("ProductPriceCond", 
+                        Collection virtualProductIdConds = delegator.findByAndCache("ProductPriceCond",
                                 UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", virtualProductId));
                         if (virtualProductIdConds != null && virtualProductIdConds.size() > 0) {
                             Iterator virtualProductIdCondsIter = virtualProductIdConds.iterator();
@@ -337,7 +337,7 @@ public class PriceServices {
                     }
 
                     //by prodCatalogId
-                    Collection prodCatalogIdConds = delegator.findByAndCache("ProductPriceCond", 
+                    Collection prodCatalogIdConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_PROD_CLG_ID", "condValue", prodCatalogId));
                     if (prodCatalogIdConds != null && prodCatalogIdConds.size() > 0) {
                         Iterator prodCatalogIdCondsIter = prodCatalogIdConds.iterator();
@@ -349,7 +349,7 @@ public class PriceServices {
 
                     //by partyId
                     if (partyId != null) {
-                        Collection partyIdConds = delegator.findByAndCache("ProductPriceCond", 
+                        Collection partyIdConds = delegator.findByAndCache("ProductPriceCond",
                                 UtilMisc.toMap("inputParamEnumId", "PRIP_PARTY_ID", "condValue", partyId));
                         if (partyIdConds != null && partyIdConds.size() > 0) {
                             Iterator partyIdCondsIter = partyIdConds.iterator();
@@ -361,7 +361,7 @@ public class PriceServices {
                     }
 
                     //by currencyUomId
-                    Collection currencyUomIdConds = delegator.findByAndCache("ProductPriceCond", 
+                    Collection currencyUomIdConds = delegator.findByAndCache("ProductPriceCond",
                             UtilMisc.toMap("inputParamEnumId", "PRIP_CURRENCY_UOMID", "condValue", currencyUomId));
                     if (currencyUomIdConds != null && currencyUomIdConds.size() > 0) {
                         Iterator currencyUomIdCondsIter = currencyUomIdConds.iterator();
@@ -382,10 +382,10 @@ public class PriceServices {
                     }
                 } else {
                     //this would be nice, but we can't cache this so easily...
-                    //List pprExprs = UtilMisc.toList(new EntityExpr("thruDate", EntityOperator.EQUALS, null), 
+                    //List pprExprs = UtilMisc.toList(new EntityExpr("thruDate", EntityOperator.EQUALS, null),
                     //        new EntityExpr("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp()));
                     //productPriceRules = delegator.findByOr("ProductPriceRule", pprExprs);
-                    
+
                     productPriceRules = delegator.findAllCache("ProductPriceRule");
                     if (productPriceRules == null) productPriceRules = new LinkedList();
                 }
@@ -395,7 +395,7 @@ public class PriceServices {
                 int totalConds = 0;
                 int totalActions = 0;
                 int totalRules = 0;
-                
+
                 Iterator productPriceRulesIter = productPriceRules.iterator();
                 while (productPriceRulesIter.hasNext()) {
                     GenericValue productPriceRule = (GenericValue) productPriceRulesIter.next();
@@ -421,7 +421,7 @@ public class PriceServices {
                     while (productPriceCondsIter != null && productPriceCondsIter.hasNext()) {
                         GenericValue productPriceCond = (GenericValue) productPriceCondsIter.next();
                         totalConds++;
-                        
+
                         if (!checkPriceCondition(productPriceCond, productId, prodCatalogId, partyId, quantity, listPrice, currencyUomId, delegator)) {
                             //if there is a virtualProductId, try that given that this one has failed
                             if (virtualProductId != null) {
@@ -435,7 +435,7 @@ public class PriceServices {
                                 break;
                             }
                         }
-                        
+
                         //add condsDescription string entry
                         condsDescription.append("[");
                         GenericValue inputParamEnum = productPriceCond.getRelatedOneCache("InputParamEnumeration");
@@ -456,7 +456,7 @@ public class PriceServices {
                     condsDescription.append(";margin:");
                     condsDescription.append(margin);
                     condsDescription.append("] ");
-                    
+
                     boolean foundFlatOverride = false;
                     //if all true, perform all actions
                     if (allTrue) {
@@ -539,12 +539,12 @@ public class PriceServices {
                     }
 
                     totalRules++;
-                    
+
                     if (foundFlatOverride) {
                         break;
                     }
                 }
-                
+
                 if (Debug.verboseOn()) {
                     Debug.logVerbose("Unchecked Calculated price: " + price, module);
                     Debug.logVerbose("PriceInfo:", module);
@@ -572,7 +572,7 @@ public class PriceServices {
                 }
 
                 if (Debug.verboseOn()) Debug.logVerbose("Final Calculated price: " + price + ", rules: " + totalRules + ", conds: " + totalConds + ", actions: " + totalActions, module);
-                
+
                 result.put("price", new Double(price));
                 result.put("listPrice", new Double(listPrice));
                 result.put("defaultPrice", new Double(defaultPrice));
@@ -582,18 +582,18 @@ public class PriceServices {
                 return ServiceUtil.returnError("Error getting rules from the database while calculating price: " + e.toString());
             }
         }
-        
+
         result.put("orderItemPriceInfos", orderItemPriceInfos);
         result.put("isSale", new Boolean(isSale));
         //utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
         return result;
     }
 
-    public static boolean checkPriceCondition(GenericValue productPriceCond, String productId, String prodCatalogId, 
+    public static boolean checkPriceCondition(GenericValue productPriceCond, String productId, String prodCatalogId,
             String partyId, double quantity, double listPrice, String currencyUomId, GenericDelegator delegator) throws GenericEntityException {
         if (Debug.verboseOn()) Debug.logVerbose("Checking price condition: " + productPriceCond, module);
         int compare = 0;
-        
+
         if ("PRIP_PRODUCT_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
             compare = productId.compareTo(productPriceCond.getString("condValue"));
         } else if ("PRIP_PROD_CAT_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
@@ -626,7 +626,7 @@ public class PriceServices {
         } else if ("PRIP_ROLE_TYPE".equals(productPriceCond.getString("inputParamEnumId"))) {
             if (partyId != null) {
                 //if a PartyRole exists for this partyId and the specified roleTypeId
-                GenericValue partyRole = delegator.findByPrimaryKeyCache("PartyRole", 
+                GenericValue partyRole = delegator.findByPrimaryKeyCache("PartyRole",
                         UtilMisc.toMap("partyId", partyId, "roleTypeId", productPriceCond.getString("condValue")));
                 // then 0 (equals), otherwise 1 (not equals)
                 if (partyRole != null) {
@@ -646,7 +646,7 @@ public class PriceServices {
             Debug.logWarning("An un-supported productPriceCond input parameter (lhs) was used: " + productPriceCond.getString("inputParamEnumId") + ", returning false, ie check failed", module);
             return false;
         }
-        
+
         if (Debug.verboseOn()) Debug.logVerbose("Price Condition compare done, compare=" + compare, module);
 
         if ("PRC_EQ".equals(productPriceCond.getString("operatorEnumId"))) {
