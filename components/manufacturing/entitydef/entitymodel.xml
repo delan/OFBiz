@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  */
 -->
 
@@ -183,10 +183,10 @@
       <field name="inventoryEventTypeId" type="id-ne"></field>
       <prim-key field="productId"/>
       <prim-key field="eventDate"/>
-      <relation type="one" fk-name="INV_EVENT_PLAN_PRODUCT" rel-entity-name="Product">
+      <relation type="one" fk-name="INV_EVNT_PLN_PRDT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" fk-name="INV_EVENT_PLAN_TYPE" rel-entity-name="MrpInventoryEventType">
+      <relation type="one" fk-name="INV_EVNT_PLN_TYP" rel-entity-name="MrpInventoryEventType">
         <key-map field-name="inventoryEventTypeId"/>
       </relation>
     </entity>
