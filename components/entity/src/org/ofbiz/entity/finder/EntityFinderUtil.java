@@ -204,8 +204,17 @@ public class EntityFinderUtil {
             if (this.ignoreIfEmpty && ObjectType.isEmpty(value)) {
                 return null;
             }
-            
-            return new EntityExpr(fieldName, (EntityComparisonOperator) operator, value);
+
+            if (operator == EntityOperator.NOT_EQUAL && value != null) {
+                // since some databases don't consider nulls in != comparisons, explicitly include them
+                // this makes more sense logically, but if anyone ever needs it to not behave this way we should add an "or-null" attribute that is true by default
+                return new EntityExpr(
+                        new EntityExpr(fieldName, (EntityComparisonOperator) operator, value), 
+                        EntityOperator.OR, 
+                        new EntityExpr(fieldName, EntityOperator.EQUALS, null));
+            } else {
+                return new EntityExpr(fieldName, (EntityComparisonOperator) operator, value);
+            }
         }
     }
     public static class ConditionList implements Condition {
