@@ -449,7 +449,6 @@
         <iterate entry-name="existingAnswer" list-name="existingAnswers">
             <field-to-field field-name="existingAnswer" to-field-name="${existingAnswer.surveyQuestionId}" to-map-name="currentAnswers"/>
         </iterate>
-        <log level="always" message="${currentAnswers}"/>
 
         <!-- create the response answers -->
         <iterate entry-name="question" list-name="questions">

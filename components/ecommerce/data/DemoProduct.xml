@@ -481,25 +481,4 @@
     <ProductFeatureAppl productId="GC-001-H50" productFeatureId="2004" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:45.336" sequenceNum="3"/>
     <ProductFeatureAppl productId="GC-001-HO" productFeatureId="2001" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-21 10:27:33.716" sequenceNum="2"/>
     <ProductFeatureAppl productId="GC-001-HO" productFeatureId="2006" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-21 10:27:33.633"/>
-
-    <!-- example gift card survey -->
-    <Survey surveyId="1000" description="Gift Card Purchase Information" isAnonymous="Y" allowMultiple="Y"/>
-    <SurveyQuestionCategory surveyQuestionCategoryId="1000" description="Gift Card Purchase Questions"/>
-    <SurveyQuestion surveyQuestionId="1000" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT_LONG" description="senderName" question="Sender&apos;s Name:"/>
-    <SurveyQuestion surveyQuestionId="1001" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT_LONG" description="recipientName" question="Recipient&apos;s Name:"/>
-    <SurveyQuestion surveyQuestionId="1002" surveyQuestionCategoryId="1000" surveyQuestionTypeId="EMAIL" description="recipientEmail" question="Recipient&apos;s Email:"/>
-    <SurveyQuestion surveyQuestionId="1003" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXTAREA" description="giftMessage" question="Gift Message:"/>
-    <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1000" fromDate="2001-01-01 00:00:00.00" requiredField="Y" sequenceNum="1"/>
-    <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1001" fromDate="2001-01-01 00:00:00.00" requiredField="Y" sequenceNum="2"/>
-    <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1002" fromDate="2001-01-01 00:00:00.00" requiredField="Y" sequenceNum="3"/>
-    <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1003" fromDate="2001-01-01 00:00:00.00" requiredField="N" sequenceNum="4"/>
-
-    <Survey surveyId="1001" description="Gift Card Reload Information" isAnonymous="Y" allowMultiple="Y"/>
-    <SurveyQuestion surveyQuestionId="1010" surveyQuestionCategoryId="1000" surveyQuestionTypeId="GIFT_CARD" description="giftCardNumber" question="Gift Card Number:"/>
-    <SurveyQuestion surveyQuestionId="1011" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT_SHORT" description="giftCardPin" question="PIN Number:"/>
-    <SurveyQuestionAppl surveyId="1001" surveyQuestionId="1010" fromDate="2001-01-01 00:00:00.00" requiredField="Y" sequenceNum="1"/>
-    <SurveyQuestionAppl surveyId="1001" surveyQuestionId="1011" fromDate="2001-01-01 00:00:00.00" requiredField="Y" sequenceNum="2"/>
-
-    <ProductStoreSurveyAppl productStoreSurveyId="1000" productStoreId="9000" surveyApplTypeId="CART_ADD" surveyId="1000" productCategoryId="GC-101" fromDate="2003-11-24 16:00:02.467" templatePath="/components/ecommerce/templates/survey/genericsurvey.ftl"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="1001" productStoreId="9000" surveyApplTypeId="CART_ADD" surveyId="1001" productCategoryId="GC-102" fromDate="2003-11-24 16:00:51.693" templatePath="/components/ecommerce/templates/survey/genericsurvey.ftl"/>
 </entity-engine-xml>
