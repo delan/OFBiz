@@ -45,7 +45,9 @@
           <TD align=left width='90%' >
             <div class='boxhead'>&nbsp;Task List</div>
           </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
+          <TD align=right width='10%'>
+            <A href='<ofbiz:url>/task</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Task]</A>
+          </TD>
         </tr>
       </table>
     </TD>

@@ -43,9 +43,11 @@
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <TD align=left width='90%' >
-            <div class='boxhead'>&nbsp;Work Effort Manager Task Page</div>
+            <div class='boxhead'>&nbsp;Task Editor</div>
           </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
+          <TD align=right width='10%'>
+            <A href='<ofbiz:url>/task</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Task]</A>
+          </TD>
         </tr>
       </table>
     </TD>
