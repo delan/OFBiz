@@ -84,6 +84,9 @@ public class ModelService {
     /** Create a transaction for this service (if one is not already in place...)? */
     public boolean useTransaction;
     
+    /** Isolate the transaction if in an existing transaction */
+    public boolean isolateTransaction;
+    
     /** Set of services this service implements */
     public Set implServices = new OrderedSet();    
 

@@ -45,6 +45,7 @@
 	export (true|false) "false"
 	validate (true|false) "true"
 	use-transaction (true|false) "true"
+	isolate-transaction (true|false) "false"
 >
 <!ELEMENT implements EMPTY>
 <!ATTLIST implements
