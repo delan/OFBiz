@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.2 2003/08/20 01:18:13 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.3 2003/08/20 16:50:13 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -70,7 +70,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 
@@ -1171,7 +1171,7 @@ public class OrderServices {
                             
         // prepare the mail info
         String ofbizHome = System.getProperty("ofbiz.home");
-        String templateName = ofbizHome + "/commonapp/src/org/ofbiz/commonapp/order/order/emailprocessnotify.ftl";
+        String templateName = ofbizHome + "/components/order/email/default/emailprocessnotify.ftl";
         
         Map sendMailContext = new HashMap();
         sendMailContext.put("sendTo", emailList.toString());
