@@ -47,19 +47,24 @@ public class ServerHitBin {
     public static final int EVENT = 2;
     public static final int VIEW = 3;
     public static final String[] typeNames = {"", "Request", "Event", "View"};
+    public static final String[] typeIds = {"", "REQUEST", "EVENT", "VIEW"};
     
-    public static void countRequest(String id, long startTime, long runningTime, String userLoginId) {
-        countHit(id, REQUEST, startTime, runningTime, userLoginId);
+    public static void countRequest(String id, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+            GenericDelegator delegator) {
+        countHit(id, REQUEST, visitId, startTime, runningTime, userLogin, delegator);
     }
-    public static void countEvent(String id, long startTime, long runningTime, String userLoginId) {
-        countHit(id, EVENT, startTime, runningTime, userLoginId);
+    public static void countEvent(String id, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+            GenericDelegator delegator) {
+        countHit(id, EVENT, visitId, startTime, runningTime, userLogin, delegator);
     }
-    public static void countView(String id, long startTime, long runningTime, String userLoginId) {
-        countHit(id, VIEW, startTime, runningTime, userLoginId);
+    public static void countView(String id, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+            GenericDelegator delegator) {
+        countHit(id, VIEW, visitId, startTime, runningTime, userLogin, delegator);
     }
     
-    public static void countHit(String id, int type, long startTime, long runningTime, String userLoginId) {
-        countHit(id, type, startTime, runningTime, userLoginId, true);
+    public static void countHit(String id, int type, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+            GenericDelegator delegator) {
+        countHit(id, type, visitId, startTime, runningTime, userLogin, delegator, true);
     }
 
     public static void advanceAllBins(long toTime) {
@@ -79,7 +84,8 @@ public class ServerHitBin {
         }
     }
     
-    static void countHit(String id, int type, long startTime, long runningTime, String userLoginId, boolean isOriginal) {
+    static void countHit(String id, int type, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+            GenericDelegator delegator, boolean isOriginal) {
         ServerHitBin bin = null;
         LinkedList binList = null;
         
@@ -116,31 +122,32 @@ public class ServerHitBin {
                     bin = (ServerHitBin) binList.getFirst();
                 }
                 if (bin == null) {
-                    bin = new ServerHitBin(id, type, true);
+                    bin = new ServerHitBin(id, type, true, delegator);
                     binList.addFirst(bin);
                 }
             }
         }
         
         bin.addHit(startTime, runningTime);
-        if (isOriginal) {
-            bin.saveHit(startTime, runningTime, userLoginId);
+        if (isOriginal && !"GLOBAL".equals(id)) {
+            bin.saveHit(visitId, startTime, runningTime, userLogin);
         }
         
         //count since start global and per id hits
         if (!"GLOBAL".equals(id))
-            countHitSinceStart(id, type, startTime, runningTime, isOriginal);
+            countHitSinceStart(id, type, startTime, runningTime, isOriginal, delegator);
         
         //also count hits up the hierarchy if the id contains a '.'
         if (id.indexOf('.') > 0) {
-            countHit(id.substring(0, id.lastIndexOf('.')), type, startTime, runningTime, userLoginId, false);
+            countHit(id.substring(0, id.lastIndexOf('.')), type, visitId, startTime, runningTime, userLogin, delegator, false);
         }
         
         if (isOriginal && !"GLOBAL".equals(id))
-            countHit("GLOBAL", type, startTime, runningTime, userLoginId, true);
+            countHit("GLOBAL", type, visitId, startTime, runningTime, userLogin, delegator, true);
     }
     
-    static void countHitSinceStart(String id, int type, long startTime, long runningTime, boolean isOriginal) {
+    static void countHitSinceStart(String id, int type, long startTime, long runningTime, boolean isOriginal, 
+            GenericDelegator delegator) {
         ServerHitBin bin = null;
         
         //save in global, and try to get bin by id
@@ -159,7 +166,7 @@ public class ServerHitBin {
                 }
 
                 if (bin == null) {
-                    bin = new ServerHitBin(id, type, false);
+                    bin = new ServerHitBin(id, type, false, delegator);
                     switch (type) {
                         case REQUEST: requestSinceStarted.put(id, bin); break;
                         case EVENT: eventSinceStarted.put(id, bin); break;
@@ -172,7 +179,7 @@ public class ServerHitBin {
         bin.addHit(startTime, runningTime);
 
         if (isOriginal)
-            countHitSinceStart("GLOBAL", type, startTime, runningTime, false);
+            countHitSinceStart("GLOBAL", type, startTime, runningTime, false, delegator);
     }
     
     //these Maps contain Lists of ServerHitBin objects by id, the most recent is first in the list
@@ -185,6 +192,7 @@ public class ServerHitBin {
     public static Map eventSinceStarted = new HashMap();
     public static Map viewSinceStarted = new HashMap();
 
+    GenericDelegator delegator;
     String id;
     int type;
     boolean limitLength;
@@ -195,12 +203,13 @@ public class ServerHitBin {
     long minTime;
     long maxTime;
     
-    public ServerHitBin(String id, int type, boolean limitLength) {
+    public ServerHitBin(String id, int type, boolean limitLength, GenericDelegator delegator) {
         super();
         
         this.id = id;
         this.type = type;
         this.limitLength = limitLength;
+        this.delegator = delegator;
         reset(getEvenStartingTime());
     }
     
@@ -253,6 +262,7 @@ public class ServerHitBin {
         this.id = oldBin.id;
         this.type = oldBin.type;
         this.limitLength = oldBin.limitLength;
+        this.delegator = delegator;
         this.startTime = oldBin.startTime;
         this.endTime = oldBin.endTime;
         this.numberHits = oldBin.numberHits;
@@ -340,8 +350,22 @@ public class ServerHitBin {
             if (this.numberHits > 0) {
                 binList.addFirst(new ServerHitBin(this));
 
-                //TODO: persist each bin when time ends if option turned on
-                if (UtilProperties.propertyValueEqualsIgnoreCase("controlservlet", "stats.persist.bins", "true")) {
+                //persist each bin when time ends if option turned on
+                if (UtilProperties.propertyValueEqualsIgnoreCase("controlservlet", "stats.persist." + ServerHitBin.typeIds[type] + ".bin", "true")) {
+                    Map binData = new HashMap();
+                    binData.put("contentId", this.id);
+                    binData.put("hitTypeId", ServerHitBin.typeIds[this.type]);
+                    binData.put("binStartDateTime", new java.sql.Timestamp(this.startTime));
+                    binData.put("binEndDateTime", new java.sql.Timestamp(this.endTime));
+                    binData.put("numberHits", new Long(this.numberHits));
+                    binData.put("totalTimeMillis", new Long(this.totalRunningTime));
+                    binData.put("minTimeMillis", new Long(this.minTime));
+                    binData.put("maxTimeMillis", new Long(this.maxTime));
+                    try {
+                        delegator.create("ServerHitBin", binData);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Could not save ServerHitBin:", module);
+                    }
                 }
             }
             this.reset(this.endTime + 1);
@@ -349,10 +373,28 @@ public class ServerHitBin {
         }
     }
     
-    void saveHit(long startTime, long runningTime, String userLoginId) {
-        //TODO: persist record of hit in ServerHit entity if option turned on
-        if (UtilProperties.propertyValueEqualsIgnoreCase("controlservlet", "stats.persist.each.hit", "true")) {
-            //save all parameters, including userLoginId for the hit
+    void saveHit(String visitId, long startTime, long runningTime, GenericValue userLogin) {
+        //persist record of hit in ServerHit entity if option turned on
+        if (UtilProperties.propertyValueEqualsIgnoreCase("controlservlet", "stats.persist." + ServerHitBin.typeIds[type] + ".hit", "true")) {
+            Map hitData = new HashMap();
+            hitData.put("visitId", visitId);
+            hitData.put("hitStartDateTime", new java.sql.Timestamp(startTime));
+            hitData.put("hitTypeId", ServerHitBin.typeIds[this.type]);
+            if (userLogin != null) {
+                hitData.put("userLoginId", userLogin.get("userLoginId"));
+                hitData.put("partyId", userLogin.get("partyId"));
+            } else {
+                hitData.put("userLoginId", "ANONYMOUS_USER");
+                hitData.put("partyId", "ANONYMOUS_PARTY");
+            }
+            hitData.put("contentId", this.id);
+            hitData.put("runningTimeMillis", new Long(runningTime));
+            
+            try {
+                delegator.create("ServerHit", hitData);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Could not save ServerHit:", module);
+            }
         }
     }
 }

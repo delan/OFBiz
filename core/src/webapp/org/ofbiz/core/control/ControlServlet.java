@@ -92,7 +92,6 @@ public class ControlServlet extends HttpServlet {
         }
 
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        String userLoginId = userLogin == null ? "_ANONYMOUS_USER_" : userLogin.getString("userLoginId");
 
         HttpSession session = request.getSession();
         if (request.getCharacterEncoding() == null)
@@ -164,7 +163,7 @@ public class ControlServlet extends HttpServlet {
 
         try {
             //the ServerHitBin call for the event is done inside the doRequest method
-            nextPage = getRequestHandler().doRequest(request, response, null, userLoginId);
+            nextPage = getRequestHandler().doRequest(request, response, null, userLogin, delegator);
         } catch (Exception e) {
             Debug.logError(e);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
@@ -185,12 +184,12 @@ public class ControlServlet extends HttpServlet {
 
         String vname = (String) request.getAttribute(SiteDefs.CURRENT_VIEW);
         if (vname != null) {
-            ServerHitBin.countView(cname + "." + vname, viewStartTime, System.currentTimeMillis() - viewStartTime, userLoginId);
+            ServerHitBin.countView(cname + "." + vname, session.getId(), viewStartTime, System.currentTimeMillis() - viewStartTime, userLogin, delegator);
         }
         
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
 
-        ServerHitBin.countRequest(cname + "." + rname, requestStartTime, System.currentTimeMillis() - requestStartTime, userLoginId);
+        ServerHitBin.countRequest(cname + "." + rname, session.getId(), requestStartTime, System.currentTimeMillis() - requestStartTime, userLogin, delegator);
     }
 
     private RequestHandler getRequestHandler() {

@@ -10,6 +10,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.naming.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.event.*;
 import org.ofbiz.core.util.*;
 
@@ -53,7 +54,7 @@ public class RequestHandler implements Serializable {
         rm = new RequestManager(context);
     }
     
-    public String doRequest(HttpServletRequest request, HttpServletResponse response, String chain, String userLoginId) 
+    public String doRequest(HttpServletRequest request, HttpServletResponse response, String chain, GenericValue userLogin, GenericDelegator delegator) 
             throws RequestHandlerException {
         String requestUri = null;
         String eventType = null;
@@ -141,7 +142,7 @@ public class RequestHandler implements Serializable {
                     EventHandler eh = EventFactory.getEventHandler(rm,eventType);
                     eh.initialize(eventPath, eventMethod);
                     eventReturnString = eh.invoke(request, response);
-                    ServerHitBin.countEvent(cname + "." + eventMethod, eventStartTime, System.currentTimeMillis() - eventStartTime, userLoginId);
+                    ServerHitBin.countEvent(cname + "." + eventMethod, request.getSession().getId(), eventStartTime, System.currentTimeMillis() - eventStartTime, userLogin, delegator);
                 } catch (EventHandlerException e) {
                     throw new RequestHandlerException(e.getMessage(),e);
                 }
@@ -205,7 +206,7 @@ public class RequestHandler implements Serializable {
         // invoke chained requests
         if (chainRequest) {
             Debug.logInfo("Running Chained Request: " + nextView);
-            nextPage = doRequest(request, response, nextView, userLoginId);
+            nextPage = doRequest(request, response, nextView, userLogin, delegator);
         }
         
         // if previous request exists, and a login just succeeded, do that now...
@@ -215,7 +216,7 @@ public class RequestHandler implements Serializable {
                 request.getSession().removeAttribute(SiteDefs.PREVIOUS_REQUEST);
                 //here we need to display nothing, and do the previous request
                 Debug.logInfo("Doing Previous Request: " + previousRequest);
-                nextPage = doRequest(request, response, previousRequest, userLoginId);
+                nextPage = doRequest(request, response, previousRequest, userLogin, delegator);
             }
         }
         
