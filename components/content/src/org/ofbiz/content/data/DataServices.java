@@ -545,7 +545,8 @@ public class DataServices {
                 byte[] imageBytes = byteWrapper.getBytes();
                 try {
                     GenericValue imageDataResource = delegator.makeValue("ImageDataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
-                    imageDataResource.set("imageData", imageBytes);
+                    //imageDataResource.set("imageData", imageBytes);
+                    imageDataResource.setBytes("imageData", imageBytes);
                     if (Debug.infoOn()) Debug.logInfo("imageDataResource(C):" + imageDataResource, module);
                     imageDataResource.create();
                 } catch (GenericEntityException e) {
