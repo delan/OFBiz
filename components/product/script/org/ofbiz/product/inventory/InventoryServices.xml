@@ -168,8 +168,8 @@
         <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
         <env-to-env env-name="parameters.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
         <env-to-env env-name="parameters.physicalInventoryId" to-env-name="createDetailMap.physicalInventoryId"/>
-        <env-to-env env-name="parameters.availableToPromiseTotal" to-env-name="createDetailMap.availableToPromiseDiff"/>
-        <env-to-env env-name="parameters.quantityOnHandTotal" to-env-name="createDetailMap.quantityOnHandDiff"/>
+        <env-to-env env-name="parameters.availableToPromiseVar" to-env-name="createDetailMap.availableToPromiseDiff"/>
+        <env-to-env env-name="parameters.quantityOnHandVar" to-env-name="createDetailMap.quantityOnHandDiff"/>
         <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
 
         <make-value value-name="newEntity" entity-name="InventoryItemVariance"/>
@@ -178,7 +178,7 @@
         <create-value value-name="newEntity"/>
 
         <!-- TODO: (possibly a big deal?) check to see if any reserved inventory needs to be changed because of a change in availableToPromise -->
-        <!-- TODO: make sure availableToPromise is never greater than the quantityOnHand -->
+        <!-- TODO: make sure availableToPromise is never greater than the quantityOnHand? -->
     </simple-method>
     <simple-method method-name="createPhysicalInventory" short-description="Create a PhysicalInventory">
         <check-permission permission="CATALOG" action="_CREATE">
