@@ -15,7 +15,7 @@
 <A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: January 11, 2003<br>
+Last Updated: January 18, 2003<br>
 $Id$ <br>
 <hr>
 <br>
@@ -77,11 +77,12 @@ in detail.</P>
 <tr><td>i18nBundle</td><td>JSP</td><td>I18nBundleTag</td><td>&nbsp;</td></tr>
 <tr><td>i18nMessage</td><td>JSP</td><td>I18nMessageTag</td><td>&nbsp;</td></tr>
 <tr><td>i18nMessageArgument</td><td>empty</td><td>I18nMessageArgumentTag</td><td>&nbsp;</td></tr>
-<tr><td>service</td><td>bdy</td><td>tag</td><td>tei</td></tr>
-<tr><td>param</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>service</td><td>JSP</td><td>ServiceTag</td><td>&nbsp;</td></tr>
+<tr><td>param</td><td>empty</td><td>ParamTag</td><td>&nbsp;</td></tr>
 <tr><td>object</td><td>JSP</td><td>ObjectTag</td><td>ObjectTEI</td></tr>
 </table>
 
+<br>
 <hr>
 <h3><a name="URL">URL Tags</a></h3>
 <hr>
@@ -116,7 +117,6 @@ account whether the content should be referred to securely (with HTTPS) or not
 Configuration Guide.</P>
 
 <P>This tag has no attributes.</P>
-
 
 <hr>
 <h3><a name="Conditional">Conditional Tags</a></h3>
@@ -463,6 +463,7 @@ Map interface.</P>
 </tr>
 </table>
 
+<br>
 <hr>
 <h3><a name="Internationalization">Internationalization Tags</a></h3>
 <hr>
@@ -536,15 +537,99 @@ numbered in the order they are specified.</P>
 </tr>
 </table>
 
-
+<br>
 <hr>
 <h3><a name="Service">Service Tags</a></h3>
 <hr>
 
 <P><B><U>ofbiz:service</U></B></P>
 
+<P>The service tag invokes the named service using the given mode (sync or
+async). The results can be placed in the page, request, session or application
+scope as specified using the resultTo attribute. The default scope is page.</P>
+
+<P>To specify information about parameters and return values use nested param
+tags. They are described below.</P>
+
+<P>For more information on services see the Service Engine Guide and the Service
+Engine Configuration Guide.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td><td>Y</td>
+    <td>The name of the service to call.</td>
+</tr>
+<tr>
+    <td>mode</td><td>N</td><td>Y</td>
+    <td>The mode that will be used to call the service, either synchronous or
+    asynchronous. Must be sync or async, Defaults to sync.</td>
+</tr>
+<tr>
+    <td>resultTo</td><td>N</td><td>Y</td>
+    <td>Specifies the scope that the results should be put into. The OUT
+    attributes/parameters of the service will be put into attributes in this
+    scope. Must be page, request, session or application. Defaults to page.</td>
+</tr>
+</table>
+
 <P><B><U>ofbiz:param</U></B></P>
 
+<P>The param tag is used to specify information about parameters passed to the
+service and can also be used for spcifying certain information about return
+values.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td><td>Y</td>
+    <td>The name of the service parameter.</td>
+</tr>
+<tr>
+    <td>value</td><td>N</td><td>Y</td>
+    <td>The value to assign to an IN parameter. Can use the
+    <code>&lt;%=...%&gt;</code> syntax to use Java method context variables.</td>
+</tr>
+<tr>
+    <td>mode</td><td>N</td><td>Y</td>
+    <td>Specifies the mode of the parameter. Must be IN, OUT or INOUT. Defaults
+    to IN. If OUT or INOUT the alias attribute can be used to override the 
+    default key for the context attribute in the scope specified in the
+    service tag.</td>
+</tr>
+<tr>
+    <td>map</td><td>N</td><td>Y</td>
+    <td>Specifies a name for a Map to find in a context attribute. If specified
+    the attribute attribute will be used to find a value in this map. If not
+    specified the attribute attribute will be used to lookup a value in a
+    context attribute.</td>
+</tr>
+<tr>
+    <td>attribute</td><td>N</td><td>Y</td>
+    <td>Specifies the name of the attribute value to lookup. This is used
+    INSTEAD of the value attribute which is used to directly specify the value
+    to be passed to the service for this parameter. The looked up attribute
+    value will be passed to the service for this parameter.</td>
+</tr>
+<tr>
+    <td>alias</td><td>N</td><td>Y</td>
+    <td>Used to specify the key that will be used when putting OUT or INOUT
+    parameters into a context attribute. Defaults to the value of the name
+    attribute.</td>
+</tr>
+</table>
+
+<br>
 <hr>
 <h3><a name="Other">Other Tags</a></h3>
 <hr>
