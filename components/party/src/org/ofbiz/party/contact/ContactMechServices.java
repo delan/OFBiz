@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Contact Mechanism maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ContactMechServices {
@@ -367,6 +367,7 @@ public class ContactMechServices {
         newAddr.set("directions", context.get("directions"));
         newAddr.set("city", context.get("city"));
         newAddr.set("postalCode", context.get("postalCode"));
+        newAddr.set("postalCodeExt", context.get("postalCodeExt"));
         newAddr.set("stateProvinceGeoId", context.get("stateProvinceGeoId"));
         newAddr.set("countryGeoId", context.get("countryGeoId"));
         newAddr.set("postalCodeGeoId", context.get("postalCodeGeoId"));
@@ -475,6 +476,7 @@ public class ContactMechServices {
             relatedEntityToSet.set("directions", context.get("directions"));
             relatedEntityToSet.set("city", context.get("city"));
             relatedEntityToSet.set("postalCode", context.get("postalCode"));
+            relatedEntityToSet.set("postalCodeExt", context.get("postalCodeExt"));
             relatedEntityToSet.set("stateProvinceGeoId", context.get("stateProvinceGeoId"));
             relatedEntityToSet.set("countryGeoId", context.get("countryGeoId"));
             relatedEntityToSet.set("postalCodeGeoId", context.get("postalCodeGeoId"));
