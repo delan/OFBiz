@@ -186,6 +186,10 @@ public class OrderManagerEvents {
                     paymentPreference.set("maxAmount", new Double(paymentTypeAmount));
                     paymentPreference.set("statusId", "PAYMENT_RECEIVED");
                     paymentPreference.set("orderId", orderId);
+                    paymentPreference.set("createdDate", UtilDateTime.nowTimestamp());
+                    if (userLogin != null) {
+                        paymentPreference.set("createdByUserLogin", userLogin.getString("userLoginId"));
+                    }
                     toBeStored.add(paymentPreference);
                     
                     // create a payment record

@@ -778,7 +778,7 @@ public class ShoppingCartHelper {
     /**
      * Select an agreement
      *
-     * @param cart The cart to manipulate
+     * @param agreementId
      */
     public Map selectAgreement(String agreementId) {
         ArrayList errorMsgs = new ArrayList();
