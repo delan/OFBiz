@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.15 2003/12/14 09:09:32 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.16 2003/12/14 10:14:43 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -289,6 +289,8 @@ public class EntitySyncServices {
                 updateHistoryMap.put("runningTimeMillis", new Long(runningTimeMillis));
                 updateHistoryMap.put("totalStoreCalls", new Long(totalStoreCalls));
                 updateHistoryMap.put("totalSplits", new Long(totalSplits));
+                updateHistoryMap.put("totalRowsToStore", new Long(totalRowsToStore));
+                updateHistoryMap.put("totalRowsToRemove", new Long(totalRowsToRemove));
                 updateHistoryMap.put("perSplitMinMillis", new Long(perSplitMinMillis));
                 updateHistoryMap.put("perSplitMaxMillis", new Long(perSplitMaxMillis));
                 updateHistoryMap.put("perSplitMinItems", new Long(perSplitMinItems));
