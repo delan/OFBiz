@@ -71,7 +71,6 @@ public class ItemConfigurationNode {
         }
         // If the date is null, set it to today.
         if (inDate == null) inDate = new Date();
-
         bomTypeId = partBomTypeId;
         GenericDelegator delegator = product.getDelegator();
         List rows = delegator.findByAnd("ProductAssoc", 
@@ -100,14 +99,15 @@ public class ItemConfigurationNode {
             // If the node is null this means that the node has been discarded by the rules.
             if (oneChildNode != null) {
                 oneChildNode.setParentNode(this);
-                if (type == ItemConfigurationTree.EXPLOSION) {
-                    oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, ItemConfigurationTree.EXPLOSION, dispatcher);
-                } else {
-                    if (type == ItemConfigurationTree.EXPLOSION_MANUFACTURING) {
+                switch (type) {
+                    case ItemConfigurationTree.EXPLOSION:
+                        oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, ItemConfigurationTree.EXPLOSION, dispatcher);
+                    break;
+                    case ItemConfigurationTree.EXPLOSION_MANUFACTURING:
                         if (!oneChildNode.isPurchased()) {
                             oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, type, dispatcher);
                         }
-                    }
+                    break;
                 }
             }
             childrenNodes.add(oneChildNode);
@@ -378,7 +378,7 @@ public class ItemConfigurationNode {
         this.depth = depth;
         //this.quantity = Math.floor(quantity * quantityMultiplier / scrapFactor + 0.5);
         this.quantity = quantity * quantityMultiplier / scrapFactor;
-        // First of all we visit the corrent node.
+        // First of all we visit the current node.
         arr.add(this);
         // Now (recursively) we visit the children.
         GenericValue oneChild = null;
@@ -460,7 +460,7 @@ public class ItemConfigurationNode {
         }
     }
 
-    protected boolean isPurchased() {
+    public boolean isPurchased() {
         boolean isPurchased = false;
         try {
             List pfs = getProduct().getRelatedCache("ProductFacility");
@@ -492,11 +492,11 @@ public class ItemConfigurationNode {
         return isPurchased;
     }
 
-    protected boolean isManufactured() {
+    public boolean isManufactured() {
         return childrenNodes.size() > 0 && !isPurchased();
     }
     
-    protected boolean isVirtual() {
+    public boolean isVirtual() {
         return (product.get("isVirtual") != null? product.get("isVirtual").equals("Y"): false);
     }
 
