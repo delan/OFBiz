@@ -71,7 +71,7 @@
   <ofbiz:if name="contactMechTypeId">
     <ofbiz:unless name="contactMech">
       <p class="head1">Create New Contact Information</p>
-    &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
       <%String cmNewPurposeTypeId = request.getParameter("contactMechPurposeTypeId");%>
       <%if (cmNewPurposeTypeId != null){%>
@@ -88,7 +88,7 @@
     </ofbiz:unless>
     <ofbiz:if name="contactMech">
       <p class="head1">Edit Contact Information</p>
-    &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class='buttontext'>[Done/Cancel]</a>
+    &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class='buttontext'>[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <tr>
@@ -246,10 +246,10 @@
   </form>
   </table>
 
-    &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
   </ofbiz:if>
   <ofbiz:unless name="contactMechTypeId">
-    &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
   </ofbiz:unless>
 <%}%>

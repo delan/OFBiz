@@ -59,14 +59,14 @@
 <%} else {%>
     <ofbiz:unless name="eftAccount">
       <p class="head1">Add New EFT Account</p>
-      &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+      &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
       &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Save]</a>
       <form method="post" action='<ofbiz:url>/createEftAccount?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editeftaccountform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     </ofbiz:unless>
     <ofbiz:if name="eftAccount">
       <p class="head1">Edit EFT Account</p>
-      &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+      &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
       &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Save]</a>
       <form method="post" action='<ofbiz:url>/updateEftAccount?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editeftaccountform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -214,6 +214,6 @@
   </table>
   </form>
 
-  &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+  &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
   &nbsp;<a href="javascript:document.editeftaccountform.submit()" class="buttontext">[Save]</a>
 <%}%>

@@ -44,7 +44,7 @@
 %>
   <p class="head1">Change Password</p>
 
-    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
 
   <form method="post" action="<ofbiz:url>/updatePassword/<%=donePage%></ofbiz:url>" name="changepasswordform">
@@ -76,5 +76,5 @@
   </table>
   </form>
 
-    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>

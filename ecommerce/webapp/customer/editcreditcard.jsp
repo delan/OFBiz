@@ -53,14 +53,14 @@
 <%} else {%>
     <ofbiz:unless name="creditCard">
       <p class="head1">Add New Credit Card</p>
-      &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+      &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
       <form method="post" action='<ofbiz:url>/createCreditCard?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     </ofbiz:unless>
     <ofbiz:if name="creditCard">
       <p class="head1">Edit Credit Card</p>
-      &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+      &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
       <form method="post" action='<ofbiz:url>/updateCreditCard?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -246,6 +246,6 @@
   </table>
   </form>
 
-  &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+  &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
   &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
 <%}%>

@@ -55,7 +55,7 @@
     <FORM method=POST action='<ofbiz:url>/updatePerson/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editpersonform">
 </ofbiz:if>
 
-&nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+&nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
 &nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[Save]</a>
 
 <table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -172,5 +172,5 @@
 </table>
 </form>
 
-&nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+&nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
 &nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[Save]</a>
