@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      3.0
 -->
 
@@ -160,42 +160,19 @@ function toggleBillingAccount(box) {
                         <#if paymentMethod.paymentMethodTypeId == "GIFT_CARD">
                           <#assign giftCard = paymentMethod.getRelatedOne("GiftCard")>
 
-                          <#if giftCard?has_content && giftCard.physicalNumber?has_content>
-                            <#assign pcardNumberDisplay = "">
-                            <#assign pcardNumber = giftCard.physicalNumber>
+                          <#if giftCard?has_content && giftCard.cardNumber?has_content>
+                            <#assign giftCardNumber = "">
+                            <#assign pcardNumber = giftCard.cardNumber>
                             <#if pcardNumber?has_content>
                               <#assign psize = pcardNumber?length - 4>
                               <#if 0 < psize>
                                 <#list 0 .. psize-1 as foo>
-                                  <#assign pcardNumberDisplay = pcardNumberDisplay + "*">
+                                  <#assign giftCardNumber = giftCardNumber + "*">
                                 </#list>
-                                <#assign pcardNumberDisplay = pcardNumberDisplay + pcardNumber[psize .. psize + 3]>
+                                <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
                               <#else>
-                                <#assign pcardNumberDisplay = pcardNumber>
+                                <#assign giftCardNumber = pcardNumber>
                               </#if>
-                            </#if>
-
-                            <#if giftCard?has_content && giftCard.virtualNumber?has_content>
-                              <#assign vcardNumberDisplay = "">
-                              <#assign vcardNumber = giftCard.virtualNumber>
-                              <#if vcardNumber?has_content>
-                                <#assign vsize = vcardNumber?length - 4>
-                                <#if 0 < vsize>
-                                  <#list 0 .. vsize-1 as foo>
-                                    <#assign vcardNumberDisplay = vcardNumberDisplay + "*">
-                                  </#list>
-                                  <#assign vcardNumberDisplay = vcardNumberDisplay + vcardNumber[vsize .. vsize + 3]>
-                                <#else>
-                                  <#assign vcardNumberDisplay = vcardNumber>
-                                </#if>
-                              </#if>
-                            </#if>
-
-                            <#assign giftCardNumber = pcardNumberDisplay?if_exists>
-                            <if (!giftCardNumber?has_content)>
-                              <#assign giftCardNumber = vcardNumberDisplay?if_exists>
-                            <#elseif vcardNumberDisplay?has_content>
-                              <#assign giftCardNumber = giftCardNumber + " / " + vcardNumberDisplay>
                             </#if>
                           </#if>
 
@@ -253,7 +230,7 @@ function toggleBillingAccount(box) {
 
                       <#-- special billing account functionality to allow use w/ a payment method -->
                       <#if billingAccountList?has_content>
-                        <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                        <tr><td colspan="3"><hr class='sepbar'></td></tr>
                         <tr>
                           <td width="1%" nowrap>
                             <input type="radio" name="checkOutPaymentId" value="EXT_BILLACT" <#if "EXT_BILLACT" == checkOutPaymentId>checked</#if>></hr>
@@ -261,8 +238,9 @@ function toggleBillingAccount(box) {
                           <td width="50%" nowrap>
                             <span class="tabletext">${uiLabelMap.AccountingPayOnlyWithBillingAccount}</span>
                           </td>
+                          <td>&nbsp;</td>
                         </tr>
-                        <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                        <tr><td colspan="3"><hr class='sepbar'></td></tr>
                         <#list billingAccountList as billingAccount>
                           <#assign availableAmount = billingAccount.accountLimit?double - billingAccount.accountBalance?double>
                           <tr>
@@ -275,6 +253,7 @@ function toggleBillingAccount(box) {
                                <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="amount_${billingAccount.billingAccountId}" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
                               </div>
                             </td>
+                            <td>&nbsp;</td>
                           </tr>
                         </#list>
                         <tr>
@@ -285,9 +264,49 @@ function toggleBillingAccount(box) {
                           <td align="left" valign="top" width="99%" nowrap>
                             <div class="tabletext">${uiLabelMap.AccountingNoBillingAccount}</div>
                            </td>
+                           <td>&nbsp;</td>
                         </tr>
                       </#if>
                       <#-- end of special billing account functionality -->
+
+                      <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                      <tr>
+                        <td width="1%" nowrap>
+                          <input type="checkbox" name="addGiftCard" value="Y">
+                          <input type="hidden" name="singleUseGiftCard" value="Y">
+                        </td>
+                        <td colspan="2"nowrap>
+                          <span class="tabletext">${uiLabelMap.AccountingUseGiftCardNotOnFile}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td width="1%" nowrap>
+                          <div class="tabletext">${uiLabelMap.AccountingNumber}</div>
+                        </td>
+                        <td width="50%" nowrap>
+                          <input type="text" size="15" class="inputBox" name="giftCardNumber" value="${(requestParameters.giftCardNumber)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td width="1%" nowrap>
+                          <div class="tabletext">${uiLabelMap.AccountingPIN}</div>
+                        </td>
+                        <td width="50%" nowrap>
+                          <input type="text" size="10" class="inputBox" name="giftCardPin" value="${(requestParameters.giftCardPin)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>&nbsp;</td>
+                        <td width="1%" nowrap>
+                          <div class="tabletext">${uiLabelMap.AccountingAmount}</div>
+                        </td>
+                        <td width="50%" nowrap>
+                          <input type="text" size="6" class="inputBox" name="giftCardAmount" value="${(requestParameters.giftCardAmount)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
+                        </td>
+                      </tr>
+
                       <tr><td colspan="3"><hr class='sepbar'></td></tr>
                       <tr>
                         <td colspan="3">
