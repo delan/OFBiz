@@ -2323,7 +2323,8 @@
       <relation type="one" fk-name="FACILITY_PGRP" rel-entity-name="FacilityGroup">
         <key-map field-name="primaryFacilityGroupId" rel-field-name="facilityGroupId"/>
       </relation>
-      <relation type="one" fk-name="FACILITY_PRDS" rel-entity-name="ProductStore">
+      <relation type="one-nofk" rel-entity-name="ProductStore">
+        <!-- this was changed from the FK to better handle syncronization; this may be re-enabled in the future -->
         <key-map field-name="productStoreId"/>
       </relation>
       <relation type="many" rel-entity-name="FacilityTypeAttr">
