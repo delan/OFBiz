@@ -1,3 +1,4 @@
+
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="java.util.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*"%>
 <%@ page import="org.ofbiz.core.pseudotag.*, org.ofbiz.commonapp.product.product.*"%>
@@ -5,11 +6,12 @@
 <%-- ====================================================== --%>
 <%-- Special Variant Code                                   --%>
 <%-- ====================================================== --%>
-<%List featureOrder = UtilMisc.toList("COLOR", "SIZE");%>
-<%pageContext.setAttribute("featureOrder", featureOrder);%>
+<ofbiz:service name="getProductFeatureSet">
+    <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
+</ofbiz:service>
 <ofbiz:service name="getProductVariantTree">
     <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
-    <ofbiz:param name='featureOrder' attribute='featureOrder'/>
+    <ofbiz:param name='featureOrder' attribute='featureset'/>
 </ofbiz:service>
 
 <%
