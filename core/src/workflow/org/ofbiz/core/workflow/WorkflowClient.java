@@ -118,7 +118,7 @@ public class WorkflowClient {
     }
     
     /** Assign activity to a new or additional party */
-    public static Map assignTask(DispatchContext ctx, Map context) {
+    public static Map assignActivity(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         
@@ -276,6 +276,58 @@ public class WorkflowClient {
         return activity;
     }
     
+    /**
+     * Determine if this party/role type is an active member of this activity
+     *@param delegator The GenericDelegator to use to locate this resource
+     *@param workEffortId The workeffort id of the activity to check
+     *@param partyId The partyId of the user to validate
+     *@return true if this party is associated with the activity
+     */
+    public static boolean isMemberOfActivity(GenericDelegator delegator, String workEffortId, String partyId, String roleType) {
+        if ( partyId == null )
+            partyId = "_NA_";
+        
+        Collection c = null;
+        try {
+            Map fields = UtilMisc.toMap("workEffortId",workEffortId,"partyId",partyId,"roleTypeId",roleType);
+            c = delegator.findByAnd("WorkEffortPartyAssignment",fields);
+        }
+        catch ( GenericEntityException e ) {
+            throw new RuntimeException("Entity error - " + e.getMessage());
+        }
+        
+        if ( c == null )
+            return false;
+        
+        boolean foundOk = false;
+        Iterator i = c.iterator();
+        while ( i.hasNext() && !foundOk ) {
+            GenericValue v = (GenericValue) i.next();
+            GenericValue w = null;
+            if ( v.get("thruDate") != null ) {
+                java.sql.Timestamp ts = v.getTimestamp("thruDate");
+                java.sql.Timestamp n = new java.sql.Timestamp(new Date().getTime());
+                if ( n.getTime() > ts.getTime() )
+                    continue;
+            }
+            String s = v.getString("statusId");
+            if ( !s.equals("CAL_SENT") && !s.equals("CAL_DELEGATED") && !s.equals("CAL_ACCEPTED") )
+                continue;
+            try {
+                w = v.getRelatedOne("WorkEffort");
+            }
+            catch ( GenericEntityException e ) {
+                throw new RuntimeException("Entity error - " + e.getMessage());
+            }
+            String cs = w.getString("currentStatusId");
+            if ( cs.equals("WF_COMPLETED") || cs.equals("WF_ABORTED") || cs.equals("WF_TERMINATED") )
+                continue;
+            else
+                foundOk = true;
+        }
+        
+        return false;
+    }
     
 }
 
