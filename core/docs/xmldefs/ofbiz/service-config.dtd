@@ -29,7 +29,7 @@
 -->
 
 <!-- ====================== Root Element ======================= -->
-<!ELEMENT service-config ( authorization, thread-pool, engine*, resource-loader*, global-services* )>
+<!ELEMENT service-config ( authorization, thread-pool, engine*, resource-loader*, global-services*, jms-service* )>
 
 <!ELEMENT authorization EMPTY>
 <!ATTLIST authorization
