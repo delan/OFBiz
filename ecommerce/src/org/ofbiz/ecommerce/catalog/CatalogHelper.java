@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/05 00:30:14  jonesde
+ * Initial keyword search implementation in place.
+ *
  * Revision 1.5  2001/09/04 20:48:57  azeneski
  * Catalog updates. (not finished)
  *
@@ -30,6 +33,7 @@ import java.util.Vector;
 import java.util.TreeSet;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.http.HttpSession;
+import javax.servlet.ServletRequest;
 
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
@@ -69,54 +73,111 @@ import org.ofbiz.core.entity.GenericHelperFactory;
  */
 public class CatalogHelper {
     
-    public static void getRelatedCategories(PageContext pageContext, String attributeName, String parentId) {        
-        ArrayList categories = new ArrayList();                        
+    public static void getRelatedCategories(PageContext pageContext, String attributeName) {
+        getRelatedCategories(pageContext,attributeName,null);
+    }
+       
+    public static void getRelatedCategories(PageContext pageContext, String attributeName, String parentId) {
+        ArrayList categories = new ArrayList();
+        ServletRequest request = pageContext.getRequest();
+        
+        if ( parentId == null ) {
+            if ( request.getParameter("catalog_id") != null )
+                parentId = request.getParameter("catalog_id");
+            else if ( request.getParameter("CATALOG_ID") != null )
+                parentId = request.getParameter("CATALOG_ID");
+            else if ( request.getParameter("category_id") != null )
+                parentId = request.getParameter("category_id");
+            else if ( request.getParameter("CATEGORY_ID") != null )
+                parentId = request.getParameter("CATEGORY_ID");
+        }
+        
+        if ( parentId == null )
+            return;
+        
         GenericHelper helper = (GenericHelper)pageContext.getServletContext().getAttribute("helper");
         GenericValue requestedCategory = helper.findByPrimaryKey("ProductCategory",UtilMisc.toMap("productCategoryId",parentId));
-        if ( requestedCategory.getString("primaryParentCategoryId") != null ) 
+        if ( requestedCategory.getString("primaryParentCategoryId") != null )
             setTrail(pageContext,parentId,false);
         else
             setTrail(pageContext,parentId,true);
-        Collection rollups = helper.findByAnd("ProductCategoryRollup",UtilMisc.toMap("parentProductCategoryId",parentId),null);        
+        Collection rollups = helper.findByAnd("ProductCategoryRollup",UtilMisc.toMap("parentProductCategoryId",parentId),null);
         Debug.log("Got rollups...");
         if ( rollups != null && rollups.size() > 0 ) {
-            Debug.log("Rollup size: " + rollups.size());            
+            Debug.log("Rollup size: " + rollups.size());
             Iterator ri = rollups.iterator();
-            while ( ri.hasNext() ) {               
+            while ( ri.hasNext() ) {
                 GenericValue parent = (GenericValue) ri.next();
                 Debug.log("Adding children of: " + parent.getString("parentProductCategoryId"));
                 Collection cc = helper.getRelated("CurrentProductCategory",parent);
                 if ( cc != null && cc.size() > 0 )
-                    categories.addAll(cc);                
+                    categories.addAll(cc);
             }
         }
         
-        if ( categories.size() > 0 ) 
+        if ( categories.size() > 0 )
             pageContext.setAttribute(attributeName,categories);
     }
     
-    public static void getRelatedProducts(PageContext pageContext, String attributeName, String parentId) {                
+    public static void getRelatedProducts(PageContext pageContext, String attributeName) {
+        getRelatedProducts(pageContext,attributeName,null);
+    }
+    
+    public static void getRelatedProducts(PageContext pageContext, String attributeName, String parentId) {
         ArrayList products = new ArrayList();
+        ServletRequest request = pageContext.getRequest();
+        
+        if ( parentId == null ) {
+            if ( request.getParameter("catalog_id") != null )
+                parentId = request.getParameter("catalog_id");
+            else if ( request.getParameter("CATALOG_ID") != null )
+                parentId = request.getParameter("CATALOG_ID");
+            else if ( request.getParameter("category_id") != null )
+                parentId = request.getParameter("category_id");
+            else if ( request.getParameter("CATEGORY_ID") != null )
+                parentId = request.getParameter("CATEGORY_ID");
+        }
+        
+        if ( parentId == null )
+            return;
+        
         GenericHelper helper = (GenericHelper)pageContext.getServletContext().getAttribute("helper");
         GenericValue category = helper.findByPrimaryKey("ProductCategory",UtilMisc.toMap("productCategoryId",parentId));
         
         if ( category != null ) {
             Collection p = helper.getRelated("PrimaryProduct",category);
             products.addAll(p);
-        }            
+        }
         
         if ( products.size() > 0 )
             pageContext.setAttribute(attributeName,products);
     }
     
-    public static void getProduct(PageContext pageContext, String attributeName, String productId) {    
-      GenericValue product = null;
-      GenericHelper helper = (GenericHelper)pageContext.getServletContext().getAttribute("helper");
-      product = helper.findByPrimaryKey("Product",UtilMisc.toMap("productId", productId));
-      if ( product != null )
-        pageContext.setAttribute(attributeName,product);
+    public static void getProduct(PageContext pageContext, String attributeName) {
+        getProduct(pageContext,attributeName,null);
     }
-
+    
+    public static void getProduct(PageContext pageContext, String attributeName, String productId) {
+        ServletRequest request = pageContext.getRequest();
+        
+        if ( productId == null ) {
+            if ( request.getParameter("product_id") != null )
+                productId = request.getParameter("product_id");
+            else if ( request.getParameter("PRODUCT_ID") != null )
+                productId = request.getParameter("PRODUCT_ID");
+        }
+        
+        if ( productId == null )
+            return;
+        
+        GenericValue product = null;
+        GenericHelper helper = GenericHelperFactory.getDefaultHelper();
+        
+        product = helper.findByPrimaryKey("Product",UtilMisc.toMap("productId", productId));
+        if ( product != null )
+            pageContext.setAttribute(attributeName,product);
+    }
+    
     /**
      * Puts the following into the pageContext attribute list:
      *  searchProductList, keywordString, viewIndex, viewSize, lowIndex, highIndex, listSize
@@ -125,60 +186,57 @@ public class CatalogHelper {
      *@param pageContext The pageContext of the calling JSP
      */
     public static void getKeywordSearchProducts(PageContext pageContext) {
-      GenericHelper helper = (GenericHelper)pageContext.getServletContext().getAttribute("helper");
-      
-      int viewIndex = 0;
-      try { viewIndex = Integer.valueOf((String)pageContext.getRequest().getParameter("VIEW_INDEX")).intValue(); }
-      catch (Exception e) { viewIndex = 0; }
-
-      int viewSize = 10;
-      try { viewSize = Integer.valueOf((String)pageContext.getRequest().getParameter("VIEW_SIZE")).intValue(); }
-      catch (Exception e) { viewSize = 10; }
-
-      String keywordString = pageContext.getRequest().getParameter("SEARCH_STRING");
-      String curFindString = "KeywordSearch:" + keywordString;
-
-      ArrayList productIds = (ArrayList)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
-      String resultArrayName = (String)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
-      if(productIds == null || resultArrayName == null || curFindString.compareTo(resultArrayName) != 0 || viewIndex == 0)
-      {
-        Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
-        Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
-
-        //sort by productId (only sort for now...)
-        Collection unsortedIds = KeywordSearch.productsByKeywords(keywordString, helper.getServerName());
-        if(unsortedIds != null && unsortedIds.size() > 0)
-        {
-          TreeSet productIdTree = new TreeSet(unsortedIds);
-          productIds = new ArrayList(productIdTree);
+        GenericHelper helper = (GenericHelper)pageContext.getServletContext().getAttribute("helper");
+        
+        int viewIndex = 0;
+        try { viewIndex = Integer.valueOf((String)pageContext.getRequest().getParameter("VIEW_INDEX")).intValue(); }
+        catch (Exception e) { viewIndex = 0; }
+        
+        int viewSize = 10;
+        try { viewSize = Integer.valueOf((String)pageContext.getRequest().getParameter("VIEW_SIZE")).intValue(); }
+        catch (Exception e) { viewSize = 10; }
+        
+        String keywordString = pageContext.getRequest().getParameter("SEARCH_STRING");
+        String curFindString = "KeywordSearch:" + keywordString;
+        
+        ArrayList productIds = (ArrayList)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
+        String resultArrayName = (String)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
+        if(productIds == null || resultArrayName == null || curFindString.compareTo(resultArrayName) != 0 || viewIndex == 0) {
+            Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
+            Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
+            
+            //sort by productId (only sort for now...)
+            Collection unsortedIds = KeywordSearch.productsByKeywords(keywordString, helper.getServerName());
+            if(unsortedIds != null && unsortedIds.size() > 0) {
+                TreeSet productIdTree = new TreeSet(unsortedIds);
+                productIds = new ArrayList(productIdTree);
+            }
+            
+            if(productIds != null) {
+                pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", productIds);
+                pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
+            }
         }
-
-        if(productIds != null)
-        {
-          pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", productIds);
-          pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
+        
+        int lowIndex = viewIndex*viewSize+1;
+        int highIndex = (viewIndex+1)*viewSize;
+        int listSize = 0;
+        if(productIds!=null) listSize = productIds.size();
+        if(listSize<highIndex) highIndex=listSize;
+        
+        ArrayList products = new ArrayList();
+        for(int ind=lowIndex; ind<=highIndex; ind++) {
+            products.add(helper.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productIds.get(ind-1))));
         }
-      }
-
-      int lowIndex = viewIndex*viewSize+1;
-      int highIndex = (viewIndex+1)*viewSize;
-      int listSize = 0;
-      if(productIds!=null) listSize = productIds.size();
-      if(listSize<highIndex) highIndex=listSize;
-
-      ArrayList products = new ArrayList();
-      for(int ind=lowIndex; ind<=highIndex; ind++) {
-        products.add(helper.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productIds.get(ind-1))));
-      }
-      
-      pageContext.setAttribute("viewIndex", new Integer(viewIndex));
-      pageContext.setAttribute("viewSize", new Integer(viewSize));
-      pageContext.setAttribute("lowIndex", new Integer(lowIndex));
-      pageContext.setAttribute("highIndex", new Integer(highIndex));
-      pageContext.setAttribute("listSize", new Integer(listSize));
-      pageContext.setAttribute("keywordString", keywordString);
-      if(products.size() > 0) pageContext.setAttribute("searchProductList",products);
-    }    
+        
+        pageContext.setAttribute("viewIndex", new Integer(viewIndex));
+        pageContext.setAttribute("viewSize", new Integer(viewSize));
+        pageContext.setAttribute("lowIndex", new Integer(lowIndex));
+        pageContext.setAttribute("highIndex", new Integer(highIndex));
+        pageContext.setAttribute("listSize", new Integer(listSize));
+        pageContext.setAttribute("keywordString", keywordString);
+        if(products.size() > 0) pageContext.setAttribute("searchProductList",products);
+    }
     
     public static void setTrail(PageContext pageContext, String category, boolean topLevel) {
         HttpSession session = pageContext.getSession();
@@ -193,7 +251,7 @@ public class CatalogHelper {
                 crumb = new ArrayList();
                 Debug.logInfo("Created new crumb, added category.");
                 crumb.add(category);
-            }            
+            }
         }
         else {
             crumb = new ArrayList();
