@@ -107,22 +107,26 @@ public class PayPalEvents {
         String payPalAccount = UtilProperties.getPropertyValue(configString, "payment.paypal.business");
                 
         // create the redirect string
-        StringBuffer redirect = new StringBuffer();
-        redirect.append(redirectUrl);        
-        redirect.append("?cmd=_xclick");
-        redirect.append("&business=" + payPalAccount);
-        redirect.append("&item_name=" + itemName);
-        redirect.append("&item_number=" + itemNumber);
-        redirect.append("&invoice=" + orderId);
-        redirect.append("&amount=" + orderTotal);
-        redirect.append("&return=" + returnUrl);
-        redirect.append("&cancel_return=" + cancelReturnUrl);
-        redirect.append("&image_url=" + imageUrl);
-        redirect.append("&no_note=1");
+        Map parameters = new OrderedMap();
+        parameters.put("cmd", "_xclick");
+        parameters.put("business", payPalAccount);
+        parameters.put("item_name", itemName);
+        parameters.put("item_number", itemNumber);
+        parameters.put("invoice", orderId);
+        parameters.put("custom", userLogin.getString("userLoginId"));
+        parameters.put("amount", orderTotal);
+        parameters.put("return", returnUrl);
+        parameters.put("cancel_return", cancelReturnUrl);
+        parameters.put("image_url", imageUrl);
+        parameters.put("no_note", "1");   
+        
+        HttpClient hclient = new HttpClient();
+        String encodedParameters = hclient.encodeArgs(parameters);
+        String redirectString = redirectUrl + "?" + encodedParameters;     
         
         // redirect to paypal
         try {
-            response.sendRedirect(redirect.toString());
+            response.sendRedirect(redirectString);
         } catch (IOException e) {
             Debug.logError(e, "Problems redirecting to PayPal", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems connecting with PayPal, please contact customer service.");
