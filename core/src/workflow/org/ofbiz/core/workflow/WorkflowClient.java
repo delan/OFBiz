@@ -148,25 +148,19 @@ public class WorkflowClient {
     public static Map assignActivity(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        
+                        
         String workEffortId = (String) context.get("workEffortId");
         String partyId = (String) context.get("partyId");
-        String roleType = (String) context.get("roleTypeId");
-        String newPartyId = (String) context.get("newPartyId");
-        String newRoleType = (String) context.get("newRoleTypeId");
-        boolean removeOldAssign = context.get("removeOldAssignments").equals("true") ? true : false;
-        
-        if ( !isMemberOfActivity(delegator,workEffortId,partyId,roleType) ) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You are not an active member of this activity");
-            return result;
-        }
-        
+        String roleType = (String) context.get("roleTypeId");       
+        boolean removeOldAssign = false;
+        if ( context.containsKey("removeOldAssignments") )
+            removeOldAssign = ((String)context.get("removeOldAssignments")).equals("true") ? true : false;
+                         
         try {
-            WfActivity activity = getActivity(delegator,workEffortId);
+            WfActivity activity = getActivity(delegator,workEffortId);            
             try {
-                WfResource resource = WfFactory.getWfResource(delegator,null,null,newPartyId,newRoleType);
-                activity.assign(resource,removeOldAssign ? false : true);
+                WfResource resource = WfFactory.getWfResource(delegator,null,null,partyId,roleType);                
+                activity.assign(resource,removeOldAssign ? false : true);                
             }
             catch ( WfException e ) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -189,22 +183,14 @@ public class WorkflowClient {
         
         String workEffortId = (String) context.get("workEffortId");
         String partyId = (String) context.get("partyId");
-        String roleType = (String) context.get("roleTypeId");
-        String newPartyId = (String) context.get("newPartyId");       
+        String roleType = (String) context.get("roleTypeId");        
         
         if ( !isMemberOfActivity(delegator,workEffortId,partyId,roleType) ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE,"You are not an active member of this activity");
             return result;
         }        
-        
-        if ( newPartyId != null ) {
-            context.put("removeOldAssignments","true");
-            result.putAll(assignActivity(ctx,context));
-            if ( result.containsKey(ModelService.ERROR_MESSAGE) )
-                return result;
-        }
-        
+                
         try {
             WfAssignment assign = getAssignment(delegator,workEffortId,partyId,roleType);
             assign.accept();

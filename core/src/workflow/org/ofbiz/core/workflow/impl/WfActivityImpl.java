@@ -157,13 +157,13 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             Iterator i = getIteratorAssignment();
             while ( i.hasNext() )
                 ((WfAssignment)i.next()).changeStatus("CAL_ACCEPTED");
+            startActivity();
         }
         
         // check the assignment status
-        if ( !checkAssignStatus(1) )
-            throw new CannotStart("All assignments have not been accepted");
-                
-        this.startActivity();
+        else if ( howManyAssignment() > 0 && checkAssignStatus(1) )
+            startActivity();
+                        
     }
     
     /**
