@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,21 +21,18 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.util;
-
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-
 
 /**
  * UtilMisc - Misc Utility Functions
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    July 26, 2001
- * @version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class UtilMisc {
 
@@ -295,7 +292,19 @@ public class UtilMisc {
         }
         return requestUrl;
     }
-
+    
+    /**
+     * Get the Locale object from a session variable; if not found use the browser's default     * @param request HttpServletRequest object to use for lookup     * @return Locale The current Locale to use     */
+    public static Locale getLocale(HttpServletRequest request) {
+        if (request == null)
+            return Locale.getDefault();
+        Locale locale = (Locale) request.getSession().getAttribute("locale");
+        if (locale == null)
+            locale = request.getLocale();
+        if (locale == null)
+            locale = Locale.getDefault();
+        return locale;
+    }
 
     /** This is meant to be very quick to create and use for small sized maps, perfect for how we usually use UtilMisc.toMap */
     protected static class SimpleMap implements Map, java.io.Serializable {
