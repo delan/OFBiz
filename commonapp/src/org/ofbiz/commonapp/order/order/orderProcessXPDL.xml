@@ -14,7 +14,7 @@
 
     <RedefinableHeader PublicationStatus="UNDER_REVISION">
         <Author>Andy Zeneski</Author>
-        <Version>1.4</Version>
+        <Version>1.5</Version>
         <Responsibles>
             <Responsible>admin</Responsible>
         </Responsibles>
@@ -66,7 +66,7 @@
             
 			<RedefinableHeader PublicationStatus="UNDER_REVISION">
         		<Author>OFBiz</Author>
-	        	<Version>1.4</Version>
+	        	<Version>1.5</Version>
         		<Responsibles>
 		          <Responsible>admin</Responsible>
         		</Responsibles>
@@ -434,7 +434,40 @@
                         <ExtendedAttribute Name="canStart" Value="N"/>
                     </ExtendedAttributes>
                 </Activity>              
-            </Activities>
+            
+                <Activity Id="cancelWorkflow" Name="Cancel Workflow">
+                    <Description>Transition Activity To Abort Workflow</Description>
+                    <Limit>1</Limit>
+                    <Implementation>
+                        <Tool Id="cancelOrderCancelWorkflow" Type="PROCEDURE">
+                            <ActualParameters>
+                                <ActualParameter>workEffortId</ActualParameter>  
+                            </ActualParameters>          
+                        	<ExtendedAttributes>                          		                             
+                                <ExtendedAttribute Name="serviceName" Value="wfCancelWorkflow"/>                              
+                                <ExtendedAttribute Name="runAsUser" Value="admin"/>
+                            </ExtendedAttributes>                                         
+                        </Tool>  
+                    </Implementation>
+                    <Performer>admin</Performer>
+                    <StartMode>
+                        <Automatic/>
+                    </StartMode>
+                    <FinishMode>
+                        <Automatic/>
+                    </FinishMode>
+                    <Priority>1</Priority>                    
+                    <TransitionRestrictions>
+                        <TransitionRestriction>
+                            <Join Type="XOR"/>
+                            <Split Type="XOR"/>
+                        </TransitionRestriction>
+                    </TransitionRestrictions>
+                    <ExtendedAttributes>
+                        <ExtendedAttribute Name="canStart" Value="N"/>
+                    </ExtendedAttributes>
+                </Activity>              
+            </Activities>                         
 
             <Transitions>
                 <Transition Id="trans1" From="receiveOrder" To="approveOrder" Loop="NOLOOP" Name="Goto Order Approve">
@@ -443,7 +476,13 @@
                 <Transition Id="trans1.1" From="receiveOrder" To="completeOrder" Loop="NOLOOP" Name="Goto Order Complete">
                     <Condition Type="CONDITION"><![CDATA[orderStatusId.equals("ORDER_APPROVED")]]></Condition>                                                            	                    
                 </Transition>
-                <Transition Id="trans1.2" From="receiveOrder" To="orderNotReady" Loop="NOLOOP" Name="Order not ready for processing">
+                <Transition Id="trans1.2" From="receiveOrder" To="cancelWorkflow" Loop="NOLOOP" Name="Goto Cancel Workflow">
+                    <Condition Type="CONDITION"><![CDATA[orderStatusId.equals("ORDER_CANCELLED")]]></Condition>                                                            	                    
+                </Transition>
+                <Transition Id="trans1.3" From="receiveOrder" To="cancelWorkflow" Loop="NOLOOP" Name="Goto Cancel Workflow">
+                    <Condition Type="CONDITION"><![CDATA[orderStatusId.equals("ORDER_REJECTED")]]></Condition>                                                            	                    
+                </Transition>                                
+                <Transition Id="trans1.4" From="receiveOrder" To="orderNotReady" Loop="NOLOOP" Name="Order not ready for processing">
                     <Condition Type="OTHERWISE"/>                     
                 </Transition>                                  
                                                                                                            
