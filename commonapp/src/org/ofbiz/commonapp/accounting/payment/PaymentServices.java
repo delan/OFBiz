@@ -197,6 +197,8 @@ public class PaymentServices {
         // do some more complicated/critical validation...
         List messages = new LinkedList();
 
+        // first remove all spaces from the credit card number
+        context.put("cardNumber", StringUtil.removeSpaces((String) context.get("cardNumber")));
         if (!UtilValidate.isCardMatch((String) context.get("cardType"), (String) context.get("cardNumber")))
             messages.add(
                 (String) context.get("cardNumber")
@@ -327,6 +329,8 @@ public class PaymentServices {
         // do some more complicated/critical validation...
         List messages = new LinkedList();
 
+        // first remove all spaces from the credit card number
+        context.put("cardNumber", StringUtil.removeSpaces((String) context.get("cardNumber")));
         if (!UtilValidate.isCardMatch((String) context.get("cardType"), (String) context.get("cardNumber")))
             messages.add(
                 (String) context.get("cardNumber")
