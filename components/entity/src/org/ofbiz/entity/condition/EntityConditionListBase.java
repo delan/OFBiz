@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionListBase.java,v 1.1 2004/07/14 04:15:49 doogie Exp $
+ * $Id: EntityConditionListBase.java,v 1.2 2004/07/14 04:18:52 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.entity.model.ModelEntity;
  * Encapsulates a list of EntityConditions to be used as a single EntityCondition combined as specified
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public abstract class EntityConditionListBase extends EntityCondition {
@@ -68,6 +68,10 @@ public abstract class EntityConditionListBase extends EntityCondition {
         return this.conditionList.iterator();
     }
     
+    public void visit(EntityConditionVisitor visitor) {
+        visitor.acceptEntityJoinOperator(operator, conditionList);
+    }
+
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
         // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName(), module);
         StringBuffer sql = new StringBuffer();

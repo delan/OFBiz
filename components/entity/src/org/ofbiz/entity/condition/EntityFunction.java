@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFunction.java,v 1.7 2004/07/07 17:37:40 ajzeneski Exp $
+ * $Id: EntityFunction.java,v 1.8 2004/07/14 04:18:52 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  */
 public abstract class EntityFunction extends EntityConditionValue {
 
@@ -148,6 +148,18 @@ public abstract class EntityFunction extends EntityConditionValue {
             addValue(sql, null, value, entityConditionParams);
         }
         sql.append(')');
+    }
+
+    public void visit(EntityConditionVisitor visitor) {
+        if (nested != null) {
+            visitor.acceptEntityConditionValue(nested);
+        } else {
+            visitor.acceptObject(value);
+        }
+    }
+
+    public void accept(EntityConditionVisitor visitor) {
+        visitor.acceptEntityFunction(this);
     }
 
     public ModelField getModelField(ModelEntity modelEntity) {
