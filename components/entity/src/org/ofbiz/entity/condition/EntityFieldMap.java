@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldMap.java,v 1.4 2004/04/23 01:42:16 doogie Exp $
+ * $Id: EntityFieldMap.java,v 1.5 2004/04/25 00:36:46 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class EntityFieldMap extends EntityCondition {
@@ -132,6 +132,6 @@ public class EntityFieldMap extends EntityCondition {
     }
 
     public int hashCode() {
-        return fieldMap.hashCode() & operator.hashCode();
+        return (fieldMap != null ? fieldMap.hashCode() : 0) & operator.hashCode();
     }
 }
