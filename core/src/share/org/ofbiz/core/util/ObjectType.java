@@ -75,7 +75,7 @@ public class ObjectType {
         classNameClassMap.put("java.sql.Date", java.sql.Date.class);
 
         classNameClassMap.put("Locale", java.util.Locale.class);
-        classNameClassMap.put("java.util.Locale", java.util.Collection.class);
+        classNameClassMap.put("java.util.Locale", java.util.Locale.class);
         
         classNameClassMap.put("java.util.Date", java.util.Date.class);
         classNameClassMap.put("Collection", java.util.Collection.class);
