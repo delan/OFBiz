@@ -67,14 +67,4 @@ public static String getGeoList(GenericDelegator delegator) {
     return "";
 }
 
-public static void removeInfo(GenericDelegator delegator, String estimateId) {
-    try {
-        GenericValue value = delegator.findByPrimaryKey("ShipmentCostEstimate",UtilMisc.toMap("shipmentCostEstimateId",estimateId));
-        delegator.removeRelated("WeightQuantityBreak",value);
-        delegator.removeRelated("QuantityQuantityBreak",value);
-        delegator.removeRelated("PriceQuantityBreak",value);
-        value.remove();
-    }
-    catch ( GenericEntityException e ) {}        
-}
 %>

@@ -92,7 +92,7 @@
       <td><div class="tabletext"><ofbiz:entityfield attribute="est" field="orderPricePercent"/>%</div></td>
       <td><div class="tabletext"><ofbiz:entityfield attribute="est" field="orderFlatPrice"/></div></td>
       <td><div class="tabletext"><ofbiz:entityfield attribute="est" field="orderItemFlatPrice"/></div></td>
-      <td><div class="tabletext"><a href="<ofbiz:url>/view/shippingEditor.jsp?REMOVE=<ofbiz:entityfield attribute="est" field="shipmentCostEstimateId"/></ofbiz:url>" class="buttontext">[Remove]</a></div></td>
+      <td><div class="tabletext"><a href="<ofbiz:url>/removeshipestimate?shipmentCostEstimateId=<ofbiz:entityfield attribute="est" field="shipmentCostEstimateId"/></ofbiz:url>" class="buttontext">[Remove]</a></div></td>
     </tr>
 <%
        wv = null;

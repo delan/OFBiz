@@ -99,10 +99,15 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="shipsetup"/>
     </request-map>
-
     <request-map uri="createshipestimate">
         <security https="true" auth="true"/>
         <event type="service" invoke="createShipmentEstimate"/>
+        <response name="success" type="view" value="shipsetup"/>
+        <response name="error" type="view" value="shipsetup"/>
+    </request-map>
+    <request-map uri="removeshipestimate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeShipmentEstimate"/>
         <response name="success" type="view" value="shipsetup"/>
         <response name="error" type="view" value="shipsetup"/>
     </request-map>
