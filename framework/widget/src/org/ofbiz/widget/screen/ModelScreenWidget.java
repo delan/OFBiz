@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -74,7 +75,7 @@ public abstract class ModelScreenWidget {
         if (Debug.verboseOn()) Debug.logVerbose("Reading Screen sub-widget with name: " + widgetElement.getNodeName(), module);
     }
     
-    public abstract void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer);
+    public abstract void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException;
     
     public static List readSubWidgets(ModelScreen modelScreen, List subElementList) {
         List subWidgets = new LinkedList();
@@ -121,7 +122,7 @@ public abstract class ModelScreenWidget {
         return subWidgets;
     }
     
-    public static void renderSubWidgetsString(List subWidgets, Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+    public static void renderSubWidgetsString(List subWidgets, Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
         if (subWidgets == null)
             return;
         Iterator subWidgetIter = subWidgets.iterator();
@@ -146,7 +147,7 @@ public abstract class ModelScreenWidget {
         }
 
         /** This is a lot like the ScreenRenderer class and returns an empty String so it can be used more easily with FreeMarker */
-        public String render(String sectionName) {
+        public String render(String sectionName) throws GeneralException {
             ModelScreenWidget section = (ModelScreenWidget) this.sectionMap.get(sectionName);
             // if no section by that name, write nothing
             if (section != null) {
@@ -192,7 +193,7 @@ public abstract class ModelScreenWidget {
             }
         }
 
-        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             // check the condition, if there is one
             boolean condTrue = true;
             if (this.condition != null) {
@@ -258,7 +259,7 @@ public abstract class ModelScreenWidget {
             return;
         }
 
-        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             try {
                 screenStringRenderer.renderContainerBegin(writer, context, this);
                 
@@ -294,7 +295,7 @@ public abstract class ModelScreenWidget {
             this.shareScopeExdr = new FlexibleStringExpander(includeScreenElement.getAttribute("share-scope"));
         }
 
-        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             // if we are not sharing the scope, protect it using the MapStack
             boolean protectScope = !shareScope(context);
             if (protectScope) {
@@ -395,7 +396,7 @@ public abstract class ModelScreenWidget {
             }
         }
 
-        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             // isolate the scope
             if (!(context instanceof MapStack)) {
                 context = new MapStack(context);
@@ -471,7 +472,7 @@ public abstract class ModelScreenWidget {
             this.subWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, subElementList);
         }
 
-        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             // render sub-widgets
             renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
         }
@@ -485,7 +486,7 @@ public abstract class ModelScreenWidget {
             this.name = decoratorSectionElement.getAttribute("name");
         }
 
-        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             SectionsRenderer sections = (SectionsRenderer) context.get("sections");
             // for now if sections is null, just log a warning; may be permissible to make the screen for flexible
             if (sections == null) {
@@ -637,7 +638,7 @@ public abstract class ModelScreenWidget {
             this.shareScopeExdr = new FlexibleStringExpander(treeElement.getAttribute("share-scope"));
         }
 
-        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             boolean protectScope = !shareScope(context);
             if (protectScope) {
                 if (!(context instanceof MapStack)) {
@@ -726,7 +727,7 @@ public abstract class ModelScreenWidget {
             }
         }
 
-        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             subWidget.renderWidgetString(writer, context, screenStringRenderer);
         }
     }

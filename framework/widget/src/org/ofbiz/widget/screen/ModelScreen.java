@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,6 +27,7 @@ import java.io.Writer;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
@@ -88,7 +89,7 @@ public class ModelScreen {
      *   different screen elements; implementing your own makes it possible to
      *   use the same screen definitions for many types of screen UIs
      */
-    public void renderScreenString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+    public void renderScreenString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
         // make sure the "null" object is in there for entity ops
         context.put("null", GenericEntity.NULL_FIELD);
 
@@ -108,9 +109,9 @@ public class ModelScreen {
                 Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }
             // after rolling back, rethrow the exception
-            throw e;
+            throw new GeneralException("Error rendering screen: " + e.toString(), e);
         } catch (Exception e) {
-            Debug.logError(e, "Failure in operation, rolling back transaction", module);
+            Debug.logError("Failure in screen rendering, rolling back transaction", module);
             try {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
@@ -119,10 +120,10 @@ public class ModelScreen {
             }
             
             String errMsg = "Error rendering screen [" + this.name + "]: " + e.toString();
-            Debug.logError(e, errMsg, module);
+            // throw nested exception, don't need to log details here: Debug.logError(e, errMsg, module);
             
             // after rolling back, rethrow the exception
-            throw new RuntimeException(errMsg);
+            throw new GeneralException(errMsg, e);
         } finally {
             // only commit the transaction if we started one... this will throw an exception if it fails
             try {

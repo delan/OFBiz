@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -68,7 +69,7 @@ public class HtmlWidget extends ModelScreenWidget {
         }
     }
 
-    public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+    public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
         childWidget.renderWidgetString(writer, context, screenStringRenderer);
     }
     
@@ -160,7 +161,7 @@ public class HtmlWidget extends ModelScreenWidget {
             this.subWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, subElementList);
         }
 
-        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+        public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             // render sub-widgets
             renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
         }

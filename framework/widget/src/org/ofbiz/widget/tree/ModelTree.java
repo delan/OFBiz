@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
@@ -232,7 +233,7 @@ public class ModelTree {
      *   different tree elements; implementing your own makes it possible to
      *   use the same tree definitions for many types of tree UIs
      */
-    public void renderTreeString(StringBuffer buf, Map context, TreeStringRenderer treeStringRenderer) {
+    public void renderTreeString(StringBuffer buf, Map context, TreeStringRenderer treeStringRenderer) throws GeneralException {
         ModelNode node = (ModelNode)nodeMap.get(rootNodeName);
         /*
         List parentNodeTrail = (List)context.get("currentNodeTrail");
@@ -387,7 +388,7 @@ public class ModelTree {
     
         public void renderNodeString(Writer writer, Map context,
                 TreeStringRenderer treeStringRenderer, int depth, boolean isLast)
-                throws IOException {
+                throws IOException, GeneralException {
             boolean passed = true;
             if (this.condition != null) {
                 if (!this.condition.eval(context)) {
