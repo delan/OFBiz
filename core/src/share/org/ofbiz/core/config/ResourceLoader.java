@@ -83,6 +83,13 @@ public abstract class ResourceLoader {
         }
     }
 
+
+	public static void invalidateDocument(String xmlFilename) throws GenericConfigException {
+		synchronized (ResourceLoader.class) {
+			docSaveMap.remove(xmlFilename);
+		}
+	}
+	
     public static Document getXmlDocument(String xmlFilename) throws GenericConfigException {
         Document document = (Document) docSaveMap.get(xmlFilename);
         if (document == null) {
