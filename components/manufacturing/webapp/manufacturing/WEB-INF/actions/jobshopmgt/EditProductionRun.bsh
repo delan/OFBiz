@@ -66,7 +66,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
 
         // productionRun update sub-screen
         HtmlFormWrapper updateProductionRunWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "UpdateProductionRun", request, response);
-        updateProductionRunWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+        //updateProductionRunWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
         updateProductionRunWrapper.putInContext("productionRunData", productionRunData);
         updateProductionRunWrapper.putInContext("actionForm", "updateProductionRun");
         updateProductionRunWrapper.setUseRequestParameters(false);
@@ -120,7 +120,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         if (actionForm.equals("AddRoutingTask")){
             Map routingTaskData =UtilMisc.toMap("workEffortParentId",productionRunId);
             HtmlFormWrapper editPrRoutingTaskWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "EditProductionRunRoutingTask", request, response);
-            editPrRoutingTaskWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+            //editPrRoutingTaskWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
             editPrRoutingTaskWrapper.putInContext("routingTaskData", routingTaskData);
             editPrRoutingTaskWrapper.putInContext("actionForm", "addRoutingTask");
             editPrRoutingTaskWrapper.putInContext("actionIsAdd", "Y");
@@ -135,18 +135,18 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             routingTaskData.put("estimatedSetupMillis",routingTask.getDouble("estimatedSetupMillis").toString());
             routingTaskData.put("estimatedMilliSeconds",routingTask.getDouble("estimatedMilliSeconds").toString());
             HtmlFormWrapper editPrRoutingTaskWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "EditProductionRunRoutingTask", request, response);
-            editPrRoutingTaskWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+            //editPrRoutingTaskWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
             editPrRoutingTaskWrapper.putInContext("routingTaskData", routingTaskData);
             editPrRoutingTaskWrapper.putInContext("actionForm", "UpdateRoutingTask");
             editPrRoutingTaskWrapper.putInContext("actionIsAdd", "null");
-            editPrRoutingTaskWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonUpdate"));
+            //editPrRoutingTaskWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonUpdate"));
             context.put("editPrRoutingTaskWrapper",editPrRoutingTaskWrapper);
             context.put("routingTaskId",routingTaskId);
         }
         //  RoutingTasks list
         List productionRunRoutingTasks = productionRun.getProductionRunRoutingTasks();
         HtmlFormWrapper ListProductionRunRoutingTasksWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "ListProductionRunRoutingTasks", request, response);
-        ListProductionRunRoutingTasksWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+        //ListProductionRunRoutingTasksWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
         ListProductionRunRoutingTasksWrapper.putInContext("productionRunRoutingTasks", productionRunRoutingTasks);
         context.put("ListProductionRunRoutingTasksWrapper",ListProductionRunRoutingTasksWrapper);
 
@@ -157,12 +157,12 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         if (actionForm.equals("AddProductComponent")){
             Map productComponentData = UtilMisc.toMap("productionRunId", productionRunId);
             HtmlFormWrapper editPrProductComponentWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "EditProductionRunComponent", request, response);
-            editPrProductComponentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+            //editPrProductComponentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
             editPrProductComponentWrapper.putInContext("productComponentData", productComponentData);
             editPrProductComponentWrapper.putInContext("actionForm", "addProductComponent");
             //editPrProductComponentWrapper.putInContext("productionRunId", productionRunId);
             editPrProductComponentWrapper.putInContext("actionIsAdd","Y");
-            editPrProductComponentWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonAdd"));
+            //editPrProductComponentWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonAdd"));
             context.put("editPrProductComponentWrapper",editPrProductComponentWrapper);
             //context.put("addProductComponent",addProductComponent);
         }
@@ -178,11 +178,11 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             internalName = productComponent.getRelatedOne("Product").getString("internalName");
             productComponentData.put("internalName",internalName);
             HtmlFormWrapper editPrProductComponentWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "EditProductionRunComponent", request, response);
-            editPrProductComponentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+            //editPrProductComponentWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
             editPrProductComponentWrapper.putInContext("productComponentData", productComponentData);
             editPrProductComponentWrapper.putInContext("actionForm", "updateProductComponent");
             editPrProductComponentWrapper.putInContext("actionIsAdd", "null");
-            editPrProductComponentWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonUpdate"));
+            //editPrProductComponentWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonUpdate"));
             context.put("editPrProductComponentWrapper",editPrProductComponentWrapper);
             context.put("productId",productId);
         }
@@ -202,7 +202,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             }
         }
         HtmlFormWrapper ListProductionRunComponentsWrapper = new HtmlFormWrapper("/jobshopmgt/ProductionRunForms.xml", "ListProductionRunComponents", request, response);
-        ListProductionRunComponentsWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+        //ListProductionRunComponentsWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
         ListProductionRunComponentsWrapper.putInContext("productionRunId", productionRunId);
         ListProductionRunComponentsWrapper.putInContext("productionRunComponentsData", productionRunComponentsData);
         context.put("ListProductionRunComponentsWrapper",ListProductionRunComponentsWrapper);
