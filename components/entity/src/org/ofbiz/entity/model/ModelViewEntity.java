@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.19 2004/07/09 22:56:11 doogie Exp $
+ * $Id: ModelViewEntity.java,v 1.20 2004/07/13 10:23:34 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -161,7 +161,8 @@ public class ModelViewEntity extends ModelEntity {
         dynamicViewEntity.addAllRelationsToList(this.relations);
         
         // finalize stuff
-        this.populateFields(modelReader);
+        // note that this doesn't result in a call to populateReverseLinks because a DynamicViewEntity should never be cached anyway, and will blow up when attempting to make the reverse links to the DynamicViewEntity 
+        this.populateFieldsBasic(modelReader);
     }
 
     public Map getMemberModelMemberEntities() {
@@ -319,6 +320,11 @@ public class ModelViewEntity extends ModelEntity {
     }
     
     public void populateFields(ModelReader modelReader) {
+        populateFieldsBasic(modelReader);
+        populateReverseLinks();
+    }
+    
+    public void populateFieldsBasic(ModelReader modelReader) {
         if (this.memberModelEntities == null) {
             this.memberModelEntities = new HashMap();
         }
@@ -417,7 +423,6 @@ public class ModelViewEntity extends ModelEntity {
                 }
             }
         }
-        populateReverseLinks();
     }
     
     protected ModelConversion getOrCreateModelConversion(String aliasName) {
