@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/01/31 05:05:25  jonesde
+ * Made a bit more friendly/useful
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -49,6 +52,7 @@ import java.util.*;
  *@version    1.0
  */
 public class UtilTimer {
+    long realStartTime;
     long startTime;
     long lastMessageTime;
     String lastMessage = null;
@@ -57,8 +61,7 @@ public class UtilTimer {
     /** Default constructor. Starts the timer.
      */
     public UtilTimer() {
-        startTime = (new Date()).getTime();
-        lastMessageTime = startTime;
+        lastMessageTime = realStartTime = startTime = System.currentTimeMillis();
         lastMessage = "Begin";
     }
     
@@ -67,12 +70,29 @@ public class UtilTimer {
      * @return A String with the timing information, the timer String
      */
     public String timerString(String message) {
+        return timerString(message, null);
+    }
+    
+    /** Creates a string with information including the passed message, the last passed message and the time since the last call, and the time since the beginning
+     * @param message A message to put into the timer String
+     * @param module The debug/log module/thread to use, can be null for root module
+     * @return A String with the timing information, the timer String
+     */
+    public String timerString(String message, String module) {
+        //time this call to avoid it interfering with the main timer
+        long tsStart = System.currentTimeMillis();
+        
         String retString =  "[[" + message + "- total:" + secondsSinceStart() + 
                             ",since last(" + ((lastMessage.length() > 20) ? (lastMessage.substring(0, 17) + "...") : lastMessage) + "):" + 
                             secondsSinceLast() + "]]";
-        lastMessageTime = (new Date()).getTime();
         lastMessage = message;
-        if (log) Debug.logTiming(retString);
+        if (log) Debug.log(Debug.TIMING, null, retString, module, "org.ofbiz.core.util.UtilTimer");
+        
+        //have lastMessageTime come as late as possible to just time what happens between calls
+        lastMessageTime = System.currentTimeMillis();
+        //update startTime to disclude the time this call took
+        startTime += (lastMessageTime - tsStart);
+        
         return retString;
     }
     
@@ -94,7 +114,7 @@ public class UtilTimer {
      * @return The number of milliseconds since the timer started
      */
     public long timeSinceStart() {
-        long currentTime = (new Date()).getTime();
+        long currentTime = System.currentTimeMillis();
         return currentTime - startTime;
     }
     
@@ -102,7 +122,7 @@ public class UtilTimer {
      * @return The number of milliseconds since the last time timerString was called
      */
     public long timeSinceLast() {
-        long currentTime = (new Date()).getTime();
+        long currentTime = System.currentTimeMillis();
         return currentTime - lastMessageTime;
     }
     
