@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -50,10 +51,13 @@ import java.util.StringTokenizer;
  */
 public class Start implements Runnable {
 
-    public static final String config = "org/ofbiz/core/start/start.properties";
-    private static Configuration conf = new Configuration(Start.config);          
-    private Classpath classPath = new Classpath(System.getProperty("java.class.path")); 
+    public static final String CONFIG_FILE = "org/ofbiz/core/start/start.properties";
+    public static final String SHUTDOWN_COMMAND = "SHUTDOWN";
+    public static final String STATUS_COMMAND = "STATUS";
+               
+    private static Configuration conf = new Configuration(Start.CONFIG_FILE);   
     
+    private Classpath classPath = new Classpath(System.getProperty("java.class.path"));     
     private ServerSocket serverSocket = null;
     private Thread serverThread = null;
     private boolean serverRunning = true; 
@@ -73,22 +77,22 @@ public class Start implements Runnable {
             processClientRequest(clientSocket);
             clientSocket.close();                      
             } catch (IOException e) {
-                e.printStackTrace();               
+                e.printStackTrace();                              
             }
         } 
         System.exit(0);                       
     }
     
-    private void processClientRequest(Socket client) throws IOException {
-        BufferedReader reader = null;
-        BufferedWriter writer = null;
-        
-        reader = new BufferedReader(new InputStreamReader(client.getInputStream()));      
+    private void processClientRequest(Socket client) throws IOException {         
+        BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));      
         String request = reader.readLine();        
         
-        writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-        writer.write(processRequest(request, client));
-        writer.flush();        
+        PrintWriter writer = new PrintWriter(client.getOutputStream(), true);
+        writer.println(processRequest(request, client));
+        writer.flush();
+        
+        writer.close();
+        reader.close();        
     }
     
     private String processRequest(String request, Socket client) {
@@ -98,9 +102,11 @@ public class Start implements Runnable {
             if (!key.equals(conf.adminKey)) {        
                 return "FAIL";
             } else {
-                if (command.equals("SHUTDOWN")) {                             
+                if (command.equals(Start.SHUTDOWN_COMMAND)) {                             
                     serverRunning = false;
                     System.out.println("Shutdown initiated from: " + client.getInetAddress().getHostAddress() + ":" + client.getPort());        
+                } else if (command.equals(Start.STATUS_COMMAND)) {
+                    return serverRunning ? "Running" : "Stopped";
                 }
                 return "OK";
             }
@@ -130,11 +136,12 @@ public class Start implements Runnable {
         
         // stat the log directory
         File logDir = new File(conf.jettyHome + "/logs");
-        if (!logDir.exists())
+        if (!logDir.exists()) {
             logDir.mkdir();
-        
-        // invoke the jetty server                            
-        invokeMain(cl, conf.serverClass, (String[]) xargs.toArray(args));
+        }
+                           
+        // invoke the main method on the defined class                            
+        invokeServerMain(cl, conf.serverClass, (String[]) xargs.toArray(args));
     }
   
     private void loadLibs() throws IOException {  
@@ -166,9 +173,7 @@ public class Start implements Runnable {
         // now load the required jetty lib based on java.version
         List excludes = new ArrayList();
         classPath.addClasspath(conf.ofbizHome + "/lib/jetty/lib/javax.servlet.jar");
-        if (conf.javaVersion.startsWith("1.4")) {
-            excludes.add("crimson.jar");
-            excludes.add("javax.xml.jaxp.jar");
+        if (conf.javaVersion.startsWith("1.4")) {            
             classPath.addComponent(conf.ofbizHome + "/lib/jetty/lib/org.mortbay.jetty.jar");
         } else {
             classPath.addComponent(conf.ofbizHome + "/lib/jetty/lib/org.mortbay.jetty-jdk1.2.jar");
@@ -183,8 +188,9 @@ public class Start implements Runnable {
         String paths[] = libDir.list();
         for (int i = 0; i < paths.length; i++) {            
             File file = new File(libDir.getCanonicalPath() + "/" + paths[i]);           
-            if (file.isDirectory() && !paths[i].equals("CVS") && !paths[i].equals("compile"))
-                loadJarsFromPath(file, excludes);            
+            if (file.isDirectory() && !paths[i].equals("CVS") && !paths[i].equals("compile")) {            
+                loadJarsFromPath(file, excludes);
+            }
         }
     }
     
@@ -202,45 +208,54 @@ public class Start implements Runnable {
         }        
     }
     
-    public void invokeMain(ClassLoader classloader, String classname, String[] args) throws Exception {                
-        Class invoked_class = null;
-        invoked_class = classloader.loadClass(classname);
+    private void invokeServerMain(ClassLoader classloader, String classname, String[] args) throws Exception {                
+        Class serverClass = classloader.loadClass(classname);                
+        Class[] parameterTypes = new Class[1];
+        parameterTypes[0] = args.getClass();
         
-        Class[] method_param_types = new Class[1];
-        method_param_types[0] = args.getClass();
+        Method main = serverClass.getDeclaredMethod("main", parameterTypes);
+        Object[] parameters = new Object[1];
+        parameters[0] = args;
         
-        Method main = null;
-        main = invoked_class.getDeclaredMethod("main", method_param_types);
-        Object[] method_params = new Object[1];
-        method_params[0] = args;
-        
-        main.invoke(null, method_params);
+        main.invoke(null, parameters);
     }
-
+    
     public static void start(String[] args) throws Exception {
         Start start = new Start();
         start.loadLibs();
         start.startServer(args);
     }
+
+    public static String status() throws Exception {
+        return sendSocketCommand(Start.STATUS_COMMAND);        
+    }
+        
+    public static String shutdown() throws Exception {
+        return sendSocketCommand(Start.SHUTDOWN_COMMAND);        
+    }
     
-    public static void shutdown() throws Exception {
-        Socket socket = new Socket(conf.adminAddr, conf.adminPort);
-        System.out.print("Shutting down server...");
-                        
-        BufferedWriter writer = null;
-        BufferedReader reader = null;
+    private static String sendSocketCommand(String command) throws IOException {
+        Socket socket = new Socket(conf.adminAddr, conf.adminPort);        
+                                                
+        // send the command
+        PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);                    
+        writer.println(conf.adminKey + ":" + command);
+        writer.flush();        
             
-        writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));            
-        writer.write(conf.adminKey + ":" + "SHUTDOWN");
-        writer.flush();
-            
-        //reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        //System.out.println(reader.readLine());
-            
-        System.out.println("");
-        System.out.println("");
-            
+        // read the reply
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String response = null;
+        if (reader.ready()) {
+            response = reader.readLine();               
+        }
+        
+        reader.close();
+        
+        // close the socket
+        writer.close();                        
         socket.close();        
+        
+        return response;
     }
     
     public static void main(String[] args) throws Exception {
@@ -250,10 +265,13 @@ public class Start implements Runnable {
             System.out.println("");
             System.out.println("Usage: java -jar ofbiz.jar [options]");
             System.out.println("-help, -? ---> This screen");
+            System.out.println("-status -----> Status of the server");
             System.out.println("-shutdown ---> Shutdown the server");
-            System.out.println("[no option] -> Start the server");                                   
+            System.out.println("[no option] -> Start the server");
+        } else if (firstArg.equals("-status")) {
+            System.out.println("Current Status : " + Start.status());                               
         } else if (firstArg.equals("-shutdown")) {
-            Start.shutdown();
+            System.out.println("Shutting down server : " + Start.shutdown());
         } else {
             Start.start(args);
         }                
