@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -492,11 +492,17 @@ function setAssocFields(select) {
         <td><span class="tableheadtext">${uiLabelMap.ProductMethodType}</span></td>
         <td><span class="tableheadtext">${uiLabelMap.ProductParty}</span></td>
         <td><span class="tableheadtext">${uiLabelMap.ProductRole}</span></td>
-        <td><span class="tableheadtext">Min Weight</span></td>
-        <td><span class="tableheadtext">Max Weight</span></td>
-        <td><span class="tableheadtext">Include Features</span></td>
-        <td><span class="tableheadtext">Exclude Features</span></td>
-        <td><span class="tableheadtext">${uiLabelMap.ProductSequence}</span></td>
+        <td><span class="tableheadtext">Min Sz</span></td>
+        <td><span class="tableheadtext">Max Sz</span></td>
+        <td><span class="tableheadtext">Min Wt</span></td>
+        <td><span class="tableheadtext">Max Wt</span></td>
+        <td><span class="tableheadtext">USPS</span></td>
+        <td><span class="tableheadtext">Co</span></td>
+        <td><span class="tableheadtext">Inc Geo</span></td>
+        <td><span class="tableheadtext">Exc Geo</span></td>
+        <td><span class="tableheadtext">Inc Feature</span></td>
+        <td><span class="tableheadtext">Exc Feature</span></td>
+        <td><span class="tableheadtext">Seq</span></td>
         <td>&nbsp;</td>
       </tr>
       <#if storeShipMethods?has_content>
@@ -514,10 +520,16 @@ function setAssocFields(select) {
               <td><span class="tabletext">${meth.description}</span></td>
               <td><span class="tabletext">${meth.partyId}</span></td>
               <td><span class="tabletext">${meth.roleTypeId}</span></td>
-              <td><input type="text" size="5" class="inputBox" name="minWeight" value="${meth.minWeight?if_exists}"></td>
-              <td><input type="text" size="5" class="inputBox" name="maxWeight" value="${meth.maxWeight?if_exists}"></td>
-              <td><input type="text" size="10" class="inputBox" name="includeFeatureGroup" value="${meth.includeFeatureGroup?if_exists}"></td>
-              <td><input type="text" size="10" class="inputBox" name="excludeFeatureGroup" value="${meth.excludeFeatureGroup?if_exists}"></td>
+              <td><span class="tabletext">${meth.minSize?if_exists}</span></td>
+              <td><span class="tabletext">${meth.maxSize?if_exists}</span></td>
+              <td><span class="tabletext">${meth.minWeight?if_exists}</span></td>
+              <td><span class="tabletext">${meth.maxWeight?if_exists}</span></td>
+              <td><span class="tabletext">${meth.allowUspsAddr?default("N")}</span></td>
+              <td><span class="tabletext">${meth.allowCompanyAddr?default("N")}</span></td>
+              <td><span class="tabletext">${meth.includeGeoId?if_exists}</span></td>
+              <td><span class="tabletext">${meth.excludeGeoId?if_exists}</span></td>
+              <td><span class="tabletext">${meth.includeFeatureGroup?if_exists}</span></td>
+              <td><span class="tabletext">${meth.excludeFeatureGroup?if_exists}</span></td>
               <td><input type="text" size="5" class="inputBox" name="sequenceNumber" value="${meth.sequenceNumber?if_exists}"></td>
               <td width='1' align="right">
                 <nobr>
@@ -551,30 +563,93 @@ function setAssocFields(select) {
           </td>
         </tr>
         <tr>
+          <td align="right"><span class="tableheadtext">Min Size</span></td>
+          <td>
+            <input type="text" class="inputBox" name="minSize" size="5">
+            <span class="tabletext">Displays only if smallest product size is equal/greater then this value</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Max Size</span></td>
+          <td>
+            <input type="text" class="inputBox" name="maxSize" size="5">
+            <span class="tabletext">Displays only if largest product size is equal/less then this value</span>
+          </td>
+        </tr>
+        <tr>
           <td align="right"><span class="tableheadtext">Min Weight</span></td>
           <td>
             <input type="text" class="inputBox" name="minWeight" size="5">
-            <span class="tabletext">Displays only if weight is less then this value</span>
+            <span class="tabletext">Displays only if total weight is equal/greater then this value</span>
           </td>
         </tr>
         <tr>
           <td align="right"><span class="tableheadtext">Max Weight</span></td>
           <td>
             <input type="text" class="inputBox" name="maxWeight" size="5">
-            <span class="tabletext">Displays only if weight is greater then this value</span>
+            <span class="tabletext">Displays only if total weight is equal/less then this value</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Include Feature Category</span></td>
+          <td align="right"><span class="tableheadtext">Allow USPS Addr (PO Box, RR, etc)</span></td>
           <td>
-            <input type="text" class="inputBox" name="includeFeatureCat" size="20">
+            <select name="allowUspsAddr" class="selectBox">
+              <option>N</option>
+              <option>Y</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Allow Company Addr</span></td>
+          <td>
+            <select name="allowCompanyAddr" class="selectBox">
+              <option>N</option>
+              <option>Y</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Company Party ID</span></td>
+          <td>
+            <input type="text" class="inputBox" name="companyPartyId" size="20">
+            <span class="tabletext">Used with allow company address</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Include GeoId</span></td>
+          <td>
+            <select name="includeGeoId" class="selectBox">
+              <option></option>
+              <#list geoList as geo>
+                <option value="${geo.geoId}">${geo.geoName}</option>
+              </#list>
+            </select>
+            <span class="tabletext">Displays only if ship-to is in this geo</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Exclude GeoId</span></td>
+          <td>
+            <select name="excludeGeoId" class="selectBox">
+              <option></option>
+              <#list geoList as geo>
+                <option value="${geo.geoId}">${geo.geoName}</option>
+              </#list>
+            </select>
+            <span class="tabletext">Displays only if ship-to is not in this geo</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Include Feature Group</span></td>
+          <td>
+            <input type="text" class="inputBox" name="includeFeatureGroup" size="20">
             <span class="tabletext">Displays only if all items have all features in this group</span>
           </td>
         </tr>
         <tr>
-          <td align="right"><span class="tableheadtext">Exclude Feature Category</span></td>
+          <td align="right"><span class="tableheadtext">Exclude Feature Group</span></td>
           <td>
-            <input type="text" class="inputBox" name="excludeFeatureCat" size="20">
+            <input type="text" class="inputBox" name="excludeFeatureGroup" size="20">
             <span class="tabletext">Displays only if all items have no features in this group</span>
           </td>
         </tr>
