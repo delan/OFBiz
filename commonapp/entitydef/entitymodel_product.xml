@@ -207,6 +207,9 @@
       <relation type="many" rel-entity-name="ProductFeatureCategoryAppl">
         <key-map field-name="productCategoryId"/>
       </relation>
+      <relation type="many" rel-entity-name="ProdCatalogCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
     </entity>
     <entity entity-name="ProductCategoryAttribute"
             package-name="org.ofbiz.commonapp.product.category"
