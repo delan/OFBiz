@@ -421,8 +421,8 @@
         <!-- create/update the response -->
         <if-compare field-name="allowUpdate" map-name="survey" operator="equals" value="Y">
           <if-not-empty field-name="surveyResponseId" map-name="parameters">
-              <make-value value-name="lookupRespMap" entity-name="SurveyResponse"/>
-              <find-by-primary-key map-name="lookupRespMap" value-name="surveyResponse"/>
+              <field-to-field field-name="surveyResponseId" map-name="parameters" to-map-name="lookupRespMap"/>
+              <find-by-primary-key entity-name="SurveyResponse" map-name="lookupRespMap" value-name="surveyResponse"/>
           </if-not-empty>
         </if-compare>
 
@@ -446,14 +446,15 @@
         <!-- lookup any existing response answers -->
         <field-to-field field-name="surveyResponseId" map-name="surveyResponse" to-map-name="lookupRespAns"/>
         <find-by-and list-name="existingAnswers" entity-name="SurveyResponseAnswer" map-name="lookupRespAns"/>
-        <iterate entry-name="existingAnswers" list-name="existingAnswer">
+        <iterate entry-name="existingAnswer" list-name="existingAnswers">
             <field-to-field field-name="existingAnswer" to-field-name="${existingAnswer.surveyQuestionId}" to-map-name="currentAnswers"/>
         </iterate>
+        <log level="always" message="${currentAnswers}"/>
 
         <!-- create the response answers -->
         <iterate entry-name="question" list-name="questions">
             <if-not-empty field-name="currentAnswers">
-                <field-to-field field-name="${question.surveyQuestionId}" map-name="currentAnswers" to-field-name="responseAnswer"/>
+                <field-to-env field-name="${question.surveyQuestionId}" map-name="currentAnswers" env-name="responseAnswer"/>
             </if-not-empty>
 
             <if-empty field-name="responseAnswer">

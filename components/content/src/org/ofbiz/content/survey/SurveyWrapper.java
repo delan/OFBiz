@@ -1,5 +1,5 @@
 /*
- * $Id: SurveyWrapper.java,v 1.4 2003/12/05 21:03:55 ajzeneski Exp $
+ * $Id: SurveyWrapper.java,v 1.5 2003/12/05 22:56:27 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,6 +35,7 @@ import org.ofbiz.base.util.UtilURL;
 import java.util.Map;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.net.URL;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -50,7 +51,7 @@ import freemarker.ext.beans.BeansWrapper;
  * Survey Wrapper - Class to render survey forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class SurveyWrapper {
@@ -58,27 +59,44 @@ public class SurveyWrapper {
     public static final String module = SurveyWrapper.class.getName();
 
     protected GenericDelegator delegator = null;
+    protected String partyId = null;
     protected String surveyId = null;
     protected String templatePath = null;
     protected Map passThru = null;
 
     protected SurveyWrapper() {}
 
-    public SurveyWrapper(GenericDelegator delegator, String surveyId, String templatePath, Map passThru) {
+    public SurveyWrapper(GenericDelegator delegator, String partyId, String surveyId, String templatePath, Map passThru) {
         this.delegator = delegator;
+        this.partyId = partyId;
         this.surveyId = surveyId;
         this.templatePath = templatePath;
         if (passThru != null) {
             this.passThru = new HashMap(passThru);
         }
+        this.checkParameters();
     }
 
-    public String renderSurvey() throws SurveyWrapperException {
+    protected void checkParameters() {
+        if (delegator == null || surveyId == null || templatePath == null) {
+            throw new IllegalArgumentException("Missing one or more required parameters (delegator, surveyId, templatePath");
+        }
+    }
+
+    /**
+     * Renders the Survey
+     * @return Writer object from the parsed Freemarker Tempalte
+     * @throws SurveyWrapperException
+     */
+    public Writer renderSurvey() throws SurveyWrapperException {
         GenericValue survey = this.getSurvey();
         List questions = this.getQuestions();
         Map templateContext = new HashMap();
+        templateContext.put("partyId", partyId);
         templateContext.put("survey", survey);
         templateContext.put("surveyQuestions", questions);
+        templateContext.put("surveyAnswers", this.getAnswers());
+        templateContext.put("surveyResponseId", this.getResponseId());
         templateContext.put("sequenceSort", UtilMisc.toList("sequenceNum"));
         templateContext.put("additionalFields", passThru);
 
@@ -91,9 +109,10 @@ public class SurveyWrapper {
         } catch (IOException e) {
             Debug.logError(e, module);
         }
-        return writer.toString();
+        return writer;
     }
 
+    // returns the GenericValue object for the current Survey
     protected GenericValue getSurvey() {
         GenericValue survey = null;
         try {
@@ -104,6 +123,7 @@ public class SurveyWrapper {
         return survey;
     }
 
+    // returns a list of SurveyQuestions (in order by sequence number) for the current Survey
     protected List getQuestions() {
         List surveyQuestions = null;
         try {
@@ -119,6 +139,7 @@ public class SurveyWrapper {
         return surveyQuestions;
     }
 
+    // returns the FTL Template object
     protected Template getTemplate() {
         URL templateUrl = UtilURL.fromResource(templatePath);
 
@@ -142,6 +163,62 @@ public class SurveyWrapper {
             Debug.logError(e, "Unable to get template from URL :" + templatePath, module);
         }
         return template;
+    }
+
+    // returns the most current SurveyResponse ID for an updateable survey; null if no party or survey cannot be updated
+    protected String getResponseId() {
+        if (partyId == null) {
+            return null;
+        }
+
+        GenericValue survey = this.getSurvey();
+        if (!"Y".equals(survey.getString("allowMultiple")) || !"Y".equals(survey.getString("allowUpdate"))) {
+            // can only update if multiple responses is true and the updateable flag is set
+            return null;
+        }
+
+        String responseId = null;
+        List responses = null;
+        try {
+            responses = delegator.findByAnd("SurveyResponse", UtilMisc.toMap("surveyId", surveyId, "partyId", partyId), UtilMisc.toList("-lastModifiedDate"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        if (responses != null) {
+            GenericValue response = EntityUtil.getFirst(responses);
+            responseId = response.getString("surveyResponseId");
+            if (responses.size() > 1) {
+                Debug.logWarning("More then one response found for survey : " + surveyId + " by party : " + partyId + " using most current", module);
+            }
+        }
+
+        return responseId;
+    }
+
+    // returns a Map of answers keyed on SurveyQuestion ID from the most current SurveyResponse ID
+    protected Map getAnswers() {
+        Map answerMap = new HashMap();
+        String responseId = this.getResponseId();
+
+        if (responseId != null) {
+            List answers = null;
+            try {
+                answers = delegator.findByAnd("SurveyResponseAnswer", UtilMisc.toMap("surveyResponseId", responseId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+
+            if (answers != null && answers.size() > 0) {
+                Iterator i = answers.iterator();
+                while (i.hasNext()) {
+                    GenericValue answer = (GenericValue) i.next();
+                    answerMap.put(answer.get("surveyQuestionId"), answer);
+                }
+            }
+        }
+
+        return answerMap;
     }
 
     class SurveyWrapperException extends GeneralException {
