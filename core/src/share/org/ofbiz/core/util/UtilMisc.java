@@ -23,8 +23,8 @@
  */
 package org.ofbiz.core.util;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import javax.servlet.http.*;
 
 /**
  * UtilMisc - Misc Utility Functions
@@ -298,12 +298,43 @@ public class UtilMisc {
     public static Locale getLocale(HttpServletRequest request) {
         if (request == null)
             return Locale.getDefault();
-        Locale locale = (Locale) request.getSession().getAttribute("locale");
-        if (locale == null)
-            locale = request.getLocale();
-        if (locale == null)
-            locale = Locale.getDefault();
+        Object localeObject = request.getSession().getAttribute("locale");
+        if (localeObject == null) {
+            localeObject = request.getLocale();
+        }
+        if (localeObject != null && localeObject instanceof String) {
+            localeObject = UtilMisc.parseLocale((String) localeObject);
+        } 
+        
+        if (localeObject != null && localeObject instanceof Locale) {
+            return (Locale) localeObject;
+        } else {
+            return Locale.getDefault();
+        }                                
+    }
+    
+    /**
+     * Parse a locale string Locale object     * @param localeString The locale string (en_US)     * @return Locale The new Locale object     */
+    public static Locale parseLocale(String localeString) {
+        if (localeString == null || localeString.length() == 0)
+            return null;
+        
+        List splitList = StringUtil.split(localeString, "_");
+        if (splitList.size() != 2)
+            return null;
+            
+        String language = (String) splitList.get(0);
+        String country = (String) splitList.get(1);
+        
+        Locale locale = new Locale(language, country);
         return locale;
+    }
+    
+    public static void setLocale(HttpServletRequest request, String localeString) {
+        setLocale(request, parseLocale(localeString));        
+    }
+    public static void setLocale(HttpServletRequest request, Locale locale) {
+        request.getSession().setAttribute("locale", locale);        
     }
 
     /** This is meant to be very quick to create and use for small sized maps, perfect for how we usually use UtilMisc.toMap */
