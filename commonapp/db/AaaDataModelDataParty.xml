@@ -61,13 +61,12 @@
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_WORK_SEC" contactMechTypeId="TELECOM_NUMBER"/>
 
   <RoleType description="Not Applicable" hasTable="N" parentTypeId="" roleTypeId="_NA_"/>
+  <RoleType description="Contact" hasTable="N" parentTypeId="" roleTypeId="CONTACT"/>
   <RoleType description="Prospect" hasTable="N" parentTypeId="" roleTypeId="PROSPECT"/>
   <RoleType description="Shareholder" hasTable="N" parentTypeId="" roleTypeId="SHAREHOLDER"/>
   <RoleType description="Person" hasTable="N" parentTypeId="" roleTypeId="PERSON_ROLE"/>
   <RoleType description="Employee" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="EMPLOYEE"/>
-  <RoleType description="Contractor" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="CONTRACTOR"/>
   <RoleType description="Sales Representative" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="SALES_REP"/>
-  <RoleType description="Contact" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="CONTACT"/>
   <RoleType description="Family Member" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="FAMILY_MEMBER"/>
   <RoleType description="Affiliate" hasTable="N" parentTypeId="SALES_REP" roleTypeId="AFFILIATE"/>
   <RoleType description="Manager" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="MANAGER"/>
@@ -76,6 +75,7 @@
   <RoleType description="Stocker" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="STOCKER"/>
   <RoleType description="Worker" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="WORKER"/>
   <RoleType description="Order Clerk" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="ORDER_CLERK"/>
+  <RoleType description="Contractor" hasTable="N" parentTypeId="" roleTypeId="CONTRACTOR"/>
   <RoleType description="Client" hasTable="N" parentTypeId="" roleTypeId="CLIENT"/>
   <RoleType description="Customer" hasTable="N" parentTypeId="" roleTypeId="CUSTOMER"/>
   <RoleType description="End-User Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="END_USER_CUSTOMER"/>
