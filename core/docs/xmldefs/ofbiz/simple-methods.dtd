@@ -540,10 +540,6 @@ simple-map-processor process operations that validate incoming data
     level ( verbose | timing | info | important | warning | error | fatal | always ) #REQUIRED
     message CDATA #IMPLIED
 >
-    <!ELEMENT number EMPTY>
-    <!ATTLIST number
-        value CDATA #REQUIRED
-    >
 
 <!ELEMENT calculate ( ( calcop | number )* )>
 <!ATTLIST calculate
