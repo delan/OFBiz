@@ -880,6 +880,12 @@
         <response name="success" type="view" value="QuickAddVariants"/>
         <response name="error" type="view" value="QuickAddVariants"/>
     </request-map>
+    <request-map uri="QuickAddChosenVariants">
+        <security https="true" auth="true"/>
+        <event type="service-multi" path="" invoke="quickAddVariant" />
+        <response name="success" type="view" value="QuickAddVariants"/>
+        <response name="error" type="view" value="QuickAddVariants"/>
+    </request-map>
 
     <!-- ================ ProdCatalog Requests ================= -->
     <request-map uri="FindProdCatalog">

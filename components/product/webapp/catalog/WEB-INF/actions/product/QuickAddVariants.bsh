@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -84,16 +84,20 @@ context.put("featureTypes", featureTypes);
 context.put("featureTypeSize", featureTypeSize);
 context.put("featureTypeValues", featureTypeValues);
 
+
 featureCombinationInfos = new LinkedList();
 context.put("featureCombinationInfos", featureCombinationInfos);
 
+HashMap defaultVariantProductIds = new HashMap();
+
 boolean carryIncrement = false;
 while (true) {
-	featureCombinationInfo = new HashMap();
-	featureCombinationInfos.add(featureCombinationInfo);
+    featureCombinationInfo = new HashMap();
+    featureCombinationInfos.add(featureCombinationInfo);
 	
     curProductFeatureAndAppls = new ArrayList();
     existingVariantProductIds = new ArrayList();
+    defaultVariantProductId = productId + "_";
     featureCombinationInfo.put("curProductFeatureAndAppls", curProductFeatureAndAppls);
     featureCombinationInfo.put("existingVariantProductIds", existingVariantProductIds);
     
@@ -102,6 +106,13 @@ while (true) {
     for (int featureTypeIndex = 0; featureTypeIndex < featureTypeSize; featureTypeIndex++) {
         featureValues = featureTypeValues.get(featureTypeIndex);
         productFeatureAndAppl = featureValues.get(indices[featureTypeIndex]);
+        idCode = productFeatureAndAppl.getString("idCode");
+        if (idCode != null) {
+            if (idCode.length() > 2) {
+                idCode = idCode.substring(0, 2);
+            }
+            defaultVariantProductId += idCode;
+        }
         // add to list of features for this combination: productFeatureAndAppl
         curProductFeatureAndAppls.add(productFeatureAndAppl);
         // remember featureTypeIndex too? no, use list index for that...
@@ -126,6 +137,17 @@ while (true) {
             }
         }
     }
+    if (defaultVariantProductId.length() > 18) {
+        defaultVariantProductId = defaultVariantProductId.substring(0, 18);
+    }
+    int counter = 0;
+    tmpDefaultVariantProductId = defaultVariantProductId;
+    while (defaultVariantProductIds.containsKey(tmpDefaultVariantProductId) && counter < 100) {
+        tmpDefaultVariantProductId = defaultVariantProductId + (counter < 10? "0": "") + counter;
+        counter++;
+    }
+    defaultVariantProductIds.put(tmpDefaultVariantProductId, null);
+    featureCombinationInfo.put("defaultVariantProductId", tmpDefaultVariantProductId);
 
     // find PRODUCT_VARIANT associations that have these features as STANDARD_FEATUREs
     productAssocs = EntityUtil.filterByDate(delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT")), true);

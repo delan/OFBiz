@@ -1,5 +1,5 @@
 /*
- * $Id: ProductServices.java,v 1.10 2004/07/01 07:57:56 jonesde Exp $
+ * $Id: ProductServices.java,v 1.11 2004/07/01 20:49:22 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ProductServices {
@@ -686,6 +686,82 @@ public class ProductServices {
         }
 
         return sample;
+    }
+
+    public static Map quickAddVariant(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        Map result = new HashMap();
+        Locale locale = (Locale) context.get("locale");
+        String errMsg=null;
+        String productId = (String) context.get("productId");
+        String variantProductId = (String) context.get("productVariantId");
+        String productFeatureIds = (String) context.get("productFeatureIds");
+        
+        try {
+            // read the product, duplicate it with the given id
+            GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+            if (product == null) {
+                Map messageMap = UtilMisc.toMap("productId", productId);
+                errMsg = UtilProperties.getMessage(resource,"productservices.product_not_found_with_ID", messageMap, locale);
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, errMsg);
+                return result;
+            }
+            // check if product exists
+            GenericValue variantProduct = delegator.findByPrimaryKey("Product",UtilMisc.toMap("productId", variantProductId));
+            boolean variantProductExists = (variantProduct != null);
+            if (variantProduct == null) {
+                //if product does not exist
+                variantProduct = new GenericValue(product);
+                variantProduct.set("productId", variantProductId);
+                variantProduct.set("isVirtual", "N");
+                variantProduct.set("isVariant", "Y");
+                variantProduct.set("primaryProductCategoryId", null);
+                //create new
+                variantProduct.create();
+            } else {
+                //if product does exist
+                variantProduct.set("isVirtual", "N");
+                variantProduct.set("isVariant", "Y");
+                variantProduct.set("primaryProductCategoryId", null);
+                //update entry
+                variantProduct.store();
+            }
+            // add an association from productId to variantProductId of the PRODUCT_VARIANT
+            GenericValue productAssoc = delegator.makeValue("ProductAssoc",
+            UtilMisc.toMap("productId", productId, "productIdTo", variantProductId,
+            "productAssocTypeId", "PRODUCT_VARIANT", "fromDate", UtilDateTime.nowTimestamp()));
+            productAssoc.create();
+            
+            // add the selected standard features to the new product given the productFeatureIds
+            java.util.StringTokenizer st = new java.util.StringTokenizer(productFeatureIds, "|");
+            while (st.hasMoreTokens()) {
+                String productFeatureId = st.nextToken();
+               
+                GenericValue productFeature = delegator.findByPrimaryKey("ProductFeature", UtilMisc.toMap("productFeatureId", productFeatureId));
+                
+                GenericValue productFeatureAppl = delegator.makeValue("ProductFeatureAppl",
+                UtilMisc.toMap("productId", variantProductId, "productFeatureId", productFeatureId,
+                "productFeatureApplTypeId", "STANDARD_FEATURE", "fromDate", UtilDateTime.nowTimestamp()));
+                
+                // set the default seq num if it's there...
+                if (productFeature != null) {
+                    productFeatureAppl.set("sequenceNum", productFeature.get("defaultSequenceNum"));
+                }
+                
+                productFeatureAppl.create();
+            }
+            
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Entity error creating quick add variant data", module);
+            Map messageMap = UtilMisc.toMap("errMessage", e.toString());
+            errMsg = UtilProperties.getMessage(resource,"productservices.entity_error_quick_add_variant_data", messageMap, locale);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
+            return result;
+        }
+        result.put("productVariantId", variantProductId);
+        return result;
     }
 
 }

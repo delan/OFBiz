@@ -1776,4 +1776,13 @@
         </required-permissions>
         <auto-attributes mode="IN" include="pk" optional="false"/>              
     </service>
+    <!-- Variant Services -->
+    <service name="quickAddVariant" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="quickAddVariant">
+        <description>Create a new product variant</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureIds" type="String" mode="IN" optional="false"/>
+        <attribute name="productVariantId" type="String" mode="INOUT" optional="false"/>
+    </service>
+
 </services>
