@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE ofbiz-component PUBLIC "-//OFBiz//DTD Component Config//EN" "http://www.ofbiz.org/dtds/ofbiz-component.dtd">
-
-<!--
+<#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -21,12 +18,18 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.4 2003/08/17 10:51:03 jonesde Exp $
+ *
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision: 1.1 $
+ *@since      2.2
 -->
 
-<ofbiz-component name="security">
-    <resource-loader name="main" type="component"/>       
-    <classpath type="jar" loader="main" location="build/lib/*"/>
-    <classpath type="dir" loader="main" location="config"/>
-    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
-</ofbiz-component>
+<html>
+<head>
+</head>
+<body>
+  <div>This email is in response to your request to have <#if useEncryption>a new<#else>your</#if> password sent to you.</div>
+  <br>
+  <div>Your <#if useEncryption>new</#if> password is "${password}"</div>
+</body>
+</html>
