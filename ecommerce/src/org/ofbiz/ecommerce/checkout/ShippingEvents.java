@@ -227,6 +227,7 @@ public class ShippingEvents {
     
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+        String contextRoot=(String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
         String shippingMethod = request.getParameter("shipping_method");
         String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
         String shipmentMethodTypeId = null;
@@ -253,8 +254,9 @@ public class ShippingEvents {
             return "succes";
         }
         if ( estimates == null || estimates.size() < 1 ) {
-            // No shipping rates defined for this option.
-            return "success";
+            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"A problem occured calculating shipping. Fees will be calculated offline.");
+            return "success";            
         }
         
         Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates begin size: " + estimates.size());
@@ -345,22 +347,46 @@ public class ShippingEvents {
                                       
         Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates left after GEO filter: " + estimateList.size());
         
-        if ( estimateList.size() < 1 ) 
+        if ( estimateList.size() < 1 ) {
+            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"A problem occured calculating shipping. Fees will be calculated offline.");
             return "success";
-        
-        // Set the index of the estimate to use.
-        int estIdx = 0;
-        for ( int x = 0; x < estimateList.size(); x++ ) {
-            GenericValue value = (GenericValue) ((List)estimateList).get(x);
-            String toGeo = value.getString("geoIdTo");
-             if ( toGeo.equals(shipAddress.getString("countryGeoId")) || toGeo.equals(shipAddress.getString("stateProvinceGeoId")) || toGeo.equals(shipAddress.getString("postalCodeGeoId")) ) 
-                 estIdx = x;
         }
-                    
-        // Grab the estimate and work with it.                             
-        GenericValue estimate = (GenericValue) ((List)estimateList).get(estIdx);
         
-        Debug.logInfo("[ShippingEvents.getShipEstimate] Working with estimate. ");
+        // Calculate priotity based on available data.
+        double PRIORITY_PARTY = UtilProperties.getPropertyNumber(contextRoot + "/WEB-INF/ecommerce.properties", "shipping.priority.partyId");
+        double PRIORITY_ROLE = UtilProperties.getPropertyNumber(contextRoot + "/WEB-INF/ecommerce.properties", "shipping.priority.roleTypeId");
+        double PRIORITY_GEO = UtilProperties.getPropertyNumber(contextRoot + "/WEB-INF/ecommerce.properties", "shipping.priority.geoId");
+        double PRIORITY_WEIGHT = UtilProperties.getPropertyNumber(contextRoot + "/WEB-INF/ecommerce.properties", "shipping.priority.weightSpan");
+        double PRIORITY_QTY = UtilProperties.getPropertyNumber(contextRoot + "/WEB-INF/ecommerce.properties", "shipping.priority.qtySpan");
+        double PRIORITY_PRICE = UtilProperties.getPropertyNumber(contextRoot + "/WEB-INF/ecommerce.properties", "shipping.priority.priceSpan");
+        
+        int estimateIndex = 0;
+        if ( estimateList.size() > 1 ) {
+            int estimatePriority[] = new int[estimateList.size()];
+            for ( int x = 0; x < estimateList.size(); x++ ) {
+                GenericValue currentEstimate = (GenericValue) estimateList.get(x);
+                if (UtilValidate.isNotEmpty(currentEstimate.getString("partyId")))
+                    estimatePriority[x] += PRIORITY_PARTY;
+                if (UtilValidate.isNotEmpty(currentEstimate.getString("roleTypeId")))
+                    estimatePriority[x] += PRIORITY_ROLE;                        
+                if (UtilValidate.isNotEmpty(currentEstimate.getString("geoIdTo")))
+                    estimatePriority[x] += PRIORITY_GEO;
+                if (UtilValidate.isNotEmpty(currentEstimate.getString("weightBreakId")))
+                    estimatePriority[x] += PRIORITY_WEIGHT;
+                if (UtilValidate.isNotEmpty(currentEstimate.getString("quantityBreakId")))
+                    estimatePriority[x] += PRIORITY_QTY;
+                if (UtilValidate.isNotEmpty(currentEstimate.getString("priceBreakId")))
+                    estimatePriority[x] += PRIORITY_PRICE;
+            }
+            java.util.Arrays.sort(estimatePriority);
+            estimateIndex = estimatePriority.length - 1;
+        }
+                             
+        // Grab the estimate and work with it.                             
+        GenericValue estimate = (GenericValue) estimateList.get(estimateIndex);
+        
+        Debug.logInfo("[ShippingEvents.getShipEstimate] Working with estimate: " + estimateIndex);
                 
         double orderFlat = 0.00;
         if ( estimate.getDouble("orderFlatPrice") != null ) 
