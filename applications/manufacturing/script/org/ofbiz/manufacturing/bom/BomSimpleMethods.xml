@@ -29,6 +29,11 @@
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
     <!-- ProductAssoc -->
     <simple-method method-name="createBOMAssoc" short-description="Create Product to Product Association">
+        <if-empty field-name="fromDate" map-name="parameters">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="parameters"/>
+        </if-empty>
+
         <field-to-field field-name="productId" map-name="parameters" to-field-name="productId" to-map-name="searchDuplicatedAncestorContext" />
         <field-to-field field-name="productIdTo" map-name="parameters" to-field-name="productIdTo" to-map-name="searchDuplicatedAncestorContext" />
         <if-not-empty field-name="fromDate" map-name="parameters">
@@ -57,10 +62,6 @@
         
         <create-value value-name="newEntity"/>
         -->
-        <if-empty field-name="fromDate" map-name="parameters">
-            <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="parameters"/>
-        </if-empty>
         <set-service-fields service-name="createProductAssoc" map-name="parameters" to-map-name="context"/>
         <call-service service-name="createProductAssoc" in-map-name="context"/>
     </simple-method>
