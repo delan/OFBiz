@@ -4,6 +4,8 @@ package org.ofbiz.commonapp.security.securitygroup;
 import java.rmi.*;
 import javax.ejb.*;
 import java.math.*;
+import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Security Component - Security Permission Entity
@@ -29,38 +31,34 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:50 MDT 2001
+ *@created    Sun Jul 08 01:14:06 MDT 2001
  *@version    1.0
  */
 
 public interface SecurityPermission extends EJBObject
 {
-
-  
-  /**
-   *  Get the primary key of the PERMISSION_ID column of the SECURITY_PERMISSION table.
-   */
+  /** Get the primary key of the PERMISSION_ID column of the SECURITY_PERMISSION table. */
   public String getPermissionId() throws RemoteException;
   
-
-  
-  /**
-   *  Get the value of the DESCRIPTION column of the SECURITY_PERMISSION table.
-   */
+  /** Get the value of the DESCRIPTION column of the SECURITY_PERMISSION table. */
   public String getDescription() throws RemoteException;
-  /**
-   *  Set the value of the DESCRIPTION column of the SECURITY_PERMISSION table.
-   */
+  /** Set the value of the DESCRIPTION column of the SECURITY_PERMISSION table. */
   public void setDescription(String description) throws RemoteException;
   
 
-
-  /**
-   *  Get the value object of this SecurityPermission class.
-   */
+  /** Get the value object of this SecurityPermission class. */
   public SecurityPermission getValueObject() throws RemoteException;
-  /**
-   *  Set the values in the value object of this SecurityPermission class.
-   */
+  /** Set the values in the value object of this SecurityPermission class. */
   public void setValueObject(SecurityPermission securityPermissionValue) throws RemoteException;
+
+
+  /** Get a collection of  SecurityGroupPermission related entities. */
+  public Collection getSecurityGroupPermissions() throws RemoteException;
+  /** Get the  SecurityGroupPermission keyed by member(s) of this class, and other passed parameters. */
+  public SecurityGroupPermission getSecurityGroupPermission(String groupId) throws RemoteException;
+  /** Remove  SecurityGroupPermission related entities. */
+  public void removeSecurityGroupPermissions() throws RemoteException;
+  /** Remove the  SecurityGroupPermission keyed by member(s) of this class, and other passed parameters. */
+  public void removeSecurityGroupPermission(String groupId) throws RemoteException;
+
 }

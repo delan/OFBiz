@@ -4,6 +4,8 @@ package org.ofbiz.commonapp.security.securitygroup;
 import java.rmi.*;
 import javax.ejb.*;
 import java.math.*;
+import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Security Component - Security Group Permission Entity
@@ -29,34 +31,33 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:50 MDT 2001
+ *@created    Sun Jul 08 01:14:07 MDT 2001
  *@version    1.0
  */
 
 public interface SecurityGroupPermission extends EJBObject
 {
-
-  
-  /**
-   *  Get the primary key of the GROUP_ID column of the SECURITY_GROUP_PERMISSION table.
-   */
+  /** Get the primary key of the GROUP_ID column of the SECURITY_GROUP_PERMISSION table. */
   public String getGroupId() throws RemoteException;
   
-
-  
-  /**
-   *  Get the primary key of the PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table.
-   */
+  /** Get the primary key of the PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table. */
   public String getPermissionId() throws RemoteException;
   
 
-
-  /**
-   *  Get the value object of this SecurityGroupPermission class.
-   */
+  /** Get the value object of this SecurityGroupPermission class. */
   public SecurityGroupPermission getValueObject() throws RemoteException;
-  /**
-   *  Set the values in the value object of this SecurityGroupPermission class.
-   */
+  /** Set the values in the value object of this SecurityGroupPermission class. */
   public void setValueObject(SecurityGroupPermission securityGroupPermissionValue) throws RemoteException;
+
+
+  /** Get the  SecurityGroup entity corresponding to this entity. */
+  public SecurityGroup getSecurityGroup() throws RemoteException;
+  /** Remove the  SecurityGroup entity corresponding to this entity. */
+  public void removeSecurityGroup() throws RemoteException;  
+
+  /** Get the  SecurityPermission entity corresponding to this entity. */
+  public SecurityPermission getSecurityPermission() throws RemoteException;
+  /** Remove the  SecurityPermission entity corresponding to this entity. */
+  public void removeSecurityPermission() throws RemoteException;  
+
 }

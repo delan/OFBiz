@@ -4,6 +4,8 @@ package org.ofbiz.commonapp.party.party;
 import java.rmi.*;
 import javax.ejb.*;
 import java.math.*;
+import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Party Classification Type Entity
@@ -29,60 +31,58 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:43 MDT 2001
+ *@created    Sun Jul 08 01:14:00 MDT 2001
  *@version    1.0
  */
 
 public interface PartyClassificationType extends EJBObject
 {
-
-  
-  /**
-   *  Get the primary key of the PARTY_CLASSIFICATION_TYPE_ID column of the PARTY_CLASSIFICATION_TYPE table.
-   */
+  /** Get the primary key of the PARTY_CLASSIFICATION_TYPE_ID column of the PARTY_CLASSIFICATION_TYPE table. */
   public String getPartyClassificationTypeId() throws RemoteException;
   
-
-  
-  /**
-   *  Get the value of the PARENT_TYPE_ID column of the PARTY_CLASSIFICATION_TYPE table.
-   */
+  /** Get the value of the PARENT_TYPE_ID column of the PARTY_CLASSIFICATION_TYPE table. */
   public String getParentTypeId() throws RemoteException;
-  /**
-   *  Set the value of the PARENT_TYPE_ID column of the PARTY_CLASSIFICATION_TYPE table.
-   */
+  /** Set the value of the PARENT_TYPE_ID column of the PARTY_CLASSIFICATION_TYPE table. */
   public void setParentTypeId(String parentTypeId) throws RemoteException;
   
-
-  
-  /**
-   *  Get the value of the HAS_TABLE column of the PARTY_CLASSIFICATION_TYPE table.
-   */
+  /** Get the value of the HAS_TABLE column of the PARTY_CLASSIFICATION_TYPE table. */
   public String getHasTable() throws RemoteException;
-  /**
-   *  Set the value of the HAS_TABLE column of the PARTY_CLASSIFICATION_TYPE table.
-   */
+  /** Set the value of the HAS_TABLE column of the PARTY_CLASSIFICATION_TYPE table. */
   public void setHasTable(String hasTable) throws RemoteException;
   
-
-  
-  /**
-   *  Get the value of the DESCRIPTION column of the PARTY_CLASSIFICATION_TYPE table.
-   */
+  /** Get the value of the DESCRIPTION column of the PARTY_CLASSIFICATION_TYPE table. */
   public String getDescription() throws RemoteException;
-  /**
-   *  Set the value of the DESCRIPTION column of the PARTY_CLASSIFICATION_TYPE table.
-   */
+  /** Set the value of the DESCRIPTION column of the PARTY_CLASSIFICATION_TYPE table. */
   public void setDescription(String description) throws RemoteException;
   
 
-
-  /**
-   *  Get the value object of this PartyClassificationType class.
-   */
+  /** Get the value object of this PartyClassificationType class. */
   public PartyClassificationType getValueObject() throws RemoteException;
-  /**
-   *  Set the values in the value object of this PartyClassificationType class.
-   */
+  /** Set the values in the value object of this PartyClassificationType class. */
   public void setValueObject(PartyClassificationType partyClassificationTypeValue) throws RemoteException;
+
+
+  /** Get the  PartyClassificationType entity corresponding to this entity. */
+  public PartyClassificationType getPartyClassificationType() throws RemoteException;
+  /** Remove the  PartyClassificationType entity corresponding to this entity. */
+  public void removePartyClassificationType() throws RemoteException;  
+
+  /** Get a collection of  PartyClassificationType related entities. */
+  public Collection getPartyClassificationTypes() throws RemoteException;
+  /** Get the  PartyClassificationType keyed by member(s) of this class, and other passed parameters. */
+  public PartyClassificationType getPartyClassificationType(String partyClassificationTypeId) throws RemoteException;
+  /** Remove  PartyClassificationType related entities. */
+  public void removePartyClassificationTypes() throws RemoteException;
+  /** Remove the  PartyClassificationType keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyClassificationType(String partyClassificationTypeId) throws RemoteException;
+
+  /** Get a collection of  PartyClassification related entities. */
+  public Collection getPartyClassifications() throws RemoteException;
+  /** Get the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
+  public PartyClassification getPartyClassification(String partyId, String partyTypeId) throws RemoteException;
+  /** Remove  PartyClassification related entities. */
+  public void removePartyClassifications() throws RemoteException;
+  /** Remove the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyClassification(String partyId, String partyTypeId) throws RemoteException;
+
 }

@@ -27,7 +27,7 @@ import java.io.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:51 MDT 2001
+ *@created    Sun Jul 08 01:14:08 MDT 2001
  *@version    1.0
  */
 public class SecurityGroupPermissionPK implements Serializable

@@ -4,6 +4,8 @@ package org.ofbiz.commonapp.security.securitygroup;
 import java.rmi.*;
 import javax.ejb.*;
 import java.math.*;
+import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Security Component - Security Group Entity
@@ -29,38 +31,43 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:49 MDT 2001
+ *@created    Sun Jul 08 01:14:06 MDT 2001
  *@version    1.0
  */
 
 public interface SecurityGroup extends EJBObject
 {
-
-  
-  /**
-   *  Get the primary key of the GROUP_ID column of the SECURITY_GROUP table.
-   */
+  /** Get the primary key of the GROUP_ID column of the SECURITY_GROUP table. */
   public String getGroupId() throws RemoteException;
   
-
-  
-  /**
-   *  Get the value of the DESCRIPTION column of the SECURITY_GROUP table.
-   */
+  /** Get the value of the DESCRIPTION column of the SECURITY_GROUP table. */
   public String getDescription() throws RemoteException;
-  /**
-   *  Set the value of the DESCRIPTION column of the SECURITY_GROUP table.
-   */
+  /** Set the value of the DESCRIPTION column of the SECURITY_GROUP table. */
   public void setDescription(String description) throws RemoteException;
   
 
-
-  /**
-   *  Get the value object of this SecurityGroup class.
-   */
+  /** Get the value object of this SecurityGroup class. */
   public SecurityGroup getValueObject() throws RemoteException;
-  /**
-   *  Set the values in the value object of this SecurityGroup class.
-   */
+  /** Set the values in the value object of this SecurityGroup class. */
   public void setValueObject(SecurityGroup securityGroupValue) throws RemoteException;
+
+
+  /** Get a collection of  UserLoginSecurityGroup related entities. */
+  public Collection getUserLoginSecurityGroups() throws RemoteException;
+  /** Get the  UserLoginSecurityGroup keyed by member(s) of this class, and other passed parameters. */
+  public UserLoginSecurityGroup getUserLoginSecurityGroup(String userLoginId) throws RemoteException;
+  /** Remove  UserLoginSecurityGroup related entities. */
+  public void removeUserLoginSecurityGroups() throws RemoteException;
+  /** Remove the  UserLoginSecurityGroup keyed by member(s) of this class, and other passed parameters. */
+  public void removeUserLoginSecurityGroup(String userLoginId) throws RemoteException;
+
+  /** Get a collection of  SecurityGroupPermission related entities. */
+  public Collection getSecurityGroupPermissions() throws RemoteException;
+  /** Get the  SecurityGroupPermission keyed by member(s) of this class, and other passed parameters. */
+  public SecurityGroupPermission getSecurityGroupPermission(String permissionId) throws RemoteException;
+  /** Remove  SecurityGroupPermission related entities. */
+  public void removeSecurityGroupPermissions() throws RemoteException;
+  /** Remove the  SecurityGroupPermission keyed by member(s) of this class, and other passed parameters. */
+  public void removeSecurityGroupPermission(String permissionId) throws RemoteException;
+
 }

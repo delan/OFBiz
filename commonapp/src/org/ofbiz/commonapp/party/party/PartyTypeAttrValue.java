@@ -3,7 +3,9 @@ package org.ofbiz.commonapp.party.party;
 
 import java.rmi.*;
 import javax.ejb.*;
+import java.util.*;
 import org.ofbiz.commonapp.common.*;
+
 
 /**
  * <p><b>Title:</b> Party Type Attribute Entity
@@ -29,28 +31,20 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:46 MDT 2001
+ *@created    Sun Jul 08 01:14:03 MDT 2001
  *@version    1.0
  */
 public class PartyTypeAttrValue implements PartyTypeAttr
 {
-
-  /**
-   *  The variable of the PARTY_TYPE_ID column of the PARTY_TYPE_ATTR table.
-   */
+  /** The variable of the PARTY_TYPE_ID column of the PARTY_TYPE_ATTR table. */
   private String partyTypeId;
-
-  /**
-   *  The variable of the NAME column of the PARTY_TYPE_ATTR table.
-   */
+  /** The variable of the NAME column of the PARTY_TYPE_ATTR table. */
   private String name;
-
 
   private PartyTypeAttr partyTypeAttr;
 
   public PartyTypeAttrValue()
   {
-
     this.partyTypeId = null;
     this.name = null;
 
@@ -60,8 +54,7 @@ public class PartyTypeAttrValue implements PartyTypeAttr
   public PartyTypeAttrValue(PartyTypeAttr partyTypeAttr) throws RemoteException
   {
     if(partyTypeAttr == null) return;
-
-
+  
     this.partyTypeId = partyTypeAttr.getPartyTypeId();
     this.name = partyTypeAttr.getName();
 
@@ -71,8 +64,7 @@ public class PartyTypeAttrValue implements PartyTypeAttr
   public PartyTypeAttrValue(PartyTypeAttr partyTypeAttr, String partyTypeId, String name)
   {
     if(partyTypeAttr == null) return;
-
-
+  
     this.partyTypeId = partyTypeId;
     this.name = name;
 
@@ -80,30 +72,15 @@ public class PartyTypeAttrValue implements PartyTypeAttr
   }
 
 
-  /**
-   *  Get the primary key of the PARTY_TYPE_ID column of the PARTY_TYPE_ATTR table.
-   */
-  public String getPartyTypeId()  throws RemoteException
-  {
-    return partyTypeId;
-  }
-  
-  /**
-   *  Get the primary key of the NAME column of the PARTY_TYPE_ATTR table.
-   */
-  public String getName()  throws RemoteException
-  {
-    return name;
-  }
-  
+  /** Get the primary key of the PARTY_TYPE_ID column of the PARTY_TYPE_ATTR table. */
+  public String getPartyTypeId()  throws RemoteException { return partyTypeId; }
 
-  /**
-   *  Get the value object of the PartyTypeAttr class.
-   */
+  /** Get the primary key of the NAME column of the PARTY_TYPE_ATTR table. */
+  public String getName()  throws RemoteException { return name; }
+
+  /** Get the value object of the PartyTypeAttr class. */
   public PartyTypeAttr getValueObject() throws RemoteException { return this; }
-  /**
-   *  Set the value object of the PartyTypeAttr class.
-   */
+  /** Set the value object of the PartyTypeAttr class. */
   public void setValueObject(PartyTypeAttr valueObject) throws RemoteException
   {
     if(valueObject == null) return;
@@ -111,12 +88,33 @@ public class PartyTypeAttrValue implements PartyTypeAttr
     if(partyTypeAttr!=null) partyTypeAttr.setValueObject(valueObject);
 
     if(partyTypeId == null) partyTypeId = valueObject.getPartyTypeId();
-  
-  
     if(name == null) name = valueObject.getName();
-  
-  
   }
+
+
+  /** Get the  PartyType entity corresponding to this entity. */
+  public PartyType getPartyType() { return PartyTypeHelper.findByPrimaryKey(partyTypeId); }
+  /** Remove the  PartyType entity corresponding to this entity. */
+  public void removePartyType() { PartyTypeHelper.removeByPrimaryKey(partyTypeId); }
+
+  /** Get a collection of  PartyAttribute related entities. */
+  public Collection getPartyAttributes() { return PartyAttributeHelper.findByName(name); }
+  /** Get the  PartyAttribute keyed by member(s) of this class, and other passed parameters. */
+  public PartyAttribute getPartyAttribute(String partyId) { return PartyAttributeHelper.findByPrimaryKey(partyId, name); }
+  /** Remove  PartyAttribute related entities. */
+  public void removePartyAttributes() { PartyAttributeHelper.removeByName(name); }
+  /** Remove the  PartyAttribute keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyAttribute(String partyId) { PartyAttributeHelper.removeByPrimaryKey(partyId, name); }
+
+  /** Get a collection of  PartyClassification related entities. */
+  public Collection getPartyClassifications() { return PartyClassificationHelper.findByPartyTypeId(partyTypeId); }
+  /** Get the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
+  public PartyClassification getPartyClassification(String partyId) { return PartyClassificationHelper.findByPrimaryKey(partyId, partyTypeId); }
+  /** Remove  PartyClassification related entities. */
+  public void removePartyClassifications() { PartyClassificationHelper.removeByPartyTypeId(partyTypeId); }
+  /** Remove the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyClassification(String partyId) { PartyClassificationHelper.removeByPrimaryKey(partyId, partyTypeId); }
+
 
   //These are from the EJBObject interface, and must at least have thrower implementations, although we do more if the EJBObject is set...
   public EJBHome getEJBHome() throws RemoteException { if(partyTypeAttr!=null) return partyTypeAttr.getEJBHome(); else throw new ValueException("Cannot call getEJBHome, EJBObject is null."); }

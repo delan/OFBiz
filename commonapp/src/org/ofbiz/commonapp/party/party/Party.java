@@ -4,6 +4,9 @@ package org.ofbiz.commonapp.party.party;
 import java.rmi.*;
 import javax.ejb.*;
 import java.math.*;
+import java.util.*;
+
+import org.ofbiz.commonapp.security.login.*;
 
 /**
  * <p><b>Title:</b> Party Entity
@@ -29,27 +32,47 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:40 MDT 2001
+ *@created    Sun Jul 08 01:13:58 MDT 2001
  *@version    1.0
  */
 
 public interface Party extends EJBObject
 {
-
-  
-  /**
-   *  Get the primary key of the PARTY_ID column of the PARTY table.
-   */
+  /** Get the primary key of the PARTY_ID column of the PARTY table. */
   public String getPartyId() throws RemoteException;
   
 
-
-  /**
-   *  Get the value object of this Party class.
-   */
+  /** Get the value object of this Party class. */
   public Party getValueObject() throws RemoteException;
-  /**
-   *  Set the values in the value object of this Party class.
-   */
+  /** Set the values in the value object of this Party class. */
   public void setValueObject(Party partyValue) throws RemoteException;
+
+
+  /** Get a collection of  PartyClassification related entities. */
+  public Collection getPartyClassifications() throws RemoteException;
+  /** Get the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
+  public PartyClassification getPartyClassification(String partyTypeId) throws RemoteException;
+  /** Remove  PartyClassification related entities. */
+  public void removePartyClassifications() throws RemoteException;
+  /** Remove the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyClassification(String partyTypeId) throws RemoteException;
+
+  /** Get a collection of  PartyAttribute related entities. */
+  public Collection getPartyAttributes() throws RemoteException;
+  /** Get the  PartyAttribute keyed by member(s) of this class, and other passed parameters. */
+  public PartyAttribute getPartyAttribute(String name) throws RemoteException;
+  /** Remove  PartyAttribute related entities. */
+  public void removePartyAttributes() throws RemoteException;
+  /** Remove the  PartyAttribute keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyAttribute(String name) throws RemoteException;
+
+  /** Get a collection of  UserLogin related entities. */
+  public Collection getUserLogins() throws RemoteException;
+  /** Get the  UserLogin keyed by member(s) of this class, and other passed parameters. */
+  public UserLogin getUserLogin(String userLoginId) throws RemoteException;
+  /** Remove  UserLogin related entities. */
+  public void removeUserLogins() throws RemoteException;
+  /** Remove the  UserLogin keyed by member(s) of this class, and other passed parameters. */
+  public void removeUserLogin(String userLoginId) throws RemoteException;
+
 }

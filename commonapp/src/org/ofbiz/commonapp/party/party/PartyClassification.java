@@ -4,6 +4,8 @@ package org.ofbiz.commonapp.party.party;
 import java.rmi.*;
 import javax.ejb.*;
 import java.math.*;
+import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Party Classification Entity
@@ -29,67 +31,71 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:42 MDT 2001
+ *@created    Sun Jul 08 01:13:59 MDT 2001
  *@version    1.0
  */
 
 public interface PartyClassification extends EJBObject
 {
-
-  
-  /**
-   *  Get the primary key of the PARTY_ID column of the PARTY_CLASSIFICATION table.
-   */
+  /** Get the primary key of the PARTY_ID column of the PARTY_CLASSIFICATION table. */
   public String getPartyId() throws RemoteException;
   
-
-  
-  /**
-   *  Get the primary key of the PARTY_TYPE_ID column of the PARTY_CLASSIFICATION table.
-   */
+  /** Get the primary key of the PARTY_TYPE_ID column of the PARTY_CLASSIFICATION table. */
   public String getPartyTypeId() throws RemoteException;
   
-
-  
-  /**
-   *  Get the value of the PARTY_CLASSIFICATION_TYPE_ID column of the PARTY_CLASSIFICATION table.
-   */
+  /** Get the value of the PARTY_CLASSIFICATION_TYPE_ID column of the PARTY_CLASSIFICATION table. */
   public String getPartyClassificationTypeId() throws RemoteException;
-  /**
-   *  Set the value of the PARTY_CLASSIFICATION_TYPE_ID column of the PARTY_CLASSIFICATION table.
-   */
+  /** Set the value of the PARTY_CLASSIFICATION_TYPE_ID column of the PARTY_CLASSIFICATION table. */
   public void setPartyClassificationTypeId(String partyClassificationTypeId) throws RemoteException;
   
-
-  
-  /**
-   *  Get the value of the FROM_DATE column of the PARTY_CLASSIFICATION table.
-   */
+  /** Get the value of the FROM_DATE column of the PARTY_CLASSIFICATION table. */
   public java.util.Date getFromDate() throws RemoteException;
-  /**
-   *  Set the value of the FROM_DATE column of the PARTY_CLASSIFICATION table.
-   */
+  /** Set the value of the FROM_DATE column of the PARTY_CLASSIFICATION table. */
   public void setFromDate(java.util.Date fromDate) throws RemoteException;
   
-
-  
-  /**
-   *  Get the value of the THRU_DATE column of the PARTY_CLASSIFICATION table.
-   */
+  /** Get the value of the THRU_DATE column of the PARTY_CLASSIFICATION table. */
   public java.util.Date getThruDate() throws RemoteException;
-  /**
-   *  Set the value of the THRU_DATE column of the PARTY_CLASSIFICATION table.
-   */
+  /** Set the value of the THRU_DATE column of the PARTY_CLASSIFICATION table. */
   public void setThruDate(java.util.Date thruDate) throws RemoteException;
   
 
-
-  /**
-   *  Get the value object of this PartyClassification class.
-   */
+  /** Get the value object of this PartyClassification class. */
   public PartyClassification getValueObject() throws RemoteException;
-  /**
-   *  Set the values in the value object of this PartyClassification class.
-   */
+  /** Set the values in the value object of this PartyClassification class. */
   public void setValueObject(PartyClassification partyClassificationValue) throws RemoteException;
+
+
+  /** Get the  Party entity corresponding to this entity. */
+  public Party getParty() throws RemoteException;
+  /** Remove the  Party entity corresponding to this entity. */
+  public void removeParty() throws RemoteException;  
+
+  /** Get the  PartyType entity corresponding to this entity. */
+  public PartyType getPartyType() throws RemoteException;
+  /** Remove the  PartyType entity corresponding to this entity. */
+  public void removePartyType() throws RemoteException;  
+
+  /** Get the  PartyClassificationType entity corresponding to this entity. */
+  public PartyClassificationType getPartyClassificationType() throws RemoteException;
+  /** Remove the  PartyClassificationType entity corresponding to this entity. */
+  public void removePartyClassificationType() throws RemoteException;  
+
+  /** Get a collection of  PartyTypeAttr related entities. */
+  public Collection getPartyTypeAttrs() throws RemoteException;
+  /** Get the  PartyTypeAttr keyed by member(s) of this class, and other passed parameters. */
+  public PartyTypeAttr getPartyTypeAttr(String name) throws RemoteException;
+  /** Remove  PartyTypeAttr related entities. */
+  public void removePartyTypeAttrs() throws RemoteException;
+  /** Remove the  PartyTypeAttr keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyTypeAttr(String name) throws RemoteException;
+
+  /** Get a collection of  PartyAttribute related entities. */
+  public Collection getPartyAttributes() throws RemoteException;
+  /** Get the  PartyAttribute keyed by member(s) of this class, and other passed parameters. */
+  public PartyAttribute getPartyAttribute(String name) throws RemoteException;
+  /** Remove  PartyAttribute related entities. */
+  public void removePartyAttributes() throws RemoteException;
+  /** Remove the  PartyAttribute keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyAttribute(String name) throws RemoteException;
+
 }

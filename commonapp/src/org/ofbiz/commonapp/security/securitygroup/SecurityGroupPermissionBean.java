@@ -4,6 +4,8 @@ package org.ofbiz.commonapp.security.securitygroup;
 import java.rmi.*;
 import javax.ejb.*;
 import java.math.*;
+import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Security Component - Security Group Permission Entity
@@ -29,71 +31,38 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:51 MDT 2001
+ *@created    Sun Jul 08 01:14:08 MDT 2001
  *@version    1.0
  */
 public class SecurityGroupPermissionBean implements EntityBean
 {
-
-  /**
-   *  The variable for the GROUP_ID column of the SECURITY_GROUP_PERMISSION table.
-   */
+  /** The variable for the GROUP_ID column of the SECURITY_GROUP_PERMISSION table. */
   public String groupId;
-
-  /**
-   *  The variable for the PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table.
-   */
+  /** The variable for the PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table. */
   public String permissionId;
 
-
   EntityContext entityContext;
+  boolean ejbIsModified = false;
 
-  /**
-   *  Sets the EntityContext attribute of the SecurityGroupPermissionBean object
-   *
+  /** Sets the EntityContext attribute of the SecurityGroupPermissionBean object
    *@param  entityContext  The new EntityContext value
    */
-  public void setEntityContext(EntityContext entityContext)
-  {
-    this.entityContext = entityContext;
-  }
+  public void setEntityContext(EntityContext entityContext) { this.entityContext = entityContext; }
 
+  /** Get the primary key GROUP_ID column of the SECURITY_GROUP_PERMISSION table. */
+  public String getGroupId() { return groupId; }
 
+  /** Get the primary key PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table. */
+  public String getPermissionId() { return permissionId; }
 
-  
-  /**
-   *  Get the primary key GROUP_ID column of the SECURITY_GROUP_PERMISSION table.
-   */
-  public String getGroupId()
-  {
-    return groupId;
-  }
-  
-
-  
-  /**
-   *  Get the primary key PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table.
-   */
-  public String getPermissionId()
-  {
-    return permissionId;
-  }
-  
-
-
-  /**
-   *  Sets the values from ValueObject attribute of the SecurityGroupPermissionBean object
-   *
-   *@param  valueObject  The new ValueObject value
+  /** Sets the values from ValueObject attribute of the SecurityGroupPermissionBean object
+   *@param  valueObject  The new ValueObject value 
    */
   public void setValueObject(SecurityGroupPermission valueObject)
   {
-
   }
 
-  /**
-   *  Gets the ValueObject attribute of the SecurityGroupPermissionBean object
-   *
+  /** Gets the ValueObject attribute of the SecurityGroupPermissionBean object
    *@return    The ValueObject value
    */
   public SecurityGroupPermission getValueObject()
@@ -102,16 +71,22 @@ public class SecurityGroupPermissionBean implements EntityBean
     {
       return new SecurityGroupPermissionValue((SecurityGroupPermission)this.entityContext.getEJBObject(), groupId, permissionId);
     }
-    else
-    {
-      return null;
-    }
+    else { return null; }
   }
 
-  /**
-   *  Description of the Method
-   *
 
+  /** Get the  SecurityGroup entity corresponding to this entity. */
+  public SecurityGroup getSecurityGroup() { return SecurityGroupHelper.findByPrimaryKey(groupId); }
+  /** Remove the  SecurityGroup entity corresponding to this entity. */
+  public void removeSecurityGroup() { SecurityGroupHelper.removeByPrimaryKey(groupId); }
+
+  /** Get the  SecurityPermission entity corresponding to this entity. */
+  public SecurityPermission getSecurityPermission() { return SecurityPermissionHelper.findByPrimaryKey(permissionId); }
+  /** Remove the  SecurityPermission entity corresponding to this entity. */
+  public void removeSecurityPermission() { SecurityPermissionHelper.removeByPrimaryKey(permissionId); }
+
+
+  /** Description of the Method
    *@param  groupId                  Field of the GROUP_ID column.
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@return                      Description of the Returned Value
@@ -119,66 +94,38 @@ public class SecurityGroupPermissionBean implements EntityBean
    */
   public org.ofbiz.commonapp.security.securitygroup.SecurityGroupPermissionPK ejbCreate(String groupId, String permissionId) throws CreateException
   {
-
     this.groupId = groupId;
     this.permissionId = permissionId;
     return null;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  groupId                  Field of the GROUP_ID column.
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@exception  CreateException  Description of Exception
    */
-  public void ejbPostCreate(String groupId, String permissionId) throws CreateException
-  {
-  }
+  public void ejbPostCreate(String groupId, String permissionId) throws CreateException {}
 
-  /**
-   *  Called when the entity bean is removed.
-   *
+  /** Called when the entity bean is removed.
    *@exception  RemoveException  Description of Exception
    */
-  public void ejbRemove() throws RemoveException
-  {
-  }
+  public void ejbRemove() throws RemoveException {}
 
-  /**
-   *  Called when the entity bean is activated.
-   */
-  public void ejbActivate()
-  {
-  }
+  /** Called when the entity bean is activated. */
+  public void ejbActivate() {}
 
-  /**
-   *  Called when the entity bean is passivated.
-   */
-  public void ejbPassivate()
-  {
-  }
+  /** Called when the entity bean is passivated. */
+  public void ejbPassivate() {}
 
-  /**
-   *  Called when the entity bean is loaded.
-   */
-  public void ejbLoad()
-  {
-  }
+  /** Called when the entity bean is loaded. */
+  public void ejbLoad() { ejbIsModified = false; }
 
-  /**
-   *  Called when the entity bean is stored.
-   */
-  public void ejbStore()
-  {
-  }
+  /** Called when the entity bean is stored. */
+  public void ejbStore() { ejbIsModified = false; }
 
-  /**
-   *  Unsets the EntityContext, ie sets it to null.
-   */
-  public void unsetEntityContext()
-  {
-    entityContext = null;
-  }
+  /** Called to check if the entity bean needs to be stored. */
+  public boolean isModified() { return ejbIsModified; }
+
+  /** Unsets the EntityContext, ie sets it to null. */
+  public void unsetEntityContext() { entityContext = null; }
 }

@@ -39,7 +39,7 @@
 <%@ include file="/includes/onecolumn.jsp" %> 
 <br>
 <h2 style='margin:0;'>Very boring main page!</h2>
-<p>For something interesting, see the site map.</p>
+<p>For something interesting, see the site map (and make sure you are logged in: try username:admin, password:ofbiz).</p>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>

@@ -3,7 +3,10 @@ package org.ofbiz.commonapp.party.party;
 
 import java.rmi.*;
 import javax.ejb.*;
+import java.util.*;
 import org.ofbiz.commonapp.common.*;
+
+import org.ofbiz.commonapp.security.login.*;
 
 /**
  * <p><b>Title:</b> Party Entity
@@ -29,23 +32,18 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:41 MDT 2001
+ *@created    Sun Jul 08 01:13:59 MDT 2001
  *@version    1.0
  */
 public class PartyValue implements Party
 {
-
-  /**
-   *  The variable of the PARTY_ID column of the PARTY table.
-   */
+  /** The variable of the PARTY_ID column of the PARTY table. */
   private String partyId;
-
 
   private Party party;
 
   public PartyValue()
   {
-
     this.partyId = null;
 
     this.party = null;
@@ -54,8 +52,7 @@ public class PartyValue implements Party
   public PartyValue(Party party) throws RemoteException
   {
     if(party == null) return;
-
-
+  
     this.partyId = party.getPartyId();
 
     this.party = party;
@@ -64,30 +61,19 @@ public class PartyValue implements Party
   public PartyValue(Party party, String partyId)
   {
     if(party == null) return;
-
-
+  
     this.partyId = partyId;
 
     this.party = party;
   }
 
 
-  /**
-   *  Get the primary key of the PARTY_ID column of the PARTY table.
-   */
-  public String getPartyId()  throws RemoteException
-  {
-    return partyId;
-  }
-  
+  /** Get the primary key of the PARTY_ID column of the PARTY table. */
+  public String getPartyId()  throws RemoteException { return partyId; }
 
-  /**
-   *  Get the value object of the Party class.
-   */
+  /** Get the value object of the Party class. */
   public Party getValueObject() throws RemoteException { return this; }
-  /**
-   *  Set the value object of the Party class.
-   */
+  /** Set the value object of the Party class. */
   public void setValueObject(Party valueObject) throws RemoteException
   {
     if(valueObject == null) return;
@@ -95,9 +81,36 @@ public class PartyValue implements Party
     if(party!=null) party.setValueObject(valueObject);
 
     if(partyId == null) partyId = valueObject.getPartyId();
-  
-  
   }
+
+
+  /** Get a collection of  PartyClassification related entities. */
+  public Collection getPartyClassifications() { return PartyClassificationHelper.findByPartyId(partyId); }
+  /** Get the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
+  public PartyClassification getPartyClassification(String partyTypeId) { return PartyClassificationHelper.findByPrimaryKey(partyId, partyTypeId); }
+  /** Remove  PartyClassification related entities. */
+  public void removePartyClassifications() { PartyClassificationHelper.removeByPartyId(partyId); }
+  /** Remove the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyClassification(String partyTypeId) { PartyClassificationHelper.removeByPrimaryKey(partyId, partyTypeId); }
+
+  /** Get a collection of  PartyAttribute related entities. */
+  public Collection getPartyAttributes() { return PartyAttributeHelper.findByPartyId(partyId); }
+  /** Get the  PartyAttribute keyed by member(s) of this class, and other passed parameters. */
+  public PartyAttribute getPartyAttribute(String name) { return PartyAttributeHelper.findByPrimaryKey(partyId, name); }
+  /** Remove  PartyAttribute related entities. */
+  public void removePartyAttributes() { PartyAttributeHelper.removeByPartyId(partyId); }
+  /** Remove the  PartyAttribute keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyAttribute(String name) { PartyAttributeHelper.removeByPrimaryKey(partyId, name); }
+
+  /** Get a collection of  UserLogin related entities. */
+  public Collection getUserLogins() { return UserLoginHelper.findByPartyId(partyId); }
+  /** Get the  UserLogin keyed by member(s) of this class, and other passed parameters. */
+  public UserLogin getUserLogin(String userLoginId) { return UserLoginHelper.findByPrimaryKey(userLoginId); }
+  /** Remove  UserLogin related entities. */
+  public void removeUserLogins() { UserLoginHelper.removeByPartyId(partyId); }
+  /** Remove the  UserLogin keyed by member(s) of this class, and other passed parameters. */
+  public void removeUserLogin(String userLoginId) { UserLoginHelper.removeByPrimaryKey(userLoginId); }
+
 
   //These are from the EJBObject interface, and must at least have thrower implementations, although we do more if the EJBObject is set...
   public EJBHome getEJBHome() throws RemoteException { if(party!=null) return party.getEJBHome(); else throw new ValueException("Cannot call getEJBHome, EJBObject is null."); }

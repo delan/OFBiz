@@ -4,6 +4,8 @@ package org.ofbiz.commonapp.security.securitygroup;
 import java.rmi.*;
 import javax.ejb.*;
 import java.math.*;
+import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Security Component - Security Permission Entity
@@ -29,92 +31,59 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:50 MDT 2001
+ *@created    Sun Jul 08 01:14:07 MDT 2001
  *@version    1.0
  */
 public class SecurityPermissionBean implements EntityBean
 {
-
-  /**
-   *  The variable for the PERMISSION_ID column of the SECURITY_PERMISSION table.
-   */
+  /** The variable for the PERMISSION_ID column of the SECURITY_PERMISSION table. */
   public String permissionId;
-
-  /**
-   *  The variable for the DESCRIPTION column of the SECURITY_PERMISSION table.
-   */
+  /** The variable for the DESCRIPTION column of the SECURITY_PERMISSION table. */
   public String description;
 
-
   EntityContext entityContext;
+  boolean ejbIsModified = false;
 
-  /**
-   *  Sets the EntityContext attribute of the SecurityPermissionBean object
-   *
+  /** Sets the EntityContext attribute of the SecurityPermissionBean object
    *@param  entityContext  The new EntityContext value
    */
-  public void setEntityContext(EntityContext entityContext)
-  {
-    this.entityContext = entityContext;
-  }
+  public void setEntityContext(EntityContext entityContext) { this.entityContext = entityContext; }
 
+  /** Get the primary key PERMISSION_ID column of the SECURITY_PERMISSION table. */
+  public String getPermissionId() { return permissionId; }
 
-
-  
-  /**
-   *  Get the primary key PERMISSION_ID column of the SECURITY_PERMISSION table.
-   */
-  public String getPermissionId()
-  {
-    return permissionId;
-  }
-  
-
-  
-  /**
-   *  Get the value of the DESCRIPTION column of the SECURITY_PERMISSION table.
-   */
-  public String getDescription()
-  {
-    return description;
-  }
-  /**
-   *  Set the value of the DESCRIPTION column of the SECURITY_PERMISSION table.
-   */
+  /** Get the value of the DESCRIPTION column of the SECURITY_PERMISSION table. */
+  public String getDescription() { return description; }
+  /** Set the value of the DESCRIPTION column of the SECURITY_PERMISSION table. */
   public void setDescription(String description)
   {
     this.description = description;
+    ejbIsModified = true;
   }
-  
 
-
-  /**
-   *  Sets the values from ValueObject attribute of the SecurityPermissionBean object
-   *
-   *@param  valueObject  The new ValueObject value
+  /** Sets the values from ValueObject attribute of the SecurityPermissionBean object
+   *@param  valueObject  The new ValueObject value 
    */
   public void setValueObject(SecurityPermission valueObject)
   {
-
     try
     {
       //check for null and if null do not set; this is the method for not setting certain fields while setting the rest quickly
       // to set a field to null, use the individual setters
-    
       if(valueObject.getDescription() != null)
+      {
         this.description = valueObject.getDescription();
+        ejbIsModified = true;
+      }
     }
     catch(java.rmi.RemoteException re)
     {
       //This should NEVER happen just calling getters on a value object, so do nothing.
       //The only reason these methods are declated to throw a RemoteException is to implement the corresponding EJBObject interface.
     }
-
   }
 
-  /**
-   *  Gets the ValueObject attribute of the SecurityPermissionBean object
-   *
+  /** Gets the ValueObject attribute of the SecurityPermissionBean object
    *@return    The ValueObject value
    */
   public SecurityPermission getValueObject()
@@ -123,16 +92,21 @@ public class SecurityPermissionBean implements EntityBean
     {
       return new SecurityPermissionValue((SecurityPermission)this.entityContext.getEJBObject(), permissionId, description);
     }
-    else
-    {
-      return null;
-    }
+    else { return null; }
   }
 
-  /**
-   *  Description of the Method
-   *
 
+  /** Get a collection of  SecurityGroupPermission related entities. */
+  public Collection getSecurityGroupPermissions() { return SecurityGroupPermissionHelper.findByPermissionId(permissionId); }
+  /** Get the  SecurityGroupPermission keyed by member(s) of this class, and other passed parameters. */
+  public SecurityGroupPermission getSecurityGroupPermission(String groupId) { return SecurityGroupPermissionHelper.findByPrimaryKey(groupId, permissionId); }
+  /** Remove  SecurityGroupPermission related entities. */
+  public void removeSecurityGroupPermissions() { SecurityGroupPermissionHelper.removeByPermissionId(permissionId); }
+  /** Remove the  SecurityGroupPermission keyed by member(s) of this class, and other passed parameters. */
+  public void removeSecurityGroupPermission(String groupId) { SecurityGroupPermissionHelper.removeByPrimaryKey(groupId, permissionId); }
+
+
+  /** Description of the Method
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@param  description                  Field of the DESCRIPTION column.
    *@return                      Description of the Returned Value
@@ -140,16 +114,12 @@ public class SecurityPermissionBean implements EntityBean
    */
   public java.lang.String ejbCreate(String permissionId, String description) throws CreateException
   {
-
     this.permissionId = permissionId;
     this.description = description;
     return null;
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@return                      Description of the Returned Value
    *@exception  CreateException  Description of Exception
@@ -159,22 +129,14 @@ public class SecurityPermissionBean implements EntityBean
     return ejbCreate(permissionId, null);
   }
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@param  description                  Field of the DESCRIPTION column.
    *@exception  CreateException  Description of Exception
    */
-  public void ejbPostCreate(String permissionId, String description) throws CreateException
-  {
-  }
+  public void ejbPostCreate(String permissionId, String description) throws CreateException {}
 
-  /**
-   *  Description of the Method
-   *
-
+  /** Description of the Method
    *@param  permissionId                  Field of the PERMISSION_ID column.
    *@exception  CreateException  Description of Exception
    */
@@ -183,48 +145,26 @@ public class SecurityPermissionBean implements EntityBean
     ejbPostCreate(permissionId, null);
   }
 
-  /**
-   *  Called when the entity bean is removed.
-   *
+  /** Called when the entity bean is removed.
    *@exception  RemoveException  Description of Exception
    */
-  public void ejbRemove() throws RemoveException
-  {
-  }
+  public void ejbRemove() throws RemoveException {}
 
-  /**
-   *  Called when the entity bean is activated.
-   */
-  public void ejbActivate()
-  {
-  }
+  /** Called when the entity bean is activated. */
+  public void ejbActivate() {}
 
-  /**
-   *  Called when the entity bean is passivated.
-   */
-  public void ejbPassivate()
-  {
-  }
+  /** Called when the entity bean is passivated. */
+  public void ejbPassivate() {}
 
-  /**
-   *  Called when the entity bean is loaded.
-   */
-  public void ejbLoad()
-  {
-  }
+  /** Called when the entity bean is loaded. */
+  public void ejbLoad() { ejbIsModified = false; }
 
-  /**
-   *  Called when the entity bean is stored.
-   */
-  public void ejbStore()
-  {
-  }
+  /** Called when the entity bean is stored. */
+  public void ejbStore() { ejbIsModified = false; }
 
-  /**
-   *  Unsets the EntityContext, ie sets it to null.
-   */
-  public void unsetEntityContext()
-  {
-    entityContext = null;
-  }
+  /** Called to check if the entity bean needs to be stored. */
+  public boolean isModified() { return ejbIsModified; }
+
+  /** Unsets the EntityContext, ie sets it to null. */
+  public void unsetEntityContext() { entityContext = null; }
 }

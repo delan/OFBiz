@@ -3,7 +3,10 @@ package org.ofbiz.commonapp.security.securitygroup;
 
 import java.rmi.*;
 import javax.ejb.*;
+import java.util.*;
 import org.ofbiz.commonapp.common.*;
+
+import org.ofbiz.commonapp.security.login.*;
 
 /**
  * <p><b>Title:</b> Security Component - User Login Security Group Entity
@@ -29,28 +32,20 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:52 MDT 2001
+ *@created    Sun Jul 08 01:14:09 MDT 2001
  *@version    1.0
  */
 public class UserLoginSecurityGroupValue implements UserLoginSecurityGroup
 {
-
-  /**
-   *  The variable of the USER_LOGIN_ID column of the USER_LOGIN_SECURITY_GROUP table.
-   */
+  /** The variable of the USER_LOGIN_ID column of the USER_LOGIN_SECURITY_GROUP table. */
   private String userLoginId;
-
-  /**
-   *  The variable of the GROUP_ID column of the USER_LOGIN_SECURITY_GROUP table.
-   */
+  /** The variable of the GROUP_ID column of the USER_LOGIN_SECURITY_GROUP table. */
   private String groupId;
-
 
   private UserLoginSecurityGroup userLoginSecurityGroup;
 
   public UserLoginSecurityGroupValue()
   {
-
     this.userLoginId = null;
     this.groupId = null;
 
@@ -60,8 +55,7 @@ public class UserLoginSecurityGroupValue implements UserLoginSecurityGroup
   public UserLoginSecurityGroupValue(UserLoginSecurityGroup userLoginSecurityGroup) throws RemoteException
   {
     if(userLoginSecurityGroup == null) return;
-
-
+  
     this.userLoginId = userLoginSecurityGroup.getUserLoginId();
     this.groupId = userLoginSecurityGroup.getGroupId();
 
@@ -71,8 +65,7 @@ public class UserLoginSecurityGroupValue implements UserLoginSecurityGroup
   public UserLoginSecurityGroupValue(UserLoginSecurityGroup userLoginSecurityGroup, String userLoginId, String groupId)
   {
     if(userLoginSecurityGroup == null) return;
-
-
+  
     this.userLoginId = userLoginId;
     this.groupId = groupId;
 
@@ -80,30 +73,15 @@ public class UserLoginSecurityGroupValue implements UserLoginSecurityGroup
   }
 
 
-  /**
-   *  Get the primary key of the USER_LOGIN_ID column of the USER_LOGIN_SECURITY_GROUP table.
-   */
-  public String getUserLoginId()  throws RemoteException
-  {
-    return userLoginId;
-  }
-  
-  /**
-   *  Get the primary key of the GROUP_ID column of the USER_LOGIN_SECURITY_GROUP table.
-   */
-  public String getGroupId()  throws RemoteException
-  {
-    return groupId;
-  }
-  
+  /** Get the primary key of the USER_LOGIN_ID column of the USER_LOGIN_SECURITY_GROUP table. */
+  public String getUserLoginId()  throws RemoteException { return userLoginId; }
 
-  /**
-   *  Get the value object of the UserLoginSecurityGroup class.
-   */
+  /** Get the primary key of the GROUP_ID column of the USER_LOGIN_SECURITY_GROUP table. */
+  public String getGroupId()  throws RemoteException { return groupId; }
+
+  /** Get the value object of the UserLoginSecurityGroup class. */
   public UserLoginSecurityGroup getValueObject() throws RemoteException { return this; }
-  /**
-   *  Set the value object of the UserLoginSecurityGroup class.
-   */
+  /** Set the value object of the UserLoginSecurityGroup class. */
   public void setValueObject(UserLoginSecurityGroup valueObject) throws RemoteException
   {
     if(valueObject == null) return;
@@ -111,12 +89,29 @@ public class UserLoginSecurityGroupValue implements UserLoginSecurityGroup
     if(userLoginSecurityGroup!=null) userLoginSecurityGroup.setValueObject(valueObject);
 
     if(userLoginId == null) userLoginId = valueObject.getUserLoginId();
-  
-  
     if(groupId == null) groupId = valueObject.getGroupId();
-  
-  
   }
+
+
+  /** Get the  UserLogin entity corresponding to this entity. */
+  public UserLogin getUserLogin() { return UserLoginHelper.findByPrimaryKey(userLoginId); }
+  /** Remove the  UserLogin entity corresponding to this entity. */
+  public void removeUserLogin() { UserLoginHelper.removeByPrimaryKey(userLoginId); }
+
+  /** Get the  SecurityGroup entity corresponding to this entity. */
+  public SecurityGroup getSecurityGroup() { return SecurityGroupHelper.findByPrimaryKey(groupId); }
+  /** Remove the  SecurityGroup entity corresponding to this entity. */
+  public void removeSecurityGroup() { SecurityGroupHelper.removeByPrimaryKey(groupId); }
+
+  /** Get a collection of  SecurityGroupPermission related entities. */
+  public Collection getSecurityGroupPermissions() { return SecurityGroupPermissionHelper.findByGroupId(groupId); }
+  /** Get the  SecurityGroupPermission keyed by member(s) of this class, and other passed parameters. */
+  public SecurityGroupPermission getSecurityGroupPermission(String permissionId) { return SecurityGroupPermissionHelper.findByPrimaryKey(groupId, permissionId); }
+  /** Remove  SecurityGroupPermission related entities. */
+  public void removeSecurityGroupPermissions() { SecurityGroupPermissionHelper.removeByGroupId(groupId); }
+  /** Remove the  SecurityGroupPermission keyed by member(s) of this class, and other passed parameters. */
+  public void removeSecurityGroupPermission(String permissionId) { SecurityGroupPermissionHelper.removeByPrimaryKey(groupId, permissionId); }
+
 
   //These are from the EJBObject interface, and must at least have thrower implementations, although we do more if the EJBObject is set...
   public EJBHome getEJBHome() throws RemoteException { if(userLoginSecurityGroup!=null) return userLoginSecurityGroup.getEJBHome(); else throw new ValueException("Cannot call getEJBHome, EJBObject is null."); }

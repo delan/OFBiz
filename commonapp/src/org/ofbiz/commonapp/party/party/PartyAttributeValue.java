@@ -3,7 +3,9 @@ package org.ofbiz.commonapp.party.party;
 
 import java.rmi.*;
 import javax.ejb.*;
+import java.util.*;
 import org.ofbiz.commonapp.common.*;
+
 
 /**
  * <p><b>Title:</b> Party Attribute Entity
@@ -29,33 +31,22 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:45 MDT 2001
+ *@created    Sun Jul 08 01:14:02 MDT 2001
  *@version    1.0
  */
 public class PartyAttributeValue implements PartyAttribute
 {
-
-  /**
-   *  The variable of the PARTY_ID column of the PARTY_ATTRIBUTE table.
-   */
+  /** The variable of the PARTY_ID column of the PARTY_ATTRIBUTE table. */
   private String partyId;
-
-  /**
-   *  The variable of the NAME column of the PARTY_ATTRIBUTE table.
-   */
+  /** The variable of the NAME column of the PARTY_ATTRIBUTE table. */
   private String name;
-
-  /**
-   *  The variable of the VALUE column of the PARTY_ATTRIBUTE table.
-   */
+  /** The variable of the VALUE column of the PARTY_ATTRIBUTE table. */
   private String value;
-
 
   private PartyAttribute partyAttribute;
 
   public PartyAttributeValue()
   {
-
     this.partyId = null;
     this.name = null;
     this.value = null;
@@ -66,8 +57,7 @@ public class PartyAttributeValue implements PartyAttribute
   public PartyAttributeValue(PartyAttribute partyAttribute) throws RemoteException
   {
     if(partyAttribute == null) return;
-
-
+  
     this.partyId = partyAttribute.getPartyId();
     this.name = partyAttribute.getName();
     this.value = partyAttribute.getValue();
@@ -78,8 +68,7 @@ public class PartyAttributeValue implements PartyAttribute
   public PartyAttributeValue(PartyAttribute partyAttribute, String partyId, String name, String value)
   {
     if(partyAttribute == null) return;
-
-
+  
     this.partyId = partyId;
     this.name = name;
     this.value = value;
@@ -88,46 +77,24 @@ public class PartyAttributeValue implements PartyAttribute
   }
 
 
-  /**
-   *  Get the primary key of the PARTY_ID column of the PARTY_ATTRIBUTE table.
-   */
-  public String getPartyId()  throws RemoteException
-  {
-    return partyId;
-  }
-  
-  /**
-   *  Get the primary key of the NAME column of the PARTY_ATTRIBUTE table.
-   */
-  public String getName()  throws RemoteException
-  {
-    return name;
-  }
-  
-  /**
-   *  Get the value of the VALUE column of the PARTY_ATTRIBUTE table.
-   */
-  public String getValue() throws RemoteException
-  {
-    return value;
-  }
-  /**
-   *  Set the value of the VALUE column of the PARTY_ATTRIBUTE table.
-   */
+  /** Get the primary key of the PARTY_ID column of the PARTY_ATTRIBUTE table. */
+  public String getPartyId()  throws RemoteException { return partyId; }
+
+  /** Get the primary key of the NAME column of the PARTY_ATTRIBUTE table. */
+  public String getName()  throws RemoteException { return name; }
+
+  /** Get the value of the VALUE column of the PARTY_ATTRIBUTE table. */
+  public String getValue() throws RemoteException { return value; }
+  /** Set the value of the VALUE column of the PARTY_ATTRIBUTE table. */
   public void setValue(String value) throws RemoteException
   {
     this.value = value;
     if(partyAttribute!=null) partyAttribute.setValue(value);
   }
-  
 
-  /**
-   *  Get the value object of the PartyAttribute class.
-   */
+  /** Get the value object of the PartyAttribute class. */
   public PartyAttribute getValueObject() throws RemoteException { return this; }
-  /**
-   *  Set the value object of the PartyAttribute class.
-   */
+  /** Set the value object of the PartyAttribute class. */
   public void setValueObject(PartyAttribute valueObject) throws RemoteException
   {
     if(valueObject == null) return;
@@ -135,14 +102,25 @@ public class PartyAttributeValue implements PartyAttribute
     if(partyAttribute!=null) partyAttribute.setValueObject(valueObject);
 
     if(partyId == null) partyId = valueObject.getPartyId();
-  
-  
     if(name == null) name = valueObject.getName();
-  
-  
     value = valueObject.getValue();
-  
   }
+
+
+  /** Get the  Party entity corresponding to this entity. */
+  public Party getParty() { return PartyHelper.findByPrimaryKey(partyId); }
+  /** Remove the  Party entity corresponding to this entity. */
+  public void removeParty() { PartyHelper.removeByPrimaryKey(partyId); }
+
+  /** Get a collection of  PartyTypeAttr related entities. */
+  public Collection getPartyTypeAttrs() { return PartyTypeAttrHelper.findByName(name); }
+  /** Get the  PartyTypeAttr keyed by member(s) of this class, and other passed parameters. */
+  public PartyTypeAttr getPartyTypeAttr(String partyTypeId) { return PartyTypeAttrHelper.findByPrimaryKey(partyTypeId, name); }
+  /** Remove  PartyTypeAttr related entities. */
+  public void removePartyTypeAttrs() { PartyTypeAttrHelper.removeByName(name); }
+  /** Remove the  PartyTypeAttr keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyTypeAttr(String partyTypeId) { PartyTypeAttrHelper.removeByPrimaryKey(partyTypeId, name); }
+
 
   //These are from the EJBObject interface, and must at least have thrower implementations, although we do more if the EJBObject is set...
   public EJBHome getEJBHome() throws RemoteException { if(partyAttribute!=null) return partyAttribute.getEJBHome(); else throw new ValueException("Cannot call getEJBHome, EJBObject is null."); }

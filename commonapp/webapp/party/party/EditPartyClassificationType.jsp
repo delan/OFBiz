@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 06 16:51:31 MDT 2001
+ *@created    Fri Jul 06 18:25:18 MDT 2001
  *@version    1.0
  */
 %>
@@ -147,7 +147,7 @@
     <td>HAS_TABLE</td>
     <td>
     
-      <input type="text" size="0" maxlength="0" name="PARTY_CLASSIFICATION_TYPE_HAS_TABLE" value="<%if(partyClassificationType!=null){%><%=UtilFormatOut.checkNull(partyClassificationType.getHasTable())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PARTY_CLASSIFICATION_TYPE_HAS_TABLE"))%><%}%>">
+      <input type="text" size="1" maxlength="1" name="PARTY_CLASSIFICATION_TYPE_HAS_TABLE" value="<%if(partyClassificationType!=null){%><%=UtilFormatOut.checkNull(partyClassificationType.getHasTable())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PARTY_CLASSIFICATION_TYPE_HAS_TABLE"))%><%}%>">
     
     </td>
   </tr>

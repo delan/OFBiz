@@ -3,7 +3,11 @@ package org.ofbiz.commonapp.security.login;
 
 import java.rmi.*;
 import javax.ejb.*;
+import java.util.*;
 import org.ofbiz.commonapp.common.*;
+
+import org.ofbiz.commonapp.party.party.*;
+import org.ofbiz.commonapp.security.securitygroup.*;
 
 /**
  * <p><b>Title:</b> User Login Entity
@@ -29,43 +33,26 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:47 MDT 2001
+ *@created    Sun Jul 08 01:14:04 MDT 2001
  *@version    1.0
  */
 public class UserLoginValue implements UserLogin
 {
-
-  /**
-   *  The variable of the USER_LOGIN_ID column of the USER_LOGIN table.
-   */
+  /** The variable of the USER_LOGIN_ID column of the USER_LOGIN table. */
   private String userLoginId;
-
-  /**
-   *  The variable of the PARTY_ID column of the USER_LOGIN table.
-   */
+  /** The variable of the PARTY_ID column of the USER_LOGIN table. */
   private String partyId;
-
-  /**
-   *  The variable of the CONTACT_MECHANISM_ID column of the USER_LOGIN table.
-   */
+  /** The variable of the CONTACT_MECHANISM_ID column of the USER_LOGIN table. */
   private String contactMechanismId;
-
-  /**
-   *  The variable of the CURRENT_USER_ID column of the USER_LOGIN table.
-   */
+  /** The variable of the CURRENT_USER_ID column of the USER_LOGIN table. */
   private String currentUserId;
-
-  /**
-   *  The variable of the CURRENT_PASSWORD column of the USER_LOGIN table.
-   */
+  /** The variable of the CURRENT_PASSWORD column of the USER_LOGIN table. */
   private String currentPassword;
-
 
   private UserLogin userLogin;
 
   public UserLoginValue()
   {
-
     this.userLoginId = null;
     this.partyId = null;
     this.contactMechanismId = null;
@@ -78,8 +65,7 @@ public class UserLoginValue implements UserLogin
   public UserLoginValue(UserLogin userLogin) throws RemoteException
   {
     if(userLogin == null) return;
-
-
+  
     this.userLoginId = userLogin.getUserLoginId();
     this.partyId = userLogin.getPartyId();
     this.contactMechanismId = userLogin.getContactMechanismId();
@@ -92,8 +78,7 @@ public class UserLoginValue implements UserLogin
   public UserLoginValue(UserLogin userLogin, String userLoginId, String partyId, String contactMechanismId, String currentUserId, String currentPassword)
   {
     if(userLogin == null) return;
-
-
+  
     this.userLoginId = userLoginId;
     this.partyId = partyId;
     this.contactMechanismId = contactMechanismId;
@@ -104,86 +89,48 @@ public class UserLoginValue implements UserLogin
   }
 
 
-  /**
-   *  Get the primary key of the USER_LOGIN_ID column of the USER_LOGIN table.
-   */
-  public String getUserLoginId()  throws RemoteException
-  {
-    return userLoginId;
-  }
-  
-  /**
-   *  Get the value of the PARTY_ID column of the USER_LOGIN table.
-   */
-  public String getPartyId() throws RemoteException
-  {
-    return partyId;
-  }
-  /**
-   *  Set the value of the PARTY_ID column of the USER_LOGIN table.
-   */
+  /** Get the primary key of the USER_LOGIN_ID column of the USER_LOGIN table. */
+  public String getUserLoginId()  throws RemoteException { return userLoginId; }
+
+  /** Get the value of the PARTY_ID column of the USER_LOGIN table. */
+  public String getPartyId() throws RemoteException { return partyId; }
+  /** Set the value of the PARTY_ID column of the USER_LOGIN table. */
   public void setPartyId(String partyId) throws RemoteException
   {
     this.partyId = partyId;
     if(userLogin!=null) userLogin.setPartyId(partyId);
   }
-  
-  /**
-   *  Get the value of the CONTACT_MECHANISM_ID column of the USER_LOGIN table.
-   */
-  public String getContactMechanismId() throws RemoteException
-  {
-    return contactMechanismId;
-  }
-  /**
-   *  Set the value of the CONTACT_MECHANISM_ID column of the USER_LOGIN table.
-   */
+
+  /** Get the value of the CONTACT_MECHANISM_ID column of the USER_LOGIN table. */
+  public String getContactMechanismId() throws RemoteException { return contactMechanismId; }
+  /** Set the value of the CONTACT_MECHANISM_ID column of the USER_LOGIN table. */
   public void setContactMechanismId(String contactMechanismId) throws RemoteException
   {
     this.contactMechanismId = contactMechanismId;
     if(userLogin!=null) userLogin.setContactMechanismId(contactMechanismId);
   }
-  
-  /**
-   *  Get the value of the CURRENT_USER_ID column of the USER_LOGIN table.
-   */
-  public String getCurrentUserId() throws RemoteException
-  {
-    return currentUserId;
-  }
-  /**
-   *  Set the value of the CURRENT_USER_ID column of the USER_LOGIN table.
-   */
+
+  /** Get the value of the CURRENT_USER_ID column of the USER_LOGIN table. */
+  public String getCurrentUserId() throws RemoteException { return currentUserId; }
+  /** Set the value of the CURRENT_USER_ID column of the USER_LOGIN table. */
   public void setCurrentUserId(String currentUserId) throws RemoteException
   {
     this.currentUserId = currentUserId;
     if(userLogin!=null) userLogin.setCurrentUserId(currentUserId);
   }
-  
-  /**
-   *  Get the value of the CURRENT_PASSWORD column of the USER_LOGIN table.
-   */
-  public String getCurrentPassword() throws RemoteException
-  {
-    return currentPassword;
-  }
-  /**
-   *  Set the value of the CURRENT_PASSWORD column of the USER_LOGIN table.
-   */
+
+  /** Get the value of the CURRENT_PASSWORD column of the USER_LOGIN table. */
+  public String getCurrentPassword() throws RemoteException { return currentPassword; }
+  /** Set the value of the CURRENT_PASSWORD column of the USER_LOGIN table. */
   public void setCurrentPassword(String currentPassword) throws RemoteException
   {
     this.currentPassword = currentPassword;
     if(userLogin!=null) userLogin.setCurrentPassword(currentPassword);
   }
-  
 
-  /**
-   *  Get the value object of the UserLogin class.
-   */
+  /** Get the value object of the UserLogin class. */
   public UserLogin getValueObject() throws RemoteException { return this; }
-  /**
-   *  Set the value object of the UserLogin class.
-   */
+  /** Set the value object of the UserLogin class. */
   public void setValueObject(UserLogin valueObject) throws RemoteException
   {
     if(valueObject == null) return;
@@ -191,17 +138,36 @@ public class UserLoginValue implements UserLogin
     if(userLogin!=null) userLogin.setValueObject(valueObject);
 
     if(userLoginId == null) userLoginId = valueObject.getUserLoginId();
-  
-  
     partyId = valueObject.getPartyId();
-  
     contactMechanismId = valueObject.getContactMechanismId();
-  
     currentUserId = valueObject.getCurrentUserId();
-  
     currentPassword = valueObject.getCurrentPassword();
-  
   }
+
+
+  /** Get the  Party entity corresponding to this entity. */
+  public Party getParty() { return PartyHelper.findByPrimaryKey(partyId); }
+  /** Remove the  Party entity corresponding to this entity. */
+  public void removeParty() { PartyHelper.removeByPrimaryKey(partyId); }
+
+  /** Get a collection of  UserLoginSecurityGroup related entities. */
+  public Collection getUserLoginSecurityGroups() { return UserLoginSecurityGroupHelper.findByUserLoginId(userLoginId); }
+  /** Get the  UserLoginSecurityGroup keyed by member(s) of this class, and other passed parameters. */
+  public UserLoginSecurityGroup getUserLoginSecurityGroup(String groupId) { return UserLoginSecurityGroupHelper.findByPrimaryKey(userLoginId, groupId); }
+  /** Remove  UserLoginSecurityGroup related entities. */
+  public void removeUserLoginSecurityGroups() { UserLoginSecurityGroupHelper.removeByUserLoginId(userLoginId); }
+  /** Remove the  UserLoginSecurityGroup keyed by member(s) of this class, and other passed parameters. */
+  public void removeUserLoginSecurityGroup(String groupId) { UserLoginSecurityGroupHelper.removeByPrimaryKey(userLoginId, groupId); }
+
+  /** Get a collection of  LoginAccountHistory related entities. */
+  public Collection getLoginAccountHistorys() { return LoginAccountHistoryHelper.findByUserLoginId(userLoginId); }
+  /** Get the  LoginAccountHistory keyed by member(s) of this class, and other passed parameters. */
+  public LoginAccountHistory getLoginAccountHistory(String userLoginSeqId) { return LoginAccountHistoryHelper.findByPrimaryKey(userLoginId, userLoginSeqId); }
+  /** Remove  LoginAccountHistory related entities. */
+  public void removeLoginAccountHistorys() { LoginAccountHistoryHelper.removeByUserLoginId(userLoginId); }
+  /** Remove the  LoginAccountHistory keyed by member(s) of this class, and other passed parameters. */
+  public void removeLoginAccountHistory(String userLoginSeqId) { LoginAccountHistoryHelper.removeByPrimaryKey(userLoginId, userLoginSeqId); }
+
 
   //These are from the EJBObject interface, and must at least have thrower implementations, although we do more if the EJBObject is set...
   public EJBHome getEJBHome() throws RemoteException { if(userLogin!=null) return userLogin.getEJBHome(); else throw new ValueException("Cannot call getEJBHome, EJBObject is null."); }

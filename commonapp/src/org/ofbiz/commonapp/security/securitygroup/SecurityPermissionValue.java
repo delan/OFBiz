@@ -3,7 +3,9 @@ package org.ofbiz.commonapp.security.securitygroup;
 
 import java.rmi.*;
 import javax.ejb.*;
+import java.util.*;
 import org.ofbiz.commonapp.common.*;
+
 
 /**
  * <p><b>Title:</b> Security Component - Security Permission Entity
@@ -29,28 +31,20 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:50 MDT 2001
+ *@created    Sun Jul 08 01:14:07 MDT 2001
  *@version    1.0
  */
 public class SecurityPermissionValue implements SecurityPermission
 {
-
-  /**
-   *  The variable of the PERMISSION_ID column of the SECURITY_PERMISSION table.
-   */
+  /** The variable of the PERMISSION_ID column of the SECURITY_PERMISSION table. */
   private String permissionId;
-
-  /**
-   *  The variable of the DESCRIPTION column of the SECURITY_PERMISSION table.
-   */
+  /** The variable of the DESCRIPTION column of the SECURITY_PERMISSION table. */
   private String description;
-
 
   private SecurityPermission securityPermission;
 
   public SecurityPermissionValue()
   {
-
     this.permissionId = null;
     this.description = null;
 
@@ -60,8 +54,7 @@ public class SecurityPermissionValue implements SecurityPermission
   public SecurityPermissionValue(SecurityPermission securityPermission) throws RemoteException
   {
     if(securityPermission == null) return;
-
-
+  
     this.permissionId = securityPermission.getPermissionId();
     this.description = securityPermission.getDescription();
 
@@ -71,8 +64,7 @@ public class SecurityPermissionValue implements SecurityPermission
   public SecurityPermissionValue(SecurityPermission securityPermission, String permissionId, String description)
   {
     if(securityPermission == null) return;
-
-
+  
     this.permissionId = permissionId;
     this.description = description;
 
@@ -80,38 +72,21 @@ public class SecurityPermissionValue implements SecurityPermission
   }
 
 
-  /**
-   *  Get the primary key of the PERMISSION_ID column of the SECURITY_PERMISSION table.
-   */
-  public String getPermissionId()  throws RemoteException
-  {
-    return permissionId;
-  }
-  
-  /**
-   *  Get the value of the DESCRIPTION column of the SECURITY_PERMISSION table.
-   */
-  public String getDescription() throws RemoteException
-  {
-    return description;
-  }
-  /**
-   *  Set the value of the DESCRIPTION column of the SECURITY_PERMISSION table.
-   */
+  /** Get the primary key of the PERMISSION_ID column of the SECURITY_PERMISSION table. */
+  public String getPermissionId()  throws RemoteException { return permissionId; }
+
+  /** Get the value of the DESCRIPTION column of the SECURITY_PERMISSION table. */
+  public String getDescription() throws RemoteException { return description; }
+  /** Set the value of the DESCRIPTION column of the SECURITY_PERMISSION table. */
   public void setDescription(String description) throws RemoteException
   {
     this.description = description;
     if(securityPermission!=null) securityPermission.setDescription(description);
   }
-  
 
-  /**
-   *  Get the value object of the SecurityPermission class.
-   */
+  /** Get the value object of the SecurityPermission class. */
   public SecurityPermission getValueObject() throws RemoteException { return this; }
-  /**
-   *  Set the value object of the SecurityPermission class.
-   */
+  /** Set the value object of the SecurityPermission class. */
   public void setValueObject(SecurityPermission valueObject) throws RemoteException
   {
     if(valueObject == null) return;
@@ -119,11 +94,19 @@ public class SecurityPermissionValue implements SecurityPermission
     if(securityPermission!=null) securityPermission.setValueObject(valueObject);
 
     if(permissionId == null) permissionId = valueObject.getPermissionId();
-  
-  
     description = valueObject.getDescription();
-  
   }
+
+
+  /** Get a collection of  SecurityGroupPermission related entities. */
+  public Collection getSecurityGroupPermissions() { return SecurityGroupPermissionHelper.findByPermissionId(permissionId); }
+  /** Get the  SecurityGroupPermission keyed by member(s) of this class, and other passed parameters. */
+  public SecurityGroupPermission getSecurityGroupPermission(String groupId) { return SecurityGroupPermissionHelper.findByPrimaryKey(groupId, permissionId); }
+  /** Remove  SecurityGroupPermission related entities. */
+  public void removeSecurityGroupPermissions() { SecurityGroupPermissionHelper.removeByPermissionId(permissionId); }
+  /** Remove the  SecurityGroupPermission keyed by member(s) of this class, and other passed parameters. */
+  public void removeSecurityGroupPermission(String groupId) { SecurityGroupPermissionHelper.removeByPrimaryKey(groupId, permissionId); }
+
 
   //These are from the EJBObject interface, and must at least have thrower implementations, although we do more if the EJBObject is set...
   public EJBHome getEJBHome() throws RemoteException { if(securityPermission!=null) return securityPermission.getEJBHome(); else throw new ValueException("Cannot call getEJBHome, EJBObject is null."); }

@@ -4,6 +4,8 @@ package org.ofbiz.commonapp.party.party;
 import java.rmi.*;
 import javax.ejb.*;
 import java.math.*;
+import java.util.*;
+
 
 /**
  * <p><b>Title:</b> Party Attribute Entity
@@ -29,45 +31,42 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:45 MDT 2001
+ *@created    Sun Jul 08 01:14:02 MDT 2001
  *@version    1.0
  */
 
 public interface PartyAttribute extends EJBObject
 {
-
-  
-  /**
-   *  Get the primary key of the PARTY_ID column of the PARTY_ATTRIBUTE table.
-   */
+  /** Get the primary key of the PARTY_ID column of the PARTY_ATTRIBUTE table. */
   public String getPartyId() throws RemoteException;
   
-
-  
-  /**
-   *  Get the primary key of the NAME column of the PARTY_ATTRIBUTE table.
-   */
+  /** Get the primary key of the NAME column of the PARTY_ATTRIBUTE table. */
   public String getName() throws RemoteException;
   
-
-  
-  /**
-   *  Get the value of the VALUE column of the PARTY_ATTRIBUTE table.
-   */
+  /** Get the value of the VALUE column of the PARTY_ATTRIBUTE table. */
   public String getValue() throws RemoteException;
-  /**
-   *  Set the value of the VALUE column of the PARTY_ATTRIBUTE table.
-   */
+  /** Set the value of the VALUE column of the PARTY_ATTRIBUTE table. */
   public void setValue(String value) throws RemoteException;
   
 
-
-  /**
-   *  Get the value object of this PartyAttribute class.
-   */
+  /** Get the value object of this PartyAttribute class. */
   public PartyAttribute getValueObject() throws RemoteException;
-  /**
-   *  Set the values in the value object of this PartyAttribute class.
-   */
+  /** Set the values in the value object of this PartyAttribute class. */
   public void setValueObject(PartyAttribute partyAttributeValue) throws RemoteException;
+
+
+  /** Get the  Party entity corresponding to this entity. */
+  public Party getParty() throws RemoteException;
+  /** Remove the  Party entity corresponding to this entity. */
+  public void removeParty() throws RemoteException;  
+
+  /** Get a collection of  PartyTypeAttr related entities. */
+  public Collection getPartyTypeAttrs() throws RemoteException;
+  /** Get the  PartyTypeAttr keyed by member(s) of this class, and other passed parameters. */
+  public PartyTypeAttr getPartyTypeAttr(String partyTypeId) throws RemoteException;
+  /** Remove  PartyTypeAttr related entities. */
+  public void removePartyTypeAttrs() throws RemoteException;
+  /** Remove the  PartyTypeAttr keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyTypeAttr(String partyTypeId) throws RemoteException;
+
 }

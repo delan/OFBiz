@@ -3,7 +3,9 @@ package org.ofbiz.commonapp.party.party;
 
 import java.rmi.*;
 import javax.ejb.*;
+import java.util.*;
 import org.ofbiz.commonapp.common.*;
+
 
 /**
  * <p><b>Title:</b> Party Classification Entity
@@ -29,43 +31,26 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:42 MDT 2001
+ *@created    Sun Jul 08 01:14:00 MDT 2001
  *@version    1.0
  */
 public class PartyClassificationValue implements PartyClassification
 {
-
-  /**
-   *  The variable of the PARTY_ID column of the PARTY_CLASSIFICATION table.
-   */
+  /** The variable of the PARTY_ID column of the PARTY_CLASSIFICATION table. */
   private String partyId;
-
-  /**
-   *  The variable of the PARTY_TYPE_ID column of the PARTY_CLASSIFICATION table.
-   */
+  /** The variable of the PARTY_TYPE_ID column of the PARTY_CLASSIFICATION table. */
   private String partyTypeId;
-
-  /**
-   *  The variable of the PARTY_CLASSIFICATION_TYPE_ID column of the PARTY_CLASSIFICATION table.
-   */
+  /** The variable of the PARTY_CLASSIFICATION_TYPE_ID column of the PARTY_CLASSIFICATION table. */
   private String partyClassificationTypeId;
-
-  /**
-   *  The variable of the FROM_DATE column of the PARTY_CLASSIFICATION table.
-   */
+  /** The variable of the FROM_DATE column of the PARTY_CLASSIFICATION table. */
   private java.util.Date fromDate;
-
-  /**
-   *  The variable of the THRU_DATE column of the PARTY_CLASSIFICATION table.
-   */
+  /** The variable of the THRU_DATE column of the PARTY_CLASSIFICATION table. */
   private java.util.Date thruDate;
-
 
   private PartyClassification partyClassification;
 
   public PartyClassificationValue()
   {
-
     this.partyId = null;
     this.partyTypeId = null;
     this.partyClassificationTypeId = null;
@@ -78,8 +63,7 @@ public class PartyClassificationValue implements PartyClassification
   public PartyClassificationValue(PartyClassification partyClassification) throws RemoteException
   {
     if(partyClassification == null) return;
-
-
+  
     this.partyId = partyClassification.getPartyId();
     this.partyTypeId = partyClassification.getPartyTypeId();
     this.partyClassificationTypeId = partyClassification.getPartyClassificationTypeId();
@@ -92,8 +76,7 @@ public class PartyClassificationValue implements PartyClassification
   public PartyClassificationValue(PartyClassification partyClassification, String partyId, String partyTypeId, String partyClassificationTypeId, java.util.Date fromDate, java.util.Date thruDate)
   {
     if(partyClassification == null) return;
-
-
+  
     this.partyId = partyId;
     this.partyTypeId = partyTypeId;
     this.partyClassificationTypeId = partyClassificationTypeId;
@@ -104,78 +87,42 @@ public class PartyClassificationValue implements PartyClassification
   }
 
 
-  /**
-   *  Get the primary key of the PARTY_ID column of the PARTY_CLASSIFICATION table.
-   */
-  public String getPartyId()  throws RemoteException
-  {
-    return partyId;
-  }
-  
-  /**
-   *  Get the primary key of the PARTY_TYPE_ID column of the PARTY_CLASSIFICATION table.
-   */
-  public String getPartyTypeId()  throws RemoteException
-  {
-    return partyTypeId;
-  }
-  
-  /**
-   *  Get the value of the PARTY_CLASSIFICATION_TYPE_ID column of the PARTY_CLASSIFICATION table.
-   */
-  public String getPartyClassificationTypeId() throws RemoteException
-  {
-    return partyClassificationTypeId;
-  }
-  /**
-   *  Set the value of the PARTY_CLASSIFICATION_TYPE_ID column of the PARTY_CLASSIFICATION table.
-   */
+  /** Get the primary key of the PARTY_ID column of the PARTY_CLASSIFICATION table. */
+  public String getPartyId()  throws RemoteException { return partyId; }
+
+  /** Get the primary key of the PARTY_TYPE_ID column of the PARTY_CLASSIFICATION table. */
+  public String getPartyTypeId()  throws RemoteException { return partyTypeId; }
+
+  /** Get the value of the PARTY_CLASSIFICATION_TYPE_ID column of the PARTY_CLASSIFICATION table. */
+  public String getPartyClassificationTypeId() throws RemoteException { return partyClassificationTypeId; }
+  /** Set the value of the PARTY_CLASSIFICATION_TYPE_ID column of the PARTY_CLASSIFICATION table. */
   public void setPartyClassificationTypeId(String partyClassificationTypeId) throws RemoteException
   {
     this.partyClassificationTypeId = partyClassificationTypeId;
     if(partyClassification!=null) partyClassification.setPartyClassificationTypeId(partyClassificationTypeId);
   }
-  
-  /**
-   *  Get the value of the FROM_DATE column of the PARTY_CLASSIFICATION table.
-   */
-  public java.util.Date getFromDate() throws RemoteException
-  {
-    return fromDate;
-  }
-  /**
-   *  Set the value of the FROM_DATE column of the PARTY_CLASSIFICATION table.
-   */
+
+  /** Get the value of the FROM_DATE column of the PARTY_CLASSIFICATION table. */
+  public java.util.Date getFromDate() throws RemoteException { return fromDate; }
+  /** Set the value of the FROM_DATE column of the PARTY_CLASSIFICATION table. */
   public void setFromDate(java.util.Date fromDate) throws RemoteException
   {
     this.fromDate = fromDate;
     if(partyClassification!=null) partyClassification.setFromDate(fromDate);
   }
-  
-  /**
-   *  Get the value of the THRU_DATE column of the PARTY_CLASSIFICATION table.
-   */
-  public java.util.Date getThruDate() throws RemoteException
-  {
-    return thruDate;
-  }
-  /**
-   *  Set the value of the THRU_DATE column of the PARTY_CLASSIFICATION table.
-   */
+
+  /** Get the value of the THRU_DATE column of the PARTY_CLASSIFICATION table. */
+  public java.util.Date getThruDate() throws RemoteException { return thruDate; }
+  /** Set the value of the THRU_DATE column of the PARTY_CLASSIFICATION table. */
   public void setThruDate(java.util.Date thruDate) throws RemoteException
   {
     this.thruDate = thruDate;
     if(partyClassification!=null) partyClassification.setThruDate(thruDate);
   }
-  
 
-  /**
-   *  Get the value object of the PartyClassification class.
-   */
+  /** Get the value object of the PartyClassification class. */
   public PartyClassification getValueObject() throws RemoteException { return this; }
-  /**
-   *  Set the value object of the PartyClassification class.
-   */
+  /** Set the value object of the PartyClassification class. */
   public void setValueObject(PartyClassification valueObject) throws RemoteException
   {
     if(valueObject == null) return;
@@ -183,18 +130,46 @@ public class PartyClassificationValue implements PartyClassification
     if(partyClassification!=null) partyClassification.setValueObject(valueObject);
 
     if(partyId == null) partyId = valueObject.getPartyId();
-  
-  
     if(partyTypeId == null) partyTypeId = valueObject.getPartyTypeId();
-  
-  
     partyClassificationTypeId = valueObject.getPartyClassificationTypeId();
-  
     fromDate = valueObject.getFromDate();
-  
     thruDate = valueObject.getThruDate();
-  
   }
+
+
+  /** Get the  Party entity corresponding to this entity. */
+  public Party getParty() { return PartyHelper.findByPrimaryKey(partyId); }
+  /** Remove the  Party entity corresponding to this entity. */
+  public void removeParty() { PartyHelper.removeByPrimaryKey(partyId); }
+
+  /** Get the  PartyType entity corresponding to this entity. */
+  public PartyType getPartyType() { return PartyTypeHelper.findByPrimaryKey(partyTypeId); }
+  /** Remove the  PartyType entity corresponding to this entity. */
+  public void removePartyType() { PartyTypeHelper.removeByPrimaryKey(partyTypeId); }
+
+  /** Get the  PartyClassificationType entity corresponding to this entity. */
+  public PartyClassificationType getPartyClassificationType() { return PartyClassificationTypeHelper.findByPrimaryKey(partyClassificationTypeId); }
+  /** Remove the  PartyClassificationType entity corresponding to this entity. */
+  public void removePartyClassificationType() { PartyClassificationTypeHelper.removeByPrimaryKey(partyClassificationTypeId); }
+
+  /** Get a collection of  PartyTypeAttr related entities. */
+  public Collection getPartyTypeAttrs() { return PartyTypeAttrHelper.findByPartyTypeId(partyTypeId); }
+  /** Get the  PartyTypeAttr keyed by member(s) of this class, and other passed parameters. */
+  public PartyTypeAttr getPartyTypeAttr(String name) { return PartyTypeAttrHelper.findByPrimaryKey(partyTypeId, name); }
+  /** Remove  PartyTypeAttr related entities. */
+  public void removePartyTypeAttrs() { PartyTypeAttrHelper.removeByPartyTypeId(partyTypeId); }
+  /** Remove the  PartyTypeAttr keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyTypeAttr(String name) { PartyTypeAttrHelper.removeByPrimaryKey(partyTypeId, name); }
+
+  /** Get a collection of  PartyAttribute related entities. */
+  public Collection getPartyAttributes() { return PartyAttributeHelper.findByPartyId(partyId); }
+  /** Get the  PartyAttribute keyed by member(s) of this class, and other passed parameters. */
+  public PartyAttribute getPartyAttribute(String name) { return PartyAttributeHelper.findByPrimaryKey(partyId, name); }
+  /** Remove  PartyAttribute related entities. */
+  public void removePartyAttributes() { PartyAttributeHelper.removeByPartyId(partyId); }
+  /** Remove the  PartyAttribute keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyAttribute(String name) { PartyAttributeHelper.removeByPrimaryKey(partyId, name); }
+
 
   //These are from the EJBObject interface, and must at least have thrower implementations, although we do more if the EJBObject is set...
   public EJBHome getEJBHome() throws RemoteException { if(partyClassification!=null) return partyClassification.getEJBHome(); else throw new ValueException("Cannot call getEJBHome, EJBObject is null."); }

@@ -3,7 +3,9 @@ package org.ofbiz.commonapp.security.securitygroup;
 
 import java.rmi.*;
 import javax.ejb.*;
+import java.util.*;
 import org.ofbiz.commonapp.common.*;
+
 
 /**
  * <p><b>Title:</b> Security Component - Security Group Permission Entity
@@ -29,28 +31,20 @@ import org.ofbiz.commonapp.common.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Tue Jul 03 01:11:51 MDT 2001
+ *@created    Sun Jul 08 01:14:08 MDT 2001
  *@version    1.0
  */
 public class SecurityGroupPermissionValue implements SecurityGroupPermission
 {
-
-  /**
-   *  The variable of the GROUP_ID column of the SECURITY_GROUP_PERMISSION table.
-   */
+  /** The variable of the GROUP_ID column of the SECURITY_GROUP_PERMISSION table. */
   private String groupId;
-
-  /**
-   *  The variable of the PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table.
-   */
+  /** The variable of the PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table. */
   private String permissionId;
-
 
   private SecurityGroupPermission securityGroupPermission;
 
   public SecurityGroupPermissionValue()
   {
-
     this.groupId = null;
     this.permissionId = null;
 
@@ -60,8 +54,7 @@ public class SecurityGroupPermissionValue implements SecurityGroupPermission
   public SecurityGroupPermissionValue(SecurityGroupPermission securityGroupPermission) throws RemoteException
   {
     if(securityGroupPermission == null) return;
-
-
+  
     this.groupId = securityGroupPermission.getGroupId();
     this.permissionId = securityGroupPermission.getPermissionId();
 
@@ -71,8 +64,7 @@ public class SecurityGroupPermissionValue implements SecurityGroupPermission
   public SecurityGroupPermissionValue(SecurityGroupPermission securityGroupPermission, String groupId, String permissionId)
   {
     if(securityGroupPermission == null) return;
-
-
+  
     this.groupId = groupId;
     this.permissionId = permissionId;
 
@@ -80,30 +72,15 @@ public class SecurityGroupPermissionValue implements SecurityGroupPermission
   }
 
 
-  /**
-   *  Get the primary key of the GROUP_ID column of the SECURITY_GROUP_PERMISSION table.
-   */
-  public String getGroupId()  throws RemoteException
-  {
-    return groupId;
-  }
-  
-  /**
-   *  Get the primary key of the PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table.
-   */
-  public String getPermissionId()  throws RemoteException
-  {
-    return permissionId;
-  }
-  
+  /** Get the primary key of the GROUP_ID column of the SECURITY_GROUP_PERMISSION table. */
+  public String getGroupId()  throws RemoteException { return groupId; }
 
-  /**
-   *  Get the value object of the SecurityGroupPermission class.
-   */
+  /** Get the primary key of the PERMISSION_ID column of the SECURITY_GROUP_PERMISSION table. */
+  public String getPermissionId()  throws RemoteException { return permissionId; }
+
+  /** Get the value object of the SecurityGroupPermission class. */
   public SecurityGroupPermission getValueObject() throws RemoteException { return this; }
-  /**
-   *  Set the value object of the SecurityGroupPermission class.
-   */
+  /** Set the value object of the SecurityGroupPermission class. */
   public void setValueObject(SecurityGroupPermission valueObject) throws RemoteException
   {
     if(valueObject == null) return;
@@ -111,12 +88,20 @@ public class SecurityGroupPermissionValue implements SecurityGroupPermission
     if(securityGroupPermission!=null) securityGroupPermission.setValueObject(valueObject);
 
     if(groupId == null) groupId = valueObject.getGroupId();
-  
-  
     if(permissionId == null) permissionId = valueObject.getPermissionId();
-  
-  
   }
+
+
+  /** Get the  SecurityGroup entity corresponding to this entity. */
+  public SecurityGroup getSecurityGroup() { return SecurityGroupHelper.findByPrimaryKey(groupId); }
+  /** Remove the  SecurityGroup entity corresponding to this entity. */
+  public void removeSecurityGroup() { SecurityGroupHelper.removeByPrimaryKey(groupId); }
+
+  /** Get the  SecurityPermission entity corresponding to this entity. */
+  public SecurityPermission getSecurityPermission() { return SecurityPermissionHelper.findByPrimaryKey(permissionId); }
+  /** Remove the  SecurityPermission entity corresponding to this entity. */
+  public void removeSecurityPermission() { SecurityPermissionHelper.removeByPrimaryKey(permissionId); }
+
 
   //These are from the EJBObject interface, and must at least have thrower implementations, although we do more if the EJBObject is set...
   public EJBHome getEJBHome() throws RemoteException { if(securityGroupPermission!=null) return securityGroupPermission.getEJBHome(); else throw new ValueException("Cannot call getEJBHome, EJBObject is null."); }
