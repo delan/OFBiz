@@ -1476,7 +1476,7 @@
         <key-map field-name="partyId"/>
       </relation>
     </entity>
-    <entity entity-name="PartyICSAVSOverride"
+    <entity entity-name="PartyIcsAvsOverride"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party ICS AVS Override Entity">
       <field name="partyId" type="id-ne"></field>
