@@ -42,16 +42,27 @@
 
 	// get this user's roles
 	List partyRoles = delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId", userLogin.getString("partyId")));
-	if (partyRoles != null)
-		pageContext.setAttribute("partyRoles", partyRoles);
+	if (partyRoles != null) partyTasks = EntityUtil.filterByDate(partyTasks);
+	if (partyRoles != null) pageContext.setAttribute("partyRoles", partyRoles);		
 
 	// get role level tasks
 	List roleTasks = delegator.findByAnd("OrderTaskList", UtilMisc.toMap("orderRoleTypeId", "PLACING_CUSTOMER", "roleTypeId", "ORDER_CLERK"));
-	if (roleTasks != null)
-		pageContext.setAttribute("roleTasks", roleTasks);
-
-		
+	if (roleTasks != null) roleTasks = EntityUtil.filterByDate(roleTasks);	
+	if (roleTasks != null) pageContext.setAttribute("roleTasks", roleTasks);				
 %>
+
+<script language="JavaScript">
+    function viewOrder(form) {
+        if (form.taskStatus.value == "WF_NOT_STARTED") {
+            form.action = "<ofbiz:url>/acceptassignment</ofbiz:url>";
+        } else if (form.delegate.checked) {
+            form.action = "<ofbiz:url>/delegateassignment</ofbiz:url>";
+        } else {
+            form.action = "<ofbiz:url>/orderview</ofbiz:url>";
+        }
+        form.submit();
+    }
+</script>
 
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -81,40 +92,36 @@
                   <div class='head3'>Workflow Activities Assigned to User</div>
                   <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                     <TR>
-                      <td><a href="<ofbiz:url>/tasklist?sort=ORDERNUM</ofbiz:url>" class="sortbutton">Order&nbsp;Number</a></td>
-                      <td><a href="<ofbiz:url>/tasklist?sort=FULLNAME</ofbiz:url>" class="sortbutton">Customer&nbsp;Name</a></td>
-                      <td><a href="<ofbiz:url>/tasklist?sort=ORDERDATE</ofbiz:url>" class="sortbutton">Order&nbsp;Date</a></td>
-                      <td><a href="<ofbiz:url>/tasklist?sort=ORDERDATE</ofbiz:url>" class="sortbutton">Site</a></td>
-                      <td><a href="<ofbiz:url>/tasklist?sort=ORDERDATE</ofbiz:url>" class="sortbutton">Type</a></td>
-                      <TD><a href="<ofbiz:url>/tasklist?sort=TASKDATE</ofbiz:url>" class="sortbutton">Start&nbsp;Date/Time</a></td>
-                      <TD><a href="<ofbiz:url>/tasklist?sort=PRIORITY</ofbiz:url>" class="sortbutton">Priority</a></td>
-                      <TD><a href="<ofbiz:url>/tasklist?sort=TASKSTATUS</ofbiz:url>" class="sortbutton">My&nbsp;Status</a></td>
+                      <td><a href="<ofbiz:url>/tasklist?sort=orderId</ofbiz:url>" class="tableheadbutton">Order&nbsp;Number</a></td>
+                      <td><a href="<ofbiz:url>/tasklist?sort=name</ofbiz:url>" class="tableheadbutton">Customer&nbsp;Name</a></td>
+                      <td><a href="<ofbiz:url>/tasklist?sort=orderDate</ofbiz:url>" class="tableheadbutton">Order&nbsp;Date</a></td>
+                      <TD><a href="<ofbiz:url>/tasklist?sort=actualStartDate</ofbiz:url>" class="tableheadbutton">Start&nbsp;Date/Time</a></td>
+                      <TD><a href="<ofbiz:url>/tasklist?sort=priority</ofbiz:url>" class="tableheadbutton">Priority</a></td>
+                      <TD><a href="<ofbiz:url>/tasklist?sort=currentStatusId</ofbiz:url>" class="tableheadbutton">My&nbsp;Status</a></td>
                     </TR>
                     <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
                     <ofbiz:iterator name="task" property="partyTasks" type="org.ofbiz.core.entity.GenericValue" expandMap="true">
                       <TR>
-                        <td>
-                          <a href="<ofbiz:url>/orderview<ofbiz:print attribute="ACCEPTSTR"/>&orderId=<ofbiz:print attribute="ORDERNUM"/></ofbiz:url>" class="adminbutton">
-                            <ofbiz:print attribute="ORDERNUM"/>
+                        <td>                          
+                          <a href="<ofbiz:url>/orderview?<ofbiz:print attribute="orderId"/></ofbiz:url>" class="buttontext">
+                            <ofbiz:print attribute="orderId"/>
                           </a>
                         </td>
                         <td>
-                          <div class="tabletext"><ofbiz:print attribute="FULLNAME"/></div>
+                          <a href="/partymgr/control/viewprofile?party_id=<%=task.getString("customerPartyId")%>" target="partymgr" class="buttontext"><%=TaskWorker.getCustomerName(task)%></a>
                         </td>
                         <td>
                           <div class="tabletext">
-                            <ofbiz:print attribute="ORDERDATE"/>
+                            <ofbiz:print attribute="orderDate"/>
                           </div>
-                        </td>
-                        <td><div class="tabletext" align="center">R</div></td>
-                        <td><div class="tabletext" align="center">W</div></td>
-                        <TD><DIV class='tabletext'><ofbiz:print attribute="TASKDATE" default="N/A"/></DIV></TD>
-                        <TD><DIV class='tabletext'><ofbiz:print attribute="PRIORITY"/></DIV></TD>
+                        </td>                                            
+                        <TD><DIV class='tabletext'><ofbiz:print attribute="actualStartDate" default="N/A"/></DIV></TD>
+                        <TD><DIV class='tabletext'><ofbiz:print attribute="priority"/></DIV></TD>
                         <td>
-                          <a href="<ofbiz:url>/activity?workEffortId=<ofbiz:print attribute="WORKEFFORT"/></ofbiz:url>" class="adminbutton">
-                            <ofbiz:print attribute="TASKSTATUS"/>
-                          </a>
-                        </td>
+                          <a href="/workeffort/control/activity?workEffortId=<ofbiz:print attribute="workEffortId"/>" target="workeffort" class="buttontext">
+                          <%=TaskWorker.getPrettyStatus(task)%>
+                        </a>
+                      </td>
                       </TR>
                     </ofbiz:iterator>
                   </TABLE>
@@ -134,31 +141,34 @@
               <div class='head3'>Workflow Activities Assigned to User Role</div>
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <TR>
-                  <td><a href="<ofbiz:url>/tasklist?sort=orderId</ofbiz:url>" class="sortbutton">Order&nbsp;Number</a></td>
-                  <td><a href="<ofbiz:url>/tasklist?sort=name</ofbiz:url>" class="sortbutton">Customer&nbsp;Name</a></td>
-                  <td><a href="<ofbiz:url>/tasklist?sort=orderDate</ofbiz:url>" class="sortbutton">Order&nbsp;Date</a></td>                                  
-                  <td><a href="<ofbiz:url>/tasklist?sort=actualStartDate</ofbiz:url>" class="sortbutton">Start&nbsp;Date/Time</a></td>
-                  <td><a href="<ofbiz:url>/tasklist?sort=wepaPartyId</ofbiz:url>" class="sortbutton">Party</a></td>
-                  <td><a href="<ofbiz:url>/tasklist?sort=roleTypeId</ofbiz:url>" class="sortbutton">Role</a></td>
-                  <td><a href="<ofbiz:url>/tasklist?sort=priority</ofbiz:url>" class="sortbutton">Priority</a></td>
-                  <td><a href="<ofbiz:url>/tasklist?sort=currentStatusId</ofbiz:url>" class="sortbutton">Status</a></td>
+                  <td><a href="<ofbiz:url>/tasklist?sort=orderId</ofbiz:url>" class="tableheadbutton">Order&nbsp;Number</a></td>
+                  <td><a href="<ofbiz:url>/tasklist?sort=name</ofbiz:url>" class="tableheadbutton">Customer&nbsp;Name</a></td>
+                  <td><a href="<ofbiz:url>/tasklist?sort=orderDate</ofbiz:url>" class="tableheadbutton">Order&nbsp;Date</a></td>                                  
+                  <td><a href="<ofbiz:url>/tasklist?sort=actualStartDate</ofbiz:url>" class="tableheadbutton">Start&nbsp;Date/Time</a></td>
+                  <td><a href="<ofbiz:url>/tasklist?sort=wepaPartyId</ofbiz:url>" class="tableheadbutton">Party</a></td>
+                  <td><a href="<ofbiz:url>/tasklist?sort=roleTypeId</ofbiz:url>" class="tableheadbutton">Role</a></td>
+                  <td><a href="<ofbiz:url>/tasklist?sort=priority</ofbiz:url>" class="tableheadbutton">Priority</a></td>
+                  <td><a href="<ofbiz:url>/tasklist?sort=currentStatusId</ofbiz:url>" class="tableheadbutton">Status</a></td>
                   <td>&nbsp;</td>
                 </TR>
                 <TR><TD colspan='11'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="task" property="roleTasks" type="org.ofbiz.core.entity.GenericValue" expandMap="true">
                   <form method="get" name="F<ofbiz:print attribute="workEffortId"/>">
-                    <input type="hidden" name="orderId" value="<ofbiz:print attribute="orderId"/>">
-                    <input type="hidden" name="partyId" value="<ofbiz:print attribute="PARTY"/>">
-                    <input type="hidden" name="roleTypeId" value="<ofbiz:print attribute="AROLE"/>">
+                    <input type="hidden" name="order_id" value="<ofbiz:print attribute="orderId"/>">
+                    <input type="hidden" name="partyId" value="<%=userLogin.getString("partyId")%>">
+                    <input type="hidden" name="roleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
                     <input type="hidden" name="fromDate" value="<ofbiz:print attribute="fromDate"/>">
                     <input type="hidden" name="workEffortId" value="<ofbiz:print attribute="workEffortId"/>">
                     <input type="hidden" name="taskStatus" value="<ofbiz:print attribute="currentStatusId"/>">
                     <tr>
                       <td>
-                        <div class="tabletext"><ofbiz:print attribute="orderId"/></div>
+                        <% String acceptString = "orderId=" + task.getString("orderId") + "&partyId=" + userLogin.getString("partyId") + "&roleTypeId=" + task.getString("roleTypeId") + "&workEffortId=" + task.getString("workEffortId") + "&fromDate=" + task.getString("fromDate"); %>
+                        <a href="javascript:viewOrder(document.F<ofbiz:print attribute="workEffortId"/>);" class="buttontext">
+                          <ofbiz:print attribute="orderId"/>
+                        </a>
                       </td>
                       <td>
-                        <div class="tabletext"><%=TaskWorker.getCustomerName(task)%></div>
+                        <a href="/partymgr/control/viewprofile?party_id=<%=task.getString("customerPartyId")%>" target="partymgr" class="buttontext"><%=TaskWorker.getCustomerName(task)%></a>
                       </td>
                       <td>
                         <div class="tabletext">
@@ -174,10 +184,10 @@
                           <%=TaskWorker.getPrettyStatus(task)%>
                         </a>
                       </td>
-                      <ofbiz:if name="TASKSTATUS" value="Pending">
+                      <ofbiz:if name="currentStatusId" value="WF_NOT_STARTED">
                         <td align="right"><input type="checkbox" name="delegate" value="true" checked></td>
                       </ofbiz:if>
-                      <ofbiz:unless name="TASKSTATUS" value="Pending">
+                      <ofbiz:unless name="currentStatusId" value="WF_NOT_STARTED">
                         <td align="right"><input type="checkbox" name="delegate" value="true"></td>
                       </ofbiz:unless>
                     </tr>
