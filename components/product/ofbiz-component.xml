@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.7 2003/08/19 11:00:47 jonesde Exp $
+ *  $Id: ofbiz-component.xml,v 1.8 2003/08/20 04:16:47 ajzeneski Exp $
 -->
 
 <ofbiz-component name="product">
@@ -39,4 +39,14 @@
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas_shipment.xml"/>
     <service-resource type="group" loader="main" location="servicedef/groups_shipment.xml"/>
+	<webapp name="catalog" 
+    	    title="Catalog" 
+    	    server="default-server" 
+    	    location="webapp/catalog" 
+    	    mount-point="/catalog"/>
+	<webapp name="facility" 
+    	    title="Facility" 
+    	    server="default-server" 
+    	    location="webapp/facility" 
+    	    mount-point="/facility"/>    	        
 </ofbiz-component>
