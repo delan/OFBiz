@@ -456,7 +456,7 @@
     <!-- Deploy the app                                                     -->
     <!-- ================================================================== -->
 
-    <target name="deploy" depends="build, catalina-deploy"></target>
+    <target name="deploy" depends="build, catalina41-deploy"></target>
 
     <target name="deploy-ext" depends="build, catalina-deploy-ext"/>
 
