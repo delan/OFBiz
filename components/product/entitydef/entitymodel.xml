@@ -1,0 +1,2600 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE entitymodel PUBLIC "-//OFBiz//DTD Entity Model//EN" "http://www.ofbiz.org/dtds/entitymodel.dtd">
+<!--
+/**
+ *  Title: Entity Generator Definitions for the General Data Model
+ *  Description: None
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Revision: 1.1 $
+ */
+-->
+
+<entitymodel>
+  <!-- ========================================================= -->
+  <!-- ======================== Defaults ======================= -->
+  <!-- ========================================================= -->
+    <title>Entity of an Open For Business Project Component</title>
+    <description>None</description>
+    <copyright>Copyright (c) 2002 The Open For Business Project - www.ofbiz.org</copyright>
+    <author>None</author>
+    <version>1.0</version>
+
+  <!-- ========================================================= -->
+  <!-- ======================== Data Model ===================== -->
+  <!-- The modules in this file are as follows:                  -->
+  <!--  - org.ofbiz.product.catalog -->
+  <!--  - org.ofbiz.product.category -->
+  <!--  - org.ofbiz.product.cost -->
+  <!--  - org.ofbiz.product.feature -->
+  <!--  - org.ofbiz.product.inventory -->
+  <!--  - org.ofbiz.product.price -->
+  <!--  - org.ofbiz.product.product -->
+  <!--  - org.ofbiz.product.promo -->
+  <!--  - org.ofbiz.product.storage -->
+  <!--  - org.ofbiz.product.store -->
+  <!--  - org.ofbiz.product.supplier -->
+  <!-- ========================================================= -->
+
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.catalog -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ProdCatalog"
+            package-name="org.ofbiz.product.catalog"
+            title="Catalog Entity">
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="catalogName" type="name"></field>     
+      <field name="useQuickAdd" type="indicator"></field>
+      <field name="styleSheet" type="url"></field>
+      <field name="headerLogo" type="url"></field>
+      <field name="contentPathPrefix" type="long-varchar"></field>
+      <field name="templatePathPrefix" type="long-varchar"></field>
+      <prim-key field="prodCatalogId"/>        
+      <relation type="many" rel-entity-name="ProdCatalogCategory">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProdCatalogRole">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductStoreCatalog">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProdCatalogCategory"
+            package-name="org.ofbiz.product.catalog"
+            title="Catalog Category Association Entity">
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <field name="prodCatalogCategoryTypeId" type="id"></field>
+      <prim-key field="prodCatalogId"/>
+      <prim-key field="productCategoryId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PROD_CC_CATALOG" rel-entity-name="ProdCatalog">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CC_CATEGORY" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CC_TYPE" rel-entity-name="ProdCatalogCategoryType">
+        <key-map field-name="prodCatalogCategoryTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProdCatalogCategoryType"
+            package-name="org.ofbiz.product.catalog"
+            title="Catalog Category Association Type Entity">
+      <field name="prodCatalogCategoryTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="prodCatalogCategoryTypeId"/>
+      <relation type="many" rel-entity-name="ProdCatalogCategory">
+        <key-map field-name="prodCatalogCategoryTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProdCatalogInvFacility"
+            package-name="org.ofbiz.product.catalog"
+            title="Product Catalog Inventory Facility Applicability Entity">
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="facilityId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="prodCatalogId"/>
+      <prim-key field="facilityId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PROD_CIF_CATALOG" rel-entity-name="ProdCatalog">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CIF_FACILITY" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProdCatalogRole"
+            package-name="org.ofbiz.product.catalog"
+            title="ProdCatalog Role Association Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <prim-key field="prodCatalogId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyGroup">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PCATRLE_PTYRLE" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PCATRLE_CATALOG" rel-entity-name="ProdCatalog">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.category -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ProductCategory"
+            package-name="org.ofbiz.product.category"
+            title="Product Category Entity">
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="productCategoryTypeId" type="id"></field>
+      <field name="primaryParentCategoryId" type="id"></field>
+      <field name="description" type="description"></field>
+      <field name="longDescription" type="very-long"></field>
+      <field name="categoryImageUrl" type="url"></field>
+      <field name="linkOneImageUrl" type="url"></field>
+      <field name="linkTwoImageUrl" type="url"></field>
+      <field name="detailTemplate" type="long-varchar"></field>
+      <prim-key field="productCategoryId"/>
+      <relation type="many" rel-entity-name="ProductCategoryAttribute">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductCategoryMember">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CTGRY_TYPE" rel-entity-name="ProductCategoryType">
+        <key-map field-name="productCategoryTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductCategoryTypeAttr">
+        <key-map field-name="productCategoryTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CTGRY_PARENT" title="PrimaryParent" rel-entity-name="ProductCategory">
+        <key-map field-name="primaryParentCategoryId" rel-field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" title="PrimaryChild" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId" rel-field-name="primaryParentCategoryId"/>
+      </relation>
+      <relation type="many" title="Primary" rel-entity-name="Product">
+        <key-map field-name="productCategoryId" rel-field-name="primaryProductCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="MarketInterest">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" title="Current" rel-entity-name="ProductCategoryRollup">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" title="Parent" rel-entity-name="ProductCategoryRollup">
+        <key-map field-name="productCategoryId" rel-field-name="parentProductCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFeatureCategoryAppl">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProdCatalogCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyNeed">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductKeywordResult">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductCategoryRole">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+    </entity>
+    <view-entity entity-name="ProductCategoryAndMember"
+            package-name="org.ofbiz.product.category"
+            title="ProductCategory And ProductCategoryMember View Entity">
+      <member-entity entity-alias="PC" entity-name="ProductCategory"/>
+      <member-entity entity-alias="PCM" entity-name="ProductCategoryMember"/>
+      <alias entity-alias="PC" name="productCategoryId"/>
+      <alias entity-alias="PC" name="productCategoryTypeId"/>
+      <alias entity-alias="PC" name="primaryParentCategoryId"/>
+      <alias entity-alias="PC" name="description"/>
+      <alias entity-alias="PC" name="longDescription"/>
+      <alias entity-alias="PC" name="categoryImageUrl"/>
+      <alias entity-alias="PC" name="linkOneImageUrl"/>
+      <alias entity-alias="PC" name="linkTwoImageUrl"/>
+      <alias entity-alias="PC" name="detailTemplate"/>
+      <alias entity-alias="PCM" name="productId"/>
+      <alias entity-alias="PCM" name="fromDate"/>
+      <alias entity-alias="PCM" name="thruDate"/>
+      <alias entity-alias="PCM" name="comments"/>
+      <alias entity-alias="PCM" name="sequenceNum"/>
+      <alias entity-alias="PCM" name="quantity"/>
+      <view-link entity-alias="PC" rel-entity-alias="PCM">
+        <key-map field-name="productCategoryId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ProductCategoryMember">
+        <key-map field-name="productCategoryId"/>
+        <key-map field-name="productId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+    </view-entity>
+    <entity entity-name="ProductCategoryAttribute"
+            package-name="org.ofbiz.product.category"
+            title="Product Category Attribute Entity">
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <field name="attrValue" type="value"></field>
+      <prim-key field="productCategoryId"/>
+      <prim-key field="attrName"/>
+      <relation type="one" fk-name="PROD_CTGRY_ATTR" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductCategoryTypeAttr">
+        <key-map field-name="attrName"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductCategoryMember"
+            package-name="org.ofbiz.product.category"
+            title="Product Category Member Entity">
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <field name="quantity" type="floating-point"></field>
+      <prim-key field="productCategoryId"/>
+      <prim-key field="productId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PROD_CMBR_PRODUCT" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CMBR_CATEGORY" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+    </entity>
+    <view-entity entity-name="ProductCategoryMemberAndRole"
+            package-name="org.ofbiz.product.category"
+            title="ProductCategoryMember And ProductCategoryRole View Entity">
+      <member-entity entity-alias="PCM" entity-name="ProductCategoryMember"/>
+      <member-entity entity-alias="PCR" entity-name="ProductCategoryRole"/>
+      <alias entity-alias="PCM" name="productId"/>
+      <alias entity-alias="PCM" name="productCategoryId"/>
+      <alias entity-alias="PCM" name="fromDate"/>
+      <alias entity-alias="PCM" name="thruDate"/>
+      <alias entity-alias="PCM" name="comments"/>
+      <alias entity-alias="PCM" name="sequenceNum"/>
+      <alias entity-alias="PCM" name="quantity"/>
+      <alias entity-alias="PCR" name="partyId"/>
+      <alias entity-alias="PCR" name="roleTypeId"/>
+      <alias entity-alias="PCR" name="roleFromDate" field="fromDate"/>
+      <alias entity-alias="PCR" name="roleThruDate" field="thruDate"/>
+      <alias entity-alias="PCR" name="roleComments" field="comments"/>
+      <view-link entity-alias="PCM" rel-entity-alias="PCR">
+        <key-map field-name="productCategoryId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ProductCategoryMember">
+        <key-map field-name="productCategoryId"/>
+        <key-map field-name="productId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductCategoryRole">
+        <key-map field-name="productCategoryId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+        <key-map field-name="roleFromDate" rel-field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+    </view-entity>
+    <entity entity-name="ProductCategoryRole"
+            package-name="org.ofbiz.product.category"
+            title="Product Category Role Entity">
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <prim-key field="productCategoryId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CRLE_PTYRLE" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CRLE_CATEGORY" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductCategoryRollup"
+            package-name="org.ofbiz.product.category"
+            title="Product Category Rollup Entity">
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="parentProductCategoryId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="productCategoryId"/>
+      <prim-key field="parentProductCategoryId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PROD_CRLP_CURRENT" title="Current" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CRLP_PARENT" title="Parent" rel-entity-name="ProductCategory">
+        <key-map field-name="parentProductCategoryId" rel-field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="ProductCategoryRollup">
+        <key-map field-name="productCategoryId" rel-field-name="parentProductCategoryId"/>
+      </relation>
+      <relation type="many" title="Parent" rel-entity-name="ProductCategoryRollup">
+        <key-map field-name="parentProductCategoryId" rel-field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" title="Sibling" rel-entity-name="ProductCategoryRollup">
+        <key-map field-name="parentProductCategoryId"/>
+      </relation>
+    </entity>
+    <view-entity entity-name="ProductCategoryRollupAndRole"
+            package-name="org.ofbiz.product.category"
+            title="ProductCategoryRollup And ProductCategoryRole View Entity">
+      <description>Allow the lookup of a category that is in another category that a party/role is related to. So, the party/role is related to the parent category.</description>
+      <member-entity entity-alias="PCRLP" entity-name="ProductCategoryRollup"/>
+      <member-entity entity-alias="PCR" entity-name="ProductCategoryRole"/>
+      <alias entity-alias="PCRLP" name="productCategoryId"/>
+      <alias entity-alias="PCRLP" name="parentProductCategoryId"/>
+      <alias entity-alias="PCRLP" name="fromDate"/>
+      <alias entity-alias="PCRLP" name="thruDate"/>
+      <alias entity-alias="PCRLP" name="sequenceNum"/>
+      <alias entity-alias="PCR" name="partyId"/>
+      <alias entity-alias="PCR" name="roleTypeId"/>
+      <alias entity-alias="PCR" name="roleFromDate" field="fromDate"/>
+      <alias entity-alias="PCR" name="roleThruDate" field="thruDate"/>
+      <alias entity-alias="PCR" name="roleComments" field="comments"/>
+      <view-link entity-alias="PCRLP" rel-entity-alias="PCR">
+        <key-map field-name="parentProductCategoryId" rel-field-name="productCategoryId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ProductCategoryRollup">
+        <key-map field-name="productCategoryId"/>
+        <key-map field-name="parentProductCategoryId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductCategoryRole">
+        <key-map field-name="parentProductCategoryId" rel-field-name="productCategoryId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+        <key-map field-name="roleFromDate" rel-field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one-nofk" title="Parent" rel-entity-name="ProductCategory">
+        <key-map field-name="parentProductCategoryId" rel-field-name="productCategoryId"/>
+      </relation>
+    </view-entity>
+    <entity entity-name="ProductCategoryType"
+            package-name="org.ofbiz.product.category"
+            title="Product Category Type Entity">
+      <field name="productCategoryTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productCategoryTypeId"/>
+      <relation type="one" fk-name="PROD_CTGRY_TYPEPAR" title="Parent" rel-entity-name="ProductCategoryType">
+        <key-map field-name="parentTypeId" rel-field-name="productCategoryTypeId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="ProductCategoryType">
+        <key-map field-name="productCategoryTypeId" rel-field-name="parentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductCategoryTypeAttr">
+        <key-map field-name="productCategoryTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductCategoryTypeAttr"
+            package-name="org.ofbiz.product.category"
+            title="Product Category Type Attribute Entity">
+      <field name="productCategoryTypeId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <prim-key field="productCategoryTypeId"/>
+      <prim-key field="attrName"/>
+      <relation type="one" fk-name="PROD_CTGRY_TATTR" rel-entity-name="ProductCategoryType">
+        <key-map field-name="productCategoryTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductCategoryAttribute">
+        <key-map field-name="attrName"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryTypeId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.cost -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="CostComponent"
+            package-name="org.ofbiz.product.cost"
+            title="Cost Component Entity">
+      <field name="costComponentId" type="id-ne"></field>
+      <field name="costComponentTypeId" type="id"></field>
+      <field name="productId" type="id"></field>
+      <field name="productFeatureId" type="id"></field>
+      <field name="partyId" type="id"></field>
+      <field name="geoId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="cost" type="currency-amount"></field>
+      <prim-key field="costComponentId"/>
+      <relation type="one" fk-name="COST_COMP_TYPE" rel-entity-name="CostComponentType">
+        <key-map field-name="costComponentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CostComponentTypeAttr">
+        <key-map field-name="costComponentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CostComponentAttribute">
+        <key-map field-name="costComponentId"/>
+      </relation>
+      <relation type="one" fk-name="COST_COMP_PRODUCT" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="COST_COMP_PRODFEAT" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="one" fk-name="COST_COMP_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="COST_COMP_GEO" rel-entity-name="Geo">
+        <key-map field-name="geoId"/>
+      </relation>
+    </entity>
+    <entity entity-name="CostComponentAttribute"
+            package-name="org.ofbiz.product.cost"
+            title="Cost Component Attribute Entity">
+      <field name="costComponentId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <field name="attrValue" type="value"></field>
+      <prim-key field="costComponentId"/>
+      <prim-key field="attrName"/>
+      <relation type="one" fk-name="COST_COMP_ATTR" rel-entity-name="CostComponent">
+        <key-map field-name="costComponentId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CostComponentTypeAttr">
+        <key-map field-name="attrName"/>
+      </relation>
+    </entity>
+    <entity entity-name="CostComponentType"
+            package-name="org.ofbiz.product.cost"
+            title="Cost Component Type Entity">
+      <field name="costComponentTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="costComponentTypeId"/>
+      <relation type="one" fk-name="COST_COMP_TYPE_PAR" title="Parent" rel-entity-name="CostComponentType">
+        <key-map field-name="parentTypeId" rel-field-name="costComponentTypeId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="CostComponentType">
+        <key-map field-name="costComponentTypeId" rel-field-name="parentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CostComponentTypeAttr">
+        <key-map field-name="costComponentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CostComponent">
+        <key-map field-name="costComponentTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="CostComponentTypeAttr"
+            package-name="org.ofbiz.product.cost"
+            title="Cost Component Type Attribute Entity">
+      <field name="costComponentTypeId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <prim-key field="costComponentTypeId"/>
+      <prim-key field="attrName"/>
+      <relation type="one" fk-name="COST_COMP_TATTR" rel-entity-name="CostComponentType">
+        <key-map field-name="costComponentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CostComponentAttribute">
+        <key-map field-name="attrName"/>
+      </relation>
+      <relation type="many" rel-entity-name="CostComponent">
+        <key-map field-name="costComponentTypeId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.feature -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ProductFeature"
+            package-name="org.ofbiz.product.feature"
+            title="Product Feature Entity">
+      <field name="productFeatureId" type="id-ne"></field>
+      <field name="productFeatureTypeId" type="id-ne"></field>
+      <field name="productFeatureCategoryId" type="id"></field>
+      <field name="description" type="description"></field>
+      <field name="uomId" type="id"></field>
+      <field name="numberSpecified" type="floating-point"></field>
+      <field name="defaultSequenceNum" type="numeric"></field>
+      <field name="abbrev" type="id"></field>
+      <field name="idCode" type="id"></field>
+      <prim-key field="productFeatureId"/>
+      <relation type="one" fk-name="PROD_FEAT_CATEGORY" rel-entity-name="ProductFeatureCategory">
+        <key-map field-name="productFeatureCategoryId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FEAT_TYPE" rel-entity-name="ProductFeatureType">
+        <key-map field-name="productFeatureTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFeatureAppl">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="many" title="Main" rel-entity-name="ProductFeatureIactn">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="many" title="Assoc" rel-entity-name="ProductFeatureIactn">
+        <key-map field-name="productFeatureId" rel-field-name="productFeatureIdTo"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFeatureContent">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CostComponent">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InvoiceItem">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="many" rel-entity-name="QuoteItem">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="many" rel-entity-name="DesiredFeature">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentItemFeature">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+    </entity>
+    <view-entity entity-name="ProductFeatureAndAppl"
+            package-name="org.ofbiz.product.feature"
+            title="ProductFeature And ProductFeatureAppl View Entity">
+      <member-entity entity-alias="PF" entity-name="ProductFeature"/>
+      <member-entity entity-alias="PFA" entity-name="ProductFeatureAppl"/>
+      <alias entity-alias="PF" name="productFeatureId"/>
+      <alias entity-alias="PF" name="productFeatureTypeId"/>
+      <alias entity-alias="PF" name="productFeatureCategoryId"/>
+      <alias entity-alias="PF" name="description"/>
+      <alias entity-alias="PF" name="uomId"/>
+      <alias entity-alias="PF" name="numberSpecified"/>
+      <alias entity-alias="PF" name="defaultSequenceNum"/>
+      <alias entity-alias="PF" name="abbrev"/>
+      <alias entity-alias="PF" name="idCode"/>
+      <alias entity-alias="PFA" name="productId"/>
+      <alias entity-alias="PFA" name="productFeatureApplTypeId"/>
+      <alias entity-alias="PFA" name="fromDate"/>
+      <alias entity-alias="PFA" name="thruDate"/>
+      <alias entity-alias="PFA" name="sequenceNum"/>
+      <alias entity-alias="PFA" name="amount"/>
+      <view-link entity-alias="PF" rel-entity-alias="PFA">
+        <key-map field-name="productFeatureId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ProductFeatureType">
+        <key-map field-name="productFeatureTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductFeatureApplType">
+        <key-map field-name="productFeatureApplTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductFeatureCategory">
+        <key-map field-name="productFeatureCategoryId"/>
+      </relation>
+    </view-entity>
+    <entity entity-name="ProductFeatureAppl"
+            package-name="org.ofbiz.product.feature"
+            title="Product Feature Applicability Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="productFeatureId" type="id-ne"></field>
+      <field name="productFeatureApplTypeId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <field name="amount" type="currency-amount"></field>
+      <prim-key field="productId"/>
+      <prim-key field="productFeatureId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PROD_FAPPL_TYPE" rel-entity-name="ProductFeatureApplType">
+        <key-map field-name="productFeatureApplTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FAPPL_PRODUCT" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FAPPL_FEATURE" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFeatureApplType"
+            package-name="org.ofbiz.product.feature"
+            title="Product Feature Applicability Type Entity">
+      <field name="productFeatureApplTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productFeatureApplTypeId"/>
+      <relation type="one" fk-name="PROD_FAPPL_TYPPAR" title="Parent" rel-entity-name="ProductFeatureApplType">
+        <key-map field-name="parentTypeId" rel-field-name="productFeatureApplTypeId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="ProductFeatureApplType">
+        <key-map field-name="productFeatureApplTypeId" rel-field-name="parentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFeatureAppl">
+        <key-map field-name="productFeatureApplTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFeatureCategory"
+            package-name="org.ofbiz.product.feature"
+            title="Product Feature Category Entity">
+      <field name="productFeatureCategoryId" type="id-ne"></field>
+      <field name="parentCategoryId" type="id"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productFeatureCategoryId"/>
+      <relation type="one" fk-name="PROD_FEAT_CAT_PAR" title="Parent" rel-entity-name="ProductFeatureCategory">
+        <key-map field-name="parentCategoryId" rel-field-name="productFeatureCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFeatureCategoryAppl">
+        <key-map field-name="productFeatureCategoryId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFeatureCategoryAppl"
+            package-name="org.ofbiz.product.feature"
+            title="Product Feature Category Applicability Entity">
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="productFeatureCategoryId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="productCategoryId"/>
+      <prim-key field="productFeatureCategoryId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PROD_FCAPPL_CAT" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FCAPPL_FCAT" rel-entity-name="ProductFeatureCategory">
+        <key-map field-name="productFeatureCategoryId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFeatureContent"
+            package-name="org.ofbiz.product.feature"
+            title="Feature Data Object Entity">
+      <field name="contentId" type="id-ne"></field>
+      <field name="productFeatureId" type="id-ne"></field>
+      <prim-key field="contentId"/>
+      <prim-key field="productFeatureId"/>
+      <relation type="one" fk-name="FEAT_CNT_FEATURE" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="one" fk-name="FEAT_CNT_CNT" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFeatureIactn"
+            package-name="org.ofbiz.product.feature"
+            title="Product Feature Interaction Entity">
+      <field name="productFeatureId" type="id-ne"></field>
+      <field name="productFeatureIdTo" type="id-ne"></field>
+      <field name="productFeatureIactnTypeId" type="id"></field>
+      <field name="productId" type="id"></field>
+      <prim-key field="productFeatureId"/>
+      <prim-key field="productFeatureIdTo"/>
+      <relation type="one" fk-name="PROD_FICTN_TYPE" rel-entity-name="ProductFeatureIactnType">
+        <key-map field-name="productFeatureIactnTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FICTN_MFEAT" title="Main" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FICTN_AFEAT" title="Assoc" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureIdTo" rel-field-name="productFeatureId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFeatureIactnType"
+            package-name="org.ofbiz.product.feature"
+            title="Product Feature Interaction Type Entity">
+      <field name="productFeatureIactnTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productFeatureIactnTypeId"/>
+      <relation type="one" fk-name="PROD_FICTN_TYPPAR" title="Parent" rel-entity-name="ProductFeatureIactnType">
+        <key-map field-name="parentTypeId" rel-field-name="productFeatureIactnTypeId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="ProductFeatureIactnType">
+        <key-map field-name="productFeatureIactnTypeId" rel-field-name="parentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFeatureIactn">
+        <key-map field-name="productFeatureIactnTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFeatureType"
+            package-name="org.ofbiz.product.feature"
+            title="Product Feature Type Entity">
+      <field name="productFeatureTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productFeatureTypeId"/>
+      <relation type="one" fk-name="PROD_FEAT_TYPPAR" title="Parent" rel-entity-name="ProductFeatureType">
+        <key-map field-name="parentTypeId" rel-field-name="productFeatureTypeId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="ProductFeatureType">
+        <key-map field-name="productFeatureTypeId" rel-field-name="parentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeatureTypeId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.inventory -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="InventoryItem"
+            package-name="org.ofbiz.product.inventory"
+            title="Inventory Item Entity">
+      <field name="inventoryItemId" type="id-ne"></field>
+      <field name="inventoryItemTypeId" type="id"></field>
+      <field name="productId" type="id"></field>
+      <field name="partyId" type="id"></field>
+      <field name="statusId" type="id"></field>
+      <field name="datetimeReceived" type="date-time"></field>
+      <field name="expireDate" type="date-time"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="containerId" type="id"></field>
+      <field name="lotId" type="id"></field>
+      <field name="uomId" type="id"></field>
+      <field name="binNumber" type="id"></field>
+      <field name="locationSeqId" type="id"></field>
+      <field name="comments" type="comment"></field>
+      <field name="quantityOnHand" type="floating-point"></field>
+      <field name="availableToPromise" type="floating-point"></field>
+      <field name="serialNumber" type="value"></field>
+      <field name="unitCost" type="currency-amount"></field>
+      <prim-key field="inventoryItemId"/>
+      <relation type="one" fk-name="INV_ITEM_TYPE" rel-entity-name="InventoryItemType">
+        <key-map field-name="inventoryItemTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItemTypeAttr">
+        <key-map field-name="inventoryItemTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItemAttribute">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_PRODUCT" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductFacility">
+      	<key-map field-name="productId"/>
+      	<key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_STTSITM" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_FACILITY" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_CONTAINER" rel-entity-name="Container">
+        <key-map field-name="containerId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_LOT" rel-entity-name="Lot">
+        <key-map field-name="lotId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="FacilityLocation">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_UOM" rel-entity-name="Uom">
+        <key-map field-name="uomId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItemStatus">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItemVariance">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AcctgTrans">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InvoiceItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderItemInventoryRes">
+      	<key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortInventoryProduced">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortInventoryAssign">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ItemIssuance">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+    </entity>
+    <entity entity-name="InventoryItemAttribute"
+            package-name="org.ofbiz.product.inventory"
+            title="Inventory Item Attribute Entity">
+      <field name="inventoryItemId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <field name="attrValue" type="value"></field>
+      <prim-key field="inventoryItemId"/>
+      <prim-key field="attrName"/>
+      <relation type="one" fk-name="INV_ITEM_ATTR" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItemTypeAttr">
+        <key-map field-name="attrName"/>
+      </relation>
+    </entity>
+    <entity entity-name="InventoryItemStatus"
+            package-name="org.ofbiz.product.inventory"
+            title="Inventory Item Status History Entity">
+      <field name="inventoryItemId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="statusDatetime" type="date-time"></field>
+      <prim-key field="inventoryItemId"/>
+      <prim-key field="statusId"/>
+      <prim-key field="statusDatetime"/>
+      <relation type="one" fk-name="INV_ITEM_STTS_II" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_STTS_SI" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+    </entity>
+    <entity entity-name="InventoryItemTempRes"
+            package-name="org.ofbiz.product.inventory"
+            title="Inventory Item Temporary Reservation Entity">
+      <field name="visitId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="reservedDate" type="date-time"></field>
+      <prim-key field="visitId"/>
+      <prim-key field="productId"/>
+      <prim-key field="productStoreId"/>
+      <relation type="one" fk-name="INV_ITEM_TR_VIS" rel-entity-name="Visit">
+        <key-map field-name="visitId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_TR_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_TR_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+    </entity>
+    <entity entity-name="InventoryItemType"
+            package-name="org.ofbiz.product.inventory"
+            title="Inventory Item Type Entity">
+      <field name="inventoryItemTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="inventoryItemTypeId"/>
+      <relation type="one" fk-name="INV_ITEM_TYPPAR" title="Parent" rel-entity-name="InventoryItemType">
+        <key-map field-name="parentTypeId" rel-field-name="inventoryItemTypeId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="InventoryItemType">
+        <key-map field-name="inventoryItemTypeId" rel-field-name="parentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItemTypeAttr">
+        <key-map field-name="inventoryItemTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="InventoryItemTypeAttr"
+            package-name="org.ofbiz.product.inventory"
+            title="Inventory Item Type Attribute Entity">
+      <field name="inventoryItemTypeId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <prim-key field="inventoryItemTypeId"/>
+      <prim-key field="attrName"/>
+      <relation type="one" fk-name="INV_ITEM_TYP_ATTR" rel-entity-name="InventoryItemType">
+        <key-map field-name="inventoryItemTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItemAttribute">
+        <key-map field-name="attrName"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="InventoryItemVariance"
+            package-name="org.ofbiz.product.inventory"
+            title="Inventory Item Variance Entity">
+      <field name="inventoryItemId" type="id-ne"></field>
+      <field name="physicalInventoryId" type="id-ne"></field>
+      <field name="varianceReasonId" type="id"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="comments" type="comment"></field>
+      <prim-key field="inventoryItemId"/>
+      <prim-key field="physicalInventoryId"/>
+      <relation type="one" fk-name="INV_ITEM_VAR_RSN" rel-entity-name="VarianceReason">
+        <key-map field-name="varianceReasonId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_VAR_PINV" rel-entity-name="PhysicalInventory">
+        <key-map field-name="physicalInventoryId"/>
+      </relation>
+      <relation type="one" fk-name="INV_ITEM_VAR_ITEM" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AcctgTrans">
+        <key-map field-name="inventoryItemId"/>
+        <key-map field-name="physicalInventoryId"/>
+      </relation>
+    </entity>
+    <entity entity-name="InventoryTransfer"
+            package-name="org.ofbiz.product.inventory"
+            title="Inventory Transfer Entity">
+      <field name="inventoryTransferId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="inventoryItemId" type="id-ne"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="locationSeqId" type="id"></field>
+      <field name="containerId" type="id"></field>
+      <field name="facilityIdTo" type="id"></field>
+      <field name="locationSeqIdTo" type="id"></field>
+      <field name="containerIdTo" type="id"></field>
+      <field name="itemIssuanceId" type="id"></field>
+      <field name="sendDate" type="date-time"></field>
+      <field name="receiveDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <prim-key field="inventoryTransferId"/>
+      <relation type="one" fk-name="INV_XFER_ITEM" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one" fk-name="INV_XFER_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="INV_XFER_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="FacilityLocation">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </relation>
+      <relation type="one" fk-name="INV_XFER_CONT" rel-entity-name="Container">
+        <key-map field-name="containerId"/>
+      </relation>
+      <relation type="one" fk-name="INV_XFER_TFAC" title="To" rel-entity-name="Facility">
+        <key-map field-name="facilityIdTo" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one-nofk" title="To" rel-entity-name="FacilityLocation">
+        <key-map field-name="facilityIdTo" rel-field-name="facilityId"/>
+        <key-map field-name="locationSeqIdTo" rel-field-name="locationSeqId"/>
+      </relation>
+      <relation type="one" fk-name="INV_XFER_TCNT" title="To" rel-entity-name="Container">
+        <key-map field-name="containerIdTo" rel-field-name="containerId"/>
+      </relation>
+      <relation type="one" fk-name="INV_XFER_ISSU" rel-entity-name="ItemIssuance">
+        <key-map field-name="itemIssuanceId"/>
+      </relation>
+    </entity>
+    <entity entity-name="Lot"
+            package-name="org.ofbiz.product.inventory"
+            title="Lot Entity">
+      <field name="lotId" type="id-ne"></field>
+      <field name="creationDate" type="date-time"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="expirationDate" type="date-time"></field>
+      <prim-key field="lotId"/>
+      <relation type="many" rel-entity-name="InventoryItem">
+        <key-map field-name="lotId"/>
+      </relation>
+    </entity>
+    <entity entity-name="PhysicalInventory"
+            package-name="org.ofbiz.product.inventory"
+            title="Physical Inventory Entity">
+      <field name="physicalInventoryId" type="id-ne"></field>
+      <field name="physicalInventoryDate" type="date-time"></field>
+      <field name="partyId" type="id"></field>
+      <field name="comments" type="comment"></field>
+      <prim-key field="physicalInventoryId"/>
+      <relation type="many" rel-entity-name="InventoryItemVariance">
+        <key-map field-name="physicalInventoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AcctgTrans">
+        <key-map field-name="physicalInventoryId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductFacility"
+            package-name="org.ofbiz.product.inventory"
+            title="Product Facility Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="facilityId" type="id-ne"></field>
+      <field name="minimumStock" type="floating-point"></field>
+      <field name="reorderQuantity" type="floating-point"></field>
+      <field name="daysToShip" type="numeric"></field>
+      <prim-key field="productId"/>
+      <prim-key field="facilityId"/>
+      <relation type="one" fk-name="PROD_FAC_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FAC_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+    </entity>
+    <entity entity-name="VarianceReason"
+            package-name="org.ofbiz.product.inventory"
+            title="Variance Reason Entity">
+      <field name="varianceReasonId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="varianceReasonId"/>
+      <relation type="many" rel-entity-name="InventoryItemVariance">
+        <key-map field-name="varianceReasonId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.price -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ProductPrice"
+            package-name="org.ofbiz.product.price"
+            title="Product Price Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="productPriceTypeId" type="id-ne"></field>
+      <field name="currencyUomId" type="id"></field>
+      <field name="facilityGroupId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="price" type="currency-amount"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="productId"/>
+      <prim-key field="productPriceTypeId"/>
+      <prim-key field="currencyUomId"/>
+      <prim-key field="facilityGroupId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PROD_PRICE_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRICE_TYPE" rel-entity-name="ProductPriceType">
+        <key-map field-name="productPriceTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRICE_CUOM" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRICE_FACG" rel-entity-name="FacilityGroup">
+        <key-map field-name="facilityGroupId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRICE_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRICE_LMBUL" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductPriceChange">
+        <key-map field-name="productId"/>
+        <key-map field-name="productPriceTypeId"/>
+        <key-map field-name="currencyUomId"/>
+        <key-map field-name="facilityGroupId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPriceAction"
+            package-name="org.ofbiz.product.price"
+            title="Product Price Action Entity">
+      <field name="productPriceRuleId" type="id-ne"></field>
+      <field name="productPriceActionSeqId" type="id-ne"></field>
+      <field name="productPriceActionTypeId" type="id-ne"></field>
+      <field name="amount" type="floating-point"></field>
+      <prim-key field="productPriceRuleId"/>
+      <prim-key field="productPriceActionSeqId"/>
+      <relation type="one" fk-name="PROD_PCACT_TYPE" rel-entity-name="ProductPriceActionType">
+        <key-map field-name="productPriceActionTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PCACT_RL" rel-entity-name="ProductPriceRule">
+        <key-map field-name="productPriceRuleId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPriceActionType"
+            package-name="org.ofbiz.product.price"
+            title="Product Price Type Entity">
+      <field name="productPriceActionTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productPriceActionTypeId"/>
+      <relation type="many" rel-entity-name="ProductPriceAction">
+        <key-map field-name="productPriceActionTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPriceAutoNotice"
+            package-name="org.ofbiz.product.price"
+            title="Product Price Automatic Notice History Entity">
+      <field name="productPriceNoticeId" type="id-ne"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="runDate" type="date-time"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="productPriceNoticeId"/>
+    </entity>
+    <entity entity-name="ProductPriceChange"
+            package-name="org.ofbiz.product.price"
+            title="Product Price Change History Entity">
+      <field name="productPriceChangeId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="productPriceTypeId" type="id-ne"></field>
+      <field name="currencyUomId" type="id"></field>
+      <field name="facilityGroupId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="price" type="currency-amount"></field>
+      <field name="oldPrice" type="currency-amount"></field>
+      <field name="changedDate" type="date-time"></field>
+      <field name="changedByUserLogin" type="id-vlong"></field>
+      <prim-key field="productPriceChangeId"/>
+      <relation type="one-nofk" rel-entity-name="ProductPrice">
+        <key-map field-name="productId"/>
+        <key-map field-name="productPriceTypeId"/>
+        <key-map field-name="currencyUomId"/>
+        <key-map field-name="facilityGroupId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRCHNG_CHUL" title="ChangedBy" rel-entity-name="UserLogin">
+        <key-map field-name="changedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPriceCond"
+            package-name="org.ofbiz.product.price"
+            title="Product Price Condition Entity">
+      <field name="productPriceRuleId" type="id-ne"></field>
+      <field name="productPriceCondSeqId" type="id-ne"></field>
+      <field name="inputParamEnumId" type="id"></field>
+      <field name="operatorEnumId" type="id"></field>
+      <field name="condValue" type="long-varchar"></field>
+      <prim-key field="productPriceRuleId"/>
+      <prim-key field="productPriceCondSeqId"/>
+      <relation type="one" fk-name="PROD_PCCOND_RULE" rel-entity-name="ProductPriceRule">
+        <key-map field-name="productPriceRuleId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PCCOND_INENUM" title="InputParam" rel-entity-name="Enumeration">
+        <key-map field-name="inputParamEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PCCOND_OPENUM" title="Operator" rel-entity-name="Enumeration">
+        <key-map field-name="operatorEnumId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPriceRule"
+            package-name="org.ofbiz.product.price"
+            title="Product Pice Rule Entity">
+      <field name="productPriceRuleId" type="id-ne"></field>
+      <field name="ruleName" type="name"></field>
+      <field name="isSale" type="indicator"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="productPriceRuleId"/>
+      <relation type="many" rel-entity-name="ProductPriceAction">
+        <key-map field-name="productPriceRuleId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductPriceCond">
+        <key-map field-name="productPriceRuleId"/>
+      </relation>
+      <relation type="many" rel-entity-name="MarketingCampaignPrice">
+        <key-map field-name="productPriceRuleId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPriceType"
+            package-name="org.ofbiz.product.price"
+            title="Product Price Type Entity">
+      <field name="productPriceTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productPriceTypeId"/>
+      <relation type="many" rel-entity-name="ProductPrice">
+        <key-map field-name="productPriceTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="QuantityBreak"
+            package-name="org.ofbiz.product.price"
+            title="Quantity Break Entity">
+      <field name="quantityBreakId" type="id-ne"></field>
+      <field name="quantityBreakTypeId" type="id"></field>
+      <field name="fromQuantity" type="floating-point"></field>
+      <field name="thruQuantity" type="floating-point"></field>
+      <prim-key field="quantityBreakId"/>
+      <relation type="one" fk-name="QUANT_BRK_TYPE" rel-entity-name="QuantityBreakType">
+        <key-map field-name="quantityBreakTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="QuantityBreakType"
+            package-name="org.ofbiz.product.price"
+            title="Quantity Break Type Entity">
+      <field name="quantityBreakTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="quantityBreakTypeId"/>
+      <relation type="many" rel-entity-name="QuantityBreak">
+        <key-map field-name="quantityBreakTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="SaleType"
+            package-name="org.ofbiz.product.price"
+            title="Sale Type Entity">
+      <field name="saleTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="saleTypeId"/>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.product -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="GoodIdentification"
+            package-name="org.ofbiz.product.product"
+            title="Good Identification Entity">
+      <field name="goodIdentificationTypeId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="idValue" type="id-long"></field>
+      <prim-key field="goodIdentificationTypeId"/>
+      <prim-key field="productId"/>
+      <relation type="one" fk-name="GOOD_ID_TYPE" rel-entity-name="GoodIdentificationType">
+        <key-map field-name="goodIdentificationTypeId"/>
+      </relation>
+      <relation type="one" fk-name="GOOD_ID_PRODICT" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+    </entity>
+    <entity entity-name="GoodIdentificationType"
+            package-name="org.ofbiz.product.product"
+            title="Good Identification Type Entity">
+      <field name="goodIdentificationTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="goodIdentificationTypeId"/>
+      <relation type="one" fk-name="GOOD_ID_TYPE_PAR" title="Parent" rel-entity-name="GoodIdentificationType">
+        <key-map field-name="parentTypeId" rel-field-name="goodIdentificationTypeId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="GoodIdentificationType">
+        <key-map field-name="goodIdentificationTypeId" rel-field-name="parentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="GoodIdentification">
+        <key-map field-name="goodIdentificationTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="Product"
+            package-name="org.ofbiz.product.product"
+            title="Product Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="productTypeId" type="id"></field>
+      <field name="primaryProductCategoryId" type="id"></field>
+      <field name="manufacturerPartyId" type="id"></field>
+      <field name="introductionDate" type="date-time"></field>
+      <field name="salesDiscontinuationDate" type="date-time"></field>
+      <field name="supportDiscontinuationDate" type="date-time"></field>
+      <field name="productName" type="name"></field>
+      <field name="internalName" type="name"></field>
+      <field name="brandName" type="name"></field>
+      <field name="comments" type="comment"></field>
+      <field name="description" type="description"></field>
+      <field name="longDescription" type="very-long"></field>
+      <field name="inventoryMessage" type="description"></field>
+      <field name="requireInventory" type="indicator"></field>
+      <field name="smallImageUrl" type="url"></field>
+      <field name="mediumImageUrl" type="url"></field>
+      <field name="largeImageUrl" type="url"></field>
+      <field name="detailImageUrl" type="url"></field>
+      <field name="detailTemplate" type="long-varchar"></field>
+      <field name="quantityUomId" type="id"></field>
+      <field name="quantityIncluded" type="floating-point"></field>
+      <field name="piecesIncluded" type="numeric"></field>
+      <field name="weightUomId" type="id"></field>
+      <field name="weight" type="floating-point"></field>
+      <field name="taxable" type="indicator"></field>
+      <field name="taxCategory" type="id"></field>
+      <field name="taxVatCode" type="short-varchar"></field>
+      <field name="taxDutyCode" type="short-varchar"></field>
+      <field name="chargeShipping" type="indicator"></field>
+      <field name="autoCreateKeywords" type="indicator"></field>
+      <field name="isVirtual" type="indicator"></field>
+      <field name="isVariant" type="indicator"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="productId"/>
+      <relation type="many" rel-entity-name="ProductAttribute">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_TYPE" rel-entity-name="ProductType">
+        <key-map field-name="productTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductTypeAttr">
+        <key-map field-name="productTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRIMARY_CAT" title="Primary" rel-entity-name="ProductCategory">
+        <key-map field-name="primaryProductCategoryId" rel-field-name="productCategoryId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductCategoryMember">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductKeyword">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_MFG_PARTY" title="Manufacturer" rel-entity-name="Party">
+        <key-map field-name="manufacturerPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_QUANT_UOM" title="Quantity" rel-entity-name="Uom">
+        <key-map field-name="quantityUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="many" rel-entity-name="GoodIdentification">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductContent">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" title="Main" rel-entity-name="ProductAssoc">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" title="Assoc" rel-entity-name="ProductAssoc">
+        <key-map field-name="productId" rel-field-name="productIdTo"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFeatureAppl">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CostComponent">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItem">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="SupplierProduct">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_WEIGHT_UOM" title="Weight" rel-entity-name="Uom">
+        <key-map field-name="weightUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductOrderItem">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShoppingListItem">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CB_USERLOGIN" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_LMB_USERLOGIN" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductPrice">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductReview">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InvoiceItem">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AgreementProductApplic">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyNeed">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="QuoteItem">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Requirement">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortGoodStandard">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentItem">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItemTempRes">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CartAbandonedLine">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="SimpleSalesTaxLookup">
+        <key-map field-name="taxCategory"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductGlAccount">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFacility">
+        <key-map field-name="productId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductAssoc"
+            package-name="org.ofbiz.product.product"
+            title="Product Association Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="productIdTo" type="id-ne"></field>
+      <field name="productAssocTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <field name="reason" type="long-varchar"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="instruction" type="long-varchar"></field>
+      <prim-key field="productId"/>
+      <prim-key field="productIdTo"/>
+      <prim-key field="productAssocTypeId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PROD_ASSOC_TYPE" rel-entity-name="ProductAssocType">
+        <key-map field-name="productAssocTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_ASSOC_MPROD" title="Main" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_ASSOC_APROD" title="Assoc" rel-entity-name="Product">
+        <key-map field-name="productIdTo" rel-field-name="productId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductAssocType"
+            package-name="org.ofbiz.product.product"
+            title="Product Association Type Entity">
+      <field name="productAssocTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productAssocTypeId"/>
+      <relation type="one" fk-name="PROD_ASSOC_TYPEPAR" title="Parent" rel-entity-name="ProductAssocType">
+        <key-map field-name="parentTypeId" rel-field-name="productAssocTypeId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="ProductAssocType">
+        <key-map field-name="productAssocTypeId" rel-field-name="parentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductAssoc">
+        <key-map field-name="productAssocTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductAttribute"
+            package-name="org.ofbiz.product.product"
+            title="Product Attribute Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <field name="attrValue" type="value"></field>
+      <field name="attrType" type="value"></field>
+      <prim-key field="productId"/>
+      <prim-key field="attrName"/>
+      <relation type="one" fk-name="PROD_ATTR" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductTypeAttr">
+        <key-map field-name="attrName"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductContent"
+            package-name="org.ofbiz.product.product"
+            title="Product Data Object Entity">
+      <field name="contentId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="purposeEnumId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="contentId"/>
+      <prim-key field="productId"/>
+      <prim-key field="purposeEnumId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PROD_CNT_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CNT_CNT" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CNT_ENUM" rel-entity-name="Enumeration">
+        <key-map field-name="purposeEnumId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductGlAccount"
+            package-name="org.ofbiz.product.product"
+            title="Product GlAccount Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="productGlAccountTypeId" type="id-ne"></field>
+      <field name="glAccountId" type="id-ne"></field>
+      <prim-key field="productId"/>
+      <prim-key field="productGlAccountTypeId"/>
+      <relation type="one" fk-name="PROD_GLACT_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_GLACT_TYPE" rel-entity-name="ProductGlAccountType">
+        <key-map field-name="productGlAccountTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_GLACT_GLACT" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductGlAccountType"
+            package-name="org.ofbiz.product.product"
+            title="Product GlAccount Type Entity">
+      <field name="productGlAccountTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productGlAccountTypeId"/>
+      <relation type="many" rel-entity-name="ProductGlAccount">
+        <key-map field-name="productGlAccountTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductKeyword"
+            package-name="org.ofbiz.product.product"
+            never-cache="true"
+            title="Product Keyword Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="keyword" type="short-varchar"></field>
+      <field name="relevancyWeight" type="numeric"></field>
+      <prim-key field="productId"/>
+      <prim-key field="keyword"/>
+      <relation type="one" fk-name="PROD_KWD_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductKeywordResult"
+            package-name="org.ofbiz.product.product"
+            never-cache="true"
+            title="Product Keyword Result Entity">
+      <field name="productKeywordResultId" type="id-ne"></field>
+      <field name="visitId" type="id"></field>
+      <field name="productCategoryId" type="id"></field>
+      <field name="searchString" type="short-varchar"></field>
+      <field name="intraKeywordOperator" type="very-short"></field>
+      <field name="anyPrefix" type="indicator"></field>
+      <field name="anySuffix" type="indicator"></field>
+      <field name="removeStems" type="indicator"></field>
+      <field name="numResults" type="numeric"></field>
+      <prim-key field="productKeywordResultId"/>
+      <relation type="one" fk-name="PROD_KWDRES_VST" rel-entity-name="Visit">
+        <key-map field-name="visitId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductReview"
+            package-name="org.ofbiz.product.product"
+            title="Product Review Entity">
+        <field name="productReviewId" type="id-ne"></field>
+        <field name="productId" type="id-ne"></field>
+        <field name="userLoginId" type="id-vlong-ne"></field>
+        <field name="postedAnonymous" type="indicator"></field>
+        <field name="postedDateTime" type="date-time"></field>
+        <field name="productRating" type="floating-point"></field>
+        <field name="productReview" type="very-long"></field>
+        <prim-key field="productReviewId"/>
+        <relation type="one" fk-name="PROD_REVIEW_PROD" rel-entity-name="Product">
+          <key-map field-name="productId" rel-field-name="productId"/>
+        </relation>
+        <relation type="one" fk-name="PROD_REVIEW_ULH" rel-entity-name="UserLogin">
+          <key-map field-name="userLoginId" rel-field-name="userLoginId"/>
+        </relation>
+    </entity>
+    <entity entity-name="ProductType"
+            package-name="org.ofbiz.product.product"
+            title="Product Type Entity">
+      <field name="productTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productTypeId"/>
+      <relation type="one" fk-name="PROD_TYPE_PARENT" title="Parent" rel-entity-name="ProductType">
+        <key-map field-name="parentTypeId" rel-field-name="productTypeId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="ProductType">
+        <key-map field-name="productTypeId" rel-field-name="parentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductTypeAttr">
+        <key-map field-name="productTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Product">
+        <key-map field-name="productTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductTypeAttr"
+            package-name="org.ofbiz.product.product"
+            title="Product Type Attribute Entity">
+      <field name="productTypeId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <prim-key field="productTypeId"/>
+      <prim-key field="attrName"/>
+      <relation type="one" fk-name="PROD_TYPE_ATTR" rel-entity-name="ProductType">
+        <key-map field-name="productTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductAttribute">
+        <key-map field-name="attrName"/>
+      </relation>
+      <relation type="many" rel-entity-name="Product">
+        <key-map field-name="productTypeId"/>
+      </relation>
+    </entity>
+    <view-entity entity-name="ProductVirtualAndAssocPrices"
+            package-name="org.ofbiz.product.product"
+            title="Virtual and Associated Product Prices View Entity">
+      <description>When using this to get an associated product price summary the only columns you should request are: productId, productName, assocProductCount, assocMinPrice, assocMaxPrice. The rest of the field aliases should only be used for specifying constraints since they will break the grouping.</description>
+      <member-entity entity-alias="PVIRT" entity-name="Product"/>
+      <member-entity entity-alias="PA" entity-name="ProductAssoc"/>
+      <member-entity entity-alias="PASC" entity-name="Product"/>
+      <member-entity entity-alias="PASCPRC" entity-name="ProductPrice"/>
+      <alias entity-alias="PVIRT" name="productId" group-by="true"/>
+      <alias entity-alias="PVIRT" name="productName"/>
+      <alias entity-alias="PA" name="productAssocTypeId"/>
+      <alias entity-alias="PA" name="fromDate"/>
+      <alias entity-alias="PA" name="thruDate"/>
+      <alias entity-alias="PASC" name="assocProductId" field="productId"/>
+      <alias entity-alias="PASC" name="assocProductCount" field="productId" function="count-distinct"/>
+      <alias entity-alias="PASCPRC" name="assocPriceTypeId" field="productPriceTypeId"/>
+      <alias entity-alias="PASCPRC" name="assocCurrencyUomId" field="currencyUomId"/>
+      <alias entity-alias="PASCPRC" name="assocFacilityGroupId" field="facilityGroupId"/>
+      <alias entity-alias="PASCPRC" name="assocPriceFromDate" field="fromDate"/>
+      <alias entity-alias="PASCPRC" name="assocPriceThruDate" field="thruDate"/>
+      <alias entity-alias="PASCPRC" name="assocMinPrice" field="price" function="min"/>
+      <alias entity-alias="PASCPRC" name="assocMaxPrice" field="price" function="max"/>
+      <view-link entity-alias="PVIRT" rel-entity-alias="PA">
+        <key-map field-name="productId"/>
+      </view-link>
+      <view-link entity-alias="PA" rel-entity-alias="PASC">
+        <key-map field-name="productIdTo" rel-field-name="productId"/>
+      </view-link>
+      <view-link entity-alias="PASC" rel-entity-alias="PASCPRC">
+        <key-map field-name="productId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="ProductVirtualAndVariantInfo"
+            package-name="org.ofbiz.product.product"
+            title="Virtual and Variant Product View Entity">
+      <member-entity entity-alias="PVIRT" entity-name="Product"/>
+      <member-entity entity-alias="PVA" entity-name="ProductAssoc"/>
+      <member-entity entity-alias="PVAR" entity-name="Product"/>
+      <member-entity entity-alias="PVARFA" entity-name="ProductFeatureAppl"/>
+      <member-entity entity-alias="PVARF" entity-name="ProductFeature"/>
+      <member-entity entity-alias="PVARPRC" entity-name="ProductPrice"/>
+      <alias entity-alias="PVIRT" name="productId"/>
+      <alias entity-alias="PVIRT" name="productName"/>
+      <alias entity-alias="PVA" name="productAssocTypeId"/>
+      <alias entity-alias="PVA" name="fromDate"/>
+      <alias entity-alias="PVA" name="thruDate"/>
+      <alias entity-alias="PVAR" name="variantProductId" field="productId"/>
+      <alias entity-alias="PVARFA" name="productFeatureApplTypeId"/>
+      <alias entity-alias="PVARFA" name="variantFeatureApplFromDate" field="fromDate"/>
+      <alias entity-alias="PVARFA" name="variantFeatureApplThruDate" field="thruDate"/>
+      <alias entity-alias="PVARF" name="productFeatureId"/>
+      <alias entity-alias="PVARF" name="productFeatureTypeId"/>
+      <alias entity-alias="PVARF" name="productFeatureCategoryId"/>
+      <alias entity-alias="PVARF" name="description"/>
+      <alias entity-alias="PVARPRC" name="variantPriceTypeId" field="productPriceTypeId"/>
+      <alias entity-alias="PVARPRC" name="variantCurrencyUomId" field="currencyUomId"/>
+      <alias entity-alias="PVARPRC" name="variantPriceFromDate" field="fromDate"/>
+      <alias entity-alias="PVARPRC" name="variantPriceThruDate" field="thruDate"/>
+      <alias entity-alias="PVARPRC" name="variantPrice" field="price"/>
+      <view-link entity-alias="PVIRT" rel-entity-alias="PVA">
+        <key-map field-name="productId"/>
+      </view-link>
+      <view-link entity-alias="PVA" rel-entity-alias="PVAR">
+        <key-map field-name="productIdTo" rel-field-name="productId"/>
+      </view-link>
+      <view-link entity-alias="PVAR" rel-entity-alias="PVARFA" rel-optional="true">
+        <key-map field-name="productId"/>
+      </view-link>
+      <view-link entity-alias="PVARFA" rel-entity-alias="PVARF">
+        <key-map field-name="productFeatureId"/>
+      </view-link>
+      <view-link entity-alias="PVAR" rel-entity-alias="PVARPRC">
+        <key-map field-name="productId"/>
+      </view-link>
+    </view-entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.promo -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ProductPromo"
+            package-name="org.ofbiz.product.promo"
+            title="Product Promotion Entity">
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="promoName" type="name"></field>
+      <field name="promoCode" type="short-varchar"></field>
+      <field name="promoText" type="description"></field>
+      <field name="singleUse" type="indicator"></field>
+      <prim-key field="productPromoId"/>
+      <relation type="many" rel-entity-name="ProductPromoRule">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductStorePromoAppl">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderAdjustment">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="many" rel-entity-name="MarketingCampaignPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoAction"
+            package-name="org.ofbiz.product.promo"
+            title="Product Promotion Action Entity">
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="productPromoRuleId" type="id-ne"></field>
+      <field name="productPromoActionSeqId" type="id-ne"></field>
+      <field name="productPromoActionTypeId" type="id-ne"></field>
+      <field name="orderAdjustmentTypeId" type="id"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="productId" type="id"></field>
+      <field name="partyId" type="id"></field>
+      <field name="actionLimit" type="numeric"></field>
+      <prim-key field="productPromoId"/>
+      <prim-key field="productPromoRuleId"/>
+      <prim-key field="productPromoActionSeqId"/>
+      <relation type="one" fk-name="PROD_PRACT_TYPE" rel-entity-name="ProductPromoActionType">
+        <key-map field-name="productPromoActionTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRACT_PR" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRACT_RL" rel-entity-name="ProductPromoRule">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRACT_OATYPE" rel-entity-name="OrderAdjustmentType">
+        <key-map field-name="orderAdjustmentTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoActionType"
+            package-name="org.ofbiz.product.promo"
+            title="Catalog Promotion Type Entity">
+      <field name="productPromoActionTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productPromoActionTypeId"/>
+      <relation type="many" rel-entity-name="ProductPromoAction">
+        <key-map field-name="productPromoActionTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoCond"
+            package-name="org.ofbiz.product.promo"
+            title="Product Promotion Condition Entity">
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="productPromoRuleId" type="id-ne"></field>
+      <field name="productPromoCondSeqId" type="id-ne"></field>
+      <field name="inputParamEnumId" type="id"></field>
+      <field name="operatorEnumId" type="id"></field>
+      <field name="condValue" type="long-varchar"></field>
+      <prim-key field="productPromoId"/>
+      <prim-key field="productPromoRuleId"/>
+      <prim-key field="productPromoCondSeqId"/>
+      <relation type="one" fk-name="PROD_PRCOND_PROMO" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRCOND_RULE" rel-entity-name="ProductPromoRule">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRCOND_INENUM" title="InputParam" rel-entity-name="Enumeration">
+        <key-map field-name="inputParamEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRCOND_OPENUM" title="Operator" rel-entity-name="Enumeration">
+        <key-map field-name="operatorEnumId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoRule"
+            package-name="org.ofbiz.product.promo"
+            title="Product Promotion Rule Entity">
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="productPromoRuleId" type="id-ne"></field>
+      <field name="ruleName" type="name"></field>
+      <prim-key field="productPromoId"/>
+      <prim-key field="productPromoRuleId"/>
+      <relation type="one" fk-name="PROD_PRRLE_PROMO" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductPromoAction">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductPromoCond">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoUsage"
+            package-name="org.ofbiz.product.promo"
+            title="Product Promotion Usage Entity">
+      <field name="productPromoUsageId" type="id-ne"></field>
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="productPromoRuleId" type="id"></field>
+      <field name="orderId" type="id"></field>
+      <field name="orderItemSeqId" type="id"></field>
+      <field name="orderAdjustmentId" type="id"></field>
+      <field name="partyId" type="id"></field>
+      <field name="usageDateTime" type="date-time"></field>
+      <prim-key field="productPromoUsageId"/>
+      <relation type="one" fk-name="PROD_PRUSG" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductPromoRule">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRUSG_OHEAD" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRUSG_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.storage -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="Container"
+            package-name="org.ofbiz.product.storage"
+            title="Container Entity">
+      <field name="containerId" type="id-ne"></field>
+      <field name="containerTypeId" type="id"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="containerId"/>
+      <relation type="one" fk-name="CONTAINER_CTTYP" rel-entity-name="ContainerType">
+        <key-map field-name="containerTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItem">
+        <key-map field-name="containerId"/>
+      </relation>
+      <relation type="one" fk-name="CONTAINER_FACILITY" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ContainerType"
+            package-name="org.ofbiz.product.storage"
+            title="Container Type Entity">
+      <field name="containerTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="containerTypeId"/>
+      <relation type="many" rel-entity-name="Container">
+        <key-map field-name="containerTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="Facility"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="facilityTypeId" type="id"></field>
+      <field name="facilityName" type="name"></field>
+      <field name="primaryFacilityGroupId" type="id"></field>
+      <field name="squareFootage" type="numeric"></field>
+      <field name="productStoreId" type="id"></field>
+      <field name="openedDate" type="date-time"></field>
+      <field name="closedDate" type="date-time"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="facilityId"/>
+      <relation type="one" fk-name="FACILITY_FCTYP" rel-entity-name="FacilityType">
+        <key-map field-name="facilityTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_PGRP" rel-entity-name="FacilityGroup">
+        <key-map field-name="primaryFacilityGroupId" rel-field-name="facilityGroupId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityGroupMember">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityTypeAttr">
+        <key-map field-name="facilityTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityAttribute">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItem">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Container">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityContactMech">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityRole">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityLocation">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffort">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Requirement">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Shipment">
+        <key-map field-name="facilityId" rel-field-name="originFacilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentRouteSegment">
+        <key-map field-name="facilityId" rel-field-name="originFacilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityCarrierShipment">
+        <key-map field-name="facilityId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityAttribute"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Attribute Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <field name="attrValue" type="value"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="attrName"/>
+      <relation type="one" fk-name="FACILITY_ATTR" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityTypeAttr">
+        <key-map field-name="attrName"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityCarrierShipment"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Role Type Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="shipmentMethodTypeId" type="id-ne"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <prim-key field="shipmentMethodTypeId"/>
+      <relation type="one" fk-name="FACILITY_CSH_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_CSH_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_CSH_STP" rel-entity-name="ShipmentMethodType">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_CSH_CSM" rel-entity-name="CarrierShipmentMethod">
+        <key-map field-name="shipmentMethodTypeId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityContactMech"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Contact Mechanism Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="contactMechId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>          
+      <field name="extension" type="very-short"></field>
+      <field name="comments" type="comment"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="contactMechId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="FACIL_CMECH_FACIL" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="FACIL_CMECH_CMECH" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="TelecomNumber">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityContactMechPurpose">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="contactMechId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityContactMechPurpose"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Contact Mechanism Purpose Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="contactMechId" type="id-ne"></field>
+      <field name="contactMechPurposeTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="contactMechId"/>
+      <prim-key field="contactMechPurposeTypeId"/>
+      <prim-key field="fromDate"/>
+      <relation type="many" rel-entity-name="FacilityContactMech">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="FACIL_CMPRP_TYPE" rel-entity-name="ContactMechPurposeType">
+        <key-map field-name="contactMechPurposeTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FACIL_CMPRP_FACIL" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="FACIL_CMPRP_CMECH" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+    </entity>   
+    <entity entity-name="FacilityGroup"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Group Entity">
+      <field name="facilityGroupId" type="id-ne"></field>
+      <field name="facilityGroupTypeId" type="id"></field>
+      <field name="primaryParentGroupId" type="id"></field>
+      <field name="facilityGroupName" type="name"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="facilityGroupId"/>
+      <relation type="one" fk-name="FACILITY_GP_TYPE" rel-entity-name="FacilityGroupType">
+        <key-map field-name="facilityGroupTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_GP_PGRP" title="PrimaryParent" rel-entity-name="FacilityGroup">
+        <key-map field-name="primaryParentGroupId" rel-field-name="facilityGroupId"/>
+      </relation>
+      <relation type="many" title="Current" rel-entity-name="FacilityGroupRollup">
+        <key-map field-name="facilityGroupId"/>
+      </relation>
+      <relation type="many" title="Parent" rel-entity-name="FacilityGroupRollup">
+        <key-map field-name="facilityGroupId" rel-field-name="parentFacilityGroupId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityGroupMember">
+        <key-map field-name="facilityGroupId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityGroupMember"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Group Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="facilityGroupId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="facilityGroupId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="FACILITY_MEM_FACILITY" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_MEM_FGROUP" rel-entity-name="FacilityGroup">
+        <key-map field-name="facilityGroupId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityGroupRole"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Group Role Entity">
+      <field name="facilityGroupId" type="id-ne"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <prim-key field="facilityGroupId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <relation type="one" rel-entity-name="FacilityGroup">
+        <key-map field-name="facilityGroupId"/>
+      </relation>
+      <relation type="one" fk-name="FGROUP_RLE_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="FGROUP_RLE_ROLE" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityGroupRollup"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Group Rollup Entity">
+      <field name="facilityGroupId" type="id-ne"></field>
+      <field name="parentFacilityGroupId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="facilityGroupId"/>
+      <prim-key field="parentFacilityGroupId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="FGRP_FRLP_CURRENT" title="Current" rel-entity-name="FacilityGroup">
+        <key-map field-name="facilityGroupId"/>
+      </relation>
+      <relation type="one" fk-name="FGRP_FRLP_PARENT" title="Parent" rel-entity-name="FacilityGroup">
+        <key-map field-name="parentFacilityGroupId" rel-field-name="facilityGroupId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="FacilityGroupRollup">
+        <key-map field-name="facilityGroupId" rel-field-name="parentFacilityGroupId"/>
+      </relation>
+      <relation type="many" title="Parent" rel-entity-name="FacilityGroupRollup">
+        <key-map field-name="parentFacilityGroupId" rel-field-name="facilityGroupId"/>
+      </relation>
+      <relation type="many" title="Sibling" rel-entity-name="FacilityGroupRollup">
+        <key-map field-name="parentFacilityGroupId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityGroupType"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Group Type Entity">
+      <field name="facilityGroupTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="facilityGroupTypeId"/>
+      <relation type="many" rel-entity-name="FacilityGroup">
+        <key-map field-name="facilityGroupTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityLocation"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Location Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="locationSeqId" type="id-ne"></field>
+      <field name="areaId" type="id"></field>
+      <field name="aisleId" type="id"></field>
+      <field name="sectionId" type="id"></field>
+      <field name="levelId" type="id"></field>
+      <field name="positionId" type="id"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="locationSeqId"/>
+      <relation type="one" fk-name="FACILITY_LOC_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItem">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityRole"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Role Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <relation type="one" fk-name="FACILITY_RLE_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_RLE_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_RLE_ROLE" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityType"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Type Entity">
+      <field name="facilityTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="facilityTypeId"/>
+      <relation type="one" fk-name="FACILITY_TYPEPAR" title="Parent" rel-entity-name="FacilityType">
+        <key-map field-name="parentTypeId" rel-field-name="facilityTypeId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="FacilityType">
+        <key-map field-name="facilityTypeId" rel-field-name="parentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityTypeAttr">
+        <key-map field-name="facilityTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Facility">
+        <key-map field-name="facilityTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityTypeAttr"
+            package-name="org.ofbiz.product.storage"
+            title="Facility Type Attribute Entity">
+      <field name="facilityTypeId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <prim-key field="facilityTypeId"/>
+      <prim-key field="attrName"/>
+      <relation type="one" fk-name="FACILITY_TPAT_FT" rel-entity-name="FacilityType">
+        <key-map field-name="facilityTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FacilityAttribute">
+        <key-map field-name="attrName"/>
+      </relation>
+      <relation type="many" rel-entity-name="Facility">
+        <key-map field-name="facilityTypeId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.store -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ProductStore"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="storeName" type="name"></field>
+      <field name="title" type="name"></field>
+      <field name="subtitle" type="description"></field>
+      <field name="inventoryFacilityId" type="id"></field>
+      <field name="oneInventoryFacility" type="indicator"></field>
+      <field name="checkInventory" type="indicator"></field>
+      <field name="reserveInventory" type="indicator"></field>
+      <field name="reserveOrderEnumId" type="id"></field>
+      <field name="requireInventory" type="indicator"></field>
+      <field name="defaultLocaleString" type="very-short"></field>
+      <field name="defaultCurrencyUomId" type="id"></field>
+      <field name="allowPassword" type="indicator"></field>
+      <field name="defaultPassword" type="long-varchar"></field>
+      <field name="explodeOrderItems" type="indicator"></field>
+      <field name="headerApprovedStatus" type="id"></field>
+      <field name="itemApprovedStatus" type="id"></field>
+      <field name="headerDeclinedStatus" type="id"></field>
+      <field name="itemDeclinedStatus" type="id"></field>
+      <field name="headerCancelStatus" type="id"></field>
+      <field name="itemCancelStatus" type="id"></field>
+      <field name="declinedMessage" type="long-varchar"></field>
+      <field name="rejectedMessage" type="long-varchar"></field>
+      <field name="styleSheet" type="url"></field>
+      <field name="headerLogo" type="url"></field>
+      <field name="headerMiddleBackground" type="url"></field>
+      <field name="headerRightBackground" type="url"></field>
+      <prim-key field="productStoreId"/>
+      <relation type="one" fk-name="PROD_STR_FACILITY" rel-entity-name="Facility">
+        <key-map field-name="inventoryFacilityId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_RORDENUM" title="ReserveOrder" rel-entity-name="Enumeration">
+        <key-map field-name="reserveOrderEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductStoreFacility">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductStorePromoAppl">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WebSite">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductStoreRole">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductStoreCatalog">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItemTempRes">
+        <key-map field-name="productStoreId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductStoreCatalog"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Catalog Association Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="productStoreId"/>
+      <prim-key field="prodCatalogId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PS_CAT_PRDSTR" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PS_CAT_CATALOG" rel-entity-name="ProdCatalog">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+    </entity>  
+    <entity entity-name="ProductStoreEmailSetting"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Email Settings Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="emailType" type="id-ne"></field>
+      <field name="templatePath" type="long-varchar"></field>
+      <field name="fromAddress" type="email"></field>
+      <field name="ccAddress" type="email"></field>
+      <field name="bccAddress" type="email"></field>
+      <field name="subject" type="comment"></field>
+      <field name="contentType" type="long-varchar"></field>               
+      <prim-key field="productStoreId"/>
+      <prim-key field="emailType"/>
+      <relation type="one" fk-name="PRDSTREM_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTREM_ENUM" rel-entity-name="Enumeration">
+        <key-map field-name="emailType" rel-field-name="enumId"/>
+      </relation>     
+    </entity>    
+    <entity entity-name="ProductStoreFacility"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Inventory Facility Applicability Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="facilityId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="productStoreId"/>
+      <prim-key field="facilityId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PRDSTRFAC_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTRFAC_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+    </entity>
+    <view-entity entity-name="ProductStoreFacilityByOrder"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Facility By Order">
+        <member-entity entity-alias="ORH" entity-name="OrderHeader"/>
+        <member-entity entity-alias="PSF" entity-name="ProductStoreFacility"/>
+        <member-entity entity-alias="PDS" entity-name="ProductStore"/>
+        <member-entity entity-alias="FAC" entity-name="Facility"/>        
+        <alias entity-alias="ORH" name="orderId"/>
+        <alias entity-alias="PSF" name="productStoreId"/>
+        <alias entity-alias="PSF" name="facilityId"/>
+        <alias entity-alias="PSF" name="fromDate"/>
+        <alias entity-alias="PSF" name="thruDate"/>
+        <alias entity-alias="PSF" name="sequenceNum"/>
+        <alias entity-alias="PDS" name="storeName"/>  
+        <alias entity-alias="FAC" name="facilityName"/>
+        <alias entity-alias="FAC" name="facilityTypeId"/>        
+        <view-link entity-alias="ORH" rel-entity-alias="PSF">
+            <key-map field-name="productStoreId"/>
+        </view-link>
+        <view-link entity-alias="PSF" rel-entity-alias="PDS">
+            <key-map field-name="productStoreId"/>
+        </view-link>
+        <view-link entity-alias="PSF" rel-entity-alias="FAC">
+            <key-map field-name="facilityId"/>
+        </view-link>        
+    </view-entity>
+    <entity entity-name="ProductStorePaymentSetting"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Payment Settings Entity">
+      <field name="productStoreId" type="id-ne"></field>      
+      <field name="paymentMethodTypeId" type="id-ne"></field>
+      <field name="paymentServiceTypeEnumId" type="id-ne"></field>
+      <field name="paymentService" type="value"></field>     
+      <field name="paymentPropertiesPath" type="value"></field>
+      <prim-key field="productStoreId"/>
+      <prim-key field="paymentMethodTypeId"/>
+      <prim-key field="paymentServiceTypeEnumId"/>
+      <relation type="one" fk-name="PRDS_PS_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PRDS_PS_PMNTTP" rel-entity-name="PaymentMethodType">
+        <key-map field-name="paymentMethodTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PRDS_PS_ENUM" rel-entity-name="Enumeration">
+        <key-map field-name="paymentServiceTypeEnumId" rel-field-name="enumId"/>
+      </relation>      
+    </entity>
+    <entity entity-name="ProductStorePromoAppl"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Promotion Applicability Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="productStoreId"/>
+      <prim-key field="productPromoId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PRDSTRPRMO_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTRPRMO_PRMO" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductStoreRole"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Role Association Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <prim-key field="productStoreId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyGroup">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTRRLE_PRLE" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTRRLE_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductStoreShipmentMeth"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Carrier Shipment Method Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="shipmentMethodTypeId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>      
+      <field name="sequenceNumber" type="numeric"></field> 
+      <prim-key field="productStoreId"/>    
+      <prim-key field="shipmentMethodTypeId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>    
+    </entity>
+    <view-entity entity-name="ProductStoreShipmentMethView"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Carrier And Shipment Method Type View Entity">
+      <member-entity entity-alias="PSSM" entity-name="ProductStoreShipmentMeth"/>
+      <member-entity entity-alias="SM" entity-name="ShipmentMethodType"/>
+      <alias entity-alias="PSSM" name="productStoreId"/>
+      <alias entity-alias="PSSM" name="shipmentMethodTypeId"/>
+      <alias entity-alias="PSSM" name="partyId"/>
+      <alias entity-alias="PSSM" name="roleTypeId"/>
+      <alias entity-alias="PSSM" name="sequenceNumber"/>
+      <alias entity-alias="SM" name="description"/>
+      <view-link entity-alias="PSSM" rel-entity-alias="SM">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </view-link>
+    </view-entity>      
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.supplier -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="MarketInterest"
+            package-name="org.ofbiz.product.supplier"
+            title="Market Interest Entity">
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="partyClassificationGroupId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="productCategoryId"/>
+      <prim-key field="partyClassificationGroupId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="MARKET_INT_PCAT" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one" fk-name="MARKET_INT_PCGRP" rel-entity-name="PartyClassificationGroup">
+        <key-map field-name="partyClassificationGroupId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ReorderGuideline"
+            package-name="org.ofbiz.product.supplier"
+            title="Reorder Guideline Entity">
+      <field name="reorderGuidelineId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="geoId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="reorderQuantity" type="floating-point"></field>
+      <field name="reorderLevel" type="floating-point"></field>
+      <prim-key field="reorderGuidelineId"/>
+      <relation type="one" fk-name="REORDER_GD_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="REORDER_GD_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="REORDER_GD_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="REORDER_GD_GEO" rel-entity-name="Geo">
+        <key-map field-name="geoId"/>
+      </relation>
+    </entity>
+    <entity entity-name="SupplierPrefOrder"
+            package-name="org.ofbiz.product.supplier"
+            title="Preference Type Entity">
+      <field name="supplierPrefOrderId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="supplierPrefOrderId"/>
+      <relation type="many" rel-entity-name="SupplierProduct">
+        <key-map field-name="supplierPrefOrderId"/>
+      </relation>
+    </entity>
+    <entity entity-name="SupplierProduct"
+            package-name="org.ofbiz.product.supplier"
+            title="Supplier Product Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="availableFromDate" type="date-time"></field>
+      <field name="availableThruDate" type="date-time"></field>
+      <field name="supplierPrefOrderId" type="id"></field>
+      <field name="supplierRatingTypeId" type="id"></field>
+      <field name="standardLeadTime" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <prim-key field="productId"/>
+      <prim-key field="partyId"/>
+      <relation type="one" fk-name="SUPPL_PROD_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="SUPPL_PROD_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="SUPPL_PROD_SPORD" rel-entity-name="SupplierPrefOrder">
+        <key-map field-name="supplierPrefOrderId"/>
+      </relation>
+      <relation type="one" fk-name="SUPPL_PROD_SRTPE" rel-entity-name="SupplierRatingType">
+        <key-map field-name="supplierRatingTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="SupplierRatingType"
+            package-name="org.ofbiz.product.supplier"
+            title="Supplier Rating Type Entity">
+      <field name="supplierRatingTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="supplierRatingTypeId"/>
+      <relation type="many" rel-entity-name="SupplierProduct">
+        <key-map field-name="supplierRatingTypeId"/>
+      </relation>
+    </entity>
+</entitymodel>
+

@@ -1,0 +1,66 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     David E. Jones
+ *@author     Brad Steiner
+ *@version    $Revision: 1.1 $
+ *@since      2.2
+ */
+
+import java.util.*;
+import java.io.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.widgetimpl.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+context.put("nowTimestampString", nowTimestampString);
+
+boolean tryEntity = true;
+if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+
+String productStoreId = request.getParameter("productStoreId");
+context.put("productStoreId", productStoreId);
+
+GenericValue productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+context.put("productStore", productStore);
+
+Collection productStorePromoAppls = null;
+if (productStore == null) {
+    tryEntity = false;
+} else {
+    productStorePromoAppls = productStore.getRelated("ProductStorePromoAppl", null, UtilMisc.toList("sequenceNum", "productPromoId"));
+    if (productStorePromoAppls != null) context.put("productStorePromoAppls", productStorePromoAppls);
+}
+
+Collection productPromos = delegator.findAll("ProductPromo", UtilMisc.toList("promoName"));
+if (productPromos != null) context.put("productPromos", productPromos);
+
+if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;
+
