@@ -25,6 +25,7 @@
 package org.ofbiz.pos.event;
 
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.pos.component.Journal;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.Debug;
 
@@ -42,6 +43,11 @@ public class TestEvents {
         pos.showDialog("main/dialog/error/testerror");
     }
 
+    public static void logSelectedIndex(PosScreen pos) {
+        Journal journal = pos.getJournal();
+        Debug.log("Selected IDX - " + journal.getSelectedIdx(), module);
+    }
+    
     public static void testMsr(PosScreen pos) {
         try {
             org.ofbiz.pos.jpos.service.MsrTestService.sendTest();

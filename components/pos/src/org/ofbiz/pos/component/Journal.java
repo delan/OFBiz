@@ -24,6 +24,8 @@
  */
 package org.ofbiz.pos.component;
 
+import javax.swing.JScrollPane;
+
 import net.xoetrope.swing.XTable;
 import net.xoetrope.swing.XPanel;
 import net.xoetrope.xui.data.XModel;
@@ -41,9 +43,9 @@ public class Journal {
 
     public static final String module = Journal.class.getName();
 
-    private static String[] field = { "sku", "desc", "qty", "price" };
-    private static String[] name = { "SKU", "ITEM", "QTY", "AMT" };
-    private static int[] width = { 100, 170, 60, 80};
+    private static String[] field = { "sku", "desc", "qty", "price", "index" };
+    private static String[] name = { "SKU", "ITEM", "QTY", "AMT", "" };
+    private static int[] width = { 100, 170, 60, 80, 0};
 
     protected XPanel jpanel = null;
     protected XTable jtable = null;
@@ -55,6 +57,7 @@ public class Journal {
         this.jpanel.setVisible(false);
 
         // set the table as selectable
+        jtable.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         jtable.setInteractiveTable(true);
         jtable.setFocusable(false);
 
@@ -82,7 +85,13 @@ public class Journal {
         XModel model = jmodel.get(jtable.getSelectedRow() + 1);
         return model.getValueAsString("sku");
     }
-    
+
+    public String getSelectedIdx() {
+        XModel jmodel = (XModel) XModel.getInstance().get("journal/items");
+        XModel model = jmodel.get(jtable.getSelectedRow() + 1);
+        return model.getValueAsString("index");
+    }
+
     public void selectNext() {
         jtable.next();
     }
@@ -168,9 +177,9 @@ public class Journal {
         }
     }
 
-    public static XModel appendNode(XModel node, String tag, String id, String value) {
-        XModel newNode = (XModel) node.append(id);
-        newNode.setTagName(tag);        
+    public static XModel appendNode(XModel node, String tag, String name, String value) {
+        XModel newNode = (XModel) node.append(name);
+        newNode.setTagName(tag);
         if (value != null) {
             newNode.set(value);
         }
