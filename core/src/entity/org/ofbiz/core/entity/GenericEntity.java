@@ -304,15 +304,26 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         return new GenericPK(getModelEntity(), this.getFields(pkNames));
     }
 
-    public void setNonPKFields(Map fields) {
-        //make a copy of the fields, remove the primary keys, set the rest
-        Map keyValuePairs = new HashMap(fields);
+    /** go through the pks and for each one see if there is an entry in fields to set */
+    public void setPKFields(Map fields) {
         Iterator iter = this.getModelEntity().getPksIterator();
         while (iter != null && iter.hasNext()) {
             ModelField curField = (ModelField) iter.next();
-            keyValuePairs.remove(curField.getName());
+            if (fields.containsKey(curField.getName())) {
+                this.set(curField.getName(), fields.get(curField.getName()));
+            }
         }
-        this.setFields(keyValuePairs);
+    }
+
+    /** go through the non-pks and for each one see if there is an entry in fields to set */
+    public void setNonPKFields(Map fields) {
+        Iterator iter = this.getModelEntity().getNopksIterator();
+        while (iter != null && iter.hasNext()) {
+            ModelField curField = (ModelField) iter.next();
+            if (fields.containsKey(curField.getName())) {
+                this.set(curField.getName(), fields.get(curField.getName()));
+            }
+        }
     }
 
     /** Returns keys of entity fields
