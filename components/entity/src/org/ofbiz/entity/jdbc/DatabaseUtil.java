@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.13 2004/04/23 01:45:27 doogie Exp $
+ * $Id: DatabaseUtil.java,v 1.14 2004/04/23 05:25:19 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -1492,6 +1492,15 @@ public class DatabaseUtil {
     }
 
     /* ====================================================================== */
+    public String makeIndexName(ModelIndex modelIndex, int constraintNameClipLength) {
+        String indexName = modelIndex.getName();
+
+        if (indexName.length() > constraintNameClipLength) {
+            indexName = indexName.substring(0, constraintNameClipLength);
+        }
+
+        return indexName;
+    }
 
     /* ====================================================================== */
     public void createForeignKeys(ModelEntity entity, Map modelEntities, List messages) {
@@ -1844,7 +1853,7 @@ public class DatabaseUtil {
             indexSqlBuf.append("UNIQUE ");
         }
         indexSqlBuf.append("INDEX ");
-        indexSqlBuf.append(modelIndex.getName());
+        indexSqlBuf.append(makeIndexName(modelIndex, datasourceInfo.constraintNameClipLength));
         indexSqlBuf.append(" ON ");
         indexSqlBuf.append(entity.getTableName(datasourceInfo));
 
