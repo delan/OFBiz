@@ -2370,12 +2370,6 @@ space [ ], doublequote ["], single quote ['], ampersand [&amp;], question mark [
 </tr>
 </table>
 
-<!ELEMENT log ( ( field | string )* )>
-<!ATTLIST log
-    level ( verbose | timing | info | important | warning | error | fatal | always ) #REQUIRED
-    message CDATA #IMPLIED
->
-
 <p><b><u>log</u></b></p>
 
 <p>The log tag logs a message used the OFBiz Debug class, which uses Log4J to log to the console, a file, or some other location.
@@ -2515,6 +2509,33 @@ bit closer to the resulting XML, and the notation used in the Rule Engine)
 &lt;!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd"&gt;
 
 &lt;simple-methods&gt;
+    &lt;simple-method method-name="createProduct" short-description="Create an Product"&gt;
+        &lt;check-permission permission="CATALOG" action="_CREATE"&gt;&lt;fail-message message="Security Error: to run createProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/&gt;&lt;/check-permission&gt;
+		&lt;check-id field-name="productId" map-name="parameters"/&gt;
+        &lt;check-errors/&gt;
+
+        &lt;make-value value-name="newEntity" entity-name="Product"/&gt;
+        &lt;set-nonpk-fields map-name="parameters" value-name="newEntity"/&gt;
+        &lt;set-pk-fields map-name="parameters" value-name="newEntity"/&gt;
+        
+        &lt;now-timestamp-to-env env-name="nowTimestamp"/&gt;
+        &lt;env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/&gt;
+        &lt;env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/&gt;
+        &lt;field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/&gt;
+        &lt;field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/&gt;
+        
+        &lt;create-value value-name="newEntity"/&gt;
+
+        &lt;!-- induce keywords if autoCreateKeywords is emtpy or Y--&gt;
+        &lt;if-empty field-name="autoCreateKeywords" map-name="newEntity"&gt;
+            &lt;call-bsh&gt;&lt;![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newEntity);]]&gt;&lt;/call-bsh&gt;
+        &lt;else&gt;
+            &lt;if-compare field-name="autoCreateKeywords" map-name="newEntity" operator="equals" value="Y"&gt;
+                &lt;call-bsh&gt;&lt;![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newEntity);]]&gt;&lt;/call-bsh&gt;
+            &lt;/if-compare&gt;
+        &lt;/else&gt;
+        &lt;/if-empty&gt;
+    &lt;/simple-method&gt;
     &lt;simple-method event-name="create" short-description="Create Work Effort"&gt;
         &lt;call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
                 processor-name="update" in-map-name="parameters" out-map-name="context"/&gt;
