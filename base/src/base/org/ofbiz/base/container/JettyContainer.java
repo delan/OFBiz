@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.17 2003/11/21 17:43:18 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.18 2004/01/24 16:07:48 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.base.util.UtilURL;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
-  *@version    $Revision: 1.17 $
+  *@version    $Revision: 1.18 $
  * @since      3.0
  */
 public class JettyContainer implements Container {
@@ -170,6 +170,10 @@ public class JettyContainer implements Container {
                     }
                     if (props.getProperty("key-password") != null) {
                         listener.setKeyPassword(props.getProperty("key-password").value);
+                    }
+                    if (props.getProperty("need-client-auth") != null) {
+                        boolean needClientAuth = "true".equalsIgnoreCase(props.getProperty("need-client-auth").value);
+                        listener.setNeedClientAuth(needClientAuth);
                     }
                     if (props.getProperty("low-resource-persist-time") != null) {
                         int value = 0;
