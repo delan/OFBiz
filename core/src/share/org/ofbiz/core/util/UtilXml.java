@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/16 14:10:50  jonesde
+ * small refactoring, moved root element name set to UtilXml
+ *
  * Revision 1.1  2001/11/15 14:55:29  jonesde
  * Refactored XML in/out and added stream and string methods
  *
@@ -60,7 +63,7 @@ import org.apache.xml.serialize.*;
  *@version    1.0
  */
 public class UtilXml {
-  public static String writeXmlDocument(Document document) throws java.io.FileNotFoundException, java.io.IOException {
+  public static String writeXmlDocument(Document document) throws java.io.IOException {
     if(document == null) {
       Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing");
       return null;
@@ -87,11 +90,11 @@ public class UtilXml {
     FileOutputStream fos = null;
     fos = new FileOutputStream(outFile);
 
-    writeXmlDocument(fos, document);
-    if(fos != null) fos.close();
+    try { writeXmlDocument(fos, document); }
+    finally { if(fos != null) fos.close(); }
   }
   
-  public static void writeXmlDocument(OutputStream os, Document document) throws java.io.FileNotFoundException, java.io.IOException {
+  public static void writeXmlDocument(OutputStream os, Document document) throws java.io.IOException {
     if(document == null) {
       Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing");
       return;
