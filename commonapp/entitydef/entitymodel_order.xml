@@ -222,12 +222,7 @@
             title="The Order Delivery Schedule Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
-      <field name="shipmentMethodTypeId" type="id"></field>
-      <field name="trackingNumber" type="short-varchar"></field>
-      <field name="deliveryDate" type="date-time"></field>
-      <field name="deliveryWorkEffortId" type="id"></field>
-      <field name="pickupDate" type="date-time"></field>
-      <field name="pickupWorkEffortId" type="id"></field>
+      <field name="estimatedReadyDate" type="date-time"></field>
       <field name="cartons" type="numeric"></field>
       <field name="skidsPallets" type="numeric"></field>
       <field name="unitsPieces" type="floating-point"></field>
@@ -245,9 +240,6 @@
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>
-      <relation type="one" fk-name="ORDER_DELSCH_SHMTP" rel-entity-name="ShipmentMethodType">
-        <key-map field-name="shipmentMethodTypeId"/>
-      </relation>
       <relation type="one" fk-name="ORDER_DELSCH_TCUOM" title="TotalCubic" rel-entity-name="Uom">
         <key-map field-name="totalCubicUomId" rel-field-name="uomId"/>
       </relation>
@@ -256,12 +248,6 @@
       </relation>
       <relation type="one" fk-name="ORDER_DELSCH_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_DELSCH_DWE" title="Delivery" rel-entity-name="WorkEffort">
-        <key-map field-name="deliveryWorkEffortId" rel-field-name="workEffortId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_DELSCH_PWE" title="Pickup" rel-entity-name="WorkEffort">
-        <key-map field-name="pickupWorkEffortId" rel-field-name="workEffortId"/>
       </relation>
     </entity>
     <entity entity-name="OrderHeader"
@@ -365,6 +351,12 @@
         <key-map field-name="orderId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" title="Primary" rel-entity-name="Shipment">
+        <key-map field-name="orderId" rel-field-name="primarOrderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ItemIssuance">
         <key-map field-name="orderId"/>
       </relation>
     </entity>
