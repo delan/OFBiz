@@ -107,37 +107,6 @@ public class ManufacLookupParams {
     }
     
     /**
-     * Set up parameters to be able to start the generic lockup to have LookupProduct
-     *
-     * @param request  The HTTPRequest object for the current request
-     * @param response The HTTPResponse object for the current request
-     * @return String specifying the exit status of this event
-     */
-    public static String lookupProduct(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = ((HttpServletRequest) request).getSession();
-        Map paramLookup = (Map) session.getAttribute("paramLookup");
-        if (paramLookup == null || !"LookupProduct".equals(paramLookup.get("lookupName"))) {
-            if (paramLookup == null) {
-                paramLookup = new HashMap();
-                session.setAttribute("paramLookup", paramLookup);
-            } else
-                paramLookup.clear();
-            paramLookup.put("lookupName", "LookupProduct");
-            paramLookup.put("titleProperty", "PageTitleLookupProduct");
-            paramLookup.put("formDefFile", "/lookup/FieldLookupForms.xml");
-            paramLookup.put("singleFormName", "lookupProduct");
-            paramLookup.put("listFormName", "listLookupProduct");
-            paramLookup.put("entityName", "Product");
-            //paramLookup.put("listName","entityList");
-            paramLookup.put("viewSize", "10");
-            paramLookup.put("permission", "MANUFACTURING");
-            paramLookup.put("permissionType", "simple");
-        }
-        
-        return "success";
-    }
-    
-    /**
      * Set up parameters to be able to start the generic lockup to have LookupVirtualProduct
      *
      * @param request  The HTTPRequest object for the current request
