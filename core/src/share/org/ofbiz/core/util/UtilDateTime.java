@@ -30,6 +30,7 @@ import java.util.*;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @author     <a href="mailto:johan@ibibi.com">Johan Isacsson</a>
  * @version    $Revision$
  * @since      2.0
  */
@@ -55,11 +56,12 @@ public class UtilDateTime {
 
     public static java.sql.Timestamp getDayStart(java.sql.Timestamp stamp, int daysLater) {
         Calendar tempCal = Calendar.getInstance();
-
         tempCal.setTime(new java.util.Date(stamp.getTime()));
         tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
-        return new java.sql.Timestamp(tempCal.getTime().getTime());
+        java.sql.Timestamp retStamp = new java.sql.Timestamp(tempCal.getTime().getTime());
+        retStamp.setNanos(0);
+        return retStamp;
     }
 
     public static java.sql.Timestamp getNextDayStart(java.sql.Timestamp stamp) {
@@ -72,13 +74,53 @@ public class UtilDateTime {
 
     public static java.sql.Timestamp getDayEnd(java.sql.Timestamp stamp, int daysLater) {
         Calendar tempCal = Calendar.getInstance();
-
         tempCal.setTime(new java.util.Date(stamp.getTime()));
         tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
         tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
-        return new java.sql.Timestamp(tempCal.getTime().getTime());
+        java.sql.Timestamp retStamp = new java.sql.Timestamp(tempCal.getTime().getTime());
+        retStamp.setNanos(999999999);
+        return retStamp;
     }
 
+    /**
+     * Return the date for the first day of the month
+     * @param stamp
+     * @return
+     */
+    public static java.sql.Timestamp getMonthStart(java.sql.Timestamp stamp) {
+        return getMonthStart(stamp, 0);
+    }
+        
+    public static java.sql.Timestamp getMonthStart(java.sql.Timestamp stamp, int daysLater) {
+        Calendar tempCal = Calendar.getInstance();
+        tempCal.setTime(new java.util.Date(stamp.getTime()));
+        tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), 1, 0, 0, 0);
+        tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
+        java.sql.Timestamp retStamp = new java.sql.Timestamp(tempCal.getTime().getTime());
+        retStamp.setNanos(0);
+        return retStamp;
+    }
+
+    /**
+     * Return the date for the first day of the week
+     * @param stamp
+     * @return
+     */
+    public static java.sql.Timestamp getWeekStart(java.sql.Timestamp stamp) {
+        return getWeekStart(stamp, 0);
+    }
+    
+    public static java.sql.Timestamp getWeekStart(java.sql.Timestamp stamp, int daysLater) {
+        Calendar tempCal = Calendar.getInstance();
+        tempCal.setTime(new java.util.Date(stamp.getTime()));
+        tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+        tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
+        tempCal.set(Calendar.DAY_OF_WEEK, tempCal.getFirstDayOfWeek());
+        java.sql.Timestamp retStamp = new java.sql.Timestamp(tempCal.getTime().getTime());
+        retStamp.setNanos(0);
+        return retStamp;
+    }
+        
     /** Converts a date String into a java.sql.Date
      * @param date The date String: MM/DD/YYYY
      * @return A java.sql.Date made from the date String

@@ -2,4 +2,5 @@
 <page>
     <template>main</template>
     <property name="title">Calendar Month View</property>
+    <page-action name="/calendar/month.bsh"/>
 </page>

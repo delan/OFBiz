@@ -2,4 +2,5 @@
 <page>
     <template>main</template>
     <property name="title">Calendar Day View</property>
+    <page-action name="/calendar/day.bsh"/>
 </page>

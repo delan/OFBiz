@@ -32,6 +32,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.ofbiz.core.entity.EntityExpr;
 import org.ofbiz.core.entity.EntityOperator;
@@ -50,6 +52,7 @@ import org.ofbiz.core.util.UtilMisc;
  * WorkEffortServices - WorkEffort related Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:johan@ibibi.com">Johan Isacsson</a>
  * @version    $Revision$
  * @since      2.0
  */
@@ -246,6 +249,22 @@ public class WorkEffortServices {
             return resultMap;
     } 
         
+    private static List getWorkEffortEvents(DispatchContext ctx,Timestamp startStamp, Timestamp endStamp, String partyId) {
+        GenericDelegator delegator = ctx.getDelegator();
+        List validWorkEfforts = new ArrayList();
+        try {
+            validWorkEfforts = new ArrayList(delegator.findByAnd("WorkEffortAndPartyAssign",
+            UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, partyId),
+                            new EntityExpr("estimatedCompletionDate", EntityOperator.GREATER_THAN_EQUAL_TO, startStamp),
+                            new EntityExpr("estimatedStartDate", EntityOperator.LESS_THAN, endStamp),
+                            new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "EVENT")),
+                            UtilMisc.toList("estimatedStartDate")));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+        return validWorkEfforts;        
+    }
+    
     public static Map getWorkEffortEventsByDays(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");    
@@ -303,16 +322,7 @@ public class WorkEffortServices {
         } else {
             // Use the View Entity
             if (userLogin != null && userLogin.get("partyId") != null) {
-                try {
-                    validWorkEfforts = new ArrayList(delegator.findByAnd("WorkEffortAndPartyAssign",
-                        UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
-                        new EntityExpr("estimatedCompletionDate", EntityOperator.GREATER_THAN_EQUAL_TO, startStamp),
-                        new EntityExpr("estimatedStartDate", EntityOperator.LESS_THAN, endStamp),
-                        new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "EVENT")),
-                        UtilMisc.toList("estimatedStartDate")));
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
-                }
+                validWorkEfforts = getWorkEffortEvents(ctx,startStamp,endStamp,userLogin.getString("partyId"));                
             }
         }
         
@@ -356,4 +366,98 @@ public class WorkEffortServices {
         result.put("days", days);
         return result;
     }
+    
+    public static Map getWorkEffortEventsByPeriod(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");    
+        Map resultMap = new HashMap();
+        
+        Timestamp startDay = (Timestamp) context.get("start");
+        Integer numPeriodsInteger = (Integer) context.get("numPeriods");
+        Integer periodInteger = (Integer) context.get("periodSeconds");
+        
+        //To be returned, the max concurrent entries for a single period
+        int maxConcurrentEntries = 0;
+                
+        long period = periodInteger.intValue()*1000;
+        
+        int numPeriods = 0;
+        if(numPeriodsInteger != null) numPeriods = numPeriodsInteger.intValue();
+        
+        // get a timestamp (date) for the beginning of today and for beginning of numDays+1 days from now
+        Timestamp startStamp = UtilDateTime.getDayStart(startDay);          
+        Timestamp endStamp = new Timestamp(startStamp.getTime()+(period*(numPeriods+1)));
+        
+        startStamp.setNanos(0);
+        // Get the WorkEfforts
+        List validWorkEfforts = null;
+        
+        
+        // Use the View Entity
+        if (userLogin != null && userLogin.get("partyId") != null) {
+            validWorkEfforts = getWorkEffortEvents(ctx,startStamp,endStamp,userLogin.getString("partyId"));                
+}
+        
+        // Split the WorkEffort list into a map with entries for each period, period start is the key
+        List periods = new ArrayList();
+        if (validWorkEfforts != null) {
+        
+            // For each day in the set we check all work efforts to see if they fall within range
+            for (int i = 0; i < numPeriods; i++) {
+                Timestamp curPeriodStart = new Timestamp(startStamp.getTime()+(i*period));
+                Timestamp curPeriodEnd = new Timestamp(curPeriodStart.getTime()+period);
+                List curWorkEfforts = new ArrayList();
+                Map entry = new HashMap();
+                for (int j = 0; j < validWorkEfforts.size(); j++) {
+                    
+                    GenericValue workEffort = (GenericValue) validWorkEfforts.get(j);
+                    // Debug.log("Got workEffort: " + workEffort.toString());
+            
+                    Timestamp estimatedStartDate = workEffort.getTimestamp("estimatedStartDate");
+                    Timestamp estimatedCompletionDate = workEffort.getTimestamp("estimatedCompletionDate");
+            
+                    if (estimatedStartDate == null || estimatedCompletionDate == null) continue;
+                    
+                    if (estimatedStartDate.compareTo(curPeriodEnd) < 0 && estimatedCompletionDate.compareTo(curPeriodStart) > 0) {
+                        //Debug.logInfo("Task start: "+estimatedStartDate+" Task end: "+estimatedCompletionDate+" Period start: "+curPeriodStart+" Period end: "+curPeriodEnd);
+                       
+                        Map calEntry = new HashMap();
+                        calEntry.put("workEffort",workEffort);
+                                               
+                        long length = ((estimatedCompletionDate.after(endStamp) ? endStamp.getTime() : estimatedCompletionDate.getTime()) - (estimatedStartDate.before(startStamp) ? startStamp.getTime() : estimatedStartDate.getTime()));
+                        int periodSpan = (int) Math.ceil((double) length / period);                                                
+                        calEntry.put("periodSpan", new Integer(periodSpan));
+
+                        if(i == 0) calEntry.put("startOfPeriod",new Boolean(true)); //If this is the first priod any valid entry is starting here
+                        else {
+                            boolean startOfPeriod = ((estimatedStartDate.getTime() - curPeriodStart.getTime()) >= 0);                            
+                            calEntry.put("startOfPeriod", new Boolean(startOfPeriod));
+                        }
+                        curWorkEfforts.add(calEntry);
+                    }
+        
+                    // if startDate is after hourEnd, continue to the next day, we haven't gotten to this one yet...
+                    if (estimatedStartDate.after(curPeriodEnd)) break;
+                    
+                    // if completionDate is before the hourEnd, remove from list, we are done with it
+                    if (estimatedCompletionDate.before(curPeriodEnd)) {
+                        validWorkEfforts.remove(j);
+                        j--;
+                    }
+                }
+                //For calendar we want to include empty periods aswell
+                //if (curWorkEfforts.size() > 0)  
+                int numEntries = curWorkEfforts.size();
+                if(numEntries > maxConcurrentEntries) maxConcurrentEntries = numEntries;
+                entry.put("start",curPeriodStart);
+                entry.put("end",curPeriodEnd);                
+                entry.put("calendarEntries",curWorkEfforts);
+                periods.add(entry);
+            }
+        }
+        Map result = new HashMap();
+        result.put("periods", periods);
+        result.put("maxConcurrentEntries", new Integer(maxConcurrentEntries));
+        return result;
+    }    
 }

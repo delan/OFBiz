@@ -1,53 +1,49 @@
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
+<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='40%' >
-            <div class='boxhead'>&nbsp;Calendar Up-Coming Events View</div>
-          </TD>
-          <TD align=right width='60%'>
-            <A href='<@ofbizUrl>/day</@ofbizUrl>' class='lightbuttontext'>[Day&nbsp;View]</A>
-            <A href='<@ofbizUrl>/week</@ofbizUrl>' class='lightbuttontext'>[Week&nbsp;View]</A>
-            <A href='<@ofbizUrl>/month</@ofbizUrl>' class='lightbuttontext'>[Month&nbsp;View]</A>
-            <A href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='lightbuttontextdisabled'>[Upcoming&nbsp;Events]</A>
-            <A href='<@ofbizUrl>/event</@ofbizUrl>' class='lightbuttontext'>[New&nbsp;Event]</A>
-          </TD>
+          <td align=left width='40%' class="boxhead">Calendar Up-Coming Events View</td>
+          <td align=right width='60%'>
+		  <table><tr><td>
+		  <a href='<@ofbizUrl>/day</@ofbizUrl>' class='submenutext'>Day&nbsp;View</a><a href='<@ofbizUrl>/week</@ofbizUrl>' class='submenutext'>Week&nbsp;View</a><a href='<@ofbizUrl>/month</@ofbizUrl>' class='submenutext'>Month&nbsp;View</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutextdisabled'>Upcoming&nbsp;Events</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextright'>New&nbsp;Event</a>
+		  </td></tr></table>
+		  </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
+    </td>
+  </tr>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
           <#if days?has_content>
-              <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
-                <TR>
-                  <TD><DIV class='tabletext'><b>Start Date/Time</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>End Date/Time</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Event Name</b></DIV></TD>
-                </TR>                
+              <table width='100%' cellpadding='2' cellspacing='0' border='0'>
+                <tr>
+                  <td><div class='tabletext'><b>Start Date/Time</b></div></td>
+                  <td><div class='tabletext'><b>End Date/Time</b></div></td>
+                  <td><div class='tabletext'><b>Event Name</b></div></td>
+                </tr>                
                 <#list days as workEfforts>
-                  <TR><TD colspan='3'><HR class='sepbar'></TD></TR>
+                  <tr><td colspan='3'><hr class='sepbar'></td></tr>
                   <#list workEfforts as workEffort>
-                    <TR>
-                      <TD><DIV class='tabletext'>${workEffort.estimatedStartDate}</DIV></TD>
-                      <TD><DIV class='tabletext'>${workEffort.estimatedCompletionDate}</DIV></TD>
-                      <TD><A class='buttontext' href='<@ofbizUrl>/event?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
-                          ${workEffort.workEffortName}</a></DIV></TD>
-                    </TR>
+                    <tr>
+                      <td><div class='tabletext'>${workEffort.estimatedStartDate}</div></td>
+                      <td><div class='tabletext'>${workEffort.estimatedCompletionDate}</div></td>
+                      <td><a class='buttontext' href='<@ofbizUrl>/event?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
+                          ${workEffort.workEffortName}</a></DIV></td>
+                    </tr>
                     </#list>
-                  <#if workEfforts_has_next><TR><TD colspan='3'><HR></TD></TR></#if>
+                  <#if workEfforts_has_next><tr><td colspan='3'><hr></td></tr></#if>
                 </#list>
-              </TABLE>
+              </table>
             <#else>
               <div class='tabletext'>No events found.</div>
             </#if>
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-</TABLE>
+    </td>
+  </tr>
+</table>

@@ -34,27 +34,23 @@
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
 <%StatusWorker.getStatusItems(pageContext, "eventStatusItems", "EVENT_STATUS");%>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
+<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='40%' >
-            <div class='boxhead'>&nbsp;Calendar Event Detail</div>
-          </TD>
-          <TD align=right width='60%'>
-            <A href='<ofbiz:url>/day</ofbiz:url>' class='lightbuttontext'>[Day&nbsp;View]</A>
-            <A href='<ofbiz:url>/week</ofbiz:url>' class='lightbuttontext'>[Week&nbsp;View]</A>
-            <A href='<ofbiz:url>/month</ofbiz:url>' class='lightbuttontext'>[Month&nbsp;View]</A>
-            <A href='<ofbiz:url>/upcoming</ofbiz:url>' class='lightbuttontext'>[Upcoming&nbsp;Events]</A>
-            <A href='<ofbiz:url>/event</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Event]</A>
-          </TD>
+          <td align=left width='40%' class="boxhead">Calendar Event Details</td>
+          <td align=right width='60%'>
+		  <table><tr><td>
+		  <a href='<ofbiz:url>/day</ofbiz:url>' class='submenutext'>Day&nbsp;View</a><a href='<ofbiz:url>/week</ofbiz:url>' class='submenutext'>Week&nbsp;View</a><a href='<ofbiz:url>/month</ofbiz:url>' class='submenutext'>Month&nbsp;View</a><a href='<ofbiz:url>/upcoming</ofbiz:url>' class='submenutext'>Upcoming&nbsp;Events</a><a href='<ofbiz:url>/event</ofbiz:url>' class='submenutextrightdisabled'>New&nbsp;Event</a>
+		  </td></tr></table>
+		  </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
+    </td>
+  </tr>
+  <tr>
+    <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
@@ -70,7 +66,7 @@
                 <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortTypeId' value='EVENT'>
                   <ofbiz:if name="workEffortId">
-                    <DIV class='tabletext'>ERROR: Could not find Event with ID "<ofbiz:print attribute="workEffortId"/>"</DIV>
+                    <div class='tabletext'>ERROR: Could not find Event with ID "<ofbiz:print attribute="workEffortId"/>"</div>
                   </ofbiz:if>
               </ofbiz:unless>
 
@@ -83,26 +79,26 @@
                   <td width='26%' align=right><div class='tabletext'>Priority</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <SELECT name='priority' class='selectBox'>
-                      <OPTION><ofbiz:inputvalue field="priority" entityAttr="workEffort" tryEntityAttr="tryEntity"/></OPTION>
-                      <OPTION value=''>--</OPTION>
-                      <OPTION>1</OPTION> <OPTION>2</OPTION> <OPTION>3</OPTION>
-                      <OPTION>4</OPTION> <OPTION>5</OPTION> <OPTION>6</OPTION>
-                      <OPTION>7</OPTION> <OPTION>8</OPTION> <OPTION>9</OPTION>
-                    </SELECT>
+                    <select name='priority' class='selectBox'>
+                      <option><ofbiz:inputvalue field="priority" entityAttr="workEffort" tryEntityAttr="tryEntity"/></option>
+                      <option value=''>--</option>
+                      <option>1</option> <option>2</option> <option>3</option>
+                      <option>4</option> <option>5</option> <option>6</option>
+                      <option>7</option> <option>8</option> <option>9</option>
+                    </select>
                   </td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Event Status</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <SELECT name='currentStatusId' class='selectBox'>
-                      <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem" default="CAL_TENTATIVE"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
-                      <OPTION value=''>--</OPTION>
+                    <select name='currentStatusId' class='selectBox'>
+                      <option value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem" default="CAL_TENTATIVE"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></option>
+                      <option value=''>--</option>
                       <ofbiz:iterator name="statusItem" property="eventStatusItems">
-                        <OPTION value='<ofbiz:entityfield field="statusId" attribute="statusItem"/>'><ofbiz:entityfield field="description" attribute="statusItem"/></OPTION>
+                        <option value='<ofbiz:entityfield field="statusId" attribute="statusItem"/>'><ofbiz:entityfield field="description" attribute="statusItem"/></option>
                       </ofbiz:iterator>
-                    </SELECT>
+                    </select>
                     <ofbiz:if name="workEffort">
                       <span class='tabletext'>Last Updated <ofbiz:entityfield field="lastStatusUpdate" attribute="workEffort"/></span>
                     </ofbiz:if>
@@ -117,7 +113,7 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Description</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><TEXTAREA class='textAreaBox' name='description' cols='50' rows='4'><ofbiz:inputvalue field="description" entityAttr="workEffort" tryEntityAttr="tryEntity"/></TEXTAREA>
+                  <td width='74%'><textarea class='textAreaBox' name='description' cols='50' rows='4'><ofbiz:inputvalue field="description" entityAttr="workEffort" tryEntityAttr="tryEntity"/></textarea>
                 </tr>
 
                 <tr>
@@ -167,11 +163,11 @@
               </form>
             </ofbiz:if>
             <ofbiz:unless name="canView">
-              <DIV class='tabletext'>ERROR: You do not have permission to view this Event. This event must belong to you, or you must be an administrator.</DIV>
+              <div class='tabletext'>ERROR: You do not have permission to view this Event. This event must belong to you, or you must be an administrator.</div>
             </ofbiz:unless>
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-</TABLE>
+    </td>
+  </tr>
+</table>

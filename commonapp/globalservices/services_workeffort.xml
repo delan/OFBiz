@@ -153,7 +153,7 @@
     <service name="getWorkEffort" engine="java"
             location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffort">
         <description>Get WorkEffort</description>
-        <attribute name="workEffortId" type="java.lang.String" mode="INOUT" optional="false"/>
+        <attribute name="workEffortId" type="java.lang.String" mode="INOUT" optional="true"/>
         <attribute name="currentStatusId" type="java.lang.String" mode="IN" optional="true"/>
         <attribute name="workEffort" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
         <attribute name="canView" type="java.lang.Boolean" mode="OUT" optional="true"/>
@@ -168,4 +168,13 @@
         <attribute name="numDays" type="java.lang.Integer" mode="IN" optional="true"/>
         <attribute name="days" type="java.util.List" mode="OUT" optional="false"/>
     </service>      
+    <service name="getWorkEffortEventsByPeriod" engine="java"
+            location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffortEventsByPeriod">
+        <description>Get WorkEffort Events by a period spcified by periodSeconds attribute. Returna a Map with periodStart as the key and a Collection of events for that period as value</description>
+        <attribute name="start" type="java.sql.Timestamp" mode="IN" optional="false"/>
+        <attribute name="numPeriods" type="java.lang.Integer" mode="IN" optional="false"/>
+        <attribute name="periodSeconds" type="java.lang.Integer" mode="IN" optional="false"/>
+        <attribute name="periods" type="java.util.List" mode="OUT" optional="false"/>
+        <attribute name="maxConcurrentEntries" type="java.lang.Integer" mode="OUT" optional="false"/>
+    </service>          
 </services>

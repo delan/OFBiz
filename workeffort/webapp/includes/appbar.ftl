@@ -30,7 +30,8 @@
 <#if requestAttributes.userLogin?has_content>
 <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#FFFFFF">
-    <td height="15">
+    <td><div class="appbarleft"></div></td>
+    <td height="15" width="100%">
 	  <table width="100%" border="0" cellspacing="0" cellpadding="0">                      
         <tr>	       
           <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)> 
@@ -283,7 +284,8 @@
               </#if>
             </table>
           </td>            
-          <td width="100%" style="vertical-align: bottom;">
+		  <td><div class="appbarright"></div></td>            
+          <td width="100%" class="appbarresize">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
                 <td class="whitearea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td>               

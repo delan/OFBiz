@@ -1,0 +1,51 @@
+import java.util.*;
+import org.ofbiz.core.security.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.pseudotag.*;
+import org.ofbiz.commonapp.workeffort.workeffort.*;
+import java.sql.Timestamp;
+import java.util.Calendar;
+
+//String currentDay = request.getAttribute("currentDay");
+String startParam = request.getParameter("start");
+
+Timestamp now = UtilDateTime.getMonthStart(UtilDateTime.nowTimestamp());
+Timestamp start = null;
+if(startParam != null) 
+    start = new Timestamp(Long.parseLong(startParam));    
+if(start == null) 
+    start = now;
+else
+    start = UtilDateTime.getMonthStart(start);
+
+Calendar tempCal = Calendar.getInstance();
+tempCal.setTime(new java.util.Date(start.getTime()));
+int numDays = tempCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+Timestamp prev = UtilDateTime.getMonthStart(start,-1);
+Timestamp next = UtilDateTime.getDayStart(start,numDays+1);
+Timestamp end = UtilDateTime.getDayStart(start,numDays);
+
+//Find out what date to get from
+Timestamp getFrom = null;
+int prevMonthDays =  tempCal.get(Calendar.DAY_OF_WEEK) - tempCal.getFirstDayOfWeek();
+if(prevMonthDays < 0) prevMonthDays = 7 + prevMonthDays;
+tempCal.add(Calendar.DATE,-(prevMonthDays));
+numDays += prevMonthDays;
+getFrom = new Timestamp(tempCal.getTime().getTime());
+
+
+dispatcher = request.getAttribute("dispatcher");
+Map serviceCtx = UtilMisc.toMap("userLogin",context.getSession().getAttribute("userLogin"),"start",getFrom,"numPeriods",new Integer(numDays),"periodSeconds",new Integer(3600*24));
+Map result = dispatcher.runSync("getWorkEffortEventsByPeriod",serviceCtx);
+context.put("periods",result.get("periods"));
+context.put("maxConcurrentEntries",result.get("maxConcurrentEntries"));
+context.put("start",start);
+context.put("end",end);
+context.put("prev",prev);
+context.put("next",next);
+context.put("now",now);
+request.setAttribute("isCalendarSelected", new Boolean(true));
+
+

@@ -277,12 +277,76 @@ text-decoration: none;
 color: #333333;
 }
 
+A.submenutext, A.submenutext:visited, A.submenutext:selected {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	text-decoration: none;
+	color: gold;
+	padding-left: 6px;
+	padding-right: 5px;
+	border-right: 1px solid #5886C6
+}
+
+A.submenutext:hover {
+color: yellow;
+text-decoration: underline;
+}
+
+A.submenutextdisabled {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 10px;
+font-weight: bold;
+text-decoration: none;
+color: #CCCCCC;
+padding-left: 6px;
+padding-right: 5px;
+border-right: 1px solid #5886C6
+}
+
+A.submenutextdisabled:hover {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 10px;
+font-weight: bold;
+text-decoration: underline;
+color: #yellow;
+}
+
+A.submenutextright {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 10px;
+font-weight: bold;
+text-decoration: none;
+color: gold;
+padding-left: 6px;
+}
+
+A.submenutextright:hover {
+color: yellow;
+text-decoration: underline;
+}
+
+.submenutextrightdisabled {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: 10px;
+font-weight: bold;
+text-decoration: none;
+color: #CCCCCC;
+padding-left: 6px;
+}
+
+.submenutextrightdisabled:hover {
+text-decoration: underline;
+color: #yellow;
+}
+
 A.lightbuttontext {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
 text-decoration: none;
 color: gold;
+	border: none;
 }
 
 A.lightbuttontext:hover {

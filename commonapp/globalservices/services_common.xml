@@ -181,4 +181,18 @@
         <description>Delete a CustomTimePeriod record</description>
         <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
     </service>
+    
+    <!-- Status services -->
+    <service name="getStatusItems" engine="java"
+            location="org.ofbiz.commonapp.common.status.StatusServices" invoke="getStatusItems" auth="false">
+        <description>Gets all StatusItem entries for the supplied StatusTypeId's</description>
+        <attribute name="statusTypeIds" type="List" mode="IN" optional="false"/>
+        <attribute name="statusItems" type="List" mode="OUT" optional="false"/>
+    </service>
+    <service name="getStatusValidChangeToDetails" engine="java"
+            location="org.ofbiz.commonapp.common.status.StatusServices" invoke="getStatusValidChangeToDetails" auth="false">
+        <description>Gets all StatusValidChangeToDetails entries for the supplied StatusTypeId</description>
+        <attribute name="statusTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusValidChangeToDetails" type="Collection" mode="OUT" optional="true"/>
+    </service>    
 </services>

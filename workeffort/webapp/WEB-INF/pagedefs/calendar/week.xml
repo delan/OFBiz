@@ -2,4 +2,5 @@
 <page>
     <template>main</template>
     <property name="title">Calendar Week View</property>
+    <page-action name="/calendar/week.bsh"/>
 </page>
