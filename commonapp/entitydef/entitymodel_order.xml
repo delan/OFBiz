@@ -668,6 +668,7 @@
       <field name="shipmentMethodTypeId" type="id"></field>
       <field name="carrierPartyId" type="id"></field>
       <field name="carrierRoleTypeId" type="id"></field>
+      <field name="trackingNumber" type="short-varchar"></field>
       <field name="shippingInstructions" type="long-varchar"></field>
       <field name="maySplit" type="indicator"></field>
       <field name="giftMessage" type="long-varchar"></field>
