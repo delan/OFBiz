@@ -2,18 +2,19 @@
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
- * Copyright (c) 2001 The Open For Business Project and repective authors.
- * Permission is hereby granted, free of charge, to any person obtaining a
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
@@ -21,13 +22,17 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on April 2, 2002
- -->
+ * @author     Andy Zeneski (jaz@jflow.net)
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @version    $Revision$
+ * @since      2.0
+-->
+
 <simple-methods>
+	
+	<!-- Facility Services -->
     <simple-method method-name="createFacility" short-description="Create an Facility">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createFacility you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run createFacility you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="Facility"/>
@@ -41,7 +46,7 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateFacility" short-description="Update an Facility">
-        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateFacility you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="Security Error: to run updateFacility you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -50,7 +55,7 @@
         <store-value value-name="facility"/>
     </simple-method>
     <simple-method method-name="deleteFacility" short-description="Delete an Facility">
-        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteFacility you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="FACILITY" action="_DELETE"><fail-message message="Security Error: to run deleteFacility you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -59,7 +64,7 @@
     </simple-method>
 
     <simple-method method-name="addContactMechToFacility" short-description="Add ContactMech To Facility">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run addContactMechToFacility you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run addContactMechToFacility you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="FacilityContactMech"/>
@@ -67,7 +72,7 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="removeContactMechFromFacility" short-description="Remove ContactMech From Facility">
-        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeContactMechFromFacility you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="FACILITY" action="_DELETE"><fail-message message="Security Error: to run removeContactMechFromFacility you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -75,4 +80,151 @@
         <find-by-primary-key entity-name="FacilityContactMech" map-name="lookupPKMap" value-name="facilityContactMech"/>
         <remove-value value-name="facilityContactMech"/>
     </simple-method>
+    
+    <!-- Facility Group Services -->
+    <simple-method method-name="createFacilityGroup" short-description="Create an Facility Group">
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run createFacilityGroup you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="FacilityGroup"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <sequenced-id-to-env sequence-name="FacilityGroup" env-name="facilityGroupId"/>
+        <to-string field-name="facilityGroupId"/>
+        <env-to-field env-name="facilityGroupId" map-name="newEntity"/>
+        <field-to-result field-name="facilityGroupId" result-name="facilitygroupId"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateFacilityGroup" short-description="Update an Facility Group">
+        <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="Security Error: to run updateFacilityGroup you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="facilityGroupId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="FacilityGroup" map-name="lookupPKMap" value-name="facilityGroup"/>
+        <set-nonpk-fields map-name="parameters" value-name="facilityGroup"/>
+        <store-value value-name="facilityGroup"/>
+    </simple-method>
+    <simple-method method-name="deleteFacilityGroup" short-description="Delete an Facility Group">
+        <check-permission permission="FACILITY" action="_DELETE"><fail-message message="Security Error: to run deleteFacilityGroup you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="facilityGroupId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="FacilityGroup" map-name="lookupPKMap" value-name="facilityGroup"/>
+        <remove-value value-name="facilityGroup"/>
+    </simple-method>    
+    
+    <!-- Facility Member Services -->
+    <simple-method method-name="addFacilityToGroup" short-description="Add Facility to FacilityGroup">
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run addFacilityToGroup you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="FacilityGroupMember"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateFacilityToGroup" short-description="Update Facility to FacilityGroup Application">
+        <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="Security Error: to run updateFacilityToGroup you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="FacilityGroupMember"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="FacilityGroupMember" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeFacilityFromGroup" short-description="Remove Facility From FacilityGroup">
+        <check-permission permission="FACILITY" action="_DELETE"><fail-message message="Security Error: to run removeFacilityFromGroup you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="FacilityGroupMember"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="FacilityGroupMember" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Facility Group Rollup Services -->
+    <simple-method method-name="addFacilityGroupToGroup" short-description="Add FacilityGroup to FacilityGroup">
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run addFacilityGroupToGroup you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="FacilityGroupRollup"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateFacilityGroupToGroup" short-description="Update FacilityGroup to FacilityGroup Rollup">
+        <check-permission permission="FACILITY" action="_UPDATE"><fail-message message="Security Error: to run updateFacilityGroupToGroup you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="FacilityGroupRollup"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="FacilityGroupRollup" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeFacilityGroupFromGroup" short-description="Remove FacilityGroup From FacilityGroup">
+        <check-permission permission="FACILITY" action="_DELETE"><fail-message message="Security Error: to run removeFacilityGroupFromGroup you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="FacilityGroupRollup"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="FacilityGroupRollup" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>    
+        
+    <!-- Facility Role / Facility Group Role Services -->
+    <simple-method method-name="addPartyToFacility" short-description="Add Party to Facility">
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run addPartyToFacility you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="FacilityRole"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+                      
+        <create-value value-name="newEntity"/>
+    </simple-method> 
+    <simple-method method-name="addPartyToFacilityGroup" short-description="Add Party to FacilityGroup">
+        <check-permission permission="FACILITY" action="_CREATE"><fail-message message="Security Error: to run addPartyToFacilityGroup you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="FacilityGroupRole"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+                      
+        <create-value value-name="newEntity"/>
+    </simple-method>         
+    
+    <simple-method method-name="removePartyFromFacility" short-description="Remove Party From Facility">
+        <check-permission permission="FACILITY" action="_DELETE"><fail-message message="Security Error: to run removePartyFromFacility you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="FacilityRole"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="FacilityRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>        
+    <simple-method method-name="removePartyFromFacilityGroup" short-description="Remove Party From FacilityGroup">
+        <check-permission permission="FACILITY" action="_DELETE"><fail-message message="Security Error: to run removePartyFromFacilityGroup you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="FacilityGroupRole"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="FacilityGroupRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>            
+    
 </simple-methods>
