@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.20 $
+ *@version    $Revision: 1.21 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -35,6 +35,7 @@
 ${requestAttributes.virtualJavaScript?if_exists}
 <script language="JavaScript">
 <!--
+    var detailImageUrl = null;
     function addItem() {
        if (document.addform.add_product_id.value == 'NULL') {
            alert("Please enter all the required information.");
@@ -42,6 +43,19 @@ ${requestAttributes.virtualJavaScript?if_exists}
        } else {
            document.addform.submit();
        }
+    }
+
+    function popupDetail() {
+        var defaultDetailImage = "${firstDetailImage?default("_NONE_")}";
+        if (detailImageUrl == null) {
+            detailImageUrl = defaultDetailImage;
+        }
+
+        if (detailImageUrl == "_NONE_") {
+            alert("No detail image available to display.");
+            return;
+        }
+        popUp(detailImageUrl, 'detailImage', '400', '550');
     }
  //-->
  </script>
@@ -68,8 +82,12 @@ ${requestAttributes.virtualJavaScript?if_exists}
   <tr>
     <td align="left" valign="top" width="0">
       <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL")?if_exists>
+      <#-- remove the next two lines to always display the virtual image first (virtual images must exist -->
+      <#if firstLargeImage?has_content>
+        <#assign productLargeImageUrl = firstLargeImage>
+      </#if>
       <#if productLargeImageUrl?has_content>
-        <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' border='1' width='200' align='left'>
+        <a href="#" onclick="javascript:popupDetail();"><img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' border='0' width='200' align='left'></a>
       </#if>
     </td>
     <td align="right" valign="top">
@@ -219,19 +237,29 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <p>&nbsp;</p>
         <table cellspacing="0" cellpadding="0">
           <tr>
+            <#assign maxIndex = 7>
             <#assign indexer = 0>
             <#list imageKeys as key>
               <#assign swatchProduct = imageMap.get(key)>
-              <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request)?if_exists>
-              <#if swatchProduct?exists && imageUrl?exists>
+              <#if swatchProduct?has_content && indexer < maxIndex>
+                <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request)?if_exists>
+                <#if !imageUrl?has_content>
+                  <#assign imageUrl = productContentWrapper.get("SMALL_IMAGE_URL")?if_exists>
+                </#if>
+                <#if !imageUrl?has_content>
+                  <#assign imageUrl = "/images/defaultImage.jpg">
+                </#if>
                 <td align="center" valign="bottom">
                   <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
                   <br>
                   <a href="#" class="buttontext" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);">${key}</a>
                 </td>
-                <#assign indexer = indexer + 1>
               </#if>
+              <#assign indexer = indexer + 1>
             </#list>
+            <#if (indexer > maxIndex)>
+              <div class="tabletext"><b>More options available in drop down.</b></div>
+            </#if>
           </tr>
         </table>
       </#if>

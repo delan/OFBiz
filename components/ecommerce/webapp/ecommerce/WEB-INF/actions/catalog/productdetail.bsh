@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.14 $
+ *@version    $Revision: 1.15 $
  *@since      2.1
  */
 
@@ -205,8 +205,10 @@ if (product != null) {
             if (variantTree != null && imageMap != null) {
 	            jsBuf = new StringBuffer();
 	            jsBuf.append("<script language=\"JavaScript\">");
+	            jsBuf.append("var DET = new Array(" + variantTree.size() + ");");
 	            jsBuf.append("var IMG = new Array(" + variantTree.size() + ");");
 	            jsBuf.append("var OPT = new Array(" + featureOrder.size() + ");");
+	            jsBuf.append("var detailImageUrl = null;");
 	            for (li = 0; li < featureOrder.size(); li++) {
 	                jsBuf.append("OPT[" + li + "] = \"" + featureOrder.get(li) + "\";");
 	            }
@@ -219,19 +221,49 @@ if (product != null) {
 	            if (variantTree != null) {
 	                vTreeKeySet = variantTree.keySet();
 	                vti = vTreeKeySet.iterator();
+	                firstDetailImage = null;
+	                firstLargeImage = null;
 	                counter = 0;
 	                while (vti.hasNext()) {
 	                    key = vti.next();
 	                    value = variantTree.get(key);
 	                    opt = null;
-	                    if (featureOrder.size() == 1)
+	                    if (featureOrder.size() == 1) {
 	                        opt = value.iterator().next();
-	                    else
+	                    } else {
 	                        opt = "" + counter;
+	                    }
+	                    // create the variant content wrapper
+                        contentWrapper = new ProductContentWrapper(((GenericValue) imageMap.get(key)), request);
+
+	                    // get the default image
+	                    virtualDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL");
+	                    virtualLargeImage = productContentWrapper.get("LARGE_IMAGE_URL");
+
+	                    detailImage = contentWrapper.get("DETAIL_IMAGE_URL");
+	                    largeImage = contentWrapper.get("LARGE_IMAGE_URL");
+
+	                    if (detailImage == null || detailImage.length() == 0) {
+	                        detailImage = virtualDetailImage;
+	                    }
+	                    if (largeImage == null || largeImage.length() == 0) {
+	                        largeImage = virtualLargeImage;
+	                    }
+
 	                    jsBuf.append("document.forms[\"addform\"].elements[\"" + topLevelName + "\"].options[" + (counter+1) + "] = new Option(\"" + key + "\",\"" + opt + "\");");
-	                    jsBuf.append("IMG[" + counter + "] = \"" + imageMap.get(key).getString("largeImageUrl") +"\";");
+	                    jsBuf.append("DET[" + counter + "] = \"" + detailImage +"\";");
+	                    jsBuf.append("IMG[" + counter + "] = \"" + largeImage +"\";");
+
+	                    if (firstDetailImage == null || firstDetailImage.length() == 0) {
+	                        firstDetailImage = detailImage;
+	                    }
+	                    if (firstLargeImage == null || firstLargeImage.length() == 0) {
+	                        firstLargeImage = largeImage;
+	                    }
 	                    counter++;
 	                }
+	                context.put("firstDetailImage", firstDetailImage);
+	                context.put("firstLargeImage", firstLargeImage);
 	            }
 	            jsBuf.append("}");
 
@@ -271,7 +303,7 @@ if (product != null) {
 	            jsBuf.append("if (src == 1 && OPT.length == 1) { value2 = document.forms[\"addform\"].elements[name].options[(value*1)+1].value;");
 	            jsBuf.append("} if (currentOrderIndex < 0 || value == \"\") return; if (currentOrderIndex < (OPT.length - 1) || OPT.length == 1) {");
 	            jsBuf.append("if (IMG[value] != null) { if (document.images['mainImage'] != null) document.images['mainImage'].src = IMG[value];");
-	            jsBuf.append("document.addform." + topLevelName + ".selectedIndex = (value*1)+1;");
+	            jsBuf.append("detailImageUrl = DET[value]; document.addform." + topLevelName + ".selectedIndex = (value*1)+1;");
 	            jsBuf.append("} if (OPT.length != 1) { eval(\"list\" + OPT[currentOrderIndex+1] + value + \"()\");");
 	            jsBuf.append("document.addform.add_product_id.value = 'NULL'; } else { if (value2 == 'NULL')");
 	            jsBuf.append("value2 = value; document.addform.add_product_id.value = value2;");
