@@ -63,7 +63,7 @@ import org.w3c.dom.Element;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -339,7 +339,7 @@ public class ServiceDispatcher {
             // if there was an error, rollback transaction, otherwise commit
             if (isError) {
                 // try to log the error
-                Debug.logError("Service Error [" + modelService.name + "]: " + result.get(ModelService.ERROR_MESSAGE), module);
+                Debug.logError("Service Error [" + modelService.name + "]: " + ServiceUtil.getErrorMessage(result), module);
 
                 // rollback the transaction
                 try {
