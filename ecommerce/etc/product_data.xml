@@ -20,6 +20,9 @@
   <WebSitePaymentSetting webSiteId="WebStore" paymentMethodTypeId="EFT_ACCOUNT" paymentAuthService="alwaysApproveEFTProcessor"/>
   <WebSitePaymentSetting webSiteId="OrderEntry" paymentMethodTypeId="CREDIT_CARD" paymentAuthService="alwaysApproveCCProcessor"/> 
   <WebSitePaymentSetting webSiteId="OrderEntry" paymentMethodTypeId="EFT_ACCOUNT" paymentAuthService="alwaysApproveEFTProcessor"/>
+  
+  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/statusnotification.ftl" subject="Order Change Notification" fromAddress="ofbiztest@yahoo.com"/>
+  <WebSiteEmailSetting webSiteId="OrderEntry" emailType="WES_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/statusnotification.ftl" subject="Order Change Notification" fromAddress="ofbiztest@yahoo.com"/>
    
   <ProductCategory description="Demo Browse Root"
     longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
