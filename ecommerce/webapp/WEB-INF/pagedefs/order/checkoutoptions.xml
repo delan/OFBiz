@@ -2,5 +2,5 @@
 <page>
     <template>main</template> 
     <property name="title">Checkout Options</property>
-    <page-action>/order/checkoutoptions.js</page-action>
+    <page-action name="/order/checkoutoptions.js"/>
 </page>

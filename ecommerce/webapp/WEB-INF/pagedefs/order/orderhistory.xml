@@ -2,5 +2,5 @@
 <page>
     <template>main_right</template> 
     <property name="title">Order History</property>
-    <page-action>/order/orderhistory.js</page-action>
+    <page-action name="/order/orderhistory.js"/>
 </page>

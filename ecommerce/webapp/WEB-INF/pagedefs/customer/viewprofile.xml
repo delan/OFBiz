@@ -2,5 +2,5 @@
 <page>
     <template>main</template>    
     <property name="title">View Profile</property>
-    <page-action>/customer/viewprofile.js</page-action>
+    <page-action name="/customer/viewprofile.js"/>
 </page>
