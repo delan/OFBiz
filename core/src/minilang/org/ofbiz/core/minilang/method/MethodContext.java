@@ -118,7 +118,7 @@ public class MethodContext {
         this.security = (Security) context.get("security");
         this.userLogin = (GenericValue) context.get("userLogin");
 
-        if (methodType == this.EVENT) {
+        if (methodType == MethodContext.EVENT) {
             this.request = (HttpServletRequest) context.get("request");
             this.response = (HttpServletResponse) context.get("response");
             if (this.locale == null) this.locale = UtilHttp.getLocale(request);
@@ -132,7 +132,7 @@ public class MethodContext {
                 if (this.security == null) this.security = (Security) this.request.getAttribute("security");
                 if (this.userLogin == null) this.userLogin = (GenericValue) this.request.getSession().getAttribute("userLogin");
             }
-        } else if (methodType == this.SERVICE) {
+        } else if (methodType == MethodContext.SERVICE) {
             this.results = new HashMap();
         }
         
@@ -158,21 +158,68 @@ public class MethodContext {
     public int getMethodType() {
         return this.methodType;
     }
-
+    
+    /** Gets the named value from the environment. Supports the "." (dot) syntax to access Map members and the
+     * "[]" (bracket) syntax to access List entries. This value is expanded, supporting the insertion of other 
+     * environment values using the "${}" notation.
+     * 
+     * @param key The name of the environment value to get. Can contain "." and "[]" syntax elements as described above.
+     * @return The environment value if found, otherwise null. 
+     */
     public Object getEnv(String key) {
-        return this.env.get(key);
+        String ekey = this.expandString(key);
+        FlexibleMapAccessor fma = new FlexibleMapAccessor(ekey);
+        return this.getEnv(fma);
+    }
+    public Object getEnv(FlexibleMapAccessor fma) {
+        return fma.get(env);
     }
 
+    /** Gets the named value from the environment. Supports the "." (dot) syntax to access Map members and the
+     * "[]" (bracket) syntax to access List entries. 
+     * If the brackets for a list are empty the value will be appended to end of the list,
+     * otherwise the value will be set in the position of the number in the brackets.
+     * If a "+" (plus sign) is included inside the square brackets before the index 
+     * number the value will inserted/added at that index instead of set at that index.
+     * This value is expanded, supporting the insertion of other 
+     * environment values using the "${}" notation.
+     * 
+     * @param key The name of the environment value to get. Can contain "." syntax elements as described above.
+     * @param value The value to set in the named environment location.
+     */
     public void putEnv(String key, Object value) {
-        this.env.put(key, value);
+        String ekey = this.expandString(key);
+        FlexibleMapAccessor fma = new FlexibleMapAccessor(ekey);
+        this.putEnv(fma, value);
+    }
+    public void putEnv(FlexibleMapAccessor fma, Object value) {
+        fma.put(env, value);
     }
 
+    /** Calls putEnv for each entry in the Map, thus allowing for the additional flexibility in naming 
+     * supported in that method. 
+     */
     public void putAllEnv(Map values) {
-        this.env.putAll(values);
+        Iterator viter = values.entrySet().iterator();
+        while (viter.hasNext()) {
+            Map.Entry entry = (Map.Entry) viter.next();
+            this.putEnv((String) entry.getKey(), entry.getValue());
+        }
     }
 
+    /** Removes the named value from the environment. Supports the "." (dot) syntax to access Map members and the
+     * "[]" (bracket) syntax to access List entries. This value is expanded, supporting the insertion of other 
+     * environment values using the "${}" notation.
+     * 
+     * @param key The name of the environment value to get. Can contain "." syntax elements as described above.
+     */
     public Object removeEnv(String key) {
-        return this.env.remove(key);
+        String ekey = this.expandString(key);
+        FlexibleMapAccessor fma = new FlexibleMapAccessor(ekey);
+        return this.removeEnv(fma);
+    }
+    public Object removeEnv(FlexibleMapAccessor fma) {
+        return fma.remove(env);
     }
 
     public Iterator getEnvEntryIterator() {
@@ -237,5 +284,44 @@ public class MethodContext {
 
     public Map getResults() {
         return this.results;
+    }
+    
+    /** Expands environment variables delimited with ${} */
+    public String expandString(String original) {
+        int start = original.indexOf("${");
+        if (start == -1) {
+            return original;
+        }
+        StringBuffer expanded = new StringBuffer();
+        int currentInd = 0;
+        int end = -1;
+        while (start != -1) {
+            end = original.indexOf("}", start);
+            if (end == -1) break;
+            
+            //append everything from the current index to the start of the var
+            expanded.append(original.substring(currentInd, start));
+            
+            //get the environment value and append it
+            String envName = original.substring(start+2, end);
+            Object envVal = this.getEnv(envName);
+            if (envVal != null) {
+                expanded.append(envVal.toString());
+            } else {
+                Debug.logWarning("Could not find value in environment for the name [" + envName + "], inserting nothing.");
+            }
+            
+            //reset the current index to after the var, and the start to the beginning of the next var
+            currentInd = end + 1;
+            start = original.indexOf("${", currentInd);
+        }
+        
+        //append the rest of the original string, ie after the last variable
+        if (currentInd < original.length()) {
+            expanded.append(original.substring(currentInd));
+        }
+        
+        //call back into this method with new String to take care of any/all nested expands
+        return expandString(expanded.toString());
     }
 }
