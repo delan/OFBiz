@@ -82,7 +82,7 @@
         >
       </td>
       <td valign="top">
-        <div class="tabletext"><%=carrierShipmentMethod.getString("partyId") + " " + carrierShipmentMethod.getString("shipmentMethodTypeId") %></div>
+        <div class="tabletext"><%=carrierShipmentMethod.getString("partyId") + " " + carrierShipmentMethod.getRelatedOneCache("ShipmentMethodType").getString("description")%></div>
       </td>
     </tr>
 </ofbiz:iterator>
