@@ -307,7 +307,7 @@
         <response name="purchase_order" type="request" value="clearcart"/>
         <response name="error" type="view" value="confirm"/>
     </request-map>
-    <request-map uri="checkBlacklist">
+    <request-map uri="checkBlackList">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="checkOrderBlacklist"/>
         <response name="success" type="request" value="processpayment"/>

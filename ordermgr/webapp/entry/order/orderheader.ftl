@@ -159,8 +159,8 @@
         </tr>
       </table>
    
-      <br>
-      
+      <#if orderPaymentPreferences?has_content || billingAccount?has_content>
+      <br>      
       <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
         <#-- order payment info -->
         <tr>
@@ -277,4 +277,5 @@
           </td>
         </tr>
       </table>
+      </#if>
 

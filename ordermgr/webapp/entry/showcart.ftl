@@ -72,7 +72,7 @@ function addToList() {
 //-->
 </script>
 
-<#if !sessionAttributes.orderMode?exists>
+<#if !sessionAttributes.orderMode?exists || requestParameters.updateParty?exists>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
@@ -98,7 +98,7 @@ function addToList() {
           <td width='6%'>&nbsp;</td>
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
-              <input type='radio' name='orderMode' value='SALES_ORDER'>&nbsp;Sales Order&nbsp;<input type='radio' name='orderMode' value='PURCHASE_ORDER'>&nbsp;Purchase Order&nbsp;
+              <input type='radio' name='orderMode' value='SALES_ORDER'<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Sales Order&nbsp;<input type='radio' name='orderMode' value='PURCHASE_ORDER'<#if sessionAttributes.orderMode?default("") == "PURCHASE_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Purchase Order&nbsp;
             </div>
           </td>
         </tr>
@@ -163,6 +163,7 @@ function addToList() {
                     <#else>
                       <span class='tabletext'>[Party not defined]</span>
                     </#if>
+                    - <span class='tabletext'><a href="<@ofbizUrl>/orderentry?updateParty=Y</@ofbizUrl>" class="buttontext">[Change]</a></span>
                   </td>
                   <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
                   <td align="right" valign="middle">
@@ -335,7 +336,7 @@ function addToList() {
         </#if>
         
         <tr> 
-          <td colspan="4" align="right" valign=bottom>             
+          <td colspan="5" align="right" valign=bottom>             
             <div class='tabletext'><b>Cart&nbsp;Total:</b></div>
           </td>
           <td align="right" valign=bottom>

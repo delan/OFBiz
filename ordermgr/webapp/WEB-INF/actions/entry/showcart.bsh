@@ -80,17 +80,21 @@ if (userLoginId != null) {
         partyId = thisUserLogin.getString("partyId");
 }
 
+Debug.log("== " + partyId);
+if (partyId == null) {
+    partyId = (String) session.getAttribute("orderPartyId");
+} 
+
 thisParty = null;
 if (partyId != null && partyId.length() > 0 && !partyId.equals("_NA_")) {
     thisParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
     if (thisParty != null)
         session.setAttribute("orderPartyId", partyId);  
-} else {
-    partyId = (String) session.getAttribute("orderPartyId");
 }
+
 if (partyId == null || partyId.length() == 0) session.setAttribute("orderPartyId", "_NA_");
 if (partyId != null && partyId.equals("_NA_")) partyId = null;
-if (partyId != null && thisParty == null) {
+if (partyId != null && partyId.length() > 0 && thisParty == null) {
     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The party was not found.");
     session.removeAttribute("orderMode");
 }

@@ -35,10 +35,7 @@
           </td> 
           <td nowrap align="right">
             <div class="tabletext">
-              <a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="lightbuttontext">[Refresh]</a>
-              <a href="<@ofbizUrl>/salesentry</@ofbizUrl>" class="lightbuttontext">[Items]</a>
-              <a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="lightbuttontext">[Shipping]</a>
-              <a href="javascript:document.optsetupform.submit();" class="lightbuttontext">[Continue]</a>&nbsp;
+              <a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">Refresh</a><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">Items</a><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">Shipping</a><a href="javascript:document.optsetupform.submit();" class="submenutextright">Continue</a>
             </div>
           </td>         
         </tr>

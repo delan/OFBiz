@@ -41,11 +41,11 @@ orderAdjustments = cart.makeAllAdjustments();
 context.put("orderAdjustments", orderAdjustments);
 
 orderItems = cart.makeOrderItems();
-orderDisplayItems = OrderReadHelper.getOrderItemDisplay(orderItems, orderAdjustments);
-context.put("orderItems", orderDisplayItems);
+context.put("orderItems", orderItems);
 
 orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments);
 context.put("orderHeaderAdjustments", orderHeaderAdjustments);
+context.put("headerAdjustmentsToShow", OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false, false, false));
 
 orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments);
 context.put("orderSubTotal", orderSubTotal);
@@ -106,7 +106,8 @@ context.put("isGift", cart.getIsGift());
 shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", cart.getShipmentMethodTypeId()));
 if (shipmentMethodType != null) context.put("shipMethDescription", shipmentMethodType.getString("description"));
 
-context.put("headerAdjustmentsToShow", OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal));
+OrderReadHelper orh = new OrderReadHelper(null, orderAdjustments, orderItems);
+context.put("localOrderReadHelper", orh);
 
 shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
 shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);

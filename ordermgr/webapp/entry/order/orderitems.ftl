@@ -56,6 +56,7 @@
                 <td width="10%" align="right"><span class="tableheadtext"><b>Subtotal</b></span></td>
               </tr>
               <#list orderItems as orderItem>
+                <#assign itemType = orderItem.getRelatedOne("OrderItemType")>
                 <tr><td colspan="7"><hr class='sepbar'></td></tr>
                 <tr>     
                   <#if orderItem.productId?exists && orderItem.productId == "_?_">           
@@ -68,7 +69,7 @@
                         <#if orderItem.productId?exists>                       
                           <a href="<@ofbizUrl>/product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
                         <#else>                                                    
-                          ${orderItem.itemDescription?if_exists}
+                          <b>${itemType.description}</b> : ${orderItem.itemDescription?if_exists}
                         </#if>
                       </div>
                       
@@ -80,11 +81,11 @@
                       <div class="tabletext" nowrap>${orderItem.unitPrice?string.currency}</div>
                     </td>
                     <td align="right" valign="top">
-                      <div class="tabletext" nowrap>${orderItem.itemAdjTotal?string.currency}</div>
+                      <div class="tabletext" nowrap>${localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem)?string.currency}</div>
                     </td>
                     <td align="right" valign="top" nowrap>
-                      <div class="tabletext">${orderItem.itemSubTotal?string.currency}</div>
-                    </td>
+                      <div class="tabletext">${localOrderReadHelper.getOrderItemTotal(orderItem)?string.currency}</div>
+                    </td>                    
                     <#if maySelectItems?default(false)>
                       <td>                                 
                         <input name="item_id" value="${orderItem.orderItemSeqId}" type="checkbox">
@@ -92,20 +93,21 @@
                     </#if>
                   </#if>
                 </tr>
-                
-                <#-- now show adjustment details per line item -->                
-                <#list orderItem.itemAdjustments as orderItemAdjustment>                                    
+
+                <#-- now show adjustment details per line item -->
+                <#assign itemAdjustments = localOrderReadHelper.getOrderItemAdjustments(orderItem)>
+                <#list itemAdjustments as orderItemAdjustment>
                   <tr>
                     <td align="right">
                       <div class="tabletext" style='font-size: xx-small;'>
-                        <b><i>Adjustment</i>:</b> <b>${orderItemAdjustment.typeDescription}</b>&nbsp;
+                        <b><i>Adjustment</i>:</b> <b>${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}</b>&nbsp;
                         <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.description}</#if>
                       </div>
                     </td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td align="right">
-                      <div class="tabletext" style='font-size: xx-small;'>${orderItemAdjustment.itemAdjTotal?string.currency}</div>                      
+                      <div class="tabletext" style='font-size: xx-small;'>${localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment)?string.currency}</div>
                     </td>
                     <td>&nbsp;</td>
                     <#if maySelectItems?default(false)><td>&nbsp;</td></#if>
@@ -124,7 +126,7 @@
               <#list headerAdjustmentsToShow as orderHeaderAdjustment>                
                 <tr>
                   <td align="right" colspan="4"><div class="tabletext"><b>${orderHeaderAdjustment.typeDescription}</b></div></td>
-                  <td align="right" nowrap><div class="tabletext">${orderHeaderAdjustment.adjustmentCalc?string.currency}</div></td>
+                  <td align="right" nowrap><div class="tabletext">${localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment)?string.currency}</div></td>
                 </tr>
               </#list>                 
               <tr>
