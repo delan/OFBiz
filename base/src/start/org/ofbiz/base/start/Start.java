@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.13 2004/03/28 15:57:12 ajzeneski Exp $
+ * $Id: Start.java,v 1.14 2004/03/30 22:35:10 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.13 $
+  *@version    $Revision: 1.14 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -61,13 +61,26 @@ public class Start implements Runnable {
     private boolean serverRunning = true;    
     private List loaders = null;
     private Config config = null;
-    
-    public Start(String configFile) throws IOException {
+    private String loaderArgs[] = null;
+
+    public Start(String args[]) throws IOException {
         this.loaders = new ArrayList();
         this.config = new Config();
 
         // always read the default properties first
         config.readConfig(CONFIG_FILE);
+
+        // parse the args for config file
+        String configFile = null;
+        if (args.length > 1) {
+            configFile = args[1];
+            if (args.length > 2) {
+                this.loaderArgs = new String[args.length - 2];
+                for (int i = 2; i < args.length; i++) {
+                    this.loaderArgs[i] = args[i];
+                }
+            }
+        }
 
         // if we specified a config file; replace the values
         if (configFile != null) {
@@ -182,7 +195,7 @@ public class Start implements Runnable {
             try {
                 Class loaderClass = classloader.loadClass(loaderClassName);
                 StartupLoader loader = (StartupLoader) loaderClass.newInstance();
-                loader.load(config);
+                loader.load(config, loaderArgs);
                 loaders.add(loader);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -275,11 +288,11 @@ public class Start implements Runnable {
     }
     
     public static void main(String[] args) throws Exception {
-        Start start = new Start(args.length == 2 ? args[1] : null);
+        Start start = new Start(args);
         String firstArg = args.length > 0 ? args[0] : "";        
-        if (firstArg.equals("-help") || firstArg.equals("-?") || args.length > 2) {
+        if (firstArg.equals("-help") || firstArg.equals("-?")) {
             System.out.println("");
-            System.out.println("Usage: java -jar ofbiz.jar [command] [config]");
+            System.out.println("Usage: java -jar ofbiz.jar [command] [config] [config arguments]");
             System.out.println("-help, -? ----> This screen");
             System.out.println("-start -------> Start the server");
             System.out.println("-status ------> Status of the server");

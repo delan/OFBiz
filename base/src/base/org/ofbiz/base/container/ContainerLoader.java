@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerLoader.java,v 1.7 2003/12/01 20:43:39 ajzeneski Exp $
+ * $Id: ContainerLoader.java,v 1.8 2004/03/30 22:35:09 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  * ContainerLoader - StartupLoader for the container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.7 $
+  *@version    $Revision: 1.8 $
  * @since      3.0
  */
 public class ContainerLoader implements StartupLoader {
@@ -49,9 +49,9 @@ public class ContainerLoader implements StartupLoader {
     protected List loadedContainers = new LinkedList();    
 
     /**
-     * @see org.ofbiz.base.start.StartupLoader#load(Start.Config)
+     * @see org.ofbiz.base.start.StartupLoader#load(Start.Config, String[])
      */
-    public void load(Start.Config config) throws StartupException {
+    public void load(Start.Config config, String args[]) throws StartupException {
         Debug.logInfo("[Startup] Loading ContainerLoader...", module);
               
         // get the master container configuration file
