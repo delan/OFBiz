@@ -7,7 +7,8 @@
 
 <title>Open For Business: <%=pageName%></title>
 
-<%@ include file="/includes/maincss.jsp"%>
+<link rel="stylesheet" href="/commonapp/includes/maincss.css" type="text/css">
+<%-- <%@ include file="/includes/maincss.jsp"%> --%>
 </head>
 
 <body>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon May 28 22:02:14 MDT 2001
+ *@created    Thu May 31 17:02:26 MDT 2001
  *@version    1.0
  */
 %>
@@ -54,8 +54,8 @@
   String rowColor2 = "CCFFFF";
   String rowColor = "";
 
-    String username = request.getParameter("PERSON_PERSON_TYPE_USERNAME");
-    String typeId = request.getParameter("PERSON_PERSON_TYPE_TYPE_ID");
+  String username = request.getParameter("PERSON_PERSON_TYPE_USERNAME");
+  String typeId = request.getParameter("PERSON_PERSON_TYPE_TYPE_ID");
 
   
   
@@ -77,66 +77,51 @@
 <%}%>
 <br>
 
+<%if(personPersonType == null && (username != null || typeId != null)){%>
+    PersonPersonType with (USERNAME, TYPE_ID: <%=username%>, <%=typeId%>) not found.<br>
+<%}%>
 <form action="<%=response.encodeURL("EditPersonPersonType.jsp")%>" method="POST" name="updateForm">
+  <input type="hidden" name="WEBEVENT" value="UPDATE_PERSON_PERSON_TYPE">
+  <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
+<%
+  String lastUpdateMode = request.getParameter("UPDATE_MODE");
+  if((session.getAttribute("ERROR_MESSAGE") != null || request.getAttribute("ERROR_MESSAGE") != null) && 
+      lastUpdateMode != null && !lastUpdateMode.equals("DELETE"))
+  {
+    //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
+    personPersonType = null;
+  }
+%>
+
 <%if(personPersonType == null){%>
-  <%if(username != null || typeId != null){%>
-    PersonPersonType with (USERNAME, TYPE_ID: <%=username%>, <%=typeId%>) not found. 
-    <%if(hasCreatePermission){%>
-      You may create a PersonPersonType by entering the values you want, and clicking Update.
-      <input type="hidden" name="WEBEVENT" value="UPDATE_PERSON_PERSON_TYPE">
-      <input type="hidden" name="UPDATE_MODE" value="CREATE">
+  <%if(hasCreatePermission){%>
+    You may create a PersonPersonType by entering the values you want, and clicking Update.
+    <input type="hidden" name="UPDATE_MODE" value="CREATE">
   
-      <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <td>USERNAME</td>
-        <td>
-        
-          <input type="text" size="20" maxlength="20" name="PERSON_PERSON_TYPE_USERNAME" value="<%=UtilFormatOut.checkNull(username)%>">
-        
-        </td>
-      </tr>
-      <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <td>TYPE_ID</td>
-        <td>
-        
-          <input type="text" size="40" maxlength="40" name="PERSON_PERSON_TYPE_TYPE_ID" value="<%=UtilFormatOut.checkNull(typeId)%>">
-        
-        </td>
-      </tr>
-    <%}else{%>
-      <%showFields=false;%>
-      You do not have permission to create a PersonPersonType (PERSON_PERSON_TYPE_ADMIN, or PERSON_PERSON_TYPE_CREATE needed).
-    <%}%>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <td>USERNAME</td>
+      <td>
+      
+        <input type="text" size="20" maxlength="20" name="PERSON_PERSON_TYPE_USERNAME" value="<%=UtilFormatOut.checkNull(username)%>">
+      
+      </td>
+    </tr>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <td>TYPE_ID</td>
+      <td>
+      
+        <input type="text" size="20" maxlength="20" name="PERSON_PERSON_TYPE_TYPE_ID" value="<%=UtilFormatOut.checkNull(typeId)%>">
+      
+      </td>
+    </tr>
   <%}else{%>
-    <%if(hasCreatePermission){%>
-      <input type="hidden" name="WEBEVENT" value="UPDATE_PERSON_PERSON_TYPE">
-      <input type="hidden" name="UPDATE_MODE" value="CREATE">
-  
-      <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <td>USERNAME</td>
-        <td>
-        
-          <input type="text" size="20" maxlength="20" name="PERSON_PERSON_TYPE_USERNAME" value="">
-        
-        </td>
-      </tr>
-      <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <td>TYPE_ID</td>
-        <td>
-        
-          <input type="text" size="40" maxlength="40" name="PERSON_PERSON_TYPE_TYPE_ID" value="">
-        
-        </td>
-      </tr>
-    <%}else{%>
-      <%showFields=false;%>
-      You do not have permission to create a PersonPersonType (PERSON_PERSON_TYPE_ADMIN, or PERSON_PERSON_TYPE_CREATE needed).
-    <%}%>
-  <%} //end if sku == null%>
+    <%showFields=false;%>
+    You do not have permission to create a PersonPersonType (PERSON_PERSON_TYPE_ADMIN, or PERSON_PERSON_TYPE_CREATE needed).
+  <%}%>
 <%}else{%>
   <%if(hasUpdatePermission){%>
-    <input type="hidden" name="WEBEVENT" value="UPDATE_PERSON_PERSON_TYPE">
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
   
     <input type="hidden" name="PERSON_PERSON_TYPE_USERNAME" value="<%=username%>">
@@ -160,21 +145,13 @@
 <%} //end if personPersonType == null %>
 
 <%if(showFields){%>
-<%
-  String lastUpdateMode = request.getParameter("UPDATE_MODE");
-  if(session.getAttribute("ERROR_MESSAGE") != null && lastUpdateMode != null && lastUpdateMode.compareTo("UPDATE") == 0)
-  {
-    //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
-    personPersonType = null;
-  }
-%>  
 
   
 
   
 
   <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-    <td><input type="submit" name="Update" value="Update"></td>
+    <td colspan="2"><input type="submit" name="Update" value="Update"></td>
   </tr>
 <%}%>
 </table>

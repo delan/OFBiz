@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon May 28 22:02:45 MDT 2001
+ *@created    Thu May 31 17:03:06 MDT 2001
  *@version    1.0
  */
 %>
@@ -54,11 +54,21 @@
   String rowColor2 = "CCFFFF";
   String rowColor = "";
 
-    String groupId = request.getParameter("SECURITY_GROUP_GROUP_ID");
+  String groupId = request.getParameter("SECURITY_GROUP_GROUP_ID");
 
   
 
   SecurityGroup securityGroup = SecurityGroupHelper.findByPrimaryKey(groupId);
+%>
+
+<%
+  String lastUpdateMode = request.getParameter("UPDATE_MODE");
+  if((session.getAttribute("ERROR_MESSAGE") != null || request.getAttribute("ERROR_MESSAGE") != null) && 
+      lastUpdateMode != null && !lastUpdateMode.equals("DELETE"))
+  {
+    //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
+    securityGroup = null;
+  }
 %>
 
 <a href="<%=response.encodeURL("FindSecurityGroup.jsp")%>" class="buttontext">[Find SecurityGroup]</a>
@@ -75,50 +85,33 @@
 <%}%>
 <br>
 
+<%if(securityGroup == null && (groupId != null)){%>
+    SecurityGroup with (GROUP_ID: <%=groupId%>) not found.<br>
+<%}%>
 <form action="<%=response.encodeURL("EditSecurityGroup.jsp")%>" method="POST" name="updateForm">
+  <input type="hidden" name="WEBEVENT" value="UPDATE_SECURITY_GROUP">
+  <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
 <%if(securityGroup == null){%>
-  <%if(groupId != null){%>
-    SecurityGroup with (GROUP_ID: <%=groupId%>) not found. 
-    <%if(hasCreatePermission){%>
-      You may create a SecurityGroup by entering the values you want, and clicking Update.
-      <input type="hidden" name="WEBEVENT" value="UPDATE_SECURITY_GROUP">
-      <input type="hidden" name="UPDATE_MODE" value="CREATE">
+  <%if(hasCreatePermission){%>
+    You may create a SecurityGroup by entering the values you want, and clicking Update.
+    <input type="hidden" name="UPDATE_MODE" value="CREATE">
   
-      <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <td>GROUP_ID</td>
-        <td>
-        
-          <input type="text" size="20" maxlength="20" name="SECURITY_GROUP_GROUP_ID" value="<%=UtilFormatOut.checkNull(groupId)%>">
-        
-        </td>
-      </tr>
-    <%}else{%>
-      <%showFields=false;%>
-      You do not have permission to create a SecurityGroup (SECURITY_GROUP_ADMIN, or SECURITY_GROUP_CREATE needed).
-    <%}%>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <td>GROUP_ID</td>
+      <td>
+      
+        <input type="text" size="20" maxlength="20" name="SECURITY_GROUP_GROUP_ID" value="<%=UtilFormatOut.checkNull(groupId)%>">
+      
+      </td>
+    </tr>
   <%}else{%>
-    <%if(hasCreatePermission){%>
-      <input type="hidden" name="WEBEVENT" value="UPDATE_SECURITY_GROUP">
-      <input type="hidden" name="UPDATE_MODE" value="CREATE">
-  
-      <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <td>GROUP_ID</td>
-        <td>
-        
-          <input type="text" size="20" maxlength="20" name="SECURITY_GROUP_GROUP_ID" value="">
-        
-        </td>
-      </tr>
-    <%}else{%>
-      <%showFields=false;%>
-      You do not have permission to create a SecurityGroup (SECURITY_GROUP_ADMIN, or SECURITY_GROUP_CREATE needed).
-    <%}%>
-  <%} //end if sku == null%>
+    <%showFields=false;%>
+    You do not have permission to create a SecurityGroup (SECURITY_GROUP_ADMIN, or SECURITY_GROUP_CREATE needed).
+  <%}%>
 <%}else{%>
   <%if(hasUpdatePermission){%>
-    <input type="hidden" name="WEBEVENT" value="UPDATE_SECURITY_GROUP">
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
   
     <input type="hidden" name="SECURITY_GROUP_GROUP_ID" value="<%=groupId%>">
@@ -135,14 +128,6 @@
 <%} //end if securityGroup == null %>
 
 <%if(showFields){%>
-<%
-  String lastUpdateMode = request.getParameter("UPDATE_MODE");
-  if(session.getAttribute("ERROR_MESSAGE") != null && lastUpdateMode != null && lastUpdateMode.compareTo("UPDATE") == 0)
-  {
-    //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
-    securityGroup = null;
-  }
-%>  
 
   
 
@@ -158,7 +143,7 @@
   
 
   <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-    <td><input type="submit" name="Update" value="Update"></td>
+    <td colspan="2"><input type="submit" name="Update" value="Update"></td>
   </tr>
 <%}%>
 </table>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon May 28 21:59:02 MDT 2001
+ *@created    Thu May 31 17:01:38 MDT 2001
  *@version    1.0
  */
 %>
@@ -54,11 +54,21 @@
   String rowColor2 = "CCFFFF";
   String rowColor = "";
 
-    String username = request.getParameter("PERSON_USERNAME");
+  String username = request.getParameter("PERSON_USERNAME");
 
   
 
   Person person = PersonHelper.findByPrimaryKey(username);
+%>
+
+<%
+  String lastUpdateMode = request.getParameter("UPDATE_MODE");
+  if((session.getAttribute("ERROR_MESSAGE") != null || request.getAttribute("ERROR_MESSAGE") != null) && 
+      lastUpdateMode != null && !lastUpdateMode.equals("DELETE"))
+  {
+    //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
+    person = null;
+  }
 %>
 
 <a href="<%=response.encodeURL("FindPerson.jsp")%>" class="buttontext">[Find Person]</a>
@@ -75,50 +85,33 @@
 <%}%>
 <br>
 
+<%if(person == null && (username != null)){%>
+    Person with (USERNAME: <%=username%>) not found.<br>
+<%}%>
 <form action="<%=response.encodeURL("EditPerson.jsp")%>" method="POST" name="updateForm">
+  <input type="hidden" name="WEBEVENT" value="UPDATE_PERSON">
+  <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
 <%if(person == null){%>
-  <%if(username != null){%>
-    Person with (USERNAME: <%=username%>) not found. 
-    <%if(hasCreatePermission){%>
-      You may create a Person by entering the values you want, and clicking Update.
-      <input type="hidden" name="WEBEVENT" value="UPDATE_PERSON">
-      <input type="hidden" name="UPDATE_MODE" value="CREATE">
+  <%if(hasCreatePermission){%>
+    You may create a Person by entering the values you want, and clicking Update.
+    <input type="hidden" name="UPDATE_MODE" value="CREATE">
   
-      <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <td>USERNAME</td>
-        <td>
-        
-          <input type="text" size="20" maxlength="20" name="PERSON_USERNAME" value="<%=UtilFormatOut.checkNull(username)%>">
-        
-        </td>
-      </tr>
-    <%}else{%>
-      <%showFields=false;%>
-      You do not have permission to create a Person (PERSON_ADMIN, or PERSON_CREATE needed).
-    <%}%>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <td>USERNAME</td>
+      <td>
+      
+        <input type="text" size="20" maxlength="20" name="PERSON_USERNAME" value="<%=UtilFormatOut.checkNull(username)%>">
+      
+      </td>
+    </tr>
   <%}else{%>
-    <%if(hasCreatePermission){%>
-      <input type="hidden" name="WEBEVENT" value="UPDATE_PERSON">
-      <input type="hidden" name="UPDATE_MODE" value="CREATE">
-  
-      <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <td>USERNAME</td>
-        <td>
-        
-          <input type="text" size="20" maxlength="20" name="PERSON_USERNAME" value="">
-        
-        </td>
-      </tr>
-    <%}else{%>
-      <%showFields=false;%>
-      You do not have permission to create a Person (PERSON_ADMIN, or PERSON_CREATE needed).
-    <%}%>
-  <%} //end if sku == null%>
+    <%showFields=false;%>
+    You do not have permission to create a Person (PERSON_ADMIN, or PERSON_CREATE needed).
+  <%}%>
 <%}else{%>
   <%if(hasUpdatePermission){%>
-    <input type="hidden" name="WEBEVENT" value="UPDATE_PERSON">
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
   
     <input type="hidden" name="PERSON_USERNAME" value="<%=username%>">
@@ -135,14 +128,6 @@
 <%} //end if person == null %>
 
 <%if(showFields){%>
-<%
-  String lastUpdateMode = request.getParameter("UPDATE_MODE");
-  if(session.getAttribute("ERROR_MESSAGE") != null && lastUpdateMode != null && lastUpdateMode.compareTo("UPDATE") == 0)
-  {
-    //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
-    person = null;
-  }
-%>  
 
   
 
@@ -162,7 +147,7 @@
     <td>FIRST_NAME</td>
     <td>
     
-      <input type="text" size="40" maxlength="40" name="PERSON_FIRST_NAME" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getFirstName())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_FIRST_NAME"))%><%}%>">
+      <input type="text" size="60" maxlength="60" name="PERSON_FIRST_NAME" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getFirstName())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_FIRST_NAME"))%><%}%>">
     
     </td>
   </tr>
@@ -173,7 +158,7 @@
     <td>MIDDLE_NAME</td>
     <td>
     
-      <input type="text" size="40" maxlength="40" name="PERSON_MIDDLE_NAME" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getMiddleName())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_MIDDLE_NAME"))%><%}%>">
+      <input type="text" size="60" maxlength="60" name="PERSON_MIDDLE_NAME" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getMiddleName())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_MIDDLE_NAME"))%><%}%>">
     
     </td>
   </tr>
@@ -184,7 +169,7 @@
     <td>LAST_NAME</td>
     <td>
     
-      <input type="text" size="40" maxlength="40" name="PERSON_LAST_NAME" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getLastName())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_LAST_NAME"))%><%}%>">
+      <input type="text" size="60" maxlength="60" name="PERSON_LAST_NAME" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getLastName())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_LAST_NAME"))%><%}%>">
     
     </td>
   </tr>
@@ -217,7 +202,7 @@
     <td>HOME_PHONE</td>
     <td>
     
-      <input type="text" size="20" maxlength="20" name="PERSON_HOME_PHONE" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getHomePhone())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_HOME_PHONE"))%><%}%>">
+      <input type="text" size="60" maxlength="60" name="PERSON_HOME_PHONE" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getHomePhone())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_HOME_PHONE"))%><%}%>">
     
     </td>
   </tr>
@@ -228,7 +213,7 @@
     <td>WORK_PHONE</td>
     <td>
     
-      <input type="text" size="20" maxlength="20" name="PERSON_WORK_PHONE" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getWorkPhone())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_WORK_PHONE"))%><%}%>">
+      <input type="text" size="60" maxlength="60" name="PERSON_WORK_PHONE" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getWorkPhone())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_WORK_PHONE"))%><%}%>">
     
     </td>
   </tr>
@@ -239,7 +224,7 @@
     <td>FAX</td>
     <td>
     
-      <input type="text" size="20" maxlength="20" name="PERSON_FAX" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getFax())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_FAX"))%><%}%>">
+      <input type="text" size="60" maxlength="60" name="PERSON_FAX" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getFax())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_FAX"))%><%}%>">
     
     </td>
   </tr>
@@ -261,7 +246,7 @@
     <td>HOME_STREET1</td>
     <td>
     
-      <input type="text" size="80" maxlength="100" name="PERSON_HOME_STREET1" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getHomeStreet1())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_HOME_STREET1"))%><%}%>">
+      <input type="text" size="80" maxlength="255" name="PERSON_HOME_STREET1" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getHomeStreet1())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_HOME_STREET1"))%><%}%>">
     
     </td>
   </tr>
@@ -272,7 +257,7 @@
     <td>HOME_STREET2</td>
     <td>
     
-      <input type="text" size="80" maxlength="100" name="PERSON_HOME_STREET2" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getHomeStreet2())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_HOME_STREET2"))%><%}%>">
+      <input type="text" size="80" maxlength="255" name="PERSON_HOME_STREET2" value="<%if(person!=null){%><%=UtilFormatOut.checkNull(person.getHomeStreet2())%><%}else{%><%=UtilFormatOut.checkNull(request.getParameter("PERSON_HOME_STREET2"))%><%}%>">
     
     </td>
   </tr>
@@ -334,7 +319,7 @@
   
 
   <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-    <td><input type="submit" name="Update" value="Update"></td>
+    <td colspan="2"><input type="submit" name="Update" value="Update"></td>
   </tr>
 <%}%>
 </table>

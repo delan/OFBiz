@@ -39,6 +39,30 @@
     <copyright>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org</copyright>
     <author>David E. Jones</author>
     <version>1.0</version>
+  <!-- ===================== field-type-def ==================== -->
+   <!-- General Types --> 
+    <field-type-def><field-type>comment</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>currency-amount</field-type><sql-type>NUMERIC(18,2)</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
+    <field-type-def><field-type>date-time</field-type><sql-type>DATETIME</sql-type><java-type>java.util.Date</java-type></field-type-def>
+    <field-type-def><field-type>description</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>floating-point</field-type><sql-type>NUMERIC(18,4)</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
+    <field-type-def><field-type>id</field-type><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>id-long</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>indicator</field-type><sql-type>CHAR(1)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>long-varchar</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>name</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>numeric</field-type><sql-type>NUMERIC(18,0)</sql-type><java-type>Long</java-type><validate>isSignedLong</validate></field-type-def>
+    <field-type-def><field-type>short-varchar</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>value</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>very-long</field-type><sql-type>TEXT</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><field-type>very-short</field-type><sql-type>VARCHAR(10)</sql-type><java-type>String</java-type></field-type-def>
+   <!-- Specialized Types -->
+    <field-type-def><field-type>credit-card-number</field-type><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type><validate>isAnyCard</validate></field-type-def>
+    <field-type-def><field-type>credit-card-date</field-type><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type><validate>isDateAfterToday</validate></field-type-def>
+    <field-type-def><field-type>email</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type><validate>isEmail</validate></field-type-def>
+    <field-type-def><field-type>id-ne</field-type><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
+    <field-type-def><field-type>id-long-ne</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
+    <field-type-def><field-type>tel-number</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type><validate>isInternationalPhoneNumber</validate></field-type-def>
   <!-- ========================================================= -->
   <!-- ========================= Person ======================== -->
   <!-- ========================================================= -->
@@ -47,30 +71,78 @@
       <package-name>org.ofbiz.commonapp.person</package-name>
       <table-name>PERSON</table-name>
       <use-cache>false</use-cache>
-      <cmp-field><column-name>USERNAME</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>PASSWORD</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>FIRST_NAME</column-name><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>MIDDLE_NAME</column-name><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>LAST_NAME</column-name><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>TITLE</column-name><sql-type>VARCHAR(10)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>SUFFIX</column-name><sql-type>VARCHAR(10)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>HOME_PHONE</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>WORK_PHONE</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>FAX</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>EMAIL</column-name><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>HOME_STREET1</column-name><sql-type>VARCHAR(100)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>HOME_STREET2</column-name><sql-type>VARCHAR(100)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>HOME_CITY</column-name><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>HOME_COUNTY</column-name><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>HOME_STATE</column-name><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>HOME_COUNTRY</column-name><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>HOME_POSTAL_CODE</column-name><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></cmp-field>
+      <cmp-field><column-name>USERNAME</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PASSWORD</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>FIRST_NAME</column-name><field-type>name</field-type><validate>isNotEmpty</validate></cmp-field>
+      <cmp-field><column-name>MIDDLE_NAME</column-name><field-type>name</field-type></cmp-field>
+      <cmp-field><column-name>LAST_NAME</column-name><field-type>name</field-type><validate>isNotEmpty</validate></cmp-field>
+      <cmp-field><column-name>TITLE</column-name><field-type>very-short</field-type></cmp-field>
+      <cmp-field><column-name>SUFFIX</column-name><field-type>very-short</field-type></cmp-field>
+      <cmp-field><column-name>HOME_PHONE</column-name><field-type>tel-number</field-type></cmp-field>
+      <cmp-field><column-name>WORK_PHONE</column-name><field-type>tel-number</field-type></cmp-field>
+      <cmp-field><column-name>FAX</column-name><field-type>tel-number</field-type></cmp-field>
+      <cmp-field><column-name>EMAIL</column-name><field-type>email</field-type><validate>isNotEmpty</validate></cmp-field>
+      <cmp-field><column-name>HOME_STREET1</column-name><field-type>long-varchar</field-type></cmp-field>
+      <cmp-field><column-name>HOME_STREET2</column-name><field-type>long-varchar</field-type></cmp-field>
+      <cmp-field><column-name>HOME_CITY</column-name><field-type>short-varchar</field-type></cmp-field>
+      <cmp-field><column-name>HOME_COUNTY</column-name><field-type>short-varchar</field-type></cmp-field>
+      <cmp-field><column-name>HOME_STATE</column-name><field-type>short-varchar</field-type></cmp-field>
+      <cmp-field><column-name>HOME_COUNTRY</column-name><field-type>short-varchar</field-type></cmp-field>
+      <cmp-field><column-name>HOME_POSTAL_CODE</column-name><field-type>short-varchar</field-type></cmp-field>
       <prim-key-column>USERNAME</prim-key-column>
       <finder><column-name>FIRST_NAME</column-name></finder>
       <finder><column-name>LAST_NAME</column-name></finder>
       <finder><column-name>FIRST_NAME</column-name><column-name>LAST_NAME</column-name></finder>
       <finder><column-name>HOME_PHONE</column-name></finder>
       <finder><column-name>EMAIL</column-name></finder>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PERSON_PERSON_TYPE</related-table-name>
+        <key-map><column-name>USERNAME</column-name></key-map>
+        <relation>
+          <relation-type>many</relation-type>
+          <related-table-name>PERSON_TYPE_ATTRIBUTE</related-table-name>
+          <key-map><column-name>TYPE_ID</column-name></key-map>
+          <relation>
+            <relation-type>one</relation-type>
+            <related-table-name>PERSON_ATTRIBUTE</related-table-name>
+            <key-map><column-name>USERNAME</column-name></key-map> <!-- this column-name is from the parent in the relation heirarchy, ie PERSON_PERSON_TYPE, and that must be supported -->
+            <key-map><column-name>NAME</column-name></key-map>
+          </relation>
+        </relation>
+        <relation>
+          <relation-type>one</relation-type>
+          <related-table-name>PERSON_TYPE</related-table-name>
+          <key-map><column-name>TYPE_ID</column-name></key-map>
+        </relation>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PERSON_ATTRIBUTE</related-table-name>
+        <key-map><column-name>USERNAME</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PERSON_SECURITY_GROUP</related-table-name>
+        <key-map><column-name>USERNAME</column-name></key-map>
+        <relation>
+          <relation-type>one</relation-type>
+          <related-table-name>SECURITY_GROUP</related-table-name>
+          <key-map><column-name>GROUP_ID</column-name></key-map>
+        </relation>
+        <!-- It may be a little too much to display all of the permissions, so just display the groups and let them drill down if they wish
+        <relation>
+          <relation-type>many</relation-type>
+          <related-table-name>SECURITY_GROUP_PERMISSION</related-table-name>
+          <key-map><column-name>GROUP_ID</column-name></key-map>
+          <relation>
+            <relation-type>one</relation-type>
+            <related-table-name>SECURITY_PERMISSION</related-table-name>
+            <key-map><column-name>PERMISSION_ID</column-name></key-map>
+          </relation>
+        </relation>
+        -->
+      </relation>
     </entity>
   <!-- ========================================================= -->    
     <entity>
@@ -78,13 +150,18 @@
       <package-name>org.ofbiz.commonapp.person</package-name>
       <table-name>PERSON_ATTRIBUTE</table-name>
       <use-cache>false</use-cache>
-      <cmp-field><column-name>USERNAME</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>VALUE</column-name><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></cmp-field>
+      <cmp-field><column-name>USERNAME</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
       <prim-key-column>USERNAME</prim-key-column>
       <prim-key-column>NAME</prim-key-column>
       <finder><column-name>USERNAME</column-name></finder>
       <finder><column-name>NAME</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PERSON</related-table-name>
+        <key-map><column-name>USERNAME</column-name></key-map>
+      </relation>
     </entity>
   <!-- ========================================================= -->    
     <entity>
@@ -92,10 +169,25 @@
       <package-name>org.ofbiz.commonapp.person</package-name>
       <table-name>PERSON_TYPE</table-name>
       <use-cache>false</use-cache>
-      <cmp-field><column-name>TYPE_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></cmp-field>
+      <cmp-field><column-name>TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
       <prim-key-class>java.lang.String</prim-key-class>
       <prim-key-column>TYPE_ID</prim-key-column>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PERSON_TYPE_ATTRIBUTE</related-table-name>
+        <key-map><column-name>TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PERSON_PERSON_TYPE</related-table-name>
+        <key-map><column-name>TYPE_ID</column-name></key-map>
+        <relation>
+          <relation-type>one</relation-type>
+          <related-table-name>PERSON</related-table-name>
+          <key-map><column-name>USERNAME</column-name></key-map>
+        </relation>
+      </relation>
     </entity>
   <!-- ========================================================= -->    
     <entity>
@@ -103,12 +195,17 @@
       <package-name>org.ofbiz.commonapp.person</package-name>
       <table-name>PERSON_TYPE_ATTRIBUTE</table-name>
       <use-cache>false</use-cache>
-      <cmp-field><column-name>TYPE_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type></cmp-field>
+      <cmp-field><column-name>TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
       <prim-key-column>TYPE_ID</prim-key-column>
       <prim-key-column>NAME</prim-key-column>
       <finder><column-name>TYPE_ID</column-name></finder>
       <finder><column-name>NAME</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PERSON_TYPE</related-table-name>
+        <key-map><column-name>TYPE_ID</column-name></key-map>
+      </relation>
     </entity>
   <!-- ========================================================= -->    
     <entity>
@@ -117,12 +214,33 @@
       <package-name>org.ofbiz.commonapp.person</package-name>
       <table-name>PERSON_PERSON_TYPE</table-name>
       <use-cache>false</use-cache>
-      <cmp-field><column-name>USERNAME</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>TYPE_ID</column-name><sql-type>VARCHAR(40)</sql-type><java-type>String</java-type></cmp-field>
+      <cmp-field><column-name>USERNAME</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <prim-key-column>USERNAME</prim-key-column>
       <prim-key-column>TYPE_ID</prim-key-column>
       <finder><column-name>USERNAME</column-name></finder>
       <finder><column-name>TYPE_ID</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PERSON</related-table-name>
+        <key-map><column-name>USERNAME</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PERSON_TYPE</related-table-name>
+        <key-map><column-name>TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PERSON_TYPE_ATTRIBUTE</related-table-name>
+        <key-map><column-name>TYPE_ID</column-name></key-map>
+        <relation>
+          <relation-type>one</relation-type>
+          <related-table-name>PERSON_ATTRIBUTE</related-table-name>
+          <key-map><column-name>USERNAME</column-name></key-map> <!-- this column-name is from the parent in the relation heirarchy, ie PERSON_PERSON_TYPE, and that must be supported -->
+          <key-map><column-name>NAME</column-name></key-map>
+        </relation>
+      </relation>
     </entity>
   <!-- ========================================================= -->    
   <!-- ========================================================= -->    
@@ -131,9 +249,19 @@
       <package-name>org.ofbiz.commonapp.security.securitygroup</package-name>
       <table-name>SECURITY_GROUP</table-name>
       <use-cache>false</use-cache>
-      <cmp-field><column-name>GROUP_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></cmp-field>
+      <cmp-field><column-name>GROUP_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
       <prim-key-column>GROUP_ID</prim-key-column>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>SECURITY_GROUP_PERMISSION</related-table-name>
+        <key-map><column-name>GROUP_ID</column-name></key-map>
+        <relation>
+          <relation-type>one</relation-type>
+          <related-table-name>SECURITY_PERMISSION</related-table-name>
+          <key-map><column-name>PERMISSION_ID</column-name></key-map>
+        </relation>
+      </relation>
     </entity>
   <!-- ========================================================= -->    
     <entity>
@@ -141,10 +269,20 @@
       <package-name>org.ofbiz.commonapp.security.securitygroup</package-name>
       <table-name>SECURITY_PERMISSION</table-name>
       <use-cache>false</use-cache>
-      <cmp-field><column-name>PERMISSION_ID</column-name><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></cmp-field>
+      <cmp-field><column-name>PERMISSION_ID</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
       <prim-key-column>PERMISSION_ID</prim-key-column>
       <finder><column-name>PERMISSION_ID</column-name></finder>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>SECURITY_GROUP_PERMISSION</related-table-name>
+        <key-map><column-name>PERMISSION_ID</column-name></key-map>
+        <relation>
+          <relation-type>one</relation-type>
+          <related-table-name>SECURITY_GROUP</related-table-name>
+          <key-map><column-name>GROUP_ID</column-name></key-map>
+        </relation>
+      </relation>
     </entity>
   <!-- ========================================================= -->    
     <entity>
@@ -153,12 +291,22 @@
       <package-name>org.ofbiz.commonapp.security.securitygroup</package-name>
       <table-name>SECURITY_GROUP_PERMISSION</table-name>
       <use-cache>false</use-cache>
-      <cmp-field><column-name>GROUP_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>PERMISSION_ID</column-name><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type></cmp-field>
+      <cmp-field><column-name>GROUP_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PERMISSION_ID</column-name><field-type>id-long-ne</field-type></cmp-field>
       <prim-key-column>GROUP_ID</prim-key-column>
       <prim-key-column>PERMISSION_ID</prim-key-column>
       <finder><column-name>GROUP_ID</column-name></finder>
       <finder><column-name>PERMISSION_ID</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>SECURITY_GROUP</related-table-name>
+        <key-map><column-name>GROUP_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>SECURITY_PERMISSION</related-table-name>
+        <key-map><column-name>PERMISSION_ID</column-name></key-map>
+      </relation>
     </entity>
   <!-- ========================================================= -->    
     <entity>
@@ -167,12 +315,32 @@
       <package-name>org.ofbiz.commonapp.security.person</package-name>
       <table-name>PERSON_SECURITY_GROUP</table-name>
       <use-cache>false</use-cache>
-      <cmp-field><column-name>USERNAME</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
-      <cmp-field><column-name>GROUP_ID</column-name><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></cmp-field>
+      <cmp-field><column-name>USERNAME</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>GROUP_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <prim-key-column>USERNAME</prim-key-column>
       <prim-key-column>GROUP_ID</prim-key-column>
       <finder><column-name>USERNAME</column-name></finder>
       <finder><column-name>GROUP_ID</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PERSON</related-table-name>
+        <key-map><column-name>USERNAME</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>SECURITY_GROUP</related-table-name>
+        <key-map><column-name>GROUP_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>SECURITY_GROUP_PERMISSION</related-table-name>
+        <key-map><column-name>GROUP_ID</column-name></key-map>
+        <relation>
+          <relation-type>one</relation-type>
+          <related-table-name>SECURITY_PERMISSION</related-table-name>
+          <key-map><column-name>PERMISSION_ID</column-name></key-map>
+        </relation>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->

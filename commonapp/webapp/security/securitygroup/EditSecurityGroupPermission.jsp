@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Mon May 28 22:03:55 MDT 2001
+ *@created    Thu May 31 17:03:38 MDT 2001
  *@version    1.0
  */
 %>
@@ -54,13 +54,23 @@
   String rowColor2 = "CCFFFF";
   String rowColor = "";
 
-    String groupId = request.getParameter("SECURITY_GROUP_PERMISSION_GROUP_ID");
-    String permissionId = request.getParameter("SECURITY_GROUP_PERMISSION_PERMISSION_ID");
+  String groupId = request.getParameter("SECURITY_GROUP_PERMISSION_GROUP_ID");
+  String permissionId = request.getParameter("SECURITY_GROUP_PERMISSION_PERMISSION_ID");
 
   
   
 
   SecurityGroupPermission securityGroupPermission = SecurityGroupPermissionHelper.findByPrimaryKey(groupId, permissionId);
+%>
+
+<%
+  String lastUpdateMode = request.getParameter("UPDATE_MODE");
+  if((session.getAttribute("ERROR_MESSAGE") != null || request.getAttribute("ERROR_MESSAGE") != null) && 
+      lastUpdateMode != null && !lastUpdateMode.equals("DELETE"))
+  {
+    //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
+    securityGroupPermission = null;
+  }
 %>
 
 <a href="<%=response.encodeURL("FindSecurityGroupPermission.jsp")%>" class="buttontext">[Find SecurityGroupPermission]</a>
@@ -77,66 +87,41 @@
 <%}%>
 <br>
 
+<%if(securityGroupPermission == null && (groupId != null || permissionId != null)){%>
+    SecurityGroupPermission with (GROUP_ID, PERMISSION_ID: <%=groupId%>, <%=permissionId%>) not found.<br>
+<%}%>
 <form action="<%=response.encodeURL("EditSecurityGroupPermission.jsp")%>" method="POST" name="updateForm">
+  <input type="hidden" name="WEBEVENT" value="UPDATE_SECURITY_GROUP_PERMISSION">
+  <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
 <%if(securityGroupPermission == null){%>
-  <%if(groupId != null || permissionId != null){%>
-    SecurityGroupPermission with (GROUP_ID, PERMISSION_ID: <%=groupId%>, <%=permissionId%>) not found. 
-    <%if(hasCreatePermission){%>
-      You may create a SecurityGroupPermission by entering the values you want, and clicking Update.
-      <input type="hidden" name="WEBEVENT" value="UPDATE_SECURITY_GROUP_PERMISSION">
-      <input type="hidden" name="UPDATE_MODE" value="CREATE">
+  <%if(hasCreatePermission){%>
+    You may create a SecurityGroupPermission by entering the values you want, and clicking Update.
+    <input type="hidden" name="UPDATE_MODE" value="CREATE">
   
-      <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <td>GROUP_ID</td>
-        <td>
-        
-          <input type="text" size="20" maxlength="20" name="SECURITY_GROUP_PERMISSION_GROUP_ID" value="<%=UtilFormatOut.checkNull(groupId)%>">
-        
-        </td>
-      </tr>
-      <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <td>PERMISSION_ID</td>
-        <td>
-        
-          <input type="text" size="60" maxlength="60" name="SECURITY_GROUP_PERMISSION_PERMISSION_ID" value="<%=UtilFormatOut.checkNull(permissionId)%>">
-        
-        </td>
-      </tr>
-    <%}else{%>
-      <%showFields=false;%>
-      You do not have permission to create a SecurityGroupPermission (SECURITY_GROUP_PERMISSION_ADMIN, or SECURITY_GROUP_PERMISSION_CREATE needed).
-    <%}%>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <td>GROUP_ID</td>
+      <td>
+      
+        <input type="text" size="20" maxlength="20" name="SECURITY_GROUP_PERMISSION_GROUP_ID" value="<%=UtilFormatOut.checkNull(groupId)%>">
+      
+      </td>
+    </tr>
+    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+      <td>PERMISSION_ID</td>
+      <td>
+      
+        <input type="text" size="60" maxlength="60" name="SECURITY_GROUP_PERMISSION_PERMISSION_ID" value="<%=UtilFormatOut.checkNull(permissionId)%>">
+      
+      </td>
+    </tr>
   <%}else{%>
-    <%if(hasCreatePermission){%>
-      <input type="hidden" name="WEBEVENT" value="UPDATE_SECURITY_GROUP_PERMISSION">
-      <input type="hidden" name="UPDATE_MODE" value="CREATE">
-  
-      <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <td>GROUP_ID</td>
-        <td>
-        
-          <input type="text" size="20" maxlength="20" name="SECURITY_GROUP_PERMISSION_GROUP_ID" value="">
-        
-        </td>
-      </tr>
-      <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-        <td>PERMISSION_ID</td>
-        <td>
-        
-          <input type="text" size="60" maxlength="60" name="SECURITY_GROUP_PERMISSION_PERMISSION_ID" value="">
-        
-        </td>
-      </tr>
-    <%}else{%>
-      <%showFields=false;%>
-      You do not have permission to create a SecurityGroupPermission (SECURITY_GROUP_PERMISSION_ADMIN, or SECURITY_GROUP_PERMISSION_CREATE needed).
-    <%}%>
-  <%} //end if sku == null%>
+    <%showFields=false;%>
+    You do not have permission to create a SecurityGroupPermission (SECURITY_GROUP_PERMISSION_ADMIN, or SECURITY_GROUP_PERMISSION_CREATE needed).
+  <%}%>
 <%}else{%>
   <%if(hasUpdatePermission){%>
-    <input type="hidden" name="WEBEVENT" value="UPDATE_SECURITY_GROUP_PERMISSION">
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
   
     <input type="hidden" name="SECURITY_GROUP_PERMISSION_GROUP_ID" value="<%=groupId%>">
@@ -160,21 +145,13 @@
 <%} //end if securityGroupPermission == null %>
 
 <%if(showFields){%>
-<%
-  String lastUpdateMode = request.getParameter("UPDATE_MODE");
-  if(session.getAttribute("ERROR_MESSAGE") != null && lastUpdateMode != null && lastUpdateMode.compareTo("UPDATE") == 0)
-  {
-    //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
-    securityGroupPermission = null;
-  }
-%>  
 
   
 
   
 
   <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-    <td><input type="submit" name="Update" value="Update"></td>
+    <td colspan="2"><input type="submit" name="Update" value="Update"></td>
   </tr>
 <%}%>
 </table>
