@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ public class CheckOutEvents {
             return "error";
         }
     }
-    
+
     public static String setCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         StringBuffer errorMessage = new StringBuffer();
@@ -69,7 +69,7 @@ public class CheckOutEvents {
             String shippingInstructions = request.getParameter("shipping_instructions");
             String orderAdditionalEmails = request.getParameter("order_additional_emails");
             String maySplit = request.getParameter("may_split");
-            
+
             if (UtilValidate.isNotEmpty(shippingMethod)) {
                 int delimiterPos = shippingMethod.indexOf('@');
                 String shipmentMethodTypeId = null;
@@ -78,7 +78,7 @@ public class CheckOutEvents {
                     shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
                     carrierPartyId = shippingMethod.substring(delimiterPos+1);
                 }
-                
+
                 cart.setShipmentMethodTypeId(shipmentMethodTypeId);
                 cart.setCarrierPartyId(carrierPartyId);
             } else {
@@ -91,13 +91,13 @@ public class CheckOutEvents {
                 errorMessage.append("<li>Please Select a Splitting Preference");
             }
             cart.setOrderAdditionalEmails(orderAdditionalEmails);
-            
+
             if (UtilValidate.isNotEmpty(shippingContactMechId)) {
                 cart.setShippingContactMechId(shippingContactMechId);
             } else {
                 errorMessage.append("<li>Please Select a Shipping Destination");
             }
-            
+
             if(UtilValidate.isNotEmpty(paymentMethodId)) {
                 cart.setPaymentMethodId(paymentMethodId);
             }
@@ -113,7 +113,7 @@ public class CheckOutEvents {
         } else {
             errorMessage.append("<li>There are no items in the cart.");
         }
-        
+
         if (errorMessage.length() > 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,errorMessage.toString());
             return "error";
@@ -121,17 +121,17 @@ public class CheckOutEvents {
             return "success";
         }
     }
-    
+
     // Create order event - uses createOrder service for processing
     public static String createOrder(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        
+
         //remove this whenever creating an order so quick reorder cache will refresh/recalc
         request.getSession().removeAttribute("_QUICK_REORDER_PRODUCTS_");
-        
+
         // build the service context
         Map context = cart.makeCartMap(delegator);
         String distributorId =  (String) request.getSession().getAttribute("_DISTRIBUTOR_ID_");
@@ -139,7 +139,7 @@ public class CheckOutEvents {
         if (distributorId != null) context.put("distributorId", distributorId);
         if (affiliateId != null) context.put("affiliateId", affiliateId);
         context.put("partyId", userLogin.get("partyId"));
-        
+
         // invoke the service
         Map result = null;
         try {
@@ -150,20 +150,20 @@ public class CheckOutEvents {
             Debug.logError(e);
             return "error";
         }
-        
+
         // check for error message(s)
         if (result.containsKey(ModelService.ERROR_MESSAGE)) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,result.get(ModelService.ERROR_MESSAGE));
         }
-        
+
         // set the orderId for future use
         request.setAttribute("order_id", result.get("orderId"));
         request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
-            
+
         // return the result
         return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
     }
-            
+
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
         String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
         //getServletContext appears to be new on the session object for Servlet 2.3
@@ -174,9 +174,9 @@ public class CheckOutEvents {
         } catch(java.net.MalformedURLException e) {
             Debug.logWarning(e);
         }
-        
+
         final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.securityCode");
-        
+
         String controlPath = (String)request.getAttribute(SiteDefs.CONTROL_PATH);
         if(controlPath == null) {
             Debug.logError("[CheckOutEvents.renderConfirmOrder] CONTROL_PATH is null.");
@@ -189,7 +189,7 @@ public class CheckOutEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error generating order confirmation, but it was recorded and will be processed.");
             return "error";
         }
-        
+
         try {
             java.net.URL url = new java.net.URL(serverRoot + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
             HttpClient httpClient = new HttpClient(url);
@@ -202,7 +202,7 @@ public class CheckOutEvents {
             return "error";
         }
     }
-    
+
     public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {
         String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
         //getServletContext appears to be new on the session object for Servlet 2.3
@@ -231,23 +231,23 @@ public class CheckOutEvents {
                     emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
                 }
             }
-            
+
             String content = (String) request.getAttribute("confirmorder");
             try {
                 // JavaMail contribution from Chris Nelson 11/21/2001
                 Properties props = new Properties();
                 props.put("mail.smtp.host", SMTP_SERVER);
                 Session session = Session.getDefaultInstance(props);
-                
+
                 MimeMessage mail = new MimeMessage(session);
                 mail.setFrom(new InternetAddress(ORDER_SENDER_EMAIL));
                 mail.addRecipients(Message.RecipientType.TO, emails.toString());
-                
+
                 if (UtilValidate.isNotEmpty(ORDER_CC))
                     mail.addRecipients(Message.RecipientType.CC, ORDER_CC);
                 if (UtilValidate.isNotEmpty(ORDER_BCC))
                     mail.addRecipients(Message.RecipientType.BCC, ORDER_BCC);
-                
+
                 String orderId = (String) request.getAttribute("order_id");
                 mail.setSubject(UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Confirmation");
                 //mail.addHeaderLine("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");

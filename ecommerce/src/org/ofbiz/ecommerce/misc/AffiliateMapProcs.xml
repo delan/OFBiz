@@ -3,7 +3,7 @@
 <!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
- * <p><b>Title:</b> Map processors for Affiliate 
+ * <p><b>Title:</b> Map processors for Affiliate
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -28,17 +28,17 @@
  * @version   1.0
  * Created    January 27, 2002
  -->
- 
+
 <simple-map-processors>
-  
+
   <simple-map-processor name="newAffilParty">
     <process field="AFFILIATE_ID"><copy to-field="partyId"/><not-empty><fail-message message="Affiliate Code is missing"/></not-empty></process>
   </simple-map-processor>
-  
+
   <simple-map-processor name="newAffilGroup">
     <process field="COMPANY_NAME"><copy to-field="groupName"/><not-empty><fail-message message="Company Name is missing"/></not-empty></process>
   </simple-map-processor>
-  
+
   <simple-map-processor name="newAffilPostal">
     <process field="COMPANY_NAME"><copy to-field="toName"/></process>
     <process field="COMPANY_ATTN"><copy to-field="attnName"/></process>
@@ -50,18 +50,18 @@
     <process field="COMPANY_COUNTRY"><copy to-field="countryGeoId"/></process>
     <process field="COMPANY_ADDRESS_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
   </simple-map-processor>
-  
+
   <simple-map-processor name="newAffilPostalPurpose">
     <make-in-string field="contactMechPurposeTypeId"><constant>BILLING_LOCATION</constant></make-in-string>
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
     <process field="contactMechPurposeTypeId"><copy/></process>
   </simple-map-processor>
-  
+
   <simple-map-processor name="newAffilContact">
     <process field="CONTACT_FIRST_NAME"><copy to-field="firstName"/><not-empty><fail-message message="First Name is missing"/></not-empty></process>
     <process field="CONTACT_LAST_NAME"><copy to-field="lastName"/><not-empty><fail-message message="Last Name is missing"/></not-empty></process>
   </simple-map-processor>
-  
+
   <simple-map-processor name="newAffilPhone">
     <process field="COMPANY_WORK_COUNTRY"><copy to-field="countryCode"/></process>
     <process field="COMPANY_WORK_AREA"><copy to-field="areaCode"/></process>
@@ -69,26 +69,26 @@
     <process field="COMPANY_WORK_EXT"><copy to-field="extension"/></process>
     <process field="COMPANY_WORK_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
   </simple-map-processor>
-  
+
   <simple-map-processor name="newAffilPhonePurpose">
-    <make-in-string field="contactMechPurposeTypeId"><constant>PHONE_WORK</constant></make-in-string>  
+    <make-in-string field="contactMechPurposeTypeId"><constant>PHONE_WORK</constant></make-in-string>
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
     <process field="contactMechPurposeTypeId"><copy/></process>
-  </simple-map-processor> 
-  
+  </simple-map-processor>
+
   <simple-map-processor name="newAffilFax">
     <process field="COMPANY_FAX_COUNTRY"><copy to-field="countryCode"/></process>
     <process field="COMPANY_FAX_AREA"><copy to-field="areaCode"/></process>
-    <process field="COMPANY_FAX_CONTACT"><copy to-field="contactNumber"/><not-empty><fail-message message="Contact Number is missing"/></not-empty></process>
+    <process field="COMPANY_FAX_CONTACT"><copy to-field="contactNumber"/></process>
     <process field="COMPANY_FAX_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
-  </simple-map-processor>  
+  </simple-map-processor>
 
   <simple-map-processor name="newAffilFaxPurpose">
-    <make-in-string field="contactMechPurposeTypeId"><constant>FAX_NUMBER</constant></make-in-string>  
-    <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
+    <make-in-string field="contactMechPurposeTypeId"><constant>FAX_NUMBER</constant></make-in-string>
+    <process field="contactMechId"><copy/></process>
     <process field="contactMechPurposeTypeId"><copy/></process>
-  </simple-map-processor>   
-    
+  </simple-map-processor>
+
   <simple-map-processor name="newAffilEmail">
     <process field="COMPANY_EMAIL">
       <copy to-field="emailAddress"/>
@@ -100,14 +100,14 @@
       </validate-method>
     </process>
     <process field="COMPANY_EMAIL_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
-  </simple-map-processor>  
+  </simple-map-processor>
 
   <simple-map-processor name="newAffilEmailPurpose">
-    <make-in-string field="contactMechPurposeTypeId"><constant>PRIMARY_EMAIL</constant></make-in-string>  
+    <make-in-string field="contactMechPurposeTypeId"><constant>PRIMARY_EMAIL</constant></make-in-string>
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
     <process field="contactMechPurposeTypeId"><copy/></process>
-  </simple-map-processor>     
-  
+  </simple-map-processor>
+
   <simple-map-processor name="newAffilURL">
     <make-in-string field="contactMechTypeId"><constant>WEB_ADDRESS</constant></make-in-string>
     <make-in-string field="allowSolicitation"><constant>Y</constant></make-in-string>
@@ -115,12 +115,12 @@
     <process field="contactMechTypeId"><copy/></process>
     <process field="allowSolicitation"><copy/></process>
   </simple-map-processor>
-  
+
   <simple-map-processor name="newAffil">
     <process field="SITE_NAME"><copy to-field="affiliateName"/><not-empty><fail-message message="Affiliate Name is missing"/></not-empty></process>
     <process field="SITE_DESCRIPTION"><copy to-field="affiliateDescription"/></process>
   </simple-map-processor>
-  
+
   <simple-map-processor name="newAffilUser">
     <process field="AFFILIATE_ID"><copy to-field="userLoginId"/><not-empty><fail-message message="Affiliate Code is missing"/></not-empty></process>
     <process field="PASSWORD"><copy to-field="currentPassword"/><not-empty><fail-message message="Password is missing"/></not-empty></process>
@@ -135,5 +135,5 @@
     </process>
     <process field="PASSWORD_HINT"><copy to-field="passwordHint"/></process>
   </simple-map-processor>
-  
+
 </simple-map-processors>

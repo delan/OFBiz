@@ -28,117 +28,114 @@
  * @version   1.0
  * Created    January 27, 2002
  -->
- 
+
 <simple-methods>
 
     <simple-method method-name="createAffiliate" short-description="Create Affiliate" login-required="false">
-    
+
        <!-- Create the UserLogin Record -->
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffilParty" in-map-name="parameters" out-map-name="ul_context"/>
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffilUser" in-map-name="parameters" out-map-name="ul_context"/>
         <check-errors/>
-        <call-service service-name="createUserLogin" in-map-name="ul_context">
-            <default-message>User Login successfully created.</default-message>
-        </call-service>
-            
+        <call-service service-name="createUserLogin" in-map-name="ul_context"/>
+        <field-to-field field-name="userLoginId" map-name="ul_context" to-map-name="newUserLoginMap"/>
+        <field-to-field field-name="currentPassword" map-name="ul_context" to-map-name="newUserLoginMap"/>
+        <field-to-field field-name="passwordHint" map-name="ul_context" to-map-name="newUserLoginMap"/>
+        <field-to-field field-name="partyId" map-name="ul_context" to-map-name="newUserLoginMap"/>
+        <make-value entity-name="UserLogin" map-name="newUserLoginMap" value-name="newUserLogin"/>
+        <set-current-user-login value-name="newUserLogin"/>
+
         <!-- Create the Party/PartyGroup -->
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffilParty" in-map-name="parameters" out-map-name="pg_context"/>
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffilGroup" in-map-name="parameters" out-map-name="pg_context"/>
         <check-errors/>
-        <call-service service-name="createPartyGroup" in-map-name="pg_context">
-            <default-message>Party Group successfully created.</default-message>
-        </call-service>
-        
+        <call-service service-name="createPartyGroup" in-map-name="pg_context"/>
+
+        <!-- Create the Contact Person -->
+        <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
+                processor-name="newAffilContact" in-map-name="parameters" out-map-name="ct_context"/>
+        <check-errors/>
+        <call-service service-name="createPerson" in-map-name="ct_context"/>
+
         <!-- Create the Postal Address -->
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffilPostal" in-map-name="parameters" out-map-name="pa_context"/>
         <check-errors/>
         <call-service service-name="createPostalAddress" in-map-name="pa_context">
-            <default-message>Mailing Address successfully created.</default-message>
             <result-to-field result-name="contactMechId" map-name="parameters"/>
         </call-service>
-        
+
         <!-- Create the Postal Address Purpose -->
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffilPostalPurpose" in-map-name="parameters" out-map-name="pr_context"/>
         <check-errors/>
-        <call-service service-name="createPartyContactMechPurpose" in-map-name="pr_context">
-            <default-message>Mailing Address successfully created.</default-message>
-        </call-service>    
-        
+        <call-service service-name="createPartyContactMechPurpose" in-map-name="pr_context"/>
+
         <!-- Create the Phone ContactMech -->
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffilPhone" in-map-name="parameters" out-map-name="ph_context"/>
         <check-errors/>
         <call-service service-name="createTelecomNumber" in-map-name="ph_context">
-            <default-message>Phone contact successfully created.</default-message>
             <result-to-field result-name="contactMechId" map-name="parameters"/>
-        </call-service> 
-        
+        </call-service>
+
         <!-- Create the Phone ContactMech Purpose -->
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffilPhonePurpose" in-map-name="parameters" out-map-name="phr_context"/>
         <check-errors/>
-        <call-service service-name="createPartyContactMechPurpose" in-map-name="phr_context">
-            <default-message>Phone contact successfully created.</default-message>
-        </call-service>                   
-        
+        <call-service service-name="createPartyContactMechPurpose" in-map-name="phr_context"/>
+
         <!-- Create the Fax ContactMech -->
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffilFax" in-map-name="parameters" out-map-name="fax_context"/>
         <check-errors/>
+
         <call-service service-name="createTelecomNumber" in-map-name="fax_context">
-            <default-message>Fax contact successfully created.</default-message>
             <result-to-field result-name="contactMechId" map-name="parameters"/>
-        </call-service> 
-        
+        </call-service>
+
         <!-- Create the Fax ContactMech Purpose -->
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffilFaxPurpose" in-map-name="parameters" out-map-name="faxp_context"/>
         <check-errors/>
-        <call-service service-name="createPartyContactMechPurpose" in-map-name="faxp_context">
-            <default-message>Fax contact successfully created.</default-message>
-        </call-service> 
-        
+        <if-not-empty field-name="contactNumber" map-name="faxp_context">
+            <call-service service-name="createPartyContactMechPurpose" in-map-name="faxp_context"/>
+        </if-not-empty>
+
         <!-- Create the Email ContactMech -->
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffilEmail" in-map-name="parameters" out-map-name="em_context"/>
         <check-errors/>
         <call-service service-name="createEmailAddress" in-map-name="em_context">
-            <default-message>Email contact successfully created.</default-message>
             <result-to-field result-name="contactMechId" map-name="parameters"/>
-        </call-service> 
-        
+        </call-service>
+
         <!-- Create the Email ContactMech Purpose -->
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffilPhonePurpose" in-map-name="parameters" out-map-name="emp_context"/>
         <check-errors/>
-        <call-service service-name="createPartyContactMechPurpose" in-map-name="emp_context">
-            <default-message>Email contact successfully created.</default-message>
-        </call-service>  
-        
+        <call-service service-name="createPartyContactMechPurpose" in-map-name="emp_context"/>
+
         <!-- Create the URL ContactMech -->
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
-                processor-name="newAffilURL" in-map-name="parameters" out-map-name="url_context"/>                                
+                processor-name="newAffilURL" in-map-name="parameters" out-map-name="url_context"/>
         <check-errors/>
-        <call-service service-name="createContactMech" in-map-name="url_context">
-            <default-message>URL contact successfully created.</default-message>
-        </call-service>  
-        
+        <call-service service-name="createContactMech" in-map-name="url_context"/>
+
         <!-- Create the Affiliate Record -->
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
-                processor-name="newAffilParty" in-map-name="parameters" out-map-name="af_context"/>        
+                processor-name="newAffilParty" in-map-name="parameters" out-map-name="af_context"/>
         <call-map-processor xml-resource="org/ofbiz/ecommerce/misc/AffiliateMapProcs.xml"
                 processor-name="newAffil" in-map-name="parameters" out-map-name="af_context"/>
         <check-errors/>
         <call-service service-name="createAffiliate" in-map-name="af_context">
-            <default-message>Affiliate record successfully created.</default-message>            
-        </call-service>  
-                                                                                           
-    </simple-method>   
-     
+            <default-message>Affiliate record successfully created.</default-message>
+        </call-service>
+
+    </simple-method>
+
 </simple-methods>

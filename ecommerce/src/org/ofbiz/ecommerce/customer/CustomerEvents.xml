@@ -80,7 +80,7 @@
             String passwordHint = (String) userLoginContext.get("passwordHint");
             org.ofbiz.commonapp.security.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list);
         ]]></call-bsh>
-                
+
         <!-- Create the Person -->
         <call-map-processor in-map-name="parameters" out-map-name="personContext">
             <simple-map-processor name="newPerson">
