@@ -1331,13 +1331,21 @@ public class DatabaseUtil {
         }
 
         String sql = "ALTER TABLE " + entity.getTableName() + " ADD " + field.getColName() + " " + type.getSqlType();
-
         if (Debug.infoOn()) Debug.logInfo("[addColumn] sql=" + sql);
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(sql);
         } catch (SQLException sqle) {
-            return "SQL Exception while executing the following:\n" + sql + "\nError was: " + sqle.toString();
+            // if that failed try the alternate syntax real quick
+            String sql2 = "ALTER TABLE " + entity.getTableName() + " ADD COLUMN " + field.getColName() + " " + type.getSqlType();
+            if (Debug.infoOn()) Debug.logInfo("[addColumn] sql failed, trying sql2=" + sql2);
+            try {
+                stmt = connection.createStatement();
+                stmt.executeUpdate(sql2);
+            } catch (SQLException sqle2) {
+                // if this also fails report original error, not this error...
+                return "SQL Exception while executing the following:\n" + sql + "\nError was: " + sqle.toString();
+            }
         } finally {
             try {
                 if (stmt != null)
