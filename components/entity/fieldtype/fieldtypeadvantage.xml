@@ -3,7 +3,7 @@
 
 <!--
 /**
- *  $Id: fieldtypeadvantage.xml,v 1.1 2004/06/01 08:07:40 jonesde Exp $
+ *  $Id: fieldtypeadvantage.xml,v 1.2 2004/06/11 09:02:23 jonesde Exp $
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
@@ -35,7 +35,7 @@
 <fieldtypemodel>
   <!-- ===================== field-type-def ==================== -->
    <!-- General Types --> 
-    <field-type-def type="blob" sql-type="Binary" java-type="java.lang.Object"></field-type-def>
+    <field-type-def type="blob" sql-type="Blob" java-type="java.lang.Object"></field-type-def>
     
     <field-type-def type="date-time" sql-type="TimeStamp" java-type="java.sql.Timestamp"></field-type-def>
     <field-type-def type="date" sql-type="Date" java-type="java.sql.Date"></field-type-def>
@@ -48,7 +48,7 @@
     <field-type-def type="numeric" sql-type="Numeric(18,0)" java-type="Long"><validate name="isSignedLong" /></field-type-def>
   -->
 
-    <!-- For the ADT type tables -->
+    <!-- For the ADT type tables (this is the only decent way to go for OFBiz -->
     <field-type-def type="currency-amount" sql-type="Money" java-type="Double"><validate name="isSignedDouble" /></field-type-def>
     <field-type-def type="floating-point" sql-type="Double" java-type="Double"><validate name="isSignedDouble" /></field-type-def>
     <field-type-def type="numeric" sql-type="Integer" java-type="Long"><validate name="isSignedLong" /></field-type-def>
