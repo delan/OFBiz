@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  This is the DTD for the Open For Business Entity Engine configuration XML file.
- *  $Id: entity-config.dtd,v 1.9 2004/04/22 22:42:11 doogie Exp $
+ *  $Id: entity-config.dtd,v 1.10 2004/04/29 23:00:33 doogie Exp $
 -->
 
 <!-- ====================== Root Element ======================= -->
@@ -112,6 +112,7 @@
     name CDATA #REQUIRED
     helper-class CDATA #REQUIRED
     field-type-name CDATA #REQUIRED
+    use-schemas ( true | false ) "true"
     schema-name CDATA #IMPLIED
     check-on-start ( true | false ) "true"
     add-missing-on-start ( true | false ) "false"

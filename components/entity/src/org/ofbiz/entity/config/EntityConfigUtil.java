@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConfigUtil.java,v 1.7 2004/04/22 22:42:14 doogie Exp $
+ * $Id: EntityConfigUtil.java,v 1.8 2004/04/29 23:00:38 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class EntityConfigUtil {
@@ -388,6 +388,7 @@ public class EntityConfigUtil {
         public Element inlineJdbcElement;
 
         public String schemaName = null;
+        public boolean useSchemas = true;
         public boolean checkOnStart = true;
         public boolean addMissingOnStart = false;
         public boolean useFks = true;
@@ -416,6 +417,7 @@ public class EntityConfigUtil {
 
             if (datasourceElement == null) {
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for schema-name (none)", module);
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-schemas (true)", module);
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-on-start (true)", module);
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for add-missing-on-start (false)", module);
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-foreign-keys (true)", module);
@@ -431,6 +433,8 @@ public class EntityConfigUtil {
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for join-style (ansi)", module);
             } else {
                 schemaName = datasourceElement.getAttribute("schema-name");
+                // anything but false is true
+                useSchemas = !"false".equals(datasourceElement.getAttribute("use-schemas"));
                 // anything but false is true
                 checkOnStart = !"false".equals(datasourceElement.getAttribute("check-on-start"));
                 // anything but true is false

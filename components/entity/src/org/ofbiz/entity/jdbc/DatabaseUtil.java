@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.14 2004/04/23 05:25:19 doogie Exp $
+ * $Id: DatabaseUtil.java,v 1.15 2004/04/29 23:00:39 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -718,13 +718,7 @@ public class DatabaseUtil {
         String lookupSchemaName = null;
         try {
             String[] types = {"TABLE", "VIEW", "ALIAS", "SYNONYM"};
-            if (dbData.supportsSchemasInTableDefinitions()) {
-                if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
-                    lookupSchemaName = this.datasourceInfo.schemaName;
-                } else {
-                    lookupSchemaName = dbData.getUserName();
-                }
-            }
+            lookupSchemaName = getSchemaName(dbData);
             tableSet = dbData.getTables(null, lookupSchemaName, null, types);
             if (tableSet == null) {
                 Debug.logWarning("getTables returned null set", module);
@@ -2123,6 +2117,17 @@ public class DatabaseUtil {
                 }
             } catch (SQLException sqle) {
                 Debug.logError(sqle, module);
+            }
+        }
+        return null;
+    }
+
+    public String getSchemaName(DatabaseMetaData dbData) throws SQLException {
+        if (this.datasourceInfo.useSchemas && dbData.supportsSchemasInTableDefinitions()) {
+            if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+                return this.datasourceInfo.schemaName;
+            } else {
+                return dbData.getUserName();
             }
         }
         return null;
