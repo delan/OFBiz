@@ -41,38 +41,39 @@
         <property name="webapp.dir"     value="webapp" />
         <property name="walib.dir"      value="${webapp.dir}/WEB-INF/lib" />
         <property name="waclasses.dir"  value="${webapp.dir}/WEB-INF/classes" />
-	<property name="doc.dir"        value="docs" />
+	    <property name="doc.dir"        value="docs" />
         <property name="build.dir"      value="build" />
         <property name="pkg-dist.name"  value="${name}-pkg" />
-		
-	<!-- Classpath setting -->
+
+	    <!-- Classpath setting -->
         <property name="corelib.dir"       value="../core/lib" />
         <property name="extlib.dir"        value="../lib" />
 
         <property name="ofbcore-share.jar"    value="${corelib.dir}/ofbcore-share.jar" />
-        <property name="ofbcore-entity.jar"    value="${corelib.dir}/ofbcore-entity.jar" />
-        <property name="ofbcore-service.jar"    value="${corelib.dir}/ofbcore-service.jar" />
-        <property name="ofbcore-extutil.jar"    value="${corelib.dir}/ofbcore-extutil.jar" />
+        <property name="ofbcore-entity.jar"   value="${corelib.dir}/ofbcore-entity.jar" />
+        <property name="ofbcore-service.jar"  value="${corelib.dir}/ofbcore-service.jar" />
+        <property name="ofbcore-extutil.jar"  value="${corelib.dir}/ofbcore-extutil.jar" />
         <property name="ofbcore-webapp.jar"   value="${corelib.dir}/ofbcore-webapp.jar" />
         <property name="ofbcore-workflow.jar" value="${corelib.dir}/ofbcore-workflow.jar" />
         <property name="ofbcore-rules.jar"    value="${corelib.dir}/ofbcore-rules.jar" />
-        <property name="ofbcore-datafile.jar"    value="${corelib.dir}/ofbcore-datafile.jar" />
-        <property name="ofbcore-minilang.jar"    value="${corelib.dir}/ofbcore-minilang.jar" />
-        <property name="ofb-jars1"    value="${ofbcore-share.jar}:${ofbcore-entity.jar}:${ofbcore-service.jar}:${ofbcore-extutil.jar}" />
-        <property name="ofb-jars2"    value="${ofbcore-webapp.jar}:${ofbcore-workflow.jar}:${ofbcore-rules.jar}:${ofbcore-datafile.jar}:${ofbcore-minilang.jar}" />
-        <property name="ofb-jars"    value="${ofb-jars1}:${ofb-jars2}" />
-        
+        <property name="ofbcore-datafile.jar" value="${corelib.dir}/ofbcore-datafile.jar" />
+        <property name="ofbcore-minilang.jar" value="${corelib.dir}/ofbcore-minilang.jar" />
+
+        <property name="ofb-jars1" value="${ofbcore-share.jar}:${ofbcore-entity.jar}:${ofbcore-service.jar}:${ofbcore-extutil.jar}" />
+        <property name="ofb-jars2" value="${ofbcore-webapp.jar}:${ofbcore-workflow.jar}:${ofbcore-rules.jar}:${ofbcore-datafile.jar}:${ofbcore-minilang.jar}" />
+        <property name="ofb-jars"  value="${ofb-jars1}:${ofb-jars2}" />
+
         <property name="j2ee.jar"      value="${extlib.dir}/compile/jboss-j2ee.jar" />
         <property name="jdbc.jar"      value="${extlib.dir}/compile/jdbc2_0-stdext.jar" />
         <property name="mail.jar"      value="${extlib.dir}/compile/mail.jar" />
         <property name="servlet.jar"   value="${extlib.dir}/compile/servlet.jar" />
         <property name="xerces.jar"    value="${extlib.dir}/compile/xerces.jar" />
-        
+
         <property name="castor.jar"    value="${extlib.dir}/common/castor-0.9.3.9.jar" />
         <property name="tyrex.jar"     value="${extlib.dir}/common/tyrex-1.0.jar" />
         <property name="log4j.jar"     value="${extlib.dir}/common/log4j.jar"/>
 
-	<property name="bsh.jar"       value="${extlib.dir}/share/bsh-1.2b3.jar"/>
+	    <property name="bsh.jar"       value="${extlib.dir}/share/bsh-1.2b3.jar"/>
         <property name="axis.jar"      value="${extlib.dir}/share/axis.jar"/>
         <property name="clutil.jar"    value="${extlib.dir}/share/clutil.jar" />
         <property name="wsdl4j.jar"    value="${extlib.dir}/share/wsdl4j.jar" />
@@ -80,10 +81,10 @@
         <property name="api-jars1"     value="${j2ee.jar}:${jdbc.jar}:${mail.jar}:${servlet.jar}:${xerces.jar}" />
         <property name="api-jars2"     value="${log4j.jar}:${tyrex.jar}:${castor.jar}" />
         <property name="api-jars3"     value="${bsh.jar}:${axis.jar}:${clutil.jar}:${wsdl4j.jar}" />
-	<property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
-        
+	    <property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
+
         <property name="classpath"   value="${env.CLASSPATH}:${ofb-jars}:${api-jars}" />
-	<echo message="classpath: ${classpath}" />
+	    <echo message="classpath: ${classpath}" />
     </target>
 
 
@@ -106,7 +107,7 @@
     <target name="prepare-docs" depends="init">
       <mkdir dir="${doc.dir}" />
       <mkdir dir="${doc.dir}/api" />
-    </target>	
+    </target>
 
 
     <!-- ================================================================== -->
@@ -115,11 +116,11 @@
 
     <target name="prepare" depends="clean-lib">
         <mkdir dir="${build.dir}" />
-	<mkdir dir="${build.dir}/jar" />
-	<mkdir dir="${build.dir}/ejb" />
-	<mkdir dir="${build.dir}/ejb/META-INF" />
-	<mkdir dir="${build.dir}/j2ee" />
-	<mkdir dir="${build.dir}/j2ee/META-INF" />
+	    <mkdir dir="${build.dir}/jar" />
+	    <mkdir dir="${build.dir}/ejb" />
+	    <mkdir dir="${build.dir}/ejb/META-INF" />
+	    <mkdir dir="${build.dir}/j2ee" />
+	    <mkdir dir="${build.dir}/j2ee/META-INF" />
         <mkdir dir="${lib.dir}" />
         <mkdir dir="${waclasses.dir}" />
         <mkdir dir="${walib.dir}" />
@@ -131,7 +132,11 @@
     <!-- ================================================================== -->
 
     <target name="classes" depends="prepare">
-        <javac debug="on" srcdir="${src.dir}" classpath="${classpath}" destdir="${build.dir}/jar" />
+        <javac debug="on" srcdir="${src.dir}" classpath="${classpath}" destdir="${build.dir}/jar">
+            <!-- exclude the payment processor packages; comment if you have libs -->
+            <exclude name="org/ofbiz/commonapp/thirdparty/cybersource/**" />
+            <exclude name="org/ofbiz/commonapp/thirdparty/verisign/**" />
+        </javac>
         <!-- also copy all .xml, .bsh & .logic files to classpath directory -->
         <copy todir="${build.dir}/jar">
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" />
@@ -141,7 +146,7 @@
     <target name="jar" depends="classes">
         <jar jarfile="${lib.dir}/${name}.jar" basedir="${build.dir}/jar" />
     </target>
-    
+
     <target name="jar-deploy" depends="jar">
     	<copy file="${ofbcore-webapp.jar}" tofile="${walib.dir}/ofbcore-webapp.jar" />
     </target>
@@ -149,7 +154,7 @@
     <!-- ================================================================== -->
     <!-- Build the WARs                                                     -->
     <!-- ================================================================== -->
-	
+
     <target name="war" depends="jar-deploy,prepare">
         <jar jarfile="${lib.dir}/${name}.war" basedir="${webapp.dir}" />
     </target>
@@ -162,17 +167,17 @@
             <copy file="${etc.dir}/ejb-jar.xml" tofile="${build.dir}/ejb/META-INF/ejb-jar.xml" />
             <copy file="${etc.dir}/jboss.xml" tofile="${build.dir}/ejb/META-INF/jboss.xml" />
             <copy file="${etc.dir}/jaws.xml" tofile="${build.dir}/ejb/META-INF/jaws.xml" />
-            <copy file="${etc.dir}/application.xml" tofile="${build.dir}/j2ee/META-INF/application.xml" />			  
+            <copy file="${etc.dir}/application.xml" tofile="${build.dir}/j2ee/META-INF/application.xml" />
 	</target>
-	
+
 	<target name="ejb" depends="meta-info">
 	    <jar jarfile="${build.dir}/j2ee/${name}-ejb.jar" basedir="${build.dir}/ejb" />
 	</target>
-			 
+
 	<target name="ear" depends="ejb">
 	    <jar jarfile="${lib.dir}/${name}.ear" basedir="${build.dir}/j2ee" />
 	</target>
-	
+
     <!-- ================================================================== -->
     <!-- Build JavaDoc                                                      -->
     <!-- ================================================================== -->
@@ -180,7 +185,7 @@
 	<target name="docs" depends="prepare-docs">
 		<javadoc packagenames="org.ofbiz.*" classpath="${classpath}"
 		         sourcepath="${src.dir}" destdir="${doc.dir}/api" />
-	</target> 	
+	</target>
 
 
     <!-- ================================================================== -->
@@ -192,7 +197,7 @@
         <mkdir dir="${lib.dir}/${name}" />
 
         <copy todir="${lib.dir}/${name}">
-            <fileset dir="." includes="${src.dir}/**" />        
+            <fileset dir="." includes="${src.dir}/**" />
             <fileset dir="." includes="build.xml" />
         </copy>
 
