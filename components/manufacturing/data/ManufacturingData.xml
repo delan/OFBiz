@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <entity-engine-xml>
-    <MrpInventoryEventType inventoryEventTypeId="MRP_REQUIREMENT" description="Mrp requirement" inOut="-"/>
-    <MrpInventoryEventType inventoryEventTypeId="PROD_ORDER_RECP" description="Production Order receipt" inOut="+"/>
-    <MrpInventoryEventType inventoryEventTypeId="PUR_ORDER_RECP" description="Purchase Order receipt" inOut="+"/>
-    <MrpInventoryEventType inventoryEventTypeId="SALE_ORDER_SHIP" description="Sales order shipment" inOut="-"/>
+  	<FixedAssetType description="The fixe Asset usable in the operation-routing definition" fixedAssetTypeId="PRODUCTION_EQUIPMENT" hasTable="N" parentTypeId=""/>
+  	<FixedAssetType description="Groupe of machine, used for operation and routing definition" fixedAssetTypeId="GROUP_EQUIPMENT" hasTable="N" parentTypeId=""/>
+
+  	<RequirementType description="ProductionRun proposed by the MRP process" hasTable="N" parentTypeId="" requirementTypeId="MRP_PRO_PROD_ORDER"/>
+  	<RequirementType description="Purchase Order proposed by the MRP process" hasTable="N" parentTypeId="" requirementTypeId="MRP_PRO_PURCH_ORDER"/>
+
+    <InventoryEventPlannedType inventoryEventPlanTypeId="MRP_REQUIREMENT" description="Mrp requirement" inOut="-"/>
+    <InventoryEventPlannedType inventoryEventPlanTypeId="PROD_ORDER_RECP" description="Production Order receipt" inOut="+"/>
+    <InventoryEventPlannedType inventoryEventPlanTypeId="PUR_ORDER_RECP" description="Purchase Order receipt" inOut="+"/>
+    <InventoryEventPlannedType inventoryEventPlanTypeId="SALE_ORDER_SHIP" description="Sales order shipment" inOut="-"/>
+    <TechDataCalendarWeek calendarWeekId="SUPPLIER" description="8hours/days, currently the Re-Order Process convert day to mms with 8h/days" mondayStartTime="08:30:00" mondayCapacity="2.88E7" tuesdayStartTime="08:30:00" tuesdayCapacity="2.88E7" wednesdayStartTime="08:30:00" wednesdayCapacity="2.88E7" thursdayStartTime="08:30:00" thursdayCapacity="2.88E7" fridayStartTime="08:30:00" fridayCapacity="2.88E7"/>
+    <TechDataCalendar calendarId="SUPPLIER" description="Calendar used for Re-Order date calculation for bought product" calendarWeekId="SUPPLIER"/>
     <TechDataCalendarWeek calendarWeekId="DEFAULT" description="8hours/days" mondayStartTime="08:30:00" mondayCapacity="2.88E7" tuesdayStartTime="08:30:00" tuesdayCapacity="2.88E7" wednesdayStartTime="08:30:00" wednesdayCapacity="2.88E7" thursdayStartTime="08:30:00" thursdayCapacity="2.88E7" fridayStartTime="08:30:00" fridayCapacity="2.88E7"/>
     <TechDataCalendar calendarId="DEFAULT" description="Default calendar used when no specific calendar is defined" calendarWeekId="DEFAULT"/>
 </entity-engine-xml>
