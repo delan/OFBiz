@@ -237,6 +237,7 @@ public class DataServices {
                 try {
                     RandomAccessFile out = new RandomAccessFile(file, "rw");
                     out.write(binData.getBytes());
+                    out.close();
                 } catch (FileNotFoundException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError("Unable to open file for writing: " + file.getAbsolutePath());
@@ -442,6 +443,7 @@ public class DataServices {
                 try {
                     RandomAccessFile out = new RandomAccessFile(file, "rw");
                     out.write(binData.getBytes());
+                    out.close();
                 } catch (FileNotFoundException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError("Unable to open file for writing: " + file.getAbsolutePath());
