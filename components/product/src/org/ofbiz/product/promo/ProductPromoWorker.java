@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.1 2003/08/17 18:04:21 ajzeneski Exp $
+ * $Id: ProductPromoWorker.java,v 1.2 2003/08/18 03:51:39 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,6 +38,10 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.shoppingcart.CartItemModifyException;
+import org.ofbiz.product.shoppingcart.ShoppingCart;
+import org.ofbiz.product.shoppingcart.ShoppingCartEvents;
+import org.ofbiz.product.shoppingcart.ShoppingCartItem;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
 
@@ -46,7 +50,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ProductPromoWorker {
