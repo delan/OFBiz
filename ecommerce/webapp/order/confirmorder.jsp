@@ -162,17 +162,19 @@
   
 <br>
 <%@ include file="orderitems.jsp" %>
-  
+<div align=right>  
   <a href="<%=response.encodeUrl(serverRoot + controlPath + "/orderstatus?order_id=" + orderId)%>" class="buttontextbig">[View Order]</a>&nbsp;&nbsp;
-
+  <a href="<%=response.encodeUrl(serverRoot + controlPath + "/main")%>" class="buttontextbig">[Continue Shopping]</a>
+</div>
 </ofbiz:if> <%-- Order Header --%>
 <ofbiz:unless name="orderHeader">
-    <p> No order found. </p>
+  <p> Order not found. </p>
+  <a href="<%=response.encodeUrl(serverRoot + controlPath + "/main")%>" class="buttontextbig">[Continue Shopping]</a>
 </ofbiz:unless>
 </ofbiz:if>
 <ofbiz:unless name="validated">
 <font color="red">Security Error!  You do not have permission to view this page.</font><br>
+<a href="<%=response.encodeUrl(serverRoot + controlPath + "/main")%>" class="buttontextbig">[Continue Shopping]</a>
 </ofbiz:unless>
-  <a href="<%=response.encodeUrl(serverRoot + controlPath + "/main")%>" class="buttontextbig">[Continue Shopping]</a>
   </body>
 </html>

@@ -70,11 +70,10 @@
 <br>
 <%@ include file="orderitems.jsp" %>
 
-<%String prevPage = "checkoutoptions";%>
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">
-      <a href="<ofbiz:url><%=prevPage%></ofbiz:url>" class="buttontextbig">[Back]</a></td>
+      <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="buttontextbig">[Back&nbsp;to&nbsp;Options]</a></td>
       <td align="right">
         <a href="<ofbiz:url>/processorder</ofbiz:url>" class="buttontextbig">[Submit&nbsp;Order]&nbsp;</a>
       </td>
