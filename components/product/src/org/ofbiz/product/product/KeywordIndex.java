@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordIndex.java,v 1.6 2004/01/22 01:25:16 jonesde Exp $
+ * $Id: KeywordIndex.java,v 1.7 2004/01/22 12:53:28 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,6 +39,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -49,7 +50,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Does indexing in preparation for a keyword search.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class KeywordIndex {
@@ -63,11 +64,24 @@ public class KeywordIndex {
         if (delegator == null) return;
         String productId = product.getString("productId");
 
-        // String separators = ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-_";
-        String separators = UtilProperties.getPropertyValue("prodsearch", "index.keyword.separators", ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-_");
+        // String separators = ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-+_";
+        String separators = UtilProperties.getPropertyValue("prodsearch", "index.keyword.separators", ";: ,.!?\t\"\'\r\n\\/()[]{}*%<>-+_");
         String stopWordBagOr = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.or");
         String stopWordBagAnd = UtilProperties.getPropertyValue("prodsearch", "stop.word.bag.and");
 
+        String removeStemsStr = UtilProperties.getPropertyValue("prodsearch", "remove.stems");
+        boolean removeStems = "true".equals(removeStemsStr);
+        String stemBag = UtilProperties.getPropertyValue("prodsearch", "stem.bag");
+        List stemList = new ArrayList(10);
+        if (UtilValidate.isNotEmpty(stemBag)) {
+            String curToken;
+            StringTokenizer tokenizer = new StringTokenizer(stemBag, ": ");
+            while (tokenizer.hasMoreTokens()) {
+                curToken = tokenizer.nextToken();
+                stemList.add(curToken);
+            }
+        }
+        
         Map keywords = new TreeMap();
         List strings = new ArrayList(50);
 
@@ -156,13 +170,33 @@ public class KeywordIndex {
 
                 while (tokener.hasMoreTokens()) {
                     String token = tokener.nextToken().toLowerCase();
+                    
+                    // when cleaning up the tokens the ordering is inportant: check stop words, remove stems, then get rid of 1 character tokens (1 digit okay)
+                    
+                    // check stop words
                     String colonToken = ":" + token + ":";
-
                     if (stopWordBagOr.indexOf(colonToken) >= 0 && stopWordBagAnd.indexOf(colonToken) >= 0) {
                         continue;
                     }
-                    Long curWeight = (Long) keywords.get(token);
+                    
+                    // remove stems
+                    if (removeStems) {
+                        Iterator stemIter = stemList.iterator();
+                        while (stemIter.hasNext()) {
+                            String stem = (String) stemIter.next();
+                            if (token.endsWith(stem)) {
+                                token = token.substring(0, token.length() - stem.length());
+                            }
+                        }
+                    }
+                    
+                    // get rid of all length 1 character only tokens, pretty much useless
+                    if (token.length() == 1 && Character.isLetter(token.charAt(0))) {
+                        continue;
+                    }
 
+                    // group by word, add up weight
+                    Long curWeight = (Long) keywords.get(token);
                     if (curWeight == null) {
                         keywords.put(token, new Long(1));
                     } else {
@@ -176,7 +210,8 @@ public class KeywordIndex {
         Iterator kiter = keywords.entrySet().iterator();
         while (kiter.hasNext()) {
             Map.Entry entry = (Map.Entry) kiter.next();
-            GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", ((String) entry.getKey()).toLowerCase(), "relevancyWeight", entry.getValue()));
+            String keyword = ((String) entry.getKey()).toLowerCase();
+            GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", product.getString("productId"), "keyword", keyword, "relevancyWeight", entry.getValue()));
             toBeStored.add(productKeyword);
         }
         if (toBeStored.size() > 0) {
