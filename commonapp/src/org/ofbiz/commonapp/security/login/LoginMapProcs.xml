@@ -37,5 +37,6 @@
         <not-empty><fail-message message="New Password Verify is missing"/></not-empty>
         <copy/></process>
     <process field="passwordHint"><copy/></process>
+    <process field="userLoginId"><copy/></process>
   </simple-map-processor>
 </simple-map-processors>
