@@ -34,7 +34,7 @@
     </context-param>
     <context-param>
         <param-name>localDispatcherName</param-name>
-        <param-value>accounting</param-value>
+        <param-value>WFDispatcher</param-value>
         <description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>
     </context-param>
     <context-param>
