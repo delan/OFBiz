@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE regions PUBLIC "-//OFBiz//DTD Regions Config//EN" "http://www.ofbiz.org/dtds/regions.dtd">
+
+<regions>
+    <define id='MAIN_REGION' template='/templates/main_template.jsp'>
+        <put section='title'>Application Page</put> <!-- this is a default and is meant to overridden -->
+        <put section='header' content='/includes/header.jsp'/>
+        <put section='appbar' content='/includes/appbar.jsp'/>
+        <put section='error' content='/includes/errormsg.jsp'/>
+        <put section='content' content='/main.jsp'/> <!-- this is a default and is meant to overridden -->
+        <put section='footer' content='/includes/footer.jsp'/>
+    </define>
+
+    <define id='LEFTBAR_REGION' template='/templates/leftbar_template.jsp'>
+        <!-- <put section='first' content='/first.jsp'/> -->
+    </define>
+
+    <define id='RIGHTBAR_REGION' template='/templates/rightbar_template.jsp'>
+        <!-- <put section='first' content='/first.jsp'/> -->
+    </define>
+
+    <define id='LEFT_ONLY_REGION' region='MAIN_REGION'>
+        <put section='leftbar' content='LEFTBAR_REGION'/>
+    </define>
+
+    <define id='RIGHT_ONLY_REGION' region='MAIN_REGION'>
+        <put section='rightbar' content='RIGHTBAR_REGION'/>
+    </define>
+
+    <define id='LEFT_RIGHT_REGION' region='MAIN_REGION'>
+        <put section='leftbar' content='LEFTBAR_REGION'/>
+        <put section='rightbar' content='RIGHTBAR_REGION'/>
+        <!-- <put section='right'><![CDATA[<font size='4'>Direct Content</font>]]></put> -->
+    </define>
+
+    <!-- ====== Start View Specific Regions ====== -->
+    <define id='main' region='MAIN_REGION'>
+        <put section='title'>Main Page</put>
+        <put section='content' content='/main.jsp'/>
+    </define>
+    <define id='login' region='MAIN_REGION'>
+        <put section='title'>Login Page</put>
+        <put section='content' content='/login.jsp'/>
+    </define>
+
+    <define id='orderview' region='MAIN_REGION'>
+        <put section='title'>View Order Page</put>
+        <put section='content' content='/orderview.jsp'/>
+    </define>
+</regions>

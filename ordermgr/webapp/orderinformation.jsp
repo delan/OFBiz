@@ -28,14 +28,6 @@
  *@version    1.0
  */
 %>
-<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-
-<%@ page import="java.util.*" %>
-
-<%@ page import="org.ofbiz.commonapp.party.contact.ContactHelper" %>
-<%@ page import="org.ofbiz.commonapp.order.order.*" %>
-<%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
@@ -48,10 +40,10 @@
     <%localOrder = new OrderReadHelper(localOrderHeader);%>
   </ofbiz:if>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Order <ofbiz:if name="orderHeader">#<%=localOrderHeader.getString("orderId")%> </ofbiz:if>Information</div>
@@ -65,78 +57,78 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-  <table width="100%" border="0" cellpadding="1">
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Name</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-        <div class="tabletext">
-        <%String partyId = orderRole.getString("partyId");%>
-        <%GenericValue userPerson = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId",orderRole.getString("partyId")));%>    
-        <%if(userPerson!=null){%>
-          <%=PartyHelper.getPersonName(userPerson)%>
-        <%}%>        
-        </div>
-      </td>
-    </tr>
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Status</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-        <ofbiz:if name="orderHeader"> 
-        <form name="statusUpdate" method="get" action="<ofbiz:url>/changeOrderStatus</ofbiz:url>">
-           <input type="hidden" name="orderId" value="<%=localOrderHeader.getString("orderId")%>">        
-           <select name="statusId">
-             <option value="<%=localOrderHeader.getString("statusId")%>"><%=localOrderHeader.getString("statusId")%></option>
-             <option value="">----</option>
-               <ofbiz:iterator name="status" property="statusChange">
-                 <option value="<%=status.getString("statusIdTo")%>"><%=status.getString("statusIdTo")%></option>               
-               </ofbiz:iterator>          
-          <%--<div class="tabletext"><%=localOrder.getStatusString()%></div>--%>
-        </form>
-        </ofbiz:if>
-        <ofbiz:unless name="orderHeader">
-          <div class="tabletext"><b>Not Yet Ordered</b></div>
-        </ofbiz:unless>
-      </td>
-    </tr>
-  <ofbiz:if name="orderHeader">
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Date</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-          <%=UtilDateTime.toDateTimeString(localOrderHeader.getTimestamp("orderDate"))%>
-          </div>
-      </td>
-    </tr>
-  </ofbiz:if>
-  <%String distributorId = localOrder != null ? localOrder.getDistributorId() : null;%>
-  <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
-  <ofbiz:if name="distributorId">
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Distributor</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext"><%=PartyHelper.formatPartyId(distributorId, delegator)%></div>
-      </td>
-    </tr>
-  </ofbiz:if>
-  </table>
+              <table width="100%" border="0" cellpadding="1">
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Name</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                    <div class="tabletext">
+                    <%String partyId = orderRole.getString("partyId");%>
+                    <%GenericValue userPerson = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId",orderRole.getString("partyId")));%>    
+                    <%if(userPerson!=null){%>
+                      <%=PartyHelper.getPersonName(userPerson)%>
+                    <%}%>        
+                    </div>
+                  </td>
+                </tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Status</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                    <ofbiz:if name="orderHeader"> 
+                    <form name="statusUpdate" method="get" action="<ofbiz:url>/changeOrderStatus</ofbiz:url>">
+                       <input type="hidden" name="orderId" value="<%=localOrderHeader.getString("orderId")%>">        
+                       <select name="statusId">
+                         <option value="<%=localOrderHeader.getString("statusId")%>"><%=localOrderHeader.getString("statusId")%></option>
+                         <option value="">----</option>
+                           <ofbiz:iterator name="status" property="statusChange">
+                             <option value="<%=status.getString("statusIdTo")%>"><%=status.getString("statusIdTo")%></option>               
+                           </ofbiz:iterator>          
+                      <%--<div class="tabletext"><%=localOrder.getStatusString()%></div>--%>
+                    </form>
+                    </ofbiz:if>
+                    <ofbiz:unless name="orderHeader">
+                      <div class="tabletext"><b>Not Yet Ordered</b></div>
+                    </ofbiz:unless>
+                  </td>
+                </tr>
+              <ofbiz:if name="orderHeader">
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Date</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                      <%=UtilDateTime.toDateTimeString(localOrderHeader.getTimestamp("orderDate"))%>
+                      </div>
+                  </td>
+                </tr>
+              </ofbiz:if>
+              <%String distributorId = localOrder != null ? localOrder.getDistributorId() : null;%>
+              <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
+              <ofbiz:if name="distributorId">
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Distributor</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext"><%=PartyHelper.formatPartyId(distributorId, delegator)%></div>
+                  </td>
+                </tr>
+              </ofbiz:if>
+              </table>
           </td>
         </tr>
       </table>
@@ -146,10 +138,10 @@
 
     <br>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Payment Information</div>
@@ -163,79 +155,79 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-  <table width="100%" border="0" cellpadding="1">
-  <%if (creditCardInfo != null) pageContext.setAttribute("creditCardInfo", creditCardInfo);%>
-  <%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
-  <%--if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);--%>
-  <ofbiz:if name="creditCardInfo"> 
-    <%pageContext.setAttribute("outputted", "true");%>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Credit Card</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-            <%=creditCardInfo.getString("nameOnCard")%><br>
-            <%=ContactHelper.formatCreditCard(creditCardInfo)%>
-          </div>
-      </td>
-    </tr>
-  </ofbiz:if>
-  <ofbiz:if name="billingAccount">
-    <ofbiz:if name="outputted">
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    </ofbiz:if>
-    <%pageContext.setAttribute("outputted", "true");%>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Billing Account</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-            #<%=billingAccount.getString("billingAccountId")%> - <%=UtilFormatOut.checkNull(billingAccount.getString("description"))%>
-          </div>
-      </td>
-    </tr>
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Purchase Order Number</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext"><%=UtilFormatOut.checkNull(customerPoNumber)%></div>
-      </td>
-    </tr>
-  </ofbiz:if>
-  <%--ofbiz:if name="billingAddress">
-    <ofbiz:if name="outputted">
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    </ofbiz:if>
-    <%pageContext.setAttribute("outputted", "true");%>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Billing Address</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-            <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
-            <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-            <%=UtilFormatOut.checkNull(billingAddress.getString("address1"))%><br>
-            <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("address2"),  "", "<br>")%>
-            <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("city"), "", "<br>")%>
-            <%=UtilFormatOut.checkNull(billingAddress.getString("stateProvinceGeoId"))%> &nbsp; <%=UtilFormatOut.checkNull(billingAddress.getString("postalCode"))%><br>
-            <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("countryGeoId"), "", "")%>
-          </div>
-      </td>
-    </tr>
-  </ofbiz:if --%>
-  </table>
+              <table width="100%" border="0" cellpadding="1">
+              <%if (creditCardInfo != null) pageContext.setAttribute("creditCardInfo", creditCardInfo);%>
+              <%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
+              <%--if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);--%>
+              <ofbiz:if name="creditCardInfo"> 
+                <%pageContext.setAttribute("outputted", "true");%>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Credit Card</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                        <%=creditCardInfo.getString("nameOnCard")%><br>
+                        <%=ContactHelper.formatCreditCard(creditCardInfo)%>
+                      </div>
+                  </td>
+                </tr>
+              </ofbiz:if>
+              <ofbiz:if name="billingAccount">
+                <ofbiz:if name="outputted">
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                </ofbiz:if>
+                <%pageContext.setAttribute("outputted", "true");%>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Billing Account</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                        #<%=billingAccount.getString("billingAccountId")%> - <%=UtilFormatOut.checkNull(billingAccount.getString("description"))%>
+                      </div>
+                  </td>
+                </tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Purchase Order Number</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext"><%=UtilFormatOut.checkNull(customerPoNumber)%></div>
+                  </td>
+                </tr>
+              </ofbiz:if>
+              <%--ofbiz:if name="billingAddress">
+                <ofbiz:if name="outputted">
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                </ofbiz:if>
+                <%pageContext.setAttribute("outputted", "true");%>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Billing Address</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                        <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
+                        <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
+                        <%=UtilFormatOut.checkNull(billingAddress.getString("address1"))%><br>
+                        <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("address2"),  "", "<br>")%>
+                        <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("city"), "", "<br>")%>
+                        <%=UtilFormatOut.checkNull(billingAddress.getString("stateProvinceGeoId"))%> &nbsp; <%=UtilFormatOut.checkNull(billingAddress.getString("postalCode"))%><br>
+                        <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("countryGeoId"), "", "")%>
+                      </div>
+                  </td>
+                </tr>
+              </ofbiz:if --%>
+              </table>
           </td>
         </tr>
       </table>
@@ -247,10 +239,10 @@
 <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
 <td width='50%' valign=top align=left>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Shipping Information</div>
@@ -264,78 +256,78 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-  <table width="100%" border="0" cellpadding="1">
-    <%if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);%>
-    <ofbiz:if name="shippingAddress">
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Destination</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address1"), "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address2"), "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
-          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("countryGeoId"), "", "<br>")%>
-          </div>
-      </td>
-    </tr>
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    </ofbiz:if>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Method</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-          <%=UtilFormatOut.checkNull(carrierPartyId)%> 
-          <%String shipMethDescription = "";%>
-          <%GenericValue shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId));%>
-          <%if(shipmentMethodType != null) shipMethDescription = shipmentMethodType.getString("description");%>
-          <%=UtilFormatOut.checkNull(shipMethDescription)%>
-          <%--=UtilFormatOut.ifNotEmpty(shippingAccount, "<br>Use Account: ", "")--%>
-          </div>
-      </td>
-    </tr>
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Splitting Preference</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-          <%if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);%>
-          <ofbiz:if name="maySplit" value="false" type="Boolean">
-          Please wait until the entire order is ready before shipping.
-          </ofbiz:if>
-          <ofbiz:if name="maySplit" value="true" type="Boolean">
-          Please ship items I ordered as they become available (may incur additional shipping charges).    
-          </ofbiz:if>
-          </div>
-      </td>
-    </tr>
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
-    <tr>
-      <td align="right" valign="top" width="15%">
-        <div class="tabletext">&nbsp;<b>Instructions</b></div>
-      </td>
-      <td width="5">&nbsp;</td>
-      <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-          <%=UtilFormatOut.checkNull(shippingInstructions)%>
-          </div>
-       </td>
-    </tr>
-  </table>
+              <table width="100%" border="0" cellpadding="1">
+                <%if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);%>
+                <ofbiz:if name="shippingAddress">
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Destination</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
+                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
+                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address1"), "", "<br>")%>
+                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address2"), "", "<br>")%>
+                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", "<br>")%>
+                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
+                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("countryGeoId"), "", "<br>")%>
+                      </div>
+                  </td>
+                </tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                </ofbiz:if>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Method</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                      <%=UtilFormatOut.checkNull(carrierPartyId)%> 
+                      <%String shipMethDescription = "";%>
+                      <%GenericValue shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId));%>
+                      <%if(shipmentMethodType != null) shipMethDescription = shipmentMethodType.getString("description");%>
+                      <%=UtilFormatOut.checkNull(shipMethDescription)%>
+                      <%--=UtilFormatOut.ifNotEmpty(shippingAccount, "<br>Use Account: ", "")--%>
+                      </div>
+                  </td>
+                </tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Splitting Preference</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                      <%if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);%>
+                      <ofbiz:if name="maySplit" value="false" type="Boolean">
+                      Please wait until the entire order is ready before shipping.
+                      </ofbiz:if>
+                      <ofbiz:if name="maySplit" value="true" type="Boolean">
+                      Please ship items I ordered as they become available (may incur additional shipping charges).    
+                      </ofbiz:if>
+                      </div>
+                  </td>
+                </tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                  <td align="right" valign="top" width="15%">
+                    <div class="tabletext">&nbsp;<b>Instructions</b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
+                  <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+                      <%=UtilFormatOut.checkNull(shippingInstructions)%>
+                      </div>
+                   </td>
+                </tr>
+              </table>
           </td>
         </tr>
       </table>

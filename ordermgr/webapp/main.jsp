@@ -30,45 +30,42 @@
 %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="org.ofbiz.core.security.*" %>
-<%@ page import="org.ofbiz.commonapp.order.order.*" %>
-<%@ page import="org.ofbiz.commonapp.party.contact.*" %>
+<%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.security.*, org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.commonapp.order.order.*, org.ofbiz.commonapp.party.contact.*" %>
 
-<% pageContext.setAttribute("PageName", "Main Page"); %> 
-
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <BR>
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
-  <FORM name="lookup" action="<ofbiz:url>/orderview</ofbiz:url>" method="GET">
-    <TD width='100%'>    
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='70%' >
             <div class='boxhead'>&nbsp;Order Manager Main Page</div>
           </TD>
           <TD align=right width='30%'>            
-              <input type="text" name="order_id" size="9">&nbsp;
-              <a href="javascript:document.lookup.submit();" class="lightbuttontext">[LookUp Order]</a>            
+              <FORM name="lookup" action="<ofbiz:url>/orderview</ofbiz:url>" method="GET">
+                  <input type="text" name="order_id" size="9">&nbsp;
+                  <a href="javascript:document.lookup.submit();" class="lightbuttontext">[LookUp Order]</a>            
+              </FORM>
           </TD>
         </tr>
       </table>
     </TD>
-    </FORM>
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-<%if(userLogin == null) {%>
-<DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
-<BR>
-<%}%>
+            <ofbiz:unless name="userLogin">
+              <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
+              <BR>
+            </ofbiz:unless>
 
-<DIV class='tabletext'>This application is primarily intended for those repsonsible for the maintenance of Order Manager related information.</DIV>
+<DIV class='tabletext'>This application is primarily intended for those repsonsible for the maintenance of Order related information.</DIV>
 <br>
 <div class="tabletext"><b>New Orders:</b></div>
 <!-- Insert in here -->
@@ -144,6 +141,3 @@
     </TD>
   </TR>
 </TABLE>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

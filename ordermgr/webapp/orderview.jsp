@@ -30,23 +30,16 @@
  */
 %>
 <%-- FIXME add status history --%>
-<%@ page import="java.util.*" %>
-<%@ page import="java.text.*" %>
+<%@ page import="java.util.*, java.text.*" %>
 
-<%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.core.util.*" %>
-
-<%@ page import="org.ofbiz.commonapp.party.party.*" %>
-<%@ page import="org.ofbiz.commonapp.party.contact.*" %>
-<%@ page import="org.ofbiz.commonapp.order.order.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.security.*, org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.commonapp.order.order.*, org.ofbiz.commonapp.party.party.*, org.ofbiz.commonapp.party.contact.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <% pageContext.setAttribute("PageName", "orderstatus"); %>
-
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %>
-<%@ include file="/includes/datepicker.js" %>
 
 <%
   String orderId = request.getParameter("order_id");
@@ -104,20 +97,11 @@
 <%Collection statusChange = delegator.findByAnd("StatusValidChange",UtilMisc.toMap("statusId",orderHeader.getString("statusId")));%>
 <%if (statusChange != null) pageContext.setAttribute("statusChange", statusChange);%>
   
-
 <%@ include file="orderinformation.jsp" %>
-
-
 <%@ include file="orderitems.jsp" %>
 
   </form>
-</ofbiz:if> <%-- Order --%>
+</ofbiz:if> <%-- OrderHeader --%>
 <ofbiz:unless name="orderHeader">
 <h3>The specified order was not found, please try again.</h3>
 </ofbiz:unless>
-
-
-<%@ include file="/includes/footer.jsp" %>
-
-
- 

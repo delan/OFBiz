@@ -27,20 +27,12 @@
  *@version    1.0
  */
 %>
-<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-
-<%@ page import="java.util.*" %>
-
-<%@ page import="org.ofbiz.commonapp.order.order.*" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.core.util.*" %>
-
 <%double total = 0.0;%>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Order Items</div>
@@ -56,86 +48,86 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-  <table width="100%" border="0" cellpadding="1">
-    <tr align=left valign=bottom>
-      <th width="65%" align="left">Product</th>
-      <th width="5%" align="right">Quantity</th>
-      <th width="15%" align="right">Unit Price</th>
-      <th width="15%" align="right">Line Price</th>
-    </tr>
- <%if (orderItemList != null) pageContext.setAttribute("orderItemList", orderItemList);%>
- <ofbiz:iterator name="orderItem" property="orderItemList">
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+              <table width="100%" border="0" cellpadding="1">
+                <tr align=left valign=bottom>
+                  <th width="65%" align="left">Product</th>
+                  <th width="5%" align="right">Quantity</th>
+                  <th width="15%" align="right">Unit Price</th>
+                  <th width="15%" align="right">Line Price</th>
+                </tr>
+             <%if (orderItemList != null) pageContext.setAttribute("orderItemList", orderItemList);%>
+             <ofbiz:iterator name="orderItem" property="orderItemList">
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
 
-    <tr>
-      <%pageContext.setAttribute("productId", orderItem.getString("productId"));%>
-      <ofbiz:if type="String" name="productId" value="shoppingcart.CommentLine">
-        <td colspan="1" valign="top">    
-          <b><div class="tabletext"> &gt;&gt; <%=orderItem.getString("itemDescription")%></div></b>
-        </td>
-      </ofbiz:if>
-      <ofbiz:unless type="String" name="productId" value="shoppingcart.CommentLine">
-        <td valign="top">
-          <div class="tabletext">
-          <a href="/catalog/control/EditProduct?PRODUCT_ID=<%=orderItem.getString("productId")%>" class="buttontext"><%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%></a>
-          </div>
-        </td>
-        <td align="right" valign="top">
-            <div class="tabletext" nowrap>
-              <%=UtilFormatOut.formatQuantity(orderItem.getDouble("quantity"))%>
-            </div>
-        </td>
-        <td align="right" valign="top">
-            <div class="tabletext" nowrap>
-              <%=UtilFormatOut.formatQuantity(orderItem.getDouble("unitPrice"))%>
-            </div>
-        </td>
-        <td align="right" valign="top" nowrap>
-          <%double lineTotal = orderItem.getDouble("quantity").doubleValue()*orderItem.getDouble("unitPrice").doubleValue();%>
-          <%total += lineTotal;%>
-          <div class="tabletext"><%=UtilFormatOut.formatPrice(lineTotal)%></div>
-        </td>
-      <ofbiz:if name="maySelectItems">
-        <td>
-          &nbsp;<%--<input name="item_id" value="<%=orderItem.getString("orderItemSeqId")%>" type="checkbox">--%>
-        </td>
-      </ofbiz:if>
-      </ofbiz:unless>
-    </tr>
-  </ofbiz:iterator>
-  <ofbiz:unless name="orderItemList" size="0">
-  <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
-  </ofbiz:unless>
+                <tr>
+                  <%pageContext.setAttribute("productId", orderItem.getString("productId"));%>
+                  <ofbiz:if type="String" name="productId" value="shoppingcart.CommentLine">
+                    <td colspan="1" valign="top">    
+                      <b><div class="tabletext"> &gt;&gt; <%=orderItem.getString("itemDescription")%></div></b>
+                    </td>
+                  </ofbiz:if>
+                  <ofbiz:unless type="String" name="productId" value="shoppingcart.CommentLine">
+                    <td valign="top">
+                      <div class="tabletext">
+                      <a href="/catalog/control/EditProduct?PRODUCT_ID=<%=orderItem.getString("productId")%>" class="buttontext"><%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%></a>
+                      </div>
+                    </td>
+                    <td align="right" valign="top">
+                        <div class="tabletext" nowrap>
+                          <%=UtilFormatOut.formatQuantity(orderItem.getDouble("quantity"))%>
+                        </div>
+                    </td>
+                    <td align="right" valign="top">
+                        <div class="tabletext" nowrap>
+                          <%=UtilFormatOut.formatQuantity(orderItem.getDouble("unitPrice"))%>
+                        </div>
+                    </td>
+                    <td align="right" valign="top" nowrap>
+                      <%double lineTotal = orderItem.getDouble("quantity").doubleValue()*orderItem.getDouble("unitPrice").doubleValue();%>
+                      <%total += lineTotal;%>
+                      <div class="tabletext"><%=UtilFormatOut.formatPrice(lineTotal)%></div>
+                    </td>
+                  <ofbiz:if name="maySelectItems">
+                    <td>
+                      &nbsp;<%--<input name="item_id" value="<%=orderItem.getString("orderItemSeqId")%>" type="checkbox">--%>
+                    </td>
+                  </ofbiz:if>
+                  </ofbiz:unless>
+                </tr>
+              </ofbiz:iterator>
+              <ofbiz:unless name="orderItemList" size="0">
+              <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
+              </ofbiz:unless>
 
-    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr><td colspan="7"><hr class='sepbar'></td></tr>
 
-    <tr>
-        <td align="right" colspan="3"><div class="tabletext"><b>Subtotal</b></div></td>
-        <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(total)%></div></td>
-    </tr>
+                <tr>
+                    <td align="right" colspan="3"><div class="tabletext"><b>Subtotal</b></div></td>
+                    <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(total)%></div></td>
+                </tr>
 
-    <% if (orderAdjustmentIterator != null) pageContext.setAttribute("orderAdjustmentIterator", orderAdjustmentIterator); %>
-    <ofbiz:iterator name="orderAdjustmentObject" type="java.lang.Object" property="orderAdjustmentIterator">
-    <%Adjustment orderAdjustment = (Adjustment) orderAdjustmentObject;%>
-    <tr>
-        <td align="right" colspan="3"><div class="tabletext"><b><%=orderAdjustment.getDescription()%></b></div></td>
-        <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(orderAdjustment.getAmount())%></div></td>
-        <%total += orderAdjustment.getAmount();%>
-    </tr>
-    </ofbiz:iterator> 
-    <tr><td colspan=2></td><td colspan="7"><hr class='sepbar'></td></tr>
-    <tr>
-        <td align="right" colspan="3"><div class="tabletext"><b>Total Due</b></div></td>
-       <td align="right" nowrap>
-      <div class="tabletext"><%= UtilFormatOut.formatPrice(total)%></div>
-        </td>
-    </tr>
-<%-- } else { %>
-  <tr><td><font color="red">ERROR: Sales Order lookup failed.</font></td></tr> --%>
-</table>
+                <% if (orderAdjustmentIterator != null) pageContext.setAttribute("orderAdjustmentIterator", orderAdjustmentIterator); %>
+                <ofbiz:iterator name="orderAdjustmentObject" type="java.lang.Object" property="orderAdjustmentIterator">
+                <%Adjustment orderAdjustment = (Adjustment) orderAdjustmentObject;%>
+                <tr>
+                    <td align="right" colspan="3"><div class="tabletext"><b><%=orderAdjustment.getDescription()%></b></div></td>
+                    <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(orderAdjustment.getAmount())%></div></td>
+                    <%total += orderAdjustment.getAmount();%>
+                </tr>
+                </ofbiz:iterator> 
+                <tr><td colspan=2></td><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr>
+                    <td align="right" colspan="3"><div class="tabletext"><b>Total Due</b></div></td>
+                   <td align="right" nowrap>
+                  <div class="tabletext"><%= UtilFormatOut.formatPrice(total)%></div>
+                    </td>
+                </tr>
+            <%-- } else { %>
+              <tr><td><font color="red">ERROR: Sales Order lookup failed.</font></td></tr> --%>
+            </table>
           </td>
         </tr>
       </table>
