@@ -1,7 +1,7 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.23 2004/05/11 14:45:49 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.24 2004/05/27 04:21:25 jonesde Exp $
  *
- * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -45,6 +45,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.barcode.BarcodeTransform;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -52,10 +53,10 @@ import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.minilang.MiniLangException;
 
+import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
-import freemarker.core.Environment;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleScalar;
 import freemarker.template.Template;
@@ -69,7 +70,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -80,12 +81,15 @@ public class FreeMarkerWorker {
     public static OfbizContentTransform ofbizContentUrl = new OfbizContentTransform();
     public static OfbizCurrencyTransform ofbizCurrency = new OfbizCurrencyTransform();
     public static SetRequestAttributeMethod setRequestAttribute = new SetRequestAttributeMethod();
+
+    public static BarcodeTransform barcodeTransform = new BarcodeTransform();
+
     public static EditRenderSubContentTransform  editRenderSubContent = new EditRenderSubContentTransform();
     public static RenderSubContentTransform  renderSubContent = new RenderSubContentTransform();
     public static RenderWrappedTextTransform  renderWrappedText = new RenderWrappedTextTransform();
     public static LoopSubContentTransform  loopSubContent = new LoopSubContentTransform();
     public static TraverseSubContentTransform  traverseSubContent = new TraverseSubContentTransform();
-
+    
     public static EditRenderSubContentCacheTransform  editRenderSubContentCache = new EditRenderSubContentCacheTransform();
     public static RenderSubContentCacheTransform  renderSubContentCache = new RenderSubContentCacheTransform();
     public static LoopSubContentCacheTransform  loopSubContentCache = new LoopSubContentCacheTransform();
@@ -106,6 +110,8 @@ public class FreeMarkerWorker {
         context.put("ofbizContentUrl", ofbizContentUrl);
         context.put("ofbizCurrency", ofbizCurrency);
         context.put("setRequestAttribute", setRequestAttribute);
+        context.put("barcode", barcodeTransform);
+
         context.put("editRenderSubContent", editRenderSubContent);
         context.put("renderSubContent", renderSubContent);
         context.put("loopSubContent", loopSubContent);

@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormWrapper.java,v 1.4 2004/02/28 21:03:24 jonesde Exp $
+ * $Id: HtmlFormWrapper.java,v 1.5 2004/05/27 04:21:25 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  */
 public class HtmlFormWrapper {
@@ -88,6 +88,11 @@ public class HtmlFormWrapper {
         // if a parameter was passed saying this is an error, it is an error
         if ("true".equals((String) parameterMap.get("isError"))) {
             context.put("isError", Boolean.TRUE);
+        }
+        
+        Map uiLabelMap = (Map) request.getAttribute("uiLabelMap");
+        if (uiLabelMap != null && uiLabelMap.size() > 0 && context.get("uiLabelMap") == null) {
+            context.put("uiLabelMap", uiLabelMap);
         }
     }
     
