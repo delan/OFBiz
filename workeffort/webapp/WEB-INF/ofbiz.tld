@@ -48,6 +48,8 @@
     <attribute><name>property</name><required>false</required></attribute>
     <attribute><name>type</name><required>false</required></attribute>
     <attribute><name>expandMap</name><required>false</required></attribute>
+    <attribute><name>offset</name><required>false</required></attribute>
+    <attribute><name>limit</name><required>false</required></attribute>
   </tag>
 
   <tag>
