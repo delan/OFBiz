@@ -904,6 +904,8 @@
       <field name="trackingCode" type="short-varchar"></field>
       <field name="boxNumber" type="short-varchar"></field>
       <field name="labelImage" type="blob"></field>
+      <field name="labelIntlSignImage" type="blob"></field>
+      <field name="labelHtml" type="very-long"></field>
       <field name="packageServiceCost" type="currency-amount"></field>
       <field name="packageOtherCost" type="currency-amount"></field>
       <field name="codAmount" type="currency-amount"></field>

@@ -689,7 +689,10 @@ public class UpsServices {
                     Element packageLabelImageFormatElement = UtilXml.firstChildElement(packageResultsElement, "LabelImageFormat");
                     // will be EPL or GIF, should always be GIF since that is what we requested
                     String packageLabelImageFormatCode = UtilXml.childElementValue(packageLabelImageFormatElement, "Code");
+                    String packageLabelImageFormatDescription = UtilXml.childElementValue(packageLabelImageFormatElement, "Description");
                     String packageLabelGraphicImageString = UtilXml.childElementValue(packageLabelImageElement, "GraphicImage");
+                    String packageLabelInternationalSignatureGraphicImageString = UtilXml.childElementValue(packageLabelImageElement, "InternationalSignatureGraphicImage");
+                    String packageLabelHTMLImageString = UtilXml.childElementValue(packageLabelImageElement, "HTMLImage");
 
                     if (!shipmentPackageRouteSegIter.hasNext()) {
                         errorList.add("Error: More PackageResults were returned than there are Packages on this Shipment; the TrackingNumber is [" + trackingNumber + "], the ServiceOptionsCharges were " + packageServiceOptionsMonetaryValue + packageServiceOptionsCurrencyCode);
@@ -712,6 +715,10 @@ public class UpsServices {
                     
                     byte[] labelImageBytes = Base64.base64Decode(packageLabelGraphicImageString.getBytes());
                     shipmentPackageRouteSeg.setBytes("labelImage", labelImageBytes);
+                    byte[] labelInternationalSignatureGraphicImageBytes = Base64.base64Decode(packageLabelInternationalSignatureGraphicImageString.getBytes());
+                    shipmentPackageRouteSeg.set("labelIntlSignImage", labelInternationalSignatureGraphicImageBytes);
+                    String packageLabelHTMLImageStringDecoded = Base64.base64Decode(packageLabelHTMLImageString);
+                    shipmentPackageRouteSeg.set("labelHtml", packageLabelHTMLImageStringDecoded);
                     
                     shipmentPackageRouteSeg.store();
                 }
@@ -766,8 +773,9 @@ public class UpsServices {
             }
             
             // add ShipmentRouteSegment carrierServiceStatusId, check before all UPS services
-            if (!"SHRSCS_CONFIRMED".equals(shipmentRouteSegment.getString("carrierServiceStatusId"))) {
-                return ServiceUtil.returnError("ERROR: The Carrier Service Status for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is [" + shipmentRouteSegment.getString("carrierServiceStatusId") + "], but must be [SHRSCS_CONFIRMED] to perform the UPS Void Shipment operation.");
+            if (!"SHRSCS_CONFIRMED".equals(shipmentRouteSegment.getString("carrierServiceStatusId")) &&
+                    !"SHRSCS_ACCEPTED".equals(shipmentRouteSegment.getString("carrierServiceStatusId"))) {
+                return ServiceUtil.returnError("ERROR: The Carrier Service Status for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is [" + shipmentRouteSegment.getString("carrierServiceStatusId") + "], but must be [SHRSCS_CONFIRMED] or [SHRSCS_ACCEPTED] to perform the UPS Void Shipment operation.");
             }
             
             if (UtilValidate.isEmpty(shipmentRouteSegment.getString("trackingIdNumber"))) {

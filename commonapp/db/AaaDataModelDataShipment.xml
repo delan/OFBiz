@@ -58,6 +58,7 @@
     <StatusValidChange condition="" statusId="SHRSCS_NOT_STARTED" statusIdTo="SHRSCS_CONFIRMED" transitionName="Confirm"/>
     <StatusValidChange condition="" statusId="SHRSCS_CONFIRMED" statusIdTo="SHRSCS_ACCEPTED" transitionName="Accept"/>
     <StatusValidChange condition="" statusId="SHRSCS_CONFIRMED" statusIdTo="SHRSCS_VOIDED" transitionName="Void"/>
+    <StatusValidChange condition="" statusId="SHRSCS_ACCEPTED" statusIdTo="SHRSCS_VOIDED" transitionName="Void"/>
     <!-- can go from accepted to voided? -->
 
 	<RejectionReason rejectionId="SRJ_DAMAGED" description="Damaged"/>
