@@ -54,7 +54,6 @@ public class EntityConfigUtil {
     protected static String txFactoryTxMgrJndiServerName;
     
     protected static Map resourceLoaderInfos = new HashMap();
-    protected static Map jndiServerInfos = new HashMap();
     protected static Map delegatorInfos = new HashMap();
     protected static Map entityModelReaderInfos = new HashMap();
     protected static Map entityGroupReaderInfos = new HashMap();
@@ -120,15 +119,6 @@ public class EntityConfigUtil {
             EntityConfigUtil.resourceLoaderInfos.put(resourceLoaderInfo.name, resourceLoaderInfo);
         }
 
-        //jndi-server - jndiServerInfos
-        childElements = UtilXml.childElementList(rootElement, "jndi-server");
-        elementIter = childElements.iterator();
-        while (elementIter.hasNext()) {
-            Element curElement = (Element) elementIter.next();
-            EntityConfigUtil.JndiServerInfo jndiServerInfo = new EntityConfigUtil.JndiServerInfo(curElement);
-            EntityConfigUtil.jndiServerInfos.put(jndiServerInfo.name, jndiServerInfo);
-        }
-        
         //delegator - delegatorInfos
         childElements = UtilXml.childElementList(rootElement, "delegator");
         elementIter = childElements.iterator();
@@ -182,7 +172,6 @@ public class EntityConfigUtil {
     public static String getTxFactoryTxMgrJndiServerName() { return txFactoryTxMgrJndiServerName; }
     
     public static EntityConfigUtil.ResourceLoaderInfo getResourceLoaderInfo(String name) { return (EntityConfigUtil.ResourceLoaderInfo) resourceLoaderInfos.get(name); }
-    public static EntityConfigUtil.JndiServerInfo getJndiServerInfo(String name) { return (EntityConfigUtil.JndiServerInfo) jndiServerInfos.get(name); }
     public static EntityConfigUtil.DelegatorInfo getDelegatorInfo(String name) { return (EntityConfigUtil.DelegatorInfo) delegatorInfos.get(name); }
     public static EntityConfigUtil.EntityModelReaderInfo getEntityModelReaderInfo(String name) { return (EntityConfigUtil.EntityModelReaderInfo) entityModelReaderInfos.get(name); }
     public static EntityConfigUtil.EntityGroupReaderInfo getEntityGroupReaderInfo(String name) { return (EntityConfigUtil.EntityGroupReaderInfo) entityGroupReaderInfos.get(name); }
@@ -202,25 +191,7 @@ public class EntityConfigUtil {
             this.prefix = element.getAttribute("prefix");
         }
     }
-    
-    public static class JndiServerInfo {
-        public String name;
-        public String contextProviderUrl;
-        public String initialContextFactory;
-        public String urlPkgPrefixes;
-        public String securityPrincipal;
-        public String securityCredentials;
 
-        public JndiServerInfo(Element element) {
-            this.name = element.getAttribute("name");
-            this.contextProviderUrl = element.getAttribute("context-provider-url");
-            this.initialContextFactory = element.getAttribute("initial-context-factory");
-            this.urlPkgPrefixes = element.getAttribute("url-pkg-prefixes");
-            this.securityPrincipal = element.getAttribute("security-principal");
-            this.securityCredentials = element.getAttribute("security-credentials");
-        }
-    }
-    
     public static class DelegatorInfo {
         public String name;
         public String entityModelReader;

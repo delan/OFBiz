@@ -70,9 +70,9 @@
 <!ATTLIST jms-service
     name CDATA #REQUIRED
     broker CDATA #REQUIRED
-    type (P2P|PUBSUB) #REQUIRED
+    type (topic|queue) #REQUIRED
     topic-queue CDATA #REQUIRED
     jndi-name CDATA #REQUIRED
     listener-enabled (true|false) "false"
-    listener-class #IMPLIED
+    listener-class CDATA #IMPLIED
 >

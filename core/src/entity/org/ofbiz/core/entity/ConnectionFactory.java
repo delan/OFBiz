@@ -30,9 +30,10 @@ import javax.sql.*;
 import javax.naming.*;
 import org.w3c.dom.Element;
 
-import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.entity.transaction.*;
+import org.ofbiz.core.config.*;
+import org.ofbiz.core.util.*;
 
 /**
  * ConnectionFactory - central source for JDBC connections
@@ -126,6 +127,8 @@ public class ConnectionFactory {
                         }
                     } catch (NamingException ne) {
                         Debug.logVerbose("[ConnectionFactory.getConnection] Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database.", module);
+                    } catch (GenericConfigException gce) {
+                        throw new GenericEntityException("Problems with the JNDI configuration.", gce.getNested());
                     }
                 }
                 

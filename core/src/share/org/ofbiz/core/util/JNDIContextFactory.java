@@ -22,23 +22,23 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.entity;
+package org.ofbiz.core.util;
 
 import java.util.*;
-import javax.naming.Context;
-import javax.naming.InitialContext;
+import javax.naming.*;
 import java.net.URL;
 import org.w3c.dom.*;
 
+import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.config.*;
 
 /**
  * JNDIContextFactory - central source for JNDI Contexts by helper name
  *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on Sep 21, 2001
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @created    Sept 21, 2002
+ * @version    1.0
  */
 public class JNDIContextFactory {
     static UtilCache contexts = new UtilCache("entity.JNDIContexts", 0, 0);
@@ -46,7 +46,7 @@ public class JNDIContextFactory {
     /** Return the initial context according to the entityengine.xml parameters that correspond to the given prefix
      * @return the JNDI initial context
      */
-    public static InitialContext getInitialContext(String jndiServerName) throws GenericEntityConfException {
+    public static InitialContext getInitialContext(String jndiServerName) throws GenericConfigException {
         InitialContext ic = (InitialContext) contexts.get(jndiServerName);
         
         if (ic == null) {
@@ -54,9 +54,9 @@ public class JNDIContextFactory {
                 ic = (InitialContext) contexts.get(jndiServerName);
 
                 if (ic == null) {
-                    EntityConfigUtil.JndiServerInfo jndiServerInfo = EntityConfigUtil.getJndiServerInfo(jndiServerName);
+                    JNDIConfigUtil.JndiServerInfo jndiServerInfo = JNDIConfigUtil.getJndiServerInfo(jndiServerName);
                     if (jndiServerInfo == null) {
-                        throw new GenericEntityConfException("ERROR: no jndi-server definition was found with the name " + jndiServerName + " in entityengine.xml");
+                        throw new GenericConfigException("ERROR: no jndi-server definition was found with the name " + jndiServerName + " in entityengine.xml");
                     }
                     
                     try {
@@ -77,7 +77,7 @@ public class JNDIContextFactory {
                             ic = new InitialContext(h);
                         }
                     } catch (Exception e) {
-                        throw new GenericEntityConfException("Error getting JNDI initial context for server name " + jndiServerName, e);
+                        throw new GenericConfigException("Error getting JNDI initial context for server name " + jndiServerName, e);
                     }
 
                     if (ic != null) {

@@ -72,7 +72,7 @@ public class JNDIFactory implements TransactionFactoryInterface {
                                 Debug.logWarning("[JNDIFactory.getTransactionManager] Failed to find TransactionManager named " + jndiName + " in JNDI.", module);
                             }
                         }
-                    } catch (GenericEntityException e) {
+                    } catch (GeneralException e) {
                         Debug.logError(e);
                         transactionManager = null;
                     }
@@ -106,7 +106,7 @@ public class JNDIFactory implements TransactionFactoryInterface {
                                 Debug.logWarning("[JNDIFactory.getUserTransaction] Failed to find UserTransaction named " + jndiName + " in JNDI.", module);
                             }
                         }
-                    } catch (GenericEntityException e) {
+                    } catch (GeneralException e) {
                         Debug.logError(e);
                         transactionManager = null;
                     }
