@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -66,6 +66,7 @@ if (shipment != null) {
             shipmentItemData.put("shipmentItem", shipmentItem);
             shipmentItemData.put("shipmentPackageContents", shipmentPackageContents);
             shipmentItemData.put("itemIssuances", shipmentItem.getRelated("ItemIssuance"));
+            shipmentItemData.put("orderShipments", shipmentItem.getRelated("OrderShipment"));
             shipmentItemData.put("product", shipmentItem.getRelatedOne("Product"));
             shipmentItemData.put("totalQuantityPackaged", totalQuantityPackaged);
             shipmentItemData.put("totalQuantityToPackage", totalQuantityToPackage);

@@ -745,14 +745,14 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditShipmentPlan"/>
     </request-map>
-    <request-map uri="deleteShipmentPlan">
+    <request-map uri="removeOrderShipmentFromShipment">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deleteShipmentPlan"/>
+        <event type="service" path="" invoke="removeOrderShipmentFromShipment"/>
         <response name="success" type="view" value="EditShipmentPlan"/>
     </request-map>
     <request-map uri="addToShipmentPlan">
         <security https="true" auth="true"/>
-        <event type="service-multi" path="" invoke="addOrderedQuantityToShipmentPlan"/>
+        <event type="service-multi" path="" invoke="addOrderShipmentToShipment"/>
         <response name="success" type="view" value="EditShipmentPlan"/>
         <response name="error" type="view" value="EditShipmentPlan"/>
     </request-map>

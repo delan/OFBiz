@@ -746,5 +746,19 @@
     <service name="shoppingCartTest" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="shoppingCartTest">        
     </service>
+    
+    <!-- OrderShipment Services -->
+    <service name="createOrderShipment" default-entity-name="OrderShipment" engine="simple"
+            location="org/ofbiz/order/order/OrderServices.xml" invoke="createOrderShipment" auth="true">
+        <description>Create OrderShipment</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteOrderShipment" default-entity-name="OrderShipment" engine="simple"
+            location="org/ofbiz/order/order/OrderServices.xml" invoke="deleteOrderShipment" auth="true">
+        <description>Delete OrderShipment</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
 </services>
 

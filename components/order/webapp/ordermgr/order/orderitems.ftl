@@ -255,6 +255,26 @@
                     </#list>
                   </#if>
 
+                  <#-- now show planned shipment info per line item -->
+                  <#assign orderShipments = orderItem.getRelated("OrderShipment")?if_exists>
+                  <#if orderShipments?has_content>
+                    <#list orderShipments as orderShipment>
+                      <tr>
+                        <td align="right" colspan="2">
+                          <div class="tabletext" style="font-size: xx-small;"><b><i>Planned in Shipment</i>: </b><a target="facility" href="/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}</div>
+                        </td>
+                        <td align="center">
+                          <div class="tabletext" style="font-size: xx-small;">${orderShipment.quantity?string.number}&nbsp;</div>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </#list>
+                  </#if>
+
                   <#-- now show item issuances per line item -->
                   <#assign itemIssuances = itemIssuancesPerItem.get(orderItem.get("orderItemSeqId"))?if_exists>
                   <#if itemIssuances?has_content>

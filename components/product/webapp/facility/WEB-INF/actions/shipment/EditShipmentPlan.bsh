@@ -65,7 +65,7 @@ shipmentPlans = null;
 shipmentPlansIt = null;
 rows = new ArrayList();
 if (shipment != null) {
-    shipmentPlans = delegator.findByAnd("ShipmentPlan", UtilMisc.toMap("shipmentId", shipment.getString("shipmentId")));
+    shipmentPlans = delegator.findByAnd("OrderShipment", UtilMisc.toMap("shipmentId", shipment.getString("shipmentId")));
 }
 if (shipmentPlans != null) {
     shipmentPlansIt = shipmentPlans.iterator();
@@ -98,7 +98,7 @@ if (shipmentPlans != null) {
         // Total quantity planned not issued
         plannedQuantity = 0.0;
         qtyPlannedInShipment = new HashMap();
-        plans = delegator.findByAnd("ShipmentPlan", UtilMisc.toMap("orderId", orderItem.getString("orderId"), "orderItemSeqId", orderItem.getString("orderItemSeqId")));
+        plans = delegator.findByAnd("OrderShipment", UtilMisc.toMap("orderId", orderItem.getString("orderId"), "orderItemSeqId", orderItem.getString("orderItemSeqId")));
         plansIt = plans.iterator();
         while (plansIt.hasNext()) {
             plan = plansIt.next();
@@ -224,29 +224,13 @@ if (orderItems != null) {
         oneRow.put("issuedQuantity", issuedQuantity);
         // Total quantity planned not issued
         plannedQuantity = 0.0;
-        qtyPlannedInShipment = new HashMap();
-        plans = delegator.findByAnd("ShipmentPlan", UtilMisc.toMap("orderId", oneOrderItem.getString("orderId"), "orderItemSeqId", oneOrderItem.getString("orderItemSeqId")));
+        plans = delegator.findByAnd("OrderShipment", UtilMisc.toMap("orderId", oneOrderItem.getString("orderId"), "orderItemSeqId", oneOrderItem.getString("orderItemSeqId")));
         plansIt = plans.iterator();
         while (plansIt.hasNext()) {
             plan = plansIt.next();
             if (plan.get("quantity") != null) {
                 netPlanQty = plan.getDouble("quantity");
-                if (qtyIssuedInShipment.containsKey(plan.getString("shipmentId"))) {
-                    qtyInShipment = ((Double)qtyIssuedInShipment.get(plan.getString("shipmentId"))).doubleValue();
-                    if (netPlanQty > qtyInShipment) {
-                        netPlanQty -= qtyInShipment;
-                    } else {
-                        netPlanQty = 0;
-                    }
-                }
                 plannedQuantity += netPlanQty;
-                if (qtyPlannedInShipment.containsKey(plan.getString("shipmentId"))) {
-                    qtyInShipment = ((Double)qtyPlannedInShipment.get(plan.getString("shipmentId"))).doubleValue();
-                    qtyInShipment += netPlanQty;
-                    qtyPlannedInShipment.put(plan.getString("shipmentId"), qtyInShipment);
-                } else {
-                    qtyPlannedInShipment.put(plan.getString("shipmentId"), netPlanQty);
-                }
             }
         }
         oneRow.put("plannedQuantity", plannedQuantity);
