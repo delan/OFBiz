@@ -24,11 +24,42 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Jacopo Cappellato (tiz@sastau.it)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 -->
 
 <simple-methods>
+
+    <!-- ProductAssoc -->
+    <simple-method method-name="createProductAssoc" short-description="Create Product to Product Association">
+        <make-value value-name="newEntity" entity-name="ProductAssoc"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>
+        <create-value value-name="newEntity"/>
+        <!--
+        <set-service-fields service-name="updateContent" map-name="parameters" to-map-name="updateContent"/>
+        <call-service service-name="updateContent" in-map-name="updateContent"/>
+        -->
+    </simple-method>
+    <simple-method method-name="updateProductAssoc" short-description="Update Product to Product Association">
+        <make-value value-name="lookupPKMap" entity-name="ProductAssoc"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductAssoc" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeProductAssoc" short-description="Remove Product to Product Association">
+        <make-value value-name="lookupPKMap" entity-name="ProductAssoc"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductAssoc" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
 
     <simple-method method-name="updateProductManufacturingRule" short-description="Update Manufacturing Rule">
         <check-permission permission="MANUFACTURING" action="_UPDATE">
