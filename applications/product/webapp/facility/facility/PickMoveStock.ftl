@@ -60,14 +60,14 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                     <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
                                 </td>
                             </tr>
-                            <#if moveByOiirInfoList?has_content || moveByPflInfoList?has_content>
-                                <#list moveByOiirInfoList?if_exists as moveByOiirInfo>
-                                    <#assign product = moveByOiirInfo.product>
-                                    <#assign facilityLocationFrom = moveByOiirInfo.facilityLocationFrom>
+                            <#if moveByOisgirInfoList?has_content || moveByPflInfoList?has_content>
+                                <#list moveByOisgirInfoList?if_exists as moveByOisgirInfo>
+                                    <#assign product = moveByOisgirInfo.product>
+                                    <#assign facilityLocationFrom = moveByOisgirInfo.facilityLocationFrom>
                                     <#assign facilityLocationTypeEnumFrom = (facilityLocationFrom.getRelatedOneCache("TypeEnumeration"))?if_exists>
-                                    <#assign facilityLocationTo = moveByOiirInfo.facilityLocationTo>
+                                    <#assign facilityLocationTo = moveByOisgirInfo.facilityLocationTo>
                                     <#assign facilityLocationTypeEnumTo = (facilityLocationTo.getRelatedOneCache("TypeEnumeration"))?if_exists>
-                                    <#assign totalQuantity = moveByOiirInfo.totalQuantity>
+                                    <#assign totalQuantity = moveByOisgirInfo.totalQuantity>
                                     <tr>
                                         <td><div class="tabletext">${product.internalName?if_exists} [${product.productId}]</div></td>
                                         <td><div class="tabletext">${facilityLocationFrom.areaId?if_exists}:${facilityLocationFrom.aisleId?if_exists}:${facilityLocationFrom.sectionId?if_exists}:${facilityLocationFrom.levelId?if_exists}:${facilityLocationFrom.positionId?if_exists}<#if facilityLocationTypeEnumFrom?has_content>(${facilityLocationTypeEnumFrom.description})</#if>[${facilityLocationFrom.locationSeqId}]</div></td>

@@ -37,10 +37,10 @@ facilityId = request.getParameter("facilityId");
 context.put("facilityId", facilityId);
 
 outMap = dispatcher.runSync("findStockMovesNeeded", UtilMisc.toMap("userLogin", userLogin, "facilityId", facilityId));
-moveByOiirInfoList = outMap.get("moveByOiirInfoList");
+moveByOisgirInfoList = outMap.get("moveByOisgirInfoList");
 oiirWarningMessageList = outMap.get("warningMessageList");
 stockMoveHandled = outMap.get("stockMoveHandled");
-context.put("moveByOiirInfoList", moveByOiirInfoList);
+context.put("moveByOisgirInfoList", moveByOisgirInfoList);
 context.put("oiirWarningMessageList", oiirWarningMessageList);
 context.put("stockMoveHandledWithOiir", stockMoveHandled);
 
