@@ -188,19 +188,26 @@ public class TransactionUtil implements javax.transaction.Status {
     public static Connection enlistConnection(XAConnection xacon) throws GenericTransactionException {
         if (xacon == null)
             return null;
+        try {
+            XAResource resource = xacon.getXAResource();
+            TransactionUtil.enlistResource(resource);
+            return xacon.getConnection();
+        } catch (SQLException e) {
+            throw new GenericTransactionException("SQL error, could not enlist connection in transaction even though transactions are available", e);
+        }
+    }
+
+    public static void enlistResource(XAResource resource) throws GenericTransactionException {
+        if (resource == null)
+            return;
 
         try {
             TransactionManager tm = TransactionFactory.getTransactionManager();
             if (tm != null && tm.getStatus() == STATUS_ACTIVE) {
                 Transaction tx = tm.getTransaction();
-                if (tx != null) {
-                    XAResource resource = xacon.getXAResource();
+                if (tx != null)
                     tx.enlistResource(resource);
-                }
             }
-            return xacon.getConnection();
-        } catch (SQLException e) {
-            throw new GenericTransactionException("SQL error, could not enlist connection in transaction even though transactions are available", e);
         } catch (RollbackException e) {
             throw new GenericTransactionException("Roll Back error, could not enlist connection in transaction even though transactions are available, current transaction rolled back", e);
         } catch (SystemException e) {
