@@ -71,7 +71,7 @@
     <div>Trying to Write XML for all data in <%=numberOfEntities%> entities.</div>
     <div>Trying to Write <%=numberWritten%> records to XML file <%=filename%></div>
     <%
-      try { GenericEntity.writeXmlDocument(filename, document); }
+      try { UtilXml.writeXmlDocument(filename, document); }
       catch(Exception e) {
         %><div>ERROR writing XML document: <%=e.toString()%></div><%
       }
