@@ -240,12 +240,6 @@ public class PartyServices {
 
         String partyId = (String) context.get("partyId");
 
-        //if specified partyId starts with a number, return an error
-        if (Character.isDigit(partyId.charAt(0))) {
-            return ServiceUtil.returnError("Cannot create party group, specified party ID cannot start with a digit, " +
-                                           "numeric IDs are reserved for auto-generated IDs");
-        }
-
         //partyId might be empty, so check it and get next seq party id if empty
         if (partyId == null || partyId.length() == 0) {
             Long newId = delegator.getNextSeqId("Party");
@@ -254,7 +248,13 @@ public class PartyServices {
             } else {
                 partyId = newId.toString();
             }
-        }
+        } else {
+            //if specified partyId starts with a number, return an error
+            if (Character.isDigit(partyId.charAt(0))) {
+                return ServiceUtil.returnError("Cannot create party group, specified party ID cannot start with a digit, " +
+                                               "numeric IDs are reserved for auto-generated IDs");
+            }
+        }            
 
         //check to see if party object exists, if so make sure it is PARTY_GROUP type party
         GenericValue party = null;
