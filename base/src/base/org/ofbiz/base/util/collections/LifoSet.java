@@ -1,5 +1,5 @@
 /*
- * $Id: LifoSet.java,v 1.4 2004/07/16 17:07:20 ajzeneski Exp $
+ * $Id: LifoSet.java,v 1.5 2004/07/17 16:38:27 ajzeneski Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import java.util.EmptyStackException;
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public class LifoSet extends AbstractSet implements Serializable {
@@ -94,7 +94,7 @@ public class LifoSet extends AbstractSet implements Serializable {
     }
 
     /**
-     * @see java.util.Collection#iterator()
+     * @see java.util.Collection#iterator()         
      */  
     public Iterator iterator() {
         return backedList.iterator();
@@ -104,6 +104,7 @@ public class LifoSet extends AbstractSet implements Serializable {
 
     /**
      * @see java.util.Stack#empty()
+     *
      * @return true if and only if this stack contains no items; false otherwise
      */
     public boolean empty() {
@@ -115,6 +116,7 @@ public class LifoSet extends AbstractSet implements Serializable {
 
     /**
      * @see java.util.Stack#push(java.lang.Object)
+     *
      * @param item The item to be pushed onto this stack
      */
     public void push(Object item) {
@@ -123,6 +125,7 @@ public class LifoSet extends AbstractSet implements Serializable {
 
     /**
      * @see java.util.Stack#pop()
+     *
      * @return The object at the top of this stack
      * @throws EmptyStackException If this stack is empty
      */
@@ -135,6 +138,7 @@ public class LifoSet extends AbstractSet implements Serializable {
 
     /**
      * @see java.util.Stack#peek()
+     *
      * @return The object at the top of this stack
      * @throws EmptyStackException If this stack is empty
      */
@@ -147,17 +151,17 @@ public class LifoSet extends AbstractSet implements Serializable {
 
     /**
      * @see java.util.Stack#search(java.lang.Object)
+     *
      * @param item The desired object
      * @return The 1-based position from the top of the stack where the object is located;
      * the return value -1  indicates that the object is not on the stack
      */
     public int search(Object item) {
-    	int index = backedList.indexOf(item);
-    	if (index > -1) {
-    		return index + 1; // this method is 1 based (per java.util.Stack)
-    	}
+        int index = backedList.indexOf(item);
+        if (index > -1) {
+            return index + 1; // this method is 1 based (per java.util.Stack)
+        }
         return -1;
     }
-
 }
 
