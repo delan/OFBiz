@@ -33,15 +33,11 @@
 	<classpathentry kind="lib" path="base/lib/xerces.jar"/>
 	<classpathentry kind="lib" path="base/lib/activation.jar"/>
 	<classpathentry kind="lib" path="base/lib/mail.jar"/>
-	<classpathentry kind="lib" path="base/lib/servlet.jar"/>
 	<classpathentry kind="lib" path="base/lib/jetty/ant.jar"/>
 	<classpathentry kind="lib" path="base/lib/logging/commons-logging.jar"/>
 	<classpathentry kind="lib" path="base/lib/jetty/jasper-compiler.jar"/>
 	<classpathentry kind="lib" path="base/lib/jetty/jasper-runtime.jar"/>
 	<classpathentry kind="lib" path="base/lib/jetty/javax.servlet.jar"/>
-	<classpathentry kind="lib" path="base/lib/jetty/jcert.jar"/>
-	<classpathentry kind="lib" path="base/lib/jetty/jnet.jar"/>
-	<classpathentry kind="lib" path="base/lib/jetty/jsse.jar"/>
 	<classpathentry kind="lib" path="base/lib/jetty/org.mortbay.jetty.jar"/>
 	<classpathentry kind="lib" path="base/lib/logging/log4j.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/bsh.jar"/>
