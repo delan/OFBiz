@@ -43,7 +43,7 @@ public class PaymentEvents {
 
     public static final String module = PaymentEvents.class.getName();
 
-    public static void payCash(PosScreen pos) {
+    public static synchronized void payCash(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
 
         // all cash transactions are NO_PAYMENT; no need to check
@@ -60,7 +60,7 @@ public class PaymentEvents {
         pos.refresh();
     }
 
-    public static void payCheck(PosScreen pos) {
+    public static synchronized void payCheck(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         Input input = pos.getInput();
         String[] ckInfo = input.getFunction("CHECK");
@@ -85,7 +85,7 @@ public class PaymentEvents {
         pos.showDialog("main/dialog/error/notyetsupported");
     }
 
-    public static void payGiftCard(PosScreen pos) {
+    public static synchronized void payGiftCard(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         Input input = pos.getInput();
         String[] gcInfo = input.getFunction("GIFTCARD");
@@ -110,7 +110,7 @@ public class PaymentEvents {
         pos.showDialog("main/dialog/error/notyetsupported");
     }
 
-    public static void payCredit(PosScreen pos) {
+    public static synchronized void payCredit(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         Input input = pos.getInput();
         String[] msrInfo = input.getFunction("MSRINFO");
@@ -292,7 +292,7 @@ public class PaymentEvents {
         }
     }
 
-    public static void processSale(PosScreen pos) {
+    public static synchronized void processSale(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         PosScreen.currentScreen.getOutput().print("Processing sale...");
 
