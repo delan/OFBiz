@@ -111,28 +111,41 @@
   </tr>
   <tr>
     <td bgcolor='white' colspan='2'>
-<table width="80%" border="0" cellpadding="1">
-    <tr>
-      <td align="left">
         <%if(partyContactMechIterator != null && partyContactMechIterator.hasNext()){%>
           <table width="100%" border="0" cellpadding="1">
-            <%boolean isFirst = true;%>
+            <tr align=left valign=bottom>
+              <th>Contact Type</th>
+              <th width="5">&nbsp;</th>
+              <th>Information</th>
+              <th colspan='2'>Soliciting&nbsp;OK?</th>
+              <th>&nbsp;</th>
+            </tr>
             <%while(partyContactMechIterator.hasNext())
               {
                 GenericValue partyContactMech = (GenericValue)partyContactMechIterator.next();
                 GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");
+                GenericValue contactMechType = contactMech.getRelatedOne("ContactMechType");
                 Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
                 if(showOld || partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(new java.util.Date()))
                 {%>
-                <%if(!isFirst){%>
-                  <tr><td colspan="5" height="1" bgcolor="#899ABC"></td></tr>
-                <%}%>
+                <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
                 <tr>
+                  <td align="right" valign="top" width="5%">
+                    <div class="tabletext">&nbsp;<b><%if(contactMechType!=null){%><%=UtilFormatOut.checkNull(contactMechType.getString("description"))%><%}%></b></div>
+                  </td>
+                  <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="90%">
                     <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
                       <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
                       <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
-                      <div class="tabletext"><b><%=contactMechPurposeType.getString("description")%></b></div>
+                      <%if(showOld || partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
+                        <div class="tabletext">
+                          <b><%=contactMechPurposeType.getString("description")%></b>
+                          <%if(showOld && partyContactMechPurpose.get("thruDate") != null){%>
+                            (Expire:<%=UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate"))%>)
+                          <%}%>
+                        </div>
+                      <%}%>
                     <%}%>
                 <%if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
                   <%GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");%>
@@ -159,7 +172,7 @@
                     </div>
               <%}%>
                     <div class="tabletext">(Created:&nbsp;<%=UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("fromDate"))%>)</div>
-                    <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("thruDate")), "<div class=\"tabletext\"><b>This contact was removed on:&nbsp;", "</b></div>")%>
+                    <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("thruDate")), "<div class=\"tabletext\"><b>Expires/Expired on:&nbsp;", "</b></div>")%>
                   </td>
                   <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(<%=UtilFormatOut.checkNull(partyContactMech.getString("allowSolicitation"))%>)</b></div></td>
                   <td width="5">&nbsp;</td>
@@ -172,16 +185,12 @@
                     [Delete]</a></div>
                   </td>
                 </tr>
-                <%isFirst = false;%>
               <%}%>
             <%}%>
           </table>
         <%}else{%>
           <p>No contact information on file.</p><br>
         <%}%>
-      </td>
-    </tr>
-</table>
     </td>
   </tr>
 </table>
@@ -237,7 +246,7 @@
             <%}//end while loop%>
           </table>
         <%}else{//if paymentIterator%>
-          <p>No credit card information on file.</p><br>
+          <p>No credit card information on file.</p>
         <%}//if paymentIterator%>
       </td>
     </tr>

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/08/31 19:07:33  jonesde
+ * Added create & delete of party contact mech purpose
+ *
  * Revision 1.7  2001/08/31 06:41:58  jonesde
  * Cleaned up the new contact info process
  *
@@ -176,7 +179,7 @@ public class CustomerEvents
     //addrFields.put("postalCodeGeoId", postalCodeGeoId);
     tempUserLogin.preStoreOther(helper.makeValue("PostalAddress", addrFields));
     tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", addressAllowSolicitation)));
-    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "SHIPPING_LOCATION")));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "fromDate", UtilDateTime.nowTimestamp())));
 
     //make home phone number
     if(UtilValidate.isNotEmpty(homeContactNumber))
@@ -185,7 +188,7 @@ public class CustomerEvents
       tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
       tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", homeCountryCode, "areaCode", homeAreaCode, "contactNumber", homeContactNumber)));
       tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", homeAllowSolicitation, "extension", homeExt)));
-      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "PHONE_HOME")));
+      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "PHONE_HOME", "fromDate", UtilDateTime.nowTimestamp())));
     }
     
     //make work phone number
@@ -195,7 +198,7 @@ public class CustomerEvents
       tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
       tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", workCountryCode, "areaCode", workAreaCode, "contactNumber", workContactNumber)));
       tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", workAllowSolicitation, "extension", workExt)));
-      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "PHONE_WORK")));
+      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "PHONE_WORK", "fromDate", UtilDateTime.nowTimestamp())));
     }
     
     //make fax number
@@ -205,7 +208,7 @@ public class CustomerEvents
       tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
       tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", faxCountryCode, "areaCode", faxAreaCode, "contactNumber", faxContactNumber)));
       tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", faxAllowSolicitation)));
-      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "FAX_NUMBER")));
+      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "FAX_NUMBER", "fromDate", UtilDateTime.nowTimestamp())));
     }
  
     //make mobile phone number
@@ -215,7 +218,7 @@ public class CustomerEvents
       tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "TELECOM_NUMBER")));
       tempUserLogin.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", mobileCountryCode, "areaCode", mobileAreaCode, "contactNumber", mobileContactNumber)));
       tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", mobileAllowSolicitation)));
-      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "PHONE_MOBILE")));
+      tempUserLogin.preStoreOther(helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "contactMechPurposeTypeId", "PHONE_MOBILE", "fromDate", UtilDateTime.nowTimestamp())));
     }
       
     //make email
@@ -263,6 +266,17 @@ public class CustomerEvents
         String country = request.getParameter("CM_COUNTRY");
         String directions = "";
 
+        if(!UtilValidate.isNotEmpty(address1)) errMsg += "<li>Address Line 1 missing.";
+        if(!UtilValidate.isNotEmpty(city)) errMsg += "<li>City missing.";
+        if(!UtilValidate.isNotEmpty(state)) errMsg += "<li>State missing.";
+        if(!UtilValidate.isNotEmpty(postalCode)) errMsg += "<li>Zip/Postal Code missing.";
+        if(errMsg.length() > 0)
+        {
+          errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+          request.setAttribute("ERROR_MESSAGE", errMsg);
+          return "error";
+        }
+
         Map addrFields = new HashMap();
         addrFields.put("contactMechId", newCMId.toString());
         addrFields.put("toName", toName);
@@ -283,6 +297,18 @@ public class CustomerEvents
         String areaCode = request.getParameter("CM_AREA_CODE");
         String contactNumber = request.getParameter("CM_CONTACT_NUMBER");
         tempContactMech.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", countryCode, "areaCode", areaCode, "contactNumber", contactNumber)));
+      }
+      else if("EMAIL_ADDRESS".equals(contactMechTypeId))
+      {        
+        String infoString = request.getParameter("CM_INFO_STRING");
+        if(!UtilValidate.isEmail(infoString)) errMsg += "<li>" + UtilValidate.isEmailMsg;
+        if(errMsg.length() > 0)
+        {
+          errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+          request.setAttribute("ERROR_MESSAGE", errMsg);
+          return "error";
+        }
+        tempContactMech.set("infoString", infoString);
       }
       else
       {        
@@ -335,6 +361,17 @@ public class CustomerEvents
         String country = request.getParameter("CM_COUNTRY");
         String directions = "";
 
+        if(!UtilValidate.isNotEmpty(address1)) errMsg += "<li>Address Line 1 missing.";
+        if(!UtilValidate.isNotEmpty(city)) errMsg += "<li>City missing.";
+        if(!UtilValidate.isNotEmpty(state)) errMsg += "<li>State missing.";
+        if(!UtilValidate.isNotEmpty(postalCode)) errMsg += "<li>Zip/Postal Code missing.";
+        if(errMsg.length() > 0)
+        {
+          errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+          request.setAttribute("ERROR_MESSAGE", errMsg);
+          return "error";
+        }
+
         Map addrFields = new HashMap();
         addrFields.put("contactMechId", newCMId.toString());
         addrFields.put("toName", toName);
@@ -357,6 +394,18 @@ public class CustomerEvents
         String extension = request.getParameter("CM_EXTENSION");
         partyContactMech.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", countryCode, "areaCode", areaCode, "contactNumber", contactNumber)));
         newPartyContactMech.set("extension", extension);
+      }
+      else if("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId")))
+      {        
+        String infoString = request.getParameter("CM_INFO_STRING");
+        if(!UtilValidate.isEmail(infoString)) errMsg += "<li>" + UtilValidate.isEmailMsg;
+        if(errMsg.length() > 0)
+        {
+          errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+          request.setAttribute("ERROR_MESSAGE", errMsg);
+          return "error";
+        }
+        newContactMech.set("infoString", infoString);
       }
       else
       {        
@@ -402,7 +451,21 @@ public class CustomerEvents
     String contactMechPurposeTypeId = request.getParameter("CONTACT_MECH_PURPOSE_TYPE_ID");
     if(contactMechPurposeTypeId == null || contactMechPurposeTypeId.length() <= 0) { errMsg = "<li>ERROR: Purpose type not specified, cannot add purpose to contact mechanism. Please try again."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
 
-    if(helper.create("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp())) == null)
+    
+    GenericValue newVal = helper.makeValue("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", UtilDateTime.nowTimestamp()));
+    GenericValue tempVal = helper.findByPrimaryKey(newVal.getPrimaryKey());
+    if(tempVal != null)
+    {
+      //if exists already, and has a thruDate, reset it to "undelete"
+      if(tempVal.get("thruDate") != null)
+      {
+        tempVal.set("fromDate", UtilDateTime.nowTimestamp());
+        tempVal.set("thruDate", null);
+        try { tempVal.store(); }
+        catch(Exception e) { errMsg = "<li>ERROR: Could not undelete purpose of contact mechanism (write failure) . Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+      }
+    }
+    else if(helper.create(newVal) == null)
     {
       errMsg = "<li>ERROR: Could not add purpose to contact mechanism (write failure). Please contact customer service."; 
       request.setAttribute("ERROR_MESSAGE", errMsg);

@@ -99,27 +99,38 @@
               <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
                 <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
                 <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>            
-                <tr>
-                  <td bgcolor='white'><div class="tabletext">&nbsp;<b><%=contactMechPurposeType.getString("description")%></b>&nbsp;</div></td>
-                  <td bgcolor='white'><div><a href='<%=response.encodeURL(controlPath + "/deletepartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&CONTACT_MECH_PURPOSE_TYPE_ID=" + contactMechPurposeType.getString("contactMechPurposeTypeId") + "&DONE_PAGE=" + donePage)%>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
-                </tr>
+                <%if(partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
+                  <tr>
+                    <td bgcolor='white'>
+                      <div class="tabletext">&nbsp;
+                        <b><%=contactMechPurposeType.getString("description")%></b>
+                        (Since:<%=UtilDateTime.toDateString(partyContactMechPurpose.getTimestamp("fromDate"))%>)
+                        <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate")), "(Expires:", ")")%>
+                      &nbsp;</div></td>
+                    <td bgcolor='white'><div><a href='<%=response.encodeURL(controlPath + "/deletepartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&CONTACT_MECH_PURPOSE_TYPE_ID=" + contactMechPurposeType.getString("contactMechPurposeTypeId") + "&DONE_PAGE=" + donePage)%>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
+                  </tr>
+                <%}%>
               <%}%>
+              <%Iterator purposeTypes = UtilMisc.toIterator(helper.findByAnd("ContactMechTypePurpose", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), null));%>
+              <%if(purposeTypes != null && purposeTypes.hasNext()){%>
               <tr>
                 <form method=POST action='<%=response.encodeURL(controlPath + "/createpartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&DONE_PAGE=" + donePage)%>' name='newpurposeform'>
                   <td bgcolor='white'>
                     <SELECT name='CONTACT_MECH_PURPOSE_TYPE_ID'>
                       <OPTION>&nbsp;</OPTION>
-                      <%Iterator purposeTypes = UtilMisc.toIterator(helper.findByAnd("ContactMechTypePurpose", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), null));%>
                       <%while(purposeTypes != null && purposeTypes.hasNext()){%>
                         <%GenericValue contactMechTypePurpose = (GenericValue)purposeTypes.next();%>
                         <%GenericValue contactMechPurposeType = contactMechTypePurpose.getRelatedOne("ContactMechPurposeType");%>
-                        <OPTION value='<%=contactMechPurposeType.getString("contactMechPurposeTypeId")%>'><%=contactMechPurposeType.getString("description")%></OPTION>
+                        <%if(contactMechPurposeType != null){%>
+                          <OPTION value='<%=contactMechPurposeType.getString("contactMechPurposeTypeId")%>'><%=contactMechPurposeType.getString("description")%></OPTION>
+                        <%}%>
                       <%}%>
                     </SELECT>
                   </td>
                 </form>
                 <td bgcolor='white'><div><a href='javascript:document.newpurposeform.submit()' class='buttontext'>&nbsp;Add&nbsp;Purpose&nbsp;</a></div></td>
               </tr>
+              <%}%>
             </table>
           </td>
         </tr>
@@ -135,7 +146,7 @@
       <td width="26%"><div class="tabletext">To Name</div></td>
       <td width="74%">
         <input type="text" name="CM_TO_NAME" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("toName"):request.getParameter("CM_TO_NAME"))%>" size="30" maxlength="60">
-      *</td>
+      </td>
     </tr>
     <tr>
       <td width="26%"><div class="tabletext">Attention Name</div></td>
