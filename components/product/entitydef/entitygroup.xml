@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.23 $
+ *@version    $Revision: 1.24 $
  */
 -->
 
@@ -263,5 +263,6 @@
     <entity-group group="org.ofbiz" entity="ShipmentType" />
     <entity-group group="org.ofbiz" entity="ShipmentTypeAttr" />
     <entity-group group="org.ofbiz" entity="ShippingDocument" />
+    <entity-group group="org.ofbiz" entity="ShipmentPlan" />
 </entitygroup>
 

@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.2
 -->
 <simple-methods>
@@ -1260,6 +1260,58 @@
             <call-service service-name="updateShipment" in-map-name="packedContext"/>
         </if-empty>
         <field-to-result field-name="shipmentId" map-name="shipment" result-name="shipmentId"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteShipmentPlan" short-description="Delete a ShipmentPlan entry">
+        <string-to-field string="Delete ShipmentPlan entry" field-name="operationName"/>
+        <check-permission permission="FACILITY" action="_CREATE">
+            <fail-message message="Security Error: to run ${operationName} you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-permission permission="FACILITY" action="_UPDATE">
+            <fail-message message="Security Error: to run ${operationName} you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <!-- get orderItemInventoryRes -->
+        <make-value entity-name="ShipmentPlan" value-name="shipmentPlanLookupPk"/>
+        <set-pk-fields value-name="shipmentPlanLookupPk" map-name="parameters"/>
+        <remove-value value-name="shipmentPlanLookupPk"/>
+    </simple-method>
+    
+    <!-- for a give order item and quantity it creates (or updates if already exists) an -->
+    <!-- entry in the ShipmentPlan. -->
+    <simple-method method-name="addOrderedQuantityToShipmentPlan" short-description="Add or update a ShipmentPlan entry">
+        <string-to-field string="Put Ordered Quantity to Shipment Plan" field-name="operationName"/>
+        <check-permission permission="FACILITY" action="_CREATE">
+            <fail-message message="Security Error: to run ${operationName} you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-permission permission="FACILITY" action="_UPDATE">
+            <fail-message message="Security Error: to run ${operationName} you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+
+        <!-- get orderHeader -->
+        <make-value entity-name="OrderHeader" value-name="orderHeaderLookupPk"/>
+        <set-pk-fields value-name="orderHeaderLookupPk" map-name="parameters"/>
+        <find-by-primary-key map-name="orderHeaderLookupPk" value-name="orderHeader"/>
+        
+        <!-- make sure the order is of orderTypeId: SALES_ORDER -->
+        <if-compare field-name="orderTypeId" map-name="orderHeader" operator="not-equals" value="SALES_ORDER">
+            <string-to-list string="Not adding Order Item to plan for shipment [${parameters.shipmentId}] because the order is not a Sales Order for order [${parameters.orderId}] order item [${parameters.orderItemSeqId}]" list-name="error_list"/>
+        </if-compare>
+        <check-errors/>
+
+        <!-- if quantity is greater than 0 we add or update the ShipmentPlan -->
+        <if-compare field-name="parameters.quantity" operator="greater" value="0" type="Double">
+            <make-value entity-name="ShipmentPlan" value-name="shipmentPlanItemPk"/>
+            <set-pk-fields value-name="shipmentPlanItemPk" map-name="parameters"/>
+            <find-by-primary-key map-name="shipmentPlanItemPk" value-name="shipmentPlanItem"/>
+            <if-empty field-name="shipmentPlanItem">
+                <make-value entity-name="ShipmentPlan" value-name="shipmentPlanItem"/>
+                <set-pk-fields value-name="shipmentPlanItem" map-name="parameters"/>
+                <create-value value-name="shipmentPlanItem"/>
+            </if-empty>
+            <set-pk-fields value-name="shipmentPlanItem" map-name="parameters"/>
+            <set-nonpk-fields value-name="shipmentPlanItem" map-name="parameters"/>
+            <store-value value-name="shipmentPlanItem"/>
+        </if-compare>
     </simple-method>
 </simple-methods>
 

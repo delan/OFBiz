@@ -300,7 +300,18 @@
         <attribute name="shipmentItemSeqId" type="String" mode="OUT" optional="false"/>
         <attribute name="itemIssuanceId" type="String" mode="OUT" optional="false"/>
     </service>
-
+    <!-- ShipmentPlan Services -->
+    <service name="deleteShipmentPlan" engine="simple"
+            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="deleteShipmentPlan" auth="true">
+        <description>Delete a ShipmentPlan - only for sales orders</description>
+        <auto-attributes entity-name="ShipmentPlan" include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="addOrderedQuantityToShipmentPlan" engine="simple"
+            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="addOrderedQuantityToShipmentPlan" auth="true">
+        <description>Add a ShipmentPlan - only for sales orders</description>
+        <auto-attributes entity-name="ShipmentPlan" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ShipmentPlan" include="nonpk" mode="IN" optional="false"/>
+    </service>
     <!-- ============================================================== -->
     <!-- Receipt Services -->
     <service name="interfaceShipmentReceipt" engine="interface" location="" invoke="">

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
 
@@ -32,6 +32,8 @@ delegator = request.getAttribute("delegator");
 
 shipmentId = request.getParameter("shipmentId");
 orderId = request.getParameter("orderId");
+selectFromShipmentPlan = request.getParameter("selectFromShipmentPlan");
+
 shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
 
 if (shipment != null) {
@@ -39,7 +41,7 @@ if (shipment != null) {
     context.put("destinationFacility", shipment.getRelatedOne("DestinationFacility"));
 }
 
-if (UtilValidate.isEmpty(orderId) && shipment != null) {
+if (UtilValidate.isEmpty(orderId) && shipment != null && selectFromShipmentPlan == null) {
     orderId = shipment.get("primaryOrderId");
 }
 
@@ -104,6 +106,88 @@ if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
         }
         context.put("orderItemDatas", orderItemDatas);
     }
+}
+
+if (selectFromShipmentPlan != null && shipment != null) {
+    orderHeaders = new HashMap();
+    shipmentPlans = delegator.findByAnd("ShipmentPlan", UtilMisc.toMap("shipmentId", shipment.getString("shipmentId")), UtilMisc.toList("orderId", "orderItemSeqId"));
+    orderItemDatas = new LinkedList();
+
+    context.put("isSalesOrder", true);
+
+    shipmentPlansIt = shipmentPlans.iterator();
+    while (shipmentPlansIt.hasNext()) {
+        orderItemData = new HashMap();
+
+        shipmentPlan = shipmentPlansIt.next();
+        orderItem = shipmentPlan.getRelatedOne("OrderItem");
+        plannedQuantity = shipmentPlan.getDouble("quantity");
+        totalProposedQuantity = 0.0;
+            
+        product = orderItem.getRelatedOne("Product");
+            
+        itemIssuances = orderItem.getRelated("ItemIssuance");
+        totalQuantityIssued = 0;
+        totalQuantityIssuedInShipment = 0;
+        itemIssuanceIter = itemIssuances.iterator();
+        while (itemIssuanceIter.hasNext()) {
+            itemIssuance = itemIssuanceIter.next();
+            if (itemIssuance.get("quantity") != null) {
+                totalQuantityIssued += itemIssuance.getDouble("quantity");
+            }
+            if (itemIssuance.get("shipmentId") != null && itemIssuance.getString("shipmentId").equals(shipmentId)) {
+                totalQuantityIssuedInShipment += itemIssuance.getDouble("quantity");
+            }
+        }
+        plannedQuantity -= totalQuantityIssuedInShipment;
+        if (plannedQuantity < 0) {
+            plannedQuantity = 0;
+        }
+        orderItemInventoryResList = orderItem.getRelated("OrderItemInventoryRes", null, UtilMisc.toList("reservedDatetime"));
+        orderItemInventoryResDatas = new LinkedList();
+        totalQuantityReserved = 0;
+        orderItemInventoryResIter = orderItemInventoryResList.iterator();
+        while (orderItemInventoryResIter.hasNext()) {
+            orderItemInventoryRes = orderItemInventoryResIter.next();
+            inventoryItem = orderItemInventoryRes.getRelatedOne("InventoryItem");
+            orderItemInventoryResData = new HashMap();
+            orderItemInventoryResData.put("orderItemInventoryRes", orderItemInventoryRes);
+            orderItemInventoryResData.put("inventoryItem", inventoryItem);
+            orderItemInventoryResData.put("inventoryItemFacility", inventoryItem.getRelatedOne("Facility"));
+            orderItemInventoryResDatas.add(orderItemInventoryResData);
+
+            reservedQuantity = 0.0;
+            quantityNotAvailable = 0.0;
+            proposedQuantity = 0.0;
+            if (orderItemInventoryRes.get("quantity") != null) {
+                reservedQuantity = orderItemInventoryRes.getDouble("quantity");
+                totalQuantityReserved += reservedQuantity;
+            }
+            if (orderItemInventoryRes.get("quantityNotAvailable") != null) {
+                quantityNotAvailable = orderItemInventoryRes.getDouble("quantityNotAvailable");
+            }
+            proposedQuantity = reservedQuantity - quantityNotAvailable;
+            if (plannedQuantity - totalProposedQuantity < proposedQuantity) {
+                proposedQuantity = plannedQuantity - totalProposedQuantity;
+            }
+            if (proposedQuantity < 0) {
+                proposedQuantity = 0.0;
+            }
+            totalProposedQuantity += proposedQuantity;
+            orderItemInventoryResData.put("shipmentPlanQuantity", proposedQuantity);
+        }
+
+        orderItemData.put("orderItemInventoryResDatas", orderItemInventoryResDatas);
+        orderItemData.put("totalQuantityReserved", totalQuantityReserved);
+        orderItemData.put("totalQuantityIssuedAndReserved", totalQuantityReserved + totalQuantityIssued);
+
+        orderItemData.put("orderItem", orderItem);
+        orderItemData.put("product", product);
+        orderItemData.put("itemIssuances", itemIssuances);
+        orderItemData.put("totalQuantityIssued", totalQuantityIssued);
+        orderItemDatas.add(orderItemData);
+    }
+    context.put("orderItemDatas", orderItemDatas);
 }
 
 context.put("shipmentId", shipmentId);

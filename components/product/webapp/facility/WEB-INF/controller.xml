@@ -738,6 +738,22 @@
         <response name="success" type="view" value="AddItemsFromOrder"/>
         <response name="error" type="view" value="AddItemsFromOrder"/>
     </request-map>
+    <!-- ================ Shipment Items From Order Requests ================= -->
+    <request-map uri="EditShipmentPlan">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditShipmentPlan"/>
+    </request-map>
+    <request-map uri="deleteShipmentPlan">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteShipmentPlan"/>
+        <response name="success" type="view" value="EditShipmentPlan"/>
+    </request-map>
+    <request-map uri="addToShipmentPlan">
+        <security https="true" auth="true"/>
+        <event type="service-multi" path="" invoke="addOrderedQuantityToShipmentPlan"/>
+        <response name="success" type="view" value="EditShipmentPlan"/>
+        <response name="error" type="view" value="EditShipmentPlan"/>
+    </request-map>
 
     <!-- ================ Shipment Manifest Report Requests ================= -->
     <request-map uri="ShipmentManifestReport.pdf">
@@ -785,6 +801,7 @@
     <view-map name="ViewShipment" type="jpublish" page="/shipment/ViewShipment.ftl"/>
     <view-map name="EditShipment" type="jpublish" page="/shipment/EditShipment.ftl"/>
     <view-map name="EditShipmentItems" type="jpublish" page="/shipment/EditShipmentItems.ftl"/>
+    <view-map name="EditShipmentPlan" type="jpublish" page="/shipment/EditShipmentPlan.ftl"/>
     <view-map name="EditShipmentPackages" type="jpublish" page="/shipment/EditShipmentPackages.ftl"/>
     <view-map name="EditShipmentRouteSegments" type="jpublish" page="/shipment/EditShipmentRouteSegments.ftl"/>
     <view-map name="AddItemsFromOrder" type="jpublish" page="/shipment/AddItemsFromOrder.ftl"/>

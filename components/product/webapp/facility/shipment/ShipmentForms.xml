@@ -108,4 +108,81 @@
         
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+
+    <!-- ******************* -->
+    <!-- Shipment Plan Forms -->
+    <!-- ******************* -->
+    <!-- List for Shipment Plan -->
+    <form name="listShipmentPlan" type="list" 
+            target="" title="" list-name="shipmentPlan"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="orderId" title="${uiLabelMap.ProductOrderId}"><display/></field>
+        <field name="orderItemSeqId" title="${uiLabelMap.ProductOrderItem}"><display/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
+        <!-- quantity planned in this shipment -->
+        <field name="quantity" title="${uiLabelMap.ProductQuantity}"><display/></field>
+        <!-- quantity issued in this shipment -->
+        <field name="issuedQuantity"><display/></field>
+        <!-- total ordered quantity -->
+        <field name="totOrderedQuantity"><display/></field>
+        <!-- total not available quantity -->
+        <field name="notAvailableQuantity" title="${uiLabelMap.ProductNotAvailable}"><display/></field>
+        <!-- total planned quantity not issued -->
+        <field name="totPlannedQuantity"><display/></field>
+        <!-- total issued quantity -->
+        <field name="totIssuedQuantity"><display/></field>
+        <!-- planned weight -->
+        <field name="weight" title="${uiLabelMap.ProductWeight}"><display/></field>
+        <field name="weightUom" title="${uiLabelMap.CommonUom}"><display/></field>
+        <!-- planned volume -->
+        <field name="volume" title="${uiLabelMap.CommonVolume}"><display/></field>
+        <field name="volumeUom" title="${uiLabelMap.CommonUom}"><display/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="deleteShipmentPlan?shipmentId=${shipmentId}&amp;orderId=${orderId}&amp;orderItemSeqId=${orderItemSeqId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+    <!-- Add entries to Shipment Plan -->
+    <form name="addToShipmentPlan" type="multi" 
+            target="addToShipmentPlan" title="" list-name="shipmentPlan"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="shipmentId"><hidden/></field>
+        <field name="orderId"><hidden/></field>
+        <field name="orderItemSeqId"><hidden/></field>
+        <field name="orderId" title="${uiLabelMap.ProductOrderId}"><display/></field>
+        <field name="orderItemSeqId" title="${uiLabelMap.ProductOrderItem}"><display/></field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
+        <!-- ordered quantity -->
+        <field name="orderedQuantity"><display/></field>
+        <!-- planned quantity not issued -->
+        <field name="plannedQuantity"><display/></field>
+        <!-- issued quantity -->
+        <field name="issuedQuantity"><display/></field>
+        <!-- quantity for plan -->
+        <field name="quantity" title="${uiLabelMap.ProductQuantity}"><text/></field>
+        <!-- planned weight -->
+        <field name="weight" title="${uiLabelMap.ProductWeight}"><display/></field>
+        <field name="weightUom" title="${uiLabelMap.CommonUom}"><display/></field>
+        <!-- planned volume -->
+        <field name="volume" title="${uiLabelMap.CommonVolume}"><display/></field>
+        <field name="volumeUom" title="${uiLabelMap.CommonUom}"><display/></field>
+    </form>
+    
+    <!-- Search by Order Id -->
+    <form name="findOrderItems" type="single" 
+        target="EditShipmentPlan" title="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <field name="action"><hidden value="search"/></field>
+        <field name="shipmentId"><hidden/></field>
+        <field name="orderId" title="${uiLabelMap.ProductOrderId}" ><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="shipmentPlanToOrderItems" type="single" 
+        target="AddItemsFromOrder" title="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <field name="selectFromShipmentPlan"><hidden value="true"/></field>
+        <field name="shipmentId"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.ProductShipmentPlanToOrderItems}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 </forms>
