@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.4 2003/08/26 14:06:57 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.5 2003/08/26 20:37:51 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -263,19 +263,21 @@ public class OrderReadHelper {
             } else {
                 // get the address from the first payment method
                 GenericValue paymentPreference = EntityUtil.getFirst(getPaymentPreferences());
-                try {
-                    GenericValue paymentMethod = paymentPreference.getRelatedOne("PaymentMethod");
-                    GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");
-                    if (creditCard != null) {
-                        billingAddress = creditCard.getRelatedOne("PostalAddress");
-                    } else {
-                        GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount");
-                        if (eftAccount != null) {
-                            billingAddress = eftAccount.getRelatedOne("PostalAddress");
-                        }
-                    }                     
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e, module);
+                if (paymentPreference != null) {
+                    try {
+                        GenericValue paymentMethod = paymentPreference.getRelatedOne("PaymentMethod");
+                        GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");
+                        if (creditCard != null) {
+                            billingAddress = creditCard.getRelatedOne("PostalAddress");
+                        } else {
+                            GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount");
+                            if (eftAccount != null) {
+                                billingAddress = eftAccount.getRelatedOne("PostalAddress");
+                            }
+                        }                     
+                    } catch (GenericEntityException e) {
+                        Debug.logWarning(e, module);
+                    }
                 }
             }
         }
