@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  */
 -->
 
@@ -2295,7 +2295,7 @@
       <field name="title" type="name"></field>
       <field name="subtitle" type="description"></field>
       <field name="payToPartyId" type="id"></field>
-      <field name="offlineCancelDays" type="numeric"></field>
+      <field name="daysToCancelNonPay" type="numeric"></field>
       <field name="prorateShipping" type="indicator"></field>
       <field name="inventoryFacilityId" type="id"></field>
       <field name="oneInventoryFacility" type="indicator"></field>
@@ -2308,14 +2308,16 @@
       <field name="allowPassword" type="indicator"></field>
       <field name="defaultPassword" type="long-varchar"></field>
       <field name="explodeOrderItems" type="indicator"></field>
+      <field name="retryFailedAuths" type="indicator"></field>
       <field name="headerApprovedStatus" type="id"></field>
       <field name="itemApprovedStatus" type="id"></field>
       <field name="headerDeclinedStatus" type="id"></field>
-      <field name="itemDeclinedStatus" type="id"></field>
+      <field name="itemDeclinedStatus" type="id"></field>      
       <field name="headerCancelStatus" type="id"></field>
       <field name="itemCancelStatus" type="id"></field>
-      <field name="declinedMessage" type="long-varchar"></field>
-      <field name="rejectedMessage" type="long-varchar"></field>
+      <field name="authDeclinedMessage" type="long-varchar"></field>
+      <field name="authFraudMessage" type="long-varchar"></field>
+      <field name="authErrorMessage" type="long-varchar"></field>
       <field name="styleSheet" type="url"></field>
       <field name="headerLogo" type="url"></field>
       <field name="headerMiddleBackground" type="url"></field>
