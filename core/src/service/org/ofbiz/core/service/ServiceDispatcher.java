@@ -479,12 +479,23 @@ public class ServiceDispatcher {
     }
 
     /**
-     * Gets the local dispatcher from a name
+     * Gets the local context from a name
      * @param name of the context to find.
      */
     public DispatchContext getLocalContext(String name) {
         if (localContext.containsKey(name))
             return (DispatchContext) localContext.get(name);
+        return null;
+    }
+    
+    /**
+     * Gets the local dispatcher from a name
+     * @param name of the LocalDispatcher to find.
+     * @return LocalDispatcher matching the loader name
+     */
+    public LocalDispatcher getLocalDispatcher(String name) {
+        if (localContext.containsKey(name))
+            return ((DispatchContext) localContext.get(name)).getDispatcher();
         return null;
     }
 
