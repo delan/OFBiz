@@ -46,7 +46,8 @@ public class HTTPServiceEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) context.getAttribute("dispatcher");
         String serviceName = request.getParameter("#SERVICE#");
         if ( serviceName == null ) {
-            // set message
+            Debug.logInfo("[HTTPServiceEvents.eventToService] : No service name passed");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"No service name passed.");
             return "error";
         }
         
@@ -56,12 +57,14 @@ public class HTTPServiceEvents {
             model = dispatcher.getDispatchContext().getModelService(serviceName);
         }
         catch ( GenericServiceException e ) {
-            // set message
+            Debug.logError(e,"[HTTPServiceEvents.eventToService] : Cannot get service model.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"Problems getting service model : " + e.getMessage());
             return "error";
         }
         
         if ( model == null ) {
-            // set message
+            Debug.logInfo("[HTTPServiceEvents.eventToService] : Cannot get service model.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"Problems getting service model.");
             return "error";
         }
         
@@ -82,7 +85,7 @@ public class HTTPServiceEvents {
         }
         catch ( GenericServiceException e ) {
             Debug.logError(e,"[HTTPServiceEvents.eventToService] : Error invoking service");
-            // set message
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"Service invocation error : " + e.getMessage());
             return "error";
         }
         
