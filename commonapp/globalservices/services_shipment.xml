@@ -35,16 +35,6 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="issueOrderItemInventoryResToShipment" engine="simple"
-            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="issueOrderItemInventoryResToShipment" auth="true">
-        <description>Add an OrderItemInventoryRes to a Shipment</description>
-        <auto-attributes entity-name="Shipment" include="pk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="OrderItemInventoryRes" include="pk" mode="IN" optional="false"/>
-        <attribute name="quantity" type="Double" mode="IN" optional="false"/>
-        <attribute name="shipmentItemSeqId" type="String" mode="OUT" optional="false"/>
-        <attribute name="itemIssuanceId" type="String" mode="OUT" optional="false"/>
-    </service>
-    
     <!-- ShipmentItem Services -->
     <service name="createShipmentItem" default-entity-name="ShipmentItem" engine="simple"
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipmentItem" auth="true">
@@ -205,6 +195,16 @@
             location="org/ofbiz/commonapp/shipment/issuance/IssuanceServices.xml" invoke="deleteItemIssuanceRole" auth="true">
         <description>Delete ItemIssuanceRole</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="issueOrderItemInventoryResToShipment" engine="simple"
+            location="org/ofbiz/commonapp/shipment/issuance/IssuanceServices.xml" invoke="issueOrderItemInventoryResToShipment" auth="true">
+        <description>Add an OrderItemInventoryRes to a Shipment</description>
+        <auto-attributes entity-name="Shipment" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="OrderItemInventoryRes" include="pk" mode="IN" optional="false"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="shipmentItemSeqId" type="String" mode="OUT" optional="false"/>
+        <attribute name="itemIssuanceId" type="String" mode="OUT" optional="false"/>
     </service>
 
     <!-- ============================================================== -->
