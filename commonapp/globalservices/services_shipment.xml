@@ -122,6 +122,47 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
+	<!-- ============================================================== -->
+
+    <!-- ItemIssuance Services -->
+    <service name="createItemIssuance" default-entity-name="ItemIssuance" engine="simple"
+            location="org/ofbiz/commonapp/shipment/issuance/IssuanceServices.xml" invoke="createItemIssuance" auth="true">
+        <description>Create ItemIssuance</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateItemIssuance" default-entity-name="ItemIssuance" engine="simple"
+            location="org/ofbiz/commonapp/shipment/issuance/IssuanceServices.xml" invoke="updateItemIssuance" auth="true">
+        <description>Update ItemIssuance</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteItemIssuance" default-entity-name="ItemIssuance" engine="simple"
+            location="org/ofbiz/commonapp/shipment/issuance/IssuanceServices.xml" invoke="deleteItemIssuance" auth="true">
+        <description>Delete ItemIssuance</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ItemIssuanceRole Services -->
+    <service name="createItemIssuanceRole" default-entity-name="ItemIssuanceRole" engine="simple"
+            location="org/ofbiz/commonapp/shipment/issuance/IssuanceServices.xml" invoke="createItemIssuanceRole" auth="true">
+        <description>Create ItemIssuanceRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateItemIssuanceRole" default-entity-name="ItemIssuanceRole" engine="simple"
+            location="org/ofbiz/commonapp/shipment/issuance/IssuanceServices.xml" invoke="updateItemIssuanceRole" auth="true">
+        <description>Update ItemIssuanceRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteItemIssuanceRole" default-entity-name="ItemIssuanceRole" engine="simple"
+            location="org/ofbiz/commonapp/shipment/issuance/IssuanceServices.xml" invoke="deleteItemIssuanceRole" auth="true">
+        <description>Delete ItemIssuanceRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+	<!-- ============================================================== -->
     <!-- Receipt Services -->
     <service name="interfaceShipmentReceipt" engine="interface" location="" invoke="">
     	<description>ShipmentReceipt Interface</description>
