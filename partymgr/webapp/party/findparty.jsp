@@ -45,6 +45,12 @@
           </ofbiz:if>
         </ofbiz:unless>
 
+        <ofbiz:if name="group_name">
+          <ofbiz:service name="getPartyFromGroupName">
+            <ofbiz:param name="groupName" attribute="group_name"/>
+          </ofbiz:service>
+        </ofbiz:if>
+
         <ofbiz:if name="email">
           <ofbiz:service name="getPartyFromEmail">
             <ofbiz:param name="email" attribute="email"/>
@@ -99,8 +105,8 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td width="50%"><div class="boxhead">Find Parties</div></td>
-          <td width="50%" align='right'><a href="<ofbiz:url>/editperson?create_new=Y</ofbiz:url>" class="lightbuttontext">[Create Person]</a></td>
+          <td width="100%"><div class="boxhead">Find Parties</div></td>
+          <%--<td width="50%" align='right'><a href="<ofbiz:url>/editperson?create_new=Y</ofbiz:url>" class="lightbuttontext">[Create Person]</a></td>--%>
         </tr>
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
@@ -128,6 +134,16 @@
                 <input type="text" name="last_name" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("last_name"))%>'>
               </td>
               <td width="35%"><a href="javascript:document.findnameform.submit()" class="buttontext">[Lookup]</a></td>
+            </tr>
+          </form>
+
+          <form method="post" action="<ofbiz:url>/findparty</ofbiz:url>" name="findgroupnameform">
+            <tr>
+              <td width="25%" align=right><div class="tabletext">Party Group Name</div></td>
+              <td width="40%">
+                <input type="text" name="group_name" size="30" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("group_name"))%>'>
+              </td>
+              <td width="35%"><a href="javascript:document.findgroupnameform.submit()" class="buttontext">[Lookup]</a></td>
             </tr>
           </form>
 
@@ -182,8 +198,13 @@
         <tr>
           <td width="10%"><div class="head3">PartyID</div></td>
           <td width="20%"><div class="head3">User Login</div></td>
-          <td width="20%"><div class="head3">Last Name</div></td>
-          <td width="20%"><div class="head3">First Name</div></td>
+          <ofbiz:if name="group_name">
+            <td colspan="2" width="40%"><div class="head3">Party Group Name</div></td>
+          </ofbiz:if>
+          <ofbiz:unless name="group_name">
+            <td width="20%"><div class="head3">Last Name</div></td>
+            <td width="20%"><div class="head3">First Name</div></td>
+          </ofbiz:unless>
           <td width="15%"><div class="head3">Type</div></td>
           <td width="15%">&nbsp;</td>
         </tr>

@@ -41,9 +41,15 @@
           <ofbiz:if name="person">
             <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
           </ofbiz:if>
-          <td class="headerButtonRight"><a href="<ofbiz:url>/findparty</ofbiz:url>" class="buttontext">Find</a></td>
+          <td nowrap class="headerButtonRight"><a href="<ofbiz:url>/findparty</ofbiz:url>" class="buttontext">Find</a></td>
+          <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
+            <td nowrap class="headerButtonRight"><a href="<ofbiz:url>/editpartygroup?create_new=Y</ofbiz:url>" class="buttontext">New Group</a></td>
+          <%}%>
+          <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
+            <td nowrap class="headerButtonRight"><a href="<ofbiz:url>/editperson?create_new=Y</ofbiz:url>" class="buttontext">New Person</a></td>
+          <%}%>
           <%if(security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
-            <td class="headerButtonRight"><a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="buttontext">Security</a></td>
+            <td nowrap class="headerButtonRight"><a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="buttontext">Security</a></td>
           <%}%>
         </TR>
       </TABLE>

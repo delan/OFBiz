@@ -77,6 +77,11 @@
         <put section='content' content='/party/editperson.jsp'/>
     </define>
 
+    <define id='editpartygroup' region='MAIN_REGION'>
+        <put section='title'>Edit Party Group Information</put>
+        <put section='content' content='/party/editpartygroup.jsp'/>
+    </define>
+
     <define id='findparty' region='MAIN_REGION'>
         <put section='title'>Find Party</put>
         <put section='content' content='/party/findparty.jsp'/>

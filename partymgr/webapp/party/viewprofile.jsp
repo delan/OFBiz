@@ -76,13 +76,17 @@
       <div class="head1">The Profile of
         <ofbiz:if name="person">
           <%entityField.run("person", "personalTitle");%>
-          <%-- <ofbiz:entityfield attribute="person" field="personalTitle"/> --%>
           <%entityField.run("person", "firstName");%>
           <%entityField.run("person", "middleName");%>
           <%entityField.run("person", "lastName");%>
           <%entityField.run("person", "suffix");%>
         </ofbiz:if>
-        <ofbiz:unless name="person">"New User"</ofbiz:unless>
+        <ofbiz:unless name="person">
+          <ofbiz:if name="partyGroup">
+            <%entityField.run("partyGroup", "groupName");%>
+          </ofbiz:if>
+          <ofbiz:unless name="partyGroup">"New User"</ofbiz:unless>
+       </ofbiz:unless>
       </div>
     </td>
     <td align=right>
@@ -103,13 +107,24 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Personal Information</div>
-          </td>
-          <td valign="middle" align="right">
-            <a href="<ofbiz:url>/editperson</ofbiz:url>" class="lightbuttontext">
-            [<ofbiz:if name="person">Update</ofbiz:if><ofbiz:unless name="person">Create</ofbiz:unless>]</a>&nbsp;&nbsp;
-          </td>
+          <ofbiz:if name="person">
+            <td valign="middle" align="left">
+              <div class="boxhead">&nbsp;Personal Information</div>
+            </td>
+            <td valign="middle" align="right">
+              <a href="<ofbiz:url>/editperson</ofbiz:url>" class="lightbuttontext">
+              [<ofbiz:if name="person">Update</ofbiz:if>]</a>&nbsp;&nbsp;
+            </td>
+          </ofbiz:if>
+          <ofbiz:if name="partyGroup">
+            <td valign="middle" align="left">
+              <div class="boxhead">&nbsp;Party Group Information</div>
+            </td>
+            <td valign="middle" align="right">
+              <a href="<ofbiz:url>/editpartygroup</ofbiz:url>" class="lightbuttontext">
+              [<ofbiz:if name="partyGroup">Update</ofbiz:if>]</a>&nbsp;&nbsp;
+            </td>
+          </ofbiz:if>
         </tr>
       </table>
     </TD>
@@ -149,7 +164,12 @@
   </table>
 </ofbiz:if>
 <ofbiz:unless name="person">
-<div class="tabletext">Personal Information Not Found</div>
+  <ofbiz:if name="partyGroup">
+    <%entityField.run("partyGroup", "groupName");%>
+  </ofbiz:if>
+  <ofbiz:unless name="partyGroup">
+    <div class="tabletext">Information Not Found</div>
+  </ofbiz:unless>
 </ofbiz:unless>
           </td>
         </tr>

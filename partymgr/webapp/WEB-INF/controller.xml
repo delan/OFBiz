@@ -199,19 +199,34 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editperson"/>
     </request-map>
-
     <request-map uri="createPerson">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/party/PartySimpleEvents.xml" invoke="createPerson"/>
         <response name="success" type="view" value="editperson"/>
         <response name="error" type="view" value="editperson"/>
     </request-map>
-
     <request-map uri="updatePerson">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/party/PartySimpleEvents.xml" invoke="updatePerson"/>
         <response name="success" type="view" value="editperson"/>
         <response name="error" type="view" value="editperson"/>
+    </request-map>
+
+    <request-map uri="editpartygroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editpartygroup"/>
+    </request-map>
+    <request-map uri="createPartyGroup">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/party/PartySimpleEvents.xml" invoke="createPartyGroup"/>
+        <response name="success" type="view" value="editpartygroup"/>
+        <response name="error" type="view" value="editpartygroup"/>
+    </request-map>
+    <request-map uri="updatePartyGroup">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/party/PartySimpleEvents.xml" invoke="updatePartyGroup"/>
+        <response name="success" type="view" value="editpartygroup"/>
+        <response name="error" type="view" value="editpartygroup"/>
     </request-map>
 
     <request-map uri="editlogin">
@@ -384,6 +399,7 @@
     <view-map name="editlogin" type="region"/>
     <view-map name="EditUserLoginSecurityGroups" type="region"/>
     <view-map name="editperson" type="region"/>
+    <view-map name="editpartygroup" type="region"/>
     <view-map name="findparty" type="region"/>
     <view-map name="createnewlogin" type="region"/>
     <view-map name="createnewnote" type="region"/>
