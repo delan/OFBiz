@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/08/25 01:42:01  azeneski
+ * Seperated event processing, now is found totally in EventHandler.java
+ * Updated all classes which deal with events to use to new handler.
+ *
  * Revision 1.3  2001/07/23 21:20:51  azeneski
  * Added support for HTTP GET/POST events in job scheduler.
  * Fixed a bug in the XML parser which caused the parser to die
@@ -162,7 +166,7 @@ public class Job implements Comparable, Serializable {
     
     /** Invokes the event associated with this job. */
     public void invoke() {
-        Debug.log("Job (" + jobName + ") invoking.");
+        Debug.logInfo("Job (" + jobName + ") invoking.");
         String eventResult = null;
         runCount++;
         if ( eventType != null && eventPath != null && eventMethod != null ) {
@@ -171,7 +175,7 @@ public class Job implements Comparable, Serializable {
                 eventResult = eh.invoke(parameters,parameters);
             }
             catch ( EventHandlerException e ) {
-                Debug.log(e,"Event Error - ");
+                Debug.logError(e,"Event Error - ");
             }
         }
     }

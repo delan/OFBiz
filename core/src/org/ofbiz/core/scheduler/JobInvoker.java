@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/19 20:50:22  azeneski
+ * Added the job scheduler to 'core' module.
+ *
  */
 
 package org.ofbiz.core.scheduler;
@@ -50,7 +53,7 @@ public class JobInvoker implements Runnable {
     }
     
     public void run() {
-        Debug.log("JobInvoker: Thread (" + thread.getName() + ") Running...");
+        Debug.logInfo("JobInvoker: Thread (" + thread.getName() + ") Running...");
         job.invoke();
     }    
 }

@@ -1,6 +1,11 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/18 22:22:53  jonesde
+ * A few small changes to use the Debug class for logging instead of straight
+ * System.out. Also added conditional logging for info, warning, and error messages
+ * which are controlled through the debug.properties file.
+ *
  * Revision 1.1  2001/07/16 14:45:48  azeneski
  * Added the missing 'core' directory into the module.
  *
@@ -102,6 +107,18 @@ public final class Debug {
       if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true")) {
         print(e);
       }
+    }
+    
+    public static void logError(Exception e, String msg) {
+        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true")) {
+            print(e,msg);
+        }
+    }
+    
+    public static void logError(Throwable t, String msg) {
+        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true")) {
+            print(t,msg);
+        }
     }
 
     public static void log(String msg) {

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/23 18:05:00  azeneski
+ * Fixed runaway thread in the job scheduler.
+ *
  * Revision 1.1  2001/07/19 20:50:22  azeneski
  * Added the job scheduler to 'core' module.
  *
@@ -58,7 +61,7 @@ public class JobScheduler implements Runnable {
     }
     
     public synchronized void run() {
-        Debug.log("JobScheduler: (" + thread.getName() + ") Thread Running...");
+        Debug.logInfo("JobScheduler: (" + thread.getName() + ") Thread Running...");
         while( isRunning ) {
             try {
                 if ( sleep <= 0 )
@@ -78,12 +81,12 @@ public class JobScheduler implements Runnable {
                 stop();
             }
         }
-        Debug.log("JobScheduler: (" + thread.getName() + ") Thread ending...");
+        Debug.logInfo("JobScheduler: (" + thread.getName() + ") Thread ending...");
     }
     
     public synchronized void stop() {
         isRunning = false;
-        Debug.log("JobScheduler: Shutting down...");
+        Debug.logInfo("JobScheduler: Shutting down...");
         notify();
     }
 }

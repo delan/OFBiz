@@ -1,6 +1,12 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/07/19 14:15:58  azeneski
+ * Moved org.ofbiz.core.control.RequestXMLReader to org.ofbiz.core.util.ConfigXMLReader
+ * ConfigXMLReader is now used for all config files, not just the request mappings.
+ * Updated RequestManager to use this new class.
+ * Added getRequestManager() method to RequestHandler.
+ *
  * Revision 1.4  2001/07/17 08:51:37  jonesde
  * Updated for auth implementation & small fixes.
  *
@@ -75,16 +81,16 @@ public class RequestManager implements Serializable {
             configFileUrl = context.getResource(context.getInitParameter(SiteDefs.SITE_CONFIG)).toString();
         }
         catch ( Exception e ) {
-            Debug.log(e,"Error Reading XML Config File: " + configFileUrl);
+            Debug.logError(e,"Error Reading XML Config File: " + configFileUrl);
         }
         requestMap = ConfigXMLReader.getRequestMap(configFileUrl);
         configMap = ConfigXMLReader.getConfigMap(configFileUrl);
         viewMap = ConfigXMLReader.getViewMap(configFileUrl);
         
         /** Debugging */
-        Debug.log("----------------------------------");
-        Debug.log("Request Mappings:");
-        Debug.log("----------------------------------");
+        Debug.logInfo("----------------------------------");
+        Debug.logInfo("Request Mappings:");
+        Debug.logInfo("----------------------------------");
         HashMap debugMap =  requestMap;
         Set debugSet = debugMap.keySet();
         Iterator i = debugSet.iterator();
@@ -98,12 +104,12 @@ public class RequestManager implements Serializable {
                 Object lo = list.next();
                 String name = (String) lo;
                 String value = (String) thisURI.get(lo);
-                Debug.log("\t" + name + " -> " + value);
+                Debug.logInfo("\t" + name + " -> " + value);
             }
         }
-        Debug.log("----------------------------------");
-        Debug.log("End Request Mappings.");
-        Debug.log("----------------------------------");
+        Debug.logInfo("----------------------------------");
+        Debug.logInfo("End Request Mappings.");
+        Debug.logInfo("----------------------------------");
         /** End Debugging */
     }
     

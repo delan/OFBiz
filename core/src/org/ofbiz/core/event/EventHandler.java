@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/08/25 01:42:01  azeneski
+ * Seperated event processing, now is found totally in EventHandler.java
+ * Updated all classes which deal with events to use to new handler.
+ *
  */
 
 package org.ofbiz.core.event;
@@ -79,22 +83,22 @@ public class EventHandler {
             throw new EventHandlerException("Invalid event type, method or path.");
         
         if ( eventType.compareToIgnoreCase("java") == 0 ) {
-            Debug.log("Processing JAVA event.");
+            Debug.logInfo("[EventHandler] : Processing JAVA event.");
             try {
                 Class c = Class.forName(eventPath);
                 Method m = c.getMethod(eventMethod,paramTypes);
                 eventReturnString = (String) m.invoke(null,params);
-                Debug.log("Event Return: " + eventReturnString);
+                Debug.logInfo("[EventHandler] : Returned -  " + eventReturnString);
             }
             catch ( Exception e ) {
-                Debug.log(e,"EventHandler - Problems Processing Event.");
+                Debug.logError(e,"[EventHandler] : Problems Processing Event.");
                 throw new EventHandlerException("Problems processing event: " + e.getMessage());
             }
         }
         // else if ( eventType.compareToIgnoreCase("javascript") == 0 ) { }
         // to be implemented later.
         else {
-            throw new EventHandlerException("Unknown event type.");
+            throw new EventHandlerException("Unknown event type");
         }
         return eventReturnString;
     }                    

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/08/25 08:35:04  jonesde
+ * Fixed bug where checkLogin always failed because return result was ignored.
+ *
  * Revision 1.7  2001/08/25 01:42:01  azeneski
  * Seperated event processing, now is found totally in EventHandler.java
  * Updated all classes which deal with events to use to new handler.
@@ -82,7 +85,7 @@ public class RequestHandler implements Serializable {
     
     public void init( ServletContext context ) {
         this.context = context;
-        Debug.log("Loading RequestManager...");
+        Debug.logInfo("Loading RequestManager...");
         rm = new RequestManager(context);
     }
     
@@ -115,7 +118,7 @@ public class RequestHandler implements Serializable {
             // catch exceptions and throw RequestHandlerException if failed.
             String checkLoginType = rm.getEventType(SiteDefs.CHECK_LOGIN_REQUEST_URI);
             String checkLoginPath = rm.getEventPath(SiteDefs.CHECK_LOGIN_REQUEST_URI);
-            String checkLoginMethod = rm.getEventMethod(SiteDefs.CHECK_LOGIN_REQUEST_URI);            
+            String checkLoginMethod = rm.getEventMethod(SiteDefs.CHECK_LOGIN_REQUEST_URI);
             String checkLoginReturnString = null;
             try {
                 EventHandler loginEvent = new EventHandler(checkLoginType,checkLoginPath,checkLoginMethod);
@@ -126,21 +129,16 @@ public class RequestHandler implements Serializable {
             }
             if(!"success".equalsIgnoreCase(checkLoginReturnString)) {
                 //previous URL already saved by event, so just do as the return says...
-                eventReturnString = checkLoginReturnString;                
+                eventReturnString = checkLoginReturnString;
                 eventType = checkLoginType;
                 eventPath = checkLoginPath;
                 eventMethod = checkLoginMethod;
                 requestUri = SiteDefs.CHECK_LOGIN_REQUEST_URI;
-                Debug.logInfo("Logged in test FAILED.");
-            }
-            else
-            {
-              Debug.logInfo("Logged in test PASSED.");
             }
         }
         
         if ( nextView == null ) nextView = rm.getViewName(requestUri);
-        Debug.log("Current View: " + nextView);
+        Debug.logInfo("Current View: " + nextView);
         
         /** Invoke the event if defined, and if login not already done. */
         if(eventReturnString == null) {
@@ -151,7 +149,7 @@ public class RequestHandler implements Serializable {
             if ( eventType != null && eventPath != null && eventMethod != null ) {
                 try {
                     EventHandler eh = new EventHandler(eventType,eventPath,eventMethod);
-                    eventReturnString = eh.invoke(request,response);            
+                    eventReturnString = eh.invoke(request,response);
                 }
                 catch ( EventHandlerException e ) {
                     throw new RequestHandlerException(e.getMessage());
@@ -161,10 +159,10 @@ public class RequestHandler implements Serializable {
         
         /** Process the eventReturn. */
         String eventReturn = rm.getRequestAttribute(requestUri,eventReturnString);
-        Debug.log("Event Qualified: " + eventReturn);
+        Debug.logInfo("Event Qualified: " + eventReturn);
         
         if(eventReturn != null && !"success".equalsIgnoreCase(eventReturnString)) nextView = eventReturn;
-        Debug.log("Next View after eventReturn: " + nextView);
+        Debug.logInfo("Next View after eventReturn: " + nextView);
         
         /** Check for a chain request. */
         if ( nextView != null && nextView.indexOf(':') != -1 ) {
@@ -178,14 +176,14 @@ public class RequestHandler implements Serializable {
         if ( !chainRequest ) {
             String tempView = nextView;
             if(tempView != null && tempView.charAt(0) == '/') tempView = tempView.substring(1);
-            Debug.log("Getting View Map: " + tempView);
+            Debug.logInfo("Getting View Map: " + tempView);
             
             /* Before mapping the view, set a session attribute so we know where we are */
             request.getSession().setAttribute(SiteDefs.CURRENT_VIEW, tempView);
             
             tempView = rm.getViewPage(tempView);
             nextPage = tempView != null ? tempView : nextView;
-            Debug.log("Mapped To: " + nextPage);
+            Debug.logInfo("Mapped To: " + nextPage);
         }
         
         /** Handle Errors. */
@@ -196,7 +194,7 @@ public class RequestHandler implements Serializable {
         
         /** Invoke chained requests. */
         if ( chainRequest ) {
-            Debug.log("Running Chained Request: " + nextView);
+            Debug.logInfo("Running Chained Request: " + nextView);
             nextPage = doRequest(request,response,nextView);
         }
         
@@ -206,7 +204,7 @@ public class RequestHandler implements Serializable {
             if ( previousRequest != null ) {
                 request.getSession().removeAttribute(SiteDefs.PREVIOUS_REQUEST);
                 //here we need to display nothing, and do the previous request
-                Debug.log("Doing Previous Request: " + previousRequest);
+                Debug.logInfo("Doing Previous Request: " + previousRequest);
                 nextPage = doRequest(request, response, previousRequest);
             }
         }

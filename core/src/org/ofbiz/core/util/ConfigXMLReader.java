@@ -1,6 +1,11 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/23 21:20:57  azeneski
+ * Added support for HTTP GET/POST events in job scheduler.
+ * Fixed a bug in the XML parser which caused the parser to die
+ * when a empty element was found.
+ *
  * Revision 1.1  2001/07/19 14:15:59  azeneski
  * Moved org.ofbiz.core.control.RequestXMLReader to org.ofbiz.core.util.ConfigXMLReader
  * ConfigXMLReader is now used for all config files, not just the request mappings.
@@ -95,11 +100,11 @@ public class ConfigXMLReader {
             document = parser.parse(input);
             Element rootElement = document.getDocumentElement();
             rootElement.normalize();
-            Debug.log("Loaded XML Config - " + location);
+            Debug.logInfo("Loaded XML Config - " + location);
             return rootElement;
         }
         catch ( Exception e ) {
-            Debug.log(e,"ConfigXMLReader Error");
+            Debug.logError(e,"ConfigXMLReader Error");
         }
         
         return null;
@@ -137,7 +142,7 @@ public class ConfigXMLReader {
                 }
             }
         }
-        Debug.log("RequestMap Created: (" + map.size() + ") records.");
+        Debug.logInfo("RequestMap Created: (" + map.size() + ") records.");
         return map;
     }
     
@@ -189,7 +194,7 @@ public class ConfigXMLReader {
             }
             list = null;
         }
-        Debug.log("ConfigMap Created: (" + map.size() +") records.");
+        Debug.logInfo("ConfigMap Created: (" + map.size() +") records.");
         return map;
     }
     
@@ -225,7 +230,7 @@ public class ConfigXMLReader {
                 }
             }
         }
-        Debug.log("ViewMap Created: (" + map.size() + ") records.");
+        Debug.logInfo("ViewMap Created: (" + map.size() + ") records.");
         return map;
     }
     
@@ -278,7 +283,7 @@ public class ConfigXMLReader {
                 }
             }
         }
-        Debug.log("SchedulerMap Created: (" + map.size() + ") records.");
+        Debug.logInfo("SchedulerMap Created: (" + map.size() + ") records.");
         return map;
     }
     

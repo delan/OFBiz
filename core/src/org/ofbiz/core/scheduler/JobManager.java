@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/08/25 01:42:01  azeneski
+ * Seperated event processing, now is found totally in EventHandler.java
+ * Updated all classes which deal with events to use to new handler.
+ *
  * Revision 1.3  2001/07/23 19:16:15  azeneski
  * Fixed up finalize() method to not debug everytime.
  *
@@ -79,7 +83,7 @@ public class JobManager {
             configFileUrl = context.getResource(context.getInitParameter(SiteDefs.SCHEDULER_CONFIG)).toString();
         }
         catch ( Exception e ) {
-            Debug.log(e,"Error Reading Scheduler Config File: " + configFileUrl);
+            Debug.logError(e,"Error Reading Scheduler Config File: " + configFileUrl);
         }
         if ( configFileUrl != null )
             config = ConfigXMLReader.getSchedulerMap(configFileUrl);
@@ -98,7 +102,7 @@ public class JobManager {
         queue = (SortedSet) new TreeSet();
         js = new JobScheduler(this);
         loadJobs(config);
-        Debug.log("Job Manager Inititalized: " + queue.size() + " jobs queued.");
+        Debug.logInfo("Job Manager Inititalized: " + queue.size() + " jobs queued.");
     }
     
     private void loadJobs(HashMap config) {
@@ -142,7 +146,7 @@ public class JobManager {
                         startDate = sdf.parse(startStr,pos);
                     }
                     catch ( Exception e ) {
-                        Debug.log(e,"Problems Parsing Start Date.");
+                        Debug.logError(e,"Problems Parsing Start Date.");
                     }
                 }
                 if ( endStr != null && !endStr.equals("") ) {
@@ -152,7 +156,7 @@ public class JobManager {
                         endDate = sdf.parse(endStr,pos);
                     }
                     catch ( Exception e ) {
-                        Debug.log(e,"Problems Parsing End Date.");
+                        Debug.logError(e,"Problems Parsing End Date.");
                     }
                 }
                 
@@ -171,11 +175,11 @@ public class JobManager {
     boolean isRepeated, String eventType, String eventPath, String eventMethod, HashMap parameters, HashMap headers ) {
         Job job = new Job(jobName,startDate,endDate,interval,intervalType,isRepeated,eventType,eventPath,eventMethod,parameters,headers);
         if (queueJob(job)) {
-            Debug.log("JobManager: Added Job ("+jobName+").");
-            Debug.log("Job String: " + job.toString());
+            Debug.logInfo("JobManager: Added Job ("+jobName+").");
+            Debug.logInfo("Job String: " + job.toString());
         }
         else {
-            Debug.log("Job ("+jobName+") not queued.");
+            Debug.logInfo("Job ("+jobName+") not queued.");
         }
         return job;
     }
@@ -208,7 +212,7 @@ public class JobManager {
             if (queue.size() > 0)
                 js.updateDelay( ((Job) queue.first()).getRunTime());
         }
-        Debug.log(job.getJobName() + " removed from queue.");
+        Debug.logInfo(job.getJobName() + " removed from queue.");
         return true;
     }
     
@@ -241,7 +245,7 @@ public class JobManager {
         queue.remove(firstJob);
         
         // Run the event here.
-        Debug.log("***JobManager -- Invoking: " + firstJob.getJobName());
+        Debug.logInfo("***JobManager -- Invoking: " + firstJob.getJobName());
         new JobInvoker(firstJob);
         
         if (firstJob.isRepeated()) {
@@ -276,7 +280,7 @@ public class JobManager {
      */
     public void reloadJobs() {
         if ( context == null ) {
-            Debug.log("Not able to locate the scheduler XML file.");
+            Debug.logError("Not able to locate the scheduler XML file.");
             return;
         }
         HashMap config = null;
@@ -285,7 +289,7 @@ public class JobManager {
             configFileUrl = context.getResource(context.getInitParameter(SiteDefs.SCHEDULER_CONFIG)).toString();
         }
         catch ( Exception e ) {
-            Debug.log(e,"Error Reading Scheduler Config File: " + configFileUrl);
+            Debug.logError(e,"Error Reading Scheduler Config File: " + configFileUrl);
         }
         if ( configFileUrl != null )
             config = ConfigXMLReader.getSchedulerMap(configFileUrl);
@@ -310,7 +314,7 @@ public class JobManager {
         if (js != null) {
             js.stop();
             js = null;
-            Debug.log("JobManager: Stopped Scheduler Thread.");
+            Debug.logInfo("JobManager: Stopped Scheduler Thread.");
         }
     }
 }
