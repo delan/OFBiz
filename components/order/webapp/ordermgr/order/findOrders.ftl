@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.2
 -->
 
@@ -274,6 +274,7 @@ document.lookuporder.order_id.focus();
           <td width="20%" align="left"><div class="tableheadtext">Name</div></td>
           <td width="5%" align="right"><div class="tableheadtext">Items Ordered</div></td>
           <td width="5%" align="right"><div class="tableheadtext">Items Returned</div></td>
+          <td width="10%" align="right"><div class="tableheadtext">Remaining Sub Total</div></td>
           <td width="10%" align="right"><div class="tableheadtext">Order Total</div></td>
           <td width="5%" align="left"><div class="tableheadtext">&nbsp;</div></td>
           <td width="20%" align="left"><div class="tableheadtext">Status</div></td>
@@ -333,7 +334,8 @@ document.lookuporder.order_id.focus();
               </td>
               <td align="right"><div class="tabletext">${orh.getTotalOrderItemsQuantity()?string.number}</div></td>
               <td align="right"><div class="tabletext">${orh.getOrderReturnedQuantity()?string.number}</div></td>
-              <td align="right"><div class="tabletext"><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></div></td>
+              <td align="right"><div class="tabletext"><@ofbizCurrency amount=orderHeader.remainingSubTotal isoCode=orh.getCurrency()/></div></td>
+              <td align="right"><div class="tabletext"><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orh.getCurrency()/></div></td>
 
               <td>&nbsp;</td>
               <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
