@@ -78,7 +78,7 @@ public class ServiceEventHandler implements EventHandler {
         if (dispatcher == null)
             throw new EventHandlerException("The local service dispatcher is null");
 
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         DispatchContext dctx = dispatcher.getDispatchContext();
         if (dctx == null)
             throw new EventHandlerException("Dispatch context cannot be found");

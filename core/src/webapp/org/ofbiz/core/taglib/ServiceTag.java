@@ -81,7 +81,7 @@ public class ServiceTag extends AbstractParameterTag {
         if (dispatcher == null)
             throw new JspTagException("Cannot get dispatcher from the request object.");
 
-        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute("userLogin");
+        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         int scope = PageContext.PAGE_SCOPE;
         char scopeChar = resultScope.toUpperCase().charAt(0);
