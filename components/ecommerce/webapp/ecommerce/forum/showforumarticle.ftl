@@ -54,8 +54,10 @@
 
     </#if>
 </@loopSubContentCache >
+<#--
 <@wrapSubContentCache subContentId=subContentId wrapTemplateId="WRAP_NEXT_PREV" >
 </@wrapSubContentCache >
+-->
 </table>
 </div>
 </div>

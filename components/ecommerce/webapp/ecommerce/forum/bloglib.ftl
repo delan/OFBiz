@@ -15,6 +15,7 @@
 <#assign viewSz = requestParameters.viewSize?if_exists />
 </#if>
 
+<#assign sz=0/>
 <table width="100%" border="0" >
 <@loopSubContentCache subContentId=contentIdx 
     viewIndex=viewIdx
@@ -24,16 +25,16 @@
     returnAfterPickWhen="purposes.contains(\"ARTICLE\")"
     followWhen="contentAssocTypeId != null && contentAssocTypeId.equals(\"never follow\")"
 >
-  <#assign thisNodeTrailCsv=context.nodeTrailCsv?if_exists/>
-  <#assign thisSubContentId=context.subContentId?if_exists/>
-  <#assign thisNode=context.globalNodeTrail?last/>
+  <#assign thisNodeTrailCsv=nodeTrailCsv?if_exists/>
+  <#assign thisSubContentId=subContentId?if_exists/>
+  <#assign thisNode=globalNodeTrail?last/>
   <#if thisNode?has_content>
   <#assign thisOwnerContentId=thisNode.value.ownerContentId?if_exists/>
   </#if>
   
   <#assign userLoginId=""/>
-  <#if context.content?has_content && context.content.createdByUserLogin?has_content>
-      <#assign userLoginId=context.content.createdByUserLogin/>
+  <#if content?has_content && content.createdByUserLogin?has_content>
+      <#assign userLoginId=content.createdByUserLogin/>
   </#if>
   <#assign authorName=Static["org.ofbiz.content.ContentManagementWorker"].getUserName(request,userLoginId?if_exists)/>
 
@@ -43,7 +44,7 @@
       <div class="tabletext">
         by:<#if authorName?has_content>${authorName?if_exists}
         <#else>
-        <#if context.content?has_content>${context.content.createdByUserLogin?if_exists}</#if>
+        <#if content?has_content>${content.createdByUserLogin?if_exists}</#if>
         </#if>
   &nbsp;
         <#if thisNode?exists && thisNode.fromDate?exists>
@@ -58,22 +59,23 @@
       </div>
     </td>
     <td class="tabletext" >
-        <#if context.content?has_content>${context.content.contentName?if_exists}</#if>
+        <#if content?has_content>${content.contentName?if_exists}</#if>
         --
-        <#if context.content?has_content>${context.content.description?if_exists}</#if>
+        <#if content?has_content>${content.description?if_exists}</#if>
     </td>
     <td width="40px" valign="bottom">
 <a class="tabButton" href="<@ofbizUrl>/showforumarticle?contentId=${thisSubContentId}&nodeTrailCsv=${thisNodeTrailCsv?if_exists}&forumId=${contentIdx?if_exists}</@ofbizUrl>" >View</a>
     </td>
-<@checkPermission mode="equals" entityOperation="_UPDATE" subContentId=context.content.contentId targetOperation="CONTENT_UPDATE" contentPurposeList="ARTICLE">
+<@checkPermission mode="equals" entityOperation="_UPDATE" subContentId=content.contentId targetOperation="CONTENT_UPDATE" contentPurposeList="ARTICLE">
     <td width="40px" valign="bottom">
-<a class="tabButton" style="height:14pt;" href="<@ofbizUrl>/editforumarticle?contentIdTo=${context.content.contentId}&nodeTrailCsv=${contentIdx?if_exists},${context.content.contentId}</@ofbizUrl>" >Edit</a>
+<a class="tabButton" style="height:14pt;" href="<@ofbizUrl>/editforumarticle?contentIdTo=${content.contentId}&nodeTrailCsv=${contentIdx?if_exists},${content.contentId}</@ofbizUrl>" >Edit</a>
     </td>
 </@checkPermission>
   </tr>
 
+<#assign sz=listSize/>
 </@loopSubContentCache>
-<#if context.listSize == 0 >
+<#if sz == 0 >
   <tr><td class="tabletext" align="center">No records found</td></tr>
 </#if>
 <@wrapSubContentCache subContentId=contentIdx wrapTemplateId=stdWrapId contentPurposeList="ARTICLE">
@@ -98,7 +100,7 @@
 </table>
 <#--
 <@checkPermission mode="not-equals" entityOperation="_CREATE" subContentId=contentIdx statusId="BLOG_PUBLISHED" targetOperation="HAS_USER_ROLE" contentPurposeList="ARTICLE">
-            ${context.permissionErrorMsg?if_exists}
+            ${permissionErrorMsg?if_exists}
 </@checkPermission>
 -->
 
@@ -138,27 +140,39 @@
 
 <#macro nextPrev listSize requestURL queryString lowIndex=0 highIndex=10 viewSize=10 viewIndex=0 >
 
+<#assign lowIdx=lowIndex/>
+<#assign highIdx=highIndex/>
+<#assign viewSz=viewSize/>
+<#assign viewIdx=viewIndex/>
+<#assign listSz=listSize/>
+
+<#if !lowIdx?has_content><#assign lowIdx=0/></#if>
+<#if !highIdx?has_content><#assign highIdx=0/></#if>
+<#if !viewSz?has_content><#assign viewSz=10/></#if>
+<#if !viewIdx?has_content><#assign viewIdx=10/></#if>
+<#if !listSz?has_content><#assign listSz=0/></#if>
+
 <#if queryString?has_content>
     <#assign queryString = Static["org.ofbiz.content.ContentManagementWorker"].stripViewParamsFromQueryString(queryString) />
 </#if>
 
-<#assign lowIndexShow = lowIndex + 1 />
-<#if highIndex < lowIndexShow >
-  <#assign lowIndexShow = highIndex/>
+<#assign lowIdxShow = lowIdx + 1 />
+<#if highIdx < lowIdxShow >
+  <#assign lowIdxShow = highIdx/>
 </#if>
 <table width="100%" border="0" >
 <tr><td>
-             <#if 0 < listSize?number>
-                <#if 0 < viewIndex?number>
-                  <a href="${requestURL}?${queryString}&viewSize=${viewSize}&viewIndex=${viewIndex?number-1}" class="submenutext">Previous</a>
+             <#if 0 < listSz?number>
+                <#if 0 < viewIdx?number>
+                  <a href="${requestURL}?${queryString}&viewSz=${viewSz}&viewIdx=${viewIdx?number-1}" class="submenutext">Previous</a>
                 <#else>
                   <span class="submenutextdisabled">Previous</span>
                 </#if>
-                <#if 0 < listSize>
-                  <span class="submenutextinfo">${lowIndexShow} - ${highIndex?if_exists} of ${listSize?if_exists}</span>
+                <#if 0 < listSz>
+                  <span class="submenutextinfo">${lowIdxShow} - ${highIdx?if_exists} of ${listSz?if_exists}</span>
                 </#if>
-                <#if highIndex?if_exists?number < listSize?if_exists?number>
-                  <a href="${requestURL}?${queryString?if_exists}&viewSize=${viewSize?if_exists}&viewIndex=${viewIndex?if_exists?number+1}" class="submenutextright">Next</a>
+                <#if highIdx?if_exists?number < listSz?if_exists?number>
+                  <a href="${requestURL}?${queryString?if_exists}&viewSz=${viewSz?if_exists}&viewIdx=${viewIdx?if_exists?number+1}" class="submenutextright">Next</a>
                 <#else>
                   <span class="submenutextrightdisabled">Next</span>
                 </#if>

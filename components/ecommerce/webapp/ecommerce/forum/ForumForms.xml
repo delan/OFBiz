@@ -485,6 +485,9 @@
        <field name="contentIdTo" >
                 <hidden value="${contentIdTo}"/>
         </field>
+       <field name="forumId" >
+                <hidden value="${forumId}"/>
+        </field>
        <field name="contentTypeId" >
                 <hidden value="${contentTypeId}"/>
         </field>
