@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.34 2004/07/10 16:24:08 byersa Exp $
+ * $Id: ContentWorker.java,v 1.35 2004/07/12 19:18:25 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  * @since 2.2
  * 
  *  
@@ -834,7 +834,7 @@ public class ContentWorker {
         if (UtilValidate.isEmpty(subContentId)) {
             view = getSubContent(delegator, contentId, mapKey, userLogin, assocTypes, fromDate, nullThruDatesOnly, contentAssocPredicateId);
         } else {
-            view = getContent(delegator, contentId);
+            view = getContent(delegator, subContentId);
         }
         return view;
     }
