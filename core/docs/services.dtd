@@ -29,7 +29,7 @@
 <!ELEMENT vendor (#PCDATA)>
 <!ELEMENT version (#PCDATA)>
 <!ELEMENT created (#PCDATA)>
-<!ELEMENT service (attribute*)>
+<!ELEMENT service (description?, attribute*)>
 <!ATTLIST service
 	name CDATA #REQUIRED
 	engine CDATA #REQUIRED
