@@ -64,8 +64,12 @@ public class ShippingEvents {
         String carrierPartyId = cart.getCarrierPartyId();
 
         if (shipmentMethodTypeId == null || carrierPartyId == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Please Select a Shipping Method");
-            return "error";
+            if (cart.getOrderType().equals("SALES_ORDER")) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Please Select a Shipping Method");
+                return "error";
+            } else {
+                return "success";
+            }
         }
         
         // get the store

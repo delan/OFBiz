@@ -293,6 +293,7 @@ public class CheckOutEvents {
         String checkOutPaymentId = null;
         
         String mode = request.getParameter("finalizeMode");
+        Debug.logInfo("FinalizeMode: " + mode, module);
         
         //set the customer info
         if (mode != null && mode.equals("cust")) {

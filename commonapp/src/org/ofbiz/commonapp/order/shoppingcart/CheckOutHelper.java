@@ -301,6 +301,9 @@ public class CheckOutHelper {
     }
 
     public void calcAndAddTax(String productStoreId) throws GeneralException {
+        if (!"SALES_ORDER".equals(cart.getOrderType())) {
+            return;
+        }
         List items = this.cart.makeOrderItems();
         List adjs = this.cart.makeAllAdjustments();
         GenericValue shipAddress = this.cart.getShippingAddress();
