@@ -50,7 +50,7 @@
         if (productCategoryType != null) pageContext.setAttribute("productCategoryType", productCategoryType);
     }
 
-    Collection categoryCol = delegator.findAll("ProductCategory", null);
+    Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
 
     GenericValue primaryParentCategory = null;
     String primParentCatIdParam = request.getParameter("primaryParentProductCategoryId");

@@ -42,9 +42,13 @@
 
     String prodCatalogId = request.getParameter("prodCatalogId");
     GenericValue prodCatalog = delegator.findByPrimaryKey("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
-    if (prodCatalog == null) tryEntity = false;
-    Collection prodCatalogCategories = prodCatalog.getRelated("ProdCatalogCategory", null, UtilMisc.toList("prodCatalogCategoryTypeId", "sequenceNum", "productCategoryId"));
-    if (prodCatalogCategories != null) pageContext.setAttribute("prodCatalogCategories", prodCatalogCategories);
+    Collection prodCatalogCategories = null;
+    if (prodCatalog == null) {
+        tryEntity = false;
+    } else {
+        prodCatalogCategories = prodCatalog.getRelated("ProdCatalogCategory", null, UtilMisc.toList("prodCatalogCategoryTypeId", "sequenceNum", "productCategoryId"));
+        if (prodCatalogCategories != null) pageContext.setAttribute("prodCatalogCategories", prodCatalogCategories);
+    }
 
     Collection productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
     if (productCategories != null) pageContext.setAttribute("productCategories", productCategories);

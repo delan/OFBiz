@@ -169,6 +169,18 @@
       </td>
     </tr>
   </table>
+<br>
+<br>
+<form method="POST" action="<ofbiz:url>/addCategoryProductMember</ofbiz:url>" style='margin: 0;'>
+  <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
+  <input type="hidden" name="useValues" value="true">
+
+  <div class='head2'>Add ProductCategoryMember:</div>
+  <br>
+  Product ID: <input type=text size='20' name='productId'>
+  Optional From Date: <input type=text size='20' name='fromDate'>
+  <input type="submit" value="Add">
+</form>
 </ofbiz:if>
 <%}%>
 <br>

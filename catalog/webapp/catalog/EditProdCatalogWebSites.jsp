@@ -40,9 +40,13 @@
 
     String prodCatalogId = request.getParameter("prodCatalogId");
     GenericValue prodCatalog = delegator.findByPrimaryKey("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
-    if (prodCatalog == null) tryEntity = false;
-    Collection webSiteCatalogs = prodCatalog.getRelated("WebSiteCatalog", null, UtilMisc.toList("sequenceNum", "webSiteId"));
-    if (webSiteCatalogs != null) pageContext.setAttribute("webSiteCatalogs", webSiteCatalogs);
+    Collection webSiteCatalogs = null;
+    if (prodCatalog == null) {
+        tryEntity = false;
+    } else {
+        webSiteCatalogs = prodCatalog.getRelated("WebSiteCatalog", null, UtilMisc.toList("sequenceNum", "webSiteId"));
+        if (webSiteCatalogs != null) pageContext.setAttribute("webSiteCatalogs", webSiteCatalogs);
+    }
 
     Collection webSites = delegator.findAll("WebSite", UtilMisc.toList("siteName"));
     if (webSites != null) pageContext.setAttribute("webSites", webSites);
@@ -111,6 +115,16 @@
   </ofbiz:iterator>
   </select>
   <input type=text size='20' name='fromDate'>
+  <input type="submit" value="Add">
+</form>
+<br>
+<form method="POST" action="<ofbiz:url>/catalog_createWebSite</ofbiz:url>" style='margin: 0;'>
+  <input type="hidden" name="prodCatalogId" value="<%=prodCatalogId%>">
+  <input type="hidden" name="tryEntity" value="true">
+  <div class='head2'>Add New WebSite:</div>
+  <br>
+  ID: <input type=text size='20' name='webSiteId'>
+  Name: <input type=text size='30' name='siteName'>
   <input type="submit" value="Add">
 </form>
 <%}%>

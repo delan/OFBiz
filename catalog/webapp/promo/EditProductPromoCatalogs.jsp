@@ -40,9 +40,13 @@
 
     String productPromoId = request.getParameter("productPromoId");
     GenericValue productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
-    if (productPromo == null) tryEntity = false;
-    Collection prodCatalogPromoAppls = productPromo.getRelated("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum", "productPromoId"));
-    if (prodCatalogPromoAppls != null) pageContext.setAttribute("prodCatalogPromoAppls", prodCatalogPromoAppls);
+    Collection prodCatalogPromoAppls = null;
+    if (productPromo == null) {
+        tryEntity = false;
+    } else {
+        prodCatalogPromoAppls = productPromo.getRelated("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum", "productPromoId"));
+        if (prodCatalogPromoAppls != null) pageContext.setAttribute("prodCatalogPromoAppls", prodCatalogPromoAppls);
+    }
 
     Collection prodCatalogs = delegator.findAll("ProdCatalog", UtilMisc.toList("catalogName"));
     if (prodCatalogs != null) pageContext.setAttribute("prodCatalogs", prodCatalogs);

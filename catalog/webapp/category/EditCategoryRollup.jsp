@@ -53,7 +53,7 @@
         if (currentProductCategoryRollups != null) pageContext.setAttribute("currentProductCategoryRollups", currentProductCategoryRollups);
     }
 
-    Collection productCategoryCol = delegator.findAll("ProductCategory", null);
+    Collection productCategoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
 
 
 %>

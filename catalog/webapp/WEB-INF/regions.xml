@@ -170,6 +170,10 @@
         <put section='title'>Edit ProductPromo</put>
         <put section='content' content='/promo/EditProductPromo.jsp'/>
     </define>
+    <define id='EditProductPromoRules' region='MAIN_REGION'>
+        <put section='title'>Edit ProductPromo Rules</put>
+        <put section='content' content='/promo/EditProductPromoRules.jsp'/>
+    </define>
     <define id='EditProductPromoCatalogs' region='MAIN_REGION'>
         <put section='title'>Edit ProductPromo Catalogs</put>
         <put section='content' content='/promo/EditProductPromoCatalogs.jsp'/>
