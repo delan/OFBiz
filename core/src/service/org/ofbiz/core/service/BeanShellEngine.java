@@ -93,7 +93,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
                             throw new GenericServiceException("Cannot read script from resource");
                         }
                     } else {
-                        throw new GenericServiceException("Cannot read script from resource");
+                        throw new GenericServiceException("Cannot read script, resource [" + modelService.location + "] not found");
                     }
                     if (script == null || script.length() < 2) {
                         throw new GenericServiceException("Null or empty script");
@@ -103,17 +103,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
             }
         }
 
-        Interpreter bsh = null;
-        try {
-            Class c = cl.loadClass("bsh.Interpreter");
-            bsh = (Interpreter) c.newInstance();
-        } catch (ClassNotFoundException e) {
-            throw new GenericServiceException("Cannot load the BeanShell Interpreter");
-        } catch (IllegalAccessException e) {
-            throw new GenericServiceException("BeanShell Interpreter class not accessible");
-        } catch (InstantiationException e) {
-            throw new GenericServiceException("Cannot instantiate the BeanShell Interpreter");
-        }
+        Interpreter bsh = new Interpreter();
 
         Map result = null;
         try {
