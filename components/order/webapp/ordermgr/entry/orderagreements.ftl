@@ -72,7 +72,7 @@
           <td width='64%' valign='middle'>
             <div class='tabletext' valign='top'>
                 <#list agreements as agreement>
-                   <input type='radio' name='agreementId' value='${agreement.agreementId}' >${agreement.description} <br />
+                   <input type='radio' name='agreementId' value='${agreement.agreementId}' >${agreement.agreementId} - ${agreement.description?if_exists} <br />
                 </#list>
             </div>
           </td>

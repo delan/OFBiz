@@ -602,6 +602,25 @@ public class ShoppingCart implements Serializable {
         return this.cartCreatedTs;
     }
 
+    private GenericValue getSupplierProduct(String productId, double quantity, LocalDispatcher dispatcher) {
+        GenericValue supplierProduct = null;
+        Map params = UtilMisc.toMap("productId", productId,
+                                    "partyId", this.getPartyId(),
+                                    "currencyUomId", this.getCurrency(),
+                                    "quantity", new Double(quantity));
+        try {
+            Map result = dispatcher.runSync("getSuppliersForProduct", params);
+            List productSuppliers = (List)result.get("supplierProducts");
+            if ((productSuppliers != null) && (productSuppliers.size() > 0)) {
+                supplierProduct = (GenericValue) productSuppliers.get(0);
+            }
+            //} catch (GenericServiceException e) {
+        } catch (Exception e) {
+            Debug.logWarning("Run service [getSuppliersForProduct] error:" + e.getMessage(), module);
+        }
+        return supplierProduct;
+    }
+
     // =======================================================================
     // Methods for cart items
     // =======================================================================
@@ -610,9 +629,9 @@ public class ShoppingCart implements Serializable {
      * @return the new/increased item index
      * @throws CartItemModifyException
      */
-    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, GenericValue supplierProduct) throws CartItemModifyException, ItemNotFoundException {
+    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         // public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
-
+        GenericValue supplierProduct = null;
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
@@ -624,22 +643,30 @@ public class ShoppingCart implements Serializable {
                 sci.setQuantity(newQuantity, dispatcher, this);
 
                 if (getOrderType().equals("PURCHASE_ORDER")) {
-                    sci.setBasePrice(supplierProduct.getDouble("lastPrice").doubleValue());
-                    sci.setName(ShoppingCartItem.getPurchaseOrderItemDescription(sci.getProduct(), supplierProduct, this.getLocale()));
+                    supplierProduct = getSupplierProduct(productId, newQuantity, dispatcher);
+                    if (supplierProduct != null && supplierProduct.getDouble("lastPrice") != null) {
+                        sci.setBasePrice(supplierProduct.getDouble("lastPrice").doubleValue());
+                        sci.setName(ShoppingCartItem.getPurchaseOrderItemDescription(sci.getProduct(), supplierProduct, this.getLocale()));
+                    } else {
+                       throw new CartItemModifyException("SupplierProduct not found");
+                    }
                  }
                 return i;
             }
         }
-
         // Add the new item to the shopping cart if it wasn't found.
-        if (supplierProduct != null) {
-             return this.addItem(0, ShoppingCartItem.makePurchaseOrderItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, dispatcher, this, supplierProduct));
+
+        if (getOrderType().equals("PURCHASE_ORDER")) {
+            //GenericValue productSupplier = null;
+            supplierProduct = getSupplierProduct(productId, quantity, dispatcher);
+            if (supplierProduct != null) {
+                 return this.addItem(0, ShoppingCartItem.makePurchaseOrderItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, dispatcher, this, supplierProduct));
+            } else {
+                throw new CartItemModifyException("SupplierProduct not found");
+            }
         } else {
             return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, reservStart, reservLength, reservPersons, features, attributes, prodCatalogId, configWrapper, dispatcher, this));
         }
-    }
-    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, selectedAmount, quantity, reservStart, reservLength, reservPersons, features, attributes, prodCatalogId, configWrapper, dispatcher, null);
     }
     public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, features, attributes, prodCatalogId, null, dispatcher);

@@ -380,6 +380,33 @@ public class ShoppingCartEvents {
         }
     }
 
+    /** Adds all products in a category according to quantity request parameter
+     * for each; if no parameter for a certain product in the category, or if
+     * quantity is 0, do not add
+     */
+    public static String addToCartBulkRequirements(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = getCartObject(request);
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        String controlDirective;
+        Map result;
+        // not used yet: Locale locale = UtilHttp.getLocale(request);
+
+        //Convert the params to a map to pass in
+        Map paramMap = UtilHttp.getParameterMap(request);
+        String catalogId = CatalogWorker.getCurrentCatalogId(request);
+        result = cartHelper.addToCartBulkRequirements(catalogId, paramMap);
+        controlDirective = processResult(result, request);
+
+        //Determine where to send the browser
+        if (controlDirective.equals(ERROR)) {
+            return "error";
+        } else {
+            return "success";
+        }
+    }
+
     /** Adds all products in a category according to default quantity on ProductCategoryMember
      * for each; if no default for a certain product in the category, or if
      * quantity is 0, do not add

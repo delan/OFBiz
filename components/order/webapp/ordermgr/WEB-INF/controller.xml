@@ -269,6 +269,12 @@
         <response name="success" type="view" value="orderentry"/>
         <response name="error" type="view" value="orderentry"/>
     </request-map>
+    <request-map uri="addRequirementsToCart">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCartBulkRequirements"/>
+        <response name="success" type="view" value="orderentry"/>
+        <response name="error" type="view" value="orderentry"/>
+    </request-map>
     <request-map uri="addseperator">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
@@ -625,6 +631,15 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="LookupPartyGroup"/>
     </request-map>
+    <request-map uri="LookupProduct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupProduct"/>
+    </request-map>
+
+    <request-map uri="RequirementsForSupplier">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RequirementsForSupplier"/>
+    </request-map>
 
     <!-- end of request mappings -->
 
@@ -634,6 +649,7 @@
     <view-map name="login" type="jpublish" page="/login.ftl"/>
     <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
     <view-map name="LookupPartyGroup" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyGroup" type="screen"/>
+    <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
     
     <view-map name="orderstats" type="jpublish" page="/order/orderstats.ftl"/>
     <view-map name="findorders" type="jpublish" page="/order/findOrders.ftl"/>
@@ -675,5 +691,7 @@
     <view-map name="OrderPurchaseReportOptions" type="screen" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportOptions"/>
     <view-map name="OrderPurchaseReportPayment" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportPayment" content-type="application/pdf" encoding="none"/>
     <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://order/widget/ordermgr/ReportScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
+    
+    <view-map name="RequirementsForSupplier" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#RequirementsForSupplier"/>
     <!-- end of view mappings -->
 </site-conf>

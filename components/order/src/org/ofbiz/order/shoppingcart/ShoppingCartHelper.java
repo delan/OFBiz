@@ -104,7 +104,6 @@ public class ShoppingCartHelper {
         Map result = null;
         Map attributes = null;
         String errMsg = null;
-        GenericValue productSupplier = null;
     
         // price sanity check
         if (productId == null && price < 0) {
@@ -123,27 +122,6 @@ public class ShoppingCartHelper {
         // amount sanity check
         if (amount < 0) {
             amount = 0;
-        }
-
-        // filter out SupplierProduct entities to find right supplier for this product, currency, and quantity
-        if (cart.getOrderType().equals("PURCHASE_ORDER")) {
-            List cartLines = cart.items();
-            double newQuantity = quantity;
-            // If this item is already in the cart, we need to use its existing quantity + quantity added to determine supplier information
-            for (int i = 0; i < cartLines.size(); i++) {
-              ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
-              if (sci.equals(productId, null, attributes, catalogId, configWrapper, amount)) {
-                  newQuantity = sci.getQuantity() + quantity;
-                  break;
-                }
-             }
-
-             productSupplier = this.getProductSupplier(productId, new Double(newQuantity), cart.getCurrency());
-             if (productSupplier == null) {
-                errMsg = UtilProperties.getMessage(resource, "cart.product_not_valid_for_supplier", this.cart.getLocale());
-                result = ServiceUtil.returnError(errMsg);
-                return result;
-             }
         }
 
         // check desiredDeliveryDate syntax and remove if empty
@@ -206,7 +184,7 @@ public class ShoppingCartHelper {
         try {
             int itemId = -1;
             if (productId != null) {
-                itemId = cart.addOrIncreaseItem(productId, amount, quantity, reservStart, reservLength, reservPersons, null, attributes, catalogId, configWrapper, dispatcher, productSupplier);
+                itemId = cart.addOrIncreaseItem(productId, amount, quantity, reservStart, reservLength, reservPersons, null, attributes, catalogId, configWrapper, dispatcher);
             } else {
                 itemId = cart.addNonProductItem(itemType, itemDescription, productCategoryId, price, quantity, attributes, catalogId, dispatcher);
             }
@@ -217,7 +195,12 @@ public class ShoppingCartHelper {
                 item.setShoppingList(shoppingListId, shoppingListItemSeqId);
             }
         } catch (CartItemModifyException e) {
-            result = ServiceUtil.returnError(e.getMessage());
+            if (cart.getOrderType().equals("PURCHASE_ORDER")) {
+                errMsg = UtilProperties.getMessage(resource, "cart.product_not_valid_for_supplier", this.cart.getLocale());
+                result = ServiceUtil.returnError(errMsg);
+            } else {
+                result = ServiceUtil.returnError(e.getMessage());
+            }
             return result;
         } catch (ItemNotFoundException e) {
             result = ServiceUtil.returnError(e.getMessage());
@@ -379,6 +362,72 @@ public class ShoppingCartHelper {
             }
         }
 
+        //Indicate there were no non critical errors
+        return ServiceUtil.returnSuccess();
+    }
+
+    /** 
+     * Adds all products in a category according to quantity request parameter
+     * for each; if no parameter for a certain product in the category, or if
+     * quantity is 0, do not add
+     */
+    public Map addToCartBulkRequirements(String catalogId, Map context) {
+        // check if we are using per row submit
+        boolean useRowSubmit = context.containsKey("_useRowSubmit")? false : 
+                "Y".equalsIgnoreCase((String)context.get("_useRowSubmit"));
+        
+        // check if we are to also look in a global scope (no delimiter)        
+        boolean checkGlobalScope = context.containsKey("_checkGlobalScope")? false :
+                "Y".equalsIgnoreCase((String)context.get("_checkGlobalScope"));
+        
+        int rowCount = 0; // parsed int value
+        try {
+            if (context.containsKey("_rowCount")) {
+                rowCount = Integer.parseInt((String)context.get("_rowCount"));
+            }
+        } catch (NumberFormatException e) {
+            //throw new EventHandlerException("Invalid value for _rowCount");
+        }
+        
+        // now loop throw the rows and prepare/invoke the service for each
+        for (int i = 0; i < rowCount; i++) {
+            String productId = null;
+            String quantStr = null;
+            String requirementId = null;
+            String thisSuffix = org.ofbiz.content.webapp.event.ServiceMultiEventHandler.DELIMITER + i;
+            boolean rowSelected = context.containsKey("_rowSubmit" + thisSuffix)? false :
+                    "Y".equalsIgnoreCase((String)context.get("_rowSubmit" + thisSuffix));
+            
+            // make sure we are to process this row
+            if (useRowSubmit && !rowSelected) {            
+                continue;
+            }
+            
+            // build the context
+            if (context.containsKey("productId" + thisSuffix)) {
+                productId = (String) context.get("productId" + thisSuffix);
+                quantStr = (String) context.get("quantity" + thisSuffix);
+                requirementId = (String) context.get("requirementId" + thisSuffix);
+                if (quantStr != null && quantStr.length() > 0) {
+                    double quantity = 0;
+                    try {
+                        quantity = Double.parseDouble(quantStr);
+                    } catch (NumberFormatException nfe) {
+                        quantity = 0;
+                    }
+                    if (quantity > 0.0) {
+                        try {
+                            if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart requirement [" + quantity + "] of [" + productId + "]", module);
+                            this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, dispatcher);
+                        } catch (CartItemModifyException e) {
+                            return ServiceUtil.returnError(e.getMessage());
+                        } catch (ItemNotFoundException e) {
+                            return ServiceUtil.returnError(e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
         //Indicate there were no non critical errors
         return ServiceUtil.returnSuccess();
     }
