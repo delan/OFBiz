@@ -116,4 +116,13 @@
     	<description>Test JavaScript Service</description>
     	<attribute name="count" type="Integer" mode="IN" optional="false"/>
     </service>
+    
+    <service name="byteWrapperTest" engine="java" auth="true"
+            location="org.ofbiz.common.CommonServices" invoke="byteWrapperTest">
+        <description>Test Passing ByteWrapper To Service</description>
+        <attribute name="byteWrapper1" type="org.ofbiz.entity.util.ByteWrapper" mode="IN" optional="false"/>
+        <attribute name="saveAsFileName1" type="String" mode="IN" optional="false"/>
+        <attribute name="byteWrapper2" type="org.ofbiz.entity.util.ByteWrapper" mode="IN" optional="false"/>
+        <attribute name="saveAsFileName2" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

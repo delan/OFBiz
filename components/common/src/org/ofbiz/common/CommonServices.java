@@ -26,6 +26,10 @@ package org.ofbiz.common;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.io.File;
+import java.io.RandomAccessFile;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.transaction.xa.XAException;
 
@@ -35,6 +39,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.service.DispatchContext;
@@ -46,7 +51,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class CommonServices {
@@ -312,6 +317,29 @@ public class CommonServices {
             }
         } else {
             Debug.log("Debug resources is disabled.", module);
+        }
+
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map byteWrapperTest(DispatchContext dctx, Map context) {
+        ByteWrapper wrapper1 = (ByteWrapper) context.get("byteWrapper1");
+        ByteWrapper wrapper2 = (ByteWrapper) context.get("byteWrapper2");
+        String fileName1 = (String) context.get("saveAsFileName1");
+        String fileName2 = (String) context.get("saveAsFileName2");
+        String ofbizHome = System.getProperty("ofbiz.home");
+        String outputPath1 = ofbizHome + (fileName1.startsWith("/") ? fileName1 : "/" + fileName1);
+        String outputPath2 = ofbizHome + (fileName2.startsWith("/") ? fileName2 : "/" + fileName2);
+
+        try {
+            RandomAccessFile file1 = new RandomAccessFile(outputPath1, "rw");
+            RandomAccessFile file2 = new RandomAccessFile(outputPath2, "rw");
+            file1.write(wrapper1.getBytes());
+            file2.write(wrapper2.getBytes());
+        } catch (FileNotFoundException e) {
+            Debug.logError(e, module);
+        } catch (IOException e) {
+            Debug.logError(e, module);
         }
 
         return ServiceUtil.returnSuccess();
