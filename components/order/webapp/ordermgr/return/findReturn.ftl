@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
@@ -149,12 +149,13 @@ function lookupReturn(click) {
     </table>
     <input type="image" src="/images/spacer.gif" onClick="javascript:document.lookupreturn.submit();">
   </form>
+<#if requestParameters.hideFields?default("N") != "Y">
   <script language="JavaScript">
     <!--//
       document.lookupreturn.returnId.focus();
     //-->
   </script>
-
+</#if>
   <#if returnHeaderList?exists>
     <br>
     <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
