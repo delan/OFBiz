@@ -294,11 +294,25 @@
           <td>
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <#if getUsername>
+<script language="JavaScript">
+ <!--
+     function setEmailUsername() {
+         if (document.forms["newuserform"].elements["UNUSEEMAIL"].checked) {
+             document.forms["newuserform"].elements["USERNAME"].value=document.forms["newuserform"].elements["CUSTOMER_EMAIL"].value;
+             document.forms["newuserform"].elements["USERNAME"].disabled=true;
+         } else {
+             document.forms["newuserform"].elements["USERNAME"].value='';
+             document.forms["newuserform"].elements["USERNAME"].disabled=false;
+         }
+     }
+ //-->
+ </script>
     <tr>
       <td width="26%"><div class="tabletext">${uiLabelMap.CommonUsername}</div></td>
       <td width="74%">
-          <input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50">
-      * </td>
+          <div class="tabletext">Use Email Address: <input type="CHECKBOX" name="UNUSEEMAIL" value="on" onClick="setEmailUsername();"/></div>
+          <div><input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50"/> *</div>
+       </td>
     </tr>
     </#if>
     <#if createAllowPassword>
