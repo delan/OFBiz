@@ -21,12 +21,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.0
 --%>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.entity.util.*" %>
 <%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>

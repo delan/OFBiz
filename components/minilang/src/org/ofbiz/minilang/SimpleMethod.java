@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMethod.java,v 1.2 2003/09/03 21:05:07 jonesde Exp $
+ * $Id: SimpleMethod.java,v 1.3 2003/09/11 13:23:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class SimpleMethod {
@@ -291,51 +291,65 @@ public class SimpleMethod {
         this.shortDescription = simpleMethodElement.getAttribute("short-description");
 
         defaultErrorCode = simpleMethodElement.getAttribute("default-error-code");
-        if (defaultErrorCode == null || defaultErrorCode.length() == 0)
+        if (defaultErrorCode == null || defaultErrorCode.length() == 0) {
             defaultErrorCode = "error";
+        }
         defaultSuccessCode = simpleMethodElement.getAttribute("default-success-code");
-        if (defaultSuccessCode == null || defaultSuccessCode.length() == 0)
+        if (defaultSuccessCode == null || defaultSuccessCode.length() == 0) {
             defaultSuccessCode = "success";
+        }
 
         parameterMapName = simpleMethodElement.getAttribute("parameter-map-name");
-        if (parameterMapName == null || parameterMapName.length() == 0)
+        if (parameterMapName == null || parameterMapName.length() == 0) {
             parameterMapName = "parameters";
+        }
 
         eventRequestName = simpleMethodElement.getAttribute("event-request-object-name");
-        if (eventRequestName == null || eventRequestName.length() == 0)
+        if (eventRequestName == null || eventRequestName.length() == 0) {
             eventRequestName = "request";
+        }
         eventResponseName = simpleMethodElement.getAttribute("event-response-object-name");
-        if (eventResponseName == null || eventResponseName.length() == 0)
+        if (eventResponseName == null || eventResponseName.length() == 0) {
             eventResponseName = "response";
+        }
         eventResponseCodeName = simpleMethodElement.getAttribute("event-response-code-name");
-        if (eventResponseCodeName == null || eventResponseCodeName.length() == 0)
+        if (eventResponseCodeName == null || eventResponseCodeName.length() == 0) {
             eventResponseCodeName = "_response_code_";
+        }
         eventErrorMessageName = simpleMethodElement.getAttribute("event-error-message-name");
-        if (eventErrorMessageName == null || eventErrorMessageName.length() == 0)
+        if (eventErrorMessageName == null || eventErrorMessageName.length() == 0) {
             eventErrorMessageName = "_error_message_";
+        }
         eventEventMessageName = simpleMethodElement.getAttribute("event-event-message-name");
-        if (eventEventMessageName == null || eventEventMessageName.length() == 0)
+        if (eventEventMessageName == null || eventEventMessageName.length() == 0) {
             eventEventMessageName = "_event_message_";
+        }
 
         serviceResponseMessageName = simpleMethodElement.getAttribute("service-response-message-name");
-        if (serviceResponseMessageName == null || serviceResponseMessageName.length() == 0)
+        if (serviceResponseMessageName == null || serviceResponseMessageName.length() == 0) {
             serviceResponseMessageName = "responseMessage";
+        }
         serviceErrorMessageName = simpleMethodElement.getAttribute("service-error-message-name");
-        if (serviceErrorMessageName == null || serviceErrorMessageName.length() == 0)
+        if (serviceErrorMessageName == null || serviceErrorMessageName.length() == 0) {
             serviceErrorMessageName = "errorMessage";
+        }
         serviceErrorMessageListName = simpleMethodElement.getAttribute("service-error-message-list-name");
-        if (serviceErrorMessageListName == null || serviceErrorMessageListName.length() == 0)
+        if (serviceErrorMessageListName == null || serviceErrorMessageListName.length() == 0) {
             serviceErrorMessageListName = "errorMessageList";
+        }
         serviceErrorMessageMapName = simpleMethodElement.getAttribute("service-error-message-map-name");
-        if (serviceErrorMessageMapName == null || serviceErrorMessageMapName.length() == 0)
+        if (serviceErrorMessageMapName == null || serviceErrorMessageMapName.length() == 0) {
             serviceErrorMessageMapName = "errorMessageMap";
+        }
 
         serviceSuccessMessageName = simpleMethodElement.getAttribute("service-success-message-name");
-        if (serviceSuccessMessageName == null || serviceSuccessMessageName.length() == 0)
+        if (serviceSuccessMessageName == null || serviceSuccessMessageName.length() == 0) {
             serviceSuccessMessageName = "successMessage";
+        }
         serviceSuccessMessageListName = simpleMethodElement.getAttribute("service-success-message-list-name");
-        if (serviceSuccessMessageListName == null || serviceSuccessMessageListName.length() == 0)
+        if (serviceSuccessMessageListName == null || serviceSuccessMessageListName.length() == 0) {
             serviceSuccessMessageListName = "successMessageList";
+        }
 
         loginRequired = !"false".equals(simpleMethodElement.getAttribute("login-required"));
         useTransaction = !"false".equals(simpleMethodElement.getAttribute("use-transaction"));
@@ -506,42 +520,22 @@ public class SimpleMethod {
             }
         }
 
-		// declare errorMsg here just in case transaction ops fail
-		String errorMsg = "";
+        // declare errorMsg here just in case transaction ops fail
+        String errorMsg = "";
 
         boolean finished = false;
         try {
-			finished = runSubOps(methodOperations, methodContext);
+            finished = runSubOps(methodOperations, methodContext);
         } catch (Throwable t) {
-        	// make SURE nothing gets thrown through
-        	String errMsg = "Error running the simple-method: " + t.toString();
-        	Debug.log(t, errMsg, module);
-        	finished = false;
-			errorMsg += errMsg + "<br>";
+            // make SURE nothing gets thrown through
+            String errMsg = "Error running the simple-method: " + t.toString();
+            Debug.log(t, errMsg, module);
+            finished = false;
+            errorMsg += errMsg + "<br>";
         }
-
-        if (finished) {
-            // if finished commit here passing beganTransaction to perform it properly
-            try {
-                TransactionUtil.commit(beganTransaction);
-            } catch (GenericTransactionException e) {
-                String errMsg = "Error trying to commit transaction, could not process method: " + e.getMessage();
-                Debug.logWarning(errMsg, module);
-                Debug.logWarning(e, module);
-				errorMsg += errMsg + "<br>";
-            }
-        } else {
-            // if NOT finished rollback here passing beganTransaction to either rollback, or set rollback only
-            try {
-                TransactionUtil.rollback(beganTransaction);
-            } catch (GenericTransactionException e) {
-                String errMsg = "Error trying to rollback transaction, could not process method: " + e.getMessage();
-                Debug.logWarning(errMsg, module);
-                Debug.logWarning(e, module);
-				errorMsg += errMsg + "<br>";
-            }
-        }
-
+        
+        String returnValue = null;
+        String response = null;
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             boolean forceError = false;
             
@@ -557,7 +551,7 @@ public class SimpleMethod {
                 methodContext.getRequest().setAttribute("_EVENT_MESSAGE_", eventMsg);
             }
 
-            String response = (String) methodContext.getEnv(eventResponseCodeName);
+            response = (String) methodContext.getEnv(eventResponseCodeName);
             if (response == null || response.length() == 0) {
                 if (forceError) {
                     //override response code, always use error code
@@ -568,7 +562,7 @@ public class SimpleMethod {
                     response = defaultSuccessCode;
                 }
             }
-            return response;
+            returnValue = response;
         } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
             boolean forceError = false;
             
@@ -601,7 +595,7 @@ public class SimpleMethod {
                 methodContext.putResult(ModelService.SUCCESS_MESSAGE_LIST, successMsgList);
             }
 
-            String response = (String) methodContext.getEnv(serviceResponseMessageName);
+            response = (String) methodContext.getEnv(serviceResponseMessageName);
             if (response == null || response.length() == 0) {
                 if (forceError) {
                     //override response code, always use error code
@@ -613,10 +607,43 @@ public class SimpleMethod {
                 }
             }
             methodContext.putResult(ModelService.RESPONSE_MESSAGE, response);
-            return null;
+            returnValue = null;
         } else {
-            return defaultSuccessCode;
+            response = defaultSuccessCode;
+            returnValue = defaultSuccessCode;
         }
+
+        // decide whether or not to commit based on the response message, ie only rollback if error is returned and not finished
+        boolean doCommit = true;
+        if (!finished) {
+            if (defaultErrorCode.equals(response)) {
+                doCommit = false;
+            }
+        }
+
+        if (doCommit) {
+            // commit here passing beganTransaction to perform it properly
+            try {
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericTransactionException e) {
+                String errMsg = "Error trying to commit transaction, could not process method: " + e.getMessage();
+                Debug.logWarning(errMsg, module);
+                Debug.logWarning(e, module);
+                errorMsg += errMsg + "<br>";
+            }
+        } else {
+            // rollback here passing beganTransaction to either rollback, or set rollback only
+            try {
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericTransactionException e) {
+                String errMsg = "Error trying to rollback transaction, could not process method: " + e.getMessage();
+                Debug.logWarning(errMsg, module);
+                Debug.logWarning(e, module);
+                errorMsg += errMsg + "<br>";
+            }
+        }
+        
+        return returnValue;
     }
 
     public static void readOperations(Element simpleMethodElement, List methodOperations, SimpleMethod simpleMethod) {
@@ -802,15 +829,12 @@ public class SimpleMethod {
      */
     public static boolean runSubOps(List methodOperations, MethodContext methodContext) {
         Iterator methodOpsIter = methodOperations.iterator();
-
         while (methodOpsIter.hasNext()) {
             MethodOperation methodOperation = (MethodOperation) methodOpsIter.next();
-
             if (!methodOperation.exec(methodContext)) {
                 return false;
             }
         }
-
         return true;
     }
 }
