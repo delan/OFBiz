@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+
+<services>
+    <description>Product Component Maintenance Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <!-- Product View Services -->
+    <service name="getProduct" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="prodFindProduct">
+        <description>Gets a product value object.</description>
+        <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="product" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
+    </service>
+    <service name="getProductVariant" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="prodFindSelectedVariant">
+        <description>Gets a list of variant product value objects.</description>
+        <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="selectedFeatures" type="java.util.Map" mode="IN"/>
+        <attribute name="products" type="java.util.List" mode="OUT"/>
+    </service>
+    <service name="getProductFeatureSet" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="prodFindFeatureTypes">
+        <description>Gets a Set of product features (distinct)</description>
+        <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="productFeatureApplTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="featureSet" type="java.util.Set" mode="OUT"/>
+    </service>
+    <service name="getProductVariantTree" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="prodMakeFeatureTree">
+        <description>Gets a tree of product variants based on a virtual product and a list of features.</description>
+        <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="featureOrder" type="java.util.Collection" mode="IN"/>
+        <attribute name="productStoreId" type="String" mode="IN"/>
+        <attribute name="variantTree" type="java.util.Map" mode="OUT"/>
+        <attribute name="variantSample" type="java.util.Map" mode="OUT"/>
+        <attribute name="virtualVariant" type="java.util.List" mode="OUT"/>
+    </service>
+    <service name="getAllProductVariants" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="prodFindAllVariants">
+        <description>Gets a Collection of products from a 'virtual' parent product.</description>
+        <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="assocProducts" type="java.util.Collection" mode="OUT"/>
+    </service>
+    <service name="getAssociatedProducts" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="prodFindAssociatedByType">
+        <description>Finds associated products by the defined type.</description>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="productIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="checkViewAllow" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="true"/>
+        <attribute name="type" type="String" mode="IN"/>
+        <attribute name="assocProducts" type="java.util.Collection" mode="OUT"/>
+    </service>
+    <service name="getProductFeatures" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="prodGetFeatures">
+        <description>Gets a Collection of product features (ProductFeatureAndAppl) for a product.</description>
+        <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="type" type="String" mode="IN" optional="true"/>
+        <attribute name="distinct" type="String" mode="IN" optional="true"/>
+        <attribute name="productFeatures" type="java.util.Collection" mode="OUT"/>
+    </service>
+
+    <!-- Category View Services -->
+    <service name="getProductCategoryMembers" engine="java"
+            location="org.ofbiz.product.category.CategoryServices" invoke="getCategoryMembers">
+        <description>Gets ProductCategoryMembers for the category_id</description>
+        <attribute name="categoryId" type="String" mode="IN"/>
+        <attribute name="category" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
+        <attribute name="categoryMembers" type="java.util.Collection" mode="OUT"/>
+    </service>
+    <service name="getPreviousNextProducts" engine="java"
+            location="org.ofbiz.product.category.CategoryServices" invoke="getNextPreviousCategoryMembers">
+        <description>Gets the previous and next product Ids.</description>
+        <attribute name="categoryId" type="String" mode="IN"/>
+        <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="category" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
+        <attribute name="previousProductId" type="String" mode="OUT" optional="true"/>
+        <attribute name="nextProductId" type="String" mode="OUT" optional="true"/>
+    </service>
+    <service name="getProductCategoryAndLimitedMembers" engine="java"
+            location="org.ofbiz.product.category.CategoryServices" invoke="getProductCategoryAndLimitedMembers">
+        <description>Gets a productCategory and a Collection of associated productCategoryMembers and calculates limiting parameters</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="true"/>
+        <attribute name="defaultViewSize" type="Integer" mode="IN" optional="false"/>
+        <attribute name="limitView" type="Boolean" mode="IN" optional="false"/>
+        <attribute name="checkViewAllow" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="viewIndexString" type="String" mode="IN" optional="true"/>
+        <attribute name="viewSizeString" type="String" mode="IN" optional="true"/>
+        <attribute name="useCacheForMembers" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="productCategory" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/>
+        <attribute name="productCategoryMembers" type="java.util.Collection" mode="OUT" optional="true"/>
+        <attribute name="viewIndex" type="Integer" mode="OUT" optional="false"/>
+        <attribute name="viewSize" type="Integer" mode="OUT" optional="false"/>
+        <attribute name="lowIndex" type="Integer" mode="OUT" optional="false"/>
+        <attribute name="highIndex" type="Integer" mode="OUT" optional="false"/>
+        <attribute name="listSize" type="Integer" mode="OUT" optional="false"/>
+    </service>
+</services>

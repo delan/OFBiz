@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.12 2004/07/31 00:24:08 ajzeneski Exp $
+ *  $Id$
 -->
 
 <ofbiz-component name="product">
@@ -38,7 +38,13 @@
     <entity-resource type="data" reader-name="main" loader="main" location="data/ShipmentTypeData.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/ProductSecurityData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_facility.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_feature.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_maint.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_pricepromo.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_shipment.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_store.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_view.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas_shipment.xml"/>
     <service-resource type="group" loader="main" location="servicedef/groups_shipment.xml"/>
