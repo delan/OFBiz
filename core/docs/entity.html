@@ -254,6 +254,212 @@ key map specified a field name (field-name) and a related field name (rel-field-
 If the two column names are the same, the rel-field-name does not have to be
 specified.</P>
 
+<p><b>Entity Element Reference</b></p>
+
+<p><b><u>entity</u></b></p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>entity-name</td><td>Y</td>
+    <td>The name of the entity as it is referred to when using the Entity Engine
+    Java API and various other places in the Entity Engine.</td>
+</tr>
+<tr>
+    <td>table-name</td><td>N</td>
+    <td>The name of the database table that corresponds to this entity. This
+    attribute is optional and if not specified the table name will be derived 
+    from the entity name.</td>
+</tr>
+<tr>
+    <td>package-name</td><td>Y</td>
+    <td>The name of the package that this entity is contained in. With hundreds
+    of entities in a large data model this is used to organize and structure the
+    entities definitions.</td>
+</tr>
+<tr>
+    <td>dependent-on</td><td>N</td>
+    <td>This can be used to specify a parent entity or an entity that this
+    entity is dependent on. This is currently not used for anything automated in
+    the Entity Engine, but can be used to specify an heirarchical entity
+    structure.</td>
+</tr>
+<tr>
+    <td>enable-lock</td><td>N</td>
+    <td>Specifies whether or not optimistic locking should be used for this
+    entity. The <B>lastUpdatedStamp</B> field must exist on the entity and will
+    be used to keep track of the last time the entity instance was updated. If
+    the current instance to be updated does not have a matching lastUpdatedStamp
+    an EntityLockedException will be thrown. Must be true or false. Defaults to 
+    false.</td>
+</tr>
+<tr>
+    <td>never-cache</td><td>N</td>
+    <td>If this is set to true caching of this entity will not be allowed.
+    Automatic cache clearing will not be done to improve efficiency and any
+    attempt to use the cache methods on the entity will results in an exception
+    so that it is easier to find and eliminate where this is being done. Must be 
+    true or false. Defaults to false.</td>
+</tr>
+<tr>
+    <td>title</td><td>N</td>
+    <td>A title for the entity. If not specified defaults to the global setting
+    for the file the entity is in.</td>
+</tr>
+<tr>
+    <td>copyright</td><td>N</td>
+    <td>The copyright of the entity. If not specified defaults to the global setting
+    for the file the entity is in.</td>
+</tr>
+<tr>
+    <td>author</td><td>N</td>
+    <td>The author of the entity. If not specified defaults to the global setting
+    for the file the entity is in.</td>
+</tr>
+<tr>
+    <td>version</td><td>N</td>
+    <td>The version of the entity. If not specified defaults to the global setting
+    for the file the entity is in.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>description</td><td>0 or 1</td>
+    <td>A description of the entity. If not specified defaults to the global setting
+    for the file the entity is in. This element has no attributes and should
+    contain only a simple string of characters.</td>
+</tr>
+<tr>
+    <td>field</td><td>1 to many</td>
+    <td>Used to declate fields that are part of the entity.</td>
+</tr>
+<tr>
+    <td>prim-key</td><td>0 to many</td>
+    <td>Used to declare which fields are primary keys</td>
+</tr>
+<tr>
+    <td>relation</td><td>0 to many</td>
+    <td>Used to declare relationships between entities.</td>
+</tr>
+</table>
+
+<p><b><u>field</u></b></p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td>
+    <td>The name of the field that is used to refer to it in Java code and other
+    places.</td>
+</tr>
+<tr>
+    <td>col-name</td><td>N</td>
+    <td>The name of the corresponding database column. This is not required and
+    if not specified this will be derived from the field name.</td>
+</tr>
+<tr>
+    <td>type</td><td>Y</td>
+    <td>The type of the field. This is looked up in the field types file for the
+    current datasource at run-time to determine the Java and SQL types for the
+    field and database column.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>validate</td><td>0 to many</td>
+    <td>Each validate element has a single attribute called name which specifies
+    the name of the validation method to call. These methods are not called in
+    all Entity Engine operations and are only used for generic user interfaces
+    like the Entity Data Maintenance pages in WebTools.</td>
+</tr>
+</table>
+
+<p><b><u>prim-key</u></b></p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>field</td><td>Y</td>
+    <td>The name of the field that will be part of the primary key.</td>
+</tr>
+</table>
+
+<p><b><u>relation</u></b></p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>type</td><td>Y</td>
+    <td>Specifies the type of the relationship including the cardinality of the
+    relationship (in one direction) and if a foreign key should be created for
+    cardinality one relationships. Must be "one", "one-nofk", or "many".</td>
+</tr>
+<tr>
+    <td>title</td><td>N</td>
+    <td>Because you may want to have more than one relationship to a single
+    entity this attribute allows you to specify a title that will be prepended
+    to the rel-entity-name to make up the name of the relationship. If not
+    specified the rel-entity-name alone will be used as the relationship name.</td>
+</tr>
+<tr>
+    <td>rel-entity-name</td><td>Y</td>
+    <td>The name of the related entity. The relationship goes from this entity
+    to the related entity.</td>
+</tr>
+<tr>
+    <td>fk-name</td><td>N</td>
+    <td>The foreign key name can be created automatically from the relationship
+    name, but this is not recommended for two reasons: many databases have a
+    very small maximum size (like 18 characters) for foreign key and index
+    names, and many databases require that the FK name be unique for the entire
+    database and not just for the table the FK is coming from.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>key-map</td><td>1 to many</td>
+    <td>The key-map is used to specify a field in this entity that corresponds 
+    to a field in the related entity. This element has two attributes:
+    <b>field-name</b> and <b>rel-field-name</b> which are used to specify the
+    name of the field on this entity and the name of the field on the related
+    entity.</td>
+</tr>
+</table>
+
 <hr>
 <h3><a name="View_Entity_Modeling">View Entity Modeling</a></h3>
 <hr>
@@ -396,6 +602,259 @@ intended. For everyone there are a few tips that might be helpful.</P>
 view-links, except for the first one, make sure the member-entity referred to in
 the entity-alias attribute has been referred to in a previous view-link (this is
 how the link tree is kept clean).</P>
+
+<p><b>View Entity Element Reference</b></p>
+
+<p><b><u>view-entity</u></b></p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>entity-name</td><td>Y</td>
+    <td>The name of the entity as it is referred to when using the Entity Engine
+    Java API and various other places in the Entity Engine.</td>
+</tr>
+<tr>
+    <td>package-name</td><td>Y</td>
+    <td>The name of the package that this entity is contained in. With hundreds
+    of entities in a large data model this is used to organize and structure the
+    entities definitions.</td>
+</tr>
+<tr>
+    <td>dependent-on</td><td>N</td>
+    <td>This can be used to specify a parent entity or an entity that this
+    entity is dependent on. This is currently not used for anything automated in
+    the Entity Engine, but can be used to specify an heirarchical entity
+    structure.</td>
+</tr>
+<tr>
+    <td>never-cache</td><td>N</td>
+    <td>If this is set to true caching of this entity will not be allowed.
+    Automatic cache clearing will not be done to improve efficiency and any
+    attempt to use the cache methods on the entity will results in an exception
+    so that it is easier to find and eliminate where this is being done. Must be 
+    true or false. Defaults to false.</td>
+</tr>
+<tr>
+    <td>title</td><td>N</td>
+    <td>A title for the entity. If not specified defaults to the global setting
+    for the file the entity is in.</td>
+</tr>
+<tr>
+    <td>copyright</td><td>N</td>
+    <td>The copyright of the entity. If not specified defaults to the global setting
+    for the file the entity is in.</td>
+</tr>
+<tr>
+    <td>author</td><td>N</td>
+    <td>The author of the entity. If not specified defaults to the global setting
+    for the file the entity is in.</td>
+</tr>
+<tr>
+    <td>version</td><td>N</td>
+    <td>The version of the entity. If not specified defaults to the global setting
+    for the file the entity is in.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>description</td><td>0 or 1</td>
+    <td>A description of the entity. If not specified defaults to the global setting
+    for the file the entity is in. This element has no attributes and should
+    contain only a simple string of characters.</td>
+</tr>
+<tr>
+    <td>member-entity</td><td>1 to many</td>
+    <td>Used to declare which entities will be part of this view-entity and what
+    alias will be used to refer to them.</td>
+</tr>
+<tr>
+    <td>alias</td><td>1 to many</td>
+    <td>Used to declare the aliased fields from the member-entities that will be
+    part of the view entity.</td>
+</tr>
+<tr>
+    <td>view-link</td><td>1 to many</td>
+    <td>Used to declare how the member-entities in the view will be linked
+    together.</td>
+</tr>
+<tr>
+    <td>relation</td><td>0 to many</td>
+    <td>Used to declare relationships between entities.</td>
+</tr>
+</table>
+
+<p><b><u>member-entity</u></b></p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>entity-alias</td><td>Y</td>
+    <td>The alias to use for this member-entity. Must be unique among all
+    member-entities. This will be used to refer to the member-entity in other
+    places in the view-entity definition.</td>
+</tr>
+<tr>
+    <td>entity-name</td><td>Y</td>
+    <td>The name of the entity definition that this member entity corresponds
+    to. The same entity can be used multiple times in the same view-entity with
+    different entity-aliases.</td>
+</tr>
+</table>
+
+<p><b><u>alias</u></b></p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>entity-alias</td><td>Y</td>
+    <td>The entity-alias of the member-entity that this aliased field
+    corresponds to.</td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td>
+    <td>The name of the field alias. This is used when interacting with the
+    view-entity the same way a field name is used when interacting with an
+    entity.</td>
+</tr>
+<tr>
+    <td>field</td><td>N</td>
+    <td>The name of the field from the member-entity with the given entity-alias
+    that this field alias corresponds to. If not specified defaults to the alias
+    name as specified in the name attribute.</td>
+</tr>
+<tr>
+    <td>prim-key</td><td>N</td>
+    <td>Used to specify if this alias should be part of the view-entities
+    primary key. If specified must be either true or false. If not specified the
+    Entity Engine will look at the definition of the field it came from to see
+    if it is part of the original entity's primary key.</td>
+</tr>
+<tr>
+    <td>group-by</td><td>N</td>
+    <td>Used to specify that the aliased field should be used for grouping
+    results and should be used in conjunction with the function attribute on
+    other aliased fields. For a more complete discussion see the main text. Must
+    be either true or false. Defaults to false.</td>
+</tr>
+<tr>
+    <td>function</td><td>N</td>
+    <td>Used to specify a function to be used on this field to calculate summary
+    information. Should be used in conjunction with the group-by attribute to
+    specify how the summary results should be grouped. See the main text for a
+    more complete discussion of how to use this.</td>
+</tr>
+</table>
+
+<p><b><u>view-link</u></b></p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>entity-alias</td><td>Y</td>
+    <td>The alias of the entity the link is coming from.</td>
+</tr>
+<tr>
+    <td>rel-entity-alias</td><td>Y</td>
+    <td>The alias of the entity the link is going to.</td>
+</tr>
+<tr>
+    <td>rel-optional</td><td>N</td>
+    <td>Used to specify whether or not the related entity is optional. If this
+    is true it effects an outer join to the related entity. Must be either true
+    or false. Defaults to false.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>key-map</td><td>1 to many</td>
+    <td>The key-map is used to specify a field in this entity that corresponds 
+    to a field in the related entity. This element has two attributes:
+    <b>field-name</b> and <b>rel-field-name</b> which are used to specify the
+    name of the field on this entity and the name of the field on the related
+    entity.</td>
+</tr>
+</table>
+
+<p><b><u>relation</u></b></p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>type</td><td>Y</td>
+    <td>Specifies the type of the relationship including the cardinality of the
+    relationship (in one direction) and if a foreign key should be created for
+    cardinality one relationships. Must be "one", "one-nofk", or "many".</td>
+</tr>
+<tr>
+    <td>title</td><td>N</td>
+    <td>Because you may want to have more than one relationship to a single
+    entity this attribute allows you to specify a title that will be prepended
+    to the rel-entity-name to make up the name of the relationship. If not
+    specified the rel-entity-name alone will be used as the relationship name.</td>
+</tr>
+<tr>
+    <td>rel-entity-name</td><td>Y</td>
+    <td>The name of the related entity. The relationship goes from this entity
+    to the related entity.</td>
+</tr>
+<tr>
+    <td>fk-name</td><td>N</td>
+    <td>The foreign key name can be created automatically from the relationship
+    name, but this is not recommended for two reasons: many databases have a
+    very small maximum size (like 18 characters) for foreign key and index
+    names, and many databases require that the FK name be unique for the entire
+    database and not just for the table the FK is coming from.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>key-map</td><td>1 to many</td>
+    <td>The key-map is used to specify a field in this entity that corresponds 
+    to a field in the related entity. This element has two attributes:
+    <b>field-name</b> and <b>rel-field-name</b> which are used to specify the
+    name of the field on this entity and the name of the field on the related
+    entity.</td>
+</tr>
+</table>
 
 <hr>
 <h3><a name="The_Entity_Engine_API">The Entity Engine API</a></h3>
