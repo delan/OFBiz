@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2001/09/06 00:29:17  jonesde
+ * Fixed small index out of bounds error.
+ *
  * Revision 1.10  2001/09/05 13:29:57  jonesde
  * Moved the CURRENT_VIEW attribute from the session to the request, since it doesn't make sense in the session.
  *
@@ -193,9 +196,9 @@ public class RequestHandler implements Serializable {
         }
         
         /** Handle Errors. */
-        if ( eventPath == null && nextPage == null && eventReturn == null )
+        if ( eventPath == null && nextPage == null && eventReturn == null && !chainRequest )
             throw new RequestHandlerException("RequestHandler: Unknown Request.");
-        if ( nextPage == null && eventReturn == null )
+        if ( nextPage == null && eventReturn == null && !chainRequest )
             throw new RequestHandlerException("RequestHandler: No Next Page To Display");
         
         /** Invoke chained requests. */
