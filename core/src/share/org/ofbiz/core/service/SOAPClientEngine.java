@@ -38,86 +38,89 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public final class SOAPClientEngine extends GenericAsyncEngine {
-    
+
     /** Creates new SOAPClientEngine */
     public SOAPClientEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
     }
-    
+
     /** Run the service synchronously and IGNORE the result
      * @param context Map of name, value pairs composing the context
      */
-    public void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException {
+    public void runSyncIgnore(ModelService modelService,
+            Map context) throws GenericServiceException {
         Map result = runSync(modelService, context);
     }
-    
+
     /** Run the service synchronously and return the result
      * @param context Map of name, value pairs composing the context
      * @return Map of name, value pairs composing the result
      */
-    public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
-        Object result = serviceInvoker(modelService,context);
-        if ( result == null )
+    public Map runSync(ModelService modelService,
+            Map context) throws GenericServiceException {
+        Object result = serviceInvoker(modelService, context);
+        if (result == null)
             throw new GenericServiceException("Service did not return expected result");
-        if ( !(result instanceof Map) ) {
+        if (!(result instanceof Map)) {
             Map newResult = new HashMap();
             newResult.put("result",result);
             return newResult;
-        }             
+        }
         return (Map) result;
     }
-    
+
     // Invoke the remote SOAP service
-    private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {
-        if ( modelService.location == null || modelService.invoke == null )
+    private Object serviceInvoker(ModelService modelService,
+            Map context) throws GenericServiceException {
+        if (modelService.location == null || modelService.invoke == null)
             throw new GenericServiceException("Cannot locate service to invoke");
-        
+
         Service service = null;
         Call call = null;
-        
+
         try {
             service = new Service();
             call = (Call) service.createCall();
-        }
-        catch ( javax.xml.rpc.JAXRPCException e ) {
+        } catch (javax.xml.rpc.JAXRPCException e) {
             throw new GenericServiceException("RPC service error",e);
         }
-        
+
         URL endPoint = null;
         try {
             endPoint = new URL(modelService.location);
-        }
-        catch ( MalformedURLException e ) {
+        } catch (MalformedURLException e) {
             throw new GenericServiceException("Location not a valid URL",e);
         }
-        
+
         Object[] params = new Object[context.size()];
-        Debug.logInfo("[SOAPClientEngine.invoke] : Parameter length - " + params.length);
-        
+        Debug.logInfo("[SOAPClientEngine.invoke] : Parameter length - " +
+                params.length);
+
         call.setTargetEndpointAddress(endPoint);
-        call.setOperationName(modelService.invoke);      
-        if ( !modelService.nameSpace.equals("") )
+        call.setOperationName(modelService.invoke);
+        if (!modelService.nameSpace.equals(""))
             call.setProperty(Call.NAMESPACE, modelService.nameSpace);
-               
-        Iterator i = context.keySet().iterator();        
-        while ( i.hasNext() ) {                    
+
+        Iterator i = context.keySet().iterator();
+        while (i.hasNext()) {
             Object key = i.next();
             Object value = context.get(key);
             ModelParam p = (ModelParam) modelService.contextInfo.get(key);
-            Debug.logInfo("[SOAPClientEngine.invoke} : Parameter : " + p.name + " ("+p.mode+") - " + p.order);
-            if ( p.order > -1 )
+            Debug.logInfo("[SOAPClientEngine.invoke} : Parameter : " + p.name + " ("+
+                    p.mode + ") - " + p.order);
+            if (p.order > -1)
                 params[p.order] = value;
         }
-                      
+
         Object result = null;
         try {
             Debug.logInfo("[SOAPClientEngine.invoke] : Sending Call To SOAP Server");
             result = call.invoke(params);
-        }
-        catch ( java.rmi.RemoteException e ) {
+        } catch (java.rmi.RemoteException e) {
             throw new GenericServiceException("RPC error",e);
-        }                    
-        return result;        
+        }
+        return result;
     }
-                
+
 }
+

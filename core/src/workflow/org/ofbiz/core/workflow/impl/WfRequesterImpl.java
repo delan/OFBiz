@@ -37,13 +37,13 @@ import org.ofbiz.core.workflow.*;
  *@version    1.0
  */
 public class WfRequesterImpl implements WfRequester {
-    protected Map performers;    
-    
+    protected Map performers;
+
     /** Create a new WfRequester */
     public WfRequesterImpl() {
-        this.performers = new HashMap();        
+        this.performers = new HashMap();
     }
-        
+
     /**
      * Registers a process with this requester; starts the process.
      *@param process to register
@@ -51,36 +51,38 @@ public class WfRequesterImpl implements WfRequester {
      *@param requester associated with the service
      *@throws WfException
      */
-    public void registerProcess(WfProcess process, Map context, GenericRequester requester) throws WfException {
-        if ( process == null )
+    public void registerProcess(WfProcess process, Map context,
+            GenericRequester requester) throws WfException {
+        if (process == null)
             throw new WfException("Process cannot be null");
-        if ( context == null )
+        if (context == null)
             throw new WfException("Context should not be null");
-        
-        performers.put(process,requester);
+
+        performers.put(process, requester);
         WfProcessMgr mgr = process.manager();
-        
+
         // Validate the process context w/ what was passed.
         try {
             ModelService.validate(mgr.contextSignature(), context, true);
         } catch (GenericServiceException e) {
             throw new WfException("Context passed does not validate against defined signature: ", e);
         }
-        
+
         // Set the context w/ the process
         process.setProcessContext(context);
-        
+
         // Start the process
         try {
             process.start();
         } catch (CannotStart cs) {
             throw new WfException("Cannot start process",cs);
-        } catch (AlreadyRunning ar) {
+        }
+        catch (AlreadyRunning ar) {
             throw new WfException("Process already running",ar);
-        }        
+        }
     }
-    
-    /** 
+
+    /**
      * Gets the number of processes.
      * @throws WfException
      * @return Count of the number of workflow processes
@@ -88,7 +90,7 @@ public class WfRequesterImpl implements WfRequester {
     public int howManyPerformer() throws WfException {
         return performers.size();
     }
-    
+
     /** Gets an iterator of processes.
      * @throws WfException
      * @return Iterator of workflow processes.
@@ -96,20 +98,20 @@ public class WfRequesterImpl implements WfRequester {
     public Iterator getIteratorPerformer() throws WfException {
         return performers.keySet().iterator();
     }
-    
-    /** 
+
+    /**
      * A list of processes
      * @param maxNumber
      * @throws WfException
      * @return List of WfProcess objects.
      */
     public List getSequencePerformer(int maxNumber) throws WfException {
-        if ( maxNumber > 0 )
-            return new ArrayList(performers.keySet()).subList(0,(maxNumber-1));
+        if (maxNumber > 0)
+            return new ArrayList(performers.keySet()).subList(0, (maxNumber - 1));
         return new ArrayList(performers.keySet());
     }
-    
-    /** 
+
+    /**
      * Checks if a WfProcess is associated with this requester object
      * @param member
      * @throws WfException
@@ -118,32 +120,35 @@ public class WfRequesterImpl implements WfRequester {
     public boolean isMemberOfPerformer(WfProcess member) throws WfException {
         return performers.containsKey(member);
     }
-    
-    /** 
+
+    /**
      * Receives notice of event status changes
      * @param event
      * @throws WfException
      * @throws InvalidPerformer
      */
-    public synchronized void receiveEvent(WfEventAudit event) throws WfException, InvalidPerformer {
+    public synchronized void receiveEvent(WfEventAudit event)
+        throws WfException, InvalidPerformer {
         // Should the source of the audit come from the process? if so use this.
         WfProcess process = null;
         try {
             process = (WfProcess) event.source();
         } catch (SourceNotAvailable sna) {
             throw new InvalidPerformer("Could not get the performer",sna);
-        } catch (ClassCastException cce) {
+        }
+        catch (ClassCastException cce) {
             throw new InvalidPerformer("Not a valid process object",cce);
         }
-        if ( process == null )
+        if (process == null)
             throw new InvalidPerformer("No performer specified");
-        if ( !performers.containsKey(process) )
+        if (!performers.containsKey(process))
             throw new InvalidPerformer("Performer not assigned to this requester");
-        
+
         GenericRequester req = null;
-        if ( performers.containsKey(process) )
+        if (performers.containsKey(process))
             req = (GenericRequester) performers.get(process);
-        if ( req != null )
-            req.receiveResult(process.result());                
+        if (req != null)
+            req.receiveResult(process.result());
     }
 }
+

@@ -34,10 +34,10 @@ import java.util.*;
  *@version    1.0
  */
 public class GenericResultWaiter implements GenericRequester {
-    
+
     boolean completed = false;
     Map result = null;
-    
+
     /** Receive the result of an asynchronous service call
      * @param result Map of name, value pairs composing the result
      */
@@ -45,19 +45,26 @@ public class GenericResultWaiter implements GenericRequester {
         this.result = result;
         completed = true;
     }
-    
-    public synchronized boolean isCompleted() { return completed; }
+
+    public synchronized boolean isCompleted() {
+        return completed;
+    }
     public synchronized Map getResult() {
-        if(!isCompleted()) throw new java.lang.IllegalStateException("Cannot return result, asynchronous call has not completed.");
+        if (!isCompleted())
+            throw new java.lang.IllegalStateException("Cannot return result, asynchronous call has not completed.");
         return result;
     }
-    
-    public synchronized Map waitForResult() { return this.waitForResult(10); }
+
+    public synchronized Map waitForResult() {
+        return this.waitForResult(10);
+    }
     public synchronized Map waitForResult(long milliseconds) {
-        while(!isCompleted()) {
-            try { this.wait(milliseconds); }
-            catch(java.lang.InterruptedException e) { }
+        while (!isCompleted()) {
+            try {
+                this.wait(milliseconds);
+            } catch (java.lang.InterruptedException e) { }
         }
         return this.getResult();
     }
 }
+

@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 package org.ofbiz.core.workflow.impl;
@@ -32,132 +32,127 @@ import org.ofbiz.core.workflow.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    December 3, 2001
  *@version    1.0
  */
 
 public class WfEventAuditImpl implements WfEventAudit {
-    
-    private WfExecutionObject object;  
+
+    private WfExecutionObject object;
     private String eventType;
     private Timestamp timeStamp;
-    
+
     public WfEventAuditImpl(WfExecutionObject object, String eventType) {
         this.object = object;
         this.eventType = eventType;
         this.timeStamp = new Timestamp(new Date().getTime());
     }
-    
- /**
-   * @throws WfException
-   * @throws SourceNotAvailable
-   * @return
-   */
-  public WfExecutionObject source() throws WfException, SourceNotAvailable {
-      return object;
-  }
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public Timestamp timeStamp() throws WfException {
-      return timeStamp;
-  }
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String eventType() throws WfException {
-      return eventType;
-  }
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String activityKey() throws WfException {
-      try {
-          if (ObjectType.instanceOf(object,"org.ofbiz.core.workflow.WfActivity") )
-              return object.key();
-      }
-      catch ( Exception e ) { }
-      throw new WfException("Source is not a WfActivity object");
-  }
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String activityName() throws WfException {
-      try {
-          if (ObjectType.instanceOf(object,"org.ofbiz.core.workflow.WfActivity") )
-              return object.name();
-      }
-      catch ( Exception e ) { }
-      throw new WfException("Source is not a WfActivity object");
 
-  }
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String processKey() throws WfException {
-      try {
-          if (ObjectType.instanceOf(object,"org.ofbiz.core.workflow.WfProcess") )
-              return object.key();
-      }
-      catch ( Exception e ) { }
-      throw new WfException("Source is not a WfProcess object");
+    /**
+      * @throws WfException
+      * @throws SourceNotAvailable
+      * @return
+      */
+    public WfExecutionObject source() throws WfException, SourceNotAvailable {
+        return object;
+    }
 
-  }
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String processName() throws WfException {
-      try {
-          if (ObjectType.instanceOf(object,"org.ofbiz.core.workflow.WfProcess") )
-              return object.name();
-      }
-      catch ( Exception e ) { }
-      throw new WfException("Source is not a WfProcess object");
+    /**
+     * @throws WfException
+     * @return
+     */
+    public Timestamp timeStamp() throws WfException {
+        return timeStamp;
+    }
 
-  }
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String processMgrName() throws WfException {
-      try {
-         if (ObjectType.instanceOf(object,"org.ofbiz.core.workflow.WfProcess") )
-             return ( (WfProcess) object).manager().name();
-         else if (ObjectType.instanceOf(object,"org.ofbiz.core.workflow.WfActivity") )
-             return ( (WfActivity) object).container().manager().name();
-      }
-      catch ( Exception e ) { }
-      throw new WfException("Illegal source object");
-  }
-                         
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String processMgrVersion() throws WfException {
-      try {
-         if (ObjectType.instanceOf(object,"org.ofbiz.core.workflow.WfProcess") )
-             return ( (WfProcess) object).manager().version();
-         else if (ObjectType.instanceOf(object,"org.ofbiz.core.workflow.WfActivity") )
-             return ( (WfActivity) object).container().manager().version();
-      }
-      catch ( Exception e ) { }
-      throw new WfException("Illegal source object");
-  }
-  
-} 
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String eventType() throws WfException {
+        return eventType;
+    }
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String activityKey() throws WfException {
+        try {
+            if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfActivity"))
+                return object.key();
+        } catch (Exception e) { }
+        throw new WfException("Source is not a WfActivity object");
+    }
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String activityName() throws WfException {
+        try {
+            if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfActivity"))
+                return object.name();
+        } catch (Exception e) { }
+        throw new WfException("Source is not a WfActivity object");
+
+    }
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String processKey() throws WfException {
+        try {
+            if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfProcess"))
+                return object.key();
+        } catch (Exception e) { }
+        throw new WfException("Source is not a WfProcess object");
+
+    }
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String processName() throws WfException {
+        try {
+            if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfProcess"))
+                return object.name();
+        } catch (Exception e) { }
+        throw new WfException("Source is not a WfProcess object");
+
+    }
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String processMgrName() throws WfException {
+        try {
+            if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfProcess"))
+                return ((WfProcess) object).manager().name();
+            else if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfActivity"))
+                return ((WfActivity) object).container().manager().name();
+        } catch (Exception e) { }
+        throw new WfException("Illegal source object");
+    }
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String processMgrVersion() throws WfException {
+        try {
+            if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfProcess"))
+                return ((WfProcess) object).manager().version();
+            else if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfActivity"))
+                return ((WfActivity) object).container().manager().version();
+        } catch (Exception e) { }
+        throw new WfException("Illegal source object");
+    }
+
+}
+
 

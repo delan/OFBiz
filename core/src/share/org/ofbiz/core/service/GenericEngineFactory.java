@@ -38,24 +38,27 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class GenericEngineFactory {
-            
+
     /** Gets the GenericEngine instance that corresponds to given the name
      *@param engineName Name of the engine
      *@return GenericEngine that corresponds to the engineName
      */
-    public static GenericEngine getGenericEngine(String engineName, ServiceDispatcher dispatcher) throws GenericServiceException {                
-        String className = UtilProperties.getPropertyValue("servicesengine",engineName + ".engine","org.ofbiz.core.service.StandardJavaEngine");
-        Class[] paramTypes = new Class[] { ServiceDispatcher.class };
-        Object[] params = new Object[] { dispatcher };
+    public static GenericEngine getGenericEngine(String engineName,
+            ServiceDispatcher dispatcher) throws GenericServiceException {
+        String className =
+                UtilProperties.getPropertyValue("servicesengine",engineName + ".engine",
+                "org.ofbiz.core.service.StandardJavaEngine");
+        Class[] paramTypes = new Class[]{ ServiceDispatcher.class };
+        Object[] params = new Object[]{ dispatcher };
         GenericEngine engine = null;
         try {
             Class c = Class.forName(className);
             Constructor cn = c.getConstructor(paramTypes);
             engine = (GenericEngine) cn.newInstance(params);
-        }
-        catch ( Exception e ) {
-            throw new GenericServiceException(e.getMessage(),e);
+        } catch (Exception e) {
+            throw new GenericServiceException(e.getMessage(), e);
         }
         return engine;
-    }            
+    }
 }
+

@@ -36,79 +36,83 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public final class StandardJavaEngine extends GenericAsyncEngine {
-            
+
     /** Creates new StandardJavaEngine */
     public StandardJavaEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
     }
-    
+
     /** Run the service synchronously and IGNORE the result
      * @param context Map of name, value pairs composing the context
      */
-    public void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException {
+    public void runSyncIgnore(ModelService modelService,
+            Map context) throws GenericServiceException {
         Map result = runSync(modelService, context);
     }
-    
+
     /** Run the service synchronously and return the result
      * @param context Map of name, value pairs composing the context
      * @return Map of name, value pairs composing the result
      */
-    public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
-        Object result = serviceInvoker(modelService,context);
-        if ( result == null || !(result instanceof Map))
+    public Map runSync(ModelService modelService,
+            Map context) throws GenericServiceException {
+        Object result = serviceInvoker(modelService, context);
+        if (result == null || !(result instanceof Map))
             throw new GenericServiceException("Service did not return expected result");
         return (Map) result;
     }
-    
+
     // Invoke the static java method service.
-    private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {
+    private Object serviceInvoker(ModelService modelService,
+            Map context) throws GenericServiceException {
         // static java service methods should be: public Map methodName(DispatchContext dctx, Map context)
         DispatchContext dctx = dispatcher.getLocalContext(loader);
-        Class[] paramTypes = new Class[] { DispatchContext.class, Map.class };
-        Object[] params = new Object[] { dctx, context };
+        Class[] paramTypes = new Class[]{ DispatchContext.class, Map.class };
+        Object[] params = new Object[]{ dctx, context };
         Object result = null;
-        
+
         // check the package and method names
-        if ( modelService.location == null || modelService.invoke == null )
+        if (modelService.location == null || modelService.invoke == null)
             throw new GenericServiceException("Cannot locate service to invoke (location or invoke name missing)");
-         
+
         // get the classloader to use
         ClassLoader cl = null;
-        if ( loader == null )
+        if (loader == null)
             cl = this.getClass().getClassLoader();
         else
             cl = dispatcher.getLocalContext(loader).getClassLoader();
-                        
+
         try {
             Class c = cl.loadClass(modelService.location);
             Method m = c.getMethod(modelService.invoke, paramTypes);
             result = m.invoke(null, params);
-        }
-        catch ( ClassNotFoundException cnfe ) {
+        } catch (ClassNotFoundException cnfe) {
             throw new GenericServiceException("Cannot find service location",cnfe);
         }
-        catch ( NoSuchMethodException nsme) {
+        catch (NoSuchMethodException nsme) {
             throw new GenericServiceException("Service method does not exist",nsme);
         }
-        catch ( SecurityException se ) {
+        catch (SecurityException se) {
             throw new GenericServiceException("Access denied",se);
         }
-        catch ( IllegalAccessException iae ) {
+        catch (IllegalAccessException iae) {
             throw new GenericServiceException("Method not accessible",iae);
         }
-        catch ( IllegalArgumentException iarge ) {
+        catch (IllegalArgumentException iarge) {
             throw new GenericServiceException("Invalid parameter match",iarge);
         }
-        catch ( InvocationTargetException ite ) {
-            throw new GenericServiceException("Service threw an unexpected exception",ite);
+        catch (InvocationTargetException ite) {
+            throw new GenericServiceException("Service threw an unexpected exception",
+                    ite);
         }
-        catch ( NullPointerException npe ) {
+        catch (NullPointerException npe) {
             throw new GenericServiceException("Specified object is null",npe);
         }
-        catch ( ExceptionInInitializerError eie ) {
+        catch (ExceptionInInitializerError eie) {
             throw new GenericServiceException("Initialization failed",eie);
         }
-        
+
         return result;
-    }        
+    }
 }
+

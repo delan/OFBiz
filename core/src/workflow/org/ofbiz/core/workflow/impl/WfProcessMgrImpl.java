@@ -39,37 +39,37 @@ import org.ofbiz.core.workflow.*;
  */
 
 public class WfProcessMgrImpl implements WfProcessMgr {
-    
-    protected GenericValue processDef;    
-    protected String state;        // will probably move to a runtime entity for the manager
-    protected List processList; // will probably be a related entity to the runtime entity    
+
+    protected GenericValue processDef;
+    protected String state; // will probably move to a runtime entity for the manager
+    protected List processList; // will probably be a related entity to the runtime entity
     protected Map contextSignature;
     protected Map resultSignature;
-    
+
     /** Creates new WfProcessMgrImpl
      * @param delegator The GenericDelegator to use for the process definitions.
      * @param processId The unique key of the process definition.
      * @throws WfException
      */
-    public WfProcessMgrImpl(GenericDelegator delegator, String packageId, String processId) throws WfException {
+    public WfProcessMgrImpl(GenericDelegator delegator, String packageId,
+            String processId) throws WfException {
         try {
-            Map finder = UtilMisc.toMap("packageId",packageId,"processId",processId);
+            Map finder = UtilMisc.toMap("packageId",packageId, "processId",processId);
             Collection processes = delegator.findByAnd("WorkflowProcess",finder);
-            if ( processes.size() > 1 )
+            if (processes.size() > 1)
                 throw new WfException("Unique processId does not exist. Entity value error");
-            if ( processes.size() == 0 )
+            if (processes.size() == 0)
                 throw new WfException("No process definition found for the specified processId");
             processDef = (GenericValue) processes.iterator().next();
-        }
-        catch ( GenericEntityException e ) {
+        } catch (GenericEntityException e) {
             throw new WfException("Problems getting the process definition from the WorkflowProcess entity");
         }
-                
-        buildSignatures();        
+
+        buildSignatures();
         processList = new ArrayList();
-        state = "enabled";     
+        state = "enabled";
     }
-    
+
     /**
      * @param newState
      * @throws WfException
@@ -77,11 +77,11 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      */
     public void setProcessMgrState(String newState) throws WfException,
     TransitionNotAllowed {
-        if ( !newState.equals("enabled") || !newState.equals("disabled") )
+        if (!newState.equals("enabled") || !newState.equals("disabled"))
             throw new TransitionNotAllowed();
         this.state = newState;
     }
-    
+
     /**
      * @param maxNumber
      * @throws WfException
@@ -92,7 +92,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
             return new ArrayList(processList.subList(0, maxNumber - 1));
         return processList;
     }
-    
+
     /**
      * Create a WfProcess object
      * @param requester
@@ -102,27 +102,26 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      * @throws RequesterRequired
      * @return WfProcess created
      */
-    public WfProcess createProcess(WfRequester requester)
-    throws WfException, NotEnabled, InvalidRequester, RequesterRequired {
-        if ( state.equals("disabled") )
+    public WfProcess createProcess(WfRequester requester) throws WfException,
+    NotEnabled, InvalidRequester, RequesterRequired {
+        if (state.equals("disabled"))
             throw new NotEnabled();
-        
+
         if (requester == null)
             throw new RequesterRequired();
-        
-        // test if the requestor is OK: how?        
-        WfProcess process = WfFactory.getWfProcess(processDef,this);
-        
+
+        // test if the requestor is OK: how?
+        WfProcess process = WfFactory.getWfProcess(processDef, this);
+
         try {
             process.setRequester(requester);
-        }
-        catch (CannotChangeRequester ccr) {
-            throw new WfException(ccr.getMessage(),ccr);
+        } catch (CannotChangeRequester ccr) {
+            throw new WfException(ccr.getMessage(), ccr);
         }
         processList.add(process);
         return process;
     }
-    
+
     /**
      * @throws WfException
      * @return
@@ -130,7 +129,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     public Map contextSignature() throws WfException {
         return this.contextSignature;
     }
-    
+
     /**
      * @throws WfException
      * @return
@@ -138,7 +137,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     public int howManyProcess() throws WfException {
         return processList.size();
     }
-    
+
     /**
      * @throws WfException
      * @return
@@ -147,7 +146,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         String[] list = { "enabled", "disabled" };
         return Arrays.asList(list);
     }
-    
+
     /**
      * @throws WfException
      * @return
@@ -155,7 +154,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     public String category() throws WfException {
         return processDef.getString("category");
     }
-    
+
     /**
      * @throws WfException
      * @return
@@ -163,7 +162,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     public String version() throws WfException {
         return processDef.getString("version");
     }
-    
+
     /**
      * @throws WfException
      * @return
@@ -171,7 +170,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     public String description() throws WfException {
         return processDef.getString("description");
     }
-    
+
     /**
      * @throws WfException
      * @return
@@ -179,7 +178,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     public String name() throws WfException {
         return processDef.getString("name");
     }
-    
+
     /**
      * @throws WfException
      * @return
@@ -187,7 +186,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     public Map resultSignature() throws WfException {
         return this.resultSignature;
     }
-    
+
     /**
      * @param member
      * @throws WfException
@@ -196,7 +195,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     public boolean isMemberOfProcess(WfProcess member) throws WfException {
         return processList.contains(member);
     }
-    
+
     /**
      * @throws WfException
      * @return
@@ -204,7 +203,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     public Iterator getIteratorProcess() throws WfException {
         return processList.iterator();
     }
-    
+
     // Constructs the context/result signatures from the formalParameters
     private void buildSignatures() throws WfException {
         contextSignature = new HashMap();
@@ -215,27 +214,27 @@ public class WfProcessMgrImpl implements WfProcessMgr {
             fields.put("packageId",processDef.getString("packageId"));
             fields.put("processId",processDef.getString("processId"));
             fields.put("applicationId","_NA_");
-            params = processDef.getDelegator().findByAnd("WorkflowFormalParam",fields);
+            params = processDef.getDelegator().findByAnd("WorkflowFormalParam",
+                    fields);
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
         }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
-        }
-        if ( params == null )
+        if (params == null)
             return;
-        
+
         Iterator i = params.iterator();
-        while ( i.hasNext() ) {
+        while (i.hasNext()) {
             GenericValue param = (GenericValue) i.next();
             String name = param.getString("formalParamId");
             String mode = param.getString("modeEnumId");
             String type = param.getString("dataTypeEnumId");
-            if ( mode.equals("WPM_IN") || mode.equals("WPM_INOUT") )
-                contextSignature.put(name,getJavaType(type));
-            else if ( mode.equals("WPM_OUT") || mode.equals("WPM_INOUT") )
-                resultSignature.put(name,getJavaType(type));
-        }                                    
+            if (mode.equals("WPM_IN") || mode.equals("WPM_INOUT"))
+                contextSignature.put(name, getJavaType(type));
+            else if (mode.equals("WPM_OUT") || mode.equals("WPM_INOUT"))
+                resultSignature.put(name, getJavaType(type));
+        }
     }
-     
+
     // Gets the Java type from a XPDL datatype
     private String getJavaType(String xpdlType) {
         Map typeMap = new HashMap();
@@ -243,10 +242,11 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         typeMap.put("WDT_STRING","java.lang.String");
         typeMap.put("WDT_INTEGER","java.lang.Long");
         typeMap.put("WDT_FLOAT","java.lang.Double");
-        typeMap.put("WDT_DATETIME","java.sql.Timestamp");        
-        if ( typeMap.containsKey(xpdlType) )
+        typeMap.put("WDT_DATETIME","java.sql.Timestamp");
+        if (typeMap.containsKey(xpdlType))
             return (String) typeMap.get(xpdlType);
         else
             return "java.lang.Object";
     }
 }
+

@@ -38,32 +38,35 @@ import org.ofbiz.core.security.*;
  *@version    1.0
  */
 public class LocalDispatcher {
-    
+
     protected DispatchContext ctx;
     protected ServiceDispatcher dispatcher;
     protected String name;
-    
-    public LocalDispatcher(String name, String root, String rootExt, GenericDelegator delegator, Collection readerURLs) {
-        this(name,root,rootExt,delegator,readerURLs,null);
+
+    public LocalDispatcher(String name, String root, String rootExt,
+            GenericDelegator delegator, Collection readerURLs) {
+        this(name, root, rootExt, delegator, readerURLs, null);
     }
-    
-    public LocalDispatcher(String name, String root, String rootExt, GenericDelegator delegator, Collection readerURLs, ClassLoader loader) {
-        if ( loader == null ) {
+
+    public LocalDispatcher(String name, String root, String rootExt,
+            GenericDelegator delegator, Collection readerURLs, ClassLoader loader) {
+        if (loader == null) {
             try {
                 loader = Thread.currentThread().getContextClassLoader();
-            }
-            catch ( SecurityException e ) {
+            } catch (SecurityException e) {
                 loader = this.getClass().getClassLoader();
             }
         }
-        DispatchContext dc = new DispatchContext(name,root,rootExt,readerURLs,loader,null);
-        init(name, delegator, dc);        
+        DispatchContext dc =
+                new DispatchContext(name, root, rootExt, readerURLs, loader, null);
+        init(name, delegator, dc);
     }
-    
-    public LocalDispatcher(String name, GenericDelegator delegator, DispatchContext ctx) {
+
+    public LocalDispatcher(String name, GenericDelegator delegator,
+            DispatchContext ctx) {
         init(name, delegator, ctx);
     }
-    
+
     private void init(String name, GenericDelegator delegator, DispatchContext ctx) {
         this.name = name;
         this.ctx = ctx;
@@ -71,50 +74,55 @@ public class LocalDispatcher {
         dispatcher = ServiceDispatcher.getInstance(name, ctx, delegator);
         Debug.logInfo("[LocalDispatcher] : Created Dispatcher for: " + name);
     }
-    
+
     /** Run the service synchronously and return the result
      *@param context Map of name, value pairs composing the context
      *@return Map of name, value pairs composing the result
      */
-    public Map runSync(String serviceName, Map context) throws GenericServiceException {
+    public Map runSync(String serviceName,
+            Map context) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         return dispatcher.runSync(this.name, service, context);
     }
-    
+
     /** Run the service synchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public void runSyncIgnore(String serviceName, Map context) throws GenericServiceException {
+    public void runSyncIgnore(String serviceName,
+            Map context) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         dispatcher.runSyncIgnore(this.name, service, context);
     }
-    
+
     /** Run the service asynchronously, passing an instance of GenericRequester that will receive the result
      *@param context Map of name, value pairs composing the context
      *@param requester Object implementing GenericRequester interface which will receive the result
      */
-    public void runAsync(String serviceName, Map context, GenericRequester requester) throws GenericServiceException {
+    public void runAsync(String serviceName, Map context,
+            GenericRequester requester) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         dispatcher.runAsync(this.name, service, context, requester);
     }
-    
+
     /** Run the service asynchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public void runAsync(String serviceName, Map context) throws GenericServiceException {
+    public void runAsync(String serviceName,
+            Map context) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         dispatcher.runAsync(this.name, service, context);
     }
-    
+
     /** Run the service asynchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public GenericResultWaiter runAsyncWait(String serviceName, Map context) throws GenericServiceException {
+    public GenericResultWaiter runAsyncWait(String serviceName,
+            Map context) throws GenericServiceException {
         GenericResultWaiter waiter = new GenericResultWaiter();
         this.runAsync(serviceName, context, waiter);
         return waiter;
     }
-    
+
     /** Schedule a service to run asynchronously at a specific start time
      *@param serviceName Name of the service to invoke
      *@param context The name/value pairs composing the context
@@ -123,64 +131,68 @@ public class LocalDispatcher {
      *@param interval The interval of the frequency recurrence
      *@param count The number of times to repeat
      */
-    public void schedule(String serviceName, Map context, long startTime, String frequency, int interval, int count) throws GenericServiceException {
+    public void schedule(String serviceName, Map context, long startTime,
+            String frequency, int interval,
+            int count) throws GenericServiceException {
         try {
-            getJobManager().schedule(getName(),serviceName,context,startTime,frequency,interval,count);
-            Debug.logInfo("[LocalDispatcher.schedule] : Current time: " + (new Date()).getTime());
+            getJobManager().schedule(getName(), serviceName, context, startTime,
+                    frequency, interval, count);
+            Debug.logInfo("[LocalDispatcher.schedule] : Current time: " +
+                    (new Date()).getTime());
             Debug.logInfo("[LocalDispatcher.schedule] : Runtime: " + startTime);
             Debug.logInfo("[LocalDispatcher.schedule] : Frequency: " + frequency);
             Debug.logInfo("[LocalDispatcher.schedule] : Interval: " + interval);
             Debug.logInfo("[LocalDispatcher.schedule] : Count: " + count);
-        }
-        catch ( JobSchedulerException e ) {
-            throw new GenericServiceException(e.getMessage(),e);
+        } catch (JobSchedulerException e) {
+            throw new GenericServiceException(e.getMessage(), e);
         }
     }
-    
+
     /** Schedule a service to run asynchronously at a specific start time
      *@param serviceName Name of the service to invoke
      *@param context The name/value pairs composing the context
      *@param startTime The time to run this service
      */
-    public void schedule(String serviceName, Map context, long startTime) throws GenericServiceException {
+    public void schedule(String serviceName, Map context,
+            long startTime) throws GenericServiceException {
         try {
-            getJobManager().schedule(getName(),serviceName,context,startTime);
-            Debug.logInfo("[LocalDispatcher.schedule] : Current time: " + (new Date()).getTime());
+            getJobManager().schedule(getName(), serviceName, context, startTime);
+            Debug.logInfo("[LocalDispatcher.schedule] : Current time: " +
+                    (new Date()).getTime());
             Debug.logInfo("[LocalDispatcher.schedule] : Runtime: " + startTime);
-        }
-        catch ( JobSchedulerException e ) {
-            throw new GenericServiceException(e.getMessage(),e);
+        } catch (JobSchedulerException e) {
+            throw new GenericServiceException(e.getMessage(), e);
         }
     }
-    
+
     /** Gets the JobManager associated with this dispatcher
      *@return JobManager that is associated with this dispatcher
      */
     public JobManager getJobManager() {
         return dispatcher.getJobManager();
     }
-    
+
     /** Gets the GenericEntityDelegator associated with this dispatcher
      *@return GenericEntityDelegator associated with this dispatcher
      */
     public GenericDelegator getDelegator() {
         return dispatcher.getDelegator();
     }
-    
+
     /** Gets the Security object associated with this dispatcher
      *@return Security object associated with this dispatcher
      */
     public Security getSecurity() {
         return dispatcher.getSecurity();
     }
-    
+
     /** Returns the Name of this local dispatcher
      *@return String representing the name of this local dispatcher
      */
     public String getName() {
         return this.name;
     }
-    
+
     /** Returns the DispatchContext created by this dispatcher
      *@return DispatchContext created by this dispatcher
      */
@@ -188,3 +200,4 @@ public class LocalDispatcher {
         return ctx;
     }
 }
+

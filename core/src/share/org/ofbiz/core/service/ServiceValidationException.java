@@ -25,21 +25,22 @@ package org.ofbiz.core.service;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    January 10, 2002
  *@version    1.0
  */
 public class ServiceValidationException extends GenericServiceException {
-    
+
     public ServiceValidationException() {
         super();
     }
-    
+
     public ServiceValidationException(String str) {
         super(str);
     }
-    
+
     public ServiceValidationException(String str, Throwable nested) {
-        super(str,nested);        
-    }        
-}    
+        super(str, nested);
+    }
+}
+

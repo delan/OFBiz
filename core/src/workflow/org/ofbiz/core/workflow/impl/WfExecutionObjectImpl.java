@@ -42,39 +42,41 @@ import org.ofbiz.core.workflow.*;
  *@version    1.2
  */
 public abstract class WfExecutionObjectImpl implements WfExecutionObject {
-    
+
     protected String packageId;
     protected String processId;
     protected String activityId;
     protected String workEffortId;
     protected GenericDelegator delegator;
     protected List history;
-    
+
     /**
      * Creates a new WfExecutionObjectImpl
-     * @param valueObject The GenericValue object for the definition entity     
+     * @param valueObject The GenericValue object for the definition entity
      * @param parentId WorkEffort ID of the parent runtime object (null for process)
      */
-    public WfExecutionObjectImpl(GenericValue valueObject, String parentId) throws WfException {
+    public WfExecutionObjectImpl(GenericValue valueObject,
+            String parentId) throws WfException {
         this.packageId = valueObject.getString("packageId");
         this.processId = valueObject.getString("processId");
-        if ( valueObject.getEntityName().equals("WorkflowActivity") )
+        if (valueObject.getEntityName().equals("WorkflowActivity"))
             this.activityId = valueObject.getString("activityId");
         else
             this.activityId = null;
         this.delegator = valueObject.getDelegator();
-        createRuntime(parentId);    
+        createRuntime(parentId);
     }
-                
-    public WfExecutionObjectImpl(GenericDelegator delegator, String workEffortId) throws WfException {
+
+    public WfExecutionObjectImpl(GenericDelegator delegator,
+            String workEffortId) throws WfException {
         this.delegator = delegator;
         this.workEffortId = workEffortId;
         this.packageId = getRuntimeObject().getString("workflowPackageId");
-        this.processId = getRuntimeObject().getString("workflowProcessId");        
-        this.activityId = getRuntimeObject().getString("workflowActivityId");                
-        this.history = null;        
+        this.processId = getRuntimeObject().getString("workflowProcessId");
+        this.activityId = getRuntimeObject().getString("workflowActivityId");
+        this.history = null;
     }
-    
+
     // creates the stored runtime workeffort data.
     private void createRuntime(String parentId) throws WfException {
         GenericValue valueObject = getDefinitionObject();
@@ -85,7 +87,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             String weType = activityId != null ? "ACTIVITY" : "WORK_FLOW";
             dataMap.put("workEffortId",workEffortId);
             dataMap.put("workEffortTypeId",weType);
-            dataMap.put("workEffortParentId",parentId); 
+            dataMap.put("workEffortParentId",parentId);
             dataMap.put("workflowPackageId",packageId);
             dataMap.put("workflowProcessId",processId);
             dataMap.put("workEffortName",valueObject.getString("objectName"));
@@ -95,18 +97,18 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             dataMap.put("lastModifiedDate",dataMap.get("createdDate"));
             dataMap.put("priority",valueObject.getLong("objectPriority"));
             dataMap.put("currentStatusId",getEntityStatus("open.not_running.not_started"));
-            if ( activityId != null )
+            if (activityId != null)
                 dataMap.put("workflowActivityId",activityId);
             dataObject = getDelegator().makeValue("WorkEffort",dataMap);
-            if ( dataObject != null )
+            if (dataObject != null)
                 getDelegator().create(dataObject);
-            Debug.logInfo("Created new runtime object (Workeffort: "+runtimeKey()+")");
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
+            Debug.logInfo("Created new runtime object (Workeffort: "+
+                    runtimeKey() + ")");
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
         }
     }
-        
+
     /**
      * Getter for attribute 'name'.
      * @throws WfException General workflow exception.
@@ -115,7 +117,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public String name() throws WfException {
         return getRuntimeObject().getString("workEffortName");
     }
-    
+
     /**
      * Setter for attribute 'name'
      * @param newValue Set the name of the object.
@@ -126,12 +128,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         try {
             dataObject.set("workEffortName",newValue);
             dataObject.store();
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
         }
     }
-    
+
     /**
      * Setter for attribute 'priority'.
      * @param newValue
@@ -142,23 +143,22 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         try {
             dataObject.set("priority",new Integer(newValue));
             dataObject.store();
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
         }
     }
-    
+
     /**
      * Getter for attribute 'priority'.
      * @throws WfException General workflow exception.
      * @return Getter Priority of
      */
     public int priority() throws WfException {
-        if ( getRuntimeObject().get("priority") != null )
+        if (getRuntimeObject().get("priority") != null)
             return getRuntimeObject().getInteger("priority").intValue();
-        return 0;  // change to default priority value
+        return 0; // change to default priority value
     }
-    
+
     /**
      * Retrieve the current state of this process or activity.
      * @throws WfException General workflow exception
@@ -169,39 +169,37 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         String stateStr = null;
         try {
             statusObj = getRuntimeObject().getRelatedOne("CurrentStatusItem");
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
         }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
-        }
-        if ( statusObj != null )
+        if (statusObj != null)
             stateStr = statusObj.getString("statusCode");
-        
-        if ( stateStr == null )
+
+        if (stateStr == null)
             throw new WfException("Stored state is not a valid type.");
         return stateStr;
     }
-    
+
     /**
      * Retrieve the list of all valid states.
      * @throws WfException General workflow exception.
      * @return List of valid states.
      */
     public List validStates() throws WfException {
-        String statesArr[] = { "open.running",  "open.not_running.not_started",
-        "open.not_running.suspended",  "closed.completed", "closed.terminated",
-        "closed.aborted" };
+        String statesArr[] = { "open.running", "open.not_running.not_started", "open.not_running.suspended",
+        "closed.completed", "closed.terminated", "closed.aborted" };
         ArrayList possibleStates = new ArrayList(Arrays.asList(statesArr));
         String currentState = state();
-        if ( currentState.startsWith("closed") )
+        if (currentState.startsWith("closed"))
             return new ArrayList();
-        if ( !currentState.startsWith("open") )
+        if (!currentState.startsWith("open"))
             throw new WfException("Currently in an unknown state.");
-        if ( currentState.equals("open.running") ) {
+        if (currentState.equals("open.running")) {
             possibleStates.remove("open.running");
             possibleStates.remove("open.not_running.not_started");
             return possibleStates;
         }
-        if ( currentState.equals("open.not_running.not_started") ) {
+        if (currentState.equals("open.not_running.not_started")) {
             possibleStates.remove("open.not_running.not_started");
             possibleStates.remove("open.not_running.suspended");
             possibleStates.remove("closed.completed");
@@ -209,7 +207,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             possibleStates.remove("closed.aborted");
             return possibleStates;
         }
-        if ( currentState.equals("open.not_running.suspended") ) {
+        if (currentState.equals("open.not_running.suspended")) {
             possibleStates.remove("open.not_running.suspended");
             possibleStates.remove("open.not_running.not_started");
             possibleStates.remove("closed.complete");
@@ -219,7 +217,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         }
         return new ArrayList();
     }
-    
+
     /**
      * Getter for history count.
      * @throws WfException Generall workflow exception
@@ -227,11 +225,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @return Count of history Elements
      */
     public int howManyHistory() throws WfException, HistoryNotAvailable {
-        if ( history.size() < 1 )
+        if (history.size() < 1)
             throw new HistoryNotAvailable();
         return history.size();
     }
-    
+
     /**
      * Abort the execution of this process or activity.
      * @throws WfException General workflow exception.
@@ -240,7 +238,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void abort() throws WfException, CannotStop, NotRunning {
     }
-    
+
     /**
      * @throws WfException General workflow exception.
      * @return
@@ -249,7 +247,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         String[] list = { "running", "not_running" };
         return Arrays.asList(list);
     }
-    
+
     /**
      * @throws WfException General workflow exception.
      * @return Reason for not running.
@@ -258,7 +256,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         String[] list = { "not_started", "suspended" };
         return Arrays.asList(list);
     }
-    
+
     /** Getter for the runtime key
      * @throws WfException
      * @return Key of the runtime object
@@ -266,30 +264,29 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public String runtimeKey() throws WfException {
         return getRuntimeObject().getString("workEffortId");
     }
-    
+
     /**
      * Getter for definition key
      * @throws WfException General workflow exception.
      * @return Key of the definition object.
      */
     public String key() throws WfException {
-        if ( activityId != null )
+        if (activityId != null)
             return activityId;
         else
-            return processId;            
+            return processId;
     }
-    
+
     /**
      * Predicate to check if a 'member' is an element of the history.
      * @param member An element of the history.
      * @throws WfException General workflow exception.
      * @return true if the element of the history, false otherwise.
      */
-    public boolean isMemberOfHistory(WfExecutionObject member)
-    throws WfException {
+    public boolean isMemberOfHistory(WfExecutionObject member) throws WfException {
         return false;
     }
-    
+
     /**
      * Set the process context
      * @param newValue Set new process data.
@@ -297,40 +294,41 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws InvalidData The data is invalid.
      * @throws UpdateNotAllowed Update the context is not allowed.
      */
-    public void setProcessContext(Map newValue) throws WfException, InvalidData, UpdateNotAllowed {        
+    public void setProcessContext(Map newValue) throws WfException, InvalidData,
+    UpdateNotAllowed {
         setSerializedData(newValue);
     }
-    
+
     /**
      * Set the process context (with previously stored data)
      * @param newValue RuntimeData entity key.
      * @throws WfException General workflow exception.
      * @throws InvalidData The data is invalid.
      * @throws UpdateNotAllowed Update the context is not allowed.
-     */    
-    public void setProcessContext(String contextKey) throws WfException, InvalidData, UpdateNotAllowed {
+     */
+    public void setProcessContext(String contextKey) throws WfException,
+    InvalidData, UpdateNotAllowed {
         GenericValue dataObject = getRuntimeObject();
         try {
             dataObject.set("runtimeDataId",contextKey);
             dataObject.store();
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
         }
     }
-    
+
     /**
      * Get the Runtime Data key (context)
      * @return String primary key for the runtime (context) data
      * @throws WfException
-     */    
+     */
     public String contextKey() throws WfException {
-        if ( getRuntimeObject().get("runtimeDataId") == null )
+        if (getRuntimeObject().get("runtimeDataId") == null)
             return null;
         else
             return getRuntimeObject().getString("runtimeDataId");
     }
-    
+
     /**
      * Getter for attribute 'context'.
      * @throws WfException General workflow exception.
@@ -339,7 +337,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public Map processContext() throws WfException {
         return getContext();
     }
-    
+
     /**
      * @throws WfException General workflow exception.
      * @return Current state of this object.
@@ -348,7 +346,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         String[] list = { "open", "closed" };
         return Arrays.asList(list);
     }
-    
+
     /**
      * Terminate this process or activity.
      * @throws WfException General workflow exception
@@ -357,7 +355,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void terminate() throws WfException, CannotStop, NotRunning {
     }
-    
+
     /**
      * Setter for attribute 'description'.
      * @param newValue New value for attribute 'description'.
@@ -368,12 +366,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         try {
             valueObject.set("description",newValue);
             valueObject.store();
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
         }
     }
-    
+
     /**
      * Getter for attribute 'description'.
      * @throws WfException General workflow exception.
@@ -382,7 +379,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public String description() throws WfException {
         return getDefinitionObject().getString("description");
     }
-    
+
     /**
      * Getter for timestamp of last state change.
      * @throws WfException General workflow exception.
@@ -390,11 +387,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public Timestamp lastStateTime() throws WfException {
         GenericValue dataObject = getRuntimeObject();
-        if ( dataObject == null || dataObject.get("lastStatusUpdate") == null )
+        if (dataObject == null || dataObject.get("lastStatusUpdate") == null)
             throw new WfException("No runtime object or status has never been set.");
         return dataObject.getTimestamp("lastStatusUpdate");
     }
-    
+
     /**
      * Getter for history sequence.
      * @param maxNumber Maximum number of element in result list.
@@ -402,11 +399,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws HistoryNotAvailable
      * @return List of History objects.
      */
-    public List getSequenceHistory(int maxNumber)
-    throws WfException, HistoryNotAvailable {
+    public List getSequenceHistory(int maxNumber) throws WfException,
+    HistoryNotAvailable {
         return history;
     }
-    
+
     /**
      * Search in the history for specific elements.
      * @param query Search criteria.
@@ -415,11 +412,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws HistoryNotAvailable
      * @return Found history elements that meet the search criteria.
      */
-    public Iterator getIteratorHistory(String query, Map namesInQuery)
-    throws WfException, HistoryNotAvailable {
+    public Iterator getIteratorHistory(String query,
+            Map namesInQuery) throws WfException, HistoryNotAvailable {
         return history.iterator();
     }
-    
+
     /**
      * Resume this process or activity.
      * @throws WfException General workflow exception.
@@ -427,18 +424,17 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws NotRunning
      * @throws NotSuspended
      */
-    public void resume() throws WfException, CannotResume,
-    NotRunning, NotSuspended {
-        if ( state().startsWith("open.not_running") ) {
-            if ( !state().equals("open.not_running_suspended") )
+    public void resume() throws WfException, CannotResume, NotRunning, NotSuspended {
+        if (state().startsWith("open.not_running")) {
+            if (!state().equals("open.not_running_suspended"))
                 throw new NotSuspended();
             else
                 throw new NotRunning();
         }
-        
+
         changeState("open.running");
     }
-    
+
     /**
      * @throws WfException General workflow exception.
      * @return Termination art of this process ot activity.
@@ -447,7 +443,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         String[] list = { "completed", "terminated", "aborted" };
         return Arrays.asList(list);
     }
-    
+
     /**
      * Set new state for this process or activity.
      * @param newState New state value to be set.
@@ -455,25 +451,24 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws InvalidState The state is invalid.
      * @throws TransitionNotAllowed The transition is not allowed.
      */
-    public void changeState(String newState) throws WfException, InvalidState, TransitionNotAllowed {
+    public void changeState(String newState) throws WfException, InvalidState,
+    TransitionNotAllowed {
         // Test is transaction is allowed???
         GenericValue dataObject = getRuntimeObject();
-        if ( validStates().contains(newState) ) {
+        if (validStates().contains(newState)) {
             try {
                 long now = (new Date()).getTime();
                 dataObject.set("currentStatusId",getEntityStatus(newState));
                 dataObject.set("lastStatusUpdate",new Timestamp(now));
                 dataObject.store();
+            } catch (GenericEntityException e) {
+                throw new WfException(e.getMessage(), e);
             }
-            catch ( GenericEntityException e ) {
-                throw new WfException(e.getMessage(),e);
-            }
-        }
-        else {
+        } else {
             throw new InvalidState();
         }
     }
-    
+
     /**
      * Suspend this process or activity.
      * @throws WfException General workflow exception.
@@ -485,7 +480,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     AlreadySuspended {
         changeState("open.not_running.suspended");
     }
-    
+
     /**
      * Returns the delegator being used by this workflow
      * @return GenericDelegator used for this workflow
@@ -494,7 +489,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public GenericDelegator getDelegator() throws WfException {
         return delegator;
     }
-           
+
     /**
      * Gets the GenericValue object of the definition.
      * @returns GenericValue object of the definition.
@@ -502,18 +497,17 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public GenericValue getDefinitionObject() throws WfException {
         String entityName = activityId != null ? "WorkflowActivity" : "WorkflowProcess";
         GenericValue value = null;
-        Map fields = UtilMisc.toMap("packageId",packageId,"processId",processId);
-        if ( activityId != null )
+        Map fields = UtilMisc.toMap("packageId",packageId, "processId",processId);
+        if (activityId != null)
             fields.put("activityId",activityId);
         try {
-            value = getDelegator().findByPrimaryKey(entityName,fields);
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
+            value = getDelegator().findByPrimaryKey(entityName, fields);
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
         }
         return value;
     }
-    
+
     /**
      * Gets the GenericValue object of the runtime workeffort.
      * @returns GenericValue object of the runtime workeffort.
@@ -521,20 +515,20 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public GenericValue getRuntimeObject() throws WfException {
         GenericValue value = null;
         try {
-            value = getDelegator().findByPrimaryKey("WorkEffort",UtilMisc.toMap("workEffortId",workEffortId));
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
+            value = getDelegator().findByPrimaryKey("WorkEffort",
+                    UtilMisc.toMap("workEffortId",workEffortId));
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
         }
         return value;
     }
-    
+
     /**
      * Returns the type of execution object
      * @return String name of this execution object type
      */
     public abstract String executionObjectType();
-   
+
     /**
      * Updates the runtime data entity
      * @param field The field name of the entity (resultDataId,contextDataId)
@@ -545,55 +539,55 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         GenericValue runtimeData = null;
         GenericValue dataObject = getRuntimeObject();
         try {
-            if ( dataObject.get("runtimeDataId") == null ) {
+            if (dataObject.get("runtimeDataId") == null) {
                 String seqId = getDelegator().getNextSeqId("RuntimeData").toString();
-                runtimeData = getDelegator().makeValue("RuntimeData",UtilMisc.toMap("runtimeDataId",seqId));
+                runtimeData = getDelegator().makeValue("RuntimeData",
+                        UtilMisc.toMap("runtimeDataId",seqId));
                 getDelegator().create(runtimeData);
                 dataObject.set("runtimeDataId",seqId);
                 dataObject.store();
-            }
-            else {
+            } else {
                 runtimeData = dataObject.getRelatedOne("RuntimeData");
             }
             //String serialized = XmlSerializer.serialize(value);
             //System.out.println(serialized);
-            
+
             runtimeData.set("runtimeInfo",XmlSerializer.serialize(value));
             runtimeData.store();
         }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
+        catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
         }
-        catch ( SerializeException e ) {
-            throw new InvalidData(e.getMessage(),e);
+        catch (SerializeException e) {
+            throw new InvalidData(e.getMessage(), e);
         }
-        catch ( FileNotFoundException e ) {
-            throw new InvalidData(e.getMessage(),e);
+        catch (FileNotFoundException e) {
+            throw new InvalidData(e.getMessage(), e);
         }
-        catch ( IOException e ) {
-            throw new InvalidData(e.getMessage(),e);
+        catch (IOException e) {
+            throw new InvalidData(e.getMessage(), e);
         }
     }
-    
-    /** 
+
+    /**
      * Get an instance of the service dispatcher
      * @return ServiceDispatcher instance for use with this workflow
      * @throws WfException
      */
-    protected ServiceDispatcher getDispatcher() throws WfException {        
-        return ServiceDispatcher.getInstance(getServiceLoader(),getDelegator());        
+    protected ServiceDispatcher getDispatcher() throws WfException {
+        return ServiceDispatcher.getInstance(getServiceLoader(), getDelegator());
     }
-    
-    /** 
+
+    /**
      * Get an instance of the service dispatcher
      * @param The service loader name
      * @return ServiceDispatcher instance for use with this workflow
      * @throws WfException
      */
-    protected ServiceDispatcher getDispatcher(String loader) throws WfException {        
-        return ServiceDispatcher.getInstance(loader,getDelegator());        
-    }    
-    
+    protected ServiceDispatcher getDispatcher(String loader) throws WfException {
+        return ServiceDispatcher.getInstance(loader, getDelegator());
+    }
+
     /**
      * Gets the name of this workflow's service loader
      * @return String name of the loader
@@ -601,84 +595,81 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     protected String getServiceLoader() throws WfException {
         GenericValue dataObject = getRuntimeObject();
-        if ( dataObject.get("serviceLoaderName") == null )
+        if (dataObject.get("serviceLoaderName") == null)
             throw new WfException("No service loader name defined");
         return dataObject.getString("serviceLoaderName");
     }
- 
+
     /**
      * Sets the name of the local dispatcher to be used with this workflow
      * @param loader The name of the loader
      * @throws WfException
-     */    
-    public void setServiceLoader(String loader) throws WfException {                
+     */
+    public void setServiceLoader(String loader) throws WfException {
         GenericValue dataObject = getRuntimeObject();
         try {
             dataObject.set("serviceLoaderName",loader);
             dataObject.store();
-            Debug.logInfo("------- EXECUTION OBJECT : Service loader set: " + dataObject.getString("serviceLoaderName"));
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
+            Debug.logInfo("------- EXECUTION OBJECT : Service loader set: " +
+                    dataObject.getString("serviceLoaderName"));
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
         }
     }
-    
+
     protected String getEntityStatus(String state) {
-        String statesArr[] = { "open.running",  "open.not_running.not_started",
-        "open.not_running.suspended",  "closed.completed", "closed.terminated",
-        "closed.aborted" };
-        String entityArr[] = { "WF_RUNNING", "WF_NOT_STARTED", "WF_SUSPENDED",
-        "WF_COMPLETED", "WF_TERMINATED", "WF_ABORTED" };
-        
-        for ( int i = 0; i < statesArr.length; i++ ) {
-            if ( statesArr[i].equals(state) )
+        String statesArr[] = { "open.running", "open.not_running.not_started", "open.not_running.suspended",
+        "closed.completed", "closed.terminated", "closed.aborted" };
+        String entityArr[] = { "WF_RUNNING", "WF_NOT_STARTED", "WF_SUSPENDED", "WF_COMPLETED",
+        "WF_TERMINATED", "WF_ABORTED" };
+
+        for (int i = 0; i < statesArr.length; i++) {
+            if (statesArr[i].equals(state))
                 return entityArr[i];
         }
         return null;
     }
-    
+
     protected String getOMGStatus(String state) {
-        String statesArr[] = { "open.running",  "open.not_running.not_started",
-        "open.not_running.suspended",  "closed.completed", "closed.terminated",
-        "closed.aborted" };
-        String entityArr[] = { "WF_RUNNING", "WF_NOT_STARTED", "WF_SUSPENDED",
-        "WF_COMPLETED", "WF_TERMINATED", "WF_ABORTED" };
-        
-        for ( int i = 0; i < entityArr.length; i++ ) {
-            if ( entityArr[i].equals(state) )
+        String statesArr[] = { "open.running", "open.not_running.not_started", "open.not_running.suspended",
+        "closed.completed", "closed.terminated", "closed.aborted" };
+        String entityArr[] = { "WF_RUNNING", "WF_NOT_STARTED", "WF_SUSPENDED", "WF_COMPLETED",
+        "WF_TERMINATED", "WF_ABORTED" };
+
+        for (int i = 0; i < entityArr.length; i++) {
+            if (entityArr[i].equals(state))
                 return statesArr[i];
         }
         return null;
-    }    
-    
-    private Map getContext() throws WfException {        
+    }
+
+    private Map getContext() throws WfException {
         GenericValue dataObject = getRuntimeObject();
         String contextXML = null;
         Map context = null;
-        if ( dataObject.get("runtimeDataId") == null )
+        if (dataObject.get("runtimeDataId") == null)
             return context;
         try {
             GenericValue runtimeData = dataObject.getRelatedOne("RuntimeData");
             contextXML = runtimeData.getString("runtimeInfo");
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
         }
         // De-serialize the context
-        if ( contextXML != null ) {
+        if (contextXML != null) {
             try {
                 context = (Map) XmlSerializer.deserialize(contextXML, getDelegator());
+            } catch (SerializeException e) {
+                throw new WfException(e.getMessage(), e);
             }
-            catch ( SerializeException e ) {
-                throw new WfException(e.getMessage(),e);
+            catch (IOException e) {
+                throw new WfException(e.getMessage(), e);
             }
-            catch ( IOException e ) {
-                throw new WfException(e.getMessage(),e);
-            }
-            catch ( Exception e ) {
-                throw new WfException(e.getMessage(),e);
+            catch (Exception e) {
+                throw new WfException(e.getMessage(), e);
             }
         }
         return context;
     }
 }
+

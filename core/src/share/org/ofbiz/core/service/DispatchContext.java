@@ -38,24 +38,26 @@ import org.ofbiz.core.security.*;
  *@version    1.0
  */
 public class DispatchContext {
-    
+
     protected static final String GLOBAL_KEY = "global";
-    protected static UtilCache modelService = new UtilCache("ModelServices",0,0);
-    protected static String globalRoot = UtilProperties.getPropertyValue("servicesengine","global.rootPath");
-    
+    protected static UtilCache modelService = new UtilCache("ModelServices",0, 0);
+    protected static String globalRoot =
+            UtilProperties.getPropertyValue("servicesengine","global.rootPath");
+
     protected String name;
-    protected String root;    
+    protected String root;
     protected String rootExt;
     protected Map attributes;
     protected Collection readers;
     protected ClassLoader loader;
     protected LocalDispatcher dispatcher;
-    
+
     /** Creates new DispatchContext
      *@param readers a collection of reader URLs
      *@param loader the classloader to use for dispatched services
      */
-    public DispatchContext(String name, String root, String rootExt, Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
+    public DispatchContext(String name, String root, String rootExt,
+            Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
         this.name = name;
         this.root = root;
         this.rootExt = rootExt;
@@ -64,197 +66,201 @@ public class DispatchContext {
         this.dispatcher = dispatcher;
         this.attributes = new HashMap();
         Map localService = addReaders(readers);
-        if ( localService != null )
-            modelService.put(root,localService);
+        if (localService != null)
+            modelService.put(root, localService);
         Map globalService = addGlobal();
-        if ( globalService != null )                    
+        if (globalService != null)
             modelService.put(GLOBAL_KEY, globalService);
     }
-    
+
     /** Returns the service attribute for the given name, or null if there is no attribute by that name.
      *@param name a String specifying the name of the attribute
      *@return an Object conatining the value of the attribute, or null if there is no attribute by that name.
      */
     public Object getAttribute(String name) {
-        if ( attributes.containsKey(name) )
+        if (attributes.containsKey(name))
             return attributes.get(name);
         return null;
     }
-    
+
     /** Binds an object to a given attribute name in this context.
      *@param name a String specifying the name of the attribute
      *@param object an Object representing the attribute to be bound.
      */
     public void setAttribute(String name, Object object) {
-        attributes.put(name,object);
+        attributes.put(name, object);
     }
-    
+
     /** Gets the classloader of this context
      *@return ClassLoader of the context
      */
     public ClassLoader getClassLoader() {
         return this.loader;
     }
-    
+
     /** Gets the collection of readers associated with this context
      *@return Collection of reader URLs
      */
     public Collection getReaders() {
         return readers;
     }
-    
+
     /** Gets the name of the local dispatcher
      *@return String name of the LocalDispatcher object
      */
     public String getName() {
         return name;
     }
-    
+
     /** Gets the 'global root' property of this context (used as a path)
      *@return String global root directory for this context (raw path)
      */
     public String getGlobalScriptPath() {
         return globalRoot;
     }
-    
-    /** Gets the context script path 
+
+    /** Gets the context script path
      *@return String context script path
      */
     public String getScriptPath() {
-        if ( root.endsWith("/") && rootExt.startsWith("/") )
+        if (root.endsWith("/") && rootExt.startsWith("/"))
             return root + rootExt.substring(1);
         else
             return root + rootExt;
     }
-    
+
     /** Gets the 'root' property of this context (used as a path)
      *@return String root directory for this context (raw path)
      */
     public String getRootPath() {
         return root;
     }
-    
+
     /** Sets the 'root' path property for this context
      *@param rootPath The 'root' path for this context (i.e. context path)
      */
     public void setRootPath(String rootPath) {
         this.root = rootPath;
     }
-    
+
     /** Gets the GenericServiceModel instance that corresponds to given the name
      *@param serviceName Name of the service
      *@return GenericServiceModel that corresponds to the serviceName
      */
-    public ModelService getModelService(String serviceName) throws GenericServiceException {
+    public ModelService getModelService(String serviceName)
+            throws GenericServiceException {
         Map serviceMap = (Map) modelService.get(root);
-        if ( serviceMap == null ) {
-            synchronized(this) {
+        if (serviceMap == null) {
+            synchronized (this) {
                 serviceMap = (Map) modelService.get(root);
-                if ( serviceMap == null ) {
+                if (serviceMap == null) {
                     serviceMap = addReaders(readers);
-                    if ( serviceMap != null )
-                        modelService.put(root,serviceMap);
+                    if (serviceMap != null)
+                        modelService.put(root, serviceMap);
                 }
             }
         }
-        
+
         ModelService retVal = null;
         if (serviceMap != null)
             retVal = (ModelService) serviceMap.get(serviceName);
         if (retVal == null)
-            retVal =  getGlobalModelService(serviceName);
+            retVal = getGlobalModelService(serviceName);
         return retVal;
     }
-    
-    private ModelService getGlobalModelService(String serviceName) throws GenericServiceException {
+
+    private ModelService getGlobalModelService(String serviceName)
+            throws GenericServiceException {
         Map serviceMap = (Map) modelService.get(GLOBAL_KEY);
-        if ( serviceMap == null ) {
-            synchronized(this) {
+        if (serviceMap == null) {
+            synchronized (this) {
                 serviceMap = (Map) modelService.get(root);
-                if ( serviceMap == null ) {
+                if (serviceMap == null) {
                     serviceMap = addGlobal();
-                    if ( serviceMap != null )
-                        modelService.put(GLOBAL_KEY,serviceMap);
+                    if (serviceMap != null)
+                        modelService.put(GLOBAL_KEY, serviceMap);
                 }
             }
         }
-        
+
         ModelService retVal = (ModelService) serviceMap.get(serviceName);
         if (retVal == null)
             throw new GenericServiceException("Cannot locate service by name");
         return retVal;
     }
-    
+
     /** Gets the LocalDispatcher used to create this context
      *@return LocalDispatcher that was used to create this context
      */
     public LocalDispatcher getDispatcher() {
         return this.dispatcher;
     }
-    
+
     /** Sets the LocalDispatcher used with this context
      *@param dispatcher The LocalDispatcher to re-assign to this context
      */
     public void setDispatcher(LocalDispatcher dispatcher) {
         this.dispatcher = dispatcher;
     }
-    
+
     /** Gets the GenericDelegator associated with this context/dispatcher
      *@return GenericDelegator associated with this context
      */
     public GenericDelegator getDelegator() {
         return dispatcher.getDelegator();
     }
-    
+
     /** Gets the Security object associated with this dispatcher
      *@return Security object associated with this dispatcher
      */
     public Security getSecurity() {
         return dispatcher.getSecurity();
     }
-    
+
     private Map addReaders(Collection readerURLs) {
         Map serviceMap = new HashMap();
-        if ( readerURLs == null )
+        if (readerURLs == null)
             return null;
         Iterator urlIter = readerURLs.iterator();
-        while(urlIter.hasNext()) {
-            URL readerURL = (URL)urlIter.next();
+        while (urlIter.hasNext()) {
+            URL readerURL = (URL) urlIter.next();
             serviceMap.putAll(addReader(readerURL));
         }
         return serviceMap;
     }
-    
+
     private Map addReader(URL readerURL) {
-        if ( readerURL == null )
+        if (readerURL == null)
             return null;
-        ModelServiceReader reader = ModelServiceReader.getModelServiceReader(readerURL);
-        if ( reader == null )
+        ModelServiceReader reader =
+                ModelServiceReader.getModelServiceReader(readerURL);
+        if (reader == null)
             return null;
         Map serviceMap = reader.getModelServices();
-        if ( serviceMap == null )
+        if (serviceMap == null)
             return null;
         else
             return serviceMap;
     }
-    
+
     private Map addGlobal() {
         Map globalMap = new HashMap();
         String path = UtilProperties.getPropertyValue("servicesengine","global.paths");
         Debug.logInfo("[addGlobal] paths: " + path);
-        if ( path == null )
+        if (path == null)
             return null;
-        List paths = StringUtil.split(path,";");
-        if ( paths == null || paths.size() == 0 )
+        List paths = StringUtil.split(path, ";");
+        if (paths == null || paths.size() == 0)
             return null;
         Iterator i = paths.iterator();
-        while ( i.hasNext() ) {
-            URL readerURL = UtilURL.fromFilename((String)i.next());
-            if ( readerURL != null )
+        while (i.hasNext()) {
+            URL readerURL = UtilURL.fromFilename((String) i.next());
+            if (readerURL != null)
                 globalMap.putAll(addReader(readerURL));
-            else 
+            else
                 Debug.logInfo("[DispatchContext.addGlobal] : URL returned a 'null' service map");
         }
         return globalMap;
     }
 }
+
