@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewHandler.java,v 1.2 2003/09/14 05:36:47 jonesde Exp $
+ * $Id: FreeMarkerViewHandler.java,v 1.3 2003/11/08 20:54:18 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import freemarker.template.WrappingTemplateModel;
  * FreemarkerViewHandler - Freemarker Template Engine View Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class FreeMarkerViewHandler implements ViewHandler {
@@ -60,6 +60,7 @@ public class FreeMarkerViewHandler implements ViewHandler {
     
     public static OfbizUrlTransform ofbizUrl = new OfbizUrlTransform();
     public static OfbizContentTransform ofbizContentUrl = new OfbizContentTransform();
+    public static OfbizCurrencyTransform ofbizCurrency = new OfbizCurrencyTransform();
     public static SetRequestAttributeMethod setRequestAttribute = new SetRequestAttributeMethod();
     
     protected ServletContext servletContext = null;
@@ -159,6 +160,7 @@ public class FreeMarkerViewHandler implements ViewHandler {
         // add the OFBiz transforms/methods
         root.put("ofbizUrl", ofbizUrl);
         root.put("ofbizContentUrl", ofbizContentUrl);
+        root.put("ofbizCurrency", ofbizCurrency);
         root.put("setRequestAttribute", setRequestAttribute);
     }
 }

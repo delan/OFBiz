@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
@@ -39,7 +39,7 @@
   <td align="left" valign="middle" width="5%">
     <div class="tabletext">
       <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
-        ${uiLabelMap.CommonList}:${price.listPrice?string.currency}
+        ${uiLabelMap.CommonList}:<@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
       <#else>
         &nbsp;
       </#if>
@@ -47,7 +47,7 @@
   </td>
   <td align="right" valign="middle" width="5%">
     <div class="<#if price.isSale>salePrice<#else>normalPrice</#if>">
-      <b>${price.price?string.currency}</b>
+      <b><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></b>
     </div>
   </td>                                 
   <td align="right" valign="middle">

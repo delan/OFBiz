@@ -1,5 +1,5 @@
 /*
- * $Id: ProductEvents.java,v 1.2 2003/11/07 01:07:51 ajzeneski Exp $
+ * $Id: ProductEvents.java,v 1.3 2003/11/08 20:54:17 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.GenericServiceException;
  * Product Information Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ProductEvents {
@@ -575,6 +575,17 @@ public class ProductEvents {
         } catch (GenericServiceException e) {
             Debug.logError(e, "Problem sending mail", module);
             return "error";
+        }
+        return "success";
+    }
+
+    /** Simple event to set the users initial locale and currency Uom based on website product store */
+    public static String setDefaultStoreSettings(HttpServletRequest request, HttpServletResponse response) {
+        GenericValue  productStore = ProductStoreWorker.getProductStore(request);
+        if (productStore != null) {
+            // request.getSession().setAttribute("productStoreGroupId", productStore.getString("primaryStoreGroupId"));
+            UtilHttp.setLocale(request, productStore.getString("defaultLocaleString"));
+            UtilHttp.setCurrencyUom(request, productStore.getString("defaultCurrencyUomId"));
         }
         return "success";
     }

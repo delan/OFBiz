@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -51,13 +51,13 @@
             <nobr>
               <b>${product.productId?if_exists}</b>,
                 <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
-                  ${uiLabelMap.ProductListPrice}: <span class="basePrice">${price.listPrice?string.currency}</span>
+                  ${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span>
                 </#if>
                 <b>
                   <#if price.isSale>
                     <span class="salePrice">${uiLabelMap.EcommerceOnSale}!</span>
                   </#if>
-                  ${uiLabelMap.EcommerceYourPrice}: <span class="<#if price.isSale>salePrice<#else>normalPrice</#if>">${price.price?string.currency}</span>
+                  ${uiLabelMap.EcommerceYourPrice}: <span class="<#if price.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
                 </b>
             </nobr>
           </div>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -197,9 +197,9 @@ function addToList() {
                 </#if>
               </div>
             </td>
-            <td nowrap align="right"><div class='tabletext'>${cartLine.getBasePrice()?string.currency}</div></TD>
-            <td nowrap align="right"><div class='tabletext'>${cartLine.getOtherAdjustments()?string.currency}</div></TD>
-            <td nowrap align="right"><div class='tabletext'>${cartLine.getItemSubTotal()?string.currency}</div></TD>
+            <td nowrap align="right"><div class='tabletext'><@ofbizCurrency amount=cartLine.getBasePrice() isoCode=shoppingCart.getCurrency()/></div></TD>
+            <td nowrap align="right"><div class='tabletext'><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></div></TD>
+            <td nowrap align="right"><div class='tabletext'><@ofbizCurrency amount=cartLine.getItemSubTotal() isoCode=shoppingCart.getCurrency()/></div></TD>
             <td nowrap align="center"><div class='tabletext'><#if !cartLine.getIsPromo()><input type="checkbox" name="selectedItem" value="${cartLineIndex}" onclick="javascript:checkToggle(this);"><#else>&nbsp;</#if></div></TD>
           </TR>
         </#list>
@@ -208,14 +208,14 @@ function addToList() {
             <tr><td colspan="7"><hr class='sepbar'></td></tr>
               <tr>
                 <td colspan="5" nowrap align="right"><div class='tabletext'>${uiLabelMap.CommonSubTotal}:</div></td>
-                <td nowrap align="right"><div class='tabletext'>${shoppingCart.getSubTotal()?string.currency}</div></td>
+                <td nowrap align="right"><div class='tabletext'><@ofbizCurrency amount=shoppingCart.getSubTotal() isoCode=shoppingCart.getCurrency()/></div></td>
                 <td>&nbsp;</td>
               </tr>
             <#list shoppingCart.getAdjustments() as cartAdjustment>
               <#assign adjustmentType = cartAdjustment.getRelatedOneCache("OrderAdjustmentType")>
               <tr>
                 <td colspan="5" nowrap align="right"><div class='tabletext'><i>${uiLabelMap.EcommerceAdjustment}</i> - ${adjustmentType.description?if_exists}:</div></td>
-                <td nowrap align="right"><div class='tabletext'>${Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal())?string.currency}</div></td>
+                <td nowrap align="right"><div class='tabletext'><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=shoppingCart.getCurrency()/></div></td>
                 <td>&nbsp;</td>
               </tr>
             </#list>
@@ -227,7 +227,7 @@ function addToList() {
           </td>
           <td align="right" valign=bottom>
             <hr size=1 class='sepbar'>
-            <div class='tabletext'><b>${shoppingCart.getGrandTotal()?string.currency}</b></div>
+            <div class='tabletext'><b><@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=shoppingCart.getCurrency()/></b></div>
           </td>
         </tr>
         <#if itemsFromList>

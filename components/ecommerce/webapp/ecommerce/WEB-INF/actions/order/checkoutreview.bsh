@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 */
 
@@ -110,6 +110,7 @@ context.put("shippingInstructions", cart.getShippingInstructions());
 context.put("maySplit", cart.getMaySplit());
 context.put("giftMessage", cart.getGiftMessage());
 context.put("isGift", cart.getIsGift());
+context.put("currencyUomId", cart.getCurrency());
 
 shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", cart.getShipmentMethodTypeId()));
 if (shipmentMethodType != null) context.put("shipMethDescription", shipmentMethodType.getString("description"));

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -80,10 +80,10 @@ ${requestAttributes.virtualJavaScript?if_exists}
               - if isSale show price with salePrice style and print "On Sale!"
       -->
       <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
-        <div class="tabletext">${uiLabelMap.ProductListPrice}: <span class='basePrice'>${price.listPrice?string.currency}</span></div>
+        <div class="tabletext">${uiLabelMap.ProductListPrice}: <span class='basePrice'><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span></div>
       </#if>
       <#if price.listPrice?exists && price.basePrice?exists && price.price?exists && price.price?double < price.defaultPrice?double && price.defaultPrice?double < price.listPrice?double>
-        <div class="tabletext">${uiLabelMap.ProductRegularPrice}: <span class='basePrice'>${price.defaultPrice?string.currency}</span></div>
+        <div class="tabletext">${uiLabelMap.ProductRegularPrice}: <span class='basePrice'><@ofbizCurrency amount=price.defaultPrice isoCode=price.currencyUsed/></span></div>
       </#if>
       <div class="tabletext">
         <b>
@@ -93,7 +93,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
           <#else>
             <#assign priceStyle = "regularPrice">
           </#if>
-            ${uiLabelMap.EcommerceYourPrice}: <span class='${priceStyle}'>${price.price?string.currency}</span>
+            ${uiLabelMap.EcommerceYourPrice}: <span class='${priceStyle}'><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
         </b>
       </div>
 
