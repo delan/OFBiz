@@ -169,16 +169,6 @@ public class ObjectType {
         if (obj == null)
             return null;
         
-        if (format == null || format.length() == 0) {
-            if ("Date".equals(type)) {
-                format = "yyyy-MM-dd";
-            } else if ("Time".equals(type)) {
-                format = "HH:mm:ss.SSS";
-            } else if ("Timestamp".equals(type)) {
-                format = "yyyy-MM-dd HH:mm:ss.SSS";
-            }
-        }
-        
         String fromType = null;
         if (obj instanceof java.lang.String) {
             fromType = "String";
@@ -231,28 +221,52 @@ public class ObjectType {
                     throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
                 }
             } else if ("Date".equals(type)) {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat(format);
-                    java.util.Date fieldDate = sdf.parse(str);
-                    return new java.sql.Date(fieldDate.getTime());
-                } catch (ParseException e) {
-                    throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                if (format == null || format.length() == 0) {
+                    try {
+                        return java.sql.Date.valueOf(str);
+                    } catch (Exception e) {
+                        throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                    }
+                } else {
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat(format);
+                        java.util.Date fieldDate = sdf.parse(str);
+                        return new java.sql.Date(fieldDate.getTime());
+                    } catch (ParseException e) {
+                        throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                    }
                 }
             } else if ("Time".equals(type)) {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat(format);
-                    java.util.Date fieldDate = sdf.parse(str);
-                    return new java.sql.Time(fieldDate.getTime());
-                } catch (ParseException e) {
-                    throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                if (format == null || format.length() == 0) {
+                    try {
+                        return java.sql.Time.valueOf(str);
+                    } catch (Exception e) {
+                        throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                    }
+                } else {
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat(format);
+                        java.util.Date fieldDate = sdf.parse(str);
+                        return new java.sql.Time(fieldDate.getTime());
+                    } catch (ParseException e) {
+                        throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                    }
                 }
             } else if ("Timestamp".equals(type)) {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat(format);
-                    java.util.Date fieldDate = sdf.parse(str);
-                    return new java.sql.Timestamp(fieldDate.getTime());
-                } catch (ParseException e) {
-                    throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                if (format == null || format.length() == 0) {
+                    try {
+                        return java.sql.Timestamp.valueOf(str);
+                    } catch (Exception e) {
+                        throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                    }
+                } else {
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat(format);
+                        java.util.Date fieldDate = sdf.parse(str);
+                        return new java.sql.Timestamp(fieldDate.getTime());
+                    } catch (ParseException e) {
+                        throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                    }
                 }
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
@@ -337,8 +351,12 @@ public class ObjectType {
             fromType = "Date";
             java.sql.Date dte = (java.sql.Date) obj;
             if ("String".equals(type)) {
-                SimpleDateFormat sdf = new SimpleDateFormat(format);
-                return sdf.format(new java.util.Date(dte.getTime()));
+                if (format == null || format.length() == 0) {
+                    return dte.toString();
+                } else {
+                    SimpleDateFormat sdf = new SimpleDateFormat(format);
+                    return sdf.format(new java.util.Date(dte.getTime()));
+                }
             } else if ("Date".equals(type)) {
                 return obj;
             } else if ("Time".equals(type)) {
@@ -352,8 +370,12 @@ public class ObjectType {
             fromType = "Time";
             java.sql.Time tme = (java.sql.Time) obj;
             if ("String".equals(type)) {
-                SimpleDateFormat sdf = new SimpleDateFormat(format);
-                return sdf.format(new java.util.Date(tme.getTime()));
+                if (format == null || format.length() == 0) {
+                    return tme.toString();
+                } else {
+                    SimpleDateFormat sdf = new SimpleDateFormat(format);
+                    return sdf.format(new java.util.Date(tme.getTime()));
+                }
             } else if ("Date".equals(type)) {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
             } else if ("Time".equals(type)) {
@@ -367,8 +389,12 @@ public class ObjectType {
             fromType = "Timestamp";
             java.sql.Timestamp tme = (java.sql.Timestamp) obj;
             if ("String".equals(type)) {
-                SimpleDateFormat sdf = new SimpleDateFormat(format);
-                return sdf.format(new java.util.Date(tme.getTime()));
+                if (format == null || format.length() == 0) {
+                    return tme.toString();
+                } else {
+                    SimpleDateFormat sdf = new SimpleDateFormat(format);
+                    return sdf.format(new java.util.Date(tme.getTime()));
+                }
             } else if ("Date".equals(type)) {
                 return new java.sql.Date(tme.getTime());
             } else if ("Time".equals(type)) {
