@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -83,6 +83,10 @@ public class ServiceUtil {
     }
 
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code, also forwards any error messages from the nestedResult */
+    public static Map returnError(String errorMessage, List errorMessageList, Map errorMessageMap, Map nestedResult) {
+        return returnProblem(ModelService.RESPOND_ERROR, errorMessage, errorMessageList, errorMessageMap, nestedResult);
+    }
+    
     public static Map returnProblem(String returnType, String errorMessage, List errorMessageList, Map errorMessageMap, Map nestedResult) {
         Map result = new HashMap();
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
