@@ -34,7 +34,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.collections.OrderedMap;
+
+import org.apache.commons.collections.map.LinkedMap;
 
 
 /**
@@ -58,7 +59,7 @@ public class KeyboardAdaptor {
     public static final int ALL_DATA = 999;
 
     protected static List loadedComponents = new LinkedList();
-    protected static Map receivers = new OrderedMap();
+    protected static Map receivers = new LinkedMap();
     protected static KeyboardAdaptor adaptor = null;
     protected static boolean running = true;
 
