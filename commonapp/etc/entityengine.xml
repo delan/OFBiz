@@ -58,6 +58,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <field-type name="oracle" loader="mainfile" location="fieldtypeoracle.xml"/>
     <field-type name="sapdb" loader="mainfile" location="fieldtypesapdb.xml"/>
     <field-type name="sybase" loader="mainfile" location="fieldtypesybase.xml"/>
+    <field-type name="firebird" loader="mainfile" location="fieldtypefirebird.xml"/>
 
     <!--
     For DAO/JDBC Helper: Tries:
@@ -186,6 +187,22 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <!-- <tyrex-dataSource dataSource-name="localsapdb" isolation-level="ReadCommitted"/> -->
     </datasource>
 
+    <datasource name="localfirebird"
+            helper-class="org.ofbiz.core.entity.GenericHelperDAO"
+            field-type-name="firebird"
+            check-on-start="false"
+            add-missing-on-start="false"
+            join-style="ansi">
+        <inline-jdbc
+                jdbc-driver="org.firebirdsql.jdbc.FBDriver"
+                jdbc-uri="jdbc:firebirdsql://localhost:3050//opt/interbase/data/ofbiz.gdb"
+                jdbc-username="OFBIZ"
+                jdbc-password="ofbiz"
+                isolation-level="ReadCommitted"/>
+        <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localfirebird" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
+        <!-- <tyrex-dataSource dataSource-name="firebird" isolation-level="ReadCommitted"/>  -->    
+    </datasource>
+    
     <datasource name="localp6spy"
             helper-class="org.ofbiz.core.entity.GenericHelperDAO"
             field-type-name="oracle"
