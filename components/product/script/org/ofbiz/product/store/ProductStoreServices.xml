@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.2
 -->
 
@@ -265,6 +265,11 @@
         <make-value value-name="newEntity" entity-name="ProductStoreKeywordOvrd"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>
 
         <!-- make sure the keyword is lower cased -->
         <call-object-method obj-field-name="newEntity.keyword" method-name="toLowerCase" ret-field-name="newEntity.keyword"/>
