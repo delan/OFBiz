@@ -531,6 +531,7 @@
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="carrierPartyId" type="id-ne"></field>
       <field name="carrierRoleTypeId" type="id-ne"></field>
+      <field name="productStoreId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="geoIdTo" type="id"></field>
@@ -562,7 +563,7 @@
       <relation type="one-nofk" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
-      </relation>
+      </relation>       
       <relation type="one" fk-name="SHPMNT_CE_WUOM" title="Weight" rel-entity-name="Uom">
         <key-map field-name="weightUomId" rel-field-name="uomId"/>
       </relation>
