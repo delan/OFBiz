@@ -21,7 +21,7 @@ DBMUSER=dbm
 DBMPWD=dbm
 
 DBAUSER=dba
-DBAPWD=dbm
+DBAPWD=dba
 
 # size of database and logs in MB
 DATASIZE=30
@@ -30,7 +30,7 @@ LOGSIZE=12
 # path to sapdb
 DEPEND=/opt/sapdb/depend
 INDEPP=/opt/sapdb/indep_prog
-INDEPD=/opt/sapdb/indep_data
+INDEPD=/var/sapdb/indep_data
 
 # path to database files
 DATA=$HOME
