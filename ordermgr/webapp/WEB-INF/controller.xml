@@ -115,7 +115,7 @@
         <response name="error" type="view" value="salesentry"/>
     </request-map>
     <request-map uri="emptycart">
-        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="clearCart"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
         <response name="success" type="view" value="salesentry"/>
         <response name="error" type="view" value="salesentry"/>
     </request-map>    
@@ -128,6 +128,15 @@
     <request-map uri="product">
         <response name="success" type="view" value="product"/>
     </request-map>  
+    <request-map uri="finalizeOrder">
+    	<security https="true" auth="true"/>
+    	<event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="finalizeOrderEntry"/>
+    	<response name="shipping" type="view" value="shipsetting"/>
+    	<response name="options" type="view" value="optionsetting"/>
+    	<response name="payment" type="view" value="billsetting"/>
+    	<response name="success" type="view" value="salesentry"/>
+    	<response name="error" type="view" value="salesentry"/>    	
+    </request-map>  
     <request-map uri="setShipping">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="shipsetting"/>
@@ -135,9 +144,17 @@
     <request-map uri="createPostalAddress">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createPostalAddress"/>
-        <response name="success" type="view" value="shipsetting"/>
+        <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="shipsetting"/>
     </request-map>
+    <request-map uri="setBilling">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="billsetting"/>
+    </request-map>  
+    <request-map uri="setOptions">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="optionsetting"/>
+    </request-map>  
 
 	<!-- Shipping Editor Requests -->
     <request-map uri="shipsetup">
@@ -191,6 +208,8 @@
     <view-map name="category" type="region"/>
     <view-map name="product" type="region"/>  
     <view-map name="shipsetting" type="region"/>
+    <view-map name="billsetting" type="region"/>
+    <view-map name="optionsetting" type="region"/>
     
     <view-map name="shipsetup" type="region"/>
     <view-map name="taxsetup" type="region"/>

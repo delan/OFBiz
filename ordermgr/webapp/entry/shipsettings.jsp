@@ -35,6 +35,8 @@
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="shoppingCart" type="org.ofbiz.commonapp.order.shoppingcart.ShoppingCart" scope="session"/>
 
+<%if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) {%>
+
 <%	
 	String partyId = (String) session.getAttribute("orderPartyId");
 	GenericValue party = null;
@@ -57,9 +59,6 @@
 	if (postalAddress != null) pageContext.setAttribute("postalAddress", postalAddress);
 		
 %>
-
-
-<%if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) {%>
 
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -89,7 +88,7 @@
 <ofbiz:if name="party">
 <table width="100%" border="0" cellpadding="1" cellspacing="0">
   <tr><td colspan="3"><a href="/partymgr/control/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&party_id=<%=partyId%>" target="_blank" class="buttontext">[Add New Address]</a></td></tr>
-  <form method="post" action="<ofbiz:url>/setShipping</ofbiz:url>" name="shipsetupform">
+  <form method="post" action="<ofbiz:url>/finalizeOrder</ofbiz:url>" name="shipsetupform">
   <ofbiz:if name="shippingContactMechList" size="0">
     <tr><td colspan="3"><hr class='sepbar'></td></tr>
     <ofbiz:iterator name="shippingContactMech" property="shippingContactMechList">

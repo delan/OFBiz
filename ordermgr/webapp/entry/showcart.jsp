@@ -28,7 +28,7 @@
               <%if(cart != null && cart.size() > 0){%>
                 <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Order]</a>
                 <a href="<ofbiz:url>/emptycart</ofbiz:url>" class="lightbuttontext">[Clear&nbsp;Order]</a>
-                <a href="<ofbiz:url>/setShipping</ofbiz:url>" class="lightbuttontext">[Finalize Order]</a>
+                <a href="<ofbiz:url>/finalizeOrder</ofbiz:url>" class="lightbuttontext">[Finalize Order]</a>
               <%}else{%>
                 [Recalculate&nbsp;Order] [Clear&nbsp;Order] [Finalize Order]
               <%}%>
