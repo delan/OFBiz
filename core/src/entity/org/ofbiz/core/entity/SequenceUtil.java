@@ -146,8 +146,10 @@ public class SequenceUtil {
                     try {
                         //if we can suspend the transaction, we'll try to do this in a local manual transaction
                         transactionManager = TransactionFactory.getTransactionManager();
-                        suspendedTransaction = transactionManager.suspend();
-                        manualTX = true;
+                        if (transactionManager != null) {
+                            suspendedTransaction = transactionManager.suspend();
+                            manualTX = true;
+                        }
                     } catch (SystemException e) {
                         Debug.logError(e, "System Error suspending transaction in sequence util");
                     }
@@ -284,7 +286,9 @@ public class SequenceUtil {
                     if (transactionManager == null) {
                         transactionManager = TransactionFactory.getTransactionManager();
                     }
-                    transactionManager.resume(suspendedTransaction);
+                    if (transactionManager != null) {
+                        transactionManager.resume(suspendedTransaction);
+                    }
                 } catch (InvalidTransactionException e) {
                     Debug.logError(e, "InvalidTransaction Error resuming suspended transaction in sequence util");
                 } catch (IllegalStateException e) {
