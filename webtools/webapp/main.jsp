@@ -97,16 +97,11 @@
             --%>
                 </ul>
               <%}%>
-              <%if(security.hasPermission("DATAFILE_MAINT", session)){%>
-                <li><div class='tabletext'>Data File Tools</div>
+              <%if(security.hasPermission("SERVICE_MAINT", session)) {%>
+                <li><div class='tabletext'>Service Engine Tools</div>
                 <ul>
-                  <li><a href="<ofbiz:url>/viewdatafile</ofbiz:url>" class='buttontext'>View Data File</A>
-                </ul>
-              <%}%>
-              <%if(security.hasPermission("RULES_MAINT", session)){%>
-                <li><div class='tabletext'>Rule Engine Tools</div>
-                <ul>
-                  <li><a href="<ofbiz:url>/logikus</ofbiz:url>" class='buttontext'>Logikus - Run Rulesets</A>
+                  <li><a href="<ofbiz:url>/jobList</ofbiz:url>" class="buttontext">Job List</a>
+                  <li><a href="<ofbiz:url>/scheduleJob</ofbiz:url>" class="buttontext">Schedule Job</a>
                 </ul>
               <%}%>
               <%if(security.hasPermission("WORKFLOW_MAINT", session)){%>
@@ -116,11 +111,16 @@
                   <li><a href="<ofbiz:url>/readxpdl</ofbiz:url>" class='buttontext'>Read XPDL File</A>
                 </ul>
               <%}%>
-              <%if(security.hasPermission("WEBTOOLS_VIEW", session)) {%>
-                <li><div class='tabletext'>Service Engine Tools</div>
+              <%if(security.hasPermission("RULES_MAINT", session)){%>
+                <li><div class='tabletext'>Rule Engine Tools</div>
                 <ul>
-                  <li><a href="<ofbiz:url>/jobList</ofbiz:url>" class="buttontext">Job List</a>
-                  <li><a href="<ofbiz:url>/scheduleJob</ofbiz:url>" class="buttontext">Schedule Job</a>
+                  <li><a href="<ofbiz:url>/logikus</ofbiz:url>" class='buttontext'>Logikus - Run Rulesets</A>
+                </ul>
+              <%}%>
+              <%if(security.hasPermission("DATAFILE_MAINT", session)){%>
+                <li><div class='tabletext'>Data File Tools</div>
+                <ul>
+                  <li><a href="<ofbiz:url>/viewdatafile</ofbiz:url>" class='buttontext'>View Data File</A>
                 </ul>
               <%}%>
               <% if (session.getAttribute("userLogin") != null) { %>
