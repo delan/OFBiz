@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  */
 -->
 
@@ -1127,6 +1127,9 @@
       <field name="surveyResponseId" type="id-ne"></field>
       <field name="surveyQuestionId" type="id-ne"></field>
       <field name="booleanResponse" type="indicator"></field>
+      <field name="currencyResponse" type="currency-amount"></field>
+      <field name="floatResponse" type="floating-point"></field>
+      <field name="numericResponse" type="numeric"></field>
       <field name="textResponse" type="very-long"></field>
       <field name="surveyOptionSeqId" type="id"></field>
       <prim-key field="surveyResponseId"/>

@@ -1,5 +1,5 @@
 /*
- * $Id: UtilValidate.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: UtilValidate.java,v 1.2 2003/11/26 20:55:37 ajzeneski Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.util.Collection;
  * See detailed description below.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      1.0
  *
  *
@@ -675,6 +675,17 @@ public class UtilValidate {
         // else return true;
     }
 
+    /** isUrl returns true if the string contains ://
+     * @param s String to validate
+     * @return true if s contains ://
+     */
+    public static boolean isUrl(String s) {
+        if (isEmpty(s)) return defaultEmptyOK;
+        if (s.indexOf("://") != -1)
+            return true;
+        return false;
+    }
+
     /** isYear returns true if string s is a valid
      *  Year number.  Must be 2 or 4 digits only.
      *
@@ -847,6 +858,28 @@ public class UtilValidate {
             second = time.substring(timeColon2 + 1);
         }
         return isTime(hour, minute, second);
+    }
+
+    /** Check to see if a card number is a valid ValueLink Gift Card
+     *
+     * @param stPassed a string representing a valuelink gift card
+     * @return true, if the number passed simple checks
+     */
+    public static boolean isValueLinkCard(String stPassed) {
+        if (isEmpty(stPassed)) return defaultEmptyOK;
+        String st = stripCharsInBag(stPassed, creditCardDelimiters);
+        if (st.length() == 16 && st.startsWith("7006"))
+            return true;
+        return false;
+    }
+
+    /** Check to see if a card number is a supported Gift Card
+     *
+     * @param stPassed a string representing a gift card
+     * @return true, if the number passed simple checks
+     */
+    public static boolean isGiftCard(String stPassed) {
+        return isValueLinkCard(stPassed);
     }
 
     /** Checks credit card number with Luhn Mod-10 test
