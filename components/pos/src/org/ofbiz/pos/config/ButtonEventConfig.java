@@ -133,11 +133,16 @@ public class ButtonEventConfig {
         if (pos == null) {
             throw new IllegalArgumentException("PosScreen parameter cannot be null");
         }
-        Object source = pos.getCurrentEvent().getSource();
-        if (source instanceof XButton) {
-            XButton button = (XButton) source;
-            return button.getName();
+        if (pos.getCurrentEvent() != null) {
+            Object source = pos.getCurrentEvent().getSource();
+            if (source instanceof XButton) {
+                XButton button = (XButton) source;
+                return button.getName();
+            } else {
+                return null;
+            }
         } else {
+            Debug.logWarning("No POS event found for obj - " + pos.toString(), module);
             return null;
         }
     }
