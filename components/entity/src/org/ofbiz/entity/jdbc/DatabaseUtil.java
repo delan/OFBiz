@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.6 2003/09/24 22:02:29 jonesde Exp $
+ * $Id: DatabaseUtil.java,v 1.7 2003/09/25 18:26:24 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -716,13 +716,16 @@ public class DatabaseUtil {
                 try {
                     String tableName = tableSet.getString("TABLE_NAME");
                     // for those databases which do not return the schema name with the table name (pgsql 7.3)
+                    boolean appendSchemaName = false;
                     if (tableName != null && lookupSchemaName != null && !tableName.startsWith(lookupSchemaName)) {
-                        tableName = lookupSchemaName + "." + tableName;
-                    }
-                    
+                        appendSchemaName = true;                        
+                    }                    
                     if (needsUpperCase && tableName != null) {
                         tableName = tableName.toUpperCase();
-                    }
+                    }                    
+                    if (appendSchemaName) {
+                        tableName = lookupSchemaName + "." + tableName;
+                    }                    
 
                     // NOTE: this may need a toUpperCase in some cases, keep an eye on it, okay for now just do a compare with equalsIgnoreCase
                     String tableType = tableSet.getString("TABLE_TYPE");
@@ -833,11 +836,15 @@ public class DatabaseUtil {
 
                     ccInfo.tableName = rsCols.getString("TABLE_NAME");
                     // for those databases which do not return the schema name with the table name (pgsql 7.3)
+                    boolean appendSchemaName = false;
                     if (ccInfo.tableName != null && lookupSchemaName != null && !ccInfo.tableName.startsWith(lookupSchemaName)) {
-                        ccInfo.tableName = lookupSchemaName + "." + ccInfo.tableName;
+                        appendSchemaName = true;                        
                     }
                     if (needsUpperCase && ccInfo.tableName != null) {
                         ccInfo.tableName = ccInfo.tableName.toUpperCase();
+                    }
+                    if (appendSchemaName) {
+                        ccInfo.tableName = lookupSchemaName + "." + ccInfo.tableName;
                     }
                     // ignore the column info if the table name is not in the list we are concerned with
                     if (!tableNames.contains(ccInfo.tableName)) {
