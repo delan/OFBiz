@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE simple-services PUBLIC "-//OFBiz//DTD Simple Services//EN" "http://www.ofbiz.org/dtds/simple-services.dtd">
+
+<!--
+ * <p><b>Title:</b> WorkEffortSimpleServices
+ * <p><b>Description:</b> Services to handle data changes
+ * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * <p>The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * Created on January 1, 2001
+ -->
+<simple-services>
+    <simple-service service-name="createWorkEffort" short-description="Create Work Effort">
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
+                processor-name="serviceCreate" in-map-name="context" out-map-name="weValues"/>
+        <check-errors></check-errors>
+        <make-value value-name="newWorkEffort" entity-name="WorkEffort" map-name="weValues"/>
+        <value-to-list value-name="newWorkEffort" list-name="toStore"/>
+        <store-list list-name="toStore"/>
+    </simple-service>
+    <simple-service service-name="updateWorkEffort" short-description="Update Work Effort">
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
+                processor-name="serviceUpdate" in-map-name="context" out-map-name="weValues"/>
+        <check-errors></check-errors>
+        <find-value value-name="workEffort" entity-name="WorkEffort" map-name="weValues"/>
+        <clone-value value-name="workEffort" new-value-name="newWorkEffort"/>
+        <fill-value value-name="newWorkEffort" map-name="weValues"/>
+        <value-to-list value-name="newWorkEffort" list-name="toStore"/>
+        <store-list list-name="toStore"/>
+    </simple-service>
+    <simple-service service-name="deleteWorkEffort" short-description="Update Work Effort">
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
+                processor-name="serviceDelete" in-map-name="context" out-map-name="weValues"/>
+        <check-errors></check-errors>
+        <make-value value-name="newWorkEffort" entity-name="WorkEffort" map-name="weValues"/>
+        <remove-value value-name="newWorkEffort"/>
+    </simple-service>
+</simple-services>
