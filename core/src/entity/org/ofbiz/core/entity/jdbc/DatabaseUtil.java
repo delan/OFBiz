@@ -637,17 +637,20 @@ public class DatabaseUtil {
             connection = getConnection();
         } catch (SQLException sqle) {
             String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
-
             Debug.logError(message, module);
-            if (messages != null)
-                messages.add(message);
+            if (messages != null) messages.add(message);
             return null;
         } catch (GenericEntityException e) {
             String message = "Unable to esablish a connection with the database... Error was:" + e.toString();
-
             Debug.logError(message, module);
-            if (messages != null)
-                messages.add(message);
+            if (messages != null) messages.add(message);
+            return null;
+        }
+        
+        if (connection == null) {
+            String message = "Unable to esablish a connection with the database, no additional information available.";
+            Debug.logError(message, module);
+            if (messages != null) messages.add(message);
             return null;
         }
 
