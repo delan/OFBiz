@@ -53,6 +53,7 @@ import bsh.Interpreter;
  * Widget Library - Form model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @version    $Revision$
  * @since      2.2
  */
@@ -77,6 +78,7 @@ public class ModelForm {
     protected String defaultWidgetStyle;
     protected String defaultTooltipStyle;
     protected String itemIndexSeparator;
+    protected String paginateTarget;
     
     protected List altTargets = new LinkedList();
     protected List autoFieldsServices = new LinkedList();
@@ -172,6 +174,7 @@ public class ModelForm {
         if(this.defaultWidgetStyle == null || formElement.hasAttribute("defaultWidgetStyle"))this.defaultWidgetStyle = formElement.getAttribute("default-widget-style");
         if(this.defaultTooltipStyle == null || formElement.hasAttribute("defaultTooltipStyle"))this.defaultTooltipStyle = formElement.getAttribute("default-tooltip-style");
         if(this.itemIndexSeparator == null || formElement.hasAttribute("itemIndexSeparator"))this.itemIndexSeparator = formElement.getAttribute("item-index-separator");
+        if(this.paginateTarget == null || formElement.hasAttribute("paginateTarget"))this.paginateTarget = formElement.getAttribute("paginate-target");
         
         // alt-target
         List altTargetElements = UtilXml.childElementList(formElement, "alt-target");
@@ -1130,6 +1133,62 @@ public class ModelForm {
     public void setType(String string) {
         this.type = string;
     }
+
+    /**
+     * @param ModelService
+     * 
+     */
+
+     /*
+     * I am adding these two methods because I don't want to change the signature of the
+     * induceFieldInfoFrom methods - amb
+     */
+    public String getDefaultFieldType(ModelService modelService){
+	String retDefaultFieldType	= "edit";
+	int sz	= autoFieldsServices.size();
+	AutoFieldsService autoFieldsService	= null;
+	for(int i=0; i<sz; i++ ){
+		autoFieldsService	= (AutoFieldsService)autoFieldsServices.get(i);
+		if(autoFieldsService.serviceName.equals(modelService.name)){
+			retDefaultFieldType	= autoFieldsService.defaultFieldType;
+			break;
+		}
+	}
+	return retDefaultFieldType;
+    }
+    
+
+    /**
+     * @param String
+     */
+    public String getDefaultFieldType(String entityName){
+	String retDefaultFieldType	= "edit";
+	int sz	= autoFieldsEntities.size();
+	AutoFieldsEntity autoFieldsEntity	= null;
+	for(int i=0; i<sz; i++ ){
+		autoFieldsEntity	= (AutoFieldsEntity)autoFieldsEntities.get(i);
+		if(autoFieldsEntity.entityName.equals(entityName)){
+			retDefaultFieldType	= autoFieldsEntity.defaultFieldType;
+			break;
+		}
+	}
+	return retDefaultFieldType;
+    }
+
+    /**
+     * @return
+     */
+    public String getPaginateTarget() {
+        return this.paginateTarget;
+    }
+
+    /**
+     * @param string
+     */
+    public void setPaginateTarget(String string) {
+        this.paginateTarget = string;
+    }
+
     
     public static class AltTarget {
         public String useWhen;
@@ -1143,18 +1202,23 @@ public class ModelForm {
     public static class AutoFieldsService {
         public String serviceName;
         public String mapName;
+        public String defaultFieldType;
         public AutoFieldsService(Element element) {
             this.serviceName = element.getAttribute("service-name");
             this.mapName = element.getAttribute("map-name");
+            this.defaultFieldType = element.getAttribute("default-field-type");
         }
     }
     
     public static class AutoFieldsEntity {
         public String entityName;
         public String mapName;
+        public String defaultFieldType;
         public AutoFieldsEntity(Element element) {
             this.entityName = element.getAttribute("entity-name");
             this.mapName = element.getAttribute("map-name");
+            this.defaultFieldType = element.getAttribute("default-field-type");
         }
     }
+
 }

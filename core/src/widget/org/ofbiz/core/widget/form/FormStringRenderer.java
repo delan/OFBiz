@@ -29,6 +29,7 @@ import java.util.Map;
  * Widget Library - Form String Renderer interface
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @version    $Revision$
  * @since      2.2
  */
@@ -87,4 +88,9 @@ public interface FormStringRenderer {
     public void renderFormatFieldRowWidgetCellClose(StringBuffer buffer, Map context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow);
 
     public void renderFormatEmptySpace(StringBuffer buffer, Map context, ModelForm modelForm);
+
+    public void renderTextFindField(StringBuffer buffer, Map context, ModelFormField.TextFindField textField);
+    public void renderDateFindField(StringBuffer buffer, Map context, ModelFormField.DateFindField textField);
+    public void renderRangeFindField(StringBuffer buffer, Map context, ModelFormField.RangeFindField textField);
+    public void renderLookupField(StringBuffer buffer, Map context, ModelFormField.LookupField textField);
 }

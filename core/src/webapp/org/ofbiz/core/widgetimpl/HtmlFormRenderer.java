@@ -50,11 +50,16 @@ import org.ofbiz.core.widget.form.ModelFormField.ResetField;
 import org.ofbiz.core.widget.form.ModelFormField.SubmitField;
 import org.ofbiz.core.widget.form.ModelFormField.TextField;
 import org.ofbiz.core.widget.form.ModelFormField.TextareaField;
+import org.ofbiz.core.widget.form.ModelFormField.TextFindField;
+import org.ofbiz.core.widget.form.ModelFormField.DateFindField;
+import org.ofbiz.core.widget.form.ModelFormField.RangeFindField;
+import org.ofbiz.core.widget.form.ModelFormField.LookupField;
 
 /**
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @version    $Revision$
  * @since      2.2
  */
@@ -676,9 +681,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
      */
     public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("<form method=\"POST\" action=\"");
-        this.appendOfbizUrl(buffer, "/" + modelForm.getTarget(context));
-        buffer.append("\" name=\"");
+        buffer.append("<form method=\"POST\" ");
+	String targ	= modelForm.getTarget(context);
+	if(targ != null && targ.length() > 0){
+		buffer.append(" action=\"");
+        	this.appendOfbizUrl(buffer, "/" + targ );
+        	buffer.append("\" ");
+	}
+        buffer.append(" name=\"");
         buffer.append(modelForm.getCurrentFormName(context));
         buffer.append("\" style=\"margin: 0;\">");
         
@@ -704,6 +714,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("</table>");
         
         this.appendWhitespace(buffer);
+
+	this.renderNextPrev(buffer, context, modelForm);
     }
 
     /* (non-Javadoc)
@@ -921,5 +933,483 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
     public void renderFormatEmptySpace(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("&nbsp;");
+    }
+
+
+    /* (non-Javadoc)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderTextFindField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.TextFindField)
+     */
+    public void renderTextFindField(StringBuffer buffer, Map context, TextFindField textFindField) {
+
+        ModelFormField modelFormField = textFindField.getModelFormField();
+        
+        buffer.append("<input type=\"text\"");
+        
+        String className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+        
+        // add a style of red if this is a date/time field and redWhen is true
+        if (modelFormField.shouldBeRed(context)) {
+            buffer.append(" style=\"color: red;\"");
+        }
+        
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+        buffer.append('"');
+        
+        String value = modelFormField.getEntry(context);
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(" value=\"");
+            buffer.append(value);
+            buffer.append('"');
+        }
+        
+        buffer.append(" size=\"");
+        buffer.append(textFindField.getSize());
+        buffer.append('"');
+        
+        Integer maxlength = textFindField.getMaxlength();
+        if (maxlength != null) {
+            buffer.append(" maxlength=\"");
+            buffer.append(maxlength.intValue());
+            buffer.append('"');
+        }
+
+        buffer.append("/>");
+        
+        this.appendTooltip(buffer, context, modelFormField);        
+        
+	buffer.append(" \n<nobr/>\n");
+        buffer.append(" Equals<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_op\" value=\"equals\" checked/>  &nbsp\n");
+
+        buffer.append(" Begins with<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_op\" value=\"like\"/>       &nbsp\n");
+
+        buffer.append(" Contains<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_op\" value=\"contains\"/>      &nbsp\n");
+
+        this.appendWhitespace(buffer);
+    }
+
+    /* (non-Javadoc)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderRangeFindField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.RangeFindField)
+     */
+    public void renderRangeFindField(StringBuffer buffer, Map context, RangeFindField rangeFindField) {
+
+        ModelFormField modelFormField = rangeFindField.getModelFormField();
+        
+        buffer.append("<input type=\"text\"");
+        
+        String className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+        
+        // add a style of red if this is a date/time field and redWhen is true
+        if (modelFormField.shouldBeRed(context)) {
+            buffer.append(" style=\"color: red;\"");
+        }
+        
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+        buffer.append("_fld0_value\"");
+        
+        String value = modelFormField.getEntry(context);
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(" value=\"");
+            buffer.append(value);
+            buffer.append('"');
+        }
+        
+        buffer.append(" size=\"");
+        buffer.append(rangeFindField.getSize());
+        buffer.append('"');
+        
+        Integer maxlength = rangeFindField.getMaxlength();
+        if (maxlength != null) {
+            buffer.append(" maxlength=\"");
+            buffer.append(maxlength.intValue());
+            buffer.append('"');
+        }
+
+        buffer.append("/>");
+        
+        this.appendTooltip(buffer, context, modelFormField);        
+        
+	buffer.append(" \n<nobr/>\n");
+        buffer.append(" Equals<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_fld0_op\" value=\"equals\" checked/>  &nbsp\n");
+
+        buffer.append(" Greater than<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_fld0_op\" value=\"greaterThan\"/>       &nbsp\n");
+
+        buffer.append(" Greater than equals<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_fld0_op\" value=\"greaterThanEqualTo\"/>      &nbsp\n");
+
+	buffer.append(" \n<br/>\n");
+
+        buffer.append("<input type=\"text\"");
+        
+        className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+        
+        // add a style of red if this is a date/time field and redWhen is true
+        if (modelFormField.shouldBeRed(context)) {
+            buffer.append(" style=\"color: red;\"");
+        }
+        
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+        buffer.append("_fld1_value\"");
+        
+        value = modelFormField.getEntry(context);
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(" value=\"");
+            buffer.append(value);
+            buffer.append('"');
+        }
+        
+        buffer.append(" size=\"");
+        buffer.append(rangeFindField.getSize());
+        buffer.append('"');
+        
+        if (maxlength != null) {
+            buffer.append(" maxlength=\"");
+            buffer.append(maxlength.intValue());
+            buffer.append('"');
+        }
+
+        buffer.append("/>");
+        
+        this.appendTooltip(buffer, context, modelFormField);        
+        
+	buffer.append(" \n<nobr/>\n");
+
+        buffer.append(" Less than<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_fld1_op\" value=\"lessThan\"/>       &nbsp\n");
+
+        buffer.append(" Less than equals<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_fld1_op\" value=\"lessThanEqualTo\"/>      &nbsp\n");
+
+        
+        this.appendWhitespace(buffer);
+    }
+
+    /* (non-Javadoc)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDateFindField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DateFindField)
+     */
+    public void renderDateFindField(StringBuffer buffer, Map context, DateFindField dateFindField) {
+        ModelFormField modelFormField = dateFindField.getModelFormField();
+        
+        buffer.append("<input type=\"text\"");
+        
+        String className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+        
+        // add a style of red if this is a date/time field and redWhen is true
+        if (modelFormField.shouldBeRed(context)) {
+            buffer.append(" style=\"color: red;\"");
+        }
+        
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+        buffer.append("_fld0_value\"");
+        
+        String value = modelFormField.getEntry(context);
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(" value=\"");
+            buffer.append(value);
+            buffer.append('"');
+        }
+        
+        // the default values for a timestamp
+        int size = 25;
+        int maxlength = 30;
+        
+        buffer.append(" size=\"");
+        buffer.append(size);
+        buffer.append('"');
+        
+        buffer.append(" maxlength=\"");
+        buffer.append(maxlength);
+        buffer.append('"');
+
+        buffer.append("/>");
+        
+        // add calendar pop-up button and seed data 
+            buffer.append("<a href=\"javascript:call_cal(document.");
+            buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
+            buffer.append('.');
+            buffer.append(modelFormField.getParameterName(context));
+            buffer.append("_fld0_value, '");
+            buffer.append(modelFormField.getEntry(context, dateFindField.getDefaultDateTimeString(context)));
+            buffer.append("');\">");
+            buffer.append("<img src=\"");
+            this.appendContentUrl(buffer, "/images/cal.gif");
+            buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
+        
+        this.appendTooltip(buffer, context, modelFormField);        
+        
+	buffer.append(" \n<nobr/>\n");
+        buffer.append(" Equals<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_fld0_op\" value=\"equals\" checked/>  &nbsp\n");
+
+        buffer.append(" Same day<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_fld0_op\" value=\"sameDay\" checked/>  &nbsp\n");
+
+        buffer.append(" Greater than from day start<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_fld0_op\" value=\"greaterThanFromDayStart\"/>      &nbsp\n");
+
+        buffer.append(" Greater than<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_fld0_op\" value=\"greaterThan\"/>       &nbsp\n");
+
+	buffer.append(" \n<br/>\n");
+        
+        buffer.append("<input type=\"text\"");
+        className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+        
+        // add a style of red if this is a date/time field and redWhen is true
+        if (modelFormField.shouldBeRed(context)) {
+            buffer.append(" style=\"color: red;\"");
+        }
+        
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+        buffer.append("_fld1_value\"");
+        
+        value = modelFormField.getEntry(context);
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(" value=\"");
+            buffer.append(value);
+            buffer.append('"');
+        }
+        
+        
+        buffer.append(" size=\"");
+        buffer.append(size);
+        buffer.append('"');
+        
+        buffer.append(" maxlength=\"");
+        buffer.append(maxlength);
+        buffer.append('"');
+
+        buffer.append("/>");
+        
+        // add calendar pop-up button and seed data 
+            buffer.append("<a href=\"javascript:call_cal(document.");
+            buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
+            buffer.append('.');
+            buffer.append(modelFormField.getParameterName(context));
+            buffer.append("_fld1_value, '");
+            buffer.append(modelFormField.getEntry(context, dateFindField.getDefaultDateTimeString(context)));
+            buffer.append("');\">");
+            buffer.append("<img src=\"");
+            this.appendContentUrl(buffer, "/images/cal.gif");
+            buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
+        
+        this.appendTooltip(buffer, context, modelFormField);        
+        
+        
+	buffer.append(" \n<nobr/>\n");
+
+        buffer.append(" Less than<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_fld1_op\" value=\"lessThan\"/>       &nbsp\n");
+
+        buffer.append(" Up TO day<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_fld1_op\" value=\"upToDay\"/>      &nbsp\n");
+
+        buffer.append(" Up THRU day<input type=\"radio\" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+	buffer.append("_fld1_op\" value=\"upThruDay\"/>      &nbsp\n");
+
+        this.appendWhitespace(buffer);
+    }
+
+    /* (non-Javadoc)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderLookupField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.LookupField)
+     */
+    public void renderLookupField(StringBuffer buffer, Map context, LookupField lookupField) {
+        ModelFormField modelFormField = lookupField.getModelFormField();
+        
+        buffer.append("<input type=\"text\"");
+        
+        String className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+        
+        // add a style of red if this is a date/time field and redWhen is true
+        if (modelFormField.shouldBeRed(context)) {
+            buffer.append(" style=\"color: red;\"");
+        }
+        
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+        buffer.append('"');
+        
+        String value = modelFormField.getEntry(context);
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(" value=\"");
+            buffer.append(value);
+            buffer.append('"');
+        }
+        
+        buffer.append(" size=\"");
+        buffer.append(lookupField.getSize());
+        buffer.append('"');
+        
+        Integer maxlength = lookupField.getMaxlength();
+        if (maxlength != null) {
+            buffer.append(" maxlength=\"");
+            buffer.append(maxlength.intValue());
+            buffer.append('"');
+        }
+
+        buffer.append("/>");
+        
+        // add lookup pop-up button 
+            buffer.append("<a href=\"javascript:call_fieldlookup2(document.");
+            buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
+            buffer.append('.');
+            buffer.append(modelFormField.getParameterName(context));
+            buffer.append(", '");
+            buffer.append(lookupField.getFormName());
+            buffer.append("');\">");
+            buffer.append("<img src=\"");
+            this.appendContentUrl(buffer, "/images/fieldlookup.gif");
+            buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Lookup\"></a>");
+        
+        this.appendTooltip(buffer, context, modelFormField);        
+        
+        this.appendWhitespace(buffer);
+    }
+
+    public void renderNextPrev(StringBuffer buffer, Map context, ModelForm modelForm) {
+	String targetService	= modelForm.getPaginateTarget();
+	if(targetService == null) targetService = "${targetService}";
+        
+	int viewIndex   = -1;
+        try{
+                viewIndex = ((Integer) context.get("viewIndex")).intValue();
+        }catch(Exception e){
+                 viewIndex      = 0;
+        }
+
+	int viewSize   = -1;
+        try{
+                viewSize = ((Integer) context.get("viewSize")).intValue();
+        }catch(Exception e){
+                 viewSize      = 0;
+        }
+
+	int listSize   = -1;
+        try{
+                listSize = ((Integer) context.get("listSize")).intValue();
+        }catch(Exception e){
+                 listSize      = 0;
+        }
+
+	int highIndex   = -1;
+        try{
+                highIndex = ((Integer) context.get("highIndex")).intValue();
+        }catch(Exception e){
+                 highIndex      = 0;
+        }
+
+	int lowIndex   = -1;
+        try{
+                lowIndex = ((Integer) context.get("lowIndex")).intValue();
+        }catch(Exception e){
+                 lowIndex      = 0;
+        }
+
+	String queryString	= (String)context.get("queryString");
+	
+        ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+        RequestHandler rh = (RequestHandler) ctx.getAttribute(SiteDefs.REQUEST_HANDLER);
+
+	buffer.append("<table border=\"0\" width=\"100%\" cellpadding=\"2\"> \n");
+	buffer.append("  <tr> \n");
+	buffer.append("    <td align=right> \n");
+	buffer.append("      <b> \n");
+	if( viewIndex > 0 ){
+		buffer.append(" <a href=\"");
+		String linkText	= ""
+			+ targetService
+			+ "?"
+			+  queryString
+			+ "&VIEW_SIZE=" + viewSize
+			+ "&VIEW_INDEX=" + (viewIndex - 1)
+			+ "\"";
+
+                        // make the link
+        	buffer.append(rh.makeLink(request, response, linkText, false, false, false));
+		buffer.append(" class=\"buttontext\">[Previous]</a>  \n");
+
+	}
+	if( listSize > 0 ){
+		buffer.append("          <span class=\"tabletext\">"
+			+ lowIndex + " - " + highIndex
+			+ " of " 
+			+ listSize
+			+ "</span> \n");
+	}
+	if( highIndex < listSize ){
+		buffer.append(" <a href=\"");
+		String linkText	= ""
+			+ targetService
+			+ "?"
+			+  queryString
+			+ "&VIEW_SIZE=" + viewSize
+			+ "&VIEW_INDEX=" + (viewIndex + 1)
+			+ "\"";
+
+                        // make the link
+        	buffer.append(rh.makeLink(request, response, linkText, false, false, false));
+		buffer.append(" class=\"buttontext\">[Next]</a>  \n");
+
+	}
+	buffer.append("      </b> \n");
+	buffer.append("    </td> \n");
+	buffer.append("  </tr> \n");
+	buffer.append("</table> \n");
+
+        this.appendWhitespace(buffer);
     }
 }
