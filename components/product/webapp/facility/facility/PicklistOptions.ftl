@@ -21,7 +21,7 @@
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
  *@author         Andy Zeneski (jaz@ofbiz.org)
- *@version        $Revision: 1.6 $
+ *@version        $Revision: 1.7 $
  *@since            2.2
 -->
 
@@ -99,7 +99,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                     </td>
                                 </tr>
                             <#else>
-                                <tr><td colspan="4"><div class="head3">No orders are ready to pick and no stock moves needed.</div></td></tr>
+                                <tr><td colspan="4"><div class="head3">No orders found that are ready to pick or that need stock moves.</div></td></tr>
                             </#if>
                         </table>
                     </td>
