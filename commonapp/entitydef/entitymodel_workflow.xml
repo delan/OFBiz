@@ -528,6 +528,10 @@
         <key-map field-name="participantTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantList">
+      	<key-map field-name="packageId"/>
+      	<key-map field-name="packageVersion"/>
+      	<key-map field-name="processId"/>
+      	<key-map field-name="processVersion"/>
         <key-map field-name="participantId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="Party">
@@ -548,11 +552,23 @@
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Participant List Entity">
       <field name="participantListId" type="id-ne"></field>
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="packageVersion" type="very-short"></field>
+      <field name="processId" type="id-long-ne"></field>
+      <field name="processVersion" type="very-short"></field>      
       <field name="participantId" type="id"></field>
       <field name="participantIndex" type="numeric"></field>
       <prim-key field="participantListId"/>
+      <prim-key field="packageId"/>
+      <prim-key field="packageVersion"/>
+      <prim-key field="processId"/>
+      <prim-key field="processVersion"/>      
       <prim-key field="participantId"/>
       <relation type="one-nofk" rel-entity-name="WorkflowParticipant">
+      	<key-map field-name="packageId"/>
+      	<key-map field-name="packageVersion"/>
+      	<key-map field-name="processId"/>
+      	<key-map field-name="processVersion"/>
         <key-map field-name="participantId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowProcess">
