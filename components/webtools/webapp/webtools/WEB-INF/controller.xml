@@ -140,10 +140,18 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="xmldsrawdump"/>
     </request-map>
+    <request-map uri="xmldsdumpall">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="xmldsdumpall"/>
+    </request-map>
 
     <request-map uri="xmldsimport">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="xmldsimport"/>
+    </request-map>
+    <request-map uri="xmldsimportdir">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="xmldsimportdir"/>
     </request-map>
 
     <request-map uri="FindGeneric">
@@ -345,7 +353,9 @@
     <view-map name="checkdb" type="region"/>    
     <view-map name="xmldsdump" type="region"/>
     <view-map name="xmldsrawdump" page="/entity/xmldsrawdump.jsp"/>
+    <view-map name="xmldsdumpall" type="region"/>
     <view-map name="xmldsimport" type="region"/>
+    <view-map name="xmldsimportdir" type="region"/>
 
     <view-map name="EditUtilCache" type="region"/>
     <view-map name="FindUtilCache" type="region"/>

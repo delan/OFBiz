@@ -85,12 +85,14 @@
                     <li><a href="<ofbiz:url>/view/EditEntity</ofbiz:url>" class='buttontext' target='_blank'>Edit Entity Definitions</A>
                     <li><a href="<ofbiz:url>/view/ModelInduceFromDb</ofbiz:url>" target='_blank' class='buttontext'>Induce Model XML from Database</A><BR>
                   </ul>
-                  <li><a href="<ofbiz:url>/view/xmldsdump</ofbiz:url>" class='buttontext'>XML Data Export</A>
-                  <li><a href="<ofbiz:url>/view/xmldsimport</ofbiz:url>" class='buttontext'>XML Data Import</A>
-            <%--
+                  <li><a href="<ofbiz:url>/xmldsdump</ofbiz:url>" class='buttontext'>XML Data Export</A>
+                  <li><a href="<ofbiz:url>/xmldsdumpall</ofbiz:url>" class='buttontext'>XML Data Export All</A>
+                  <li><a href="<ofbiz:url>/xmldsimport</ofbiz:url>" class='buttontext'>XML Data Import</A>
+                  <li><a href="<ofbiz:url>/xmldsimportdir</ofbiz:url>" class='buttontext'>XML Data Import Dir</A>
+            <!--
                   <li><a href="<ofbiz:url>/view/tablesMySql</ofbiz:url>" class='buttontext'>MySQL Table Creation SQL</A>
                   <li><a href="<ofbiz:url>/view/dataMySql</ofbiz:url>" class='buttontext'>MySQL Auto Data SQL</A>
-            --%>
+            -->
                 </ul>
               <%}%>
               <%if(security.hasPermission("SERVICE_MAINT", session)) {%>
