@@ -16,6 +16,10 @@
             location="rmi://localhost:1099/RMIDispatcher" invoke="testScv">
         <implements service="testScv"/>
     </service>
+    <service name="testRmiFail" engine="rmi" validate="false"
+            location="rmi://localhost:1099/RMIDispatcher" invoke="testBsh">
+        <implements service="testScv"/>
+    </service>
 
     <service name="testWorkflow" engine="workflow" location="TEST-PKG" invoke="TestWorkflow">
         <attribute name="orderId" type="String" mode="IN"/>        

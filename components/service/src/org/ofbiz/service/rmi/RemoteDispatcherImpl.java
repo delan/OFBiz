@@ -1,5 +1,5 @@
 /*
- * $Id: RemoteDispatcherImpl.java,v 1.1 2003/12/02 06:39:32 ajzeneski Exp $
+ * $Id: RemoteDispatcherImpl.java,v 1.2 2003/12/02 17:12:55 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -24,10 +24,8 @@
  */
 package org.ofbiz.service.rmi;
 
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.GenericRequester;
-import org.ofbiz.service.GenericResultWaiter;
-import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.*;
+import org.ofbiz.base.util.Debug;
 
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.server.RMIClientSocketFactory;
@@ -39,7 +37,7 @@ import java.util.Map;
  * Generic Services Remote Dispatcher Implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteDispatcher {
@@ -56,55 +54,75 @@ public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteD
     // RemoteDispatcher methods
 
     public Map runSync(String serviceName, Map context) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
         return dispatcher.runSync(serviceName, context);
     }
 
     public void runSyncIgnore(String serviceName, Map context) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
         dispatcher.runSyncIgnore(serviceName, context);
     }
 
     public void runAsync(String serviceName, Map context, GenericRequester requester, boolean persist) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
         dispatcher.runAsync(serviceName, context, requester, persist);
     }
 
     public void runAsync(String serviceName, Map context, GenericRequester requester) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
         dispatcher.runAsync(serviceName, context, requester);
     }
 
     public void runAsync(String serviceName, Map context, boolean persist) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
         dispatcher.runAsync(serviceName, context, persist);
     }
 
     public void runAsync(String serviceName, Map context) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
         dispatcher.runAsync(serviceName, context);
     }
 
     public GenericResultWaiter runAsyncWait(String serviceName, Map context, boolean persist) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
         return dispatcher.runAsyncWait(serviceName, context, persist);
     }
 
     public GenericResultWaiter runAsyncWait(String serviceName, Map context) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
         return dispatcher.runAsyncWait(serviceName, context);
     }
 
     public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
         dispatcher.schedule(serviceName, context, startTime, frequency, interval, count, endTime);
     }
 
     public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
         dispatcher.schedule(serviceName, context, startTime, frequency, interval, count);
     }
 
     public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, long endTime) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
         dispatcher.schedule(serviceName, context, startTime, frequency, interval, endTime);
     }
 
     public void schedule(String serviceName, Map context, long startTime) throws GenericServiceException, RemoteException {
+        this.checkExportFlag(serviceName);
         dispatcher.schedule(serviceName, context, startTime);
     }
 
     public void deregister() {
         dispatcher.deregister();
+    }
+
+    protected void checkExportFlag(String serviceName) throws GenericServiceException {
+        ModelService model = dispatcher.getDispatchContext().getModelService(serviceName);
+        if (!model.export) {
+            Debug.logWarning("Attempt to invoke a non-exported service: " + serviceName, module);
+            throw new GenericServiceException("Cannot find requested service");
+        }
     }
 
 }
