@@ -25,13 +25,13 @@
     <handler name="jasperreportsxml" type="view" class="org.ofbiz.content.webapp.view.JasperReportsXmlViewHandler"/>
 
     <preprocessor>
-    	<!-- Events to run on every request before security (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
-    	<event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
+        <!-- Events to run on every request before security (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
     </preprocessor>
     <postprocessor>
-    	<!-- Events to run on every request after all other processing (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
+        <!-- Events to run on every request after all other processing (chains exempt) -->
+        <!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
     </postprocessor>
 
     <!-- Security Mappings -->
@@ -64,16 +64,21 @@
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
-    
     <request-map uri="authview">
-    	<security https="false" auth="true"/>
-    	<response name="success" type="view" value="main"/>
-    	<response name="error" type="view" value="main"/>
+        <security https="false" auth="true"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
     </request-map>   
-        
+
+    <request-map uri="setSessionLocale">
+        <event type="java" path="org.ofbiz.base.util.UtilHttp" invoke="setSessionLocale"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+            
     <request-map uri="main">
         <security https="true" auth="true"/>
-    	<response name="success" type="view" value="main"/>
+        <response name="success" type="view" value="main"/>
     </request-map>
 
     <request-map uri="viewprofile">
@@ -487,23 +492,23 @@
     </request-map>
     
     <request-map uri="showvisits">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="showvisits"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="showvisits"/>
     </request-map>
     <request-map uri="visitdetail">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="visitdetail"/>
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="visitdetail"/>
     </request-map>    
     
     <request-map uri="pushPage">
-    	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.common.CommonEvents" invoke="setFollowerPage"/>
-    	<response name="success" type="view" value="visitdetail"/>    	
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setFollowerPage"/>
+        <response name="success" type="view" value="visitdetail"/>        
     </request-map>
     <request-map uri="setAppletFollower">
-    	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.common.CommonEvents" invoke="setAppletFollower"/>
-    	<response name="success" type="view" value="visitdetail"/>
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setAppletFollower"/>
+        <response name="success" type="view" value="visitdetail"/>
     </request-map>
     
     <!-- communication event requests -->

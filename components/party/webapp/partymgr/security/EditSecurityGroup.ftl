@@ -20,14 +20,16 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
   ${pages.get("/security/SecurityGroupTabBar.ftl")}
-  <div class="head1">Edit SecurityGroup with ID "${groupId?if_exists}"</div>
-  <a href="<@ofbizUrl>/EditSecurityGroup</@ofbizUrl>" class="buttontext">[New Security Group]</a>
+  <div class="head1">${uiLabelMap.PartyEditSecurityGroupWithId}&nbsp;"${groupId?if_exists}"</div>
+  <a href="<@ofbizUrl>/EditSecurityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewSecurityGroup}]</a>
   <br>
   <br>
   
@@ -36,17 +38,17 @@
       <input type="hidden" name="groupId" value="${groupId}">
       <table border='0' cellpadding='2' cellspacing='0'>    
         <tr>
-          <td align='right'><div class="tabletext">SecurityGroup ID</div></td>
+          <td align='right'><div class="tabletext">${uiLabelMap.PartySecurityGroupId}</div></td>
           <td>&nbsp;</td>
           <td>
-            <b>${groupId}</b> <span class='tabletext'>(This cannot be changed without re-creating the securityGroup.)</span>
+            <b>${groupId}</b> <span class='tabletext'>(${uiLabelMap.PartyNotModifRecreatSecurityGroup})</span>
           </td>
         </tr>
   <#else>  
     <form action="<@ofbizUrl>/createSecurityGroup</@ofbizUrl>" method=POST style='margin: 0;'>
       <table border='0' cellpadding='2' cellspacing='0'>
         <tr>
-          <td align='right'><div class="tabletext">SecurityGroup ID</div></td>
+          <td align='right'><div class="tabletext">${uiLabelMap.PartySecurityGroupId}</div></td>
           <td>&nbsp;</td>
           <td>
             <input type="text" name='groupId' class="inputBox" value='' size='20'>
@@ -54,17 +56,17 @@
         </tr>
   </#if>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Description</div></td>
+        <td width="26%" align=right><div class="tabletext">${uiLabelMap.CommonDescription}</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="description" value="${(securityGroup.description)?if_exists}" size="60" maxlength="250"></td>
       </tr>
 
       <tr>
-        <td colspan='1' align=right><input type="submit" class="smallSubmit" value="Update"></td>
+        <td colspan='1' align=right><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonUpdate}"></td>
         <td colspan='2'>&nbsp;</td>
       </tr>
     </table>
   </form>
 <#else>
-  <h3>You do not have permission to view this page. ("SECURITY_VIEW" or "SECURITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.MsgErr0003}</h3>
 </#if>

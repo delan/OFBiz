@@ -20,31 +20,33 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign security = requestAttributes.security>
 <#assign unselectedLeftClassName = "headerButtonLeft">
 <#assign unselectedRightClassName = "headerButtonRight">
 <#assign selectedLeftClassMap = {page.headerItem?default("void") : "headerButtonLeftSelected"}>
 <#assign selectedRightClassMap = {page.headerItem?default("void") : "headerButtonRightSelected"}>
 
-<div class="apptitle">&nbsp;Party Manager Application&nbsp;</div>
+<div class="apptitle">&nbsp;${uiLabelMap.PartyManagerApplication}&nbsp;</div>
 <div class="row">
-  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>   
-  <div class="col"><a href="<@ofbizUrl>/findparty</@ofbizUrl>" class="${selectedLeftClassMap.find?default(unselectedLeftClassName)}">Find</a></div>
+  <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>   
+  <div class="col"><a href="<@ofbizUrl>/findparty</@ofbizUrl>" class="${selectedLeftClassMap.find?default(unselectedLeftClassName)}">${uiLabelMap.CommonFind}</a></div>
   <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-  <div class="col"><a href="<@ofbizUrl>/createnew</@ofbizUrl>" class="${selectedLeftClassMap.create?default(unselectedLeftClassName)}">Create</a></div>
+    <div class="col"><a href="<@ofbizUrl>/createnew</@ofbizUrl>" class="${selectedLeftClassMap.create?default(unselectedLeftClassName)}">${uiLabelMap.CommonCreate}</a></div>
   </#if>  
-  <div class="col"><a href="<@ofbizUrl>/showvisits</@ofbizUrl>" class="${selectedLeftClassMap.visits?default(unselectedLeftClassName)}">Visits</a></div>
+  <div class="col"><a href="<@ofbizUrl>/showvisits</@ofbizUrl>" class="${selectedLeftClassMap.visits?default(unselectedLeftClassName)}">${uiLabelMap.PartyVisits}</a></div>
   <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
-  <div class="col"><a href="<@ofbizUrl>/FindSecurityGroup</@ofbizUrl>" class="${selectedLeftClassMap.security?default(unselectedLeftClassName)}">Security</a></div>
+    <div class="col"><a href="<@ofbizUrl>/FindSecurityGroup</@ofbizUrl>" class="${selectedLeftClassMap.security?default(unselectedLeftClassName)}">${uiLabelMap.CommonSecurity}</a></div>
   </#if>    
   <#if userLogin?has_content>
-  	<div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${unselectedRightClassName}">Logout</a></div>
+    <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${unselectedRightClassName}">${uiLabelMap.CommonLogout}</a></div>
   <#else>
-    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>Login</a></div>
+    <div class="col-right"><a href='<@ofbizUrl>${requestAttributes.checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
   </#if>  
   <div class="col-fill">&nbsp;</div>
 </div>

@@ -20,21 +20,23 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
   <#if partyId?exists>
-    <#assign title = "Party">
+    <#assign title = uiLabelMap.PartyParty>
   <#else>
-    <#assign title = "Active">
+    <#assign title = uiLabelMap.PartyActive>
   </#if>
-  <div class="head1">${title}&nbsp;Visit&nbsp;Listing</div>
+  <div class="head1">${title}&nbsp;${uiLabelMap.PartyVisitListing}</div>
   <#if !partyId?exists && showAll?lower_case == "true">
-    <a href="<@ofbizUrl>/showvisits?showAll=false</@ofbizUrl>" class="buttontext">[Show Active]</a>
+    <a href="<@ofbizUrl>/showvisits?showAll=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyShowActive}]</a>
   <#elseif !partyId?exists>
-    <a href="<@ofbizUrl>/showvisits?showAll=true</@ofbizUrl>" class="buttontext">[Show All]</a>
+    <a href="<@ofbizUrl>/showvisits?showAll=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyShowAll}]</a>
   </#if>
   <br>
   <#if visitList?has_content>
@@ -43,13 +45,13 @@
         <td align='right'>
           <b>
             <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>/showvisits?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}<#if sort?has_content>&sort=${sort}</#if><#if partyId?has_content>&partyId=${partyId}</#if>&showAll=${showAll}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+              <a href="<@ofbizUrl>/showvisits?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}<#if sort?has_content>&sort=${sort}</#if><#if partyId?has_content>&partyId=${partyId}</#if>&showAll=${showAll}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${visitSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl>/showvisits?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}<#if sort?has_content>&sort=${sort}</#if><#if partyId?has_content>&partyId=${partyId}</#if>&showAll=${showAll}</@ofbizUrl>" class="buttontext">[Next]</a>              
+              | <a href="<@ofbizUrl>/showvisits?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}<#if sort?has_content>&sort=${sort}</#if><#if partyId?has_content>&partyId=${partyId}</#if>&showAll=${showAll}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>              
             </#if>
           </b>
         </td>
@@ -61,14 +63,14 @@
   
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td><a href="<@ofbizUrl>/showvisits?sort=visitId&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">VisitId</a></td>      
-      <td><a href="<@ofbizUrl>/showvisits?sort=partyId&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">PartyId</a></td>
-      <td><a href="<@ofbizUrl>/showvisits?sort=userLoginId&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">UserLoginId</a></td>
-      <td><a href="<@ofbizUrl>/showvisits?sort=-userCreated&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">New User</a></td>
-      <td><a href="<@ofbizUrl>/showvisits?sort=webappName&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">WebApp</a></td>
-      <td><a href="<@ofbizUrl>/showvisits?sort=clientIpAddress&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">Client IP</a></td>
-      <td><a href="<@ofbizUrl>/showvisits?sort=fromDate&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">From Date</a></td>
-      <td><a href="<@ofbizUrl>/showvisits?sort=thruDate&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">Thru Date</a></td>
+      <td><a href="<@ofbizUrl>/showvisits?sort=visitId&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyVisitId}</a></td>      
+      <td><a href="<@ofbizUrl>/showvisits?sort=partyId&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyPartyId}</a></td>
+      <td><a href="<@ofbizUrl>/showvisits?sort=userLoginId&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyUserLoginId}</a></td>
+      <td><a href="<@ofbizUrl>/showvisits?sort=-userCreated&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyNewUser}</a></td>
+      <td><a href="<@ofbizUrl>/showvisits?sort=webappName&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyWebApp}</a></td>
+      <td><a href="<@ofbizUrl>/showvisits?sort=clientIpAddress&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">${uiLabelMap.PartyClientIP}</a></td>
+      <td><a href="<@ofbizUrl>/showvisits?sort=fromDate&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">${uiLabelMap.CommonFromDate}</a></td>
+      <td><a href="<@ofbizUrl>/showvisits?sort=thruDate&showAll=${showAll}<#if partyId?has_content>&partyId=${partyId}</#if></@ofbizUrl>" class="tableheadbutton">${uiLabelMap.CommonThruDate}</a></td>
     </tr>
     <tr><td colspan="8"><hr class="sepbar"></td></tr>
     <#-- set initial row color -->
@@ -99,13 +101,13 @@
         <td align='right'>
           <b>
             <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>/showvisits?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}<#if sort?has_content>&sort=${sort}</#if><#if partyId?has_content>&partyId=${partyId}</#if>&showAll=${showAll}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+              <a href="<@ofbizUrl>/showvisits?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}<#if sort?has_content>&sort=${sort}</#if><#if partyId?has_content>&partyId=${partyId}</#if>&showAll=${showAll}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${visitSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl>/showvisits?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}<#if sort?has_content>&sort=${sort}</#if><#if partyId?has_content>&partyId=${partyId}</#if>&showAll=${showAll}</@ofbizUrl>" class="buttontext">[Next]</a>              
+              | <a href="<@ofbizUrl>/showvisits?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}<#if sort?has_content>&sort=${sort}</#if><#if partyId?has_content>&partyId=${partyId}</#if>&showAll=${showAll}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>              
             </#if>
           </b>
         </td>
@@ -113,5 +115,5 @@
     </table> 
   </#if>  
 <#else>
-  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.MsgErr0002}</h3>
 </#if>

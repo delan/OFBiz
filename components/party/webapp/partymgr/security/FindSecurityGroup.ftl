@@ -20,13 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
-  <div class="head1">SecurityGroups List</div>
-  <div><a href='<@ofbizUrl>/EditSecurityGroup</@ofbizUrl>' class="buttontext">[Create New SecurityGroup]</a></div>
+  <div class="head1">${uiLabelMap.PartySecurityGroupsList}</div>
+  <div><a href='<@ofbizUrl>/EditSecurityGroup</@ofbizUrl>' class="buttontext">[${uiLabelMap.PartyCreateNewSecurityGroup}]</a></div>
   
   <#if securityGroups?has_content>
     <table border="0" width="100%" cellpadding="2">
@@ -34,13 +36,13 @@
         <td align='right'>
           <b>
             <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>/FindSecurityGroup?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+              <a href="<@ofbizUrl>/FindSecurityGroup?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl>/FindSecurityGroup?VIEW_SIZE${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
+              | <a href="<@ofbizUrl>/FindSecurityGroup?VIEW_SIZE${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
           </b>
         </td>
@@ -50,8 +52,8 @@
   
   <table border="1" cellpadding='2' cellspacing='0' width='100%'>
     <tr>
-      <td><div class="tabletext"><b>SecurityGroup&nbsp;ID</b></div></td>
-      <td><div class="tabletext"><b>Description</b></div></td>
+      <td><div class="tabletext"><b>${uiLabelMap.PartySecurityGroupId}</b></div></td>
+      <td><div class="tabletext"><b>${uiLabelMap.CommonDescription}</b></div></td>
       <td><div class="tabletext">&nbsp;</div></td>
     </tr>
     <#list securityGroups[lowIndex..highIndex-1] as securityGroup>    
@@ -59,7 +61,7 @@
         <td><div class='tabletext'>&nbsp;${securityGroup.groupId}</div></td>
         <td><div class='tabletext'>&nbsp;${securityGroup.description?if_exists}</div></td>
         <td align="center">
-          <a href='<@ofbizUrl>/EditSecurityGroup?groupId=${securityGroup.groupId}</@ofbizUrl>' class="buttontext">[Edit]</a>
+          <a href='<@ofbizUrl>/EditSecurityGroup?groupId=${securityGroup.groupId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonEdit}]</a>
         </td>
       </tr>
     </#list>
@@ -71,13 +73,13 @@
         <td align='right'>
           <b>
             <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>/FindSecurityGroup?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+              <a href="<@ofbizUrl>/FindSecurityGroup?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl>/FindSecurityGroup?VIEW_SIZE${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
+              | <a href="<@ofbizUrl>/FindSecurityGroup?VIEW_SIZE${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
           </b>
         </td>
@@ -85,5 +87,5 @@
     </table>
   </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("SECURITY_VIEW" or "SECURITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.MsgErr0003}</h3>
 </#if>

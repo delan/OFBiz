@@ -20,24 +20,26 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
-  <div class='head1'>Visit Detail</div>
+  <div class='head1'>${uiLabelMap.PartyVisitDetail}</div>
   <br>
   
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">VisitID / SessionID</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyVisitIDSessionID}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <div class="tabletext">${visit.visitId?if_exists} / ${visit.sessionId?if_exists}</div>
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">PartyID / UserLoginID</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyPartyIDUserLoginID}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <div class="tabletext">
@@ -46,21 +48,21 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">UserCreated</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyUserCreated}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <div class="tabletext">${visit.userCreated?if_exists}</div>
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">WebApp</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyWebApp}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <div class="tabletext">${visit.webappName?if_exists}</div>
       </td>
     </tr>  
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">Server</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyServer}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <div class="tabletext">
@@ -69,7 +71,7 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">Client</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyClient}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <div class="tabletext">
@@ -78,58 +80,58 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">Client User</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyClientUser}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <div class="tabletext">${visit.clientUser?if_exists}</div>
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">Initial Locale</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyInitialLocale}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <div class="tabletext">${visit.initialLocale?if_exists}</div>
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">Initial Request</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyInitialRequest}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <a href="${visit.initialRequest?if_exists}" class="buttontext">${visit.initialRequest?if_exists}</a>
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">Initial Referer</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyInitialReferer}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <a href="${visit.initialReferrer?if_exists}" class="buttontext">${visit.initialReferrer?if_exists}</a>
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">Initial User Agent</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyInitialUserAgent}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <div class="tabletext">${visit.initialUserAgent?if_exists}</div>
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">Cookie</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.PartyCookie}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
         <div class="tabletext">${visit.cookie?if_exists}</div>
       </td>
     </tr>
     <tr>
-      <td width="26%" align="right"><div class="tableheadtext">From-Date / Thru-Date</div></td>
+      <td width="26%" align="right"><div class="tableheadtext">${uiLabelMap.CommonFromDateThruDate}</div></td>
       <td width="5">:&nbsp;</td>
       <td width="74%" align="left">
-        <div class="tabletext">${(visit.fromDate?string)?if_exists} / ${(visit.thruDate?string)?default("[Still Active]")}</div>
+        <div class="tabletext">${(visit.fromDate?string)?if_exists} / ${(visit.thruDate?string)?default("["+uiLabelMap.PartyStillActive+"]")}</div>
       </td>
     </tr>                             
   </table>
 
   <br>
-  <div class="head1">Hit Tracker</div>
+  <div class="head1">${uiLabelMap.PartyHitTracker}</div>
   <br>
 
   <#if serverHits?has_content>
@@ -138,13 +140,13 @@
         <td align='right'>
           <b>
             <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+              <a href="<@ofbizUrl>/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl><%="/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
+              | <a href="<@ofbizUrl><%="/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
           </b>
         </td>
@@ -154,12 +156,12 @@
   
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td><div class="tableheadtext">ContentID</div></td>
-      <td><div class="tableheadtext">Type</div></td>
-      <td><div class="tableheadtext">&nbsp;&nbsp;Size</div></td>    
-      <td><div class="tableheadtext">Start Time</div></td>
-      <td><div class="tableheadtext">&nbsp;&nbsp;Time(ms)</div></td>
-      <td><div class="tableheadtext">URI</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.PartyContentId}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.PartyType}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.PartySize}</div></td>    
+      <td><div class="tableheadtext">${uiLabelMap.PartyStartTime}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.PartyTime}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.PartyURI}</div></td>
     </tr>
     <tr>
       <td colspan="6"><hr class="sepbar"></td>
@@ -199,13 +201,13 @@
         <td align='right'>
           <b>
             <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+              <a href="<@ofbizUrl>/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl><%="/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
+              | <a href="<@ofbizUrl><%="/visitdetail?visitId=${visitId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
           </b>
         </td>
@@ -215,19 +217,19 @@
 
   <#if security.hasPermission("SEND_CONTROL_APPLET", session)>
     <br>
-    <div class="head1">Page Push/Following</div>
+    <div class="head1">${uiLabelMap.PartyPagePushFollowing}</div>
     <br>
     
     <table border="0" cellpadding="5" cellspacing="5">
       <form name="pushPage" method="get" action="<@ofbizUrl>/pushPage</@ofbizUrl>">
         <tr>        
-          <td><div class="tableheadtext">Push URL</div></td>    
+          <td><div class="tableheadtext">${uiLabelMap.PartyPushURL}</div></td>    
           <td>
             <input type="hidden" name="followerSid" value="${visit.sessionId}">
             <input type="hidden" name="visitId" value="${visit.visitId}">
             <input type="input" name="pageUrl" class="inputBox">
           </td>
-          <td><input type="submit" value="Submit" class="smallSubmit"></td>
+          <td><input type="submit" value="${uiLabelMap.CommonSubmit}" class="smallSubmit"></td>
         </tr>
         <tr>
           <td colspan="3"><hr class="sepbar"></td>
@@ -235,17 +237,17 @@
       </form>
       <form name="setFollower" method="get" action="<@ofbizUrl>/setAppletFollower</@ofbizUrl>">
         <tr>
-          <td><div class="tableheadtext">Follow Session</div></td>
+          <td><div class="tableheadtext">${uiLabelMap.PartyFollowSession}</div></td>
           <td>
             <input type="hidden" name="followerSid" value="${visit.sessionId}">
             <input type="hidden" name="visitId" value="${visit.visitId}">
             <input type="text" name="followSid" class="inputBox">
           </td>
-          <td><input type="submit" value="Submit" class="smallSubmit"></td>
+          <td><input type="submit" value="${uiLabelMap.CommonSubmit}" class="smallSubmit"></td>
         </tr>
       </form>
     </table>
   </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.MsgErr0002}</h3>
 </#if>

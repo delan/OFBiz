@@ -447,7 +447,7 @@
     </service>
     <service name="updateCommunicationEvent" engine="simple"
             location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="updateCommunicationEvent" auth="true">
-        <description>Create a Communication Event</description>
+        <description>Update a Communication Event</description>
         <auto-attributes entity-name="CommunicationEvent" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="CommunicationEvent" include="nonpk" mode="IN" optional="true"/>
     </service>

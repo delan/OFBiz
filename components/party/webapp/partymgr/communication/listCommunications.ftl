@@ -20,16 +20,18 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 <#-- Main Heading -->
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td align="left">
-      <div class="head1">Communications with
+      <div class="head1">${uiLabelMap.PartyCommunicationsWith}
         <#if lookupPerson?exists>
           ${lookupPerson.personalTitle?if_exists}
           ${lookupPerson.firstName?if_exists}
@@ -38,26 +40,26 @@
           ${lookupPerson.suffix?if_exists}
         <#else>
           <#if lookupGroup?exists>
-            ${lookupGroup.groupName?default("No name (group)")}
+            ${lookupGroup.groupName?default(uiLabelMap.PartyNoNameGroup)}
           <#else>
-          "New User"
+          "${uiLabelMap.PartyNewUser}"
           </#if>
         </#if>
       </div>
     </td>
     <td align="right">
 	  <div class="tabContainer">
-        <a href="<@ofbizUrl>/viewprofile?partyId=${partyId}</@ofbizUrl>" class="tabButton">Profile</a>
-        <a href="<@ofbizUrl>/viewvendor?partyId=${partyId}</@ofbizUrl>" class="tabButton">Vendor</a>
-        <a href="<@ofbizUrl>/viewroles?partyId=${partyId}</@ofbizUrl>" class="tabButton">Roles</a>
-        <a href="<@ofbizUrl>/viewrelationships?partyId=${partyId}</@ofbizUrl>" class="tabButton">Relationships</a>
-        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButtonSelected">Communications</a>
+        <a href="<@ofbizUrl>/viewprofile?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyProfile}</a>
+        <a href="<@ofbizUrl>/viewvendor?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyVendor}</a>
+        <a href="<@ofbizUrl>/viewroles?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRoles}</a>
+        <a href="<@ofbizUrl>/viewrelationships?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRelationships}</a>
+        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.PartyCommunications}</a>
       </div>
     </td>
   </tr>
   <tr>
     <td colspan="2" align="right" nowrap>      
-      <a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}</@ofbizUrl>" class="buttontext">[New Communication]</a>
+      <a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
     </td>
   </tr>
 </table>
@@ -65,13 +67,13 @@
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
   <tr>
-    <td><div class="tableheadtext">Event #</div></td>
-    <td><div class="tableheadtext">Type</div></td>
-    <td><div class="tableheadtext">Contact Type</div></td>
-    <td><div class="tableheadtext">Status</div></td>
-    <td><div class="tableheadtext">Party From</div></td>  
-    <td><div class="tableheadtext">Party To</div></td>
-    <td><div class="tableheadtext">Entered Date</div></td>    
+    <td><div class="tableheadtext">${uiLabelMap.PartyCommEvent} #</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.PartyType}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.PartyContactType}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.PartyStatus}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.PartyPartyFrom}</div></td>  
+    <td><div class="tableheadtext">${uiLabelMap.PartyPartyTo}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.PartyEnteredDate}</div></td>    
   </tr> 
   <tr><td colspan="8"><hr class="sepbar"></td></tr>
   <#if events?has_content>
@@ -83,21 +85,21 @@
       </#if>
       <tr>
         <td><div class="tabletext">${event.communicationEventId?if_exists}</div></td>
-        <td><div class="tabletext">${eventType.description?default("N/A")}</div></td>
-        <td><div class="tabletext">${contactMechType.description?default("N/A")}</div></td>
-        <td><div class="tabletext">${(statusItem.description)?default("N/A")}</div></td>
-        <td><div class="tabletext">${event.partyIdFrom?default("N/A")}</div></td>
-        <td><div class="tabletext">${event.partyIdTo?default("N/A")}</div></td>
+        <td><div class="tabletext">${eventType.description?default(uiLabelMap.CommonNA)}</div></td>
+        <td><div class="tabletext">${contactMechType.description?default(uiLabelMap.CommonNA)}</div></td>
+        <td><div class="tabletext">${(statusItem.description)?default(uiLabelMap.CommonNA)}</div></td>
+        <td><div class="tabletext">${event.partyIdFrom?default(uiLabelMap.CommonNA)}</div></td>
+        <td><div class="tabletext">${event.partyIdTo?default(uiLabelMap.CommonNA)}</div></td>
         <td><div class="tabletext">${(event.entryDate?string)?if_exists}</div></td>
-        <td align="right"><a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}&communicationEventId=${event.communicationEventId}</@ofbizUrl>" class="buttontext">[View]</a>
+        <td align="right"><a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}&communicationEventId=${event.communicationEventId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a>
       </tr>
     </#list>
   <#else>
     <tr>
-      <td colspan="8"><div class="tabletext">No Communication Events</div></td>
+      <td colspan="8"><div class="tabletext">${uiLabelMap.PartyNoCommunicationFound}</div></td>
     </tr>
   </#if>
 </table>
 <#else>
-  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.MsgErr0002}</h3>
 </#if>

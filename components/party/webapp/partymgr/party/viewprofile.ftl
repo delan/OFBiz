@@ -23,9 +23,11 @@
  * @author     David E. Jones
  * @author     Andy Zeneski
  * @created    May 26 2003
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
  * @version    1.0
  */
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 
 <script language='JavaScript'>
@@ -37,7 +39,7 @@
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
     <td align='left'>
-      <div class="head1">The Profile of
+      <div class="head1">${uiLabelMap.PartyTheProfileOf}
         <#if lookupPerson?has_content>
           ${lookupPerson.personalTitle?if_exists}
           ${lookupPerson.firstName?if_exists}
@@ -45,35 +47,35 @@
           ${lookupPerson.lastName?if_exists}
           ${lookupPerson.suffix?if_exists}
         <#elseif lookupGroup?has_content>
-          ${lookupGroup.groupName?default("No name (group)")}
+          ${lookupGroup.groupName?default("${uiLabelMap.PartyNoNameGroup}")}
         <#else>
-          "New User"
+          ${uiLabelMap.PartyNewUser}
        </#if>
       </div>
     </td>
     <td align='right'>
       <div class='tabContainer'>
-        <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="tabButtonSelected">Profile</a>
-        <a href="<@ofbizUrl>/viewvendor?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">Vendor</a>
-        <a href="<@ofbizUrl>/viewroles?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">Roles</a>
-        <a href="<@ofbizUrl>/viewrelationships?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">Relationships</a>
-        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButton">Communications</a>
+        <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.PartyProfile}</a>
+        <a href="<@ofbizUrl>/viewvendor?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyVendor}</a>
+        <a href="<@ofbizUrl>/viewroles?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRoles}</a>
+        <a href="<@ofbizUrl>/viewrelationships?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRelationships}</a>
+        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyCommunications}</a>
       </div>
     </td>
   </tr>
   <tr>
     <td colspan="2" align="right" nowrap>     
       <#if showOld>
-        <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[Hide Old]</a>
+        <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyHideOld}]</a>
       <#else>      
-        <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}&SHOW_OLD=true</@ofbizUrl>" class="buttontext">[Show Old]</a>
+        <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}&SHOW_OLD=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyShowOld}]</a>
       </#if>
-      <a href="/accounting/control/findBillingAccount?partyId=${partyId}${externalKeyParam}" class="buttontext">[Billing Accounts]</a>
+      <a href="/accounting/control/findBillingAccount?partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.AccountingBillingAccount}]</a>
       <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
-        <a href="/ordermgr/control/findorders?lookupFlag=Y&partyId=${partyId}${externalKeyParam}" class="buttontext">[Orders]</a>
+        <a href="/ordermgr/control/findorders?lookupFlag=Y&partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderOrders}]</a>
       </#if>
       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-        <a href="/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyId}${externalKeyParam}" class="buttontext">[New Order]</a>
+        <a href="/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>
       </#if>      
     </td>
   </tr>
@@ -87,24 +89,24 @@
         <tr>
           <#if lookupPerson?has_content>
             <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;Personal Information</div>
+              <div class="boxhead">&nbsp;${uiLabelMap.PartyPersonalInformation}</div>
             </td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td valign="middle" align="right">
               <a href="<@ofbizUrl>/editperson?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
-              <#if lookupPerson?has_content>Update</#if></a>
+              <#if lookupPerson?has_content>${uiLabelMap.CommonUpdate}</#if></a>
             </td>
             </#if>            
           </#if>
           <#if lookupGroup?has_content>
             <#assign lookupPartyType = party.getRelatedOneCache("PartyType")>            
             <td valign="middle" align="left">
-              <div class="boxhead">&nbsp;Party Group Information</div>
+              <div class="boxhead">&nbsp;${uiLabelMap.PartyPartyGroupInformation}</div>
             </td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td valign="middle" align="right">
               <a href="<@ofbizUrl>/editpartygroup?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
-              <#if lookupGroup?has_content>Update</#if></a>
+              <#if lookupGroup?has_content>${uiLabelMap.CommonUpdate}</#if></a>
             </td>
             </#if>
           </#if>
@@ -120,7 +122,7 @@
 <#if lookupPerson?has_content>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
     <tr>
-      <td align="right" width="10%"><div class="tabletext"><b>Name</b></div></td>
+      <td align="right" width="10%"><div class="tabletext"><b>${uiLabelMap.PartyName}</b></div></td>
       <td width="5">&nbsp;</td>
       <td align="left" width="90%">
         <div class="tabletext">
@@ -133,46 +135,46 @@
       </td>
     </tr>
     <#if lookupPerson.nickname?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>Nickname</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.nickname}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyNickname}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.nickname}</div></td></tr>
     </#if>
     <#if lookupPerson.gender?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>Gender</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.gender}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyGender}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.gender}</div></td></tr>
     </#if>
     <#if lookupPerson.birthDate?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>Birth Date</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.birthDate.toString()}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyBirthDate}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.birthDate.toString()}</div></td></tr>
     </#if>
     <#if lookupPerson.height?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>Height</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.height}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyHeight}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.height}</div></td></tr>
     </#if>
     <#if lookupPerson.weight?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>Weight</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.weight}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyWeight}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.weight}</div></td></tr>
     </#if>
     <#if lookupPerson.mothersMaidenName?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>Mothers Maiden Name</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.mothersMaidenName}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyMothersMaidenName}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.mothersMaidenName}</div></td></tr>
     </#if>
     <#if lookupPerson.maritalStatus?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>Marital Status</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.maritalStatus}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyMaritalStatus}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.maritalStatus}</div></td></tr>
     </#if>
     <#if lookupPerson.socialSecurityNumber?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>Social Security Number</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.socialSecurityNumber}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartySocialSecurityNumber}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.socialSecurityNumber}</div></td></tr>
     </#if>
     <#if lookupPerson.passportNumber?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>Passport Number</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.passportNumber}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportNumber}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.passportNumber}</div></td></tr>
     </#if>
     <#if lookupPerson.passportExpireDate?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>Passport Expire</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.passportExpireDate.toString()}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyPassportExpire}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.passportExpireDate.toString()}</div></td></tr>
     </#if>
     <#if lookupPerson.totalYearsWorkExperience?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>Years Work</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.totalYearsWorkExperience}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyYearsWork}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.totalYearsWorkExperience}</div></td></tr>
     </#if>
     <#if lookupPerson.comments?has_content>
-    <tr><td align=right nowrap><div class='tabletext'><b>Comments</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.comments}</div></td></tr>
+    <tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyComments}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${lookupPerson.comments}</div></td></tr>
     </#if>
   </table>
 <#elseif lookupGroup?has_content>
     <div class="tabletext">${lookupGroup.groupName} (${(lookupPartyType.description)?if_exists})</div>
 <#else>
-    <div class="tabletext">Information Not Found</div>
+    <div class="tabletext">${uiLabelMap.PartyInformationNotFound}</div>
 </#if>
           </td>
         </tr>
@@ -188,11 +190,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Contact Information</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.PartyContactInformation}</div>
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editcontactmech?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">Create New</a>
+              <a href="<@ofbizUrl>/editcontactmech?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
           </td>
           </#if>
         </tr>
@@ -207,10 +209,10 @@
   <#if contactMeches?has_content>
     <table width="100%" border="0" cellpadding="0">
       <tr align=left valign=bottom>
-        <th>Contact&nbsp;Type</th>
+        <th><div class="tableheadtext">${uiLabelMap.PartyContactType}</th>
         <th width="5">&nbsp;</th>
-        <th>Information</th>
-        <th colspan='2'>Soliciting&nbsp;OK?</th>
+        <th><div class="tableheadtext">${uiLabelMap.PartyContactInformation}</th>
+        <th colspan='2'><div class="tableheadtext">${uiLabelMap.PartyContactSolicitingOk}</th>
         <th>&nbsp;</th>
       </tr>
       <#list contactMeches as contactMechMap>
@@ -229,18 +231,18 @@
                       <#if contactMechPurposeType?has_content>
                         <b>${contactMechPurposeType.description}</b>
                       <#else>
-                        <b>Purpose Type not found with ID: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
+                        <b>${uiLabelMap.PartyMechPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
                       </#if>
                       <#if partyContactMechPurpose.thruDate?has_content>
-                      (Expire: ${partyContactMechPurpose.thruDate.toString()})
+                      (${uiLabelMap.CommonExpire}: ${partyContactMechPurpose.thruDate.toString()})
                       </#if>
                     </div>
               </#list>
               <#if "POSTAL_ADDRESS" = contactMech.contactMechTypeId>
                   <#assign postalAddress = contactMechMap.postalAddress>
                   <div class="tabletext">                    
-                    <#if postalAddress.toName?has_content><b>To:</b> ${postalAddress.toName}<br></#if>
-                    <#if postalAddress.attnName?has_content><b>Attn:</b> ${postalAddress.attnName}<br></#if>
+                    <#if postalAddress.toName?has_content><b>${uiLabelMap.PartyAddrToName}:</b> ${postalAddress.toName}<br></#if>
+                    <#if postalAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}<br></#if>
                     ${postalAddress.address1?if_exists}<br>
                     <#if postalAddress.address2?has_content><br></#if>
                     ${postalAddress.city?if_exists},
@@ -261,7 +263,7 @@
                   <div class="tabletext">
                     ${telecomNumber.countryCode?if_exists}
                     <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber}
-                    <#if partyContactMech.extension?has_content>ext&nbsp;${partyContactMech.extension}</#if>
+                    <#if partyContactMech.extension?has_content>${uiLabelMap.PartyContactExt}&nbsp;${partyContactMech.extension}</#if>
                     <#if (telecomNumber?has_content && !telecomNumber.countryCode?has_content) || telecomNumber.countryCode = "011">
                       <a target='_blank' href='http://www.anywho.com/qry/wp_rl?npa=${telecomNumber.areaCode?if_exists}&telephone=${telecomNumber.contactNumber?if_exists}&btnsubmit.x=20&btnsubmit.y=8' class='buttontext'>(lookup:anywho.com)</a>
                       <a target='_blank' href='http://whitepages.com/find_person_results.pl?fid=p&ac=${telecomNumber.areaCode?if_exists}&s=&p=${telecomNumber.contactNumber?if_exists}&pt=b&x=40&y=9' class='buttontext'>(lookup:whitepages.com)</a>
@@ -270,42 +272,42 @@
               <#elseif "EMAIL_ADDRESS" = contactMech.contactMechTypeId>
                   <div class="tabletext">
                     ${contactMech.infoString?if_exists}
-                    <a href='mailto:${contactMech.infoString?if_exists}' class='buttontext'>(send&nbsp;email)</a>
+                    <a href='mailto:${contactMech.infoString?if_exists}' class='buttontext'>(${uiLabelMap.CommonSendEmail})</a>
                   </div>
               <#elseif "WEB_ADDRESS" = contactMech.contactMechTypeId>
                   <div class="tabletext">
                     ${contactMech.infoString?if_exists}
                     <#assign openAddress = contactMech.infoString?default("")>
                     <#if !openAddress?starts_with("http") && !openAddress?starts_with("HTTP")><#assign openAddress = "http://" + openAddress></#if>
-                    <a target='_blank' href='${openAddress}' class='buttontext'>(open&nbsp;page&nbsp;in&nbsp;new&nbsp;window)</a>
+                    <a target='_blank' href='${openAddress}' class='buttontext'>(${uiLabelMap.CommonOpenPageNewWindow})</a>
                   </div>
               <#else>
                   <div class="tabletext">
                     ${contactMech.infoString?if_exists}
                   </div>
               </#if>
-              <div class="tabletext">(Updated:&nbsp;${partyContactMech.fromDate.toString()})</div>
-              <#if partyContactMech.thruDate?has_content><div class='tabletext'><b>Effective Thru:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>
+              <div class="tabletext">(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>
+              <#if partyContactMech.thruDate?has_content><div class='tabletext'><b>${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>
             </td>
             <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(${partyContactMech.allowSolicitation?if_exists})</b></div></td>
             <td width="5">&nbsp;</td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td align="right" valign="top" nowrap width="1%">
               <div><a href='<@ofbizUrl>/editcontactmech?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
-              [Update]</a>&nbsp;</div>
+              [${uiLabelMap.CommonUpdate}]</a>&nbsp;</div>
             </td>
             </#if>
             <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session)>
             <td align="right" valign="top" width="1%">
               <div><a href='<@ofbizUrl>/deleteContactMech/viewprofile?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}&partyId=${partyId}</@ofbizUrl>' class="buttontext">
-              [Expire]</a>&nbsp;&nbsp;</div>
+              [${uiLabelMap.CommonExpire}]</a>&nbsp;&nbsp;</div>
             </td>
             </#if>
           </tr>
       </#list>
     </table>
   <#else>
-    <div class="tabletext">No contact information on file.</div>
+    <div class="tabletext">${uiLabelMap.PartyNoContactInformation}</div>
   </#if>
           </td>
         </tr>
@@ -321,11 +323,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Payment Method Information</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.PartyPaymentMethodInformation}</div>
           </td>
           <td valign="middle" align="right">
               <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session)>
-                <a href="<@ofbizUrl>/editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">Create New Credit Card</a><a href="<@ofbizUrl>/editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">Create New EFT Account</a>
+                <a href="<@ofbizUrl>/editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewCreditCard}</a><a href="<@ofbizUrl>/editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.AccountingCreateNewEftAccount}</a>
               </#if>
           </td>
         </tr>
@@ -350,7 +352,7 @@
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
                                       <b>
-                                        Credit Card: ${creditCard.nameOnCard} - 
+                                        ${uiLabelMap.AccountingCreditCard}: ${creditCard.nameOnCard} - 
                                         <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
                                             ${creditCard.cardType}
                                             ${creditCard.cardNumber}
@@ -359,15 +361,15 @@
                                             ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                         </#if>
                                       </b>
-                                      (Updated:&nbsp;${paymentMethod.fromDate.toString()})
-                                      <#if paymentMethod.thruDate?has_content><b>(Effective Thru:&nbsp;${paymentMethod.thruDate})</b></#if>
+                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
+                                      <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate})</b></#if>
                                     </div>
                                   </td>
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
                                     <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session)>
                                         <div><a href='<@ofbizUrl>/editcreditcard?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
-                                        [Update]</a></div>
+                                        [${uiLabelMap.CommonUpdate}]</a></div>
                                     </#if>
                                   </td>
                               <#elseif "EFT_ACCOUNT" = paymentMethod.paymentMethodTypeId>
@@ -375,24 +377,24 @@
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
                                       <b>
-                                        EFT Account: ${eftAccount.nameOnAccount} - <#if eftAccount.bankName?has_content>Bank: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>Account #: ${eftAccount.accountNumber}</#if>
+                                        ${uiLabelMap.PartyEftAccount}: ${eftAccount.nameOnAccount} - <#if eftAccount.bankName?has_content>${uiLabelMap.PartyBank}: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>${uiLabelMap.PartyAccount} #: ${eftAccount.accountNumber}</#if>
                                       </b>
-                                      (Updated:&nbsp;${paymentMethod.fromDate.toString()})
-                                      <#if paymentMethod.thruDate?has_content><b>(Effective Thru:&nbsp;${paymentMethod.thruDate.toString()}</b></#if>
+                                      (${uiLabelMap.CommonUpdated}:&nbsp;${paymentMethod.fromDate.toString()})
+                                      <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate.toString()}</b></#if>
                                     </div>
                                   </td>
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
                                     <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session)>
                                         <div><a href='<@ofbizUrl>/editeftaccount?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
-                                        [Update]</a></div>
+                                        [${uiLabelMap.CommonUpdate}]</a></div>
                                     </#if>
                                   </td>
                               </#if>
                               <td align="right" valign="top" width='1%'>
                                 <#if security.hasEntityPermission("PAY_INFO", "_DELETE", session)>
                                     <div><a href='<@ofbizUrl>/deletePaymentMethod/viewprofile?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
-                                    [Expire]</a></div>
+                                    [${uiLabelMap.CommonExpire}]</a></div>
                                 </#if>
                               </td>
                             </tr>
@@ -403,7 +405,7 @@
                 </tr>
               </table>
               <#else>
-                <div class="tabletext">No payment method information on file.</div>
+                <div class="tabletext">${uiLabelMap.PartyNoPaymentMethodInformation}</div>
               </#if>
           </td>
         </tr>
@@ -420,7 +422,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Cybersource AVS Override</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.PartyCybersourceAvsOver}</div>
           </td>
         </tr>
       </table>
@@ -431,15 +433,15 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
           <td>
-            <div class="tabletext"><b>AVS String:</b>&nbsp;${(avsOverride.avsDeclineString)?default("Global")}</div>
+            <div class="tabletext"><b>${uiLabelMap.PartyAvsString}:</b>&nbsp;${(avsOverride.avsDeclineString)?default("Global")}</div>
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
           <td align="right" valign="top" width="1%">
-            <a href="<@ofbizUrl>/editAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[Edit]</a>
+            <a href="<@ofbizUrl>/editAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
           </td>          
           <#if avsOverride?exists>
             <td align="right" valign="top" width="1%">
-              <a href="<@ofbizUrl>/resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[Reset]</a>
+              <a href="<@ofbizUrl>/resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonReset}]</a>
             </td>
           </#if>
           </#if>
@@ -457,11 +459,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;User Name(s)</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.PartyUserName}</div>
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/createnewlogin?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">Create New</a>
+            <a href="<@ofbizUrl>/createnewlogin?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
           </td>
           </#if>
         </tr>
@@ -477,36 +479,36 @@
             <table width="100%" border="0" cellpadding="1">
               <#list userLogins as userUserLogin>
               <tr>
-                <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>User Name</b></div></td>
+                <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>${uiLabelMap.PartyUserLogin}</b></div></td>
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="40%"><div class="tabletext">${userUserLogin.userLoginId}</div></td>
                 <td align="left" valign="top" width="30%">
                   <div class="tabletext">
-                    <#assign enabled = "ENABLED">
+                    <#assign enabled = uiLabelMap.PartyEnabled>
                     <#if (userUserLogin.enabled)?default("Y") == "N">
                       <#if userUserLogin.disabledDateTime?exists>
                         <#assign disabledTime = userUserLogin.disabledDateTime.toString()>
                       <#else>
                         <#assign disabledTime = "??">
                       </#if>
-                      <#assign enabled = "DISABLED - " + disabledTime>
+                      <#assign enabled = uiLabelMap.PartyDisabled + " - " + disabledTime>
                     </#if>
                     ${enabled}
                   </div>
                 </td>
                 <td align="right" valign="top" width="20%">
                   <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-                      <a href="<@ofbizUrl>/editlogin?partyId=${party.partyId}&userlogin_id=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[Edit]</a>&nbsp;
+                      <a href="<@ofbizUrl>/editlogin?partyId=${party.partyId}&userlogin_id=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>&nbsp;
                   </#if>
                   <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
-                      <a href="<@ofbizUrl>/EditUserLoginSecurityGroups?partyId=${party.partyId}&userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[SecurityGroups]</a>&nbsp;
+                      <a href="<@ofbizUrl>/EditUserLoginSecurityGroups?partyId=${party.partyId}&userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartySecurityGroups}]</a>&nbsp;
                   </#if>
                 </td>
               </tr>
               </#list>
             </table>
             <#else>
-              <div class="tabletext">No UserLogin(s) found for this party.</div>
+              <div class="tabletext">${uiLabelMap.PartyNoUserLogin}</div>
             </#if>
           </td>
         </tr>
@@ -523,10 +525,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Last Visit(s)</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.PartyLastVisit}</div>
           </td>   
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/showvisits?party_id=${partyId}</@ofbizUrl>" class="submenutextright">List All</a>
+            <a href="<@ofbizUrl>/showvisits?party_id=${partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonListAll}</a>
           </td>
         </tr>
       </table>
@@ -540,13 +542,13 @@
             <#if visits?exists>
             <table width="100%" border="0" cellpadding="2" cellspacing="0">
               <tr>
-                <td><div class="tableheadtext">VisitId</div></td>
-                <td><div class="tableheadtext">UserLoginId</div></td>
-                <td><div class="tableheadtext">New User</div></td>
-                <td><div class="tableheadtext">WebApp</div></td>
-                <td><div class="tableheadtext">Client IP</div></td>
-                <td><div class="tableheadtext">From Date</div></td>
-                <td><div class="tableheadtext">Thru Date</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.PartyVisitId}</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.PartyUserLogin}</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.PartyNewUser}</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.PartyWebApp}</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.PartyClientIP}</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.CommonFromDate}</div></td>
+                <td><div class="tableheadtext">${uiLabelMap.CommonThruDate}</div></td>
               </tr>
               <tr>
                 <td colspan="7"><hr class="sepbar"></td>
@@ -565,7 +567,7 @@
               </#list>                                         
             </table>
             <#else>            
-              <div class="tabletext">No Visit(s) found for this party.</div>
+              <div class="tabletext">${uiLabelMap.PartyNoVisitFound}</div>
             </#if>
           </td>
         </tr>
@@ -582,11 +584,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Notes</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.CommonNotes}</div>
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_NOTE", session)>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/createnewnote?partyId=${partyId}</@ofbizUrl>" class="submenutextright">Create New</a>
+            <a href="<@ofbizUrl>/createnewnote?partyId=${partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
           </td>
           </#if>
         </tr>
@@ -603,8 +605,8 @@
               <#list notes as noteRef>
                 <tr>
                   <td align="left" valign="top" width="35%">
-                    <div class="tabletext">&nbsp;<b>By: </b>${noteRef.firstName}&nbsp;${noteRef.lastName}</div>
-                    <div class="tabletext">&nbsp;<b>At: </b>${noteRef.noteDateTime.toString()}</div>
+                    <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonBy}: </b>${noteRef.firstName}&nbsp;${noteRef.lastName}</div>
+                    <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonAt}: </b>${noteRef.noteDateTime.toString()}</div>
                   </td>
                   <td align="left" valign="top" width="65%">
                     <div class="tabletext">${noteRef.noteInfo}</div>
@@ -616,7 +618,7 @@
               </#list>
             </table>
             <#else>
-              <div class="tabletext">No notes for this party.</div>
+              <div class="tabletext">${uiLabelMap.PartyNoNotesForParty}</div>
             </#if>
           </td>
         </tr>
@@ -626,8 +628,8 @@
 </TABLE>
 
 <#else>
-    No party found with the partyId of: ${partyId?if_exists}
+    ${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${partyId?if_exists}
 </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.MsgErr0002}</h3>
 </#if>

@@ -21,16 +21,18 @@
  *
  * @author     Andy Zeneski
  * @created    July 12, 2002
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
  * @version    1.0
+ */ 
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasViewPermission>
 
 <#-- Main Heading -->
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td align="left">
-      <div class="head1">The Profile of
+      <div class="head1">${uiLabelMap.PartyTheProfileOf}
         <#if lookupPerson?exists>
           ${lookupPerson.personalTitle?if_exists}
           ${lookupPerson.firstName?if_exists}
@@ -39,20 +41,20 @@
           ${lookupPerson.suffix?if_exists}
         <#else>
           <#if lookupGroup?exists>
-            ${lookupGroup.groupName?default("No name (group)")}
+            ${lookupGroup.groupName?default(uiLabelMap.PartyNoNameGroup)}
           <#else>
-          "New User"
+          "${uiLabelMap.PartyNewUser}"
           </#if>
         </#if>
       </div>
     </td>
     <td align="right">
 	  <div class="tabContainer">
-        <a href="<@ofbizUrl>/viewprofile?party_id=${partyId}</@ofbizUrl>" class="tabButton">Profile</a>
-        <a href="<@ofbizUrl>/viewvendor?party_id=${partyId}</@ofbizUrl>" class="tabButton">Vendor</a>
-        <a href="<@ofbizUrl>/viewroles?party_id=${partyId}</@ofbizUrl>" class="tabButtonSelected">Roles</a>
-        <a href="<@ofbizUrl>/viewrelationships?party_id=${partyId}</@ofbizUrl>" class="tabButton">Relationships</a>
-        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButton">Communications</a>
+        <a href="<@ofbizUrl>/viewprofile?party_id=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyProfile}</a>
+        <a href="<@ofbizUrl>/viewvendor?party_id=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyVendor}</a>
+        <a href="<@ofbizUrl>/viewroles?party_id=${partyId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.PartyRoles}</a>
+        <a href="<@ofbizUrl>/viewrelationships?party_id=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRelationships}</a>
+        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyCommunications}</a>
       </div>
     </td>
   </tr>
@@ -66,7 +68,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Member Roles</div>
+            <div class="boxhead">${uiLabelMap.PartyMemberRoles}</div>
           </td>
         </tr>
       </table>
@@ -87,14 +89,14 @@
                 <td align="left" valign="top" width="70%"><div class="tabletext">${userRole.description} [${userRole.roleTypeId}]</div></td>
                 <#if hasDeletePermission>
                 <td align="right" valign="top" width="20%">
-                  <a href="<@ofbizUrl>/deleterole?partyId=${partyId}&roleTypeId=${userRole.roleTypeId}</@ofbizUrl>" class="buttontext">[Remove]</a>&nbsp;
+                  <a href="<@ofbizUrl>/deleterole?partyId=${partyId}&roleTypeId=${userRole.roleTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a>&nbsp;
                 </td>
                 </#if>
               </tr>
               </#list>
             </table>
             <#else>
-              <div class="tabletext">No party roles found.</div>
+              <div class="tabletext">${uiLabelMap.PartyNoPartyRolesFound}</div>
             </#if>
           </td>
         </tr>
@@ -111,7 +113,7 @@
         <form name="addPartyRole" method="post" action="<@ofbizUrl>/addrole/viewroles</@ofbizUrl>">
         <input type="hidden" name="partyId" value="${partyId}">
         <tr>
-          <td align="right" width="75%"><span class="tabletext">&nbsp;Add To Role:&nbsp;</span></td>
+          <td align="right" width="75%"><span class="tabletext">&nbsp;${uiLabelMap.PartyAddToRole}:&nbsp;</span></td>
           <td>
             <select name="roleTypeId" class="selectBox">
               <#list roles as role>
@@ -120,7 +122,7 @@
             </select>
           </td>
           <td>
-            <a href="javascript:document.addPartyRole.submit()" class="buttontext">[Add]</a>&nbsp;&nbsp;
+            <a href="javascript:document.addPartyRole.submit()" class="buttontext">[${uiLabelMap.CommonAdd}]</a>&nbsp;&nbsp;
           </td>
         </tr>
         </form>
@@ -139,7 +141,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;New Role Type</div>
+            <div class="boxhead">${uiLabelMap.PartyNewRoleType}</div>
           </td>
         </tr>
       </table>
@@ -152,15 +154,15 @@
         <form method="post" action="<@ofbizUrl>/createroletype/viewroles</@ofbizUrl>" name="createroleform">
         <input type='hidden' name='party_id' value='${partyId}'>
         <tr>
-          <td width="16%"><div class="tabletext">Role Type ID</div></td>
+          <td width="16%"><div class="tabletext">${uiLabelMap.PartyRoleTypeId}</div></td>
           <td width="84%">
             <input type="text" name="roleTypeId" size="20" class="inputBox">*
           </td>
         <tr>
-          <td width="16%"><div class="tabletext">Description</div></td>
+          <td width="16%"><div class="tabletext">${uiLabelMap.CommonDescription}</div></td>
           <td width="84%">
             <input type="text" name="description" size="30" class="inputBox">*
-            &nbsp;&nbsp;<a href="javascript:document.createroleform.submit()" class="buttontext">[Save]</a>
+            &nbsp;&nbsp;<a href="javascript:document.createroleform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
           </td>
         </tr>
         </form>
@@ -171,5 +173,5 @@
 </#if>
 
 <#else>
-  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.MsgErr0002})</h3>
 </#if>

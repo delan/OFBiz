@@ -19,18 +19,21 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     David E. Jones
  * @created    July 12, 2002
+ * @author     David E. Jones
+ * @author     Olivier Heintz (olivier.heintz@nereide.biz) 
  * @version    1.0
+ * since 2.2
+ */
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasViewPermission>
 
 <#-- Main Heading -->
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td align="left">
-      <div class="head1">The Profile of
+      <div class="head1">${uiLabelMap.PartyTheProfileOf}
         <#if lookupPerson?exists>
           ${lookupPerson.personalTitle?if_exists}
           ${lookupPerson.firstName?if_exists}
@@ -39,20 +42,20 @@
           ${lookupPerson.suffix?if_exists}
         <#else>
           <#if lookupGroup?exists>
-            ${lookupGroup.groupName?default("No name (group)")}
+            ${lookupGroup.groupName?default(uiLabelMap.PartyNoNameGroup)}
           <#else>
-          "New User"
+          "${uiLabelMap.PartyNewUser}"
           </#if>
         </#if>
       </div>
     </td>
     <td align="right">
 	  <div class="tabContainer">
-        <a href="<@ofbizUrl>/viewprofile?partyId=${partyId}</@ofbizUrl>" class="tabButton">Profile</a>
-        <a href="<@ofbizUrl>/viewvendor?partyId=${partyId}</@ofbizUrl>" class="tabButtonSelected">Vendor</a>
-        <a href="<@ofbizUrl>/viewroles?partyId=${partyId}</@ofbizUrl>" class="tabButton">Roles</a>
-        <a href="<@ofbizUrl>/viewrelationships?partyId=${partyId}</@ofbizUrl>" class="tabButton">Relationships</a>
-        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButton">Communications</a>
+        <a href="<@ofbizUrl>/viewprofile?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyProfile}</a>
+        <a href="<@ofbizUrl>/viewvendor?partyId=${partyId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.PartyVendor}</a>
+        <a href="<@ofbizUrl>/viewroles?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRoles}</a>
+        <a href="<@ofbizUrl>/viewrelationships?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRelationships}</a>
+        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyCommunications}</a>
       </div>
     </td>
   </tr>  
@@ -65,7 +68,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Vendor Information</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.PartyVendorInformation}</div>
           </td>
         </tr>
       </table>
@@ -80,5 +83,5 @@ ${editVendorWrapper.renderFormString()}
 </table>
 
 <#else>
-  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.MsgErr0002}</h3>
 </#if>

@@ -20,17 +20,19 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
   <#assign unselectedClassName = "tabButton">
   <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
   <#if groupId?has_content>
     <div class='tabContainer'>        
-      <a href="<@ofbizUrl>/EditSecurityGroup?groupId=${groupId}</@ofbizUrl>" class="${selectedClassMap.EditSecurityGroup?default(unselectedClassName)}">Security Group</a>
-	  <a href="<@ofbizUrl>/EditSecurityGroupPermissions?groupId=${groupId}</@ofbizUrl>" class="${selectedClassMap.EditSecurityGroupPermissions?default(unselectedClassName)}">Permissions</a>
-	  <a href="<@ofbizUrl>/EditSecurityGroupUserLogins?groupId=${groupId}</@ofbizUrl>" class="${selectedClassMap.EditSecurityGroupUserLogins?default(unselectedClassName)}">UserLogins</a>  
+      <a href="<@ofbizUrl>/EditSecurityGroup?groupId=${groupId}</@ofbizUrl>" class="${selectedClassMap.EditSecurityGroup?default(unselectedClassName)}">${uiLabelMap.PartySecurityGroups}</a>
+	  <a href="<@ofbizUrl>/EditSecurityGroupPermissions?groupId=${groupId}</@ofbizUrl>" class="${selectedClassMap.EditSecurityGroupPermissions?default(unselectedClassName)}">${uiLabelMap.PartyPermissions}</a>
+	  <a href="<@ofbizUrl>/EditSecurityGroupUserLogins?groupId=${groupId}</@ofbizUrl>" class="${selectedClassMap.EditSecurityGroupUserLogins?default(unselectedClassName)}">${uiLabelMap.PartyUserLogins}</a>  
     </div>
   </#if>
   

@@ -13,14 +13,15 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  MERCHANTABILIT`Y, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz)
+ *@version    $Revision: 1.6 $
  *@since      2.2
  */
 
@@ -51,11 +52,21 @@ controlPath = request.getAttribute("_CONTROL_PATH_");
 contextRoot = request.getAttribute("_CONTEXT_ROOT_");
 serverRoot = request.getAttribute("_SERVER_ROOT_URL_");
 
+/* reading of the localization information */
+availableLocales = Arrays.asList(Locale.getAvailableLocales());
+request.setAttribute("availableLocales",availableLocales);
+
+locale = UtilHttp.getLocale(request);
+request.setAttribute("locale",locale);
+uiLabelMap = UtilProperties.getResourceBundleMap("PartyUiLabels", locale);
+request.setAttribute("uiLabelMap", uiLabelMap);
+
 layoutSettings = new HashMap();
 request.setAttribute("layoutSettings", layoutSettings);
-    
-layoutSettings.put("companyName", "OFBiz: Party Manager");
-layoutSettings.put("companySubtitle", "Part of the Open For Business Family of Open Source Software");
+
+layoutSettings.put("companyName", uiLabelMap.get("PartyCompanyName"));
+layoutSettings.put("companySubtitle", uiLabelMap.get("PartyCompanySubtitle"));
+
 layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
 layoutSettings.put("headerMiddleBackgroundUrl", null);
 layoutSettings.put("headerRightBackgroundUrl", null);
@@ -67,6 +78,7 @@ externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + extern
 request.setAttribute("externalKeyParam", externalKeyParam);
 request.setAttribute("activeApp", "partymgr");
 
+
 eventMsgReq = request.getAttribute("_EVENT_MESSAGE_");
 errorMsgReq = request.getAttribute("_ERROR_MESSAGE_");
 errorMsgSes = session.getAttribute("_ERROR_MESSAGE_");
@@ -76,10 +88,20 @@ if (eventMsgReq != null) {
     request.removeAttribute("_EVENT_MESSAGE_");
 }
 if (errorMsgReq != null) {
-    request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>"));
+    int indiceMsgCode = (errorMsgReq.indexOf("Msg")>0)?errorMsgReq.indexOf("Msg"):0;
+    String errorMsgReqUi = errorMsgReq.substring(indiceMsgCode,indiceMsgCode+10); 
+    if (uiLabelProp.getProperty(errorMsgReqUi) != null) 
+         request.setAttribute("errorMsgReq", errorMsgReq.substring(0,indiceMsgCode) + uiLabelProp.getProperty(errorMsgReqUi));
+    else
+         request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>") );
     request.removeAttribute("_ERROR_MESSAGE_");
 }
 if (errorMsgSes != null) {
-    request.setAttribute("errorMsgSes", UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>"));
+    int indiceMsgCode = (errorMsgSec.indexOf("Msg")>0)?errorMsgSes.indexOf("Msg"):0;
+    String errorMsgSesUi = errorMsgSes.substring(indiceMsgCode,indiceMsgCode+10); 
+    if (uiLabelProp.getProperty(errorMsgSesUi) != null) 
+         request.setAttribute("errorMsgSes", errorMsgSes.substring(0,indiceMsgCode) + uiLabelProp.getProperty(errorMsgSesUi));
+    else
+         request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>"));
     session.removeAttribute("_ERROR_MESSAGE_");
 }
