@@ -44,19 +44,14 @@ import org.ofbiz.core.minilang.method.*;
 public class FieldToSession extends MethodOperation {
     String mapName;
     String fieldName;
-    String toFieldName;
     String sessionName;
 
     public FieldToSession(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
-        toFieldName = element.getAttribute("to-field-name");
         sessionName = element.getAttribute("session-name");
 
-        if (toFieldName == null || toFieldName.length() == 0) {
-            toFieldName = fieldName;
-        }
         if (sessionName == null || sessionName.length() == 0) {
             sessionName = fieldName;
         }
@@ -84,7 +79,7 @@ public class FieldToSession extends MethodOperation {
                 return true;
             }
 
-            methodContext.getRequest().getSession().setAttribute(toFieldName, fieldVal);
+            methodContext.getRequest().getSession().setAttribute(sessionName, fieldVal);
         }
         return true;
     }
