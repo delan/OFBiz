@@ -66,13 +66,15 @@ public class CategoryWorker {
         
         getRelatedProductCategoryMembers(pageContext, attributePrefix, parentId, limitView);
         
-        int lowIndex = ((Integer) pageContext.getAttribute(attributePrefix + "lowIndex")).intValue();
-        int highIndex = ((Integer) pageContext.getAttribute(attributePrefix + "highIndex")).intValue();
+        Integer lowIndex = (Integer) pageContext.getAttribute(attributePrefix + "lowIndex");
+        Integer highIndex = (Integer) pageContext.getAttribute(attributePrefix + "highIndex");
+        if (lowIndex == null || highIndex == null) return;
+        
         ArrayList prodCatMembers = (ArrayList) pageContext.getAttribute(attributePrefix + "productCategoryMembers");
 
         ArrayList someProducts = new ArrayList();
         if (prodCatMembers != null) {
-            for (int ind = lowIndex; ind <= highIndex; ind++) {
+            for (int ind = lowIndex.intValue(); ind <= highIndex.intValue(); ind++) {
                 GenericValue prodCatMember = (GenericValue) prodCatMembers.get(ind - 1);
                 GenericValue prod = null;
                 try {
