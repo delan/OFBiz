@@ -10,17 +10,17 @@
     <!-- Security Mappings -->
     <request-map>
         <uri>checkLogin</uri><secure>false</secure><auth>false</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.WebEventSecurity</event-path><event-invoke>checkLogin</event-invoke>
+        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>checkLogin</event-invoke>
         <success>view:main</success><error>view:login</error>
     </request-map>
     <request-map>
         <uri>login</uri><secure>true</secure><auth>false</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.WebEventSecurity</event-path><event-invoke>login</event-invoke>
+        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>login</event-invoke>
         <success>view:main</success><error>view:login</error>
     </request-map>
     <request-map>
         <uri>logout</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.WebEventSecurity</event-path><event-invoke>logout</event-invoke>
+        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>logout</event-invoke>
         <success>view:main</success><error>view:main</error>
     </request-map>
     <view-map><view>login</view><mapped-page>/login.jsp</mapped-page></view-map>
