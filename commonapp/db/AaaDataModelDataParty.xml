@@ -28,9 +28,13 @@
   <CommunicationEventType communicationEventTypeId="WEB_SITE_COMMUNICATI" description="Web Site" hasTable="N" parentTypeId=""/>
 
   <ContactMechPurposeType contactMechPurposeTypeId="SHIPPING_LOCATION" description="Shipping Destination Address"/>
-  <ContactMechPurposeType contactMechPurposeTypeId="BILLING_LOCATION" description="Billing Address"/>
+  <ContactMechPurposeType contactMechPurposeTypeId="BILLING_LOCATION" description="Billing (AP) Address"/>
+  <ContactMechPurposeType contactMechPurposeTypeId="PAYMENT_LOCATION" description="Payment (AR) Address"/>
+  <ContactMechPurposeType contactMechPurposeTypeId="GENERAL_LOCATION" description="General Correspondence Address"/>
+  <ContactMechPurposeType contactMechPurposeTypeId="PUR_RET_LOCATION" description="Purchase Return Address"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIPPING" description="Shipping Phone Number"/>
-  <ContactMechPurposeType contactMechPurposeTypeId="PHONE_BILLING" description="Billing Phone Number"/>
+  <ContactMechPurposeType contactMechPurposeTypeId="PHONE_BILLING" description="Billing (AP) Phone Number"/>
+  <ContactMechPurposeType contactMechPurposeTypeId="PHONE_PAYMENT" description="Payment (AR) Phone Number"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PHONE_HOME" description="Main Home Phone Number"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PHONE_WORK" description="Main Work Phone Number"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PHONE_WORK_SEC" description="Secondary Work Phone Number"/>
@@ -51,14 +55,20 @@
 
   <ContactMechTypePurpose contactMechPurposeTypeId="OTHER_EMAIL" contactMechTypeId="EMAIL_ADDRESS"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="PRIMARY_EMAIL" contactMechTypeId="EMAIL_ADDRESS"/>
-  <ContactMechTypePurpose contactMechPurposeTypeId="BILLING_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="SHIPPING_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
+  <ContactMechTypePurpose contactMechPurposeTypeId="BILLING_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
+  <ContactMechTypePurpose contactMechPurposeTypeId="PAYMENT_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
+  <ContactMechTypePurpose contactMechPurposeTypeId="GENERAL_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
+  <ContactMechTypePurpose contactMechPurposeTypeId="PUR_RET_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="FAX_NUMBER" contactMechTypeId="TELECOM_NUMBER"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="FAX_NUMBER_SEC" contactMechTypeId="TELECOM_NUMBER"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_HOME" contactMechTypeId="TELECOM_NUMBER"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_MOBILE" contactMechTypeId="TELECOM_NUMBER"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_WORK" contactMechTypeId="TELECOM_NUMBER"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_WORK_SEC" contactMechTypeId="TELECOM_NUMBER"/>
+  <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_SHIPPING" contactMechTypeId="TELECOM_NUMBER"/>
+  <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_BILLING" contactMechTypeId="TELECOM_NUMBER"/>
+  <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_PAYMENT" contactMechTypeId="TELECOM_NUMBER"/>
 
   <RoleType description="Not Applicable" hasTable="N" parentTypeId="" roleTypeId="_NA_"/>
   <RoleType description="Administrator" hasTable="N" parentTypeId="" roleTypeId="ADMIN"/>
@@ -84,6 +94,9 @@
   <RoleType description="Ship-To Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="SHIP_TO_CUSTOMER"/>
   <RoleType description="Bill-To Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="BILL_TO_CUSTOMER"/>
   <RoleType description="Placing Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="PLACING_CUSTOMER"/>
+  <RoleType description="Vendor" hasTable="N" parentTypeId="" roleTypeId="VENDOR"/>
+  <RoleType description="Ship-From Vendor" hasTable="N" parentTypeId="" roleTypeId="SHIP_FROM_VENDOR"/>
+  <RoleType description="Bill-From Vendor" hasTable="N" parentTypeId="" roleTypeId="BILL_FROM_VENDOR"/>
   <RoleType description="Organization" hasTable="N" parentTypeId="" roleTypeId="ORGANIZATION_ROLE"/>
   <RoleType description="Partner" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="PARTNER"/>
   <RoleType description="Supplier" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="SUPPLIER"/>
